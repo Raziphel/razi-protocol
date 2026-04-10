@@ -58,6 +58,57 @@ PlanetsLib:update({
             },
         },
     },
+    {
+        type = "planet",
+        name = "moshine",
+        orbit = {
+            parent = {
+                type = "space-location",
+                name = "nyxaris",
+            },
+            distance = 6,
+            orientation = 0.91,
+            sprite = {
+                type = "sprite",
+                filename = "__razi-protocol__/graphics/orbits/orbit_6.png",
+                size = 492,
+            },
+        },
+    },
+    {
+        type = "planet",
+        name = "panglia",
+        orbit = {
+            parent = {
+                type = "space-location",
+                name = "nyxaris",
+            },
+            distance = 18,
+            orientation = 0.72,
+            sprite = {
+                type = "sprite",
+                filename = "__razi-protocol__/graphics/orbits/orbit_18.png",
+                size = 1475,
+            },
+        },
+    },
+    {
+        type = "planet",
+        name = "pelagos",
+        orbit = {
+            parent = {
+                type = "space-location",
+                name = "nyxaris",
+            },
+            distance = 25,
+            orientation = 0.65,
+            sprite = {
+                type = "sprite",
+                filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
+                size = 2048,
+            },
+        },
+    },
 })
 
 require("util")
@@ -71,6 +122,13 @@ deleteRoute("dea-dia-edge")
 deleteRoute("gleba-apia-carnova-orbit")
 deleteRoute("apia-carnova-orbit-aquilo")
 deleteRoute("pelagos-apia-carnova-orbit")
+deleteRoute("nauvis-moshine")
+deleteRoute("vulcanus-moshine")
+deleteRoute("gleba-panglia")
+deleteRoute("star-pelagos")
+deleteRoute("pelagos-corrundum")
+deleteRoute("maraxsis-pelagos")
+deleteRoute("pelagos-aquilo")
 
 data:extend({
 	{
@@ -78,6 +136,30 @@ data:extend({
 		name = "sye-nyxaris-apia-carnova-orbit",
 		from = "sye-nyxaris",
 		to = "apia-carnova-orbit",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+	{
+		type = "space-connection",
+		name = "sye-nyxaris-moshine",
+		from = "sye-nyxaris",
+		to = "moshine",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+	{
+		type = "space-connection",
+		name = "sye-nyxaris-panglia",
+		from = "sye-nyxaris",
+		to = "panglia",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+	{
+		type = "space-connection",
+		name = "panglia-pelagos",
+		from = "panglia",
+		to = "pelagos",
 		length = 25000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},

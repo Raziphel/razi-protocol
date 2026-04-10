@@ -7,10 +7,10 @@ PlanetsLib:extend({
         orbit = {
             parent = {
                 type = "space-location",
-                name = "emberon",
+                name = "vibrant",
             },
             distance = 120,
-            orientation = 0.0,
+            orientation = 0.95,
         },
         sprite_only = true,
         magnitude = 25,
@@ -29,17 +29,76 @@ PlanetsLib:extend({
                 type = "space-location",
                 name = "beetlejuice",
             },
-            distance = 32,
-            orientation = 0.4,
+            distance = 44,
+            orientation = 0.35,
             sprite = {
                 type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
-                size = 2048,
+                filename = "__razi-protocol__/graphics/orbits/orbit_44.png",
+                size = 3604,
             },
         },
     }
 })
 
+PlanetsLib:update({
+	{
+		type = "planet",
+		name = "cubium",
+		distance = nil,
+		orientation = nil,
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "beetlejuice",
+			},
+			distance = 32,
+			orientation = 0.3,
+			sprite = {
+				type = "sprite",
+				filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
+				size = 2621,
+			},
+		},
+	},
+	{
+		type = "planet",
+		name = "aquilo",
+		distance = nil,
+		orientation = nil,
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "beetlejuice",
+			},
+			distance = 45,
+			orientation = 0.15,
+			sprite = {
+				type = "sprite",
+				filename = "__razi-protocol__/graphics/orbits/orbit_45.png",
+				size = 3686,
+			},
+		},
+	},
+	{
+		type = "planet",
+		name = "vesta",
+		distance = nil,
+		orientation = nil,
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "beetlejuice",
+			},
+			distance = 37,
+			orientation = 0.25,
+			sprite = {
+				type = "sprite",
+				filename = "__razi-protocol__/graphics/orbits/orbit_37.png",
+				size = 3031,
+			},
+		},
+	},
+})
 
 PlanetsLib:update({
 	type = "space-location",
@@ -55,21 +114,58 @@ PlanetsLib:update({
         sprite = {
 			type = "sprite",
 			filename = "__razi-protocol__/graphics/orbits/orbit_50.png",
-			-- size = 4096,
-            size = 1,
+            size = 4096,
 		},
 	},
 })
 
-PlanetsLib:update({
-	type = "space-location",
-	name = "shattered-planet",
-	orbit = {
-		parent = {
-			type = "space-location",
-			name = "solar-system-edge",
-		},
-		distance = 80,
-		orientation = 0.15,
+require("util")
+local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
+
+deleteRoute("vulcanus-cubium")
+deleteRoute("gleba-cubium")
+deleteRoute("cubium-aquilo")
+deleteRoute("paracelsin-aquilo")
+deleteRoute("aquilo-solar-system-edge")
+deleteRoute("vesta-aquilo")
+deleteRoute("aquilo-vesta")
+deleteRoute("nauvis-vesta")
+deleteRoute("vulcanus-vesta")
+deleteRoute("fulgora-vesta")
+deleteRoute("gleba-vesta")
+deleteRoute("vesta-solar-system-edge")
+
+data:extend({
+	{
+		type = "space-connection",
+		name = "sye-beetlejuice-cubium",
+		from = "sye-beetlejuice",
+		to = "cubium",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.vulcanus_gleba)
+	},
+	{
+		type = "space-connection",
+		name = "cubium-vesta",
+		from = "cubium",
+		to = "vesta",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo)
+	},
+	{
+		type = "space-connection",
+		name = "vesta-aquilo",
+		from = "vesta",
+		to = "aquilo",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo)
+	},
+	{
+		type = "space-connection",
+		name = "aquilo-solar-system-edge",
+		from = "aquilo",
+		to = "solar-system-edge",
+		length = 50000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 	},
 })

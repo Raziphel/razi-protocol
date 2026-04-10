@@ -1,89 +1,105 @@
-local function science_pack_exists(name)
-	return data.raw.tool and data.raw.tool[name] ~= nil
-end
-
-local function add_science_pack_if_exists(ingredients, science_pack)
-	if science_pack_exists(science_pack) then
-		table.insert(ingredients, {science_pack, 1})
-		return true
-	end
-
-	return false
-end
-
-local function add_unique_science_pack_if_exists(ingredients, science_pack)
-	if not science_pack_exists(science_pack) then
-		return false
-	end
-
-	for _, ingredient in ipairs(ingredients) do
-		if ingredient[1] == science_pack then
-			return false
-		end
-	end
-
-	table.insert(ingredients, {science_pack, 1})
-	return true
-end
-
 local function build_solaris_science_ingredients()
-	local ingredients = {}
-
-	local planetaris_pack_candidates = {
-		"planetaris-compression-science-pack",
-		"planetaris-polishing-science-pack",
-		"planetaris-bioengineering-science-pack",
-		"planetaris-pathological-science-pack"
-	}
-
-	for _, science_pack in ipairs(planetaris_pack_candidates) do
-		if science_pack_exists(science_pack) then
-			table.insert(ingredients, {science_pack, 1})
-		end
-	end
-
-	local corrundum_pack_candidates = {
-		"lithium-science-pack",
-		"tungsten-science-pack",
-		"chemical-science-pack"
-	}
-
-	for _, science_pack in ipairs(corrundum_pack_candidates) do
-		if add_science_pack_if_exists(ingredients, science_pack) then
-			break
-		end
-	end
-
-	if #ingredients == 0 then
-		ingredients = {
-			{"space-science-pack", 1},
-			{"metallurgic-science-pack", 1},
-			{"electromagnetic-science-pack", 1},
-			{"agricultural-science-pack", 1}
+	return build_integrated_science_ingredients({
+		primary_science_packs = {
+			"planetaris-compression-science-pack",
+			"planetaris-polishing-science-pack",
+			"planetaris-bioengineering-science-pack",
+			"planetaris-pathological-science-pack"
+		},
+		first_available_science_packs = {
+			"lithium-science-pack",
+			"tungsten-science-pack"
+		},
+		fallback_science_packs = {
+			"space-science-pack",
+			"metallurgic-science-pack",
+			"electromagnetic-science-pack",
+			"agricultural-science-pack"
 		}
-	end
-
-	return ingredients
+	})
 end
 
 local function build_nyxaris_science_ingredients()
-	local ingredients = build_solaris_science_ingredients()
+	return build_integrated_science_ingredients({
+		primary_science_packs = {
+			"planetaris-compression-science-pack",
+			"planetaris-polishing-science-pack",
+			"planetaris-bioengineering-science-pack",
+			"planetaris-pathological-science-pack"
+		},
+		first_available_science_packs = {
+			"lithium-science-pack",
+			"tungsten-science-pack"
+		},
+		extra_science_packs = {
+			"insulation-science-pack",
+			"thermodynamic-science-pack",
+			"aerospace-science-pack"
+		},
+		fallback_science_packs = {
+			"space-science-pack",
+			"metallurgic-science-pack",
+			"electromagnetic-science-pack",
+			"agricultural-science-pack"
+		}
+	})
+end
 
-	local dea_dia_pack_candidates = {
-		"insulation-science-pack",
-		"thermodynamic-science-pack",
-		"aerospace-science-pack"
-	}
+local function build_vibrant_science_ingredients()
+	return build_integrated_science_ingredients({
+		primary_science_packs = {
+			"automation-science-pack",
+			"logistic-science-pack",
+			"utility-science-pack",
+			"space-science-pack",
+			"electromagnetic-science-pack",
+			"cryogenic-science-pack"
+		},
+		extra_science_packs = {
+			"apicultural-science-pack",
+			"pelagos-science-pack"
+		},
+		fallback_science_packs = {
+			"automation-science-pack",
+			"logistic-science-pack",
+			"utility-science-pack",
+			"space-science-pack",
+			"electromagnetic-science-pack",
+			"cryogenic-science-pack"
+		}
+	})
+end
 
-	for _, science_pack in ipairs(dea_dia_pack_candidates) do
-		add_unique_science_pack_if_exists(ingredients, science_pack)
-	end
-
-	return ingredients
+local function build_beetlejuice_science_ingredients()
+	return build_integrated_science_ingredients({
+		primary_science_packs = {
+			"automation-science-pack",
+			"logistic-science-pack",
+			"utility-science-pack",
+			"space-science-pack",
+			"electromagnetic-science-pack",
+			"cryogenic-science-pack"
+		},
+		extra_science_packs = {
+			"pelagos-science-pack",
+			"planetaris-bioengineering-science-pack",
+			"thermodynamic-science-pack"
+		},
+		fallback_science_packs = {
+			"automation-science-pack",
+			"logistic-science-pack",
+			"utility-science-pack",
+			"space-science-pack",
+			"electromagnetic-science-pack",
+			"cryogenic-science-pack"
+		}
+	})
 end
 
 local solaris_science_ingredients = build_solaris_science_ingredients()
 local nyxaris_science_ingredients = build_nyxaris_science_ingredients()
+local vibrant_science_ingredients = build_vibrant_science_ingredients()
+local beetlejuice_science_ingredients = build_beetlejuice_science_ingredients()
 local solaris_prerequisite_technologies = {
 	"lithium-processing",
 	"tungsten-carbide"
@@ -96,6 +112,18 @@ local nyxaris_prerequisite_technologies = {
 	"planetaris-pathological-science-pack",
 	"lithium-processing",
 	"tungsten-carbide"
+}
+
+local vibrant_prerequisite_technologies = {
+	"apicultural-science-pack",
+	"pelagos-science-pack"
+}
+
+local beetlejuice_prerequisite_technologies = {
+	"cryogenic-science-pack",
+	"pelagos-science-pack",
+	"planetaris-bioengineering-science-pack",
+	"thermodynamic-science-pack"
 }
 
 data:extend({
@@ -148,8 +176,58 @@ data:extend({
 			ingredients = nyxaris_science_ingredients
 		},
 		order = "eb[nyxaris]"
+	},
+	{
+		type = "technology",
+		name = "vibrant-discovery",
+		localised_name = "Vibrant Discovery",
+		icon = "__razi-protocol__/graphics/icons/VibrantStar.png",
+		icon_size = 1024,
+		essential = true,
+		effects = {
+			{
+				type = "unlock-space-location",
+				space_location = "sye-vibrant",
+				use_icon_overlay_constant = true
+			}
+		},
+		prerequisites = {
+			"nyxaris-discovery"
+		},
+		unit = {
+			count = 1200,
+			time = 60,
+			ingredients = vibrant_science_ingredients
+		},
+		order = "ec[vibrant]"
+	},
+	{
+		type = "technology",
+		name = "beetlejuice-discovery",
+		localised_name = "Beetlejuice Discovery",
+		icon = "__razi-protocol__/graphics/icons/BeetleJuiceStar.png",
+		icon_size = 1024,
+		essential = true,
+		effects = {
+			{
+				type = "unlock-space-location",
+				space_location = "sye-beetlejuice",
+				use_icon_overlay_constant = true
+			}
+		},
+		prerequisites = {
+			"vibrant-discovery"
+		},
+		unit = {
+			count = 1500,
+			time = 60,
+			ingredients = beetlejuice_science_ingredients
+		},
+		order = "ed[beetlejuice]"
 	}
 })
 
 add_existing_prerequisites("solaris-discovery", solaris_prerequisite_technologies)
 add_existing_prerequisites("nyxaris-discovery", nyxaris_prerequisite_technologies)
+add_existing_prerequisites("vibrant-discovery", vibrant_prerequisite_technologies)
+add_existing_prerequisites("beetlejuice-discovery", beetlejuice_prerequisite_technologies)

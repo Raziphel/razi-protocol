@@ -1,6 +1,7 @@
 require "prototypes.system.calidus"
 require "prototypes.system.solaris"
 require "prototypes.system.nyxaris"
-require "prototypes.system.emberon"
+require "prototypes.system.vibrant"
 require "prototypes.system.beetlejuice"
+require "prototypes.system.deep_space"
 require "prototypes.technology"

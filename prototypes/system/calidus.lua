@@ -75,9 +75,9 @@ data:extend({
 data:extend({
 	{
 		type = "space-connection",
-		name = "sye-calidus-sye-emberon",
+		name = "sye-calidus-sye-vibrant",
 		from = "sye-calidus",
-		to = "sye-emberon",
+		to = "sye-vibrant",
 		length = 1000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},

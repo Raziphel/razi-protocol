@@ -102,3 +102,74 @@ function add_existing_prerequisites(technology_name, candidate_prerequisites)
 		end
 	end
 end
+
+function science_pack_exists(name)
+	return data.raw.tool and data.raw.tool[name] ~= nil
+end
+
+function add_science_pack_if_exists(ingredients, science_pack)
+	if science_pack_exists(science_pack) then
+		table.insert(ingredients, {science_pack, 1})
+		return true
+	end
+
+	return false
+end
+
+function add_unique_science_pack_if_exists(ingredients, science_pack)
+	if not science_pack_exists(science_pack) then
+		return false
+	end
+
+	for _, ingredient in ipairs(ingredients) do
+		if ingredient[1] == science_pack then
+			return false
+		end
+	end
+
+	table.insert(ingredients, {science_pack, 1})
+	return true
+end
+
+function add_existing_science_packs(ingredients, science_packs)
+	for _, science_pack in ipairs(science_packs or {}) do
+		add_unique_science_pack_if_exists(ingredients, science_pack)
+	end
+end
+
+function add_first_existing_science_pack(ingredients, science_packs)
+	for _, science_pack in ipairs(science_packs or {}) do
+		if add_science_pack_if_exists(ingredients, science_pack) then
+			return true
+		end
+	end
+
+	return false
+end
+
+function build_integrated_science_ingredients(options)
+	options = options or {}
+
+	local ingredients = {}
+
+	add_existing_science_packs(ingredients, options.primary_science_packs)
+	add_first_existing_science_pack(ingredients, options.first_available_science_packs)
+	add_existing_science_packs(ingredients, options.extra_science_packs)
+
+	if #ingredients == 0 and options.fallback_science_packs then
+		for _, science_pack in ipairs(options.fallback_science_packs) do
+			table.insert(ingredients, {science_pack, 1})
+		end
+	end
+
+	return ingredients
+end
+
+function set_technology_unit_ingredients_if_exists(technology_name, ingredients)
+	local technology = data.raw.technology and data.raw.technology[technology_name]
+	if not technology or not technology.unit or not ingredients or #ingredients == 0 then
+		return
+	end
+
+	technology.unit.ingredients = ingredients
+end
