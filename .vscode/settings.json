@@ -1,0 +1,25 @@
+{
+    "Lua.workspace.userThirdParty": [
+		"/home/razi/.config/Code - OSS/User/workspaceStorage/9a0b144bfd58839199c40a0543a7abac/justarandomgeek.factoriomod-debug/sumneko-3rd"
+	],
+	"Lua.runtime.version": "Lua 5.2",
+	"Lua.diagnostics.globals": [
+		"data",
+		"mods",
+		"settings",
+		"script",
+		"game",
+		"remote",
+		"commands",
+		"rendering",
+		"defines",
+		"serpent",
+		"log"
+	],
+	"Lua.workspace.checkThirdParty": "ApplyInMemory",
+	"Lua.hint.enable": true,
+	"Lua.format.enable": true,
+
+	"editor.insertSpaces": false,
+	"editor.tabSize": 4
+}

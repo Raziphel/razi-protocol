@@ -1,0 +1,6 @@
+require "prototypes.system.calidus"
+require "prototypes.system.solaris"
+require "prototypes.system.nyxaris"
+require "prototypes.system.emberon"
+require "prototypes.system.beetlejuice"
+require "prototypes.technology"

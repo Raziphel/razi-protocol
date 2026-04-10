@@ -1,5 +1,5 @@
 {
-	"name": "Razi-Protocol",
+	"name": "razi-protocol",
 	"version": "0.0.1",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
@@ -10,7 +10,18 @@
 		"base",
 		"space-age",
 		"PlanetsLib",
-		"Krastorio2Assets"
+		"planet-muluna",
+		"planetaris-unbounded",
+		"planetaris-tellus",
+		"planetaris-hyarion",
+		"planetaris-arig",
+		"Krastorio2-spaced-out",
+		"Cerys-Moon-of-Fulgora",
+		"dea-dia-system",
+		"corrundum",
+		"kr-air-purifier-helper",
+		"Imersite-Asteroids",
+		"apia"
 	],
 	"quality_required": true,
 	"rail_bridges_required": true,

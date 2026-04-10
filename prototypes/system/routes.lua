@@ -1,0 +1,291 @@
+-- require("util")
+-- local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
+
+-- -- -----------------------------
+-- -- NUKE ALL EXISTING ROUTES
+-- -- -----------------------------
+-- deleteAllRoutesExceptLocations({
+-- 	"muluna",
+-- 	"cerys",
+-- 	"asteroid-belt-inner-edge",
+-- 	"shattered-planet",
+-- 	"black-hole"
+-- })
+-- -- -----------------------------
+-- -- BRING BACK THE ROUTES A-NEW!
+-- -- -----------------------------
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "nauvis-gleba",
+-- 		from = "nauvis",
+-- 		to = "gleba",
+-- 		length = 10000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_gleba)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "nauvis-gleba",
+-- 		from = "nauvis",
+-- 		to = "gleba",
+-- 		length = 15000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_gleba)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "gleba-arig",
+-- 		from = "gleba",
+-- 		to = "arig",
+-- 		length = 7500,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_gleba)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "nauvis-fulgora",
+-- 		from = "nauvis",
+-- 		to = "fulgora",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "asteroid-belt-outer-edge-sye-Calidus",
+-- 		from = "asteroid-belt-outer-edge",
+-- 		to = "sye-Calidus",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-Calidus-dea-dia-system-edge",
+-- 		from = "sye-Calidus",
+-- 		to = "dea-dia-system-edge",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-Calidus-dea-dia-system-edge",
+-- 		from = "sye-Calidus",
+-- 		to = "sye-nyxaris",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- -- dea dia goes here
+
+
+
+
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "dea-dia-system-edge-sye-nyxaris",
+-- 		from = "dea-dia-system-edge",
+-- 		to = "sye-nyxaris",
+-- 		length = 30000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-nyxaris-tellus",
+-- 		from = "sye-nyxaris",
+-- 		to = "tellus",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "tellus-vulcanus",
+-- 		from = "tellus",
+-- 		to = "vulcanus",
+-- 		length = 30000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "tellus-panglia",
+-- 		from = "tellus",
+-- 		to = "panglia",
+-- 		length = 40000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "vulcanus-moshine",
+-- 		from = "vulcanus",
+-- 		to = "moshine",
+-- 		length = 10000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "moshine-corrundum",
+-- 		from = "moshine",
+-- 		to = "corrundum",
+-- 		length = 40000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "corrundum-panglia",
+-- 		from = "corrundum",
+-- 		to = "panglia",
+-- 		length = 40000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-nyxaris-sye-solaris",
+-- 		from = "sye-nyxaris",
+-- 		to = "sye-solaris",
+-- 		length = 60000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-solaris-hyarion",
+-- 		from = "sye-solaris",
+-- 		to = "hyarion",
+-- 		length = 50000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-solaris-cubium",
+-- 		from = "sye-solaris",
+-- 		to = "cubium",
+-- 		length = 50000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "cubium-maraxsis",
+-- 		from = "cubium",
+-- 		to = "maraxsis",
+-- 		length = 30000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "maraxsis-pelagos",
+-- 		from = "maraxsis",
+-- 		to = "pelagos",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "pelagos-aquilo",
+-- 		from = "pelagos",
+-- 		to = "aquilo",
+-- 		length = 20000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "hyarion-tenebris",
+-- 		from = "hyarion",
+-- 		to = "tenebris",
+-- 		length = 50000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-nyxaris-sye-beetlejuice",
+-- 		from = "sye-nyxaris",
+-- 		to = "sye-beetlejuice",
+-- 		length = 800000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-solaris-sye-beetlejuice",
+-- 		from = "sye-solaris",
+-- 		to = "sye-beetlejuice",
+-- 		length = 600000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-beetlejuice-apia",
+-- 		from = "sye-beetlejuice",
+-- 		to = "apia",
+-- 		length = 600000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-beetlejuice-carnova",
+-- 		from = "sye-beetlejuice",
+-- 		to = "carnova",
+-- 		length = 600000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "sye-beetlejuice-paracelsin",
+-- 		from = "sye-beetlejuice",
+-- 		to = "paracelsin",
+-- 		length = 800000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
+-- data:extend({
+-- 	{
+-- 		type = "space-connection",
+-- 		name = "paracelsin-frozeta",
+-- 		from = "paracelsin",
+-- 		to = "frozeta",
+-- 		length = 100000,
+-- 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+-- 	},
+-- })
