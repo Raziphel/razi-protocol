@@ -4,6 +4,7 @@ require("prototypes.compat.armoured_biters")
 require("prototypes.compat.cold_biters")
 require("prototypes.compat.explosive_biters")
 require("prototypes.compat.toxic_biters")
+require("prototypes.compat.science_tab").data_updates()
 require("prototypes.compat.k2so_tweaks").data_updates()
 
 local function clear_invalid_place_result(item_prototypes)

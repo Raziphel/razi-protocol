@@ -200,6 +200,16 @@ data:extend({
 data:extend({
 	{
 		type = "space-connection",
+		name = "castra-hyarion",
+		from = "castra",
+		to = "hyarion",
+		length = 12000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(castra_asteroids)
+	},
+})
+data:extend({
+	{
+		type = "space-connection",
 		name = "arig-hyarion",
 		from = "arig",
 		to = "hyarion",

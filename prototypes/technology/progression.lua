@@ -43,6 +43,8 @@ local science_tiers = {
 	},
 	vibrant = {
 		"bioluminescent-science-pack",
+		"biorecycling-science-pack",
+		"rubia-biofusion-science-pack",
 		"galvanization-science-pack",
 		"paracelsin-galvanization-science-pack",
 		"golden-science-pack",
@@ -199,7 +201,9 @@ if technology_exists("planet-discovery-frozeta") then
 else
 	set_prerequisites_if_exists("planet-discovery-secretas", {"vibrant-discovery"})
 end
+set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-secretas"})
 set_first_existing_prerequisite("planet-discovery-maraxsis", {
+	"planet-discovery-rubia",
 	"planet-discovery-secretas",
 	"vibrant-discovery"
 })
@@ -208,6 +212,7 @@ set_many_science_through({
 	"planet-discovery-paracelsin",
 	"planet-discovery-secretas",
 	"planet-discovery-frozeta",
+	"planet-discovery-rubia",
 	"planet-discovery-maraxsis"
 }, "nyxaris")
 add_existing_prerequisites("beetlejuice-discovery", {
@@ -215,6 +220,7 @@ add_existing_prerequisites("beetlejuice-discovery", {
 	"planet-discovery-paracelsin",
 	"planet-discovery-secretas",
 	"planet-discovery-frozeta",
+	"planet-discovery-rubia",
 	"planet-discovery-maraxsis"
 })
 

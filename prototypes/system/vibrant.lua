@@ -111,6 +111,23 @@ PlanetsLib:update({
 	},
 	{
 		type = "planet",
+		name = "rubia",
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "vibrant",
+			},
+			distance = 19,
+			orientation = 0.4,
+			sprite = {
+				type = "sprite",
+				filename = "__razi-protocol__/graphics/orbits/orbit_19.png",
+				size = 1556,
+			},
+		},
+	},
+	{
+		type = "planet",
 		name = "maraxsis",
 		distance = nil,
 		orientation = nil,
@@ -152,6 +169,9 @@ deleteRoute("maraxsis-tenebris")
 deleteRoute("maraxsis-tellus")
 deleteRoute("maraxsis-hyarion")
 deleteRoute("sye-vibrant-maraxsis")
+deleteRoute("vulcanus-rubia")
+deleteRoute("gleba-rubia")
+deleteRoute("corrundum-rubia")
 
 data:extend({
 	{
@@ -164,18 +184,26 @@ data:extend({
 	},
 	{
 		type = "space-connection",
-		name = "secretas-maraxsis",
-		from = "secretas",
-		to = "maraxsis",
-		length = 50000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
-	{
-		type = "space-connection",
 		name = "sye-vibrant-secretas",
 		from = "sye-vibrant",
 		to = "secretas",
 		length = 40000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+	{
+		type = "space-connection",
+		name = "secretas-rubia",
+		from = "secretas",
+		to = "rubia",
+		length = 25000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+	{
+		type = "space-connection",
+		name = "rubia-maraxsis",
+		from = "rubia",
+		to = "maraxsis",
+		length = 30000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 	{
