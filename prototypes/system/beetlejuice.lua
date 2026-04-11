@@ -9,8 +9,8 @@ PlanetsLib:extend({
                 type = "space-location",
                 name = "vibrant",
             },
-            distance = 120,
-            orientation = 0.95,
+            distance = 90,
+            orientation = 0.97,
         },
         sprite_only = true,
         magnitude = 25,
@@ -23,18 +23,18 @@ PlanetsLib:extend({
         name = "sye-beetlejuice",
         localised_name = "Beetlejuice Slip Stream",
         icon = "__space-age__/graphics/icons/solar-system-edge.png",
-        solar_power_in_space = 25,
+        solar_power_in_space = 20,
         orbit = {
             parent = {
                 type = "space-location",
                 name = "beetlejuice",
             },
-            distance = 44,
+            distance = 25,
             orientation = 0.35,
             sprite = {
                 type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_44.png",
-                size = 3604,
+                filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
+                size = 2048,
             },
         },
     }
@@ -51,12 +51,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 32,
+			distance = 21,
 			orientation = 0.3,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
-				size = 2621,
+				filename = "__razi-protocol__/graphics/orbits/orbit_21.png",
+				size = 1720,
 			},
 		},
 	},
@@ -70,12 +70,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 45,
+			distance = 32,
 			orientation = 0.15,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_45.png",
-				size = 3686,
+				filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
+				size = 2621,
 			},
 		},
 	},
@@ -89,12 +89,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 37,
+			distance = 25,
 			orientation = 0.25,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_37.png",
-				size = 3031,
+				filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
+				size = 2048,
 			},
 		},
 	},
@@ -113,8 +113,8 @@ PlanetsLib:update({
 		orientation = 0.0,
         sprite = {
 			type = "sprite",
-			filename = "__razi-protocol__/graphics/orbits/orbit_50.png",
-            size = 4096,
+			filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
+            size = 369,
 		},
 	},
 })
@@ -141,15 +141,15 @@ data:extend({
 		name = "sye-beetlejuice-cubium",
 		from = "sye-beetlejuice",
 		to = "cubium",
-		length = 25000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.vulcanus_gleba)
+		length = 15000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.fulgora_aquilo)
 	},
 	{
 		type = "space-connection",
 		name = "cubium-vesta",
 		from = "cubium",
 		to = "vesta",
-		length = 25000,
+		length = 10000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo)
 	},
 	{
@@ -157,7 +157,7 @@ data:extend({
 		name = "vesta-aquilo",
 		from = "vesta",
 		to = "aquilo",
-		length = 25000,
+		length = 20000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo)
 	},
 	{
@@ -165,7 +165,7 @@ data:extend({
 		name = "aquilo-solar-system-edge",
 		from = "aquilo",
 		to = "solar-system-edge",
-		length = 50000,
+		length = 75000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 	},
 })

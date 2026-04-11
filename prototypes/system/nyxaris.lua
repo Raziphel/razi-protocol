@@ -9,8 +9,8 @@ PlanetsLib:extend({
                 type = "space-location",
                 name = "star-dea-dia",
             },
-            distance = 70,
-            orientation = 0.63,
+            distance = 75,
+            orientation = 0.59,
         },
         sprite_only = true,
         magnitude = 12,
@@ -136,7 +136,7 @@ data:extend({
 		name = "sye-nyxaris-apia-carnova-orbit",
 		from = "sye-nyxaris",
 		to = "apia-carnova-orbit",
-		length = 25000,
+		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 	{
@@ -144,7 +144,7 @@ data:extend({
 		name = "sye-nyxaris-moshine",
 		from = "sye-nyxaris",
 		to = "moshine",
-		length = 25000,
+		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 	{
@@ -160,7 +160,7 @@ data:extend({
 		name = "panglia-pelagos",
 		from = "panglia",
 		to = "pelagos",
-		length = 25000,
+		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })

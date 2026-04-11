@@ -9,8 +9,8 @@ PlanetsLib:extend({
                 type = "space-location",
                 name = "nyxaris",
             },
-            distance = 100,
-            orientation = 0.69,
+            distance = 90,
+            orientation = 0.75,
         },
         sprite_only = true,
         magnitude = 20,
@@ -49,12 +49,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "vibrant",
 			},
-			distance = 40,
+			distance = 22,
 			orientation = 0.08,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_40.png",
-				size = 3277,
+				filename = "__razi-protocol__/graphics/orbits/orbit_22.png",
+				size = 1802,
 			},
 		},
 	},
@@ -66,12 +66,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "vibrant",
 			},
-			distance = 22,
+			distance = 32,
 			orientation = 0.86,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_22.png",
-				size = 1802,
+				filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
+				size = 2621,
 			},
 		},
 	},
@@ -83,12 +83,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "vibrant",
 			},
-			distance = 45,
+			distance = 35,
 			orientation = 0.32,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_45.png",
-				size = 3685,
+				filename = "__razi-protocol__/graphics/orbits/orbit_35.png",
+				size = 2867,
 			},
 		},
 	},
@@ -119,12 +119,12 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "vibrant",
 			},
-			distance = 32,
+			distance = 23,
 			orientation = 0.70,
 			sprite = {
 				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
-				size = 2621,
+				filename = "__razi-protocol__/graphics/orbits/orbit_23.png",
+				size = 1884,
 			},
 		},
 	},
@@ -159,7 +159,7 @@ data:extend({
 		name = "sye-vibrant-tenebris",
 		from = "sye-vibrant",
 		to = "tenebris",
-		length = 50000,
+		length = 20000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 	{
@@ -167,7 +167,7 @@ data:extend({
 		name = "secretas-maraxsis",
 		from = "secretas",
 		to = "maraxsis",
-		length = 25000,
+		length = 50000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 	{
@@ -175,7 +175,7 @@ data:extend({
 		name = "sye-vibrant-secretas",
 		from = "sye-vibrant",
 		to = "secretas",
-		length = 25000,
+		length = 40000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 	{
@@ -183,7 +183,7 @@ data:extend({
 		name = "secretas-frozeta",
 		from = "secretas",
 		to = "frozeta",
-		length = 8000,
+		length = 7500,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
     {
@@ -191,7 +191,7 @@ data:extend({
 		name = "tenebris-paracelsin",
 		from = "tenebris",
 		to = "paracelsin",
-		length = 10000,
+		length = 40000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })

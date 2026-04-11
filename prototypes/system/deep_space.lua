@@ -128,7 +128,7 @@ data:extend({
 		name = "solar-system-edge-nexus",
 		from = "solar-system-edge",
 		to = "nexus",
-		length = 30000,
+		length = 2000000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 	},
 	{
@@ -136,7 +136,7 @@ data:extend({
 		name = "solar-system-edge-black-hole-approach",
 		from = "solar-system-edge",
 		to = "black-hole-approach",
-		length = 130000,
+		length = 2000000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 	},
 	{
@@ -152,7 +152,7 @@ data:extend({
 		name = "nexus-oort-cloud",
 		from = "nexus",
 		to = "oort-cloud",
-		length = 300000,
+		length = 2000000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 	},
 	{
@@ -160,7 +160,7 @@ data:extend({
 		name = "oort-cloud-sol",
 		from = "oort-cloud",
 		to = "sol",
-		length = 600000,
+		length = 2000000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 	},
 })

@@ -58,7 +58,7 @@ data:extend({
 		name = "sye-calidus-sye-solaris",
 		from = "sye-calidus",
 		to = "sye-solaris",
-		length = 1000,
+		length = 10000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })
@@ -68,7 +68,7 @@ data:extend({
 		name = "sye-calidus-sye-nyxaris",
 		from = "sye-calidus",
 		to = "sye-nyxaris",
-		length = 1000,
+		length = 20000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })
@@ -78,7 +78,7 @@ data:extend({
 		name = "sye-calidus-sye-vibrant",
 		from = "sye-calidus",
 		to = "sye-vibrant",
-		length = 1000,
+		length = 30000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })
@@ -88,7 +88,7 @@ data:extend({
 		name = "sye-calidus-sye-beetlejuice",
 		from = "sye-calidus",
 		to = "sye-beetlejuice",
-		length = 1000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+		length = 40000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.fulgora_aquilo)
 	},
 })

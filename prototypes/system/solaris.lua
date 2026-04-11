@@ -41,6 +41,23 @@ PlanetsLib:extend({
 })
 
 PlanetsLib:update({
+	{
+		type = "planet",
+		name = "castra",
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "solaris",
+			},
+			distance = 14,
+			orientation = 0.58,
+			sprite = {
+                type = "sprite",
+                filename = "__razi-protocol__/graphics/orbits/orbit_14.png",
+                size = 1147,
+            },
+		},
+	},
     {
 		type = "planet",
 		name = "corrundum",
@@ -155,15 +172,29 @@ PlanetsLib:update({
 
 require("util")
 local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
+local castra_asteroids = asteroid_util.vulcanus_castra or asteroid_util.nauvis_fulgora
+
+deleteRoute("vulcanus-castra")
+deleteRoute("gleba-castra")
 
 data:extend({
 	{
 		type = "space-connection",
-		name = "sye-solaris-arig",
+		name = "sye-solaris-castra",
 		from = "sye-solaris",
+		to = "castra",
+		length = 10000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(castra_asteroids)
+	},
+})
+data:extend({
+	{
+		type = "space-connection",
+		name = "castra-arig",
+		from = "castra",
 		to = "arig",
-		length = 15000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+		length = 12000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(castra_asteroids)
 	},
 })
 data:extend({
@@ -172,7 +203,7 @@ data:extend({
 		name = "arig-hyarion",
 		from = "arig",
 		to = "hyarion",
-		length = 15000,
+		length = 17500,
 		-- asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })
@@ -182,18 +213,8 @@ data:extend({
 		name = "hyarion-tellus",
 		from = "hyarion",
 		to = "tellus",
-		length = 30000,
+		length = 20000,
 		-- asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
-})
-data:extend({
-	{
-		type = "space-connection",
-		name = "sye-calidus-dea-dia-system-edge",
-		from = "sye-calidus",
-		to = "dea-dia-system-edge",
-		length = 25000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })
 data:extend({
@@ -214,5 +235,25 @@ data:extend({
 		to = "corrundum",
 		length = 15000,
 		-- asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+})
+data:extend({
+	{
+		type = "space-connection",
+		name = "sye-calidus-dea-dia-system-edge",
+		from = "sye-calidus",
+		to = "dea-dia-system-edge",
+		length = 15000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	},
+})
+data:extend({
+	{
+		type = "space-connection",
+		name = "dea-dia-system-edge-lemures",
+		from = "dea-dia-system-edge",
+		to = "lemures",
+		length = 3000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 })

@@ -1,4 +1,10 @@
---require("prototypes.compat.k2so_deadia")
+
+require("prototypes.compat.arachnids_enemy")
+require("prototypes.compat.armoured_biters")
+require("prototypes.compat.cold_biters")
+require("prototypes.compat.explosive_biters")
+require("prototypes.compat.toxic_biters")
+require("prototypes.compat.k2so_tweaks").data_updates()
 
 local function clear_invalid_place_result(item_prototypes)
 	for _, prototype in pairs(item_prototypes or {}) do
