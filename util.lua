@@ -103,6 +103,24 @@ function add_existing_prerequisites(technology_name, candidate_prerequisites)
 	end
 end
 
+function remove_prerequisites_if_exists(technology_name, prerequisites_to_remove)
+	local technology = data.raw.technology and data.raw.technology[technology_name]
+	if not technology or not technology.prerequisites then
+		return
+	end
+
+	local remove_lookup = {}
+	for _, prerequisite in ipairs(prerequisites_to_remove or {}) do
+		remove_lookup[prerequisite] = true
+	end
+
+	for index = #technology.prerequisites, 1, -1 do
+		if remove_lookup[technology.prerequisites[index]] then
+			table.remove(technology.prerequisites, index)
+		end
+	end
+end
+
 function science_pack_exists(name)
 	return data.raw.tool and data.raw.tool[name] ~= nil
 end

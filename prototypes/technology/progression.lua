@@ -19,10 +19,8 @@ local science_tiers = {
 		"advanced-space-science-pack",
 		"cerysian-science-pack"
 	},
-	castra = {
-		"battlefield-science-pack"
-	},
 	solaris = {
+		"battlefield-science-pack",
 		"planetaris-compression-science-pack",
 		"planetaris-polishing-science-pack",
 		"planetaris-bioengineering-science-pack",
@@ -30,16 +28,14 @@ local science_tiers = {
 		"planetaris-refraction-science-pack",
 		"electrochemical-science-pack"
 	},
-	dea_dia = {
+	dea_dia_nyxaris = {
 		"aerospace-science-pack",
 		"dea-dia-science-pack",
 		"insulation-science-pack",
 		"thermodynamic-science-pack",
-		"nuclear-science-pack"
-	},
-	nyxaris = {
+		"nuclear-science-pack",
 		"apicultural-science-pack",
-		"pelagos-science-pack"
+		"pelagos-science-pack",
 	},
 	vibrant = {
 		"bioluminescent-science-pack",
@@ -53,6 +49,7 @@ local science_tiers = {
 	beetlejuice = {
 		"cryogenic-science-pack",
 		"gas-manipulation-science-pack",
+		"planet-crucible-science-pack",
 		"promethium-science-pack"
 	},
 	nexus_early = {
@@ -82,10 +79,8 @@ local science_tiers = {
 local tier_order = {
 	"base",
 	"inner_system",
-	"castra",
 	"solaris",
-	"dea_dia",
-	"nyxaris",
+	"dea_dia_nyxaris",
 	"vibrant",
 	"beetlejuice",
 	"nexus_early",
@@ -100,6 +95,27 @@ local function build_science_through(tier_name)
 		add_existing_science_packs(ingredients, science_tiers[current_tier_name])
 		if current_tier_name == tier_name then
 			break
+		end
+	end
+
+	return ingredients
+end
+
+local function build_solar_system_edge_science()
+	local ingredients = {}
+
+	for _, tier_name in ipairs({
+		"base",
+		"inner_system",
+		"solaris",
+		"dea_dia_nyxaris",
+		"vibrant",
+		"beetlejuice"
+	}) do
+		for _, science_pack in ipairs(science_tiers[tier_name] or {}) do
+			if science_pack ~= "promethium-science-pack" then
+				add_unique_science_pack_if_exists(ingredients, science_pack)
+			end
 		end
 	end
 
@@ -125,10 +141,10 @@ set_prerequisites_if_exists("solaris-discovery", {
 set_science_through("solaris-discovery", "inner_system")
 
 set_prerequisites_if_exists("nyxaris-discovery", {"system-discovery-dea-dia"})
-set_science_through("nyxaris-discovery", "dea_dia")
+set_science_through("nyxaris-discovery", "solaris")
 
 set_prerequisites_if_exists("vibrant-discovery", {"nyxaris-discovery"})
-set_science_through("vibrant-discovery", "nyxaris")
+set_science_through("vibrant-discovery", "dea_dia_nyxaris")
 
 set_prerequisites_if_exists("beetlejuice-discovery", {"vibrant-discovery"})
 set_science_through("beetlejuice-discovery", "vibrant")
@@ -141,7 +157,7 @@ add_existing_prerequisites("solaris-discovery", {
 	"moon-discovery-cerys"
 })
 
--- Solaris and Dea Dia branch.
+-- Solaris branch.
 set_prerequisites_if_exists("planet-discovery-castra", {"solaris-discovery"})
 set_prerequisites_if_exists("planet-discovery-arig", {"planet-discovery-castra"})
 set_prerequisites_if_exists("planet-discovery-hyarion", {"planet-discovery-arig"})
@@ -153,8 +169,9 @@ set_many_science_through({
 	"planet-discovery-hyarion",
 	"planet-discovery-tellus",
 	"planet-discovery-corrundum"
-}, "castra")
+}, "solaris")
 
+-- Dea Dia and Nyxaris are treated as one shared tier before Vibrant.
 set_prerequisites_if_exists("system-discovery-dea-dia", {"planet-discovery-corrundum"})
 set_science_through("system-discovery-dea-dia", "solaris")
 
@@ -184,7 +201,7 @@ set_many_science_through({
 	"planet-discovery-moshine",
 	"panglia_planet_discovery_panglia",
 	"planet-discovery-pelagos"
-}, "dea_dia")
+}, "solaris")
 add_existing_prerequisites("vibrant-discovery", {
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
@@ -214,7 +231,7 @@ set_many_science_through({
 	"planet-discovery-frozeta",
 	"planet-discovery-rubia",
 	"planet-discovery-maraxsis"
-}, "nyxaris")
+}, "dea_dia_nyxaris")
 add_existing_prerequisites("beetlejuice-discovery", {
 	"planet-discovery-tenebris",
 	"planet-discovery-paracelsin",
@@ -226,10 +243,14 @@ add_existing_prerequisites("beetlejuice-discovery", {
 
 -- Beetlejuice and the road out to deep space.
 set_prerequisites_if_exists("planet-discovery-cubium", {"beetlejuice-discovery"})
-set_prerequisites_if_exists("planet-discovery-vesta", {"planet-discovery-cubium"})
+set_prerequisites_if_exists("planet-discovery-crucible", {"planet-discovery-cubium"})
+set_prerequisites_if_exists("planet-discovery-vesta", {"planet-discovery-crucible"})
 set_prerequisites_if_exists("planet-discovery-aquilo", {"planet-discovery-vesta"})
+set_prerequisites_if_exists("planet-crucible-rocket-part", {"planet-crucible-science-pack"})
+remove_prerequisites_if_exists("moon-discovery-cerys", {"planet-crucible-rocket-part"})
 set_many_science_through({
 	"planet-discovery-cubium",
+	"planet-discovery-crucible",
 	"planet-discovery-vesta",
 	"planet-discovery-aquilo"
 }, "vibrant")
@@ -248,6 +269,7 @@ add_existing_prerequisites("planet-nexus-scanning-Krastorio2-space-out", {"plane
 add_existing_prerequisites("planet-discovery-nexus", {"planet-discovery-aquilo"})
 set_many_science_through(nexus_discovery_technologies, "beetlejuice")
 
+set_technology_unit_ingredients_if_exists("promethium-science-pack", build_solar_system_edge_science())
 set_science_through("promethium-882-research", "beetlejuice")
 set_science_through("antimatter-science-pack", "nexus_early")
 

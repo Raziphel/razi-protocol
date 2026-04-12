@@ -1,3 +1,5 @@
+local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+
 local toxic_enemy_control = "enemy-base"
 
 local toxic_enemy_entities = {
@@ -13,7 +15,8 @@ local toxic_enemy_entities = {
 local toxic_planets = {
 	"cubium",
 	"vesta",
-	"nexus"
+	"nexus",
+	"crucible"
 }
 
 local toxic_planet_tiles = {
@@ -68,7 +71,16 @@ local toxic_planet_tiles = {
 	"volcanic-jagged-ground",
 	"volcanic-smooth-stone",
 	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
+	"volcanic-ash-cracks",
+	"planet-crucible-dirt-1",
+	"planet-crucible-dirt-2",
+	"planet-crucible-dirt-3",
+	"planet-crucible-dirt-4",
+	"planet-crucible-rock-1",
+	"planet-crucible-rock-2",
+	"planet-crucible-rock-3",
+	"planet-crucible-rock-4",
+	"planet-crucible-sand-1"
 }
 
 local function existing_tiles(tile_names)
@@ -125,6 +137,7 @@ local function add_toxic_enemies_to_planet(planet_name)
 	end
 
 	planet.pollutant_type = planet.pollutant_type or "pollution"
+	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls[toxic_enemy_control] = {
 		frequency = 1,

@@ -9,8 +9,8 @@ PlanetsLib:extend({
                 type = "space-location",
                 name = "vibrant",
             },
-            distance = 90,
-            orientation = 0.97,
+            distance = 75,
+            orientation = 0.85,
         },
         sprite_only = true,
         magnitude = 25,
@@ -30,7 +30,7 @@ PlanetsLib:extend({
                 name = "beetlejuice",
             },
             distance = 25,
-            orientation = 0.35,
+            orientation = 0.25,
             sprite = {
                 type = "sprite",
                 filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
@@ -52,11 +52,49 @@ PlanetsLib:update({
 				name = "beetlejuice",
 			},
 			distance = 21,
-			orientation = 0.3,
+			orientation = 0.6,
 			sprite = {
 				type = "sprite",
 				filename = "__razi-protocol__/graphics/orbits/orbit_21.png",
 				size = 1720,
+			},
+		},
+	},
+	{
+		type = "space-location",
+		name = "crucible-orbit",
+		distance = nil,
+		orientation = nil,
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "beetlejuice",
+			},
+			distance = 23,
+			orientation = 0.5,
+			sprite = {
+				type = "sprite",
+				filename = "__razi-protocol__/graphics/orbits/orbit_23.png",
+				size = 1884,
+			},
+		},
+	},
+	{
+		type = "planet",
+		name = "crucible",
+		distance = nil,
+		orientation = nil,
+		orbit = {
+			parent = {
+				type = "space-location",
+				name = "crucible-orbit",
+			},
+			distance = 1,
+			orientation = 0.5,
+			sprite = {
+				type = "sprite",
+				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
+				size = 369,
 			},
 		},
 	},
@@ -90,7 +128,7 @@ PlanetsLib:update({
 				name = "beetlejuice",
 			},
 			distance = 25,
-			orientation = 0.25,
+			orientation = 0.4,
 			sprite = {
 				type = "sprite",
 				filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
@@ -134,30 +172,41 @@ deleteRoute("vulcanus-vesta")
 deleteRoute("fulgora-vesta")
 deleteRoute("gleba-vesta")
 deleteRoute("vesta-solar-system-edge")
+deleteRoute("nauvis-crucible")
+deleteRoute("crucible-vulcanus")
+deleteRoute("crucible-maraxsis")
 
 data:extend({
 	{
 		type = "space-connection",
-		name = "sye-beetlejuice-cubium",
+		name = "sye-beetlejuice-vesta",
 		from = "sye-beetlejuice",
+		to = "vesta",
+		length = 15000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.fulgora_aquilo)
+	},
+	{
+		type = "space-connection",
+		name = "crucible-orbit-cubium",
+		from = "crucible-orbit",
 		to = "cubium",
 		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.fulgora_aquilo)
 	},
 	{
 		type = "space-connection",
-		name = "cubium-vesta",
-		from = "cubium",
+		name = "crucible-orbit-vesta",
+		from = "crucible-orbit",
 		to = "vesta",
-		length = 10000,
+		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo)
 	},
 	{
 		type = "space-connection",
-		name = "vesta-aquilo",
-		from = "vesta",
+		name = "sye-beetlejuice-aquilo",
+		from = "sye-beetlejuice",
 		to = "aquilo",
-		length = 20000,
+		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo)
 	},
 	{

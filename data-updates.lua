@@ -2,6 +2,7 @@
 require("prototypes.compat.arachnids_enemy")
 require("prototypes.compat.armoured_biters")
 require("prototypes.compat.cold_biters")
+require("prototypes.compat.electric_flying_enemies")
 require("prototypes.compat.explosive_biters")
 require("prototypes.compat.toxic_biters")
 require("prototypes.compat.science_tab").data_updates()

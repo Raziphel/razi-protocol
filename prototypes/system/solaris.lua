@@ -11,7 +11,7 @@ PlanetsLib:extend({
                 type = "space-location",
                 name = "star",
             },
-            distance = 70,
+            distance = 80,
             orientation = 0.18,
         },
         sprite_only = true,

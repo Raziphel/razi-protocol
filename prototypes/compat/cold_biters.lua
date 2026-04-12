@@ -1,3 +1,5 @@
+local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+
 local cold_enemy_control = "frost_enemy_base"
 
 local cold_enemy_entities = {
@@ -129,6 +131,7 @@ local function add_cold_enemies_to_planet(planet_name)
 	end
 
 	planet.pollutant_type = planet.pollutant_type or "pollution"
+	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls[cold_enemy_control] = {
 		frequency = 1,

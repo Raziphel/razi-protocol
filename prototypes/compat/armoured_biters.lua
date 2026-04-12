@@ -1,3 +1,5 @@
+local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+
 local armoured_biter_units = {
 	["small-armoured-biter"] = true,
 	["medium-armoured-biter"] = true,
@@ -62,7 +64,16 @@ local armoured_biter_tiles = {
 	"volcanic-jagged-ground",
 	"volcanic-smooth-stone",
 	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
+	"volcanic-ash-cracks",
+	"planet-crucible-dirt-1",
+	"planet-crucible-dirt-2",
+	"planet-crucible-dirt-3",
+	"planet-crucible-dirt-4",
+	"planet-crucible-rock-1",
+	"planet-crucible-rock-2",
+	"planet-crucible-rock-3",
+	"planet-crucible-rock-4",
+	"planet-crucible-sand-1"
 }
 
 local function remove_armoured_units_from_spawner(spawner)
@@ -87,6 +98,7 @@ local function add_spawner_to_planet(planet_name, spawner_name)
 	end
 
 	local map_gen_settings = planet.map_gen_settings
+	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls["enemy-base"] = {
 		frequency = 1,
@@ -111,4 +123,5 @@ if armoured_spawner then
 	add_spawner_to_planet("panglia", "armoured-biter-spawner")
 	add_spawner_to_planet("hyarion", "armoured-biter-spawner")
 	add_spawner_to_planet("nexus", "armoured-biter-spawner")
+	add_spawner_to_planet("crucible", "armoured-biter-spawner")
 end

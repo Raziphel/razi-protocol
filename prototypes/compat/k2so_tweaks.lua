@@ -1,6 +1,6 @@
 local compat = {}
 
-local xy_k2so_placeholder_connections = {
+local xy_k2so_placeholder_connections = { -- Cuz fuckin hell xy loves to complain.
 	{
 		name = "nauvis-moshine",
 		from = "nauvis",

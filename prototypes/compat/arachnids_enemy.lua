@@ -1,3 +1,4 @@
+local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
 local arachnid_spawner = data.raw["unit-spawner"]["arachnid-spawner-unitspawner"]
 
 local arachnid_tiles = {
@@ -23,7 +24,16 @@ local arachnid_tiles = {
 	"volcanic-jagged-ground",
 	"volcanic-smooth-stone",
 	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
+	"volcanic-ash-cracks",
+	"planet-crucible-dirt-1",
+	"planet-crucible-dirt-2",
+	"planet-crucible-dirt-3",
+	"planet-crucible-dirt-4",
+	"planet-crucible-rock-1",
+	"planet-crucible-rock-2",
+	"planet-crucible-rock-3",
+	"planet-crucible-rock-4",
+	"planet-crucible-sand-1"
 }
 
 local function add_arachnids_to_planet(planet_name)
@@ -34,6 +44,7 @@ local function add_arachnids_to_planet(planet_name)
 	end
 
 	planet.pollutant_type = planet.pollutant_type or "pollution"
+	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls["enemy-base"] = {
 		frequency = 1,
@@ -53,3 +64,4 @@ end
 
 add_arachnids_to_planet("arig")
 add_arachnids_to_planet("nexus")
+add_arachnids_to_planet("crucible")

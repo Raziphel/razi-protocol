@@ -139,6 +139,11 @@ data:extend({
 				type = "unlock-space-location",
 				space_location = "sye-calidus",
 				use_icon_overlay_constant = true
+			},
+			{
+				type = "unlock-space-location",
+				space_location = "sye-solaris",
+				use_icon_overlay_constant = true
 			}
 		},
 		prerequisites = {

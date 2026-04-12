@@ -119,6 +119,7 @@ function science_tab.data_final_fixes()
 		"hydraulic-science-pack",
 		"biorecycling-science-pack",
 		"rubia-biofusion-science-pack",
+		"planet-crucible-science-pack",
 		"battlefield-science-pack",
 		"cryogenic-science-pack",
 		"electrochemical-science-pack",
@@ -142,8 +143,16 @@ function science_tab.data_final_fixes()
 		"kr-cryogenic-research-data",
 		"kr-electromagnetic-research-data",
 		"kr-promethium-research-data",
-		"hydraulic-research-data"
+		"hydraulic-research-data",
+		"datacell-empty",
+		"datacell-raw-data",
+		"datacell-ai-model-data",
+		"datacell-equation",
+		"datacell-solved-equation",
+		"datacell-dna-raw",
+		"datacell-dna-sequenced"
 	}) do
+		set_subgroup("tool", name, "research-data")
 		set_subgroup("item", name, "research-data")
 		set_subgroup("recipe", name, "research-data")
 	end
