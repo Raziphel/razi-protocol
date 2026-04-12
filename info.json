@@ -31,6 +31,7 @@
 		"skewer_planet_vesta",
 		"castra",
 		"planet-crucible",
+		"slp-dyson-sphere-reworked",
 
 		"Arachnids_enemy",
 		"ArmouredBiters",
@@ -55,9 +56,11 @@
 		"? rubia-minus-memes",
 		"? StatsGui",
 		"? shield-projector",
+		"? turret-activation-delay",
 		"? LogisticTrainNetwork",
         "? LTN_Combinator_Modernized",
         "? LtnManager",
+		"? NapalmArtillery",
 		"? Noxys_Swimming",
 		"? bullet-trails",
         "? even-distribution",
@@ -78,6 +81,7 @@
 		"? LithiumBattery",
 		"? CircularColliderLab",
 		"? Quality-Asteroids-Expanded",
+		"? cargo-bay-inserters",
 
         "! tile-upgrade-planner",
         "! quality-rocket-parts",
