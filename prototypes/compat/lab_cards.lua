@@ -10,8 +10,6 @@ local system_card_definitions = {
 		tint = {r = 1.0, g = 0.86, b = 0.08},
 		order = "s[system]-a[calidus]",
 		unlock_technology_candidates = {
-			"planet-discovery-castra",
-			"planet-discovery-muluna",
 			"moon-discovery-cerys"
 		},
 		ingredients = {

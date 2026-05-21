@@ -194,9 +194,10 @@ set_prerequisites_if_exists("solaris-discovery", {
 	"planet-discovery-fulgora",
 	"planet-discovery-gleba"
 })
+-- Solaris discovery should be researched with Calidus Tech Card after the inner-system discoveries.
 set_technology_unit_ingredients_if_exists(
 	"solaris-discovery",
-	build_science_through("base", {disable_cards = true})
+	build_science_after("base")
 )
 
 set_prerequisites_if_exists("nyxaris-discovery", {"planet-discovery-corrundum"})
@@ -221,7 +222,8 @@ set_prerequisites_if_exists("planet-discovery-arig", {"planet-discovery-castra"}
 set_prerequisites_if_exists("planet-discovery-hyarion", {"planet-discovery-arig"})
 set_prerequisites_if_exists("planet-discovery-tellus", {"planet-discovery-hyarion"})
 set_prerequisites_if_exists("planet-discovery-corrundum", {"planet-discovery-tellus"})
-set_science_through("planet-discovery-castra", "base")
+-- Castra belongs after Solaris, so it should also use Calidus Tech Card instead of the full base pack set.
+set_science_after("planet-discovery-castra", "base")
 set_many_science_after({
 	"planet-discovery-arig",
 	"planet-discovery-hyarion",
