@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.5
+Date: 22. 05. 2026
+  Bugfixes:
+    - Removed the legacy `prototypes/technology/system_cards.lua` path so system tech-card handling now lives in the compat flow without duplicate definitions.
+    - Updated Solaris and Castra progression wiring so both use the intended post-base card-driven science routing.
+    - Narrowed Calidus unlock candidate injection in lab-card compat to avoid forcing older Castra/Muluna unlock wiring.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.4
 Date: 21. 05. 2026
   Bugfixes:
@@ -10,7 +18,7 @@ Version: 1.3.0
 Date: 15. 05. 2026
   Bugfixes:
     - Added Paracelsin to the required mod list. 
-    
+
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.0
 Date: 15. 05. 2026
