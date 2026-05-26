@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.6
+Date: 27. 05. 2026
+  Bugfixes:
+    - Added explicit research triggers for Planetaris progression techs in final fixes:
+      `planetaris-compression` now unlocks after crafting 50 `glass`,
+      `planetaris-raw-diamond-production` now unlocks after crafting 50 `kr-quartz`,
+      and `condensing-agricultural-tower` now unlocks after crafting 25 `glass`.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.5
 Date: 22. 05. 2026
   Bugfixes:
