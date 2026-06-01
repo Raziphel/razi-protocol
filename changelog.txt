@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.7
+Date: 1. 06. 2026
+  Bugfixes:
+    - Removed the extra Crucible-to-Ribbonia orbit route by deleting `crucible-orbit-ribbonia` in final fixes.
+    - Reverted the generic-lab Cerys science input injection, so Cerys science packs/tech cards are no longer globally added to non-Cerys research labs.
+    - Reverted the Solaris Cerys-path simplification by requiring `moon-discovery-cerys` for `solaris-discovery` again and restoring Solaris discovery to the pre-1.3.4 inner-system science tier.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.6
 Date: 27. 05. 2026
   Bugfixes:

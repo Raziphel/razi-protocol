@@ -16,19 +16,4 @@ require("prototypes.compat.prototype_sanity").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
 
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
-
-data.raw["technology"]["planetaris-compression"].research_trigger = {
-    type = "craft-item",
-    item = "glass",
-    count = 50
-}
-data.raw["technology"]["planetaris-raw-diamond-production"].research_trigger = {
-    type = "craft-item",
-    item = "kr-quartz",
-    count = 50
-}
-data.raw["technology"]["condensing-agricultural-tower"].research_trigger = {
-    type = "craft-item",
-    item = "glass",
-    count = 25
-}
+deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2

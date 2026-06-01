@@ -194,10 +194,9 @@ set_prerequisites_if_exists("solaris-discovery", {
 	"planet-discovery-fulgora",
 	"planet-discovery-gleba"
 })
--- Solaris discovery should be researched with Calidus Tech Card after the inner-system discoveries.
 set_technology_unit_ingredients_if_exists(
 	"solaris-discovery",
-	build_science_after("base")
+	build_science_through("inner_system", {disable_cards = true})
 )
 
 set_prerequisites_if_exists("nyxaris-discovery", {"planet-discovery-corrundum"})
@@ -213,7 +212,8 @@ set_science_after("beetlejuice-discovery", "vibrant")
 set_science_through("planet-discovery-muluna", "base")
 set_science_through("moon-discovery-cerys", "base")
 add_existing_prerequisites("solaris-discovery", {
-	"planet-discovery-muluna"
+	"planet-discovery-muluna",
+	"moon-discovery-cerys"
 })
 
 -- Solaris branch.
