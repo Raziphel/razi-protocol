@@ -17,3 +17,5 @@ require("prototypes.compat.logistics_cleanup").data_final_fixes()
 
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
+deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
+deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4

@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.8
+Date: 2. 06. 2026
+  Bugfixes:
+    - Removed additional unwanted Ribbonia routes in final fixes by deleting `moshine-ribbonia` and `igrys-orbit-ribbonia`.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.7
 Date: 1. 06. 2026
   Bugfixes:
