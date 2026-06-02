@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.10
+Date: 2. 06. 2026
+  Changes:
+    - Replaced the old required `castra` dependency with `castra-prime` and added `castra-krastorio-compatibility-plus`.
+    - Made Cerys optional while keeping Calidus Tech Card unlocks available through Muluna/space-science fallback progression.
+
+  Bugfixes:
+    - Added detected Cerys science packs/tech cards to Biolab inputs without re-adding them to every generic lab.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.9
 Date: 2. 06. 2026
   Bugfixes:

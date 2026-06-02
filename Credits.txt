@@ -33,7 +33,7 @@ These mods provide many of the worlds, science packs, mechanics, and progression
 - Nexus
 - VoidProcessing
 - skewer_planet_vesta
-- castra
+- castra-prime
 - planet-crucible
 - ribbonia
 - slp-dyson-sphere-reworked
@@ -56,6 +56,7 @@ Thanks to the authors of these mods for compatibility ideas, balance references,
 - xy-k2so-enhancements
 - paracelsin-krastorio-compatibility-plus
 - rubia-krastorio-compatibility-plus
+- castra-krastorio-compatibility-plus
 - k2-wind-turbine-speed
 - Imersite-Asteroids
 - BetterAquilo
