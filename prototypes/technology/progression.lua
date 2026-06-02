@@ -196,7 +196,7 @@ set_prerequisites_if_exists("solaris-discovery", {
 })
 set_technology_unit_ingredients_if_exists(
 	"solaris-discovery",
-	build_science_through("inner_system", {disable_cards = true})
+	build_science_through("base", {disable_cards = true})
 )
 
 set_prerequisites_if_exists("nyxaris-discovery", {"planet-discovery-corrundum"})
@@ -212,8 +212,7 @@ set_science_after("beetlejuice-discovery", "vibrant")
 set_science_through("planet-discovery-muluna", "base")
 set_science_through("moon-discovery-cerys", "base")
 add_existing_prerequisites("solaris-discovery", {
-	"planet-discovery-muluna",
-	"moon-discovery-cerys"
+	"planet-discovery-muluna"
 })
 
 -- Solaris branch.

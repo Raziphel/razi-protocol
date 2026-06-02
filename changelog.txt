@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.3.9
+Date: 2. 06. 2026
+  Bugfixes:
+    - Removed the Cerys science/card requirement from `solaris-discovery` again, so Cerys can stay an optional side path while Solaris unlocks from the base inner-system progression.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.3.8
 Date: 2. 06. 2026
   Bugfixes:
