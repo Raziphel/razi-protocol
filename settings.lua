@@ -5,5 +5,12 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		order = "a[compat]-a[enemy-routing]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-hide-redundant-assembler-tiers",
+		setting_type = "startup",
+		default_value = true,
+		order = "a[compat]-b[redundant-assemblers]"
 	}
 })

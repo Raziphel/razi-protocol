@@ -13,6 +13,7 @@ require("prototypes.compat.progression_polish").data_final_fixes()
 require("prototypes.compat.vibrant_discovery_guard").data_final_fixes()
 require("prototypes.compat.prototype_identity").data_final_fixes()
 require("prototypes.compat.prototype_sanity").data_final_fixes()
+require("prototypes.compat.redundant_progression").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
 
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.

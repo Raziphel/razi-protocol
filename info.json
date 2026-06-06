@@ -1,6 +1,6 @@
 {
 	"name": "razi-protocol",
-	"version": "1.3.10",
+	"version": "1.4.1",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
 	"homepage": "https://github.com/Raziphel/razi-protocol",
@@ -89,7 +89,9 @@
 		"? Quality-Asteroids-Expanded",
 		"? cargo-bay-inserters",
 		"? Tenebris_plants_retexture",
+		"? tenebris-prime-made-in-hide",
 
+		"! castra",
 		"! Redrawn-Space-Connections",
 		"! paracelsin-krastorio-compatibility-plus",
 		"! krastorio2_extended_endgame",
