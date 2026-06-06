@@ -1,8 +1,8 @@
 # Razi Protocol
 
-Razi Protocol is a large progression, compatibility, and space-map overhaul for *Factorio: Space Age*. It is built for a huge Krastorio 2 Spaced Out planet pack, and its job is to make that pack feel like one connected expedition instead of a stack of unrelated planet mods.
+Razi Protocol is a Space Age progression overhaul for huge Krastorio 2 Spaced Out planet packs. Its job is to turn a giant stack of planet, science, enemy, and endgame mods into one connected multi-system expedition instead of a pile of disconnected content.
 
-The mod adds a new system-based progression structure, reorganizes where many planets live, rebuilds discovery technologies, adds system tech cards, routes custom enemy factions to planets that fit them, replaces Nexus omega science clutter with a single Deep Space card, and creates a longer endgame around the Krastorio intergalactic transceiver.
+The mod rebuilds planet discovery, adds system tech cards, reorganizes where many planets and routes live, sends custom enemy factions to planets that fit them, replaces Nexus omega-science clutter with a single Deep Space card, and creates a longer deep-space endgame around the Krastorio intergalactic transceiver.
 
 ## What Razi Protocol Adds
 

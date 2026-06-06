@@ -1,10 +1,10 @@
 {
 	"name": "razi-protocol",
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
 	"homepage": "https://github.com/Raziphel/razi-protocol",
-	"description": "A giant Space Age modpack bridge that connects many planet, science, enemy, and endgame mods into one coherent progression route across multiple star systems.\n\nSee the mod page or README for the full overview and credits.",
+	"description": "A Space Age progression overhaul for huge K2SO planet packs, with custom system tech cards, rebuilt planet discovery, enemy routing, and a longer deep-space endgame across multiple star systems.\n\nSee the README for the full overview, compatibility notes, and credits.",
 	"factorio_version": "2.0",
 	"dependencies": [
 		"base",
@@ -57,6 +57,7 @@
 		"? Cold_biters_K2_compatibility",
 		"? Explosive_biters_K2_compatibility",
 		"? Toxic_biters_K2_compatibility",
+		"paracelsin-krastorio-compatibility-plus",
 
 		"? visible-planets",
 		"? kr-air-purifier-helper",
@@ -93,7 +94,6 @@
 
 		"! castra",
 		"! Redrawn-Space-Connections",
-		"! paracelsin-krastorio-compatibility-plus",
 		"! krastorio2_extended_endgame",
 		"! K2_spaced_out_extended_endgame",
 		"! xy-k2so-enhancements",

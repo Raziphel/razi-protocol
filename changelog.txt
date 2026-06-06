@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.2
+Date: 6. 06. 2026
+  Bugfixes:
+    - Made `paracelsin-krastorio-compatibility-plus` a required dependency instead of leaving it on the incompatible list, so the intended Paracelsin + Krastorio 2 Spaced Out compat layer now loads with the pack.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.1
 Date: 6. 06. 2026
   Bugfixes:
