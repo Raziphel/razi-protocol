@@ -74,6 +74,20 @@ local function remove_technology_ingredient_if_present(technology_name, ingredie
 	end
 end
 
+local function set_craft_trigger(technology_name, item_name, count)
+	local target_technology = technology(technology_name)
+	if not target_technology or not item_exists(item_name) then
+		return
+	end
+
+	target_technology.unit = nil
+	target_technology.research_trigger = {
+		type = "craft-item",
+		item = item_name,
+		count = count
+	}
+end
+
 local function harden_kr_sand_recipe()
 	local sand_recipe = recipe("kr-sand")
 	local crusher = data.raw.furnace and data.raw.furnace["kr-crusher"]
@@ -108,6 +122,13 @@ end
 
 function prototype_sanity.data_final_fixes()
 	harden_kr_sand_recipe()
+	-- Planetaris Arig/Tellus still exposes a few trigger-techs whose recipe names
+	-- read like "glass panel" steps even though the crafts themselves produce the
+	-- generic `glass` item. Trigger on the crafted item result directly so the
+	-- Arig chain advances no matter which source recipe provided the glass.
+	set_craft_trigger("planetaris-compression", "glass", 50)
+	set_craft_trigger("planetaris-raw-diamond-production", "kr-quartz", 50)
+	set_craft_trigger("condensing-agricultural-tower", "glass", 25)
 	remove_result_if_missing("planetaris-cactus-mash", "planetaris-cactus-seeds")
 	-- Hyarion's K2SO refraction chain is a Solaris-tier step. Crucible's
 	-- broad data-updates sweep adds its science to any technology with the

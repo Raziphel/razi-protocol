@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.4
+Date: 12. 06. 2026
+  Bugfixes:
+    - Restored the Planetaris glass progression trigger-tech patch in final fixes so Arig/Tellus glass crafts now correctly advance `planetaris-compression` and `condensing-agricultural-tower` by counting crafted `glass` instead of relying on misleading glass-panel recipe naming.
+    - Kept the Krastorio 2 sand compatibility hardening in the same final-fixes sanity seam so `kr-sand` remains a stone-to-sand crusher recipe instead of drifting back onto assembler-only crafting.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.3
 Date: 12. 06. 2026
   Bugfixes:
