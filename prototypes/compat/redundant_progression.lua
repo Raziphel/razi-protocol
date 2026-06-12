@@ -78,6 +78,50 @@ local function clear_next_upgrade_references(name)
 	end
 end
 
+local function has_visible_place_result(entity_name)
+	for _, type_name in ipairs({
+		"item",
+		"item-with-entity-data",
+		"tool",
+		"ammo",
+		"capsule",
+		"gun",
+		"armor",
+		"module",
+		"rail-planner",
+		"repair-tool"
+	}) do
+		for _, item in pairs(data.raw[type_name] or {}) do
+			if item.place_result == entity_name and not item.hidden then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+local function clear_hidden_next_upgrade_targets()
+	for _, type_name in ipairs({
+		"assembling-machine",
+		"furnace",
+		"mining-drill",
+		"inserter",
+		"transport-belt",
+		"underground-belt",
+		"splitter"
+	}) do
+		for _, prototype in pairs(data.raw[type_name] or {}) do
+			local next_upgrade = prototype.next_upgrade
+			if next_upgrade and type(next_upgrade) == "string" and raw(type_name, next_upgrade) then
+				if not has_visible_place_result(next_upgrade) then
+					prototype.next_upgrade = nil
+				end
+			end
+		end
+	end
+end
+
 local function technology_has_dependents(technology_name)
 	for _, technology in pairs(data.raw.technology or {}) do
 		for _, prerequisite in ipairs(technology.prerequisites or {}) do
@@ -129,6 +173,8 @@ function redundant_progression.data_final_fixes()
 	if mods["LithiumBattery"] and raw("assembling-machine", "assembling-machine-4") then
 		hide_redundant_machine("assembling-machine-4")
 	end
+
+	clear_hidden_next_upgrade_targets()
 end
 
 return redundant_progression
