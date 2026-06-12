@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.3
+Date: 12. 06. 2026
+  Bugfixes:
+    - Cleared invalid hidden `next_upgrade` targets after redundant-tier cleanup, so Mini/Micro Machines no longer crash when copied assembler upgrade chains point at hidden tier-4 machines from Lithium Battery or similar optional mods.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.2
 Date: 6. 06. 2026
   Bugfixes:
