@@ -26,6 +26,10 @@ local function ingredient_name(ingredient)
 	return ingredient and (ingredient.name or ingredient[1])
 end
 
+local function ingredient_type(ingredient)
+	return ingredient and (ingredient.type or "item")
+end
+
 local function remove_result_if_missing(recipe_name, result_name)
 	local target_recipe = recipe(recipe_name)
 	if not target_recipe or not target_recipe.results or item_exists(result_name) then
@@ -88,6 +92,41 @@ local function set_craft_trigger(technology_name, item_name, count)
 	}
 end
 
+local function recipe_has_fluid_ingredient(target_recipe)
+	for _, ingredient in ipairs(target_recipe.ingredients or {}) do
+		if ingredient_type(ingredient) == "fluid" then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function ensure_recipe_unlock_copy(source_recipe_name, target_recipe_name)
+	for _, target_technology in pairs(data.raw.technology or {}) do
+		local has_source_unlock = false
+		local has_target_unlock = false
+
+		for _, effect in ipairs(target_technology.effects or {}) do
+			if effect.type == "unlock-recipe" then
+				if effect.recipe == source_recipe_name then
+					has_source_unlock = true
+				elseif effect.recipe == target_recipe_name then
+					has_target_unlock = true
+				end
+			end
+		end
+
+		if has_source_unlock and not has_target_unlock then
+			target_technology.effects = target_technology.effects or {}
+			table.insert(target_technology.effects, {
+				type = "unlock-recipe",
+				recipe = target_recipe_name
+			})
+		end
+	end
+end
+
 local function harden_kr_sand_recipe()
 	local sand_recipe = recipe("kr-sand")
 	local crusher = data.raw.furnace and data.raw.furnace["kr-crusher"]
@@ -95,16 +134,8 @@ local function harden_kr_sand_recipe()
 		return
 	end
 
-	-- Keep late recipe tweaks from accidentally turning sand into a generic
-	-- assembler recipe. Stone -> sand should stay a crusher job.
-	sand_recipe.category = "kr-crushing"
-	sand_recipe.ingredients = {
-		{type = "item", name = "stone", amount = 3}
-	}
-	sand_recipe.results = {
-		{type = "item", name = "kr-sand", amount_min = 7, amount_max = 8}
-	}
-	sand_recipe.main_product = "kr-sand"
+	local has_fluid_ingredients = recipe_has_fluid_ingredient(sand_recipe)
+
 	crusher.crafting_categories = crusher.crafting_categories or {}
 
 	local has_crushing = false
@@ -117,6 +148,81 @@ local function harden_kr_sand_recipe()
 
 	if not has_crushing then
 		table.insert(crusher.crafting_categories, "kr-crushing")
+	end
+
+	local fallback_recipe_name = "razi-kr-sand-crushing"
+
+	if has_fluid_ingredients then
+		-- If a mod adds water to sand, keep that as the better assembler path
+		-- and add a weaker crusher fallback so early progression cannot deadlock.
+		if data.raw["recipe-category"] and data.raw["recipe-category"]["crafting-with-fluid"] then
+			sand_recipe.category = "crafting-with-fluid"
+		else
+			sand_recipe.category = "crafting"
+		end
+
+		local fallback_recipe = recipe(fallback_recipe_name)
+		if fallback_recipe then
+			fallback_recipe.category = "kr-crushing"
+			fallback_recipe.enabled = sand_recipe.enabled == true
+			fallback_recipe.ingredients = {
+				{type = "item", name = "stone", amount = 3}
+			}
+			fallback_recipe.results = {
+				{type = "item", name = "kr-sand", amount = 5}
+			}
+			fallback_recipe.main_product = "kr-sand"
+		else
+			data:extend({
+				{
+					type = "recipe",
+					name = fallback_recipe_name,
+					localised_name = {"recipe-name.razi-kr-sand-crushing"},
+					localised_description = {"recipe-description.razi-kr-sand-crushing"},
+					icons = sand_recipe.icons and table.deepcopy(sand_recipe.icons) or nil,
+					icon = sand_recipe.icon,
+					icon_size = sand_recipe.icon_size,
+					subgroup = sand_recipe.subgroup,
+					order = sand_recipe.order,
+					category = "kr-crushing",
+					energy_required = sand_recipe.energy_required,
+					enabled = sand_recipe.enabled == true,
+					allow_as_intermediate = sand_recipe.allow_as_intermediate,
+					allow_decomposition = sand_recipe.allow_decomposition,
+					ingredients = {
+						{type = "item", name = "stone", amount = 3}
+					},
+					results = {
+						{type = "item", name = "kr-sand", amount = 5}
+					},
+					main_product = "kr-sand"
+				}
+			})
+		end
+
+		ensure_recipe_unlock_copy("kr-sand", fallback_recipe_name)
+		return
+	end
+
+	-- Keep late recipe tweaks from accidentally turning sand into a generic
+	-- assembler recipe. Stone -> sand should stay a crusher job when no mod has
+	-- turned the recipe into a fluid process.
+	sand_recipe.category = "kr-crushing"
+	sand_recipe.ingredients = {
+		{type = "item", name = "stone", amount = 3}
+	}
+	sand_recipe.results = {
+		{type = "item", name = "kr-sand", amount_min = 7, amount_max = 8}
+	}
+	sand_recipe.main_product = "kr-sand"
+
+	local fallback_recipe = recipe(fallback_recipe_name)
+	if fallback_recipe then
+		fallback_recipe.enabled = false
+		fallback_recipe.hidden = true
+		fallback_recipe.hidden_in_factoriopedia = true
+		fallback_recipe.hide_from_player_crafting = true
+		fallback_recipe.hide_from_stats = true
 	end
 end
 

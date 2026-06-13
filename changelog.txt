@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.5
+Date: 13. 06. 2026
+  Bugfixes:
+    - Reworked the Krastorio 2 sand compatibility patch so fluid-based `kr-sand` recipes keep their better assembler path while also gaining a lower-yield `razi-kr-sand-crushing` fallback, preventing early sand progression from deadlocking on crusher-only setups.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.4
 Date: 12. 06. 2026
   Bugfixes:
