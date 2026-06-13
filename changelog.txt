@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.6
+Date: 13. 06. 2026
+  Bugfixes:
+    - Tightened the Krastorio 2 sand compatibility fallback so when `kr-sand` stays on a fluid recipe, the lower-yield `razi-kr-sand-crushing` crusher recipe is forced visible and enabled instead of relying on the mirrored unlock path to expose it.
+    - Added `castra-prime-k2-turret-ammo-fix` as a required dependency.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.5
 Date: 13. 06. 2026
   Bugfixes:

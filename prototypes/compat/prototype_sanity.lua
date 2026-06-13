@@ -164,7 +164,11 @@ local function harden_kr_sand_recipe()
 		local fallback_recipe = recipe(fallback_recipe_name)
 		if fallback_recipe then
 			fallback_recipe.category = "kr-crushing"
-			fallback_recipe.enabled = sand_recipe.enabled == true
+			fallback_recipe.enabled = true
+			fallback_recipe.hidden = false
+			fallback_recipe.hidden_in_factoriopedia = false
+			fallback_recipe.hide_from_player_crafting = false
+			fallback_recipe.hide_from_stats = false
 			fallback_recipe.ingredients = {
 				{type = "item", name = "stone", amount = 3}
 			}
@@ -186,7 +190,11 @@ local function harden_kr_sand_recipe()
 					order = sand_recipe.order,
 					category = "kr-crushing",
 					energy_required = sand_recipe.energy_required,
-					enabled = sand_recipe.enabled == true,
+					enabled = true,
+					hidden = false,
+					hidden_in_factoriopedia = false,
+					hide_from_player_crafting = false,
+					hide_from_stats = false,
 					allow_as_intermediate = sand_recipe.allow_as_intermediate,
 					allow_decomposition = sand_recipe.allow_decomposition,
 					ingredients = {
@@ -200,7 +208,6 @@ local function harden_kr_sand_recipe()
 			})
 		end
 
-		ensure_recipe_unlock_copy("kr-sand", fallback_recipe_name)
 		return
 	end
 

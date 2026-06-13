@@ -1,6 +1,6 @@
 {
 	"name": "razi-protocol",
-	"version": "1.4.5",
+	"version": "1.4.6",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
 	"homepage": "https://github.com/Raziphel/razi-protocol",
@@ -58,6 +58,7 @@
 		"? Explosive_biters_K2_compatibility",
 		"? Toxic_biters_K2_compatibility",
 		"paracelsin-krastorio-compatibility-plus",
+		"castra-prime-k2-turret-ammo-fix",
 
 		"? visible-planets",
 		"? kr-air-purifier-helper",
