@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.9
+Date: 13. 06. 2026
+  Bugfixes:
+    - Hardened the K2 sand compatibility seam against `nulls-k2so-tweaks` renaming `kr-sand` to `sand`, so the forced crusher recipe now follows the surviving sand prototype and mirrors old `kr-sand` tech unlocks onto the renamed recipe instead of leaving progression or accepted-input checks behind.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.8
 Date: 13. 06. 2026
   Bugfixes:

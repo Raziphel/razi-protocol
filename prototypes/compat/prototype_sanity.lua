@@ -4,6 +4,17 @@ local function recipe(name)
 	return data.raw.recipe and data.raw.recipe[name]
 end
 
+local function first_existing_recipe(names)
+	for _, name in ipairs(names) do
+		local target_recipe = recipe(name)
+		if target_recipe then
+			return target_recipe, name
+		end
+	end
+
+	return nil, nil
+end
+
 local function item_exists(name)
 	return
 		(data.raw.item and data.raw.item[name]) or
@@ -20,6 +31,16 @@ local function item_exists(name)
 		(data.raw["copy-paste-tool"] and data.raw["copy-paste-tool"][name]) or
 		(data.raw["deconstruction-item"] and data.raw["deconstruction-item"][name]) or
 		(data.raw["spidertron-remote"] and data.raw["spidertron-remote"][name])
+end
+
+local function first_existing_item(names)
+	for _, name in ipairs(names) do
+		if item_exists(name) then
+			return name
+		end
+	end
+
+	return nil
 end
 
 local function ingredient_name(ingredient)
@@ -92,6 +113,39 @@ local function set_craft_trigger(technology_name, item_name, count)
 	}
 end
 
+local function ensure_recipe_unlock_copy(source_recipe_name, target_recipe_name)
+	local source_recipe = recipe(source_recipe_name)
+	local target_recipe = recipe(target_recipe_name)
+	if not source_recipe or not target_recipe then
+		return
+	end
+
+	for _, target_technology in pairs(data.raw.technology or {}) do
+		local effects = target_technology.effects
+		if effects then
+			local has_source_unlock = false
+			local has_target_unlock = false
+
+			for _, effect in ipairs(effects) do
+				if effect.type == "unlock-recipe" then
+					if effect.recipe == source_recipe_name then
+						has_source_unlock = true
+					elseif effect.recipe == target_recipe_name then
+						has_target_unlock = true
+					end
+				end
+			end
+
+			if has_source_unlock and not has_target_unlock then
+				table.insert(effects, {
+					type = "unlock-recipe",
+					recipe = target_recipe_name
+				})
+			end
+		end
+	end
+end
+
 local function recipe_has_fluid_ingredient(target_recipe)
 	for _, variant in ipairs({target_recipe, target_recipe.normal, target_recipe.expensive}) do
 		if variant and variant.ingredients then
@@ -121,9 +175,10 @@ local function overwrite_recipe_variants(target_recipe, fields)
 end
 
 local function harden_kr_sand_recipe()
-	local sand_recipe = recipe("kr-sand")
+	local sand_recipe, sand_recipe_name = first_existing_recipe({"kr-sand", "sand"})
 	local crusher = data.raw.furnace and data.raw.furnace["kr-crusher"]
-	if not sand_recipe or not crusher then
+	local sand_item_name = first_existing_item({"kr-sand", "sand"})
+	if not sand_recipe or not crusher or not sand_item_name then
 		return
 	end
 
@@ -157,12 +212,16 @@ local function harden_kr_sand_recipe()
 			{type = "item", name = "stone", amount = 3}
 		},
 		results = {
-			{type = "item", name = "kr-sand", amount_min = 7, amount_max = 8}
+			{type = "item", name = sand_item_name, amount_min = 7, amount_max = 8}
 		},
-		main_product = "kr-sand"
+		main_product = sand_item_name
 	})
 
-	if has_fluid_ingredients then
+	if sand_recipe_name == "sand" then
+		ensure_recipe_unlock_copy("kr-sand", "sand")
+	end
+
+	if has_fluid_ingredients and sand_recipe_name == "kr-sand" then
 		sand_recipe.localised_description = {"recipe-description.kr-sand"}
 	end
 end
