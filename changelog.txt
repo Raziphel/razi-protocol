@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.8
+Date: 13. 06. 2026
+  Bugfixes:
+    - Tightened the Krastorio 2 sand fix again by forcing every loaded `kr-sand` recipe branch to the same enabled, visible stone-to-sand `kr-crushing` recipe, so the crusher's real accepted-input list can recognize stone instead of waiting on a broken unlock state or hidden fluid variant.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.4.7
+Date: 13. 06. 2026
+  Bugfixes:
+    - Tightened the Krastorio 2 sand fix again by force-rewriting every loaded `kr-sand` recipe branch into the same stone-to-sand `kr-crushing` recipe, preventing hidden difficulty-specific fluid variants from leaving tech and Factoriopedia on the old stone+water path.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.6
 Date: 13. 06. 2026
   Bugfixes:
