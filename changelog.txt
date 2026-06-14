@@ -1,40 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.1
+Date: 15. 06. 2026
+  Bugfixes:
+    - Added `kr-ai-core` back to `kr-automation` as an explicit prerequisite, so advanced assembling machines no longer unlock before the AI-core research their recipe depends on.
+    - Stripped non-tool research ingredients from `muluna-space-telescope` in final fixes, preventing placeholder items like `qw-debug-cone_inverted-empty` from crashing the mod stack during menu load.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.4.9
 Date: 13. 06. 2026
   Bugfixes:
     - Hardened the K2 sand compatibility seam against `nulls-k2so-tweaks` renaming `kr-sand` to `sand`, so the forced crusher recipe now follows the surviving sand prototype and mirrors old `kr-sand` tech unlocks onto the renamed recipe instead of leaving progression or accepted-input checks behind.
-
----------------------------------------------------------------------------------------------------
-Version: 1.4.8
-Date: 13. 06. 2026
-  Bugfixes:
-    - Tightened the Krastorio 2 sand fix again by forcing every loaded `kr-sand` recipe branch to the same enabled, visible stone-to-sand `kr-crushing` recipe, so the crusher's real accepted-input list can recognize stone instead of waiting on a broken unlock state or hidden fluid variant.
-
----------------------------------------------------------------------------------------------------
-Version: 1.4.7
-Date: 13. 06. 2026
-  Bugfixes:
-    - Tightened the Krastorio 2 sand fix again by force-rewriting every loaded `kr-sand` recipe branch into the same stone-to-sand `kr-crushing` recipe, preventing hidden difficulty-specific fluid variants from leaving tech and Factoriopedia on the old stone+water path.
-
----------------------------------------------------------------------------------------------------
-Version: 1.4.6
-Date: 13. 06. 2026
-  Bugfixes:
-    - Tightened the Krastorio 2 sand compatibility fallback so when `kr-sand` stays on a fluid recipe, the lower-yield `razi-kr-sand-crushing` crusher recipe is forced visible and enabled instead of relying on the mirrored unlock path to expose it.
-    - Added `castra-prime-k2-turret-ammo-fix` as a required dependency.
-
----------------------------------------------------------------------------------------------------
-Version: 1.4.5
-Date: 13. 06. 2026
-  Bugfixes:
-    - Reworked the Krastorio 2 sand compatibility patch so fluid-based `kr-sand` recipes keep their better assembler path while also gaining a lower-yield `razi-kr-sand-crushing` fallback, preventing early sand progression from deadlocking on crusher-only setups.
-
----------------------------------------------------------------------------------------------------
-Version: 1.4.4
-Date: 12. 06. 2026
-  Bugfixes:
-    - Restored the Planetaris glass progression trigger-tech patch in final fixes so Arig/Tellus glass crafts now correctly advance `planetaris-compression` and `condensing-agricultural-tower` by counting crafted `glass` instead of relying on misleading glass-panel recipe naming.
-    - Kept the Krastorio 2 sand compatibility hardening in the same final-fixes sanity seam so `kr-sand` remains a stone-to-sand crusher recipe instead of drifting back onto assembler-only crafting.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.3

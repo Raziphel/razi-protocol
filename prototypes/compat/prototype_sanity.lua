@@ -86,6 +86,34 @@ local function technology(name)
 	return data.raw.technology and data.raw.technology[name]
 end
 
+local function technology_has_prerequisite(technology_name, prerequisite_name)
+	local target_technology = technology(technology_name)
+	if not target_technology then
+		return false
+	end
+
+	for _, prerequisite in ipairs(target_technology.prerequisites or {}) do
+		if prerequisite == prerequisite_name then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function add_technology_prerequisite_if_present(technology_name, prerequisite_name)
+	local target_technology = technology(technology_name)
+	local prerequisite_technology = technology(prerequisite_name)
+	if not target_technology or not prerequisite_technology then
+		return
+	end
+
+	target_technology.prerequisites = target_technology.prerequisites or {}
+	if not technology_has_prerequisite(technology_name, prerequisite_name) then
+		table.insert(target_technology.prerequisites, prerequisite_name)
+	end
+end
+
 local function remove_technology_ingredient_if_present(technology_name, ingredient_to_remove)
 	local target_technology = technology(technology_name)
 	if not target_technology or not target_technology.unit or not target_technology.unit.ingredients then
@@ -94,6 +122,21 @@ local function remove_technology_ingredient_if_present(technology_name, ingredie
 
 	for index = #target_technology.unit.ingredients, 1, -1 do
 		if ingredient_name(target_technology.unit.ingredients[index]) == ingredient_to_remove then
+			table.remove(target_technology.unit.ingredients, index)
+		end
+	end
+end
+
+local function strip_non_tool_technology_ingredients(technology_name)
+	local target_technology = technology(technology_name)
+	if not target_technology or not target_technology.unit or not target_technology.unit.ingredients then
+		return
+	end
+
+	for index = #target_technology.unit.ingredients, 1, -1 do
+		local current_ingredient = target_technology.unit.ingredients[index]
+		local current_name = ingredient_name(current_ingredient)
+		if current_name and not (data.raw.tool and data.raw.tool[current_name]) then
 			table.remove(target_technology.unit.ingredients, index)
 		end
 	end
@@ -228,6 +271,10 @@ end
 
 function prototype_sanity.data_final_fixes()
 	harden_kr_sand_recipe()
+	-- K2's advanced assembler recipe consumes AI cores, but the unlock tech does
+	-- not always inherit the AI-core research gate once the full mod stack
+	-- reshuffles K2 progression. Re-attach that prerequisite explicitly.
+	add_technology_prerequisite_if_present("kr-automation", "kr-ai-core")
 	-- Planetaris Arig/Tellus still exposes a few trigger-techs whose recipe names
 	-- read like "glass panel" steps even though the crafts themselves produce the
 	-- generic `glass` item. Trigger on the crafted item result directly so the
@@ -264,6 +311,11 @@ function prototype_sanity.data_final_fixes()
 			remove_technology_ingredient_if_present(technology_name, ingredient_name_to_remove)
 		end
 	end
+
+	-- Muluna copies the current vanilla-lab science list onto this technology in
+	-- its own final-fixes pass. In larger mod stacks that can include non-tool
+	-- placeholder items, which Factorio rejects for research units.
+	strip_non_tool_technology_ingredients("muluna-space-telescope")
 end
 
 return prototype_sanity
