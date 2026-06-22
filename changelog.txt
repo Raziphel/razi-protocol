@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.5.2
+Date: 22. 06. 2026
+  Bugfixes:
+    - Re-applied the Paracelsin gas standardization in final fixes when both `paracelsin-krastorio-compatibility-plus` and `nulls-k2so-tweaks` are present, so Paracelsin nitrogen lakes and late-touched recipes now agree on the common `nitrogen` / `nitric-acid` fluids instead of soft-locking planet recipes behind atmospheric condensers.
+    - Forced the late K2 antimatter chain back onto `promethium-science-pack` if another compat pass injects `deep-space-tech-card`, preventing the Deep Space card route from looping back through `kr-antimatter-reactor`.
+    - Added an explicit `planet-crucible-science-pack` prerequisite to technologies that consume Crucible/high-pressure science aliases, so high-pressure branches no longer appear in the tree before their actual science gate.
+    - Added explicit `planet-crucible-science-pack` prerequisites to reported late-tech outliers such as `kr-matter-processing`, the Dyson Sphere branch, `foundation`, `captive-biter-spawner`, `planet-crucible-lithium-hydride`, `muluna-fertilized-greenhouses-vulcanus`, and `maraxsis-nuclear-submarine`, so they stop appearing researchable long before the Crucible gate in this progression pack.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.5.1
 Date: 15. 06. 2026
   Bugfixes:

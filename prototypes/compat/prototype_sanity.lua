@@ -127,6 +127,46 @@ local function remove_technology_ingredient_if_present(technology_name, ingredie
 	end
 end
 
+local function technology_has_ingredient(technology_name, ingredient_name_to_find)
+	local target_technology = technology(technology_name)
+	if not target_technology or not target_technology.unit or not target_technology.unit.ingredients then
+		return false
+	end
+
+	for _, ingredient in ipairs(target_technology.unit.ingredients) do
+		if ingredient_name(ingredient) == ingredient_name_to_find then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function replace_technology_ingredient_if_present(technology_name, ingredient_to_replace, replacement_name)
+	local target_technology = technology(technology_name)
+	if not target_technology or not target_technology.unit or not target_technology.unit.ingredients then
+		return
+	end
+
+	local replacement_already_exists = technology_has_ingredient(technology_name, replacement_name)
+
+	for index = #target_technology.unit.ingredients, 1, -1 do
+		local current_ingredient = target_technology.unit.ingredients[index]
+		if ingredient_name(current_ingredient) == ingredient_to_replace then
+			if replacement_already_exists then
+				table.remove(target_technology.unit.ingredients, index)
+			else
+				if current_ingredient.name then
+					current_ingredient.name = replacement_name
+				else
+					current_ingredient[1] = replacement_name
+				end
+				replacement_already_exists = true
+			end
+		end
+	end
+end
+
 local function strip_non_tool_technology_ingredients(technology_name)
 	local target_technology = technology(technology_name)
 	if not target_technology or not target_technology.unit or not target_technology.unit.ingredients then
@@ -269,6 +309,67 @@ local function harden_kr_sand_recipe()
 	end
 end
 
+local function enforce_crucible_science_prerequisite()
+	local pressure_science_aliases = {
+		"planet-crucible-science-pack",
+		"high-pressure-pack",
+		"high-pressure-science-pack"
+	}
+
+	for technology_name, target_technology in pairs(data.raw.technology or {}) do
+		if technology_name ~= "planet-crucible-science-pack"
+			and target_technology.unit
+			and target_technology.unit.ingredients
+			and technology_exists("planet-crucible-science-pack") then
+			for _, pressure_science in ipairs(pressure_science_aliases) do
+				if technology_has_ingredient(technology_name, pressure_science) then
+					add_technology_prerequisite_if_present(technology_name, "planet-crucible-science-pack")
+					break
+				end
+			end
+		end
+	end
+end
+
+local function break_antimatter_deep_space_loop()
+	-- Deep Space Tech Card is the post-promethium bridge. If another compat pass
+	-- swaps it into the antimatter K2 chain, the card's own unlock route circles
+	-- back through antimatter progression. Keep those K2 late techs on
+	-- `promethium-science-pack` instead.
+	for _, technology_name in ipairs({
+		"kr-antimatter-reactor",
+		"kr-antimatter-ammo",
+		"kr-antimatter-reactor-equipment",
+		"kr-intergalactic-transceiver"
+	}) do
+		replace_technology_ingredient_if_present(technology_name, "deep-space-tech-card", "promethium-science-pack")
+	end
+end
+
+local function gate_reported_late_technologies_behind_crucible()
+	if not technology_exists("planet-crucible-science-pack") then
+		return
+	end
+
+	-- These branches still appear early in the tech tree because their science
+	-- ingredients were compressed or inherited without also pulling in the
+	-- explicit late-planet prerequisite that players read from the tree.
+	for _, technology_name in ipairs({
+		"kr-matter-processing",
+		"slp-dyson-sphere",
+		"slp-dyson-sphere-grounded",
+		"ds-energy-loader-mk2",
+		"ds-energy-loader-mk3",
+		"muluna-fertilized-greenhouses-vulcanus",
+		"foundation",
+		"captive-biter-spawner",
+		"planet-crucible-lithium-hydride",
+		"maraxsis-nuclear-submarine"
+	}) do
+		add_technology_prerequisite_if_present(technology_name, "planet-crucible-science-pack")
+	end
+end
+
 function prototype_sanity.data_final_fixes()
 	harden_kr_sand_recipe()
 	-- K2's advanced assembler recipe consumes AI cores, but the unlock tech does
@@ -316,6 +417,9 @@ function prototype_sanity.data_final_fixes()
 	-- its own final-fixes pass. In larger mod stacks that can include non-tool
 	-- placeholder items, which Factorio rejects for research units.
 	strip_non_tool_technology_ingredients("muluna-space-telescope")
+	break_antimatter_deep_space_loop()
+	enforce_crucible_science_prerequisite()
+	gate_reported_late_technologies_behind_crucible()
 end
 
 return prototype_sanity
