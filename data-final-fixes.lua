@@ -20,3 +20,26 @@ deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
 deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
 deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4
+deleteRoute("sye-vibrant-muria")
+deleteRoutesBetween("sye-vibrant", "muria")
+deleteRoutesBetween("linox-planet_linox", "ribbonia")
+deleteRoutesBetween("linox-planet_linox", "rubia")
+deleteRoute("sye-vibrant-shchierbin")
+deleteRoutesBetween("sye-vibrant", "shchierbin")
+
+local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
+if ribbonia then
+	ribbonia.starmap_icon = "__ribbonia__/graphics/starmap/ribbonia2048.png"
+	ribbonia.starmap_icon_size = 2048
+end
+
+local default_sprites = data.raw["utility-sprites"] and data.raw["utility-sprites"]["default"]
+local starmap_star = default_sprites and default_sprites["starmap_star"]
+if starmap_star and starmap_star.layers then
+	for index = #starmap_star.layers, 1, -1 do
+		local layer = starmap_star.layers[index]
+		if layer and layer.filename == "__ribbonia__/graphics/starmap/ribbonia2048.png" then
+			table.remove(starmap_star.layers, index)
+		end
+	end
+end

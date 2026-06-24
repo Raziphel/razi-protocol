@@ -30,9 +30,18 @@ end
 function vibrant_discovery_guard.data_final_fixes()
 	local vibrant_planet_ingredients = build_card_discovery_ingredients()
 
+	if technology_exists("planet-discovery-muria") then
+		set_prerequisites_if_exists("planet-discovery-muria", {"vibrant-discovery"})
+	end
+
+	set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
+
+	if technology_exists("planet-discovery-shchierbin") then
+		set_prerequisites_if_exists("planet-discovery-shchierbin", {"planet-discovery-paracelsin"})
+	end
+
 	set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 	set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
-	set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
 	set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
 	set_first_existing_prerequisite("planet-discovery-maraxsis", {
 		"planet-discovery-rubia",
@@ -41,6 +50,8 @@ function vibrant_discovery_guard.data_final_fixes()
 	})
 
 	for _, technology_name in ipairs({
+		"planet-discovery-muria",
+		"planet-discovery-shchierbin",
 		"planet-discovery-ribbonia",
 		"planet-discovery-paracelsin",
 		"planet-discovery-aquilo",

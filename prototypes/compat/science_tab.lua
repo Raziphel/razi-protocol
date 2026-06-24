@@ -66,10 +66,13 @@ function science_tab.data_final_fixes()
 	}
 
 	local planet_science_packs = {
+		"ambition-science-pack",
 		"bioluminescent-science-pack",
 		"hydraulic-science-pack",
 		"biorecycling-science-pack",
+		"muriatic-science-pack",
 		"rubia-biofusion-science-pack",
+		"vanadium-science-pack",
 		"planet-crucible-science-pack",
 		"battlefield-science-pack",
 		"cryogenic-science-pack",
@@ -105,7 +108,13 @@ function science_tab.data_final_fixes()
 		"datacell-equation",
 		"datacell-solved-equation",
 		"datacell-dna-raw",
-		"datacell-dna-sequenced"
+		"datacell-dna-sequenced",
+		"linox-item_lava-data-card",
+		"linox-item_rare-earth-data-card",
+		"linox-item_samarium-data-card",
+		"linox-item_dysprosium-data-card",
+		"linox-item_neodymium-data-card",
+		"linox-item_erbium-data-card"
 	}) do
 		set_subgroup("tool", name, "research-data")
 		set_subgroup("item", name, "research-data")

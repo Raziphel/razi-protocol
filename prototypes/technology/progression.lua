@@ -211,9 +211,26 @@ set_science_after("beetlejuice-discovery", "vibrant")
 -- Base/inner-system planet discoveries.
 set_science_through("planet-discovery-muluna", "base")
 set_science_through("moon-discovery-cerys", "base")
+set_many_science_through({
+	"moon-discovery-eneas",
+	"planet-discovery-eneas"
+}, "base")
+add_first_existing_prerequisite("moon-discovery-eneas", {
+	"planet-discovery-muluna",
+	"moon-discovery-cerys"
+})
+add_first_existing_prerequisite("planet-discovery-eneas", {
+	"planet-discovery-muluna",
+	"moon-discovery-cerys"
+})
 add_existing_prerequisites("solaris-discovery", {
 	"planet-discovery-muluna"
 })
+add_existing_prerequisites("linox-technology_planet-discovery-linox", {"planet-discovery-cubium"})
+set_many_science_after({
+	"linox-technology_planet-discovery-linox",
+	"linox-technology_exploring-linox-landing-site"
+}, "vibrant")
 
 -- Solaris branch.
 set_prerequisites_if_exists("planet-discovery-castra", {"solaris-discovery"})
@@ -269,9 +286,23 @@ add_existing_prerequisites("vibrant-discovery", {
 })
 
 -- Vibrant branch.
+if technology_exists("planet-discovery-muria") then
+	set_prerequisites_if_exists("planet-discovery-muria", {"vibrant-discovery"})
+end
+
+if technology_exists("planet-discovery-shchierbin") then
+	set_prerequisites_if_exists("planet-discovery-shchierbin", {"planet-discovery-paracelsin"})
+end
+
 set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
 set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
+set_prerequisites_if_exists("muriatic-science-pack", {"planet-discovery-muria"})
+set_prerequisites_if_exists("vanadium-science-pack", {"planet-discovery-shchierbin"})
+set_many_science_after({
+	"muriatic-science-pack",
+	"vanadium-science-pack"
+}, "vibrant")
 set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
 set_first_existing_prerequisite("planet-discovery-maraxsis", {
 	"planet-discovery-rubia",

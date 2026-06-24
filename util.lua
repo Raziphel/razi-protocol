@@ -92,10 +92,17 @@ function add_first_existing_prerequisite(technology_name, candidate_prerequisite
 		return
 	end
 
+	technology.prerequisites = technology.prerequisites or {}
+	local existing_prerequisites = {}
+	for _, prerequisite in ipairs(technology.prerequisites) do
+		existing_prerequisites[prerequisite] = true
+	end
+
 	for _, prerequisite in ipairs(candidate_prerequisites) do
 		if technology_exists(prerequisite) then
-			technology.prerequisites = technology.prerequisites or {}
-			table.insert(technology.prerequisites, prerequisite)
+			if not existing_prerequisites[prerequisite] then
+				table.insert(technology.prerequisites, prerequisite)
+			end
 			return
 		end
 	end

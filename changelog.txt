@@ -1,4 +1,40 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.0
+Date: 24. 06. 2026
+  Changes:
+    - Made Eneas, Linox, Shchierbin, and Muria required content mods in `info.json` instead of leaving them marked optional after their route and progression integration landed.
+    - Updated the pack overview copy so Calidus, Solaris, and Vibrant now describe those planets as real parts of the intended route rather than optional side support.
+    - Moved Linox off the Solaris slipstream and into the later Solaris branch through Hyarion, while restoring Aquilo as the direct Vibrant slipstream destination and leaving Muria as an Aquilo side planet instead of a slipstream replacement.
+    - Integrated the new planet entry techs more cleanly by pushing Linox discovery onto the later Solaris card tier and aligning Muria/Shchierbin science-pack unlocks with the Vibrant chapter gate.
+    - Moved Linox fully out of Solaris and into the Beetlejuice chapter as a Cubium-side branch, so its map placement and discovery gate now reflect a later-system role.
+    - Rebranched Shchierbin from Paracelsin instead of the Vibrant slipstream, and moved its discovery prerequisite to the Paracelsin branch so the map route and tech tree match.
+    - Nudged Linox farther north in the Beetlejuice system so its orbit placement reads more cleanly on the starmap after the system move.
+    - Returned `VoidProcessing` to an optional dependency in `info.json` instead of forcing it as a required content mod for the main pack.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.5.4
+Date: 23. 06. 2026
+  Changes:
+    - Added optional support for Linox, Shchierbin, and Muria, and listed those planets in the pack metadata and overview docs.
+    - Slotted Linox into the Solaris chapter as an optional side branch while routing Muria and Shchierbin into the Vibrant chapter instead of leaving them on disconnected vanilla-style routes.
+
+  Bugfixes:
+    - Added guarded route rewrites for `linox-planet_linox`, `muria`, and `shchierbin`, so their starmap positions and travel links now fit the Razi Protocol layout when those mods are present.
+    - Added Science Tab grouping for `muriatic-science-pack`, `vanadium-science-pack`, and Linox's data cards, so those planets no longer leave their science surfaces scattered across default subgroups.
+    - Made Muria optionally gate Aquilo when installed and forced Muria/Shchierbin discovery technologies onto the same Vibrant chapter card pattern as the rest of that branch.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.5.3
+Date: 23. 06. 2026
+  Changes:
+    - Added optional Eneas modpack support, including recommended companion dependencies for `moon-eneas` and its required support mods.
+    - Slotted Eneas into the Calidus chapter as an optional side moon instead of turning Solaris or later system progression into an Eneas gate.
+
+  Bugfixes:
+    - Added a guarded Eneas starmap normalization pass that re-anchors the `eneas` moon onto Nauvis when the planet exists, so it fits the Calidus layout more cleanly.
+    - Added Science Tab subgroup handling for `ambition-science-pack`, so Eneas science stays grouped with the other planet packs when both mods are loaded.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.5.2
 Date: 22. 06. 2026
   Bugfixes:
