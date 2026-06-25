@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.1
+Date: 26. 06. 2026
+  Bugfixes:
+    - Guarded the deep-space orbit and route rewrites so Razi Protocol only updates `black-hole-approach`, `black-hole`, `oort-cloud`, `sol`, and their connections when those space-location prototypes actually exist, preventing startup crashes from `PlanetsLib:update() - space-location not found: black-hole-approach` in current public modpack builds.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.0
 Date: 24. 06. 2026
   Changes:
