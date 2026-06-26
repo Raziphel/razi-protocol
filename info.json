@@ -1,6 +1,6 @@
 {
 	"name": "razi-protocol",
-	"version": "1.6.1",
+	"version": "1.6.2",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
 	"homepage": "https://github.com/Raziphel/razi-protocol",
@@ -9,6 +9,7 @@
 	"dependencies": [
 		"base",
 		"space-age",
+        "Krastorio2",
 		"PlanetsLib",
 		"Krastorio2-spaced-out",
 		"planet-muluna",
@@ -119,7 +120,6 @@
         "! external-rocket-parts",
         "! Wood_Gasification_updated",
         "! quality-rocket-parts",
-        "! Krastorio2",
         "! factorioplus"
 	],
 	"quality_required": true,
