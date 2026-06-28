@@ -1,8 +1,15 @@
 ---------------------------------------------------------------------------------------------------
-Version: 1.6.2
+Version: 1.6.4
+Date: 29. 06. 2026
+  Changes:
+    - Returned `moon-eneas` to an optional dependency in `info.json` so Eneas stays a supported Calidus side branch instead of a mandatory content gate for the whole pack.
+    - Updated the pack overview copy to describe Eneas as optional support again, keeping the README and mod description aligned with the actual guarded route/progression integration.
+
+---------------------------------------------------------------------------------------------------
+Version: 1.6.3
 Date: 26. 06. 2026
   Bugfixes:
-    - Fixed the Krastorio 2 Dependency that just changed!
+    - Rolled back K2SO dependency!  Now requires older version.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.1

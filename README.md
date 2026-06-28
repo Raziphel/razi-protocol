@@ -22,7 +22,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
-- Integrates Eneas, Linox, Muria, and Shchierbin directly into the intended campaign flow.
+- Integrates optional Eneas support plus Linox, Muria, and Shchierbin directly into the intended campaign flow.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
 - Reworks endgame flow around Nexus, the solar-system edge, the black-hole chain, and the intergalactic transceiver.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame.
@@ -37,7 +37,7 @@ Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bu
 
 ### Calidus
 
-Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and Eneas. This is where the pack establishes the first milestone card: Calidus Tech Card.
+Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and optional Eneas support. This is where the pack establishes the first milestone card: Calidus Tech Card.
 
 ### Solaris
 
@@ -78,7 +78,7 @@ That keeps the tree readable while still preserving the feeling that every chapt
 
 Several planets are not just "supported"; they are deliberately placed into the campaign.
 
-- Eneas is kept in the Calidus phase as an early moon branch.
+- Eneas stays an optional early Calidus moon branch when installed.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
 - Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
 - Linox is moved into Beetlejuice as a later Cubium-side branch.
@@ -156,7 +156,6 @@ Core content in the intended experience includes:
 - Krastorio2 Spaced Out
 - PlanetsLib
 - Muluna
-- Eneas
 - Linox
 - Shchierbin
 - Muria
@@ -178,7 +177,7 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include things like Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include things like Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
 ## Modpack Guidance
 

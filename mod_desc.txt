@@ -7,7 +7,7 @@ Instead of leaving every mod on its own disconnected branch, Razi Protocol:
 - Rebuilds the galaxy into progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space.
 - Adds system discovery technologies and system milestone cards.
 - Rehomes many planets so the starmap and tech tree follow one readable route.
-- Integrates Eneas, Linox, Muria, and Shchierbin into that route instead of leaving them as awkward side content.
+- Integrates optional Eneas support plus Linox, Muria, and Shchierbin into that route instead of leaving them as awkward side content.
 - Replaces Nexus omega-science clutter with a cleaner Deep Space card-driven endgame.
 - Pushes the Krastorio intergalactic transceiver into a longer singularity-based finale.
 - Routes optional custom enemy factions onto planets that actually fit their theme.
@@ -17,7 +17,7 @@ Instead of leaving every mod on its own disconnected branch, Razi Protocol:
 
 ### Calidus
 
-The early inner-system foundation. This is where Muluna, optional Cerys, and Eneas sit, and where the campaign starts building toward Calidus Tech Card.
+The early inner-system foundation. This is where Muluna, optional Cerys, and optional Eneas support sit, and where the campaign starts building toward Calidus Tech Card.
 
 ### Solaris
 
@@ -58,7 +58,7 @@ That preserves the scale of the pack without turning the technology screen into 
 
 Several supported planets are deliberately placed inside the campaign structure:
 
-- Eneas stays in the early Calidus phase.
+- Eneas stays an optional early Calidus branch when installed.
 - Muria becomes part of the Vibrant route ahead of Aquilo.
 - Shchierbin now branches from Paracelsin.
 - Linox is moved into Beetlejuice instead of hanging off Vulcanus or Solaris.
