@@ -10,8 +10,8 @@ local system_card_definitions = {
 		tint = {r = 1.0, g = 0.86, b = 0.08},
 		order = "s[system]-a[calidus]",
 		unlock_technology_candidates = {
-			"moon-discovery-cerys",
 			"planet-discovery-muluna",
+			"moon-discovery-cerys",
 			"space-science-pack"
 		},
 		ingredients = {
@@ -29,8 +29,7 @@ local system_card_definitions = {
 			"tungsten-science-pack",
 			"lunar-science-pack",
 			"interstellar-science-pack",
-			"advanced-space-science-pack",
-			"cerysian-science-pack"
+			"advanced-space-science-pack"
 		},
 		fallback_ingredients = {
 			"automation-science-pack"

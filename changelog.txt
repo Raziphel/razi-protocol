@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.5
+Date: 30. 06. 2026
+  Bugfixes:
+    - Kept Cerys support wired into the Calidus chapter without letting it become the preferred unlock gate for `calidus-tech-card`, so Muluna remains the main progression entry and Cerys can stay a temporary optional side path.
+    - Removed `cerysian-science-pack` from the Calidus tech-card recipe compression, so enabling Cerys no longer turns that optional branch into a mandatory craft cost for the rest of the chapter.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.4
 Date: 29. 06. 2026
   Changes:

@@ -21,5 +21,10 @@
 	"Lua.format.enable": true,
 
 	"editor.insertSpaces": false,
-	"editor.tabSize": 4
+	"editor.tabSize": 4,
+	"files.exclude": {
+		".agents": true,
+		".vscode": true,
+		".codex": true
+	}
 }
