@@ -1,6 +1,6 @@
 {
 	"name": "razi-protocol",
-	"version": "1.6.5",
+	"version": "1.6.6",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
 	"homepage": "https://github.com/Raziphel/razi-protocol",
@@ -11,7 +11,7 @@
 		"space-age",
         "! Krastorio2",
 		"PlanetsLib",
-		"Krastorio2-spaced-out <= 1.6.20",
+		"Krastorio2-spaced-out <= 1.6.21",
 		"Krastorio2Assets <= 2.0.3",
 		"planet-muluna",
 		"planetaris-unbounded",
