@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.7
+Date: 09. 07. 2026
+  Changes:
+    - Re-gated the early sand route so the surviving `kr-sand` / `sand` recipe no longer starts exposed before the crusher-side unlock.
+    - Restored the older AAI/K2SO-style sand branch cleanup by forcing `sand-processing` behind the crusher path again, stripping stale direct sand unlocks from that tech, and hiding the dead node entirely if the active stack leaves it with no remaining purpose.
+    - Forced `glass-processing` to sit after `sand-processing` when that legacy branch exists, so the old AAI industry path stops presenting glass before the sand/crusher ladder settles.
+    - Re-gated reported open-chest recycling recipes behind `recycler` / `fluid-recycler` when those recipe IDs are present in the active stack.
+    - Re-gated `sand-compaction` behind the pneumatic-press/fluid-recycler step instead of leaving it available from the start when present.
+    - Re-gated `void-data-disk` and `black-hole-void-data-disk` behind `black-hole-discovery` when Void Processing is installed.
+    - Re-gated the Nexus atmospheric stabilization recipe behind the Nexus chapter progression instead of leaving it start-visible when that recipe prototype exists.
+    - Re-gated the K2SO rare-metals melt/cast chain behind `kr-fluids-chemistry` / `fluid-chemistry` so the chlorine-backed rare-metals path does not appear before its real chemistry gate.
+    - Added `steel-processing` as an explicit prerequisite for `military` when `slowdown-capsule` still uses steel in the merged recipe set.
+    - Moved the K2SO `kr-coke-carbon` unlock off `steel-processing` and onto `carbonic-asteroid-crushing`.
+    - Added `electricity` as an explicit prerequisite for `radar`.
+    - Reversed the reported K2 fuel/power ordering by removing the `kr-fuel` dependency from `electricity` and making `kr-fuel` depend on `electricity` instead.
+    - Added `electricity` as an explicit prerequisite for `electronics`, moved `inserter`, `long-handed-inserter`, and `kr-loader` onto the electronics unlock, and removed the stray early loader/long-inserter unlocks from the wrong techs.
+    - Added `gun-turret` as an explicit prerequisite for K2SO captivity tech so the Copper Spitter captivity branch no longer floats ahead of turret progression.
+    - Added `fast-inserter` as an explicit prerequisite for `cube-jelly`.
+    - Added `metallurgic-science-pack`, `electromagnetic-science-pack`, and `agricultural-science-pack` as explicit prerequisites for `solaris-discovery` so it no longer appears far earlier than its real science cost suggests.
+    - Added a guarded `metallurgic-science-pack` prerequisite for `access-to-suns-orbit` / `access-to-sun-orbit` if that technology ID is present.
+    - Added a guarded `electromagnetic-science-pack` prerequisite for `aircraft-energy-shields` / `lex-aircraft-energy-shields` if that technology ID is present.
+    - Reordered the most confusing reported research band so crusher/sand/glass, electricity/electronics/logistics/fast inserters, the Nexus reveal chain, Cubium jelly progression, and black-hole discovery now sort more closely to the intended route in the technology menu.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.5
 Date: 30. 06. 2026
   Bugfixes:
