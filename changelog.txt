@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.8
+Date: 02. 09. 2026
+  Bugfixes:
+    - Made the Atomizer, Atomic Separator, and Photon Enrichment Chamber recipes portable so players can build and ship the Nexus bootstrap machines before travelling there, while keeping later Nexus material processing planet-bound.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.7
 Date: 09. 07. 2026
   Changes:
