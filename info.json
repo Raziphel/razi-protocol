@@ -10,7 +10,7 @@
 		"base",
 		"space-age",
     	"PlanetsLib",
-    	"rastorio2-spaced-out = 1.6.21",
+    	"Krastorio2-spaced-out = 1.6.21",
     	"Krastorio2Assets >= 2.0.5",
 		"planet-muluna",
 		"planetaris-unbounded",
