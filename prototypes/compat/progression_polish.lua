@@ -274,6 +274,28 @@ local function loosen_matter_research_data_surface()
 	matter_data.surface_conditions = nil
 end
 
+local function make_nexus_bootstrap_machines_portable()
+	if not mods["Nexus"] then
+		return
+	end
+
+	-- These are the machines unlocked by Nexus' first production technology.
+	-- Their recipes only consume materials from earlier planets, so forcing the
+	-- machines themselves to be assembled on Nexus creates an avoidable landing
+	-- bootstrap: players cannot prepare the production line before travelling.
+	-- Keep every recipe that actually processes Nexus materials planet-bound.
+	for _, recipe_name in ipairs({
+		"atomacer",
+		"atomar-separator",
+		"photon-enrichment-chamber"
+	}) do
+		local bootstrap_recipe = recipe(recipe_name)
+		if bootstrap_recipe then
+			bootstrap_recipe.surface_conditions = nil
+		end
+	end
+end
+
 local function spawn_definition_key(definition)
 	return (definition.type or "asteroid") .. ":" .. tostring(definition.asteroid)
 end
@@ -506,6 +528,7 @@ function progression_polish.data_final_fixes()
 	clarify_long_stack_inserters()
 	move_singularity_card_out_of_early_deep_space()
 	loosen_matter_research_data_surface()
+	make_nexus_bootstrap_machines_portable()
 	add_imersite_to_far_space()
 	clean_up_sand_progression()
 	polish_reported_technology_order()
