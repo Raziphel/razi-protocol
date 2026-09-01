@@ -9,9 +9,9 @@
 	"dependencies": [
 		"base",
 		"space-age",
-    "PlanetsLib",
-    "Krastorio2-spaced-out >= 2.0.16",
-    "Krastorio2Assets >= 2.1.0",
+    	"PlanetsLib",
+    	"rastorio2-spaced-out = 1.6.21",
+    	"Krastorio2Assets >= 2.0.5",
 		"planet-muluna",
 		"planetaris-unbounded",
 		"planetaris-tellus",
