@@ -380,9 +380,9 @@ function prototype_sanity.data_final_fixes()
 	-- read like "glass panel" steps even though the crafts themselves produce the
 	-- generic `glass` item. Trigger on the crafted item result directly so the
 	-- Arig chain advances no matter which source recipe provided the glass.
-	set_craft_trigger("planetaris-compression", "glass", 50)
+	set_craft_trigger("planetaris-compression", "kr-glass", 50)
 	set_craft_trigger("planetaris-raw-diamond-production", "kr-quartz", 50)
-	set_craft_trigger("condensing-agricultural-tower", "glass", 25)
+	set_craft_trigger("condensing-agricultural-tower", "kr-glass", 25)
 	remove_result_if_missing("planetaris-cactus-mash", "planetaris-cactus-seeds")
 	-- Hyarion's K2SO refraction chain is a Solaris-tier step. Crucible's
 	-- broad data-updates sweep adds its science to any technology with the
