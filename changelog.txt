@@ -1,3 +1,8 @@
+Version: 1.6.10
+Date: 06. 09. 2026
+  Bugfixes:
+    - Restore every Nexus 1.3.4 technology node that may remain disabled after an upgrade. Existing research is preserved and prerequisites still gate each node; this only lets the normal Nexus research tree become visible and researchable again.
+
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.9
 Date: 06. 09. 2026
