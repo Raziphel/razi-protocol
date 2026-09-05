@@ -1,5 +1,10 @@
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
+local nexus_visibility_technologies = {
+	"rare-metal-refining",
+	"nexus-sand-processing",
+	"promethium-882-research"
+}
 
 local function unlock_transceiver_gate(force)
 	if not (force and force.valid) then
@@ -36,6 +41,21 @@ local function check_existing_transceivers()
 	end
 end
 
+local function repair_nexus_technology_visibility()
+	if not (game and game.active_mods["Nexus"]) then
+		return
+	end
+
+	for _, force in pairs(game.forces) do
+		for _, technology_name in ipairs(nexus_visibility_technologies) do
+			local technology = force.technologies[technology_name]
+			if technology and not technology.researched and not technology.enabled then
+				technology.enabled = true
+			end
+		end
+	end
+end
+
 local function on_entity_built(event)
 	check_entity(event.entity or event.destination or event.created_entity)
 end
@@ -43,7 +63,10 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The slow scan covers old saves and any weird script ordering.
 script.on_init(check_existing_transceivers)
-script.on_configuration_changed(check_existing_transceivers)
+script.on_configuration_changed(function()
+	check_existing_transceivers()
+	repair_nexus_technology_visibility()
+end)
 script.on_nth_tick(600, check_existing_transceivers)
 script.on_event({
 	defines.events.on_built_entity,

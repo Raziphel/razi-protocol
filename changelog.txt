@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.6.9
+Date: 06. 09. 2026
+  Bugfixes:
+    - Restore the disabled `rare-metal-refining`, `nexus-sand-processing`, and `promethium-882-research` technologies when upgrading with Nexus installed, so existing saves show their normal unresearched technology nodes again without unlocking research early.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.8
 Date: 02. 09. 2026
   Bugfixes:
