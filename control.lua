@@ -95,7 +95,7 @@ local function check_existing_transceivers()
 end
 
 local function repair_nexus_technology_visibility()
-	if not (game and game.active_mods["Nexus"]) then
+	if not script.active_mods["Nexus"] then
 		return
 	end
 

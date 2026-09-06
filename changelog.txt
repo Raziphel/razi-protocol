@@ -1,3 +1,9 @@
+Version: 1.6.12
+Date: 06. 09. 2026
+  Bugfixes:
+    - Fixed the Nexus technology visibility upgrade repair crashing on Factorio 2.0 saves. The repair now reads Factorio's active-mod table from the runtime script interface.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.11
 Date: 06. 09. 2026
   Bugfixes:
