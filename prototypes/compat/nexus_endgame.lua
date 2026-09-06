@@ -146,34 +146,18 @@ local function add_input_to_lab(lab, science_pack)
 	table.insert(lab.inputs, science_pack)
 end
 
-local function collect_technology_science_packs()
-	local science_packs = {}
-	local added = {}
-
-	for _, technology in pairs(data.raw.technology or {}) do
-		local ingredients = technology.unit and technology.unit.ingredients
-		if ingredients then
-			for _, ingredient in ipairs(ingredients) do
-				local name = ingredient_name(ingredient)
-				if science_pack_exists(name) and not added[name] then
-					added[name] = true
-					table.insert(science_packs, name)
-				end
-			end
-		end
-	end
-
-	return science_packs
-end
-
-local function add_all_science_to_omega_lab()
-	local omega_lab = data.raw.lab and data.raw.lab["omega-lab"]
-	if not (omega_lab and omega_lab.inputs) then
+local function add_endgame_science_to_singularity_lab()
+	local singularity_lab = data.raw.lab and data.raw.lab["kr-singularity-lab"]
+	if not (singularity_lab and singularity_lab.inputs) then
 		return
 	end
 
-	for _, science_pack in ipairs(collect_technology_science_packs()) do
-		add_input_to_lab(omega_lab, science_pack)
+	for _, science_pack in ipairs({
+		"promethium-882-science-pack",
+		"antimatter-science-pack",
+		deep_space_card
+	}) do
+		add_input_to_lab(singularity_lab, science_pack)
 	end
 end
 
@@ -192,7 +176,7 @@ function nexus_endgame.data_final_fixes()
 	end
 
 	prune_omega_recipe_unlocks(data.raw.technology and data.raw.technology["promethium-882-research"])
-	add_all_science_to_omega_lab()
+	add_endgame_science_to_singularity_lab()
 end
 
 return nexus_endgame

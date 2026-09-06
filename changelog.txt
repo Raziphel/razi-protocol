@@ -1,3 +1,9 @@
+Version: 1.6.11
+Date: 06. 09. 2026
+  Bugfixes:
+    - Stopped adding every science pack to Nexus's Omega Lab. The K2 Singularity Lab now accepts only the Promethium-882, Antimatter, and Deep Space science packs needed for the late-game route.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.10
 Date: 06. 09. 2026
   Bugfixes:
