@@ -1,3 +1,9 @@
+Version: 1.6.13
+Date: 07. 09. 2026
+  Bugfixes:
+    - Removed Cerys from Cold Biters' enemy routing and tile restrictions, so its compact moon surface no longer receives frost-biter generation or the related pollution mechanics.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.6.12
 Date: 06. 09. 2026
   Bugfixes:

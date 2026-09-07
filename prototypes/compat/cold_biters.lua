@@ -30,7 +30,6 @@ local cold_planets = {
 	"aquilo",
 	"paracelsin",
 	"frozeta",
-	"cerys",
 	"nexus"
 }
 
@@ -48,12 +47,6 @@ local cold_planet_tiles = {
 	"ammoniacal-ocean",
 	"ammoniacal-ocean-2",
 	"brash-ice",
-	"cerys-empty-space-2",
-	"cerys-ice-on-water",
-	"cerys-water-puddles",
-	"cerys-ash-cracks-frozen",
-	"cerys-ash-dark-frozen",
-	"cerys-pumice-stones-frozen",
 	"volcanic-soil-dark",
 	"volcanic-soil-light",
 	"volcanic-ash-soil",
