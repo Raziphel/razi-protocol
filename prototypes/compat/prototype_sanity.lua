@@ -285,7 +285,7 @@ local function harden_kr_sand_recipe()
 	-- recipe, `kr-sand` should end up as a direct crusher recipe instead of
 	-- leaving a hidden fluid variant behind on a difficulty-specific branch.
 	overwrite_recipe_variants(sand_recipe, {
-		category = "kr-crushing",
+		categories = {"kr-crushing"},
 		enabled = true,
 		hidden = false,
 		hidden_in_factoriopedia = false,
@@ -299,6 +299,16 @@ local function harden_kr_sand_recipe()
 		},
 		main_product = sand_item_name
 	})
+
+	-- Factorio 2.1 merges the old singular category and
+	-- additional_categories fields into categories. Clear both legacy fields in
+	-- case an upstream compatibility pass left them on any recipe variant.
+	for _, variant in ipairs({sand_recipe, sand_recipe.normal, sand_recipe.expensive}) do
+		if variant then
+			variant.category = nil
+			variant.additional_categories = nil
+		end
+	end
 
 	if sand_recipe_name == "sand" then
 		ensure_recipe_unlock_copy("kr-sand", "sand")

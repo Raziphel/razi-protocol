@@ -1,4 +1,5 @@
 require "prototypes.system.calidus"
+require("prototypes.system.bellicos").data()
 require "prototypes.system.eneas"
 require "prototypes.system.solaris"
 require "prototypes.system.nyxaris"

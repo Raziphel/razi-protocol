@@ -15,6 +15,7 @@ require("prototypes.compat.prototype_identity").data_final_fixes()
 require("prototypes.compat.prototype_sanity").data_final_fixes()
 require("prototypes.compat.redundant_progression").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
+require("prototypes.system.bellicos").data_final_fixes()
 
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
@@ -22,6 +23,22 @@ deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
 deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4
 deleteRoute("sye-vibrant-muria")
 deleteRoutesBetween("sye-vibrant", "muria")
+
+-- Muria has changed its stock connections across releases, and compatibility
+-- mods may add more during later data stages. Razi Protocol deliberately places
+-- Muria in the Vibrant system with Aquilo as its sole route.
+if mods["Muria"] then
+	local unwanted_muria_routes = {}
+	for name, connection in pairs(data.raw["space-connection"] or {}) do
+		if name ~= "muria-aquilo" and (connection.from == "muria" or connection.to == "muria") then
+			unwanted_muria_routes[#unwanted_muria_routes + 1] = name
+		end
+	end
+	for _, name in ipairs(unwanted_muria_routes) do
+		deleteRoute(name)
+	end
+end
+
 deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")
 deleteRoute("sye-vibrant-shchierbin")
@@ -41,5 +58,23 @@ if starmap_star and starmap_star.layers then
 		if layer and layer.filename == "__ribbonia__/graphics/starmap/ribbonia2048.png" then
 			table.remove(starmap_star.layers, index)
 		end
+	end
+end
+
+-- Planet packs frequently append their science inputs without checking whether
+-- another compatibility pass already added the same pack. Duplicate lab inputs
+-- are invalid in Factorio 2.1, so normalize them after every Razi compatibility
+-- module has finished.
+for _, lab in pairs(data.raw.lab or {}) do
+	if lab.inputs then
+		local unique_inputs = {}
+		local seen_inputs = {}
+		for _, input in ipairs(lab.inputs) do
+			if not seen_inputs[input] then
+				unique_inputs[#unique_inputs + 1] = input
+				seen_inputs[input] = true
+			end
+		end
+		lab.inputs = unique_inputs
 	end
 end

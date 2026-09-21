@@ -61,6 +61,8 @@ local science_tiers = {
 		"antimatter-science-pack"
 	},
 	deep_space = {
+		"space-logistic-science-pack",
+		"pulsar-science-pack",
 		"void-science-pack",
 		"voidp-void-science-pack"
 	}
@@ -169,18 +171,24 @@ local function add_science_to_labs(science_packs)
 	for _, lab_name in ipairs(regular_lab_names) do
 		local lab = data.raw.lab and data.raw.lab[lab_name]
 		if lab and lab.inputs then
+			-- Several planet compatibility layers append their packs independently.
+			-- Factorio rejects duplicate lab inputs, so keep the first occurrence
+			-- before adding Razi Protocol's cross-system packs.
+			local unique_inputs = {}
+			local seen_inputs = {}
+			for _, lab_input in ipairs(lab.inputs) do
+				if not seen_inputs[lab_input] then
+					unique_inputs[#unique_inputs + 1] = lab_input
+					seen_inputs[lab_input] = true
+				end
+			end
+			lab.inputs = unique_inputs
+
 			for _, science_pack in ipairs(science_packs) do
 				if science_pack_exists(science_pack) and not science_pack_is_lab_protected(science_pack) then
-					local already_exists = false
-					for _, lab_input in ipairs(lab.inputs) do
-						if lab_input == science_pack then
-							already_exists = true
-							break
-						end
-					end
-
-					if not already_exists then
+					if not seen_inputs[science_pack] then
 						table.insert(lab.inputs, science_pack)
+						seen_inputs[science_pack] = true
 					end
 				end
 			end
@@ -226,6 +234,14 @@ add_first_existing_prerequisite("planet-discovery-eneas", {
 add_existing_prerequisites("solaris-discovery", {
 	"planet-discovery-muluna"
 })
+
+-- Aegis and Bellicos form a self-contained expedition beyond the solar-system
+-- edge. Gate the entrance on reaching the edge, then retain the source mod's
+-- internal discovery chain and its requirement for Pulsar Science before
+-- Promethium research.
+set_prerequisites_if_exists("discovery-aegis-outer", {
+	"stellar-discovery-solar-system-edge"
+})
 add_existing_prerequisites("linox-technology_planet-discovery-linox", {"planet-discovery-cubium"})
 set_many_science_after({
 	"linox-technology_planet-discovery-linox",
@@ -269,9 +285,13 @@ add_existing_prerequisites("vibrant-discovery", {
 set_prerequisites_if_exists("planet-discovery-apia-carnova", {"nyxaris-discovery"})
 set_prerequisites_if_exists("planet-discovery-moshine", {"nyxaris-discovery"})
 set_prerequisites_if_exists("panglia_planet_discovery_panglia", {"nyxaris-discovery"})
--- Pelagos can feed Aquilo/lithium depending on its settings, so keep its
--- technology entrypoint on the Dea Dia branch while its route/orbit stays in Nyxaris.
-set_prerequisites_if_exists("planet-discovery-pelagos", {"system-discovery-dea-dia"})
+-- Prefer the Dea Dia branch when both optional integrations are installed,
+-- otherwise let standalone Pelagos enter through Panglia and Nyxaris.
+set_first_existing_prerequisite("planet-discovery-pelagos", {
+	"system-discovery-dea-dia",
+	"panglia_planet_discovery_panglia",
+	"nyxaris-discovery"
+})
 set_many_science_after({
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
@@ -385,3 +405,4 @@ set_science_through("black-hole-discovery", "nexus")
 -- Only the compressed system cards need to be added by this mod.
 -- Adding every science pack found in technologies makes all labs universal.
 add_science_to_labs(system_tech_cards)
+add_science_to_labs({"space-logistic-science-pack", "pulsar-science-pack"})

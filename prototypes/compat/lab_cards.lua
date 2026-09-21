@@ -2,12 +2,13 @@ local lab_cards = {}
 
 local system_card_subgroup = "system-tech-card"
 local vanilla_science_weight = 1000
+local system_card_icon_size = 256
 
 local system_card_definitions = {
 	{
 		name = "calidus-tech-card",
 		localised_name = "Calidus Tech Card",
-		tint = {r = 1.0, g = 0.86, b = 0.08},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
 		unlock_technology_candidates = {
 			"planet-discovery-muluna",
@@ -38,7 +39,7 @@ local system_card_definitions = {
 	{
 		name = "solaris-tech-card",
 		localised_name = "Solaris Tech Card",
-		tint = {r = 1.0, g = 0.52, b = 0.18},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/solaris-tech-card.png",
 		order = "s[system]-b[solaris]",
 		unlock_technology_candidates = {
 			"planet-discovery-castra"
@@ -60,7 +61,7 @@ local system_card_definitions = {
 	{
 		name = "nyxaris-tech-card",
 		localised_name = "Nyxaris Tech Card",
-		tint = {r = 0.36, g = 0.62, b = 1.0},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/nyxaris-tech-card.png",
 		order = "s[system]-c[nyxaris]",
 		unlock_technology_candidates = {
 			"system-discovery-dea-dia",
@@ -84,7 +85,7 @@ local system_card_definitions = {
 	{
 		name = "vibrant-tech-card",
 		localised_name = "Vibrant Tech Card",
-		tint = {r = 0.82, g = 0.28, b = 1.0},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
 		order = "s[system]-d[vibrant]",
 		unlock_technology_candidates = {
 			"planet-discovery-ribbonia",
@@ -107,7 +108,7 @@ local system_card_definitions = {
 	{
 		name = "beetlejuice-tech-card",
 		localised_name = "Beetlejuice Tech Card",
-		tint = {r = 0.22, g = 1.0, b = 0.42},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
 		order = "s[system]-e[beetlejuice]",
 		unlock_technology_candidates = {
 			"planet-discovery-cubium",
@@ -128,15 +129,18 @@ local system_card_definitions = {
 	{
 		name = "deep-space-tech-card",
 		localised_name = "Deep Space Tech Card",
-		tint = {r = 0.18, g = 0.18, b = 0.22},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
 		order = "s[system]-f[deep-space]",
 		unlock_technology_candidates = {
-			"promethium-882-research"
+			"promethium-882-research",
+			"razi-singularity-theory"
 		},
 		ingredients = {
 			"beetlejuice-tech-card",
 			"promethium-science-pack",
-			"promethium-882-science-pack"
+			"promethium-882-science-pack",
+			"space-logistic-science-pack",
+			"pulsar-science-pack"
 		},
 		fallback_ingredients = {
 			"beetlejuice-tech-card",
@@ -146,6 +150,8 @@ local system_card_definitions = {
 }
 
 local modded_science_ids = {
+	"space-logistic-science-pack",
+	"pulsar-science-pack",
 	"lunar-science-pack",
 	"interstellar-science-pack",
 	"advanced-space-science-pack",
@@ -271,13 +277,8 @@ local function upsert_system_card(card)
 				name = card.name,
 				localised_name = {"", card.localised_name},
 				localised_description = {"item-description.science-pack"},
-				icons = {
-					{
-						icon = "__base__/graphics/icons/space-science-pack.png",
-						icon_size = 64,
-						tint = card.tint
-					}
-				},
+				icon = card.icon,
+				icon_size = system_card_icon_size,
 				subgroup = system_card_subgroup,
 				order = card.order,
 				stack_size = 200,
@@ -294,13 +295,9 @@ local function upsert_system_card(card)
 	if tool then
 		tool.localised_name = {"", card.localised_name}
 		tool.localised_description = {"item-description.science-pack"}
-		tool.icons = {
-			{
-				icon = "__base__/graphics/icons/space-science-pack.png",
-				icon_size = 64,
-				tint = card.tint
-			}
-		}
+		tool.icon = card.icon
+		tool.icon_size = system_card_icon_size
+		tool.icons = nil
 		tool.subgroup = system_card_subgroup
 		tool.order = card.order
 		tool.stack_size = 200
@@ -319,7 +316,7 @@ local function upsert_system_card(card)
 				name = card.name,
 				localised_name = {"", card.localised_name},
 				enabled = false,
-				category = "crafting",
+				categories = {"crafting"},
 				energy_required = 10,
 				ingredients = ingredients,
 				results = {
@@ -335,7 +332,9 @@ local function upsert_system_card(card)
 	if recipe then
 		recipe.localised_name = {"", card.localised_name}
 		recipe.enabled = false
-		recipe.category = "crafting"
+		recipe.categories = {"crafting"}
+		recipe.category = nil
+		recipe.additional_categories = nil
 		recipe.energy_required = 10
 		recipe.ingredients = ingredients
 		recipe.results = {
@@ -373,6 +372,31 @@ local function set_science_weight(name, weight)
 	end
 end
 
+local regular_lab_names = {
+	"lab",
+	"kr-advanced-lab",
+	"biolab",
+	"kr-singularity-lab",
+	"thermodynamics-lab",
+	"pressure-lab"
+}
+
+local function add_system_cards_to_regular_labs()
+	for _, lab_name in ipairs(regular_lab_names) do
+		local lab = data.raw.lab and data.raw.lab[lab_name]
+		if lab and lab.inputs then
+			for _, card in ipairs(system_card_definitions) do
+				-- Deep Space remains an endgame-only input. Nexus adds it to the
+				-- singularity lab through nexus_endgame.lua when that integration is
+				-- installed.
+				if card.name ~= "deep-space-tech-card" and science_pack_exists(card.name) then
+					add_unique_input(lab, card.name)
+				end
+			end
+		end
+	end
+end
+
 function lab_cards.data_final_fixes()
 	ensure_item_subgroup(system_card_subgroup, "science", "0[system-tech-card]")
 
@@ -384,9 +408,11 @@ function lab_cards.data_final_fixes()
 		set_science_weight(science_name, vanilla_science_weight)
 	end
 
+	add_system_cards_to_regular_labs()
+
 	-- Do not add every modded science pack to every lab.
 	-- Planet and mod-specific science packs must stay on the labs that own them.
-	-- System tech cards are handled by progression.lua.
+	-- Only Razi Protocol's compressed system cards are shared by regular labs.
 end
 
 return lab_cards

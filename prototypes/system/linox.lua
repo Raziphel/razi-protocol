@@ -16,7 +16,7 @@ PlanetsLib:update({
 				name = "beetlejuice",
 			},
 			distance = 19,
-				orientation = 0.78,
+			orientation = 0.1,
 			sprite = {
 				type = "sprite",
 				filename = "__razi-protocol__/graphics/orbits/orbit_19.png",

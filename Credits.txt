@@ -1,5 +1,5 @@
 Razi Protocol Credits and Acknowledgements
-Razi Protocol is a compatibility, progression, and system-layout mod built around a large collection of Factorio 2.0 and Space Age mods. 
+Razi Protocol is a compatibility, progression, and system-layout mod built around a large collection of Factorio 2.1 and Space Age mods.
 Credit for the original planets, enemies, systems, mechanics, art, sounds, icons, and ideas belongs to the authors and contributors of those mods.
 This project exists because of the work of the Factorio modding community. 
 If you are the creator of a mod or asset referenced here and want credit adjusted, wording changed, or something removed, please contact me on Discord: Raziphel.
@@ -15,6 +15,8 @@ Core foundation
 Planet and system mods
 These mods provide many of the worlds, science packs, mechanics, and progression ideas that Razi Protocol integrates into one larger route:
 - planet-muluna
+- bellicos-and-aegis
+- bellicos-and-aegis-assets
 - planetaris-unbounded
 - planetaris-tellus
 - planetaris-hyarion

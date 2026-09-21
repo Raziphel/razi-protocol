@@ -4,11 +4,11 @@ Razi Protocol is a progression and starmap overhaul for giant *Factorio: Space A
 
 Instead of leaving every mod on its own disconnected branch, Razi Protocol:
 
-- Rebuilds the galaxy into progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space.
+- Rebuilds the galaxy into progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, plus the Aegis/Bellicos pulsar expedition.
 - Adds system discovery technologies and system milestone cards.
 - Rehomes many planets so the starmap and tech tree follow one readable route.
 - Integrates optional Eneas support plus Linox, Muria, and Shchierbin into that route instead of leaving them as awkward side content.
-- Replaces Nexus omega-science clutter with a cleaner Deep Space card-driven endgame.
+- Replaces Nexus omega-science clutter with a cleaner Deep Space card-driven endgame when optional Nexus is installed.
 - Pushes the Krastorio intergalactic transceiver into a longer singularity-based finale.
 - Routes optional custom enemy factions onto planets that actually fit their theme.
 - Cleans up Science Tab groupings, overloaded crafting tabs, and several late compatibility seams.
@@ -19,13 +19,17 @@ Instead of leaving every mod on its own disconnected branch, Razi Protocol:
 
 The early inner-system foundation. This is where Muluna, optional Cerys, and optional Eneas support sit, and where the campaign starts building toward Calidus Tech Card.
 
+### Aegis and Bellicos
+
+A Calidus stargate opens an early route into Outer Aegis and Lightweight Science. Inner Aegis and its Warden remain intact, while the extreme voyage to the Bellicos pulsar becomes a later post-Vibrant objective whose Pulsar Science contributes to Beetlejuice mastery.
+
 ### Solaris
 
 The first major custom-system chapter. It connects Castra Prime, Arig, Hyarion, Tellus, and Corrundum into a single structured progression region.
 
 ### Nyxaris
 
-The mid-tier science chapter that also absorbs Dea Dia-style progression. Apia Carnova, Moshine, Panglia, and Pelagos all feed into this stage.
+The mid-tier science chapter. Apia Carnova, Moshine, and Panglia feed into this stage, with optional Dea Dia and Pelagos folded in when installed.
 
 ### Vibrant
 
@@ -37,7 +41,7 @@ The harsh outer-system chapter. Cubium, Tenebris, Crucible, Vesta, Secretas, Fro
 
 ### Deep Space
 
-The final chapter. Nexus, the black-hole chain, Oort Cloud, Sol, optional Void Processing, antimatter, promethium, and the transceiver finale all converge here.
+The final chapter. Its required route culminates in the transceiver finale; optional Nexus adds the black-hole chain, Oort Cloud, and Sol, and optional Void Processing adds another late branch.
 
 ## System Cards
 
@@ -69,7 +73,7 @@ These placements are reflected in both the starmap and the related discovery pro
 
 Razi Protocol provides its own late-game shape.
 
-Nexus omega sciences are hidden behind a cleaner Deep Space card route. The solar-system edge becomes the bridge into the final chapter. The transceiver is moved later and wrapped in a singularity research chain:
+When Nexus is installed, its omega sciences are hidden behind a cleaner Deep Space card route. With or without Nexus, the solar-system edge becomes the bridge into the final chapter and the transceiver is moved later into a singularity research chain:
 
 - Intergalactic Singularity Theory
 - Intergalactic Singularity Test Fire

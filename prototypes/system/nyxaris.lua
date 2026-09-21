@@ -17,38 +17,40 @@ PlanetsLib:extend({
     },
 })
 
-PlanetsLib:update({
-	{
-		type = "space-location",
-		name = "star-dea-dia",
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "nyxaris",
-			},
-			distance = 32,
-			orientation = 0.08,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-				size = 369,
+if mods["dea-dia-system"] then
+	PlanetsLib:update({
+		{
+			type = "space-location",
+			name = "star-dea-dia",
+			orbit = {
+				parent = {
+					type = "space-location",
+					name = "nyxaris",
+				},
+				distance = 32,
+				orientation = 0.08,
+				sprite = {
+					type = "sprite",
+					filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
+					size = 369,
+				},
 			},
 		},
-	},
-	{
-		type = "space-location",
-		name = "dea-dia-system-edge",
-		localised_name = "Dea Dia Slip Stream",
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "star-dea-dia",
+		{
+			type = "space-location",
+			name = "dea-dia-system-edge",
+			localised_name = "Dea Dia Slip Stream",
+			orbit = {
+				parent = {
+					type = "space-location",
+					name = "star-dea-dia",
+				},
+				distance = 10,
+				orientation = 0.58,
 			},
-			distance = 10,
-			orientation = 0.58,
 		},
-	},
-})
+	})
+end
 
 PlanetsLib:extend({
     {
@@ -73,7 +75,7 @@ PlanetsLib:extend({
     },
 })
 
-PlanetsLib:update({
+local nyxaris_locations = {
     {
         type = "space-location",
         name = "apia-carnova-orbit",
@@ -125,7 +127,10 @@ PlanetsLib:update({
             },
         },
     },
-    {
+}
+
+if mods["pelagos"] then
+    table.insert(nyxaris_locations, {
         type = "planet",
         name = "pelagos",
         orbit = {
@@ -141,8 +146,10 @@ PlanetsLib:update({
                 size = 2048,
             },
         },
-    },
-})
+    })
+end
+
+PlanetsLib:update(nyxaris_locations)
 
 require("util")
 local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
@@ -164,23 +171,7 @@ deleteRoute("maraxsis-pelagos")
 deleteRoute("pelagos-aquilo")
 deleteRoute("sye-calidus-dea-dia-system-edge")
 
-data:extend({
-	{
-		type = "space-connection",
-		name = "sye-nyxaris-dea-dia-system-edge",
-		from = "sye-nyxaris",
-		to = "dea-dia-system-edge",
-		length = 15000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
-	{
-		type = "space-connection",
-		name = "dea-dia-system-edge-lemures",
-		from = "dea-dia-system-edge",
-		to = "lemures",
-		length = 3000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
+local connections = {
 	{
 		type = "space-connection",
 		name = "sye-nyxaris-apia-carnova-orbit",
@@ -205,12 +196,47 @@ data:extend({
 		length = 25000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
-	{
+}
+
+local function location_exists(name)
+	return (data.raw.planet and data.raw.planet[name])
+		or (data.raw["space-location"] and data.raw["space-location"][name])
+end
+
+local function add_connection_if_locations_exist(connection)
+	if location_exists(connection.from) and location_exists(connection.to) then
+		table.insert(connections, connection)
+	end
+end
+
+if mods["dea-dia-system"] then
+	add_connection_if_locations_exist({
+		type = "space-connection",
+		name = "sye-nyxaris-dea-dia-system-edge",
+		from = "sye-nyxaris",
+		to = "dea-dia-system-edge",
+		length = 15000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	})
+	add_connection_if_locations_exist({
+		type = "space-connection",
+		name = "dea-dia-system-edge-lemures",
+		from = "dea-dia-system-edge",
+		to = "lemures",
+		length = 3000,
+		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+	})
+end
+
+if mods["pelagos"] then
+	add_connection_if_locations_exist({
 		type = "space-connection",
 		name = "panglia-pelagos",
 		from = "panglia",
 		to = "pelagos",
 		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
-})
+	})
+end
+
+data:extend(connections)

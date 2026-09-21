@@ -2,7 +2,7 @@
 
 Razi Protocol is a large progression, compatibility, and starmap overhaul for *Factorio: Space Age* built around a huge Krastorio 2 Spaced Out modpack. Its goal is simple: turn a massive pile of excellent planet mods into one coherent campaign.
 
-Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into Nexus, black-hole research, Sol, and the intergalactic transceiver finale.
+Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into the intergalactic transceiver finale. When Nexus is installed, its black-hole and Sol content becomes an additional Deep Space branch.
 
 ## Why It Exists
 
@@ -18,14 +18,14 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 
 ## What It Changes
 
-- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space.
+- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
 - Integrates optional Eneas support plus Linox, Muria, and Shchierbin directly into the intended campaign flow.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
-- Reworks endgame flow around Nexus, the solar-system edge, the black-hole chain, and the intergalactic transceiver.
-- Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame.
+- Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
+- Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
@@ -39,13 +39,17 @@ Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bu
 
 Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and optional Eneas support. This is where the pack establishes the first milestone card: Calidus Tech Card.
 
+### Aegis and Bellicos
+
+The Aegis expedition no longer crowds the inner campaign map. Its precursor stargate sits beyond the solar-system edge, and the enormous Bellicos pulsar occupies a remote, otherwise unused deep-space bearing. The complete Aegis route remains intact, while Lightweight and Pulsar Science now contribute to Deep Space mastery.
+
 ### Solaris
 
 Solaris is the first major custom-system branch. It brings Castra Prime, Arig, Hyarion, Tellus, and Corrundum into a single connected route. This is where the campaign stops feeling like vanilla Space Age and starts feeling like a true multi-system pack.
 
 ### Nyxaris
 
-Nyxaris is the shared mid-tier chapter that also absorbs Dea Dia-style progression. It groups Nyxaris, Dea Dia access, Apia Carnova, Moshine, Panglia, and Pelagos into one broader progression stage and collapses their science into Nyxaris Tech Card.
+Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia and Pelagos progression when either is installed.
 
 ### Vibrant
 
@@ -57,7 +61,7 @@ Beetlejuice is the harsh outer-system chapter. It includes Cubium, Tenebris, Cru
 
 ### Deep Space
 
-Deep Space is the final chapter. It pushes beyond the solar-system edge into Nexus, the black-hole approach, the black hole, Oort Cloud, and Sol. This is where the pack transitions into the true late game: promethium, antimatter, black-hole research, optional Void Processing, and the intergalactic transceiver chain.
+Deep Space is the final chapter. Its required route culminates in the intergalactic transceiver chain. Optional Nexus expands that chapter through the black-hole approach, black hole, Oort Cloud, and Sol, while optional Void Processing can add another late branch.
 
 ## System Cards
 
@@ -78,6 +82,8 @@ That keeps the tree readable while still preserving the feeling that every chapt
 
 Several planets are not just "supported"; they are deliberately placed into the campaign.
 
+- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign beyond the solar-system edge. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
+
 - Eneas stays an optional early Calidus moon branch when installed.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
 - Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
@@ -89,7 +95,7 @@ These are not cosmetic placements only. Razi Protocol also adjusts their route a
 
 Razi Protocol intentionally provides its own late-game structure.
 
-Nexus often arrives with a large amount of omega-science clutter. Razi Protocol hides that clutter from normal play and swaps its role into a cleaner Deep Space card-driven progression. The solar-system edge becomes the gate out of Beetlejuice, and the final research flow runs through the black-hole chain and the transceiver singularity sequence.
+When Nexus is installed, Razi Protocol hides its omega-science clutter from normal play and swaps its role into a cleaner Deep Space card-driven progression. Without Nexus, the solar-system edge still leads into the transceiver singularity sequence without leaving a missing prerequisite.
 
 That singularity sequence is a major part of the pack identity:
 
@@ -135,7 +141,7 @@ Razi Protocol is not just a route mod. It is also a cleanup layer for a very bus
 It includes targeted fixes for:
 
 - K2SO transceiver and endgame flow
-- Nexus omega-science replacement
+- Optional Nexus omega-science replacement
 - Science Tab grouping and lab input behavior
 - Vehicles & Infrastructure crafting cleanup
 - `xy-k2so-enhancements-nulls-fork`
@@ -159,31 +165,32 @@ Core content in the intended experience includes:
 - Linox
 - Shchierbin
 - Muria
-- Dea Dia
+- Dea Dia (optional)
 - Corrundum
 - Apia
 - Moshine
 - Panglia
-- Pelagos
+- Pelagos (optional)
 - Tenebris Prime
 - Secretas
 - Maraxsis
 - Rubia
 - Cubium
-- Nexus
+- Nexus (optional)
 - Vesta
 - Castra Prime
 - Crucible
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include things like Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
 ## Modpack Guidance
 
 For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
+- Factorio 2.1 migration status and optional third-party compatibility gaps are tracked in [FACTORIO-2.1-COMPATIBILITY.md](FACTORIO-2.1-COMPATIBILITY.md). The required dependency path now consists entirely of native Factorio 2.1 releases.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
 - Expect Razi Protocol to disagree with mods that try to define their own parallel late game.
