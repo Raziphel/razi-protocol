@@ -1,4 +1,5 @@
 require("util")
+local Collections = require("__razi_lib__/lib/collections")
 
 require("prototypes.compat.lab_cards").data_final_fixes()
 require("prototypes.compat.cerys_cards").data_final_fixes()
@@ -68,12 +69,8 @@ end
 for _, lab in pairs(data.raw.lab or {}) do
 	if lab.inputs then
 		local unique_inputs = {}
-		local seen_inputs = {}
 		for _, input in ipairs(lab.inputs) do
-			if not seen_inputs[input] then
-				unique_inputs[#unique_inputs + 1] = input
-				seen_inputs[input] = true
-			end
+			Collections.append_unique(unique_inputs, input)
 		end
 		lab.inputs = unique_inputs
 	end

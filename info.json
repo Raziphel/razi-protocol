@@ -9,6 +9,7 @@
 	"dependencies": [
 		"base >= 2.1.0",
 		"space-age >= 2.1.0",
+		"razi_lib >= 1.0.0",
 		"PlanetsLib >= 1.26.6",
 		"bellicos-and-aegis >= 0.4.0",
 		"Krastorio2-spaced-out >= 2.0.17",

@@ -1,4 +1,8 @@
 local lab_cards = {}
+local Collections = require("__razi_lib__/lib/collections")
+local Prototype = require("__razi_lib__/lib/prototype")
+local Recipe = require("__razi_lib__/lib/recipe")
+local Technology = require("__razi_lib__/lib/technology")
 
 local system_card_subgroup = "system-tech-card"
 local vanilla_science_weight = 1000
@@ -213,9 +217,7 @@ local function ensure_item_subgroup(name, group, order)
 end
 
 local function science_pack_exists(name)
-	return
-		(data.raw.tool and data.raw.tool[name]) or
-		(data.raw.item and data.raw.item[name])
+	return Prototype.exists("tool", name) or Prototype.exists("item", name)
 end
 
 local function build_recipe_ingredients(science_packs)
@@ -231,27 +233,17 @@ local function build_recipe_ingredients(science_packs)
 end
 
 local function add_recipe_unlock(technology_name, recipe_name)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
+	local technology = Technology.optional(technology_name)
 	if not technology then
 		return
 	end
 
-	technology.effects = technology.effects or {}
-	for _, effect in ipairs(technology.effects) do
-		if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
-			return
-		end
-	end
-
-	table.insert(technology.effects, {
-		type = "unlock-recipe",
-		recipe = recipe_name
-	})
+	technology:unlock(recipe_name)
 end
 
 local function find_first_existing_technology(candidates)
 	for _, technology_name in ipairs(candidates or {}) do
-		if data.raw.technology and data.raw.technology[technology_name] then
+		if Prototype.exists("technology", technology_name) then
 			return technology_name
 		end
 	end
@@ -269,7 +261,7 @@ local function upsert_system_card(card)
 		return
 	end
 
-	local tool = data.raw.tool and data.raw.tool[card.name]
+	local tool = Prototype.raw("tool", card.name)
 	if not tool then
 		data:extend({
 			{
@@ -289,7 +281,7 @@ local function upsert_system_card(card)
 				durability_description_value = "description.science-pack-remaining-amount-value"
 			}
 		})
-		tool = data.raw.tool and data.raw.tool[card.name]
+		tool = Prototype.raw("tool", card.name)
 	end
 
 	if tool then
@@ -308,7 +300,7 @@ local function upsert_system_card(card)
 		tool.durability_description_value = "description.science-pack-remaining-amount-value"
 	end
 
-	local recipe = data.raw.recipe and data.raw.recipe[card.name]
+	local recipe = Recipe.optional(card.name)
 	if not recipe then
 		data:extend({
 			{
@@ -326,22 +318,20 @@ local function upsert_system_card(card)
 				order = card.order
 			}
 		})
-		recipe = data.raw.recipe and data.raw.recipe[card.name]
+		recipe = Recipe.optional(card.name)
 	end
 
 	if recipe then
 		recipe.localised_name = {"", card.localised_name}
-		recipe.enabled = false
-		recipe.categories = {"crafting"}
-		recipe.category = nil
-		recipe.additional_categories = nil
-		recipe.energy_required = 10
-		recipe.ingredients = ingredients
-		recipe.results = {
-			{type = "item", name = card.name, amount = 1}
-		}
-		recipe.subgroup = system_card_subgroup
-		recipe.order = card.order
+		recipe
+			:set_categories({"crafting"})
+			:set_energy(10)
+			:set_ingredients(ingredients)
+			:set_results({
+				{type = "item", name = card.name, amount = 1}
+			})
+			:set_subgroup(system_card_subgroup, card.order)
+			:disable()
 	end
 
 	local unlock_technology = find_first_existing_technology(card.unlock_technology_candidates)
@@ -351,22 +341,16 @@ local function upsert_system_card(card)
 end
 
 local function add_unique_input(lab, input_name)
-	for _, existing in ipairs(lab.inputs or {}) do
-		if existing == input_name then
-			return
-		end
-	end
-
-	table.insert(lab.inputs, input_name)
+	Collections.append_unique(lab.inputs, input_name)
 end
 
 local function set_science_weight(name, weight)
-	local tool = data.raw.tool and data.raw.tool[name]
+	local tool = Prototype.raw("tool", name)
 	if tool then
 		tool.weight = weight
 	end
 
-	local item = data.raw.item and data.raw.item[name]
+	local item = Prototype.raw("item", name)
 	if item then
 		item.weight = weight
 	end

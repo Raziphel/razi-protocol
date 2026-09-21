@@ -1,3 +1,7 @@
+local Collections = require("__razi_lib__/lib/collections")
+local Prototype = require("__razi_lib__/lib/prototype")
+local Technology = require("__razi_lib__/lib/technology")
+
 function deleteRoute(name)
 	if not data.raw["space-connection"] then
 		return
@@ -62,94 +66,70 @@ function deleteAllRoutesExceptLocations(keep_locations)
 end
 
 function technology_exists(name)
-	return data.raw.technology and data.raw.technology[name] ~= nil
+	return Prototype.exists("technology", name)
 end
 
 function set_prerequisites_if_exists(technology_name, prerequisites)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
+	local technology = Technology.optional(technology_name)
 	if technology then
-		technology.prerequisites = prerequisites
+		technology:set_prerequisites(prerequisites)
 	end
 end
 
 function set_first_existing_prerequisite(technology_name, candidate_prerequisites)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
+	local technology = Technology.optional(technology_name)
 	if not technology then
 		return
 	end
 
 	for _, prerequisite in ipairs(candidate_prerequisites or {}) do
 		if technology_exists(prerequisite) then
-			technology.prerequisites = {prerequisite}
+			technology:set_prerequisites({prerequisite})
 			return
 		end
 	end
 end
 
 function add_first_existing_prerequisite(technology_name, candidate_prerequisites)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
+	local technology = Technology.optional(technology_name)
 	if not technology then
 		return
 	end
 
-	technology.prerequisites = technology.prerequisites or {}
-	local existing_prerequisites = {}
-	for _, prerequisite in ipairs(technology.prerequisites) do
-		existing_prerequisites[prerequisite] = true
-	end
-
-	for _, prerequisite in ipairs(candidate_prerequisites) do
+	for _, prerequisite in ipairs(candidate_prerequisites or {}) do
 		if technology_exists(prerequisite) then
-			if not existing_prerequisites[prerequisite] then
-				table.insert(technology.prerequisites, prerequisite)
-			end
+			technology:add_prerequisite(prerequisite)
 			return
 		end
 	end
 end
 
 function add_existing_prerequisites(technology_name, candidate_prerequisites)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
+	local technology = Technology.optional(technology_name)
 	if not technology then
 		return
 	end
 
-	local existing_prerequisites = {}
-	technology.prerequisites = technology.prerequisites or {}
-	for _, prerequisite in ipairs(technology.prerequisites) do
-		existing_prerequisites[prerequisite] = true
-	end
-
 	for _, prerequisite in ipairs(candidate_prerequisites or {}) do
-		if technology_exists(prerequisite) and not existing_prerequisites[prerequisite] then
-			table.insert(technology.prerequisites, prerequisite)
-			existing_prerequisites[prerequisite] = true
+		if technology_exists(prerequisite) then
+			technology:add_prerequisite(prerequisite)
 		end
 	end
 end
 
 function remove_prerequisites_if_exists(technology_name, prerequisites_to_remove)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
-	if not technology or not technology.prerequisites then
+	local technology = Technology.optional(technology_name)
+	if not technology or not technology._prototype.prerequisites then
 		return
 	end
 
-	local remove_lookup = {}
 	for _, prerequisite in ipairs(prerequisites_to_remove or {}) do
-		remove_lookup[prerequisite] = true
-	end
-
-	for index = #technology.prerequisites, 1, -1 do
-		if remove_lookup[technology.prerequisites[index]] then
-			table.remove(technology.prerequisites, index)
-		end
+		technology:remove_prerequisite(prerequisite)
 	end
 end
 
 function science_pack_exists(name)
-	return
-		(data.raw.tool and data.raw.tool[name] ~= nil) or
-		(data.raw.item and data.raw.item[name] ~= nil)
+	return Prototype.exists("tool", name) or Prototype.exists("item", name)
 end
 
 local protected_lab_science_pack_lookup = {
@@ -169,13 +149,7 @@ function lab_has_science_input(lab, science_pack)
 		return false
 	end
 
-	for _, input in ipairs(lab.inputs) do
-		if input == science_pack then
-			return true
-		end
-	end
-
-	return false
+	return Collections.contains(lab.inputs, science_pack)
 end
 
 function lab_is_protected_unique_science_lab(lab)
@@ -223,16 +197,9 @@ function add_existing_science_packs(ingredients, science_packs)
 end
 
 function add_unique_values(values, new_values)
-	local seen = {}
-
-	for _, value in ipairs(values or {}) do
-		seen[value] = true
-	end
-
 	for _, value in ipairs(new_values or {}) do
-		if value and not seen[value] then
-			seen[value] = true
-			table.insert(values, value)
+		if value then
+			Collections.append_unique(values, value)
 		end
 	end
 end
@@ -308,10 +275,10 @@ function build_integrated_science_ingredients(options)
 end
 
 function set_technology_unit_ingredients_if_exists(technology_name, ingredients)
-	local technology = data.raw.technology and data.raw.technology[technology_name]
-	if not technology or not technology.unit or not ingredients or #ingredients == 0 then
+	local technology = Technology.optional(technology_name)
+	if not technology or not technology._prototype.unit or not ingredients or #ingredients == 0 then
 		return
 	end
 
-	technology.unit.ingredients = ingredients
+	technology:set_packs(ingredients)
 end

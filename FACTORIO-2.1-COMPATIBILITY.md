@@ -6,13 +6,13 @@ Razi Protocol now declares Factorio 2.1. Every direct dependency was checked aga
 
 ## Result
 
-- 93 direct positive dependencies were audited: 76 have native Factorio 2.1 releases and 17 do not.
+- 94 direct positive dependencies were audited: 77 have native Factorio 2.1 releases and 17 do not.
 - 190 portal mods were inspected across the direct dependency set and its required transitive dependencies.
 - 102 portal-hosted mods remain on the required load path, and all 102 have native 2.1 releases. Factorio's bundled `quality` and `recycler` feature modules are also reached transitively.
 - Built-in `base` and `space-age` are supplied by Factorio 2.1 and remain required.
 - Incompatible (`!`) declarations were retained, with duplicate declarations removed.
 
-The required pack now has a fully native Factorio 2.1 dependency path. Five formerly required 2.0-only integrations are retained as optional dependencies, so their compatibility support remains available if they publish 2.1 releases later.
+The required pack now has a fully native Factorio 2.1 dependency path, including RAZI Library 1.0.0 as a required shared code foundation. Five formerly required 2.0-only integrations are retained as optional dependencies, so their compatibility support remains available if they publish 2.1 releases later.
 
 ## Direct dependencies with native 2.1 releases
 
@@ -133,7 +133,7 @@ These declarations intentionally remain in `info.json` without invented 2.1 vers
 
 ## Loader validation
 
-A required-only installation containing all 102 native portal dependencies plus Factorio's built-in dependencies was staged under Factorio 2.1.19. `--dump-data` completed successfully through settings, every data stage, final prototype validation, and data dump generation.
+A required-only installation containing all 103 native dependencies plus Factorio's built-in dependencies was staged under Factorio 2.1.19. `--dump-data` completed successfully through settings, every data stage, final prototype validation, and data dump generation.
 
 That validation exposed two Razi-owned compatibility issues, which are now fixed:
 

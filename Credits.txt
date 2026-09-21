@@ -7,6 +7,7 @@ If you are the creator of a mod or asset referenced here and want credit adjuste
 
 Core foundation
 - Wube Software for Factorio and Space Age.
+- RAZI Library for the shared prototype, recipe, technology, collection, and validation foundation used by Razi Protocol.
 - PlanetsLib for making large custom planet and system setups practical.
 - Krastorio2 Spaced Out for the overhaul foundation that this modpack progression is built around.
 - Science Tab for the science organization concept and compatibility target.
