@@ -3,7 +3,6 @@ local Collections = require("__razi_lib__/lib/collections")
 
 require("prototypes.compat.lab_cards").data_final_fixes()
 require("prototypes.compat.cerys_cards").data_final_fixes()
-package.loaded["prototypes.technology.progression"] = nil
 require("prototypes.technology.progression")
 require("prototypes.compat.transceiver_endgame").data_final_fixes()
 require("prototypes.compat.nexus_endgame").data_final_fixes()
