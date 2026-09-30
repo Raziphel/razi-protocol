@@ -1,3 +1,9 @@
+Version: 2.0.2
+Date: 30. 09. 2026
+	Bugfixes:
+		- Improved the active transceiver gate check for existing saves and configuration changes. It now uses Factorio's per-force entity count instead of searching every surface, preserving the existing unlock behavior with less periodic work.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 27. 09. 2026
 	Bugfixes:
