@@ -82,14 +82,10 @@ local function check_existing_transceivers()
 		return
 	end
 
-	for _, surface in pairs(game.surfaces) do
-		local entities = surface.find_entities_filtered({
-			name = active_transceiver_name,
-			limit = 1
-		})
-
-		if entities[1] then
-			unlock_transceiver_gate(entities[1].force)
+	-- get_entity_count is O(1): the engine keeps the counts, so no surface search.
+	for _, force in pairs(game.forces) do
+		if force.get_entity_count(active_transceiver_name) > 0 then
+			unlock_transceiver_gate(force)
 		end
 	end
 end
@@ -114,7 +110,7 @@ local function on_entity_built(event)
 end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
--- The slow scan covers old saves and any weird script ordering.
+-- The periodic check covers old saves and any weird script ordering.
 script.on_init(check_existing_transceivers)
 script.on_configuration_changed(function()
 	check_existing_transceivers()
