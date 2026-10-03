@@ -446,15 +446,6 @@ local function tighten_reported_unlock_order()
 		{}
 	)
 
-	for _, rare_metals_recipe in ipairs({
-		"kr-molten-rare-metals-from-lava",
-		"kr-molten-rare-metals",
-		"kr-molten-enriched-rare-metals",
-		"kr-casting-rare-metals"
-	}) do
-		gate_recipe_to_technology({rare_metals_recipe}, {"kr-fluids-chemistry", "fluid-chemistry"}, {"foundry"})
-	end
-
 	local military = technology("military")
 	if military and recipe_has_ingredient("slowdown-capsule", "steel-plate") then
 		add_prerequisite(military, "steel-processing")
