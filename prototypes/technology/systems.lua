@@ -130,7 +130,7 @@ data:extend({
 	{
 		type = "technology",
 		name = "solaris-discovery",
-		localised_name = "Solaris Discovery",
+		localised_name = {"technology-name.solaris-discovery"},
 		icon = "__razi-protocol__/graphics/icons/SolarisStar.png",
 		icon_size = 1024,
 		essential = true,
@@ -161,7 +161,7 @@ data:extend({
 	{
 		type = "technology",
 		name = "nyxaris-discovery",
-		localised_name = "Nyxaris Discovery",
+		localised_name = {"technology-name.nyxaris-discovery"},
 		icon = "__razi-protocol__/graphics/icons/NyxarisStar.png",
 		icon_size = 1024,
 		essential = true,
@@ -185,7 +185,7 @@ data:extend({
 	{
 		type = "technology",
 		name = "vibrant-discovery",
-		localised_name = "Vibrant Discovery",
+		localised_name = {"technology-name.vibrant-discovery"},
 		icon = "__razi-protocol__/graphics/icons/VibrantStar.png",
 		icon_size = 1024,
 		essential = true,
@@ -209,7 +209,7 @@ data:extend({
 	{
 		type = "technology",
 		name = "beetlejuice-discovery",
-		localised_name = "Beetlejuice Discovery",
+		localised_name = {"technology-name.beetlejuice-discovery"},
 		icon = "__razi-protocol__/graphics/icons/BeetleJuiceStar.png",
 		icon_size = 1024,
 		essential = true,

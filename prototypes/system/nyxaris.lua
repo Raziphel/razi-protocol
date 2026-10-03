@@ -39,7 +39,7 @@ if mods["dea-dia-system"] then
 		{
 			type = "space-location",
 			name = "dea-dia-system-edge",
-			localised_name = "Dea Dia Slip Stream",
+			localised_name = {"space-location-name.razi-dea-dia-slip-stream"},
 			orbit = {
 				parent = {
 					type = "space-location",
@@ -56,7 +56,7 @@ PlanetsLib:extend({
     {
         type = "space-location",
         name = "sye-nyxaris",
-        localised_name = "Nyxaris Slip Stream",
+        localised_name = {"space-location-name.sye-nyxaris"},
         icon = "__space-age__/graphics/icons/solar-system-edge.png",
         solar_power_in_space = 25,
         orbit = {

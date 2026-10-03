@@ -24,11 +24,11 @@ local function build_transceiver_science(multiplier)
 	return ingredients
 end
 
-local function make_transceiver_technology(name, localised_name, prerequisites, count, multiplier, effects)
+local function make_transceiver_technology(name, prerequisites, count, multiplier, effects)
 	return {
 		type = "technology",
 		name = name,
-		localised_name = {"", localised_name},
+		localised_name = {"technology-name." .. name},
 		icon = icon,
 		icon_size = 256,
 		essential = true,
@@ -47,21 +47,18 @@ end
 data:extend({
 	make_transceiver_technology(
 		"razi-singularity-theory",
-		"Intergalactic Singularity Theory",
 		{"kr-intergalactic-transceiver"},
 		5000,
 		1
 	),
 	make_transceiver_technology(
 		"razi-singularity-test-fire",
-		"Intergalactic Singularity Test Fire",
 		{"razi-singularity-theory"},
 		7500,
 		2
 	),
 	make_transceiver_technology(
 		"razi-stable-intergalactic-singularity",
-		"Stable Intergalactic Singularity",
 		{"razi-singularity-test-fire"},
 		10000,
 		3,

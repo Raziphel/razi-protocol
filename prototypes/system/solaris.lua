@@ -20,7 +20,7 @@ PlanetsLib:extend({
 	{
         type = "space-location",
         name = "sye-solaris",
-        localised_name = "Solaris Slip Stream",
+        localised_name = {"space-location-name.sye-solaris"},
         icon = "__space-age__/graphics/icons/solar-system-edge.png",
         solar_power_in_space = 25,
         orbit = {

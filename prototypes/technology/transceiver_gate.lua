@@ -10,7 +10,7 @@ data:extend({
 	{
 		type = "technology",
 		name = gate_technology,
-		localised_name = {"", "Intergalactic Signal Lock"},
+		localised_name = {"technology-name.razi-intergalactic-transceiver-signal"},
 		icon = "__Krastorio2Assets__/technologies/intergalactic-transceiver.png",
 		icon_size = 256,
 		essential = true,
