@@ -21,7 +21,7 @@ PlanetsLib:extend({
     {
         type = "space-location",
         name = "sye-vibrant",
-        localised_name = "Vibrant Slip Stream",
+        localised_name = {"space-location-name.sye-vibrant"},
         icon = "__space-age__/graphics/icons/solar-system-edge.png",
         solar_power_in_space = 25,
         orbit = {

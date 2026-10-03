@@ -11,7 +11,7 @@ local system_card_icon_size = 256
 local system_card_definitions = {
 	{
 		name = "calidus-tech-card",
-		localised_name = "Calidus Tech Card",
+		localised_name = {"item-name.calidus-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
 		unlock_technology_candidates = {
@@ -42,7 +42,7 @@ local system_card_definitions = {
 	},
 	{
 		name = "solaris-tech-card",
-		localised_name = "Solaris Tech Card",
+		localised_name = {"item-name.solaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/solaris-tech-card.png",
 		order = "s[system]-b[solaris]",
 		unlock_technology_candidates = {
@@ -64,7 +64,7 @@ local system_card_definitions = {
 	},
 	{
 		name = "nyxaris-tech-card",
-		localised_name = "Nyxaris Tech Card",
+		localised_name = {"item-name.nyxaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/nyxaris-tech-card.png",
 		order = "s[system]-c[nyxaris]",
 		unlock_technology_candidates = {
@@ -88,7 +88,7 @@ local system_card_definitions = {
 	},
 	{
 		name = "vibrant-tech-card",
-		localised_name = "Vibrant Tech Card",
+		localised_name = {"item-name.vibrant-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
 		order = "s[system]-d[vibrant]",
 		unlock_technology_candidates = {
@@ -111,7 +111,7 @@ local system_card_definitions = {
 	},
 	{
 		name = "beetlejuice-tech-card",
-		localised_name = "Beetlejuice Tech Card",
+		localised_name = {"item-name.beetlejuice-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
 		order = "s[system]-e[beetlejuice]",
 		unlock_technology_candidates = {
@@ -132,7 +132,7 @@ local system_card_definitions = {
 	},
 	{
 		name = "deep-space-tech-card",
-		localised_name = "Deep Space Tech Card",
+		localised_name = {"item-name.deep-space-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
 		order = "s[system]-f[deep-space]",
 		unlock_technology_candidates = {

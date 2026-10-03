@@ -20,7 +20,7 @@ local function ensure_group()
 			{
 				type = "item-group",
 				name = group_name,
-				localised_name = {"", "Vehicles & Infrastructure"},
+				localised_name = {"item-group-name.razi-infrastructure"},
 				icon = "__base__/graphics/icons/rail.png",
 				icon_size = 64,
 				order = "c[logistics]-b[infrastructure]"

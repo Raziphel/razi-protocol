@@ -2,7 +2,7 @@ PlanetsLib:extend({
     {
         type = "space-location",
         name = "sye-calidus",
-        localised_name = "Calidus Slip Stream",
+        localised_name = {"space-location-name.sye-calidus"},
         icon = "__space-age__/graphics/icons/solar-system-edge.png",
         solar_power_in_space = 25,
         orbit = {

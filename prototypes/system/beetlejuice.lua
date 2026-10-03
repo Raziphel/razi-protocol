@@ -21,7 +21,7 @@ PlanetsLib:extend({
     {
         type = "space-location",
         name = "sye-beetlejuice",
-        localised_name = "Beetlejuice Slip Stream",
+        localised_name = {"space-location-name.sye-beetlejuice"},
         icon = "__space-age__/graphics/icons/solar-system-edge.png",
         solar_power_in_space = 20,
         orbit = {
@@ -179,7 +179,7 @@ PlanetsLib:update({
 PlanetsLib:update({
 	type = "space-location",
 	name = "solar-system-edge",
-    localised_name = "Edge of Deep Space",
+    localised_name = {"space-location-name.razi-deep-space-edge"},
 	orbit = {
 		parent = {
 			type = "space-location",
