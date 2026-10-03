@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.0
+Date: 03. 10. 2026
+  Features:
+    - Added full Russian localization for Razi Protocol's system names, technology names, compatibility labels, and startup settings.
+    - Made Razi Protocol's previously hardcoded English prototype names fully localizable while preserving their existing English text.
+
+  Compatibility:
+    - Added pollution absorption to Arig and Hyarion terrain so pollution now dissipates normally on the enemy planets instead of spreading indefinitely across their surfaces.
+    - Added the Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space Tech Cards to the Omega Lab so it can research the endgame technologies that consume them.
+    - Updated Planetaris compression and agricultural-tower research triggers to recognize Krastorio's `kr-glass` item.
+    - Kept the K2SO molten and cast rare-metals recipes on the Foundry unlock, preventing them from appearing before a compatible crafting machine is available.
+
+  Bugfixes:
+    - Corrected the Void Processing and Nexus-Threat recipe identifiers used by progression gating, preventing their late-game recipes from being craftable at the start of the game.
+    - Added the missing English name and description for the redundant assembler tier startup setting.
+    - Repaired changelog formatting so Factorio can parse and display the complete in-game changelog.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.0.2
 Date: 30. 09. 2026
   Bugfixes:
