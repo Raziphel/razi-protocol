@@ -362,7 +362,8 @@ local regular_lab_names = {
 	"biolab",
 	"kr-singularity-lab",
 	"thermodynamics-lab",
-	"pressure-lab"
+	"pressure-lab",
+	"omega-lab"
 }
 
 local function add_system_cards_to_regular_labs()
@@ -371,8 +372,8 @@ local function add_system_cards_to_regular_labs()
 		if lab and lab.inputs then
 			for _, card in ipairs(system_card_definitions) do
 				-- Deep Space remains an endgame-only input. Nexus adds it to the
-				-- singularity lab through nexus_endgame.lua when that integration is
-				-- installed.
+				-- singularity lab and the omega lab through nexus_endgame.lua when that
+				-- integration is installed.
 				if card.name ~= "deep-space-tech-card" and science_pack_exists(card.name) then
 					add_unique_input(lab, card.name)
 				end

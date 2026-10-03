@@ -146,18 +146,20 @@ local function add_input_to_lab(lab, science_pack)
 	table.insert(lab.inputs, science_pack)
 end
 
-local function add_endgame_science_to_singularity_lab()
-	local singularity_lab = data.raw.lab and data.raw.lab["kr-singularity-lab"]
-	if not (singularity_lab and singularity_lab.inputs) then
-		return
-	end
-
-	for _, science_pack in ipairs({
-		"promethium-882-science-pack",
-		"antimatter-science-pack",
-		deep_space_card
-	}) do
-		add_input_to_lab(singularity_lab, science_pack)
+-- The omega lab is Nexus's own endgame lab: the technologies that used Omega
+-- packs cost the Deep Space card now, so it has to take that card as well.
+local function add_endgame_science_to_labs()
+	for _, lab_name in ipairs({"kr-singularity-lab", "omega-lab"}) do
+		local lab = data.raw.lab and data.raw.lab[lab_name]
+		if lab and lab.inputs then
+			for _, science_pack in ipairs({
+				"promethium-882-science-pack",
+				"antimatter-science-pack",
+				deep_space_card
+			}) do
+				add_input_to_lab(lab, science_pack)
+			end
+		end
 	end
 end
 
@@ -176,7 +178,7 @@ function nexus_endgame.data_final_fixes()
 	end
 
 	prune_omega_recipe_unlocks(data.raw.technology and data.raw.technology["promethium-882-research"])
-	add_endgame_science_to_singularity_lab()
+	add_endgame_science_to_labs()
 end
 
 return nexus_endgame
