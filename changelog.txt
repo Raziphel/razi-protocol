@@ -1,28 +1,29 @@
+---------------------------------------------------------------------------------------------------
 Version: 2.0.2
 Date: 30. 09. 2026
-	Bugfixes:
-		- Improved the active transceiver gate check for existing saves and configuration changes. It now uses Factorio's per-force entity count instead of searching every surface, preserving the existing unlock behavior with less periodic work.
+  Bugfixes:
+    - Improved the active transceiver gate check for existing saves and configuration changes. It now uses Factorio's per-force entity count instead of searching every surface, preserving the existing unlock behavior with less periodic work.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 27. 09. 2026
-	Bugfixes:
-		- Restored system and chapter Tech Card requirements across the progression tree by applying progression after the Tech Card prototypes are created. This fixes upgraded and new Factorio 2.1 games where only Vibrant-linked discoveries retained their intended system cards.
+  Bugfixes:
+    - Restored system and chapter Tech Card requirements across the progression tree by applying progression after the Tech Card prototypes are created. This fixes upgraded and new Factorio 2.1 games where only Vibrant-linked discoveries retained their intended system cards.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 21. 09. 2026
-	Changes:
-		- Released Razi Protocol 2.0, the major compatibility release for Factorio 2.1.
-		- Added RAZI Library 1.0.0 as a required shared foundation for prototype, recipe, technology, and collection helpers.
+  Changes:
+    - Released Razi Protocol 2.0, the major compatibility release for Factorio 2.1.
+    - Added RAZI Library 1.0.0 as a required shared foundation for prototype, recipe, technology, and collection helpers.
     - Added dedicated illustrated icons for the Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space Tech Cards.
     - Retargeted Razi Protocol to Factorio 2.1 and updated every dependency with a verified native 2.1 release to require that release or newer.
     - Converted Dea Dia, Pelagos, Nexus, Celestial Weather, and Celestial Weather Additions into optional integrations so their 2.0-only releases no longer block the native 2.1 pack.
     - Removed duplicate dependency and incompatibility declarations from the mod metadata.
     - Added Bellicos and Aegis 0.4.0 as a required Factorio 2.1 expedition, including its verified asset, turret, asteroid-fix, and PlanetsLib dependency closure.
 
-	Compatibility:
-		- Replaced Razi Protocol's duplicated technology, prototype lookup, recipe mutation, and unique-list operations with the corresponding RAZI Library APIs while preserving the existing progression and starmap behavior.
+  Compatibility:
+    - Replaced Razi Protocol's duplicated technology, prototype lookup, recipe mutation, and unique-list operations with the corresponding RAZI Library APIs while preserving the existing progression and starmap behavior.
     - Rehomed the Aegis expedition beyond the solar-system edge, removed its direct Nauvis/Fulgora and former Calidus bypasses, and preserved the complete Aegis, Warden, and Bellicos internal route.
     - Placed the massive Bellicos pulsar 240 starmap units beyond the edge on an unused deep-space bearing, with its return gate on the inward face so the route does not cross the pulsar image.
     - Gated Outer Aegis on solar-system-edge discovery and moved Lightweight and Pulsar Science out of the early system cards into Deep Space mastery without creating a Promethium research cycle.
@@ -256,7 +257,7 @@ Date: 21. 05. 2026
 Version: 1.3.0
 Date: 15. 05. 2026
   Bugfixes:
-    - Added Paracelsin to the required mod list. 
+    - Added Paracelsin to the required mod list.
 
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.0
