@@ -436,12 +436,12 @@ local function tighten_reported_unlock_order()
 		{"sand-processing"}
 	)
 	gate_recipe_to_technology(
-		{"void-data-disk", "black-hole-void-data-disk"},
+		{"void-data-disk", "void-data-disk-black-hole"},
 		{"black-hole-discovery"},
 		{}
 	)
 	gate_recipe_to_technology(
-		{"nexus-atmospheric-stabilization-process"},
+		{"nexus-stabilization-process"},
 		{"promethium-882-research", "planet-discovery-nexus", "planet-nexus-scanning"},
 		{}
 	)
