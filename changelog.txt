@@ -1,3 +1,11 @@
+Version: 2.1.1
+Date: 05. 10. 2026
+  Compatibility:
+    - Added optional support for VoidProcessing-Updated, the maintained Factorio 2.1 fork of Void Processing.
+
+  Bugfixes:
+    - Corrected the duplicate 1.3.0 changelog heading so the historical 1.3.1 release is displayed with its proper version and date.
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 03. 10. 2026
