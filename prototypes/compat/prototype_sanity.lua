@@ -386,6 +386,11 @@ function prototype_sanity.data_final_fixes()
 	-- not always inherit the AI-core research gate once the full mod stack
 	-- reshuffles K2 progression. Re-attach that prerequisite explicitly.
 	add_technology_prerequisite_if_present("kr-automation", "kr-ai-core")
+	-- The Auric tech card research triggers on crafting gold plates, whose
+	-- recipes come with the steam recycler. K2SO Enhancements removes its only
+	-- prerequisite (planet discovery Secretas), so the tree offers it from the
+	-- start. Gate it behind the steam recycler research instead.
+	add_technology_prerequisite_if_present("golden-science-pack", "steam-recycler")
 	-- Planetaris Arig/Tellus still exposes a few trigger-techs whose recipe names
 	-- read like "glass panel" steps even though the crafts themselves produce the
 	-- generic `glass` item. Trigger on the crafted item result directly so the
