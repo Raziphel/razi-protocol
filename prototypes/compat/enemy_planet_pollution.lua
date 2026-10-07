@@ -9,8 +9,8 @@ local enemy_planet_pollution = {}
 -- over the whole map and every nest it reaches attacks. Give each tile without
 -- a pollution value the absorption of its vanilla counterpart.
 local planets = {
-	{planet = "arig", enemy_mod = "Arachnids_enemy", like_tile = "sand-1", fallback = 0.000015},
-	{planet = "hyarion", enemy_mod = "ArmouredBiters", like_tile = "volcanic-soil-dark", fallback = 0.00003}
+	{planet = "arig", enemy_mods = {"Arachnids_enemy"}, like_tile = "sand-1", fallback = 0.000015},
+	{planet = "hyarion", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
 }
 
 local function planet_tile_names(planet_name)
@@ -27,6 +27,16 @@ local function planet_tile_names(planet_name)
 	return names
 end
 
+local function any_mod_active(names)
+	for _, name in ipairs(names) do
+		if mods[name] then
+			return true
+		end
+	end
+
+	return false
+end
+
 local function vanilla_absorption(entry)
 	local tile = data.raw.tile and data.raw.tile[entry.like_tile]
 	local absorptions = tile and tile.absorptions_per_second
@@ -39,7 +49,7 @@ function enemy_planet_pollution.data_final_fixes()
 	end
 
 	for _, entry in ipairs(planets) do
-		if mods[entry.enemy_mod] then
+		if any_mod_active(entry.enemy_mods) then
 			local pollution = vanilla_absorption(entry)
 
 			for _, tile_name in ipairs(planet_tile_names(entry.planet)) do
