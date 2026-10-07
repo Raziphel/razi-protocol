@@ -401,7 +401,14 @@ set_first_existing_prerequisite("black-hole-discovery", {
 	"planet-nexus-scanning-Krastorio2-space-out",
 	"planet-nexus-scanning"
 })
-set_science_through("black-hole-discovery", "nexus")
+-- Without Nexus no lab takes the Deep Space card (nexus_endgame.lua adds it to
+-- labs only with Nexus), so the game refuses to load. Keep Void Processing at
+-- the edge of the solar system there, like the Nexus discovery techs.
+if mods["Nexus"] then
+	set_science_through("black-hole-discovery", "nexus")
+else
+	set_science_after("black-hole-discovery", "beetlejuice")
+end
 -- Only the compressed system cards need to be added by this mod.
 -- Adding every science pack found in technologies makes all labs universal.
 add_science_to_labs(system_tech_cards)
