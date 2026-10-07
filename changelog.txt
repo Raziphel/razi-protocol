@@ -1,3 +1,13 @@
+Version: 2.1.2
+Date: 07. 10. 2026
+  Compatibility:
+    - Added support for ArmouredBiters21Compat so the Factorio 2.1 fork receives the intended enemy autoplace and Hyarion pollution handling.
+
+  Bugfixes:
+    - Gated the Auric Tech Card behind steam recycler research so it is no longer offered at the start of the game when K2SO Enhancements removes its original prerequisite.
+    - Adjusted black hole discovery costs when Nexus is absent so the technology no longer requires a Deep Space Tech Card that no available lab can accept.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.1
 Date: 05. 10. 2026
   Compatibility:
