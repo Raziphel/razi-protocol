@@ -229,6 +229,30 @@ local function resync_paracelsin_common_gases()
 	-- agree on the same gas family.
 	replace_fluid_globally("kr-nitrogen", "nitrogen")
 	replace_fluid_globally("kr-nitric-acid", "nitric-acid")
+
+	-- `paracelsin-krastorio-compatibility-plus` also hides the common fluids
+	-- when it swaps them out. After the swap back they are the ones in use,
+	-- but hidden ones cannot be picked in circuit and train conditions or pump
+	-- filters, and the signal list offers the unused K2 fluids instead. Show
+	-- the used fluids and hide the K2 ones that nothing uses any more.
+	local used = {}
+	for _, recipe in pairs(data.raw.recipe or {}) do
+		for _, list in pairs({recipe.ingredients or {}, recipe.results or {}}) do
+			for _, entry in pairs(list) do
+				if entry.type == "fluid" then
+					used[entry_name(entry)] = true
+				end
+			end
+		end
+	end
+
+	for common, k2 in pairs({["nitrogen"] = "kr-nitrogen", ["nitric-acid"] = "kr-nitric-acid"}) do
+		local common_fluid, k2_fluid = fluid_exists(common), fluid_exists(k2)
+		if common_fluid and common_fluid.hidden and used[common] and k2_fluid and not used[k2] then
+			common_fluid.hidden = nil
+			k2_fluid.hidden = true
+		end
+	end
 end
 
 function compat.data()
