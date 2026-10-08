@@ -12,11 +12,6 @@ PlanetsLib:extend({
             },
             distance = 32,
             orientation = 0.5,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
-                size = 2621,
-            },
         },
     },
 })

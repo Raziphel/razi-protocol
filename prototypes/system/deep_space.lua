@@ -42,11 +42,6 @@ if planet_exists("nexus") and space_location_exists("solar-system-edge") then
 			},
 			distance = 50,
 			orientation = 0.12,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-				size = 369,
-			},
 		},
 	})
 end
@@ -64,11 +59,6 @@ if space_location_exists("black-hole-approach") and space_location_exists("solar
 			},
 			distance = 50,
 			orientation = 0.9,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-				size = 369,
-			},
 		},
 	})
 end
@@ -86,11 +76,6 @@ if space_location_exists("black-hole") and space_location_exists("black-hole-app
 			},
 			distance = 4.5,
 			orientation = 0.75,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_4.5.png",
-				size = 369,
-			},
 		},
 	})
 end
@@ -108,11 +93,6 @@ if space_location_exists("oort-cloud") and planet_exists("nexus") then
 			},
 			distance = 22,
 			orientation = 0.28,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-				size = 369,
-			},
 		},
 	})
 end
@@ -130,11 +110,6 @@ if space_location_exists("sol") and space_location_exists("oort-cloud") then
 			},
 			distance = 25,
 			orientation = 0.18,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-				size = 369,
-			},
 		},
 	})
 end

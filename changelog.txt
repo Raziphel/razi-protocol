@@ -1,3 +1,13 @@
+Version: 2.1.3
+Date: 08. 10. 2026
+  Compatibility:
+    - Require PlanetsLib 2.0.0 or newer for native starmap orbit rendering.
+
+  Graphics:
+    - Removed legacy orbit sprite overrides throughout Razi Protocol's systems so the base game and PlanetsLib draw standard orbit rings.
+    - Preserve third-party custom orbit styles, including special dashed orbits, instead of replacing them with Razi Protocol's standard ring textures.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.2
 Date: 07. 10. 2026
   Compatibility:

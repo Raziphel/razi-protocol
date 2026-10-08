@@ -1,6 +1,6 @@
 {
 	"name": "razi-protocol",
-	"version": "2.1.2",
+	"version": "2.1.3",
 	"title": "Razi Protocol",
 	"author": "Raziphel",
 	"homepage": "https://github.com/Raziphel/razi-protocol",
@@ -10,7 +10,7 @@
 		"base >= 2.1.0",
 		"space-age >= 2.1.0",
 		"razi_lib >= 1.0.0",
-		"PlanetsLib >= 1.26.6",
+		"PlanetsLib >= 2.0.0",
 		"bellicos-and-aegis >= 0.4.0",
 		"Krastorio2-spaced-out >= 2.0.17",
 		"Krastorio2Assets >= 2.1.0",

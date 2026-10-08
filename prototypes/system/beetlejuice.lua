@@ -31,11 +31,6 @@ PlanetsLib:extend({
             },
             distance = 25,
             orientation = 0.3,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
-                size = 2048,
-            },
         },
     }
 })
@@ -53,11 +48,6 @@ PlanetsLib:update({
 			},
 			distance = 21,
 			orientation = 0.21,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_21.png",
-				size = 1720,
-			},
 		},
 	},
 	{
@@ -72,11 +62,6 @@ PlanetsLib:update({
 			},
 			distance = 23,
 			orientation = 0.5,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_23.png",
-				size = 1884,
-			},
 		},
 	},
 	{
@@ -91,11 +76,6 @@ PlanetsLib:update({
 			},
 			distance = 22,
 			orientation = 0.6,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_22.png",
-				size = 1802,
-			},
 		},
 	},
 	{
@@ -110,11 +90,6 @@ PlanetsLib:update({
 			},
 			distance = 1,
 			orientation = 0.5,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-				size = 369,
-			},
 		},
 	},
 	{
@@ -129,11 +104,6 @@ PlanetsLib:update({
 			},
 			distance = 25,
 			orientation = 0.4,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
-				size = 2048,
-			},
 		},
 	},
 	{
@@ -148,11 +118,6 @@ PlanetsLib:update({
 			},
 			distance = 32,
 			orientation = 0.15,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_32.png",
-				size = 2621,
-			},
 		},
 	},
 	{
@@ -167,11 +132,6 @@ PlanetsLib:update({
 			},
 			distance = 4.5,
 			orientation = 0.18,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_4.5.png",
-				size = 369,
-			},
 		},
 	},
 })
@@ -187,11 +147,6 @@ PlanetsLib:update({
 		},
 		distance = 50,
 		orientation = 0.0,
-        sprite = {
-			type = "sprite",
-			filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-            size = 369,
-		},
 	},
 })
 

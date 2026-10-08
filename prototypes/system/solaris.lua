@@ -30,12 +30,6 @@ PlanetsLib:extend({
             },
             distance = 20,
             orientation = 0.6,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_20.png",
-                -- size = 2048,
-                size = 1,
-            },
         },
     },
 })
@@ -51,11 +45,6 @@ PlanetsLib:update({
 			},
 			distance = 14,
 			orientation = 0.58,
-			sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_14.png",
-                size = 1147,
-            },
 		},
 	},
     {
@@ -68,11 +57,6 @@ PlanetsLib:update({
 			},
 			distance = 18,
 			orientation = 0.25,
-			sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_18.png",
-                size = 1475,
-            },
 		},
 	},
 	{
@@ -85,11 +69,6 @@ PlanetsLib:update({
 			},
 			distance = 11,
 			orientation = 0.75,
-			sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_11.png",
-                size = 901,
-            },
 		},
 	},
     {
@@ -102,11 +81,6 @@ PlanetsLib:update({
 			},
 			distance = 15,
 			orientation = 0.08,
-			sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_15.png",
-                size = 1229,
-            },
 		},
 	},
     {
@@ -119,11 +93,6 @@ PlanetsLib:update({
 			},
 			distance = 18,
 			orientation = 0.42,
-			sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_18.png",
-                size = 1475,
-            },
 		},
 	},
 })

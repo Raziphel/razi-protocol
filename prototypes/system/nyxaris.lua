@@ -29,11 +29,6 @@ if mods["dea-dia-system"] then
 				},
 				distance = 32,
 				orientation = 0.08,
-				sprite = {
-					type = "sprite",
-					filename = "__razi-protocol__/graphics/orbits/orbit_0.png",
-					size = 369,
-				},
 			},
 		},
 		{
@@ -66,11 +61,6 @@ PlanetsLib:extend({
             },
             distance = 20,
             orientation = 0.9,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_20.png",
-                size = 1638,
-            },
         },
     },
 })
@@ -86,11 +76,6 @@ local nyxaris_locations = {
             },
             distance = 14,
             orientation = 0.09,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_14.png",
-                size = 1147,
-            },
         },
     },
     {
@@ -103,11 +88,6 @@ local nyxaris_locations = {
             },
             distance = 6,
             orientation = 0.91,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_6.png",
-                size = 492,
-            },
         },
     },
     {
@@ -120,11 +100,6 @@ local nyxaris_locations = {
             },
             distance = 18,
             orientation = 0.72,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_18.png",
-                size = 1475,
-            },
         },
     },
 }
@@ -140,11 +115,6 @@ if mods["pelagos"] then
             },
             distance = 25,
             orientation = 0.65,
-            sprite = {
-                type = "sprite",
-                filename = "__razi-protocol__/graphics/orbits/orbit_25.png",
-                size = 2048,
-            },
         },
     })
 end

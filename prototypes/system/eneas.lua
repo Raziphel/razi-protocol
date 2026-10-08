@@ -19,11 +19,6 @@ PlanetsLib:update({
 			},
 			distance = 7,
 			orientation = 0.82,
-			sprite = {
-				type = "sprite",
-				filename = "__razi-protocol__/graphics/orbits/orbit_7.png",
-				size = 573,
-			},
 		},
 	},
 })

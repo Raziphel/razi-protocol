@@ -1,6 +1,6 @@
 # Factorio 2.1 compatibility audit
 
-Audit date: 21 September 2026
+Audit date: 21 September 2026 (PlanetsLib minimum updated 8 October 2026)
 
 Razi Protocol now declares Factorio 2.1. Every direct dependency was checked against the official Factorio Mod Portal, and the required dependency graph was followed recursively. A release counts as compatible here only when its own `info.json` declares `factorio_version` 2.1; a 2.0 release was not assumed to work.
 
@@ -20,7 +20,7 @@ The minimum versions below are now recorded in `info.json`.
 
 ### Required
 
-- `PlanetsLib >= 1.26.6`
+- `PlanetsLib >= 2.0.0`
 - `bellicos-and-aegis >= 0.4.0`
 - `Krastorio2-spaced-out >= 2.0.17`
 - `Krastorio2Assets >= 2.1.0`
