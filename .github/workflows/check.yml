@@ -1,0 +1,22 @@
+name: Check
+
+# Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API and the changelog.txt format, with the settings in
+# .luacheckrc and .emmyrc.json: https://github.com/GreenTech-Solutions/factorio-mod-tools
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check the mod
+        uses: GreenTech-Solutions/factorio-mod-tools@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
