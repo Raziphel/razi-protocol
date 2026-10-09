@@ -275,7 +275,8 @@ local function loosen_matter_research_data_surface()
 end
 
 local function make_nexus_bootstrap_machines_portable()
-	if not mods["Nexus"] then
+	-- Nexus-Updated is the 2.1 fork of Nexus with the same prototype names.
+	if not (mods["Nexus"] or mods["Nexus-Updated"]) then
 		return
 	end
 

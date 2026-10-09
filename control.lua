@@ -91,7 +91,8 @@ local function check_existing_transceivers()
 end
 
 local function repair_nexus_technology_visibility()
-	if not script.active_mods["Nexus"] then
+	-- Nexus-Updated is the 2.1 fork of Nexus with the same prototype names.
+	if not (script.active_mods["Nexus"] or script.active_mods["Nexus-Updated"]) then
 		return
 	end
 

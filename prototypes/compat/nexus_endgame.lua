@@ -164,7 +164,8 @@ local function add_endgame_science_to_labs()
 end
 
 function nexus_endgame.data_final_fixes()
-	if not mods["Nexus"] then
+	-- Nexus-Updated is the 2.1 fork of Nexus with the same prototype names.
+	if not (mods["Nexus"] or mods["Nexus-Updated"]) then
 		return
 	end
 

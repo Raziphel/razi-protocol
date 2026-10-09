@@ -404,7 +404,8 @@ set_first_existing_prerequisite("black-hole-discovery", {
 -- Without Nexus no lab takes the Deep Space card (nexus_endgame.lua adds it to
 -- labs only with Nexus), so the game refuses to load. Keep Void Processing at
 -- the edge of the solar system there, like the Nexus discovery techs.
-if mods["Nexus"] then
+-- Nexus-Updated is the 2.1 fork of Nexus with the same prototype names.
+if mods["Nexus"] or mods["Nexus-Updated"] then
 	set_science_through("black-hole-discovery", "nexus")
 else
 	set_science_after("black-hole-discovery", "beetlejuice")
