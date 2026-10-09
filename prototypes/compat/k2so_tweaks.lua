@@ -113,12 +113,6 @@ local function replace_recipe_ingredient(recipe_name, from, to)
 	end
 
 	replace_in_ingredients(recipe.ingredients)
-	if recipe.normal then
-		replace_in_ingredients(recipe.normal.ingredients)
-	end
-	if recipe.expensive then
-		replace_in_ingredients(recipe.expensive.ingredients)
-	end
 end
 
 local function replace_recipe_fluid_reference(recipe_name, from, to)
@@ -143,25 +137,12 @@ local function replace_recipe_fluid_reference(recipe_name, from, to)
 		end
 	end
 
-	local function replace_variant(variant)
-		if not variant then
-			return
-		end
+	replace_in_ingredients(recipe.ingredients)
+	replace_in_results(recipe.results)
 
-		replace_in_ingredients(variant.ingredients)
-		replace_in_results(variant.results)
-
-		if variant.main_product == from then
-			variant.main_product = to
-		end
-		if variant.result == from then
-			variant.result = to
-		end
+	if recipe.main_product == from then
+		recipe.main_product = to
 	end
-
-	replace_variant(recipe)
-	replace_variant(recipe.normal)
-	replace_variant(recipe.expensive)
 end
 
 local function replace_missing_magazine_ingredients_globally(from, to)

@@ -20,6 +20,9 @@ local function most_item_results_by_category()
 			end
 		end
 
+		-- 2.1 knows only categories, but a mod not yet updated for it can still set
+		-- the old category: count its recipes where that mod meant them to go.
+		---@diagnostic disable-next-line: undefined-field
 		for _, category in pairs(recipe.categories or {recipe.category or "crafting"}) do
 			most[category] = math.max(most[category] or 0, count)
 		end
