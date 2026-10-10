@@ -69,7 +69,8 @@ local function run_fixture(enabled, cycle)
 		update = function(_, updates)
 			for _, item in ipairs(updates) do
 				recolored[item.name] = true
-				planets[item.name].orbit = item.orbit
+				local target = item.type == "planet" and planets[item.name] or hubs[item.name]
+				if target then target.orbit = item.orbit end
 			end
 		end
 	})
