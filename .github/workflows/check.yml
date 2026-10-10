@@ -38,6 +38,8 @@ jobs:
         run: lua5.2 tests/lua/test_enemy_safety.lua
       - name: Test research trigger migrations
         run: lua5.2 tests/lua/test_trigger_compat.lua
+      - name: Check interwoven planet science progression
+        run: lua5.2 tests/lua/test_campaign_weave.lua
       - name: Check optional planet integrations
         run: lua5.2 tests/lua/test_optional_planets.lua
       - name: Test escalating asteroid profiles

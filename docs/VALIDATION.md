@@ -55,3 +55,7 @@ both second-tier branches, both third-tier branches, the Muria/Aquilo and
 Tenebris/Crucible travel paths, and an unmodified Aegis/Bellicos expedition.
 The new Lua fixtures verify structural intent only: they cannot prove resource
 craftability or that parent star coordinates render cleanly in Factorio.
+
+The interwoven progression fixture additionally checks science technology
+prerequisites, complete-lab compatibility, cyclic and absent dependencies,
+and repeat-pass stability. The full pack must still be tested in-game.

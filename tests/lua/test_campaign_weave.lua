@@ -1,0 +1,112 @@
+---@diagnostic disable: missing-fields
+package.path = "./?.lua;./?/init.lua;" .. package.path
+local function check(ok, message)
+  if not ok then error(message, 2) end
+end
+local raw = {technology={},tool={},recipe={},lab={
+  standard={inputs={"calidus-tech-card","metallurgic-science-pack",
+    "battlefield-science-pack","planetaris-compression-science-pack",
+    "planetaris-polishing-science-pack","agricultural-science-pack"}}
+}}
+local t=raw.technology
+local function mk(parents)
+  return {prerequisites=parents or {},unit={
+    count=100,time=30,ingredients={{"calidus-tech-card",1}}}}
+end
+for _, name in ipairs({
+  "solaris-discovery","nyxaris-discovery",
+  "planet-discovery-vulcanus","planet-discovery-castra",
+  "planet-discovery-arig","planet-discovery-hyarion",
+  "planet-discovery-tellus","planet-discovery-corrundum",
+  "planet-discovery-gleba","planet-discovery-moshine",
+  "planet-discovery-apia-carnova","panglia_planet_discovery_panglia",
+  "planet-discovery-fulgora","planet-discovery-ribbonia",
+  "planet-discovery-paracelsin","planet-discovery-shchierbin",
+  "planet-discovery-muria","planet-discovery-aquilo",
+  "planet-discovery-rubia","planet-discovery-maraxsis",
+  "planet-discovery-cubium","planet-discovery-secretas",
+  "planet-discovery-frozeta","planet-discovery-tenebris",
+  "planet-discovery-crucible","planet-discovery-vesta"
+}) do t[name]=mk() end
+t["planet-discovery-castra"].prerequisites={"planet-discovery-vulcanus","native-castra"}
+t["native-castra"]=mk()
+for _, entry in ipairs({
+  {"metallurgic-science-pack","planet-discovery-vulcanus"},
+  {"battlefield-science-pack","planet-discovery-castra"},
+  {"planetaris-compression-science-pack","planet-discovery-arig"},
+  {"planetaris-polishing-science-pack","planet-discovery-hyarion"},
+  {"agricultural-science-pack","planet-discovery-gleba"},
+  {"bioluminescent-science-pack","planet-discovery-tenebris"},
+  {"planet-crucible-science-pack","planet-discovery-crucible"}
+}) do
+  t[entry[1]]=mk({entry[2]})
+  raw.tool[entry[1]]={}
+  raw.recipe[entry[1]]={results={{type="item",name=entry[1],amount=1}}}
+end
+-- Simulate a source-mod circular dependency. Do not let Frozeta require
+-- a science technology which itself demands Frozeta discovery.
+t["bioluminescent-science-pack"].prerequisites={"planet-discovery-frozeta"}
+rawset(_G,"data",{raw=raw})
+package.loaded["prototypes.technology.campaign_weave"]=nil
+local M=require("prototypes.technology.campaign_weave")
+M.data_final_fixes()
+local function has_parent(name,need)
+  for _, p in ipairs(t[name].prerequisites) do if p==need then return true end end
+  return false
+end
+local function has_pack(name,need)
+  for _, p in ipairs(t[name].unit.ingredients) do
+    if (p.name or p[1])==need then return true end
+  end
+  return false
+end
+check(has_parent("planet-discovery-castra","metallurgic-science-pack"),
+  "Castra lacks Vulcanus metallurgy research")
+check(has_pack("planet-discovery-castra","metallurgic-science-pack"),
+  "Castra is not using producible science accepted by one lab")
+check(has_parent("planet-discovery-castra","native-castra"),
+  "Native prerequisites were overwritten")
+check(has_parent("planet-discovery-arig","battlefield-science-pack"),
+  "Arig lacks Castra military research")
+check(has_parent("planet-discovery-tellus","planet-discovery-gleba"),
+  "Tellus missing Gleba cross-system discovery")
+check(has_parent("planet-discovery-tellus","planetaris-compression-science-pack"),
+  "Tellus missing Arig science")
+check(has_parent("planet-discovery-tellus","planetaris-polishing-science-pack"),
+  "Tellus missing Hyarion science")
+check(has_parent("planet-discovery-apia-carnova","planet-discovery-moshine"),
+  "Apia/Carnova missing Moshine research")
+check(has_parent("panglia_planet_discovery_panglia","planet-discovery-apia-carnova"),
+  "Panglia missing Apia/Carnova research")
+check(has_parent("planet-discovery-shchierbin","planet-discovery-muria"),
+  "Middle-frontier link missing")
+check(has_parent("planet-discovery-maraxsis","planet-discovery-paracelsin"),
+  "Maraxsis missing Vibrant research")
+check(has_parent("planet-discovery-frozeta","planet-discovery-tenebris"),
+  "Outer-frontier link missing")
+check(has_parent("planet-discovery-vesta","planet-discovery-cubium"),
+  "Vesta missing Beetlejuice research")
+check(not has_parent("planet-discovery-frozeta","bioluminescent-science-pack"),
+  "A science milestone produced a technology cycle")
+check(not has_pack("planet-discovery-crucible","bioluminescent-science-pack"),
+  "Science added despite no lab accepting it")
+check(not has_parent("solaris-discovery","nyxaris-discovery") and
+  not has_parent("nyxaris-discovery","solaris-discovery"),
+  "First-system independence lost")
+check(t["planet-discovery-carna"]==nil and t["planet-discovery-pelagos"]==nil,
+  "An optional planet was created")
+
+local snapshots={}
+for name,v in pairs(t) do snapshots[name]={#v.prerequisites,#v.unit.ingredients} end
+M.data_final_fixes()
+for name,v in pairs(t) do
+  check(#v.prerequisites==snapshots[name][1] and
+    #v.unit.ingredients==snapshots[name][2],"Duplicate research on repeated pass: "..name)
+end
+local f=assert(io.open("data-final-fixes.lua","r"))
+local src=f:read("*a")
+f:close()
+local a=assert(src:find('require("prototypes.technology.seven_system_gates").data_final_fixes()',1,true))
+local b=assert(src:find('require("prototypes.technology.campaign_weave").data_final_fixes()',1,true))
+check(b>a,"Weave not wired after final system research gates")
+print("Cross-planet research, optional guards, lab safety and cycles passed")
