@@ -120,19 +120,21 @@ function route_reconcile.data_final_fixes()
 		if has_endpoint(from) and has_endpoint(to) then
 			local pair = key_for(from, to)
 			local route_name = "razi-" .. from .. "-" .. to
-			local keep_name = routes[route_name] and route_name or nil
-
-			-- Prefer the source's existing name: external compatibility modules
-			-- refer to names such as "secretas-frozeta" to augment asteroid
-			-- definitions. Only introduce razi-* when no source route exists.
-			if not keep_name then
-				for name, connection in pairs(routes) do
-					if key_for(connection.from, connection.to) == pair then
-						keep_name = name
-						break
-					end
+			-- Choose source names first, deterministically; other mods may
+			-- patch their asteroid tables by the original connection name.
+			local matches = {}
+			for name, connection in pairs(routes) do
+				if key_for(connection.from, connection.to) == pair then
+					matches[#matches + 1] = name
 				end
 			end
+			table.sort(matches, function(a, b)
+				local a_razi, b_razi = a:sub(1, 5) == "razi-", b:sub(1, 5) == "razi-"
+				if a_razi ~= b_razi then return not a_razi end
+				return a < b
+			end)
+			local keep_name = matches[1]
+
 			for name, connection in pairs(routes) do
 				if name ~= keep_name and key_for(connection.from, connection.to) == pair then
 					if keep_name then
