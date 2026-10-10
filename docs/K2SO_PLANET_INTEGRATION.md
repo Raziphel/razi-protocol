@@ -153,3 +153,15 @@ scenery. It never invents output prototypes or renames unknown modded items.
 The post-load compatibility auditor warns when old hidden K2SO aliases
 remain in recipe inputs, results or mineable scenery so upstream changes
 cannot silently reintroduce them.
+
+### Verify machine placement against source planets
+
+The post-load audit additionally compares every K2SO research-data recipe's
+crafting category and fluid requirements with actual assembling machines and
+furnaces. If a planet declares the relevant surface properties, the audit
+flags cases where **all otherwise compatible machines are forbidden on the
+source planet**. It checks explicit numeric surface conditions rather than
+guessing unreported planet properties. A valid machine category elsewhere
+in the universe is no longer treated as sufficient evidence that the K2SO
+research data can be made locally. These remain warnings until verified
+against the full game and modpack.
