@@ -1,7 +1,7 @@
 -- The last word on Razi-owned routes. This must run after source mod fixes.
 -- Preserve native intra-system routes (especially Apia, Crucible and Bellicos).
 local route_reconcile = {}
-local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
+local hazard_profiles = require("prototypes.system.asteroid_profiles")
 
 local membership = {
 	-- Main game and Calidus.
@@ -31,54 +31,54 @@ local membership = {
 
 local route_specifications = {
 	-- Parallel chapter entrances and neighbor-system crosslinks.
-	{"sye-calidus", "sye-solaris", 60000, "medium"},
-	{"sye-calidus", "sye-nyxaris", 65000, "medium"},
-	{"sye-solaris", "sye-nyxaris", 32000, "medium"},
-	{"sye-solaris", "sye-vibrant", 95000, "medium"},
-	{"sye-nyxaris", "sye-vespera", 95000, "medium"},
-	{"sye-vibrant", "sye-vespera", 38000, "medium"},
-	{"sye-vibrant", "sye-beetlejuice", 130000, "outer"},
-	{"sye-vespera", "sye-umbra", 130000, "outer"},
-	{"sye-beetlejuice", "sye-umbra", 45000, "outer"},
+	{"sye-calidus", "sye-solaris", 60000, "first_crossing"},
+	{"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
+	{"sye-solaris", "sye-nyxaris", 32000, "frontier_crosslink"},
+	{"sye-solaris", "sye-vibrant", 95000, "middle_crossing"},
+	{"sye-nyxaris", "sye-vespera", 95000, "middle_crossing"},
+	{"sye-vibrant", "sye-vespera", 38000, "middle_crosslink"},
+	{"sye-vibrant", "sye-beetlejuice", 130000, "outer_crossing"},
+	{"sye-vespera", "sye-umbra", 130000, "outer_crossing"},
+	{"sye-beetlejuice", "sye-umbra", 45000, "outer_crosslink"},
 	-- Solaris's twin opening branches.
-	{"sye-solaris", "vulcanus", 18000, "early"},
-	{"sye-solaris", "castra", 12000, "early"},
-	{"castra", "arig", 15000, "early"},
-	{"castra", "hyarion", 15000, "early"},
-	{"arig", "tellus", 16500, "early"},
-	{"hyarion", "tellus", 16500, "early"},
-	{"tellus", "corrundum", 18000, "early"},
+	{"sye-solaris", "vulcanus", 18000, "industrial"},
+	{"sye-solaris", "castra", 12000, "industrial"},
+	{"castra", "arig", 15000, "industrial"},
+	{"castra", "hyarion", 15000, "industrial"},
+	{"arig", "tellus", 16500, "industrial_deep"},
+	{"hyarion", "tellus", 16500, "industrial_deep"},
+	{"tellus", "corrundum", 18000, "industrial_deep"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
-	{"sye-nyxaris", "gleba", 18000, "early"},
-	{"sye-nyxaris", "apia-carnova-orbit", 17000, "early"},
-	{"sye-nyxaris", "moshine", 18000, "early"},
-	{"sye-nyxaris", "panglia", 18000, "early"},
-	{"panglia", "pelagos", 16000, "early"},
-	{"sye-nyxaris", "dea-dia-system-edge", 20000, "early"},
+	{"sye-nyxaris", "gleba", 18000, "biological"},
+	{"sye-nyxaris", "apia-carnova-orbit", 17000, "biological"},
+	{"sye-nyxaris", "moshine", 18000, "biological"},
+	{"sye-nyxaris", "panglia", 18000, "biological_deep"},
+	{"panglia", "pelagos", 16000, "biological_deep"},
+	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
 	-- Vibrant's chemistry strand.
-	{"sye-vibrant", "fulgora", 17000, "medium"},
-	{"fulgora", "ribbonia", 17500, "medium"},
-	{"sye-vibrant", "ribbonia", 17000, "medium"},
-	{"ribbonia", "paracelsin", 18000, "medium"},
-	{"paracelsin", "shchierbin", 18000, "medium"},
+	{"sye-vibrant", "fulgora", 17000, "electrical"},
+	{"fulgora", "ribbonia", 17500, "electrical"},
+	{"sye-vibrant", "ribbonia", 17000, "electrical"},
+	{"ribbonia", "paracelsin", 18000, "chemistry"},
+	{"paracelsin", "shchierbin", 18000, "chemistry_deep"},
 	-- Vespera's extreme-environment strand.
-	{"sye-vespera", "muria", 19000, "medium"},
-	{"muria", "aquilo", 22000, "medium"},
-	{"aquilo", "rubia", 24000, "medium"},
-	{"rubia", "maraxsis", 24000, "medium"},
+	{"sye-vespera", "muria", 19000, "cryogenic"},
+	{"muria", "aquilo", 22000, "cryogenic"},
+	{"aquilo", "rubia", 24000, "cryogenic_deep"},
+	{"rubia", "maraxsis", 24000, "cryogenic_deep"},
 	-- Beetlejuice's remote industrial strand.
-	{"sye-beetlejuice", "cubium", 18000, "outer"},
-	{"cubium", "linox-planet_linox", 17000, "outer"},
-	{"cubium", "secretas", 19000, "outer"},
-	{"secretas", "frozeta", 10500, "outer"},
+	{"sye-beetlejuice", "cubium", 18000, "outer_industry"},
+	{"cubium", "linox-planet_linox", 17000, "outer_industry"},
+	{"cubium", "secretas", 19000, "outer_industry_deep"},
+	{"secretas", "frozeta", 10500, "outer_industry_deep"},
 	-- Umbra's extreme sciences. Crucible's native orbital link stays intact.
-	{"sye-umbra", "tenebris", 18000, "outer"},
-	{"tenebris", "crucible-orbit", 20000, "outer"},
-	{"crucible-orbit", "vesta", 18000, "outer"},
-	{"vesta", "secretas", 23000, "outer"},
+	{"sye-umbra", "tenebris", 18000, "outer_void"},
+	{"tenebris", "crucible-orbit", 20000, "outer_void"},
+	{"crucible-orbit", "vesta", 18000, "outer_void_deep"},
+	{"vesta", "secretas", 23000, "outer_crosslink"},
 	-- The outer branches converge at the conventional Deep Space edge.
-	{"secretas", "solar-system-edge", 75000, "edge"},
-	{"vesta", "solar-system-edge", 75000, "edge"}
+	{"secretas", "solar-system-edge", 75000, "deep_edge"},
+	{"vesta", "solar-system-edge", 75000, "deep_edge"}
 }
 
 local function has_endpoint(name)
@@ -96,18 +96,6 @@ end
 local allowed = {}
 for _, specification in ipairs(route_specifications) do
 	allowed[key_for(specification[1], specification[2])] = true
-end
-
-local function asteroid_definitions(kind)
-	local source = asteroid_util.nauvis_fulgora
-	if kind == "outer" then
-		source = asteroid_util.fulgora_aquilo or source
-	elseif kind == "edge" then
-		source = asteroid_util.aquilo_solar_system_edge or source
-	elseif kind == "medium" then
-		source = asteroid_util.gleba_aquilo or source
-	end
-	return asteroid_util.spawn_definitions(source)
 end
 
 function route_reconcile.data_final_fixes()
@@ -145,6 +133,9 @@ function route_reconcile.data_final_fixes()
 			end
 			for name, connection in pairs(routes) do
 				if name ~= keep_name and key_for(connection.from, connection.to) == pair then
+					if keep_name then
+						hazard_profiles.preserve_custom(routes[keep_name], connection)
+					end
 					routes[name] = nil
 				end
 			end
@@ -152,11 +143,7 @@ function route_reconcile.data_final_fixes()
 			local route = keep_name and routes[keep_name]
 			if route then
 				route.from, route.to, route.length = from, to, length
-				-- Keep source / Imersite additions intact. Supply the chapter
-				-- hazard only when the upstream route has none of its own.
-				if not route.asteroid_spawn_definitions or #route.asteroid_spawn_definitions == 0 then
-					route.asteroid_spawn_definitions = asteroid_definitions(hazard)
-				end
+				hazard_profiles.apply(route, hazard)
 			else
 				data:extend({
 					{
@@ -165,7 +152,7 @@ function route_reconcile.data_final_fixes()
 						from = from,
 						to = to,
 						length = length,
-						asteroid_spawn_definitions = asteroid_definitions(hazard)
+						asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}
 				})
 			end
