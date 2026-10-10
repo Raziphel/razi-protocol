@@ -21,12 +21,23 @@ renamed["uranium-rounds-magazine"] = "kr-uranium-rifle-magazine"
 
 local function made_by_a_recipe()
 	local made = {}
-	for _, recipe in pairs(data.raw.recipe or {}) do
+	local function add_products(recipe)
+		if recipe.result then
+			made[recipe.result] = true
+		end
 		for _, product in pairs(recipe.results or {}) do
-			if product.name then
-				made[product.name] = true
+			local name = product.name or product[1]
+			if name then
+				made[name] = true
 			end
 		end
+	end
+
+	for _, recipe in pairs(data.raw.recipe or {}) do
+		add_products(recipe)
+		-- Compatibility with forks still using pre-2.0 recipe variants.
+		if recipe.normal then add_products(recipe.normal) end
+		if recipe.expensive then add_products(recipe.expensive) end
 	end
 
 	return made
