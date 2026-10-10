@@ -74,3 +74,12 @@ A green GitHub Actions run means **source checks and isolated fixtures passed**.
 It does not mean the game loads. A release is blocked until the required-mod
 Factorio 2.1 world, old-save migration and supported optional integrations
 pass in-engine testing.
+
+## Phase 8: Staged asteroid hazards
+
+- [x] Profile Razi-owned routes from mild launches through high-risk Deep Space approaches
+- [x] Preserve modded asteroid species, their native spawn curves, and source-owned internal travel routes
+- [x] Use region-specific hazards for newly added optional planet connections
+- [x] Add regression tests for custom asteroid preservation and deterministic duplicate-route handling
+- [ ] Validate actual asteroid and resource composition in the full Factorio 2.1 modpack
+- [ ] Playtest ammunition, shielding and throughput on representative ships in each frontier
