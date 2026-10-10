@@ -1,4 +1,4 @@
----@diagnostic disable: missing-fields, need-check-nil, assign-type-mismatch
+---@diagnostic disable: missing-fields, need-check-nil, assign-type-mismatch, undefined-field
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local function check(ok, message)
