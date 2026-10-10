@@ -113,6 +113,48 @@ class CompatibilityAuditTests(unittest.TestCase):
         self.assertFalse(any("K2SO machine" in message
                              for message in audit.audit(raw)[1]))
 
+    def test_mixed_planet_science_requires_one_lab(self):
+        raw = fixture()
+        raw["tool"]["other-world-science-pack"] = {}
+        raw["lab"] = {
+            "calidus-lab": {"inputs": ["calidus-tech-card"]},
+            "alien-lab": {"inputs": ["other-world-science-pack"]}}
+        raw["technology"]["interwoven-k2-research"] = {"unit": {
+            "ingredients": [
+                ["calidus-tech-card", 1],
+                ["other-world-science-pack", 1]]}}
+        _, warnings = audit.audit(raw)
+        self.assertTrue(any("Cross-mod research lab conflict" in w
+                            and "interwoven-k2-research" in w
+                            for w in warnings))
+        raw["lab"]["hybrid-lab"] = {"inputs": [
+            "calidus-tech-card", "other-world-science-pack"]}
+        self.assertFalse(any("Cross-mod research lab conflict" in w
+                             for w in audit.audit(raw)[1]))
+
+    def test_k2so_data_recipe_needs_enough_fluid_ports(self):
+        raw = fixture()
+        raw["item"]["kr-metallurgic-research-data"] = {}
+        raw["planet"]["vulcanus"] = {
+            "surface_properties": {"pressure": 4000}}
+        raw["recipe"]["kr-metallurgic-research-data"] = {
+            "categories": ["metallurgy"],
+            "ingredients": [
+                {"type": "fluid", "name": "molten-iron", "amount": 100}],
+            "results": [{"type": "item",
+                         "name": "kr-metallurgic-research-data"}]}
+        raw["recipe"]["solaris-tech-card"] = {
+            "ingredients": [{"type": "item",
+                             "name": "kr-metallurgic-research-data"}]}
+        raw["assembling-machine"] = {"foundry": {
+            "crafting_categories": ["metallurgy"]}}
+        self.assertTrue(any("sufficient fluid input/output connections" in w
+                            for w in audit.audit(raw)[1]))
+        raw["assembling-machine"]["foundry"]["fluid_boxes"] = [
+            {"production_type": "input"}]
+        self.assertFalse(any("sufficient fluid input/output connections" in w
+                             for w in audit.audit(raw)[1]))
+
     def test_k2so_homeworld_machine_surface_incompatibility(self):
         raw = fixture()
         raw["item"]["kr-metallurgic-research-data"] = {}

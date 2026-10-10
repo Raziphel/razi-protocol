@@ -165,3 +165,18 @@ guessing unreported planet properties. A valid machine category elsewhere
 in the universe is no longer treated as sufficient evidence that the K2SO
 research data can be made locally. These remain warnings until verified
 against the full game and modpack.
+
+## Cross-mod lab and fluid-port regressions
+
+The compatibility audit now reviews **all enabled research technologies**
+whose science ingredients come from multiple mods. If no actual laboratory
+accepts the *entire* ingredient combination, it emits an advisory warning
+with the technology name and science packs. A set of separate labs each
+accepting half the ingredients is insufficient. Hidden/disabled research
+nodes are excluded to avoid irrelevant findings.
+
+For K2SO research data, the same audit checks that at least one machine
+has enough distinct fluid input/output interfaces to run the science-data
+recipe. Neither finding blindly expands lab inputs or machine capability:
+the right fix should be chosen once the full modpack's prototypes confirm
+the producing world, machine and technology progression.
