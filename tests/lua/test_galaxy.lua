@@ -71,7 +71,12 @@ local function test_routes()
 				from = "sye-beetlejuice", to = "tenebris"
 			},
 			["native-crucible-orbit"] = native_crucible,
-			["native-dea-dia-internal"] = native_dea_dia
+			["native-dea-dia-internal"] = native_dea_dia,
+			["cubium-secretas"] = {
+				type = "space-connection", name = "cubium-secretas",
+				from = "cubium", to = "secretas", length = 1000,
+				asteroid_spawn_definitions = {{asteroid = "imersite", type = "asteroid"}}
+			}
 		}
 	}))
 	local spawn_module = "__space-age__.prototypes.planet.asteroid-spawn-definitions"
@@ -89,6 +94,9 @@ local function test_routes()
 	check(routes["old-tenebris-link"] == nil, "Stale Beetlejuice/Tenebris route survived")
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
 	check(routes["native-dea-dia-internal"] == native_dea_dia, "Dea Dia internal route removed")
+	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")
+	check(routes["cubium-secretas"].asteroid_spawn_definitions[1].asteroid == "imersite",
+		"Imersite asteroid definitions were lost")
 	for _, name in ipairs({
 		"razi-sye-calidus-sye-nyxaris",
 		"razi-sye-solaris-sye-vibrant",
