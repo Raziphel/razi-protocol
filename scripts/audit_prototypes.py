@@ -28,6 +28,48 @@ SYSTEM_CARDS = (
     "umbra-tech-card",
     "deep-space-tech-card",
 )
+
+# Focus on source worlds that unambiguously own the mandatory science.
+# Unknown/optional source science remains unasserted rather than guessed.
+CARD_SCIENCE_ORIGINS = {
+    "solaris-tech-card": {
+        "metallurgic-science-pack": "planet-discovery-vulcanus",
+        "battlefield-science-pack": "planet-discovery-castra",
+        "planetaris-compression-science-pack": "planet-discovery-arig",
+        "planetaris-refraction-science-pack": "planet-discovery-hyarion",
+        "electrochemical-science-pack": "planet-discovery-corrundum",
+        "kr-metallurgic-research-data": "planet-discovery-vulcanus",
+    },
+    "nyxaris-tech-card": {
+        "agricultural-science-pack": "planet-discovery-gleba",
+        "thermodynamic-science-pack": "planet-discovery-moshine",
+        "apicultural-science-pack": "planet-discovery-apia-carnova",
+        "kr-agricultural-research-data": "planet-discovery-gleba",
+    },
+    "vibrant-tech-card": {
+        "electromagnetic-science-pack": "planet-discovery-fulgora",
+        "ribbonia-alien-science-pack": "planet-discovery-ribbonia",
+        "vanadium-science-pack": "planet-discovery-shchierbin",
+        "kr-electromagnetic-research-data": "planet-discovery-fulgora",
+    },
+    "vespera-tech-card": {
+        "muriatic-science-pack": "planet-discovery-muria",
+        "cryogenic-science-pack": "planet-discovery-aquilo",
+        "rubia-biofusion-science-pack": "planet-discovery-rubia",
+        "hydraulic-science-pack": "planet-discovery-maraxsis",
+        "kr-cryogenic-research-data": "planet-discovery-aquilo",
+    },
+    "beetlejuice-tech-card": {
+        "golden-science-pack": "planet-discovery-secretas",
+        "kr-matter-research-data": "planet-discovery-aquilo",
+    },
+    "umbra-tech-card": {
+        "bioluminescent-science-pack": "planet-discovery-tenebris",
+        "planet-crucible-science-pack": "planet-discovery-crucible",
+        "gas-manipulation-science-pack": "planet-discovery-vesta",
+        "kr-matter-research-data": "planet-discovery-aquilo",
+    },
+}
 OPTIONAL_PLANET_DESTINATIONS = {
     # Planet: (expected orbit parent, expected local route entry, chapter gate)
     "igrys": ("solaris", "sye-solaris", "solaris-discovery"),
@@ -177,6 +219,88 @@ def audit(raw, extra_locations=(), check_campaign_routes=True):
             visited.add(current)
             queue.extend(parents.get(current, ()))
         return False
+    # A prerequisite cycle checker cannot see the second graph formed by
+    # recipe outputs and recipe-unlock technologies. Examine Razi's compulsory
+    # system cards whenever a technology consumes them.
+    card_recipe_ingredients = {}
+    producers = {}
+    for recipe_name, recipe in recipes.items():
+        outputs = [recipe.get("result")] if recipe.get("result") else []
+        outputs.extend(name_of(result)
+                       for result in sequence(recipe.get("results")))
+        for item in outputs:
+            if item:
+                producers.setdefault(item, []).append((recipe_name, recipe))
+    for card in SYSTEM_CARDS:
+        card_recipe_ingredients[card] = {
+            name for entry in sequence(table(recipes.get(card)).get("ingredients"))
+            if (name := name_of(entry))
+        }
+
+    for consumer, t in technologies.items():
+        cards = tech_ingredients(t).intersection(SYSTEM_CARDS)
+        if not cards:
+            continue
+        for card in cards:
+            inputs = card_recipe_ingredients[card]
+            for pack in inputs:
+                producers_for_pack = producers.get(pack, ())
+                if not producers_for_pack:
+                    continue  # Launch products and native mining need no recipe.
+                # All producers must be impossible before consuming research
+                # for this to be a definite dependency deadlock.
+                locked = True
+                for recipe_name, recipe in producers_for_pack:
+                    if recipe.get("enabled") is not False:
+                        locked = False
+                        break
+                    if any(not depends_on(unlocker, consumer)
+                           for unlocker in unlockers.get(recipe_name, ())):
+                        locked = False
+                        break
+                if locked and all(unlockers.get(name) for name, _ in producers_for_pack):
+                    errors.add(
+                        f"Science supply deadlock: {consumer} consumes {card}, "
+                        f"but {pack} production unlocks only after {consumer}"
+                    )
+
+            # Each explicitly mapped science ingredient must have its planet
+            # discovered before a later chapter can research that card.
+            for science, owner in CARD_SCIENCE_ORIGINS.get(card, {}).items():
+                if science in inputs and owner in technologies and consumer != owner:
+                    if not depends_on(consumer, owner):
+                        errors.add(
+                            f"Planet progression softlock: {consumer} needs "
+                            f"{card} containing {science} from {owner}, "
+                            f"but has no prerequisite path through that world"
+                        )
+
+    # System-card recipes themselves must not require one another cyclically,
+    # even when all their unlock technologies are acyclic.
+    recipe_card_parents = {
+        card: card_recipe_ingredients[card].intersection(SYSTEM_CARDS)
+        for card in SYSTEM_CARDS
+    }
+    card_state, card_path = {}, []
+
+    def visit_card(card):
+        if card_state.get(card) == 2:
+            return
+        if card_state.get(card) == 1:
+            cycle = card_path[card_path.index(card):] + [card]
+            errors.add("System-card ingredient cycle: " + " -> ".join(cycle))
+            return
+        card_state[card] = 1
+        card_path.append(card)
+        for previous in recipe_card_parents[card]:
+            visit_card(previous)
+        card_path.pop()
+        card_state[card] = 2
+
+    for card in SYSTEM_CARDS:
+        if card_state.get(card) is None:
+            visit_card(card)
+
     if check_campaign_routes:
         # A drawn route is not an unlock. Verify that the endpoint discovery
         # is owned by its chapter technology and cannot come from an earlier

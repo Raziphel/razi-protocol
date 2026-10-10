@@ -52,6 +52,48 @@ class TestRaziAudit(unittest.TestCase):
     def test_good_dump(self):
         self.assertEqual(module.audit(fixture()), [])
 
+    def test_recipe_unlock_supply_deadlock_even_without_tech_cycle(self):
+        raw = fixture()
+        raw["recipe"]["solaris-tech-card"]["ingredients"] = [
+            {"type": "item", "name": "battlefield-science-pack", "amount": 1}]
+        raw["recipe"]["battlefield-science-pack"] = {
+            "enabled": False,
+            "results": [{"type": "item", "name": "battlefield-science-pack"}]
+        }
+        raw["technology"]["after-vibrant"] = {
+            "prerequisites": ["vibrant-discovery"],
+            "effects": [{"type": "unlock-recipe",
+                         "recipe": "battlefield-science-pack"}],
+        }
+        raw["technology"]["vibrant-discovery"]["unit"]["ingredients"].append(
+            ["solaris-tech-card", 1])
+        self.assertTrue(any("Science supply deadlock" in issue
+                            for issue in module.audit(raw)))
+
+    def test_card_recipe_ingredient_cycle(self):
+        raw = fixture()
+        raw["recipe"]["solaris-tech-card"]["ingredients"] = [
+            {"type": "item", "name": "nyxaris-tech-card", "amount": 1}]
+        raw["recipe"]["nyxaris-tech-card"]["ingredients"] = [
+            {"type": "item", "name": "solaris-tech-card", "amount": 1}]
+        self.assertTrue(any("System-card ingredient cycle" in issue
+                            for issue in module.audit(raw)))
+
+    def test_later_tech_using_planet_science_requires_that_planet(self):
+        raw = fixture()
+        raw["technology"]["planet-discovery-secretas"] = {"unit": {
+            "ingredients": [["calidus-tech-card", 1]]}}
+        raw["recipe"]["beetlejuice-tech-card"]["ingredients"] = [
+            {"type": "item", "name": "golden-science-pack", "amount": 1}]
+        raw["technology"]["razi-outer-frontier-mastery"]["unit"][
+            "ingredients"].append(["beetlejuice-tech-card", 1])
+        self.assertTrue(any("Planet progression softlock" in issue
+                            for issue in module.audit(raw)))
+        raw["technology"]["razi-outer-frontier-mastery"][
+            "prerequisites"] = ["planet-discovery-secretas"]
+        self.assertFalse(any("Planet progression softlock" in issue
+                             for issue in module.audit(raw)))
+
     def test_shared_departure_hub_unlocks_on_either_first_branch(self):
         raw = fixture()
         effects = raw["technology"]["nyxaris-discovery"]["effects"]
