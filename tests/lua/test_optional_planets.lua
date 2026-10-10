@@ -99,8 +99,10 @@ check(planets.athos.orbit.parent.name == "solaris", "Athos didn't join Solaris")
 check(not moved.rabbasca and planets.rabbasca == moon, "Rabbasca lost native moon orbit")
 check(routes["gleba-rabbasca"] == native_moon, "Rabbasca native connection removed")
 check(routes["carna-special-link"] == special, "Source-owned special route removed")
-check(not routes["vulcanus-to-igrys"] and not routes["gleba-to-igrys"],
-	"Old Igrys early-game bypass remained")
+check(routes["vulcanus-to-igrys"] ~= nil,
+	"Solaris's native Vulcanus/Igrys connection was removed")
+check(not routes["gleba-to-igrys"],
+	"Nyxaris/Gleba bypassed the optional Solaris discovery gate")
 
 for _, pair in ipairs({
 	{"igrys", "sye-solaris", "solaris-discovery"},
