@@ -13,12 +13,12 @@ never assume an upstream release contains a fix unless it has been verified.
 
 The machine-readable [registry](../compat/registry.json) identifies the
 current integration modules, their scope and their tests. It is *not* evidence
-that every upstream issue is unresolved; \`needs-review\` is deliberately
+that every upstream issue is unresolved; `needs-review` is deliberately
 conservative.
 
 Before adding a new patch:
 1. Reproduce the bug in a specific required/optional mod combination.
-2. Capture the technology/recipe prototype from \`--dump-data-raw\`.
+2. Capture the technology/recipe prototype from `--dump-data-raw`.
 3. Check whether an upstream issue/fix already exists, and write its link.
 4. Modify only the impacted prototypes and guard on the expected mod/version.
 5. Add a fixture reproducing both the bug and the absence of the dependency.
@@ -42,7 +42,7 @@ surface conditions. It is intentionally conservative:
   the only producible one.
 - **WARN**: a suspicious recycling loop, or absent surface restriction.
   These might be intentional. Review them instead of blindly patching.
-- Use \`--json\` for automation and \`--strict-warnings\` when conducting a
+- Use `--json` for automation and `--strict-warnings` when conducting a
   manual all-findings review.
 
 The audit does **not** prove the Factorio engine can load the modpack, or
@@ -51,8 +51,8 @@ load, save migration and practical exploration remain mandatory.
 
 ## Celestial weather
 
-The 2.1 forks \`celestial-weather-updated\` and
-\`celestial-weather-additions-updated\` are already optional dependencies.
+The 2.1 forks `celestial-weather-updated` and
+`celestial-weather-additions-updated` are already optional dependencies.
 Avoid duplicating their mechanics inside Razi. Audit the final enabled planet
 prototypes and weather settings before adding integrations, especially Muria,
 Rubia, Paracelsin, Vesta, Panglia and optional Pelagos. The next step is to
