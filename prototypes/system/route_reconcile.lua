@@ -19,12 +19,16 @@ local membership = {
 	["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
 	paracelsin = "vibrant", shchierbin = "vibrant",
 	["sye-vespera"] = "vespera", muria = "vespera", aquilo = "vespera",
+	["razi-vespera-belt-inner"] = "vespera",
+	["razi-vespera-belt-outer"] = "vespera",
 	rubia = "vespera", maraxsis = "vespera",
 	-- Beetlejuice and Umbra.
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
 	frozeta = "beetlejuice",
 	["sye-umbra"] = "umbra", tenebris = "umbra",
+	["razi-umbra-belt-inner"] = "umbra",
+	["razi-umbra-belt-outer"] = "umbra",
 	["crucible-orbit"] = "umbra", crucible = "umbra", vesta = "umbra",
 	["solar-system-edge"] = "deep-space"
 }
@@ -66,7 +70,9 @@ local route_specifications = {
 	-- Vespera's extreme-environment strand.
 	{"sye-vespera", "muria", 19000, "cryogenic"},
 	{"muria", "aquilo", 22000, "cryogenic"},
-	{"aquilo", "rubia", 24000, "cryogenic_deep"},
+	{"aquilo", "razi-vespera-belt-inner", 10500, "belt_vespera_approach"},
+	{"razi-vespera-belt-inner", "razi-vespera-belt-outer", 6500, "belt_vespera_crossing"},
+	{"razi-vespera-belt-outer", "rubia", 10500, "belt_vespera_departure"},
 	{"rubia", "maraxsis", 24000, "cryogenic_deep"},
 	-- Beetlejuice's remote industrial strand.
 	{"sye-beetlejuice", "cubium", 18000, "outer_industry"},
@@ -76,12 +82,23 @@ local route_specifications = {
 	-- Umbra's extreme sciences. Crucible's native orbital link stays intact.
 	{"sye-umbra", "tenebris", 18000, "outer_void"},
 	{"tenebris", "crucible-orbit", 20000, "outer_void"},
-	{"crucible-orbit", "vesta", 18000, "outer_void_deep"},
+	{"crucible-orbit", "razi-umbra-belt-inner", 10000, "belt_umbra_approach"},
+	{"razi-umbra-belt-inner", "razi-umbra-belt-outer", 8000, "belt_umbra_crossing"},
+	{"razi-umbra-belt-outer", "vesta", 11000, "belt_umbra_departure"},
 	{"vesta", "secretas", 23000, "outer_crosslink"},
 	-- The outer branches converge at the conventional Deep Space edge.
 	{"secretas", "solar-system-edge", 75000, "deep_edge"},
 	{"vesta", "solar-system-edge", 75000, "deep_edge"}
 }
+
+-- Paths replaced by physical belt detours. Retain original modded
+-- asteroid-resource entries on the new dangerous central crossing.
+local retired_belts = {
+  {"aquilo", "rubia", "razi-vespera-belt-inner", "razi-vespera-belt-outer"},
+  {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
+}
+
+local calidus_locations = {"nauvis", "muluna", "eneas", "sye-calidus"}
 
 local function has_endpoint(name)
 	return (data.raw.planet and data.raw.planet[name])
@@ -102,6 +119,25 @@ end
 
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
+	local rescued = {}
+
+	-- Remove only the two direct journeys now replaced by real belt hops.
+	-- This must happen before new routes are created or the old connection
+	-- would bypass the whole encounter.
+	for _, old in ipairs(retired_belts) do
+		if has_endpoint(old[3]) and has_endpoint(old[4]) then
+			local obsolete = key_for(old[1], old[2])
+			local destination = key_for(old[3], old[4])
+			local preserved = {asteroid_spawn_definitions = {}}
+			for name, connection in pairs(routes) do
+				if key_for(connection.from, connection.to) == obsolete then
+					hazard_profiles.preserve_custom(preserved, connection)
+					routes[name] = nil
+				end
+			end
+			rescued[destination] = preserved
+		end
+	end
 
 	-- Stop cross-chapter shortcuts injected by dependencies, without deleting
 	-- a single native route inside a chapter or unmanaged optional subsystem.
@@ -160,6 +196,28 @@ function route_reconcile.data_final_fixes()
 					}
 				})
 			end
+		end
+	end
+
+	-- Save custom chunks from the two retired direct routes after constructing
+	-- the replacement crossings. Never change their source spawn curves.
+	for _, connection in pairs(routes) do
+		local retained = rescued[key_for(connection.from, connection.to)]
+		if retained then hazard_profiles.preserve_custom(connection, retained) end
+	end
+
+	-- No medium, big or huge vanilla asteroids anywhere *inside* Calidus.
+	-- Cover source mod moon connections and parked platforms as well as the
+	-- Razi-managed Nauvis launch route. Modded asteroids remain untouched.
+	for _, location_name in ipairs(calidus_locations) do
+		local location = (data.raw.planet and data.raw.planet[location_name])
+			or (data.raw["space-location"] and data.raw["space-location"][location_name])
+		if location then hazard_profiles.cap_sizes(location, "small") end
+	end
+	for _, connection in pairs(routes) do
+		if membership[connection.from] == "calidus"
+			and membership[connection.to] == "calidus" then
+			hazard_profiles.cap_sizes(connection, "small")
 		end
 	end
 end

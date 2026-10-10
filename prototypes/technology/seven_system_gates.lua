@@ -167,7 +167,7 @@ function gates.data_final_fixes()
 	replace_requirements("planet-discovery-aquilo",
 		{"planet-discovery-muria"}, frontier, 950)
 	replace_requirements("planet-discovery-rubia",
-		{"planet-discovery-aquilo"}, frontier, 950)
+		{"planet-discovery-aquilo", "razi-vespera-belt-survey"}, frontier, 950)
 	replace_requirements("planet-discovery-maraxsis",
 		{"planet-discovery-rubia"}, frontier, 1100)
 
@@ -190,7 +190,7 @@ function gates.data_final_fixes()
 	replace_requirements("planet-discovery-crucible",
 		{"planet-discovery-tenebris"}, outer, 1200)
 	replace_requirements("planet-discovery-vesta",
-		{"planet-discovery-crucible"}, outer, 1200)
+		{"planet-discovery-crucible", "razi-umbra-belt-survey"}, outer, 1200)
 
 	-- Require BOTH final branches before opening the solar-system edge.
 	local final_prereqs = {"beetlejuice-discovery", "umbra-discovery"}
