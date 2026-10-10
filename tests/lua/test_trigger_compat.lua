@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields, need-check-nil, assign-type-mismatch
 -- Regression fixtures for K2SO item/fluids research trigger renames.
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
