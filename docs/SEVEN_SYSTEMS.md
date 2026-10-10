@@ -25,13 +25,27 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 
 ### Physical routes
 
-The final route tables are in `prototypes/system/route_reconcile.lua`. Razi-owned interstellar connections:
+The physical layout is finalized by `prototypes/system/galaxy_layout.lua`
+**after** optional planet mods have finished positioning their worlds. This
+prevents earlier per-planet updates from pulling stars back out of alignment.
+The route table itself lives in `prototypes/system/route_reconcile.lua`.
+
+Calidus is the left-hand anchor. Solaris/Nyxaris, Vibrant/Vespera, and
+Beetlejuice/Umbra occupy three evenly spaced upper/lower columns. Deep Space
+sits beyond the final column. Larger star-to-star orbit circles are hidden to
+keep the starmap clean, while local planetary rings remain visible.
+
+Razi-owned interstellar connections:
 
     Calidus <-> Solaris       Calidus <-> Nyxaris
     Solaris <-> Nyxaris       Solaris <-> Vibrant
     Nyxaris <-> Vespera       Vibrant <-> Vespera
     Vibrant <-> Beetlejuice   Vespera <-> Umbra
     Beetlejuice <-> Umbra
+
+    Additional diagonals (available only after both endpoints unlock):
+    Solaris <-> Vespera       Nyxaris <-> Vibrant
+    Vibrant <-> Umbra         Vespera <-> Beetlejuice
 
 Local branches remain connected inside their own systems, including:
 
@@ -42,6 +56,16 @@ Local branches remain connected inside their own systems, including:
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
     Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)
     Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos
+
+Cross-system connections render as clean straight lines, without the
+large solar-centered arcs that previously tangled the map. The diagonal
+links are **not separate research shortcuts**: both endpoint slipstreams
+must be researched before they can be used. Vibrant/Vespera require both
+first-frontier chapters; Beetlejuice/Umbra require both middle-frontier
+chapters. The Solar System Edge remains gated by Outer Frontier Mastery.
+
+Both Solaris and Nyxaris discovery technologies unlock the shared Calidus
+departure slipstream. Either branch can therefore be chosen first.
 
 Razi's reconciliation pass only removes source routes where **both** endpoints belong to explicitly managed but different chapters. Unknown optional source-mod internals stay intact.
 
