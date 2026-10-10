@@ -47,7 +47,8 @@ check(settings_map["biter-spawner"].frequency == 0, "Vanilla spawner not suppres
 check(settings_map["small-worm-turret"].frequency == 0, "Vanilla worm not suppressed")
 
 router = setup()
-settings.startup["razi-enable-enemy-routing"].value = false
+local mock_settings = rawget(_G, "settings")
+mock_settings.startup["razi-enable-enemy-routing"].value = false
 local second = data.raw.planet["test-world"]
 data.raw["unit-spawner"]["armoured-biter-spawner"] = {autoplace = {}}
 router.add_entities_to_planet("test-world", {"armoured-biter-spawner"}, "enemy-base")
