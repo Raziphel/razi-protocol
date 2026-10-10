@@ -93,3 +93,7 @@ require("prototypes.compat.k2so_planet_integration").data_final_fixes()
 -- Restore equivalent baseline crafting on K2SO upgrades after all planetary
 -- recipe-category rewrites, and anchor late K2 technologies to their worlds.
 require("prototypes.compat.k2so_planet_machines").data_final_fixes()
+
+-- Linox can optionally inject its own science into pre-Linox Aquilo research.
+-- Keep the outer system reachable without weakening post-arrival hard mode.
+require("prototypes.compat.linox_science_guard").data_final_fixes()

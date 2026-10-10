@@ -96,6 +96,17 @@
       "purpose": "Preserve ordinary machine category parity after planet mods change recipes, and anchor late K2SO machine research to source-world discoveries without cycles.",
       "upstream_status": "local-only",
       "fixture": "tests/lua/test_k2so_machines.lua"
+    },
+    {
+      "id": "linox-hard-mode-early-science",
+      "module": "prototypes/compat/linox_science_guard.lua",
+      "upstream_mods": [
+        "linox",
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Prevent late Linox hard-mode science from being required by the research chain that unlocks Linox itself.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_linox_science_guard.lua"
     }
   ]
 }

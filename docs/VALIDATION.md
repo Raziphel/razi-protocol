@@ -79,3 +79,14 @@ This only establishes *logical availability*. It cannot establish fuel,
 electricity, resources, special crafting events, surface placement or input
 transport without a complete enabled-modpack Factorio dump and a gameplay
 smoke test.
+
+## Linox hard-mode integration with the outer system
+
+Linox's optional `linox-settings_hard-mode_enable-science-pack_aquilo`
+setting can insert `linox-item_linox-science-pack` into pre-Linox
+Aquilo-era technologies. Linox itself moved into Beetlejuice, and cannot
+supply that pack until its discovery and native production are unlocked.
+Razi now strips that ingredient only from the prerequisite ancestry of
+`beetlejuice-discovery`, `umbra-discovery` and Linox's own landing
+discovery. This keeps all required entrances feasible while leaving later
+Linox hard-mode recipes and technologies untouched.
