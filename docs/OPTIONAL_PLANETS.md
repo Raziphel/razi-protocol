@@ -1,6 +1,9 @@
 # Optional Planet Expeditions
 
-Six new planet mods are supported as **optional** destinations. Installing them
+Six new planet mods are supported as **non-mandatory** destinations. The five
+established candidates are **recommended** dependencies (so users are prompted
+to install them with Razi Protocol); new experimental Athos is **optional**.
+Installing them
 does not alter the required seven-system mastery cards or transceiver victory.
 
 These are external, separately downloadable mods. Razi Protocol contains no
@@ -52,3 +55,7 @@ space connections can affect existing space-platform routes.
 Athos is especially new, and Carna has substantial environment simulation.
 Both need in-game performance and K2SO checks before they can be considered
 mature default choices.
+
+**Note on game-version dependencies:** Rabbasca requires a modern Factorio
+2.1.20 build; other planets may require their own assets and libraries. Let
+the Factorio mod manager resolve those requirements before playing.

@@ -126,6 +126,7 @@ authors' mods or making unverified assumptions about their mechanics.
 
 - [Compatibility policy and upstream patch registry](docs/COMPATIBILITY.md)
 - [Planet Field Guide](docs/PLANET_FIELD_GUIDE.md)
+- [Six new planet expeditions](docs/OPTIONAL_PLANETS.md)
 - [Seven-System Galaxy Design](docs/SEVEN_SYSTEMS.md)
 - [Factorio prototype validation guide](docs/VALIDATION.md)
 - [Next-pass implementation checklist](docs/INTEGRATION_ROADMAP.md)

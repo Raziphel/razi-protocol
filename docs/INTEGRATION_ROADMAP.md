@@ -56,6 +56,18 @@ verification** after the first cleanup pass. It is not a release changelog.
 - [ ] Verify source ownership of native travel routes and technology unlock effects
 - [ ] Add guarded integration and fixture tests before making the dependency required
 
+## Phase 7: Six additional planet destinations
+
+- [x] Screen 2.1 candidates for distinct gameplay, updates and compatibility
+- [x] Add five mature recommendations and experimental optional Athos
+- [x] Attach guarded planet travel, star ownership, and native discovery gates
+- [x] Preserve Rabbasca's Gleba moon orbit and native source links
+- [x] Add isolated regression fixtures for absent mods and research cycles
+- [ ] Run each recommended planet with actual Factorio 2.1 + K2SO
+- [ ] Run the all-recommended combination and check modded machine restrictions
+- [ ] Test Asteroid defenses and the normal seven-system tech card victory
+- [ ] Verify Athos before recommending it by default
+
 ## Release condition
 
 A green GitHub Actions run means **source checks and isolated fixtures passed**.

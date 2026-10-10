@@ -15,7 +15,15 @@
 | Umbra | Tenebris, Crucible, Vesta | Late experimental engineering, high-risk planet sciences | Crucible Orbit and Vesta routes |
 | Deep Space | Solar System Edge, Aegis, Bellicos, Shattered Planet | Pulsar research, Promethium, stable singularity and transceiver | Aegis/Bellicos required; Nexus/Void optional |
 
-## Optional expeditions
+## Additional expeditions
+
+The new recommended planet adventures are Igrys (Solaris), Rabbasca (Gleba's
+moon), Foliax (Nyxaris), Obsidiax (Vespera), and Carna (Umbra). Athos is an
+experimental optional planet in Solaris. All retain native discovery and
+science, and are excluded from mandatory chapter mastery.
+
+See [Optional Planet Expeditions](OPTIONAL_PLANETS.md) for installation notes
+and upstream links.
 
 Cerys and Eneas extend Calidus. Pelagos and Dea Dia extend Nyxaris,
 with Dea Dia retaining its native subsystem. Nexus-Updated and
