@@ -30,6 +30,8 @@ local membership = {
 }
 
 local route_specifications = {
+	-- The local Nauvis launch corridor stays comparatively forgiving.
+	{"nauvis", "sye-calidus", 25000, "starter"},
 	-- Parallel chapter entrances and neighbor-system crosslinks.
 	{"sye-calidus", "sye-solaris", 60000, "first_crossing"},
 	{"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
