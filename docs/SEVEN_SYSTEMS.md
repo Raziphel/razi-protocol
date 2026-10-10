@@ -103,3 +103,9 @@ and researched travel passages. Rubia requires the Vespera belt survey;
 Vesta requires the Umbra belt survey. Source-mod custom asteroid resources
 from retired direct paths are retained on the new dangerous crossings.
 See [Asteroid Routes](ASTEROID_ROUTES.md).
+
+## Research between individual planets
+
+Individual destination technologies now integrate upstream planetary science,
+including safe crosslinks between the parallel frontiers. Details and safety
+limits are in [Interwoven Progression](INTERWOVEN_PROGRESSION.md).

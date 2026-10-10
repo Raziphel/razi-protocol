@@ -73,6 +73,9 @@ require("prototypes.system.route_reconcile").data_final_fixes()
 -- The final campaign gates must override earlier source compatibility rules.
 require("prototypes.technology.seven_system_gates").data_final_fixes()
 
+-- Weave the seven-system planet discoveries through upstream research.
+require("prototypes.technology.campaign_weave").data_final_fixes()
+
 -- Optional planet destinations: native science retained, chapter travel attached.
 require("prototypes.system.optional_planets").data_final_fixes()
 
