@@ -72,6 +72,14 @@ local function test_routes()
 			},
 			["native-crucible-orbit"] = native_crucible,
 			["native-dea-dia-internal"] = native_dea_dia,
+			["razi-cubium-secretas"] = {
+				type = "space-connection", name = "razi-cubium-secretas",
+				from = "cubium", to = "secretas",
+				asteroid_spawn_definitions = {{
+					type = "entity", asteroid = "special-mod-asteroid",
+					spawn_points = {{distance = 0.4, probability = 0.17, speed = 3}}
+				}}
+			},
 			["cubium-secretas"] = {
 				type = "space-connection", name = "cubium-secretas",
 				from = "cubium", to = "secretas", length = 1000,
@@ -95,6 +103,14 @@ local function test_routes()
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
 	check(routes["native-dea-dia-internal"] == native_dea_dia, "Dea Dia internal route removed")
 	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")
+	check(routes["razi-cubium-secretas"] == nil, "Duplicate Razi route was not consolidated")
+	local found_extra = false
+	for _, asteroid in ipairs(routes["cubium-secretas"].asteroid_spawn_definitions or {}) do
+		if asteroid.asteroid == "special-mod-asteroid" then
+			found_extra = asteroid.spawn_points[1].probability == 0.17
+		end
+	end
+	check(found_extra, "Duplicate route lost a modded asteroid's native spawn curve")
 	local native_asteroids = routes["cubium-secretas"].asteroid_spawn_definitions or {}
 	local first_asteroid = native_asteroids[1] or {}
 	check(first_asteroid.asteroid == "imersite",
