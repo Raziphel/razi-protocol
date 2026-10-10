@@ -76,8 +76,10 @@ local system_card_definitions = {
 		},
 		ingredients = {
 			"aerospace-science-pack",
+			"dea-dia-science-pack",
 			"insulation-science-pack",
 			"thermodynamic-science-pack",
+			"nuclear-science-pack",
 			"apicultural-science-pack",
 			"pelagos-science-pack"
 		},

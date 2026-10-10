@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - Revamp
   pull_request:
 
 permissions:
@@ -20,3 +21,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Check the mod
         uses: GreenTech-Solutions/factorio-mod-tools@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
+
+  regression:
+    name: Regression fixtures
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install Lua 5.2
+        run: sudo apt-get update -qq && sudo apt-get install -y lua5.2
+      - name: Check Lua compatibility guards
+        run: lua5.2 tests/lua/test_compat.lua
+      - name: Test Factorio prototype auditor
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
