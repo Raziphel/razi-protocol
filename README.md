@@ -37,13 +37,13 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 
 | Tier | System | Planets | Identity |
 | --- | --- | --- | --- |
-| Home | **Calidus** | Nauvis, Vulcanus, Fulgora, Gleba, Muluna | Familiar Space Age industry, the first system card |
-| Frontier 1 | **Solaris** | Castra Prime, Arig, Hyarion, Tellus, Corrundum | Military and advanced industrial science |
-| Frontier 1 | **Nyxaris** | Moshine, Apia/Carnova, Panglia | Computation, exotic biology, environmental challenges |
-| Frontier 2 | **Vibrant** | Ribbonia, Paracelsin, Shchierbin | Alien chemistry and galvanization |
-| Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis | Extreme environments, cryogenics, research-data production |
+| Home | **Calidus** | Nauvis, Muluna; optional Eneas | Familiar Space Age industry, the first system card |
+| Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys, optional Athos | Military and advanced industrial science |
+| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
+| Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin, Shchierbin; optional Cerys | Alien chemistry and galvanization |
+| Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
 | Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
-| Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta | Unusual and dangerous late-game experimentation |
+| Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta; Carna | Unusual and dangerous late-game experimentation |
 | Finale | **Deep Space** | Aegis/Bellicos, the solar-system edge, Shattered Planet; optional Nexus/black-hole branches | Pulsar science, Promethium, transceiver |
 
 ### The interstellar routes
@@ -55,13 +55,13 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
             \           |---- Vespera ----|                   |---- Deep Space
              \---- (local system crosslinks) ---- Umbra -------|
 
-This sketch represents **choices**, not all physical connections. Full interstellar route and local-spoke details are in [Seven-System Design](docs/SEVEN_SYSTEMS.md).
+This sketch represents **choices**, not all physical connections. Full interstellar route and local-spoke details are in [Seven-System Design](docs/SEVEN_SYSTEMS.md) and [Asteroid Hazard Guide](docs/ASTEROID_ROUTES.md).
 
-Calidus's native early routes remain. Solaris and Nyxaris are independent first-frontier entry choices. Vibrant and Vespera require mastery of both first-frontier systems; Beetlejuice and Umbra likewise require mastery of both second-frontier systems. An outer-frontier mastery technology gates the final edge journey.
+Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, while Fulgora anchors Vibrant. Solaris and Nyxaris are independent first-frontier entry choices. Vibrant and Vespera require mastery of both first-frontier systems; Beetlejuice and Umbra likewise require mastery of both second-frontier systems. An outer-frontier mastery technology gates the final edge journey.
 
 ### Optional regions
 
-- **Cerys and Eneas** remain Calidus moon branches.
+- **Eneas** remains with Calidus; **Cerys** follows Fulgora to Vibrant and **Rabbasca** follows Gleba to Nyxaris.
 - **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
 - **Nexus-Updated and VoidProcessing-Updated** remain optional Deep Space expansions, never prerequisites to reach the main transceiver finale.
 - Aegis/Bellicos is **required** by the current pack and retains its own internal pulsar and stargate routes.
