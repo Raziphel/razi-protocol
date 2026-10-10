@@ -84,3 +84,7 @@ mod ID, dependencies, author permission/credit, unique gameplay, science,
 resource supply, surface conditions, native connections, save stability and
 which system's research tier they fit. Do not add experimental planet mods to
 required dependencies until those checks pass.
+
+## K2SO integration for every enabled planet
+
+Razi's final K2SO pass reconciles known K2SO material aliases on all installed planet recipes without rewriting Null's intentionally visible common fluids. Its existing system cards also import native K2SO planetary research data from accessible earlier regions. See [K2SO Planet Integration](K2SO_PLANET_INTEGRATION.md) for the science matrix, guards and remaining engine tests.

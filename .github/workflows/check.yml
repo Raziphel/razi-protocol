@@ -50,5 +50,7 @@ jobs:
         run: lua5.2 tests/lua/test_asteroid_belts.lua
       - name: Test native planet descriptions and Razi expedition context
         run: lua5.2 tests/lua/test_planet_descriptions.lua
+      - name: Check K2SO integration across planet mods
+        run: lua5.2 tests/lua/test_k2so_planets.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
