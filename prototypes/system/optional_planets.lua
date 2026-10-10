@@ -19,13 +19,13 @@ local additions = {
 		29, 0.61, 20500},
 	{"PlanetAthos", "athos", "solaris", "sye-solaris", "solaris-discovery",
 		31, 0.90, 19000},
-	{"planet-rabbasca", "rabbasca", "calidus", "gleba",
+	{"planet-rabbasca", "rabbasca", "nyxaris", "gleba",
 		"planet-discovery-gleba", nil, nil, 13000}
 }
 
 local home_systems = {
-	nauvis = "calidus", vulcanus = "calidus", fulgora = "calidus",
-	gleba = "calidus", aquilo = "vespera",
+	nauvis = "calidus", vulcanus = "solaris", fulgora = "vibrant",
+	gleba = "nyxaris", aquilo = "vespera",
 	["sye-calidus"] = "calidus", ["sye-solaris"] = "solaris",
 	["sye-nyxaris"] = "nyxaris", ["sye-vibrant"] = "vibrant",
 	["sye-vespera"] = "vespera", ["sye-beetlejuice"] = "beetlejuice",

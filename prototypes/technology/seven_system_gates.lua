@@ -82,19 +82,19 @@ local exotic = {"solaris-tech-card", "nyxaris-tech-card"}
 local outer = {"vibrant-tech-card", "vespera-tech-card"}
 local finale = {"beetlejuice-tech-card", "umbra-tech-card"}
 
-local calidus_discoveries = {
-	"planet-discovery-vulcanus",
-	"planet-discovery-fulgora",
-	"planet-discovery-gleba",
-	"planet-discovery-muluna"
-}
+local calidus_discoveries = {"space-science-pack"}
+-- Original Space Age worlds now sit at successive independent frontiers.
+-- No travel gate may depend on a science pack from the planet it unlocks.
 local frontier_mastery = {
+	"planet-discovery-vulcanus",
+	"planet-discovery-gleba",
 	"planet-discovery-corrundum",
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
 	"panglia_planet_discovery_panglia"
 }
 local exotic_mastery = {
+	"planet-discovery-fulgora",
 	"planet-discovery-shchierbin",
 	"planet-discovery-maraxsis"
 }
@@ -113,21 +113,24 @@ local function with_gate(gate, other)
 end
 
 function gates.data_final_fixes()
-	-- The opening pair must be independently researchable; no lithium / Aquilo
-	-- or Solaris planet sciences may appear in these entry technologies.
+	-- Both first stars unlock using Nauvis science only. In particular, do
+	-- not require metallurgic, electromagnetic, or agricultural science here.
 	replace_requirements("solaris-discovery", calidus_discoveries, calidus, 1000)
 	replace_requirements("nyxaris-discovery", calidus_discoveries, calidus, 1000)
 
-	-- Solaris: Arig and Hyarion become genuinely independent discovery paths.
-	replace_requirements("planet-discovery-castra", {"solaris-discovery"}, calidus, 600)
+	-- Vulcanus is the Solaris industrial anchor, reached after departing Nauvis.
+	-- Castra opens after Vulcanus, while Arig and Hyarion branch after Castra.
+	replace_requirements("planet-discovery-vulcanus", {"solaris-discovery"}, calidus, 550)
+	replace_requirements("planet-discovery-castra", {"planet-discovery-vulcanus"}, calidus, 600)
 	replace_requirements("planet-discovery-arig", {"planet-discovery-castra"}, calidus, 750)
 	replace_requirements("planet-discovery-hyarion", {"planet-discovery-castra"}, calidus, 750)
 	replace_requirements("planet-discovery-tellus",
 		{"planet-discovery-arig", "planet-discovery-hyarion"}, calidus, 900)
 	replace_requirements("planet-discovery-corrundum", {"planet-discovery-tellus"}, calidus, 1100)
 
-	-- Nyxaris: three parallel first destinations. Optional Dea Dia/Pelagos
-	-- keep their own natural discovery arcs and do not gate the next pair.
+	-- Gleba anchors Nyxaris's biological progression, alongside the three
+	-- existing research destinations. Optional Dea Dia/Pelagos stay optional.
+	replace_requirements("planet-discovery-gleba", {"nyxaris-discovery"}, calidus, 600)
 	for _, name in ipairs({
 		"planet-discovery-apia-carnova",
 		"planet-discovery-moshine",
@@ -148,7 +151,11 @@ function gates.data_final_fixes()
 		with_gate("solaris-discovery", with_gate("nyxaris-discovery", frontier_mastery)),
 		exotic, 1500)
 
-	-- Vibrant: chemistry and alien science.
+	-- Vibrant is Fulgora's home. Electromagnetic science is obtained *inside*
+	-- this tier, never from Calidus or the initial Solaris/Nyxaris entrances.
+	replace_requirements("planet-discovery-fulgora", {"vibrant-discovery"}, frontier, 800)
+	-- Keep Cerys with its parent Fulgora, while preserving native moon techs.
+	add_existing_prerequisites("moon-discovery-cerys", {"planet-discovery-fulgora"})
 	replace_requirements("planet-discovery-ribbonia", {"vibrant-discovery"}, frontier, 900)
 	replace_requirements("planet-discovery-paracelsin",
 		{"planet-discovery-ribbonia"}, frontier, 900)
