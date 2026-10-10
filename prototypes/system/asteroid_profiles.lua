@@ -76,16 +76,11 @@ local function adjust(definitions, settings, profile_name)
       definitions[index] = def
       local family_boost = family == settings[4] and 1.10 or 1
       local size = vanilla_sizes[def.asteroid]
-      local size_boost = 1
-      if size == "small" then
-        size_boost = weights.small
-      elseif size == "medium" then
-        size_boost = weights.medium
-      elseif size == "big" then
-        size_boost = weights.big
-      elseif size == "huge" then
-        size_boost = weights.huge
-      end
+      local size_boost = (size == "small" and weights.small)
+        or (size == "medium" and weights.medium)
+        or (size == "big" and weights.big)
+        or (size == "huge" and weights.huge)
+        or 1
       for _, point in ipairs(def.spawn_points or {}) do
         if type(point.probability) == "number" then
           point.probability = math.max(0,
