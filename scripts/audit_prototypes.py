@@ -267,7 +267,13 @@ def audit(raw, extra_locations=(), check_campaign_routes=True):
             # Each explicitly mapped science ingredient must have its planet
             # discovered before a later chapter can research that card.
             for science, owner in CARD_SCIENCE_ORIGINS.get(card, {}).items():
-                if science in inputs and owner in technologies and consumer != owner:
+                # This is a mandatory ordering requirement only for Razi's
+                # explicit campaign milestones. Independent mod research may
+                # legitimately require imported packs without a tech-tree link
+                # to the planet where they were made.
+                if (consumer in CAMPAIGN_TECHNOLOGIES
+                        and science in inputs and owner in technologies
+                        and consumer != owner):
                     if not depends_on(consumer, owner):
                         errors.add(
                             f"Planet progression softlock: {consumer} needs "

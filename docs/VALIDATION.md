@@ -90,3 +90,8 @@ Razi now strips that ingredient only from the prerequisite ancestry of
 `beetlejuice-discovery`, `umbra-discovery` and Linox's own landing
 discovery. This keeps all required entrances feasible while leaving later
 Linox hard-mode recipes and technologies untouched.
+
+The source-planet ancestry assertion is restricted to **Razi campaign
+milestones**. Independent K2SO/third-party technologies can legitimately
+consume imported System Tech Cards without having every source-world
+planet discovery as a direct prerequisite. Such use is not a deadlock.
