@@ -146,10 +146,27 @@ def audit(raw, extra_locations=(), check_campaign_routes=True):
     # Every milestone card must be craftable once its unlocking tech is
     # researched. The dump captures the final state after other mods patch it.
     unlocked = set()
-    for tech in technologies.values():
+    unlockers = {}
+    for tech_name, tech in technologies.items():
         for effect in sequence(tech.get("effects")):
             if isinstance(effect, dict) and effect.get("type") == "unlock-recipe":
-                unlocked.add(effect.get("recipe"))
+                recipe_name = effect.get("recipe")
+                unlocked.add(recipe_name)
+                unlockers.setdefault(recipe_name, set()).add(tech_name)
+
+    def depends_on(technology_name, target):
+        """Does technology_name require target, directly or transitively?"""
+        visited = set()
+        queue = list(parents.get(technology_name, ()))
+        while queue:
+            current = queue.pop()
+            if current == target:
+                return True
+            if current in visited:
+                continue
+            visited.add(current)
+            queue.extend(parents.get(current, ()))
+        return False
     for card in SYSTEM_CARDS:
         if card not in tools:
             errors.add(f"Missing system tech card item: {card}")
@@ -158,6 +175,19 @@ def audit(raw, extra_locations=(), check_campaign_routes=True):
             errors.add(f"Missing system tech card recipe: {card}")
         elif recipe.get("enabled") is not True and card not in unlocked:
             errors.add(f"No technology unlocks system tech card recipe: {card}")
+
+        # A tech consuming a card cannot be the only route to unlock that
+        # card's recipe. This catches cross-mod softlocks missed by tech cycle
+        # detection because recipe gates are not prerequisite edges.
+        if recipe and recipe.get("enabled") is not True and unlockers.get(card):
+            for consumer, technology in technologies.items():
+                if card not in tech_ingredients(technology):
+                    continue
+                sources = unlockers[card]
+                if all(unlocker == consumer or depends_on(unlocker, consumer)
+                       for unlocker in sources):
+                    errors.add(f"System card {card} cannot be made before "
+                               f"{consumer} researches it (recipe unlock deadlock)")
 
     for route_name, route in connections.items():
         for endpoint in ("from", "to"):
