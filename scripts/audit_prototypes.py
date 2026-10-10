@@ -177,6 +177,60 @@ def audit(raw, extra_locations=(), check_campaign_routes=True):
             visited.add(current)
             queue.extend(parents.get(current, ()))
         return False
+    if check_campaign_routes:
+        # A drawn route is not an unlock. Verify that the endpoint discovery
+        # is owned by its chapter technology and cannot come from an earlier
+        # independent technology provided by a dependency.
+        systems = (
+            ("solaris", ("solaris-discovery",)),
+            ("nyxaris", ("nyxaris-discovery",)),
+            ("vibrant", ("vibrant-discovery",)),
+            ("vespera", ("vespera-discovery",)),
+            ("beetlejuice", ("beetlejuice-discovery",)),
+            ("umbra", ("umbra-discovery",)),
+            ("calidus", ("solaris-discovery", "nyxaris-discovery")),
+        )
+        for system, legitimate in systems:
+            location = "sye-" + system
+            if location not in locations:
+                continue
+            discoverers = set()
+            for name, technology in technologies.items():
+                if any(isinstance(effect, dict) and
+                       effect.get("type") == "unlock-space-location" and
+                       effect.get("space_location") == location
+                       for effect in sequence(technology.get("effects"))):
+                    discoverers.add(name)
+            for required in legitimate:
+                if required in technologies and required not in discoverers:
+                    errors.add(f"Shared or chapter travel hub {location} missing "
+                               f"unlock from {required}")
+            if system != "calidus":
+                owner = legitimate[0]
+                for other in discoverers - {owner}:
+                    if not depends_on(other, owner):
+                        errors.add(f"Premature unlock of {location} by {other} "
+                                   f"(must follow {owner})")
+
+        pair_gates = (
+            ("vibrant-discovery", ("solaris-discovery", "nyxaris-discovery")),
+            ("vespera-discovery", ("solaris-discovery", "nyxaris-discovery")),
+            ("beetlejuice-discovery", ("vibrant-discovery", "vespera-discovery")),
+            ("umbra-discovery", ("vibrant-discovery", "vespera-discovery")),
+        )
+        for destination, required in pair_gates:
+            if destination in technologies:
+                for predecessor in required:
+                    if not depends_on(destination, predecessor):
+                        errors.add(f"Premature {destination}: missing {predecessor} gate")
+        if depends_on("solaris-discovery", "nyxaris-discovery") or \
+                depends_on("nyxaris-discovery", "solaris-discovery"):
+            errors.add("First-frontier systems are no longer independent")
+        if "stellar-discovery-solar-system-edge" in technologies and not \
+                depends_on("stellar-discovery-solar-system-edge",
+                           "razi-outer-frontier-mastery"):
+            errors.add("Deep Space exit bypasses Outer Frontier Mastery")
+
     for card in SYSTEM_CARDS:
         if card not in tools:
             errors.add(f"Missing system tech card item: {card}")
