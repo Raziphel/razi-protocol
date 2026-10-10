@@ -99,7 +99,7 @@ check(#all["kr-advanced-chemical-plant"].crafting_categories==original
 
 -- Source planet mod did not expose the category. Do not invent it.
 local unsupported,_,safety=create(true)
-unsupported["chemical-plant"].crafting_categories={"chemistry"}
+table.remove(unsupported["chemical-plant"].crafting_categories, 2)
 safety.data_final_fixes()
 check(not has(unsupported["kr-advanced-chemical-plant"].crafting_categories,
   "chemistry-or-cryogenics"),"Category added without the baseline machine")
