@@ -147,6 +147,9 @@ function optional_planets.data_final_fixes()
 			attach_route(location_name, hub, length, host_system)
 		end
 	end
+	-- The final orbit pass runs after recommended and optional planet updates.
+	-- No change to the public source mods' native moon relationships.
+	require("prototypes.system.galaxy_layout").data_final_fixes()
 end
 
 return optional_planets

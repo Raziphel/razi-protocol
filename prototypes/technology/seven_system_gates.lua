@@ -112,7 +112,33 @@ local function with_gate(gate, other)
 	return list
 end
 
+-- The Calidus slipstream is shared by both opening expeditions.
+-- Opening either Solaris or Nyxaris must be sufficient to leave Nauvis.
+local function ensure_unlock(discovery, location)
+	local t = tech(discovery)
+	if not t then return end
+	t.effects = t.effects or {}
+	for _, effect in ipairs(t.effects) do
+		if effect.type == "unlock-space-location"
+			and effect.space_location == location then return end
+	end
+	t.effects[#t.effects + 1] = {
+		type = "unlock-space-location",
+		space_location = location,
+		use_icon_overlay_constant = true
+	}
+end
+
 function gates.data_final_fixes()
+	ensure_unlock("solaris-discovery", "sye-calidus")
+	ensure_unlock("nyxaris-discovery", "sye-calidus")
+	-- Every chapter hub remains tied to exactly its own system discovery.
+	for _, name in ipairs({
+		"solaris", "nyxaris", "vibrant", "vespera",
+		"beetlejuice", "umbra"
+	}) do
+		ensure_unlock(name .. "-discovery", "sye-" .. name)
+	end
 	-- Both first stars unlock using Nauvis science only. In particular, do
 	-- not require metallurgic, electromagnetic, or agricultural science here.
 	replace_requirements("solaris-discovery", calidus_discoveries, calidus, 1000)
