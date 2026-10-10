@@ -42,5 +42,7 @@ jobs:
         run: lua5.2 tests/lua/test_optional_planets.lua
       - name: Test escalating asteroid profiles
         run: lua5.2 tests/lua/test_asteroid_profiles.lua
+      - name: Test Razi asteroid belts and surveys
+        run: lua5.2 tests/lua/test_asteroid_belts.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v

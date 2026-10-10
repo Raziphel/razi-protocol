@@ -28,6 +28,8 @@ local function test_routes()
 	local places = {
 		"sye-calidus", "sye-solaris", "sye-nyxaris", "sye-vibrant",
 		"sye-vespera", "sye-beetlejuice", "sye-umbra",
+		"razi-vespera-belt-inner","razi-vespera-belt-outer",
+		"razi-umbra-belt-inner","razi-umbra-belt-outer",
 		"solar-system-edge", "castra", "arig", "hyarion", "tellus",
 		"corrundum", "apia-carnova-orbit", "moshine", "panglia",
 		"dea-dia-system-edge", "ribbonia", "paracelsin", "shchierbin",
@@ -70,7 +72,21 @@ local function test_routes()
 				type = "space-connection", name = "old-tenebris-link",
 				from = "sye-beetlejuice", to = "tenebris"
 			},
-			["native-crucible-orbit"] = native_crucible,
+			["old-direct-aquilo-rubia"] = {
+                type="space-connection", from="aquilo", to="rubia",
+                asteroid_spawn_definitions={{
+                  type="asteroid-chunk", asteroid="obsidiax-asteroid-chunk",
+                  spawn_points={{distance=0.45,probability=0.11,speed=2}}
+                }}
+            },
+            ["old-direct-crucible-vesta"] = {
+                type="space-connection", from="crucible-orbit", to="vesta",
+                asteroid_spawn_definitions={{
+                  type="entity", asteroid="carna-crystal-asteroid",
+                  spawn_points={{distance=0.6,probability=0.09,speed=2}}
+                }}
+            },
+            ["native-crucible-orbit"] = native_crucible,
 			["native-dea-dia-internal"] = native_dea_dia,
 			["razi-cubium-secretas"] = {
 				type = "space-connection", name = "razi-cubium-secretas",
@@ -100,6 +116,26 @@ local function test_routes()
 	check(routes["outdated-cross-shortcut"] == nil, "Calidus bypass survived")
 	check(routes["outdated-muria"] == nil, "Stale Vibrant/Muria route survived")
 	check(routes["old-tenebris-link"] == nil, "Stale Beetlejuice/Tenebris route survived")
+    check(routes["old-direct-aquilo-rubia"] == nil,
+      "Vespera belt has a direct bypass")
+    check(routes["old-direct-crucible-vesta"] == nil,
+      "Umbra belt has a direct bypass")
+    for _, crossing in ipairs({
+      {"razi-razi-vespera-belt-inner-razi-vespera-belt-outer",
+       "obsidiax-asteroid-chunk", 0.11},
+      {"razi-razi-umbra-belt-inner-razi-umbra-belt-outer",
+       "carna-crystal-asteroid", 0.09}
+    }) do
+      local connection = routes[crossing[1]]
+      check(connection ~= nil, "Belt crossing not linked")
+      local found = false
+      for _, def in ipairs(connection.asteroid_spawn_definitions or {}) do
+        if def.asteroid == crossing[2] then
+          found = def.spawn_points[1].probability == crossing[3]
+        end
+      end
+      check(found, "Retired native route lost a modded asteroid resource")
+    end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
 	check(routes["native-dea-dia-internal"] == native_dea_dia, "Dea Dia internal route removed")
 	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")
@@ -160,6 +196,7 @@ local function test_research()
 		"planet-discovery-tenebris", "planet-discovery-crucible",
 		"planet-discovery-vesta", "linox-technology_planet-discovery-linox",
 		"promethium-science-pack",
+        "razi-vespera-belt-survey", "razi-umbra-belt-survey",
 		"razi-singularity-theory", "razi-singularity-test-fire",
 		"razi-stable-intergalactic-singularity"
 	}
@@ -218,6 +255,10 @@ local function test_research()
 		"Muria lacks Vespera entry gate")
 	check(list_contains(technologies["planet-discovery-tenebris"].prerequisites, "umbra-discovery"),
 		"Tenebris lacks Umbra entry gate")
+    check(list_contains(technologies["planet-discovery-rubia"].prerequisites,
+      "razi-vespera-belt-survey"), "Rubia bypasses its belt survey")
+    check(list_contains(technologies["planet-discovery-vesta"].prerequisites,
+      "razi-umbra-belt-survey"), "Vesta bypasses its belt survey")
 	local edge = technologies["stellar-discovery-solar-system-edge"] or {prerequisites = {}}
 	check(list_contains(edge.prerequisites, "razi-outer-frontier-mastery"),
 		"Deep Space can bypass outer-system mastery")

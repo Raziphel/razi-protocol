@@ -40,22 +40,27 @@ local function probability(defs, name)
 end
 
 local progression = {
-  "starter", "first_crossing", "middle_crossing",
-  "cryogenic", "outer_crossing", "deep_edge"
+  {"starter", false, false, false},
+  {"first_crossing", true, false, false},
+  {"industrial_deep", true, false, false},
+  {"middle_crossing", true, true, false},
+  {"belt_vespera_crossing", true, true, false},
+  {"outer_crossing", true, true, true},
+  {"belt_umbra_crossing", true, true, true},
+  {"deep_edge", true, true, true}
 }
-local previous = 0
-local previous_big = 0
-local previous_huge = 0
-for _, name in ipairs(progression) do
+for _, entry in ipairs(progression) do
+  local name, medium_allowed, big_allowed, huge_allowed =
+    entry[1], entry[2], entry[3], entry[4]
   local defs = profiles.create(name)
-  local metal = probability(defs, "metallic-asteroid-chunk")
-  ok(metal > previous, "Hazard difficulty not rising at " .. name)
-  previous = metal
+  local metallic = probability(defs, "metallic-asteroid-chunk")
+  ok(metallic > 0, "Resource chunks were removed on " .. name)
+  local medium = probability(defs, "medium-oxide-asteroid")
   local big = probability(defs, "big-metallic-asteroid")
   local huge = probability(defs, "huge-metallic-asteroid")
-  ok(big > previous_big, "Big asteroids did not escalate on " .. name)
-  ok(huge > previous_huge, "Huge asteroids did not escalate on " .. name)
-  previous_big, previous_huge = big, huge
+  ok((medium > 0) == medium_allowed, "Medium asteroid size tier failed on " .. name)
+  ok((big > 0) == big_allowed, "Big asteroid size tier failed on " .. name)
+  ok((huge > 0) == huge_allowed, "Huge asteroid size tier failed on " .. name)
   ok(probability(defs, "imersite-asteroid-chunk") == 0.21,
      "Custom Imersite resource asteroid changed")
   ok(probability(defs, "super-metallic-asteroid") == 0.06,
@@ -119,5 +124,45 @@ ok(probability(first.asteroid_spawn_definitions, "imersite-asteroid-chunk") == 0
    "Changed duplicate Imersite asteroid curve")
 profiles.preserve_custom(first, duplicate)
 ok(#first.asteroid_spawn_definitions == 3, "Duplicated custom asteroid definitions")
+
+-- Stationary Calidus platforms must be small-only, not merely
+-- a lower probability of getting hit by a medium or huge asteroid.
+local shared_home = util.spawn_definitions()
+local home_orbit = {asteroid_spawn_definitions = shared_home}
+local another_orbit = {asteroid_spawn_definitions = shared_home}
+profiles.cap_sizes(home_orbit, "small")
+ok(probability(home_orbit.asteroid_spawn_definitions, "medium-oxide-asteroid") == 0,
+   "Calidus platform still spawns medium asteroids")
+ok(probability(home_orbit.asteroid_spawn_definitions, "big-metallic-asteroid") == 0,
+   "Calidus platform still spawns big asteroids")
+ok(probability(home_orbit.asteroid_spawn_definitions, "huge-metallic-asteroid") == 0,
+   "Calidus platform still spawns huge asteroids")
+ok(probability(another_orbit.asteroid_spawn_definitions, "medium-oxide-asteroid") > 0,
+   "Size clamp contaminated a shared modded asteroid list")
+ok(probability(home_orbit.asteroid_spawn_definitions, "imersite-asteroid-chunk") == 0.21,
+   "Calidus size cap removed custom asteroid resources")
+
+-- A belt can introduce an actual big/huge encounter when the native vanilla
+-- preset omitted that size, but ONLY if Factorio defines that entity.
+rawset(_G, "data", {raw={asteroid={
+  ["big-metallic-asteroid"]={},
+  ["huge-metallic-asteroid"]={}
+}}})
+local old_spawn = util.spawn_definitions
+util.spawn_definitions = function()
+  return {{type="asteroid-chunk",asteroid="metallic-asteroid-chunk",
+    spawn_points={{distance=0.5,probability=0.1,speed=1}}}}
+end
+local v_belt = profiles.create("belt_vespera_crossing")
+local u_belt = profiles.create("belt_umbra_crossing")
+ok(probability(v_belt, "big-metallic-asteroid") > 0,
+   "Vespera belt lacks an intentional big asteroid challenge")
+ok(probability(v_belt, "huge-metallic-asteroid") == nil,
+   "Vespera belt introduced huge asteroids too soon")
+ok(probability(u_belt, "huge-metallic-asteroid") > 0,
+   "Umbra belt lacks an intentional huge asteroid challenge")
+ok(probability(u_belt, "imersite-asteroid-chunk") == nil,
+   "Belt generated a non-native modded asteroid without source data")
+util.spawn_definitions = old_spawn
 
 print("Tiered asteroid profiles and modded spawn preservation passed")
