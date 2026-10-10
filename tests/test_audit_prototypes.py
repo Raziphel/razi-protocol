@@ -20,7 +20,7 @@ def fixture():
     tech["vibrant-discovery"]["prerequisites"] = ["nyxaris-discovery"]
     tech["beetlejuice-discovery"]["prerequisites"] = ["vibrant-discovery"]
     tech["card-factory"] = {
-        "unit": {"ingredients": [["calidus-tech-card", 1]]},
+        "unit": {"ingredients": [["space-science-pack", 1]]},
         "effects": [{"type": "unlock-recipe", "recipe": name}
                     for name in module.SYSTEM_CARDS],
     }
@@ -71,6 +71,33 @@ class TestRaziAudit(unittest.TestCase):
         raw = fixture()
         raw["technology"]["card-factory"]["effects"].pop()
         self.assertTrue(any("No technology unlocks" in msg for msg in module.audit(raw)))
+
+    def test_card_cannot_unlock_itself(self):
+        raw = fixture()
+        raw["technology"]["card-factory"]["unit"]["ingredients"] = [
+            ["calidus-tech-card", 1]]
+        issues = module.audit(raw)
+        self.assertTrue(any("recipe unlock deadlock" in issue
+                            for issue in issues))
+
+    def test_card_unlock_after_consumer_is_deadlock(self):
+        raw = fixture()
+        raw["technology"]["card-factory"]["prerequisites"] = ["vibrant-discovery"]
+        raw["technology"]["vibrant-discovery"]["unit"]["ingredients"] = [
+            ["nyxaris-tech-card", 1]]
+        issues = module.audit(raw)
+        self.assertTrue(any("nyxaris-tech-card" in issue and "deadlock" in issue
+                            for issue in issues))
+
+    def test_alternative_unlock_avoids_deadlock(self):
+        raw = fixture()
+        raw["technology"]["card-factory"]["unit"]["ingredients"] = [
+            ["calidus-tech-card", 1]]
+        raw["technology"]["early-card-factory"] = {
+            "unit": {"ingredients": [["space-science-pack", 1]]},
+            "effects": [{"type": "unlock-recipe", "recipe": "calidus-tech-card"}],
+        }
+        self.assertEqual(module.audit(raw), [])
 
     def test_optional_extra_route(self):
         raw = fixture()
