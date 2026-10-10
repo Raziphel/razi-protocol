@@ -133,7 +133,9 @@ local function test_research()
 		"planet-discovery-secretas", "planet-discovery-frozeta",
 		"planet-discovery-tenebris", "planet-discovery-crucible",
 		"planet-discovery-vesta", "linox-technology_planet-discovery-linox",
-		"promethium-science-pack"
+		"promethium-science-pack",
+		"razi-singularity-theory", "razi-singularity-test-fire",
+		"razi-stable-intergalactic-singularity"
 	}
 	local technologies = {}
 	for _, name in ipairs(technology_names) do
@@ -198,6 +200,20 @@ local function test_research()
 		"Outer mastery does not require Beetlejuice")
 	check(list_contains(outer.prerequisites, "planet-discovery-vesta"),
 		"Outer mastery does not require Umbra")
+	for _, name in ipairs({
+		"razi-singularity-theory",
+		"razi-singularity-test-fire",
+		"razi-stable-intergalactic-singularity"
+	}) do
+		local unit = technologies[name].unit
+		local found_vespera, found_umbra = false, false
+		for _, ingredient in ipairs(unit.ingredients) do
+			local ingredient_name = ingredient.name or ingredient[1]
+			if ingredient_name == "vespera-tech-card" then found_vespera = true end
+			if ingredient_name == "umbra-tech-card" then found_umbra = true end
+		end
+		check(found_vespera and found_umbra, "Missing final card in " .. name)
+	end
 end
 
 test_routes()

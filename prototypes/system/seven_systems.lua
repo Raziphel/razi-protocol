@@ -8,6 +8,7 @@ PlanetsLib:extend({
 	{
 		type = "space-location",
 		name = "vespera",
+		localised_name = {"space-location-name.vespera"},
 		starmap_icon = "__razi-protocol__/graphics/icons/VibrantStar.png",
 		starmap_icon_size = 1024,
 		sprite_only = true,
@@ -33,6 +34,7 @@ PlanetsLib:extend({
 	{
 		type = "space-location",
 		name = "umbra",
+		localised_name = {"space-location-name.umbra"},
 		starmap_icon = "__razi-protocol__/graphics/icons/NyxarisStar.png",
 		starmap_icon_size = 1024,
 		sprite_only = true,
