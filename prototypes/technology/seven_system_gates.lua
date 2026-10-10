@@ -46,6 +46,36 @@ local function replace_requirements(name, prerequisites, science_packs, count)
 	end
 end
 
+
+-- Singularity technology prototypes are created in data.lua, before Razi's
+-- card prototypes exist. Add the cards now, once lab_cards has created them.
+local function ensure_transceiver_cards(technology_name, multiplier)
+	local t = tech(technology_name)
+	if not (t and t.unit and t.unit.ingredients) then
+		return
+	end
+
+	local existing = {}
+	for _, ingredient in ipairs(t.unit.ingredients) do
+		local name = ingredient.name or ingredient[1]
+		existing[name] = true
+	end
+	for _, name in ipairs({
+		"calidus-tech-card", "solaris-tech-card", "nyxaris-tech-card",
+		"vibrant-tech-card", "vespera-tech-card",
+		"beetlejuice-tech-card", "umbra-tech-card"
+	}) do
+		if science_pack_exists(name) and not existing[name] then
+			local amount = 1
+			if name == "beetlejuice-tech-card" or name == "umbra-tech-card" then
+				amount = multiplier
+			end
+			t.unit.ingredients[#t.unit.ingredients + 1] = {name, amount}
+			existing[name] = true
+		end
+	end
+end
+
 local calidus = {"calidus-tech-card"}
 local frontier = {"calidus-tech-card", "solaris-tech-card", "nyxaris-tech-card"}
 local exotic = {"solaris-tech-card", "nyxaris-tech-card"}
@@ -165,6 +195,11 @@ function gates.data_final_fixes()
 		{"razi-outer-frontier-mastery"})
 	add_existing_prerequisites("promethium-science-pack",
 		{"razi-outer-frontier-mastery"})
+
+	-- Keep the final transceiver prices proportionate to each experiment.
+	ensure_transceiver_cards("razi-singularity-theory", 1)
+	ensure_transceiver_cards("razi-singularity-test-fire", 2)
+	ensure_transceiver_cards("razi-stable-intergalactic-singularity", 3)
 
 	-- Old saves retain their original tech IDs; Nexus and Void remain optional
 	-- endgame branches, not prerequisites for the seven-system campaign.
