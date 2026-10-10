@@ -89,3 +89,7 @@ require("prototypes.system.planet_descriptions").data_final_fixes()
 -- The final K2SO pass reconciles planet recipes and integrates research data
 -- into system cards after all source compatibility and layout passes.
 require("prototypes.compat.k2so_planet_integration").data_final_fixes()
+
+-- Restore equivalent baseline crafting on K2SO upgrades after all planetary
+-- recipe-category rewrites, and anchor late K2 technologies to their worlds.
+require("prototypes.compat.k2so_planet_machines").data_final_fixes()

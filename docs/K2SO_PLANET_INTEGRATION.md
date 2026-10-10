@@ -69,3 +69,56 @@ should remain upstream where practical.
   `prototypes/final-fixes/enforce-k2-items.lua` in the upstream repository
 - Integration: `prototypes/compat/k2so_planet_integration.lua`
 - Fixture: `tests/lua/test_k2so_planets.lua`
+
+## K2SO machinery and production continuity
+
+Razi's late-stage **machine capability parity** now covers three carefully
+matched K2SO upgrades. The rule applies to recipes originating on **any
+enabled planet**, but only when their normal base-machine category already
+exists. It never copies the full catalog of planet-specific recipes.
+
+| Advanced K2SO machine | Compared against | Shared standard capability |
+| --- | --- | --- |
+| `kr-advanced-assembling-machine` | Assembling Machine 3 | Normal advanced crafting and fluid crafting |
+| `kr-advanced-chemical-plant` | Chemical Plant | Normal chemistry including shared chemistry-or-cryogenics |
+| `kr-advanced-furnace` | Foundry | Metallurgy only; no special casting categories added |
+
+The machine must already support its own baseline crafting category and have
+at least the base machine's fluid input/output interfaces. For example, K2SO's
+advanced chemical plant can continue running chemistry that another planet
+patch moved from `chemistry` into `chemistry-or-cryogenics`, without being
+granted cryogenic-plant-only chemistry or Paracelsin, Rubia, Maraxsis,
+Crucible and other exclusive crafting categories. Original recipe surface
+conditions, resource restrictions, pollution, energy cost and machine effects
+are untouched. The K2SO machines remain meaningful upgrades on any world
+where construction is permitted.
+
+### Planet-linked K2SO machine research
+
+The following already-existing K2SO technologies explicitly inherit the
+discovery of their native source world:
+
+| K2SO technology | Source world |
+| --- | --- |
+| Advanced Furnace / Geothermal | Vulcanus, Solaris |
+| Advanced Chemical Plant | Gleba, Nyxaris |
+| Energy Storage | Fulgora, Vibrant |
+| Quantum Computer / Matter Tech Card | Aquilo, Vespera |
+
+These are additive prerequisites only: native K2SO unlocks, triggers,
+science, existing prerequisite technologies and recipe outputs are retained.
+If the full modpack already contains a prerequisite path, nothing is added.
+If the source-mod graph could create a cycle, the crosslink is skipped.
+Bootstrap machines like the K2 Research Server and Atmospheric Condenser are
+deliberately *not* made dependent on a later planet, as that could strand an
+earlier landing.
+
+**Not automatically homogenized:** biochambers, electrolysis plants,
+planet-specific foundries, underwater pressure domes, recycling machinery
+and unusual high-pressure/biochemical recipe categories remain exclusive.
+A later full-engine prototype audit can identify genuine gaps worth addressing
+with smaller per-mod compatibility rules.
+
+Test: `tests/lua/test_k2so_machines.lua`. Module:
+`prototypes/compat/k2so_planet_machines.lua`. This is a final-stage prototype
+patch only and adds no new content or dependencies.
