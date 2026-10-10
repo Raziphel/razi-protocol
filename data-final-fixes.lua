@@ -85,3 +85,7 @@ require("prototypes.system.galaxy_layout").data_final_fixes()
 
 -- Restore each source planet's original description and append Razi expedition context.
 require("prototypes.system.planet_descriptions").data_final_fixes()
+
+-- The final K2SO pass reconciles planet recipes and integrates research data
+-- into system cards after all source compatibility and layout passes.
+require("prototypes.compat.k2so_planet_integration").data_final_fixes()
