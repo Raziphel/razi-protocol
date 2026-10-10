@@ -16,11 +16,20 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertIn('"sye-vespera", "muria"', (
             ROOT / "prototypes/system/route_reconcile.lua").read_text(encoding="utf-8"))
 
-    def test_optional_weather_dependencies_are_optional(self):
+    def test_only_integrated_optional_dependencies_are_advertised(self):
         import json
         info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
-        self.assertIn("? celestial-weather-updated", info["dependencies"])
-        self.assertIn("? celestial-weather-additions-updated", info["dependencies"])
+        expected = {
+            "Cerys-Moon-of-Fulgora", "moon-eneas", "dea-dia-system",
+            "pelagos", "Nexus-Updated", "VoidProcessing-Updated",
+            "Arachnids_enemy", "ArmouredBiters21Compat",
+            "Electric_flying_enemies", "Explosive_biters",
+            "Toxic_biters", "Imersite-Asteroids", "LithiumBattery",
+            "PlanetAthos",
+        }
+        names = {dep.split()[1] for dep in info["dependencies"]
+                 if dep.startswith("? ")}
+        self.assertEqual(names, expected)
 
 if __name__ == "__main__":
     unittest.main()
