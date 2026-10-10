@@ -136,6 +136,22 @@ local function test_routes()
       end
       check(found, "Retired native route lost a modded asteroid resource")
     end
+	for _, pair in ipairs({
+		{"sye-solaris","sye-vespera"},
+		{"sye-nyxaris","sye-vibrant"},
+		{"sye-vibrant","sye-umbra"},
+		{"sye-vespera","sye-beetlejuice"}
+	}) do
+		local found = false
+		for _, link in pairs(routes) do
+			if ((link.from == pair[1] and link.to == pair[2])
+				or (link.to == pair[1] and link.from == pair[2]))
+				and link.shape == "line" then
+				found = true
+			end
+		end
+		check(found, "Missing straight interstellar diagonal " .. pair[1] .. "/" .. pair[2])
+	end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
 	check(routes["native-dea-dia-internal"] == native_dea_dia, "Dea Dia internal route removed")
 	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")
@@ -240,6 +256,16 @@ local function test_research()
 	check(technologies["vespera-discovery"] ~= nil, "Vespera gate missing")
 	check(technologies["umbra-discovery"] ~= nil, "Umbra gate missing")
 
+	for _, first_star in ipairs({"solaris-discovery","nyxaris-discovery"}) do
+		local departure_unlocked = false
+		for _, effect in ipairs(technologies[first_star].effects or {}) do
+			if effect.type == "unlock-space-location"
+				and effect.space_location == "sye-calidus" then
+				departure_unlocked = true
+			end
+		end
+		check(departure_unlocked, first_star .. " cannot reach the departure hub")
+	end
 	local nyxaris = technologies["nyxaris-discovery"] or {prerequisites = {}}
 	check(not list_contains(nyxaris.prerequisites, "planet-discovery-corrundum"),
 		"Nyxaris still requires Solaris completion")
