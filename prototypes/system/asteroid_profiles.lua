@@ -55,7 +55,7 @@ function M.is_vanilla(def)
   return type(def) == "table" and vanilla[def.asteroid] ~= nil
 end
 function M.create(profile)
-  local p = assert(presets[profile], "Unknown asteroid profile "..tostring(profile))
+  local p = presets[profile] or presets.starter
   local source = util[p[1]] or (p[3] and util[p[3]]) or util.nauvis_fulgora
   if not source then return {} end
   local defs = copy(util.spawn_definitions(source) or {})
@@ -68,7 +68,7 @@ function M.apply(route, profile)
   if type(defs) ~= "table" or #defs == 0 then
     route.asteroid_spawn_definitions = M.create(profile)
   else
-    adjust(defs, assert(presets[profile]))
+    adjust(defs, presets[profile] or presets.starter)
   end
   done[route] = true
 end
