@@ -18,7 +18,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 
 ## What It Changes
 
-- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
+- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice, Umbra, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
@@ -33,80 +33,89 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 
 ## Campaign Structure
 
-Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bucket of planets.
+Seven solar systems are arranged as three outward pairs after the Calidus home system. Unlock both systems in a pair, choose which planet chains to tackle first, then master **both** to move to the next frontier.
 
-### Calidus
+| Tier | System | Planets | Identity |
+| --- | --- | --- | --- |
+| Home | **Calidus** | Nauvis, Vulcanus, Fulgora, Gleba, Muluna | Familiar Space Age industry, the first system card |
+| Frontier 1 | **Solaris** | Castra Prime, Arig, Hyarion, Tellus, Corrundum | Military and advanced industrial science |
+| Frontier 1 | **Nyxaris** | Moshine, Apia/Carnova, Panglia | Computation, exotic biology, environmental challenges |
+| Frontier 2 | **Vibrant** | Ribbonia, Paracelsin, Shchierbin | Alien chemistry and galvanization |
+| Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis | Extreme environments, cryogenics, research-data production |
+| Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
+| Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta | Unusual and dangerous late-game experimentation |
+| Finale | **Deep Space** | Aegis/Bellicos, the solar-system edge, Shattered Planet; optional Nexus/black-hole branches | Pulsar science, Promethium, transceiver |
 
-Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and optional Eneas support. This is where the pack establishes the first milestone card: Calidus Tech Card.
+### The interstellar routes
 
-### Aegis and Bellicos
+    Calidus
+      |---- Solaris ----|
+      |                 |---- Vibrant ----|
+      |---- Nyxaris ----|                 |---- Beetlejuice --|
+            \           |---- Vespera ----|                   |---- Deep Space
+             \---- (local system crosslinks) ---- Umbra -------|
 
-The Aegis expedition no longer crowds the inner campaign map. Its precursor stargate sits beyond the solar-system edge, and the enormous Bellicos pulsar occupies a remote, otherwise unused deep-space bearing. The complete Aegis route remains intact, while Lightweight and Pulsar Science now contribute to Deep Space mastery.
+This sketch represents **choices**, not all physical connections. Full interstellar route and local-spoke details are in [Seven-System Design](docs/SEVEN_SYSTEMS.md).
 
-### Solaris
+Calidus's native early routes remain. Solaris and Nyxaris are independent first-frontier entry choices. Vibrant and Vespera require mastery of both first-frontier systems; Beetlejuice and Umbra likewise require mastery of both second-frontier systems. An outer-frontier mastery technology gates the final edge journey.
 
-Solaris is the first major custom-system branch. It brings Castra Prime, Arig, Hyarion, Tellus, and Corrundum into a single connected route. This is where the campaign stops feeling like vanilla Space Age and starts feeling like a true multi-system pack.
+### Optional regions
 
-### Nyxaris
+- **Cerys and Eneas** remain Calidus moon branches.
+- **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
+- **Nexus-Updated and VoidProcessing-Updated** remain optional Deep Space expansions, never prerequisites to reach the main transceiver finale.
+- Aegis/Bellicos is **required** by the current pack and retains its own internal pulsar and stargate routes.
 
-Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia and Pelagos progression when either is installed.
+### Progression principles
 
-### Vibrant
+Different planets in the same system should provide genuine early travel choices, while the system's research prerequisites determine when advancing to the next frontier makes sense. Science ingredients are compressed into chapter cards, which can be automated and transported between systems without making every lab universal.
 
-Vibrant is the exotic science chapter. It holds Ribbonia, Paracelsin, Muria, Aquilo, Rubia, Maraxsis, and Shchierbin. It is the point where the campaign starts leaning into stranger science packs, more specialized planets, and stronger thematic enemy placements.
-
-### Beetlejuice
-
-Beetlejuice is the harsh outer-system chapter. It includes Cubium, Tenebris, Crucible, Vesta, Secretas, Frozeta, and the route toward the solar-system edge. Linox also lives here now as a later side branch, instead of remaining attached to Vulcanus or Solaris.
-
-### Deep Space
-
-Deep Space is the final chapter. Its required route culminates in the intergalactic transceiver chain. Optional Nexus expands that chapter through the black-hole approach, black hole, Oort Cloud, and Sol, while optional Void Processing can add another late branch.
+Changes to existing discovery technology effects, route placement and science cards are intended to preserve prototype IDs for old saves. This revamp is not yet validated against a full Factorio runtime load; test a copy of your save before upgrading.
 
 ## System Cards
 
-System cards are the backbone of the technology cleanup.
+Eight cards now connect the scientific ladder:
 
-Without Razi Protocol, late-game research in a giant planet pack often becomes unreadable because every technology demands huge walls of planet-specific science packs. Razi Protocol compresses earlier system mastery into milestone cards:
+1. Calidus Tech Card
+2. Solaris Tech Card
+3. Nyxaris Tech Card
+4. Vibrant Tech Card
+5. Vespera Tech Card
+6. Beetlejuice Tech Card
+7. Umbra Tech Card
+8. Deep Space Tech Card
 
-- Calidus Tech Card
-- Solaris Tech Card
-- Nyxaris Tech Card
-- Vibrant Tech Card
-- Beetlejuice Tech Card
-- Deep Space Tech Card
+The first pair of frontiers uses Calidus science. The second pair consumes Solaris and Nyxaris cards. The third pair uses Vibrant and Vespera cards. **Beetlejuice and Umbra** cards converge at the Outer Frontier mastery gate and the singularity finale.
 
-That keeps the tree readable while still preserving the feeling that every chapter matters. You still have to conquer the system. You just do not have to stare at fifteen separate science icons every time you open the tech screen.
+Vespera and Umbra currently tint existing icon assets, rather than introducing unsupported or unapproved new artwork. Dedicated star and card art are a separate polish pass. The card recipes contain only science expected from their required core planets, rather than injecting science from optional integrations.
 
 ## Planet Integrations
 
-Several planets are not just "supported"; they are deliberately placed into the campaign.
+Some world relationships need particular care:
 
-- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign beyond the solar-system edge. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
+- **Muria** now serves as the entry point to Vespera: Muria -> Aquilo -> Rubia -> Maraxsis. It is no longer entered through Vibrant.
+- **Ribbonia -> Paracelsin -> Shchierbin** is Vibrant's core science chain.
+- **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
+- **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
+- **Moshine, Apia/Carnova and Panglia** open independently from Nyxaris, with Pelagos and Dea Dia remaining optional.
+- **Aegis and Bellicos** keep their complete internal pulsar/stargate expedition beyond the solar-system edge.
 
-- Eneas stays an optional early Calidus moon branch when installed.
-- Muria is integrated into the Vibrant chapter ahead of Aquilo.
-- Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
-- Linox is moved into Beetlejuice as a later Cubium-side branch.
-
-These are not cosmetic placements only. Razi Protocol also adjusts their route assumptions, discovery placement, and nearby progression gates so the starmap and tech tree tell the same story.
+The last data-stage route pass removes unintended cross-chapter shortcuts among the systems Razi owns, without deleting internal source-mod networks.
 
 ## Endgame Philosophy
 
-Razi Protocol intentionally provides its own late-game structure.
+Deep Space is a genuine finale after **both** outer-frontier chapters.
 
-When Nexus is installed, Razi Protocol hides its omega-science clutter from normal play and swaps its role into a cleaner Deep Space card-driven progression. Without Nexus, the solar-system edge still leads into the transceiver singularity sequence without leaving a missing prerequisite.
-
-That singularity sequence is a major part of the pack identity:
+Outer Frontier Mastery requires science from Beetlejuice and Umbra and is inserted ahead of the existing outer-edge research when that native technology is available. The transceiver sequence then proceeds through:
 
 - Intergalactic Singularity Theory
 - Intergalactic Singularity Test Fire
 - Stable Intergalactic Singularity
 - Intergalactic Signal Lock
 
-The result is a longer, cleaner, and more intentional endgame than simply unlocking the vanilla K2SO transceiver as soon as it appears.
+All seven main chapter cards participate in the singularity research ladder. Deep Space remains a separate endgame card, especially for Nexus.
 
-Optional Void Processing is still supported, but it is treated as a late Deep Space branch rather than mandatory core pack content.
+When optional Nexus is installed, its Omega science is condensed into the Deep Space card. Nexus, Oort Cloud, Sol and optional black-hole content are additional Deep Space adventures, not mandatory prerequisites for the campaign's primary victory.
 
 ## Enemy Routing
 
