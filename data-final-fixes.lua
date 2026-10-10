@@ -81,3 +81,6 @@ for _, lab in pairs(data.raw.lab or {}) do
 		lab.inputs = unique_inputs
 	end
 end
+
+-- Reconcile the final route network after every source compatibility pass.
+require("prototypes.system.route_reconcile").data_final_fixes()
