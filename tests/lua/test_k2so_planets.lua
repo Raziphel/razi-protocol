@@ -70,7 +70,7 @@ for _, spec in ipairs({
   {"vespera-tech-card","kr-cryogenic-research-data"}
 }) do
   local card=raw.recipe[spec[1]]
-  check(#card.ingredients==2 and card.ingredients[2].name==spec[2],
+  check(#card.ingredients==2 and card.ingredients[#card.ingredients].name==spec[2],
     "K2SO data was not integrated into "..spec[1])
 end
 mod.data_final_fixes()

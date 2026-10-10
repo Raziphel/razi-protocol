@@ -84,7 +84,7 @@
         "nulls-k2so-tweaks"
       ],
       "purpose": "Integrate K2SO planetary research data into Razi system cards and reconcile only hidden legacy K2SO material names across final planet recipes and mining outputs.",
-      "upstream_status": "razi-owned-campaign-plus-guarded-upstream-compat",
+      "upstream_status": "needs-review",
       "fixture": "tests/lua/test_k2so_planets.lua"
     }
   ]
