@@ -8,7 +8,8 @@ local function setup(k2)
       ["sand"]={hidden=true},["kr-sand"]={},
       ["kr-metallurgic-research-data"]={},
       ["kr-agricultural-research-data"]={},
-      ["kr-cryogenic-research-data"]={}},
+      ["kr-cryogenic-research-data"]={},
+      ["custom-hidden"]={hidden=true},["kr-custom-hidden"]={}},
     fluid={["oxygen"]={hidden=true},["kr-oxygen"]={},
       ["hydrogen"]={},["kr-hydrogen"]={hidden=true}},
     tool={["solaris-tech-card"]={},["nyxaris-tech-card"]={},
@@ -21,6 +22,8 @@ local function setup(k2)
         results={{type="item",name="sand",amount=2}}},
       ["nulls-common-fluid"]={ingredients={{type="fluid",name="hydrogen",amount=5}}},
       ["missing-material"]={ingredients={{type="item",name="unused",amount=1}}},
+      ["unrelated-mod"]={ingredients={{type="item",name="custom-hidden",amount=1}}},
+      ["old-expensive-only"]={expensive={ingredients={{type="item",name="sand",amount=1}}}},
       ["kr-metallurgic-research-data"]={results={{type="item",name="kr-metallurgic-research-data",amount=1}}},
       ["kr-agricultural-research-data"]={results={{type="item",name="kr-agricultural-research-data",amount=1}}},
       ["kr-cryogenic-research-data"]={results={{type="item",name="kr-cryogenic-research-data",amount=1}}},
@@ -51,6 +54,10 @@ check(raw.recipe["nulls-common-fluid"].ingredients[1].name=="hydrogen",
   "Null's visible common hydrogen fluid was overwritten")
 check(raw.recipe["missing-material"].ingredients[1].name=="unused",
   "Unknown modded material was changed")
+check(raw.recipe["unrelated-mod"].ingredients[1].name=="custom-hidden",
+  "Non-K2SO hidden material was modified")
+check(raw.recipe["old-expensive-only"].expensive.ingredients[1].name=="kr-sand",
+  "Old expensive-only recipe variant was missed")
 check(raw.resource["k2-ore"].minable.results[1].name=="kr-sand",
   "Planet mining output was not standardized")
 check(raw["simple-entity"].debris.minable.result=="kr-sand",
