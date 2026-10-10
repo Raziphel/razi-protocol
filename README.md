@@ -117,6 +117,35 @@ All seven main chapter cards participate in the singularity research ladder. Dee
 
 When optional Nexus is installed, its Omega science is condensed into the Deep Space card. Nexus, Oort Cloud, Sol and optional black-hole content are additional Deep Space adventures, not mandatory prerequisites for the campaign's primary victory.
 
+## Compatibility and Modpack Quality
+
+This development branch includes a cross-mod compatibility registry, focused
+engine-free regression tests, and two complementary audits for final prototype
+dumps. These tools help us integrate community fixes without rewriting other
+authors' mods or making unverified assumptions about their mechanics.
+
+- [Compatibility policy and upstream patch registry](docs/COMPATIBILITY.md)
+- [Planet Field Guide](docs/PLANET_FIELD_GUIDE.md)
+- [Seven-System Galaxy Design](docs/SEVEN_SYSTEMS.md)
+- [Factorio prototype validation guide](docs/VALIDATION.md)
+- [Next-pass implementation checklist](docs/INTEGRATION_ROADMAP.md)
+
+After loading the real required modpack with Factorio 2.1 and exporting a
+`--dump-data-raw` snapshot, run:
+
+```bash
+python3 scripts/audit_prototypes.py /path/to/data-raw-dump.json
+python3 scripts/audit_compatibility.py /path/to/data-raw-dump.json
+```
+
+The second command reports hard errors and review-only warnings for
+system-card ingredients, incompatible research triggers, recycling,
+surface conditions, and the known water-loop issue.
+
+**Development status:** automated GitHub checks do not launch Factorio or
+verify the full dependency pack. Do not publish or migrate a long-running
+save until the real engine and all optional combinations have been tested.
+
 ## Enemy Routing
 
 Razi Protocol supports several optional enemy packs and places them where they fit best.
