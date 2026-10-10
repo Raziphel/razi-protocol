@@ -95,3 +95,15 @@ The source-planet ancestry assertion is restricted to **Razi campaign
 milestones**. Independent K2SO/third-party technologies can legitimately
 consume imported System Tech Cards without having every source-world
 planet discovery as a direct prerequisite. Such use is not a deadlock.
+
+## Late-world exclusive-science bootstrap
+
+Crucible is originally designed to be visitable before Aquilo and can modify
+Aquilo-tier research. Razi now places Crucible in Umbra. The guarded
+`outer_science_arrival_guard.lua` removes Crucible's own science/tech-card
+cost only from the prerequisite chain that unlocks Crucible, and similarly
+prevents Vesta's gas science from blocking Vesta discovery. Native post-arrival
+research keeps these exclusive science requirements. The guard runs only
+with the relevant world and K2SO enabled, and avoids an empty tech-cost
+prototype by using an already-valid early science fallback when available.
+A live full-modpack prototype dump must still verify all native revisions.
