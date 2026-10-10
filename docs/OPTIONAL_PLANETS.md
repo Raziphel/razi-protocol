@@ -12,7 +12,7 @@ copied artwork, control scripts, music, or surface generation from their authors
 | Planet | Mod ID | Razi region | Gameplay appeal | Status |
 | --- | --- | --- | --- | --- |
 | Igrys | `Igrys` | Solaris | Glass, mineral science, magic-fluid industry | 2.1 candidate, guarded routes |
-| Rabbasca | `planet-rabbasca` | Calidus (Gleba moon) | Vault hacking, energy restrictions, bunnyhop equipment | 2.1 candidate, preserve native moon |
+| Rabbasca | `planet-rabbasca` | Nyxaris (Gleba moon) | Vault hacking, energy restrictions, bunnyhop equipment | 2.1 candidate, preserve native moon |
 | Foliax | `foliax` | Nyxaris | Botany, arcane processing and improved biolabs | 2.1 candidate, guarded routes |
 | Obsidiax | `obsidiax` | Vespera | No mining, fire-and-ice industry, cultivated rocks | 2.1 candidate, guarded routes |
 | Carna | `carna` | Umbra | Frozen factories, salvage, mechanoids and plasma | 2.1 candidate, guarded routes |
