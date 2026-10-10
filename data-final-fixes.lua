@@ -97,3 +97,7 @@ require("prototypes.compat.k2so_planet_machines").data_final_fixes()
 -- Linox can optionally inject its own science into pre-Linox Aquilo research.
 -- Keep the outer system reachable without weakening post-arrival hard mode.
 require("prototypes.compat.linox_science_guard").data_final_fixes()
+
+-- Scan one final time after K2SO's legacy-item material reconciliation so
+-- craft-item and craft-fluid triggers cannot remain on removed recipe outputs.
+require("prototypes.compat.renamed_research_triggers").data_final_fixes()
