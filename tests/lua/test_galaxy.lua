@@ -161,6 +161,7 @@ local function test_research()
 	rawset(_G, "add_existing_prerequisites", function(name, candidates)
 		local target = data.raw.technology[name]
 		if not target then return end
+		target.prerequisites = target.prerequisites or {}
 		for _, candidate in ipairs(candidates) do
 			if data.raw.technology[candidate]
 				and not list_contains(target.prerequisites, candidate) then
@@ -174,13 +175,13 @@ local function test_research()
 	check(technologies["vespera-discovery"] ~= nil, "Vespera gate missing")
 	check(technologies["umbra-discovery"] ~= nil, "Umbra gate missing")
 
-	local nyxaris = technologies["nyxaris-discovery"]
+	local nyxaris = technologies["nyxaris-discovery"] or {prerequisites = {}}
 	check(not list_contains(nyxaris.prerequisites, "planet-discovery-corrundum"),
 		"Nyxaris still requires Solaris completion")
-	local tellus = technologies["planet-discovery-tellus"]
+	local tellus = technologies["planet-discovery-tellus"] or {prerequisites = {}}
 	check(list_contains(tellus.prerequisites, "planet-discovery-arig"), "Arig branch missing")
 	check(list_contains(tellus.prerequisites, "planet-discovery-hyarion"), "Hyarion branch missing")
-	local vespera = technologies["vespera-discovery"]
+	local vespera = technologies["vespera-discovery"] or {prerequisites = {}}
 	check(list_contains(vespera.prerequisites, "planet-discovery-corrundum"),
 		"Vespera unlocked without Solaris mastery")
 	check(list_contains(vespera.prerequisites, "panglia_planet_discovery_panglia"),
@@ -189,10 +190,10 @@ local function test_research()
 		"Muria lacks Vespera entry gate")
 	check(list_contains(technologies["planet-discovery-tenebris"].prerequisites, "umbra-discovery"),
 		"Tenebris lacks Umbra entry gate")
-	local edge = technologies["stellar-discovery-solar-system-edge"]
+	local edge = technologies["stellar-discovery-solar-system-edge"] or {prerequisites = {}}
 	check(list_contains(edge.prerequisites, "razi-outer-frontier-mastery"),
 		"Deep Space can bypass outer-system mastery")
-	local outer = technologies["razi-outer-frontier-mastery"]
+	local outer = technologies["razi-outer-frontier-mastery"] or {prerequisites = {}}
 	check(list_contains(outer.prerequisites, "planet-discovery-frozeta"),
 		"Outer mastery does not require Beetlejuice")
 	check(list_contains(outer.prerequisites, "planet-discovery-vesta"),
