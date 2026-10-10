@@ -71,5 +71,55 @@ class CompatibilityAuditTests(unittest.TestCase):
         self.assertTrue(any("Missing surface conditions" in issue
                             for issue in audit.audit(raw)[1]))
 
+    def test_k2so_machine_category_regression(self):
+        raw = fixture()
+        raw["assembling-machine"] = {
+            "chemical-plant": {
+                "crafting_categories": ["chemistry", "chemistry-or-cryogenics"],
+                "fluid_boxes": [{"production_type": "input"},
+                                {"production_type": "output"}]},
+            "kr-advanced-chemical-plant": {
+                "crafting_categories": ["chemistry", "kr-advanced-chemistry"],
+                "fluid_boxes": [{"production_type": "input"},
+                                {"production_type": "output"}]},
+        }
+        self.assertTrue(any("chemistry-or-cryogenics" in message
+                            for message in audit.audit(raw)[1]))
+        raw["assembling-machine"]["kr-advanced-chemical-plant"][
+            "crafting_categories"].append("chemistry-or-cryogenics")
+        self.assertFalse(any("K2SO machine" in message
+                             for message in audit.audit(raw)[1]))
+
+    def test_k2so_card_data_requires_reachable_machine_and_surface(self):
+        raw = fixture()
+        raw["tool"]["solaris-tech-card"] = {}
+        raw["item"]["kr-metallurgic-research-data"] = {}
+        raw["planet"]["vulcanus"] = {"surface_properties": {"pressure": 4000}}
+        raw["recipe"]["kr-metallurgic-research-data"] = {
+            "categories": ["metallurgy"],
+            "results": [{"name": "kr-metallurgic-research-data"}],
+            "surface_conditions": [{"property": "pressure", "min": 100, "max": 300}]
+        }
+        raw["recipe"]["solaris-tech-card"] = {
+            "ingredients": [{"name": "automation-science-pack", "type": "item"}],
+            "results": [{"name": "solaris-tech-card", "type": "item"}]
+        }
+        _, warnings = audit.audit(raw)
+        self.assertTrue(any("system-card research link" in issue
+                            for issue in warnings))
+        self.assertTrue(any("no compatible crafting machine" in issue
+                            for issue in warnings))
+        self.assertTrue(any("excludes source planet vulcanus" in issue
+                            for issue in warnings))
+
+        raw["recipe"]["solaris-tech-card"]["ingredients"].append(
+            {"name": "kr-metallurgic-research-data", "type": "item"})
+        raw["assembling-machine"] = {
+            "foundry": {"crafting_categories": ["metallurgy"]}
+        }
+        raw["recipe"]["kr-metallurgic-research-data"]["surface_conditions"] = [
+            {"property": "pressure", "min": 4000, "max": 4000}]
+        self.assertFalse(any("K2SO" in issue for issue in audit.audit(raw)[1]))
+
 if __name__ == "__main__":
     unittest.main()

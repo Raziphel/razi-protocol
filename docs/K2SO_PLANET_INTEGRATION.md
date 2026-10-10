@@ -122,3 +122,17 @@ with smaller per-mod compatibility rules.
 Test: `tests/lua/test_k2so_machines.lua`. Module:
 `prototypes/compat/k2so_planet_machines.lua`. This is a final-stage prototype
 patch only and adds no new content or dependencies.
+
+## Detecting regressions across future planet mod updates
+
+The post-load compatibility audit (`scripts/audit_compatibility.py`) now
+also checks standard K2SO machine category parity and whether existing K2SO
+research data reaches its intended System Tech Card. It warns when the
+research-data category has no compatible assembling machine/furnace, or when
+the home planet's declared surface properties contradict its production
+recipe's surface restrictions.
+
+Run this on a **real post-load Factorio 2.1 data dump**. It is advisory,
+not an automatic permission to remove planet-specific restrictions or
+rewrite unique recipes. Such restrictions are intentional until a matching
+machine, technology and material path is verified.
