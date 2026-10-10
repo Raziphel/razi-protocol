@@ -34,5 +34,9 @@ jobs:
         run: lua5.2 tests/lua/test_compat.lua
       - name: Check seven-system galaxy and research fixtures
         run: lua5.2 tests/lua/test_galaxy.lua
+      - name: Test optional enemy placement safety
+        run: lua5.2 tests/lua/test_enemy_safety.lua
+      - name: Test research trigger migrations
+        run: lua5.2 tests/lua/test_trigger_compat.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
