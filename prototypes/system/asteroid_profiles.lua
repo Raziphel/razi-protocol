@@ -24,11 +24,39 @@ local presets = {
   outer_void_deep={"gleba_aquilo",1.42,"fulgora_aquilo","carbonic"},
   deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"}
 }
+-- Sizes are tuned separately from spawn density. A route that starts with
+-- big/huge asteroid probability zero stays at zero; no new species are added.
+local size_tiers = {
+  starter="home",
+  first_crossing="first", frontier_crosslink="first",
+  industrial="first", biological="first",
+  industrial_deep="first_deep", biological_deep="first_deep",
+  middle_crossing="middle", middle_crosslink="middle",
+  electrical="middle", chemistry="middle", cryogenic="middle",
+  chemistry_deep="middle_deep", cryogenic_deep="middle_deep",
+  outer_crossing="outer", outer_crosslink="outer",
+  outer_industry="outer", outer_void="outer",
+  outer_industry_deep="outer_deep", outer_void_deep="outer_deep",
+  deep_edge="edge"
+}
+local size_weights = {
+  home={small=1.10, medium=0.70, big=0.35, huge=0.20},
+  first={small=1.04, medium=0.90, big=0.70, huge=0.50},
+  first_deep={small=1.00, medium=1.02, big=0.85, huge=0.62},
+  middle={small=0.96, medium=1.10, big=1.05, huge=0.82},
+  middle_deep={small=0.94, medium=1.16, big=1.20, huge=1.00},
+  outer={small=0.90, medium=1.22, big=1.40, huge=1.16},
+  outer_deep={small=0.86, medium=1.28, big=1.50, huge=1.32},
+  edge={small=0.83, medium=1.32, big=1.58, huge=1.40}
+}
 local vanilla = {}
+local vanilla_sizes = {}
 for _, family in ipairs({"metallic","carbonic","oxide","promethium"}) do
   vanilla[family.."-asteroid-chunk"] = family
   for _, size in ipairs({"small","medium","big","huge"}) do
-    vanilla[size.."-"..family.."-asteroid"] = family
+    local name = size.."-"..family.."-asteroid"
+    vanilla[name] = family
+    vanilla_sizes[name] = size
   end
 end
 local function copy(value)
@@ -37,14 +65,21 @@ local function copy(value)
   for key, element in pairs(value) do result[key] = copy(element) end
   return result
 end
-local function adjust(definitions, settings)
-  for _, def in ipairs(definitions) do
-    local family = vanilla[def.asteroid]
+local function adjust(definitions, settings, profile_name)
+  local weights = size_weights[size_tiers[profile_name] or "first"]
+  for index, definition in ipairs(definitions) do
+    local family = vanilla[definition.asteroid]
     if family then
-      local boost = family == settings[4] and 1.10 or 1
+      -- Copy only the vanilla entry so no source mod or other connection
+      -- shares a spawn_points object that our balance pass modifies.
+      local def = copy(definition)
+      definitions[index] = def
+      local family_boost = family == settings[4] and 1.10 or 1
+      local size_boost = weights[vanilla_sizes[def.asteroid]] or 1
       for _, point in ipairs(def.spawn_points or {}) do
         if type(point.probability) == "number" then
-          point.probability = math.max(0, point.probability * settings[2] * boost)
+          point.probability = math.max(0,
+            point.probability * settings[2] * family_boost * size_boost)
         end
       end
     end
@@ -59,7 +94,7 @@ function M.create(profile)
   local source = util[p[1]] or (p[3] and util[p[3]]) or util.nauvis_fulgora
   if not source then return {} end
   local defs = copy(util.spawn_definitions(source) or {})
-  adjust(defs, p)
+  adjust(defs, p, profile)
   return defs
 end
 function M.apply(route, profile)
@@ -68,7 +103,12 @@ function M.apply(route, profile)
   if type(defs) ~= "table" or #defs == 0 then
     route.asteroid_spawn_definitions = M.create(profile)
   else
-    adjust(defs, presets[profile] or presets.starter)
+    -- The list itself can be reused by another modded connection. Detach
+    -- this route before replacing only its vanilla asteroid definitions.
+    local detached = {}
+    for key, value in pairs(defs) do detached[key] = value end
+    route.asteroid_spawn_definitions = detached
+    adjust(detached, presets[profile] or presets.starter, profile)
   end
   done[route] = true
 end

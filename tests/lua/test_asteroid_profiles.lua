@@ -16,6 +16,12 @@ local util = {
        spawn_points={{distance=0,probability=0.10,speed=1}}},
       {type="entity", asteroid="medium-oxide-asteroid",
        spawn_points={{distance=0.5,probability=0.03,speed=2}}},
+      {type="entity", asteroid="small-metallic-asteroid",
+       spawn_points={{distance=0.5,probability=0.03,speed=2}}},
+      {type="entity", asteroid="big-metallic-asteroid",
+       spawn_points={{distance=0.5,probability=0.02,speed=2}}},
+      {type="entity", asteroid="huge-metallic-asteroid",
+       spawn_points={{distance=0.5,probability=0.01,speed=2}}},
       {type="asteroid-chunk", asteroid="imersite-asteroid-chunk",
        spawn_points={{distance=0.4,probability=0.21,speed=2}}},
       {type="entity", asteroid="super-metallic-asteroid",
@@ -38,11 +44,18 @@ local progression = {
   "cryogenic", "outer_crossing", "deep_edge"
 }
 local previous = 0
+local previous_big = 0
+local previous_huge = 0
 for _, name in ipairs(progression) do
   local defs = profiles.create(name)
   local metal = probability(defs, "metallic-asteroid-chunk")
   ok(metal > previous, "Hazard difficulty not rising at " .. name)
   previous = metal
+  local big = probability(defs, "big-metallic-asteroid")
+  local huge = probability(defs, "huge-metallic-asteroid")
+  ok(big > previous_big, "Big asteroids did not escalate on " .. name)
+  ok(huge > previous_huge, "Huge asteroids did not escalate on " .. name)
+  previous_big, previous_huge = big, huge
   ok(probability(defs, "imersite-asteroid-chunk") == 0.21,
      "Custom Imersite resource asteroid changed")
   ok(probability(defs, "super-metallic-asteroid") == 0.06,
@@ -53,10 +66,10 @@ local native = {
   length = 20000,
   asteroid_spawn_definitions = util.spawn_definitions()
 }
-local custom = native.asteroid_spawn_definitions[3]
+local custom = native.asteroid_spawn_definitions[6]
 local custom_points = custom.spawn_points
 profiles.apply(native, "outer_industry")
-ok(native.asteroid_spawn_definitions[3] == custom,
+ok(native.asteroid_spawn_definitions[6] == custom,
    "Native custom asteroid definition was replaced")
 ok(custom.spawn_points == custom_points and custom_points[1].probability == 0.21,
    "Native custom asteroid spawn curve was modified")
@@ -64,6 +77,18 @@ local after = probability(native.asteroid_spawn_definitions, "metallic-asteroid-
 profiles.apply(native, "outer_industry")
 ok(probability(native.asteroid_spawn_definitions, "metallic-asteroid-chunk") == after,
    "Repeated final-fixes doubled asteroid difficulty")
+
+-- Two source mod routes may share the same list and vanilla definitions.
+-- Scaling one must not alter the other (or any custom entry references).
+local same_list = util.spawn_definitions()
+local shared = {asteroid_spawn_definitions = same_list}
+local neighboring = {asteroid_spawn_definitions = same_list}
+local baseline = probability(same_list, "big-metallic-asteroid")
+profiles.apply(shared, "outer_void_deep")
+ok(probability(neighboring.asteroid_spawn_definitions, "big-metallic-asteroid") == baseline,
+   "A shared upstream asteroid table was modified in place")
+ok(neighboring.asteroid_spawn_definitions[6] == same_list[6],
+   "A neighboring modded asteroid was replaced")
 
 local before = profiles.create("industrial")
 local after_copy = profiles.create("industrial")

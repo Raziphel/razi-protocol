@@ -24,10 +24,28 @@ asteroid resources.
 | Outer crosslink | Beetlejuice <-> Umbra; Vesta <-> Secretas | Outer Crosslink | 1.33x |
 | Final approaches | Secretas/Vesta -> Solar-System Edge | Deep Edge | 1.40x |
 
-*Multipliers are applied only to existing **vanilla** asteroid spawn-point
-probabilities, not to speed, ore yield, asteroid size or all asteroid types at
-once. A 1.4x multiplier does not mean exactly 40% more real-world danger:
-the underlying vanilla preset and planet-specific modifiers also matter.*
+*Density multipliers apply to existing **vanilla** asteroid spawn points.
+Size-specific multipliers now additionally favor smaller asteroids near
+Nauvis and shift toward big and huge asteroids in later chapters. No new
+asteroid sizes are introduced on routes whose vanilla presets omit them.
+Neither speed nor ore yield is changed. A 1.4x density multiplier is not
+exactly 40% more danger because size and the underlying preset also matter.*
+
+### Size distribution
+
+| Frontier tier | Small | Medium | Big | Huge |
+| --- | ---: | ---: | ---: | ---: |
+| Nauvis launch | 1.10× | 0.70× | 0.35× | 0.20× |
+| First-frontier entry | 1.04× | 0.90× | 0.70× | 0.50× |
+| Middle frontier | 0.96× | 1.10× | 1.05× | 0.82× |
+| Outer frontier | 0.90× | 1.22× | 1.40× | 1.16× |
+| Deep Space edge | 0.83× | 1.32× | 1.58× | 1.40× |
+
+These are **additional relative weights** on top of each route's existing
+preset and regional density. Interior deep-route variants interpolate between
+the main tiers. Asteroid chunks are deliberately unaffected by size weighting,
+protecting baseline space resources; custom mod asteroid definitions are
+never size- or density-modified.
 
 ## Compatibility rules
 
