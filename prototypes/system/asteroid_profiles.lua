@@ -22,7 +22,13 @@ local presets = {
   outer_industry_deep={"fulgora_aquilo",1.39,nil,"metallic"},
   outer_void={"gleba_aquilo",1.34,"fulgora_aquilo","carbonic"},
   outer_void_deep={"gleba_aquilo",1.42,"fulgora_aquilo","carbonic"},
-  deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"}
+  deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"},
+  belt_vespera_approach={"gleba_aquilo",1.20,"fulgora_aquilo","oxide"},
+  belt_vespera_crossing={"gleba_aquilo",1.48,"fulgora_aquilo","oxide"},
+  belt_vespera_departure={"gleba_aquilo",1.19,"fulgora_aquilo","oxide"},
+  belt_umbra_approach={"aquilo_solar_system_edge",1.42,"fulgora_aquilo","carbonic"},
+  belt_umbra_crossing={"aquilo_solar_system_edge",1.72,"fulgora_aquilo","carbonic"},
+  belt_umbra_departure={"aquilo_solar_system_edge",1.40,"fulgora_aquilo","carbonic"}
 }
 -- Sizes are tuned separately from spawn density. A route that starts with
 -- big/huge asteroid probability zero stays at zero; no new species are added.
@@ -37,17 +43,26 @@ local size_tiers = {
   outer_crossing="outer", outer_crosslink="outer",
   outer_industry="outer", outer_void="outer",
   outer_industry_deep="outer_deep", outer_void_deep="outer_deep",
-  deep_edge="edge"
+  deep_edge="edge",
+  belt_vespera_approach="middle_deep",
+  belt_vespera_crossing="belt_middle",
+  belt_vespera_departure="middle_deep",
+  belt_umbra_approach="outer_deep",
+  belt_umbra_crossing="belt_outer",
+  belt_umbra_departure="outer_deep"
 }
 local size_weights = {
-  home={small=1.10, medium=0.70, big=0.35, huge=0.20},
-  first={small=1.04, medium=0.90, big=0.70, huge=0.50},
-  first_deep={small=1.00, medium=1.02, big=0.85, huge=0.62},
-  middle={small=0.96, medium=1.10, big=1.05, huge=0.82},
-  middle_deep={small=0.94, medium=1.16, big=1.20, huge=1.00},
-  outer={small=0.90, medium=1.22, big=1.40, huge=1.16},
-  outer_deep={small=0.86, medium=1.28, big=1.50, huge=1.32},
-  edge={small=0.83, medium=1.32, big=1.58, huge=1.40}
+  -- Zero is an absolute size cap, NOT a gentle density reduction.
+  home={small=1.08, medium=0, big=0, huge=0},
+  first={small=1.04, medium=0.70, big=0, huge=0},
+  first_deep={small=1.00, medium=1.00, big=0, huge=0},
+  middle={small=0.96, medium=1.14, big=0.48, huge=0},
+  middle_deep={small=0.93, medium=1.17, big=0.86, huge=0},
+  belt_middle={small=0.82, medium=1.42, big=1.64, huge=0},
+  outer={small=0.90, medium=1.24, big=1.24, huge=0.38},
+  outer_deep={small=0.85, medium=1.31, big=1.45, huge=0.84},
+  belt_outer={small=0.75, medium=1.38, big=1.90, huge=1.75},
+  edge={small=0.82, medium=1.34, big=1.64, huge=1.37}
 }
 local vanilla = {}
 local vanilla_sizes = {}
@@ -90,6 +105,78 @@ local function adjust(definitions, settings, profile_name)
     end
   end
 end
+-- Vanilla asteroid models are introduced explicitly only at the two
+-- designated belt crossings, guarded by the actual installed prototypes.
+local belt_escalations = {
+  belt_vespera_crossing={big=0.007},
+  belt_umbra_crossing={big=0.010, huge=0.0008}
+}
+local function add_belt_size_encounters(definitions, profile)
+  local wanted = belt_escalations[profile]
+  if not wanted then return end
+  local asteroid_entities = data and data.raw and data.raw["asteroid"] or {}
+  local found = {}
+  for _, def in ipairs(definitions) do found[def.asteroid] = true end
+  for _, family in ipairs({"metallic","carbonic","oxide"}) do
+    for _, size in ipairs({"big","huge"}) do
+      local name = size.."-"..family.."-asteroid"
+      local chance = wanted[size]
+      if chance and asteroid_entities[name] and not found[name] then
+        definitions[#definitions+1] = {
+          type="entity", asteroid=name,
+          spawn_points={
+            {distance=0.15, probability=chance*0.65, speed=0.015},
+            {distance=0.50, probability=chance, speed=0.015},
+            {distance=0.85, probability=chance*0.65, speed=0.015}
+          }
+        }
+      end
+    end
+  end
+end
+
+-- Only recognized vanilla enemies are affected. Modded asteroid species and
+-- resource chunks stay exactly as provided by their source mod.
+function M.cap_sizes(location_or_route, maximum)
+  if maximum ~= "small" then return end
+  local current = location_or_route.asteroid_spawn_definitions
+  if type(current) ~= "table" then return end
+  local detached = {}
+  for key, original in pairs(current) do detached[key] = original end
+  for i, definition in ipairs(current) do
+    local size = vanilla_sizes[definition.asteroid]
+    if size and size ~= "small" then
+      local edited = copy(definition)
+      if type(edited.probability) == "number" then
+        edited.probability = 0
+      end
+      for _, point in ipairs(edited.spawn_points or {}) do
+        if type(point.probability) == "number" then point.probability = 0 end
+      end
+      detached[i] = edited
+    end
+  end
+  location_or_route.asteroid_spawn_definitions = detached
+end
+
+-- Belt edges are rich in collectible ore, but a parked ship won't be smashed
+-- by big/huge asteroids. Native modded resource chunks are not replaced.
+function M.belt_edge_resources(intensity)
+  local result = {}
+  local resources = data and data.raw and data.raw["asteroid-chunk"] or {}
+  for _, family in ipairs({"metallic","carbonic","oxide"}) do
+    local name = family.."-asteroid-chunk"
+    if resources[name] then
+      result[#result+1] = {
+        type="asteroid-chunk", asteroid=name,
+        probability=0.06*intensity, speed=0.035,
+        angle_when_stopped=0.5
+      }
+    end
+  end
+  return result
+end
+
 local done = setmetatable({}, {__mode="k"})
 function M.is_vanilla(def)
   return type(def) == "table" and vanilla[def.asteroid] ~= nil
@@ -100,6 +187,7 @@ function M.create(profile)
   if not source then return {} end
   local defs = copy(util.spawn_definitions(source) or {})
   adjust(defs, p, profile)
+  add_belt_size_encounters(defs, profile)
   return defs
 end
 function M.apply(route, profile)
@@ -114,6 +202,7 @@ function M.apply(route, profile)
     for key, value in pairs(defs) do detached[key] = value end
     route.asteroid_spawn_definitions = detached
     adjust(detached, presets[profile] or presets.starter, profile)
+    add_belt_size_encounters(detached, profile)
   end
   done[route] = true
 end
