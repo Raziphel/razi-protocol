@@ -1,90 +1,112 @@
-# Seven-System Asteroid Routes
+# Seven-System Asteroids and Debris Belts
 
-**Status:** Implemented on private `main`, pending real Factorio 2.1 load and space-platform playtesting.
+**Implementation:** Private `main`, pending the first full Factorio 2.1 engine load and real space-platform playtesting.
 
-Razi-owned connections now follow a graduated route-hazard table instead of
-applying one asteroid preset to entire chapters. The aim is meaningful choices
-in ship design while keeping local travel useful and supporting other mods'
-asteroid resources.
+## Size unlocks: the hard progression rule
 
-| Route group | Example | Base profile | Relative vanilla density |
-| --- | --- | --- | --- |
-| Home launch | Nauvis -> Calidus hub | Starter | 0.82x |
-| First interstellar jumps | Calidus -> Solaris or Nyxaris | First Crossing | 0.99x |
-| First-frontier system crosslink | Solaris <-> Nyxaris | Frontier Crosslink | 1.05x |
-| Solaris industry | Vulcanus, Castra, Arig, Hyarion | Industrial / Deep | 0.96–1.08x, metallic bias |
-| Nyxaris biology | Gleba, Moshine, Apia, Panglia | Biological / Deep | 0.97–1.10x, carbonic bias |
-| Next-tier interstellar jumps | Solaris -> Vibrant; Nyxaris -> Vespera | Middle Crossing | 1.08x |
-| Vibrant science | Fulgora, Ribbonia, Paracelsin, Shchierbin | Electrical / Chemistry | 1.08–1.21x |
-| Vespera survival | Muria, Aquilo, Rubia, Maraxsis | Cryogenic / Deep | 1.15–1.25x |
-| Second-frontier crosslink | Vibrant <-> Vespera | Middle Crosslink | 1.13x |
-| Outer-system crossings | Vibrant -> Beetlejuice; Vespera -> Umbra | Outer Crossing | 1.30x |
-| Beetlejuice industry | Cubium, Linox, Secretas, Frozeta | Outer Industry / Deep | 1.30–1.39x, metallic bias |
-| Umbra science | Tenebris, Crucible Orbit, Vesta | Outer Void / Deep | 1.34–1.42x, carbonic bias |
-| Outer crosslink | Beetlejuice <-> Umbra; Vesta <-> Secretas | Outer Crosslink | 1.33x |
-| Final approaches | Secretas/Vesta -> Solar-System Edge | Deep Edge | 1.40x |
+Razi's own routes now have actual asteroid-size ceilings, not just density nerfs.
 
-*Density multipliers apply to existing **vanilla** asteroid spawn points.
-Size-specific multipliers now additionally favor smaller asteroids near
-Nauvis and shift toward big and huge asteroids in later chapters. No new
-asteroid sizes are introduced on routes whose vanilla presets omit them.
-Neither speed nor ore yield is changed. A 1.4x density multiplier is not
-exactly 40% more danger because size and the underlying preset also matter.*
+| Frontier | Natural vanilla sizes | What players need |
+| --- | --- | --- |
+| **Calidus (Nauvis, Muluna, Eneas)** | Resource chunks and **small only** | Basic platform defenses |
+| **Solaris / Nyxaris** | Small and medium; **no big/huge** | First proper turrets and ammunition logistics |
+| **Vibrant / Vespera** | Small, medium, **big**; no huge | Improved coverage, ammo production and durability |
+| **Beetlejuice / Umbra** | All sizes, huge initially uncommon | Developed warships and layered defenses |
+| **Umbra belt / Deep Space** | Big and huge concentrated | Serious long-distance combat platforms |
 
-### Size distribution
+For Razi-managed Calidus routes, the same small-only rule also applies to
+existing moon routes. Nauvis, Muluna, Eneas and the Calidus transit point
+receive a defensive clamp for vanilla stationary asteroid spawns.
+**Modded asteroid species and their spawn curves remain unchanged.**
 
-| Frontier tier | Small | Medium | Big | Huge |
-| --- | ---: | ---: | ---: | ---: |
-| Nauvis launch | 1.10× | 0.70× | 0.35× | 0.20× |
-| First-frontier entry | 1.04× | 0.90× | 0.70× | 0.50× |
-| Middle frontier | 0.96× | 1.10× | 1.05× | 0.82× |
-| Outer frontier | 0.90× | 1.22× | 1.40× | 1.16× |
-| Deep Space edge | 0.83× | 1.32× | 1.58× | 1.40× |
+An asteroid size blocked by the tier has zero vanilla spawn probability.
+No absent asteroid species is automatically created on ordinary routes.
 
-These are **additional relative weights** on top of each route's existing
-preset and regional density. Interior deep-route variants interpolate between
-the main tiers. Asteroid chunks are deliberately unaffected by size weighting,
-protecting baseline space resources; custom mod asteroid definitions are
-never size- or density-modified.
+## Two actual belt crossings
 
-## Compatibility rules
+Inspired by [Lumme's Asteroid Belt](https://mods.factorio.com/mod/AsteroidBelt),
+but implemented independently for Razi's multi-star layout. We did **not**
+add the original `AsteroidBelt` mod as a dependency because its default
+single-solar-system rearrangement would conflict with our seven systems.
+No source-mod graphics or scripts were copied.
 
-- Do not replace or remove any modded asteroid species or its spawn points.
-  Exact vanilla asteroid names are whitelisted. A modded name containing
-  `metallic`, `oxide`, `carbonic` or `promethium` is still custom.
-- On Razi-managed routes with existing definitions, retain all custom entries
-  and apply restrained changes only to vanilla ones. Do not change modded
-  asteroid speed or spawn-probability curves.
-- When two mods supply the same connection, prefer the original non-Razi
-  route name. Merge any missing custom asteroid definitions before dropping
-  duplicate routes.
-- Fresh Razi routes use copies of Factorio's own asteroid-spawn presets.
-  Fallbacks allow mod forks that do not expose every optional preset.
-- Do not rebalance the source-owned internal routes for Dea Dia, Apia,
-  Crucible, Aegis/Bellicos, optional planet mechanics or moon-only routes.
-  Those may use custom asteroid species essential to their resource chains.
-- No route hazards are added to planetary orbit asteroid tables, and none of
-  the required/optional planet mods gains new dependencies.
+### Vespera: The Debris Divide
 
-## Verification
+    Muria -> Aquilo -> INNER RIM ==> DENSE BELT ==> OUTER RIM -> Rubia -> Maraxsis
 
-GitHub Lua fixtures cover scaling order, preservation of native Imersite and
-other modded entries, route consolidation and repeated application.
+* **Survey:** `razi-vespera-belt-survey`, following Aquilo discovery.
+* Requires the Vespera Tech Card, already obtainable before Rubia.
+* A 10,500 km approach, **6,500 km dangerous core**, and 10,500 km exit.
+* The core is a concentrated medium/big-asteroid encounter; **no huge yet**.
+* Both rims are resource-rich stops with metallic, carbonic, and oxide chunks.
+* Direct Aquilo-to-Rubia shortcuts are removed. The path's existing custom
+  asteroid resources are transferred into the central crossing.
 
-Full modpack testing still needs:
+### Umbra: The Shattered Divide
 
-1. Inspect a `--dump-data-raw` export for every connection's final asteroid
-   species and curves, especially Imersite, Carna and optional planet chunks.
-2. Fly Nauvis -> Solaris and Nauvis -> Nyxaris with starter ships, then test
-   the two middle and outer parallel paths using appropriately upgraded ships.
-3. Ensure crucial asteroid resource chunks remain attainable on all
-   destinations that depend on them.
-4. Verify no duplicate route or unintended shortcut exists after integrating
-   all optional planets.
-5. Compare speed, ammunition consumption, shield attrition and throughput
-   before declaring the danger curve fully balanced.
+    Tenebris -> Crucible Orbit -> INNER RIM ==> SHATTERED CORE ==> OUTER RIM -> Vesta
 
-The new profile implementation is in
-[`prototypes/system/asteroid_profiles.lua`](../prototypes/system/asteroid_profiles.lua);
-the route ownership table is in
-[`prototypes/system/route_reconcile.lua`](../prototypes/system/route_reconcile.lua).
+* **Survey:** `razi-umbra-belt-survey`, following Crucible discovery.
+* Requires the Umbra Tech Card, already obtainable before Vesta.
+* A 10,000 km approach, **8,000 km dangerous core**, and 11,000 km exit.
+* Strong big-asteroid encounters and **the first intentionally added huge
+  asteroid encounters**, provided the relevant vanilla prototypes exist.
+* Both rims provide additional metallic, carbonic, and oxide chunks.
+* Direct Crucible-Orbit-to-Vesta shortcuts are removed, preserving any unique
+  custom asteroid species from the retired route.
+
+Both belts are **real named space locations and actual route segments**, not
+a cosmetic hazard modifier on an existing direct route. The map uses safe
+built-in placeholder icons for the four rims. Unique debris-ring starmap art
+can follow once the orbital layout is verified in-game.
+
+### Engineering details
+
+* Vanilla resource **chunks are not made rarer** by the size ceilings.
+* On retained modded routes, only exact vanilla asteroid names are resized
+  and reweighted. An Imersite asteroid is not mistaken for a metallic asteroid.
+* Modded source asteroid definitions remain intact, including native
+  probabilities, spawn-point curves, speeds, and asteroid types.
+* When replacing an old direct crossing, any unique modded asteroid definitions
+  are copied to the new core connection rather than silently discarded.
+* Explicit big and huge encounters on belt cores are added **only if Factorio
+  already defines those vanilla asteroid prototypes**.
+* Native Aegis/Bellicos, Apia/Carnova, Dea Dia, source moon and special
+  Crucible routes are left untouched.
+* No experimental Asteroid Belt dependency is required.
+
+## Regional density profiles
+
+Density still varies by region, applied on top of the hard size limits.
+
+| Region | Base multiplier |
+| --- | --- |
+| Calidus launch | 0.82x |
+| First interstellar crossing | 0.99x |
+| Solaris industry / Nyxaris biology | 0.96–1.10x |
+| Middle system crossings | 1.08–1.13x |
+| Vibrant / Vespera interiors | 1.08–1.25x |
+| Vespera belt core | **1.48x** |
+| Outer system crossings | 1.30–1.33x |
+| Beetlejuice / Umbra interiors | 1.30–1.42x |
+| Umbra belt core | **1.72x** |
+| Deep Space approach | 1.40x |
+
+These numbers describe probability scaling, not guaranteed asteroid counts.
+The underlying preset, asteroid size and platform speed all influence actual
+combat difficulty.
+
+## Remaining tests before release
+
+The latest GitHub CI runs structural Lua fixtures only, not a Factorio game
+load. Before publishing, inspect a real `--dump-data-raw` snapshot and fly
+both belts. Test resource throughput while parked at each rim, the actual
+big/huge encounter rate, defenses and ammunition economy, survey unlock
+timing, existing-save migration, and any modded asteroid resource behavior
+that relies on original route names.
+
+Source modules:
+* [Asteroid profiles](../prototypes/system/asteroid_profiles.lua)
+* [Belt locations](../prototypes/system/asteroid_belts.lua)
+* [Route reconciliation](../prototypes/system/route_reconcile.lua)
+* [Belt surveys](../prototypes/technology/asteroid_belts.lua)

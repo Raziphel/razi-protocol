@@ -83,3 +83,14 @@ pass in-engine testing.
 - [x] Add regression tests for custom asteroid preservation and deterministic duplicate-route handling
 - [ ] Validate actual asteroid and resource composition in the full Factorio 2.1 modpack
 - [ ] Playtest ammunition, shielding and throughput on representative ships in each frontier
+
+## Phase 9: Real asteroid belt corridors
+
+- [x] Make Calidus small-only, including existing moon routes and orbits
+- [x] Add hard size ceilings for the first and second frontiers
+- [x] Add Vespera and Umbra belt rim locations and survey technologies
+- [x] Replace direct Aquilo/Rubia and Crucible/Vesta shortcuts with crossings
+- [x] Preserve modded asteroid resource types on retired direct routes
+- [x] Test giant-asteroid introductions only in the late dangerous belt
+- [ ] Design unique starmap sprites for both debris belts after a live map review
+- [ ] Fly and benchmark both belts with the full Factorio 2.1 modpack

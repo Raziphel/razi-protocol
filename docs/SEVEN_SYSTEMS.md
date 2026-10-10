@@ -38,9 +38,9 @@ Local branches remain connected inside their own systems, including:
     Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
     Nyxaris: Gleba | Moshine | Apia/Carnova | Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
     Vibrant: Fulgora | Ribbonia -> Paracelsin -> Shchierbin (+ Cerys)
-    Vespera: Muria -> Aquilo -> Rubia -> Maraxsis
+    Vespera: Muria -> Aquilo -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
-    Umbra: Tenebris -> Crucible Orbit -> Vesta; Crucible Orbit -> Crucible (native)
+    Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)
     Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos
 
 Razi's reconciliation pass only removes source routes where **both** endpoints belong to explicitly managed but different chapters. Unknown optional source-mod internals stay intact.
@@ -70,3 +70,11 @@ The `*-discovery` technology IDs of existing systems were retained. New IDs are 
 The route difficulty now increases between the paired frontier tiers while preserving
 source-mod asteroid resource species and curves. See the
 [Asteroid Route Guide](ASTEROID_ROUTES.md) for the exact tier assignments and safety constraints.
+
+## The two asteroid belts
+
+Vespera's Debris Divide and Umbra's Shattered Divide are separate locations
+and researched travel passages. Rubia requires the Vespera belt survey;
+Vesta requires the Umbra belt survey. Source-mod custom asteroid resources
+from retired direct paths are retained on the new dangerous crossings.
+See [Asteroid Routes](ASTEROID_ROUTES.md).
