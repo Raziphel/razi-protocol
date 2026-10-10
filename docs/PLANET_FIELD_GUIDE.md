@@ -53,3 +53,24 @@ No unconfirmed recipe or weather claims should appear as gameplay facts.
 Razi-managed connections now have progressively stronger region-specific hazards.
 Original modded asteroid species, their source spawn curves, and native internal
 space routes remain intact. See [Asteroid Routes](ASTEROID_ROUTES.md).
+
+## In-game planet descriptions
+
+Razi Protocol keeps the native planet/space-location description first and
+appends a compact expedition briefing explaining its position in the seven-
+system campaign. The original mod's lore, environment and mechanical warnings
+are retained through Factorio's localised strings, including available source
+translations. English and Russian versions of the new briefing are provided.
+
+This is applied in `data-final-fixes.lua` **after** optional planets and the
+final galaxy layout. Entries are explicitly listed, exist-guarded and
+idempotent: they never create a missing optional world, rename a planet, or
+change travel, progression, resource or recipe prototypes. Locations with no
+source description use a safe locale fallback without showing unknown keys.
+
+The briefing covers all currently known campaign planets plus relevant moons,
+shared orbits, six named stars, slipstreams, belts, native Aegis/Bellicos
+stargates, and optional Dea Dia/Nexus destinations. Unknown third-party planets
+are not changed. Descriptions do not imply that optional expeditions are
+required for victory. Validate a full game load to confirm source text and rich
+text formatting display correctly across the installed mod combinations.

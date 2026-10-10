@@ -46,5 +46,7 @@ jobs:
         run: lua5.2 tests/lua/test_galaxy_layout.lua
       - name: Test Razi asteroid belts and surveys
         run: lua5.2 tests/lua/test_asteroid_belts.lua
+      - name: Test native planet descriptions and Razi expedition context
+        run: lua5.2 tests/lua/test_planet_descriptions.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
