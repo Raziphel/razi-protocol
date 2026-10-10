@@ -79,3 +79,6 @@ require("prototypes.system.optional_planets").data_final_fixes()
 -- Apply our approved star/planet coordinates last, after optional orbits.
 -- Keep this explicit in the data-stage entrypoint so it cannot be skipped.
 require("prototypes.system.galaxy_layout").data_final_fixes()
+
+-- Restore each source planet's original description and append Razi expedition context.
+require("prototypes.system.planet_descriptions").data_final_fixes()
