@@ -35,7 +35,7 @@ class OptionalPlanetTests(unittest.TestCase):
 
     def test_optional_is_last_route_pass(self):
         fixes = (ROOT / "data-final-fixes.lua").read_text()
-        self.assertLess(fixes.index('route_reconcile"),'),
+        self.assertLess(fixes.index('route_reconcile").data_final_fixes()'),
                         fixes.index('optional_planets").data_final_fixes()'))
 
 if __name__ == "__main__":
