@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields, need-check-nil, assign-type-mismatch
 -- Validate optional enemy routing without any Factorio engine.
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
