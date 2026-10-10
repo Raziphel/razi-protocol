@@ -112,10 +112,10 @@ function gates.data_final_fixes()
 	-- Both first-tier systems must be mastered before either next destination
 	-- opens. Requiring the previous pair's cards means genuine production.
 	replace_requirements("vibrant-discovery",
-		{"solaris-discovery", "nyxaris-discovery", "planet-discovery-corrundum", "planet-discovery-apia-carnova", "planet-discovery-moshine", "panglia_planet_discovery_panglia"},
+		with_gate("solaris-discovery", with_gate("nyxaris-discovery", frontier_mastery)),
 		exotic, 1500)
 	replace_requirements("vespera-discovery",
-		with_gate("solaris-discovery", {"nyxaris-discovery", unpack(frontier_mastery)}),
+		with_gate("solaris-discovery", with_gate("nyxaris-discovery", frontier_mastery)),
 		exotic, 1500)
 
 	-- Vibrant: chemistry and alien science.
