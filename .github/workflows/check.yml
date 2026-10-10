@@ -52,5 +52,7 @@ jobs:
         run: lua5.2 tests/lua/test_planet_descriptions.lua
       - name: Check K2SO integration across planet mods
         run: lua5.2 tests/lua/test_k2so_planets.lua
+      - name: Check K2SO machine parity and planetary tech gates
+        run: lua5.2 tests/lua/test_k2so_machines.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v

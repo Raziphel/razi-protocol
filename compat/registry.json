@@ -86,6 +86,16 @@
       "purpose": "Integrate K2SO planetary research data into Razi system cards and reconcile only hidden legacy K2SO material names across final planet recipes and mining outputs.",
       "upstream_status": "needs-review",
       "fixture": "tests/lua/test_k2so_planets.lua"
+    },
+    {
+      "id": "k2so-machine-planet-continuity",
+      "module": "prototypes/compat/k2so_planet_machines.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Preserve ordinary machine category parity after planet mods change recipes, and anchor late K2SO machine research to source-world discoveries without cycles.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_k2so_machines.lua"
     }
   ]
 }
