@@ -26,6 +26,24 @@ K2SO_RENAMES = (
     "oxygen", "hydrogen", "chlorine", "sand", "glass", "silicon",
     "lithium", "ammonia",
 )
+# All category assignments are intentionally limited to native-machine parity.
+# Exclusive planet-specific recipe categories must never be granted globally.
+K2SO_MACHINE_PARITY = (
+    ("kr-advanced-assembling-machine", "assembling-machine-3", "crafting",
+     ("crafting", "advanced-crafting", "crafting-with-fluid")),
+    ("kr-advanced-chemical-plant", "chemical-plant", "chemistry",
+     ("chemistry", "chemistry-or-cryogenics")),
+    ("kr-advanced-furnace", "foundry", "metallurgy", ("metallurgy",)),
+)
+K2SO_CARD_BRIDGES = (
+    ("solaris-tech-card", "kr-metallurgic-research-data", "vulcanus"),
+    ("nyxaris-tech-card", "kr-agricultural-research-data", "gleba"),
+    ("vibrant-tech-card", "kr-electromagnetic-research-data", "fulgora"),
+    ("vespera-tech-card", "kr-cryogenic-research-data", "aquilo"),
+    ("beetlejuice-tech-card", "kr-matter-research-data", "aquilo"),
+    ("umbra-tech-card", "kr-matter-research-data", "aquilo"),
+    ("deep-space-tech-card", "kr-promethium-research-data", "shattered-planet"),
+)
 
 def obj(value):
     return value if isinstance(value, dict) else {}
@@ -55,6 +73,102 @@ def recipe_products(recipe):
             if name:
                 output.add(name)
     return output
+
+def crafting_categories(recipe):
+    """Use final Factorio 2.1 categories, with a guarded legacy fallback."""
+    categories = recipe.get("categories")
+    if isinstance(categories, list):
+        return set(categories)
+    return {recipe.get("category") or "crafting"}
+
+
+def fluid_interfaces(machine):
+    """Count usable input/output fluid boxes, excluding nonproduction metadata."""
+    inputs = outputs = 0
+    for box in seq(machine.get("fluid_boxes")):
+        if not isinstance(box, dict):
+            continue
+        direction = box.get("production_type")
+        if direction in ("input", "input-output"):
+            inputs += 1
+        if direction in ("output", "input-output"):
+            outputs += 1
+    return inputs, outputs
+
+
+def audit_k2so_planet_machinery(raw, recipes, items, planets, warnings):
+    """Spot lost standard machine recipes or K2SO data with no production path."""
+    assemblers = obj(raw.get("assembling-machine"))
+    machines = [*assemblers.values(), *obj(raw.get("furnace")).values()]
+    possible = set()
+    for machine in machines:
+        if isinstance(machine, dict):
+            possible.update(seq(machine.get("crafting_categories")))
+
+    for upgraded_name, native_name, anchor, categories in K2SO_MACHINE_PARITY:
+        upgraded = obj(assemblers.get(upgraded_name))
+        native = obj(assemblers.get(native_name))
+        if not upgraded or not native:
+            continue
+        native_categories = set(seq(native.get("crafting_categories")))
+        upgraded_categories = set(seq(upgraded.get("crafting_categories")))
+        if anchor not in upgraded_categories:
+            continue  # Another mod fundamentally changed the machine's identity.
+        native_inputs, native_outputs = fluid_interfaces(native)
+        upgrade_inputs, upgrade_outputs = fluid_interfaces(upgraded)
+        if (upgrade_inputs < native_inputs or upgrade_outputs < native_outputs):
+            warnings.add(
+                f"K2SO machine {upgraded_name} lacks the fluid connections of "
+                f"its standard counterpart {native_name}"
+            )
+            continue
+        for category in categories:
+            if category in native_categories and category not in upgraded_categories:
+                warnings.add(
+                    f"K2SO machine {upgraded_name} cannot craft native "
+                    f"{native_name} category {category}"
+                )
+
+    locations = set(planets) | set(obj(raw.get("space-location")))
+    for card, research_data, world in K2SO_CARD_BRIDGES:
+        card_recipe = obj(recipes.get(card))
+        data_recipe = obj(recipes.get(research_data))
+        # K2SO can be missing entirely, and source-mod data may not exist.
+        if (not card_recipe or research_data not in items
+                or world not in locations or not data_recipe
+                or research_data not in recipe_products(data_recipe)):
+            continue
+        if research_data not in {name_of(item)
+                                 for item in seq(card_recipe.get("ingredients"))}:
+            warnings.add(
+                f"K2SO system-card research link absent: {card} should consume "
+                f"{research_data} from {world}"
+            )
+        categories = crafting_categories(data_recipe)
+        if not possible.intersection(categories):
+            warnings.add(
+                f"K2SO research data {research_data} has no compatible "
+                f"crafting machine for {', '.join(sorted(categories))}"
+            )
+
+        # An unchanged surface lock can make the origin-world data impossible.
+        planet = obj(planets.get(world))
+        properties = obj(planet.get("surface_properties"))
+        for condition in seq(data_recipe.get("surface_conditions")):
+            if not isinstance(condition, dict):
+                continue
+            property_name = condition.get("property")
+            value = properties.get(property_name)
+            if not isinstance(value, (int, float)):
+                continue
+            minimum, maximum = condition.get("min"), condition.get("max")
+            if ((minimum is not None and value < minimum)
+                    or (maximum is not None and value > maximum)):
+                warnings.add(
+                    f"K2SO research data {research_data} excludes source "
+                    f"planet {world} by {property_name}={value}"
+                )
+
 
 def audit(raw):
     """Return (hard_errors, advisory_warnings), both sorted and deduplicated."""
@@ -127,6 +241,8 @@ def audit(raw):
         recipe = recipes.get(name)
         if recipe and recipe.get("maximum_productivity") != 0:
             warnings.add(f"Water-loop recipe {name} lacks a 0 productivity cap")
+
+    audit_k2so_planet_machinery(raw, recipes, items, planets, warnings)
 
     return sorted(problems), sorted(warnings)
 
