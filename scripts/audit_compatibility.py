@@ -181,10 +181,17 @@ def audit_k2so_planet_machinery(raw, recipes, items, planets, warnings):
                 f"{research_data} from {world}"
             )
         categories = crafting_categories(data_recipe)
+        candidates = [machine for machine in machines
+                      if can_craft_with_machine(data_recipe, machine)]
         if not possible.intersection(categories):
             warnings.add(
                 f"K2SO research data {research_data} has no compatible "
                 f"crafting machine for {', '.join(sorted(categories))}"
+            )
+        elif not candidates:
+            warnings.add(
+                f"K2SO research data {research_data} has no crafting machine "
+                f"with sufficient fluid input/output connections"
             )
 
         # A global category match can still be unusable on the home planet:
@@ -193,8 +200,6 @@ def audit_k2so_planet_machinery(raw, recipes, items, planets, warnings):
         planet = obj(planets.get(world))
         properties = obj(planet.get("surface_properties"))
         if planet and properties:
-            candidates = [machine for machine in machines
-                          if can_craft_with_machine(data_recipe, machine)]
             if candidates and not any(
                     matches_known_surface(machine, properties)
                     for machine in candidates):
@@ -262,6 +267,28 @@ def audit_k2so_stale_materials(raw, recipes, warnings):
         fluid = obj(tile).get("fluid")
         if fluid:
             check(fluid, "fluid", f"tile {name}")
+
+
+def audit_research_lab_combinations(raw, technologies, warnings):
+    """Every researched science combination must fit into one actual lab."""
+    labs = obj(raw.get("lab"))
+    if not labs:
+        return
+    lab_inputs = [set(seq(obj(lab).get("inputs"))) for lab in labs.values()]
+    for name, technology in technologies.items():
+        if not isinstance(technology, dict):
+            continue
+        if technology.get("enabled") is False or technology.get("hidden") is True:
+            continue
+        unit = obj(technology.get("unit"))
+        required = {name_of(x) for x in seq(unit.get("ingredients"))}
+        required.discard(None)
+        if required and not any(required.issubset(inputs)
+                                for inputs in lab_inputs):
+            warnings.add(
+                f"Cross-mod research lab conflict in {name}: no single lab "
+                f"accepts {', '.join(sorted(required))}"
+            )
 
 
 def audit(raw):
@@ -338,6 +365,7 @@ def audit(raw):
 
     audit_k2so_planet_machinery(raw, recipes, items, planets, warnings)
     audit_k2so_stale_materials(raw, recipes, warnings)
+    audit_research_lab_combinations(raw, technologies, warnings)
 
     return sorted(problems), sorted(warnings)
 
