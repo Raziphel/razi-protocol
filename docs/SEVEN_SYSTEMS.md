@@ -15,13 +15,13 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 
 ### Main system ownership
 
-* **Calidus:** Nauvis, Vulcanus, Fulgora, Gleba, Muluna; optional Cerys and Eneas
-* **Solaris:** Castra, Arig, Hyarion, Tellus, Corrundum
-* **Nyxaris:** Moshine, Apia/Carnova, Panglia; optional Pelagos and Dea Dia
-* **Vibrant:** Ribbonia, Paracelsin, Shchierbin
-* **Vespera:** Muria, Aquilo, Rubia, Maraxsis
+* **Calidus:** Nauvis, Muluna; optional Eneas
+* **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys, optional Athos
+* **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
+* **Vibrant:** Fulgora, Ribbonia, Paracelsin, Shchierbin; optional Cerys (Fulgora moon)
+* **Vespera:** Muria, Aquilo, Rubia, Maraxsis; recommended Obsidiax
 * **Beetlejuice:** Cubium, Linox, Secretas, Frozeta
-* **Umbra:** Tenebris, Crucible and its orbit, Vesta
+* **Umbra:** Tenebris, Crucible and its orbit, Vesta; recommended Carna
 
 ### Physical routes
 
@@ -35,9 +35,9 @@ The final route tables are in `prototypes/system/route_reconcile.lua`. Razi-owne
 
 Local branches remain connected inside their own systems, including:
 
-    Solaris: Castra -> Arig/Hyarion -> Tellus -> Corrundum
-    Nyxaris: Moshine | Apia/Carnova | Panglia (+ Pelagos / Dea Dia)
-    Vibrant: Ribbonia -> Paracelsin -> Shchierbin
+    Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
+    Nyxaris: Gleba | Moshine | Apia/Carnova | Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
+    Vibrant: Fulgora | Ribbonia -> Paracelsin -> Shchierbin (+ Cerys)
     Vespera: Muria -> Aquilo -> Rubia -> Maraxsis
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
     Umbra: Tenebris -> Crucible Orbit -> Vesta; Crucible Orbit -> Crucible (native)
@@ -64,3 +64,9 @@ The `*-discovery` technology IDs of existing systems were retained. New IDs are 
 4. Current native star positions and routes are adjusted only for the core pack. Optional mod compatibility matrices should be verified one by one.
 5. **Do not merge into the public release repo** until full loading, a fresh playthrough and existing-save migration have been tested.
 6. Follow Alex's collaboration suggestion: only small, guarded direct-dependency fixes belong in the integration layer, and upstream/source mod fixes should be preferred when reasonable.
+
+## Asteroid hazards
+
+The route difficulty now increases between the paired frontier tiers while preserving
+source-mod asteroid resource species and curves. See the
+[Asteroid Route Guide](ASTEROID_ROUTES.md) for the exact tier assignments and safety constraints.
