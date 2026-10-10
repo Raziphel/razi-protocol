@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "policy": "Small guarded patches only. Audit final Factorio prototypes and upstream releases before modifying dependent mods.",
+  "patches": [
+    {
+      "id": "armoured-biter-placement",
+      "module": "prototypes/compat/armoured_biters.lua",
+      "upstream_mods": [
+        "ArmouredBiters21Compat"
+      ],
+      "purpose": "Spawn fork-compatible armoured enemies on thematic planets; preserve vanilla spawning when enemy prototypes are absent.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_enemy_safety.lua"
+    },
+    {
+      "id": "research-trigger-k2so-rename",
+      "module": "prototypes/compat/renamed_research_triggers.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Repair stale craft-item/fluid research triggers after K2SO recipe-product renames.",
+      "upstream_status": "reported-upstream-unknown-release",
+      "fixture": "tests/lua/test_trigger_compat.lua"
+    },
+    {
+      "id": "water-productivity-loop",
+      "module": "prototypes/compat/water_loop.lua",
+      "upstream_mods": [
+        "shchierbin",
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Cap productivity on demonstrated cross-mod hydrogen/oxygen/water loop.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "research-data-surfaces",
+      "module": "prototypes/compat/research_data_surfaces.lua",
+      "upstream_mods": [
+        "Paracelsin",
+        "rubia"
+      ],
+      "purpose": "Retain pressure and surface conditions for research data after science rewrite.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "extra-assembler-cleanup",
+      "module": "prototypes/compat/redundant_progression.lua",
+      "upstream_mods": [
+        "LithiumBattery",
+        "planetaris-hyarion"
+      ],
+      "purpose": "Optionally hide genuinely redundant assembler tiers without hiding unrelated technology.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_compat.lua"
+    },
+    {
+      "id": "entity-recycling-sanity",
+      "module": "prototypes/compat/prototype_sanity.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Repair missing recipes, materials and obsolete result prototypes when the real data dump proves incompatibility.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "maraxsis-wind-restriction",
+      "module": "prototypes/compat/maraxsis_trench_wind.lua",
+      "upstream_mods": [
+        "maraxsis",
+        "rubia"
+      ],
+      "purpose": "Prevent wind turbines using surface-property defaults in the Maraxsis trench.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    }
+  ]
+}
