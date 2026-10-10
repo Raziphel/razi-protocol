@@ -71,7 +71,8 @@ local custom_points = custom.spawn_points
 profiles.apply(native, "outer_industry")
 ok(native.asteroid_spawn_definitions[6] == custom,
    "Native custom asteroid definition was replaced")
-ok(custom.spawn_points == custom_points and custom_points[1].probability == 0.21,
+ok(custom_points == native.asteroid_spawn_definitions[6].spawn_points and
+   custom_points[1].probability == 0.21,
    "Native custom asteroid spawn curve was modified")
 local after = probability(native.asteroid_spawn_definitions, "metallic-asteroid-chunk")
 profiles.apply(native, "outer_industry")
