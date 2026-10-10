@@ -14,21 +14,28 @@ SYSTEM_LOCATIONS = (
     "sye-solaris",
     "sye-nyxaris",
     "sye-vibrant",
+    "sye-vespera",
     "sye-beetlejuice",
+    "sye-umbra",
 )
 SYSTEM_CARDS = (
     "calidus-tech-card",
     "solaris-tech-card",
     "nyxaris-tech-card",
     "vibrant-tech-card",
+    "vespera-tech-card",
     "beetlejuice-tech-card",
+    "umbra-tech-card",
     "deep-space-tech-card",
 )
 CAMPAIGN_TECHNOLOGIES = (
     "solaris-discovery",
     "nyxaris-discovery",
     "vibrant-discovery",
+    "vespera-discovery",
     "beetlejuice-discovery",
+    "umbra-discovery",
+    "razi-outer-frontier-mastery",
     "razi-singularity-theory",
     "razi-singularity-test-fire",
     "razi-stable-intergalactic-singularity",

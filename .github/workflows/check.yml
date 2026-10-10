@@ -32,5 +32,7 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y lua5.2
       - name: Check Lua compatibility guards
         run: lua5.2 tests/lua/test_compat.lua
+      - name: Check seven-system galaxy and research fixtures
+        run: lua5.2 tests/lua/test_galaxy.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
