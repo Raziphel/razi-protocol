@@ -16,9 +16,18 @@ def fixture():
         "unit": {"ingredients": [["calidus-tech-card", 1]]},
         "prerequisites": [],
     }
-    tech["nyxaris-discovery"]["prerequisites"] = ["solaris-discovery"]
-    tech["vibrant-discovery"]["prerequisites"] = ["nyxaris-discovery"]
-    tech["beetlejuice-discovery"]["prerequisites"] = ["vibrant-discovery"]
+    tech["nyxaris-discovery"]["prerequisites"] = []
+    for name in ("vibrant-discovery", "vespera-discovery"):
+        tech[name]["prerequisites"] = ["solaris-discovery", "nyxaris-discovery"]
+    for name in ("beetlejuice-discovery", "umbra-discovery"):
+        tech[name]["prerequisites"] = ["vibrant-discovery", "vespera-discovery"]
+    for system in ("solaris", "nyxaris", "vibrant", "vespera",
+                   "beetlejuice", "umbra"):
+        tech[system + "-discovery"]["effects"] = [
+            {"type": "unlock-space-location", "space_location": "sye-" + system}]
+    for name in ("solaris-discovery", "nyxaris-discovery"):
+        tech[name]["effects"].append(
+            {"type": "unlock-space-location", "space_location": "sye-calidus"})
     tech["card-factory"] = {
         "unit": {"ingredients": [["space-science-pack", 1]]},
         "effects": [{"type": "unlock-recipe", "recipe": name}
@@ -43,6 +52,30 @@ class TestRaziAudit(unittest.TestCase):
     def test_good_dump(self):
         self.assertEqual(module.audit(fixture()), [])
 
+    def test_shared_departure_hub_unlocks_on_either_first_branch(self):
+        raw = fixture()
+        effects = raw["technology"]["nyxaris-discovery"]["effects"]
+        raw["technology"]["nyxaris-discovery"]["effects"] = [
+            effect for effect in effects
+            if effect["space_location"] != "sye-calidus"]
+        self.assertTrue(any("sye-calidus" in error
+                            for error in module.audit(raw)))
+
+    def test_middle_frontier_cannot_bypass_earlier_pair(self):
+        raw = fixture()
+        raw["technology"]["vespera-discovery"]["prerequisites"] = [
+            "nyxaris-discovery"]
+        self.assertTrue(any("Premature vespera-discovery" in error
+                            for error in module.audit(raw)))
+
+    def test_foreign_technology_cannot_unlock_umbra_early(self):
+        raw = fixture()
+        raw["technology"]["unrelated-tech"] = {
+            "effects": [{"type": "unlock-space-location",
+                         "space_location": "sye-umbra"}]}
+        self.assertTrue(any("Premature unlock of sye-umbra" in error
+                            for error in module.audit(raw)))
+
     def test_missing_prerequisite(self):
         raw = fixture()
         raw["technology"]["nyxaris-discovery"]["prerequisites"] = ["removed-planet"]
@@ -51,6 +84,7 @@ class TestRaziAudit(unittest.TestCase):
     def test_research_cycle(self):
         raw = fixture()
         raw["technology"]["solaris-discovery"]["prerequisites"] = ["nyxaris-discovery"]
+        raw["technology"]["nyxaris-discovery"]["prerequisites"] = ["solaris-discovery"]
         self.assertTrue(any("cycle" in msg for msg in module.audit(raw)))
 
     def test_science_requires_one_compatible_lab(self):
