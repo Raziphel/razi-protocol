@@ -52,7 +52,9 @@ load, save migration and practical exploration remain mandatory.
 ## Celestial weather
 
 The 2.1 forks `celestial-weather-updated` and
-`celestial-weather-additions-updated` are already optional dependencies.
+`celestial-weather-additions-updated` can be installed independently, but Razi
+Protocol does not yet patch their prototypes or runtime behavior, so they are
+not declared as optional dependencies in `info.json`.
 Avoid duplicating their mechanics inside Razi. Audit the final enabled planet
 prototypes and weather settings before adding integrations, especially Muria,
 Rubia, Paracelsin, Vesta, Panglia and optional Pelagos. The next step is to
