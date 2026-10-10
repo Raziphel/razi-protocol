@@ -43,6 +43,13 @@ for _, entry in ipairs({
   raw.tool[entry[1]]={}
   raw.recipe[entry[1]]={results={{type="item",name=entry[1],amount=1}}}
 end
+-- A recipe can exist but remain locked behind the discovery that is trying
+-- to consume its science. The science technology milestone is still safe,
+-- but the ingredient itself must not be added until its production is valid.
+raw.recipe["battlefield-science-pack"].enabled=false
+t["planet-discovery-arig"].effects={{
+  type="unlock-recipe",recipe="battlefield-science-pack"
+}}
 -- Simulate a source-mod circular dependency. Do not let Frozeta require
 -- a science technology which itself demands Frozeta discovery.
 t["bioluminescent-science-pack"].prerequisites={"planet-discovery-frozeta"}
@@ -68,6 +75,8 @@ check(has_parent("planet-discovery-castra","native-castra"),
   "Native prerequisites were overwritten")
 check(has_parent("planet-discovery-arig","battlefield-science-pack"),
   "Arig lacks Castra military research")
+check(not has_pack("planet-discovery-arig","battlefield-science-pack"),
+  "Arig was charged science that only Arig research itself unlocks")
 check(has_parent("planet-discovery-tellus","planet-discovery-gleba"),
   "Tellus missing Gleba cross-system discovery")
 check(has_parent("planet-discovery-tellus","planetaris-compression-science-pack"),

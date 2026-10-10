@@ -59,3 +59,23 @@ craftability or that parent star coordinates render cleanly in Factorio.
 The interwoven progression fixture additionally checks science technology
 prerequisites, complete-lab compatibility, cyclic and absent dependencies,
 and repeat-pass stability. The full pack must still be tested in-game.
+
+## Recipe-unlock and source-planet reachability audit
+
+The post-load prototype auditor now checks a second dependency graph that
+research prerequisite checks alone miss: **which technology unlocks the
+recipes that produce each mandatory System Tech Card ingredient**. If every
+source recipe is locked behind the very research consuming that card, it
+reports a hard science-supply deadlock. The audit also finds card recipe
+ingredient cycles and checks known source-planet science against the
+consumer's transitive planet-discovery prerequisites.
+
+The interwoven science module now declines to add an optional science-pack
+cost when every available recipe producing that pack unlocks only at or
+after the consuming discovery technology. It retains the normal predecessor
+research milestone, avoiding an artificial lock on the actual ingredient.
+
+This only establishes *logical availability*. It cannot establish fuel,
+electricity, resources, special crafting events, surface placement or input
+transport without a complete enabled-modpack Factorio dump and a gameplay
+smoke test.

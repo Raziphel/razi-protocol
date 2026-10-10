@@ -63,10 +63,30 @@ local function produces(recipe, pack)
   return false
 end
 
-local function has_production_recipe(pack)
-  for _, recipe in pairs(data.raw.recipe or {}) do
-    if produces(recipe, pack) or produces(rawget(recipe, "normal"), pack)
-      or produces(rawget(recipe, "expensive"), pack) then return true end
+-- Existence of a recipe alone is not evidence that the pack can be made.
+-- An otherwise valid science requirement softlocks its discovery when the
+-- recipe can only be unlocked *by* that same discovery or a later research.
+local function recipe_accessible_before(recipe_name, recipe, target_name)
+  if recipe.enabled ~= false then return true end
+  for name, t in pairs(data.raw.technology or {}) do
+    if not depends_on(name, target_name) then
+      for _, effect in ipairs(t.effects or {}) do
+        if effect.type == "unlock-recipe"
+          and effect.recipe == recipe_name then return true end
+      end
+    end
+  end
+  return false
+end
+
+local function has_production_recipe_before(pack, target_name)
+  for recipe_name, recipe in pairs(data.raw.recipe or {}) do
+    if (produces(recipe, pack)
+        or produces(rawget(recipe, "normal"), pack)
+        or produces(rawget(recipe, "expensive"), pack))
+      and recipe_accessible_before(recipe_name, recipe, target_name) then
+      return true
+    end
   end
   return false
 end
@@ -92,7 +112,7 @@ end
 local function add_science(target, pack)
   local t = technology(target)
   if not (t and t.unit and t.unit.ingredients) then return end
-  if not has_production_recipe(pack) then return end
+  if not has_production_recipe_before(pack, target) then return end
   for _, ingredient in ipairs(t.unit.ingredients) do
     if (ingredient.name or ingredient[1]) == pack then return end
   end
