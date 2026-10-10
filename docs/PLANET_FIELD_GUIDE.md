@@ -6,10 +6,10 @@
 
 | System | Main destinations | Main purpose | Known mod context |
 | --- | --- | --- | --- |
-| Calidus | Nauvis, Vulcanus, Fulgora, Gleba, Muluna | Home industry, metallurgy, electromagnetic and agricultural science; lunar expansion | Base Space Age and Muluna |
-| Solaris | Castra, Arig, Hyarion, Tellus, Corrundum | Industrial and military breakthroughs; multiple initial approaches | Planetaris and Castra Prime |
-| Nyxaris | Moshine, Apia/Carnova, Panglia | Computational science, alien biology, challenging environments | Native Apia/Carnova subsystem |
-| Vibrant | Ribbonia, Paracelsin, Shchierbin | Alien chemistry, galvanization and specialist processing | Preserve source surface requirements |
+| Calidus | Nauvis, Muluna | Home automation and lunar spaceflight; lunar expansion | Base Space Age and Muluna |
+| Solaris | Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum | Metallurgy, industrial and military breakthroughs; multiple initial approaches | Planetaris and Castra Prime |
+| Nyxaris | Gleba, Moshine, Apia/Carnova, Panglia | Agricultural, computational and alien biology science, challenging environments | Native Apia/Carnova subsystem |
+| Vibrant | Fulgora, Ribbonia, Paracelsin, Shchierbin | Electromagnetics, alien chemistry, galvanization and specialist processing | Preserve source surface requirements |
 | Vespera | Muria, Aquilo, Rubia, Maraxsis | Harsh environments, cooling, fluid and materials engineering | Muria entrance; native Aquilo/Maraxsis content |
 | Beetlejuice | Cubium, Linox, Secretas, Frozeta | Outer-rim production and resource specialization | Secretas to Frozeta; Linox fork |
 | Umbra | Tenebris, Crucible, Vesta | Late experimental engineering, high-risk planet sciences | Crucible Orbit and Vesta routes |
@@ -25,7 +25,7 @@ science, and are excluded from mandatory chapter mastery.
 See [Optional Planet Expeditions](OPTIONAL_PLANETS.md) for installation notes
 and upstream links.
 
-Cerys and Eneas extend Calidus. Pelagos and Dea Dia extend Nyxaris,
+Eneas extends Calidus; Cerys follows Fulgora to Vibrant. Pelagos and Dea Dia extend Nyxaris,
 with Dea Dia retaining its native subsystem. Nexus-Updated and
 VoidProcessing-Updated extend the late-game universe without being mandatory
 for the normal Razi victory condition.
@@ -47,3 +47,9 @@ discovery gate; unique science and resources; machine/surface restrictions;
 native enemies, verified weather hazards; preferred starter logistics; routes
 to neighboring planets; and what its chapter mastery needs from that planet.
 No unconfirmed recipe or weather claims should appear as gameplay facts.
+
+## Asteroid safety
+
+Razi-managed connections now have progressively stronger region-specific hazards.
+Original modded asteroid species, their source spawn curves, and native internal
+space routes remain intact. See [Asteroid Routes](ASTEROID_ROUTES.md).
