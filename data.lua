@@ -11,3 +11,6 @@ require "prototypes.system.linox"
 require "prototypes.system.deep_space"
 require("prototypes.compat.k2so_tweaks").data()
 require "prototypes.technology"
+
+-- Add two new stars and apply final 7-system orbital placement.
+require "prototypes.system.seven_systems"
