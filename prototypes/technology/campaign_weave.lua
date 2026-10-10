@@ -65,8 +65,8 @@ end
 
 local function has_production_recipe(pack)
   for _, recipe in pairs(data.raw.recipe or {}) do
-    if produces(recipe, pack) or produces(recipe.normal, pack)
-      or produces(recipe.expensive, pack) then return true end
+    if produces(recipe, pack) or produces(rawget(recipe, "normal"), pack)
+      or produces(rawget(recipe, "expensive"), pack) then return true end
   end
   return false
 end

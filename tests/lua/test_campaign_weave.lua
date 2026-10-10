@@ -56,7 +56,7 @@ local function has_parent(name,need)
 end
 local function has_pack(name,need)
   for _, p in ipairs(t[name].unit.ingredients) do
-    if (p.name or p[1])==need then return true end
+    if p[1]==need then return true end
   end
   return false
 end
