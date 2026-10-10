@@ -15,7 +15,9 @@ local function build_transceiver_science(multiplier)
 	add_science_pack(ingredients, "solaris-tech-card", 1)
 	add_science_pack(ingredients, "nyxaris-tech-card", 1)
 	add_science_pack(ingredients, "vibrant-tech-card", 1)
+	add_science_pack(ingredients, "vespera-tech-card", 1)
 	add_science_pack(ingredients, "beetlejuice-tech-card", multiplier)
+	add_science_pack(ingredients, "umbra-tech-card", multiplier)
 	add_science_pack(ingredients, "kr-matter-tech-card", 1)
 	add_science_pack(ingredients, "kr-advanced-tech-card", 1)
 	add_science_pack(ingredients, "kr-singularity-tech-card", multiplier)
@@ -47,7 +49,7 @@ end
 data:extend({
 	make_transceiver_technology(
 		"razi-singularity-theory",
-		{"kr-intergalactic-transceiver"},
+		{"kr-intergalactic-transceiver", "razi-outer-frontier-mastery"},
 		5000,
 		1
 	),
