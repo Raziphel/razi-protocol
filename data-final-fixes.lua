@@ -84,3 +84,6 @@ end
 
 -- Reconcile the final route network after every source compatibility pass.
 require("prototypes.system.route_reconcile").data_final_fixes()
+
+-- The final campaign gates must override earlier source compatibility rules.
+require("prototypes.technology.seven_system_gates").data_final_fixes()
