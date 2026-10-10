@@ -38,5 +38,7 @@ jobs:
         run: lua5.2 tests/lua/test_enemy_safety.lua
       - name: Test research trigger migrations
         run: lua5.2 tests/lua/test_trigger_compat.lua
+      - name: Check optional planet integrations
+        run: lua5.2 tests/lua/test_optional_planets.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
