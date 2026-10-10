@@ -99,6 +99,41 @@ class TestRaziAudit(unittest.TestCase):
         }
         self.assertEqual(module.audit(raw), [])
 
+    def test_new_optional_planet_integration(self):
+        raw = fixture()
+        raw["planet"]["igrys"] = {
+            "orbit": {"parent": {"type": "space-location", "name": "solaris"}}}
+        raw["space-location"]["solaris"] = {}
+        raw["space-connection"]["igrys-entry"] = {
+            "from": "sye-solaris", "to": "igrys"}
+        raw["technology"]["planet-discovery-igrys"] = {
+            "prerequisites": ["solaris-discovery"],
+            "unit": {"ingredients": [["calidus-tech-card", 1]]},
+            "effects": [{"type": "unlock-space-location", "space_location": "igrys"}],
+        }
+        self.assertEqual(module.audit(raw), [])
+
+        del raw["space-connection"]["igrys-entry"]
+        self.assertTrue(any("igrys lacks route" in issue
+                            for issue in module.audit(raw)))
+
+    def test_optional_planet_has_valid_research_gate(self):
+        raw = fixture()
+        raw["planet"]["rabbasca"] = {
+            "orbit": {"parent": {"type": "planet", "name": "gleba"}}}
+        raw["planet"]["gleba"] = {}
+        raw["space-connection"]["gleba-rabbasca"] = {
+            "from": "gleba", "to": "rabbasca"}
+        raw["technology"]["planet-discovery-gleba"] = {
+            "unit": {"ingredients": [["calidus-tech-card", 1]]}}
+        raw["technology"]["planet-discovery-rabbasca"] = {
+            "prerequisites": ["planet-discovery-gleba"],
+            "effects": [{"type": "unlock-space-location", "space_location": "rabbasca"}]}
+        self.assertEqual(module.audit(raw), [])
+        raw["technology"]["planet-discovery-rabbasca"]["prerequisites"] = []
+        self.assertTrue(any("rabbasca discovery lacks" in issue
+                            for issue in module.audit(raw)))
+
     def test_optional_extra_route(self):
         raw = fixture()
         raw["planet"]["optional-planet"] = {}

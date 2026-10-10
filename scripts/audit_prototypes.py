@@ -28,6 +28,16 @@ SYSTEM_CARDS = (
     "umbra-tech-card",
     "deep-space-tech-card",
 )
+OPTIONAL_PLANET_DESTINATIONS = {
+    # Planet: (expected orbit parent, expected local route entry, chapter gate)
+    "igrys": ("solaris", "sye-solaris", "solaris-discovery"),
+    "rabbasca": ("gleba", "gleba", "planet-discovery-gleba"),
+    "foliax": ("nyxaris", "sye-nyxaris", "nyxaris-discovery"),
+    "obsidiax": ("vespera", "sye-vespera", "vespera-discovery"),
+    "carna": ("umbra", "sye-umbra", "umbra-discovery"),
+    "athos": ("solaris", "sye-solaris", "solaris-discovery"),
+}
+
 CAMPAIGN_TECHNOLOGIES = (
     "solaris-discovery",
     "nyxaris-discovery",
@@ -210,6 +220,33 @@ def audit(raw, extra_locations=(), check_campaign_routes=True):
                 errors.add(f"Required location does not exist: {location}")
             elif location not in reachable:
                 errors.add(f"No space route from Nauvis to {location}")
+
+    # Conditional validation: never demand an optional planet if its mod
+    # is not installed. Validate its real post-load orbit/route/gate if present.
+    planets = table(raw.get("planet"))
+    for planet_name, (parent, entry, gate) in OPTIONAL_PLANET_DESTINATIONS.items():
+        if planet_name not in planets:
+            continue
+        orbit = table(planets[planet_name].get("orbit"))
+        observed_parent = table(orbit.get("parent")).get("name")
+        if observed_parent != parent:
+            errors.add(f"Optional planet {planet_name} orbits {observed_parent}, "
+                       f"expected {parent}")
+        has_route = any({route.get("from"), route.get("to")} == {planet_name, entry}
+                        for route in connections.values())
+        if not has_route:
+            errors.add(f"Optional planet {planet_name} lacks route to {entry}")
+        discoverers = [
+            name for name, technology in technologies.items()
+            if any(isinstance(effect, dict) and
+                   effect.get("type") == "unlock-space-location" and
+                   effect.get("space_location") == planet_name
+                   for effect in sequence(technology.get("effects")))
+        ]
+        if not discoverers:
+            errors.add(f"Optional planet {planet_name} has no native discovery research")
+        elif not any(depends_on(name, gate) for name in discoverers):
+            errors.add(f"Optional planet {planet_name} discovery lacks {gate} gate")
 
     return sorted(errors)
 
