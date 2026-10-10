@@ -5,9 +5,11 @@ local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-de
 
 local membership = {
 	-- Main game and Calidus.
-	nauvis = "calidus", vulcanus = "calidus", fulgora = "calidus",
-	gleba = "calidus", muluna = "calidus",
-	["sye-calidus"] = "calidus", cerys = "calidus", eneas = "calidus",
+	nauvis = "calidus", muluna = "calidus", eneas = "calidus",
+	["sye-calidus"] = "calidus",
+	vulcanus = "solaris",
+	gleba = "nyxaris", rabbasca = "nyxaris",
+	fulgora = "vibrant", cerys = "vibrant",
 	-- Solaris and Nyxaris.
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris",
 	hyarion = "solaris", tellus = "solaris", corrundum = "solaris",
@@ -39,6 +41,7 @@ local route_specifications = {
 	{"sye-vespera", "sye-umbra", 130000, "outer"},
 	{"sye-beetlejuice", "sye-umbra", 45000, "outer"},
 	-- Solaris's twin opening branches.
+	{"sye-solaris", "vulcanus", 18000, "early"},
 	{"sye-solaris", "castra", 12000, "early"},
 	{"castra", "arig", 15000, "early"},
 	{"castra", "hyarion", 15000, "early"},
@@ -46,12 +49,15 @@ local route_specifications = {
 	{"hyarion", "tellus", 16500, "early"},
 	{"tellus", "corrundum", 18000, "early"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
+	{"sye-nyxaris", "gleba", 18000, "early"},
 	{"sye-nyxaris", "apia-carnova-orbit", 17000, "early"},
 	{"sye-nyxaris", "moshine", 18000, "early"},
 	{"sye-nyxaris", "panglia", 18000, "early"},
 	{"panglia", "pelagos", 16000, "early"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "early"},
 	-- Vibrant's chemistry strand.
+	{"sye-vibrant", "fulgora", 17000, "medium"},
+	{"fulgora", "ribbonia", 17500, "medium"},
 	{"sye-vibrant", "ribbonia", 17000, "medium"},
 	{"ribbonia", "paracelsin", 18000, "medium"},
 	{"paracelsin", "shchierbin", 18000, "medium"},

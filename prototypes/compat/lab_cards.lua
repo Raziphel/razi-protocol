@@ -14,15 +14,14 @@ local system_card_definitions = {
 		localised_name = {"item-name.calidus-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
-		unlock_technology_candidates = {"planet-discovery-muluna", "space-science-pack"},
+		unlock_technology_candidates = {"space-science-pack", "planet-discovery-muluna"},
 		ingredients = {
 			"automation-science-pack", "logistic-science-pack",
 			"military-science-pack", "chemical-science-pack",
 			"production-science-pack", "utility-science-pack",
-			"space-science-pack", "metallurgic-science-pack",
-			"electromagnetic-science-pack", "agricultural-science-pack",
-			"tungsten-science-pack", "lunar-science-pack",
-			"interstellar-science-pack", "advanced-space-science-pack"
+			"space-science-pack"
+			-- The frontier systems now own metallurgy, biology and electronics.
+			-- No later-planet science may be needed to construct this first card.
 		},
 		fallback_ingredients = {"automation-science-pack"}
 	},
@@ -33,7 +32,8 @@ local system_card_definitions = {
 		order = "s[system]-b[solaris]",
 		unlock_technology_candidates = {"planet-discovery-castra"},
 		ingredients = {
-			"calidus-tech-card", "battlefield-science-pack",
+			"calidus-tech-card", "metallurgic-science-pack",
+			"tungsten-science-pack", "battlefield-science-pack",
 			"planetaris-compression-science-pack",
 			"planetaris-polishing-science-pack",
 			"planetaris-bioengineering-science-pack",
@@ -54,7 +54,8 @@ local system_card_definitions = {
 			"panglia_planet_discovery_panglia"
 		},
 		ingredients = {
-			"calidus-tech-card", "insulation-science-pack",
+			"calidus-tech-card", "agricultural-science-pack",
+			"insulation-science-pack",
 			"thermodynamic-science-pack", "apicultural-science-pack"
 		},
 		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
@@ -67,7 +68,7 @@ local system_card_definitions = {
 		unlock_technology_candidates = {"planet-discovery-ribbonia"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
-			"ribbonia-alien-science-pack",
+			"electromagnetic-science-pack", "ribbonia-alien-science-pack",
 			"galvanization-science-pack", "paracelsin-galvanization-science-pack",
 			"vanadium-science-pack"
 		},

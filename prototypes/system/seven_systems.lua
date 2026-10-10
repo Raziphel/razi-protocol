@@ -64,6 +64,11 @@ local updates = {
 	{"space-location", "nyxaris", "star", 92, 0.36},
 	{"space-location", "vibrant", "star", 153, 0.12},
 	{"space-location", "beetlejuice", "star", 218, 0.11},
+	-- Space Age's three original off-world planets are frontier destinations,
+	-- not additional Calidus starting planets.
+	{"planet", "vulcanus", "solaris", 32, 0.04},
+	{"planet", "gleba", "nyxaris", 28, 0.45},
+	{"planet", "fulgora", "vibrant", 27, 0.42},
 	{"planet", "muria", "vespera", 17, 0.62},
 	{"planet", "aquilo", "vespera", 26, 0.24},
 	{"planet", "rubia", "vespera", 14, 0.34},
