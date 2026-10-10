@@ -25,8 +25,9 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 
 ### Physical routes
 
-The physical layout is finalized by `prototypes/system/galaxy_layout.lua`
-**after** optional planet mods have finished positioning their worlds. This
+The physical layout is finalized by `prototypes/system/galaxy_layout.lua`,
+called explicitly at the end of `data-final-fixes.lua` **after** optional
+planet mods have finished positioning their worlds. This
 prevents earlier per-planet updates from pulling stars back out of alignment.
 The route table itself lives in `prototypes/system/route_reconcile.lua`.
 

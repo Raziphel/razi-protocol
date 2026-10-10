@@ -35,7 +35,7 @@ No source-mod graphics or scripts were copied.
     Muria -> Aquilo -> INNER RIM ==> DENSE BELT ==> OUTER RIM -> Rubia -> Maraxsis
 
 * **Survey:** `razi-vespera-belt-survey`, following Aquilo discovery.
-* Requires the Vespera Tech Card, already obtainable before Rubia.
+* Requires Solaris and Nyxaris Tech Cards, both available before Vespera opens. The Vespera card still uses Rubia/Maraxsis science and therefore cannot gate this survey.
 * A 10,500 km approach, **6,500 km dangerous core**, and 10,500 km exit.
 * The core is a concentrated medium/big-asteroid encounter; **no huge yet**.
 * Both rims are resource-rich stops with metallic, carbonic, and oxide chunks.
@@ -47,7 +47,7 @@ No source-mod graphics or scripts were copied.
     Tenebris -> Crucible Orbit -> INNER RIM ==> SHATTERED CORE ==> OUTER RIM -> Vesta
 
 * **Survey:** `razi-umbra-belt-survey`, following Crucible discovery.
-* Requires the Umbra Tech Card, already obtainable before Vesta.
+* Requires Vibrant and Vespera Tech Cards, both available before Umbra opens. The Umbra card is reserved for later Umbra mastery and cannot gate this survey.
 * A 10,000 km approach, **8,000 km dangerous core**, and 11,000 km exit.
 * Strong big-asteroid encounters and **the first intentionally added huge
   asteroid encounters**, provided the relevant vanilla prototypes exist.

@@ -75,3 +75,7 @@ require("prototypes.technology.seven_system_gates").data_final_fixes()
 
 -- Optional planet destinations: native science retained, chapter travel attached.
 require("prototypes.system.optional_planets").data_final_fixes()
+
+-- Apply our approved star/planet coordinates last, after optional orbits.
+-- Keep this explicit in the data-stage entrypoint so it cannot be skipped.
+require("prototypes.system.galaxy_layout").data_final_fixes()
