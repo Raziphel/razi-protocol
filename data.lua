@@ -1,0 +1,13 @@
+require "prototypes.system.calidus"
+require("prototypes.system.bellicos").data()
+require "prototypes.system.eneas"
+require "prototypes.system.solaris"
+require "prototypes.system.nyxaris"
+require "prototypes.system.vibrant"
+require "prototypes.system.muria"
+require "prototypes.system.shchierbin"
+require "prototypes.system.beetlejuice"
+require "prototypes.system.linox"
+require "prototypes.system.deep_space"
+require("prototypes.compat.k2so_tweaks").data()
+require "prototypes.technology"

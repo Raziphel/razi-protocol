@@ -1,0 +1,91 @@
+Razi Protocol Credits and Acknowledgements
+Razi Protocol is a compatibility, progression, and system-layout mod built around a large collection of Factorio 2.1 and Space Age mods.
+Credit for the original planets, enemies, systems, mechanics, art, sounds, icons, and ideas belongs to the authors and contributors of those mods.
+This project exists because of the work of the Factorio modding community. 
+If you are the creator of a mod or asset referenced here and want credit adjusted, wording changed, or something removed, please contact me on Discord: Raziphel.
+
+
+Core foundation
+- Wube Software for Factorio and Space Age.
+- RAZI Library for the shared prototype, recipe, technology, collection, and validation foundation used by Razi Protocol.
+- PlanetsLib for making large custom planet and system setups practical.
+- Krastorio2 Spaced Out for the overhaul foundation that this modpack progression is built around.
+- Science Tab for the science organization concept and compatibility target.
+
+
+Planet and system mods
+These mods provide many of the worlds, science packs, mechanics, and progression ideas that Razi Protocol integrates into one larger route:
+- planet-muluna
+- bellicos-and-aegis
+- bellicos-and-aegis-assets
+- planetaris-unbounded
+- planetaris-tellus
+- planetaris-hyarion
+- planetaris-arig
+- Cerys-Moon-of-Fulgora
+- moon-eneas
+- linox
+- shchierbin
+- Muria
+- dea-dia-system
+- corrundum
+- apia
+- Moshine
+- panglia_planet
+- pelagos
+- tenebris-prime
+- secretas
+- maraxsis
+- rubia
+- Nexus
+- VoidProcessing
+- skewer_planet_vesta
+- castra-prime
+- planet-crucible
+- ribbonia
+- slp-dyson-sphere-reworked
+
+
+Enemy and world hazard mods
+These mods inspired or provide the enemy and hazard variety that Razi Protocol routes onto specific planets:
+- Arachnids_enemy
+- ArmouredBiters
+- Cold_biters
+- Electric_flying_enemies
+- Explosive_biters
+- Toxic_biters
+- celestial-weather
+
+Additional thanks to the K2 compatibility work around Cold_biters_K2_compatibility, Explosive_biters_K2_compatibility, and Toxic_biters_K2_compatibility.
+Compatibility and balance inspiration
+Thanks to the authors of these mods for compatibility ideas, balance references, and useful integration points:
+- nulls-k2so-tweaks
+- xy-k2so-enhancements
+- paracelsin-krastorio-compatibility-plus
+- rubia-krastorio-compatibility-plus
+- castra-krastorio-compatibility-plus
+- k2-wind-turbine-speed
+- Imersite-Asteroids
+- BetterAquilo
+- LithiumBattery
+- Quality-Asteroids-Expanded
+- cargo-bay-inserters
+- kr-air-purifier-helper
+- rubia-minus-memes
+
+
+Endgame inspiration
+Razi Protocol's late-game transceiver, deep-space card, Nexus, Sol, and singularity progression was also inspired by the general idea of extending Krastorio's endgame beyond the normal finish line.
+Special acknowledgement to the Krastorio2 Extended Endgame / K2 Spaced Out Extended Endgame lineage and authors for that style of late-game concept. 
+Razi Protocol does not depend on those mods directly and intentionally conflicts with them so its own endgame route can be used instead.
+
+Quality of life and optional modpack support
+Thanks also to the authors of optional utility and quality-of-life mods that this modpack is commonly used around, including 
+visible-planets, StatsGui, shield-projector, turret-activation-delay, LogisticTrainNetwork, LTN_Combinator_Modernized, LtnManager, 
+NapalmArtillery, Noxys_Swimming, bullet-trails, even-distribution, squeak-through-2, robot_attrition, CleanedConcrete, better-victory-screen, 
+Aircraft-space-age, aai-signal-transmission, aai-industry, assembler-group, AutoDeconstruct, combat-mechanics-overhaul, enemy-alert, UPSFriendlyNixieTubeDisplay, 
+rocket-reusability, and CircularColliderLab.
+
+
+Final note
+This credits file is meant to be appreciative, not exhaustive ownership documentation. If any credit is missing, inaccurate, or needs a better description, please let me know and I will fix it.
