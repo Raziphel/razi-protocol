@@ -42,9 +42,15 @@ local route_specifications = {
 	{"sye-solaris", "sye-nyxaris", 32000, "frontier_crosslink"},
 	{"sye-solaris", "sye-vibrant", 95000, "middle_crossing"},
 	{"sye-nyxaris", "sye-vespera", 95000, "middle_crossing"},
+	-- Four neighbor diagonals make the lattice traversable in multiple ways
+	-- only after the destination's independent star research is complete.
+	{"sye-solaris", "sye-vespera", 116000, "middle_crossing"},
+	{"sye-nyxaris", "sye-vibrant", 116000, "middle_crossing"},
 	{"sye-vibrant", "sye-vespera", 38000, "middle_crosslink"},
 	{"sye-vibrant", "sye-beetlejuice", 130000, "outer_crossing"},
 	{"sye-vespera", "sye-umbra", 130000, "outer_crossing"},
+	{"sye-vibrant", "sye-umbra", 148000, "outer_crossing"},
+	{"sye-vespera", "sye-beetlejuice", 148000, "outer_crossing"},
 	{"sye-beetlejuice", "sye-umbra", 45000, "outer_crosslink"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
@@ -183,6 +189,10 @@ function route_reconcile.data_final_fixes()
 			local route = keep_name and routes[keep_name]
 			if route then
 				route.from, route.to, route.length = from, to, length
+				if membership[from] and membership[to]
+					and membership[from] ~= membership[to] then
+					route.shape = "line"
+				end
 				hazard_profiles.apply(route, hazard)
 			else
 				data:extend({
@@ -192,6 +202,8 @@ function route_reconcile.data_final_fixes()
 						from = from,
 						to = to,
 						length = length,
+						shape = (membership[from] and membership[to]
+							and membership[from] ~= membership[to]) and "line" or "arc",
 						asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}
 				})
