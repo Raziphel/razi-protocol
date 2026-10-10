@@ -10,7 +10,6 @@ local science_tiers = {
 		"metallurgic-science-pack",
 		"electromagnetic-science-pack",
 		"agricultural-science-pack",
-		"lithium-science-pack",
 		"tungsten-science-pack"
 	},
 	inner_system = {
@@ -95,7 +94,9 @@ local system_tech_cards = {
 	"solaris-tech-card",
 	"nyxaris-tech-card",
 	"vibrant-tech-card",
-	"beetlejuice-tech-card"
+	"vespera-tech-card",
+	"beetlejuice-tech-card",
+	"umbra-tech-card"
 }
 
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"

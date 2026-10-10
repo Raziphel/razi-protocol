@@ -14,144 +14,118 @@ local system_card_definitions = {
 		localised_name = {"item-name.calidus-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
-		unlock_technology_candidates = {
-			"planet-discovery-muluna",
-			"moon-discovery-cerys",
-			"space-science-pack"
-		},
+		unlock_technology_candidates = {"planet-discovery-muluna", "space-science-pack"},
 		ingredients = {
-			"automation-science-pack",
-			"logistic-science-pack",
-			"military-science-pack",
-			"chemical-science-pack",
-			"production-science-pack",
-			"utility-science-pack",
-			"space-science-pack",
-			"metallurgic-science-pack",
-			"electromagnetic-science-pack",
-			"agricultural-science-pack",
-			"lithium-science-pack",
-			"tungsten-science-pack",
-			"lunar-science-pack",
-			"interstellar-science-pack",
-			"advanced-space-science-pack"
+			"automation-science-pack", "logistic-science-pack",
+			"military-science-pack", "chemical-science-pack",
+			"production-science-pack", "utility-science-pack",
+			"space-science-pack", "metallurgic-science-pack",
+			"electromagnetic-science-pack", "agricultural-science-pack",
+			"tungsten-science-pack", "lunar-science-pack",
+			"interstellar-science-pack", "advanced-space-science-pack"
 		},
-		fallback_ingredients = {
-			"automation-science-pack"
-		}
+		fallback_ingredients = {"automation-science-pack"}
 	},
 	{
 		name = "solaris-tech-card",
 		localised_name = {"item-name.solaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/solaris-tech-card.png",
 		order = "s[system]-b[solaris]",
-		unlock_technology_candidates = {
-			"planet-discovery-castra"
-		},
+		unlock_technology_candidates = {"planet-discovery-castra"},
 		ingredients = {
-			"battlefield-science-pack",
+			"calidus-tech-card", "battlefield-science-pack",
 			"planetaris-compression-science-pack",
 			"planetaris-polishing-science-pack",
 			"planetaris-bioengineering-science-pack",
 			"planetaris-pathological-science-pack",
-			"planetaris-refraction-science-pack",
-			"electrochemical-science-pack"
+			"planetaris-refraction-science-pack", "electrochemical-science-pack"
 		},
-		fallback_ingredients = {
-			"calidus-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
 	},
 	{
 		name = "nyxaris-tech-card",
 		localised_name = {"item-name.nyxaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/nyxaris-tech-card.png",
 		order = "s[system]-c[nyxaris]",
+		-- Never put optional Dea Dia / Pelagos science into a mandatory card.
 		unlock_technology_candidates = {
-			"system-discovery-dea-dia",
-			"planet-discovery-dea-dia",
-			"planet-discovery-apia-carnova",
 			"planet-discovery-moshine",
-			"planet-discovery-pelagos"
+			"planet-discovery-apia-carnova",
+			"panglia_planet_discovery_panglia"
 		},
 		ingredients = {
-			"aerospace-science-pack",
-			"dea-dia-science-pack",
-			"insulation-science-pack",
-			"thermodynamic-science-pack",
-			"nuclear-science-pack",
-			"apicultural-science-pack",
-			"pelagos-science-pack"
+			"calidus-tech-card", "insulation-science-pack",
+			"thermodynamic-science-pack", "apicultural-science-pack"
 		},
-		fallback_ingredients = {
-			"solaris-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
 	},
 	{
 		name = "vibrant-tech-card",
 		localised_name = {"item-name.vibrant-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
 		order = "s[system]-d[vibrant]",
-		unlock_technology_candidates = {
-			"planet-discovery-ribbonia",
-			"planet-discovery-aquilo",
-			"planet-discovery-maraxsis"
-		},
+		unlock_technology_candidates = {"planet-discovery-ribbonia"},
 		ingredients = {
+			"solaris-tech-card", "nyxaris-tech-card",
 			"ribbonia-alien-science-pack",
-			"biorecycling-science-pack",
-			"rubia-biofusion-science-pack",
-			"galvanization-science-pack",
-			"paracelsin-galvanization-science-pack",
+			"galvanization-science-pack", "paracelsin-galvanization-science-pack",
+			"vanadium-science-pack"
+		},
+		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
+	},
+	{
+		name = "vespera-tech-card",
+		localised_name = {"item-name.vespera-tech-card"},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
+		tint = {r = 0.45, g = 0.85, b = 1, a = 1},
+		order = "s[system]-e[vespera]",
+		unlock_technology_candidates = {"planet-discovery-muria"},
+		ingredients = {
+			"solaris-tech-card", "nyxaris-tech-card",
+			"muriatic-science-pack", "cryogenic-science-pack",
+			"biorecycling-science-pack", "rubia-biofusion-science-pack",
 			"hydraulic-science-pack"
 		},
-		fallback_ingredients = {
-			"nyxaris-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
 	{
 		name = "beetlejuice-tech-card",
 		localised_name = {"item-name.beetlejuice-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
-		order = "s[system]-e[beetlejuice]",
-		unlock_technology_candidates = {
-			"planet-discovery-cubium",
-			"planet-discovery-tenebris"
-		},
+		order = "s[system]-f[beetlejuice]",
+		unlock_technology_candidates = {"planet-discovery-cubium"},
 		ingredients = {
-			"bioluminescent-science-pack",
-			"cryogenic-science-pack",
-			"gas-manipulation-science-pack",
-			"planet-crucible-science-pack",
+			"vibrant-tech-card", "vespera-tech-card",
 			"golden-science-pack"
 		},
-		fallback_ingredients = {
-			"vibrant-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"vibrant-tech-card", "vespera-tech-card"}
+	},
+	{
+		name = "umbra-tech-card",
+		localised_name = {"item-name.umbra-tech-card"},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
+		tint = {r = 0.72, g = 0.52, b = 1, a = 1},
+		order = "s[system]-g[umbra]",
+		unlock_technology_candidates = {"planet-discovery-tenebris"},
+		ingredients = {
+			"vibrant-tech-card", "vespera-tech-card",
+			"bioluminescent-science-pack", "gas-manipulation-science-pack",
+			"planet-crucible-science-pack"
+		},
+		fallback_ingredients = {"vibrant-tech-card", "vespera-tech-card"}
 	},
 	{
 		name = "deep-space-tech-card",
 		localised_name = {"item-name.deep-space-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
-		order = "s[system]-f[deep-space]",
-		unlock_technology_candidates = {
-			"promethium-882-research",
-			"razi-singularity-theory"
-		},
+		order = "s[system]-h[deep-space]",
+		unlock_technology_candidates = {"razi-singularity-theory", "promethium-882-research"},
 		ingredients = {
-			"beetlejuice-tech-card",
-			"promethium-science-pack",
-			"promethium-882-science-pack",
-			"space-logistic-science-pack",
+			"beetlejuice-tech-card", "umbra-tech-card",
+			"promethium-science-pack", "space-logistic-science-pack",
 			"pulsar-science-pack"
 		},
-		fallback_ingredients = {
-			"beetlejuice-tech-card",
-			"promethium-science-pack"
-		}
+		fallback_ingredients = {"beetlejuice-tech-card", "umbra-tech-card"}
 	}
 }
 
@@ -192,11 +166,15 @@ local modded_science_ids = {
 	"kr-advanced-tech-card",
 	"kr-matter-tech-card",
 	"kr-singularity-tech-card",
+	"muriatic-science-pack",
+	"vanadium-science-pack",
 	"calidus-tech-card",
 	"solaris-tech-card",
 	"nyxaris-tech-card",
 	"vibrant-tech-card",
+	"vespera-tech-card",
 	"beetlejuice-tech-card",
+	"umbra-tech-card",
 	"deep-space-tech-card"
 }
 
@@ -289,9 +267,14 @@ local function upsert_system_card(card)
 	if tool then
 		tool.localised_name = {"", card.localised_name}
 		tool.localised_description = {"item-description.science-pack"}
-		tool.icon = card.icon
+		-- Tint existing icons for the new systems until dedicated artwork lands.
+		tool.icon = card.tint and nil or card.icon
 		tool.icon_size = system_card_icon_size
-		tool.icons = nil
+		tool.icons = card.tint and {{
+			icon = card.icon,
+			icon_size = system_card_icon_size,
+			tint = card.tint
+		}} or nil
 		tool.subgroup = system_card_subgroup
 		tool.order = card.order
 		tool.stack_size = 200

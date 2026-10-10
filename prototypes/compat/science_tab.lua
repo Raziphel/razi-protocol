@@ -61,7 +61,9 @@ function science_tab.data_final_fixes()
 		"solaris-tech-card",
 		"nyxaris-tech-card",
 		"vibrant-tech-card",
+		"vespera-tech-card",
 		"beetlejuice-tech-card",
+		"umbra-tech-card",
 		"deep-space-tech-card"
 	}
 
