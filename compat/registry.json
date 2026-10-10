@@ -107,6 +107,18 @@
       "purpose": "Prevent late Linox hard-mode science from being required by the research chain that unlocks Linox itself.",
       "upstream_status": "local-only",
       "fixture": "tests/lua/test_linox_science_guard.lua"
+    },
+    {
+      "id": "outer-world-native-science-bootstrap",
+      "module": "prototypes/compat/outer_science_arrival_guard.lua",
+      "upstream_mods": [
+        "planet-crucible",
+        "skewer_planet_vesta",
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Protect research needed to reach late-moved Crucible/Vesta from requiring exclusive science produced only after arrival, without weakening post-arrival tech.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_outer_science_arrival_guard.lua"
     }
   ]
 }

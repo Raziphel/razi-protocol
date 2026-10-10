@@ -101,3 +101,6 @@ require("prototypes.compat.linox_science_guard").data_final_fixes()
 -- Scan one final time after K2SO's legacy-item material reconciliation so
 -- craft-item and craft-fluid triggers cannot remain on removed recipe outputs.
 require("prototypes.compat.renamed_research_triggers").data_final_fixes()
+
+-- Ensure Crucible/Vesta science cannot be needed to discover their own worlds.
+require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
