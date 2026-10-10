@@ -62,4 +62,15 @@ check(places["sye-calidus"].orbit.parent.name=="star","Calidus departure mispare
 check(planets.rabbasca.orbit==moon,"Rabbasca lost its Gleba moon parent")
 layout.data_final_fixes()
 check(planets.rabbasca.orbit==moon,"Repeated layout damaged native moon")
-print("Paired star arrangement and protected moon orbits passed")
+-- Guard the real data-stage wiring, not only the standalone layout function.
+-- Applying the layout before optional planet placement would overwrite it.
+local entrypoint = assert(io.open("data-final-fixes.lua", "r"))
+local source = entrypoint:read("*a")
+entrypoint:close()
+local optional_call = source:find(
+  'require("prototypes.system.optional_planets").data_final_fixes()', 1, true)
+local layout_call = source:find(
+  'require("prototypes.system.galaxy_layout").data_final_fixes()', 1, true)
+check(optional_call and layout_call and layout_call > optional_call,
+  "Final starmap layout must run after optional planets in data-final-fixes.lua")
+print("Paired star arrangement, preserved moons and final-stage wiring passed")

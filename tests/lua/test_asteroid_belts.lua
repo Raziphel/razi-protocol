@@ -47,12 +47,24 @@ for _, parent in ipairs({"vespera","umbra"}) do
   end
 end
 require("prototypes.technology.asteroid_belts")
+local survey_science = {
+  vespera = {"solaris-tech-card", "nyxaris-tech-card"},
+  umbra = {"vibrant-tech-card", "vespera-tech-card"}
+}
 for _, stem in ipairs({"vespera","umbra"}) do
   local tech=raw.technology["razi-"..stem.."-belt-survey"]
   check(tech and #tech.effects==2, "Belt survey tech must unlock both rims")
   check(tech.prerequisites[1]==(stem=="vespera" and
     "planet-discovery-aquilo" or "planet-discovery-crucible"),
     "Belt survey must happen before the destination's science")
+  local expected = survey_science[stem]
+  check(#tech.unit.ingredients == #expected,
+    stem .. " survey has unexpected science ingredients")
+  for i, name in ipairs(expected) do
+    local ingredient = tech.unit.ingredients[i]
+    check((ingredient.name or ingredient[1]) == name,
+      stem .. " survey requires a card not guaranteed before its belt")
+  end
   check(tech.effects[1].space_location=="razi-"..stem.."-belt-inner",
     "Wrong belt survey inner-rim unlock")
   check(tech.effects[2].space_location=="razi-"..stem.."-belt-outer",
