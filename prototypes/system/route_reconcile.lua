@@ -122,18 +122,35 @@ function route_reconcile.data_final_fixes()
 	for _, specification in ipairs(route_specifications) do
 		local from, to, length, hazard = specification[1], specification[2], specification[3], specification[4]
 		if has_endpoint(from) and has_endpoint(to) then
+			local pair = key_for(from, to)
 			local route_name = "razi-" .. from .. "-" .. to
-			-- Same endpoints may already be connected under a source mod name.
-			-- Remove duplicates before writing one authoritative Razi route.
+			local keep_name = routes[route_name] and route_name or nil
+
+			-- Prefer the source's existing name: external compatibility modules
+			-- refer to names such as "secretas-frozeta" to augment asteroid
+			-- definitions. Only introduce razi-* when no source route exists.
+			if not keep_name then
+				for name, connection in pairs(routes) do
+					if key_for(connection.from, connection.to) == pair then
+						keep_name = name
+						break
+					end
+				end
+			end
 			for name, connection in pairs(routes) do
-				if name ~= route_name and key_for(connection.from, connection.to) == key_for(from, to) then
+				if name ~= keep_name and key_for(connection.from, connection.to) == pair then
 					routes[name] = nil
 				end
 			end
-			local route = routes[route_name]
+
+			local route = keep_name and routes[keep_name]
 			if route then
 				route.from, route.to, route.length = from, to, length
-				route.asteroid_spawn_definitions = asteroid_definitions(hazard)
+				-- Keep source / Imersite additions intact. Supply the chapter
+				-- hazard only when the upstream route has none of its own.
+				if not route.asteroid_spawn_definitions or #route.asteroid_spawn_definitions == 0 then
+					route.asteroid_spawn_definitions = asteroid_definitions(hazard)
+				end
 			else
 				data:extend({
 					{
