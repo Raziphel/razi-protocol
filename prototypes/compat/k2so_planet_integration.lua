@@ -19,8 +19,8 @@ local data_bridges = {
 -- Exact material identities standardized by K2SO. Do not rewrite other
 -- materials or guess aliases for independently designed planet resources.
 local replaced_materials = {
-  "oxygen", "hydrogen", "chlorine", "sand",
-  "glass", "silicon", "lithium", "ammonia"
+  oxygen=true, hydrogen=true, chlorine=true, sand=true,
+  glass=true, silicon=true, lithium=true, ammonia=true
 }
 
 local function material(kind, name)
@@ -28,6 +28,7 @@ local function material(kind, name)
 end
 
 local function visible_replacement(kind, old)
+  if not replaced_materials[old] then return nil end
   local original = material(kind, old)
   local replacement = material(kind, "kr-" .. old)
   -- Null's K2SO Tweaks may deliberately retain common oxygen/hydrogen or
@@ -57,22 +58,24 @@ local function reconcile_entries(entries)
   end
 end
 
+local function reconcile_recipe_variant(variant)
+  if not variant then return end
+  reconcile_entries(variant.ingredients)
+  reconcile_entries(variant.results)
+  local main_product = variant.main_product
+  if main_product then
+    local kind = material("fluid", main_product) and "fluid" or "item"
+    local replacement = visible_replacement(kind, main_product)
+    if replacement then variant.main_product = replacement end
+  end
+end
+
 local function reconcile_recipes()
   for _, recipe in pairs(data.raw.recipe or {}) do
-    for _, variant in ipairs({recipe, rawget(recipe, "normal"),
-      rawget(recipe, "expensive")}) do
-      if variant then
-        reconcile_entries(variant.ingredients)
-        reconcile_entries(variant.results)
-        local main_product = variant.main_product
-        if main_product then
-          -- Only replace when the old prototype has one unambiguous family.
-          local kind = material("fluid", main_product) and "fluid" or "item"
-          local replacement = visible_replacement(kind, main_product)
-          if replacement then variant.main_product = replacement end
-        end
-      end
-    end
+    reconcile_recipe_variant(recipe)
+    -- Pre-2.1 forks can carry only an expensive variant, with no normal.
+    reconcile_recipe_variant(rawget(recipe, "normal"))
+    reconcile_recipe_variant(rawget(recipe, "expensive"))
   end
 end
 
@@ -136,10 +139,6 @@ function integration.data_final_fixes()
   -- Source mods sometimes reintroduce obsolete prototypes in their final
   -- compatibility passes. Reconcile only when the old material is hidden
   -- and the K2SO counterpart is actually available and visible.
-  for _, name in ipairs(replaced_materials) do
-    -- Keep the list explicit and reviewable alongside K2SO upstream.
-    assert(type(name) == "string")
-  end
   reconcile_recipes()
   reconcile_mining()
   add_existing_research_data()
