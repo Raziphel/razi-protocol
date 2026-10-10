@@ -79,6 +79,17 @@ class TestRaziAudit(unittest.TestCase):
         self.assertTrue(any("System-card ingredient cycle" in issue
                             for issue in module.audit(raw)))
 
+    def test_unrelated_k2_research_can_import_optional_planet_science(self):
+        raw = fixture()
+        raw["technology"]["planet-discovery-secretas"] = {
+            "unit": {"ingredients": [["calidus-tech-card", 1]]}}
+        raw["recipe"]["beetlejuice-tech-card"]["ingredients"] = [
+            {"type": "item", "name": "golden-science-pack", "amount": 1}]
+        raw["technology"]["kr-independent-technology"] = {
+            "unit": {"ingredients": [["beetlejuice-tech-card", 1]]}}
+        self.assertFalse(any("Planet progression softlock" in issue
+                             for issue in module.audit(raw)))
+
     def test_later_tech_using_planet_science_requires_that_planet(self):
         raw = fixture()
         raw["technology"]["planet-discovery-secretas"] = {"unit": {
