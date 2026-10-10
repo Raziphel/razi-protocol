@@ -36,8 +36,10 @@ local function made_by_a_recipe()
 	for _, recipe in pairs(data.raw.recipe or {}) do
 		add_products(recipe)
 		-- Compatibility with forks still using pre-2.0 recipe variants.
-		if recipe.normal then add_products(recipe.normal) end
-		if recipe.expensive then add_products(recipe.expensive) end
+		local normal = rawget(recipe, "normal")
+		if normal then add_products(normal) end
+		local expensive = rawget(recipe, "expensive")
+		if expensive then add_products(expensive) end
 	end
 
 	return made
