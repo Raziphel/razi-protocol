@@ -28,23 +28,8 @@ deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
 deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
 deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4
-deleteRoute("sye-vibrant-muria")
-deleteRoutesBetween("sye-vibrant", "muria")
-
--- Muria has changed its stock connections across releases, and compatibility
--- mods may add more during later data stages. Razi Protocol deliberately places
--- Muria in the Vibrant system with Aquilo as its sole route.
-if mods["Muria"] then
-	local unwanted_muria_routes = {}
-	for name, connection in pairs(data.raw["space-connection"] or {}) do
-		if name ~= "muria-aquilo" and (connection.from == "muria" or connection.to == "muria") then
-			unwanted_muria_routes[#unwanted_muria_routes + 1] = name
-		end
-	end
-	for _, name in ipairs(unwanted_muria_routes) do
-		deleteRoute(name)
-	end
-end
+-- Muria's orbit and routes are owned by seven_systems.lua and the final
+-- route_reconcile.lua pass; do not destroy and rebuild its links here.
 
 deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")

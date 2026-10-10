@@ -144,16 +144,29 @@ function enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 end
 
 function enemy_autoplace.add_entities_to_planet(planet_name, entity_names, control_name, entity_exists)
+	if not enemy_autoplace.enabled() then
+		return
+	end
+
+	-- Never suppress vanilla enemies unless at least one custom enemy really
+	-- exists. Some optional packs change prototype names between releases.
+	entity_exists = entity_exists or enemy_autoplace.enemy_entity_exists
+	local available = {}
+	for _, entity_name in pairs(entity_names or {}) do
+		if entity_exists(entity_name) then
+			available[#available + 1] = entity_name
+		end
+	end
+	if #available == 0 then
+		return
+	end
+
 	local entity_settings = enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 	if not entity_settings then
 		return
 	end
-
-	entity_exists = entity_exists or enemy_autoplace.enemy_entity_exists
-	for _, entity_name in pairs(entity_names or {}) do
-		if entity_exists(entity_name) then
-			entity_settings[entity_name] = {}
-		end
+	for _, entity_name in ipairs(available) do
+		entity_settings[entity_name] = {}
 	end
 end
 
