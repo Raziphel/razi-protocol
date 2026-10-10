@@ -96,6 +96,42 @@ def fluid_interfaces(machine):
     return inputs, outputs
 
 
+def matches_known_surface(prototype, surface_properties):
+    """Reject only explicitly contradictory planet/machine requirements."""
+    for condition in seq(prototype.get("surface_conditions")):
+        if not isinstance(condition, dict):
+            continue
+        value = surface_properties.get(condition.get("property"))
+        if not isinstance(value, (int, float)):
+            continue
+        minimum, maximum = condition.get("min"), condition.get("max")
+        if ((minimum is not None and value < minimum)
+                or (maximum is not None and value > maximum)):
+            return False
+    return True
+
+
+def can_craft_with_machine(recipe, machine):
+    if not isinstance(machine, dict):
+        return False
+    if not crafting_categories(recipe).intersection(
+            seq(machine.get("crafting_categories"))):
+        return False
+    fixed_recipe = machine.get("fixed_recipe")
+    if fixed_recipe:
+        # A fixed-recipe machine is not generally available to other science.
+        return False
+    # Fluid boxes are required for each distinct input/output fluid. This
+    # intentionally ignores connections and placement direction, which need
+    # in-engine testing.
+    fluid_inputs = {name_of(x) for x in seq(recipe.get("ingredients"))
+                    if isinstance(x, dict) and x.get("type") == "fluid"}
+    fluid_outputs = {name_of(x) for x in seq(recipe.get("results"))
+                     if isinstance(x, dict) and x.get("type") == "fluid"}
+    inputs, outputs = fluid_interfaces(machine)
+    return inputs >= len(fluid_inputs) and outputs >= len(fluid_outputs)
+
+
 def audit_k2so_planet_machinery(raw, recipes, items, planets, warnings):
     """Spot lost standard machine recipes or K2SO data with no production path."""
     assemblers = obj(raw.get("assembling-machine"))
@@ -151,9 +187,21 @@ def audit_k2so_planet_machinery(raw, recipes, items, planets, warnings):
                 f"crafting machine for {', '.join(sorted(categories))}"
             )
 
-        # An unchanged surface lock can make the origin-world data impossible.
+        # A global category match can still be unusable on the home planet:
+        # all suitable machines may be excluded by the surface properties.
+        # Only reject conditions when both sides declare comparable values.
         planet = obj(planets.get(world))
         properties = obj(planet.get("surface_properties"))
+        if planet and properties:
+            candidates = [machine for machine in machines
+                          if can_craft_with_machine(data_recipe, machine)]
+            if candidates and not any(
+                    matches_known_surface(machine, properties)
+                    for machine in candidates):
+                warnings.add(
+                    f"K2SO research data {research_data} has no suitable "
+                    f"crafting machine permitted on {world}"
+                )
         for condition in seq(data_recipe.get("surface_conditions")):
             if not isinstance(condition, dict):
                 continue

@@ -113,6 +113,36 @@ class CompatibilityAuditTests(unittest.TestCase):
         self.assertFalse(any("K2SO machine" in message
                              for message in audit.audit(raw)[1]))
 
+    def test_k2so_homeworld_machine_surface_incompatibility(self):
+        raw = fixture()
+        raw["item"]["kr-metallurgic-research-data"] = {}
+        raw["tool"]["solaris-tech-card"] = {}
+        raw["planet"]["vulcanus"] = {
+            "surface_properties": {"pressure": 4000}}
+        raw["recipe"]["kr-metallurgic-research-data"] = {
+            "categories": ["metallurgy"],
+            "results": [{"type": "item", "name": "kr-metallurgic-research-data"}]
+        }
+        raw["recipe"]["solaris-tech-card"] = {
+            "ingredients": [
+                {"type": "item", "name": "kr-metallurgic-research-data"}],
+            "results": [{"type": "item", "name": "solaris-tech-card"}]
+        }
+        raw["assembling-machine"] = {"cold-foundry": {
+            "crafting_categories": ["metallurgy"],
+            "surface_conditions": [
+                {"property": "pressure", "max": 300}]}}
+        _, warnings = audit.audit(raw)
+        self.assertTrue(any("no suitable crafting machine permitted on vulcanus"
+                            in issue for issue in warnings))
+        raw["assembling-machine"]["vulcanus-foundry"] = {
+            "crafting_categories": ["metallurgy"],
+            "surface_conditions": [
+                {"property": "pressure", "min": 4000}]}
+        _, warnings = audit.audit(raw)
+        self.assertFalse(any("no suitable crafting machine permitted" in issue
+                             for issue in warnings))
+
     def test_k2so_card_data_requires_reachable_machine_and_surface(self):
         raw = fixture()
         raw["tool"]["solaris-tech-card"] = {}
