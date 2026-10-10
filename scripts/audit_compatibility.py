@@ -170,6 +170,52 @@ def audit_k2so_planet_machinery(raw, recipes, items, planets, warnings):
                 )
 
 
+def audit_k2so_stale_materials(raw, recipes, warnings):
+    """Find hidden old K2SO aliases in final planetary production outputs."""
+    substitutions = {}
+    for kind in ("item", "fluid"):
+        prototypes = obj(raw.get(kind))
+        for original in K2SO_RENAMES:
+            hidden = obj(prototypes.get(original))
+            canonical = obj(prototypes.get("kr-" + original))
+            if hidden.get("hidden") is True and canonical and not canonical.get("hidden"):
+                substitutions[(kind, original)] = "kr-" + original
+    if not substitutions:
+        return
+
+    def check(name, kind, context):
+        replacement = substitutions.get((kind, name))
+        if replacement:
+            warnings.add(f"K2SO stale {kind} {name} in {context}: use {replacement}")
+
+    def entries(values, context):
+        for value in seq(values):
+            name = name_of(value)
+            if name:
+                kind = value.get("type", "item") if isinstance(value, dict) else "item"
+                check(name, kind, context)
+
+    for name, recipe in recipes.items():
+        if not isinstance(recipe, dict):
+            continue
+        for variant in (recipe, obj(recipe.get("normal")), obj(recipe.get("expensive"))):
+            entries(variant.get("ingredients"), f"recipe {name} input")
+            entries(variant.get("results"), f"recipe {name} result")
+
+    for family in ("resource", "simple-entity", "simple-entity-with-owner",
+                   "tree", "fish"):
+        for name, entity in obj(raw.get(family)).items():
+            minable = obj(obj(entity).get("minable"))
+            if minable.get("result"):
+                check(minable["result"], "item", f"{family} {name} mining")
+            entries(minable.get("results"), f"{family} {name} mining")
+
+    for name, tile in obj(raw.get("tile")).items():
+        fluid = obj(tile).get("fluid")
+        if fluid:
+            check(fluid, "fluid", f"tile {name}")
+
+
 def audit(raw):
     """Return (hard_errors, advisory_warnings), both sorted and deduplicated."""
     recipes = obj(raw.get("recipe"))
@@ -243,6 +289,7 @@ def audit(raw):
             warnings.add(f"Water-loop recipe {name} lacks a 0 productivity cap")
 
     audit_k2so_planet_machinery(raw, recipes, items, planets, warnings)
+    audit_k2so_stale_materials(raw, recipes, warnings)
 
     return sorted(problems), sorted(warnings)
 

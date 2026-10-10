@@ -80,7 +80,10 @@ local function reconcile_recipes()
 end
 
 local function reconcile_mining()
-  for _, family in ipairs({"resource", "simple-entity"}) do
+  -- Mineable scenery and trees may also return K2SO-hidden old item IDs.
+  for _, family in ipairs({
+    "resource", "simple-entity", "simple-entity-with-owner", "tree", "fish"
+  }) do
     for _, entity in pairs(data.raw[family] or {}) do
       local minable = entity.minable
       if minable then

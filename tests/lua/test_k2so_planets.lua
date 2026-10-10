@@ -33,6 +33,12 @@ local function setup(k2)
     },
     resource={["k2-ore"]={minable={results={{type="item",name="sand",amount=3}}}}},
     ["simple-entity"]={["debris"]={minable={result="sand"}}},
+    ["simple-entity-with-owner"]={["rock"]={minable={
+      results={{type="item",name="sand",amount=1}}}}},
+    tree={["dry-tree"]={minable={result="sand"}}},
+    fish={["fish-ore"]={minable={results={{type="item",name="sand",amount=1}}}}},
+    technology={["planet-oxygen-trigger"]={
+      research_trigger={type="craft-fluid",fluid="oxygen"}}},
     tile={["gas-lake"]={fluid="oxygen"}}
   }
   rawset(_G,"data",{raw=raw})
@@ -41,7 +47,15 @@ local function setup(k2)
   return raw,require("prototypes.compat.k2so_planet_integration")
 end
 local raw,mod=setup(true)
+package.loaded["prototypes.compat.renamed_research_triggers"]=nil
+local triggers=require("prototypes.compat.renamed_research_triggers")
+triggers.data_final_fixes()
+check(raw.technology["planet-oxygen-trigger"].research_trigger.fluid=="oxygen",
+  "Early scan wrongly rewrote a still-producible native oxygen output")
 mod.data_final_fixes()
+triggers.data_final_fixes()
+check(raw.technology["planet-oxygen-trigger"].research_trigger.fluid=="kr-oxygen",
+  "Late normalized oxygen recipe left its research trigger stranded")
 check(raw.recipe["planet-oxygen"].ingredients[1].name=="kr-oxygen",
   "K2SO hidden oxygen was not reconciled")
 check(raw.recipe["planet-oxygen"].results[1].name=="kr-oxygen",
@@ -62,6 +76,12 @@ check(raw.resource["k2-ore"].minable.results[1].name=="kr-sand",
   "Planet mining output was not standardized")
 check(raw["simple-entity"].debris.minable.result=="kr-sand",
   "Debris minable output was not standardized")
+check(raw["simple-entity-with-owner"].rock.minable.results[1].name=="kr-sand",
+  "Mineable owned scenery still produces hidden sand")
+check(raw.tree["dry-tree"].minable.result=="kr-sand",
+  "Mineable planet tree still produces hidden sand")
+check(raw.fish["fish-ore"].minable.results[1].name=="kr-sand",
+  "Mineable fish entity still produces hidden sand")
 check(raw.tile["gas-lake"].fluid=="kr-oxygen",
   "Planet tile fluid was not standardized")
 for _, spec in ipairs({
@@ -100,4 +120,8 @@ f:close()
 local layout=assert(source:find('require("prototypes.system.galaxy_layout").data_final_fixes()',1,true))
 local integration=assert(source:find('require("prototypes.compat.k2so_planet_integration").data_final_fixes()',1,true))
 check(integration>layout,"K2SO reconciliation should run after planet layout")
+local late=assert(source:find(
+  'require("prototypes.compat.renamed_research_triggers").data_final_fixes()',
+  integration+1,true))
+check(late>integration,"The last research trigger repair must follow material normalization")
 print("K2SO science-data backbone, planet materials and upstream ownership passed")

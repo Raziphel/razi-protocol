@@ -136,3 +136,20 @@ Run this on a **real post-load Factorio 2.1 data dump**. It is advisory,
 not an automatic permission to remove planet-specific restrictions or
 rewrite unique recipes. Such restrictions are intentional until a matching
 machine, technology and material path is verified.
+
+## Repairing late planet science triggers and mining outputs
+
+An early research-trigger migration can correctly retain `oxygen` or another
+K2SO predecessor while some planet recipe still produces it. If a later
+compatibility pass remaps that recipe output to `kr-oxygen`, the trigger then
+becomes unachievable. Razi now re-runs the **craft-item / craft-fluid research
+trigger migration after the final material reconciliation**. The second pass
+only changes a target if no recipe still crafts the original and a recipe
+actually makes the replacement.
+
+The same guarded material conversion now covers mineable `tree`, `fish`
+and `simple-entity-with-owner` entity drops, alongside resources and simple
+scenery. It never invents output prototypes or renames unknown modded items.
+The post-load compatibility auditor warns when old hidden K2SO aliases
+remain in recipe inputs, results or mineable scenery so upstream changes
+cannot silently reintroduce them.

@@ -71,6 +71,29 @@ class CompatibilityAuditTests(unittest.TestCase):
         self.assertTrue(any("Missing surface conditions" in issue
                             for issue in audit.audit(raw)[1]))
 
+    def test_hidden_k2so_mining_and_recipe_aliases(self):
+        raw = fixture()
+        raw["item"]["sand"] = {"hidden": True}
+        raw["item"]["kr-sand"] = {"hidden": False}
+        raw["recipe"]["planet-glass"] = {"ingredients": [
+            {"type": "item", "name": "sand", "amount": 1}]}
+        raw["tree"] = {"crystal-tree": {"minable": {
+            "results": [{"type": "item", "name": "sand", "amount": 1}]}}}
+        _, warnings = audit.audit(raw)
+        self.assertTrue(any("recipe planet-glass input" in w for w in warnings))
+        self.assertTrue(any("tree crystal-tree mining" in w for w in warnings))
+        raw["recipe"]["planet-glass"]["ingredients"][0]["name"] = "kr-sand"
+        raw["tree"]["crystal-tree"]["minable"]["results"][0]["name"] = "kr-sand"
+        self.assertFalse(any("K2SO stale" in w for w in audit.audit(raw)[1]))
+
+    def test_visible_non_k2so_common_fluids_are_not_stale(self):
+        raw = fixture()
+        raw["fluid"]["oxygen"] = {"hidden": False}
+        raw["fluid"]["kr-oxygen"] = {"hidden": False}
+        raw["recipe"]["common-oxygen"] = {"results": [
+            {"type": "fluid", "name": "oxygen", "amount": 10}]}
+        self.assertFalse(any("K2SO stale" in w for w in audit.audit(raw)[1]))
+
     def test_k2so_machine_category_regression(self):
         raw = fixture()
         raw["assembling-machine"] = {
