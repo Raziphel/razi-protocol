@@ -2,7 +2,7 @@
 -- Keep their native science, entities, surfaces and research chains intact.
 -- No planet added here is required to reach Deep Space.
 local optional_planets = {}
-local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
+local asteroid_profiles = require("prototypes.system.asteroid_profiles")
 
 -- Mod ID, planet prototype, host star, transit hub, native discovery gate,
 -- orbital radius/orientation, and local route length.
@@ -89,17 +89,19 @@ local function attach_route(location_name, hub, length, system)
 		end
 	end
 
-	local source = asteroid_util.nauvis_fulgora
-	if system == "umbra" or system == "vespera" then
-		source = asteroid_util.fulgora_aquilo or source
-	end
+	local system_profiles = {
+		calidus = "starter", solaris = "industrial",
+		nyxaris = "biological", vibrant = "electrical",
+		vespera = "cryogenic", beetlejuice = "outer_industry",
+		umbra = "outer_void"
+	}
 	data:extend({{
 		type = "space-connection",
 		name = "razi-optional-" .. location_name .. "-" .. hub,
 		from = hub,
 		to = location_name,
 		length = length,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(source)
+		asteroid_spawn_definitions = asteroid_profiles.create(system_profiles[system] or "starter")
 	}})
 end
 
