@@ -1,6 +1,9 @@
 # Razi Protocol starmap: Calidus and the six-star circle
 
-Factorio's starmap uses north = **negative Y** (orientation = 0).
+Factorio and PlanetsLib use clockwise turns: **0 north**, **0.25 east**,
+**0.5 south**, **0.75 west**. The native map formula is
+`x = radius * sin(2π * orientation)`, `y = -radius * cos(2π * orientation)`.
+
 This design is an intentional ring centered on Calidus, with the expedition
 chapters advancing upward to Deep Space and Bellicos.
 
@@ -19,19 +22,19 @@ chapters advancing upward to Deep Space and Bellicos.
 | Anchor | X | Y |
 | --- | ---: | ---: |
 | Calidus / Nauvis | 0 | 0 |
-| Solaris | 62 | 105 |
-| Nyxaris | -62 | 105 |
+| Solaris | 62 | 107.39 |
+| Nyxaris | -62 | 107.39 |
 | Vibrant | 124 | 0 |
 | Vespera | -124 | 0 |
-| Beetlejuice | 62 | -105 |
-| Umbra | -62 | -105 |
-| Required Asteroid Belt inner edge | 0 | -48 |
-| Required Asteroid Belt outer edge | 0 | -62 |
+| Beetlejuice | 62 | -107.39 |
+| Umbra | -62 | -107.39 |
+| Required Asteroid Belt inner edge | 0 | -26 |
+| Required Asteroid Belt outer edge | 0 | -34 |
 | Deep Space / solar-system-edge | 0 | -248 |
 
 ## Design rules
 
-- The six star centers share an approximate 124-unit radius around Calidus.
+- The six star centers share an exact 124-unit radius around Calidus.
   Star sprites and most native planetary routes remain visually unobstructed.
 - Each existing planetary family is rotated in place so its slipstream portal
   points toward the readable campaign route; preserve planet distances from
@@ -44,7 +47,7 @@ chapters advancing upward to Deep Space and Bellicos.
 - Native AsteroidBelt by MrLumme remains REQUIRED at >=1.2.11. Keep its
   native graphics at full scale (1.0), original five-thousand-km crossing,
   research and native asteroid hazard tables; the entry/exit nodes are now
-  just north of Calidus, close to the visual halo.
+  just north of Calidus, straddling the actual ring artwork at 26 and 34 units.
 - **Native rings for every planet around a Razi star** use the Factorio 2.1
   origin-based renderer provided by PlanetsLib >= 2.0.9. The previous code
   set `draw_orbit=false` for all except six handpicked planets, hiding most
@@ -76,3 +79,17 @@ chapters advancing upward to Deep Space and Bellicos.
 
 Real Factorio screenshots are still necessary to judge shader scale, label
 overlaps, and third-party system art. Tests do not replace live rendering.
+
+## Verifying the running mod
+
+On a mod-data rebuild, Razi writes a single
+`[Razi Protocol/starmap] COMPASS-2026-10-11-v2` line to
+`factorio-current.log`, followed by the final **native** starmap
+coordinates calculated from each location's `origin`, `distance`,
+and `orientation`. These are the same fields Factorio uses to draw
+the map; the old geometry tests only checked `orbit` metadata.
+
+If the log line is absent, the client is likely running an outdated
+copy of the dev mod. If a logged native position differs from its
+expected position, check for a source mod or final-fixes overwrite.
+Static geometry tests cannot detect incorrect local mod loading.

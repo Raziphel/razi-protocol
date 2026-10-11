@@ -1,4 +1,4 @@
-"""Geometry regressions for the branching seven-system Factorio constellation."""
+"""Geometry regressions for Factorio compass bearings and circular star systems."""
 import math
 import re
 import unittest
@@ -73,14 +73,24 @@ class ConstellationTests(unittest.TestCase):
 
     def test_calidus_centered_radial_gallery(self):
         centers = {
-            "solaris": (62, 105), "nyxaris": (-62, 105),
+            "solaris": (62, 124 * math.sqrt(3) / 2),
+            "nyxaris": (-62, 124 * math.sqrt(3) / 2),
             "vibrant": (124, 0), "vespera": (-124, 0),
-            "beetlejuice": (62, -105), "umbra": (-62, -105),
+            "beetlejuice": (62, -124 * math.sqrt(3) / 2),
+            "umbra": (-62, -124 * math.sqrt(3) / 2),
             "solar-system-edge": (0, -248),
         }
         for name, xy in centers.items():
             self.assertLess(math.dist(self.coords[name], xy), 1.0,
                             f"{name} moved from its radial sector")
+        expected_bearings = {
+            "solaris": 5 / 12, "nyxaris": 7 / 12,
+            "vibrant": 1 / 4, "vespera": 3 / 4,
+            "beetlejuice": 1 / 12, "umbra": 11 / 12
+        }
+        for name, bearing in expected_bearings.items():
+            self.assertAlmostEqual(self.anchors[name][2], bearing, places=5)
+            self.assertAlmostEqual(self.anchors[name][1], 124, places=4)
         radii = [math.dist(self.coords[name], (0, 0)) for name in STARS]
         self.assertLess(max(radii) - min(radii), 3.0,
                         "Major stars must share one circular orbit radius")
@@ -89,6 +99,16 @@ class ConstellationTests(unittest.TestCase):
             self.assertAlmostEqual(self.coords[a][1], self.coords[b][1], delta=1)
         self.assertLess(self.coords["solar-system-edge"][1], -230,
                         "Deep Space must be north, not south of the galaxy")
+
+    def test_factorio_compass_cardinal_directions(self):
+        # The exact PlanetsLib get_rectangular_position_from_polar equation.
+        bearings = ((0, 0, -10), (.25, 10, 0),
+                    (.5, 0, 10), (.75, -10, 0))
+        for turn, ex, ey in bearings:
+            x = 10 * math.sin(math.tau * turn)
+            y = -10 * math.cos(math.tau * turn)
+            self.assertAlmostEqual(x, ex, places=5)
+            self.assertAlmostEqual(y, ey, places=5)
 
     def test_natural_planet_crescents_and_clear_stellar_art(self):
         for star in STARS:
@@ -168,8 +188,8 @@ class ConstellationTests(unittest.TestCase):
                     queue.append(n)
         self.assertTrue({"sye-beetlejuice", "sye-umbra",
                          "solar-system-edge"}.issubset(reachable))
-        self.assertLess(math.dist(self.coords[native[0]], (0, -48)), 1)
-        self.assertLess(math.dist(self.coords[native[1]], (0, -62)), 1)
+        self.assertLess(math.dist(self.coords[native[0]], (0, -26)), 1)
+        self.assertLess(math.dist(self.coords[native[1]], (0, -34)), 1)
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()

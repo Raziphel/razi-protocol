@@ -60,19 +60,40 @@ local function position(name)
     y-math.cos(angle)*orbit.distance
 end
 
-local centers={
-  solaris={62,105},nyxaris={-62,105},
-  vibrant={124,0},vespera={-124,0},
-  beetlejuice={62,-105},umbra={-62,-105}
+-- Factorio/PlanetsLib use clockwise turns from north:
+-- 0=N, .25=E, .5=S, .75=W; x=r*sin(tau*turn), y=-r*cos(tau*turn).
+local function cartesian(radius,orientation)
+  local angle=orientation*2*math.pi
+  return radius*math.sin(angle),-radius*math.cos(angle)
+end
+for _,direction in ipairs({
+  {0,0,-10}, {.25,10,0}, {.5,0,10}, {.75,-10,0}
+}) do
+  local x,y=cartesian(10,direction[1])
+  check(math.abs(x-direction[2])<.001 and math.abs(y-direction[3])<.001,
+    "Factorio compass bearings are no longer interpreted correctly")
+end
+
+local bearings={
+  solaris=5/12,nyxaris=7/12,
+  vibrant=1/4,vespera=3/4,
+  beetlejuice=1/12,umbra=11/12
 }
-for name,expected in pairs(centers) do
+for name,bearing in pairs(bearings) do
+  local star=places[name]
+  local radius=star.orbit.distance
+  check(math.abs(radius-124)<.001,
+    "Stars are not positioned on the same circular radius: "..name)
+  check(math.abs(star.orbit.orientation-bearing)<.000002,
+    "Wrong clockwise compass bearing for "..name)
   local x,y=position(name)
-  check(math.abs(x-expected[1])<1 and math.abs(y-expected[2])<1,
-    "Star moved out of its circular position: "..name)
+  local ex,ey=cartesian(124,bearing)
+  check(math.abs(x-ex)<.01 and math.abs(y-ey)<.01,
+    "Star position does not match Factorio polar orientation: "..name)
   local hx,hy=position("sye-"..name)
   check(math.sqrt((hx-x)^2+(hy-y)^2)>25,
     "Slipstream overlaps its parent star: "..name)
-  check(places[name].draw_orbit==false,"Giant orbital ring survived")
+  check(star.draw_orbit==false,"Giant orbital ring survived")
 end
 local dx,dy=position("solar-system-edge")
 check(math.abs(dx)<1 and dy < -235 and dy > -260,
