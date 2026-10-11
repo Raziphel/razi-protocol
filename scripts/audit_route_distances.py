@@ -20,7 +20,10 @@ STAR_PAIRS = (
 STAR_STAGES = (
     (("sye-calidus", "sye-solaris"), ("sye-calidus", "sye-nyxaris")),
     (("sye-solaris", "sye-vibrant"), ("sye-nyxaris", "sye-vespera")),
-    (("sye-vibrant", "sye-beetlejuice"), ("sye-vespera", "sye-umbra")),
+    (("shchierbin", "asteroid-belt-inner-edge"),
+     ("maraxsis", "asteroid-belt-inner-edge")),
+    (("asteroid-belt-outer-edge", "sye-beetlejuice"),
+     ("asteroid-belt-outer-edge", "sye-umbra")),
 )
 DEEP_EDGES = (
     ("secretas", "solar-system-edge"),
@@ -30,6 +33,8 @@ BELT_BYPASSES = (
     ("aquilo", "rubia"),
     ("crucible-orbit", "vesta"),
     ("vesta", "secretas"),
+    ("sye-vibrant", "sye-beetlejuice"),
+    ("sye-vespera", "sye-umbra"),
 )
 
 def obj(x):
@@ -37,6 +42,22 @@ def obj(x):
 
 def key(a, b):
     return tuple(sorted((a, b)))
+
+# Kilometres and display coordinates are independent. Enforce deliberate
+# minimum travel times instead of requiring a fixed km/visual-unit scale.
+MIN_LENGTHS = {
+    key("sye-solaris", "sye-nyxaris"): 60000,
+    key("sye-vibrant", "sye-vespera"): 72000,
+    key("sye-beetlejuice", "sye-umbra"): 90000,
+    key("secretas", "solar-system-edge"): 100000,
+    key("vesta", "solar-system-edge"): 120000,
+    key("sye-solaris", "sye-vibrant"): 65000,
+    key("sye-nyxaris", "sye-vespera"): 65000,
+    key("shchierbin", "asteroid-belt-inner-edge"): 32000,
+    key("maraxsis", "asteroid-belt-inner-edge"): 32000,
+    key("asteroid-belt-outer-edge", "sye-beetlejuice"): 42000,
+    key("asteroid-belt-outer-edge", "sye-umbra"): 42000,
+}
 
 def positions(raw):
     locations = {**obj(raw.get("space-location")),
@@ -94,14 +115,17 @@ def audit(raw):
             continue
         if a not in coords or b not in coords:
             continue  # Another source mod has not exposed both parent orbits.
+        if length < MIN_LENGTHS.get(key(a, b), 0):
+            issues.add(f"Too-short interstellar route: {a} <-> {b}, "
+                       f"{length:,.0f} km")
         span = math.dist(coords[a], coords[b])
         if span < 1:
             continue
         density = length / span
-        if density < 750:
+        if density < 300:
             issues.add(f"Too-short interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
-        if density > 3000:
+        if density > 5000:
             issues.add(f"Disproportionate interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
 
@@ -111,8 +135,13 @@ def audit(raw):
                   for a, b in section if key(a, b) in links]
         if values and all(isinstance(n, (int, float)) for n in values):
             stages.append(min(values))
-    if len(stages) == len(STAR_STAGES) and stages != sorted(stages):
-        issues.add("Long-haul progression reverses between star stages")
+    # Midgame asteroid approaches are intentionally shorter in kilometres
+    # than the earlier interstellar jumps, but tougher due to source hazards.
+    if len(stages) == len(STAR_STAGES):
+        if stages[1] < stages[0]:
+            issues.add("Middle chapter crossings are cheaper than first chapter")
+        if stages[3] < stages[2]:
+            issues.add("Outer belt exits are cheaper than their approaches")
 
     for i, pair in enumerate(STAR_PAIRS):
         match = links.get(key(*pair))
