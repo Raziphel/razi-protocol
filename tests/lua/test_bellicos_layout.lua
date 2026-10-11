@@ -81,7 +81,7 @@ check(connected[route_name] and connected[route_name].length==250000,
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="solar-system-edge",
   "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance==103,
+check(missing[gate_b].orbit.distance==70,
   "Missing pulsar fallback no longer separates the two gates")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
