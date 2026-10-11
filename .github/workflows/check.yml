@@ -2,11 +2,10 @@ name: Check
 
 # Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API and the changelog.txt format, with the settings in
 # .luacheckrc and .emmyrc.json: https://github.com/GreenTech-Solutions/factorio-mod-tools
+# Checks are intentionally opt-in to avoid automatic GitHub Actions usage.
+# To run, open Actions > Check > Run workflow.
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
