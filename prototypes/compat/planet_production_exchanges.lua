@@ -479,7 +479,19 @@ local function register_exchange(rule)
     end
   end
   for _, ingredient in ipairs(rule.additional) do
-    alternative.ingredients[#alternative.ingredients + 1] = deepcopy(ingredient)
+    local duplicate
+    for _, existing in ipairs(alternative.ingredients) do
+      if name_of(existing) == name_of(ingredient)
+        and (existing.type or "item") == (ingredient.type or "item") then
+        duplicate = existing
+        break
+      end
+    end
+    if duplicate then
+      duplicate.amount = duplicate.amount + ingredient.amount
+    else
+      alternative.ingredients[#alternative.ingredients + 1] = deepcopy(ingredient)
+    end
   end
 
   local tech = {
