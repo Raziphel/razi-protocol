@@ -92,6 +92,27 @@ function M.shortest_path(force,start,destination,connections)
   for i=#reverse,1,-1 do path[#path+1]=reverse[i] end
   return path,distances[destination]
 end
+-- Use actual asteroid prototype IDs rather than inventing route danger levels.
+-- The name class is indicative; each mod owns its actual spawn frequencies.
+function M.asteroid_profile(definitions)
+  local size="unlisted"
+  local rank={unlisted=0,small=1,medium=2,big=3,huge=4}
+  local types={}
+  for _,spawn in ipairs(definitions or {}) do
+    local name=spawn.asteroid
+    if type(name)=="string" then
+      types[name]=true
+      local group=name:find("huge",1,true) and "huge"
+        or name:find("big",1,true) and "big"
+        or name:find("medium",1,true) and "medium"
+        or name:find("small",1,true) and "small" or "unlisted"
+      if rank[group]>rank[size] then size=group end
+    end
+  end
+  local count=0
+  for _ in pairs(types) do count=count+1 end
+  return size,count
+end
 local function connected_routes(force,id,show_locked)
   local results={}
   for _,edge in pairs(prototypes.space_connection or {}) do
@@ -101,8 +122,9 @@ local function connected_routes(force,id,show_locked)
     if location and not location.hidden
       and (show_locked or force.is_space_location_unlocked(other)) then
       local patterns=edge.asteroid_spawn_definitions
+      local size,count=M.asteroid_profile(patterns)
       results[#results+1]={name=other,length=edge.length or 0,
-        patterns=patterns and #patterns or 0,
+        patterns=count,largest=size,
         unlocked=force.is_space_location_unlocked(other)}
     end
   end
@@ -180,6 +202,31 @@ function M.render(parent,player,id,p)
   else
     label(frame,L("atlas-no-unlock"))
   end
+  if unlocked and #research>0 then
+    -- Only actual available technology links are displayed. Razi-owned
+    -- exchanges can depend on a world without making that world mandatory.
+    local discovery={}
+    for _,node in ipairs(research) do discovery[node.tech.name]=true end
+    local industries={}
+    for _,tech in pairs(player.force.technologies or {}) do
+      if tech.name:sub(1,5)=="razi-" and not tech.prototype.hidden then
+        for name in pairs(tech.prerequisites or {}) do
+          if discovery[name] then
+            industries[#industries+1]=tech
+            break
+          end
+        end
+      end
+    end
+    table.sort(industries,function(a,b) return a.name<b.name end)
+    if #industries>0 then
+      bold(frame,L("atlas-industry"))
+      for i=1,math.min(6,#industries) do
+        local tech=industries[i]
+        line(frame,tech.researched and "✓ " or "• ",tech.localised_name)
+      end
+    end
+  end
   if unlocked then
     local button=frame.add{type="button",caption=L("atlas-set-origin"),
       tags={razi_ops_action="atlas-origin",value=id}}
@@ -211,6 +258,7 @@ function M.render(parent,player,id,p)
       line(frame,r.unlocked and "• " or "○ ",named_location(r.name),
         "  •  ",L("atlas-km",tostring(r.length)),
         "  •  ",L("atlas-patterns",tostring(r.patterns)),
+        "  •  ",L("atlas-asteroid-size-"..r.largest),
         r.unlocked and "" or "  [LOCKED]")
     end
     if #routes==0 then label(frame,L("atlas-no-routes")) end

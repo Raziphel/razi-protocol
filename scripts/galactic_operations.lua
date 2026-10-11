@@ -317,13 +317,19 @@ local function redraw(player)
   local next=add_button(footer,"▶","page",1)
   next.enabled=page<pages
   if p.focus then
+    -- A bounded inspector scroll prevents tall tech graphs or cargo summaries
+    -- from pushing Galactic Operations below smaller displays.
+    local inspector=body.add{type="scroll-pane",direction="vertical"}
+    inspector.style.horizontally_stretchable=true
+    inspector.style.height=math.max(130,math.min(235,
+      math.floor(player.display_resolution.height/math.max(player.display_scale,1)*0.26)))
     local kind,id=p.focus:match("^(worlds):(.+)$")
     if not kind then kind,id=p.focus:match("^(platforms):(.+)$") end
     if kind==p.tab and kind=="worlds" then
-      atlas.render(body,player,id,p)
+      atlas.render(inspector,player,id,p)
     elseif kind==p.tab and kind=="platforms" then
       local platform=player.force.platforms[tonumber(id)]
-      fleet.render(body,platform,id,p)
+      fleet.render(inspector,platform,id,p)
     end
   end
 end

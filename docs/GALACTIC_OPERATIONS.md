@@ -77,3 +77,5 @@ The Lua fixtures and static checks test the new graph and interface
 structure. Factorio 2.1 and the actual full modpack are still needed to
 exercise localization, native GUI scaling, route permissions and mixed
 planet-mod research effects. The dashboard is informational by design.
+
+Additional Atlas route annotations display the largest size word detected in declared asteroid prototype names. These are not numerical danger ratings, and unknown modded asteroid naming is explicitly unclassified. The chosen planet's Razi industrial research is listed only when the real tech graph contains a direct discovery prerequisite. The inspector is vertically scrollable on compact screens.
