@@ -3,16 +3,16 @@ local M = {}
 
 -- Campaign order follows the ring from south to north: first, middle, outer.
 -- Physical route lengths, unlock prerequisites and native moons stay unchanged.
--- Six equally spaced campaign systems around the original Calidus center.
+-- Six systems share radius 124 and exact hexagonal compass bearings.
 -- North is NEGATIVE Y (Factorio orientation 0); Deep Space is far north.
 -- Local planets keep their native route graphs and readable spacing.
 local anchors = {
-  {"space-location","solaris","star",121.938509,0.415109},
-  {"space-location","nyxaris","star",121.938509,0.584891},
+  {"space-location","solaris","star",124,0.416667},
+  {"space-location","nyxaris","star",124,0.583333},
   {"space-location","vibrant","star",124,0.25},
   {"space-location","vespera","star",124,0.75},
-  {"space-location","beetlejuice","star",121.938509,0.084891},
-  {"space-location","umbra","star",121.938509,0.915109},
+  {"space-location","beetlejuice","star",124,0.083333},
+  {"space-location","umbra","star",124,0.916667},
   {"space-location","solar-system-edge","star",248,0},
   {"space-location","sye-calidus","star",25,0.5},
   {"space-location","sye-solaris","solaris",27,0.75},
@@ -111,6 +111,37 @@ function M.data_final_fixes()
   }) do
     local location=exists("space-location",name)
     if location then location.draw_orbit=false end
+  end
+
+  -- The actual Factorio starmap coordinates are NOT just orbit.relative x/y.
+  -- PlanetsLib >= 2 calculates a native origin, distance and orientation.
+  -- Log the final native coordinates so a stale local dev ZIP or competing
+  -- final-fixes override is immediately visible in factorio-current.log.
+  if type(log) == "function" then
+    log("[Razi Protocol/starmap] COMPASS-2026-10-11-v2: 0=N 0.25=E 0.5=S 0.75=W")
+    for _, item in ipairs(anchors) do
+      local kind, name, parent = item[1], item[2], item[3]
+      if parent=="star" and (stars[name] or name=="solar-system-edge") then
+        local location=exists(kind,name)
+        if location then
+          local origin=location.origin or {}
+          local radius=location.distance or 0
+          local orientation=location.orientation or 0
+          local angle=orientation*2*math.pi
+          local actual_x=(origin.x or origin[1] or 0)+radius*math.sin(angle)
+          local actual_y=(origin.y or origin[2] or 0)-radius*math.cos(angle)
+          local expected_x=item[4]*math.sin(item[5]*2*math.pi)
+          local expected_y=-item[4]*math.cos(item[5]*2*math.pi)
+          log(string.format(
+            "[Razi Protocol/starmap] %s expected=(%.1f,%.1f) native=(%.1f,%.1f) turn=%.6f",
+            name,expected_x,expected_y,actual_x,actual_y,orientation))
+          if math.abs(expected_x-actual_x)>2 or math.abs(expected_y-actual_y)>2 then
+            log("[Razi Protocol/starmap] WARNING: unexpected rendered position for "..name..
+              " (check origin and mod load order)")
+          end
+        end
+      end
+    end
   end
 end
 

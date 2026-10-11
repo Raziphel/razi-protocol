@@ -57,8 +57,8 @@ local function run(with_outer,with_mod)
 end
 
 local module,raw,inner,outer,native,layers=run(true,true)
-check(inner.orbit.distance==48 and outer.orbit.distance==62,
-  "AsteroidBelt was not placed at the mid/outer boundary")
+check(inner.orbit.distance==26 and outer.orbit.distance==34,
+  "Native belt endpoints should straddle the visible Calidus asteroid halo")
 check(inner.orbit.parent.name=="star" and outer.orbit.parent.name=="star",
   "Native belt locations must remain space-location descendants of star")
 check(inner.orbit.orientation==0 and outer.orbit.orientation==0,

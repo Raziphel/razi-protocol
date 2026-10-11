@@ -20,8 +20,8 @@ function M.data_final_fixes()
   if not (data.raw["space-location"] or {}).star then return end
   local updates = {}
   local coords = {
-    {"asteroid-belt-inner-edge",48,0},
-    {"asteroid-belt-outer-edge",62,0}
+    {"asteroid-belt-inner-edge",26,0},
+    {"asteroid-belt-outer-edge",34,0}
   }
   for _, item in ipairs(coords) do
     local kind = get_location(item[1])
@@ -41,7 +41,10 @@ function M.data_final_fixes()
     if location then location.draw_orbit=false end
   end
 
-  -- Restore the actual upstream asteroid sprite, visible at the center of the hexagonal campaign ring.
+  -- Full-size source sprite: the visual halo has a radius of roughly 30
+  -- starmap units in-game. Place one native crossing node just inside and
+  -- one just outside that ring, instead of 48/62 units far above its edge.
+  -- The original AsteroidBelt artwork, hazards and 5000-km trip are unchanged.
   local util=(data.raw["utility-sprites"] or {}).default
   local sprite=util and util.starmap_star
   for _,layer in ipairs((sprite and sprite.layers) or {}) do
