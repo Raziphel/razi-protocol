@@ -100,6 +100,45 @@ class VisualStarmapTests(unittest.TestCase):
                     clearance, 15,
                     f"{a} -> {b} cuts through {star} ({clearance:.1f})")
 
+    def test_planetary_route_crescents_have_no_internal_crossings(self):
+        # Local links must not turn an otherwise compact system into a knot.
+        def side(a, b, p):
+            return ((b[0] - a[0]) * (p[1] - a[1])
+                    - (b[1] - a[1]) * (p[0] - a[0]))
+
+        def crossed(a, b, c, d):
+            return (side(a, b, c) * side(a, b, d) < 0
+                    and side(c, d, a) * side(c, d, b) < 0)
+
+        for star in STARS:
+            family = {"sye-" + star}
+            family.update(
+                name for name, (parent, _, _) in self.anchors.items()
+                if parent == star
+            )
+            links = [(a, b) for a, b, _, _ in self.routes
+                     if a in family and b in family]
+            for i, (a, b) in enumerate(links):
+                for c, d in links[i + 1:]:
+                    if len({a, b, c, d}) < 4:
+                        continue  # Shared endpoints are intentional junctions.
+                    self.assertFalse(
+                        crossed(self.coords[a], self.coords[b],
+                                self.coords[c], self.coords[d]),
+                        f"{star}: {a}-{b} crosses {c}-{d}")
+
+    def test_compact_planets_have_readable_node_spacing(self):
+        for star in STARS:
+            family = [
+                name for name, (parent, _, _) in self.anchors.items()
+                if parent == star and "-belt-" not in name
+            ]
+            for i, first in enumerate(family):
+                for second in family[i + 1:]:
+                    self.assertGreaterEqual(
+                        math.dist(self.coords[first], self.coords[second]), 10,
+                        f"{star}: {first} and {second} overlap")
+
     def test_tier_lanes_replace_four_crossing_diagonals(self):
         edges = {tuple(sorted((a, b))) for a, b, _, _ in self.routes}
         for a, b in DIAGONALS:
