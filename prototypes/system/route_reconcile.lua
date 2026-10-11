@@ -43,15 +43,12 @@ local route_specifications = {
 	{"sye-solaris", "sye-nyxaris", 88000, "frontier_crosslink"},
 	{"sye-solaris", "sye-vibrant", 95000, "middle_crossing"},
 	{"sye-nyxaris", "sye-vespera", 95000, "middle_crossing"},
-	-- Four neighbor diagonals make the lattice traversable in multiple ways
-	-- only after the destination's independent star research is complete.
-	{"sye-solaris", "sye-vespera", 142000, "middle_crossing"},
-	{"sye-nyxaris", "sye-vibrant", 142000, "middle_crossing"},
+	-- Pair rungs offer optional sideways travel inside a tier. The four
+	-- diagonal shortcuts across tiers made the actual starmap unreadable.
+	-- Both parallel lanes remain connected by these short visual rungs.
 	{"sye-vibrant", "sye-vespera", 103000, "middle_crosslink"},
 	{"sye-vibrant", "sye-beetlejuice", 130000, "outer_crossing"},
 	{"sye-vespera", "sye-umbra", 130000, "outer_crossing"},
-	{"sye-vibrant", "sye-umbra", 174000, "outer_crossing"},
-	{"sye-vespera", "sye-beetlejuice", 174000, "outer_crossing"},
 	{"sye-beetlejuice", "sye-umbra", 126000, "outer_crosslink"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
