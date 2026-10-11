@@ -474,7 +474,7 @@ local function register_exchange(rule)
     icon = visual.icon,
     icons = visual.icons and deepcopy(visual.icons) or nil,
     -- The native technology may use a 64px icon with no icon_size field.
-    -- Preserve its declared size (or Factorio\'s 64px default) rather than
+    -- Preserve its declared size (or Factorio's 64px default) rather than
     -- forcing 256px for an image that only contains 64x64 pixels.
     icon_size = visual.icon_size,
     prerequisites = prerequisite_list,
