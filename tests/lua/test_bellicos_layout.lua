@@ -103,4 +103,12 @@ disappearing.data_final_fixes()
 check(disappearing_locations[gate_b].orbit.parent.name=="solar-system-edge",
   "Final-stage removed pulsar still referenced as orbit parent")
 
+-- Late gateway removal also invalidates the route Razi registered in data.lua.
+local no_longer_present, late_locations, _, late_routes =
+  run({pulsar="space-location"})
+late_locations[gate_a] = nil
+no_longer_present.data_final_fixes()
+check(not late_routes[route_name],
+  "Final-stage removed gateway left an invalid space connection")
+
 print("Bellicos missing/retyped/removed prototype compatibility passed")
