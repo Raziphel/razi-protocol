@@ -191,37 +191,48 @@ class ConstellationTests(unittest.TestCase):
                                                        self.coords[b]), 10,
                                             f"{a} overlaps {b}")
 
-    def test_homeward_spokes_and_native_belt(self):
-        edges = {tuple(sorted((a,b))) for a,b,_,_ in self.routes}
-        for star in STARS:
-            self.assertIn(tuple(sorted(("sye-calidus","sye-"+star))), edges)
-        for a,b in (("maraxsis","asteroid-belt-inner-edge"),
-                    ("asteroid-belt-outer-edge","sye-umbra"),
-                    ("sye-nyxaris","sye-vibrant"),
-                    ("sye-solaris","sye-vespera"),
-                    ("sye-vibrant","sye-vespera")):
-            self.assertNotIn(tuple(sorted((a,b))),edges)
-        neighbors = (
-            ("solaris","nyxaris"),("solaris","vibrant"),
-            ("nyxaris","vespera"),("vibrant","beetlejuice"),
-            ("vespera","umbra"),("beetlejuice","umbra")
-        )
-        for a,b in neighbors:
-            self.assertIn(tuple(sorted(("sye-"+a,"sye-"+b))), edges,
-                          f"Missing adjacent-system slipstream {a}/{b}")
-        actual = [(a,b) for a,b,_,_ in self.routes
-                  if a.startswith("sye-") and b.startswith("sye-")
-                  and a!="sye-calidus" and b!="sye-calidus"]
-        self.assertEqual(len(actual), 6, "Unwanted diagonal system route")
-        for a,b in (("shchierbin","asteroid-belt-inner-edge"),
-                    ("asteroid-belt-outer-edge","sye-beetlejuice")):
-            self.assertIn(tuple(sorted((a,b))),edges)
-        for side,r in (("inner",14),("outer",20)):
+    def test_two_branch_constellation_and_native_belt(self):
+        edges = {tuple(sorted((a, b))) for a, b, _, _ in self.routes}
+        required = {
+            ("sye-calidus", "sye-solaris"),
+            ("sye-calidus", "sye-nyxaris"),
+            ("sye-solaris", "sye-nyxaris"),
+            ("sye-solaris", "sye-vibrant"),
+            ("sye-nyxaris", "sye-vespera"),
+            ("sye-vibrant", "sye-beetlejuice"),
+            ("sye-vespera", "sye-umbra"),
+            ("sye-beetlejuice", "sye-umbra"),
+        }
+        actual = {
+            (a, b) for a, b, _, _ in self.routes
+            if a.startswith("sye-") and b.startswith("sye-")
+        }
+        self.assertEqual(
+            {tuple(sorted(pair)) for pair in actual},
+            {tuple(sorted(pair)) for pair in required},
+            "Interstellar links must form a clean 8-route constellation")
+        self.assertEqual(
+            sum("sye-calidus" in (a, b) for a, b in actual), 2,
+            "Calidus should have only the two early departure routes")
+        for a, b in (("maraxsis", "asteroid-belt-inner-edge"),
+                     ("asteroid-belt-outer-edge", "sye-umbra")):
+            self.assertNotIn(tuple(sorted((a, b))), edges)
+        for a, b in (("shchierbin", "asteroid-belt-inner-edge"),
+                     ("asteroid-belt-outer-edge", "sye-beetlejuice")):
+            self.assertIn(tuple(sorted((a, b))), edges)
+        for side, radius in (("inner", 14), ("outer", 20)):
             self.assertAlmostEqual(
                 math.dist(self.coords[f"asteroid-belt-{side}-edge"],
-                          self.coords["vibrant"]),r,places=3)
-        self.assertNotIn(tuple(sorted(("asteroid-belt-inner-edge",
-                                      "asteroid-belt-outer-edge"))),edges)
+                          self.coords["vibrant"]), radius, places=3)
+        self.assertNotIn(
+            tuple(sorted(("asteroid-belt-inner-edge",
+                          "asteroid-belt-outer-edge"))), edges)
+
+    def test_calidus_departure_hub_is_close_but_clear(self):
+        self.assertAlmostEqual(
+            math.dist(self.coords["sye-calidus"], (0, 0)), 20, places=2)
+        self.assertGreater(
+            math.dist(self.coords["sye-calidus"], self.coords["nauvis"]), 20)
 
     def test_vibrant_sun_belt_clearance(self):
         for n,(parent,_,_) in self.anchors.items():

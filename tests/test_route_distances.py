@@ -65,56 +65,78 @@ class RouteTests(unittest.TestCase):
         raw = world()
         self.assertEqual(routes_audit.audit(raw), [])
 
-    def test_old_underpriced_paired_stars_are_detected(self):
+    def test_underpriced_chapter_routes_are_detected(self):
         raw = world()
-        for pair, old_length in (
-            (("sye-calidus", "sye-vibrant"), 30000),
-            (("sye-calidus", "sye-beetlejuice"), 40000),
+        for pair, too_short in (
+            (("sye-solaris", "sye-vibrant"), 30000),
+            (("sye-vibrant", "sye-beetlejuice"), 40000),
         ):
-            modified = dict(raw["space-connection"])
-            match = next(k for k, v in modified.items()
-                         if routes_audit.key(v["from"], v["to"]) ==
+            modified = {k: dict(v) for k, v in raw["space-connection"].items()}
+            match = next(k for k, route in modified.items()
+                         if routes_audit.key(route["from"], route["to"]) ==
                          routes_audit.key(*pair))
-            original = modified[match]
-            modified[match] = {**original, "length": old_length}
+            modified[match]["length"] = too_short
             self.assertTrue(any("Too-short interstellar route" in message
                                 for message in routes_audit.audit({
                                     **raw, "space-connection": modified})))
 
-    def test_neighbor_routes_are_all_present_and_balanced(self):
+    def test_exact_eight_link_constellation(self):
         raw = world()
         self.assertEqual(routes_audit.audit(raw), [])
-        catalog = {routes_audit.key(a,b):(km,profile)
-                   for a,b,km,profile in route_manifest()}
-        for a,b in routes_audit.NEIGHBOR_LINKS:
-            self.assertIn(routes_audit.key(a,b),catalog)
-            direct = catalog[routes_audit.key(a,b)][0]
-            via = (catalog[routes_audit.key(a,"sye-calidus")][0]
-                   + catalog[routes_audit.key(b,"sye-calidus")][0])
-            self.assertLess(direct,via)
+        catalog = {routes_audit.key(a, b): (km, profile)
+                   for a, b, km, profile in route_manifest()}
+        self.assertEqual(len(routes_audit.CAMPAIGN_ROUTES), 8)
+        for a, b in routes_audit.CAMPAIGN_ROUTES:
+            self.assertIn(routes_audit.key(a, b), catalog)
+        for planet in ("vibrant", "vespera", "beetlejuice", "umbra"):
+            self.assertNotIn(routes_audit.key("sye-calidus", "sye-" + planet),
+                             catalog, "Reintroduced extra Calidus spoke")
 
-    def test_mispriced_neighbor_and_missing_neighbor_are_detected(self):
+    def test_extra_calidus_spoke_and_missing_branch_are_detected(self):
         raw = world()
-        for r in raw["space-connection"].values():
-            if routes_audit.key(r["from"],r["to"]) == routes_audit.key(
-                    "sye-solaris","sye-nyxaris"):
-                r["length"]=22000
-        self.assertTrue(any("Neighbor tier distance mismatch" in msg
+        raw["space-connection"]["unwanted-extra-spoke"] = {
+            "from": "sye-calidus", "to": "sye-beetlejuice",
+            "length": 175000}
+        self.assertTrue(any("Unwanted cross-system route" in msg
                             for msg in routes_audit.audit(raw)))
         raw = world()
-        target = next(n for n,r in raw["space-connection"].items()
-                      if routes_audit.key(r["from"],r["to"]) == routes_audit.key(
-                          "sye-umbra","sye-vespera"))
+        target = next(name for name, route in raw["space-connection"].items()
+                      if routes_audit.key(route["from"], route["to"]) ==
+                      routes_audit.key("sye-vespera", "sye-umbra"))
         del raw["space-connection"][target]
-        self.assertTrue(any("Missing required corridor" in msg
+        self.assertTrue(any("Missing constellation corridor" in msg
+                            for msg in routes_audit.audit(raw)))
+
+    def test_two_branches_scale_with_chapter(self):
+        raw = world()
+        self.assertEqual(routes_audit.audit(raw), [])
+        for branch in zip(routes_audit.STARTER_BRANCHES,
+                          routes_audit.MIDDLE_BRANCHES,
+                          routes_audit.OUTER_BRANCHES):
+            values = []
+            for pair in branch:
+                connection = next(route for route in raw["space-connection"].values()
+                                  if routes_audit.key(route["from"], route["to"]) ==
+                                  routes_audit.key(*pair))
+                values.append(connection["length"])
+            self.assertEqual(values, sorted(values))
+            self.assertEqual(len(set(values)), 3)
+
+    def test_mispriced_crosslink_is_detected(self):
+        raw = world()
+        for route in raw["space-connection"].values():
+            if routes_audit.key(route["from"], route["to"]) == routes_audit.key(
+                    "sye-solaris", "sye-nyxaris"):
+                route["length"] = 22000
+        self.assertTrue(any("Lateral corridor distance mismatch" in msg
                             for msg in routes_audit.audit(raw)))
 
     def test_all_manifest_profiles_are_defined(self):
-        src=(ROOT / "prototypes/system/asteroid_profiles.lua").read_text()
-        known=set(re.findall(r"^\s*([a-z][a-z_]+)=\{",src,re.M))
-        for a,b,km,profile in route_manifest():
-            self.assertGreater(km,0)
-            self.assertIn(profile,known,f"Missing hazard profile for {a}/{b}")
+        src = (ROOT / "prototypes/system/asteroid_profiles.lua").read_text()
+        known = set(re.findall(r"^\s*([a-z][a-z_]+)=\{", src, re.M))
+        for a, b, km, profile in route_manifest():
+            self.assertGreater(km, 0)
+            self.assertIn(profile, known, f"Missing hazard profile: {a}/{b}")
 
     def test_an_out_of_order_deep_space_shortcut_is_detected(self):
         raw = world()

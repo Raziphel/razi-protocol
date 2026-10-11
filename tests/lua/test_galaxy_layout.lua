@@ -52,6 +52,9 @@ end})
 
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
+local hub_x,hub_y=layout.anchor_position("sye-calidus")
+check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
+  "Calidus departure portal drifted from the compact central approach")
 local shchierbin_x,shchierbin_y=layout.anchor_position("shchierbin")
 check(shchierbin_x>130 and shchierbin_y<0,
   "Asteroid Belt host is no longer the Vibrant outer planet")
