@@ -20,8 +20,8 @@ function M.data_final_fixes()
   if not (data.raw["space-location"] or {}).star then return end
   local updates = {}
   local coords = {
-    {"asteroid-belt-inner-edge",177},
-    {"asteroid-belt-outer-edge",191}
+    {"asteroid-belt-inner-edge",128.887548,0.633736},
+    {"asteroid-belt-outer-edge",135.69451,0.667812}
   }
   for _, item in ipairs(coords) do
     local kind = get_location(item[1])
@@ -30,7 +30,7 @@ function M.data_final_fixes()
         type=kind, name=item[1], draw_orbit=false,
         orbit={
           parent={type="space-location",name="star"},
-          distance=item[2],orientation=0.5
+          distance=item[2],orientation=item[3]
         }
       }
     end
@@ -41,21 +41,13 @@ function M.data_final_fixes()
     if location then location.draw_orbit=false end
   end
 
-  -- The source draws a giant 2436px ring over the original solar system.
-  -- Our native belt crossing is now BETWEEN the middle and outer systems,
-  -- so an origin-centred background ring would be misleading and cluttered.
-  -- Remove *only* its ring layer, not its item icons, starmap icons, or
-  -- unrelated star/background layers from other mods.
-  local utility = (data.raw["utility-sprites"] or {}).default
-  local sprite = utility and utility.starmap_star
-  local layers = sprite and sprite.layers
-  if type(layers)=="table" then
-    for i=#layers,1,-1 do
-      local layer=layers[i]
-      if type(layer)=="table" and
-        layer.filename=="__AsteroidBelt__/graphics/sprite/asteroid-belt.png" then
-        table.remove(layers,i)
-      end
+  -- Restore the actual upstream asteroid sprite, scaled to a subtle halo.
+  local util=(data.raw["utility-sprites"] or {}).default
+  local sprite=util and util.starmap_star
+  for _,layer in ipairs((sprite and sprite.layers) or {}) do
+    if type(layer)=="table" and
+      layer.filename=="__AsteroidBelt__/graphics/sprite/asteroid-belt.png" then
+      layer.scale=0.28
     end
   end
 end
