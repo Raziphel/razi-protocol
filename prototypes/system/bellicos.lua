@@ -107,8 +107,13 @@ function bellicos.data_final_fixes()
 	-- Razi Protocol's deep-space entrance while preserving every route inside Aegis.
 	remove_stock_entry_routes()
 	-- Source data-final-fixes may reparent its giant pulsar after data.lua.
-	-- Reaffirm only the three Razi-managed anchors at the final stage.
+	-- Reaffirm only existing Razi-managed anchors at the final stage.
 	position_expedition()
+	-- A gateway removed by a later dependency pass must not leave our
+	-- replacement deep-space route pointing to an invalid endpoint.
+	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then
+		deleteRoute(deep_space_entry_route)
+	end
 end
 
 return bellicos
