@@ -172,24 +172,47 @@ local function depends_on(start, sought, seen)
   return false
 end
 
-local function unlock_technology(recipe_name, guard)
-  local choices = {}
-  for name, tech in pairs(technologies()) do
+-- Building an index once beats rescanning every technology for every
+-- native recipe and imported supplier (especially with dozens of planets).
+-- Only Razi exchange techs are created after this first lookup, so the
+-- original source-mod unlocks are already stable by this final-fixes pass.
+local indexed_technologies, unlockers_by_recipe
+
+local function native_unlockers()
+  local techs = technologies()
+  if indexed_technologies == techs and unlockers_by_recipe then
+    return unlockers_by_recipe
+  end
+  local index = {}
+  for name, tech in pairs(techs) do
+    local counted = {}
     for _, effect in ipairs(tech.effects or {}) do
-      if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
-        local too_late = false
-        for _, gate in ipairs(guard.not_after or {}) do
-          if depends_on(name, gate) then too_late = true break end
-        end
-        if not too_late and tech.enabled ~= false and not tech.hidden then
-          choices[#choices + 1] = name
-        end
-        break
+      local target = effect.type == "unlock-recipe" and effect.recipe
+      if target and not counted[target] then
+        counted[target] = true
+        local matches = index[target]
+        if not matches then matches = {}; index[target] = matches end
+        matches[#matches + 1] = name
       end
     end
   end
-  table.sort(choices)
-  return choices[1]
+  for _, matches in pairs(index) do table.sort(matches) end
+  indexed_technologies, unlockers_by_recipe = techs, index
+  return index
+end
+
+local function unlock_technology(recipe_name, guard)
+  for _, name in ipairs(native_unlockers()[recipe_name] or {}) do
+    local tech = technologies()[name]
+    if tech and tech.enabled ~= false and not tech.hidden then
+      local too_late = false
+      for _, gate in ipairs(guard.not_after or {}) do
+        if depends_on(name, gate) then too_late = true break end
+      end
+      if not too_late then return name end
+    end
+  end
+  return nil
 end
 
 local function lab_can_research(packs)

@@ -220,34 +220,43 @@ function route_reconcile.data_final_fixes()
 		end
 	end
 
+	-- Make a one-pass, final-stage route index after bypass removal instead
+	-- of scanning every space connection twice for every authored corridor.
+	-- Buckets preserve *all* duplicate names so native asteroid data can
+	-- still be rescued before redundant links are removed.
+	local routes_by_pair = {}
+	for name, connection in pairs(routes) do
+		local pair = key_for(connection.from, connection.to)
+		local matches = routes_by_pair[pair]
+		if not matches then matches = {}; routes_by_pair[pair] = matches end
+		matches[#matches + 1] = name
+	end
+
 	for _, specification in ipairs(route_specifications) do
 		local from, to, length, hazard = specification[1], specification[2], specification[3], specification[4]
 		if has_endpoint(from) and has_endpoint(to) then
 			local pair = key_for(from, to)
 			local route_name = "razi-" .. from .. "-" .. to
-			-- Choose source names first, deterministically; other mods may
-			-- patch their asteroid tables by the original connection name.
-			local matches = {}
-			for name, connection in pairs(routes) do
-				if key_for(connection.from, connection.to) == pair then
-					matches[#matches + 1] = name
-				end
-			end
+			-- Preserve the original source-first sorting and all asteroid merges.
+			local matches = routes_by_pair[pair] or {}
 			table.sort(matches, function(a, b)
 				local a_razi, b_razi = a:sub(1, 5) == "razi-", b:sub(1, 5) == "razi-"
 				if a_razi ~= b_razi then return not a_razi end
 				return a < b
 			end)
 			local keep_name = matches[1]
-
-			for name, connection in pairs(routes) do
-				if name ~= keep_name and key_for(connection.from, connection.to) == pair then
+			for i = 2, #matches do
+				local name = matches[i]
+				local connection = routes[name]
+				if connection then
 					if keep_name then
 						hazard_profiles.preserve_custom(routes[keep_name], connection)
 					end
 					routes[name] = nil
 				end
 			end
+			end
+			if keep_name then routes_by_pair[pair] = {keep_name} end
 
 			local route = keep_name and routes[keep_name]
 			if route then
@@ -271,6 +280,7 @@ function route_reconcile.data_final_fixes()
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				data:extend({connection})
+				routes_by_pair[pair] = {route_name}
 			end
 		end
 	end

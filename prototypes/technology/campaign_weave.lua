@@ -64,28 +64,67 @@ local function produces(recipe, pack)
   return false
 end
 
+-- Every campaign milestone used to scan the entire recipe catalogue, then
+-- every locked producer scanned every technology again. This final-stage
+-- index is rebuilt on each pass, after all source mods have registered their
+-- recipes. Dependencies still use the LIVE technology graph at query time.
+local producers_by_pack, unlockers_by_recipe
+
+local function record_producer(pack, name, wanted, index)
+  if not wanted[pack] then return end
+  local list = index[pack]
+  if not list then list = {}; index[pack] = list end
+  if list[#list] ~= name then list[#list + 1] = name end
+end
+
+local function index_variant(recipe, name, wanted, index)
+  if not recipe then return end
+  if recipe.result then record_producer(recipe.result, name, wanted, index) end
+  for _, result in ipairs(recipe.results or {}) do
+    record_producer(result.name or result[1], name, wanted, index)
+  end
+end
+
+local function build_indexes()
+  local wanted = {}
+  for _, rule in ipairs(rules) do
+    for _, milestone in ipairs(rule[3]) do wanted[milestone[1]] = true end
+  end
+  local producers, unlockers = {}, {}
+  for recipe_name, recipe in pairs(data.raw.recipe or {}) do
+    index_variant(recipe, recipe_name, wanted, producers)
+    index_variant(rawget(recipe, "normal"), recipe_name, wanted, producers)
+    index_variant(rawget(recipe, "expensive"), recipe_name, wanted, producers)
+  end
+  for name, tech in pairs(data.raw.technology or {}) do
+    for _, effect in ipairs(tech.effects or {}) do
+      if effect.type == "unlock-recipe" and effect.recipe then
+        local matches = unlockers[effect.recipe]
+        if not matches then
+          matches = {}; unlockers[effect.recipe] = matches
+        end
+        matches[#matches + 1] = name
+      end
+    end
+  end
+  producers_by_pack, unlockers_by_recipe = producers, unlockers
+end
+
 -- Existence of a recipe alone is not evidence that the pack can be made.
 -- An otherwise valid science requirement softlocks its discovery when the
 -- recipe can only be unlocked *by* that same discovery or a later research.
 local function recipe_accessible_before(recipe_name, recipe, target_name)
   if recipe.enabled ~= false then return true end
-  for name, t in pairs(data.raw.technology or {}) do
-    if not depends_on(name, target_name) then
-      for _, effect in ipairs(t.effects or {}) do
-        if effect.type == "unlock-recipe"
-          and effect.recipe == recipe_name then return true end
-      end
-    end
+  for _, name in ipairs(unlockers_by_recipe[recipe_name] or {}) do
+    if not depends_on(name, target_name) then return true end
   end
   return false
 end
 
 local function has_production_recipe_before(pack, target_name)
-  for recipe_name, recipe in pairs(data.raw.recipe or {}) do
-    if (produces(recipe, pack)
-        or produces(rawget(recipe, "normal"), pack)
-        or produces(rawget(recipe, "expensive"), pack))
-      and recipe_accessible_before(recipe_name, recipe, target_name) then
+  for _, recipe_name in ipairs(producers_by_pack[pack] or {}) do
+    local recipe = data.raw.recipe[recipe_name]
+    if recipe and recipe_accessible_before(recipe_name, recipe, target_name) then
       return true
     end
   end
@@ -130,6 +169,9 @@ function M.data_final_fixes()
   for _, rule in ipairs(rules) do
     for _, parent in ipairs(rule[2]) do link(rule[1], parent) end
   end
+  -- Index only the science packs the campaign actually references.
+  -- This is an ephemeral data-stage cache and never enters the save game.
+  build_indexes()
   -- Existing science techs must follow their source planets. Never insert
   -- an impossible technology cycle or assume a missing optional mod exists.
   for _, rule in ipairs(rules) do
