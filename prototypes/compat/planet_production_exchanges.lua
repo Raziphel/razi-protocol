@@ -11,6 +11,7 @@ local exchanges = {
     planets = {"planet-discovery-vulcanus", "planet-discovery-gleba"},
     science = {"calidus-tech-card"},
     category = "metallurgy",
+    working_world = "vulcanus",
     additional = {{type="item", name="bioflux", amount=2}},
     batch = 4, bonus = 1, count = 350, time = 30,
     bonus_icon = "bioflux",
@@ -108,7 +109,9 @@ local function unlock_technology(recipe_name, guard)
         for _, gate in ipairs(guard.not_after or {}) do
           if depends_on(name, gate) then too_late = true break end
         end
-        if not too_late then choices[#choices + 1] = name end
+        if not too_late and tech.enabled ~= false and not tech.hidden then
+          choices[#choices + 1] = name
+        end
         break
       end
     end
@@ -130,28 +133,70 @@ local function lab_can_research(packs)
   return false
 end
 
-local function machine_can_craft(category)
-  for _, family in ipairs({"assembling-machine", "furnace"}) do
-    for _, machine in pairs(data.raw[family] or {}) do
-      if not machine.fixed_recipe then
-        for _, value in ipairs(machine.crafting_categories or {}) do
-          if value == category then return true end
-        end
-      end
-    end
-  end
-  return false
-end
-
 local function matches_surface(recipe, world)
-  if not (world and world.surface_properties) then return false end
-  for _, condition in ipairs(recipe.surface_conditions or {}) do
+  if not world then return false end
+  local conditions = recipe.surface_conditions or {}
+  if #conditions == 0 then return true end
+  if not world.surface_properties then return false end
+  for _, condition in ipairs(conditions) do
     local value = world.surface_properties[condition.property]
     if type(value) ~= "number" then return false end
     if condition.min and value < condition.min then return false end
     if condition.max and value > condition.max then return false end
   end
   return true
+end
+
+local function distinct_fluid_count(entries)
+  local fluids = {}
+  for _, entry in ipairs(entries or {}) do
+    if entry.type == "fluid" then fluids[name_of(entry)] = true end
+  end
+  local count = 0
+  for _ in pairs(fluids) do count = count + 1 end
+  return count
+end
+
+local function machine_fluid_ports(machine)
+  local inputs, outputs = 0, 0
+  for _, port in ipairs(machine.fluid_boxes or {}) do
+    if port.production_type == "input" or port.production_type == "input-output" then
+      inputs = inputs + 1
+    end
+    if port.production_type == "output" or port.production_type == "input-output" then
+      outputs = outputs + 1
+    end
+  end
+  return inputs, outputs
+end
+
+local function machine_can_craft(category, base, additional, world)
+  local ingredients = {}
+  for _, entry in ipairs(base.ingredients) do
+    ingredients[#ingredients + 1] = entry
+  end
+  for _, entry in ipairs(additional) do
+    ingredients[#ingredients + 1] = entry
+  end
+  local required_inputs = distinct_fluid_count(ingredients)
+  local required_outputs = distinct_fluid_count(base.results)
+  for _, family in ipairs({"assembling-machine", "furnace"}) do
+    for _, machine in pairs(data.raw[family] or {}) do
+      if not machine.fixed_recipe and matches_surface(machine, world) then
+        local suitable_category = false
+        for _, value in ipairs(machine.crafting_categories or {}) do
+          if value == category then suitable_category = true break end
+        end
+        if suitable_category then
+          local inputs, outputs = machine_fluid_ports(machine)
+          if inputs >= required_inputs and outputs >= required_outputs then
+            return true
+          end
+        end
+      end
+    end
+  end
+  return false
 end
 
 local function recipe_icon(base, product, bonus)
@@ -205,9 +250,10 @@ end
 
 local function register_exchange(rule)
   local base = raw("recipe", rule.source)
+  local world = raw("planet", rule.surface_world or rule.working_world)
   if not safe_template(base, rule.product)
     or not raw("item", rule.product)
-    or not machine_can_craft(rule.category)
+    or not machine_can_craft(rule.category, base, rule.additional, world)
     or raw("recipe", rule.name) or technologies()[rule.name] then return end
   for _, arrival in ipairs(rule.planets) do
     if not technologies()[arrival] then return end
