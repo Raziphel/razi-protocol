@@ -95,14 +95,18 @@ local function setup(options)
     item=items,fluid=fluids,recipe=recipes,technology=techs,
     tool={["calidus-tech-card"]={},["solaris-tech-card"]={},
       ["nyxaris-tech-card"]={}},
-    planet={fulgora={surface_properties={["magnetic-field"]=99}},
+    planet={vulcanus={surface_properties={pressure=4000}},
+      fulgora={surface_properties={["magnetic-field"]=99}},
       aquilo={surface_properties={pressure=300}}},
     lab={["kr-advanced-lab"]={inputs={"calidus-tech-card",
       "solaris-tech-card","nyxaris-tech-card"}}},
     ["assembling-machine"]={
-      foundry={crafting_categories={"metallurgy"}},
+      foundry={crafting_categories={"metallurgy"},fluid_boxes={
+        {production_type="input"},{production_type="input"},
+        {production_type="output"}}},
       ["electromagnetic-plant"]={crafting_categories={"electromagnetics"}},
-      cryogenic_plant={crafting_categories={"cryogenics"}}
+      cryogenic_plant={crafting_categories={"cryogenics"},fluid_boxes={
+        {production_type="input"}}}
     }
   }
   if options.hidden_bioflux then items.bioflux.hidden=true end
@@ -123,6 +127,17 @@ local function setup(options)
   end
   if options.without_second_lab then
     raw.lab={}
+  end
+  if options.cryo_ports_missing then
+    raw["assembling-machine"].cryogenic_plant.fluid_boxes={}
+  end
+  if options.no_vulcanus_foundry_output then
+    raw["assembling-machine"].foundry.fluid_boxes={
+      {production_type="input"},{production_type="input"}}
+  end
+  if options.electromagnetic_machine_excluded then
+    raw["assembling-machine"]["electromagnetic-plant"].surface_conditions={
+      {property="magnetic-field", max=20}}
   end
   rawset(_G,"data",{raw=raw,extend=function(self,prototypes)
     for _, prototype in ipairs(prototypes) do
@@ -251,6 +266,18 @@ absent({incomplete_native_recipe=true},{
   ["razi-electrobiological-components"]=true
 })
 absent({without_second_lab=true},{})
+absent({cryo_ports_missing=true},{
+  ["razi-bio-rare-metal-casting"]=true,
+  ["razi-electrobiological-components"]=true
+})
+absent({no_vulcanus_foundry_output=true},{
+  ["razi-electrobiological-components"]=true,
+  ["razi-cryo-energy-control"]=true
+})
+absent({electromagnetic_machine_excluded=true},{
+  ["razi-bio-rare-metal-casting"]=true,
+  ["razi-cryo-energy-control"]=true
+})
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()

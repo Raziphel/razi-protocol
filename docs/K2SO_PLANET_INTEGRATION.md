@@ -230,3 +230,14 @@ repeat-run safety, and late-technology compatibility.
 The exact complete-modpack Factorio 2.1 load still needs testing.
 If upstream changes a recipe category or a technology unlock, the guarded
 integration deliberately fails closed until reviewed.
+
+### Machine fluid connections and buildable homeworlds
+
+The exchange creation guard now checks the *actual recipe* after extra
+cross-planet ingredients are added: it requires a compatible machine with
+enough fluid inputs and outputs. In addition, the corresponding planet must
+exist, and its declared surface properties must not exclude the machine.
+For example, a foundry lacking the dirty-water output cannot run the
+bio-metal casting exchange, and a cryogenic machine without a coolant
+inlet cannot run the Aquilo recipe. When no appropriate machine exists,
+the exchange is skipped and native production remains untouched.
