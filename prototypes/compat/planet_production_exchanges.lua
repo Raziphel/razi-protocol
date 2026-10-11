@@ -155,7 +155,7 @@ local function matches_surface(recipe, world)
 end
 
 local function recipe_icon(base, product, bonus)
-  local icons = {}
+  local icons
   if base.icons then
     icons = deepcopy(base.icons)
   elseif base.icon then

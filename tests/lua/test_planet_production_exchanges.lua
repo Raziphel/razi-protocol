@@ -11,7 +11,7 @@ local function clone(value)
   for key, inner in pairs(value) do copied[clone(key)] = clone(inner) end
   return copied
 end
-table.deepcopy = clone
+rawset(table, "deepcopy", clone)
 
 local function ingredients(list)
   local result = {}
@@ -227,7 +227,9 @@ local function absent(options, expected)
   end
 end
 absent({no_k2=true},{})
-absent({hidden_bioflux=true},{})
+absent({hidden_bioflux=true},{
+  ["razi-cryo-energy-control"]=true
+})
 absent({missing_magnetic_field=true},{
   ["razi-bio-rare-metal-casting"]=true,
   ["razi-cryo-energy-control"]=true
