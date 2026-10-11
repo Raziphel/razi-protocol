@@ -73,12 +73,12 @@ class ConstellationTests(unittest.TestCase):
 
     def test_calidus_centered_radial_gallery(self):
         centers = {
-            "solaris": (62, 124 * math.sqrt(3) / 2),
-            "nyxaris": (-62, 124 * math.sqrt(3) / 2),
-            "vibrant": (124, 0), "vespera": (-124, 0),
-            "beetlejuice": (62, -124 * math.sqrt(3) / 2),
-            "umbra": (-62, -124 * math.sqrt(3) / 2),
-            "solar-system-edge": (0, -248),
+            "solaris": (52, 104 * math.sqrt(3) / 2),
+            "nyxaris": (-52, 104 * math.sqrt(3) / 2),
+            "vibrant": (104, 0), "vespera": (-104, 0),
+            "beetlejuice": (52, -104 * math.sqrt(3) / 2),
+            "umbra": (-52, -104 * math.sqrt(3) / 2),
+            "solar-system-edge": (0, -190),
         }
         for name, xy in centers.items():
             self.assertLess(math.dist(self.coords[name], xy), 1.0,
@@ -90,15 +90,47 @@ class ConstellationTests(unittest.TestCase):
         }
         for name, bearing in expected_bearings.items():
             self.assertAlmostEqual(self.anchors[name][2], bearing, places=5)
-            self.assertAlmostEqual(self.anchors[name][1], 124, places=4)
+            self.assertAlmostEqual(self.anchors[name][1], 104, places=4)
         radii = [math.dist(self.coords[name], (0, 0)) for name in STARS]
         self.assertLess(max(radii) - min(radii), 3.0,
                         "Major stars must share one circular orbit radius")
-        self.assertTrue(all(120 < r < 130 for r in radii))
+        self.assertTrue(all(100 < r < 108 for r in radii))
         for a, b in PAIRS:
             self.assertAlmostEqual(self.coords[a][1], self.coords[b][1], delta=1)
-        self.assertLess(self.coords["solar-system-edge"][1], -230,
+        self.assertLess(self.coords["solar-system-edge"][1], -185,
                         "Deep Space must be north, not south of the galaxy")
+        self.assertGreater(self.coords["solar-system-edge"][1], -200,
+                           "Deep Space drifted too far outside compact view")
+
+    def test_compact_ring_respects_large_optional_orbits(self):
+        # Athos (~49.5) and Ferrum (~51.4) have the largest supported
+        # non-moon orbital tracks. Their neighboring star circles need a gap.
+        from itertools import combinations
+        for a, b in combinations(STARS, 2):
+            distance = math.dist(self.coords[a], self.coords[b])
+            self.assertGreaterEqual(
+                distance, 103.5,
+                f"Stars {a} and {b} are too close for optional orbit art")
+        self.assertLess(
+            max(math.dist(self.coords[name], (0, 0)) for name in STARS),
+            108, "Galaxy no longer fits the compact six-star circle")
+
+    def test_long_campaign_routes_do_not_cross_each_other(self):
+        major = [(a, b) for a, b, _, profile in self.routes
+                 if "crossing" in profile or "crosslink" in profile
+                 or profile == "deep_edge"]
+        for i, (a, b) in enumerate(major):
+            if a not in self.coords or b not in self.coords:
+                continue
+            for c, d in major[i + 1:]:
+                if c not in self.coords or d not in self.coords:
+                    continue
+                if len({a, b, c, d}) != 4:
+                    continue
+                self.assertFalse(
+                    cross(self.coords[a], self.coords[b],
+                          self.coords[c], self.coords[d]),
+                    f"Campaign route lines cross: {a}-{b} and {c}-{d}")
 
     def test_factorio_compass_cardinal_directions(self):
         # The exact PlanetsLib get_rectangular_position_from_polar equation.
@@ -212,8 +244,8 @@ class ConstellationTests(unittest.TestCase):
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
-        self.assertIn('145,0.12', source)
-        self.assertIn('35,0.10,true', source)
+        self.assertIn('110,0.12', source)
+        self.assertIn('28,0.10,true', source)
         self.assertIn('place(near,pulsar,3,0.25)', source)
         self.assertEqual(source.count("position_expedition()"), 3)
 

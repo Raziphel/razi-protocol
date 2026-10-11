@@ -22,20 +22,25 @@ chapters advancing upward to Deep Space and Bellicos.
 | Anchor | X | Y |
 | --- | ---: | ---: |
 | Calidus / Nauvis | 0 | 0 |
-| Solaris | 62 | 107.39 |
-| Nyxaris | -62 | 107.39 |
-| Vibrant | 124 | 0 |
-| Vespera | -124 | 0 |
-| Beetlejuice | 62 | -107.39 |
-| Umbra | -62 | -107.39 |
+| Solaris | 52 | 90.07 |
+| Nyxaris | -52 | 90.07 |
+| Vibrant | 104 | 0 |
+| Vespera | -104 | 0 |
+| Beetlejuice | 52 | -90.07 |
+| Umbra | -52 | -90.07 |
 | Required Asteroid Belt inner edge | Shchierbin X | Shchierbin Y - 14 |
 | Required Asteroid Belt outer edge | Shchierbin X | Shchierbin Y - 20 |
-| Deep Space / solar-system-edge | 0 | -248 |
+| Deep Space / solar-system-edge | 0 | -190 |
 
 ## Design rules
 
-- The six star centers share an exact 124-unit radius around Calidus.
-  Star sprites and most native planetary routes remain visually unobstructed.
+- All six star centers share a **104-unit radius**, down from 124
+  (~16% closer to Nauvis). The layout is still a symmetric clockwise-turn
+  hexagon. The absolute starmap width is reduced without scaling planetary
+  orbits, chopping off their labels, or crowding larger optional planets.
+- The widest optional planet rings reach about 51 map units from their stars.
+  A 104-unit adjacent-star separation is intentionally chosen instead of a
+  tighter 90-unit circle, which would overlap the optional orbital rings.
 - Each existing planetary family is rotated in place so its slipstream portal
   points toward the readable campaign route; preserve planet distances from
   their parent stars to avoid crowding labels and sub-planet content.
@@ -65,16 +70,22 @@ chapters advancing upward to Deep Space and Bellicos.
 - Never copy old PlanetsLib orbit sprites into `PlanetsLib:update` calls.
   Preserve *source-owned* special sprites and moon orbits rather than globally
   deleting other mods' artwork.
-- Deep Space is genuinely north of the circular constellation at (0,-248).
-  Shattered Planet stays source-owned with its own local orbit.
-- Bellicos/Aegis branches northeast from Deep Space, independent of the
-  six-star circle. Preserve source art, gate names and every native Aegis
-  connection; guard missing and retyped source prototypes at final fixes.
+- Deep Space sits north at **(0, -190)** instead of (0, -248).
+  Shattered Planet remains source-owned with its local orbit.
+- Bellicos/Aegis remains a **separate northeastern expedition**, but its
+  pulsar/near-orbit anchor now lies only 110 units from Deep Space rather
+  than 145. The entry stargate is 28 units away rather than 35. Keep source
+  art, gate names, travel distance and every native Aegis connection.
+- Do not remove campaign crosslinks just to conceal map lines: early parallel
+  routes, the shared required asteroid crossing at Shchierbin, and both outer
+  routes to Deep Space are intentional. The compact layout reduces the long
+  visual spans without weakening research gates or travel hazards.
 
 ## Verification
 
-- `tests/test_starmap_clarity.py` verifies the common ring radius, exact
-  six-star placement, northern Deep Space, belt integration and stellar clearance.
+- `tests/test_starmap_clarity.py` verifies compact ring radius, exact
+  six-star positions, northern Deep Space, belt integration, stellar clearance,
+  segment crossings, and the minimum room for outer optional planet orbits.
 - `tests/lua/test_galaxy_layout.lua` covers final-stage parent updates,
   native moon persistence and signature rings.
 - `tests/lua/test_asteroid_belt_integration.lua` protects the original

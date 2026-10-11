@@ -32,7 +32,7 @@ prevents earlier per-planet updates from pulling stars back out of alignment.
 The route table itself lives in `prototypes/system/route_reconcile.lua`.
 
 Calidus is the left-hand anchor. Solaris/Nyxaris, Vibrant/Vespera, and
-Beetlejuice/Umbra occupy three evenly spaced upper/lower columns. Deep Space
+Beetlejuice/Umbra occupy three evenly spaced compact radial tiers. Deep Space
 sits beyond the final column. Larger star-to-star orbit circles are hidden to
 keep the starmap clean, while local planetary rings remain visible.
 
@@ -180,3 +180,8 @@ Ferrum's source route from Vulcanus was a local 10,000 km trip. As
 Vulcanus is in Solaris and Ferrum joins Vibrant, Razi scales just that
 cross-star path to **115,000 km**, leaving its original asteroid
 definitions and short local Fulgora connection untouched.
+
+The 2026-10 starmap uses a 104-unit six-star radius (previously 124)
+so most systems fit on screen with substantially less panning. Deep Space
+is north at radius 190; the Aegis/Bellicos annex begins beyond it.
+The mandatory native Asteroid Belt still rings Shchierbin, not Nauvis.
