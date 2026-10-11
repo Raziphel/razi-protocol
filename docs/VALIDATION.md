@@ -201,3 +201,12 @@ introduce conflicting deep science-pack costs or new endgame definitions.
 Review Wit space-science availability, the Balack promethium science
 requirement, Shattered Planet redefinitions, Ferrum choice-driven research,
 Hephaestus shortcuts and Arkanyx's Voidcraft requirement before shipping.
+
+## Community industry sources and tests
+
+`lua5.2 tests/lua/test_community_industry_exchanges.lua` validates the
+post-load optional Ferrum, Wit and Balack alternatives. It checks actual
+native recipe quantities, independent late tech prerequisites, missing mods,
+suppliers and machines, original recipe preservation, disabled optional
+settings, and repeat-run stability. This is a synthetic prototype fixture,
+not a complete live Factorio 2.1 startup and playtest.

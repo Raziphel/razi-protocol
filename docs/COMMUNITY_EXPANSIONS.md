@@ -114,3 +114,48 @@ repositories include:
 
 All installed mod-specific art, recipes, resource tables and sound
 files remain owned by their respective mods; none is copied into Razi.
+
+## Community industrial integration: Ferrum, Wit and Balack
+
+The next production pass adds **three more modded-world-to-modded-world
+manufacturing bridges**, independent of the earlier seven new exchanges.
+They are gated alternate recipes, not modifications to the original mods.
+
+| Factory | Exports shipped to the factory | Native process still required | New output |
+| --- | --- | --- | --- |
+| **Ferrum** | 3 Linox rare-earth powders, 4 Moshine optical cables | 15 Ferrum rare-earth oxide, 30 electrolyte, 60 molten iron across three native magnet batches | **4 Ferrum rare-earth magnets** rather than 3 |
+| **Wit** | 4 Ferrum magnets, 4 Linox rare-earth powders, 4 Moshine optical cables | Four complete native advanced-accumulator batches, including **400 supercapacitors and 200 mixed-gas cells** | **5 advanced accumulators** rather than 4 |
+| **Balack** | 2 Rubia craptonite frames, 2 Tenebris chitosan | Two native bio-cube shielding batches, including **2 promethium asteroid chunks and 20 heavy oil** | **12 radiation shielding** rather than 10 |
+
+This deliberately keeps Ferrum's branching remote robotics, Wit's
+helium/early-space-science/asteroid-collector bootstrap, and Balack's
+promethium and pollutant-producing factory untouched. The bridge from
+Wit uses its **late** accumulator recipe, not the early space-science
+recipe; Balack's radiation shielding still requires its own promethium
+research. All three use source-appropriate crafting categories and are
+skipped when the destination machine has insufficient fluid ports.
+
+A new recipe requires the exact source mod, its source recipe and research
+unlock, *every* imported material's native producer recipe and unlock,
+all destination and exporter world discovery techs, and available
+Vibrant/Vespera tech cards in at least one real lab. No optional item
+appears in mandatory Razi science or discovery tech. The variants do not
+support productivity, auto recycling, or recursive self-catalysis and
+take **30% longer per native production batch**; the output premiums of
+20–33% are therefore not automatically better than optimized vanilla
+factories. They are intended to reward players who already operate
+the relevant planets.
+
+Source files inspected:
+- `benlaflen/planet-ferrum/prototypes/rare-earth.lua` and
+  `prototypes/techs.lua`
+- `bradythehuman/Biological-Machines/biological-machines-planet-wit/
+  prototypes/recipes.lua` and `prototypes/technologies.lua`
+- `bradythehuman/Biological-Machines/biological-machines-planet-balack/
+  prototypes/recipes.lua` and `prototypes/technologies.lua`
+
+The `tests/lua/test_community_industry_exchanges.lua` fixture verifies
+native resource costs, bonuses, original recipe preservation, late
+research unlocks, optional mod absence, missing supplier materials,
+source machine fluid ports and the existing mod-settings toggle.
+Factorio 2.1 full-modpack validation remains necessary.
