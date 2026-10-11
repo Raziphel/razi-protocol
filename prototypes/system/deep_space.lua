@@ -23,8 +23,8 @@ if space_location_exists("shattered-planet") and space_location_exists("solar-sy
 				type = "space-location",
 				name = "solar-system-edge",
 			},
-			distance = 46,
-			orientation = 0.0,
+			distance = 39,
+			orientation = 0.30,
 		},
 	})
 end
