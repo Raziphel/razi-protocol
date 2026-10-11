@@ -11,15 +11,15 @@ local route_icons = require("prototypes.system.route_icons")
 -- Gleba connection, as well as its special bunnyhop/rocket limitations.
 local additions = {
 	{"Igrys", "igrys", "solaris", "sye-solaris", "solaris-discovery",
-		37, 0.88, 17000},
+		29, 0.92, 17000},
 	{"foliax", "foliax", "nyxaris", "sye-nyxaris", "nyxaris-discovery",
-		39, 0.46, 18500},
+		30, 0.36, 18500},
 	{"obsidiax", "obsidiax", "vespera", "sye-vespera", "vespera-discovery",
-		43, 0.58, 21000},
+		35, 0.45, 21000},
 	{"carna", "carna", "umbra", "sye-umbra", "umbra-discovery",
-		43, 0.59, 20500},
+		32, 0.20, 20500},
 	{"PlanetAthos", "athos", "solaris", "sye-solaris", "solaris-discovery",
-		42, 0.97, 19000},
+		31, 0.03, 19000},
 	{"planet-rabbasca", "rabbasca", "nyxaris", "gleba",
 		"planet-discovery-gleba", nil, nil, 13000}
 }
