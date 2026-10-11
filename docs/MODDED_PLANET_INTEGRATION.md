@@ -63,3 +63,11 @@ and source-missing guards. This does not establish complete modpack
 playability. Run Factorio 2.1 with every required mod and confirm actual
 ingredient production, native research, surface pressure, machine crafting,
 and comparative cargo cost before balancing further.
+
+### Ferrum, Wit and Balack
+
+An additional guarded catalog expands the optional production network with
+Ferrum rare-earth magnets, Wit's expensive late-stage accumulators, and
+Balack radiation shielding. Original early space science and specialized
+factory restrictions remain unchanged. See
+[Community Expansions](COMMUNITY_EXPANSIONS.md#community-industrial-integration-ferrum-wit-and-balack).

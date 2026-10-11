@@ -113,3 +113,7 @@ require("prototypes.compat.planet_production_exchanges").data_final_fixes()
 -- Additional cross-mod industrial exchanges use their source mods' true
 -- producer research and preserve specialist surface/crafting restrictions.
 require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
+
+-- Source-derived optional high-end exchanges for Ferrum, Wit and Balack.
+-- Native recipes and science production are never rewritten.
+require("prototypes.compat.community_industry_exchanges").data_final_fixes()
