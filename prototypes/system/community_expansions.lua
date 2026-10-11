@@ -143,6 +143,21 @@ local function attach(config)
   }})
 end
 
+local function calibrate_ferrum_star_link()
+  local routes = data.raw["space-connection"] or {}
+  for _, connection in pairs(routes) do
+    if (connection.from == "vulcanus" and connection.to == "ferrum")
+      or (connection.from == "ferrum" and connection.to == "vulcanus") then
+      -- This is now a Solaris-to-Vibrant journey, not a 10,000 km local
+      -- hop. Preserve the original connection identity and its custom
+      -- asteroid encounter definitions; update only the physical length.
+      if connection.length and connection.length < 95000 then
+        connection.length = 115000
+      end
+    end
+  end
+end
+
 local function integrate(config)
   if not mods[config.mod] or not (data.raw.planet or {})[config.name] then
     return
@@ -161,6 +176,7 @@ local function integrate(config)
     }})
   end
   gate_unlock(config.name,config.gate)
+  if config.name == "ferrum" then calibrate_ferrum_star_link() end
   if not config.moon and not config.preserve_routes then
     prune_known_bypass(config.name,config.system)
   end
