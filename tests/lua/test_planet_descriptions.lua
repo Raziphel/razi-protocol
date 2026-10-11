@@ -64,7 +64,7 @@ rawset(_G, "settings", {startup={
 descriptions.data_final_fixes()
 check(planet.muluna.localised_description == "Original lunar expedition text",
   "Disabled expedition briefings still overwrite planet descriptions")
-settings.startup["razi-enable-expedition-briefings"].value = true
+rawset(settings.startup["razi-enable-expedition-briefings"], "value", true)
 descriptions.data_final_fixes()
 check_context(planet.muluna, "calidus", "muluna")
 rawset(_G, "settings", nil)

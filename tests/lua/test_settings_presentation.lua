@@ -34,8 +34,8 @@ check(number == #expected, "Settings should be real controls, not dummy headings
 local previous_order = ""
 for _, spec in ipairs(expected) do
   local name, order, color = spec[1], spec[2], spec[3]
-  local setting = definitions[name]
-  check(setting and setting.type == "bool-setting", "Missing boolean: " .. name)
+  local setting = assert(definitions[name], "Missing setting: " .. name)
+  check(setting.type == "bool-setting", "Not a boolean: " .. name)
   check(setting.setting_type == "startup", "Startup mode changed: " .. name)
   check(setting.default_value == true, "Existing behavior no longer default: " .. name)
   check(setting.order == order and order > previous_order,
@@ -57,10 +57,11 @@ for _, spec in ipairs(expected) do
         matching_name = line:sub(#name + 2)
       end
     end
-    check(matching_name and matching_name:find(
-      "[color=" .. color .. "][font=heading-2]", 1, true),
+    check(matching_name, "Missing translated setting label: " .. name)
+    local label = tostring(matching_name)
+    check(label:find("[color=" .. color .. "][font=heading-2]", 1, true),
       "Missing matching color and large heading: " .. language .. " " .. name)
-    check(matching_name:find("[/font][/color] ", 1, true),
+    check(label:find("[/font][/color] ", 1, true),
       "Heading not closed before setting label: " .. name)
     local description = raw:match("%[mod%-setting%-description%]%s*(.*)")
     check(description and ("\n" .. description):find("\n" .. name .. "=", 1, true),
