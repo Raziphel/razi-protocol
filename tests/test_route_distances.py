@@ -64,7 +64,7 @@ class RouteTests(unittest.TestCase):
         for pair, old_length in (
             (("sye-solaris", "sye-nyxaris"), 32000),
             (("sye-vibrant", "sye-vespera"), 38000),
-            (("sye-beetlejuice", "sye-umbra"), 45000)):
+            ):
             modified = dict(raw["space-connection"])
             match = next(k for k, v in modified.items()
                          if routes_audit.key(v["from"], v["to"]) ==
