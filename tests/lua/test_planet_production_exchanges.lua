@@ -116,6 +116,19 @@ local function setup(options)
   if options.late_native_unlock then
     techs["kr-electronic-components"].prerequisites={"beetlejuice-discovery"}
   end
+  if options.tenebris_style_icon then
+    -- Tenebris chitin-processing uses a 64px icon with no icon_size field.
+    techs["kr-electronic-components"].icon=
+      "__tenebris-prime__/graphics/icons/chitin.png"
+    techs["kr-electronic-components"].icon_size=nil
+  end
+  if options.layered_native_icon then
+    techs["kr-electronic-components"].icon=nil
+    techs["kr-electronic-components"].icon_size=nil
+    techs["kr-electronic-components"].icons={{
+      icon="__base__/graphics/icons/iron-plate.png",icon_size=64
+    }}
+  end
   if options.unavailable_native_unlock then
     techs["kr-electronic-components"].effects={}
   end
@@ -228,6 +241,28 @@ for _, name in ipairs(names) do
   check(full.recipe[name] and full.technology[name],
     "Repeated integration removed or duplicated a recipe")
 end
+
+-- Copying a third-party technology icon must not upscale a 64px image
+-- into a 256px source rectangle (e.g. Tenebris Prime's chitin.png).
+local tenebris, tenebris_module=setup({tenebris_style_icon=true})
+tenebris_module.data_final_fixes()
+local copied_chitin=tenebris.technology["razi-electrobiological-components"]
+check(copied_chitin and copied_chitin.icon==
+  "__tenebris-prime__/graphics/icons/chitin.png",
+  "Exchange research lost its native Tenebris icon")
+check(copied_chitin.icon_size==nil,
+  "Missing native icon_size must retain Factorio's 64px default")
+check(tenebris.technology["kr-electronic-components"].icon_size==nil,
+  "Exchange registration unexpectedly modified source technology icon size")
+
+local layered, layered_module=setup({layered_native_icon=true})
+layered_module.data_final_fixes()
+local copied_layers=layered.technology["razi-electrobiological-components"]
+check(copied_layers and copied_layers.icon==nil and copied_layers.icon_size==nil
+  and copied_layers.icons and copied_layers.icons[1].icon_size==64,
+  "Layered native technology icons must preserve their own image dimensions")
+check(full.technology["razi-electrobiological-components"].icon_size==256,
+  "Explicit 256px technology artwork was not preserved")
 
 local function absent(options, expected)
   local raw, compat=setup(options)
