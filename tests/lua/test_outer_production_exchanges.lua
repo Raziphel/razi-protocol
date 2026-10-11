@@ -143,13 +143,13 @@ local function setup(options)
   return raw,require("prototypes.compat.planet_production_exchanges")
 end
 
-local function product(recipe, wanted)
-  for _, entry in ipairs(recipe.results or {}) do
+local function product(source, wanted)
+  for _, entry in ipairs(source.results or {}) do
     if entry.name==wanted then return entry.amount end
   end
 end
-local function ingredient(recipe, wanted)
-  for _, entry in ipairs(recipe.ingredients or {}) do
+local function ingredient(source, wanted)
+  for _, entry in ipairs(source.ingredients or {}) do
     if entry.name==wanted then return entry.amount end
   end
 end
