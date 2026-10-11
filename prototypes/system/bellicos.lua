@@ -19,36 +19,56 @@ end
 -- Keep the source pulsar's giant artwork and its local Aegis routes in
 -- a compact annex to the RIGHT of Deep Space, not 240 units BELOW it.
 -- Orientations use Factorio turns: east .25, west .75.
+local function endpoint_type(name)
+	if data.raw["space-location"] and data.raw["space-location"][name] then
+		return "space-location"
+	end
+	if data.raw.planet and data.raw.planet[name] then
+		return "planet"
+	end
+	return nil
+end
+
 local function position_expedition()
-	PlanetsLib:update({
-		{
-			type = "space-location", name = "pulsar",
+	-- Source mods can change or remove their optional starmap locations in
+	-- data-updates/data-final-fixes. Never hand an absent prototype to PlanetsLib.
+	local edge_type = endpoint_type("solar-system-edge")
+	if not edge_type then return end
+
+	local updates = {}
+	local function place(name, parent_name, parent_type, distance, orientation,
+		is_gate)
+		local kind = endpoint_type(name)
+		if not kind or not parent_type then return end
+		local update = {
+			type = kind, name = name,
 			orbit = {
-				parent = {type = "space-location", name = "solar-system-edge"},
-				distance = 165, orientation = 0.25
+				parent = {type = parent_type, name = parent_name},
+				distance = distance, orientation = orientation
 			},
 			draw_orbit = false
-		},
-		{
-			type = "space-location", name = entry_gate,
-			distance = nil, orientation = nil,
-			orbit = {
-				parent = {type = "space-location", name = "solar-system-edge"},
-				distance = 36, orientation = 0.25
-			},
-			draw_orbit = false,
-			redrawn_connections_exclude = true
-		},
-		{
-			type = "space-location", name = bellicos_gate,
-			orbit = {
-				parent = {type = "space-location", name = "pulsar"},
-				distance = 62, orientation = 0.75
-			},
-			draw_orbit = false,
-			redrawn_connections_exclude = true
 		}
-	})
+		if is_gate then
+			update.redrawn_connections_exclude = true
+		end
+		updates[#updates + 1] = update
+	end
+
+	-- The pulsar may be a differently typed location, or have been removed
+	-- by an upstream compatibility pass. Both cases must remain load-safe.
+	local pulsar_type = endpoint_type("pulsar")
+	if pulsar_type then
+		place("pulsar", "solar-system-edge", edge_type, 165, 0.25, false)
+	end
+	place(entry_gate, "solar-system-edge", edge_type, 36, 0.25, true)
+	if pulsar_type then
+		place(bellicos_gate, "pulsar", pulsar_type, 62, 0.75, true)
+	else
+		-- Without the source pulsar prototype, place the gate in the same
+		-- annex rather than creating an orbit whose parent cannot resolve.
+		place(bellicos_gate, "solar-system-edge", edge_type, 103, 0.25, true)
+	end
+	if #updates > 0 then PlanetsLib:update(updates) end
 end
 
 function bellicos.data()
@@ -59,6 +79,12 @@ function bellicos.data()
 	position_expedition()
 	remove_stock_entry_routes()
 	deleteRoute(deep_space_entry_route)
+
+	-- When a different Aegis version omits the gateway, do not register a
+	-- space connection with nonexistent endpoints.
+	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then
+		return
+	end
 
 	data:extend({
 		{
