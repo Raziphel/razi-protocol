@@ -20,7 +20,11 @@ def parse_layout():
     for name, distance, orientation in re.findall(
             r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
             belt_source):
-        result[name] = ("shchierbin", float(distance), float(orientation))
+        star_r, star_t = result["vibrant"][1:]
+        x = star_r * math.sin(math.tau * star_t) + float(distance) * math.sin(math.tau * float(orientation))
+        y = -star_r * math.cos(math.tau * star_t) - float(distance) * math.cos(math.tau * float(orientation))
+        result[name] = ("star", math.hypot(x, y),
+                        math.atan2(x, -y) / math.tau % 1)
     return result
 
 
@@ -155,8 +159,12 @@ class ConstellationTests(unittest.TestCase):
             for star in STARS:
                 gap = segment_clearance(
                     self.coords[star], self.coords[a], self.coords[b])
+                # Sun-belt arrival deliberately ends 14 units from Vibrant.
+                tolerance = 13.5 if {a,b} == {
+                    "shchierbin", "asteroid-belt-inner-edge"
+                } and star=="vibrant" else 15
                 self.assertGreaterEqual(
-                    gap, 15,
+                    gap, tolerance,
                     f"{a}->{b} cuts through {star}: {gap:.1f} units")
 
     def test_local_routes_have_no_geometric_crossovers(self):
@@ -183,64 +191,30 @@ class ConstellationTests(unittest.TestCase):
                                                        self.coords[b]), 10,
                                             f"{a} overlaps {b}")
 
-    def test_original_mod_belt_is_the_middle_to_outer_bridge(self):
-        edges = {tuple(sorted((a, b))) for a, b, _, _ in self.routes}
-        forbidden = (
-            ("sye-vibrant", "sye-beetlejuice"),
-            ("sye-vespera", "sye-umbra"),
-            ("sye-vibrant", "sye-vespera"),
-            ("sye-beetlejuice", "sye-umbra"),
-            ("sye-solaris", "sye-vespera"),
-            ("sye-nyxaris", "sye-vibrant")
-        )
-        for a, b in forbidden:
-            self.assertNotIn(tuple(sorted((a, b))), edges)
-        for a, b in (
-            ("shchierbin", "asteroid-belt-inner-edge"),
-            ("maraxsis", "asteroid-belt-inner-edge"),
-            ("asteroid-belt-outer-edge", "sye-beetlejuice"),
-            ("asteroid-belt-outer-edge", "sye-umbra")
-        ):
-            self.assertIn(tuple(sorted((a, b))), edges)
+    def test_homeward_spokes_and_native_belt(self):
+        edges = {tuple(sorted((a,b))) for a,b,_,_ in self.routes}
+        for star in STARS:
+            self.assertIn(tuple(sorted(("sye-calidus","sye-"+star))), edges)
+        for a,b in (("maraxsis","asteroid-belt-inner-edge"),
+                    ("asteroid-belt-outer-edge","sye-umbra"),
+                    ("sye-solaris","sye-vibrant"),
+                    ("sye-nyxaris","sye-vespera")):
+            self.assertNotIn(tuple(sorted((a,b))),edges)
+        for a,b in (("shchierbin","asteroid-belt-inner-edge"),
+                    ("asteroid-belt-outer-edge","sye-beetlejuice")):
+            self.assertIn(tuple(sorted((a,b))),edges)
+        for side,r in (("inner",14),("outer",20)):
+            self.assertAlmostEqual(
+                math.dist(self.coords[f"asteroid-belt-{side}-edge"],
+                          self.coords["vibrant"]),r,places=3)
+        self.assertNotIn(tuple(sorted(("asteroid-belt-inner-edge",
+                                      "asteroid-belt-outer-edge"))),edges)
 
-        # The crossing itself belongs to AsteroidBelt, not Razi Protocol.
-        neighbors = defaultdict(set)
-        for a, b, _, _ in self.routes:
-            neighbors[a].add(b)
-            neighbors[b].add(a)
-        native = ("asteroid-belt-inner-edge", "asteroid-belt-outer-edge")
-        neighbors[native[0]].add(native[1])
-        neighbors[native[1]].add(native[0])
-        reachable = {"sye-calidus"}
-        queue = deque(reachable)
-        while queue:
-            for n in neighbors[queue.popleft()]:
-                if n not in reachable:
-                    reachable.add(n)
-                    queue.append(n)
-        self.assertTrue({"sye-beetlejuice", "sye-umbra",
-                         "solar-system-edge"}.issubset(reachable))
-        self.assertAlmostEqual(
-            math.dist(self.coords[native[0]], self.coords["shchierbin"]),
-            14, places=3)
-        self.assertAlmostEqual(
-            math.dist(self.coords[native[1]], self.coords["shchierbin"]),
-            20, places=3)
-        self.assertGreater(
-            math.dist(self.coords[native[0]], (0, 0)), 100,
-            "Native asteroid gateways must not sit in the Nauvis system")
-
-    def test_shchierbin_belt_clearance(self):
-        # At scale 0.55 the source sprite occupies roughly 16-17 map
-        # units around Shchierbin; the nearest other planet stays outside.
-        host = self.coords["shchierbin"]
-        for name, (parent, _, _) in self.anchors.items():
-            if name in {"shchierbin", "asteroid-belt-inner-edge",
-                        "asteroid-belt-outer-edge"}:
-                continue
-            self.assertGreater(
-                math.dist(self.coords[name], host), 22,
-                f"Shchierbin's asteroid ring overlaps {name}")
+    def test_vibrant_sun_belt_clearance(self):
+        for n,(parent,_,_) in self.anchors.items():
+            if parent=="vibrant":
+                self.assertGreater(math.dist(self.coords[n],
+                                             self.coords["vibrant"]),22)
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()

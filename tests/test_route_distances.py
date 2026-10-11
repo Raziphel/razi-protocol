@@ -40,9 +40,14 @@ def world():
     for name, distance, turn in re.findall(
             r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
             source):
+        parent=raw["space-location"]["vibrant"]["orbit"]
+        import math
+        x=float(parent["distance"])*math.sin(math.tau*float(parent["orientation"]))+float(distance)*math.sin(math.tau*float(turn))
+        y=-float(parent["distance"])*math.cos(math.tau*float(parent["orientation"]))-float(distance)*math.cos(math.tau*float(turn))
         raw["space-location"][name] = {
-            "orbit": {"parent": {"name": "shchierbin"},
-                      "distance": float(distance), "orientation": float(turn)}
+            "orbit": {"parent": {"name": "star"},
+                      "distance": math.hypot(x,y),
+                      "orientation": math.atan2(x,-y)/math.tau%1}
         }
     for a, b, length, kind in route_manifest():
         raw["space-connection"][f"link-{a}-{b}"] = {
@@ -63,8 +68,8 @@ class RouteTests(unittest.TestCase):
     def test_old_underpriced_paired_stars_are_detected(self):
         raw = world()
         for pair, old_length in (
-            (("sye-solaris", "sye-nyxaris"), 32000),
-            (("sye-solaris", "sye-vibrant"), 38000),
+            (("sye-calidus", "sye-vibrant"), 30000),
+            (("sye-calidus", "sye-beetlejuice"), 40000),
         ):
             modified = dict(raw["space-connection"])
             match = next(k for k, v in modified.items()
@@ -104,7 +109,7 @@ class RouteTests(unittest.TestCase):
     def test_geometric_angle_sign_and_parent_position(self):
         raw = world()
         coords = routes_audit.positions(raw)
-        # Calidus remains clear; the source belt encircles Shchierbin.
+        # Calidus remains clear; the source belt encircles Vibrant's sun.
         self.assertGreater(coords["sye-solaris"][1], 60)
         self.assertGreater(coords["sye-nyxaris"][1], 55)
         self.assertGreater(coords["sye-vibrant"][0], 70)
@@ -113,7 +118,7 @@ class RouteTests(unittest.TestCase):
         self.assertLess(coords["sye-umbra"][1], -60)
         self.assertAlmostEqual(
             __import__("math").dist(coords["asteroid-belt-inner-edge"],
-                                    coords["shchierbin"]), 14,
+                                    coords["vibrant"]), 14,
             places=3)
         self.assertGreater(coords["asteroid-belt-inner-edge"][0], 100)
         self.assertLess(coords["solar-system-edge"][1], -185)

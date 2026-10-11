@@ -27,8 +27,8 @@ local membership = {
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
 	frozeta = "beetlejuice",
-	-- The required upstream AsteroidBelt is the sole bridge between
-	-- middle and outer chapters; retain its native hard central crossing.
+	-- The required upstream AsteroidBelt remains a science gate for both
+	-- outer discoveries; new Calidus spokes retain the original tech gates.
 	["asteroid-belt-inner-edge"] = "mid-outer-belt",
 	["asteroid-belt-outer-edge"] = "mid-outer-belt",
 	["sye-umbra"] = "umbra", tenebris = "umbra",
@@ -39,31 +39,18 @@ local membership = {
 }
 
 local route_specifications = {
-	-- The local Nauvis launch corridor stays comparatively forgiving.
-	{"nauvis", "sye-calidus", 25000, "starter"},
-	-- Parallel chapter entrances and neighbor-system crosslinks.
-	{"sye-calidus", "sye-solaris", 60000, "first_crossing"},
-	{"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
-	{"sye-solaris", "sye-nyxaris", 88000, "frontier_crosslink"},
-	{"sye-solaris", "sye-vibrant", 95000, "middle_crossing"},
-	{"sye-nyxaris", "sye-vespera", 95000, "middle_crossing"},
-	-- First and middle systems have clear inter-branch rungs. Outer systems
-	-- share the upstream belt gateway instead of drawing one more crossing.
-	-- Cross-tier diagonals were removed to avoid the old starmap mesh.
-	-- The central crosslink was visually cutting straight through the shared
-	-- belt gateway. Both branches reconnect through the mandatory native belt.
-	-- Required Shchierbin-centered asteroid ring is a shared third-chapter
-	-- crossing. Both branches still enter the SAME native 5,000 km hazard route.
-	-- Vespera's approach crosses farther around the circle, so its flight
-	-- distance is longer. The actual native belt danger is unchanged.
-	-- Reach the belt from the END of each local midgame route, not from
-	-- the slipstream: those direct diagonals passed through both star sprites.
-	{"shchierbin", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
-	{"maraxsis", "asteroid-belt-inner-edge", 90000, "middle_crossing"},
-	{"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
-	{"asteroid-belt-outer-edge", "sye-umbra", 70000, "outer_crossing"},
-	-- The two outer systems already connect through the shared source belt
-	-- outer edge. Their direct rung would run across that marker itself.
+  -- Research unlocks each destination hub. A visible spoke is not early access.
+  {"nauvis", "sye-calidus", 25000, "starter"},
+  {"sye-calidus", "sye-solaris", 60000, "first_crossing"},
+  {"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
+  {"sye-calidus", "sye-vibrant", 110000, "middle_crossing"},
+  {"sye-calidus", "sye-vespera", 110000, "middle_crossing"},
+  {"sye-calidus", "sye-beetlejuice", 175000, "outer_crossing"},
+  {"sye-calidus", "sye-umbra", 175000, "outer_crossing"},
+  -- Source-owned 5000 km belt crossing on Vibrant's sun. No map-spanning
+  -- routes from Maraxsis or from the outer edge to distant Umbra.
+  {"shchierbin", "asteroid-belt-inner-edge", 48000, "chemistry_deep"},
+  {"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
 	{"sye-solaris", "castra", 21000, "industrial"},

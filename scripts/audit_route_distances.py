@@ -13,16 +13,18 @@ import math
 from collections import defaultdict
 from pathlib import Path
 
-STAR_PAIRS = (
-    ("sye-solaris", "sye-nyxaris"),
+HOMEWARD_SPOKES = (
+    ("sye-calidus", "sye-solaris"),
+    ("sye-calidus", "sye-nyxaris"),
+    ("sye-calidus", "sye-vibrant"),
+    ("sye-calidus", "sye-vespera"),
+    ("sye-calidus", "sye-beetlejuice"),
+    ("sye-calidus", "sye-umbra"),
 )
 STAR_STAGES = (
-    (("sye-calidus", "sye-solaris"), ("sye-calidus", "sye-nyxaris")),
-    (("sye-solaris", "sye-vibrant"), ("sye-nyxaris", "sye-vespera")),
-    (("shchierbin", "asteroid-belt-inner-edge"),
-     ("maraxsis", "asteroid-belt-inner-edge")),
-    (("asteroid-belt-outer-edge", "sye-beetlejuice"),
-     ("asteroid-belt-outer-edge", "sye-umbra")),
+    HOMEWARD_SPOKES[:2],
+    HOMEWARD_SPOKES[2:4],
+    HOMEWARD_SPOKES[4:],
 )
 DEEP_EDGES = (
     ("secretas", "solar-system-edge"),
@@ -45,15 +47,16 @@ def key(a, b):
 # Kilometres and display coordinates are independent. Enforce deliberate
 # minimum travel times instead of requiring a fixed km/visual-unit scale.
 MIN_LENGTHS = {
-    key("sye-solaris", "sye-nyxaris"): 60000,
+    key("sye-calidus", "sye-solaris"): 45000,
+    key("sye-calidus", "sye-nyxaris"): 45000,
+    key("sye-calidus", "sye-vibrant"): 85000,
+    key("sye-calidus", "sye-vespera"): 85000,
+    key("sye-calidus", "sye-beetlejuice"): 145000,
+    key("sye-calidus", "sye-umbra"): 145000,
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
-    key("sye-solaris", "sye-vibrant"): 65000,
-    key("sye-nyxaris", "sye-vespera"): 65000,
     key("shchierbin", "asteroid-belt-inner-edge"): 32000,
-    key("maraxsis", "asteroid-belt-inner-edge"): 86000,
     key("asteroid-belt-outer-edge", "sye-beetlejuice"): 42000,
-    key("asteroid-belt-outer-edge", "sye-umbra"): 68000,
 }
 
 def positions(raw):
@@ -99,8 +102,10 @@ def audit(raw):
         if key(a, b) in links:
             issues.add(f"Unsafe belt bypass remains: {a} -> {b}")
 
-    for a, b in STAR_PAIRS + tuple(
-            route for stage in STAR_STAGES for route in stage) + DEEP_EDGES:
+    for a, b in HOMEWARD_SPOKES + (
+            ("shchierbin", "asteroid-belt-inner-edge"),
+            ("asteroid-belt-outer-edge", "sye-beetlejuice")
+        ) + DEEP_EDGES:
         match = links.get(key(a, b))
         if not match:
             continue  # Some star or planet prototypes are optional.
@@ -126,32 +131,17 @@ def audit(raw):
             issues.add(f"Disproportionate interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
 
-    stages = []
-    for section in STAR_STAGES:
-        values = [links[key(a, b)][0][1].get("length")
-                  for a, b in section if key(a, b) in links]
-        if values and all(isinstance(n, (int, float)) for n in values):
-            stages.append(min(values))
-    # The distant Vespera approach takes longer than Vibrant's local
-    # Shchierbin approach, but both lead through the same hard source belt.
-    if len(stages) == len(STAR_STAGES):
-        if stages[1] < stages[0]:
-            issues.add("Middle chapter crossings are cheaper than first chapter")
-        if stages[3] < stages[2]:
-            issues.add("Outer belt exits are cheaper than their approaches")
-
-    for i, pair in enumerate(STAR_PAIRS):
-        match = links.get(key(*pair))
-        if not match:
-            continue
-        length = match[0][1].get("length")
-        stage = STAR_STAGES[i]
-        crossings = [links[key(a, b)][0][1].get("length")
-                     for a, b in stage if key(a, b) in links]
-        if (crossings and isinstance(length, (int, float))
-                and all(isinstance(x, (int, float)) for x in crossings)
-                and length < 0.7 * min(crossings)):
-            issues.add(f"Paired stars are implausibly cheap: {pair[0]} <-> {pair[1]}")
+    # Stage research gates unlock the visible spokes. Ensure tier travel
+    # costs increase even when the visual chart is geometrically compact.
+    stage_costs = []
+    for stage in STAR_STAGES:
+        values = [links[key(a,b)][0][1].get("length")
+                  for a,b in stage if key(a,b) in links]
+        if values and all(isinstance(n,(int,float)) for n in values):
+            stage_costs.append(min(values))
+    if len(stage_costs)==3 and not (
+            stage_costs[0]<stage_costs[1]<stage_costs[2]):
+        issues.add("Direct Calidus routes violate escalating tier costs")
     return sorted(issues)
 
 def main():
