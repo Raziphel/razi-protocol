@@ -45,13 +45,14 @@ for _, pair in ipairs({
 }) do
   local ax,ay=position(pair[1])
   local bx,by=position(pair[2])
-  check(ax>last_x+80,"Systems overlap between stages")
+  check(ax>last_x+72,"Compact systems still need distinct star columns")
   check(math.abs(ax-bx)<5,"Parallel pair not aligned")
   check(ay < -35 and by > 35,"Star pairs must be above/below center")
   last_x=ax
 end
 local edge_x,edge_y=position("solar-system-edge")
-check(edge_x>last_x+80 and math.abs(edge_y)<5,"Deep Space not at far right")
+check(edge_x>last_x+90 and edge_x<370 and math.abs(edge_y)<5,
+  "Deep Space should finish the compact right-hand frontier")
 for _, name in ipairs({
   "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
 }) do
@@ -59,6 +60,13 @@ for _, name in ipairs({
   check(places[name].draw_orbit==false,"Giant star orbit obscures map")
 end
 check(places["sye-calidus"].orbit.parent.name=="star","Calidus departure misparented")
+for _, name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
+  "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
+  "paracelsin","shchierbin","muria","aquilo","rubia","maraxsis",
+  "cubium","linox-planet_linox","tenebris","vesta"}) do
+  check(planets[name].draw_orbit==false,
+    "A crowded star-centered orbital ring survived: "..name)
+end
 check(planets.rabbasca.orbit==moon,"Rabbasca lost its Gleba moon parent")
 layout.data_final_fixes()
 check(planets.rabbasca.orbit==moon,"Repeated layout damaged native moon")
