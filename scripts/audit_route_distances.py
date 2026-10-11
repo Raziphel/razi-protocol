@@ -98,7 +98,7 @@ def audit(raw):
         if span < 1:
             continue
         density = length / span
-        if density < 600:
+        if density < 750:
             issues.add(f"Too-short interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
         if density > 3000:
