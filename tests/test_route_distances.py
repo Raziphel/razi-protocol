@@ -28,28 +28,28 @@ def world():
     # The actual core star-map anchors from galaxy_layout.lua.
     stars = {
         "sye-calidus": ("star", 32, .25),
-        "solaris": ("star", 124, .182),
-        "nyxaris": ("star", 124, .318),
-        "vibrant": ("star", 242, .216),
-        "vespera": ("star", 242, .284),
-        "beetlejuice": ("star", 363, .224),
-        "umbra": ("star", 363, .276),
+        "solaris": ("star", 140, .173),
+        "nyxaris": ("star", 140, .327),
+        "vibrant": ("star", 251, .208),
+        "vespera": ("star", 251, .292),
+        "beetlejuice": ("star", 369, .222),
+        "umbra": ("star", 369, .278),
         "solar-system-edge": ("star", 485, .25),
-        "sye-solaris": ("solaris", 39, .76),
-        "sye-nyxaris": ("nyxaris", 39, .74),
-        "sye-vibrant": ("vibrant", 38, .76),
-        "sye-vespera": ("vespera", 38, .74),
-        "sye-beetlejuice": ("beetlejuice", 38, .76),
-        "sye-umbra": ("umbra", 38, .74),
-        "secretas": ("beetlejuice", 26, .50),
+        "sye-solaris": ("solaris", 50, .82),
+        "sye-nyxaris": ("nyxaris", 50, .82),
+        "sye-vibrant": ("vibrant", 50, .82),
+        "sye-vespera": ("vespera", 50, .82),
+        "sye-beetlejuice": ("beetlejuice", 50, .82),
+        "sye-umbra": ("umbra", 50, .82),
+        "secretas": ("beetlejuice", 34, .50),
     }
     for name, (parent, distance, angle) in stars.items():
         raw["space-location"][name] = {
             "orbit": {"parent": {"name": parent}, "distance": distance,
                       "orientation": angle}}
     raw["planet"]["vesta"] = {
-        "orbit": {"parent": {"name": "umbra"}, "distance": 32,
-                  "orientation": .60}}
+        "orbit": {"parent": {"name": "umbra"}, "distance": 37,
+                  "orientation": .37}}
     for a, b, length, kind in route_manifest():
         raw["space-connection"][f"link-{a}-{b}"] = {
             "from": a, "to": b, "length": length}
