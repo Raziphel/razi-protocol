@@ -167,7 +167,7 @@ local function test_routes()
       check(found, "Retired native route lost a modded asteroid resource")
     end
 	-- Diagonal cross-tier links made the sky map a mesh of crossed lines.
-	-- The two parallel lanes and three same-tier rungs provide connectivity.
+	-- The two branching lanes and native belt gateway provide connectivity.
 	for _, pair in ipairs({
 		{"sye-solaris","sye-vespera"},
 		{"sye-nyxaris","sye-vibrant"},
