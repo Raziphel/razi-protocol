@@ -47,10 +47,12 @@ for _,entry in ipairs({inner,outer}) do
 end
 local x1,y1=native_xy(inner)
 local x2,y2=native_xy(outer)
-check(math.abs(x1-cx)<.01 and math.abs(x2-cx)<.01 and
-  math.abs(y1-cy+14)<.01 and math.abs(y2-cy+20)<.01,
+check(math.abs(x1-(cx+31*math.sin(.17*2*math.pi)))<.01 and
+  math.abs(x2-(cx+39*math.sin(.17*2*math.pi)))<.01 and
+  math.abs(y1-(cy-31*math.cos(.17*2*math.pi)))<.01 and
+  math.abs(y2-(cy-39*math.cos(.17*2*math.pi)))<.01,
   "Source belt entry and exit not placed at Vibrant north rim")
-check(layers[2].filename==src and layers[2].scale==.55 and
+check(layers[2].filename==src and layers[2].scale==1.12 and
   math.abs(layers[2].shift[1]-cx*32)<.01 and
   math.abs(layers[2].shift[2]-cy*32)<.01,
   "Source bitmap did not center on Vibrant sun")

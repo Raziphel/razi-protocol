@@ -8,15 +8,14 @@ local M = {}
 
 local HOST = "vibrant"
 local SOURCE_SPRITE = "__AsteroidBelt__/graphics/sprite/asteroid-belt.png"
-local RING_SCALE = 0.55
+local RING_SCALE = 1.12
 local STARMAP_PIXELS_PER_UNIT = 32
 
 local coords = {
-  -- Radial crossing through the northern asteroid band around Vibrant's sun.
-  -- Inner edge is just inside the debris; outer edge is just outside.
-  -- Both use the native Factorio orientation zero (north).
-  {"asteroid-belt-inner-edge",14,0},
-  {"asteroid-belt-outer-edge",20,0}
+  -- Crossing follows a north-east radial corridor at 0.17 turns.
+  -- Fulgora/Ribbonia are inside; Shchierbin/Paracelsin are outside.
+  {"asteroid-belt-inner-edge",31,0.17},
+  {"asteroid-belt-outer-edge",39,0.17}
 }
 
 local function get_location(name)

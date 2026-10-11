@@ -22,13 +22,22 @@ receive a defensive clamp for vanilla stationary asteroid spawns.
 An asteroid size blocked by the tier has zero vanilla spawn probability.
 No absent asteroid species is automatically created on ordinary routes.
 
-## Two actual belt crossings
+## Three actual belt crossings
 
-Inspired by [Lumme's Asteroid Belt](https://mods.factorio.com/mod/AsteroidBelt),
-but implemented independently for Razi's multi-star layout. We did **not**
-add the original `AsteroidBelt` mod as a dependency because its default
-single-solar-system rearrangement would conflict with our seven systems.
-No source-mod graphics or scripts were copied.
+The original [MrLumme AsteroidBelt](https://mods.factorio.com/mod/AsteroidBelt)
+is REQUIRED. Its native 5,000 km crossing, asteroid hazards, resources,
+tech and original graphic stay source-owned. Razi adds two more custom
+debris-belt encounters in Vespera and Umbra.
+
+### Vibrant: Required Native Crossing
+
+    Fulgora / Ribbonia -> INNER EDGE ==> ORIGINAL BELT ==> OUTER EDGE -> Shchierbin / Paracelsin / Beetlejuice
+
+The graphic circles Vibrant at 1.12 scale, gateways at 31/39 map units.
+Frozen Paracelsin and Shchierbin are beyond its perimeter, with their
+tech progression requiring the belt. No direct Vibrant→Beetlejuice or
+Ribbonia→Paracelsin route can bypass it. We never regenerate
+the original native crossing or its custom asteroid resources.
 
 ### Vespera: The Debris Divide
 
@@ -55,7 +64,7 @@ No source-mod graphics or scripts were copied.
 * Direct Crucible-Orbit-to-Vesta shortcuts are removed, preserving any unique
   custom asteroid species from the retired route.
 
-Both belts are **real named space locations and actual route segments**, not
+Both Razi-created belts are **real named space locations and actual route segments**, not
 a cosmetic hazard modifier on an existing direct route. The map uses safe
 built-in placeholder icons for the four rims. Unique debris-ring starmap art
 can follow once the orbital layout is verified in-game.
@@ -73,7 +82,7 @@ can follow once the orbital layout is verified in-game.
   already defines those vanilla asteroid prototypes**.
 * Native Aegis/Bellicos, Apia/Carnova, Dea Dia, source moon and special
   Crucible routes are left untouched.
-* No experimental Asteroid Belt dependency is required.
+* AsteroidBelt >= 1.2.11 is a required dependency.
 
 ## Regional density profiles
 

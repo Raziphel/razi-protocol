@@ -183,10 +183,14 @@ function gates.data_final_fixes()
 	-- Keep Cerys with its parent Fulgora, while preserving native moon techs.
 	add_existing_prerequisites("moon-discovery-cerys", {"planet-discovery-fulgora"})
 	replace_requirements("planet-discovery-ribbonia", {"vibrant-discovery"}, frontier, 900)
-	replace_requirements("planet-discovery-paracelsin",
-		{"planet-discovery-ribbonia"}, frontier, 900)
+	-- Preserve original AsteroidBelt science. Its research unlocks both
+	-- native edge waypoints; crossing them is a physical travel requirement.
+	ensure_unlock("space-discovery-asteroid-belt", "asteroid-belt-inner-edge")
+	ensure_unlock("space-discovery-asteroid-belt", "asteroid-belt-outer-edge")
 	replace_requirements("planet-discovery-shchierbin",
-		{"planet-discovery-paracelsin"}, frontier, 900)
+		{"planet-discovery-ribbonia", "space-discovery-asteroid-belt"}, frontier, 900)
+	replace_requirements("planet-discovery-paracelsin",
+		{"planet-discovery-shchierbin"}, frontier, 1000)
 
 	-- Vespera: Muria is the beginning of the Aquilo/Rubia/Maraxsis branch.
 	replace_requirements("planet-discovery-muria", {"vespera-discovery"}, frontier, 900)

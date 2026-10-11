@@ -160,9 +160,7 @@ class ConstellationTests(unittest.TestCase):
                 gap = segment_clearance(
                     self.coords[star], self.coords[a], self.coords[b])
                 # Sun-belt arrival deliberately ends 14 units from Vibrant.
-                tolerance = 13.5 if {a,b} == {
-                    "shchierbin", "asteroid-belt-inner-edge"
-                } and star=="vibrant" else 15
+                tolerance = 15
                 self.assertGreaterEqual(
                     gap, tolerance,
                     f"{a}->{b} cuts through {star}: {gap:.1f} units")
@@ -199,7 +197,6 @@ class ConstellationTests(unittest.TestCase):
             ("sye-solaris", "sye-nyxaris"),
             ("sye-solaris", "sye-vibrant"),
             ("sye-nyxaris", "sye-vespera"),
-            ("sye-vibrant", "sye-beetlejuice"),
             ("sye-vespera", "sye-umbra"),
             ("sye-beetlejuice", "sye-umbra"),
         }
@@ -210,17 +207,18 @@ class ConstellationTests(unittest.TestCase):
         self.assertEqual(
             {tuple(sorted(pair)) for pair in actual},
             {tuple(sorted(pair)) for pair in required},
-            "Interstellar links must form a clean 8-route constellation")
+            "Seven direct routes plus the native belt bridge are required")
         self.assertEqual(
             sum("sye-calidus" in (a, b) for a, b in actual), 2,
             "Calidus should have only the two early departure routes")
         for a, b in (("maraxsis", "asteroid-belt-inner-edge"),
                      ("asteroid-belt-outer-edge", "sye-umbra")):
             self.assertNotIn(tuple(sorted((a, b))), edges)
-        for a, b in (("shchierbin", "asteroid-belt-inner-edge"),
+        for a, b in (("ribbonia", "asteroid-belt-inner-edge"),
+                     ("asteroid-belt-outer-edge", "shchierbin"),
                      ("asteroid-belt-outer-edge", "sye-beetlejuice")):
             self.assertIn(tuple(sorted((a, b))), edges)
-        for side, radius in (("inner", 14), ("outer", 20)):
+        for side, radius in (("inner", 31), ("outer", 39)):
             self.assertAlmostEqual(
                 math.dist(self.coords[f"asteroid-belt-{side}-edge"],
                           self.coords["vibrant"]), radius, places=3)
@@ -237,11 +235,19 @@ class ConstellationTests(unittest.TestCase):
         self.assertAlmostEqual(y, 20, places=2)
         self.assertGreater(math.dist((x, y), (0, 0)), 15)
 
-    def test_vibrant_sun_belt_clearance(self):
-        for n,(parent,_,_) in self.anchors.items():
-            if parent=="vibrant":
-                self.assertGreater(math.dist(self.coords[n],
-                                             self.coords["vibrant"]),22)
+    def test_hot_cold_orbits_and_native_belt_divide(self):
+        radius = lambda n: self.anchors[n][1]
+        for hot, cooler in (
+            ("vulcanus", "castra"), ("hyarion", "castra"),
+            ("arig", "castra"), ("moshine", "gleba"),
+            ("muria", "aquilo"), ("crucible-orbit", "vesta")
+        ):
+            self.assertLess(radius(hot), radius(cooler))
+        for inner in ("fulgora", "ribbonia"):
+            self.assertLess(radius(inner), 31)
+        for outer in ("shchierbin", "paracelsin"):
+            self.assertGreater(radius(outer), 39)
+        self.assertGreater(radius("maraxsis"), radius("rubia"))
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()

@@ -14,30 +14,30 @@ from collections import defaultdict
 from pathlib import Path
 
 STARTER_BRANCHES = (
-    ("sye-calidus", "sye-solaris"),
-    ("sye-calidus", "sye-nyxaris"),
+    ("sye-calidus", "sye-solaris"), ("sye-calidus", "sye-nyxaris"),
 )
 MIDDLE_BRANCHES = (
-    ("sye-solaris", "sye-vibrant"),
-    ("sye-nyxaris", "sye-vespera"),
+    ("sye-solaris", "sye-vibrant"), ("sye-nyxaris", "sye-vespera"),
 )
-OUTER_BRANCHES = (
-    ("sye-vibrant", "sye-beetlejuice"),
-    ("sye-vespera", "sye-umbra"),
-)
+OUTER_BRANCHES = (("sye-vespera", "sye-umbra"),)
 LATERAL_LINKS = (
-    ("sye-solaris", "sye-nyxaris"),
-    ("sye-beetlejuice", "sye-umbra"),
+    ("sye-solaris", "sye-nyxaris"), ("sye-beetlejuice", "sye-umbra"),
 )
 CAMPAIGN_ROUTES = STARTER_BRANCHES + MIDDLE_BRANCHES + OUTER_BRANCHES + LATERAL_LINKS
-STAGES = (STARTER_BRANCHES, MIDDLE_BRANCHES, OUTER_BRANCHES)
+VIBRANT_BELT_ROUTES = (
+    ("sye-vibrant", "ribbonia"),
+    ("ribbonia", "asteroid-belt-inner-edge"),
+    ("asteroid-belt-inner-edge", "asteroid-belt-outer-edge"),
+    ("asteroid-belt-outer-edge", "shchierbin"),
+    ("shchierbin", "paracelsin"),
+    ("asteroid-belt-outer-edge", "sye-beetlejuice"),
+)
 LATERAL_BANDS = (
     (("sye-solaris", "sye-nyxaris"), 68000, 96000),
     (("sye-beetlejuice", "sye-umbra"), 124000, 176000),
 )
 CAMPAIGN_HUBS = {"sye-calidus", "sye-solaris", "sye-nyxaris",
-                 "sye-vibrant", "sye-vespera", "sye-beetlejuice",
-                 "sye-umbra"}
+                 "sye-vibrant", "sye-vespera", "sye-beetlejuice", "sye-umbra"}
 DEEP_EDGES = (
     ("secretas", "solar-system-edge"),
     ("vesta", "solar-system-edge"),
@@ -64,14 +64,14 @@ MIN_LENGTHS = {
     key("sye-calidus", "sye-nyxaris"): 45000,
     key("sye-solaris", "sye-vibrant"): 80000,
     key("sye-nyxaris", "sye-vespera"): 72000,
-    key("sye-vibrant", "sye-beetlejuice"): 108000,
     key("sye-vespera", "sye-umbra"): 96000,
     key("sye-solaris", "sye-nyxaris"): 65000,
     key("sye-beetlejuice", "sye-umbra"): 120000,
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
-    key("shchierbin", "asteroid-belt-inner-edge"): 32000,
-    key("asteroid-belt-outer-edge", "sye-beetlejuice"): 42000,
+    key("ribbonia", "asteroid-belt-inner-edge"): 16000,
+    key("asteroid-belt-outer-edge", "shchierbin"): 11000,
+    key("asteroid-belt-outer-edge", "sye-beetlejuice"): 65000,
 }
 
 def positions(raw):
@@ -117,10 +117,7 @@ def audit(raw):
         if key(a, b) in links:
             issues.add(f"Unsafe belt bypass remains: {a} -> {b}")
 
-    for a, b in CAMPAIGN_ROUTES + (
-            ("shchierbin", "asteroid-belt-inner-edge"),
-            ("asteroid-belt-outer-edge", "sye-beetlejuice")
-        ) + DEEP_EDGES:
+    for a, b in CAMPAIGN_ROUTES + VIBRANT_BELT_ROUTES + DEEP_EDGES:
         match = links.get(key(a, b))
         if not match:
             if a in coords and b in coords:
@@ -148,48 +145,57 @@ def audit(raw):
             issues.add(f"Disproportionate interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
 
-    # The map must have *exactly* eight managed interstellar links.
-    # This catches unnecessary radial spokes and extra perimeter chords
-    # even when every individually valid route has a plausible distance.
-    managed = {pair for pair in links if pair[0] in CAMPAIGN_HUBS
-               and pair[1] in CAMPAIGN_HUBS}
-    expected = {key(a, b) for a, b in CAMPAIGN_ROUTES}
-    for unexpected in managed - expected:
-        issues.add(f"Unwanted cross-system route: {unexpected[0]} <-> {unexpected[1]}")
-    for missing in expected - managed:
-        issues.add(f"Missing constellation corridor: {missing[0]} <-> {missing[1]}")
-
-    # The two optional local bridges must be real conveniences rather than
-    # punishing detours or nearly-free routes to a later chapter.
-    for (a, b), low, high in LATERAL_BANDS:
-        match = links.get(key(a, b))
-        if not match:
-            continue
-        length = match[0][1].get("length")
-        if isinstance(length, (int, float)) and not low <= length <= high:
-            issues.add(f"Lateral corridor distance mismatch: {a} <-> {b}")
-
-    # Both expedition strands must grow in difficulty with the chapter.
-    for i, strand in enumerate((
-        (STARTER_BRANCHES[0], MIDDLE_BRANCHES[0], OUTER_BRANCHES[0]),
-        (STARTER_BRANCHES[1], MIDDLE_BRANCHES[1], OUTER_BRANCHES[1])
-    )):
-        values = []
-        for a, b in strand:
-            pair_routes = links.get(key(a, b))
-            if not pair_routes:
-                break
-            values.append(pair_routes[0][1].get("length"))
-        if len(values) == 3 and all(isinstance(k, (int, float)) for k in values):
-            if not values[0] < values[1] < values[2]:
-                issues.add(f"Branch {i + 1} travel distances do not scale by chapter")
-    first_bridge = links.get(key("sye-solaris", "sye-nyxaris"))
-    if first_bridge and all(links.get(key(a, b)) for a, b in STARTER_BRANCHES):
-        first_length = first_bridge[0][1].get("length")
-        via_calidus = sum(links[key(a, b)][0][1].get("length", 0)
-                          for a, b in STARTER_BRANCHES)
-        if isinstance(first_length, (int, float)) and first_length >= via_calidus:
-            issues.add("Solaris/Nyxaris crosslink is longer than the Calidus detour")
+    # Precisely seven direct interstellar routes. Vibrant/Beetlejuice
+    # must be bridged through the original 5000 km native asteroid crossing.
+    managed={p for p in links if p[0] in CAMPAIGN_HUBS and p[1] in CAMPAIGN_HUBS}
+    required={key(a,b) for a,b in CAMPAIGN_ROUTES}
+    for pair in managed-required:
+        issues.add(f"Unwanted cross-system route: {pair[0]} <-> {pair[1]}")
+    for pair in required-managed:
+        issues.add(f"Missing constellation corridor: {pair[0]} <-> {pair[1]}")
+    for a,b in (
+        ("sye-vibrant","sye-beetlejuice"),
+        ("ribbonia","shchierbin"),
+        ("ribbonia","paracelsin"),
+        ("paracelsin","asteroid-belt-inner-edge"),
+    ):
+        if key(a,b) in links:
+            issues.add(f"AsteroidBelt physical bypass: {a} <-> {b}")
+    native=links.get(key("asteroid-belt-inner-edge","asteroid-belt-outer-edge"))
+    if native and native[0][1].get("length")!=5000:
+        issues.add("Original native AsteroidBelt crossing changed")
+    for (a,b),low,high in LATERAL_BANDS:
+        match=links.get(key(a,b))
+        if match and isinstance(match[0][1].get("length"),(int,float)):
+            if not low<=match[0][1]["length"]<=high:
+                issues.add(f"Lateral corridor distance mismatch: {a} <-> {b}")
+    for index,strand in enumerate((
+        (STARTER_BRANCHES[0],MIDDLE_BRANCHES[0]),
+        (STARTER_BRANCHES[1],MIDDLE_BRANCHES[1],OUTER_BRANCHES[0]),
+    ),start=1):
+        if all(key(a,b) in links for a,b in strand):
+            amounts=[links[key(a,b)][0][1].get("length") for a,b in strand]
+            if not all(isinstance(n,(int,float)) for n in amounts):
+                issues.add(f"Non-numeric distance in branch {index}")
+            elif any(a>=b for a,b in zip(amounts,amounts[1:])):
+                issues.add(f"Branch {index} distances not rising by chapter")
+    journey=(
+        ("sye-vibrant","ribbonia"),
+        ("ribbonia","asteroid-belt-inner-edge"),
+        ("asteroid-belt-inner-edge","asteroid-belt-outer-edge"),
+        ("asteroid-belt-outer-edge","sye-beetlejuice"),
+    )
+    if all(key(a,b) in links for a,b in journey):
+        distance=sum(links[key(a,b)][0][1].get("length",0) for a,b in journey)
+        middle=links.get(key("sye-solaris","sye-vibrant"))
+        if middle and distance<=middle[0][1].get("length",0):
+            issues.add("Native belt journey underpriced vs middle tier")
+    first=links.get(key("sye-solaris","sye-nyxaris"))
+    if first and all(key(a,b) in links for a,b in STARTER_BRANCHES):
+        direct=first[0][1].get("length")
+        via=sum(links[key(a,b)][0][1].get("length",0) for a,b in STARTER_BRANCHES)
+        if isinstance(direct,(int,float)) and direct>=via:
+            issues.add("Solaris/Nyxaris link longer than journey via Calidus")
     return sorted(issues)
 
 def main():
@@ -206,7 +212,7 @@ def main():
     for issue in issues:
         print("ROUTE: " + issue)
     if not issues:
-        print("Two constellation branches, two lateral links, belt routes and difficulty tiers passed.")
+        print("Seven star links, mandatory native Vibrant belt, and tier distances passed.")
     return int(bool(issues))
 
 if __name__ == "__main__":
