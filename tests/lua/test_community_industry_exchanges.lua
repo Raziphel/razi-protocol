@@ -190,13 +190,16 @@ local specs={
 for _,spec in ipairs(specs) do
   local r,t=raw.recipe[spec.name],raw.technology[spec.name]
   check(r and t,"Community production exchange missing: "..spec.name)
-  check(r.enabled==false and r.auto_recycle==false,
+  check(r.enabled==false and rawget(r,"auto_recycle")==false,
     "Bonus recipe must not replace native production")
-  check(r.allow_productivity==false and r.maximum_productivity==0,
+  check(r.allow_productivity==false and rawget(r,"maximum_productivity")==0,
     "Trade bonus cannot stack with productivity")
   check(amount(r.results,spec.output)==spec.original*spec.batch+spec.bonus,
     "Incorrect trade output yield: "..spec.name)
-  check(#t.unit.ingredients==2 and #t.prerequisites>=3,
+  local unit=rawget(t,"unit") or {}
+  local packs=rawget(unit,"ingredients") or {}
+  local prerequisites=rawget(t,"prerequisites") or {}
+  check(#packs==2 and #prerequisites>=3,
     "Trade exchange has bypassed research: "..spec.name)
   local original_unlock=false
   for _,prereq in ipairs(rawget(t,"prerequisites") or {}) do
