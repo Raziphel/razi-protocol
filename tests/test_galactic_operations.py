@@ -28,6 +28,7 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertNotIn('type="shortcut"',proto)
         self.assertIn('type="sprite"',proto)
         self.assertIn('razi-galactic-operations-map-icon',proto)
+        ui=(ROOT/"scripts/galactic_operations.lua").read_text()
         self.assertIn('MAP_ANCHOR="razi_ops_map_anchor"',ui)
         self.assertIn('type="sprite-button",name=MAP_BUTTON',ui)
         self.assertIn('player.render_mode~=defines.render_mode.game',ui)
@@ -36,6 +37,21 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertIn('CONTROL + SHIFT + G',proto)
         self.assertIn('[razi-ops]',loc)
         self.assertIn('group-vibrant=',loc)
+    def test_atlas_fleet_are_read_only(self):
+        ui=(ROOT/"scripts/galactic_operations.lua").read_text()
+        atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
+        fleet=(ROOT/"scripts/galactic_fleet.lua").read_text()
+        self.assertIn('atlas.render(body,player,id,p)',ui)
+        self.assertIn('fleet.render(body,platform,id,p)',ui)
+        self.assertIn('razi_ops_note_id',ui)
+        self.assertIn('shortest_path',atlas)
+        self.assertIn('unlock-space-location',atlas)
+        self.assertIn('can_leave_current_location()',fleet)
+        self.assertIn('defines.inventory.hub_main',fleet)
+        for source in (atlas,fleet):
+            self.assertNotIn('create_surface(',source)
+            self.assertNotIn('on_nth_tick',source)
+            self.assertNotIn('platform.schedule=',source)
     def test_all_seven_systems(self):
         catalog=(ROOT/"scripts/galactic_catalog.lua").read_text()
         for star in ("calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"):

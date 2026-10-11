@@ -3,6 +3,8 @@
 -- no on_tick scans, no surface creation, no recipe/progression modifications.
 local M={}
 local catalog=require("scripts.galactic_catalog")
+local atlas=require("scripts.galactic_atlas")
+local fleet=require("scripts.galactic_fleet")
 local FRAME="razi_galactic_operations"
 local MAP_ANCHOR="razi_ops_map_anchor"
 local MAP_BUTTON="razi_ops_map_button"
@@ -39,7 +41,7 @@ local function preferences(index)
   if not p then
     p={tab="worlds",filter="all",group="all",search="",page=1,
        waypoints=false,locked=false,role_filter="all",roles={},favorites={worlds={},platforms={}},
-       collapsed={},recent={}}
+       collapsed={},recent={},notes={},focus=nil,atlas_origin=nil,priority_sort=false}
     storage.razigui[index]=p
   end
   p.favorites=p.favorites or {worlds={},platforms={}}
@@ -47,8 +49,10 @@ local function preferences(index)
   p.favorites.platforms=p.favorites.platforms or {}
   p.collapsed=p.collapsed or {}
   p.recent=p.recent or {}
+  p.notes=p.notes or {}
   p.roles=p.roles or {}
   p.role_filter=p.role_filter or "all"
+  p.priority_sort=p.priority_sort or false
   return p
 end
 local function is_unlocked(force,name)
@@ -111,6 +115,7 @@ local function collect_platforms(player,p)
   local entries={}
   for index,platform in pairs(player.force.platforms) do
     if valid_platform(platform) then
+      local diagnostics=fleet.snapshot(platform)
       entries[#entries+1]={
         id=tostring(index),index=index,name=platform.name,
         caption=platform.name,kind="platforms",
@@ -119,7 +124,8 @@ local function collect_platforms(player,p)
         location=platform.space_location or platform.last_visited_space_location,
         connection=platform.space_connection,
         role=p.roles[tostring(index)] or infer_role(platform.name),
-        manual_role=p.roles[tostring(index)]~=nil
+        manual_role=p.roles[tostring(index)]~=nil,
+        warnings=diagnostics.warning_count
       }
     end
   end
@@ -154,9 +160,7 @@ local function matches(p,row)
     if row.kind=="platforms" and row.status~="transit" then return false end
   elseif p.filter=="attention" then
     if row.kind=="worlds" and row.status~="locked" then return false end
-    if row.kind=="platforms"
-      and row.status~="unscheduled" and row.status~="paused"
-      and row.status~="building" then return false end
+    if row.kind=="platforms" and (row.warnings or 0)==0 then return false end
   elseif p.filter=="recent" and not is_recent(p,row) then
     return false
   end
@@ -169,6 +173,8 @@ local function rows_for(player,p)
     if matches(p,row) then filtered[#filtered+1]=row end
   end
   table.sort(filtered,function(a,b)
+    if p.priority_sort and a.kind=="platforms" and b.kind=="platforms"
+      and a.warnings~=b.warnings then return a.warnings>b.warnings end
     local x,y=catalog.position(a.group),catalog.position(b.group)
     if x~=y then return x<y end
     local af,bf=p.favorites[a.kind][a.id],p.favorites[b.kind][b.id]
@@ -240,7 +246,14 @@ local function paint_row(parent,row,p)
       recent_key(row),L("no-view-tooltip"))
     btn.enabled=false
   end
+  add_button(line,L(row.kind=="worlds" and "atlas-open" or "fleet-open"),
+    "details",recent_key(row),L("details-tooltip"))
   if row.kind=="platforms" then
+    if (row.warnings or 0)>0 then
+      local warning=band.add{type="label",
+        caption=L("fleet-warnings",tostring(row.warnings))}
+      accent(warning,{r=1,g=0.63,b=0.32})
+    end
     local mission=band.add{type="flow",direction="horizontal"}
     mission.add{type="label",caption=L("mission")}
     local choice=mission.add{type="drop-down",
@@ -303,6 +316,16 @@ local function redraw(player)
   footer.add{type="label",caption=L("pages",tostring(page),tostring(pages))}
   local next=add_button(footer,"▶","page",1)
   next.enabled=page<pages
+  if p.focus then
+    local kind,id=p.focus:match("^(worlds):(.+)$")
+    if not kind then kind,id=p.focus:match("^(platforms):(.+)$") end
+    if kind==p.tab and kind=="worlds" then
+      atlas.render(body,player,id,p)
+    elseif kind==p.tab and kind=="platforms" then
+      local platform=player.force.platforms[tonumber(id)]
+      fleet.render(body,platform,id,p)
+    end
+  end
 end
 
 local function close(player)
@@ -426,6 +449,10 @@ local function open(player)
     if p.role_filter==role then role_filter.selected_index=i;break end
   end
   roles.visible=p.tab=="platforms"
+  local sorter=frame.add{type="flow",name="razi_ops_sorter",direction="horizontal"}
+  add_button(sorter,L(p.priority_sort and "priority-on" or "priority-off"),
+    "priority","",L("priority-tooltip"))
+  sorter.visible=p.tab=="platforms"
   local options=frame.add{type="flow",name="razi_ops_options",direction="horizontal"}
   options.add{
     type="checkbox",name="razi_ops_waypoints",
@@ -484,15 +511,41 @@ function M.gui_click(event)
   if action=="close" then close(player);return end
   if action=="tab" then
     if value~="worlds" and value~="platforms" then return end
-    p.tab=value;p.page=1
+    p.tab=value;p.page=1;p.focus=nil
     local frame=player.gui.screen[FRAME]
     if frame and frame.valid then
       frame.razi_ops_options.razi_ops_waypoints.visible=value=="worlds"
       frame.razi_ops_options.razi_ops_locked.visible=value=="worlds"
       frame.razi_ops_roles.visible=value=="platforms"
+      frame.razi_ops_sorter.visible=value=="platforms"
     end
   elseif action=="page" then
     p.page=math.max(1,p.page+value)
+  elseif action=="priority" then
+    p.priority_sort=not p.priority_sort
+    local frame=player.gui.screen[FRAME]
+    if frame and frame.valid then
+      local sorter=frame.razi_ops_sorter
+      if sorter and sorter.valid then sorter.children[1].caption=L(p.priority_sort and "priority-on" or "priority-off") end
+    end
+  elseif action=="details-close" then
+    p.focus=nil
+  elseif action=="atlas-origin" then
+    if prototypes.space_location[value] and player.force.is_space_location_unlocked(value) then
+      p.atlas_origin=value
+    end
+  elseif action=="details" then
+    local kind,id=value:match("^(worlds):(.+)$")
+    if not kind then kind,id=value:match("^(platforms):(.+)$") end
+    if kind~=p.tab then return end
+    if kind=="worlds" then
+      local proto=prototypes.space_location[id]
+      if not proto or proto.hidden or (not p.locked
+        and not player.force.is_space_location_unlocked(id)) then return end
+    elseif not valid_platform(player.force.platforms[tonumber(id)]) then
+      return
+    end
+    p.focus=value
   elseif action=="favorite" or action=="view" then
     local kind,id=value:match("^(worlds):(.+)$")
     if not kind then kind,id=value:match("^(platforms):(.+)$") end
@@ -515,7 +568,14 @@ function M.gui_click(event)
 end
 function M.text_changed(event)
   local element=event.element
-  if not (element and element.valid and element.name=="razi_ops_search") then return end
+  if not (element and element.valid) then return end
+  local tags=element.tags
+  if tags and tags.razi_ops_note_id then
+    local p=preferences(event.player_index)
+    p.notes[tostring(tags.razi_ops_note_id)]=element.text:sub(1,128)
+    return
+  end
+  if element.name~="razi_ops_search" then return end
   local p=preferences(event.player_index)
   p.search=element.text:sub(1,80);p.page=1
   local player=game.get_player(event.player_index)
