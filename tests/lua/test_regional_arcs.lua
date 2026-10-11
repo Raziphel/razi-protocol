@@ -1,5 +1,12 @@
 -- Version-safe star-centered route curvature with no native overwrites.
 package.path="./?.lua;./?/init.lua;"..package.path
+-- The route reconciler imports Space Age's native spawn presets.
+-- Stub only that external dependency so this fixture runs under stock Lua.
+package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]={
+  nauvis_fulgora={},nauvis_gleba={},vulcanus_castra={},
+  fulgora_aquilo={},gleba_aquilo={},aquilo_solar_system_edge={},
+  spawn_definitions=function() return {} end
+}
 local mod=require("prototypes.system.route_reconcile")
 rawset(_G,"mods",{base="2.1.19"})
 assert(mod.regional_origin("vulcanus","arig","arc")==nil,
