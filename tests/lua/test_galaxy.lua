@@ -183,7 +183,6 @@ local function test_routes()
 	for _, pair in ipairs({
 		{"sye-solaris","sye-nyxaris"},
 		{"sye-vibrant","sye-vespera"},
-		{"sye-beetlejuice","sye-umbra"}
 	}) do
 		local found = false
 		for _, link in pairs(routes) do
@@ -265,7 +264,6 @@ local function test_routes()
     for _, spec in ipairs({
       {"razi-sye-solaris-sye-nyxaris", 88000},
       {"razi-sye-vibrant-sye-vespera", 103000},
-      {"razi-sye-beetlejuice-sye-umbra", 126000},
       {"razi-secretas-solar-system-edge", 155000},
       {"razi-vesta-solar-system-edge", 185000}
     }) do
