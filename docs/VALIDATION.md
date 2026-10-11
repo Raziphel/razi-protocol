@@ -171,3 +171,17 @@ stargates, the optional Nexus endgame and original source internal links.
 In particular, the native route length is respected within the Razi local
 travel envelope and native modded asteroid entries are not replaced.
 See `tests/test_route_distances.py` and `tests/lua/test_galaxy.lua`.
+
+## Startup settings and localized grouping
+
+The FluxWorks-style Razi startup settings are checked by
+`lua5.2 tests/lua/test_settings_presentation.lua` for stable prototype
+names, startup types, default values, deterministic category ordering,
+colored rich-text labels, and English/Russian descriptions. The existing
+enemy routing and redundant assembler defaults are preserved.
+
+Additional production and planet-description fixture cases now verify the
+new optional switches: off means no Razi-owned alternate recipe/briefing;
+the native recipes, technology and planet description are not removed.
+Factorio's built-in settings UI controls the layout; the sections are
+localized prefixes, not fabricated headings or custom interface panels.

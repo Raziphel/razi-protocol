@@ -31,6 +31,12 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
+## Mod Settings
+
+Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
+
+The optional K2SO and modded-planet production exchanges can be controlled independently. Their normal defaults leave the existing Razi experience unchanged, and disabling them never removes the native recipes supplied by planet mods.
+
 ## Campaign Structure
 
 Seven solar systems are arranged as three outward pairs after the Calidus home system. Unlock both systems in a pair, choose which planet chains to tackle first, then master **both** to move to the next frontier.

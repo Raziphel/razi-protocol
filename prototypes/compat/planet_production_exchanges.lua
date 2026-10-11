@@ -488,13 +488,22 @@ local function register_exchange(rule)
   data:extend({alternative, tech})
 end
 
+-- Startup switches affect only Razi-owned alternate recipes. Missing settings
+-- are treated as enabled so older mock environments preserve existing behavior.
+local function enabled(name)
+  local option = settings and settings.startup and settings.startup[name]
+  return not option or option.value ~= false
+end
+
 function M.data_final_fixes()
-  if not (mods and mods["Krastorio2-spaced-out"]) then return end
+  if not (mods and mods["Krastorio2-spaced-out"])
+    or not enabled("razi-enable-k2so-production-exchanges") then return end
   for _, rule in ipairs(exchanges) do register_exchange(rule) end
 end
 
 function M.register_additional(rules)
-  if not (mods and mods["Krastorio2-spaced-out"]) then return end
+  if not (mods and mods["Krastorio2-spaced-out"])
+    or not enabled("razi-enable-modded-planet-exchanges") then return end
   for _, rule in ipairs(rules or {}) do register_exchange(rule) end
 end
 

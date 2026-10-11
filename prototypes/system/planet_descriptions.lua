@@ -25,6 +25,10 @@ local function original_description(prototype, name)
 end
 
 function descriptions.data_final_fixes()
+  local preference = settings and settings.startup
+    and settings.startup["razi-enable-expedition-briefings"]
+  if preference and preference.value == false then return end
+
   for region, names in pairs(destinations) do
     local heading = region == "deep_space" and "deep-space" or region
     for _, name in ipairs(names) do
