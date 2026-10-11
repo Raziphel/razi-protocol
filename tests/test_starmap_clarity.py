@@ -136,6 +136,7 @@ class ConstellationTests(unittest.TestCase):
         forbidden = (
             ("sye-vibrant", "sye-beetlejuice"),
             ("sye-vespera", "sye-umbra"),
+            ("sye-beetlejuice", "sye-umbra"),
             ("sye-solaris", "sye-vespera"),
             ("sye-nyxaris", "sye-vibrant")
         )
