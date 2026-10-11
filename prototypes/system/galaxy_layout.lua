@@ -27,9 +27,9 @@ local anchors = {
   -- Local discovery chains form concise, nonintersecting planetary crescents.
   {"planet","vulcanus","solaris",46.3249,0.8407248},
   {"planet","castra","solaris",42.72,0.7046837},
-  {"planet","arig","solaris",41.7612,0.5463868},
-  {"planet","hyarion","solaris",40.3113,0.4802083},
-  {"planet","tellus","solaris",30,0.3524164},
+  {"planet","arig","solaris",41.7852,0.5584375},
+  {"planet","hyarion","solaris",24.7386,0.5389896},
+  {"planet","tellus","solaris",37.2022,0.3992949},
   {"planet","corrundum","solaris",27.2947,0.2265918},
   {"planet","gleba","nyxaris",41.7852,0.1915625},
   {"planet","moshine","nyxaris",38.833,0.345857},
