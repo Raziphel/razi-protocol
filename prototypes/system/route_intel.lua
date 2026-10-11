@@ -2,6 +2,7 @@
 -- No control.lua polling, GUIs, or extra runtime work.
 local M={}
 local hazards=require("prototypes.system.route_hazards")
+local catalog=require("scripts.galactic_catalog")
 local prefix="razi-route-intel."
 
 local function localise(key,...)
@@ -47,6 +48,16 @@ function M.annotate(route)
   end
   if hazards.is_belt_crossing(route) then
     additions[#additions+1]=field("progress",localise("required-belt"),227)
+  end
+  -- Only describe routes with two explicitly catalogued system endpoints.
+  -- Unknown third-party planets must never be assigned a guessed sector.
+  local from,to=catalog.system(route.from),catalog.system(route.to)
+  if from~="unassigned" and to~="unassigned" then
+    local desc=from==to
+      and localise("inside-system",localise("system-"..from))
+      or localise("across-systems",
+        localise("system-"..from),localise("system-"..to))
+    additions[#additions+1]=field("sector",desc,228)
   end
   for _,extra in ipairs(additions) do fields[#fields+1]=extra end
   route.custom_tooltip_fields=fields

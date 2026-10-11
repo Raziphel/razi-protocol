@@ -234,6 +234,10 @@ local function test_routes()
     "Missing outer exit to Shchierbin")
 
     for _, local_link in ipairs({
+        {"razi-vulcanus-arig",19500},
+        {"razi-hyarion-corrundum",22500},
+        {"razi-gleba-apia-carnova-orbit",22000},
+        {"razi-gleba-panglia",23500},
         {"razi-vulcanus-castra",17500},
         {"razi-arig-hyarion",12000},
         {"razi-gleba-moshine",17000},

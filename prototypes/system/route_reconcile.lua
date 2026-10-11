@@ -5,6 +5,7 @@
 local route_reconcile = {}
 local hazard_profiles = require("prototypes.system.asteroid_profiles")
 local route_icons = require("prototypes.system.route_icons")
+local layout = require("prototypes.system.galaxy_layout")
 
 local membership = {
 	-- Main game and Calidus.
@@ -67,6 +68,9 @@ local route_specifications = {
 	-- Keep the original discovery prerequisites; these routes only provide
 	-- logistical choices once both endpoints are researched.
 	{"vulcanus", "castra", 17500, "industrial"},
+	-- Extra short freight loops inside Solaris. Native discovery gates remain.
+	{"vulcanus", "arig", 19500, "industrial_deep"},
+	{"hyarion", "corrundum", 22500, "industrial_deep"},
 	{"arig", "hyarion", 12000, "industrial_deep"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
@@ -79,6 +83,8 @@ local route_specifications = {
 	-- Nyxaris neighbors can exchange biological supplies directly instead
 	-- of routing every load through their distant slipstream hub.
 	{"gleba", "moshine", 17000, "biological"},
+	{"gleba", "apia-carnova-orbit", 22000, "biological"},
+	{"gleba", "panglia", 23500, "biological_deep"},
 	{"moshine", "apia-carnova-orbit", 12000, "biological"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
 	{"sye-nyxaris", "gleba", 18000, "biological"},
@@ -184,6 +190,28 @@ local function balanced_length(name, actual, planned, from, to)
 end
 
 
+-- Factorio 2.1.20 added arc centres for space connections. On newer
+-- clients our local routes can curve around their own relocated star.
+-- Older 2.1 clients and source-authored origins are left untouched.
+local function supports_regional_arcs()
+  local v=mods and mods.base
+  if type(v)~="string" then return false end
+  local a,b,c=v:match("^(%d+)%.(%d+)%.(%d+)")
+  a,b,c=tonumber(a),tonumber(b),tonumber(c)
+  return a and (a>2 or a==2 and (b>1 or b==1 and c>=20)) or false
+end
+local function regional_origin(from,to,shape)
+  if shape~="arc" or not supports_regional_arcs() then return nil end
+  local system=membership[from]
+  if not system or system~=membership[to]
+    or system=="calidus" or system=="mid-outer-belt" then return nil end
+  local x,y=layout.anchor_position(system)
+  if not x or not y then return nil end
+  return {x=x,y=y}
+end
+
+route_reconcile.regional_origin=regional_origin
+
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
 	local rescued = {}
@@ -267,6 +295,9 @@ function route_reconcile.data_final_fixes()
 					route.shape = "line"
 				end
 				hazard_profiles.apply(route, hazard)
+				if route.origin==nil then
+					route.origin=regional_origin(from,to,route.shape)
+				end
 				route_icons.assign(route, hazard)
 			else
 				local connection = route_icons.assign({
@@ -279,6 +310,7 @@ function route_reconcile.data_final_fixes()
                             and membership[from] ~= membership[to]) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
+				connection.origin=regional_origin(from,to,connection.shape)
 				data:extend({connection})
 				routes_by_pair[pair] = {route_name}
 			end

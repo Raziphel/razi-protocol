@@ -201,3 +201,34 @@ The 2026-10 starmap uses a 104-unit six-star radius (previously 124)
 so most systems fit on screen with substantially less panning. Deep Space
 is north at radius 190; the Aegis/Bellicos annex begins beyond it.
 The mandatory native Asteroid Belt still rings Shchierbin, not Nauvis.
+
+## October 2026 stellar arc and neighbouring-world polish
+
+A geometry review found no serious crowding in the six-star hexagon. The
+104-unit ring and source-owned moons remain in their established positions.
+Instead of moving planets or painting fake travel links, Razi adds four real
+same-system connections for established late-stage freight logistics:
+
+| Star system | Real local connection | Planned distance |
+| --- | --- | ---: |
+| Solaris | Vulcanus ↔ Arig | 19,500 km |
+| Solaris | Hyarion ↔ Corrundum | 22,500 km |
+| Nyxaris | Gleba ↔ Apia/Carnova Orbit | 22,000 km |
+| Nyxaris | Gleba ↔ Panglia | 23,500 km |
+
+These routes never unlock worlds or change research. The source belt in
+Vibrant, Vespera's Debris Divide and Umbra's Shattered Divide are preserved.
+Cross-system shortcuts remain disallowed.
+
+Starting in **Factorio 2.1.20**, `SpaceConnectionPrototype.origin` can
+centre an arc on a location other than the global origin. On supported
+clients, Razi-managed local arcs now centre on their own star. This is
+skipped on earlier 2.1 versions, and explicit native arc centres are
+preserved. Interstellar straight lines, unusual moons and special source
+routes stay source-owned. Actual in-game confirmation remains required.
+
+The original highlighted corridor textures now have a faint enlarged
+glow underlay, and the six authored outer stars reuse their loaded filament
+sprites to build an additional faint corona. No new image files, hidden
+travel links, or per-tick rendering are introduced. Tooltips now label the
+actual Razi system(s) of recognised route endpoints.
