@@ -18,8 +18,8 @@ def entries():
 class RouteHighlightTests(unittest.TestCase):
     def test_complete_masks_and_positioned_layers(self):
         rows=entries()
-        self.assertEqual(len(rows),12)
-        self.assertEqual(len({frozenset((a,b)) for a,b,*_ in rows}),12)
+        self.assertEqual(len(rows),14)
+        self.assertEqual(len({frozenset((a,b)) for a,b,*_ in rows}),14)
         for a,b,kind,path,w,h,sx,sy,ax,ay,bx,by in rows:
             p=ROOT/path
             self.assertTrue(p.is_file(),p)
