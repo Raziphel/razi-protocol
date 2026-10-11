@@ -198,7 +198,12 @@ function gates.data_final_fixes()
 		{"planet-discovery-rubia"}, frontier, 1100)
 
 	-- The next parallel pair demands both second-tier branches.
-	local outer_prereqs = {"vibrant-discovery", "vespera-discovery"}
+	-- The required upstream asteroid field is the shared middle-to-outer
+	-- expedition gateway. Its own science remains source-owned.
+	local outer_prereqs = {
+		"vibrant-discovery", "vespera-discovery",
+		"space-discovery-asteroid-belt"
+	}
 	for _, name in ipairs(exotic_mastery) do
 		outer_prereqs[#outer_prereqs + 1] = name
 	end
