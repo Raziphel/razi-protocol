@@ -34,11 +34,11 @@ local function has_surface(name)
   return planet and planet.valid and planet.surface and planet.surface.valid
 end
 local function valid_platform(p)
-  return p and p.valid and not p.hidden and not p.scheduled_for_deletion
+  return p and p.valid and not p.hidden and p.scheduled_for_deletion==0
 end
 local function platform_status(p)
-  if p.space_connection then return "transit" end
   if p.paused then return "paused" end
+  if p.space_connection then return "transit" end
   if not p.hub or not p.hub.valid then return "building" end
   local schedule=p.schedule
   if not schedule or not schedule.records or #schedule.records==0 then
@@ -66,7 +66,6 @@ end
 local function collect_worlds(player,p)
   local entries={}
   local force=player.force
-  local seen={}
   for name,proto in pairs(prototypes.space_location) do
     if not proto.hidden and (proto.type=="planet" or p.waypoints) then
       local unlocked=is_unlocked(force,name)
@@ -78,7 +77,6 @@ local function collect_worlds(player,p)
           status=not unlocked and "locked" or accessible and "visited" or "unvisited",
           ready=accessible,unlocked=unlocked
         }
-        seen[name]=true
       end
     end
   end
@@ -314,7 +312,7 @@ local function open(player)
   for index,value in ipairs(group_options) do
     if p.group==value then selector.selected_index=index end
   end
-  local options=frame.add{type="flow",direction="horizontal"}
+  local options=frame.add{type="flow",name="razi_ops_options",direction="horizontal"}
   options.add{
     type="checkbox",name="razi_ops_waypoints",
     state=p.waypoints,caption=L("waypoints")
@@ -327,6 +325,7 @@ local function open(player)
   body.style.horizontally_stretchable=true
   options.razi_ops_waypoints.visible=p.tab=="worlds"
   options.razi_ops_locked.visible=p.tab=="worlds"
+  player.opened=frame
   player.set_shortcut_toggled(SHORTCUT,true)
   redraw(player)
 end
@@ -370,8 +369,8 @@ function M.gui_click(event)
     p.tab=value;p.page=1
     local frame=player.gui.screen[FRAME]
     if frame and frame.valid then
-      frame.razi_ops_waypoints.visible=value=="worlds"
-      frame.razi_ops_locked.visible=value=="worlds"
+      frame.razi_ops_options.razi_ops_waypoints.visible=value=="worlds"
+      frame.razi_ops_options.razi_ops_locked.visible=value=="worlds"
     end
   elseif action=="page" then
     p.page=math.max(1,p.page+value)
