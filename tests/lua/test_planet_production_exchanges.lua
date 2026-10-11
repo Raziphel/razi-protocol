@@ -180,6 +180,13 @@ local function product(recipe, name)
 end
 
 local full, module=setup()
+-- Irrelevant technologies must not change native unlock selection.
+for i=1,600 do
+  full.technology["unrelated-tech-"..i]={
+    name="unrelated-tech-"..i,
+    effects={{type="unlock-recipe",recipe="some-other-product-"..i}}
+  }
+end
 local original=clone(full.recipe)
 module.data_final_fixes()
 local names={

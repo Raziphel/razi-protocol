@@ -109,3 +109,28 @@ startup logs were available for this repo audit. The caching mechanisms
 are confirmed by Factorio's own documentation. **Any claimed seconds saved
 for Razi Protocol itself must come from before/after timings on the exact
 tested system.** Do not confuse a cold first launch with a cached repeat launch.
+
+
+## Enabled-by-default code optimizations
+
+Razi applies these automatically in its data-final-fixes stage, regardless
+of any optional visual preferences:
+
+- Index technology recipe unlocks once per compatibility pass rather than
+  scanning all technologies for every cross-planet imported ingredient.
+- Index only the science-pack producers actually referenced by the campaign
+  weave. Re-evaluate live technology dependencies when testing each gate,
+  so earlier-world science cannot accidentally become future-world research.
+- Index surviving space connections by endpoint pair after the campaign
+  bypass cleanup. Preserve native route names, asteroid details, original
+  length balancing and the belt barriers while reconciling duplicates.
+
+These caches are **in-memory and data-stage-only**. They do not add persisted
+save data, bypass unlock requirements or let a mod configure Factorio's
+client-side prototype/sprite caches. On huge packs the primary benefits
+remain the built-in engine disk caches enabled by each player. Benchmark
+the full pack before attributing any specific number of seconds to Razi's
+internal improvements.
+
+The optimisation is independent of starmap artwork settings. Razi will not
+silently disable starfield details to gain a small unmeasured improvement.

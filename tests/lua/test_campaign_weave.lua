@@ -56,6 +56,13 @@ t["bioluminescent-science-pack"].prerequisites={"planet-discovery-frozeta"}
 rawset(_G,"data",{raw=raw})
 package.loaded["prototypes.technology.campaign_weave"]=nil
 local M=require("prototypes.technology.campaign_weave")
+-- A large unrelated recipe catalogue should not alter actual source-pack
+-- eligibility: only native target-science producers may affect this weave.
+for i=1,600 do
+  raw.recipe["unrelated-recipe-"..i]={
+    results={{type="item",name="irrelevant-product-"..i,amount=1}}
+  }
+end
 M.data_final_fixes()
 local function has_parent(name,need)
   for _, p in ipairs(t[name].prerequisites) do if p==need then return true end end
