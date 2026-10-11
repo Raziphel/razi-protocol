@@ -17,10 +17,10 @@ def parse_layout():
     result = {n: (p, float(r), float(a))
               for n, p, r, a in re.findall(pattern, source)}
     belt_source = (ROOT / "prototypes/system/asteroid_belt_integration.lua").read_text()
-    for name, distance in re.findall(
-            r'\{"(asteroid-belt-(?:inner|outer)-edge)",(\d+)\}',
+    for name, distance, orientation in re.findall(
+            r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
             belt_source):
-        result[name] = ("star", float(distance), 0.5)
+        result[name] = ("star", float(distance), float(orientation))
     return result
 
 
