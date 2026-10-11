@@ -47,9 +47,9 @@ local route_specifications = {
 	{"sye-solaris", "sye-nyxaris", 88000, "frontier_crosslink"},
 	{"sye-solaris", "sye-vibrant", 95000, "middle_crossing"},
 	{"sye-nyxaris", "sye-vespera", 95000, "middle_crossing"},
-	-- Pair rungs offer optional sideways travel inside a tier. The four
-	-- diagonal shortcuts across tiers made the actual starmap unreadable.
-	-- Both parallel lanes remain connected by these short visual rungs.
+	-- First and middle systems have clear inter-branch rungs. Outer systems
+	-- share the upstream belt gateway instead of drawing one more crossing.
+	-- Cross-tier diagonals were removed to avoid the old starmap mesh.
 	{"sye-vibrant", "sye-vespera", 103000, "middle_crosslink"},
 	-- The central source-mod belt is a required, shared third-chapter
 	-- crossing. Native inner->outer stays source-owned with its real asteroids.
