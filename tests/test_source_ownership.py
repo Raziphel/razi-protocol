@@ -26,10 +26,33 @@ class TestSourceOwnership(unittest.TestCase):
             "Electric_flying_enemies", "Explosive_biters",
             "Toxic_biters", "Imersite-Asteroids", "LithiumBattery",
             "PlanetAthos",
+            # Eleven inspected 2.1 community mods. Nonstandard locations
+            # retain their source mod's surface, station or warp machinery.
+            "rabbasca-underground", "skewer_shattered_planet",
+            "Solar-Halo", "planet-ferrum", "Velora", "nulla",
+            "Hephaestus", "alchemy-khemia", "Arcanyx",
+            "biological-machines-planet-wit",
+            "biological-machines-planet-balack",
         }
         names = {dep.split()[1] for dep in info["dependencies"]
                  if dep.startswith("? ")}
         self.assertEqual(names, expected)
+        # Prevent future decorative optional dependencies without any
+        # corresponding Razi content or explicitly preserved source behavior.
+        module = (ROOT / "prototypes/system/community_expansions.lua").read_text(
+            encoding="utf-8")
+        for mod_id in {
+            "rabbasca-underground", "skewer_shattered_planet",
+            "Solar-Halo", "planet-ferrum", "Velora", "nulla",
+            "Hephaestus", "alchemy-khemia", "Arcanyx",
+            "biological-machines-planet-wit",
+            "biological-machines-planet-balack"
+        }:
+            self.assertIn(f'mod="{mod_id}"', module)
+        fixes = (ROOT / "data-final-fixes.lua").read_text(encoding="utf-8")
+        self.assertIn(
+            'require("prototypes.system.community_expansions").data_final_fixes()',
+            fixes)
 
 if __name__ == "__main__":
     unittest.main()

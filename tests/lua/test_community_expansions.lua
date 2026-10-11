@@ -110,7 +110,7 @@ local function run(options)
   rawset(_G,"PlanetsLib",{update=function(_,entries)
     for _,entry in ipairs(entries) do
       check(planets[entry.name],"Missing planet orbital update")
-      planets[entry.name].orbit=entry.orbit
+      rawset(planets[entry.name], "orbit", entry.orbit)
       moved[entry.name]=true
     end
   end})
@@ -167,11 +167,13 @@ for _,pair in ipairs({
 }) do
   local tech=raw.technology["unlock-"..pair[1]]
   local found=false
-  for _,prerequisite in ipairs(tech.prerequisites) do
+  for _,prerequisite in ipairs(rawget(tech,"prerequisites") or {}) do
     if prerequisite==pair[2] then found=true end
   end
   check(found,"Native discovery not chapter-gated: "..pair[1])
-  check(tech.effects[2].recipe==pair[1].."-native-science",
+  local effects=rawget(tech,"effects") or {}
+  local native_science=effects[2] or {}
+  check(rawget(native_science,"recipe")==pair[1].."-native-science",
     "A mod's native science unlock was damaged")
 end
 check(#raw.technology["unlock-bm-wit"].prerequisites==1,
