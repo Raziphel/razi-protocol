@@ -10,7 +10,7 @@ local layout = require("prototypes.system.galaxy_layout")
 local membership = {
 	-- Main game and Calidus.
 	nauvis = "calidus", muluna = "calidus", eneas = "calidus",
-	["sye-calidus"] = "calidus",
+	["sye-calidus"] = "calidus", ["razi-calidus-drift"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris",
 	fulgora = "vibrant", cerys = "vibrant",
@@ -46,6 +46,10 @@ local route_specifications = {
   -- redundant Calidus spokes. The fixed hexagonal star art stays unchanged.
   -- Research unlocks each destination hub independently of the visual path.
   {"nauvis", "sye-calidus", 25000, "starter"},
+  -- Calidus's modest local freight triangle; native lunar discovery remains.
+  {"nauvis", "razi-calidus-drift", 12000, "starter"},
+  {"razi-calidus-drift", "sye-calidus", 17500, "starter"},
+  {"muluna", "sye-calidus", 14000, "starter"},
   {"sye-calidus", "sye-solaris", 60000, "first_crossing"},
   {"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
   -- After the two first-frontier discoveries, each strand continues
@@ -137,7 +141,8 @@ local retired_belts = {
   {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
 }
 
-local calidus_locations = {"nauvis", "muluna", "eneas", "sye-calidus"}
+local calidus_locations = {"nauvis", "muluna", "eneas", "sye-calidus",
+  "razi-calidus-drift"}
 
 local function has_endpoint(name)
 	return (data.raw.planet and data.raw.planet[name])

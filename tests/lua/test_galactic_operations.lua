@@ -3,6 +3,8 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(v,msg) if not v then error(msg,2) end end
 local catalog=require("scripts.galactic_catalog")
 check(catalog.system("nauvis")=="calidus","Nauvis in wrong group")
+check(catalog.system("razi-calidus-drift")=="calidus",
+  "Drift should be discoverable in the Calidus Atlas")
 check(catalog.system("sye-vespera")=="vespera","Vespera slipstream misplaced")
 check(catalog.system("crucible-orbit")=="umbra","Crucible misplaced")
 check(catalog.system("asteroid-belt-inner-edge")=="vibrant","Belt misplaced")

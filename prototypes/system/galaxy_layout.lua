@@ -17,6 +17,8 @@ local anchors = {
   {"space-location","umbra","star",104,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
+  -- A compact station-sized salvage destination opposite the departure hub.
+  {"space-location","razi-calidus-drift","star",33,0.865},
   {"space-location","sye-solaris","solaris",27,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
@@ -208,6 +210,7 @@ function M.data_final_fixes()
   -- Only Razi-owned hubs and rims get fixed orientations. Native planet,
   -- moon and optional third-party label preferences remain source-owned.
   local label_orientations={
+    ["razi-calidus-drift"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.25,
