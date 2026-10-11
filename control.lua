@@ -1,3 +1,4 @@
+local galactic_operations = require("scripts.galactic_operations")
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local nexus_visibility_technologies = {
@@ -122,7 +123,9 @@ end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
-script.on_init(check_existing_transceivers)
+script.on_init(function()
+  check_existing_transceivers()
+end)
 script.on_configuration_changed(function(event)
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
@@ -135,3 +138,28 @@ script.on_event({
 	defines.events.script_raised_built,
 	defines.events.script_raised_revive
 }, on_entity_built)
+
+
+-- The new UI owns only its own shortcut and tagged GUI elements.
+-- Existing transceiver and compatibility handlers remain unchanged.
+script.on_event("razi-galactic-operations-input",function(event)
+  local player=game.get_player(event.player_index)
+  if player then galactic_operations.toggle(player) end
+end)
+script.on_event(defines.events.on_lua_shortcut,function(event)
+  if event.prototype_name~="razi-galactic-operations" then return end
+  local player=game.get_player(event.player_index)
+  if player then galactic_operations.toggle(player) end
+end)
+script.on_event(defines.events.on_gui_click,galactic_operations.gui_click)
+script.on_event(defines.events.on_gui_text_changed,galactic_operations.text_changed)
+script.on_event(defines.events.on_gui_selection_state_changed,
+  galactic_operations.selection_changed)
+script.on_event(defines.events.on_gui_checked_state_changed,
+  galactic_operations.checkbox_changed)
+script.on_event(defines.events.on_gui_closed,galactic_operations.gui_closed)
+script.on_event(defines.events.on_player_display_resolution_changed,
+  galactic_operations.on_display_changed)
+script.on_event(defines.events.on_player_display_scale_changed,
+  galactic_operations.on_display_changed)
+script.on_event(defines.events.on_player_removed,galactic_operations.on_removed)
