@@ -83,6 +83,9 @@ check(present[gate_a].orbit.parent.name == "solar-system-edge",
   "Entry gateway not attached to deep-space edge")
 check(connected[route_name] and connected[route_name].length==250000,
   "Original expedition route gameplay length changed")
+check(connected[route_name].from=="solar-system-edge" and
+  connected[route_name].to==gate_a,
+  "Bellicos/Aegis gateway must start at Deep Space, not Calidus")
 
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="solar-system-edge",

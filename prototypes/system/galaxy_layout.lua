@@ -78,19 +78,32 @@ function M.data_final_fixes()
   end
   if #updates>0 then PlanetsLib:update(updates) end
 
-  -- The old ring forest was much larger than the planets themselves. Keep
-  -- native moon orbits, but suppress cosmetic rings around our six stars.
-  local signature={vulcanus=true,gleba=true,fulgora=true,
-    muria=true,cubium=true,tenebris=true}
-  for _, kind in ipairs({"planet","space-location"}) do
-    for _, location in pairs(data.raw[kind] or {}) do
-      local orbit = location.orbit
-      local parent = orbit and orbit.parent
-      if parent and parent.type=="space-location" and stars[parent.name] then
-        location.draw_orbit=(signature[location.name]==true)
-      end
+  -- PlanetsLib >= 2.0 uses Factorio's native origin-based orbit renderer.
+  -- Previously we drew only six signature rings, hiding every other orbit.
+  -- Native planet rings should remain enabled around Razi's six stars, even
+  -- when an upstream mod explicitly disabled them for the old sprite system.
+  -- Do NOT overwrite moons: their native planet-parent orbit and any custom
+  -- sprites (Apia-Carnova, Frozeta, etc.) belong to their source mods.
+  for _, planet in pairs(data.raw.planet or {}) do
+    local orbit = planet.orbit
+    local parent = orbit and orbit.parent
+    if parent and parent.type == "space-location" and stars[parent.name] then
+      planet.draw_orbit = true
     end
   end
+
+  -- Secretas is represented by a space-location rather than a planet; it is
+  -- an actual orbiting world, unlike the artificial slipstream and belt nodes.
+  local secretas=exists("space-location","secretas")
+  if secretas then
+    local parent=secretas.orbit and secretas.orbit.parent
+    if parent and parent.type=="space-location" and stars[parent.name] then
+      secretas.draw_orbit=true
+    end
+  end
+
+  -- Keep synthetic transit locations and sprite-only star anchors free of
+  -- spurious sun-centered rings. This does not affect the planet orbits.
   for _, name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
     "solar-system-edge","sye-calidus","sye-solaris","sye-nyxaris",

@@ -21,11 +21,20 @@ for _,name in ipairs({
   "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
   "shchierbin","muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta",
-  "cerys","rabbasca"
+  "cerys","rabbasca","athos"
 }) do planets[name]={name=name} end
 
 local moon={parent={type="planet",name="gleba"},distance=4}
 planets.rabbasca.orbit=moon
+planets.rabbasca.draw_orbit=false
+local native_moon_sprite={type="sprite",filename="custom-dashed-moon-orbit.png"}
+moon.sprite=native_moon_sprite
+local optional_orbit={parent={type="space-location",name="solaris"},
+  distance=40,orientation=.1,sprite={filename="custom-optional-orbit.png"}}
+planets.athos.orbit=optional_orbit
+planets.athos.draw_orbit=false
+planets.castra.draw_orbit=false
+places["sye-solaris"].draw_orbit=false
 rawset(_G,"data",{raw={planet=planets,["space-location"]=places}})
 rawset(_G,"PlanetsLib",{update=function(_,values)
   for _,item in ipairs(values) do
@@ -72,18 +81,29 @@ local hx,hy=position("sye-calidus")
 check(math.abs(hx)<1 and hy>20 and hy<30,
   "Calidus departure must remain near the central star")
 
+-- All planets directly orbiting a Razi star get Factorio 2.1 native
+-- rings, not only the old handpicked six signature planets.
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
   "paracelsin","shchierbin","muria","aquilo","rubia","maraxsis",
-  "cubium","linox-planet_linox","tenebris","vesta"}) do
-  local signature={vulcanus=true,gleba=true,fulgora=true,
-    muria=true,cubium=true,tenebris=true}
-  check(planets[name].draw_orbit==(signature[name]==true),
-    "Wrong signature orbital ring: "..name)
+  "cubium","linox-planet_linox","tenebris","vesta","athos"}) do
+  check(planets[name].draw_orbit==true,
+    "Factorio native orbit still disabled: "..name)
 end
+check(places.secretas.draw_orbit==true,
+  "Natural Secretas space-location should have a native orbit")
+check(places["sye-solaris"].draw_orbit==false,
+  "Synthetic slipstream ring should remain suppressed")
+check(planets.athos.orbit==optional_orbit and
+  planets.athos.orbit.sprite.filename=="custom-optional-orbit.png",
+  "Optional source orbit identity or unique sprite was overwritten")
+check(planets.rabbasca.draw_orbit==false and moon.sprite==native_moon_sprite,
+  "Moon's own orbit drawing settings were modified")
 check(planets.rabbasca.orbit==moon,
   "Native Gleba moon orbit must remain untouched")
 layout.data_final_fixes()
+check(planets.athos.draw_orbit==true,
+  "Repeated final fixes reverted native planet orbit")
 check(planets.rabbasca.orbit==moon,
   "Repeating layout damaged native moon")
 
@@ -98,4 +118,4 @@ local layout_call=source:find(
   'require("prototypes.system.galaxy_layout").data_final_fixes()',1,true)
 check(optional and belt and layout_call and optional<belt
   and belt<layout_call,"Final galaxy layout stage ordering is incorrect")
-print("Calidus radial gallery, native moon and belt order passed")
+print("Calidus radial gallery, Factorio native planet orbits and moon preservation passed")
