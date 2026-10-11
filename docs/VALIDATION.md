@@ -185,3 +185,19 @@ new optional switches: off means no Razi-owned alternate recipe/briefing;
 the native recipes, technology and planet description are not removed.
 Factorio's built-in settings UI controls the layout; the sections are
 localized prefixes, not fabricated headings or custom interface panels.
+
+## Community expansion post-load checks
+
+The added optional-world fixture runs with
+`lua5.2 tests/lua/test_community_expansions.lua` and tests:
+repeated pass idempotence; guarded startup when mods/planets/gates are
+missing; technology-cycle avoidance; keeping native solar flare,
+Balack, Ferrum and Wit connections; no Rabbasca Underground platform route;
+correctly positioned ordinary extra worlds; and preserved native technology
+unlock effects.
+
+**Not a live installation test:** enabling all newly optional mods can
+introduce conflicting deep science-pack costs or new endgame definitions.
+Review Wit space-science availability, the Balack promethium science
+requirement, Shattered Planet redefinitions, Ferrum choice-driven research,
+Hephaestus shortcuts and Arkanyx's Voidcraft requirement before shipping.

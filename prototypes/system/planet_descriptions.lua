@@ -5,13 +5,13 @@ local descriptions = {}
 local configured = setmetatable({}, {__mode = "k"})
 
 local destinations = {
-  calidus = {"nauvis", "muluna", "eneas", "sye-calidus"},
-  solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys", "athos", "solaris", "sye-solaris"},
-  nyxaris = {"gleba", "moshine", "apia", "carnova", "panglia", "foliax", "rabbasca", "pelagos", "lemures", "prosephina", "nyxaris", "sye-nyxaris", "apia-carnova-orbit", "star-dea-dia", "dea-dia-system-edge"},
-  vibrant = {"fulgora", "ribbonia", "paracelsin", "shchierbin", "cerys", "vibrant", "sye-vibrant"},
-  vespera = {"muria", "aquilo", "rubia", "maraxsis", "obsidiax", "vespera", "sye-vespera", "razi-vespera-belt-inner", "razi-vespera-belt-outer"},
+  calidus = {"nauvis", "muluna", "eneas", "bm-wit", "sye-calidus"},
+  solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys", "athos", "halo-solar-orbit", "halo-solar-station", "solaris", "sye-solaris"},
+  nyxaris = {"gleba", "moshine", "apia", "carnova", "panglia", "foliax", "rabbasca", "velora", "pelagos", "lemures", "prosephina", "nyxaris", "sye-nyxaris", "apia-carnova-orbit", "star-dea-dia", "dea-dia-system-edge"},
+  vibrant = {"fulgora", "ribbonia", "paracelsin", "shchierbin", "cerys", "ferrum", "khemia", "vibrant", "sye-vibrant"},
+  vespera = {"muria", "aquilo", "rubia", "maraxsis", "obsidiax", "nulla", "bm-balack", "vespera", "sye-vespera", "razi-vespera-belt-inner", "razi-vespera-belt-outer"},
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "beetlejuice", "sye-beetlejuice"},
-  umbra = {"tenebris", "crucible", "vesta", "carna", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
+  umbra = {"tenebris", "crucible", "vesta", "carna", "arcanyx", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
   deep_space = {"nexus", "shattered-planet", "solar-system-edge", "pulsar", "calidus-bellicos-stargate-calidus", "calidus-bellicos-stargate-bellicos", "black-hole-approach", "black-hole", "oort-cloud", "sol"}
 }
 

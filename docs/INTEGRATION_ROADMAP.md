@@ -96,3 +96,22 @@ pass in-engine testing.
 - [x] Test giant-asteroid introductions only in the late dangerous belt
 - [ ] Design unique starmap sprites for both debris belts after a live map review
 - [ ] Fly and benchmark both belts with the full Factorio 2.1 modpack
+
+## Phase 10: Community expansion, 16 additional mod recommendations
+
+- [x] Audit the full Discord request against 2026-10-11 mod portal/source descriptions
+- [x] Retain the five already-supported worlds (Rabbasca, Igrys, Foliax, Obsidiax, Athos)
+- [x] Register eleven newly requested mods as optional 2.1-compatible dependencies
+- [x] Attach selected ordinary planets to appropriate stars without creating research bypasses
+- [x] Preserve Solar Halo flares, Ferrum's remote operations, Balack's huge asteroid routes, and native moons
+- [x] Keep Rabbasca's invisible underground warp stabilizer off the ordinary space map
+- [x] Add fixtures for absent mods, native-route preservation, gated discoveries and technology cycles
+- [ ] Verify actual prototype IDs for Velora, Nulla, Khemia, Arcanyx and Hephaestus using full post-load Factorio data
+- [ ] Verify Ferrum choice-driven research alongside Razi system cards and K2SO
+- [ ] Resolve Balack/Wit changes to promethium science and early space science in the full modpack
+- [ ] Confirm no Hephaestus mass relay bypasses a locked star discovery
+- [ ] Validate Solar Halo's flare asteroid curves and Shattered Planet endgame mod together
+- [ ] Integrate native items, science and specialty machines only after their exact recipes are verified in-game
+- [ ] Benchmarked gameplay run with all 16 requested modules installed at once
+
+See `docs/COMMUNITY_EXPANSIONS.md` for decisions and source citations.

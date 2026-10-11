@@ -78,6 +78,7 @@ require("prototypes.technology.campaign_weave").data_final_fixes()
 
 -- Optional planet destinations: native science retained, chapter travel attached.
 require("prototypes.system.optional_planets").data_final_fixes()
+require("prototypes.system.community_expansions").data_final_fixes()
 
 -- Apply our approved star/planet coordinates last, after optional orbits.
 -- Keep this explicit in the data-stage entrypoint so it cannot be skipped.

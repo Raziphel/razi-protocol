@@ -95,6 +95,12 @@ The first pair of frontiers uses Calidus science. The second pair consumes Solar
 
 Vespera and Umbra currently tint existing icon assets, rather than introducing unsupported or unapproved new artwork. Dedicated star and card art are a separate polish pass. The card recipes contain only science expected from their required core planets, rather than injecting science from optional integrations.
 
+## Expanded Community Planet Compatibility
+
+The October 2026 optional modpack expansion now recognizes additional planets and atypical space destinations, including Ferrum, Velora, Nulla, Khemia, Arcanyx, Wit, Balack, Solar Halo, Rabbasca Underground, and the Shattered Planet extension. Each remains optional; Razi integrates them only when their actual mod and world prototypes exist.
+
+The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
+
 ## Planet Integrations
 
 Some world relationships need particular care:
