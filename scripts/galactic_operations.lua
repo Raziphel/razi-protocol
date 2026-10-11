@@ -7,6 +7,24 @@ local FRAME="razi_galactic_operations"
 local SHORTCUT="razi-galactic-operations"
 local PAGE_SIZE=22
 local FILTERS={"all","favorites","active","attention","recent"}
+local ROLES={"all","general","freighter","science","defense","exploration","construction"}
+local ROLE_CHOICES={"auto","general","freighter","science","defense","exploration","construction"}
+local function infer_role(name)
+  local s=(name or ""):lower()
+  if s:find("cargo",1,true) or s:find("freight",1,true)
+    or s:find("hauler",1,true) then return "freighter" end
+  if s:find("science",1,true) or s:find("research",1,true)
+    or s:find("laboratory",1,true) then return "science" end
+  if s:find("defense",1,true) or s:find("escort",1,true)
+    or s:find("warship",1,true) or s:find("gunship",1,true) then
+    return "defense"
+  end
+  if s:find("scout",1,true) or s:find("explor",1,true)
+    or s:find("survey",1,true) then return "exploration" end
+  if s:find("builder",1,true) or s:find("construct",1,true)
+    then return "construction" end
+  return "general"
+end
 local group_options={"all","calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra","deep-space","unassigned"}
 local function L(key,...) return {"razi-ops."..key,...} end
 
@@ -15,7 +33,7 @@ local function preferences(index)
   local p=storage.razigui[index]
   if not p then
     p={tab="worlds",filter="all",group="all",search="",page=1,
-       waypoints=false,locked=false,favorites={worlds={},platforms={}},
+       waypoints=false,locked=false,role_filter="all",roles={},favorites={worlds={},platforms={}},
        collapsed={},recent={}}
     storage.razigui[index]=p
   end
@@ -24,6 +42,8 @@ local function preferences(index)
   p.favorites.platforms=p.favorites.platforms or {}
   p.collapsed=p.collapsed or {}
   p.recent=p.recent or {}
+  p.roles=p.roles or {}
+  p.role_filter=p.role_filter or "all"
   return p
 end
 local function is_unlocked(force,name)
@@ -82,7 +102,7 @@ local function collect_worlds(player,p)
   end
   return entries
 end
-local function collect_platforms(player)
+local function collect_platforms(player,p)
   local entries={}
   for index,platform in pairs(player.force.platforms) do
     if valid_platform(platform) then
@@ -92,7 +112,9 @@ local function collect_platforms(player)
         group=platform_group(platform),status=platform_status(platform),
         ready=platform.surface and platform.surface.valid or false,
         location=platform.space_location or platform.last_visited_space_location,
-        connection=platform.space_connection
+        connection=platform.space_connection,
+        role=p.roles[tostring(index)] or infer_role(platform.name),
+        manual_role=p.roles[tostring(index)]~=nil
       }
     end
   end
@@ -110,6 +132,8 @@ local function is_recent(p,row)
 end
 local function matches(p,row)
   if p.group~="all" and p.group~=row.group then return false end
+  if row.kind=="platforms" and p.role_filter~="all"
+    and p.role_filter~=row.role then return false end
   local text=p.search:lower()
   if text~="" then
     local name=(row.name or ""):lower()
@@ -134,7 +158,7 @@ local function matches(p,row)
   return true
 end
 local function rows_for(player,p)
-  local all=p.tab=="worlds" and collect_worlds(player,p) or collect_platforms(player)
+  local all=p.tab=="worlds" and collect_worlds(player,p) or collect_platforms(player,p)
   local filtered={}
   for _,row in ipairs(all) do
     if matches(p,row) then filtered[#filtered+1]=row end
@@ -144,6 +168,9 @@ local function rows_for(player,p)
     if x~=y then return x<y end
     local af,bf=p.favorites[a.kind][a.id],p.favorites[b.kind][b.id]
     if (not not af)~=(not not bf) then return not not af end
+    if a.kind=="platforms" and b.kind=="platforms" and a.role~=b.role then
+      return a.role<b.role
+    end
     if a.name:lower()~=b.name:lower() then
       return a.name:lower()<b.name:lower()
     end
@@ -208,11 +235,27 @@ local function paint_row(parent,row,p)
       recent_key(row),L("no-view-tooltip"))
     btn.enabled=false
   end
-  if row.kind=="platforms" and row.connection then
-    local detail=band.add{type="label",
-      caption=L("flight-route",row.connection.from.localised_name,
-        row.connection.to.localised_name)}
-    accent(detail,{r=0.57,g=0.73,b=0.96})
+  if row.kind=="platforms" then
+    local mission=band.add{type="flow",direction="horizontal"}
+    mission.add{type="label",caption=L("mission")}
+    local choice=mission.add{type="drop-down",
+      name="razi_ops_role_"..row.id,
+      items={L("role-auto"),L("role-general"),L("role-freighter"),
+             L("role-science"),L("role-defense"),L("role-exploration"),
+             L("role-construction")},
+      tags={razi_ops_role_id=row.id}
+    }
+    local chosen=row.manual_role and row.role or "auto"
+    for i,value in ipairs(ROLE_CHOICES) do
+      if chosen==value then choice.selected_index=i;break end
+    end
+    mission.add{type="label",caption=L("role-"..row.role)}
+    if row.connection then
+      local detail=band.add{type="label",
+        caption=L("flight-route",row.connection.from.localised_name,
+          row.connection.to.localised_name)}
+      accent(detail,{r=0.57,g=0.73,b=0.96})
+    end
   end
 end
 
@@ -312,6 +355,17 @@ local function open(player)
   for index,value in ipairs(group_options) do
     if p.group==value then selector.selected_index=index end
   end
+  local roles=frame.add{type="flow",name="razi_ops_roles",direction="horizontal"}
+  roles.add{type="label",caption=L("mission-filter")}
+  local role_filter=roles.add{type="drop-down",name="razi_ops_role_filter",
+    items={L("role-all"),L("role-general"),L("role-freighter"),
+           L("role-science"),L("role-defense"),L("role-exploration"),
+           L("role-construction")}
+  }
+  for i,role in ipairs(ROLES) do
+    if p.role_filter==role then role_filter.selected_index=i;break end
+  end
+  roles.visible=p.tab=="platforms"
   local options=frame.add{type="flow",name="razi_ops_options",direction="horizontal"}
   options.add{
     type="checkbox",name="razi_ops_waypoints",
@@ -371,6 +425,7 @@ function M.gui_click(event)
     if frame and frame.valid then
       frame.razi_ops_options.razi_ops_waypoints.visible=value=="worlds"
       frame.razi_ops_options.razi_ops_locked.visible=value=="worlds"
+      frame.razi_ops_roles.visible=value=="platforms"
     end
   elseif action=="page" then
     p.page=math.max(1,p.page+value)
@@ -406,7 +461,19 @@ function M.selection_changed(event)
   local element=event.element
   if not (element and element.valid) then return end
   local p=preferences(event.player_index)
-  if element.name=="razi_ops_filter" then
+  local tags=element.tags
+  if tags and tags.razi_ops_role_id then
+    local id=tostring(tags.razi_ops_role_id)
+    local role=ROLE_CHOICES[element.selected_index] or "auto"
+    p.roles[id]=role~="auto" and role or nil
+    p.page=1
+    local player=game.get_player(event.player_index)
+    if player then redraw(player) end
+    return
+  end
+  if element.name=="razi_ops_role_filter" then
+    p.role_filter=ROLES[element.selected_index] or "all"
+  elseif element.name=="razi_ops_filter" then
     p.filter=FILTERS[element.selected_index] or "all"
   elseif element.name=="razi_ops_group" then
     p.group=group_options[element.selected_index] or "all"

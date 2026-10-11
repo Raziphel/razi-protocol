@@ -21,6 +21,7 @@ Razi Protocol's independent, native Factorio 2.1 planet and space-platform dashb
 - Enumerates the player's force-owned, nonhidden, non-deleting platforms.
 - Displays in-transit, in-orbit, paused, unscheduled and under-construction states; ongoing connections show their two endpoints.
 - Filters for travelling craft, attention-needed craft, favourites and recently opened craft. Bookmarks are private per player.
+- Fleet mission roles classify ships automatically from their names, with editable per-player overrides (cargo, science, defense, exploration, construction, general). Filter the fleet by mission without renaming the ship, editing its schedule, or changing another player's annotations.
 - **View** changes only the Remote View camera to an existing platform surface, never moves the character, starts a schedule, or renames a platform.
 - Both tabs are paginated at 22 entries per page, with no full-game tick scans. Refresh on demand.
 
