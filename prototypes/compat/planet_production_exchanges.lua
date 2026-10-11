@@ -473,7 +473,10 @@ local function register_exchange(rule)
     localised_description = {"technology-description." .. rule.name},
     icon = visual.icon,
     icons = visual.icons and deepcopy(visual.icons) or nil,
-    icon_size = visual.icon_size or 256,
+    -- The native technology may use a 64px icon with no icon_size field.
+    -- Preserve its declared size (or Factorio\'s 64px default) rather than
+    -- forcing 256px for an image that only contains 64x64 pixels.
+    icon_size = visual.icon_size,
     prerequisites = prerequisite_list,
     effects = {{type="unlock-recipe", recipe=rule.name}},
     unit = {
