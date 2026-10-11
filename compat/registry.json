@@ -175,7 +175,7 @@
         "tenebris-prime"
       ],
       "purpose": "Three optional K2SO-enabled manufacturing variants that connect Ferrum/Linox/Moshine rare earths, Wit advanced storage, and Balack/Rubia/Tenebris radiation materials. All source recipes and science gates survive unchanged.",
-      "upstream_status": "source-inspected-awaiting-full-pack-load",
+      "upstream_status": "local-only",
       "fixture": "tests/lua/test_community_industry_exchanges.lua"
     }
   ]
