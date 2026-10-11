@@ -190,10 +190,10 @@ class ConstellationTests(unittest.TestCase):
                          "solar-system-edge"}.issubset(reachable))
         self.assertAlmostEqual(
             math.dist(self.coords[native[0]], self.coords["shchierbin"]),
-            16.124515, places=3)
+            14, places=3)
         self.assertAlmostEqual(
             math.dist(self.coords[native[1]], self.coords["shchierbin"]),
-            16.124515, places=3)
+            20, places=3)
         self.assertGreater(
             math.dist(self.coords[native[0]], (0, 0)), 100,
             "Native asteroid gateways must not sit in the Nauvis system")

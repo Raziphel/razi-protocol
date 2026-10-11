@@ -51,7 +51,7 @@ MIN_LENGTHS = {
     key("sye-solaris", "sye-vibrant"): 65000,
     key("sye-nyxaris", "sye-vespera"): 65000,
     key("shchierbin", "asteroid-belt-inner-edge"): 32000,
-    key("maraxsis", "asteroid-belt-inner-edge"): 82000,
+    key("maraxsis", "asteroid-belt-inner-edge"): 86000,
     key("asteroid-belt-outer-edge", "sye-beetlejuice"): 42000,
     key("asteroid-belt-outer-edge", "sye-umbra"): 68000,
 }

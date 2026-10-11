@@ -28,8 +28,8 @@ chapters advancing upward to Deep Space and Bellicos.
 | Vespera | -124 | 0 |
 | Beetlejuice | 62 | -107.39 |
 | Umbra | -62 | -107.39 |
-| Required Asteroid Belt inner edge | Shchierbin - 14 | Shchierbin - 8 |
-| Required Asteroid Belt outer edge | Shchierbin + 14 | Shchierbin - 8 |
+| Required Asteroid Belt inner edge | Shchierbin X | Shchierbin Y - 14 |
+| Required Asteroid Belt outer edge | Shchierbin X | Shchierbin Y - 20 |
 | Deep Space / solar-system-edge | 0 | -248 |
 
 ## Design rules
@@ -47,13 +47,13 @@ chapters advancing upward to Deep Space and Bellicos.
 - Native AsteroidBelt by MrLumme remains REQUIRED at >=1.2.11, but its
   original bitmap is now centered on **Shchierbin**, not Calidus.
   Scale 0.55 fits the midgame planet with a ~16-unit particle ring.
-  The two source-owned asteroid gateways are genuine orbiting locations
-  around Shchierbin, 16.124515 units away at clockwise turns 0.832625
-  and 0.167375. The crossing itself is still source-owned and stays
+  The source-owned asteroid gateways orbit Shchierbin at radii 14 and 20
+  with orientation 0 (north). The ship crosses the belt radially, from its
+  inner edge to its outer edge. The crossing is still source-owned and stays
   exactly 5,000 km with its original asteroid hazards.
 - Shchierbin already connects to the native belt entrance; Maraxsis
   remains the Vespera entrance. Its cross-galaxy approach is lengthened
-  from 48,000 to 85,000 km; the long Umbra departure from 63,000 to
+  from 48,000 to 90,000 km; the long Umbra departure from 63,000 to
   70,000 km. These are flight distances, **not** hazard nerfs.
 - **Native rings for every planet around a Razi star** use the Factorio 2.1
   origin-based renderer provided by PlanetsLib >= 2.0.9. The previous code

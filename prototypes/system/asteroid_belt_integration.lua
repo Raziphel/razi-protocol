@@ -12,10 +12,11 @@ local RING_SCALE = 0.55
 local STARMAP_PIXELS_PER_UNIT = 32
 
 local coords = {
-  -- Identical radius (~16.125) on opposite sides of the northern ring.
-  -- Parent-relative polar bearings follow Factorio's 0=N, .25=E convention.
-  {"asteroid-belt-inner-edge",16.124515,0.832625},
-  {"asteroid-belt-outer-edge",16.124515,0.167375}
+  -- Radial crossing through the northern asteroid band around Shchierbin.
+  -- Inner edge is just inside the debris; outer edge is just outside.
+  -- Both use the native Factorio orientation zero (north).
+  {"asteroid-belt-inner-edge",14,0},
+  {"asteroid-belt-outer-edge",20,0}
 }
 
 local function get_location(name)
