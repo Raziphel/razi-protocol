@@ -36,5 +36,16 @@ data:extend({
     order="ca[quality-of-life]-c[route-highlights]"
   },
   startup_toggle("razi-route-intelligence",
-    "ca[quality-of-life]-d[route-intelligence]")
+    "ca[quality-of-life]-d[route-intelligence]"),
+  -- GALAXY VISUALS
+  {
+    type="string-setting",
+    name="razi-starmap-background-style",
+    setting_type="startup",
+    default_value="subtle",
+    allowed_values={"off","subtle","cinematic"},
+    order="cb[starmap]-a[background]"
+  },
+  startup_toggle("razi-starmap-system-halos","cb[starmap]-b[halos]"),
+  startup_toggle("razi-starmap-belt-atmosphere","cb[starmap]-c[belts]")
 })

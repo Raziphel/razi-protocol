@@ -1,0 +1,63 @@
+"""Validate all original PNG layers and their safety constraints."""
+import pathlib
+import struct
+import unittest
+import zlib
+ROOT=pathlib.Path(__file__).resolve().parents[1]
+ASSET=ROOT/"graphics/starmap/razi"
+SYSTEMS=("calidus","solaris","nyxaris","vibrant","vespera",
+         "beetlejuice","umbra","deep-space")
+BELTS=("vibrant","vespera","umbra")
+
+def inspect_png(path):
+    buf=path.read_bytes()
+    assert buf[:8]==b"\x89PNG\r\n\x1a\n",path
+    chunks={}
+    index=8
+    while index<len(buf):
+        n=int.from_bytes(buf[index:index+4],"big")
+        key=buf[index+4:index+8]
+        payload=buf[index+8:index+8+n]
+        check=int.from_bytes(buf[index+8+n:index+12+n],"big")
+        assert zlib.crc32(key+payload)==check,path
+        chunks.setdefault(key,[]).append(payload)
+        index+=n+12
+    assert index==len(buf)
+    w,h,depth,colour=struct.unpack(">IIBB",chunks[b"IHDR"][0][:10])
+    raw=zlib.decompress(b"".join(chunks[b"IDAT"]))
+    assert len(raw)==h*(1+(w*depth+7)//8),path
+    return w,h,depth,colour,b"tRNS" in chunks,len(buf)
+
+class StarmapBackgroundTests(unittest.TestCase):
+    def test_all_sprites_fit_without_giant_atlases(self):
+        names=([f"sky-{i}.png" for i in range(1,5)] +
+               [f"glow-{name}.png" for name in SYSTEMS] +
+               [f"belt-{name}.png" for name in BELTS] +
+               ["galactic-current.png"])
+        self.assertEqual(len(names),16)
+        self.assertEqual({f.name for f in ASSET.glob("*.png")},set(names))
+        for name in names:
+            w,h,depth,colour,transparent,size=inspect_png(ASSET/name)
+            self.assertLessEqual(max(w,h),1024)
+            self.assertEqual(colour,3)
+            self.assertIn(depth,(2,8))
+            self.assertTrue(transparent)
+            self.assertLess(size,350000)
+    def test_art_after_orbit_layout_before_route_highlights(self):
+        source=(ROOT/"data-final-fixes.lua").read_text()
+        layout='require("prototypes.system.galaxy_layout").data_final_fixes()'
+        art='require("prototypes.system.starmap_background").data_final_fixes()'
+        routes='require("prototypes.system.route_highlights").data_final_fixes()'
+        self.assertLess(source.index(layout),source.index(art))
+        self.assertLess(source.index(art),source.index(routes))
+    def test_settings_and_prototype_ownership(self):
+        settings=(ROOT/"settings.lua").read_text()
+        module=(ROOT/"prototypes/system/starmap_background.lua").read_text()
+        self.assertIn('allowed_values={"off","subtle","cinematic"}',settings)
+        self.assertIn('mods["Better_Starmap_Background"]',module)
+        self.assertIn('table.insert(sprite.layers,1,new[i])',module)
+        self.assertIn('layout.anchor_position',module)
+        self.assertNotIn('data:extend',module)
+        self.assertNotIn('space-connection',module)
+if __name__=="__main__":
+    unittest.main()

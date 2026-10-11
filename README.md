@@ -268,3 +268,8 @@ Please see [Credits.txt](Credits.txt) for the full acknowledgement list. If you 
 ## Galactic Operations UI
 
 A first-party, seven-system-aware planet and space-platform dashboard is included. Open the **Galactic Ops** button in Remote View on the space map, or optionally press **Ctrl+Shift+G** while viewing the map. It never occupies the shortcut bar. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).
+
+
+## Razi Universe Background
+
+The original, static seven-system starmap now has a galaxy-wide starfield, distinct coloured nebulae for each system and Deep Space, a connecting dust current, and three subtle asteroid-belt halos. Change the **Custom universe background** setting between Off, Subtle (default) and Cinematic, and independently toggle nebulae or belt atmosphere. Assets are 1024px or smaller and keep all native route and planet artwork. See [background notes](docs/STARMAP_BACKGROUND.md).
