@@ -1,0 +1,127 @@
+"""Geometric regressions for the seven-system Factorio starmap.
+
+These checks consume the authoritative Lua manifests rather than a hand-drawn
+mock screenshot. Distances here are *starmap* units, not game travel km.
+"""
+import math
+import re
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+LAYOUT = ROOT / "prototypes/system/galaxy_layout.lua"
+ROUTES = ROOT / "prototypes/system/route_reconcile.lua"
+STARS = ("solaris", "nyxaris", "vibrant", "vespera", "beetlejuice", "umbra")
+PAIRS = (("solaris", "nyxaris"), ("vibrant", "vespera"),
+         ("beetlejuice", "umbra"))
+DIAGONALS = (("sye-solaris", "sye-vespera"),
+             ("sye-nyxaris", "sye-vibrant"),
+             ("sye-vibrant", "sye-umbra"),
+             ("sye-vespera", "sye-beetlejuice"))
+
+
+def parse_layout():
+    text = LAYOUT.read_text(encoding="utf8")
+    pattern = r'\{"(?:planet|space-location)","([^"]+)","([^"]+)",(\d+),([.\d]+)\}'
+    anchors = {}
+    for name, parent, radius, angle in re.findall(pattern, text):
+        anchors[name] = (parent, float(radius), float(angle))
+    return anchors
+
+
+def parse_routes():
+    text = ROUTES.read_text(encoding="utf8")
+    section = text.split("local route_specifications = {", 1)[1]
+    section = section.split("-- Paths replaced by", 1)[0]
+    pattern = r'\{"([^"]+)", "([^"]+)", (\d+), "([^"]+)"\}'
+    return [(a, b, int(km), profile)
+            for a, b, km, profile in re.findall(pattern, section)]
+
+
+def coordinates(anchors):
+    cache = {"star": (0.0, 0.0)}
+
+    def position(name):
+        if name in cache:
+            return cache[name]
+        parent, radius, orientation = anchors[name]
+        x, y = position(parent)
+        angle = math.tau * orientation
+        cache[name] = (x + radius * math.sin(angle),
+                       y - radius * math.cos(angle))
+        return cache[name]
+
+    for name in anchors:
+        position(name)
+    return cache
+
+
+def point_to_segment(p, a, b):
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    denominator = dx * dx + dy * dy
+    t = max(0.0, min(1.0, ((p[0] - a[0]) * dx +
+                             (p[1] - a[1]) * dy) / denominator)) if denominator else 0
+    return math.dist(p, (a[0] + dx * t, a[1] + dy * t))
+
+
+class VisualStarmapTests(unittest.TestCase):
+    def setUp(self):
+        self.anchors = parse_layout()
+        self.coords = coordinates(self.anchors)
+        self.routes = parse_routes()
+
+    def test_system_columns_and_deep_space_are_separated(self):
+        previous_x = 0
+        for upper, lower in PAIRS:
+            x1, y1 = self.coords[upper]
+            x2, y2 = self.coords[lower]
+            self.assertGreater(x1 - previous_x, 100)
+            self.assertLess(abs(x1 - x2), 4)
+            self.assertLess(y1, -60)
+            self.assertGreater(y2, 60)
+            previous_x = x1
+        self.assertGreater(self.coords["solar-system-edge"][0], previous_x + 100)
+
+    def test_hubs_stay_left_and_routes_do_not_cut_through_stars(self):
+        for name in STARS:
+            sx, sy = self.coords[name]
+            hx, hy = self.coords["sye-" + name]
+            self.assertLess(hx, sx - 40)
+            self.assertLess(hy, sy - 17)
+
+        for a, b, _, _ in self.routes:
+            if a not in self.coords or b not in self.coords:
+                continue  # Conditional planet and external source location
+            for star in STARS:
+                clearance = point_to_segment(
+                    self.coords[star], self.coords[a], self.coords[b])
+                self.assertGreaterEqual(
+                    clearance, 17,
+                    f"{a} -> {b} cuts through {star} ({clearance:.1f})")
+
+    def test_tier_lanes_replace_four_crossing_diagonals(self):
+        edges = {tuple(sorted((a, b))) for a, b, _, _ in self.routes}
+        for a, b in DIAGONALS:
+            self.assertNotIn(tuple(sorted((a, b))), edges)
+        for a, b in (("sye-calidus", "sye-solaris"),
+                     ("sye-calidus", "sye-nyxaris"),
+                     ("sye-solaris", "sye-nyxaris"),
+                     ("sye-solaris", "sye-vibrant"),
+                     ("sye-nyxaris", "sye-vespera"),
+                     ("sye-vibrant", "sye-vespera"),
+                     ("sye-vibrant", "sye-beetlejuice"),
+                     ("sye-vespera", "sye-umbra"),
+                     ("sye-beetlejuice", "sye-umbra")):
+            self.assertIn(tuple(sorted((a, b))), edges)
+
+    def test_bellicos_pulsar_is_a_right_side_annex(self):
+        source = (ROOT / "prototypes/system/bellicos.lua").read_text(encoding="utf8")
+        self.assertIn('name = "pulsar"', source)
+        self.assertIn('distance = 165, orientation = 0.25', source)
+        self.assertIn('distance = 36, orientation = 0.25', source)
+        self.assertIn('distance = 62, orientation = 0.75', source)
+        self.assertEqual(source.count("position_expedition()"), 3)
+
+
+if __name__ == "__main__":
+    unittest.main()
