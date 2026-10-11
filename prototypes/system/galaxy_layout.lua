@@ -34,7 +34,7 @@ local anchors = {
   {"space-location","apia-carnova-orbit","nyxaris",32,.91},
   {"planet","panglia","nyxaris",31,.58},
   -- Vibrant: travel along the bottom edge rather than through the star.
-  {"planet","fulgora","vibrant",20,.87},
+  {"planet","fulgora","vibrant",24,.86},
   {"planet","ribbonia","vibrant",28,.61},
   {"planet","paracelsin","vibrant",24,.40},
   {"planet","shchierbin","vibrant",32,.25},
