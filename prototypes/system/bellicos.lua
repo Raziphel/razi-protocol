@@ -58,15 +58,15 @@ local function position_expedition()
 	-- by an upstream compatibility pass. Both cases must remain load-safe.
 	local pulsar_type = endpoint_type("pulsar")
 	if pulsar_type then
-		place("pulsar", "solar-system-edge", edge_type, 165, 0.25, false)
+		place("pulsar", "solar-system-edge", edge_type, 110, 0.25, false)
 	end
-	place(entry_gate, "solar-system-edge", edge_type, 36, 0.25, true)
+	place(entry_gate, "solar-system-edge", edge_type, 24, 0.25, true)
 	if pulsar_type then
-		place(bellicos_gate, "pulsar", pulsar_type, 62, 0.75, true)
+		place(bellicos_gate, "pulsar", pulsar_type, 40, 0.75, true)
 	else
 		-- Without the source pulsar prototype, place the gate in the same
 		-- annex rather than creating an orbit whose parent cannot resolve.
-		place(bellicos_gate, "solar-system-edge", edge_type, 103, 0.25, true)
+		place(bellicos_gate, "solar-system-edge", edge_type, 70, 0.25, true)
 	end
 	if #updates > 0 then PlanetsLib:update(updates) end
 end
