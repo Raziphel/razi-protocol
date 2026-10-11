@@ -10,7 +10,7 @@ local route_icons = require("prototypes.system.route_icons")
 local candidates = {
   {mod="planet-ferrum", name="ferrum", system="vibrant",
     gate="vibrant-discovery", hub="fulgora",
-    radius=31, orientation=.91, km=19500, profile="electrical",
+    radius=45.1885, orientation=0.8190658, km=19500, profile="electrical",
     preserve_routes=true},
   {mod="Velora", name="velora", system="nyxaris",
     gate="planet-discovery-gleba", hub="gleba",
@@ -20,15 +20,15 @@ local candidates = {
     moon=true, km=13500, profile="cryogenic"},
   {mod="alchemy-khemia", name="khemia", system="vibrant",
     gate="vibrant-discovery", hub="paracelsin",
-    radius=33, orientation=.12, km=21000, profile="chemistry"},
+    radius=46.0977, orientation=0.3872186, km=21000, profile="chemistry"},
   {mod="Arcanyx", name="arcanyx", system="umbra",
     gate="umbra-discovery", hub="tenebris",
-    radius=32, orientation=.94, km=25000, profile="outer_void"},
+    radius=43.7379, orientation=0.0292755, km=25000, profile="outer_void"},
   -- Source: Balack is a dangerous post-Aquilo side trip. Its prometheum
   -- research, strong asteroid routes and source bio-factory are NOT changed.
   {mod="biological-machines-planet-balack", name="bm-balack",
     system="vespera", gate="planet-discovery-aquilo", hub="aquilo",
-    radius=35, orientation=.72, km=30000, profile="cryogenic_deep",
+    radius=46.1411, orientation=0.6669475, km=30000, profile="cryogenic_deep",
     preserve_routes=true},
   -- Wit produces early space science and belongs to Nauvis. Its moon
   -- relationship is not an ordinary Razi star-system orbital slot.
