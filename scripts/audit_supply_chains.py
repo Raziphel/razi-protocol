@@ -148,10 +148,21 @@ class SupplyTrace:
                         places.add(location)
         return places
 
-    def recipe_available(self, name, recipe, researched):
+    def recipe_unlock_status(self, name, recipe, researched, goal):
         if recipe.get("enabled") is not False:
-            return True
-        return bool(self.unlockers[name].intersection(researched))
+            return "ready"
+        if self.unlockers[name].intersection(researched):
+            return "ready"
+        unlockers = self.unlockers[name]
+        if not unlockers:
+            return "no-unlocker"
+        # No prerequisite ancestry means an independent research branch may
+        # still unlock this producer. It is not proof of an impossible recipe.
+        if goal and all(unlocker == goal or
+                        goal in technology_ancestors(self.technologies, unlocker)
+                        for unlocker in unlockers):
+            return "future-unlock"
+        return "independent-research"
 
     def recipe_locations(self, recipe, places):
         if not seq(recipe.get("surface_conditions")):
@@ -191,7 +202,7 @@ class SupplyTrace:
             return False
         return None if uncertain or not places else False
 
-    def trace(self, name, researched, places, trail=(), depth=0):
+    def trace(self, name, researched, places, trail=(), depth=0, goal=None):
         if name in trail:
             return {"item": name, "status": "cycle", "path": list(trail) + [name]}
         if name in self.natural:
@@ -201,9 +212,11 @@ class SupplyTrace:
         candidates = []
         for recipe_name in self.producers.get(name, ()):
             recipe = self.recipes[recipe_name]
-            if not self.recipe_available(recipe_name, recipe, researched):
+            unlock_state = self.recipe_unlock_status(
+                recipe_name, recipe, researched, goal)
+            if unlock_state != "ready":
                 unlocks = sorted(self.unlockers.get(recipe_name, ()))
-                candidates.append({"recipe": recipe_name, "status": "locked",
+                candidates.append({"recipe": recipe_name, "status": unlock_state,
                                    "unlockers": unlocks})
                 continue
             surface = self.recipe_locations(recipe, places)
@@ -217,7 +230,7 @@ class SupplyTrace:
                                    "status": "no-machine"})
                 continue
             children = [self.trace(item, researched, places,
-                                   trail + (name,), depth + 1)
+                                   trail + (name,), depth + 1, goal)
                         for item in input_names(recipe) if item != name]
             if name in input_names(recipe):
                 children.append({"item": name, "status": "cycle",
@@ -225,9 +238,11 @@ class SupplyTrace:
             statuses = {child["status"] for child in children}
             if "blocked" in statuses or "cycle" in statuses:
                 status = "blocked"
-            elif "locked" in statuses or "surface-excluded" in statuses or "no-machine" in statuses:
+            elif ("future-unlock" in statuses or "no-unlocker" in statuses
+                  or "surface-excluded" in statuses or "no-machine" in statuses):
                 status = "blocked"
-            elif "depth-limit" in statuses or "unresolved" in statuses:
+            elif ("independent-research" in statuses or "unverified" in statuses
+                  or "depth-limit" in statuses or "unresolved" in statuses):
                 status = "unverified"
             elif surface is None or machine is None:
                 status = "unverified"
@@ -238,13 +253,18 @@ class SupplyTrace:
         if not candidates:
             return {"item": name, "status": "unresolved",
                     "reason": "No recipe or mineable source in loaded prototypes"}
-        preference = {"traceable": 0, "unverified": 1, "blocked": 2,
-                      "locked": 3, "no-machine": 4, "surface-excluded": 5}
+        preference = {"traceable": 0, "unverified": 1,
+                      "independent-research": 2, "blocked": 3,
+                      "future-unlock": 4, "no-unlocker": 5,
+                      "no-machine": 6, "surface-excluded": 7}
         best = min(candidates, key=lambda c: (
             preference.get(c["status"], 6), len(c.get("inputs", ()))))
         status = best["status"]
-        if status in ("locked", "no-machine", "surface-excluded"):
+        if status in ("future-unlock", "no-unlocker", "no-machine",
+                      "surface-excluded"):
             status = "blocked"
+        elif status == "independent-research":
+            status = "unverified"
         return {"item": name, "status": status,
                 "best": best, "producer_count": len(candidates)}
 
@@ -263,10 +283,10 @@ class SupplyTrace:
             report[label] = {
                 "discovery": goal,
                 "before_discovery_science": [
-                    self.trace(item, before, before_places)
+                    self.trace(item, before, before_places, goal=goal)
                     for item in science_names(tech)],
                 "after_discovery_production": [
-                    self.trace(item, after, after_places)
+                    self.trace(item, after, after_places, goal=goal)
                     for item in focus if item in known],
                 "reachable_location_prototypes": sorted(after_places),
                 "caveat": ("Sources and machines inferred from prototypes; "
@@ -283,7 +303,9 @@ def summarize(report):
             for node in result[section]:
                 print(f"    {node['status']}: {node['item']}")
                 best = node.get("best", {})
-                if best.get("status") in ("locked", "surface-excluded", "no-machine"):
+                if best.get("status") in ("future-unlock", "no-unlocker",
+                                          "independent-research",
+                                          "surface-excluded", "no-machine"):
                     print(f"       {best['recipe']}: {best['status']}")
         print("  Note: possible chains require an in-game supply/transport check.")
 

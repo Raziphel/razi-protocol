@@ -88,7 +88,7 @@ class SupplyTests(unittest.TestCase):
         child = science["best"]["inputs"][0]
         self.assertEqual(child["item"], "kr-cryogenic-research-data")
         self.assertEqual(child["status"], "blocked")
-        self.assertEqual(child["best"]["status"], "locked")
+        self.assertEqual(child["best"]["status"], "future-unlock")
         self.assertIn("kr-cryogenic-research",
                       child["best"]["unlockers"])
 
@@ -117,6 +117,16 @@ class SupplyTests(unittest.TestCase):
                          "blocked")
         self.assertEqual(result["Crucible"]["after_discovery_production"][0]["best"]["status"],
                          "no-machine")
+
+    def test_independent_research_is_not_reported_as_impossible(self):
+        raw = example()
+        raw["technology"]["kr-cryogenic-research"]["prerequisites"] = [
+            "vespera-discovery"]
+        result = audit.SupplyTrace(raw).analyze()
+        science = result["Aquilo"]["before_discovery_science"][0]
+        self.assertEqual(science["status"], "unverified")
+        self.assertEqual(science["best"]["inputs"][0]["best"]["status"],
+                         "independent-research")
 
     def test_alternative_recipe_bypasses_locked_producer(self):
         raw = example()

@@ -152,3 +152,8 @@ in research needed to reach Aquilo, Umbra or Crucible. Vesta's gas science is
 treated similarly. Only late-world-exclusive science is removed from those
 pre-arrival milestones; native science needed after arrival remains in place.
 See `tests/lua/test_outer_science_arrival_guard.lua`.
+
+The recipe-chain tracer explicitly distinguishes recipes locked *behind*
+the destination (`future-unlock`, a likely deadlock) from recipes unlocked by
+independent technologies outside the snapshot's prerequisite ancestry
+(`independent-research`, not enough evidence to call impossible).
