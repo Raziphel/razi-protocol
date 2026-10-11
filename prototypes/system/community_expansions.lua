@@ -10,7 +10,7 @@ local route_icons = require("prototypes.system.route_icons")
 local candidates = {
   {mod="planet-ferrum", name="ferrum", system="vibrant",
     gate="vibrant-discovery", hub="fulgora",
-    radius=45.1885, orientation=0.8190658, km=19500, profile="electrical",
+    radius=57.0088, orientation=0.7923753, km=19500, profile="electrical",
     preserve_routes=true},
   {mod="Velora", name="velora", system="nyxaris",
     gate="planet-discovery-gleba", hub="gleba",
