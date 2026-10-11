@@ -2,7 +2,7 @@
 """Audit Razi's interstellar travel lengths against post-load starmap geometry.
 
 Factorio route.length is kilometres; orbit.distance is map layout scale.
-The ratio is *not* physical astronomy. It is a consistency signal intended
+The ratio is *not* physical astronomy. Compact galaxy artwork projects\nmore kilometres per map unit than the old sprawling layout. It is a signal intended
 to catch a 30,000 km cross-star route placed beside a 140,000 km neighbor.
 Native orbital hops and mod-specific transit routes are deliberately excluded.
 """
@@ -101,7 +101,7 @@ def audit(raw):
         if density < 600:
             issues.add(f"Too-short interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
-        if density > 1500:
+        if density > 3000:
             issues.add(f"Disproportionate interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
 
