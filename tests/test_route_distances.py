@@ -37,11 +37,12 @@ def world():
             }
         }
     source = (ROOT / "prototypes/system/asteroid_belt_integration.lua").read_text()
-    for name, distance in re.findall(
-            r'\{"(asteroid-belt-(?:inner|outer)-edge)",(\d+)\}', source):
+    for name, distance, turn in re.findall(
+            r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
+            source):
         raw["space-location"][name] = {
             "orbit": {"parent": {"name": "star"},
-                      "distance": float(distance), "orientation": 0.5}
+                      "distance": float(distance), "orientation": float(turn)}
         }
     for a, b, length, kind in route_manifest():
         raw["space-connection"][f"link-{a}-{b}"] = {
