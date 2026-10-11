@@ -13,3 +13,5 @@ require "prototypes.system.seven_systems"
 require "prototypes.system.asteroid_belts"
 require "prototypes.technology"
 require "prototypes.technology.asteroid_belts"
+
+require("prototypes.ui.galactic_operations")

@@ -263,3 +263,8 @@ If you enjoy the mod and want to support future updates:
 Razi Protocol exists because of the wider Factorio modding community. The planets, enemies, mechanics, art, sounds, and icons used by the pack belong to their respective authors and contributors.
 
 Please see [Credits.txt](Credits.txt) for the full acknowledgement list. If you are a mod author and want credit wording adjusted or content removed, contact Raziphel on Discord.
+
+
+## Galactic Operations UI
+
+A first-party, seven-system-aware planet and space-platform dashboard is included. Open it from the shortcut bar or press **Ctrl+Shift+G**. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).
