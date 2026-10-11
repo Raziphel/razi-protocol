@@ -33,8 +33,12 @@ class StarmapBackgroundTests(unittest.TestCase):
         names=([f"sky-{i}.png" for i in range(1,5)] +
                [f"glow-{name}.png" for name in SYSTEMS] +
                [f"belt-{name}.png" for name in BELTS] +
-               ["galactic-current.png"])
-        self.assertEqual(len(names),16)
+               ["galactic-current.png","dust-lane-2.png",
+                "rift-deep-space.png","chart-constellation.png"] +
+               [f"filament-{name}.png" for name in SYSTEMS] +
+               [f"debris-{name}.png" for name in BELTS] +
+               [f"cluster-{i}.png" for i in range(1,4)])
+        self.assertEqual(len(names),33)
         self.assertEqual({f.name for f in ASSET.glob("*.png")},set(names))
         for name in names:
             w,h,depth,colour,transparent,size=inspect_png(ASSET/name)
@@ -57,6 +61,13 @@ class StarmapBackgroundTests(unittest.TestCase):
         self.assertIn('mods["Better_Starmap_Background"]',module)
         self.assertIn('table.insert(sprite.layers,1,new[i])',module)
         self.assertIn('layout.anchor_position',module)
+        self.assertIn('razi-starmap-fine-details',settings)
+        self.assertIn('razi-starmap-cartography',settings)
+        self.assertIn('default_value=false',settings)
+        self.assertIn('filament-',module)
+        self.assertIn('debris-',module)
+        self.assertIn('rift-deep-space.png',module)
+        self.assertIn('chart-constellation.png',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('space-connection',module)
 if __name__=="__main__":
