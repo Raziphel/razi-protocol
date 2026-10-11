@@ -54,6 +54,17 @@ chapters advancing upward to Deep Space and Bellicos.
 - The Calidus departure slipstream is 20 units due south of home
   (previously 25), clear of Nauvis and Muluna but closer to the center.
   Planet orbits, the six-star radius (104) and all star textures stay put.
+- Neighboring planets now have short return routes: Vulcanus↔Castra,
+  Arig↔Hyarion, Gleba↔Moshine, Moshine↔Apia-Carnova Orbit,
+  outer AsteroidBelt edge↔Paracelsin, Linox↔Secretas,
+  and Umbra slipstream↔Crucible Orbit. These are 12–22k km local
+  expeditions, not new interstellar shortcuts. They reuse existing
+  asteroid difficulty profiles; world discovery prerequisites are unchanged.
+- Vespera and the remaining Umbra rim routes intentionally keep a
+  single dangerous crossing. Extra shortcuts there either bypass the
+  surveys or run over Rubia/Crucible map markers. Old same-system
+  crossings directly from Vibrant's inner planets to its outer planets
+  are removed while preserving the original native belt core.
 - The original discovery technologies continue to gate travel:
   the first two frontiers use Nauvis science, the middle frontiers
   require the earlier branches, and outer discoveries still require

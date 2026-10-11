@@ -29,8 +29,8 @@ local membership = {
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
 	frozeta = "beetlejuice",
-	-- The required upstream AsteroidBelt remains a science gate for both
-	-- outer discoveries; new Calidus spokes retain the original tech gates.
+	-- The native AsteroidBelt remains a science gate for both outer
+	-- discoveries. Its edge-to-edge crossing must remain source-owned.
 	["asteroid-belt-inner-edge"] = "mid-outer-belt",
 	["asteroid-belt-outer-edge"] = "mid-outer-belt",
 	["sye-umbra"] = "umbra", tenebris = "umbra",
@@ -63,6 +63,11 @@ local route_specifications = {
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "shchierbin", 16000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
+	-- Dense neighboring industrial worlds get a few short cargo loops.
+	-- Keep the original discovery prerequisites; these routes only provide
+	-- logistical choices once both endpoints are researched.
+	{"vulcanus", "castra", 17500, "industrial"},
+	{"arig", "hyarion", 12000, "industrial_deep"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
 	{"sye-solaris", "castra", 21000, "industrial"},
@@ -71,6 +76,10 @@ local route_specifications = {
 	{"arig", "tellus", 16500, "industrial_deep"},
 	{"hyarion", "tellus", 16500, "industrial_deep"},
 	{"tellus", "corrundum", 18000, "industrial_deep"},
+	-- Nyxaris neighbors can exchange biological supplies directly instead
+	-- of routing every load through their distant slipstream hub.
+	{"gleba", "moshine", 17000, "biological"},
+	{"moshine", "apia-carnova-orbit", 12000, "biological"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
 	{"sye-nyxaris", "gleba", 18000, "biological"},
 	{"sye-nyxaris", "apia-carnova-orbit", 23000, "biological"},
@@ -84,6 +93,9 @@ local route_specifications = {
 	{"sye-vibrant", "ribbonia", 23500, "electrical"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
 	{"shchierbin", "paracelsin", 22000, "chemistry_deep"},
+	-- A post-crossing outer-side return leg. It never connects an inner
+	-- Vibrant world directly to an outer one.
+	{"asteroid-belt-outer-edge", "paracelsin", 14000, "chemistry_deep"},
 	-- Vespera's extreme-environment strand.
 	{"sye-vespera", "muria", 19000, "cryogenic"},
 	{"muria", "aquilo", 22000, "cryogenic"},
@@ -96,7 +108,12 @@ local route_specifications = {
 	{"cubium", "linox-planet_linox", 17000, "outer_industry"},
 	{"cubium", "secretas", 23000, "outer_industry_deep"},
 	{"secretas", "frozeta", 10500, "outer_industry_deep"},
+	-- Linox and Secretas are neighbors in the same researched outer tier.
+	-- Their return shuttle avoids another trip back through Cubium.
+	{"linox-planet_linox", "secretas", 22000, "outer_industry_deep"},
 	-- Umbra's extreme sciences. Crucible's native orbital link stays intact.
+	-- Keep the critical inner-rim / outer-rim transit untouched.
+	{"sye-umbra", "crucible-orbit", 17000, "outer_void"},
 	{"sye-umbra", "tenebris", 18000, "outer_void"},
 	{"tenebris", "crucible-orbit", 20000, "outer_void"},
 	{"crucible-orbit", "razi-umbra-belt-inner", 10000, "belt_umbra_approach"},
@@ -126,6 +143,26 @@ local function key_for(a, b)
 		a, b = b, a
 	end
 	return a .. "|" .. b
+end
+
+-- The original AsteroidBelt is a true inner/outer boundary at Vibrant.
+-- Some dependencies add old same-system shortcuts in their final-fixes;
+-- remove ONLY crossings between Razi's known inner and outer locations.
+-- Never remove the one native edge-to-edge connection, even on repeated
+-- reconciliation. Optional source moons within the inner region stay inside.
+local vibrant_inner = {
+  ["sye-vibrant"]=true, fulgora=true, ribbonia=true, cerys=true,
+  ["asteroid-belt-inner-edge"]=true
+}
+local vibrant_outer = {
+  shchierbin=true, paracelsin=true, ["asteroid-belt-outer-edge"]=true
+}
+local function bypasses_vibrant_belt(a,b)
+  if key_for(a,b)==key_for("asteroid-belt-inner-edge","asteroid-belt-outer-edge") then
+    return false
+  end
+  return (vibrant_inner[a] and vibrant_outer[b])
+      or (vibrant_inner[b] and vibrant_outer[a])
 end
 
 local allowed = {}
@@ -169,15 +206,17 @@ function route_reconcile.data_final_fixes()
 		end
 	end
 
-	-- Stop cross-chapter shortcuts injected by dependencies, without deleting
-	-- a single native route inside a chapter or unmanaged optional subsystem.
+	-- Stop unmanaged interstellar shortcuts and old intra-Vibrant routes
+	-- that would bypass the required original AsteroidBelt.
+	-- Do not prune ordinary native same-system connections, special moons,
+	-- optional integrations, or the native inner-to-outer belt crossing.
 	for name, connection in pairs(routes) do
 		local from_system = membership[connection.from]
 		local to_system = membership[connection.to]
-		if from_system and to_system and from_system ~= to_system then
-			if not allowed[key_for(connection.from, connection.to)] then
-				routes[name] = nil
-			end
+		if bypasses_vibrant_belt(connection.from, connection.to)
+			or (from_system and to_system and from_system ~= to_system
+				and not allowed[key_for(connection.from, connection.to)]) then
+			routes[name] = nil
 		end
 	end
 

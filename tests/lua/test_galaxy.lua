@@ -37,7 +37,8 @@ local function test_routes()
 		"secretas", "crucible-orbit", "frozeta"
 	}
 	local planets = {
-		"nauvis", "muria", "aquilo", "rubia", "maraxsis", "cubium",
+		"nauvis", "vulcanus", "gleba", "fulgora",
+		"muria", "aquilo", "rubia", "maraxsis", "cubium",
 		"tenebris", "crucible", "vesta", "linox-planet_linox"
 	}
 	local space_locations = {}
@@ -83,6 +84,14 @@ local function test_routes()
 				type = "space-connection", name = "old-tenebris-link",
 				from = "sye-beetlejuice", to = "tenebris"
 			},
+            ["old-inner-to-frozen"] = {
+                type="space-connection",name="old-inner-to-frozen",
+                from="ribbonia",to="paracelsin",length=3000
+            },
+            ["old-factory-belt-bypass"] = {
+                type="space-connection",name="old-factory-belt-bypass",
+                from="fulgora",to="shchierbin",length=3000
+            },
 			["old-direct-aquilo-rubia"] = {
                 type="space-connection", from="aquilo", to="rubia",
                 asteroid_spawn_definitions={{
@@ -144,6 +153,9 @@ local function test_routes()
 	check(routes["outdated-cross-shortcut"] == nil, "Obsolete perimeter route survived")
 	check(routes["outdated-muria"] == nil, "Stale Vibrant/Muria route survived")
 	check(routes["old-tenebris-link"] == nil, "Stale Beetlejuice/Tenebris route survived")
+    check(routes["old-inner-to-frozen"] == nil
+      and routes["old-factory-belt-bypass"] == nil,
+      "Native Vibrant belt can be bypassed by a same-system source route")
     check(routes["old-direct-aquilo-rubia"] == nil,
       "Vespera belt has a direct bypass")
     check(routes["old-direct-crucible-vesta"] == nil,
@@ -220,6 +232,22 @@ local function test_routes()
     "Missing inner entry to native asteroid belt")
   check(routes["razi-asteroid-belt-outer-edge-shchierbin"]~=nil,
     "Missing outer exit to Shchierbin")
+
+    for _, local_link in ipairs({
+        {"razi-vulcanus-castra",17500},
+        {"razi-arig-hyarion",12000},
+        {"razi-gleba-moshine",17000},
+        {"razi-moshine-apia-carnova-orbit",12000},
+        {"razi-asteroid-belt-outer-edge-paracelsin",14000},
+        {"razi-linox-planet_linox-secretas",22000},
+        {"razi-sye-umbra-crucible-orbit",17000}
+    }) do
+        local connection=routes[local_link[1]]
+        check(connection and connection.length==local_link[2],
+          "Missing local neighboring-world shuttle: "..local_link[1])
+        check(connection.shape=="arc",
+          "Neighbor shuttle incorrectly became an interstellar line")
+    end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
       "Maraxsis's native 20,000 km local route was overwritten")
