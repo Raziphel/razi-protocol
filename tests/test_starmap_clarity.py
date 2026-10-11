@@ -179,6 +179,58 @@ class ConstellationTests(unittest.TestCase):
                                            self.coords[c], self.coords[d]),
                                      f"{star}: {a}-{b} crosses {c}-{d}")
 
+    def test_neighbor_links_are_short_non_crossing_and_belt_safe(self):
+        neighbors = (
+            ("vulcanus","castra",17500),
+            ("arig","hyarion",12000),
+            ("gleba","moshine",17000),
+            ("moshine","apia-carnova-orbit",12000),
+            ("asteroid-belt-outer-edge","paracelsin",14000),
+            ("linox-planet_linox","secretas",22000),
+            ("sye-umbra","crucible-orbit",17000),
+        )
+        routes = {(frozenset((a,b))):(km,kind)
+                  for a,b,km,kind in self.routes}
+        families = {
+            "solaris": ("sye-solaris","vulcanus","castra","arig","hyarion",
+                        "tellus","corrundum"),
+            "nyxaris": ("sye-nyxaris","gleba","moshine",
+                        "apia-carnova-orbit","panglia"),
+            "vibrant": ("sye-vibrant","fulgora","ribbonia",
+                        "asteroid-belt-inner-edge","asteroid-belt-outer-edge",
+                        "paracelsin","shchierbin"),
+            "beetlejuice": ("sye-beetlejuice","cubium",
+                           "linox-planet_linox","secretas"),
+            "umbra": ("sye-umbra","tenebris","crucible-orbit",
+                      "razi-umbra-belt-inner","razi-umbra-belt-outer","vesta"),
+        }
+        for a,b,km in neighbors:
+            self.assertEqual(routes[frozenset((a,b))][0],km)
+            system=next(s for s,nodes in families.items() if a in nodes and b in nodes)
+            ax,bx=self.coords[a],self.coords[b]
+            self.assertLess(math.dist(ax,bx),45,
+                f"{a}-{b} is not a sensible neighboring-world connection")
+            self.assertGreaterEqual(
+                segment_clearance(self.coords[system],ax,bx),15,
+                f"{a}-{b} passes through the system's sun")
+            for other in families[system]:
+                if other not in (a,b):
+                    self.assertGreaterEqual(
+                        segment_clearance(self.coords[other],ax,bx),8,
+                        f"{a}-{b} obscures {other}'s map marker")
+            for u,v,_,_ in self.routes:
+                if u in families[system] and v in families[system] and len(
+                    {a,b,u,v})==4:
+                    self.assertFalse(cross(ax,bx,self.coords[u],self.coords[v]),
+                        f"{a}-{b} crosses {u}-{v}")
+        # Outer-side links are fine; inner-to-outer planet bypasses are not.
+        for a,b,_,_ in self.routes:
+            self.assertNotIn(frozenset((a,b)), {
+                frozenset(("ribbonia","paracelsin")),
+                frozenset(("fulgora","shchierbin")),
+                frozenset(("sye-vibrant","shchierbin"))
+            })
+
     def test_local_world_labels_have_breathing_room(self):
         for star in STARS:
             family = [n for n, (parent, _, _) in self.anchors.items()

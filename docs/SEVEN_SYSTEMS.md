@@ -60,6 +60,7 @@ Local branches remain connected inside their own systems, including:
     Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
     Nyxaris: Gleba | Moshine | Apia/Carnova | Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
     Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> Shchierbin -> frozen Paracelsin (+ Cerys)
+             Belt Outer -> Paracelsin is an extra post-crossing return link
     Vespera: Muria -> Aquilo -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
     Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)
@@ -72,6 +73,13 @@ an early unlock. Vibrant/Vespera require both first-frontier chapters;
 Beetlejuice/Umbra additionally require both middle chapters and
 Asteroid Belt discovery. Keep the Deep Space finale behind its existing
 Outer Frontier Mastery prerequisites.
+
+Short same-tier shuttles make planetary logistics more natural:
+Vulcanus↔Castra, Arig↔Hyarion, Gleba↔Moshine, Moshine↔Apia-Carnova
+Orbit, Linox↔Secretas and Umbra's hub↔Crucible Orbit.
+Research remains the authority for when destinations unlock; the
+native Vibrant crossing, Vespera and Umbra debris encounters cannot
+be bypassed by these extra local routes.
 
 Both Solaris and Nyxaris discovery technologies unlock the shared Calidus
 departure slipstream. Either branch can therefore be chosen first.
