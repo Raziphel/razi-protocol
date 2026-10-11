@@ -2,7 +2,8 @@
 """Audit Razi's interstellar travel lengths against post-load starmap geometry.
 
 Factorio route.length is kilometres; orbit.distance is map layout scale.
-The ratio is *not* physical astronomy. Compact galaxy artwork projects\nmore kilometres per map unit than the old sprawling layout. It is a signal intended
+The ratio is *not* physical astronomy. Compact galaxy artwork projects
+more kilometres per map unit than the old sprawling layout. It is a signal intended
 to catch a 30,000 km cross-star route placed beside a 140,000 km neighbor.
 Native orbital hops and mod-specific transit routes are deliberately excluded.
 """
