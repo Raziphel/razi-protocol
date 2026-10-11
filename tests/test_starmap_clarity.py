@@ -142,8 +142,8 @@ class ConstellationTests(unittest.TestCase):
         for a, b in forbidden:
             self.assertNotIn(tuple(sorted((a, b))), edges)
         for a, b in (
-            ("sye-vibrant", "asteroid-belt-inner-edge"),
-            ("sye-vespera", "asteroid-belt-inner-edge"),
+            ("shchierbin", "asteroid-belt-inner-edge"),
+            ("maraxsis", "asteroid-belt-inner-edge"),
             ("asteroid-belt-outer-edge", "sye-beetlejuice"),
             ("asteroid-belt-outer-edge", "sye-umbra")
         ):
