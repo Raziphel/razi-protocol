@@ -1,6 +1,7 @@
 -- Intertwine existing planet sciences without new items or optional requirements.
 -- Run after the authoritative seven-system discovery gates.
 local M = {}
+local interdependence = require("prototypes.compat.interdependence_mode")
 local rules = {
 {"planet-discovery-castra", {}, {{"metallurgic-science-pack", "planet-discovery-vulcanus"}}},
 {"planet-discovery-arig", {}, {{"battlefield-science-pack", "planet-discovery-castra"}}},
@@ -123,6 +124,8 @@ local function add_science(target, pack)
 end
 
 function M.data_final_fixes()
+  -- The core seven-system technology gates are handled separately.
+  if not interdependence.enabled() then return end
   -- Required-planet connections first; early star entries are untouched.
   for _, rule in ipairs(rules) do
     for _, parent in ipairs(rule[2]) do link(rule[1], parent) end

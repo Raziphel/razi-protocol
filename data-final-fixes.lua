@@ -122,6 +122,9 @@ require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
 -- Native recipes and science production are never rewritten.
 require("prototypes.compat.community_industry_exchanges").data_final_fixes()
 
+-- Extra optional trade networks only in Deep interdependence mode.
+require("prototypes.compat.deep_interdependence").data_final_fixes()
+
 -- Space Age assigns connection defaults before this stage. Repair only routes
 -- still lacking icon data after every Razi and compatibility route exists.
 require("prototypes.system.route_icons").data_final_fixes()

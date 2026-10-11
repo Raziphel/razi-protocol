@@ -4,7 +4,7 @@ The startup settings use the same visual approach as **FluxWorks**: compact
 category-based order prefixes, colorful localized headings using Factorio
 rich text, and clear descriptions explaining the recommended configuration.
 
-All five options are standard Factorio **startup settings**. Change them in
+All Razi options are standard Factorio **startup settings**. Change them in
 **Settings → Mod settings → Startup**, then restart/reload as prompted.
 Changing startup settings may rebuild prototype definitions, so back up
 existing saves before experimenting with a substantially different modpack.
@@ -26,6 +26,7 @@ not enemies that already exist in an established save.
 
 | Setting | Default | Effect |
 | --- | --- | --- |
+| Planetary interdependence | Balanced | Off keeps essential system gates but disables Razi's optional planet science weaving and exchange recipes; Balanced preserves existing behavior; Deep adds nine guarded import-heavy industrial variants. | 
 | K2SO interplanetary industry | On | Creates the optional K2SO-based exchange recipes connecting existing industries across systems. Off leaves original K2SO recipes alone. |
 | Modded-planet industrial exchanges | On | Creates optional industrial exchanges among Rubia, Paracelsin, Moshine, Linox, Vesta, and Tenebris, only when source mods and production paths are valid. Off preserves the native factory recipes. |
 
@@ -74,3 +75,9 @@ settings, their names and defaults, localized headings, order keys, and
 matching translated descriptions. Existing integration fixtures also
 assert that disabled optional catalogs are not created, and that original
 planet information remains untouched when its briefing toggle is off.
+
+## Choosing an interdependence mode
+
+**Balanced (default)** retains the existing research weave and industrial exchanges, including their original recipes and output values. **Deep** adds nine independently guarded production exchanges across K2SO and modded worlds. Extra imported material never replaces the native recipe, and every Deep recipe has a verified-at-load source recipe, native research requirement, supplier-research dependency, compatible machine and lab, and a hard 30% output ceiling with productivity and recycling bonuses disabled. **Off** disables the optional research weave, K2SO research-data card deliveries, Razi-only exchange recipes, and elective K2SO research anchors. It does not disable the essential seven-system discovery gates, planet orbits, or native source-mod factories.
+
+The two existing independent exchange toggles also apply in Balanced and Deep. Changing modes requires a Factorio restart and a backed-up existing save. Actual recipe craftability still requires an engine-level full-modpack validation. For details see [Planetary Interdependence](PLANETARY_INTERDEPENDENCE.md).

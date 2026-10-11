@@ -144,7 +144,11 @@ function integration.data_final_fixes()
   -- and the K2SO counterpart is actually available and visible.
   reconcile_recipes()
   reconcile_mining()
-  add_existing_research_data()
+  -- Cross-world research-data deliveries are optional interdependence,
+  -- unlike the K2SO alias reconciliation needed by every mode.
+  if require("prototypes.compat.interdependence_mode").enabled() then
+    add_existing_research_data()
+  end
 end
 
 return integration

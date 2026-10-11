@@ -114,7 +114,9 @@ end
 function machines.data_final_fixes()
   if not (mods and mods["Krastorio2-spaced-out"]) then return end
   preserve_machine_capabilities()
-  anchor_machine_research()
+  if require("prototypes.compat.interdependence_mode").enabled() then
+    anchor_machine_research()
+  end
 end
 
 return machines

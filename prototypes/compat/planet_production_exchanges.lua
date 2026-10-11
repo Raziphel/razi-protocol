@@ -2,6 +2,7 @@
 -- These are alternate recipes, not replacements or ingredients for core science.
 -- A shortcut must never unlock the native product before its original research.
 local M = {}
+local interdependence = require("prototypes.compat.interdependence_mode")
 
 local exchanges = {
   {
@@ -338,6 +339,7 @@ local function source_supports_category(base, category)
 end
 
 local function register_exchange(rule)
+  if rule.deep_only and not interdependence.deep() then return end
   if rule.source_mod and not mods[rule.source_mod] then return end
   for _, needed_mod in ipairs(rule.required_mods or {}) do
     if not mods[needed_mod] then return end
@@ -357,6 +359,20 @@ local function register_exchange(rule)
   end
   for _, extra in ipairs(rule.additional) do
     if not valid_ingredient(extra) then return end
+  end
+  -- Stronger cross-world alternatives cannot silently print unlimited items.
+  -- Deep recipes must have at least two discoveries, an actual import and a
+  -- deterministic item output; native batches and byproducts remain unchanged.
+  if rule.deep_only then
+    if #rule.planets < 2 or #rule.additional == 0
+      or rule.batch < 1 or rule.bonus < 1 then return end
+    local native_amount
+    for _, result in ipairs(base.results) do
+      if name_of(result) == rule.product then native_amount = result.amount end
+    end
+    if not native_amount or rule.bonus > native_amount * rule.batch * 0.30 then
+      return
+    end
   end
   for _, pack in ipairs(rule.science) do
     if not raw("tool", pack) then return end
@@ -499,14 +515,22 @@ local function enabled(name)
 end
 
 function M.data_final_fixes()
-  if not (mods and mods["Krastorio2-spaced-out"])
+  if not interdependence.enabled() or not (mods and mods["Krastorio2-spaced-out"])
     or not enabled("razi-enable-k2so-production-exchanges") then return end
   for _, rule in ipairs(exchanges) do register_exchange(rule) end
 end
 
 function M.register_additional(rules)
-  if not (mods and mods["Krastorio2-spaced-out"])
+  if not interdependence.enabled() or not (mods and mods["Krastorio2-spaced-out"])
     or not enabled("razi-enable-modded-planet-exchanges") then return end
+  for _, rule in ipairs(rules or {}) do register_exchange(rule) end
+end
+
+-- Deep industry can use either catalog without changing the two legacy
+-- independent toggles. A single startup setting remains the master switch.
+function M.register_k2so(rules)
+  if not interdependence.deep() or not (mods and mods["Krastorio2-spaced-out"])
+    or not enabled("razi-enable-k2so-production-exchanges") then return end
   for _, rule in ipairs(rules or {}) do register_exchange(rule) end
 end
 

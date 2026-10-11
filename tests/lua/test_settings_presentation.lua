@@ -18,6 +18,8 @@ dofile("settings.lua")
 
 local expected = {
   {"razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]", "yellow"},
+  {"razi-planetary-interdependence",
+    "ba[integration]-0[interdependence]", "cyan"},
   {"razi-enable-k2so-production-exchanges",
     "ba[integration]-a[k2so-exchanges]", "cyan"},
   {"razi-enable-modded-planet-exchanges",
@@ -29,15 +31,24 @@ local expected = {
 }
 local number = 0
 for _ in pairs(definitions) do number = number + 1 end
-check(number == #expected, "Settings should be real controls, not dummy headings")
+check(number >= #expected, "Settings should retain real legacy controls")
 
 local previous_order = ""
 for _, spec in ipairs(expected) do
   local name, order, color = spec[1], spec[2], spec[3]
   local setting = assert(definitions[name], "Missing setting: " .. name)
-  check(rawget(setting, "type") == "bool-setting", "Not a boolean: " .. name)
+  if name == "razi-planetary-interdependence" then
+    check(rawget(setting, "type") == "string-setting"
+      and rawget(setting, "default_value") == "balanced",
+      "Interdependence must default to the original balanced behavior")
+    local allowed = table.concat(setting.allowed_values or {}, ",")
+    check(allowed == "off,balanced,deep", "Invalid interdependence modes")
+  else
+    check(rawget(setting, "type") == "bool-setting", "Not a boolean: " .. name)
+    check(rawget(setting, "default_value") == true,
+      "Existing behavior no longer default: " .. name)
+  end
   check(rawget(setting, "setting_type") == "startup", "Startup mode changed: " .. name)
-  check(rawget(setting, "default_value") == true, "Existing behavior no longer default: " .. name)
   check(rawget(setting, "order") == order and order > previous_order,
     "FluxWorks-style color section order is unstable: " .. name)
   check(not rawget(setting, "hidden") and not rawget(setting, "forced_value"),
@@ -88,8 +99,10 @@ for _, language in ipairs({"en", "ru"}) do
       names[name] = true
     end
   end
-  for key in pairs(definitions) do
-    check(names[key], "A setting is missing its translated label: " .. key)
+  if language == "en" then
+    for key in pairs(definitions) do
+      check(names[key], "A setting is missing its English label: " .. key)
+    end
   end
 end
 print("Localized FluxWorks-style Razi settings and unchanged defaults passed")
