@@ -129,5 +129,8 @@ require("prototypes.system.route_icons").data_final_fixes()
 -- Final native tooltip fields for all surviving route prototypes.
 require("prototypes.system.route_intel").data_final_fixes()
 
+-- Insert Razi's original galaxy sky and system halos behind route guides.
+require("prototypes.system.starmap_background").data_final_fixes()
+
 -- Final cosmetic-only starmap pass, after every connection and orbit has settled.
 require("prototypes.system.route_highlights").data_final_fixes()
