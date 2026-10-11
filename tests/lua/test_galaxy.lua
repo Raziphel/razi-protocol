@@ -26,7 +26,7 @@ end
 
 local function test_routes()
 	local places = {
-		"sye-calidus", "sye-solaris", "sye-nyxaris", "sye-vibrant",
+		"sye-calidus", "razi-calidus-drift", "sye-solaris", "sye-nyxaris", "sye-vibrant",
 		"sye-vespera", "sye-beetlejuice", "sye-umbra",
 		"razi-vespera-belt-inner","razi-vespera-belt-outer",
 		"razi-umbra-belt-inner","razi-umbra-belt-outer",
@@ -37,7 +37,7 @@ local function test_routes()
 		"secretas", "crucible-orbit", "frozeta"
 	}
 	local planets = {
-		"nauvis", "vulcanus", "gleba", "fulgora",
+		"nauvis", "muluna", "vulcanus", "gleba", "fulgora",
 		"muria", "aquilo", "rubia", "maraxsis", "cubium",
 		"tenebris", "crucible", "vesta", "linox-planet_linox"
 	}
@@ -226,6 +226,17 @@ local function test_routes()
     end
   end
   check(count==7,"Expected seven direct interstellar corridors")
+  for name,km in pairs({
+    ["razi-nauvis-razi-calidus-drift"]=12000,
+    ["razi-razi-calidus-drift-sye-calidus"]=17500,
+    ["razi-muluna-sye-calidus"]=14000
+  }) do
+    local route=routes[name]
+    check(route and route.length==km and route.shape=="arc",
+      "Calidus freight route missing: "..name)
+  end
+  check(routes["razi-sye-calidus-sye-vibrant"]==nil,
+    "Home system shortcut bypassed the first frontier")
   check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
     "A direct route bypasses the native asteroid belt")
   check(routes["razi-ribbonia-asteroid-belt-inner-edge"]~=nil,

@@ -9,7 +9,7 @@ local planets = {}
 local places = {star={name="star"}}
 for _,name in ipairs({
   "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-  "solar-system-edge","sye-calidus",
+  "solar-system-edge","sye-calidus","razi-calidus-drift",
   "sye-solaris","sye-nyxaris","sye-vibrant","sye-vespera",
   "sye-beetlejuice","sye-umbra","apia-carnova-orbit",
   "crucible-orbit","secretas",
@@ -52,6 +52,9 @@ end})
 
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
+local dx,dy=layout.anchor_position("razi-calidus-drift")
+check(dx < -20 and dy < -15 and dy > -27,
+  "Calidus Drift should stand opposite the southern departure corridor")
 local hub_x,hub_y=layout.anchor_position("sye-calidus")
 check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
   "Calidus departure portal drifted from the compact central approach")
