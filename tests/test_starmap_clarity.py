@@ -71,31 +71,25 @@ class ConstellationTests(unittest.TestCase):
         self.coords = positions(self.anchors)
         self.routes = parse_routes()
 
-    def test_compact_balanced_branching_shape(self):
-        previous = 0
-        for left, right in PAIRS:
-            lx, ly = self.coords[left]
-            rx, ry = self.coords[right]
-            self.assertLess(lx, -40)
-            self.assertGreater(rx, 40)
-            self.assertLess(abs(lx + rx), 1)
-            self.assertLess(abs(ly - ry), 1)
-            self.assertGreater(ly - previous, 50)
-            self.assertLess(ly - previous, 100)
-            previous = ly
-        dx, dy = self.coords["solar-system-edge"]
-        self.assertLess(abs(dx), 1)
-        self.assertGreater(dy, previous + 65)
-        self.assertLess(dy, 340)
-        self.assertLess(max(abs(x) for x, y in self.coords.values()), 120)
+    def test_calidus_centered_radial_gallery(self):
+        centers = {
+            "solaris": (150, -115), "nyxaris": (145, 92),
+            "vibrant": (20, 180), "vespera": (-142, 138),
+            "beetlejuice": (-180, -25), "umbra": (-102, -151),
+            "solar-system-edge": (-292, -155),
+        }
+        for name, xy in centers.items():
+            self.assertLess(math.dist(self.coords[name], xy), 1.0,
+                            f"{name} moved from its radial sector")
+        for star in STARS:
+            self.assertGreater(math.dist(self.coords[star], (0, 0)), 135)
 
     def test_natural_planet_crescents_and_clear_stellar_art(self):
         for star in STARS:
             x, y = self.coords[star]
             hx, hy = self.coords["sye-" + star]
-            self.assertLess(hy, y - 18)
-            self.assertGreater(abs(hx - x), 13)
-            self.assertEqual((hx - x) < 0, x < 0)
+            self.assertGreater(math.dist((hx, hy), (x, y)), 25)
+            self.assertLess(math.dist((hx, hy), (x, y)), 45)
 
         for a, b, _, _ in self.routes:
             if a not in self.coords or b not in self.coords:
@@ -167,17 +161,14 @@ class ConstellationTests(unittest.TestCase):
                     queue.append(n)
         self.assertTrue({"sye-beetlejuice", "sye-umbra",
                          "solar-system-edge"}.issubset(reachable))
-        self.assertEqual(self.coords[native[0]][0], 0.0)
-        self.assertEqual(self.coords[native[1]][0], 0.0)
-        self.assertTrue(
-            self.coords["vibrant"][1] < self.coords[native[0]][1]
-            < self.coords[native[1]][1] < self.coords["beetlejuice"][1])
+        self.assertLess(math.dist(self.coords[native[0]], (-96, 86)), 1)
+        self.assertLess(math.dist(self.coords[native[1]], (-118, 67)), 1)
 
-    def test_deep_space_and_bellicos_are_below_branches(self):
+    def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
-        self.assertIn('110, 0.5, false', source)
-        self.assertIn('24, 0.5, true', source)
-        self.assertIn('40, 0.0, true', source)
+        self.assertIn('198,0.817', source)
+        self.assertIn('34,0.84,true', source)
+        self.assertIn('place(near,pulsar,3,0.25)', source)
         self.assertEqual(source.count("position_expedition()"), 3)
 
 

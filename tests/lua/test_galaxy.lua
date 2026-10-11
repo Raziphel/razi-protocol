@@ -193,6 +193,13 @@ local function test_routes()
 		end
 		check(found, "Missing paired system connector: " .. pair[1])
 	end
+	for _, name in ipairs({
+		"razi-sye-calidus-sye-solaris",
+		"razi-sye-solaris-sye-vibrant",
+		"razi-sye-nyxaris-sye-vespera"}) do
+		check(routes[name] and routes[name].shape=="arc",
+			"Razi interstellar route no longer uses a curved arc: "..name)
+	end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
       "Maraxsis's native 20,000 km local route was overwritten")
