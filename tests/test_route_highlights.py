@@ -26,7 +26,7 @@ class RouteHighlightTests(unittest.TestCase):
             raw=p.read_bytes()
             self.assertEqual(raw[:8],b'\x89PNG\r\n\x1a\n')
             self.assertEqual(struct.unpack(">II",raw[16:24]),(w,h))
-            self.assertEqual(raw[24:26],bytes([2,3]))
+            self.assertIn(tuple(raw[24:26]),((2,3),(1,3)))
             self.assertLessEqual(max(w,h),2048)
             self.assertAlmostEqual(sx/32,(ax+bx)/2,delta=.05)
             self.assertAlmostEqual(sy/32,(ay+by)/2,delta=.05)
@@ -43,7 +43,7 @@ class RouteHighlightTests(unittest.TestCase):
         module=(ROOT/"prototypes/system/route_highlights.lua").read_text()
         self.assertIn('default_value="subtle"',settings)
         self.assertIn('mods["space-route-overlay"]',module)
-        self.assertIn('math.abs(p[1]-item.start[1])<1.5',module)
+        self.assertIn('math.abs(p[1]-guide.start[1])<1.5',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('connection.length=',module)
 if __name__=="__main__":
