@@ -32,6 +32,16 @@ local unlock=A.unlock_research(force,"c")
 check(#unlock==1 and #unlock[1].missing==1
   and unlock[1].missing[1].name=="b",
   "Atlas must report unresearched native prerequisite")
+local largest,count=A.asteroid_profile({
+  {asteroid="small-metallic-asteroid"},
+  {asteroid="huge-oxide-asteroid"},
+  {asteroid="small-metallic-asteroid"}
+})
+check(largest=="huge" and count==2,
+  "Atlas asteroid labels should come from distinct declared types")
+local unknown=A.asteroid_profile({{asteroid="custom-oddity"}})
+check(unknown=="unlisted",
+  "Unknown modded asteroid must not be assigned an invented risk rating")
 local Fleet=require("scripts.galactic_fleet")
 local ship={
   hub={valid=true},space_location={name="a"},space_connection=nil,
