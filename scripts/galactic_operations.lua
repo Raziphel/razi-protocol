@@ -4,7 +4,12 @@
 local M={}
 local catalog=require("scripts.galactic_catalog")
 local FRAME="razi_galactic_operations"
-local SHORTCUT="razi-galactic-operations"
+local MAP_ANCHOR="razi_ops_map_anchor"
+local MAP_BUTTON="razi_ops_map_button"
+local MAP_SPRITE="razi-galactic-operations-map-icon"
+-- The engine's native starmap header isn't a LuaGuiElement. This floating
+-- entry appears while Remote View displays the chart, beside its controls.
+-- It is never inserted into Factorio's quickbar or shortcut bar.
 local PAGE_SIZE=22
 local FILTERS={"all","favorites","active","attention","recent"}
 local ROLES={"all","general","freighter","science","defense","exploration","construction"}
@@ -303,7 +308,62 @@ end
 local function close(player)
   local frame=player.gui.screen[FRAME]
   if frame and frame.valid then frame.destroy() end
-  player.set_shortcut_toggled(SHORTCUT,false)
+end
+
+function M.in_map_view(player)
+  return player and player.valid and player.connected
+    and player.controller_type==defines.controllers.remote
+    and player.render_mode~=defines.render_mode.game
+end
+
+local function position_map_button(player,anchor)
+  local scale=math.max(player.display_scale,0.5)
+  local width=math.floor(player.display_resolution.width/scale)
+  -- Screen-root elements are on top of the map, NOT part of the shortcut bar.
+  -- Leave the top-left native surface/planet selector unobstructed.
+  anchor.location={x=math.max(8,width-244),y=86}
+end
+
+function M.sync_map_button(player)
+  if not (player and player.valid) then return end
+  local anchor=player.gui.screen[MAP_ANCHOR]
+  if not M.in_map_view(player) then
+    if anchor and anchor.valid then anchor.destroy() end
+    if player.gui.screen[FRAME] then close(player) end
+    return
+  end
+  if not (anchor and anchor.valid) then
+    anchor=player.gui.screen.add{
+      type="frame",name=MAP_ANCHOR,direction="horizontal"
+    }
+    local icon=anchor.add{
+      type="sprite-button",name=MAP_BUTTON,
+      sprite=MAP_SPRITE,style="slot_button",
+      tooltip=L("map-button-tooltip"),
+      tags={razi_ops_action="map-toggle"}
+    }
+    icon.style.width=38
+    icon.style.height=38
+    local text=anchor.add{
+      type="button",caption=L("map-button"),
+      tooltip=L("map-button-tooltip"),
+      tags={razi_ops_action="map-toggle"}
+    }
+    text.style.font="default-bold"
+    text.style.height=38
+  end
+  position_map_button(player,anchor)
+end
+
+function M.sync_all_map_buttons()
+  for _,player in pairs(game.connected_players) do
+    M.sync_map_button(player)
+  end
+end
+
+function M.map_context_changed(event)
+  local player=game.get_player(event.player_index)
+  if player then M.sync_map_button(player) end
 end
 local function open(player)
   if player.gui.screen[FRAME] then return end
@@ -380,12 +440,15 @@ local function open(player)
   options.razi_ops_waypoints.visible=p.tab=="worlds"
   options.razi_ops_locked.visible=p.tab=="worlds"
   player.opened=frame
-  player.set_shortcut_toggled(SHORTCUT,true)
   redraw(player)
 end
 
 function M.toggle(player)
-  if player.gui.screen[FRAME] then close(player) else open(player) end
+  if player.gui.screen[FRAME] then
+    close(player)
+  elseif M.in_map_view(player) then
+    open(player)
+  end
 end
 local function record_recent(p,key)
   for i=#p.recent,1,-1 do
@@ -417,6 +480,7 @@ function M.gui_click(event)
   if not (player and player.valid) then return end
   local p=preferences(player.index)
   local action,value=tags.razi_ops_action,tags.value
+  if action=="map-toggle" then M.toggle(player);return end
   if action=="close" then close(player);return end
   if action=="tab" then
     if value~="worlds" and value~="platforms" then return end
@@ -504,10 +568,12 @@ function M.gui_closed(event)
 end
 function M.on_display_changed(event)
   local player=game.get_player(event.player_index)
-  if player and player.gui.screen[FRAME] then
+  if not player then return end
+  if player.gui.screen[FRAME] then
     close(player)
-    open(player)
+    if M.in_map_view(player) then open(player) end
   end
+  M.sync_map_button(player)
 end
 function M.on_removed(event)
   if storage.razigui then storage.razigui[event.player_index]=nil end

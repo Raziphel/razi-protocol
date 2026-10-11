@@ -4,7 +4,9 @@ Razi Protocol's independent, native Factorio 2.1 planet and space-platform dashb
 
 ## Opening
 
-- Select **Galactic Operations** from the Factorio shortcut bar, or press **Ctrl+Shift+G** (rebind under Controls).
+- Enter **Remote View** and open the space map. A dedicated **Galactic Ops** button appears at the upper-right edge of the map, independent of the Factorio shortcut bar.
+- While viewing the map, you can optionally press **Ctrl+Shift+G** (rebind under Controls).
+- The map button hides automatically when returning to normal gameplay. It updates within half a second after a map view change; it does not poll the fleet or planet list.
 - The original Space Age planet and platform selector stays available.
 - The panel is draggable and scales to the player's display resolution.
 
@@ -27,7 +29,8 @@ Razi Protocol's independent, native Factorio 2.1 planet and space-platform dashb
 
 ## Compatibility and limitations
 
-- This is a separate supported GUI, not an engine GUI injection. Nothing in the vanilla surface panel is patched, replaced or hidden.
+- This is a separate supported GUI, not an engine GUI injection. Nothing in the vanilla surface panel is patched, replaced or hidden. The button is a companion screen overlay rather than a new control inside Factorio's native starmap header.
+- Factorio exposes map render mode and Remote View controller state, but not a distinct starmap-open event. Consequently the button may also appear in other Remote View chart views, not solely when zoomed out to the galaxy.
 - The panel and filters do not edit routes, planets, schedules or other mods' GUI.
 - The initial version presents dynamic names as Factorio GUI localised captions; search primarily matches internal IDs and star-system grouping. Unknown optional systems are categorised conservatively.
 - A planet surface must already exist for its **View** button to work, by design.
