@@ -41,12 +41,28 @@ rawset(_G,"PlanetsLib",{update=function(_,values)
     local dest=data.raw[item.type] and data.raw[item.type][item.name]
     check(dest~=nil,"Unknown layout destination "..item.name)
     dest.orbit=item.orbit
+    -- data-updates mock also needs to model native absolute polar coordinates
+    -- of sprite-only stars, not merely copy orbit metadata.
+    if item.orbit.parent.name=="star" then
+      dest.distance=item.orbit.distance
+      dest.orientation=item.orbit.orientation
+    end
   end
 end})
 
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
 layout.data_updates()
+-- A star missing its data-updates placement caused all earlier screenshots:
+-- assert its real native coordinates before PlanetsLib renders its art.
+for name,bearing in pairs({
+  solaris=5/12,nyxaris=7/12,vibrant=.25,
+  vespera=.75,beetlejuice=1/12,umbra=11/12
+}) do
+  check(math.abs(places[name].distance-124)<.001 and
+        math.abs(places[name].orientation-bearing)<.000002,
+    "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
+end
 layout.data_final_fixes()
 
 local function position(name)
@@ -181,6 +197,12 @@ check(planets.rabbasca.orbit==moon_before and
   "Final native movement damaged unique moon artwork")
 check(planets.athos.orbit.sprite==orbit_art_before,
   "Optional special orbit sprite was destroyed")
+-- A world with dashed custom orbit art must not gain a second native ring.
+planets.athos.draw_orbit=false
+layout.data_final_fixes()
+check(planets.athos.draw_orbit==false and
+  planets.athos.orbit.sprite==orbit_art_before,
+  "Unique source orbit art should not be doubled by native circles")
 local dzx,dzy=fixed_position("solar-system-edge")
 check(math.abs(dzx)<.01 and math.abs(dzy+248)<.01,
   "Native Deep Space was no longer directly north")

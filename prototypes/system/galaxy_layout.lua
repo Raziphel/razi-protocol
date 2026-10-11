@@ -199,12 +199,15 @@ function M.data_final_fixes()
   -- Do not suppress every circle or replace third-party moon artwork.
   for _,planet in pairs(data.raw.planet or {}) do
     local parent=planet.orbit and planet.orbit.parent
-    if parent and parent.type=="space-location" and stars[parent.name] then
+    if parent and parent.type=="space-location" and stars[parent.name]
+      and not (planet.orbit and planet.orbit.sprite) then
       planet.draw_orbit=true
     end
   end
   local secretas=exists("space-location","secretas")
-  if secretas and relocated.secretas then secretas.draw_orbit=true end
+  if secretas and relocated.secretas and not (secretas.orbit and secretas.orbit.sprite) then
+    secretas.draw_orbit=true
+  end
 
   for _,name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
