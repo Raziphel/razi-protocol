@@ -157,3 +157,17 @@ The recipe-chain tracer explicitly distinguishes recipes locked *behind*
 the destination (`future-unlock`, a likely deadlock) from recipes unlocked by
 independent technologies outside the snapshot's prerequisite ancestry
 (`independent-research`, not enough evidence to call impossible).
+
+## Route distances and native travel behavior
+
+Compare final route length values to the final parent-orbit starmap:
+
+    python3 scripts/audit_route_distances.py /path/to/script-output/data-raw-dump.json
+
+This checks the post-load hub-to-hub and outer Deep Space km-per-map-unit
+ranges, travel tiers, duplicate routes and direct shortcuts across surveyed
+belts. It intentionally excludes native planet moon orbits, long-range
+stargates, the optional Nexus endgame and original source internal links.
+In particular, the native route length is respected within the Razi local
+travel envelope and native modded asteroid entries are not replaced.
+See `tests/test_route_distances.py` and `tests/lua/test_galaxy.lua`.

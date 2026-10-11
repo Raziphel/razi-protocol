@@ -39,24 +39,24 @@ local route_specifications = {
 	-- Parallel chapter entrances and neighbor-system crosslinks.
 	{"sye-calidus", "sye-solaris", 60000, "first_crossing"},
 	{"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
-	{"sye-solaris", "sye-nyxaris", 32000, "frontier_crosslink"},
+	{"sye-solaris", "sye-nyxaris", 88000, "frontier_crosslink"},
 	{"sye-solaris", "sye-vibrant", 95000, "middle_crossing"},
 	{"sye-nyxaris", "sye-vespera", 95000, "middle_crossing"},
 	-- Four neighbor diagonals make the lattice traversable in multiple ways
 	-- only after the destination's independent star research is complete.
-	{"sye-solaris", "sye-vespera", 116000, "middle_crossing"},
-	{"sye-nyxaris", "sye-vibrant", 116000, "middle_crossing"},
-	{"sye-vibrant", "sye-vespera", 38000, "middle_crosslink"},
+	{"sye-solaris", "sye-vespera", 142000, "middle_crossing"},
+	{"sye-nyxaris", "sye-vibrant", 142000, "middle_crossing"},
+	{"sye-vibrant", "sye-vespera", 103000, "middle_crosslink"},
 	{"sye-vibrant", "sye-beetlejuice", 130000, "outer_crossing"},
 	{"sye-vespera", "sye-umbra", 130000, "outer_crossing"},
-	{"sye-vibrant", "sye-umbra", 148000, "outer_crossing"},
-	{"sye-vespera", "sye-beetlejuice", 148000, "outer_crossing"},
-	{"sye-beetlejuice", "sye-umbra", 45000, "outer_crosslink"},
+	{"sye-vibrant", "sye-umbra", 174000, "outer_crossing"},
+	{"sye-vespera", "sye-beetlejuice", 174000, "outer_crossing"},
+	{"sye-beetlejuice", "sye-umbra", 126000, "outer_crosslink"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
-	{"sye-solaris", "castra", 12000, "industrial"},
-	{"castra", "arig", 15000, "industrial"},
-	{"castra", "hyarion", 15000, "industrial"},
+	{"sye-solaris", "castra", 21000, "industrial"},
+	{"castra", "arig", 18000, "industrial"},
+	{"castra", "hyarion", 22000, "industrial"},
 	{"arig", "tellus", 16500, "industrial_deep"},
 	{"hyarion", "tellus", 16500, "industrial_deep"},
 	{"tellus", "corrundum", 18000, "industrial_deep"},
@@ -64,15 +64,15 @@ local route_specifications = {
 	{"sye-nyxaris", "gleba", 18000, "biological"},
 	{"sye-nyxaris", "apia-carnova-orbit", 17000, "biological"},
 	{"sye-nyxaris", "moshine", 18000, "biological"},
-	{"sye-nyxaris", "panglia", 18000, "biological_deep"},
+	{"sye-nyxaris", "panglia", 24000, "biological_deep"},
 	{"panglia", "pelagos", 16000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
 	-- Vibrant's chemistry strand.
 	{"sye-vibrant", "fulgora", 17000, "electrical"},
-	{"fulgora", "ribbonia", 17500, "electrical"},
-	{"sye-vibrant", "ribbonia", 17000, "electrical"},
-	{"ribbonia", "paracelsin", 18000, "chemistry"},
-	{"paracelsin", "shchierbin", 18000, "chemistry_deep"},
+	{"fulgora", "ribbonia", 19500, "electrical"},
+	{"sye-vibrant", "ribbonia", 23500, "electrical"},
+	{"ribbonia", "paracelsin", 20000, "chemistry"},
+	{"paracelsin", "shchierbin", 22000, "chemistry_deep"},
 	-- Vespera's extreme-environment strand.
 	{"sye-vespera", "muria", 19000, "cryogenic"},
 	{"muria", "aquilo", 22000, "cryogenic"},
@@ -91,10 +91,9 @@ local route_specifications = {
 	{"crucible-orbit", "razi-umbra-belt-inner", 10000, "belt_umbra_approach"},
 	{"razi-umbra-belt-inner", "razi-umbra-belt-outer", 8000, "belt_umbra_crossing"},
 	{"razi-umbra-belt-outer", "vesta", 11000, "belt_umbra_departure"},
-	{"vesta", "secretas", 23000, "outer_crosslink"},
 	-- The outer branches converge at the conventional Deep Space edge.
-	{"secretas", "solar-system-edge", 75000, "deep_edge"},
-	{"vesta", "solar-system-edge", 75000, "deep_edge"}
+	{"secretas", "solar-system-edge", 155000, "deep_edge"},
+	{"vesta", "solar-system-edge", 185000, "deep_edge"}
 }
 
 -- Paths replaced by physical belt detours. Retain original modded
@@ -122,6 +121,20 @@ local allowed = {}
 for _, specification in ipairs(route_specifications) do
 	allowed[key_for(specification[1], specification[2])] = true
 end
+-- Source authors sometimes tune travel time for a planet's own route.
+-- Respect those values if they are near the new system's intended range,
+-- rather than overwriting a native 20,000 km crossing with an arbitrary
+-- round number. Very short/long legacy routes are bounded to stop moving
+-- planets between stars from creating a 1,000 km interplanetary shortcut.
+local function balanced_length(name, actual, planned, from, to)
+	if not name or name:sub(1, 5) == "razi-" then return planned end
+	if membership[from] ~= membership[to] then return planned end
+	if type(actual) ~= "number" or actual <= 0 then return planned end
+	local minimum = math.floor(planned * 0.75 / 500 + 0.5) * 500
+	local maximum = math.floor(planned * 1.35 / 500 + 0.5) * 500
+	return math.max(minimum, math.min(maximum, math.floor(actual + 0.5)))
+end
+
 
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
@@ -188,7 +201,8 @@ function route_reconcile.data_final_fixes()
 
 			local route = keep_name and routes[keep_name]
 			if route then
-				route.from, route.to, route.length = from, to, length
+				route.from, route.to = from, to
+				route.length = balanced_length(keep_name, route.length, length, from, to)
 				if membership[from] and membership[to]
 					and membership[from] ~= membership[to] then
 					route.shape = "line"

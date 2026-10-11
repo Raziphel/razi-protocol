@@ -79,6 +79,14 @@ local function test_routes()
                   spawn_points={{distance=0.45,probability=0.11,speed=2}}
                 }}
             },
+            ["old-interstar-vesta-secretas"] = {
+                type="space-connection", from="vesta", to="secretas",
+                length=23000
+            },
+            ["native-rubia-maraxsis"] = {
+                type="space-connection", from="rubia", to="maraxsis",
+                length=20000
+            },
             ["old-direct-crucible-vesta"] = {
                 type="space-connection", from="crucible-orbit", to="vesta",
                 asteroid_spawn_definitions={{
@@ -120,6 +128,8 @@ local function test_routes()
       "Vespera belt has a direct bypass")
     check(routes["old-direct-crucible-vesta"] == nil,
       "Umbra belt has a direct bypass")
+    check(routes["old-interstar-vesta-secretas"] == nil,
+      "Cheap cross-star Vesta/Secretas route bypassed the Umbra belt")
     for _, crossing in ipairs({
       {"razi-razi-vespera-belt-inner-razi-vespera-belt-outer",
        "obsidiax-asteroid-chunk", 0.11},
@@ -153,6 +163,10 @@ local function test_routes()
 		check(found, "Missing straight interstellar diagonal " .. pair[1] .. "/" .. pair[2])
 	end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
+    check(routes["native-rubia-maraxsis"].length == 20000,
+      "Maraxsis's native 20,000 km local route was overwritten")
+    check(routes["cubium-secretas"].length >= 14000,
+      "A legacy 1,000 km route trivializes outer-system travel")
 	check(routes["native-dea-dia-internal"] == native_dea_dia, "Dea Dia internal route removed")
 	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")
 	check(routes["razi-cubium-secretas"] == nil, "Duplicate Razi route was not consolidated")
@@ -179,6 +193,23 @@ local function test_routes()
 		check(routes[name] ~= nil, "Required route missing: " .. name)
 	end
 
+    for _, spec in ipairs({
+      {"razi-sye-solaris-sye-nyxaris", 88000},
+      {"razi-sye-vibrant-sye-vespera", 103000},
+      {"razi-sye-beetlejuice-sye-umbra", 126000},
+      {"razi-sye-solaris-sye-vespera", 142000},
+      {"razi-sye-vibrant-sye-umbra", 174000},
+      {"razi-secretas-solar-system-edge", 155000},
+      {"razi-vesta-solar-system-edge", 185000}
+    }) do
+      local link = routes[spec[1]]
+      check(link and link.length == spec[2],
+        "Cross-system distance violates progressive star map: "..spec[1])
+    end
+    check(routes["razi-razi-vespera-belt-inner-razi-vespera-belt-outer"].length == 6500,
+      "Vespera belt encounter was made longer than intended")
+    check(routes["razi-razi-umbra-belt-inner-razi-umbra-belt-outer"].length == 8000,
+      "Umbra belt encounter was made longer than intended")
 	local before = 0
 	for _ in pairs(routes) do before = before + 1 end
 	reconciliation.data_final_fixes()
