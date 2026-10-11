@@ -80,8 +80,8 @@ require("prototypes.technology.campaign_weave").data_final_fixes()
 require("prototypes.system.optional_planets").data_final_fixes()
 require("prototypes.system.community_expansions").data_final_fixes()
 
--- Reparent the REQUIRED original Asteroid Belt to the central frontier.
--- Keep its own asteroid spawn curves, technology, and graphics.
+-- Reparent the REQUIRED source belt to Shchierbin's midgame orbit.
+-- Move the original art as well; keep native hazards and research.
 require("prototypes.system.asteroid_belt_integration").data_final_fixes()
 
 -- Apply our approved star/planet coordinates last, after optional orbits.

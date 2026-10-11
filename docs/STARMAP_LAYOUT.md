@@ -28,8 +28,8 @@ chapters advancing upward to Deep Space and Bellicos.
 | Vespera | -124 | 0 |
 | Beetlejuice | 62 | -107.39 |
 | Umbra | -62 | -107.39 |
-| Required Asteroid Belt inner edge | 0 | -26 |
-| Required Asteroid Belt outer edge | 0 | -34 |
+| Required Asteroid Belt inner edge | Shchierbin - 14 | Shchierbin - 8 |
+| Required Asteroid Belt outer edge | Shchierbin + 14 | Shchierbin - 8 |
 | Deep Space / solar-system-edge | 0 | -248 |
 
 ## Design rules
@@ -44,10 +44,17 @@ chapters advancing upward to Deep Space and Bellicos.
   crossing. The northern pair is unlocked beyond that crossing.
 - Long Razi-managed interstellar links are lines (not giant external arcs).
   No new crosslinks or impossible shortcuts are introduced.
-- Native AsteroidBelt by MrLumme remains REQUIRED at >=1.2.11. Keep its
-  native graphics at full scale (1.0), original five-thousand-km crossing,
-  research and native asteroid hazard tables; the entry/exit nodes are now
-  just north of Calidus, straddling the actual ring artwork at 26 and 34 units.
+- Native AsteroidBelt by MrLumme remains REQUIRED at >=1.2.11, but its
+  original bitmap is now centered on **Shchierbin**, not Calidus.
+  Scale 0.55 fits the midgame planet with a ~16-unit particle ring.
+  The two source-owned asteroid gateways are genuine orbiting locations
+  around Shchierbin, 16.124515 units away at clockwise turns 0.832625
+  and 0.167375. The crossing itself is still source-owned and stays
+  exactly 5,000 km with its original asteroid hazards.
+- Shchierbin already connects to the native belt entrance; Maraxsis
+  remains the Vespera entrance. Its cross-galaxy approach is lengthened
+  from 48,000 to 85,000 km; the long Umbra departure from 63,000 to
+  70,000 km. These are flight distances, **not** hazard nerfs.
 - **Native rings for every planet around a Razi star** use the Factorio 2.1
   origin-based renderer provided by PlanetsLib >= 2.0.9. The previous code
   set `draw_orbit=false` for all except six handpicked planets, hiding most
@@ -71,7 +78,9 @@ chapters advancing upward to Deep Space and Bellicos.
 - `tests/lua/test_galaxy_layout.lua` covers final-stage parent updates,
   native moon persistence and signature rings.
 - `tests/lua/test_asteroid_belt_integration.lua` protects the original
-  upstream sprite, native hazards, and missing-location safety.
+  upstream sprite, its shift to Shchierbin, native hazards, and missing
+  gateway safety. `tests/test_starmap_clarity.py` verifies that the belt
+  doesn't intersect surrounding planets.
 - `tests/lua/test_bellicos_layout.lua` covers absent and retyped source
   locations, gate routing and remote-orbit positioning.
 - `scripts/audit_route_distances.py` validates actual travel kilometers,
@@ -109,3 +118,11 @@ If the pre-render star positions differ from the expected positions,
 the custom star sprites will be misplaced. The native pass logs virtual
 star-art positions explicitly because PlanetsLib correctly removed
 those prototypes before Razi's final fixes.
+
+## Design follow-up
+
+The six-star ring centered on Calidus works as an at-a-glance map. Keep
+Deep Space to the north and Bellicos beyond it. Treat the required
+Shchierbin asteroid ring as a distinct midgame hazard landmark, not
+something every new player sees circling Nauvis. Avoid additional direct
+outer-system routes that would bypass the native asteroid crossing.

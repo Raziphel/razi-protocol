@@ -41,7 +41,7 @@ def world():
             r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
             source):
         raw["space-location"][name] = {
-            "orbit": {"parent": {"name": "star"},
+            "orbit": {"parent": {"name": "shchierbin"},
                       "distance": float(distance), "orientation": float(turn)}
         }
     for a, b, length, kind in route_manifest():
@@ -104,15 +104,18 @@ class RouteTests(unittest.TestCase):
     def test_geometric_angle_sign_and_parent_position(self):
         raw = world()
         coords = routes_audit.positions(raw)
-        # Calidus is central; source belt nodes bracket the northern halo.
+        # Calidus remains clear; the source belt encircles Shchierbin.
         self.assertGreater(coords["sye-solaris"][1], 75)
         self.assertGreater(coords["sye-nyxaris"][1], 75)
         self.assertGreater(coords["sye-vibrant"][0], 70)
         self.assertLess(coords["sye-vespera"][0], -70)
         self.assertLess(coords["sye-beetlejuice"][1], -60)
         self.assertLess(coords["sye-umbra"][1], -60)
-        self.assertAlmostEqual(coords["asteroid-belt-inner-edge"][0], 0, places=2)
-        self.assertAlmostEqual(coords["asteroid-belt-inner-edge"][1], -26, places=2)
+        self.assertAlmostEqual(
+            __import__("math").dist(coords["asteroid-belt-inner-edge"],
+                                    coords["shchierbin"]), 16.124515,
+            places=3)
+        self.assertGreater(coords["asteroid-belt-inner-edge"][0], 100)
         self.assertLess(coords["solar-system-edge"][1], -230)
 
 if __name__ == "__main__":
