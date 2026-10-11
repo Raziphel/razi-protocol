@@ -26,6 +26,22 @@ STAR_STAGES = (
     HOMEWARD_SPOKES[2:4],
     HOMEWARD_SPOKES[4:],
 )
+NEIGHBOR_LINKS = (
+    ("sye-solaris", "sye-nyxaris"),
+    ("sye-solaris", "sye-vibrant"),
+    ("sye-nyxaris", "sye-vespera"),
+    ("sye-vibrant", "sye-beetlejuice"),
+    ("sye-vespera", "sye-umbra"),
+    ("sye-beetlejuice", "sye-umbra"),
+)
+NEIGHBOR_BANDS = (
+    (("sye-solaris", "sye-nyxaris"), 68000, 96000),
+    (("sye-solaris", "sye-vibrant"), 83000, 117000),
+    (("sye-nyxaris", "sye-vespera"), 74000, 106000),
+    (("sye-vibrant", "sye-beetlejuice"), 112000, 158000),
+    (("sye-vespera", "sye-umbra"), 99000, 141000),
+    (("sye-beetlejuice", "sye-umbra"), 124000, 176000),
+)
 DEEP_EDGES = (
     ("secretas", "solar-system-edge"),
     ("vesta", "solar-system-edge"),
@@ -34,8 +50,9 @@ BELT_BYPASSES = (
     ("aquilo", "rubia"),
     ("crucible-orbit", "vesta"),
     ("vesta", "secretas"),
-    ("sye-vibrant", "sye-beetlejuice"),
-    ("sye-vespera", "sye-umbra"),
+    ("sye-vibrant", "sye-vespera"),
+    ("sye-nyxaris", "sye-vibrant"),
+    ("sye-solaris", "sye-vespera"),
 )
 
 def obj(x):
@@ -53,6 +70,12 @@ MIN_LENGTHS = {
     key("sye-calidus", "sye-vespera"): 85000,
     key("sye-calidus", "sye-beetlejuice"): 145000,
     key("sye-calidus", "sye-umbra"): 145000,
+    key("sye-solaris", "sye-nyxaris"): 65000,
+    key("sye-solaris", "sye-vibrant"): 80000,
+    key("sye-nyxaris", "sye-vespera"): 72000,
+    key("sye-vibrant", "sye-beetlejuice"): 108000,
+    key("sye-vespera", "sye-umbra"): 96000,
+    key("sye-beetlejuice", "sye-umbra"): 120000,
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
     key("shchierbin", "asteroid-belt-inner-edge"): 32000,
@@ -102,13 +125,15 @@ def audit(raw):
         if key(a, b) in links:
             issues.add(f"Unsafe belt bypass remains: {a} -> {b}")
 
-    for a, b in HOMEWARD_SPOKES + (
+    for a, b in HOMEWARD_SPOKES + NEIGHBOR_LINKS + (
             ("shchierbin", "asteroid-belt-inner-edge"),
             ("asteroid-belt-outer-edge", "sye-beetlejuice")
         ) + DEEP_EDGES:
         match = links.get(key(a, b))
         if not match:
-            continue  # Some star or planet prototypes are optional.
+            if a in coords and b in coords:
+                issues.add(f"Missing required corridor: {a} <-> {b}")
+            continue  # Some source planets are optional.
         if len(match) > 1:
             issues.add(f"Duplicate interstellar route: {a} <-> {b}")
         length = match[0][1].get("length")
@@ -130,6 +155,22 @@ def audit(raw):
         if density > 5000:
             issues.add(f"Disproportionate interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
+
+    # Adjacent journeys must be useful but not cheap campaign bypasses.
+    for (a,b), low, high in NEIGHBOR_BANDS:
+        links_here = links.get(key(a,b))
+        if not links_here:
+            continue
+        length = links_here[0][1].get("length")
+        if isinstance(length,(int,float)) and not low <= length <= high:
+            issues.add(f"Neighbor tier distance mismatch: {a} <-> {b}")
+        via_a = links.get(key(a,"sye-calidus"))
+        via_b = links.get(key(b,"sye-calidus"))
+        if (isinstance(length,(int,float)) and via_a and via_b
+                and all(isinstance(x[0][1].get("length"),(int,float))
+                        for x in (via_a,via_b))
+                and length >= via_a[0][1]["length"]+via_b[0][1]["length"]):
+            issues.add(f"Neighbor is longer than its hub detour: {a} <-> {b}")
 
     # Stage research gates unlock the visible spokes. Ensure tier travel
     # costs increase even when the visual chart is geometrically compact.

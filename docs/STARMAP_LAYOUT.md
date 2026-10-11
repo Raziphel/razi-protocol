@@ -44,10 +44,21 @@ chapters advancing upward to Deep Space and Bellicos.
 - Each existing planetary family is rotated in place so its slipstream portal
   points toward the readable campaign route; preserve planet distances from
   their parent stars to avoid crowding labels and sub-planet content.
-- Six homeward slipstreams now connect Calidus directly with every system
-  hub. All six destination hubs remain gated by their own discovery tech.
+- Six homeward slipstreams plus **six neighboring-system links** form a
+  compact hub-and-ring network around Calidus. Only adjacent star sectors
+  connect, never across the star circle. Destination discovery research
+  still gates access to each system.
   Outer discoveries still require space-discovery-asteroid-belt AND both
   midgame discoveries, so the direct lines are not early-game shortcuts.
+- Neighbor routes by tier: Solaris ↔ Nyxaris 82k km (first-tier);
+  Solaris ↔ Vibrant 100k and Nyxaris ↔ Vespera 90k (middle-tier);
+  Vibrant ↔ Beetlejuice 135k and Vespera ↔ Umbra 120k (outer);
+  Beetlejuice ↔ Umbra 150k (outer-deep). These use progressively stronger
+  hazard profiles, from small/medium to rare huge asteroids.
+- Route distance audit also addressed the three clearest local mismatches:
+  Nyxaris ↔ Apia-Carnova planned 17k → 23k km, Nyxaris ↔ Moshine 18k →
+  22k, and Cubium ↔ Secretas 19k → 23k. Native in-system lengths still
+  use the existing source-preserving 75–135% clamp.
 - The original AsteroidBelt graphic surrounds **Vibrant's sun** at (104,0),
   not Nauvis or Shchierbin. The original graphic is 0.55 scale. Native
   inner/outer endpoints are offset 14/20 units north of that sun, but
