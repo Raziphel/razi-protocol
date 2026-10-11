@@ -15,6 +15,16 @@ data:extend({
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
 
+  -- PRODUCTION INTEGRATION. The overarching mode controls optional cross-world
+  -- discoveries and industry. The following toggles remain independent filters.
+  {
+    type = "string-setting",
+    name = "razi-planetary-interdependence",
+    setting_type = "startup",
+    default_value = "balanced",
+    allowed_values = {"off", "balanced", "deep"},
+    order = "ba[integration]-0[interdependence]"
+  },
   -- PRODUCTION INTEGRATION. These are independent optional recipe catalogs;
   -- neither switch disables Razi's mandatory seven-system science progression.
   startup_toggle("razi-enable-k2so-production-exchanges",

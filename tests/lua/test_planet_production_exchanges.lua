@@ -327,6 +327,20 @@ check(disabled_raw.recipe["kr-energy-control-unit"],
   "Disabling optional exchange removed native K2SO manufacturing")
 rawset(_G, "settings", nil)
 
+-- The master Off mode overrides both independently enabled catalogs.
+local off_raw, off_module = setup()
+rawset(_G, "settings", {startup={
+  ["razi-planetary-interdependence"]={value="off"}
+}})
+off_module.data_final_fixes()
+for _, name in ipairs(names) do
+  check(not off_raw.recipe[name] and not off_raw.technology[name],
+    "Master Off still created an interplanetary exchange: "..name)
+end
+check(off_raw.recipe["kr-casting-rare-metals"],
+  "Master Off must retain K2SO's original production")
+rawset(_G, "settings", nil)
+
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
