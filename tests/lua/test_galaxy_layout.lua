@@ -46,6 +46,7 @@ end})
 
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
+layout.data_updates()
 layout.data_final_fixes()
 
 local function position(name)
@@ -127,6 +128,74 @@ check(planets.athos.draw_orbit==true,
   "Repeated final fixes reverted native planet orbit")
 check(planets.rabbasca.orbit==moon,
   "Repeating layout damaged native moon")
+
+
+-- Reproduce the real PlanetsLib 2.0.9 load sequence. PlanetsLib removes
+-- sprite_only stars in its own data-final-fixes, before Razi's final fixes.
+-- This used to silently skip every orbit whose parent was a deleted star.
+local original_positions={}
+for _,name in ipairs({"solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"}) do
+  original_positions[name]={distance=places[name].orbit.distance,
+    orientation=places[name].orbit.orientation}
+  places[name]=nil
+end
+-- Simulate a later source mod moving a planet and a slipstream off the ring.
+planets.gleba.origin={x=800,y=800}
+planets.gleba.distance=10
+planets.gleba.orientation=.5
+places["sye-nyxaris"].origin={x=500,y=500}
+places["sye-nyxaris"].distance=8
+places["sye-nyxaris"].orientation=.5
+local moon_before=planets.rabbasca.orbit
+local orbit_art_before=planets.athos.orbit.sprite
+local native_moon_before=planets.rabbasca.orbit.sprite
+-- And a source-owned Frozeta-like moon that must follow its moved planet.
+planets.rabbasca.distance=4
+planets.rabbasca.orientation=.25
+local function fixed_position(name)
+  local location=planets[name] or places[name]
+  check(location~=nil,"Native test missing "..name)
+  local origin=location.origin or {}
+  local r=location.distance
+  local o=location.orientation
+  return (origin.x or 0)+r*math.sin(o*math.pi*2),
+    (origin.y or 0)-r*math.cos(o*math.pi*2)
+end
+layout.data_final_fixes()
+local ex=-62
+local ey=124*math.sqrt(3)/2
+check(math.abs(planets.gleba.origin.x-ex)<.05 and
+      math.abs(planets.gleba.origin.y-ey)<.05,
+  "Final native layout did not recover a planet after its star was deleted")
+check(math.abs(places["sye-nyxaris"].origin.x-ex)<.05 and
+      math.abs(places["sye-nyxaris"].origin.y-ey)<.05,
+  "Final native layout skipped a slipstream with a deleted star parent")
+check(math.abs(planets.gleba.distance-37.706964)<.001,
+  "Native planet distance was not restored")
+local gx,gy=fixed_position("gleba")
+check(math.abs(planets.rabbasca.origin.x-gx)<.01 and
+      math.abs(planets.rabbasca.origin.y-gy)<.01,
+  "Source-owned moon origin did not follow its parent's relocation")
+check(planets.rabbasca.orbit==moon_before and
+      planets.rabbasca.orbit.sprite==native_moon_before,
+  "Final native movement damaged unique moon artwork")
+check(planets.athos.orbit.sprite==orbit_art_before,
+  "Optional special orbit sprite was destroyed")
+local dzx,dzy=fixed_position("solar-system-edge")
+check(math.abs(dzx)<.01 and math.abs(dzy+248)<.01,
+  "Native Deep Space was no longer directly north")
+-- Astral sprite positions were already fixed by the pre-final stage.
+for name,expect in pairs(original_positions) do
+  check(math.abs(expect.distance-124)<.001,
+    "Pre-render parent star radius was wrong: "..name)
+end
+
+local data_updates_file=assert(io.open("data-updates.lua","r"))
+local updates_source=data_updates_file:read("*a")
+data_updates_file:close()
+check(updates_source:find(
+  'require("prototypes.system.galaxy_layout").data_updates()',1,true),
+  "Pre-render star placement is not called during data-updates")
 
 local entrypoint=assert(io.open("data-final-fixes.lua","r"))
 local source=entrypoint:read("*a")
