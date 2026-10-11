@@ -3,6 +3,7 @@
 -- No planet added here is required to reach Deep Space.
 local optional_planets = {}
 local asteroid_profiles = require("prototypes.system.asteroid_profiles")
+local route_icons = require("prototypes.system.route_icons")
 
 -- Mod ID, planet prototype, host star, transit hub, native discovery gate,
 -- orbital radius/orientation, and local route length.
@@ -95,14 +96,16 @@ local function attach_route(location_name, hub, length, system)
 		vespera = "cryogenic", beetlejuice = "outer_industry",
 		umbra = "outer_void"
 	}
-	data:extend({{
+	local profile = system_profiles[system] or "starter"
+	local connection = route_icons.assign({
 		type = "space-connection",
 		name = "razi-optional-" .. location_name .. "-" .. hub,
 		from = hub,
 		to = location_name,
 		length = length,
-		asteroid_spawn_definitions = asteroid_profiles.create(system_profiles[system] or "starter")
-	}})
+		asteroid_spawn_definitions = asteroid_profiles.create(profile)
+	}, profile)
+	data:extend({connection})
 end
 
 local function remove_cross_system_routes(location_name, system)

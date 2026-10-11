@@ -2,6 +2,7 @@
 -- Preserve native intra-system routes (especially Apia, Crucible and Bellicos).
 local route_reconcile = {}
 local hazard_profiles = require("prototypes.system.asteroid_profiles")
+local route_icons = require("prototypes.system.route_icons")
 
 local membership = {
 	-- Main game and Calidus.
@@ -208,9 +209,9 @@ function route_reconcile.data_final_fixes()
 					route.shape = "line"
 				end
 				hazard_profiles.apply(route, hazard)
+				route_icons.assign(route, hazard)
 			else
-				data:extend({
-					{
+				local connection = route_icons.assign({
 						type = "space-connection",
 						name = route_name,
 						from = from,
@@ -219,8 +220,8 @@ function route_reconcile.data_final_fixes()
 						shape = (membership[from] and membership[to]
 							and membership[from] ~= membership[to]) and "line" or "arc",
 						asteroid_spawn_definitions = hazard_profiles.create(hazard)
-					}
-				})
+					}, hazard)
+				data:extend({connection})
 			end
 		end
 	end

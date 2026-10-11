@@ -1,7 +1,7 @@
 -- New system gates. Existing discoveries keep their prototype IDs for saves.
 local star_icons = {
-	vespera = "__razi-protocol__/graphics/icons/VibrantStar.png",
-	umbra = "__razi-protocol__/graphics/icons/NyxarisStar.png"
+	vespera = "__razi-protocol__/graphics/icons/VesperaStar.png",
+	umbra = "__razi-protocol__/graphics/icons/UmbraStar.png"
 }
 
 local function new_discovery(name, star, order, count, prerequisites, packs)

@@ -1,5 +1,4 @@
 -- Seven-system galaxy: two new stellar regions and deliberate orbital spacing.
--- Use existing star art as placeholders until dedicated sprites are approved.
 local function location_exists(kind, name)
 	return data.raw[kind] and data.raw[kind][name]
 end
@@ -9,7 +8,7 @@ PlanetsLib:extend({
 		type = "space-location",
 		name = "vespera",
 		localised_name = {"space-location-name.vespera"},
-		starmap_icon = "__razi-protocol__/graphics/icons/VibrantStar.png",
+		starmap_icon = "__razi-protocol__/graphics/icons/VesperaStar.png",
 		starmap_icon_size = 1024,
 		sprite_only = true,
 		magnitude = 18,
@@ -35,7 +34,7 @@ PlanetsLib:extend({
 		type = "space-location",
 		name = "umbra",
 		localised_name = {"space-location-name.umbra"},
-		starmap_icon = "__razi-protocol__/graphics/icons/NyxarisStar.png",
+		starmap_icon = "__razi-protocol__/graphics/icons/UmbraStar.png",
 		starmap_icon_size = 1024,
 		sprite_only = true,
 		magnitude = 20,

@@ -191,6 +191,10 @@ local function test_routes()
 		"razi-vesta-solar-system-edge"
 	}) do
 		check(routes[name] ~= nil, "Required route missing: " .. name)
+		check(routes[name].icon ~= nil or routes[name].icons ~= nil,
+			"Required route has no Factorio 2.1 icon: " .. name)
+		check(routes[name].icon_size == 64 or routes[name].icons ~= nil,
+			"Required route icon size does not match its PNG: " .. name)
 	end
 
     for _, spec in ipairs({

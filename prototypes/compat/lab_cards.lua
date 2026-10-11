@@ -77,8 +77,7 @@ local system_card_definitions = {
 	{
 		name = "vespera-tech-card",
 		localised_name = {"item-name.vespera-tech-card"},
-		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
-		tint = {r = 0.45, g = 0.85, b = 1, a = 1},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/vespera-tech-card.png",
 		order = "s[system]-e[vespera]",
 		unlock_technology_candidates = {"planet-discovery-muria"},
 		ingredients = {
@@ -104,8 +103,7 @@ local system_card_definitions = {
 	{
 		name = "umbra-tech-card",
 		localised_name = {"item-name.umbra-tech-card"},
-		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
-		tint = {r = 0.72, g = 0.52, b = 1, a = 1},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/umbra-tech-card.png",
 		order = "s[system]-g[umbra]",
 		unlock_technology_candidates = {"planet-discovery-tenebris"},
 		ingredients = {
@@ -268,14 +266,9 @@ local function upsert_system_card(card)
 	if tool then
 		tool.localised_name = {"", card.localised_name}
 		tool.localised_description = {"item-description.science-pack"}
-		-- Tint existing icons for the new systems until dedicated artwork lands.
-		tool.icon = card.tint and nil or card.icon
+		tool.icon = card.icon
 		tool.icon_size = system_card_icon_size
-		tool.icons = card.tint and {{
-			icon = card.icon,
-			icon_size = system_card_icon_size,
-			tint = card.tint
-		}} or nil
+		tool.icons = nil
 		tool.subgroup = system_card_subgroup
 		tool.order = card.order
 		tool.stack_size = 200
