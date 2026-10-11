@@ -57,16 +57,15 @@ local function run(with_outer,with_mod)
 end
 
 local module,raw,inner,outer,native,layers=run(true,true)
-check(inner.orbit.distance>45 and outer.orbit.distance>50,
+check(inner.orbit.distance==48 and outer.orbit.distance==62,
   "AsteroidBelt was not placed at the mid/outer boundary")
 check(inner.orbit.parent.name=="star" and outer.orbit.parent.name=="star",
   "Native belt locations must remain space-location descendants of star")
-check(inner.orbit.orientation>.57 and inner.orbit.orientation<.65
-  and outer.orbit.orientation>.55 and outer.orbit.orientation<.62,
-  "Required source belt endpoints should track the southwest Calidus rim")
+check(inner.orbit.orientation==0 and outer.orbit.orientation==0,
+  "Required source belt endpoints should sit north of Calidus")
 check(inner.draw_orbit==false and outer.draw_orbit==false,
   "Old origin-centered asteroid belt rings still appear")
-check(#layers==3 and layers[2].filename==ring and layers[2].scale==0.85
+check(#layers==3 and layers[2].filename==ring and layers[2].scale==1.0
   and layers[3].filename=="__another-mod__/graphics/starmap/background.png",
   "The original source asteroid graphic must remain, scaled modestly")
 check(raw["space-connection"][native.name]==native
@@ -76,7 +75,7 @@ check(inner.starmap_icon:find("__AsteroidBelt__",1,true)
   and outer.starmap_icon:find("__AsteroidBelt__",1,true),
   "Source mod belt artwork was replaced")
 module.data_final_fixes()
-check(#layers==3 and layers[2].scale==0.28,
+check(#layers==3 and layers[2].scale==1.0,
   "Source asteroid sprite should never be removed or duplicated")
 
 local _,partial,missing_inner=run(false,true)

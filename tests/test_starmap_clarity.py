@@ -73,16 +73,22 @@ class ConstellationTests(unittest.TestCase):
 
     def test_calidus_centered_radial_gallery(self):
         centers = {
-            "solaris": (100, -80), "nyxaris": (-90, -80),
-            "vibrant": (121, 41), "vespera": (-117, 43),
-            "beetlejuice": (75, 135), "umbra": (-78, 141),
-            "solar-system-edge": (0, 232),
+            "solaris": (62, 105), "nyxaris": (-62, 105),
+            "vibrant": (124, 0), "vespera": (-124, 0),
+            "beetlejuice": (62, -105), "umbra": (-62, -105),
+            "solar-system-edge": (0, -248),
         }
         for name, xy in centers.items():
             self.assertLess(math.dist(self.coords[name], xy), 1.0,
                             f"{name} moved from its radial sector")
-        for star in STARS:
-            self.assertGreater(math.dist(self.coords[star], (0, 0)), 115)
+        radii = [math.dist(self.coords[name], (0, 0)) for name in STARS]
+        self.assertLess(max(radii) - min(radii), 3.0,
+                        "Major stars must share one circular orbit radius")
+        self.assertTrue(all(120 < r < 130 for r in radii))
+        for a, b in PAIRS:
+            self.assertAlmostEqual(self.coords[a][1], self.coords[b][1], delta=1)
+        self.assertLess(self.coords["solar-system-edge"][1], -230,
+                        "Deep Space must be north, not south of the galaxy")
 
     def test_natural_planet_crescents_and_clear_stellar_art(self):
         for star in STARS:
@@ -162,13 +168,13 @@ class ConstellationTests(unittest.TestCase):
                     queue.append(n)
         self.assertTrue({"sye-beetlejuice", "sye-umbra",
                          "solar-system-edge"}.issubset(reachable))
-        self.assertLess(math.dist(self.coords[native[0]], (-30, 36)), 1)
-        self.assertLess(math.dist(self.coords[native[1]], (-26, 48)), 1)
+        self.assertLess(math.dist(self.coords[native[0]], (0, -48)), 1)
+        self.assertLess(math.dist(self.coords[native[1]], (0, -62)), 1)
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
-        self.assertIn('120,0.68', source)
-        self.assertIn('26,0.68,true', source)
+        self.assertIn('145,0.12', source)
+        self.assertIn('35,0.10,true', source)
         self.assertIn('place(near,pulsar,3,0.25)', source)
         self.assertEqual(source.count("position_expedition()"), 3)
 

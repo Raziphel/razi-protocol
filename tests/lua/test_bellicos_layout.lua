@@ -87,15 +87,15 @@ check(connected[route_name] and connected[route_name].length==250000,
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="solar-system-edge",
   "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance==110,
+check(missing[gate_b].orbit.distance==140,
   "Missing pulsar fallback no longer separates the two gates")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
 local _, near_locations=run({near=true})
 check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
   "Visible Bellicos orbit should be detached from the central galaxy")
-check(near_locations["near-bellicos-orbit"].orbit.distance==120,
-  "Visible pulsar artwork is still too far from Deep Space")
+check(near_locations["near-bellicos-orbit"].orbit.distance==145,
+  "Visible Bellicos orbit was not moved north of Deep Space")
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
   "Native Aegis belt nodes were left behind")

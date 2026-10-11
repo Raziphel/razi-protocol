@@ -1,62 +1,69 @@
-# Calidus starmap: compact connected star ring
+# Razi Protocol starmap: Calidus and the six-star circle
 
-The starmap uses a small Calidus-centered six-system constellation. The
-previous radius of roughly 170–200 visual units spread individual chapters
-over several screens; star centers are now 120–160 units from home, with the
-six systems arranged as two opening worlds, two middle worlds, and two outer
-worlds. Deep Space converges a short distance beyond the outer pair.
+Factorio's starmap uses north = **negative Y** (orientation = 0).
+This design is an intentional ring centered on Calidus, with the expedition
+chapters advancing upward to Deep Space and Bellicos.
 
-| Star/landmark | X | Y |
-|---|---:|---:|
-| Calidus | 0 | 0 |
-| Solaris | 100 | -80 |
-| Nyxaris | -90 | -80 |
-| Vibrant | 121 | 41 |
-| Vespera | -117 | 43 |
-| Beetlejuice | 75 | 135 |
-| Umbra | -78 | 141 |
-| Original Asteroid Belt, inner | -30 | 36 |
-| Original Asteroid Belt, outer | -26 | 48 |
-| Deep Space | 0 | 232 |
+```text
+                         BELLICOS / AEGIS
+                              /
+                         DEEP SPACE
+                              |
+                UMBRA                  BEETLEJUICE
+                     \                 /
+               VESPERA    CALIDUS    VIBRANT
+                     /                 \
+                NYXARIS                SOLARIS
+```
 
-## Art and routing
+| Anchor | X | Y |
+| --- | ---: | ---: |
+| Calidus / Nauvis | 0 | 0 |
+| Solaris | 62 | 105 |
+| Nyxaris | -62 | 105 |
+| Vibrant | 124 | 0 |
+| Vespera | -124 | 0 |
+| Beetlejuice | 62 | -105 |
+| Umbra | -62 | -105 |
+| Required Asteroid Belt inner edge | 0 | -48 |
+| Required Asteroid Belt outer edge | 0 | -62 |
+| Deep Space / solar-system-edge | 0 | -248 |
 
-- Each planetary family rotates as a unit around its new star position.
-  Ordinary planet radii shrink by about six percent; native orbit moons and
-  hidden destinations retain their source mechanics.
-- Long inter-system links use direct **line** presentation rather than very
-  large Factorio arc curves. Local planetary routes can remain curved.
-- The oversized optional Vibrant–Vespera shortcut is removed. Both middle
-  systems remain reachable from their respective opening systems; they join
-  at the mandatory source Asteroid Belt instead.
-- Solaris and Nyxaris retain their shorter early crosslink.
-- The native AsteroidBelt graphic is preserved from the upstream mod at scale
-  0.85 (instead of the tiny 0.28 halo). Its two source-owned travel locations
-  now sit close to the visual ring around Calidus. The upstream 5,000 km
-  crossing, hazards, science and art files remain source-owned.
-- Vespera/ Umbra local asteroid belt detours remain unchanged in difficulty.
-- Deep Space is a compact outer convergence at (0,232).
-- Optional Aegis & Bellicos remains a distinct annex beyond Deep Space, but
-  its root offset is reduced to 120 units and its orbitals grouped 30–49
-  units from the shared Near Bellicos Orbit anchor. No native asteroid
-  spawning or routes inside Aegis are rewritten.
+## Design rules
 
-## Regression checks
+- The six star centers share an approximate 124-unit radius around Calidus.
+  Star sprites and most native planetary routes remain visually unobstructed.
+- Each existing planetary family is rotated in place so its slipstream portal
+  points toward the readable campaign route; preserve planet distances from
+  their parent stars to avoid crowding labels and sub-planet content.
+- Research progression follows two lanes from the southern opening systems,
+  through the middle side systems to the REQUIRED, shared asteroid belt
+  crossing. The northern pair is unlocked beyond that crossing.
+- Long Razi-managed interstellar links are lines (not giant external arcs).
+  No new crosslinks or impossible shortcuts are introduced.
+- Native AsteroidBelt by MrLumme remains REQUIRED at >=1.2.11. Keep its
+  native graphics at full scale (1.0), original five-thousand-km crossing,
+  research and native asteroid hazard tables; the entry/exit nodes are now
+  just north of Calidus, close to the visual halo.
+- Signature planetary rings remain, but avoid huge rings around entire stars.
+- Deep Space is genuinely north of the circular constellation at (0,-248).
+  Shattered Planet stays source-owned with its own local orbit.
+- Bellicos/Aegis branches northeast from Deep Space, independent of the
+  six-star circle. Preserve source art, gate names and every native Aegis
+  connection; guard missing and retyped source prototypes at final fixes.
 
-`tests/test_starmap_clarity.py`: core star centers, visual clearance,
-crossing connectivity, planetary marker spacing.
+## Verification
 
-`tests/test_route_distances.py` and `scripts/audit_route_distances.py`:
-travel kilometres remain independent of starmap geometry.
+- `tests/test_starmap_clarity.py` verifies the common ring radius, exact
+  six-star placement, northern Deep Space, belt integration and stellar clearance.
+- `tests/lua/test_galaxy_layout.lua` covers final-stage parent updates,
+  native moon persistence and signature rings.
+- `tests/lua/test_asteroid_belt_integration.lua` protects the original
+  upstream sprite, native hazards, and missing-location safety.
+- `tests/lua/test_bellicos_layout.lua` covers absent and retyped source
+  locations, gate routing and remote-orbit positioning.
+- `scripts/audit_route_distances.py` validates actual travel kilometers,
+  entirely independent of starmap art.
 
-`tests/lua/test_galaxy_layout.lua`: star sectors, native moons, one
-signature orbit per star, safe final-fixes ordering.
-
-`tests/lua/test_galaxy.lua`: required routes and hazards, native belt
-preservation, no redundant middle crosslink, direct long-route presentation.
-
-`tests/lua/test_asteroid_belt_integration.lua` and
-`tests/lua/test_bellicos_layout.lua`: source asset and remote prototype safety.
-
-Live Factorio rendering remains the final visual check for special artwork
-and label positions; static geometry can not verify sprite anchoring.
+Real Factorio screenshots are still necessary to judge shader scale, label
+overlaps, and third-party system art. Tests do not replace live rendering.

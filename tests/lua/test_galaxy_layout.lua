@@ -51,24 +51,27 @@ local function position(name)
     y-math.cos(angle)*orbit.distance
 end
 
-local sectors={
-  solaris={1,-1},nyxaris={-1,-1},vibrant={1,1},
-  vespera={-1,1},beetlejuice={1,1},umbra={-1,1}
+local centers={
+  solaris={62,105},nyxaris={-62,105},
+  vibrant={124,0},vespera={-124,0},
+  beetlejuice={62,-105},umbra={-62,-105}
 }
-for name,sign in pairs(sectors) do
+for name,expected in pairs(centers) do
   local x,y=position(name)
-  check(x*sign[1]>10 and y*sign[2]>10,"Wrong radial sector: "..name)
+  check(math.abs(x-expected[1])<1 and math.abs(y-expected[2])<1,
+    "Star moved out of its circular position: "..name)
   local hx,hy=position("sye-"..name)
   check(math.sqrt((hx-x)^2+(hy-y)^2)>25,
     "Slipstream overlaps its parent star: "..name)
-  check(places[name].draw_orbit==false,"Giant star orbit survived")
+  check(places[name].draw_orbit==false,"Giant orbital ring survived")
 end
 local dx,dy=position("solar-system-edge")
-check(math.abs(dx)<1 and dy>210 and dy<250,
-  "Deep Space should be the nearby southern convergence")
+check(math.abs(dx)<1 and dy < -235 and dy > -260,
+  "Deep Space must be a northern outer frontier")
 local hx,hy=position("sye-calidus")
-check(hx>1 and hx<12 and hy>20 and hy<30,
-  "Calidus departure must be southeast of the central star")
+check(math.abs(hx)<1 and hy>20 and hy<30,
+  "Calidus departure must remain near the central star")
+
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
   "paracelsin","shchierbin","muria","aquilo","rubia","maraxsis",
