@@ -56,55 +56,157 @@ local stars = {
   beetlejuice=true, umbra=true
 }
 
-local function exists(kind, name)
-  local bucket = data.raw[kind]
-  return bucket and bucket[name]
+-- Sprite-only star prototypes are removed during PlanetsLib data-final-fixes.
+-- PlanetsLib draws the star ART first and then deletes these prototypes.
+-- Consequently a PlanetsLib:update call after that point SILENTLY SKIPS the
+-- whole galaxy when its code is guarded by exists("space-location", parent).
+-- Use native origins after cleanup; never recreate deleted sprite-only stars.
+local by_name = {}
+for _,item in ipairs(anchors) do by_name[item[2]]=item end
+
+local function exists(kind,name)
+  return (data.raw[kind] or {})[name]
 end
 
-function M.data_final_fixes()
-  local updates = {}
-  for _, item in ipairs(anchors) do
-    local kind, name, parent, radius, turn =
-      item[1], item[2], item[3], item[4], item[5]
-    if exists(kind, name) and exists("space-location", parent) then
-      updates[#updates+1] = {
-        type=kind, name=name,
-        orbit={
-          parent={type="space-location",name=parent},
-          distance=radius, orientation=turn
-        }
+local function polar(distance,orientation)
+  local theta=2*math.pi*orientation
+  return distance*math.sin(theta),-distance*math.cos(theta)
+end
+
+local virtual_cache={star={x=0,y=0}}
+local function anchor_position(name)
+  local cached=virtual_cache[name]
+  if cached then return cached.x,cached.y end
+  local anchor=by_name[name]
+  if not anchor then return nil end
+  local px,py=anchor_position(anchor[3])
+  if not px then return nil end
+  local x,y=polar(anchor[4],anchor[5])
+  virtual_cache[name]={x=px+x,y=py+y}
+  return px+x,py+y
+end
+
+local function source_orbit(item)
+  local existing=exists(item[1],item[2])
+  local old=existing and existing.orbit
+  -- Preserve source-owned dashed/custom orbit artwork.
+  local orbit={
+    parent={type="space-location",name=item[3]},
+    distance=item[4],orientation=item[5]
+  }
+  if old and old.sprite then orbit.sprite=old.sprite end
+  return orbit
+end
+
+-- MUST run in data-updates, while PlanetsLib still has sprite_only anchors.
+-- This moves their graphical layers when PlanetsLib renders the starmap.
+function M.data_updates()
+  for name in pairs(stars) do
+    assert(exists("space-location",name),
+      "Razi starmap: required sprite-only star missing before PlanetsLib cleanup: "..name)
+  end
+  local updates={}
+  for _,item in ipairs(anchors) do
+    if exists(item[1],item[2]) and exists("space-location",item[3]) then
+      updates[#updates+1]={
+        type=item[1],name=item[2],orbit=source_orbit(item)
       }
     end
   end
   if #updates>0 then PlanetsLib:update(updates) end
+  if type(log)=="function" then
+    log("[Razi Protocol/starmap] PRE-RENDER-2026-10-11-v3: positioned six sprite-only stars before PlanetsLib cleanup")
+    for name in pairs(stars) do
+      local proto=exists("space-location",name)
+      local x,y=polar(proto.distance or 0,proto.orientation or 0)
+      local px,py=anchor_position(name)
+      log(string.format("[Razi Protocol/starmap] pre-render %s native=(%.2f,%.2f) expected=(%.2f,%.2f)",
+        name,x,y,px,py))
+    end
+  end
+end
 
-  -- PlanetsLib >= 2.0 uses Factorio's native origin-based orbit renderer.
-  -- Previously we drew only six signature rings, hiding every other orbit.
-  -- Native planet rings should remain enabled around Razi's six stars, even
-  -- when an upstream mod explicitly disabled them for the old sprite system.
-  -- Do NOT overwrite moons: their native planet-parent orbit and any custom
-  -- sprites (Apia-Carnova, Frozeta, etc.) belong to their source mods.
-  for _, planet in pairs(data.raw.planet or {}) do
-    local orbit = planet.orbit
-    local parent = orbit and orbit.parent
-    if parent and parent.type == "space-location" and stars[parent.name] then
-      planet.draw_orbit = true
+local function adjust_layer(name,px,py)
+  local graphics=exists("utility-sprites","default")
+  local layers=graphics and graphics.starmap_star and graphics.starmap_star.layers
+  for _,layer in ipairs(layers or {}) do
+    if layer.planetslib_orbit_name==name and layer.planetslib_orbit_shift then
+      layer.shift={
+        layer.planetslib_orbit_shift[1]+px*32,
+        layer.planetslib_orbit_shift[2]+py*32
+      }
+    end
+  end
+end
+
+-- Runs AFTER PlanetsLib deletes all sprite_only stars. Update the remaining
+-- Factorio-native geometry directly rather than attempting to reparent through
+-- missing star prototypes. Preserve source children, e.g. Frozeta's moon orbit.
+function M.data_final_fixes()
+  local relocated={}
+  local count=0
+  for name in pairs(stars) do
+    local x,y=anchor_position(name)
+    relocated[name]={x=x,y=y}
+  end
+
+  for _,item in ipairs(anchors) do
+    local location=exists(item[1],item[2])
+    local px,py=anchor_position(item[3])
+    if location and px and py then
+      local orbit=source_orbit(item)
+      location.orbit=orbit
+      location.origin={x=px,y=py}
+      location.distance=item[4]
+      location.orientation=item[5]
+      local dx,dy=polar(item[4],item[5])
+      relocated[item[2]]={x=px+dx,y=py+dy}
+      adjust_layer(item[2],px,py)
+      count=count+1
     end
   end
 
-  -- Secretas is represented by a space-location rather than a planet; it is
-  -- an actual orbiting world, unlike the artificial slipstream and belt nodes.
-  local secretas=exists("space-location","secretas")
-  if secretas then
-    local parent=secretas.orbit and secretas.orbit.parent
+  -- Any source-owned orbit not explicitly in our layout must travel with its
+  -- moved parent. Keep the source's relative native distance/orientation and
+  -- custom orbit sprite intact. Multiple passes handle nested moon systems.
+  for _=1,8 do
+    local changed=false
+    for _,kind in ipairs({"planet","space-location"}) do
+      for name,location in pairs(data.raw[kind] or {}) do
+        if not by_name[name] then
+          local parent=location.orbit and location.orbit.parent
+          local origin=parent and relocated[parent.name]
+          if origin and parent.name~="star" and not relocated[name] then
+            local radius=location.distance
+            local turn=location.orientation
+            if radius==nil then radius=location.orbit.distance end
+            if turn==nil then turn=location.orbit.orientation end
+            if radius and turn then
+              location.origin={x=origin.x,y=origin.y}
+              local dx,dy=polar(radius,turn)
+              relocated[name]={x=origin.x+dx,y=origin.y+dy}
+              adjust_layer(name,origin.x,origin.y)
+              changed=true
+            end
+          end
+        end
+      end
+    end
+    if not changed then break end
+  end
+
+  -- Native orbits on actual planets are drawn automatically by Factorio.
+  -- Do not suppress every circle or replace third-party moon artwork.
+  for _,planet in pairs(data.raw.planet or {}) do
+    local parent=planet.orbit and planet.orbit.parent
     if parent and parent.type=="space-location" and stars[parent.name] then
-      secretas.draw_orbit=true
+      planet.draw_orbit=true
     end
   end
+  local secretas=exists("space-location","secretas")
+  if secretas and relocated.secretas then secretas.draw_orbit=true end
 
-  -- Keep synthetic transit locations and sprite-only star anchors free of
-  -- spurious sun-centered rings. This does not affect the planet orbits.
-  for _, name in ipairs({
+  for _,name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
     "solar-system-edge","sye-calidus","sye-solaris","sye-nyxaris",
     "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"
@@ -113,32 +215,23 @@ function M.data_final_fixes()
     if location then location.draw_orbit=false end
   end
 
-  -- The actual Factorio starmap coordinates are NOT just orbit.relative x/y.
-  -- PlanetsLib >= 2 calculates a native origin, distance and orientation.
-  -- Log the final native coordinates so a stale local dev ZIP or competing
-  -- final-fixes override is immediately visible in factorio-current.log.
-  if type(log) == "function" then
-    log("[Razi Protocol/starmap] COMPASS-2026-10-11-v2: 0=N 0.25=E 0.5=S 0.75=W")
-    for _, item in ipairs(anchors) do
-      local kind, name, parent = item[1], item[2], item[3]
-      if parent=="star" and (stars[name] or name=="solar-system-edge") then
-        local location=exists(kind,name)
-        if location then
-          local origin=location.origin or {}
-          local radius=location.distance or 0
-          local orientation=location.orientation or 0
-          local angle=orientation*2*math.pi
-          local actual_x=(origin.x or origin[1] or 0)+radius*math.sin(angle)
-          local actual_y=(origin.y or origin[2] or 0)-radius*math.cos(angle)
-          local expected_x=item[4]*math.sin(item[5]*2*math.pi)
-          local expected_y=-item[4]*math.cos(item[5]*2*math.pi)
-          log(string.format(
-            "[Razi Protocol/starmap] %s expected=(%.1f,%.1f) native=(%.1f,%.1f) turn=%.6f",
-            name,expected_x,expected_y,actual_x,actual_y,orientation))
-          if math.abs(expected_x-actual_x)>2 or math.abs(expected_y-actual_y)>2 then
-            log("[Razi Protocol/starmap] WARNING: unexpected rendered position for "..name..
-              " (check origin and mod load order)")
-          end
+  if type(log)=="function" then
+    log("[Razi Protocol/starmap] NATIVE-2026-10-11-v3: placed "..count..
+      " live anchors after sprite-only cleanup; stars are virtual")
+    for _,item in ipairs(anchors) do
+      if stars[item[2]] or item[2]=="solar-system-edge" then
+        local ex,ey=anchor_position(item[2])
+        local loc=exists(item[1],item[2])
+        if loc then
+          local dx,dy=polar(loc.distance or 0,loc.orientation or 0)
+          local origin=loc.origin or {}
+          local x=(origin.x or origin[1] or 0)+dx
+          local y=(origin.y or origin[2] or 0)+dy
+          log(string.format("[Razi Protocol/starmap] %s expected=(%.2f,%.2f) native=(%.2f,%.2f)",
+            item[2],ex,ey,x,y))
+        else
+          log(string.format("[Razi Protocol/starmap] %s virtual-star-art=(%.2f,%.2f), rendered pre-cleanup",
+            item[2],ex,ey))
         end
       end
     end

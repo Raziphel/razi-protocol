@@ -80,6 +80,21 @@ chapters advancing upward to Deep Space and Bellicos.
 Real Factorio screenshots are still necessary to judge shader scale, label
 overlaps, and third-party system art. Tests do not replace live rendering.
 
+## Why earlier maps ignored the star positions
+
+PlanetsLib 2.0.9 renders `sprite_only` stars into `utility-sprites`
+and **deletes their space-location prototypes during its own
+`data-final-fixes`**. Because PlanetsLib runs before Razi at that stage,
+the old Razi layout encountered missing parents and skipped every star and
+many planets. Our test mocks failed to reproduce that deletion.
+
+The new two-stage design performs `galaxy_layout.data_updates()` in
+`data-updates.lua` to move the actual star sprites **before rendering**.
+`galaxy_layout.data_final_fixes()` subsequently reapplies the exact
+native `origin/distance/orientation` coordinates to all surviving
+planets, slipstreams, and nested moons without restoring removed stars.
+Original unique source orbit sprites are retained.
+
 ## Verifying the running mod
 
 On a mod-data rebuild, Razi writes a single
@@ -89,7 +104,8 @@ coordinates calculated from each location's `origin`, `distance`,
 and `orientation`. These are the same fields Factorio uses to draw
 the map; the old geometry tests only checked `orbit` metadata.
 
-If the log line is absent, the client is likely running an outdated
-copy of the dev mod. If a logged native position differs from its
-expected position, check for a source mod or final-fixes overwrite.
-Static geometry tests cannot detect incorrect local mod loading.
+If either log marker is absent, the client is loading an outdated build.
+If the pre-render star positions differ from the expected positions,
+the custom star sprites will be misplaced. The native pass logs virtual
+star-art positions explicitly because PlanetsLib correctly removed
+those prototypes before Razi's final fixes.
