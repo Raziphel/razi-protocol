@@ -233,8 +233,10 @@ local function test_routes()
   check(routes["razi-asteroid-belt-outer-edge-shchierbin"]~=nil,
     "Missing outer exit to Shchierbin")
 
+    check(routes["razi-vulcanus-arig"]==nil,
+      "Retired crossing line must not appear across Solaris")
     for _, local_link in ipairs({
-        {"razi-vulcanus-arig",19500},
+        {"razi-vulcanus-hyarion",20000},
         {"razi-hyarion-corrundum",22500},
         {"razi-gleba-apia-carnova-orbit",22000},
         {"razi-gleba-panglia",23500},

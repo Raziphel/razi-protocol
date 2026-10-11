@@ -232,3 +232,49 @@ glow underlay, and the six authored outer stars reuse their loaded filament
 sprites to build an additional faint corona. No new image files, hidden
 travel links, or per-tick rendering are introduced. Tooltips now label the
 actual Razi system(s) of recognised route endpoints.
+
+## Per-system starmap readability pass (October 2026)
+
+This is a geometry/metadata audit at Razi's authored map scale, **not an
+in-game screenshot or a measured Factorio UI zoom test**. Factorio's label
+metrics and special moon rendering still need live inspection.
+
+- **Calidus:** the home hub remains isolated and uncluttered; no new
+  unresearched shortcuts or orbital circles were introduced.
+- **Solaris:** Vulcanus and the departure hub sit only about 12 chart units
+  apart, so the Razi hub label now faces outward. Hyarion's orbit expands
+  slightly from 19 to 22 units to separate its native ring from Vulcanus's
+  18-unit ring. The dev-only Vulcanus/Arig connection had crossed an existing
+  Castra/Hyarion line; it is retired and replaced with a 20,000 km
+  Vulcanus/Hyarion freight connection. Source-owned links are untouched.
+- **Nyxaris:** the Gleba/Apia orbital rings had radii 32 and 32.35.
+  Apia/Carnova Orbit now uses radius 39 without changing the world's
+  discovery, source icon, or native subsystems. The departure label faces
+  away from the tightly grouped eastern biology worlds.
+- **Vibrant:** the original native Asteroid Belt, Ribbonia branch and frozen
+  outer planets remain untouched. The Fulgora/Ribbonia chain is naturally
+  tight; the map's regional arcs should be inspected in-game before
+  removing any source-world route.
+- **Vespera:** the inner/outer Debris Divide endpoints are intentionally just
+  about 11 units apart. Their shorter **Vespera • In / Out** labels now face
+  away from one another. The ribbon-shaped belt and dangerous crossing
+  stay in their exact original coordinates.
+- **Beetlejuice:** the longer Cubium/Linox/Secretas orbits and outer-system
+  convergence already have healthy spacing. Only the departure hub's label
+  is redirected outward; source Frozeta moons are not moved.
+- **Umbra:** Crucible Orbit and Tenebris are close but remain distinct.
+  The equally tight Shattered Divide uses shorter **Umbra • In / Out**
+  labels with opposing directions. Neither Vesta nor the mandatory huge-
+  asteroid encounter was relocated.
+- **Deep Space:** the 190-unit northern edge and both long final routes
+  remain unchanged. We preserve room for optional Aegis, Bellicos,
+  Nexus and other source-owned endgame artwork.
+
+Use `python scripts/audit_starmap_readability.py` to repeat a conservative
+review of named hub/planet spacing, near-identical orbital rings, route chords
+and declared mandatory belt waypoints. Its warnings are **design leads**,
+not proof of collisions on Factorio's curved starmap. A complete modpack
+`--dump-data-raw` and screenshots remain necessary for final approval.
+
+No new PNGs, runtime ticks, automatic cache invalidation or science changes
+were added by this pass.
