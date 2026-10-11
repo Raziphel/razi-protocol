@@ -25,3 +25,11 @@ All 16 original paletted transparent PNGs are 1024 pixels or less per side. No 4
 The original Better_Starmap_Background takes precedence if both mods are installed, preventing duplicate wallpapers. The native AsteroidBelt ring remains in its existing sprite layer above the dust halo.
 
 Python and Lua fixtures verify image structure, atlas limits, sequence, source ownership, and settings. In-game Factorio rendering still needs validation.
+
+## Galactic Scenery Expansion
+
+Seventeen additional original textures bring the atlas to **33 PNG assets**: eight spiral nebula filaments, three irregular debris rings, three distant stellar nurseries, a cold Deep Space gravity-lens motif, a second braided dust stream, and an optional observatory-style star chart. Razi's pre-existing 16 images remain intact.
+
+**Default Subtle** composes 32 sprite layers behind the game's stars, native belts and routes. **Cinematic** composes 40 layers by adding low-opacity expanded filament passes which reuse the same texture assets. The optional Observatory ring adds one additional layer. Both modes keep main route colours visible. Under the new **Detailed galactic scenery** setting, users can disable all new textures and revert to the original 16-layer background without losing the Razi universe theme.
+
+Every image remains 1024 pixels or smaller. The new artwork is constructed only at data loading and adds no per-tick effects or star-map GUI polling. Original asteroid encounters and planet gates remain unchanged.

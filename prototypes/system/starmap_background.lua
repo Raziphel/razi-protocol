@@ -40,7 +40,7 @@ local function insert_asset(layers,file,w,h,scale,x,y,rgb,alpha)
     tint={r=rgb.r,g=rgb.g,b=rgb.b,a=alpha}
   }
 end
-function M.make_layers(mode,halos,atmosphere)
+function M.make_layers(mode,halos,atmosphere,details,cartography)
   if mode~="subtle" and mode~="cinematic" then return {} end
   local cine=mode=="cinematic"
   local result={}
@@ -70,6 +70,57 @@ function M.make_layers(mode,halos,atmosphere)
       end
     end
   end
+  -- New fine-grain scenery adds structure at a smaller visual scale.
+  -- These textures sit behind every source-owned planet, sun and route.
+  if details~=false then
+    -- A counter-flowing galaxy arm joins the six-star ring visually.
+    insert_asset(result,"dust-lane-2.png",768,384,9,8,-43,
+      {r=.63,g=.47,b=.78},cine and .51 or .25)
+    -- Star nurseries in the outer void, away from main system markers.
+    local clusters={
+      {169,139,{r=.45,g=.73,b=1}},
+      {-162,137,{r=.89,g=.51,b=.84}},
+      {-170,-148,{r=.52,g=.86,b=.83}}
+    }
+    for i,cluster in ipairs(clusters) do
+      insert_asset(result,"cluster-"..i..".png",384,384,6.2,
+        cluster[1],cluster[2],cluster[3],cine and .60 or .40)
+    end
+    if halos~=false then
+      for _,system in ipairs(systems) do
+        local x,y=anchor(system.name)
+        if x and y then
+          -- Filaments are hollow at the centre to preserve stellar icons.
+          insert_asset(result,"filament-"..system.name..".png",512,512,
+            5,x,y,system.tint,cine and .64 or .34)
+          if cine then
+            -- A faint expanded copy reuses the exact texture/atlas slot.
+            insert_asset(result,"filament-"..system.name..".png",512,512,
+              6.5,x,y,system.tint,.14)
+          end
+        end
+      end
+    end
+    if atmosphere~=false then
+      for _,belt in ipairs(belts) do
+        local x,y=anchor(belt.name)
+        if x and y then
+          insert_asset(result,"debris-"..belt.name..".png",512,512,
+            6,x,y,belt.tint,cine and .56 or .30)
+        end
+      end
+    end
+    local x,y=anchor("deep-space")
+    if x and y then
+      insert_asset(result,"rift-deep-space.png",512,512,4.7,x,y,
+        {r=.48,g=.61,b=.95},cine and .58 or .32)
+    end
+  end
+  if cartography==true then
+    -- Decorative, never a navigation connection; disabled by default.
+    insert_asset(result,"chart-constellation.png",512,512,16,0,0,
+      {r=.51,g=.70,b=.84},cine and .25 or .17)
+  end
   return result
 end
 function M.data_final_fixes()
@@ -97,7 +148,9 @@ function M.data_final_fixes()
   end
   local new=M.make_layers(mode,
     option("razi-starmap-system-halos",true),
-    option("razi-starmap-belt-atmosphere",true))
+    option("razi-starmap-belt-atmosphere",true),
+    option("razi-starmap-fine-details",true),
+    option("razi-starmap-cartography",false))
   -- Prepend in natural order. Native belts, authored star graphics and
   -- subsequent risk-coloured route guides remain ABOVE these textures.
   for i=#new,1,-1 do table.insert(sprite.layers,1,new[i]) end

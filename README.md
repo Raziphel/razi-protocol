@@ -273,3 +273,8 @@ A first-party, seven-system-aware planet and space-platform dashboard is include
 ## Razi Universe Background
 
 The original, static seven-system starmap now has a galaxy-wide starfield, distinct coloured nebulae for each system and Deep Space, a connecting dust current, and three subtle asteroid-belt halos. Change the **Custom universe background** setting between Off, Subtle (default) and Cinematic, and independently toggle nebulae or belt atmosphere. Assets are 1024px or smaller and keep all native route and planet artwork. See [background notes](docs/STARMAP_BACKGROUND.md).
+
+
+### Expanded Galactic Scenery
+
+The star map also includes finer spiral nebula filaments, additional dust currents, scattered distant star clusters, atmospheric debris around all three belts, and Deep Space lensing. **Detailed galactic scenery** is on by default; disable it for the earlier minimalist backdrop. For a navigational-astronomy look, the optional **Observatory constellation ring** starts off so it will never be mistaken for a travel route. All sprites remain 1024px or smaller.

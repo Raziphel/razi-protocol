@@ -47,5 +47,13 @@ data:extend({
     order="cb[starmap]-a[background]"
   },
   startup_toggle("razi-starmap-system-halos","cb[starmap]-b[halos]"),
-  startup_toggle("razi-starmap-belt-atmosphere","cb[starmap]-c[belts]")
+  startup_toggle("razi-starmap-belt-atmosphere","cb[starmap]-c[belts]"),
+  startup_toggle("razi-starmap-fine-details","cb[starmap]-d[details]"),
+  {
+    type="bool-setting",
+    name="razi-starmap-cartography",
+    setting_type="startup",
+    default_value=false,
+    order="cb[starmap]-e[chart]"
+  }
 })
