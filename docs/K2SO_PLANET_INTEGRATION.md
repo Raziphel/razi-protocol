@@ -291,3 +291,17 @@ Upstream recipes inspected in the source repositories:
 The recipe source patterns and their feature flags are verified in the
 isolated Lua fixture `tests/lua/test_outer_production_exchanges.lua`, not
 in a full post-load dump; real engine/playtest verification is still needed.
+
+## Modded-planet exchange specialization
+
+Seven additional alternate recipes extend the **modded-world-only** network
+without making any export mandatory for native discoveries or original
+science factories. The source code and in-game localised names are in
+`prototypes/compat/modded_planet_exchanges.lua` and
+`locale/en/production.cfg`.
+
+These separate methods require the supplier worlds **and the technology that
+actually unlocks each source manufacturing recipe**. A named material is
+not sufficient if the producer recipe, its ingredients, or its original tech
+were deleted by an upstream mod. See the deeper audit in
+`docs/MODDED_PLANET_INTEGRATION.md`.

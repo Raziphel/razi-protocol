@@ -108,3 +108,7 @@ require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 -- Higher-efficiency, nonmandatory industry exchanges between source planets.
 -- Add only after all K2SO items, recipes, and research data are reconciled.
 require("prototypes.compat.planet_production_exchanges").data_final_fixes()
+
+-- Additional cross-mod industrial exchanges use their source mods' true
+-- producer research and preserve specialist surface/crafting restrictions.
+require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
