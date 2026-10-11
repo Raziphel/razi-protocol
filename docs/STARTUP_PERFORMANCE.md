@@ -134,3 +134,10 @@ internal improvements.
 
 The optimisation is independent of starmap artwork settings. Razi will not
 silently disable starfield details to gain a small unmeasured improvement.
+
+### Reused route highlights and stellar coronas
+
+October 2026 starmap polish reuses existing PNGs for corridor glow and six
+additional stellar coronas. It introduces no new on-disk textures and does
+not require per-tick runtime rendering. Verify any increase in sprite layer
+processing in a real startup benchmark.

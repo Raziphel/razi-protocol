@@ -30,6 +30,18 @@ check(hz.kind(routes.huge)=="belt-crossing","Belt class lost")
 check(hz.kind(routes.medium)=="interstellar","Interstellar class lost")
 check(hz.color(routes.huge)==hz.belt_color,"Belt art must remain identifiable")
 check(intel.annotate(routes.external),"External route should be annotated")
+local regional={from="vulcanus",to="arig",length=19500,shape="arc"}
+check(intel.annotate(regional),"Known regional route should be annotated")
+check(#regional.custom_tooltip_fields==7,"Regional route needs one sector line")
+local sector=regional.custom_tooltip_fields[7]
+check(sector.name[1]=="razi-route-intel.sector"
+  and sector.value[1]=="razi-route-intel.inside-system",
+  "Regional tooltip uses the wrong system identity")
+local cross={from="sye-solaris",to="sye-vibrant",shape="line"}
+intel.annotate(cross)
+check(cross.custom_tooltip_fields[#cross.custom_tooltip_fields].value[1]
+  =="razi-route-intel.across-systems","Interstellar sector label missing")
+check(not intel.annotate(regional),"Regional tooltip must not duplicate")
 check(#routes.external.custom_tooltip_fields==7,"Existing tooltip field was lost")
 check(routes.external.custom_tooltip_fields[1].order==12,"External tooltip ownership lost")
 check(routes.external.localised_description[1]=="other.description",

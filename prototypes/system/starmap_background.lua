@@ -93,10 +93,12 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
           -- Filaments are hollow at the centre to preserve stellar icons.
           insert_asset(result,"filament-"..system.name..".png",512,512,
             5,x,y,system.tint,cine and .64 or .34)
-          if cine then
-            -- A faint expanded copy reuses the exact texture/atlas slot.
+          -- Reuse the filament's texture for a very faint outer corona.
+          -- Six stellar hubs gain subtle depth; Calidus and Deep Space keep
+          -- their distinct native silhouettes.
+          if cine or (system.name~="calidus" and system.name~="deep-space") then
             insert_asset(result,"filament-"..system.name..".png",512,512,
-              6.5,x,y,system.tint,.14)
+              cine and 6.5 or 6.15,x,y,system.tint,cine and .14 or .085)
           end
         end
       end

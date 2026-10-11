@@ -25,6 +25,18 @@ local function current_position(name)
           (origin.y or origin[2] or 0)-radius*math.cos(radians)}
 end
 
+-- Both strokes reuse the exact same texture. The glow is broader
+-- and much fainter; it never draws a route that the native graph lacks.
+function M.layers_for_guide(guide,color,mode)
+  local function layer(scale,alpha)
+    return {type="sprite",filename=guide.filename,size=guide.size,
+      shift=guide.shift,scale=scale,priority="extra-high-no-scale",
+      flags={"gui-icon"},blend_mode="normal",
+      tint={r=color.r,g=color.g,b=color.b,a=alpha}}
+  end
+  return {layer(4.035,mode=="clear" and .17 or .075),
+          layer(4,mode=="clear" and .58 or .36)}
+end
 function M.data_final_fixes()
   local option=settings and settings.startup
     and settings.startup["razi-route-highlight-style"]
@@ -53,12 +65,9 @@ function M.data_final_fixes()
       or (guide.kind=="belt-approach" and mode=="clear"))
     if aligned and appropriate then
       local c=hazards.color(route)
-      art.layers[#art.layers+1]={
-        type="sprite",filename=guide.filename,size=guide.size,
-        shift=guide.shift,scale=4,priority="extra-high-no-scale",
-        flags={"gui-icon"},blend_mode="normal",
-        tint={r=c.r,g=c.g,b=c.b,a=mode=="clear" and 0.60 or 0.33}
-      }
+      for _,layer in ipairs(M.layers_for_guide(guide,c,mode)) do
+        art.layers[#art.layers+1]=layer
+      end
       painted=painted+1
     else
       skipped=skipped+1
