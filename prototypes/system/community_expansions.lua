@@ -1,0 +1,182 @@
+-- Optional worlds and unusual locations contributed by the October 2026
+-- community expansion. Do not imitate a source planet's special progression.
+-- Discovered worlds join Razi's galaxy; sealed sub-surfaces stay sealed.
+local M = {}
+local hazard = require("prototypes.system.asteroid_profiles")
+
+-- Native orbital moons and event-driven surfaces must not be reparented.
+-- A side branch never contributes science to required seven-system milestones.
+local candidates = {
+  {mod="planet-ferrum", name="ferrum", system="vibrant",
+    gate="vibrant-discovery", hub="fulgora",
+    radius=27, orientation=.79, km=19500, profile="electrical",
+    preserve_routes=true},
+  {mod="Velora", name="velora", system="nyxaris",
+    gate="planet-discovery-gleba", hub="gleba",
+    moon=true, km=14000, profile="biological"},
+  {mod="nulla", name="nulla", system="vespera",
+    gate="planet-discovery-aquilo", hub="aquilo",
+    moon=true, km=13500, profile="cryogenic"},
+  {mod="alchemy-khemia", name="khemia", system="vibrant",
+    gate="vibrant-discovery", hub="paracelsin",
+    radius=26, orientation=.84, km=21000, profile="chemistry"},
+  {mod="Arcanyx", name="arcanyx", system="umbra",
+    gate="umbra-discovery", hub="tenebris",
+    radius=36, orientation=.43, km=25000, profile="outer_void"},
+  -- Source: Balack is a dangerous post-Aquilo side trip. Its prometheum
+  -- research, strong asteroid routes and source bio-factory are NOT changed.
+  {mod="biological-machines-planet-balack", name="bm-balack",
+    system="vespera", gate="planet-discovery-aquilo", hub="aquilo",
+    radius=38, orientation=.91, km=30000, profile="cryogenic_deep",
+    preserve_routes=true},
+  -- Wit produces early space science and belongs to Nauvis. Its moon
+  -- relationship is not an ordinary Razi star-system orbital slot.
+  {mod="biological-machines-planet-wit", name="bm-wit",
+    system="calidus", gate=nil, hub="nauvis",
+    moon=true, km=12000, profile="starter"}
+}
+
+-- Nonstandard content is registered via optional dependencies, but must
+-- keep its original routes/surface lifecycle:
+-- rabbasca-underground: hidden, moving subsurface; no platform arrivals.
+-- Solar-Halo: unusual twin solar orbit/station and harmful halo-flare routes.
+-- skewer_shattered_planet: plays in the existing endgame Shattered zone.
+-- Hephaestus: runtime-built mega-structure with source warp routes.
+local special = {
+  {mod="Solar-Halo", location="halo-solar-orbit",
+    gate="solaris-discovery"},
+  {mod="skewer_shattered_planet", location="shattered-planet",
+    gate=nil},
+  {mod="rabbasca-underground", location="rabbasca-underground",
+    hidden=true},
+  {mod="Hephaestus", location="hephaestus", gate=nil}
+}
+
+local home = {
+  nauvis="calidus", gleba="nyxaris", vulcanus="solaris",
+  fulgora="vibrant", aquilo="vespera", paracelsin="vibrant",
+  tenebris="umbra", ["sye-vibrant"]="vibrant",
+  ["sye-nyxaris"]="nyxaris", ["sye-vespera"]="vespera",
+  ["sye-umbra"]="umbra", ["solar-system-edge"]="deep-space"
+}
+
+local function location(name)
+  return (data.raw.planet or {})[name]
+    or (data.raw["space-location"] or {})[name]
+end
+
+local function depends_on(current, target, seen)
+  if current == target then return true end
+  local tech = (data.raw.technology or {})[current]
+  if not tech then return false end
+  seen = seen or {}
+  if seen[current] then return false end
+  seen[current] = true
+  for _, name in ipairs(tech.prerequisites or {}) do
+    if depends_on(name,target,seen) then return true end
+  end
+  return false
+end
+
+local function gate_unlock(name, gate)
+  if not gate then return end
+  local techs = data.raw.technology or {}
+  if not techs[gate] then return end
+  for tech_name, tech in pairs(techs) do
+    for _, effect in ipairs(tech.effects or {}) do
+      if effect.type=="unlock-space-location"
+        and effect.space_location==name
+        and tech_name~=gate
+        and not depends_on(gate,tech_name)
+        and not depends_on(tech_name,gate) then
+        tech.prerequisites = tech.prerequisites or {}
+        tech.prerequisites[#tech.prerequisites+1] = gate
+      end
+    end
+  end
+end
+
+local function already_connected(a, b)
+  for _, route in pairs(data.raw["space-connection"] or {}) do
+    if (route.from==a and route.to==b)
+      or (route.from==b and route.to==a) then return true end
+  end
+  return false
+end
+
+local function has_local_route(destination, system)
+  for _, route in pairs(data.raw["space-connection"] or {}) do
+    local other
+    if route.from==destination then other=route.to end
+    if route.to==destination then other=route.from end
+    if other and home[other]==system then return true end
+  end
+  return false
+end
+
+local function prune_known_bypass(destination, system)
+  local routes=data.raw["space-connection"] or {}
+  for name, route in pairs(routes) do
+    local other
+    if route.from==destination then other=route.to end
+    if route.to==destination then other=route.from end
+    -- Remove only normal other-system planet routes, never special
+    -- source-owned links to unknown endgame/stargate destinations.
+    if other and home[other] and home[other]~=system then
+      routes[name]=nil
+    end
+  end
+end
+
+local function attach(config)
+  if not location(config.hub)
+    or has_local_route(config.name,config.system)
+    or already_connected(config.name,config.hub) then return end
+  local routes=data.raw["space-connection"] or {}
+  local name="razi-expansion-" .. config.name .. "-" .. config.hub
+  if routes[name] then return end
+  data:extend({{
+    type="space-connection", name=name,
+    from=config.hub, to=config.name,
+    length=config.km,
+    asteroid_spawn_definitions=hazard.create(config.profile)
+  }})
+end
+
+local function integrate(config)
+  if not mods[config.mod] or not (data.raw.planet or {})[config.name] then
+    return
+  end
+  -- Original discovery owners remain responsible for unlock-space-location;
+  -- unknown/removed unlocks cannot be recreated by a speculative shortcut.
+  if config.gate and not (data.raw.technology or {})[config.gate] then
+    return
+  end
+  if config.radius
+    and (data.raw["space-location"] or {})[config.system] then
+    PlanetsLib:update({{
+      type="planet", name=config.name,
+      orbit={parent={type="space-location",name=config.system},
+        distance=config.radius,orientation=config.orientation}
+    }})
+  end
+  gate_unlock(config.name,config.gate)
+  if not config.moon and not config.preserve_routes then
+    prune_known_bypass(config.name,config.system)
+  end
+  attach(config)
+end
+
+function M.data_final_fixes()
+  for _, config in ipairs(candidates) do integrate(config) end
+  for _, config in ipairs(special) do
+    if mods[config.mod] and location(config.location)
+      and not config.hidden then
+      -- Only gate the native space-location unlock. Keep every native
+      -- route and asteroid entry on Solar Halo's flares and Shattered.
+      gate_unlock(config.location,config.gate)
+    end
+  end
+end
+
+return M

@@ -160,3 +160,16 @@ The post-load checker `scripts/audit_route_distances.py` compares interstellar
 km against resolved parent-orbit geometry, warns on inexplicable short hops,
 checks staged travel growth, duplicates and removed-belt shortcuts. CI uses
 the canonical Razi route manifest and final starmap anchors as fixtures.
+
+## October 2026 optional community destinations
+
+New guarded late-addition paths use native moon, special surface and
+solar-station handling. Ferrum and Khemia join Vibrant's electrically and
+chemically focused worlds; Arcanyx joins Umbra's experimental side branches;
+Velora stays Gleba's moon and Nulla stays Aquilo's moon. Balack remains a
+dangerous post-Aquilo destination inside Vespera. Wit stays near Nauvis.
+Solar Halo and Rabbasca Underground retain their source-owned layouts.
+
+Native authors' unusual worlds are not flattened into Razi's standard
+asteroid patterns. For the exact list, safety checks and unresolved
+full-modpack tests see [Community Expansions](COMMUNITY_EXPANSIONS.md).
