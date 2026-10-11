@@ -3,6 +3,7 @@
 -- Discovered worlds join Razi's galaxy; sealed sub-surfaces stay sealed.
 local M = {}
 local hazard = require("prototypes.system.asteroid_profiles")
+local route_icons = require("prototypes.system.route_icons")
 
 -- Native orbital moons and event-driven surfaces must not be reparented.
 -- A side branch never contributes science to required seven-system milestones.
@@ -135,12 +136,13 @@ local function attach(config)
   local routes=data.raw["space-connection"] or {}
   local name="razi-expansion-" .. config.name .. "-" .. config.hub
   if routes[name] then return end
-  data:extend({{
+  local connection=route_icons.assign({
     type="space-connection", name=name,
     from=config.hub, to=config.name,
     length=config.km,
     asteroid_spawn_definitions=hazard.create(config.profile)
-  }})
+  },config.profile)
+  data:extend({connection})
 end
 
 local function calibrate_ferrum_star_link()

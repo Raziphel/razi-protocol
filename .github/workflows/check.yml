@@ -36,6 +36,8 @@ jobs:
         run: lua5.2 tests/lua/test_compat.lua
       - name: Check seven-system galaxy and research fixtures
         run: lua5.2 tests/lua/test_galaxy.lua
+      - name: Check required route icons and external icon preservation
+        run: lua5.2 tests/lua/test_route_icons.lua
       - name: Test optional enemy placement safety
         run: lua5.2 tests/lua/test_enemy_safety.lua
       - name: Test research trigger migrations
@@ -76,3 +78,5 @@ jobs:
         run: python3 -m unittest tests/test_route_distances.py -v
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Audit Razi-owned graphics and required icon declarations
+        run: python3 scripts/audit_assets.py

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="steel" x1="8" y1="5" x2="55" y2="59" gradientUnits="userSpaceOnUse"><stop stop-color="#a79170"/><stop offset=".18" stop-color="#4d4d49"/><stop offset=".55" stop-color="#242728"/><stop offset=".82" stop-color="#71634d"/><stop offset="1" stop-color="#17191a"/></linearGradient>
+    <radialGradient id="screen" cx="35%" cy="30%" r="80%"><stop stop-color="#24343a"/><stop offset=".55" stop-color="#10191d"/><stop offset="1" stop-color="#070b0d"/></radialGradient>
+    <radialGradient id="planetA" cx="35%" cy="28%" r="72%"><stop stop-color="#b9e5df"/><stop offset=".27" stop-color="#529b9b"/><stop offset=".7" stop-color="#24515b"/><stop offset="1" stop-color="#101f25"/></radialGradient>
+    <radialGradient id="planetB" cx="32%" cy="25%" r="75%"><stop stop-color="#f4d48b"/><stop offset=".3" stop-color="#b77b3f"/><stop offset=".72" stop-color="#5e3824"/><stop offset="1" stop-color="#211611"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.4" stdDeviation="1.3" flood-color="#000" flood-opacity=".9"/></filter>
+    <filter id="routeGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.1"/></filter>
+    <clipPath id="display"><path d="M14 9h36l6 6v34l-6 6H14l-6-6V15z"/></clipPath>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M12 3h40l9 9v40l-9 9H12l-9-9V12z" fill="#101112" stroke="#080909" stroke-width="1.5"/>
+    <path d="M13 5h38l8 8v38l-8 8H13l-8-8V13z" fill="url(#steel)" stroke="#c0a274" stroke-width=".65"/>
+    <path d="M14 9h36l6 6v34l-6 6H14l-6-6V15z" fill="url(#screen)" stroke="#121617" stroke-width="2"/>
+    <path d="M14 9h36l6 6v34l-6 6H14l-6-6V15z" fill="none" stroke="#8d7958" stroke-width=".75"/>
+  </g>
+  <g clip-path="url(#display)" opacity=".28" stroke="#799097" stroke-width=".45"><path d="M3 18h58M3 31h58M3 44h58M19 5v54M32 5v54M45 5v54"/><path d="M5 51L52 8M12 58L59 15" opacity=".32"/></g>
+  <path d="M17 44C22 31 32 24 47 20" fill="none" stroke="#75dbcf" stroke-width="4" opacity=".17" filter="url(#routeGlow)"/>
+  <path d="M17 44C22 31 32 24 47 20" fill="none" stroke="#132b2e" stroke-width="4"/>
+  <path d="M17 44C22 31 32 24 47 20" fill="none" stroke="#77c9bc" stroke-width="1.8"/>
+  <path d="M29.5 29.5l5.2-1.4-2.6 4.6z" fill="#e1d3a5" stroke="#342b20" stroke-width=".65"/>
+  <g transform="translate(17 44)"><ellipse rx="9" ry="3.1" fill="none" stroke="#779da0" stroke-width="1" transform="rotate(-20)"/><circle r="6.3" fill="url(#planetA)" stroke="#0a1114" stroke-width="1"/><path d="M-4-1c2-2 4-2 7-1M-2 3c2-1 4-.6 6 .2" fill="none" stroke="#8dc1ba" stroke-width=".7" opacity=".5"/><circle cx="-2" cy="-2.5" r="1" fill="#d8f0df" opacity=".7"/></g>
+  <g transform="translate(47 20)"><circle r="5.5" fill="url(#planetB)" stroke="#100d0a" stroke-width="1"/><path d="M-4 0c2 1 5 1 8-.2M-3-2.5c2 .8 4 .8 6 0" fill="none" stroke="#e2ad61" stroke-width=".65" opacity=".6"/><circle cx="-1.8" cy="-2" r=".9" fill="#ffe2a1" opacity=".7"/></g>
+  <g fill="#171818" stroke="#a99776" stroke-width=".65"><circle cx="11.5" cy="11.5" r="1.45"/><circle cx="52.5" cy="11.5" r="1.45"/><circle cx="11.5" cy="52.5" r="1.45"/><circle cx="52.5" cy="52.5" r="1.45"/></g>
+  <path d="M17 6h12M35 58h12" stroke="#ddd0ae" stroke-width=".55" opacity=".45"/>
+</svg>

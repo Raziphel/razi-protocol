@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="steel" x1="7" y1="4" x2="56" y2="60"><stop stop-color="#b0a487"/><stop offset=".2" stop-color="#535654"/><stop offset=".55" stop-color="#222628"/><stop offset=".82" stop-color="#68675c"/><stop offset="1" stop-color="#151718"/></linearGradient>
+    <radialGradient id="screen" cx="34%" cy="28%" r="80%"><stop stop-color="#262e3b"/><stop offset=".56" stop-color="#111722"/><stop offset="1" stop-color="#07090e"/></radialGradient>
+    <radialGradient id="blueStar"><stop stop-color="#fffbd9"/><stop offset=".18" stop-color="#b9ecff"/><stop offset=".55" stop-color="#4b92b8"/><stop offset="1" stop-color="#19313f"/></radialGradient>
+    <radialGradient id="violetStar"><stop stop-color="#fff2d5"/><stop offset=".17" stop-color="#efc8ff"/><stop offset=".52" stop-color="#8d63b7"/><stop offset="1" stop-color="#322042"/></radialGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.4" stdDeviation="1.3" flood-color="#000" flood-opacity=".9"/></filter>
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="1.2"/></filter>
+    <clipPath id="display"><path d="M14 9h36l6 6v34l-6 6H14l-6-6V15z"/></clipPath>
+  </defs>
+  <g filter="url(#shadow)"><path d="M12 3h40l9 9v40l-9 9H12l-9-9V12z" fill="#101112" stroke="#070809" stroke-width="1.5"/><path d="M13 5h38l8 8v38l-8 8H13l-8-8V13z" fill="url(#steel)" stroke="#bdb08b" stroke-width=".65"/><path d="M14 9h36l6 6v34l-6 6H14l-6-6V15z" fill="url(#screen)" stroke="#111418" stroke-width="2"/><path d="M14 9h36l6 6v34l-6 6H14l-6-6V15z" fill="none" stroke="#777b78" stroke-width=".75"/></g>
+  <g clip-path="url(#display)" fill="#aec4d9"><circle cx="18" cy="18" r=".45"/><circle cx="34" cy="15" r=".35" opacity=".5"/><circle cx="45" cy="43" r=".5"/><circle cx="26" cy="48" r=".35"/><circle cx="50" cy="29" r=".3" opacity=".7"/><circle cx="13" cy="34" r=".3"/></g>
+  <path d="M16.5 45L25 36.5 34.5 32 48 19" stroke="#a78ad0" stroke-width="4.2" opacity=".16" fill="none" filter="url(#glow)"/><path d="M16.5 45L25 36.5 34.5 32 48 19" stroke="#11141b" stroke-width="4.5" fill="none"/><path d="M16.5 45L25 36.5 34.5 32 48 19" stroke="#b6a5c9" stroke-width="1.65" fill="none"/>
+  <g fill="#e8d8a6" stroke="#312b20" stroke-width=".55"><path d="M26.5 34.1l4.5-.9-2.2 3.9z"/><path d="M37.1 28.2l4.5-1.4-1.8 4.1z"/></g>
+  <g transform="translate(16.5 45)"><path d="M0-8l1.6 5.7L6-5l-3 4.7L8 0 2.6 1.5 5 6 1.2 3 0 8l-1.5-5-4.1 3 2.8-4.5L-8 0l5.3-1.3L-5-6l3.8 3.5z" fill="#6098b4" opacity=".55"/><circle r="4.3" fill="url(#blueStar)" stroke="#152934" stroke-width=".8"/><circle cx="-1.2" cy="-1.4" r=".8" fill="#fff" opacity=".75"/></g>
+  <g transform="translate(48 19)"><path d="M0-8l1.4 5.7L6-5l-3 4.7L8 0 2.8 1.4 5 6 1.1 3 0 8l-1.4-5-4.2 3 2.9-4.5L-8 0l5.2-1.4L-5-6l3.8 3.6z" fill="#9869b6" opacity=".55"/><circle r="4.2" fill="url(#violetStar)" stroke="#281936" stroke-width=".8"/><circle cx="-1.2" cy="-1.3" r=".8" fill="#fff" opacity=".7"/></g>
+  <g fill="#151717" stroke="#aaa080" stroke-width=".65"><circle cx="11.5" cy="11.5" r="1.45"/><circle cx="52.5" cy="11.5" r="1.45"/><circle cx="11.5" cy="52.5" r="1.45"/><circle cx="52.5" cy="52.5" r="1.45"/></g><path d="M17 6h12M35 58h12" stroke="#ddd3b2" stroke-width=".55" opacity=".42"/>
+</svg>

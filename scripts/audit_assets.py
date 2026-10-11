@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""Static audit for graphics owned by Razi Protocol.
+
+The audit intentionally resolves only ``__razi-protocol__`` paths. References
+owned by Factorio and optional mods are data-stage concerns and must not be
+reported as missing merely because those mods are absent from the checkout.
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import struct
+from pathlib import Path
+from typing import NamedTuple
+
+
+MOD_PREFIX = "__razi-protocol__/"
+GRAPHICS_REFERENCE = re.compile(
+    r"(?P<quote>['\"])(?P<path>__razi-protocol__/graphics/[^'\"]+)(?P=quote)"
+)
+SOURCE_SUFFIXES = {".lua", ".json", ".cfg"}
+
+REQUIRED_DIMENSIONS = {
+    "graphics/icons/SolarisStar.png": (1024, 1024),
+    "graphics/icons/NyxarisStar.png": (1024, 1024),
+    "graphics/icons/VibrantStar.png": (1024, 1024),
+    "graphics/icons/BeetleJuiceStar.png": (1024, 1024),
+    "graphics/icons/VesperaStar.png": (1024, 1024),
+    "graphics/icons/UmbraStar.png": (1024, 1024),
+    "graphics/icons/tech-cards/calidus-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/solaris-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/nyxaris-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/vibrant-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/beetlejuice-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/deep-space-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/vespera-tech-card.png": (256, 256),
+    "graphics/icons/tech-cards/umbra-tech-card.png": (256, 256),
+    "graphics/icons/routes/planetary-route.png": (64, 64),
+    "graphics/icons/routes/interstellar-route.png": (64, 64),
+    "graphics/icons/routes/asteroid-route.png": (64, 64),
+    "graphics/icons/routes/deep-space-route.png": (64, 64),
+}
+
+
+class Reference(NamedTuple):
+    source: Path
+    line: int
+    mod_path: str
+
+
+def png_info(path: Path) -> tuple[int, int, bool]:
+    """Return width, height, and whether a PNG's color type carries alpha."""
+    with path.open("rb") as handle:
+        header = handle.read(26)
+    if len(header) < 26 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError("invalid PNG signature or truncated header")
+    if header[12:16] != b"IHDR":
+        raise ValueError("missing PNG IHDR chunk")
+    width, height = struct.unpack(">II", header[16:24])
+    color_type = header[25]
+    if not width or not height:
+        raise ValueError("zero-sized PNG")
+    return width, height, color_type in (4, 6)
+
+
+def discover_references(root: Path) -> list[Reference]:
+    references = []
+    excluded = {".git", ".venv", "__pycache__"}
+    for source in sorted(root.rglob("*")):
+        if (not source.is_file() or source.suffix not in SOURCE_SUFFIXES
+                or any(part in excluded for part in source.parts)):
+            continue
+        text = source.read_text(encoding="utf-8")
+        for match in GRAPHICS_REFERENCE.finditer(text):
+            references.append(Reference(
+                source.relative_to(root),
+                text.count("\n", 0, match.start()) + 1,
+                match.group("path"),
+            ))
+    return references
+
+
+def _source_contracts(root: Path) -> list[str]:
+    errors = []
+    final_fixes = (root / "data-final-fixes.lua").read_text(encoding="utf-8")
+    final_call = 'require("prototypes.system.route_icons").data_final_fixes()'
+    if final_call not in final_fixes:
+        errors.append("data-final-fixes.lua: missing final route icon repair pass")
+    elif final_fixes.rstrip().splitlines()[-1].strip() != final_call:
+        errors.append("data-final-fixes.lua: route icon repair must remain the final pass")
+
+    for relative in (
+        "prototypes/system/route_reconcile.lua",
+        "prototypes/system/optional_planets.lua",
+        "prototypes/system/community_expansions.lua",
+    ):
+        text = (root / relative).read_text(encoding="utf-8")
+        if 'require("prototypes.system.route_icons")' not in text:
+            errors.append(f"{relative}: dynamic routes do not import route_icons")
+        if "route_icons.assign" not in text:
+            errors.append(f"{relative}: dynamic routes are not assigned an icon")
+
+    system_text = (root / "prototypes/system/seven_systems.lua").read_text(
+        encoding="utf-8")
+    tech_text = (root / "prototypes/technology/seven_systems.lua").read_text(
+        encoding="utf-8")
+    cards_text = (root / "prototypes/compat/lab_cards.lua").read_text(
+        encoding="utf-8")
+    for label, text in (("system", system_text), ("technology", tech_text)):
+        for star in ("VesperaStar.png", "UmbraStar.png"):
+            if star not in text:
+                errors.append(f"seven-system {label}: missing dedicated {star}")
+        for placeholder in ("VibrantStar.png", "NyxarisStar.png"):
+            if placeholder in text:
+                errors.append(
+                    f"seven-system {label}: suspicious reused {placeholder}")
+    for card in ("vespera-tech-card.png", "umbra-tech-card.png"):
+        if card not in cards_text:
+            errors.append(f"lab cards: missing dedicated {card}")
+    if "tint =" in cards_text:
+        errors.append("lab cards: dedicated card artwork must not use tint workarounds")
+
+    route_source = (root / "prototypes/system/route_icons.lua").read_text(
+        encoding="utf-8")
+    if "icon_size = 64" not in route_source:
+        errors.append("route_icons.lua: route icon_size must match the 64px files")
+    return errors
+
+
+def audit_repository(root: Path) -> list[str]:
+    root = root.resolve()
+    errors = _source_contracts(root)
+    references = discover_references(root)
+    seen = set()
+    for reference in references:
+        relative = reference.mod_path[len(MOD_PREFIX):]
+        asset = root / relative
+        location = f"{reference.source}:{reference.line}"
+        if not asset.is_file():
+            errors.append(f"{location}: missing {reference.mod_path}")
+            continue
+        if asset.suffix.lower() != ".png" or relative in seen:
+            continue
+        seen.add(relative)
+        try:
+            width, height, has_alpha = png_info(asset)
+        except (OSError, ValueError) as exc:
+            errors.append(f"{location}: unreadable PNG {relative}: {exc}")
+            continue
+        expected = REQUIRED_DIMENSIONS.get(relative)
+        if expected and (width, height) != expected:
+            errors.append(
+                f"{location}: {relative} is {width}x{height}; expected "
+                f"{expected[0]}x{expected[1]}")
+        if not has_alpha:
+            errors.append(f"{location}: {relative} has no alpha channel")
+
+    for relative, expected in REQUIRED_DIMENSIONS.items():
+        if relative not in seen:
+            errors.append(f"unreferenced required asset: {relative}")
+
+    return sorted(set(errors))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("root", nargs="?", type=Path,
+                        default=Path(__file__).resolve().parents[1])
+    args = parser.parse_args()
+    errors = audit_repository(args.root)
+    if errors:
+        print("Asset audit failed:")
+        for error in errors:
+            print(f"  - {error}")
+        return 1
+    count = len(discover_references(args.root.resolve()))
+    print(f"Asset audit passed: {count} Razi-owned graphics references resolved")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
