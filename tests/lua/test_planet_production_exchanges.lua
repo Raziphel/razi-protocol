@@ -327,6 +327,19 @@ check(disabled_raw.recipe["kr-energy-control-unit"],
   "Disabling optional exchange removed native K2SO manufacturing")
 rawset(_G, "settings", nil)
 
+-- Imports already used by a native recipe are merged rather than duplicated.
+local merged_raw, merged_mod = setup()
+local native = merged_raw.recipe["kr-casting-rare-metals"]
+native.ingredients[#native.ingredients+1]={type="item",name="bioflux",amount=1}
+merged_mod.data_final_fixes()
+local duplicate_count=0
+for _, ing in ipairs(merged_raw.recipe["razi-bio-rare-metal-casting"].ingredients) do
+  if ing.name=="bioflux" then
+    duplicate_count=duplicate_count+1
+    check(ing.amount==6,"Native/import batch amounts failed to merge")
+  end
+end
+check(duplicate_count==1,"Import duplicate was not eliminated")
 -- The master Off mode overrides both independently enabled catalogs.
 local off_raw, off_module = setup()
 rawset(_G, "settings", {startup={

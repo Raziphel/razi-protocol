@@ -62,7 +62,8 @@ for _, spec in ipairs(expected) do
     local section = raw:match("%[mod%-setting%-name%]%s*(.-)%[mod%-setting%-description%]")
     check(section, "Missing localized setting names: " .. language)
     local matching_name
-    for line in section:gmatch("[^\n]+") do
+    section = section:match("^(.-)%[string%-mod%-setting%]") or section
+  for line in section:gmatch("[^\n]+") do
       if line:sub(1, #name + 1) == name .. "=" then
         check(not matching_name, "Duplicate locale entry: " .. name)
         matching_name = line:sub(#name + 2)
@@ -91,6 +92,7 @@ for _, language in ipairs({"en", "ru"}) do
   file:close()
   local names = {}
   local section = raw:match("%[mod%-setting%-name%]%s*(.-)%[mod%-setting%-description%]")
+  section = section:match("^(.-)%[string%-mod%-setting%]") or section
   for line in section:gmatch("[^\n]+") do
     local name = line:match("^([^=]+)=")
     if name then
