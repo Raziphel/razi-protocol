@@ -126,6 +126,12 @@ for _,name in ipairs({"ferrum","khemia","arcanyx","bm-balack"}) do
 end
 check(raw.planet.ferrum.orbit.parent.name=="vibrant",
   "Ferrum must join electrical Vibrant while retaining source routes")
+check(native.ferrum_vulcanus.length==115000,
+  "Ferrum's Vulcanus cross-star distance is still a 10k shortcut")
+check(native.ferrum_vulcanus.asteroid_spawn_definitions[1].asteroid
+  =="native-metallic","Ferrum's native cross-star asteroids were replaced")
+check(native.ferrum.length==10000,
+  "Ferrum's local Fulgora route must keep its native distance")
 check(raw.planet.khemia.orbit.parent.name=="vibrant",
   "Khemia did not join chemistry frontier")
 check(raw.planet.arcanyx.orbit.parent.name=="umbra",

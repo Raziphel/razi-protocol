@@ -173,3 +173,8 @@ Solar Halo and Rabbasca Underground retain their source-owned layouts.
 Native authors' unusual worlds are not flattened into Razi's standard
 asteroid patterns. For the exact list, safety checks and unresolved
 full-modpack tests see [Community Expansions](COMMUNITY_EXPANSIONS.md).
+
+Ferrum's source route from Vulcanus was a local 10,000 km trip. As
+Vulcanus is in Solaris and Ferrum joins Vibrant, Razi scales just that
+cross-star path to **115,000 km**, leaving its original asteroid
+definitions and short local Fulgora connection untouched.

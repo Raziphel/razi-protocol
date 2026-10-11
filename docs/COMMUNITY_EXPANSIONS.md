@@ -48,8 +48,12 @@ to the **original unlock-space-location technology**, not a fabricated
 replacement technology; preexisting/indirect prerequisites and cycles are
 respected. A non-existent prototype is never instantiated.
 
-Ferrum uses its native Fulgora and Vulcanus routes and native asteroid
-distributions. Its discovery technology may be chapter-gated but its
+Ferrum keeps its native Fulgora and Vulcanus connections and their
+asteroid distributions. The Fulgora link stays at its native 10,000 km,
+while the Vulcanus-to-Ferrum link is calibrated to 115,000 km now that
+it crosses from Solaris to Vibrant; this closes a 10,000 km interstellar
+shortcut without discarding native resource asteroids.
+Its discovery technology may be chapter-gated but its
 dynamic research choices are untouched. The moon trio (Velora, Nulla, Wit)
 keep original orbital relationships. Balack keeps its original, hard
 Aquilo-side hazardous path. Special worlds (Rabbasca Underground,
