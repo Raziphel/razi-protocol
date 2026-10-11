@@ -17,7 +17,7 @@ local function remove_stock_entry_routes()
 end
 
 -- Keep the source pulsar's giant artwork and its local Aegis routes in
--- a compact annex BELOW Deep Space, away from the main constellation.
+-- a nearby but distinct annex outside the compact six-system constellation.
 -- Orientations use Factorio turns: north 0, south .5.
 local function endpoint_type(name)
 	if data.raw["space-location"] and data.raw["space-location"][name] then
@@ -54,19 +54,19 @@ local function position_expedition()
   end
   local near=near_orbit()
   local pulsar=endpoint_type("pulsar") and "pulsar" or nil
-  if pulsar then place(pulsar,"solar-system-edge",198,0.817) end
+  if pulsar then place(pulsar,"solar-system-edge",120,0.68) end
   if near then
     if pulsar then place(near,pulsar,3,0.25)
-    else place(near,"solar-system-edge",198,0.817) end
+    else place(near,"solar-system-edge",120,0.68) end
   end
-  place(entry_gate,"solar-system-edge",34,0.84,true)
+  place(entry_gate,"solar-system-edge",26,0.68,true)
   if near then
-    place(bellicos_gate,near,53,0.70,true)
-    place("aegis-outer-edge",near,66,0.25)
-    place("aegis-inner-edge",near,46,0.25)
-    place("point-warden",near,61,0.36)
-  elseif pulsar then place(bellicos_gate,pulsar,53,0.70,true)
-  else place(bellicos_gate,"solar-system-edge",184,0.817,true) end
+    place(bellicos_gate,near,32,0.70,true)
+    place("aegis-outer-edge",near,49,0.25)
+    place("aegis-inner-edge",near,30,0.25)
+    place("point-warden",near,44,0.36)
+  elseif pulsar then place(bellicos_gate,pulsar,32,0.70,true)
+  else place(bellicos_gate,"solar-system-edge",110,0.68,true) end
   if #updates>0 then PlanetsLib:update(updates) end
 end
 

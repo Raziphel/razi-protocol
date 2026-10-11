@@ -15,7 +15,6 @@ from pathlib import Path
 
 STAR_PAIRS = (
     ("sye-solaris", "sye-nyxaris"),
-    ("sye-vibrant", "sye-vespera"),
 )
 STAR_STAGES = (
     (("sye-calidus", "sye-solaris"), ("sye-calidus", "sye-nyxaris")),
@@ -47,7 +46,6 @@ def key(a, b):
 # minimum travel times instead of requiring a fixed km/visual-unit scale.
 MIN_LENGTHS = {
     key("sye-solaris", "sye-nyxaris"): 60000,
-    key("sye-vibrant", "sye-vespera"): 72000,
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
     key("sye-solaris", "sye-vibrant"): 65000,

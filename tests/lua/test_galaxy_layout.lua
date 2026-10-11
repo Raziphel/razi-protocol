@@ -52,8 +52,8 @@ local function position(name)
 end
 
 local sectors={
-  solaris={1,-1},nyxaris={1,1},vibrant={1,1},
-  vespera={-1,1},beetlejuice={-1,-1},umbra={-1,-1}
+  solaris={1,-1},nyxaris={-1,-1},vibrant={1,1},
+  vespera={-1,1},beetlejuice={1,1},umbra={-1,1}
 }
 for name,sign in pairs(sectors) do
   local x,y=position(name)
@@ -64,9 +64,11 @@ for name,sign in pairs(sectors) do
   check(places[name].draw_orbit==false,"Giant star orbit survived")
 end
 local dx,dy=position("solar-system-edge")
-check(dx<-250 and dy<-120,"Deep Space must remain a distinct outer annex")
+check(math.abs(dx)<1 and dy>210 and dy<250,
+  "Deep Space should be the nearby southern convergence")
 local hx,hy=position("sye-calidus")
-check(hx< -12 and hy>20,"Calidus departure must be southwest of center")
+check(hx>1 and hx<12 and hy>20 and hy<30,
+  "Calidus departure must be southeast of the central star")
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
   "paracelsin","shchierbin","muria","aquilo","rubia","maraxsis",

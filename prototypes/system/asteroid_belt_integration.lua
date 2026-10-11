@@ -20,8 +20,8 @@ function M.data_final_fixes()
   if not (data.raw["space-location"] or {}).star then return end
   local updates = {}
   local coords = {
-    {"asteroid-belt-inner-edge",128.887548,0.633736},
-    {"asteroid-belt-outer-edge",135.69451,0.667812}
+    {"asteroid-belt-inner-edge",46.861498,0.610571},
+    {"asteroid-belt-outer-edge",54.589376,0.579008}
   }
   for _, item in ipairs(coords) do
     local kind = get_location(item[1])
@@ -41,13 +41,13 @@ function M.data_final_fixes()
     if location then location.draw_orbit=false end
   end
 
-  -- Restore the actual upstream asteroid sprite, scaled to a subtle halo.
+  -- Restore the actual upstream asteroid sprite, scaled to a readable Calidus halo.
   local util=(data.raw["utility-sprites"] or {}).default
   local sprite=util and util.starmap_star
   for _,layer in ipairs((sprite and sprite.layers) or {}) do
     if type(layer)=="table" and
       layer.filename=="__AsteroidBelt__/graphics/sprite/asteroid-belt.png" then
-      layer.scale=0.28
+      layer.scale=0.85
     end
   end
 end

@@ -73,16 +73,16 @@ class ConstellationTests(unittest.TestCase):
 
     def test_calidus_centered_radial_gallery(self):
         centers = {
-            "solaris": (150, -115), "nyxaris": (145, 92),
-            "vibrant": (20, 180), "vespera": (-142, 138),
-            "beetlejuice": (-180, -25), "umbra": (-102, -151),
-            "solar-system-edge": (-292, -155),
+            "solaris": (100, -80), "nyxaris": (-90, -80),
+            "vibrant": (121, 41), "vespera": (-117, 43),
+            "beetlejuice": (75, 135), "umbra": (-78, 141),
+            "solar-system-edge": (0, 232),
         }
         for name, xy in centers.items():
             self.assertLess(math.dist(self.coords[name], xy), 1.0,
                             f"{name} moved from its radial sector")
         for star in STARS:
-            self.assertGreater(math.dist(self.coords[star], (0, 0)), 135)
+            self.assertGreater(math.dist(self.coords[star], (0, 0)), 115)
 
     def test_natural_planet_crescents_and_clear_stellar_art(self):
         for star in STARS:
@@ -130,6 +130,7 @@ class ConstellationTests(unittest.TestCase):
         forbidden = (
             ("sye-vibrant", "sye-beetlejuice"),
             ("sye-vespera", "sye-umbra"),
+            ("sye-vibrant", "sye-vespera"),
             ("sye-beetlejuice", "sye-umbra"),
             ("sye-solaris", "sye-vespera"),
             ("sye-nyxaris", "sye-vibrant")
@@ -161,13 +162,13 @@ class ConstellationTests(unittest.TestCase):
                     queue.append(n)
         self.assertTrue({"sye-beetlejuice", "sye-umbra",
                          "solar-system-edge"}.issubset(reachable))
-        self.assertLess(math.dist(self.coords[native[0]], (-96, 86)), 1)
-        self.assertLess(math.dist(self.coords[native[1]], (-118, 67)), 1)
+        self.assertLess(math.dist(self.coords[native[0]], (-30, 36)), 1)
+        self.assertLess(math.dist(self.coords[native[1]], (-26, 48)), 1)
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
-        self.assertIn('198,0.817', source)
-        self.assertIn('34,0.84,true', source)
+        self.assertIn('120,0.68', source)
+        self.assertIn('26,0.68,true', source)
         self.assertIn('place(near,pulsar,3,0.25)', source)
         self.assertEqual(source.count("position_expedition()"), 3)
 

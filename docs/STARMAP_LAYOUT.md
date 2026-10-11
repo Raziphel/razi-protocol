@@ -1,49 +1,62 @@
-# Calidus-centered radial starmap
+# Calidus starmap: compact connected star ring
 
-The map returns to the appearance of Razi's original version: Calidus stays in
-the center, six star systems occupy loose radial sectors, and special remote
-content remains outside the main constellation.
+The starmap uses a small Calidus-centered six-system constellation. The
+previous radius of roughly 170–200 visual units spread individual chapters
+over several screens; star centers are now 120–160 units from home, with the
+six systems arranged as two opening worlds, two middle worlds, and two outer
+worlds. Deep Space converges a short distance beyond the outer pair.
 
-| Location | X | Y | Notes |
-| --- | ---: | ---: | --- |
-| Calidus | 0 | 0 | Home star, restored native asteroid halo |
-| Solaris | 150 | -115 | Upper-right industry |
-| Nyxaris | 145 | 92 | Right-side biology |
-| Vibrant | 20 | 180 | Lower technology arc |
-| Vespera | -142 | 138 | Lower-left planetary/belt cluster |
-| Beetlejuice | -180 | -25 | West remote industrial |
-| Umbra | -102 | -151 | Upper-left exotic |
-| Main Asteroid Belt inner | -96 | 86 | Source-owned gateway |
-| Main Asteroid Belt outer | -118 | 67 | Source-owned gateway |
-| Deep Space | -292 | -155 | Detached outer frontier |
+| Star/landmark | X | Y |
+|---|---:|---:|
+| Calidus | 0 | 0 |
+| Solaris | 100 | -80 |
+| Nyxaris | -90 | -80 |
+| Vibrant | 121 | 41 |
+| Vespera | -117 | 43 |
+| Beetlejuice | 75 | 135 |
+| Umbra | -78 | 141 |
+| Original Asteroid Belt, inner | -30 | 36 |
+| Original Asteroid Belt, outer | -26 | 48 |
+| Deep Space | 0 | 232 |
 
-Each planetary family is rotated as a whole. Native moons remain untouched,
-and the same existing travel lengths, research prerequisites and asteroid
-hazards continue to determine gameplay. Razi's interstellar links use
-Factorio's curved `arc` rendering to avoid the old straight-line mesh.
+## Art and routing
 
-**Asteroid art:** Restore the required MrLumme AsteroidBelt source graphic
-instead of deleting its starmap layer. Its scale is reduced from 1.1 to 0.28,
-so the original Calidus-centered asteroid halo is readable without covering
-other stars. Its source item/technology icons and native crossing stay intact.
+- Each planetary family rotates as a unit around its new star position.
+  Ordinary planet radii shrink by about six percent; native orbit moons and
+  hidden destinations retain their source mechanics.
+- Long inter-system links use direct **line** presentation rather than very
+  large Factorio arc curves. Local planetary routes can remain curved.
+- The oversized optional Vibrant–Vespera shortcut is removed. Both middle
+  systems remain reachable from their respective opening systems; they join
+  at the mandatory source Asteroid Belt instead.
+- Solaris and Nyxaris retain their shorter early crosslink.
+- The native AsteroidBelt graphic is preserved from the upstream mod at scale
+  0.85 (instead of the tiny 0.28 halo). Its two source-owned travel locations
+  now sit close to the visual ring around Calidus. The upstream 5,000 km
+  crossing, hazards, science and art files remain source-owned.
+- Vespera/ Umbra local asteroid belt detours remain unchanged in difficulty.
+- Deep Space is a compact outer convergence at (0,232).
+- Optional Aegis & Bellicos remains a distinct annex beyond Deep Space, but
+  its root offset is reduced to 120 units and its orbitals grouped 30–49
+  units from the shared Near Bellicos Orbit anchor. No native asteroid
+  spawning or routes inside Aegis are rewritten.
 
-**Special annex:** Aegis/Bellicos uses the actual Near Bellicos Orbit graphics
-location where available, because some source versions have no registered
-`pulsar` prototype. Its Aegis locations and stargate travel with it to the
-upper-left Deep Space annex. Missing source prototypes are guarded to
-prevent Factorio startup failures.
+## Regression checks
 
-## Checks
+`tests/test_starmap_clarity.py`: core star centers, visual clearance,
+crossing connectivity, planetary marker spacing.
 
-- `tests/lua/test_galaxy_layout.lua`: radial sectors, one ring per system,
-  safe native moon orbits, final stage ordering.
-- `tests/test_starmap_clarity.py`: six star centers, local route geometry,
-  mandatory belt progression and route clearance.
-- `tests/lua/test_asteroid_belt_integration.lua`: source-owned belt hazard and
-  native graphic restoration, including idempotent loading.
-- `tests/lua/test_bellicos_layout.lua`: absent/retyped pulsar and actual
-  Near Bellicos Orbit placement.
-- `tests/lua/test_galaxy.lua`: curved route presentation and research gates.
+`tests/test_route_distances.py` and `scripts/audit_route_distances.py`:
+travel kilometres remain independent of starmap geometry.
 
-A screenshot from Factorio's Remote View is the final visual check. Static
-tests cannot account for all external mod sprites, labels, and render sizes.
+`tests/lua/test_galaxy_layout.lua`: star sectors, native moons, one
+signature orbit per star, safe final-fixes ordering.
+
+`tests/lua/test_galaxy.lua`: required routes and hazards, native belt
+preservation, no redundant middle crosslink, direct long-route presentation.
+
+`tests/lua/test_asteroid_belt_integration.lua` and
+`tests/lua/test_bellicos_layout.lua`: source asset and remote prototype safety.
+
+Live Factorio rendering remains the final visual check for special artwork
+and label positions; static geometry can not verify sprite anchoring.

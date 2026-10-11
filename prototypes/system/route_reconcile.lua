@@ -50,7 +50,8 @@ local route_specifications = {
 	-- First and middle systems have clear inter-branch rungs. Outer systems
 	-- share the upstream belt gateway instead of drawing one more crossing.
 	-- Cross-tier diagonals were removed to avoid the old starmap mesh.
-	{"sye-vibrant", "sye-vespera", 103000, "middle_crosslink"},
+	-- The central crosslink was visually cutting straight through the shared
+	-- belt gateway. Both branches reconnect through the mandatory native belt.
 	-- The central source-mod belt is a required, shared third-chapter
 	-- crossing. Native inner->outer stays source-owned with its real asteroids.
 	-- Reach the belt from the END of each local midgame route, not from
@@ -214,7 +215,7 @@ function route_reconcile.data_final_fixes()
 				route.length = balanced_length(keep_name, route.length, length, from, to)
 				if membership[from] and membership[to]
 					and membership[from] ~= membership[to] then
-					route.shape = "arc"
+					route.shape = "line"
 				end
 				hazard_profiles.apply(route, hazard)
 				route_icons.assign(route, hazard)
@@ -225,8 +226,9 @@ function route_reconcile.data_final_fixes()
 						from = from,
 						to = to,
 						length = length,
-						shape = "arc",
-						asteroid_spawn_definitions = hazard_profiles.create(hazard)
+						shape = (membership[from] and membership[to]
+                            and membership[from] ~= membership[to]) and "line" or "arc",
+                        asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				data:extend({connection})
 			end
