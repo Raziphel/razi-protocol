@@ -53,8 +53,10 @@ local route_specifications = {
 	{"sye-vibrant", "sye-vespera", 103000, "middle_crosslink"},
 	-- The central source-mod belt is a required, shared third-chapter
 	-- crossing. Native inner->outer stays source-owned with its real asteroids.
-	{"sye-vibrant", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
-	{"sye-vespera", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
+	-- Reach the belt from the END of each local midgame route, not from
+	-- the slipstream: those direct diagonals passed through both star sprites.
+	{"shchierbin", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
+	{"maraxsis", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
 	{"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
 	{"asteroid-belt-outer-edge", "sye-umbra", 63000, "outer_crossing"},
 	{"sye-beetlejuice", "sye-umbra", 126000, "outer_crosslink"},
