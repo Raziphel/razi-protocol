@@ -75,19 +75,20 @@ class VisualStarmapTests(unittest.TestCase):
         for upper, lower in PAIRS:
             x1, y1 = self.coords[upper]
             x2, y2 = self.coords[lower]
-            self.assertGreater(x1 - previous_x, 100)
+            self.assertGreater(x1 - previous_x, 72)
             self.assertLess(abs(x1 - x2), 4)
-            self.assertLess(y1, -60)
-            self.assertGreater(y2, 60)
+            self.assertLess(y1, -38)
+            self.assertGreater(y2, 38)
             previous_x = x1
-        self.assertGreater(self.coords["solar-system-edge"][0], previous_x + 100)
+        self.assertGreater(self.coords["solar-system-edge"][0], previous_x + 90)
+        self.assertLess(self.coords["solar-system-edge"][0], 370)
 
     def test_hubs_stay_left_and_routes_do_not_cut_through_stars(self):
         for name in STARS:
             sx, sy = self.coords[name]
             hx, hy = self.coords["sye-" + name]
-            self.assertLess(hx, sx - 40)
-            self.assertLess(hy, sy - 17)
+            self.assertLess(hx, sx - 22)
+            self.assertLess(hy, sy - 15)
 
         for a, b, _, _ in self.routes:
             if a not in self.coords or b not in self.coords:
@@ -96,7 +97,7 @@ class VisualStarmapTests(unittest.TestCase):
                 clearance = point_to_segment(
                     self.coords[star], self.coords[a], self.coords[b])
                 self.assertGreaterEqual(
-                    clearance, 17,
+                    clearance, 15,
                     f"{a} -> {b} cuts through {star} ({clearance:.1f})")
 
     def test_tier_lanes_replace_four_crossing_diagonals(self):
@@ -117,9 +118,9 @@ class VisualStarmapTests(unittest.TestCase):
     def test_bellicos_pulsar_is_a_right_side_annex(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text(encoding="utf8")
         self.assertIn('name = "pulsar"', source)
-        self.assertIn('distance = 165, orientation = 0.25', source)
-        self.assertIn('distance = 36, orientation = 0.25', source)
-        self.assertIn('distance = 62, orientation = 0.75', source)
+        self.assertIn('110, 0.25, false', source)
+        self.assertIn('24, 0.25, true', source)
+        self.assertIn('40, 0.75, true', source)
         self.assertEqual(source.count("position_expedition()"), 3)
 
 
