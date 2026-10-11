@@ -19,7 +19,7 @@ local additions = {
 	{"carna", "carna", "umbra", "sye-umbra", "umbra-discovery",
 		43, 0.59, 20500},
 	{"PlanetAthos", "athos", "solaris", "sye-solaris", "solaris-discovery",
-		42, 0.97, 19000}
+		42, 0.97, 19000},
 	{"planet-rabbasca", "rabbasca", "nyxaris", "gleba",
 		"planet-discovery-gleba", nil, nil, 13000}
 }
