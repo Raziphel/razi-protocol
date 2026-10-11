@@ -12,8 +12,13 @@ New assets should extend that collection rather than reinterpret it.
   sharp alpha edge, and strong readability when reduced for the starmap.
 - Give each system a controlled palette and characteristic surface pattern;
   avoid flat circles, generic lens flares, text, frames, or scenery.
-- Vespera is cold white/cyan with blue-violet depth. Umbra is near-black indigo
-  with ultraviolet/magenta fissures and a pale violet limb.
+- Vespera is pearlescent white and platinum, with moonstone-gray currents and
+  restrained champagne highlights. It must remain neutral enough not to read
+  as a second Nyxaris-blue star.
+- Umbra is a near-black, eclipsed star with selective molten-copper fissures,
+  a brass limb, and a smoky bronze corona. Its dark body is the dominant read;
+  avoid violet so it cannot be confused with Vibrant, and avoid expanding the
+  hot accents until it resembles Solaris.
 
 ## Technology cards
 
@@ -22,6 +27,8 @@ New assets should extend that collection rather than reinterpret it.
   bevel lighting, and compact framing as the original card set.
 - The inset star carries the system palette while the casing remains materially
   consistent across the collection. Dedicated art is preferred to runtime tint.
+- System-colored casing accents may echo the inset, but neutral worn metal and
+  the gold electrical contacts should remain shared collection anchors.
 - Details must survive Factorio's small inventory and technology icon sizes.
 
 ## Route icons

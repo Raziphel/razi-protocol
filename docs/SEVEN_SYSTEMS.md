@@ -85,7 +85,9 @@ The `*-discovery` technology IDs of existing systems were retained. New IDs are 
 
 1. **Real Factorio engine tests remain essential.** GitHub Actions validates Lua syntax/API and our mocked test routes but cannot independently load K2SO and dozens of planet mods.
 2. Research graphs may have upstream constraints that differ from our assumptions. Run `scripts/audit_prototypes.py` against the full `--dump-data-raw` output and verify practical resource acquisition per chapter.
-3. The two new star sprites reuse tinted/standard Razi graphics. Design distinct Vespera and Umbra star and card sprites after the orbital positions are approved visually.
+3. Vespera and Umbra now have dedicated white/platinum and black/copper star and
+   card artwork, but their visual balance still needs inspection at real
+   starmap and inventory UI scales.
 4. Current native star positions and routes are adjusted only for the core pack. Optional mod compatibility matrices should be verified one by one.
 5. **Do not merge into the public release repo** until full loading, a fresh playthrough and existing-save migration have been tested.
 6. Follow Alex's collaboration suggestion: only small, guarded direct-dependency fixes belong in the integration layer, and upstream/source mod fixes should be preferred when reasonable.
