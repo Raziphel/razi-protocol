@@ -146,6 +146,21 @@
       "purpose": "Guard four outer-world K2SO-enabled optional industrial exchanges against missing origin planets, incompatible source recipes, native research and surface conditions.",
       "upstream_status": "local-only",
       "fixture": "tests/lua/test_outer_production_exchanges.lua"
+    },
+    {
+      "id": "modded-world-industrial-bridges",
+      "module": "prototypes/compat/modded_planet_exchanges.lua",
+      "upstream_mods": [
+        "rubia",
+        "Paracelsin",
+        "Moshine",
+        "linox",
+        "tenebris-prime",
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Seven optional alternate manufacturing recipes driven by modded-planet source ingredients and their actual original recipe unlocks. Preserves author-specific production mechanics, native outputs and surface conditions.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_modded_planet_exchanges.lua"
     }
   ]
 }

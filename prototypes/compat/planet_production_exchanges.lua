@@ -319,11 +319,33 @@ local function safe_template(base, output)
   return true
 end
 
+local function recipe_produces(base, target)
+  if not base then return false end
+  if base.result == target then return true end
+  for _, output in ipairs(base.results or {}) do
+    if name_of(output) == target then return true end
+  end
+  return false
+end
+
+local function source_supports_category(base, category)
+  if not base then return false end
+  local categories = base.categories or {base.category or "crafting"}
+  for _, existing in ipairs(categories) do
+    if existing == category then return true end
+  end
+  return false
+end
+
 local function register_exchange(rule)
   if rule.source_mod and not mods[rule.source_mod] then return end
+  for _, needed_mod in ipairs(rule.required_mods or {}) do
+    if not mods[needed_mod] then return end
+  end
   local base = raw("recipe", rule.source)
   local world = raw("planet", rule.surface_world or rule.working_world)
   if not safe_template(base, rule.product)
+    or (rule.keep_native_category and not source_supports_category(base, rule.category))
     or not raw("item", rule.product)
     -- A recipe built for a native world must still be legal there, even
     -- if a compatible machine exists for its category.
@@ -347,6 +369,27 @@ local function register_exchange(rule)
     if not native_unlock then return end
   end
 
+  -- Optional imports can never be available *before* their source recipe.
+  -- Simply knowing the supplying planet has been discovered is insufficient:
+  -- some mods unlock manufacturing much later in their native progression.
+  local supplier_unlocks = {}
+  for _, supplied in ipairs(rule.supplier_recipes or {}) do
+    local producer = raw("recipe", supplied.recipe)
+    if not (producer and not producer.hidden
+      and recipe_produces(producer, supplied.product)
+      and valid_ingredient({type="item", name=supplied.product})) then return end
+    -- A named supplier recipe is not proof of an obtainable ingredient if
+    -- its own direct inputs no longer exist after other mods' final fixes.
+    for _, upstream_input in ipairs(producer.ingredients or {}) do
+      if not valid_ingredient(upstream_input) then return end
+    end
+    if producer.enabled == false then
+      local unlock = unlock_technology(supplied.recipe, rule)
+      if not unlock then return end
+      supplier_unlocks[#supplier_unlocks + 1] = unlock
+    end
+  end
+
   local prerequisite_list, seen = {}, {}
   for _, name in ipairs(rule.planets) do
     if not seen[name] then
@@ -356,6 +399,13 @@ local function register_exchange(rule)
   end
   if native_unlock and not seen[native_unlock] then
     prerequisite_list[#prerequisite_list + 1] = native_unlock
+    seen[native_unlock] = true
+  end
+  for _, supplier_unlock in ipairs(supplier_unlocks) do
+    if not seen[supplier_unlock] then
+      prerequisite_list[#prerequisite_list + 1] = supplier_unlock
+      seen[supplier_unlock] = true
+    end
   end
 
   local conditions
@@ -441,6 +491,11 @@ end
 function M.data_final_fixes()
   if not (mods and mods["Krastorio2-spaced-out"]) then return end
   for _, rule in ipairs(exchanges) do register_exchange(rule) end
+end
+
+function M.register_additional(rules)
+  if not (mods and mods["Krastorio2-spaced-out"]) then return end
+  for _, rule in ipairs(rules or {}) do register_exchange(rule) end
 end
 
 return M
