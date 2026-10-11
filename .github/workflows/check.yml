@@ -30,6 +30,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install Lua 5.2
         run: sudo apt-get update -qq && sudo apt-get install -y lua5.2
+      - name: Check colored and localized mod settings
+        run: lua5.2 tests/lua/test_settings_presentation.lua
       - name: Check Lua compatibility guards
         run: lua5.2 tests/lua/test_compat.lua
       - name: Check seven-system galaxy and research fixtures

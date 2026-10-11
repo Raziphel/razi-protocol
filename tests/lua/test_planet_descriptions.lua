@@ -55,6 +55,20 @@ descriptions.data_final_fixes()
 check(planet.nauvis.localised_description == first,
   "Repeated final-fixes pass duplicated Razi context")
 
+-- Turning off the optional description overlay leaves the source author's
+-- wording intact on worlds that have not yet received Razi's context.
+planet.muluna = {localised_description = "Original lunar expedition text"}
+rawset(_G, "settings", {startup={
+  ["razi-enable-expedition-briefings"] = {value = false}
+}})
+descriptions.data_final_fixes()
+check(planet.muluna.localised_description == "Original lunar expedition text",
+  "Disabled expedition briefings still overwrite planet descriptions")
+settings.startup["razi-enable-expedition-briefings"].value = true
+descriptions.data_final_fixes()
+check_context(planet.muluna, "calidus", "muluna")
+rawset(_G, "settings", nil)
+
 -- Require the entrypoint to apply context after the final layout pass.
 local f = assert(io.open("data-final-fixes.lua", "r"))
 local source = f:read("*a")

@@ -278,6 +278,20 @@ absent({electromagnetic_machine_excluded=true},{
   ["razi-bio-rare-metal-casting"]=true,
   ["razi-cryo-energy-control"]=true
 })
+-- Disabling this optional category must not disturb native K2SO recipes.
+local disabled_raw, disabled_module = setup()
+rawset(_G, "settings", {startup={
+  ["razi-enable-k2so-production-exchanges"] = {value = false}
+}})
+disabled_module.data_final_fixes()
+for _, name in ipairs(names) do
+  check(not disabled_raw.recipe[name] and not disabled_raw.technology[name],
+    "Disabled K2SO exchange still appeared: " .. name)
+end
+check(disabled_raw.recipe["kr-energy-control-unit"],
+  "Disabling optional exchange removed native K2SO manufacturing")
+rawset(_G, "settings", nil)
+
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
