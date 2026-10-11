@@ -27,29 +27,29 @@ def world():
     }
     # The actual core star-map anchors from galaxy_layout.lua.
     stars = {
-        "sye-calidus": ("star", 32, .25),
-        "solaris": ("star", 140, .173),
-        "nyxaris": ("star", 140, .327),
-        "vibrant": ("star", 251, .208),
-        "vespera": ("star", 251, .292),
-        "beetlejuice": ("star", 369, .222),
-        "umbra": ("star", 369, .278),
-        "solar-system-edge": ("star", 485, .25),
-        "sye-solaris": ("solaris", 50, .82),
-        "sye-nyxaris": ("nyxaris", 50, .82),
-        "sye-vibrant": ("vibrant", 50, .82),
-        "sye-vespera": ("vespera", 50, .82),
-        "sye-beetlejuice": ("beetlejuice", 50, .82),
-        "sye-umbra": ("umbra", 50, .82),
-        "secretas": ("beetlejuice", 34, .50),
+        "sye-calidus": ("star", 27, .25),
+        "solaris": ("star", 99, .1805),
+        "nyxaris": ("star", 99, .3195),
+        "vibrant": ("star", 175, .21145),
+        "vespera": ("star", 175, .28855),
+        "beetlejuice": ("star", 254, .2235),
+        "umbra": ("star", 254, .2765),
+        "solar-system-edge": ("star", 355, .25),
+        "sye-solaris": ("solaris", 33, .835),
+        "sye-nyxaris": ("nyxaris", 33, .835),
+        "sye-vibrant": ("vibrant", 33, .835),
+        "sye-vespera": ("vespera", 33, .835),
+        "sye-beetlejuice": ("beetlejuice", 33, .835),
+        "sye-umbra": ("umbra", 33, .835),
+        "secretas": ("beetlejuice", 31, .56),
     }
     for name, (parent, distance, angle) in stars.items():
         raw["space-location"][name] = {
             "orbit": {"parent": {"name": parent}, "distance": distance,
                       "orientation": angle}}
     raw["planet"]["vesta"] = {
-        "orbit": {"parent": {"name": "umbra"}, "distance": 37,
-                  "orientation": .37}}
+        "orbit": {"parent": {"name": "umbra"}, "distance": 30,
+                  "orientation": .31}}
     for a, b, length, kind in route_manifest():
         raw["space-connection"][f"link-{a}-{b}"] = {
             "from": a, "to": b, "length": length}
