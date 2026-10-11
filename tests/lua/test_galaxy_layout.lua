@@ -51,48 +51,30 @@ local function position(name)
     y-math.cos(angle)*orbit.distance
 end
 
-local prev_y=0
-for _,pair in ipairs({
-  {"solaris","nyxaris"},
-  {"vibrant","vespera"},
-  {"beetlejuice","umbra"}
-}) do
-  local lx,ly=position(pair[1])
-  local rx,ry=position(pair[2])
-  check(lx < -40 and rx > 40,
-    "Star pair must straddle Calidus' central constellation axis")
-  check(math.abs(lx+rx)<1 and math.abs(ly-ry)<1,
-    "Star pair lost balanced composition")
-  check(ly > prev_y+50 and ly < prev_y+100,
-    "Stellar chapter spacing is no longer compact")
-  prev_y=ly
+local sectors={
+  solaris={1,-1},nyxaris={1,1},vibrant={1,1},
+  vespera={-1,1},beetlejuice={-1,-1},umbra={-1,-1}
+}
+for name,sign in pairs(sectors) do
+  local x,y=position(name)
+  check(x*sign[1]>10 and y*sign[2]>10,"Wrong radial sector: "..name)
+  local hx,hy=position("sye-"..name)
+  check(math.sqrt((hx-x)^2+(hy-y)^2)>25,
+    "Slipstream overlaps its parent star: "..name)
+  check(places[name].draw_orbit==false,"Giant star orbit survived")
 end
-
 local dx,dy=position("solar-system-edge")
-check(math.abs(dx)<1 and dy>prev_y+65 and dy<340,
-  "Deep Space must sit below the final pair, centered between both arms")
+check(dx<-250 and dy<-120,"Deep Space must remain a distinct outer annex")
 local hx,hy=position("sye-calidus")
-check(math.abs(hx)<1 and hy>12 and hy<35,
-  "Calidus departure portal no longer points down the campaign")
-for _,name in ipairs({
-  "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
-}) do
-  local starx,stary=position(name)
-  local portalx,portaly=position("sye-"..name)
-  check(places["sye-"..name].orbit.parent.name==name,"Orphaned slipstream")
-  check(portaly < stary-18,"Hub needs to sit above the star")
-  if starx<0 then
-    check(portalx<starx-13,"Left portal must face outer branch")
-  else
-    check(portalx>starx+13,"Right portal must face outer branch")
-  end
-  check(places[name].draw_orbit==false,"A star centered ring survived")
-end
+check(hx< -12 and hy>20,"Calidus departure must be southwest of center")
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
   "paracelsin","shchierbin","muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta"}) do
-  check(planets[name].draw_orbit==false,"Cluttering orbital ring: "..name)
+  local signature={vulcanus=true,gleba=true,fulgora=true,
+    muria=true,cubium=true,tenebris=true}
+  check(planets[name].draw_orbit==(signature[name]==true),
+    "Wrong signature orbital ring: "..name)
 end
 check(planets.rabbasca.orbit==moon,
   "Native Gleba moon orbit must remain untouched")
@@ -111,4 +93,4 @@ local layout_call=source:find(
   'require("prototypes.system.galaxy_layout").data_final_fixes()',1,true)
 check(optional and belt and layout_call and optional<belt
   and belt<layout_call,"Final galaxy layout stage ordering is incorrect")
-print("Branching constellation, native moon and late belt integration passed")
+print("Calidus radial gallery, native moon and belt order passed")

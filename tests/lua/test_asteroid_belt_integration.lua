@@ -57,17 +57,17 @@ local function run(with_outer,with_mod)
 end
 
 local module,raw,inner,outer,native,layers=run(true,true)
-check(inner.orbit.distance==177 and outer.orbit.distance==191,
+check(inner.orbit.distance>120 and outer.orbit.distance>130,
   "AsteroidBelt was not placed at the mid/outer boundary")
 check(inner.orbit.parent.name=="star" and outer.orbit.parent.name=="star",
   "Native belt locations must remain space-location descendants of star")
-check(inner.orbit.orientation==.5 and outer.orbit.orientation==.5,
+check(inner.orbit.orientation>.6 and outer.orbit.orientation>.6,
   "The source crossing must point south through the campaign")
 check(inner.draw_orbit==false and outer.draw_orbit==false,
   "Old origin-centered asteroid belt rings still appear")
-check(#layers==2 and layers[1].filename~="__AsteroidBelt__/graphics/sprite/asteroid-belt.png"
-  and layers[2].filename=="__another-mod__/graphics/starmap/background.png",
-  "Razi must remove only the misleading source ring image")
+check(#layers==3 and layers[2].filename==ring and layers[2].scale==0.28
+  and layers[3].filename=="__another-mod__/graphics/starmap/background.png",
+  "The original source asteroid graphic must remain, scaled modestly")
 check(raw["space-connection"][native.name]==native
   and native.asteroid_spawn_definitions[1].asteroid=="source-asteroid",
   "Razi deleted or rewrote the source belt's asteroid hazards")
@@ -75,7 +75,8 @@ check(inner.starmap_icon:find("__AsteroidBelt__",1,true)
   and outer.starmap_icon:find("__AsteroidBelt__",1,true),
   "Source mod belt artwork was replaced")
 module.data_final_fixes()
-check(#layers==2,"The visual repair must be idempotent")
+check(#layers==3 and layers[2].scale==0.28,
+  "Source asteroid sprite should never be removed or duplicated")
 
 local _,partial,missing_inner=run(false,true)
 check(missing_inner.orbit and not partial["space-location"]["asteroid-belt-outer-edge"],

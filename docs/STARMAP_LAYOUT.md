@@ -1,95 +1,49 @@
-# Razi Protocol starmap: The Branching Constellation
+# Calidus-centered radial starmap
 
-This layout deliberately replaces the 2026 horizontal double-row map. The old
-layout stretched the galaxy over hundreds of map units, forced many crossings
-between bright stars, and exposed the player to too much empty space.
+The map returns to the appearance of Razi's original version: Calidus stays in
+the center, six star systems occupy loose radial sectors, and special remote
+content remains outside the main constellation.
 
-## A new silhouette
+| Location | X | Y | Notes |
+| --- | ---: | ---: | --- |
+| Calidus | 0 | 0 | Home star, restored native asteroid halo |
+| Solaris | 150 | -115 | Upper-right industry |
+| Nyxaris | 145 | 92 | Right-side biology |
+| Vibrant | 20 | 180 | Lower technology arc |
+| Vespera | -142 | 138 | Lower-left planetary/belt cluster |
+| Beetlejuice | -180 | -25 | West remote industrial |
+| Umbra | -102 | -151 | Upper-left exotic |
+| Main Asteroid Belt inner | -96 | 86 | Source-owned gateway |
+| Main Asteroid Belt outer | -118 | 67 | Source-owned gateway |
+| Deep Space | -292 | -155 | Detached outer frontier |
 
-Visual progression is now **top to bottom**:
+Each planetary family is rotated as a whole. Native moons remain untouched,
+and the same existing travel lengths, research prerequisites and asteroid
+hazards continue to determine gameplay. Razi's interstellar links use
+Factorio's curved `arc` rendering to avoid the old straight-line mesh.
 
-```text
-                         CALIDUS (Nauvis)
-                          /             \
-                   SOLARIS             NYXARIS
-                       |                   |
-                   VIBRANT               VESPERA
-                        \                 /
-                 required ASTEROID BELT crossing
-                        /                 \
-                  BEETLEJUICE            UMBRA
-                       \                   /
-                            DEEP SPACE
-                                |
-                        BELLICOS EXPEDITION
-```
+**Asteroid art:** Restore the required MrLumme AsteroidBelt source graphic
+instead of deleting its starmap layer. Its scale is reduced from 1.1 to 0.28,
+so the original Calidus-centered asteroid halo is readable without covering
+other stars. Its source item/technology icons and native crossing stay intact.
 
-The astronomical map coordinates are **not** kilometres. Use
-`prototypes/system/galaxy_layout.lua` for display-only polar coordinates, and
-`prototypes/system/route_reconcile.lua` for game travel lengths, route hazards,
-and the actual progression graph.
+**Special annex:** Aegis/Bellicos uses the actual Near Bellicos Orbit graphics
+location where available, because some source versions have no registered
+`pulsar` prototype. Its Aegis locations and stargate travel with it to the
+upper-left Deep Space annex. Missing source prototypes are guarded to
+prevent Factorio startup failures.
 
-Approximate centers in Razi starmap units:
+## Checks
 
-| Star/region | X | Y |
-|-------------|---:|---:|
-| Calidus | 0 | 0 |
-| Solaris / Nyxaris | -56 / +56 | +60 |
-| Vibrant / Vespera | -70 / +70 | +138 |
-| Original Asteroid Belt, inner / outer edge | 0 | +177 / +191 |
-| Beetlejuice / Umbra | -86 / +86 | +218 |
-| Deep Space | 0 | +310 |
+- `tests/lua/test_galaxy_layout.lua`: radial sectors, one ring per system,
+  safe native moon orbits, final stage ordering.
+- `tests/test_starmap_clarity.py`: six star centers, local route geometry,
+  mandatory belt progression and route clearance.
+- `tests/lua/test_asteroid_belt_integration.lua`: source-owned belt hazard and
+  native graphic restoration, including idempotent loading.
+- `tests/lua/test_bellicos_layout.lua`: absent/retyped pulsar and actual
+  Near Bellicos Orbit placement.
+- `tests/lua/test_galaxy.lua`: curved route presentation and research gates.
 
-## First-class Asteroid Belt
-
-[Asteroid Belt by MrLumme](https://mods.factorio.com/mod/AsteroidBelt) is
-required, Factorio 2.1 version **1.2.11 or newer**.
-
-The mod owns the `asteroid-belt-inner-edge`,
-`asteroid-belt-outer-edge`, and its **native 5,000 km crossing**. Do not
-recreate those prototypes under Razi names, copy the upstream assets, or
-overwrite its asteroid spawn tables. The belt is the shared gateway between
-middle systems and outer systems:
-
-- Reach the inner edge from Shchierbin (Vibrant) or Maraxsis (Vespera).
-- Cross the source-mod native inner-to-outer connection.
-- Reach Beetlejuice or Umbra from the outer edge.
-- The straight mid-to-outer shortcuts are intentionally removed.
-- The late Vespera and Umbra original Razi belts remain as separate, tougher
-  local detours with their existing custom asteroid difficulty profiles.
-
-`asteroid_belt_integration.lua` repositions the upstream belt edge locations
-around the constellation's central waist while preserving the upstream icons,
-research, travel lengths, and resources. It suppresses **only** the source
-mod's giant solar-origin asteroid-ring background layer. That layer would
-otherwise surround Calidus, which is no longer where the belt lives.
-
-## Composition constraints
-
-- Every star has a compact planetary crescent; the ordinary star icon must
-  remain visible and no route should cut through its center.
-- The inner belt is **between** the middle and outer chapters, not inside
-  Calidus. Do not create easy bypasses around its central crossing.
-- Portal nodes sit slightly above and to the outside of each branch star.
-- Local route edges must not intersect except at intentional shared hubs.
-- Only large star-centered cosmetic orbit rings are suppressed. Do not alter
-  native moon orbits, hidden sub-surfaces, or other mods' local mechanics.
-- Allow optional worlds to join their natural host crescent without changing
-  their native science, crafting, surface triggers, or teleport mechanics.
-- The Bellicos endgame annex is below the Deep Space convergence, with
-  missing-pulsar and missing-gateway protections intact.
-
-## Quality checks
-
-`tests/test_starmap_clarity.py` checks symmetrical tiers, stellar clearance,
-readable spacing, and source-mod belt connectivity.
-`tests/lua/test_asteroid_belt_integration.lua` checks upstream icons,
-hazards, ring-layer removal, missing prototype safety, and repeat execution.
-`tests/lua/test_galaxy.lua` checks allowed connections and source-prototype
-identity.
-`tests/test_route_distances.py` checks gameplay km independently of
-visual distances, including safeguards against belt-bypassing shortcuts.
-
-Static tests cannot establish what the actual Factorio UI displays for
-third-party star effects and labels. Use real Remote View screenshots to
-make a final visual refinement without compromising route gameplay.
+A screenshot from Factorio's Remote View is the final visual check. Static
+tests cannot account for all external mod sprites, labels, and render sizes.

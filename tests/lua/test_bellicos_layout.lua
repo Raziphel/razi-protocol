@@ -29,6 +29,12 @@ local function run(options)
     planets.pulsar = {name="pulsar"}
   end
   if options.no_entry_gate then places[gate_a] = nil end
+  if options.near then
+    places["near-bellicos-orbit"]={name="near-bellicos-orbit"}
+    places["aegis-inner-edge"]={name="aegis-inner-edge"}
+    places["aegis-outer-edge"]={name="aegis-outer-edge"}
+    places["point-warden"]={name="point-warden"}
+  end
   local routes = {}
   rawset(_G, "data", {
     raw = {["space-location"]=places, planet=planets,
@@ -81,9 +87,20 @@ check(connected[route_name] and connected[route_name].length==250000,
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="solar-system-edge",
   "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance==70,
+check(missing[gate_b].orbit.distance==184,
   "Missing pulsar fallback no longer separates the two gates")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
+
+local _, near_locations=run({near=true})
+check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
+  "Visible Bellicos orbit should be detached from the central galaxy")
+check(near_locations["near-bellicos-orbit"].orbit.distance==198,
+  "Visible pulsar artwork remains in the main galaxy")
+check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
+  and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
+  "Native Aegis belt nodes were left behind")
+check(near_locations[gate_b].orbit.parent.name=="near-bellicos-orbit",
+  "Remote Bellicos stargate is detached from its destination")
 
 local _, alt_locations, alt_planets = run({pulsar="planet"})
 check(alt_planets.pulsar.orbit.parent.name=="solar-system-edge",
