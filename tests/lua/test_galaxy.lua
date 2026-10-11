@@ -30,6 +30,7 @@ local function test_routes()
 		"sye-vespera", "sye-beetlejuice", "sye-umbra",
 		"razi-vespera-belt-inner","razi-vespera-belt-outer",
 		"razi-umbra-belt-inner","razi-umbra-belt-outer",
+		"asteroid-belt-inner-edge","asteroid-belt-outer-edge",
 		"solar-system-edge", "castra", "arig", "hyarion", "tellus",
 		"corrundum", "apia-carnova-orbit", "moshine", "panglia",
 		"dea-dia-system-edge", "ribbonia", "paracelsin", "shchierbin",
@@ -55,6 +56,16 @@ local function test_routes()
 	local native_dea_dia = {
 		type = "space-connection", name = "native-dea-dia-internal",
 		from = "dea-dia-system-edge", to = "lemures", length = 1500
+	}
+	local original_belt = {
+		type="space-connection",
+		name="asteroid-belt-inner-edge-asteroid-belt-outer-edge",
+		from="asteroid-belt-inner-edge",to="asteroid-belt-outer-edge",
+		length=5000,
+		asteroid_spawn_definitions={{
+			type="asteroid-chunk",asteroid="native-source-belt-ore",
+			spawn_points={{distance=0.5,probability=0.2,speed=1}}
+		}}
 	}
 	rawset(_G, "data", mock_data({
 		planet = planet_locations,
@@ -96,6 +107,15 @@ local function test_routes()
             },
             ["native-crucible-orbit"] = native_crucible,
 			["native-dea-dia-internal"] = native_dea_dia,
+			[original_belt.name] = original_belt,
+			["old-belt-shortcut"]={
+				type="space-connection",from="fulgora",
+				to="asteroid-belt-inner-edge",length=2000
+			},
+			["old-belt-exit"]={
+				type="space-connection",from="asteroid-belt-outer-edge",
+				to="aquilo",length=2000
+			},
 			["razi-cubium-secretas"] = {
 				type = "space-connection", name = "razi-cubium-secretas",
 				from = "cubium", to = "secretas",
@@ -180,6 +200,39 @@ local function test_routes()
     check(routes["cubium-secretas"].length >= 14000,
       "A legacy 1,000 km route trivializes outer-system travel")
 	check(routes["native-dea-dia-internal"] == native_dea_dia, "Dea Dia internal route removed")
+	check(routes[original_belt.name]==original_belt,
+		"Original AsteroidBelt crossing was replaced or lost")
+	check(original_belt.length==5000
+		and original_belt.asteroid_spawn_definitions[1].asteroid
+		=="native-source-belt-ore",
+		"Original source belt length/asteroid loot was changed")
+	check(not routes["old-belt-shortcut"] and not routes["old-belt-exit"],
+		"Source belt bypass survived outer-tier reconciliation")
+	for _,pair in ipairs({
+		{"shchierbin","asteroid-belt-inner-edge"},
+		{"maraxsis","asteroid-belt-inner-edge"},
+		{"asteroid-belt-outer-edge","sye-beetlejuice"},
+		{"asteroid-belt-outer-edge","sye-umbra"}
+	}) do
+		local present=false
+		for _,conn in pairs(routes) do
+			if (conn.from==pair[1] and conn.to==pair[2])
+				or (conn.from==pair[2] and conn.to==pair[1]) then
+				present=true
+			end
+		end
+		check(present,"Missing native-belt chapter link "..pair[1])
+	end
+	for _,pair in ipairs({
+		{"sye-vibrant","sye-beetlejuice"},
+		{"sye-vespera","sye-umbra"}
+	}) do
+		for _,conn in pairs(routes) do
+			check(not ((conn.from==pair[1] and conn.to==pair[2])
+				or (conn.from==pair[2] and conn.to==pair[1])),
+				"Outer system skips native AsteroidBelt")
+		end
+	end
 	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")
 	check(routes["razi-cubium-secretas"] == nil, "Duplicate Razi route was not consolidated")
 	local found_extra = false
