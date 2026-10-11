@@ -27,6 +27,10 @@ local membership = {
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
 	frozeta = "beetlejuice",
+	-- The required upstream AsteroidBelt is the sole bridge between
+	-- middle and outer chapters; retain its native hard central crossing.
+	["asteroid-belt-inner-edge"] = "mid-outer-belt",
+	["asteroid-belt-outer-edge"] = "mid-outer-belt",
 	["sye-umbra"] = "umbra", tenebris = "umbra",
 	["razi-umbra-belt-inner"] = "umbra",
 	["razi-umbra-belt-outer"] = "umbra",
@@ -47,8 +51,12 @@ local route_specifications = {
 	-- diagonal shortcuts across tiers made the actual starmap unreadable.
 	-- Both parallel lanes remain connected by these short visual rungs.
 	{"sye-vibrant", "sye-vespera", 103000, "middle_crosslink"},
-	{"sye-vibrant", "sye-beetlejuice", 130000, "outer_crossing"},
-	{"sye-vespera", "sye-umbra", 130000, "outer_crossing"},
+	-- The central source-mod belt is a required, shared third-chapter
+	-- crossing. Native inner->outer stays source-owned with its real asteroids.
+	{"sye-vibrant", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
+	{"sye-vespera", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
+	{"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
+	{"asteroid-belt-outer-edge", "sye-umbra", 63000, "outer_crossing"},
 	{"sye-beetlejuice", "sye-umbra", 126000, "outer_crosslink"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
