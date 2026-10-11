@@ -146,21 +146,33 @@ local function test_routes()
       end
       check(found, "Retired native route lost a modded asteroid resource")
     end
+	-- Diagonal cross-tier links made the sky map a mesh of crossed lines.
+	-- The two parallel lanes and three same-tier rungs provide connectivity.
 	for _, pair in ipairs({
 		{"sye-solaris","sye-vespera"},
 		{"sye-nyxaris","sye-vibrant"},
 		{"sye-vibrant","sye-umbra"},
 		{"sye-vespera","sye-beetlejuice"}
 	}) do
+		for _, link in pairs(routes) do
+			check(not ((link.from == pair[1] and link.to == pair[2])
+				or (link.to == pair[1] and link.from == pair[2])),
+				"Legacy crossing survived: " .. pair[1] .. "/" .. pair[2])
+		end
+	end
+	for _, pair in ipairs({
+		{"sye-solaris","sye-nyxaris"},
+		{"sye-vibrant","sye-vespera"},
+		{"sye-beetlejuice","sye-umbra"}
+	}) do
 		local found = false
 		for _, link in pairs(routes) do
-			if ((link.from == pair[1] and link.to == pair[2])
-				or (link.to == pair[1] and link.from == pair[2]))
-				and link.shape == "line" then
+			if (link.from == pair[1] and link.to == pair[2])
+				or (link.to == pair[1] and link.from == pair[2]) then
 				found = true
 			end
 		end
-		check(found, "Missing straight interstellar diagonal " .. pair[1] .. "/" .. pair[2])
+		check(found, "Missing paired system connector: " .. pair[1])
 	end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
@@ -201,8 +213,6 @@ local function test_routes()
       {"razi-sye-solaris-sye-nyxaris", 88000},
       {"razi-sye-vibrant-sye-vespera", 103000},
       {"razi-sye-beetlejuice-sye-umbra", 126000},
-      {"razi-sye-solaris-sye-vespera", 142000},
-      {"razi-sye-vibrant-sye-umbra", 174000},
       {"razi-secretas-solar-system-edge", 155000},
       {"razi-vesta-solar-system-edge", 185000}
     }) do
