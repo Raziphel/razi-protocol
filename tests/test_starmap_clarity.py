@@ -197,9 +197,22 @@ class ConstellationTests(unittest.TestCase):
             self.assertIn(tuple(sorted(("sye-calidus","sye-"+star))), edges)
         for a,b in (("maraxsis","asteroid-belt-inner-edge"),
                     ("asteroid-belt-outer-edge","sye-umbra"),
-                    ("sye-solaris","sye-vibrant"),
-                    ("sye-nyxaris","sye-vespera")):
+                    ("sye-nyxaris","sye-vibrant"),
+                    ("sye-solaris","sye-vespera"),
+                    ("sye-vibrant","sye-vespera")):
             self.assertNotIn(tuple(sorted((a,b))),edges)
+        neighbors = (
+            ("solaris","nyxaris"),("solaris","vibrant"),
+            ("nyxaris","vespera"),("vibrant","beetlejuice"),
+            ("vespera","umbra"),("beetlejuice","umbra")
+        )
+        for a,b in neighbors:
+            self.assertIn(tuple(sorted(("sye-"+a,"sye-"+b))), edges,
+                          f"Missing adjacent-system slipstream {a}/{b}")
+        actual = [(a,b) for a,b,_,_ in self.routes
+                  if a.startswith("sye-") and b.startswith("sye-")
+                  and a!="sye-calidus" and b!="sye-calidus"]
+        self.assertEqual(len(actual), 6, "Unwanted diagonal system route")
         for a,b in (("shchierbin","asteroid-belt-inner-edge"),
                     ("asteroid-belt-outer-edge","sye-beetlejuice")):
             self.assertIn(tuple(sorted((a,b))),edges)

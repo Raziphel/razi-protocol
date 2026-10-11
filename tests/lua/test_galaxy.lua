@@ -73,7 +73,7 @@ local function test_routes()
 		["space-connection"] = {
 			["outdated-cross-shortcut"] = {
 				type = "space-connection", name = "outdated-cross-shortcut",
-				from = "sye-beetlejuice", to = "sye-umbra"
+				from = "sye-solaris", to = "sye-vespera"
 			},
 			["outdated-muria"] = {
 				type = "space-connection", name = "outdated-muria",
@@ -181,6 +181,24 @@ local function test_routes()
 				"Legacy crossing survived: " .. pair[1] .. "/" .. pair[2])
 		end
 	end
+  for _,info in ipairs({
+    {"sye-solaris","sye-nyxaris",82000},
+    {"sye-solaris","sye-vibrant",100000},
+    {"sye-nyxaris","sye-vespera",90000},
+    {"sye-vibrant","sye-beetlejuice",135000},
+    {"sye-vespera","sye-umbra",120000},
+    {"sye-beetlejuice","sye-umbra",150000},
+  }) do
+    local link
+    for _,candidate in pairs(routes) do
+      if (candidate.from==info[1] and candidate.to==info[2])
+          or (candidate.from==info[2] and candidate.to==info[1]) then
+        link=candidate
+      end
+    end
+    check(link and link.length==info[3] and link.shape=="line",
+      "Adjacent systems missing balanced route "..info[1].." -> "..info[2])
+  end
   for _,system in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
   }) do
@@ -216,13 +234,13 @@ local function test_routes()
 		check(present,"Missing native-belt chapter link "..pair[1])
 	end
 	for _,pair in ipairs({
-		{"sye-vibrant","sye-beetlejuice"},
-		{"sye-vespera","sye-umbra"}
+		{"sye-nyxaris","sye-vibrant"},
+		{"sye-solaris","sye-vespera"}
 	}) do
 		for _,conn in pairs(routes) do
 			check(not ((conn.from==pair[1] and conn.to==pair[2])
 				or (conn.from==pair[2] and conn.to==pair[1])),
-				"Outer system skips native AsteroidBelt")
+				"Diagonal research shortcut appeared")
 		end
 	end
 	check(routes["cubium-secretas"] ~= nil, "Original route name was replaced")

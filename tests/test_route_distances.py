@@ -81,6 +81,41 @@ class RouteTests(unittest.TestCase):
                                 for message in routes_audit.audit({
                                     **raw, "space-connection": modified})))
 
+    def test_neighbor_routes_are_all_present_and_balanced(self):
+        raw = world()
+        self.assertEqual(routes_audit.audit(raw), [])
+        catalog = {routes_audit.key(a,b):(km,profile)
+                   for a,b,km,profile in route_manifest()}
+        for a,b in routes_audit.NEIGHBOR_LINKS:
+            self.assertIn(routes_audit.key(a,b),catalog)
+            direct = catalog[routes_audit.key(a,b)][0]
+            via = (catalog[routes_audit.key(a,"sye-calidus")][0]
+                   + catalog[routes_audit.key(b,"sye-calidus")][0])
+            self.assertLess(direct,via)
+
+    def test_mispriced_neighbor_and_missing_neighbor_are_detected(self):
+        raw = world()
+        for r in raw["space-connection"].values():
+            if routes_audit.key(r["from"],r["to"]) == routes_audit.key(
+                    "sye-solaris","sye-nyxaris"):
+                r["length"]=22000
+        self.assertTrue(any("Neighbor tier distance mismatch" in msg
+                            for msg in routes_audit.audit(raw)))
+        raw = world()
+        target = next(n for n,r in raw["space-connection"].items()
+                      if routes_audit.key(r["from"],r["to"]) == routes_audit.key(
+                          "sye-umbra","sye-vespera"))
+        del raw["space-connection"][target]
+        self.assertTrue(any("Missing required corridor" in msg
+                            for msg in routes_audit.audit(raw)))
+
+    def test_all_manifest_profiles_are_defined(self):
+        src=(ROOT / "prototypes/system/asteroid_profiles.lua").read_text()
+        known=set(re.findall(r"^\s*([a-z][a-z_]+)=\{",src,re.M))
+        for a,b,km,profile in route_manifest():
+            self.assertGreater(km,0)
+            self.assertIn(profile,known,f"Missing hazard profile for {a}/{b}")
+
     def test_an_out_of_order_deep_space_shortcut_is_detected(self):
         raw = world()
         raw["space-connection"]["old-outer-shortcut"] = {

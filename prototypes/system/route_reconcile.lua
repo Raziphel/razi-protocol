@@ -47,6 +47,14 @@ local route_specifications = {
   {"sye-calidus", "sye-vespera", 110000, "middle_crossing"},
   {"sye-calidus", "sye-beetlejuice", 175000, "outer_crossing"},
   {"sye-calidus", "sye-umbra", 175000, "outer_crossing"},
+  -- Nearest-neighbor arcs on the ring, no far-side diagonals.
+  -- Later destinations still require their existing system discoveries.
+  {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
+  {"sye-solaris", "sye-vibrant", 100000, "middle_crosslink"},
+  {"sye-nyxaris", "sye-vespera", 90000, "middle_crosslink"},
+  {"sye-vibrant", "sye-beetlejuice", 135000, "outer_crosslink"},
+  {"sye-vespera", "sye-umbra", 120000, "outer_crosslink"},
+  {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
   -- Source-owned 5000 km belt crossing on Vibrant's sun. No map-spanning
   -- routes from Maraxsis or from the outer edge to distant Umbra.
   {"shchierbin", "asteroid-belt-inner-edge", 48000, "chemistry_deep"},
@@ -61,8 +69,8 @@ local route_specifications = {
 	{"tellus", "corrundum", 18000, "industrial_deep"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
 	{"sye-nyxaris", "gleba", 18000, "biological"},
-	{"sye-nyxaris", "apia-carnova-orbit", 17000, "biological"},
-	{"sye-nyxaris", "moshine", 18000, "biological"},
+	{"sye-nyxaris", "apia-carnova-orbit", 23000, "biological"},
+	{"sye-nyxaris", "moshine", 22000, "biological"},
 	{"sye-nyxaris", "panglia", 24000, "biological_deep"},
 	{"panglia", "pelagos", 16000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
@@ -82,7 +90,7 @@ local route_specifications = {
 	-- Beetlejuice's remote industrial strand.
 	{"sye-beetlejuice", "cubium", 18000, "outer_industry"},
 	{"cubium", "linox-planet_linox", 17000, "outer_industry"},
-	{"cubium", "secretas", 19000, "outer_industry_deep"},
+	{"cubium", "secretas", 23000, "outer_industry_deep"},
 	{"secretas", "frozeta", 10500, "outer_industry_deep"},
 	-- Umbra's extreme sciences. Crucible's native orbital link stays intact.
 	{"sye-umbra", "tenebris", 18000, "outer_void"},
