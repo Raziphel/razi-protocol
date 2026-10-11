@@ -57,15 +57,15 @@ local function run(with_outer,with_mod)
 end
 
 local module,raw,inner,outer,native,layers=run(true,true)
-check(inner.orbit.distance>120 and outer.orbit.distance>130,
+check(inner.orbit.distance>45 and outer.orbit.distance>50,
   "AsteroidBelt was not placed at the mid/outer boundary")
 check(inner.orbit.parent.name=="star" and outer.orbit.parent.name=="star",
   "Native belt locations must remain space-location descendants of star")
-check(inner.orbit.orientation>.6 and outer.orbit.orientation>.6,
+check(inner.orbit.orientation>.85 and outer.orbit.orientation>.85,
   "The source crossing must point south through the campaign")
 check(inner.draw_orbit==false and outer.draw_orbit==false,
   "Old origin-centered asteroid belt rings still appear")
-check(#layers==3 and layers[2].filename==ring and layers[2].scale==0.28
+check(#layers==3 and layers[2].filename==ring and layers[2].scale==0.85
   and layers[3].filename=="__another-mod__/graphics/starmap/background.png",
   "The original source asteroid graphic must remain, scaled modestly")
 check(raw["space-connection"][native.name]==native

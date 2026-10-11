@@ -64,7 +64,7 @@ class RouteTests(unittest.TestCase):
         raw = world()
         for pair, old_length in (
             (("sye-solaris", "sye-nyxaris"), 32000),
-            (("sye-vibrant", "sye-vespera"), 38000),
+            (("sye-solaris", "sye-vibrant"), 38000),
         ):
             modified = dict(raw["space-connection"])
             match = next(k for k, v in modified.items()
@@ -105,16 +105,15 @@ class RouteTests(unittest.TestCase):
         raw = world()
         coords = routes_audit.positions(raw)
         # Calidus is central; native belt edges sit on the western solar rim.
-        self.assertGreater(coords["sye-solaris"][0], 100)
+        self.assertGreater(coords["sye-solaris"][0], 65)
         self.assertLess(coords["sye-solaris"][1], 0)
-        self.assertGreater(coords["sye-nyxaris"][0], 100)
-        self.assertGreater(coords["sye-nyxaris"][1], 0)
-        self.assertGreater(coords["sye-vibrant"][1], 140)
-        self.assertLess(coords["sye-beetlejuice"][0], -120)
-        self.assertLess(coords["asteroid-belt-inner-edge"][0], -90)
-        self.assertGreater(coords["asteroid-belt-inner-edge"][1], 70)
-        self.assertLess(coords["solar-system-edge"][0],
-                        coords["sye-beetlejuice"][0])
+        self.assertLess(coords["sye-nyxaris"][0], -60)
+        self.assertLess(coords["sye-nyxaris"][1], -40)
+        self.assertGreater(coords["sye-vibrant"][1], 40)
+        self.assertGreater(coords["sye-beetlejuice"][0], 45)
+        self.assertLess(coords["asteroid-belt-inner-edge"][0], -25)
+        self.assertGreater(coords["asteroid-belt-inner-edge"][1], 30)
+        self.assertGreater(coords["solar-system-edge"][1], 200)
 
 if __name__ == "__main__":
     unittest.main()

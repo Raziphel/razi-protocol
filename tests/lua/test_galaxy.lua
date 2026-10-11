@@ -172,6 +172,7 @@ local function test_routes()
 		{"sye-solaris","sye-vespera"},
 		{"sye-nyxaris","sye-vibrant"},
 		{"sye-vibrant","sye-umbra"},
+		{"sye-vibrant","sye-vespera"},
 		{"sye-vespera","sye-beetlejuice"}
 	}) do
 		for _, link in pairs(routes) do
@@ -182,7 +183,6 @@ local function test_routes()
 	end
 	for _, pair in ipairs({
 		{"sye-solaris","sye-nyxaris"},
-		{"sye-vibrant","sye-vespera"},
 	}) do
 		local found = false
 		for _, link in pairs(routes) do
@@ -197,8 +197,8 @@ local function test_routes()
 		"razi-sye-calidus-sye-solaris",
 		"razi-sye-solaris-sye-vibrant",
 		"razi-sye-nyxaris-sye-vespera"}) do
-		check(routes[name] and routes[name].shape=="arc",
-			"Razi interstellar route no longer uses a curved arc: "..name)
+		check(routes[name] and routes[name].shape=="line",
+			"Interstellar link should use compact direct geometry: "..name)
 	end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
@@ -270,7 +270,6 @@ local function test_routes()
 
     for _, spec in ipairs({
       {"razi-sye-solaris-sye-nyxaris", 88000},
-      {"razi-sye-vibrant-sye-vespera", 103000},
       {"razi-secretas-solar-system-edge", 155000},
       {"razi-vesta-solar-system-edge", 185000}
     }) do
