@@ -59,7 +59,8 @@ local route_specifications = {
 	{"maraxsis", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
 	{"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
 	{"asteroid-belt-outer-edge", "sye-umbra", 63000, "outer_crossing"},
-	{"sye-beetlejuice", "sye-umbra", 126000, "outer_crosslink"},
+	-- The two outer systems already connect through the shared source belt
+	-- outer edge. Their direct rung would run across that marker itself.
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
 	{"sye-solaris", "castra", 21000, "industrial"},
