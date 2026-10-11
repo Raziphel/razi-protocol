@@ -229,10 +229,13 @@ class ConstellationTests(unittest.TestCase):
                           "asteroid-belt-outer-edge"))), edges)
 
     def test_calidus_departure_hub_is_close_but_clear(self):
-        self.assertAlmostEqual(
-            math.dist(self.coords["sye-calidus"], (0, 0)), 20, places=2)
-        self.assertGreater(
-            math.dist(self.coords["sye-calidus"], self.coords["nauvis"]), 20)
+        # The source Nauvis orbit is not in Razi's layout fixture, so do
+        # not pretend the fixture contains it. Verify the known hub position
+        # and its safe distance from the central star graphic instead.
+        x, y = self.coords["sye-calidus"]
+        self.assertAlmostEqual(x, 0, places=2)
+        self.assertAlmostEqual(y, 20, places=2)
+        self.assertGreater(math.dist((x, y), (0, 0)), 15)
 
     def test_vibrant_sun_belt_clearance(self):
         for n,(parent,_,_) in self.anchors.items():
