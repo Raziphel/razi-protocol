@@ -1,5 +1,5 @@
--- Separate, opt-in manager; never patches the native Space Age list.
-local icon="__razi-protocol__/graphics/icons/routes/interstellar-route.png"
+-- The manager lives in a map-only screen overlay, not the shortcut bar.
+-- The optional hotkey stays available while Remote View is active.
 data:extend({
   {
     type="custom-input",
@@ -8,9 +8,10 @@ data:extend({
     consuming="none"
   },
   {
-    type="shortcut", name="razi-galactic-operations",
-    action="lua", style="blue", order="z[razi]-g[galactic-operations]",
-    icon=icon,icon_size=64,small_icon=icon,small_icon_size=64,
-    toggleable=true,associated_control_input="razi-galactic-operations-input"
+    type="sprite",
+    name="razi-galactic-operations-map-icon",
+    filename="__razi-protocol__/graphics/icons/routes/interstellar-route.png",
+    width=64,
+    height=64
   }
 })

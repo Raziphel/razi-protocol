@@ -267,4 +267,4 @@ Please see [Credits.txt](Credits.txt) for the full acknowledgement list. If you 
 
 ## Galactic Operations UI
 
-A first-party, seven-system-aware planet and space-platform dashboard is included. Open it from the shortcut bar or press **Ctrl+Shift+G**. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).
+A first-party, seven-system-aware planet and space-platform dashboard is included. Open the **Galactic Ops** button in Remote View on the space map, or optionally press **Ctrl+Shift+G** while viewing the map. It never occupies the shortcut bar. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).

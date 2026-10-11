@@ -18,4 +18,18 @@ local overflow,clamped=ui.page_slice(rows,600,22)
 check(#overflow==13 and clamped==5,"Overflow clamp")
 local empty,index,pages=ui.page_slice({},10,22)
 check(#empty==0 and index==1 and pages==1,"Empty page")
-print("Galactic Operations selection fixtures passed")
+rawset(_G,"defines",{controllers={remote=1,character=2},
+  render_mode={game=0,chart=1,chart_zoomed_in=2}})
+local mock={valid=true,connected=true,controller_type=1,render_mode=1}
+check(ui.in_map_view(mock),"Remote chart should show the map button")
+mock.render_mode=2
+check(ui.in_map_view(mock),"Zoomed chart should still show the map button")
+mock.render_mode=0
+check(not ui.in_map_view(mock),"Normal factory play must hide the map button")
+mock.render_mode=1
+mock.controller_type=2
+check(not ui.in_map_view(mock),"Non-remote controller must not display button")
+mock.controller_type=1
+mock.connected=false
+check(not ui.in_map_view(mock),"Disconnected player must not display button")
+print("Galactic Operations selection and map visibility fixtures passed")

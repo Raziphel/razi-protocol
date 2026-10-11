@@ -125,12 +125,17 @@ end
 -- The periodic check covers old saves and any weird script ordering.
 script.on_init(function()
   check_existing_transceivers()
+  galactic_operations.sync_all_map_buttons()
 end)
 script.on_configuration_changed(function(event)
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
+  galactic_operations.sync_all_map_buttons()
 end)
 script.on_nth_tick(600, check_existing_transceivers)
+-- The engine has no starmap-open event. Check only the small per-player
+-- render/controller state twice per second; never enumerate planets here.
+script.on_nth_tick(30, galactic_operations.sync_all_map_buttons)
 script.on_event({
 	defines.events.on_built_entity,
 	defines.events.on_robot_built_entity,
@@ -140,17 +145,18 @@ script.on_event({
 }, on_entity_built)
 
 
--- The new UI owns only its own shortcut and tagged GUI elements.
--- Existing transceiver and compatibility handlers remain unchanged.
+-- Galactic Operations is launched from its floating map button.
+-- The optional Ctrl+Shift+G input works only while viewing the map.
 script.on_event("razi-galactic-operations-input",function(event)
   local player=game.get_player(event.player_index)
   if player then galactic_operations.toggle(player) end
 end)
-script.on_event(defines.events.on_lua_shortcut,function(event)
-  if event.prototype_name~="razi-galactic-operations" then return end
-  local player=game.get_player(event.player_index)
-  if player then galactic_operations.toggle(player) end
-end)
+script.on_event(defines.events.on_player_controller_changed,
+  galactic_operations.map_context_changed)
+script.on_event(defines.events.on_player_joined_game,
+  galactic_operations.map_context_changed)
+script.on_event(defines.events.on_player_created,
+  galactic_operations.map_context_changed)
 script.on_event(defines.events.on_gui_click,galactic_operations.gui_click)
 script.on_event(defines.events.on_gui_text_changed,galactic_operations.text_changed)
 script.on_event(defines.events.on_gui_selection_state_changed,
