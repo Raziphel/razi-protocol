@@ -28,8 +28,8 @@ chapters advancing upward to Deep Space and Bellicos.
 | Vespera | -104 | 0 |
 | Beetlejuice | 52 | -90.07 |
 | Umbra | -52 | -90.07 |
-| Required Asteroid Belt inner edge | Shchierbin X | Shchierbin Y - 14 |
-| Required Asteroid Belt outer edge | Shchierbin X | Shchierbin Y - 20 |
+| Required Asteroid Belt inner edge | Vibrant X | Vibrant Y - 14 |
+| Required Asteroid Belt outer edge | Vibrant X | Vibrant Y - 20 |
 | Deep Space / solar-system-edge | 0 | -190 |
 
 ## Design rules
@@ -44,22 +44,20 @@ chapters advancing upward to Deep Space and Bellicos.
 - Each existing planetary family is rotated in place so its slipstream portal
   points toward the readable campaign route; preserve planet distances from
   their parent stars to avoid crowding labels and sub-planet content.
-- Research progression follows two lanes from the southern opening systems,
-  through the middle side systems to the REQUIRED, shared asteroid belt
-  crossing. The northern pair is unlocked beyond that crossing.
-- Long Razi-managed interstellar links are lines (not giant external arcs).
-  No new crosslinks or impossible shortcuts are introduced.
-- Native AsteroidBelt by MrLumme remains REQUIRED at >=1.2.11, but its
-  original bitmap is now centered on **Shchierbin**, not Calidus.
-  Scale 0.55 fits the midgame planet with a ~16-unit particle ring.
-  The source-owned asteroid gateways orbit Shchierbin at radii 14 and 20
-  with orientation 0 (north). The ship crosses the belt radially, from its
-  inner edge to its outer edge. The crossing is still source-owned and stays
-  exactly 5,000 km with its original asteroid hazards.
-- Shchierbin already connects to the native belt entrance; Maraxsis
-  remains the Vespera entrance. Its cross-galaxy approach is lengthened
-  from 48,000 to 90,000 km; the long Umbra departure from 63,000 to
-  70,000 km. These are flight distances, **not** hazard nerfs.
+- Six homeward slipstreams now connect Calidus directly with every system
+  hub. All six destination hubs remain gated by their own discovery tech.
+  Outer discoveries still require space-discovery-asteroid-belt AND both
+  midgame discoveries, so the direct lines are not early-game shortcuts.
+- The original AsteroidBelt graphic surrounds **Vibrant's sun** at (104,0),
+  not Nauvis or Shchierbin. The original graphic is 0.55 scale. Native
+  inner/outer endpoints are offset 14/20 units north of that sun, but
+  their orbit prototypes reference the surviving root star because
+  PlanetsLib deletes virtual sprite-only stars during final fixes.
+- Shchierbin remains the local approach to the REQUIRED source-owned 5,000
+  km native crossing and its unique asteroid resources. The far exit
+  connects to Beetlejuice. The excessively long Maraxsis and Umbra
+  diagonals were removed; the surrounding spokes use increasing hazards
+  and travel times of 60-65k, 110k and 175k km by chapter.
 - **Native rings for every planet around a Razi star** use the Factorio 2.1
   origin-based renderer provided by PlanetsLib >= 2.0.9. The previous code
   set `draw_orbit=false` for all except six handpicked planets, hiding most
@@ -77,7 +75,7 @@ chapters advancing upward to Deep Space and Bellicos.
   than 145. The entry stargate is 28 units away rather than 35. Keep source
   art, gate names, travel distance and every native Aegis connection.
 - Do not remove campaign crosslinks just to conceal map lines: early parallel
-  routes, the shared required asteroid crossing at Shchierbin, and both outer
+  routes, the required asteroid expedition around Vibrant, and both outer
   routes to Deep Space are intentional. The compact layout reduces the long
   visual spans without weakening research gates or travel hazards.
 
@@ -89,7 +87,7 @@ chapters advancing upward to Deep Space and Bellicos.
 - `tests/lua/test_galaxy_layout.lua` covers final-stage parent updates,
   native moon persistence and signature rings.
 - `tests/lua/test_asteroid_belt_integration.lua` protects the original
-  upstream sprite, its shift to Shchierbin, native hazards, and missing
+  upstream sprite, its shift to Vibrant's sun, native hazards, and missing
   gateway safety. `tests/test_starmap_clarity.py` verifies that the belt
   doesn't intersect surrounding planets.
 - `tests/lua/test_bellicos_layout.lua` covers absent and retyped source

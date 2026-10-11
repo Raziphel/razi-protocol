@@ -73,7 +73,7 @@ local function test_routes()
 		["space-connection"] = {
 			["outdated-cross-shortcut"] = {
 				type = "space-connection", name = "outdated-cross-shortcut",
-				from = "sye-calidus", to = "sye-vibrant"
+				from = "sye-beetlejuice", to = "sye-umbra"
 			},
 			["outdated-muria"] = {
 				type = "space-connection", name = "outdated-muria",
@@ -141,7 +141,7 @@ local function test_routes()
 	local reconciliation = reload("prototypes.system.route_reconcile")
 	reconciliation.data_final_fixes()
 	local routes = data.raw["space-connection"]
-	check(routes["outdated-cross-shortcut"] == nil, "Calidus bypass survived")
+	check(routes["outdated-cross-shortcut"] == nil, "Obsolete perimeter route survived")
 	check(routes["outdated-muria"] == nil, "Stale Vibrant/Muria route survived")
 	check(routes["old-tenebris-link"] == nil, "Stale Beetlejuice/Tenebris route survived")
     check(routes["old-direct-aquilo-rubia"] == nil,
@@ -181,25 +181,13 @@ local function test_routes()
 				"Legacy crossing survived: " .. pair[1] .. "/" .. pair[2])
 		end
 	end
-	for _, pair in ipairs({
-		{"sye-solaris","sye-nyxaris"},
-	}) do
-		local found = false
-		for _, link in pairs(routes) do
-			if (link.from == pair[1] and link.to == pair[2])
-				or (link.to == pair[1] and link.from == pair[2]) then
-				found = true
-			end
-		end
-		check(found, "Missing paired system connector: " .. pair[1])
-	end
-	for _, name in ipairs({
-		"razi-sye-calidus-sye-solaris",
-		"razi-sye-solaris-sye-vibrant",
-		"razi-sye-nyxaris-sye-vespera"}) do
-		check(routes[name] and routes[name].shape=="line",
-			"Interstellar link should use compact direct geometry: "..name)
-	end
+  for _,system in ipairs({
+    "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
+  }) do
+    local name="razi-sye-calidus-sye-"..system
+    check(routes[name] and routes[name].shape=="line",
+      "Missing direct homeward slipstream "..name)
+  end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
       "Maraxsis's native 20,000 km local route was overwritten")
@@ -216,9 +204,7 @@ local function test_routes()
 		"Source belt bypass survived outer-tier reconciliation")
 	for _,pair in ipairs({
 		{"shchierbin","asteroid-belt-inner-edge"},
-		{"maraxsis","asteroid-belt-inner-edge"},
-		{"asteroid-belt-outer-edge","sye-beetlejuice"},
-		{"asteroid-belt-outer-edge","sye-umbra"}
+		{"asteroid-belt-outer-edge","sye-beetlejuice"}
 	}) do
 		local present=false
 		for _,conn in pairs(routes) do
@@ -254,8 +240,10 @@ local function test_routes()
 		"Imersite asteroid definitions were lost")
 	for _, name in ipairs({
 		"razi-sye-calidus-sye-nyxaris",
-		"razi-sye-solaris-sye-vibrant",
-		"razi-sye-nyxaris-sye-vespera",
+		"razi-sye-calidus-sye-vibrant",
+		"razi-sye-calidus-sye-vespera",
+		"razi-sye-calidus-sye-beetlejuice",
+		"razi-sye-calidus-sye-umbra",
 		"razi-sye-vespera-muria",
 		"razi-sye-umbra-tenebris",
 		"razi-secretas-solar-system-edge",
@@ -269,7 +257,7 @@ local function test_routes()
 	end
 
     for _, spec in ipairs({
-      {"razi-sye-solaris-sye-nyxaris", 88000},
+      {"razi-sye-calidus-sye-beetlejuice", 175000},
       {"razi-secretas-solar-system-edge", 155000},
       {"razi-vesta-solar-system-edge", 185000}
     }) do
