@@ -13,13 +13,14 @@ local anchors = {
   {"space-location","umbra","star",369,.278},
   {"space-location","solar-system-edge","star",485,.25},
   {"space-location","sye-calidus","star",32,.25},
-  -- West-facing transit portals prevent long passages through star sprites.
-  {"space-location","sye-solaris","solaris",39,.75},
-  {"space-location","sye-nyxaris","nyxaris",39,.75},
-  {"space-location","sye-vibrant","vibrant",38,.75},
-  {"space-location","sye-vespera","vespera",38,.75},
-  {"space-location","sye-beetlejuice","beetlejuice",38,.75},
-  {"space-location","sye-umbra","umbra",38,.75},
+  -- Northwest-facing portals keep tier-to-tier links ABOVE their star sprites.
+  -- Their common western x-offset keeps same-tier vertical rungs clear too.
+  {"space-location","sye-solaris","solaris",50,.82},
+  {"space-location","sye-nyxaris","nyxaris",50,.82},
+  {"space-location","sye-vibrant","vibrant",50,.82},
+  {"space-location","sye-vespera","vespera",50,.82},
+  {"space-location","sye-beetlejuice","beetlejuice",50,.82},
+  {"space-location","sye-umbra","umbra",50,.82},
   -- Solaris: a southwest factory path and a short northern Vulcanus spur.
   {"planet","vulcanus","solaris",24,.84},
   {"planet","castra","solaris",24,.64},
