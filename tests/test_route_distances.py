@@ -105,8 +105,8 @@ class RouteTests(unittest.TestCase):
         raw = world()
         coords = routes_audit.positions(raw)
         # Calidus remains clear; the source belt encircles Shchierbin.
-        self.assertGreater(coords["sye-solaris"][1], 75)
-        self.assertGreater(coords["sye-nyxaris"][1], 75)
+        self.assertGreater(coords["sye-solaris"][1], 60)
+        self.assertGreater(coords["sye-nyxaris"][1], 55)
         self.assertGreater(coords["sye-vibrant"][0], 70)
         self.assertLess(coords["sye-vespera"][0], -70)
         self.assertLess(coords["sye-beetlejuice"][1], -60)
@@ -116,7 +116,7 @@ class RouteTests(unittest.TestCase):
                                     coords["shchierbin"]), 14,
             places=3)
         self.assertGreater(coords["asteroid-belt-inner-edge"][0], 100)
-        self.assertLess(coords["solar-system-edge"][1], -230)
+        self.assertLess(coords["solar-system-edge"][1], -185)
 
 if __name__ == "__main__":
     unittest.main()

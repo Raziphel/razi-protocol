@@ -62,7 +62,7 @@ for name,bearing in pairs({
   solaris=5/12,nyxaris=7/12,vibrant=.25,
   vespera=.75,beetlejuice=1/12,umbra=11/12
 }) do
-  check(math.abs(places[name].distance-124)<.001 and
+  check(math.abs(places[name].distance-104)<.001 and
         math.abs(places[name].orientation-bearing)<.000002,
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
@@ -102,12 +102,12 @@ local bearings={
 for name,bearing in pairs(bearings) do
   local star=places[name]
   local radius=star.orbit.distance
-  check(math.abs(radius-124)<.001,
+  check(math.abs(radius-104)<.001,
     "Stars are not positioned on the same circular radius: "..name)
   check(math.abs(star.orbit.orientation-bearing)<.000002,
     "Wrong clockwise compass bearing for "..name)
   local x,y=position(name)
-  local ex,ey=cartesian(124,bearing)
+  local ex,ey=cartesian(104,bearing)
   check(math.abs(x-ex)<.01 and math.abs(y-ey)<.01,
     "Star position does not match Factorio polar orientation: "..name)
   local hx,hy=position("sye-"..name)
@@ -116,7 +116,7 @@ for name,bearing in pairs(bearings) do
   check(star.draw_orbit==false,"Giant orbital ring survived")
 end
 local dx,dy=position("solar-system-edge")
-check(math.abs(dx)<1 and dy < -235 and dy > -260,
+check(math.abs(dx)<1 and dy < -185 and dy > -195,
   "Deep Space must be a northern outer frontier")
 local hx,hy=position("sye-calidus")
 check(math.abs(hx)<1 and hy>20 and hy<30,
@@ -182,7 +182,7 @@ local function fixed_position(name)
 end
 layout.data_final_fixes()
 local ex=-62
-local ey=124*math.sqrt(3)/2
+local ey=104*math.sqrt(3)/2
 check(math.abs(planets.gleba.origin.x-ex)<.05 and
       math.abs(planets.gleba.origin.y-ey)<.05,
   "Final native layout did not recover a planet after its star was deleted")
@@ -207,11 +207,11 @@ check(planets.athos.draw_orbit==false and
   planets.athos.orbit.sprite==orbit_art_before,
   "Unique source orbit art should not be doubled by native circles")
 local dzx,dzy=fixed_position("solar-system-edge")
-check(math.abs(dzx)<.01 and math.abs(dzy+248)<.01,
+check(math.abs(dzx)<.01 and math.abs(dzy+190)<.01,
   "Native Deep Space was no longer directly north")
 -- Astral sprite positions were already fixed by the pre-final stage.
 for name,expect in pairs(original_positions) do
-  check(math.abs(expect.distance-124)<.001,
+  check(math.abs(expect.distance-104)<.001,
     "Pre-render parent star radius was wrong: "..name)
 end
 

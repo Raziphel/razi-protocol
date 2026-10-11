@@ -3,17 +3,17 @@ local M = {}
 
 -- Campaign order follows the ring from south to north: first, middle, outer.
 -- Physical route lengths, unlock prerequisites and native moons stay unchanged.
--- Six systems share radius 124 and exact hexagonal compass bearings.
--- North is NEGATIVE Y (Factorio orientation 0); Deep Space is far north.
+-- Six systems share radius 104 and exact hexagonal compass bearings.
+-- North is NEGATIVE Y (Factorio orientation 0); Deep Space is north, but closer.
 -- Local planets keep their native route graphs and readable spacing.
 local anchors = {
-  {"space-location","solaris","star",124,0.416667},
-  {"space-location","nyxaris","star",124,0.583333},
-  {"space-location","vibrant","star",124,0.25},
-  {"space-location","vespera","star",124,0.75},
-  {"space-location","beetlejuice","star",124,0.083333},
-  {"space-location","umbra","star",124,0.916667},
-  {"space-location","solar-system-edge","star",248,0},
+  {"space-location","solaris","star",104,0.416667},
+  {"space-location","nyxaris","star",104,0.583333},
+  {"space-location","vibrant","star",104,0.25},
+  {"space-location","vespera","star",104,0.75},
+  {"space-location","beetlejuice","star",104,0.083333},
+  {"space-location","umbra","star",104,0.916667},
+  {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",25,0.5},
   {"space-location","sye-solaris","solaris",27,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
