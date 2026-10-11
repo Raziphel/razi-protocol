@@ -214,7 +214,7 @@ function route_reconcile.data_final_fixes()
 				route.length = balanced_length(keep_name, route.length, length, from, to)
 				if membership[from] and membership[to]
 					and membership[from] ~= membership[to] then
-					route.shape = "line"
+					route.shape = "arc"
 				end
 				hazard_profiles.apply(route, hazard)
 				route_icons.assign(route, hazard)
@@ -225,8 +225,7 @@ function route_reconcile.data_final_fixes()
 						from = from,
 						to = to,
 						length = length,
-						shape = (membership[from] and membership[to]
-							and membership[from] ~= membership[to]) and "line" or "arc",
+						shape = "arc",
 						asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				data:extend({connection})

@@ -1,58 +1,51 @@
--- A compact branching constellation. Calidus is the apex; the two
--- expedition branches descend through a shared midgame asteroid frontier,
--- then reunite at Deep Space. Coordinates are display-only; km and hazards
--- live in route_reconcile.lua and the source AsteroidBelt crossing.
--- Directions are Factorio turns: north=0, east=.25, south=.5, west=.75.
+-- The visual composition follows the original Calidus-centered Razi starmap.
 local M = {}
 
+-- Calidus-centered radial gallery: six stars with preserved local crescents.
+-- Visual coordinates do not modify route lengths or research.
 local anchors = {
-  -- Paired stellar chambers widen gently down the map instead of forming
-  -- oversized left-to-right columns with huge empty regions.
-  {"space-location","solaris","star",82.0731,0.6195141},
-  {"space-location","nyxaris","star",82.0731,0.3804859},
-  {"space-location","vibrant","star",154.7385,0.5747118},
-  {"space-location","vespera","star",154.7385,0.4252882},
-  {"space-location","beetlejuice","star",234.3502,0.5598028},
-  {"space-location","umbra","star",234.3502,0.4401972},
-  {"space-location","solar-system-edge","star",310,0.5},
-  -- Calidus is the top of the constellation; portals sit ABOVE each star
-  -- and on the outward face of their own branch.
-  {"space-location","sye-calidus","star",24,0.5},
-  {"space-location","sye-solaris","solaris",28.0631,0.8999657},
-  {"space-location","sye-vibrant","vibrant",28.0631,0.8999657},
-  {"space-location","sye-beetlejuice","beetlejuice",28.0631,0.8999657},
-  {"space-location","sye-nyxaris","nyxaris",28.0631,0.1000343},
-  {"space-location","sye-vespera","vespera",28.0631,0.1000343},
-  {"space-location","sye-umbra","umbra",28.0631,0.1000343},
-  -- Local discovery chains form concise, nonintersecting planetary crescents.
-  {"planet","vulcanus","solaris",46.3249,0.8407248},
-  {"planet","castra","solaris",42.72,0.7046837},
-  {"planet","arig","solaris",41.7852,0.5584375},
-  {"planet","hyarion","solaris",24.7386,0.5389896},
-  {"planet","tellus","solaris",37.2022,0.3992949},
-  {"planet","corrundum","solaris",27.2947,0.2265918},
-  {"planet","gleba","nyxaris",41.7852,0.1915625},
-  {"planet","moshine","nyxaris",38.833,0.345857},
-  {"space-location","apia-carnova-orbit","nyxaris",35.8469,0.4361425},
-  {"planet","panglia","nyxaris",40.0125,0.003978},
-  {"planet","fulgora","vibrant",41.4367,0.8048523},
-  {"planet","ribbonia","vibrant",35.609,0.6440077},
-  {"planet","paracelsin","vibrant",29.2746,0.5218148},
-  {"planet","shchierbin","vibrant",29.0689,0.3633752},
-  {"planet","muria","vespera",28.0179,0.2443183},
-  {"planet","aquilo","vespera",33.0151,0.347595},
-  {"space-location","razi-vespera-belt-inner","vespera",31.9531,0.4440658},
-  {"space-location","razi-vespera-belt-outer","vespera",32.0156,0.504972},
-  {"planet","rubia","vespera",31.9061,0.5894326},
-  {"planet","maraxsis","vespera",30.0832,0.7071607},
-  {"planet","cubium","beetlejuice",28.0179,0.7556817},
-  {"planet","linox-planet_linox","beetlejuice",35.609,0.6440077},
-  {"space-location","secretas","beetlejuice",31.6228,0.4487918},
-  {"planet","tenebris","umbra",28.0179,0.2443183},
-  {"space-location","crucible-orbit","umbra",36.4005,0.3532909},
-  {"space-location","razi-umbra-belt-inner","umbra",34.0147,0.4324874},
-  {"space-location","razi-umbra-belt-outer","umbra",33.0151,0.4951786},
-  {"planet","vesta","umbra",32.8024,0.6043572},
+  {"space-location","solaris","star",189.010582,0.1459},
+  {"space-location","nyxaris","star",171.723615,0.339985},
+  {"space-location","vibrant","star",181.107703,0.482388},
+  {"space-location","vespera","star",198.010101,0.627273},
+  {"space-location","beetlejuice","star",181.727818,0.771964},
+  {"space-location","umbra","star",182.222392,0.905448},
+  {"space-location","solar-system-edge","star",330.588869,0.827668},
+  {"space-location","sye-calidus","star",36.400549,0.603291},
+  {"space-location","sye-solaris","solaris",37.20215,0.649295},
+  {"space-location","sye-vibrant","vibrant",32.249031,0.167375},
+  {"space-location","sye-beetlejuice","beetlejuice",33.105891,0.319491},
+  {"space-location","sye-nyxaris","nyxaris",33.015148,0.847595},
+  {"space-location","sye-vespera","vespera",33.600595,0.148531},
+  {"space-location","sye-umbra","umbra",30.870698,0.31918},
+  {"planet","vulcanus","solaris",44.471904,0.590054},
+  {"planet","castra","solaris",41.0112,0.454013},
+  {"planet","arig","solaris",40.113792,0.307767},
+  {"planet","hyarion","solaris",23.749056,0.288319},
+  {"planet","tellus","solaris",35.714112,0.148624},
+  {"planet","corrundum","solaris",26.202912,0.975921},
+  {"planet","gleba","nyxaris",40.113792,0.939123},
+  {"planet","moshine","nyxaris",37.27968,0.093418},
+  {"space-location","apia-carnova-orbit","nyxaris",34.413024,0.183703},
+  {"planet","panglia","nyxaris",38.412,0.751539},
+  {"planet","fulgora","vibrant",39.779232,0.072262},
+  {"planet","ribbonia","vibrant",34.18464,0.911417},
+  {"planet","paracelsin","vibrant",28.103616,0.789224},
+  {"planet","shchierbin","vibrant",27.906144,0.630785},
+  {"planet","muria","vespera",26.897184,0.292815},
+  {"planet","aquilo","vespera",31.694496,0.396092},
+  {"space-location","razi-vespera-belt-inner","vespera",30.674976,0.492562},
+  {"space-location","razi-vespera-belt-outer","vespera",30.734976,0.553469},
+  {"planet","rubia","vespera",30.629856,0.637929},
+  {"planet","maraxsis","vespera",28.879872,0.755657},
+  {"planet","cubium","beetlejuice",26.897184,0.175207},
+  {"planet","linox-planet_linox","beetlejuice",34.18464,0.063533},
+  {"space-location","secretas","beetlejuice",30.357888,0.868317},
+  {"planet","tenebris","umbra",26.897184,0.463464},
+  {"space-location","crucible-orbit","umbra",34.94448,0.572437},
+  {"space-location","razi-umbra-belt-inner","umbra",32.654112,0.651633},
+  {"space-location","razi-umbra-belt-outer","umbra",31.694496,0.714324},
+  {"planet","vesta","umbra",31.490304,0.823503},
 }
 
 local stars = {
@@ -84,12 +77,14 @@ function M.data_final_fixes()
 
   -- The old ring forest was much larger than the planets themselves. Keep
   -- native moon orbits, but suppress cosmetic rings around our six stars.
+  local signature={vulcanus=true,gleba=true,fulgora=true,
+    muria=true,cubium=true,tenebris=true}
   for _, kind in ipairs({"planet","space-location"}) do
     for _, location in pairs(data.raw[kind] or {}) do
       local orbit = location.orbit
       local parent = orbit and orbit.parent
       if parent and parent.type=="space-location" and stars[parent.name] then
-        location.draw_orbit=false
+        location.draw_orbit=(signature[location.name]==true)
       end
     end
   end
