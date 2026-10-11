@@ -35,12 +35,12 @@ local previous_order = ""
 for _, spec in ipairs(expected) do
   local name, order, color = spec[1], spec[2], spec[3]
   local setting = assert(definitions[name], "Missing setting: " .. name)
-  check(setting.type == "bool-setting", "Not a boolean: " .. name)
-  check(setting.setting_type == "startup", "Startup mode changed: " .. name)
-  check(setting.default_value == true, "Existing behavior no longer default: " .. name)
-  check(setting.order == order and order > previous_order,
+  check(rawget(setting, "type") == "bool-setting", "Not a boolean: " .. name)
+  check(rawget(setting, "setting_type") == "startup", "Startup mode changed: " .. name)
+  check(rawget(setting, "default_value") == true, "Existing behavior no longer default: " .. name)
+  check(rawget(setting, "order") == order and order > previous_order,
     "FluxWorks-style color section order is unstable: " .. name)
-  check(not setting.hidden and not setting.forced_value,
+  check(not rawget(setting, "hidden") and not rawget(setting, "forced_value"),
     "A displayed setting was accidentally hidden or forced")
   previous_order = order
 
