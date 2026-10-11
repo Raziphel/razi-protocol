@@ -23,6 +23,7 @@ require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
 require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
+require("prototypes.compat.eneas_gantry").data_final_fixes()
 
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
