@@ -45,7 +45,16 @@ chapters advancing upward to Deep Space and Bellicos.
   native graphics at full scale (1.0), original five-thousand-km crossing,
   research and native asteroid hazard tables; the entry/exit nodes are now
   just north of Calidus, close to the visual halo.
-- Signature planetary rings remain, but avoid huge rings around entire stars.
+- **Native rings for every planet around a Razi star** use the Factorio 2.1
+  origin-based renderer provided by PlanetsLib >= 2.0.9. The previous code
+  set `draw_orbit=false` for all except six handpicked planets, hiding most
+  of the orbits. That suppression has been removed.
+- Synthetic star icons, artificial slipstreams, and hazard/belt edge markers
+  do not draw meaningless extra rings. Secretas, an orbiting world represented
+  as a space-location, does receive a native orbit.
+- Never copy old PlanetsLib orbit sprites into `PlanetsLib:update` calls.
+  Preserve *source-owned* special sprites and moon orbits rather than globally
+  deleting other mods' artwork.
 - Deep Space is genuinely north of the circular constellation at (0,-248).
   Shattered Planet stays source-owned with its own local orbit.
 - Bellicos/Aegis branches northeast from Deep Space, independent of the

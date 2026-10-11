@@ -10,7 +10,7 @@
     "base >= 2.1.0",
     "space-age >= 2.1.0",
     "razi_lib >= 1.0.0",
-    "PlanetsLib >= 2.0.0",
+    "PlanetsLib >= 2.0.9",
     "AsteroidBelt >= 1.2.11",
     "bellicos-and-aegis >= 0.4.0",
     "Krastorio2-spaced-out >= 2.0.17",
