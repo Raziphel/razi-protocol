@@ -16,50 +16,47 @@ local function remove_stock_entry_routes()
 	deleteRoutesBetween("sye-calidus", entry_gate)
 end
 
+-- Keep the source pulsar's giant artwork and its local Aegis routes in
+-- a compact annex to the RIGHT of Deep Space, not 240 units BELOW it.
+-- Orientations use Factorio turns: east .25, west .75.
+local function position_expedition()
+	PlanetsLib:update({
+		{
+			type = "space-location", name = "pulsar",
+			orbit = {
+				parent = {type = "space-location", name = "solar-system-edge"},
+				distance = 165, orientation = 0.25
+			},
+			draw_orbit = false
+		},
+		{
+			type = "space-location", name = entry_gate,
+			distance = nil, orientation = nil,
+			orbit = {
+				parent = {type = "space-location", name = "solar-system-edge"},
+				distance = 36, orientation = 0.25
+			},
+			draw_orbit = false,
+			redrawn_connections_exclude = true
+		},
+		{
+			type = "space-location", name = bellicos_gate,
+			orbit = {
+				parent = {type = "space-location", name = "pulsar"},
+				distance = 62, orientation = 0.75
+			},
+			draw_orbit = false,
+			redrawn_connections_exclude = true
+		}
+	})
+end
+
 function bellicos.data()
 	if not mods["bellicos-and-aegis"] then
 		return
 	end
 
-	-- Bellicos is large enough to overwhelm the normal campaign systems. Anchor
-	-- the whole expedition beyond the solar-system edge on the otherwise unused
-	-- opposite bearing from the other deep-space branches. The entry gate and
-	-- pulsar share a radial line, while the Bellicos gate sits on the pulsar's
-	-- inward face so the inter-stargate route never crosses the star image.
-	PlanetsLib:update({
-		{
-			type = "space-location",
-			name = "pulsar",
-			orbit = {
-				parent = {type = "space-location", name = "solar-system-edge"},
-				distance = 240,
-				orientation = 0.5
-			}
-		},
-		{
-			type = "space-location",
-			name = entry_gate,
-			distance = nil,
-			orientation = nil,
-			orbit = {
-				parent = {type = "space-location", name = "solar-system-edge"},
-				distance = 30,
-				orientation = 0.5
-			},
-			redrawn_connections_exclude = true
-		},
-		{
-			type = "space-location",
-			name = bellicos_gate,
-			orbit = {
-				parent = {type = "space-location", name = "pulsar"},
-				distance = 58,
-				orientation = 0.0
-			},
-			redrawn_connections_exclude = true
-		}
-	})
-
+	position_expedition()
 	remove_stock_entry_routes()
 	deleteRoute(deep_space_entry_route)
 
@@ -83,6 +80,9 @@ function bellicos.data_final_fixes()
 	-- Other route compatibility passes can run after the source mod. Keep only
 	-- Razi Protocol's deep-space entrance while preserving every route inside Aegis.
 	remove_stock_entry_routes()
+	-- Source data-final-fixes may reparent its giant pulsar after data.lua.
+	-- Reaffirm only the three Razi-managed anchors at the final stage.
+	position_expedition()
 end
 
 return bellicos
