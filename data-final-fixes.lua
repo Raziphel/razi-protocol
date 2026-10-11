@@ -125,3 +125,6 @@ require("prototypes.compat.community_industry_exchanges").data_final_fixes()
 -- Space Age assigns connection defaults before this stage. Repair only routes
 -- still lacking icon data after every Razi and compatibility route exists.
 require("prototypes.system.route_icons").data_final_fixes()
+
+-- Final cosmetic-only starmap pass, after every connection and orbit has settled.
+require("prototypes.system.route_highlights").data_final_fixes()
