@@ -26,5 +26,13 @@ data:extend({
   startup_toggle("razi-hide-redundant-assembler-tiers",
     "ca[quality-of-life]-a[redundant-assemblers]"),
   startup_toggle("razi-enable-expedition-briefings",
-    "ca[quality-of-life]-b[expedition-briefings]")
+    "ca[quality-of-life]-b[expedition-briefings]"),
+  {
+    type="string-setting",
+    name="razi-route-highlight-style",
+    setting_type="startup",
+    default_value="subtle",
+    allowed_values={"off","subtle","clear"},
+    order="ca[quality-of-life]-c[route-highlights]"
+  }
 })
