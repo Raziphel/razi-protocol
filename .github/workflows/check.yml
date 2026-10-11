@@ -4,10 +4,19 @@ name: Check
 # .luacheckrc and .emmyrc.json: https://github.com/GreenTech-Solutions/factorio-mod-tools
 on:
   push:
-    branches:
-      - main
-      - Revamp
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - '**/*.md'
+  workflow_dispatch:
+
+concurrency:
+  group: razi-protocol-dev-check-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -16,18 +25,16 @@ jobs:
   check:
     name: check
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Check the mod
+        id: factorio_check
+        continue-on-error: true
         uses: GreenTech-Solutions/factorio-mod-tools@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
 
-  regression:
-    name: Regression fixtures
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # All regression fixtures share this runner with the Factorio tool check.
       - name: Install Lua 5.2
         run: sudo apt-get update -qq && sudo apt-get install -y lua5.2
       - name: Check colored and localized mod settings
@@ -80,3 +87,8 @@ jobs:
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
       - name: Audit Razi-owned graphics and required icon declarations
         run: python3 scripts/audit_assets.py
+      - name: Enforce Factorio mod-tools result
+        if: ${{ always() && steps.factorio_check.outcome == 'failure' }}
+        run: |
+          echo '::error::Factorio mod-tools checks failed.'
+          exit 1
