@@ -59,7 +59,7 @@ local route_specifications = {
 	-- Reach the belt from the END of each local midgame route, not from
 	-- the slipstream: those direct diagonals passed through both star sprites.
 	{"shchierbin", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
-	{"maraxsis", "asteroid-belt-inner-edge", 85000, "middle_crossing"},
+	{"maraxsis", "asteroid-belt-inner-edge", 90000, "middle_crossing"},
 	{"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
 	{"asteroid-belt-outer-edge", "sye-umbra", 70000, "outer_crossing"},
 	-- The two outer systems already connect through the shared source belt

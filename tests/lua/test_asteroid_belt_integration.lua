@@ -62,12 +62,10 @@ check(inner.orbit.parent.name=="shchierbin" and
   inner.orbit.parent.type=="planet" and
   outer.orbit.parent.type=="planet",
   "Native belt waypoints should follow the midgame Shchierbin planet")
-check(math.abs(inner.orbit.distance-16.124515)<.000001 and
-  math.abs(outer.orbit.distance-16.124515)<.000001,
-  "Gateway markers must straddle the Shchierbin-centered ring")
-check(inner.orbit.orientation>.8 and inner.orbit.orientation<.9 and
-  outer.orbit.orientation>.1 and outer.orbit.orientation<.2,
-  "Northern Asteroid Belt waypoint bearings were inverted")
+check(inner.orbit.distance==14 and outer.orbit.distance==20,
+  "Source belt edge markers should sit radially inside and outside the debris")
+check(inner.orbit.orientation==0 and outer.orbit.orientation==0,
+  "Both belt markers should point north of Shchierbin")
 check(inner.draw_orbit==false and outer.draw_orbit==false,
   "Belt waypoints must not create giant new orbital lines")
 check(#layers==3 and layers[2].filename==ring and

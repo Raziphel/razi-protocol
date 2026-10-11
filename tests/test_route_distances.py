@@ -113,7 +113,7 @@ class RouteTests(unittest.TestCase):
         self.assertLess(coords["sye-umbra"][1], -60)
         self.assertAlmostEqual(
             __import__("math").dist(coords["asteroid-belt-inner-edge"],
-                                    coords["shchierbin"]), 16.124515,
+                                    coords["shchierbin"]), 14,
             places=3)
         self.assertGreater(coords["asteroid-belt-inner-edge"][0], 100)
         self.assertLess(coords["solar-system-edge"][1], -230)
