@@ -37,6 +37,16 @@ Razi Protocol's startup settings are organized into three color-coded groups ins
 
 The optional K2SO and modded-planet production exchanges can be controlled independently. Their normal defaults leave the existing Razi experience unchanged, and disabling them never removes the native recipes supplied by planet mods.
 
+## Faster Loading for Large Modpacks
+
+Razi Protocol depends on many planet mods. For players with long startup times,
+Factorio already offers optional **prototype-data** and **sprite-atlas**
+disk caches. These must be enabled **on each player's computer**, rather than
+through Razi's mod settings. The first startup builds the caches; subsequent
+unchanged launches may be much faster. See our
+[Faster Startup & Troubleshooting Guide](docs/STARTUP_PERFORMANCE.md) for
+setup steps, trade-offs, and how to identify the slow phase from Factorio logs.
+
 ## Campaign Structure
 
 Seven solar systems are arranged as three outward pairs after the Calidus home system. Unlock both systems in a pair, choose which planet chains to tackle first, then master **both** to move to the next frontier.

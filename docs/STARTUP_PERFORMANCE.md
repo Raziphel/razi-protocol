@@ -1,0 +1,111 @@
+# Faster startup for Razi Protocol and large Factorio 2.1 modpacks
+
+This is a **client-side performance guide** for players, not a new gameplay
+setting. Razi cannot toggle the host Factorio installation's graphics or
+prototype caches from `settings.lua`, `control.lua`, or the mod's data stage.
+
+## First: enable Factorio's two built-in disk caches
+
+1. Open Factorio's main menu.
+2. Hold **Ctrl + Alt** while clicking **Settings**.
+3. Open **The rest** and search for `cache`.
+4. Enable `cache-prototype-data` under **Other**.
+5. Enable `cache-sprite-atlas` under **Graphics**.
+6. Apply, start the game once to build the caches, exit, then restart with
+   **the same modpack and startup settings** to assess the benefit.
+
+The official Factorio wiki confirms both options and warns they are advanced
+settings. The cache will use more disk space, and its **first** rebuild can
+take longer than normal. Game updates, mod updates, changed mod lists, startup
+options or changed assets can invalidate a cache, requiring another full load.
+
+- Prototype cache: reduces repeated **Building prototypes** work.
+- Sprite cache: reduces repeated **Loading sprites** processing.
+- Neither removes the initial mod download, first full load, save load,
+  multiplayer connection, or local need for installed mod files.
+
+Sources:
+- https://wiki.factorio.com/Settings
+- https://factorio.com/blog/post/fff-326
+
+### Optional config file alternative
+
+If the hidden menu is unavailable, close Factorio and edit its local
+`config/config.ini`. On the usual Windows installation this lives under
+`%APPDATA%\\Factorio\\config\\config.ini`. For Linux, macOS and portable
+installs use the [Factorio application directories guide](https://wiki.factorio.com/User_data_directory).
+**Back up config.ini before editing it.**
+
+Within their existing sections (do not create duplicate sections or duplicate
+keys), set:
+
+```ini
+[other]
+cache-prototype-data=true
+
+[graphics]
+cache-sprite-atlas=true
+```
+
+These section snippets are examples, not replacements for the rest of the file.
+The built-in UI is preferred because it knows where the installed version
+stores its settings.
+
+## Diagnose which stage is slow before cutting content
+
+Find `factorio-current.log` in Factorio's user-data directory; the previous
+run is saved as `factorio-previous.log`. Timestamps at the beginning of
+lines can help determine where startup time was spent. Compare one start with
+caches disabled, the first start after enabling them, and a repeat start
+**without changing any mods**.
+
+| Slow phase | Best first action |
+| --- | --- |
+| Loading mod settings, data stages, Building prototypes | Prototype cache; keep a stable mod set; collect log timings for deeper analysis |
+| Loading sprites / atlas processing | Sprite cache; ensure adequate disk space and GPU memory; review graphics settings |
+| Downloading/synchronising mods to join multiplayer | Use the server's exact mod versions and startup settings before joining; caches do not skip network downloads |
+| Loading the saved map after reaching the menu | Treat separately from mod startup; profile save size/map load, not prototype caching |
+
+Log locations and format: https://wiki.factorio.com/Log_File
+
+If the first two cached startups are still very slow, attach the full
+`factorio-current.log` and note the Factorio version, operating system,
+CPU, RAM, graphics card and number of enabled mods. A single screenshot of
+the loading bar is not enough to isolate the bottleneck.
+
+## Razi-specific findings and recommendations
+
+- Razi's `info.json` has a large **required** planet ecosystem. Disabling a
+  required mod is not a safe speed tweak and will break campaign compatibility.
+  Optional or hidden-optional integrations do **not** force installation merely
+  because they are listed in `info.json`.
+- For a server/community pack, maintain a tested **stable release set** rather
+  than distributing every experimental update. Caches are most useful across
+  repeated launches with no changes. Do not claim players have the latest
+  prototypes if their cache was built against different files.
+- The custom starmap includes around **8 MB of source PNGs** in the
+  `graphics/starmap/razi` directory. This is small compared with the many
+  third-party planet mods but adds graphic assets while enabled.
+  Players who need a lightweight visual preset can change
+  `razi-starmap-background-style` to **Off** and optionally disable
+  fine details or route highlights. This requires a restart and trades
+  appearance for fewer referenced visual layers. Do **not** promise a
+  measurable speedup without timing the full installed pack.
+- Razi's data-stage compatibility and progression passes inspect prototypes,
+  but there are no measured per-module load timings yet. Replacing them
+  with a homemade cross-restart cache is **not** recommended: other mods'
+  final prototype edits and the campaign's deterministic progression must
+  remain accurate.
+- Do not indiscriminately recommend `disable-prototype-history` or obscure
+  debug/performance switches. They can remove useful diagnostics or alter
+  behaviour and need game-version-specific validation.
+- Mods cannot secretly precompile or redistribute another mod's enabled
+  prototype cache to clients. Use Factorio's built-in cache instead.
+
+## Honest verification status
+
+No full Factorio 2.1 game binary, full modpack, or representative player
+startup logs were available for this repo audit. The caching mechanisms
+are confirmed by Factorio's own documentation. **Any claimed seconds saved
+for Razi Protocol itself must come from before/after timings on the exact
+tested system.** Do not confuse a cold first launch with a cached repeat launch.
