@@ -86,6 +86,10 @@ local function anchor_position(name)
   return px+x,py+y
 end
 
+-- Shared absolute starmap coordinates for third-party visual layers.
+-- This is data-only and valid even after PlanetsLib deletes sprite-only stars.
+M.anchor_position=anchor_position
+
 local function source_orbit(item)
   local existing=exists(item[1],item[2])
   local old=existing and existing.orbit

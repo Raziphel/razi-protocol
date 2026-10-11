@@ -20,7 +20,7 @@ def parse_layout():
     for name, distance, orientation in re.findall(
             r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
             belt_source):
-        result[name] = ("star", float(distance), float(orientation))
+        result[name] = ("shchierbin", float(distance), float(orientation))
     return result
 
 
@@ -188,8 +188,27 @@ class ConstellationTests(unittest.TestCase):
                     queue.append(n)
         self.assertTrue({"sye-beetlejuice", "sye-umbra",
                          "solar-system-edge"}.issubset(reachable))
-        self.assertLess(math.dist(self.coords[native[0]], (0, -26)), 1)
-        self.assertLess(math.dist(self.coords[native[1]], (0, -34)), 1)
+        self.assertAlmostEqual(
+            math.dist(self.coords[native[0]], self.coords["shchierbin"]),
+            16.124515, places=3)
+        self.assertAlmostEqual(
+            math.dist(self.coords[native[1]], self.coords["shchierbin"]),
+            16.124515, places=3)
+        self.assertGreater(
+            math.dist(self.coords[native[0]], (0, 0)), 100,
+            "Native asteroid gateways must not sit in the Nauvis system")
+
+    def test_shchierbin_belt_clearance(self):
+        # At scale 0.55 the source sprite occupies roughly 16-17 map
+        # units around Shchierbin; the nearest other planet stays outside.
+        host = self.coords["shchierbin"]
+        for name, (parent, _, _) in self.anchors.items():
+            if name in {"shchierbin", "asteroid-belt-inner-edge",
+                        "asteroid-belt-outer-edge"}:
+                continue
+            self.assertGreater(
+                math.dist(self.coords[name], host), 22,
+                f"Shchierbin's asteroid ring overlaps {name}")
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()

@@ -52,14 +52,16 @@ local route_specifications = {
 	-- Cross-tier diagonals were removed to avoid the old starmap mesh.
 	-- The central crosslink was visually cutting straight through the shared
 	-- belt gateway. Both branches reconnect through the mandatory native belt.
-	-- The central source-mod belt is a required, shared third-chapter
-	-- crossing. Native inner->outer stays source-owned with its real asteroids.
+	-- Required Shchierbin-centered asteroid ring is a shared third-chapter
+	-- crossing. Both branches still enter the SAME native 5,000 km hazard route.
+	-- Vespera's approach crosses farther around the circle, so its flight
+	-- distance is longer. The actual native belt danger is unchanged.
 	-- Reach the belt from the END of each local midgame route, not from
 	-- the slipstream: those direct diagonals passed through both star sprites.
 	{"shchierbin", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
-	{"maraxsis", "asteroid-belt-inner-edge", 48000, "middle_crossing"},
+	{"maraxsis", "asteroid-belt-inner-edge", 85000, "middle_crossing"},
 	{"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
-	{"asteroid-belt-outer-edge", "sye-umbra", 63000, "outer_crossing"},
+	{"asteroid-belt-outer-edge", "sye-umbra", 70000, "outer_crossing"},
 	-- The two outer systems already connect through the shared source belt
 	-- outer edge. Their direct rung would run across that marker itself.
 	-- Solaris's twin opening branches.

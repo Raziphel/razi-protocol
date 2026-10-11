@@ -52,6 +52,9 @@ end})
 
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
+local shchierbin_x,shchierbin_y=layout.anchor_position("shchierbin")
+check(shchierbin_x>130 and shchierbin_y<0,
+  "Asteroid Belt host is no longer the Vibrant outer planet")
 layout.data_updates()
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.

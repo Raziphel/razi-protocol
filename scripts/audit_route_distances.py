@@ -51,9 +51,9 @@ MIN_LENGTHS = {
     key("sye-solaris", "sye-vibrant"): 65000,
     key("sye-nyxaris", "sye-vespera"): 65000,
     key("shchierbin", "asteroid-belt-inner-edge"): 32000,
-    key("maraxsis", "asteroid-belt-inner-edge"): 32000,
+    key("maraxsis", "asteroid-belt-inner-edge"): 82000,
     key("asteroid-belt-outer-edge", "sye-beetlejuice"): 42000,
-    key("asteroid-belt-outer-edge", "sye-umbra"): 42000,
+    key("asteroid-belt-outer-edge", "sye-umbra"): 68000,
 }
 
 def positions(raw):
@@ -132,8 +132,8 @@ def audit(raw):
                   for a, b in section if key(a, b) in links]
         if values and all(isinstance(n, (int, float)) for n in values):
             stages.append(min(values))
-    # Midgame asteroid approaches are intentionally shorter in kilometres
-    # than the earlier interstellar jumps, but tougher due to source hazards.
+    # The distant Vespera approach takes longer than Vibrant's local
+    # Shchierbin approach, but both lead through the same hard source belt.
     if len(stages) == len(STAR_STAGES):
         if stages[1] < stages[0]:
             issues.add("Middle chapter crossings are cheaper than first chapter")
