@@ -34,5 +34,7 @@ data:extend({
     default_value="subtle",
     allowed_values={"off","subtle","clear"},
     order="ca[quality-of-life]-c[route-highlights]"
-  }
+  },
+  startup_toggle("razi-route-intelligence",
+    "ca[quality-of-life]-d[route-intelligence]")
 })

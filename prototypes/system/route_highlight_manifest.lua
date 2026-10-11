@@ -48,4 +48,12 @@ return {
    filename="__razi-protocol__/graphics/route-highlights/guide-12.png",size={104,103},
    shift={-2382.48906,-3502.25803},
    start={-78.66683,-105.26691},finish={-70.23874,-113.62421}},
+  {from="secretas",to="solar-system-edge",kind="outer",
+   filename="__razi-protocol__/graphics/route-highlights/guide-13.png",size={549,531},
+   shift={1025.27264,-5091.18646},
+   start={64.07954,-128.19915},finish={0.00000,-190.00000}},
+  {from="vesta",to="solar-system-edge",kind="outer",
+   filename="__razi-protocol__/graphics/route-highlights/guide-14.png",size={446,599},
+   shift={-819.13416,-4954.50749},
+   start={-51.19588,-119.65672},finish={0.00000,-190.00000}},
 }
