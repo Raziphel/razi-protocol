@@ -104,14 +104,17 @@ class RouteTests(unittest.TestCase):
     def test_geometric_angle_sign_and_parent_position(self):
         raw = world()
         coords = routes_audit.positions(raw)
-        self.assertLess(coords["sye-solaris"][0], 0)
-        self.assertGreater(coords["sye-nyxaris"][0], 0)
-        self.assertLess(coords["sye-solaris"][1], coords["sye-vibrant"][1])
-        self.assertLess(coords["sye-vibrant"][1],
-                        coords["sye-beetlejuice"][1])
-        self.assertAlmostEqual(coords["asteroid-belt-inner-edge"][0], 0, places=3)
-        self.assertGreater(coords["solar-system-edge"][1],
-                           coords["sye-beetlejuice"][1])
+        # Calidus is central; native belt edges sit on the western solar rim.
+        self.assertGreater(coords["sye-solaris"][0], 100)
+        self.assertLess(coords["sye-solaris"][1], 0)
+        self.assertGreater(coords["sye-nyxaris"][0], 100)
+        self.assertGreater(coords["sye-nyxaris"][1], 0)
+        self.assertGreater(coords["sye-vibrant"][1], 140)
+        self.assertLess(coords["sye-beetlejuice"][0], -120)
+        self.assertLess(coords["asteroid-belt-inner-edge"][0], -90)
+        self.assertGreater(coords["asteroid-belt-inner-edge"][1], 70)
+        self.assertLess(coords["solar-system-edge"][0],
+                        coords["sye-beetlejuice"][0])
 
 if __name__ == "__main__":
     unittest.main()
