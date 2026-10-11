@@ -21,6 +21,8 @@ verification** after the first cleanup pass. It is not a release changelog.
 - [ ] Confirm every expected planet has actual unlock-space-location coverage
 - [ ] Confirm the seven-system map has no disconnected or unintentional routes
 - [ ] Confirm each science card's ingredients can be produced before first use
+- [x] Add a pre-/post-arrival nested recipe-chain audit for Aquilo, Linox, Crucible and Vesta
+- [ ] Review the full-modpack output of scripts/audit_supply_chains.py and fix proven blockers
 - [ ] Verify native Apia/Carnova and Aegis/Bellicos connections in the live game
 - [ ] Test a fresh save and a **backed-up** existing campaign migration
 

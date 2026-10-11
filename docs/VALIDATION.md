@@ -107,3 +107,48 @@ research keeps these exclusive science requirements. The guard runs only
 with the relevant world and K2SO enabled, and avoids an empty tech-cost
 prototype by using an already-valid early science fallback when available.
 A live full-modpack prototype dump must still verify all native revisions.
+
+## Aquilo, Linox, Crucible and Vesta supply-chain report
+
+A separate nested producer-chain report now examines the installed
+post-load modpack for the four most sensitive worlds and the Outer Frontier:
+
+    python3 scripts/audit_supply_chains.py /path/to/script-output/data-raw-dump.json
+    python3 scripts/audit_supply_chains.py /path/to/script-output/data-raw-dump.json --json
+
+The report checks **before** each discovery whether its research science has
+a recipe path whose producer recipes are unlocked by prior technologies, and
+**after** arrival whether important native/K2SO products have a traceable
+recipe ingredient chain. It resolves multiple producer recipes, mined inputs,
+technology-unlock effects, recipe surface conditions and machine categories.
+The JSON includes the chosen recipe, its nested dependencies and blockers,
+so a precise compatibility rule can be written instead of globally changing
+a planet's resources.
+
+Interpreting status:
+
+- `traceable`: an apparent recipe path exists, not a gameplay guarantee
+- `natural-source-unverified`: some mineable prototype produces the material,
+  but **its presence on the current world has not been established**
+- `blocked`: no path within the research and machine snapshot under the
+  stated assumptions; review the nested unlock/surface/machine reason
+- `unresolved`/`unverified`/`depth-limit`: insufficient proof, not a hard error
+
+The report is intentionally advisory and does not make a green GitHub
+Actions fixture run stand in for a real Factorio game load. Source mods can
+grant material through starting inventory, script events, asteroid routing,
+spoiling or remote supply. In particular, researching an independent branch
+outside a tech's formal prerequisites is possible, so a recipe listed as
+locked in its strict ancestor snapshot is **not necessarily** impossible.
+A real data dump and targeted in-game playtest determine which alerts need
+patches.
+
+### Specific source interaction
+
+Crucible's upstream author documents that its mod changes some Aquilo-era
+technologies and supports K2SO natively. Razi places Crucible after Aquilo,
+so `outer_science_arrival_guard.lua` ensures Crucible science cannot appear
+in research needed to reach Aquilo, Umbra or Crucible. Vesta's gas science is
+treated similarly. Only late-world-exclusive science is removed from those
+pre-arrival milestones; native science needed after arrival remains in place.
+See `tests/lua/test_outer_science_arrival_guard.lua`.

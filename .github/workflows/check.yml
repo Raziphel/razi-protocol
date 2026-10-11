@@ -58,5 +58,7 @@ jobs:
         run: lua5.2 tests/lua/test_linox_science_guard.lua
       - name: Guard late Crucible and Vesta science bootstrap
         run: lua5.2 tests/lua/test_outer_science_arrival_guard.lua
+      - name: Test Aquilo Linox Crucible Vesta supply chain tracing
+        run: python3 -m unittest tests/test_supply_chains.py -v
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
