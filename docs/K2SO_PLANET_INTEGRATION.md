@@ -241,3 +241,53 @@ For example, a foundry lacking the dirty-water output cannot run the
 bio-metal casting exchange, and a cryogenic machine without a coolant
 inlet cannot run the Aquilo recipe. When no appropriate machine exists,
 the exchange is skipped and native production remains untouched.
+
+## Outer world production exchanges: deliberate imports, never dependencies
+
+Four more *alternate* processing technologies now use confirmed native recipe
+identities from the source mods, adding value to previously explored worlds
+without forcing any of them into a destination planet's initial bootstrap.
+
+| Native industrial world | Original recipe and output | Imported earlier-world materials | Optional yield benefit |
+| --- | --- | --- | --- |
+| Tenebris | `biopolymer`, 1 chitin -> 4 plastic | 1 Gleba bioflux per two base batches | 10 plastic instead of 8 (25%) |
+| Linox | `linox-recipe_rare-earth-refining`, 100 stone + 200 sulfuric acid -> 2 rare-earth powder | 2 K2SO rare metals from prior metal industry + 1 Fulgora holmium plate per two base batches | 5 powder instead of 4 (25%) |
+| Cubium and Secretas | `gold-plate`, 4 gold ore -> 1 gold plate | 1 K2SO rare metal + 1 Fulgora holmium plate per four base batches | 5 plates instead of 4 (25%) |
+| Vesta | `vesta-foundation`, local nitrogen, iron, ceramic and carbon -> 10 foundations | 2 K2SO rare metals, 2 Fulgora holmium and 2 Tenebris bioluminescent crystals | 15 foundations instead of 10 (50%) |
+
+**Why these links are fair:** All original recipes remain present and
+untouched. The alternate recipes require their **native recipe's existing
+unlock**, the discoveries of the imported materials' homeworlds, and an
+existing late-enough science combination (Vibrant + Vespera cards). They
+cost additional cargo and energy rather than simply returning free output.
+They do not become requirements for a system tech card, mandatory landing,
+or research gate. No new optional mod is required by `info.json`.
+
+Production respects the source-mod specialties: Tenebris biopolymer stays
+restricted to its original pressure environment; Linox rare-earth refining
+keeps its native surface requirement, sulphuric acid and stone; Cubium's
+foundries process gold *shipped from Secretas* rather than implying a
+factory can be placed on Secretas's space-location prototype; and Vesta
+still needs its native atmospheric gas supply and ceramic infrastructure.
+In all cases a compatible actual-world machine must have enough usable
+fluid input/output boxes for the finished recipe.
+
+The expanded integration is guarded by the exact installed source-mod IDs,
+existing recipes, items, research unlocks, lab inputs, machine capabilities
+and known planet properties. If a future version changes any of these
+identities or makes a required machine incompatible, the extra recipe is
+skipped rather than breaking the original recipe. The Crucible metallic
+hydrogen and probabilistic crafting chains are deliberately not altered:
+its original developer integrates K2SO and designs those chains around
+spoiling and rigor mechanics which should not be bypassed.
+
+Upstream recipes inspected in the source repositories:
+
+- Linox: `xeon0527/factorio_mod_planet_linox/prototypes/recipe/rare-earth-refining.lua`
+- Tenebris Prime: `nicholasgower/tenebris-prime/prototypes/recipe.lua`
+- Secretas: `ZacharyDK/Secretas/secretas/prototypes/recipe.lua`
+- Vesta: `invisiblek/skewer_planet_vesta/prototypes/recipes.lua`
+
+The recipe source patterns and their feature flags are verified in the
+isolated Lua fixture `tests/lua/test_outer_production_exchanges.lua`, not
+in a full post-load dump; real engine/playtest verification is still needed.

@@ -124,11 +124,28 @@
       "id": "k2so-cross-planet-industrial-exchanges",
       "module": "prototypes/compat/planet_production_exchanges.lua",
       "upstream_mods": [
-        "Krastorio2-spaced-out"
+        "Krastorio2-spaced-out",
+        "tenebris-prime",
+        "linox",
+        "secretas",
+        "skewer_planet_vesta"
       ],
-      "purpose": "Three nonmandatory K2SO-native alternative production recipes linking Vulcanus/Gleba, Gleba/Fulgora, and Gleba/Fulgora/Aquilo with original unlock and surface guards.",
+      "purpose": "Seven nonmandatory cross-planet production variants preserving K2SO and native Tenebris, Linox, Secretas and Vesta recipes, original unlocks, source planet conditions and machinery constraints.",
       "upstream_status": "local-only",
       "fixture": "tests/lua/test_planet_production_exchanges.lua"
+    },
+    {
+      "id": "outer-world-production-exchange-guards",
+      "module": "prototypes/compat/planet_production_exchanges.lua",
+      "upstream_mods": [
+        "linox",
+        "tenebris-prime",
+        "secretas",
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Guard four outer-world K2SO-enabled optional industrial exchanges against missing origin planets, incompatible source recipes, native research and surface conditions.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_outer_production_exchanges.lua"
     }
   ]
 }

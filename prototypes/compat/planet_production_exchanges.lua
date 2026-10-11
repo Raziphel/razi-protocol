@@ -53,6 +53,77 @@ local exchanges = {
     batch = 1, bonus = 1, count = 900, time = 60,
     bonus_icon = "supercapacitor",
     not_after = {"beetlejuice-discovery", "umbra-discovery"}
+  },
+  -- Tenebris remains an independent chitin economy. Shipping stable Gleba
+  -- bioflux only boosts its plastic output, never replaces its local chitin.
+  {
+    name = "razi-gleba-tenebris-biopolymer",
+    source_mod = "tenebris-prime",
+    source = "biopolymer",
+    product = "plastic-bar",
+    planets = {"planet-discovery-tenebris", "planet-discovery-gleba"},
+    science = {"vibrant-tech-card", "vespera-tech-card"},
+    category = "organic", working_world = "tenebris",
+    additional = {{type="item", name="bioflux", amount=1}},
+    batch = 2, bonus = 2, count = 950, time = 45,
+    bonus_icon = "bioflux"
+  },
+  -- Linox's rare-earth metallurgy gets a meaningful late-game importer
+  -- option using Fulgoran holmium and K2SO rare metals from prior industry.
+  {
+    name = "razi-linox-rare-earth-exchange",
+    source_mod = "linox",
+    source = "linox-recipe_rare-earth-refining",
+    product = "rare-earth-powder",
+    planets = {"linox-technology_planet-discovery-linox",
+      "planet-discovery-vulcanus", "planet-discovery-fulgora"},
+    science = {"vibrant-tech-card", "vespera-tech-card"},
+    category = "chemistry", working_world = "linox-planet_linox",
+    additional = {
+      {type="item", name="kr-rare-metals", amount=2},
+      {type="item", name="holmium-plate", amount=1}
+    },
+    batch = 2, bonus = 1, count = 1150, time = 60,
+    bonus_icon = "holmium-plate"
+  },
+  -- Cubium provides an industrial home for gold arriving from Secretas.
+  -- Preserve native gold smelting, let ore travel instead of requiring a
+  -- nonexistent factory on Secretas's space-location prototype.
+  {
+    name = "razi-cubium-precious-metal-alloying",
+    source_mod = "secretas",
+    source = "gold-plate",
+    product = "gold-plate",
+    planets = {"planet-discovery-secretas", "planet-discovery-cubium",
+      "planet-discovery-vulcanus", "planet-discovery-fulgora"},
+    science = {"vibrant-tech-card", "vespera-tech-card"},
+    category = "metallurgy", working_world = "cubium",
+    additional = {
+      {type="item", name="kr-rare-metals", amount=1},
+      {type="item", name="holmium-plate", amount=1}
+    },
+    batch = 4, bonus = 1, count = 1100, time = 55,
+    bonus_icon = "kr-rare-metals"
+  },
+  -- Building out Vesta stays possible with its own native foundation.
+  -- A late premium version uses established mineral, electronics and
+  -- bioluminescent supply lines without requiring a volatile gas export.
+  {
+    name = "razi-vesta-frontier-foundations",
+    source_mod = "skewer_planet_vesta",
+    source = "vesta-foundation",
+    product = "vesta-foundation",
+    planets = {"planet-discovery-vesta", "planet-discovery-tenebris",
+      "planet-discovery-vulcanus", "planet-discovery-fulgora"},
+    science = {"vibrant-tech-card", "vespera-tech-card"},
+    category = "metallurgy", working_world = "vesta",
+    additional = {
+      {type="item", name="kr-rare-metals", amount=2},
+      {type="item", name="holmium-plate", amount=2},
+      {type="item", name="bioluminescent-crystal", amount=2}
+    },
+    batch = 1, bonus = 5, count = 1450, time = 60,
+    bonus_icon = "bioluminescent-crystal"
   }
 }
 
@@ -249,10 +320,14 @@ local function safe_template(base, output)
 end
 
 local function register_exchange(rule)
+  if rule.source_mod and not mods[rule.source_mod] then return end
   local base = raw("recipe", rule.source)
   local world = raw("planet", rule.surface_world or rule.working_world)
   if not safe_template(base, rule.product)
     or not raw("item", rule.product)
+    -- A recipe built for a native world must still be legal there, even
+    -- if a compatible machine exists for its category.
+    or not matches_surface(base, world)
     or not machine_can_craft(rule.category, base, rule.additional, world)
     or raw("recipe", rule.name) or technologies()[rule.name] then return end
   for _, arrival in ipairs(rule.planets) do
