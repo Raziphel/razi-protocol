@@ -228,13 +228,13 @@ for _,rule in ipairs(rules) do
       supplier="unlock-linox-recipe_rare-earth-refining"
     end
     local needs=false
-    for _,name in ipairs(technology.prerequisites) do
+    for _,name in ipairs(rawget(technology,"prerequisites") or {}) do
       if name==supplier then needs=true end
     end
     check(needs,"Supplier native technology was skipped: "..rule.name)
   end
   local native_unlocked=false
-  for _,name in ipairs(technology.prerequisites) do
+  for _,name in ipairs(rawget(technology,"prerequisites") or {}) do
     if name=="unlock-"..rule.native then native_unlocked=true end
   end
   check(native_unlocked,"Native source research was bypassed: "..rule.name)
