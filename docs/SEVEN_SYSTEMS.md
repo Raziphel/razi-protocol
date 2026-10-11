@@ -31,22 +31,34 @@ planet mods have finished positioning their worlds. This
 prevents earlier per-planet updates from pulling stars back out of alignment.
 The route table itself lives in `prototypes/system/route_reconcile.lua`.
 
-Calidus is the left-hand anchor. Solaris/Nyxaris, Vibrant/Vespera, and
-Beetlejuice/Umbra occupy three evenly spaced compact radial tiers. Deep Space
-sits beyond the final column. Larger star-to-star orbit circles are hidden to
-keep the starmap clean, while local planetary rings remain visible.
+Calidus sits at the center of a compact six-star hexagon (radius 104).
+Solaris/Nyxaris are the first frontiers to the south, Vibrant/Vespera
+form the middle pair, and Beetlejuice/Umbra lie to the north. Deep Space
+and the Bellicos/Aegis expedition sit beyond the constellation to the north.
+Star artwork and local planet orbits remain untouched. The Calidus departure
+hub sits 20 map units south of the home sun, instead of 25.
 
-Razi-owned interstellar connections:
+The eight main connections are deliberately *two staged branches* with
+only two lateral connectors, not a six-spoke radial hub and perimeter ring:
 
-    Calidus <-> Solaris       Calidus <-> Nyxaris
-    Solaris <-> Nyxaris       Solaris <-> Vibrant
-    Nyxaris <-> Vespera       Vibrant <-> Vespera
-    Vibrant <-> Beetlejuice   Vespera <-> Umbra
-    Beetlejuice <-> Umbra
+```text
+                      Deep Space / Bellicos
+                         ↑         ↑
+                    Beetlejuice ⇄ Umbra
+                         ↑         ↑
+                      Vibrant   Vespera
+                         ↑         ↑
+                      Solaris ⇄ Nyxaris
+                          \       /
+                           Calidus
+                            Nauvis
+```
 
-    Additional diagonals (available only after both endpoints unlock):
-    Solaris <-> Vespera       Nyxaris <-> Vibrant
-    Vibrant <-> Umbra         Vespera <-> Beetlejuice
+Travel is balanced by chapter: first-tier crossings 60–65k km,
+middle bridges 90–100k km, outer bridges 120–135k km,
+first-frontier lateral 82k km, outer lateral 150k km.
+The native Vibrant-sun AsteroidBelt remains a 5,000 km source-owned
+hazard that feeds the Beetlejuice region from Shchierbin.
 
 Local branches remain connected inside their own systems, including:
 
@@ -58,12 +70,13 @@ Local branches remain connected inside their own systems, including:
     Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)
     Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos
 
-Cross-system connections render as clean straight lines, without the
-large solar-centered arcs that previously tangled the map. The diagonal
-links are **not separate research shortcuts**: both endpoint slipstreams
-must be researched before they can be used. Vibrant/Vespera require both
-first-frontier chapters; Beetlejuice/Umbra require both middle-frontier
-chapters. The Solar System Edge remains gated by Outer Frontier Mastery.
+The only extra cross-system connections are Solaris ↔ Nyxaris and
+Beetlejuice ↔ Umbra. Destination hubs still require the corresponding
+discovery technologies, so a route drawn on the starmap does not grant
+an early unlock. Vibrant/Vespera require both first-frontier chapters;
+Beetlejuice/Umbra additionally require both middle chapters and
+Asteroid Belt discovery. Keep the Deep Space finale behind its existing
+Outer Frontier Mastery prerequisites.
 
 Both Solaris and Nyxaris discovery technologies unlock the shared Calidus
 departure slipstream. Either branch can therefore be chosen first.

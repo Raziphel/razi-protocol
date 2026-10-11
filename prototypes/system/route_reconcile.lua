@@ -1,5 +1,7 @@
--- The last word on Razi-owned routes. This must run after source mod fixes.
+-- The last word on Razi-owned routes. Run after all source mod fixes.
 -- Preserve native intra-system routes (especially Apia, Crucible and Bellicos).
+-- Interstellar graph: Calidus opens two branches, each advances through
+-- midgame and outer systems, with only one first and one outer crosslink.
 local route_reconcile = {}
 local hazard_profiles = require("prototypes.system.asteroid_profiles")
 local route_icons = require("prototypes.system.route_icons")
@@ -39,24 +41,26 @@ local membership = {
 }
 
 local route_specifications = {
-  -- Research unlocks each destination hub. A visible spoke is not early access.
+  -- Two carefully staged expedition branches; do not redraw a web of
+  -- redundant Calidus spokes. The fixed hexagonal star art stays unchanged.
+  -- Research unlocks each destination hub independently of the visual path.
   {"nauvis", "sye-calidus", 25000, "starter"},
   {"sye-calidus", "sye-solaris", 60000, "first_crossing"},
   {"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
-  {"sye-calidus", "sye-vibrant", 110000, "middle_crossing"},
-  {"sye-calidus", "sye-vespera", 110000, "middle_crossing"},
-  {"sye-calidus", "sye-beetlejuice", 175000, "outer_crossing"},
-  {"sye-calidus", "sye-umbra", 175000, "outer_crossing"},
-  -- Nearest-neighbor arcs on the ring, no far-side diagonals.
-  -- Later destinations still require their existing system discoveries.
-  {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
+  -- After the two first-frontier discoveries, each strand continues
+  -- outward to its own middle system rather than through Calidus.
   {"sye-solaris", "sye-vibrant", 100000, "middle_crosslink"},
   {"sye-nyxaris", "sye-vespera", 90000, "middle_crosslink"},
+  -- Outer systems remain locked behind their original science requirements,
+  -- especially space-discovery-asteroid-belt.
   {"sye-vibrant", "sye-beetlejuice", 135000, "outer_crosslink"},
   {"sye-vespera", "sye-umbra", 120000, "outer_crosslink"},
+  -- Only two meaningful lateral connections: a first-tier cargo bridge
+  -- and a late-game crosslink. They avoid diagonals through Calidus.
+  {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
-  -- Source-owned 5000 km belt crossing on Vibrant's sun. No map-spanning
-  -- routes from Maraxsis or from the outer edge to distant Umbra.
+  -- The 5,000 km source-owned AsteroidBelt is a mandatory science step.
+  -- Keep its source asteroids, route names and original loot untouched.
   {"shchierbin", "asteroid-belt-inner-edge", 48000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
 	-- Solaris's twin opening branches.

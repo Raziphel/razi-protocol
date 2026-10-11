@@ -13,35 +13,31 @@ import math
 from collections import defaultdict
 from pathlib import Path
 
-HOMEWARD_SPOKES = (
+STARTER_BRANCHES = (
     ("sye-calidus", "sye-solaris"),
     ("sye-calidus", "sye-nyxaris"),
-    ("sye-calidus", "sye-vibrant"),
-    ("sye-calidus", "sye-vespera"),
-    ("sye-calidus", "sye-beetlejuice"),
-    ("sye-calidus", "sye-umbra"),
 )
-STAR_STAGES = (
-    HOMEWARD_SPOKES[:2],
-    HOMEWARD_SPOKES[2:4],
-    HOMEWARD_SPOKES[4:],
-)
-NEIGHBOR_LINKS = (
-    ("sye-solaris", "sye-nyxaris"),
+MIDDLE_BRANCHES = (
     ("sye-solaris", "sye-vibrant"),
     ("sye-nyxaris", "sye-vespera"),
+)
+OUTER_BRANCHES = (
     ("sye-vibrant", "sye-beetlejuice"),
     ("sye-vespera", "sye-umbra"),
+)
+LATERAL_LINKS = (
+    ("sye-solaris", "sye-nyxaris"),
     ("sye-beetlejuice", "sye-umbra"),
 )
-NEIGHBOR_BANDS = (
+CAMPAIGN_ROUTES = STARTER_BRANCHES + MIDDLE_BRANCHES + OUTER_BRANCHES + LATERAL_LINKS
+STAGES = (STARTER_BRANCHES, MIDDLE_BRANCHES, OUTER_BRANCHES)
+LATERAL_BANDS = (
     (("sye-solaris", "sye-nyxaris"), 68000, 96000),
-    (("sye-solaris", "sye-vibrant"), 83000, 117000),
-    (("sye-nyxaris", "sye-vespera"), 74000, 106000),
-    (("sye-vibrant", "sye-beetlejuice"), 112000, 158000),
-    (("sye-vespera", "sye-umbra"), 99000, 141000),
     (("sye-beetlejuice", "sye-umbra"), 124000, 176000),
 )
+CAMPAIGN_HUBS = {"sye-calidus", "sye-solaris", "sye-nyxaris",
+                 "sye-vibrant", "sye-vespera", "sye-beetlejuice",
+                 "sye-umbra"}
 DEEP_EDGES = (
     ("secretas", "solar-system-edge"),
     ("vesta", "solar-system-edge"),
@@ -66,15 +62,11 @@ def key(a, b):
 MIN_LENGTHS = {
     key("sye-calidus", "sye-solaris"): 45000,
     key("sye-calidus", "sye-nyxaris"): 45000,
-    key("sye-calidus", "sye-vibrant"): 85000,
-    key("sye-calidus", "sye-vespera"): 85000,
-    key("sye-calidus", "sye-beetlejuice"): 145000,
-    key("sye-calidus", "sye-umbra"): 145000,
-    key("sye-solaris", "sye-nyxaris"): 65000,
     key("sye-solaris", "sye-vibrant"): 80000,
     key("sye-nyxaris", "sye-vespera"): 72000,
     key("sye-vibrant", "sye-beetlejuice"): 108000,
     key("sye-vespera", "sye-umbra"): 96000,
+    key("sye-solaris", "sye-nyxaris"): 65000,
     key("sye-beetlejuice", "sye-umbra"): 120000,
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
@@ -125,7 +117,7 @@ def audit(raw):
         if key(a, b) in links:
             issues.add(f"Unsafe belt bypass remains: {a} -> {b}")
 
-    for a, b in HOMEWARD_SPOKES + NEIGHBOR_LINKS + (
+    for a, b in CAMPAIGN_ROUTES + (
             ("shchierbin", "asteroid-belt-inner-edge"),
             ("asteroid-belt-outer-edge", "sye-beetlejuice")
         ) + DEEP_EDGES:
@@ -156,33 +148,48 @@ def audit(raw):
             issues.add(f"Disproportionate interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
 
-    # Adjacent journeys must be useful but not cheap campaign bypasses.
-    for (a,b), low, high in NEIGHBOR_BANDS:
-        links_here = links.get(key(a,b))
-        if not links_here:
-            continue
-        length = links_here[0][1].get("length")
-        if isinstance(length,(int,float)) and not low <= length <= high:
-            issues.add(f"Neighbor tier distance mismatch: {a} <-> {b}")
-        via_a = links.get(key(a,"sye-calidus"))
-        via_b = links.get(key(b,"sye-calidus"))
-        if (isinstance(length,(int,float)) and via_a and via_b
-                and all(isinstance(x[0][1].get("length"),(int,float))
-                        for x in (via_a,via_b))
-                and length >= via_a[0][1]["length"]+via_b[0][1]["length"]):
-            issues.add(f"Neighbor is longer than its hub detour: {a} <-> {b}")
+    # The map must have *exactly* eight managed interstellar links.
+    # This catches unnecessary radial spokes and extra perimeter chords
+    # even when every individually valid route has a plausible distance.
+    managed = {pair for pair in links if pair[0] in CAMPAIGN_HUBS
+               and pair[1] in CAMPAIGN_HUBS}
+    expected = {key(a, b) for a, b in CAMPAIGN_ROUTES}
+    for unexpected in managed - expected:
+        issues.add(f"Unwanted cross-system route: {unexpected[0]} <-> {unexpected[1]}")
+    for missing in expected - managed:
+        issues.add(f"Missing constellation corridor: {missing[0]} <-> {missing[1]}")
 
-    # Stage research gates unlock the visible spokes. Ensure tier travel
-    # costs increase even when the visual chart is geometrically compact.
-    stage_costs = []
-    for stage in STAR_STAGES:
-        values = [links[key(a,b)][0][1].get("length")
-                  for a,b in stage if key(a,b) in links]
-        if values and all(isinstance(n,(int,float)) for n in values):
-            stage_costs.append(min(values))
-    if len(stage_costs)==3 and not (
-            stage_costs[0]<stage_costs[1]<stage_costs[2]):
-        issues.add("Direct Calidus routes violate escalating tier costs")
+    # The two optional local bridges must be real conveniences rather than
+    # punishing detours or nearly-free routes to a later chapter.
+    for (a, b), low, high in LATERAL_BANDS:
+        match = links.get(key(a, b))
+        if not match:
+            continue
+        length = match[0][1].get("length")
+        if isinstance(length, (int, float)) and not low <= length <= high:
+            issues.add(f"Lateral corridor distance mismatch: {a} <-> {b}")
+
+    # Both expedition strands must grow in difficulty with the chapter.
+    for i, strand in enumerate((
+        (STARTER_BRANCHES[0], MIDDLE_BRANCHES[0], OUTER_BRANCHES[0]),
+        (STARTER_BRANCHES[1], MIDDLE_BRANCHES[1], OUTER_BRANCHES[1])
+    )):
+        values = []
+        for a, b in strand:
+            pair_routes = links.get(key(a, b))
+            if not pair_routes:
+                break
+            values.append(pair_routes[0][1].get("length"))
+        if len(values) == 3 and all(isinstance(k, (int, float)) for k in values):
+            if not values[0] < values[1] < values[2]:
+                issues.add(f"Branch {i + 1} travel distances do not scale by chapter")
+    first_bridge = links.get(key("sye-solaris", "sye-nyxaris"))
+    if first_bridge and all(links.get(key(a, b)) for a, b in STARTER_BRANCHES):
+        first_length = first_bridge[0][1].get("length")
+        via_calidus = sum(links[key(a, b)][0][1].get("length", 0)
+                          for a, b in STARTER_BRANCHES)
+        if isinstance(first_length, (int, float)) and first_length >= via_calidus:
+            issues.add("Solaris/Nyxaris crosslink is longer than the Calidus detour")
     return sorted(issues)
 
 def main():
@@ -199,7 +206,7 @@ def main():
     for issue in issues:
         print("ROUTE: " + issue)
     if not issues:
-        print("Interstellar distances, belt detours and tier ladder passed.")
+        print("Two constellation branches, two lateral links, belt routes and difficulty tiers passed.")
     return int(bool(issues))
 
 if __name__ == "__main__":

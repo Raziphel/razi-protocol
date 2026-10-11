@@ -44,17 +44,24 @@ chapters advancing upward to Deep Space and Bellicos.
 - Each existing planetary family is rotated in place so its slipstream portal
   points toward the readable campaign route; preserve planet distances from
   their parent stars to avoid crowding labels and sub-planet content.
-- Six homeward slipstreams plus **six neighboring-system links** form a
-  compact hub-and-ring network around Calidus. Only adjacent star sectors
-  connect, never across the star circle. Destination discovery research
-  still gates access to each system.
-  Outer discoveries still require space-discovery-asteroid-belt AND both
-  midgame discoveries, so the direct lines are not early-game shortcuts.
-- Neighbor routes by tier: Solaris ↔ Nyxaris 82k km (first-tier);
-  Solaris ↔ Vibrant 100k and Nyxaris ↔ Vespera 90k (middle-tier);
-  Vibrant ↔ Beetlejuice 135k and Vespera ↔ Umbra 120k (outer);
-  Beetlejuice ↔ Umbra 150k (outer-deep). These use progressively stronger
-  hazard profiles, from small/medium to rare huge asteroids.
+- **A two-branch constellation, not a dense hub-and-ring.** Calidus
+  connects only to Solaris and Nyxaris. Those advance separately through
+  Vibrant and Vespera, then Beetlejuice and Umbra. Two convenient
+  lateral links remain: Solaris ↔ Nyxaris and Beetlejuice ↔ Umbra.
+  There are **eight** Razi-owned interstellar routes, down from twelve,
+  with zero long diagonals cutting across the star circle.
+- The Calidus departure slipstream is 20 units due south of home
+  (previously 25), clear of Nauvis and Muluna but closer to the center.
+  Planet orbits, the six-star radius (104) and all star textures stay put.
+- The original discovery technologies continue to gate travel:
+  the first two frontiers use Nauvis science, the middle frontiers
+  require the earlier branches, and outer discoveries still require
+  `space-discovery-asteroid-belt` plus both middle branches.
+- Travel distances and asteroid profiles increase by chapter:
+  opening crossings 60–65k km (first), middle branches 90–100k km
+  (middle), outer branches 120–135k km (outer).
+  Solaris ↔ Nyxaris is 82k (first), Beetlejuice ↔ Umbra 150k
+  (outer-deep). The source-native AsteroidBelt crossing stays 5k.
 - Route distance audit also addressed the three clearest local mismatches:
   Nyxaris ↔ Apia-Carnova planned 17k → 23k km, Nyxaris ↔ Moshine 18k →
   22k, and Cubium ↔ Secretas 19k → 23k. Native in-system lengths still
@@ -85,10 +92,9 @@ chapters advancing upward to Deep Space and Bellicos.
   pulsar/near-orbit anchor now lies only 110 units from Deep Space rather
   than 145. The entry stargate is 28 units away rather than 35. Keep source
   art, gate names, travel distance and every native Aegis connection.
-- Do not remove campaign crosslinks just to conceal map lines: early parallel
-  routes, the required asteroid expedition around Vibrant, and both outer
-  routes to Deep Space are intentional. The compact layout reduces the long
-  visual spans without weakening research gates or travel hazards.
+- Keep the two short same-tier crosslinks, the required asteroid expedition
+  around Vibrant, and both distinct outer branches to Deep Space. Avoid
+  additional Calidus spokes and unnecessary neighboring-star loops.
 
 ## Verification
 
@@ -127,7 +133,8 @@ Original unique source orbit sprites are retained.
 ## Verifying the running mod
 
 On a mod-data rebuild, Razi writes a single
-`[Razi Protocol/starmap] COMPASS-2026-10-11-v2` line to
+`[Razi Protocol/starmap] PRE-RENDER-2026-10-11-v3` line and a later
+`[Razi Protocol/starmap] NATIVE-2026-10-11-v3` line to
 `factorio-current.log`, followed by the final **native** starmap
 coordinates calculated from each location's `origin`, `distance`,
 and `orientation`. These are the same fields Factorio uses to draw
@@ -143,6 +150,6 @@ those prototypes before Razi's final fixes.
 
 The six-star ring centered on Calidus works as an at-a-glance map. Keep
 Deep Space to the north and Bellicos beyond it. Treat the required
-Shchierbin asteroid ring as a distinct midgame hazard landmark, not
+Vibrant sun asteroid ring as a distinct midgame hazard landmark, not
 something every new player sees circling Nauvis. Avoid additional direct
 outer-system routes that would bypass the native asteroid crossing.

@@ -181,31 +181,40 @@ local function test_routes()
 				"Legacy crossing survived: " .. pair[1] .. "/" .. pair[2])
 		end
 	end
-  for _,info in ipairs({
+  -- Eight interstellar routes, not the twelve-line hub-and-ring mesh.
+  local required_interstellar = {
+    {"sye-calidus","sye-solaris",60000},
+    {"sye-calidus","sye-nyxaris",65000},
     {"sye-solaris","sye-nyxaris",82000},
     {"sye-solaris","sye-vibrant",100000},
     {"sye-nyxaris","sye-vespera",90000},
     {"sye-vibrant","sye-beetlejuice",135000},
     {"sye-vespera","sye-umbra",120000},
     {"sye-beetlejuice","sye-umbra",150000},
-  }) do
-    local link
-    for _,candidate in pairs(routes) do
-      if (candidate.from==info[1] and candidate.to==info[2])
-          or (candidate.from==info[2] and candidate.to==info[1]) then
-        link=candidate
-      end
+  }
+  local allowed_interstellar = {}
+  for _, info in ipairs(required_interstellar) do
+    local key=info[1].."|"..info[2]
+    allowed_interstellar[key]=true
+    local name="razi-"..info[1].."-"..info[2]
+    local route=routes[name]
+    check(route and route.length==info[3] and route.shape=="line",
+      "Required constellation corridor missing: "..name)
+  end
+  local hub={"sye-calidus","sye-solaris","sye-nyxaris",
+    "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"}
+  local hub_set={}
+  for _,name in ipairs(hub) do hub_set[name]=true end
+  local count=0
+  for _,route in pairs(routes) do
+    if hub_set[route.from] and hub_set[route.to] then
+      count=count+1
+      local k=route.from.."|"..route.to
+      check(allowed_interstellar[k],
+        "Unwanted hub spoke or ring arc: "..k)
     end
-    check(link and link.length==info[3] and link.shape=="line",
-      "Adjacent systems missing balanced route "..info[1].." -> "..info[2])
   end
-  for _,system in ipairs({
-    "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
-  }) do
-    local name="razi-sye-calidus-sye-"..system
-    check(routes[name] and routes[name].shape=="line",
-      "Missing direct homeward slipstream "..name)
-  end
+  check(count==8,"Expected exactly eight interstellar corridors")
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
       "Maraxsis's native 20,000 km local route was overwritten")
@@ -257,15 +266,18 @@ local function test_routes()
 	check(first_asteroid.asteroid == "imersite",
 		"Imersite asteroid definitions were lost")
 	for _, name in ipairs({
-		"razi-sye-calidus-sye-nyxaris",
-		"razi-sye-calidus-sye-vibrant",
-		"razi-sye-calidus-sye-vespera",
-		"razi-sye-calidus-sye-beetlejuice",
-		"razi-sye-calidus-sye-umbra",
-		"razi-sye-vespera-muria",
-		"razi-sye-umbra-tenebris",
-		"razi-secretas-solar-system-edge",
-		"razi-vesta-solar-system-edge"
+        "razi-sye-calidus-sye-solaris",
+        "razi-sye-calidus-sye-nyxaris",
+        "razi-sye-solaris-sye-vibrant",
+        "razi-sye-nyxaris-sye-vespera",
+        "razi-sye-vibrant-sye-beetlejuice",
+        "razi-sye-vespera-sye-umbra",
+        "razi-sye-solaris-sye-nyxaris",
+        "razi-sye-beetlejuice-sye-umbra",
+        "razi-sye-vespera-muria",
+        "razi-sye-umbra-tenebris",
+        "razi-secretas-solar-system-edge",
+        "razi-vesta-solar-system-edge"
 	}) do
 		check(routes[name] ~= nil, "Required route missing: " .. name)
 		check(routes[name].icon ~= nil or routes[name].icons ~= nil,
@@ -275,7 +287,7 @@ local function test_routes()
 	end
 
     for _, spec in ipairs({
-      {"razi-sye-calidus-sye-beetlejuice", 175000},
+      {"razi-sye-vibrant-sye-beetlejuice", 135000},
       {"razi-secretas-solar-system-edge", 155000},
       {"razi-vesta-solar-system-edge", 185000}
     }) do
