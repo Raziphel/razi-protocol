@@ -55,6 +55,15 @@ local layout=require("prototypes.system.galaxy_layout")
 local hub_x,hub_y=layout.anchor_position("sye-calidus")
 check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
   "Calidus departure portal drifted from the compact central approach")
+-- Native rings should not pile up at nearly identical radii.
+local ax,ay=layout.anchor_position("apia-carnova-orbit")
+local nx,ny=layout.anchor_position("nyxaris")
+check(math.abs(math.sqrt((ax-nx)^2+(ay-ny)^2)-39)<.01,
+  "Apia/Carnova orbital lane must be distinct from Gleba")
+local hx,hy=layout.anchor_position("hyarion")
+local sx,sy=layout.anchor_position("solaris")
+check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-22)<.01,
+  "Hyarion must not share Vulcanus's close orbital lane")
 local shchierbin_x,shchierbin_y=layout.anchor_position("shchierbin")
 local vx,vy=layout.anchor_position("vibrant")
 for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
@@ -77,6 +86,14 @@ for name,bearing in pairs({
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
 layout.data_final_fixes()
+for key,orientation in pairs({
+  ["razi-vespera-belt-inner"]=.25,["razi-vespera-belt-outer"]=.75,
+  ["razi-umbra-belt-inner"]=.75,["razi-umbra-belt-outer"]=.25,
+  ["sye-solaris"]=.75,["sye-nyxaris"]=.75
+}) do
+  check(places[key].label_orientation==orientation,
+    "Starmap waypoint labels overlap: "..key)
+end
 
 local function position(name)
   if name=="star" then return 0,0 end

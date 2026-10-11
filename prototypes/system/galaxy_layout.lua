@@ -26,12 +26,14 @@ local anchors = {
   {"planet","vulcanus","solaris",18,0.690759},
   {"planet","castra","solaris",38.550528,0.554718},
   {"planet","arig","solaris",27,0.48},
-  {"planet","hyarion","solaris",19,0.389024},
+  -- Separate Hyarion and Vulcanus orbit rings while retaining their climate tiers.
+  {"planet","hyarion","solaris",22,0.389024},
   {"planet","tellus","solaris",33.571265,0.249329},
   {"planet","corrundum","solaris",24.630737,0.076626},
   {"planet","gleba","nyxaris",32,0.091528},
   {"planet","moshine","nyxaris",22,0.245823},
-  {"space-location","apia-carnova-orbit","nyxaris",32.348243,0.316108},
+  -- Apia/Carnova no longer shares an almost identical ring with Gleba.
+  {"space-location","apia-carnova-orbit","nyxaris",39,0.316108},
   {"planet","panglia","nyxaris",36.10728,0.903944},
   {"planet","fulgora","vibrant",22,0.558152},
   {"planet","ribbonia","vibrant",27,0.397307},
@@ -199,6 +201,24 @@ function M.data_final_fixes()
       end
     end
     if not changed then break end
+  end
+
+  -- Factorio draws labels relative to their location, and compact waypoints
+  -- can otherwise overlap each other even when the icons are distinct.
+  -- Only Razi-owned hubs and rims get fixed orientations. Native planet,
+  -- moon and optional third-party label preferences remain source-owned.
+  local label_orientations={
+    ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
+    ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
+    ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.25,
+    ["razi-vespera-belt-inner"]=0.25,
+    ["razi-vespera-belt-outer"]=0.75,
+    ["razi-umbra-belt-inner"]=0.75,
+    ["razi-umbra-belt-outer"]=0.25
+  }
+  for name,direction in pairs(label_orientations) do
+    local marker=exists("space-location",name)
+    if marker then marker.label_orientation=direction end
   end
 
   -- Native orbits on actual planets are drawn automatically by Factorio.

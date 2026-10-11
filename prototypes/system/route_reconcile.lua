@@ -69,7 +69,7 @@ local route_specifications = {
 	-- logistical choices once both endpoints are researched.
 	{"vulcanus", "castra", 17500, "industrial"},
 	-- Extra short freight loops inside Solaris. Native discovery gates remain.
-	{"vulcanus", "arig", 19500, "industrial_deep"},
+	{"vulcanus", "hyarion", 20000, "industrial_deep"},
 	{"hyarion", "corrundum", 22500, "industrial_deep"},
 	{"arig", "hyarion", 12000, "industrial_deep"},
 	-- Solaris's twin opening branches.
@@ -215,6 +215,15 @@ route_reconcile.regional_origin=regional_origin
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
 	local rescued = {}
+
+	-- A short-lived development shuttle crossed the existing Castra/Hyarion
+	-- connection in the compact Solaris map. Keep source-authored connections
+	-- untouched, but retire our own awkward line in favor of a cleaner
+	-- Vulcanus/Hyarion supply corridor. This runs before indexing routes.
+	local retired=routes["razi-vulcanus-arig"]
+	if retired and retired.from=="vulcanus" and retired.to=="arig" then
+		routes["razi-vulcanus-arig"]=nil
+	end
 
 	-- Remove only the two direct journeys now replaced by real belt hops.
 	-- This must happen before new routes are created or the old connection
