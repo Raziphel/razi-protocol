@@ -8,11 +8,15 @@ local families = {
   {
     mod = "planet-crucible",
     arrival = "planet-discovery-crucible",
+    earlier = {"planet-discovery-aquilo", "planet-discovery-rubia",
+      "beetlejuice-discovery", "umbra-discovery"},
     science = {"planet-crucible-science-pack", "kr-high-pressure-tech-card"}
   },
   {
     mod = "skewer_planet_vesta",
     arrival = "planet-discovery-vesta",
+    earlier = {"planet-discovery-aquilo", "planet-discovery-rubia",
+      "beetlejuice-discovery", "umbra-discovery"},
     science = {"gas-manipulation-science-pack"}
   }
 }
@@ -77,7 +81,13 @@ function guard.data_final_fixes()
       end
       if next(exclusive) then
         local ancestors = {}
-        collect_prearrival(family.arrival, ancestors, {})
+        local seen = {}
+        collect_prearrival(family.arrival, ancestors, seen)
+        -- Early parallel destinations can be discovered without being a
+        -- formal prerequisite ancestor of this specific planet.
+        for _, early in ipairs(family.earlier or {}) do
+          collect_prearrival(early, ancestors, seen)
+        end
         for name in pairs(ancestors) do
           without_late_science(tech(name), exclusive, fallback)
         end
