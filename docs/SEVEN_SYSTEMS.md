@@ -35,36 +35,31 @@ Calidus sits at the center of a compact six-star hexagon (radius 104).
 Solaris/Nyxaris are the first frontiers to the south, Vibrant/Vespera
 form the middle pair, and Beetlejuice/Umbra lie to the north. Deep Space
 and the Bellicos/Aegis expedition sit beyond the constellation to the north.
-Star artwork and local planet orbits remain untouched. The Calidus departure
-hub sits 20 map units south of the home sun, instead of 25.
+Star artwork and source-owned moons stay intact. Several planets now
+have climate-themed orbit radii, without gameplay temperature changes.
+The Calidus departure hub stays 20 map units south of home.
 
-The eight main connections are deliberately *two staged branches* with
-only two lateral connectors, not a six-spoke radial hub and perimeter ring:
+The network now has seven direct interstellar lines plus a native
+belt journey through Vibrant:
 
 ```text
-                      Deep Space / Bellicos
-                         ↑         ↑
-                    Beetlejuice ⇄ Umbra
-                         ↑         ↑
-                      Vibrant   Vespera
-                         ↑         ↑
-                      Solaris ⇄ Nyxaris
-                          \       /
-                           Calidus
-                            Nauvis
+Calidus → Solaris → Vibrant → Ribbonia → Belt inner == Belt outer → Beetlejuice
+        ↘ Nyxaris → Vespera → Umbra
+Solaris ↔ Nyxaris                    Beetlejuice ↔ Umbra
+Belt outer → Shchierbin → frozen Paracelsin
+Beetlejuice / Umbra → Deep Space after Outer Frontier Mastery
 ```
 
-Travel is balanced by chapter: first-tier crossings 60–65k km,
-middle bridges 90–100k km, outer bridges 120–135k km,
-first-frontier lateral 82k km, outer lateral 150k km.
-The native Vibrant-sun AsteroidBelt remains a 5,000 km source-owned
-hazard that feeds the Beetlejuice region from Shchierbin.
+The native inner-to-outer crossing retains its original 5,000 km length
+and unique asteroid resources. Total Vibrant-to-Beetlejuice travel via
+Ribbonia and the belt is about 137.5k km (23.5+24+5+85k).
+Shchierbin requires the source belt research, and Paracelsin follows it.
 
 Local branches remain connected inside their own systems, including:
 
     Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
     Nyxaris: Gleba | Moshine | Apia/Carnova | Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
-    Vibrant: Fulgora | Ribbonia -> Paracelsin -> Shchierbin (+ Cerys)
+    Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> Shchierbin -> frozen Paracelsin (+ Cerys)
     Vespera: Muria -> Aquilo -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
     Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)

@@ -28,8 +28,8 @@ chapters advancing upward to Deep Space and Bellicos.
 | Vespera | -104 | 0 |
 | Beetlejuice | 52 | -90.07 |
 | Umbra | -52 | -90.07 |
-| Required Asteroid Belt inner edge | Vibrant X | Vibrant Y - 14 |
-| Required Asteroid Belt outer edge | Vibrant X | Vibrant Y - 20 |
+| Required Asteroid Belt inner edge | Vibrant + 31 at 0.17 turns | Inner side |
+| Required Asteroid Belt outer edge | Vibrant + 39 at 0.17 turns | Outer side |
 | Deep Space / solar-system-edge | 0 | -190 |
 
 ## Design rules
@@ -41,15 +41,16 @@ chapters advancing upward to Deep Space and Bellicos.
 - The widest optional planet rings reach about 51 map units from their stars.
   A 104-unit adjacent-star separation is intentionally chosen instead of a
   tighter 90-unit circle, which would overlap the optional orbital rings.
-- Each existing planetary family is rotated in place so its slipstream portal
-  points toward the readable campaign route; preserve planet distances from
-  their parent stars to avoid crowding labels and sub-planet content.
-- **A two-branch constellation, not a dense hub-and-ring.** Calidus
-  connects only to Solaris and Nyxaris. Those advance separately through
-  Vibrant and Vespera, then Beetlejuice and Umbra. Two convenient
-  lateral links remain: Solaris ↔ Nyxaris and Beetlejuice ↔ Umbra.
-  There are **eight** Razi-owned interstellar routes, down from twelve,
-  with zero long diagonals cutting across the star circle.
+- Planet climates guide visual orbital distances: hot Vulcanus (18),
+  Hyarion (19), Arig (27), Muria (20), Moshine (22) and Crucible orbit
+  (19) move inward. Remote/icy Paracelsin (49), Aquilo (40),
+  Maraxsis (44) and Secretas (40) sit farther away.
+  Source game temperatures, solar yields and moon orbits are unchanged.
+- Calidus opens two branches through Solaris/Nyxaris into
+  Vibrant/Vespera. The Vibrant to Beetlejuice stage now physically
+  requires the original native AsteroidBelt crossing. Only seven
+  direct interstellar lines remain, plus the belt, with the two useful
+  crosslinks Solaris↔Nyxaris and Beetlejuice↔Umbra.
 - The Calidus departure slipstream is 20 units due south of home
   (previously 25), clear of Nauvis and Muluna but closer to the center.
   Planet orbits, the six-star radius (104) and all star textures stay put.
@@ -57,25 +58,25 @@ chapters advancing upward to Deep Space and Bellicos.
   the first two frontiers use Nauvis science, the middle frontiers
   require the earlier branches, and outer discoveries still require
   `space-discovery-asteroid-belt` plus both middle branches.
-- Travel distances and asteroid profiles increase by chapter:
-  opening crossings 60–65k km (first), middle branches 90–100k km
-  (middle), outer branches 120–135k km (outer).
-  Solaris ↔ Nyxaris is 82k (first), Beetlejuice ↔ Umbra 150k
-  (outer-deep). The source-native AsteroidBelt crossing stays 5k.
+- Routes increase in challenge: early 60–65k km, midgame 90–100k km,
+  Umbra branch 120k km and Vibrant→Beetlejuice 137.5k km total through
+  Ribbonia and the source-native asteroid crossing (23.5+24+5+85k).
+  The original belt-core 5k segment and its native asteroid spawns
+  remain untouched.
 - Route distance audit also addressed the three clearest local mismatches:
   Nyxaris ↔ Apia-Carnova planned 17k → 23k km, Nyxaris ↔ Moshine 18k →
   22k, and Cubium ↔ Secretas 19k → 23k. Native in-system lengths still
   use the existing source-preserving 75–135% clamp.
-- The original AsteroidBelt graphic surrounds **Vibrant's sun** at (104,0),
-  not Nauvis or Shchierbin. The original graphic is 0.55 scale. Native
-  inner/outer endpoints are offset 14/20 units north of that sun, but
-  their orbit prototypes reference the surviving root star because
-  PlanetsLib deletes virtual sprite-only stars during final fixes.
-- Shchierbin remains the local approach to the REQUIRED source-owned 5,000
-  km native crossing and its unique asteroid resources. The far exit
-  connects to Beetlejuice. The excessively long Maraxsis and Umbra
-  diagonals were removed; the surrounding spokes use increasing hazards
-  and travel times of 60-65k, 110k and 175k km by chapter.
+- The original source AsteroidBelt graphic surrounds Vibrant at
+  1.12 scale, its native inner/outer gateway at radii 31/39 and
+  0.17 clockwise turns north-east. The gateways orbit the root star
+  because PlanetsLib removes sprite-only stars in final fixes.
+  Fulgora and Ribbonia are inside; Shchierbin and frozen Paracelsin
+  outside. To reach the outer worlds: Ribbonia → inner edge →
+  native belt → outer edge → Shchierbin / Beetlejuice.
+  The direct Vibrant→Beetlejuice and Ribbonia→Paracelsin shortcuts
+  are removed. Shchierbin requires native belt science, Paracelsin
+  requires Shchierbin.
 - **Native rings for every planet around a Razi star** use the Factorio 2.1
   origin-based renderer provided by PlanetsLib >= 2.0.9. The previous code
   set `draw_orbit=false` for all except six handpicked planets, hiding most

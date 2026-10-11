@@ -188,7 +188,6 @@ local function test_routes()
     {"sye-solaris","sye-nyxaris",82000},
     {"sye-solaris","sye-vibrant",100000},
     {"sye-nyxaris","sye-vespera",90000},
-    {"sye-vibrant","sye-beetlejuice",135000},
     {"sye-vespera","sye-umbra",120000},
     {"sye-beetlejuice","sye-umbra",150000},
   }
@@ -214,7 +213,13 @@ local function test_routes()
         "Unwanted hub spoke or ring arc: "..k)
     end
   end
-  check(count==8,"Expected exactly eight interstellar corridors")
+  check(count==7,"Expected seven direct interstellar corridors")
+  check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
+    "A direct route bypasses the native asteroid belt")
+  check(routes["razi-ribbonia-asteroid-belt-inner-edge"]~=nil,
+    "Missing inner entry to native asteroid belt")
+  check(routes["razi-asteroid-belt-outer-edge-shchierbin"]~=nil,
+    "Missing outer exit to Shchierbin")
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,
       "Maraxsis's native 20,000 km local route was overwritten")
@@ -230,7 +235,8 @@ local function test_routes()
 	check(not routes["old-belt-shortcut"] and not routes["old-belt-exit"],
 		"Source belt bypass survived outer-tier reconciliation")
 	for _,pair in ipairs({
-		{"shchierbin","asteroid-belt-inner-edge"},
+		{"ribbonia","asteroid-belt-inner-edge"},
+        {"asteroid-belt-outer-edge","shchierbin"},
 		{"asteroid-belt-outer-edge","sye-beetlejuice"}
 	}) do
 		local present=false
@@ -270,7 +276,6 @@ local function test_routes()
         "razi-sye-calidus-sye-nyxaris",
         "razi-sye-solaris-sye-vibrant",
         "razi-sye-nyxaris-sye-vespera",
-        "razi-sye-vibrant-sye-beetlejuice",
         "razi-sye-vespera-sye-umbra",
         "razi-sye-solaris-sye-nyxaris",
         "razi-sye-beetlejuice-sye-umbra",
@@ -287,7 +292,7 @@ local function test_routes()
 	end
 
     for _, spec in ipairs({
-      {"razi-sye-vibrant-sye-beetlejuice", 135000},
+      {"razi-asteroid-belt-outer-edge-sye-beetlejuice", 85000},
       {"razi-secretas-solar-system-edge", 155000},
       {"razi-vesta-solar-system-edge", 185000}
     }) do
@@ -411,6 +416,10 @@ local function test_research()
       "razi-vespera-belt-survey"), "Rubia bypasses its belt survey")
     check(list_contains(technologies["planet-discovery-vesta"].prerequisites,
       "razi-umbra-belt-survey"), "Vesta bypasses its belt survey")
+  check(list_contains(technologies["planet-discovery-shchierbin"].prerequisites,
+    "space-discovery-asteroid-belt"),"Native belt research gate missing")
+  check(list_contains(technologies["planet-discovery-paracelsin"].prerequisites,
+    "planet-discovery-shchierbin"),"Icy Paracelsin unlocked before the belt")
 	local edge = technologies["stellar-discovery-solar-system-edge"] or {prerequisites = {}}
 	check(list_contains(edge.prerequisites, "razi-outer-frontier-mastery"),
 		"Deep Space can bypass outer-system mastery")

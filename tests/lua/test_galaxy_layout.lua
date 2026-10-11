@@ -56,7 +56,14 @@ local hub_x,hub_y=layout.anchor_position("sye-calidus")
 check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
   "Calidus departure portal drifted from the compact central approach")
 local shchierbin_x,shchierbin_y=layout.anchor_position("shchierbin")
-check(shchierbin_x>130 and shchierbin_y<0,
+local vx,vy=layout.anchor_position("vibrant")
+for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
+    {"shchierbin",45},{"paracelsin",49}}) do
+  local px,py=layout.anchor_position(pair[1])
+  check(math.abs(math.sqrt((px-vx)^2+(py-vy)^2)-pair[2])<.01,
+    "Vibrant climate radius mismatch: "..pair[1])
+end
+check(shchierbin_x>120 and shchierbin_y<0,
   "Asteroid Belt host is no longer the Vibrant outer planet")
 layout.data_updates()
 -- A star missing its data-updates placement caused all earlier screenshots:

@@ -69,7 +69,7 @@ class RouteTests(unittest.TestCase):
         raw = world()
         for pair, too_short in (
             (("sye-solaris", "sye-vibrant"), 30000),
-            (("sye-vibrant", "sye-beetlejuice"), 40000),
+            (("asteroid-belt-outer-edge", "sye-beetlejuice"), 40000),
         ):
             modified = {k: dict(v) for k, v in raw["space-connection"].items()}
             match = next(k for k, route in modified.items()
@@ -80,14 +80,20 @@ class RouteTests(unittest.TestCase):
                                 for message in routes_audit.audit({
                                     **raw, "space-connection": modified})))
 
-    def test_exact_eight_link_constellation(self):
+    def test_native_belt_constellation(self):
         raw = world()
         self.assertEqual(routes_audit.audit(raw), [])
         catalog = {routes_audit.key(a, b): (km, profile)
                    for a, b, km, profile in route_manifest()}
-        self.assertEqual(len(routes_audit.CAMPAIGN_ROUTES), 8)
+        self.assertEqual(len(routes_audit.CAMPAIGN_ROUTES), 7)
         for a, b in routes_audit.CAMPAIGN_ROUTES:
             self.assertIn(routes_audit.key(a, b), catalog)
+        for a,b in routes_audit.VIBRANT_BELT_ROUTES:
+            actual={routes_audit.key(r["from"],r["to"]) for r in raw[
+                "space-connection"].values()}
+            self.assertIn(routes_audit.key(a,b),actual)
+        self.assertNotIn(routes_audit.key("sye-vibrant","sye-beetlejuice"),
+                         catalog)
         for planet in ("vibrant", "vespera", "beetlejuice", "umbra"):
             self.assertNotIn(routes_audit.key("sye-calidus", "sye-" + planet),
                              catalog, "Reintroduced extra Calidus spoke")
@@ -107,12 +113,28 @@ class RouteTests(unittest.TestCase):
         self.assertTrue(any("Missing constellation corridor" in msg
                             for msg in routes_audit.audit(raw)))
 
+    def test_direct_bypass_and_missing_native_crossing_fail(self):
+        raw=world()
+        raw["space-connection"]["unsafe-direct"]={
+            "from":"sye-vibrant","to":"sye-beetlejuice","length":135000}
+        self.assertTrue(any("AsteroidBelt physical bypass" in msg
+                            for msg in routes_audit.audit(raw)))
+        raw=world()
+        native=next(name for name,r in raw["space-connection"].items()
+                    if routes_audit.key(r["from"],r["to"]) ==
+                    routes_audit.key("asteroid-belt-inner-edge",
+                                     "asteroid-belt-outer-edge"))
+        del raw["space-connection"][native]
+        self.assertTrue(any("Missing required corridor" in msg
+                            for msg in routes_audit.audit(raw)))
+
     def test_two_branches_scale_with_chapter(self):
         raw = world()
         self.assertEqual(routes_audit.audit(raw), [])
-        for branch in zip(routes_audit.STARTER_BRANCHES,
-                          routes_audit.MIDDLE_BRANCHES,
-                          routes_audit.OUTER_BRANCHES):
+        for branch in (
+            (routes_audit.STARTER_BRANCHES[0],routes_audit.MIDDLE_BRANCHES[0]),
+            (routes_audit.STARTER_BRANCHES[1],routes_audit.MIDDLE_BRANCHES[1],
+             routes_audit.OUTER_BRANCHES[0])):
             values = []
             for pair in branch:
                 connection = next(route for route in raw["space-connection"].values()
@@ -120,7 +142,7 @@ class RouteTests(unittest.TestCase):
                                   routes_audit.key(*pair))
                 values.append(connection["length"])
             self.assertEqual(values, sorted(values))
-            self.assertEqual(len(set(values)), 3)
+            self.assertEqual(len(set(values)), len(values))
 
     def test_mispriced_crosslink_is_detected(self):
         raw = world()
@@ -175,9 +197,9 @@ class RouteTests(unittest.TestCase):
         self.assertLess(coords["sye-umbra"][1], -60)
         self.assertAlmostEqual(
             __import__("math").dist(coords["asteroid-belt-inner-edge"],
-                                    coords["vibrant"]), 14,
+                                    coords["vibrant"]), 31,
             places=3)
-        self.assertGreater(coords["asteroid-belt-inner-edge"][0], 100)
+        self.assertGreater(coords["asteroid-belt-inner-edge"][0], 120)
         self.assertLess(coords["solar-system-edge"][1], -185)
 
 if __name__ == "__main__":

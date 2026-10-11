@@ -53,7 +53,6 @@ local route_specifications = {
   {"sye-nyxaris", "sye-vespera", 90000, "middle_crosslink"},
   -- Outer systems remain locked behind their original science requirements,
   -- especially space-discovery-asteroid-belt.
-  {"sye-vibrant", "sye-beetlejuice", 135000, "outer_crosslink"},
   {"sye-vespera", "sye-umbra", 120000, "outer_crosslink"},
   -- Only two meaningful lateral connections: a first-tier cargo bridge
   -- and a late-game crosslink. They avoid diagonals through Calidus.
@@ -61,8 +60,9 @@ local route_specifications = {
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
   -- The 5,000 km source-owned AsteroidBelt is a mandatory science step.
   -- Keep its source asteroids, route names and original loot untouched.
-  {"shchierbin", "asteroid-belt-inner-edge", 48000, "chemistry_deep"},
-  {"asteroid-belt-outer-edge", "sye-beetlejuice", 63000, "outer_crossing"},
+  {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
+  {"asteroid-belt-outer-edge", "shchierbin", 16000, "chemistry_deep"},
+  {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
 	{"sye-solaris", "castra", 21000, "industrial"},
@@ -82,8 +82,8 @@ local route_specifications = {
 	{"sye-vibrant", "fulgora", 17000, "electrical"},
 	{"fulgora", "ribbonia", 19500, "electrical"},
 	{"sye-vibrant", "ribbonia", 23500, "electrical"},
-	{"ribbonia", "paracelsin", 20000, "chemistry"},
-	{"paracelsin", "shchierbin", 22000, "chemistry_deep"},
+	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
+	{"shchierbin", "paracelsin", 22000, "chemistry_deep"},
 	-- Vespera's extreme-environment strand.
 	{"sye-vespera", "muria", 19000, "cryogenic"},
 	{"muria", "aquilo", 22000, "cryogenic"},
