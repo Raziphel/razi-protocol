@@ -110,3 +110,19 @@ Source modules:
 * [Belt locations](../prototypes/system/asteroid_belts.lua)
 * [Route reconciliation](../prototypes/system/route_reconcile.lua)
 * [Belt surveys](../prototypes/technology/asteroid_belts.lua)
+
+## Route distance calibration
+
+The revised Razi network now makes paired-star crossing lengths consistent
+with the physical positions drawn on the map and later-stage platform design:
+Solaris/Nyxaris **88,000 km**, Vibrant/Vespera **103,000 km**, and
+Beetlejuice/Umbra **126,000 km**. Middle and outer diagonals are correspondingly
+longer, and the Deep Space approaches from Secretas and Vesta are substantial
+expeditions rather than cheap cross-star hops. The former 23,000 km
+Vesta/Secretas shortcut was removed to preserve the Umbra belt's significance.
+
+The dangerous **belt cores themselves remain unchanged** at 6,500 and
+8,000 km. Other source-mod intra-system routes can keep their original travel
+distances if they are appropriate for the new orbit. See SEVEN_SYSTEMS.md for
+the table of revised km distances and `scripts/audit_route_distances.py` for
+the post-load geometry checks.

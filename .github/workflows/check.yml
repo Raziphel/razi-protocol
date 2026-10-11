@@ -60,5 +60,7 @@ jobs:
         run: lua5.2 tests/lua/test_outer_science_arrival_guard.lua
       - name: Test Aquilo Linox Crucible Vesta supply chain tracing
         run: python3 -m unittest tests/test_supply_chains.py -v
+      - name: Audit progressive Razi route lengths and native orbital intent
+        run: python3 -m unittest tests/test_route_distances.py -v
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
