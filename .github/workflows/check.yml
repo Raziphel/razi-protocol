@@ -52,6 +52,8 @@ jobs:
         run: lua5.2 tests/lua/test_planet_descriptions.lua
       - name: Check K2SO integration across planet mods
         run: lua5.2 tests/lua/test_k2so_planets.lua
+      - name: Check cross-planet K2SO production exchange safety
+        run: lua5.2 tests/lua/test_planet_production_exchanges.lua
       - name: Check K2SO machine parity and planetary tech gates
         run: lua5.2 tests/lua/test_k2so_machines.lua
       - name: Check Linox hard-mode pre-arrival science

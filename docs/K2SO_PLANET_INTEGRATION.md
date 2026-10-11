@@ -180,3 +180,53 @@ has enough distinct fluid input/output interfaces to run the science-data
 recipe. Neither finding blindly expands lab inputs or machine capability:
 the right fix should be chosen once the full modpack's prototypes confirm
 the producing world, machine and technology progression.
+
+## Production exchange pass: early, middle and late factories
+
+Razi now introduces three **optional, higher-throughput alternate recipes**
+based directly on K2SO's real, source-mod-owned production chains. The native
+recipes, unlocking technologies, and planet-specific machines remain intact.
+These are not new science-pack ingredients or mandatory research for system
+discovery. The recipe and technology only exist when every source material,
+original recipe, compatible machine, native recipe unlock, source-world
+discovery and appropriate existing lab are present.
+
+| Exchange technology | Where it makes sense | Native recipe reused | Added imported cost | Benefit |
+| --- | --- | --- | --- | --- |
+| Bio-assisted rare-metal casting | Vulcanus foundry, after Gleba | `kr-casting-rare-metals` | 2 bioflux from Gleba per four batches | Five rare metals from four native batches, preserving original molten metal/water use and byproducts |
+| Electrobiological components | Fulgora's electromagnetic plants | `kr-electronic-components` | Bioflux from Gleba, holmium from Fulgora | Seven components instead of four, using all original silicon/glass/plastic inputs |
+| Cryo-stabilized energy-control units | Aquilo cryogenic machinery | `kr-energy-control-unit` | Supercapacitors from Fulgora, carbon fiber from Gleba, fluoroketone from Aquilo | Two control units instead of one, retaining all expensive native components |
+
+**Why imports are interesting:** Gleba's output earns a premium in Solaris
+and Vibrant; Fulgora supplies later Aquilo industry; and Vulcanus's original
+K2SO rare metals become attractive to process even after the first frontier.
+You can still choose independent native production if interplanetary shipping
+is inconvenient, unreliable, or too expensive.
+
+**Unlock safety:** Each exchange has an independent technology requiring
+the source-world discoveries and the *original recipe's actual unlock
+technology*. If the real K2SO unlock is unavailable, beyond the intended
+chapter, or cannot be identified, the exchange is skipped, rather than
+bypassing its original research. The three technologies require Calidus,
+Solaris/Nyxaris, and Solaris/Nyxaris Tech Cards respectively, so they
+don't consume their own products or need late systems' cards to bootstrap.
+
+**Production safety:** Fulgora's recipe inherits the K2SO electromagnetic
+research-data magnetic-field condition; Aquilo's inherits K2SO's native
+cryogenic pressure condition. Source machine crafting categories are checked.
+No extra machine is granted another planet's special capabilities.
+The original recipe ingredients, recipe effects and fluid byproducts are
+copied rather than redefined, then extra imported ingredients are added.
+Auto-recycling and productivity are disabled on the bonus variants to prevent
+multiplying their exchange premium through repeated loops. Native recipes
+retain their original productivity settings.
+
+The new recipes show their native item icons with a small imported-material
+overlay, with explicit unlock descriptions in `locale/en/production.cfg`.
+Isolated Lua regression fixtures check alternative yields, prerequisites,
+source-missing guards, surface restrictions, native recipe preservation,
+repeat-run safety, and late-technology compatibility.
+
+The exact complete-modpack Factorio 2.1 load still needs testing.
+If upstream changes a recipe category or a technology unlock, the guarded
+integration deliberately fails closed until reviewed.

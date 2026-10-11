@@ -104,3 +104,7 @@ require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 
 -- Ensure Crucible/Vesta science cannot be needed to discover their own worlds.
 require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
+
+-- Higher-efficiency, nonmandatory industry exchanges between source planets.
+-- Add only after all K2SO items, recipes, and research data are reconciled.
+require("prototypes.compat.planet_production_exchanges").data_final_fixes()

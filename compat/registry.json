@@ -119,6 +119,16 @@
       "purpose": "Protect research needed to reach late-moved Crucible/Vesta from requiring exclusive science produced only after arrival, without weakening post-arrival tech.",
       "upstream_status": "needs-review",
       "fixture": "tests/lua/test_outer_science_arrival_guard.lua"
+    },
+    {
+      "id": "k2so-cross-planet-industrial-exchanges",
+      "module": "prototypes/compat/planet_production_exchanges.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Three nonmandatory K2SO-native alternative production recipes linking Vulcanus/Gleba, Gleba/Fulgora, and Gleba/Fulgora/Aquilo with original unlock and surface guards.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_planet_production_exchanges.lua"
     }
   ]
 }
