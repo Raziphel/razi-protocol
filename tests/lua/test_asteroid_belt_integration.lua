@@ -61,8 +61,9 @@ check(inner.orbit.distance>45 and outer.orbit.distance>50,
   "AsteroidBelt was not placed at the mid/outer boundary")
 check(inner.orbit.parent.name=="star" and outer.orbit.parent.name=="star",
   "Native belt locations must remain space-location descendants of star")
-check(inner.orbit.orientation>.85 and outer.orbit.orientation>.85,
-  "The source crossing must point south through the campaign")
+check(inner.orbit.orientation>.57 and inner.orbit.orientation<.65
+  and outer.orbit.orientation>.55 and outer.orbit.orientation<.62,
+  "Required source belt endpoints should track the southwest Calidus rim")
 check(inner.draw_orbit==false and outer.draw_orbit==false,
   "Old origin-centered asteroid belt rings still appear")
 check(#layers==3 and layers[2].filename==ring and layers[2].scale==0.85
