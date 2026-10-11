@@ -296,6 +296,7 @@ local function test_research()
 	local technology_names = {
 		"solaris-discovery", "nyxaris-discovery", "vibrant-discovery",
 		"beetlejuice-discovery", "stellar-discovery-solar-system-edge",
+		"space-discovery-asteroid-belt",
 		"planet-discovery-vulcanus", "planet-discovery-fulgora",
 		"planet-discovery-gleba", "planet-discovery-muluna",
 		"planet-discovery-castra", "planet-discovery-arig",
@@ -353,6 +354,11 @@ local function test_research()
 	reload("prototypes.technology.seven_system_gates").data_final_fixes()
 	check(technologies["vespera-discovery"] ~= nil, "Vespera gate missing")
 	check(technologies["umbra-discovery"] ~= nil, "Umbra gate missing")
+	for _,outer in ipairs({"beetlejuice-discovery","umbra-discovery"}) do
+		check(list_contains(technologies[outer].prerequisites,
+			"space-discovery-asteroid-belt"),
+			outer.." does not require original AsteroidBelt exploration")
+	end
 
 	for _, first_star in ipairs({"solaris-discovery","nyxaris-discovery"}) do
 		local departure_unlocked = false
