@@ -127,6 +127,17 @@ local function observe_surface(player, imported)
   return true
 end
 
+local function completed_platform_voyage(platform)
+  -- completed_trips was added in a later Factorio 2.1 revision.
+  -- Older 2.1 installs can still observe a completed crossing by comparing
+  -- the current and last visited space locations.
+  local last = platform.last_visited_space_location
+  local current = platform.space_location
+  if last and current and last.name ~= current.name then return true end
+  local ok, trips = pcall(function() return platform.completed_trips end)
+  return ok and type(trips) == "number" and trips > 0
+end
+
 local function observe_platforms(force, imported)
   local ledger = ledger_for(force)
   if ledger.platforms.first and ledger.platforms.trip then return false end
@@ -138,7 +149,7 @@ local function observe_platforms(force, imported)
         ledger.platforms.first = {tick = game.tick, imported = imported == true}
         changed = true
       end
-      if not ledger.platforms.trip and platform.completed_trips > 0 then
+      if not ledger.platforms.trip and completed_platform_voyage(platform) then
         ledger.platforms.trip = {tick = game.tick, imported = imported == true}
         changed = true
       end
