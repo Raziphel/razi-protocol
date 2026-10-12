@@ -6,6 +6,8 @@ Razi Protocol now declares Factorio 2.1. Every direct dependency was checked aga
 
 ## Result
 
+**October 12 curation note:** Dev 2.1.5 explicitly excludes Panglia and Shchierbin and retains Muluna over Wit. Dependency counts and prior in-engine load checks below document earlier versions, not a newly validated full pack.
+
 - 94 direct positive dependencies were audited: 77 have native Factorio 2.1 releases and 17 do not.
 - 190 portal mods were inspected across the direct dependency set and its required transitive dependencies.
 - 102 portal-hosted mods remain on the required load path, and all 102 have native 2.1 releases. Factorio's bundled `quality` and `recycler` feature modules are also reached transitively.
@@ -30,12 +32,10 @@ The minimum versions below are now recorded in `info.json`.
 - `planetaris-hyarion >= 1.3.23`
 - `planetaris-arig >= 1.1.44`
 - `linox >= 1.8.9`
-- `shchierbin >= 0.3.19`
 - `Muria >= 1.8.6`
 - `corrundum >= 1.0.49`
 - `apia >= 0.3.1`
 - `Moshine >= 1.2.10`
-- `panglia_planet >= 0.6.1`
 - `tenebris-prime >= 1.3.12`
 - `secretas >= 1.0.37`
 - `maraxsis >= 1.39.1`

@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: 12. 10. 2026
+  Planet curation:
+    - Remove Panglia and Shchierbin from the seven-system curated modpack and explicitly mark their mods incompatible.
+    - Keep Nyxaris centered on Gleba, Moshine, Apia/Carnova and an optional Moshine-to-Pelagos branch.
+    - Preserve native AsteroidBelt's inner/outer crossing; its outer exit now connects directly to Paracelsin.
+    - Update discovery gates, missions, science cards, routes, map and dossiers to prevent missing-planet progression blockers.
+    - Retain required Muluna; Wit remains excluded and Balack remains supported.
+    - Update static audit fixtures; full Factorio 2.1 in-game load and old-save migration tests remain required.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.4
 Date: 12. 10. 2026
   Compatibility:

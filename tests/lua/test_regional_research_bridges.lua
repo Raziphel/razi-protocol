@@ -15,7 +15,6 @@ local techs={
  ["umbra-discovery"]=tech({"vibrant-discovery","vespera-discovery"}),
  ["planet-discovery-corrundum"]=tech(),
  ["planet-discovery-apia-carnova"]=tech(),
- ["panglia_planet_discovery_panglia"]=tech(),
  ["planet-discovery-tellus"]=tech(),
  ["planet-discovery-secretas"]=tech(),
  ["planet-discovery-tenebris"]=tech(),

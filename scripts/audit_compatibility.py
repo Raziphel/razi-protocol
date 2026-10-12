@@ -358,7 +358,7 @@ def audit(raw):
         if recipe and planet in planets and not seq(recipe.get("surface_conditions")):
             warnings.add(f"Missing surface conditions for {name} ({planet})")
 
-    for name in ("water-electrolysis-shchierbin", "ske_h2o", "ske_water_electrolysis"):
+    for name in ("ske_h2o", "ske_water_electrolysis"):
         recipe = recipes.get(name)
         if recipe and recipe.get("maximum_productivity") != 0:
             warnings.add(f"Water-loop recipe {name} lacks a 0 productivity cap")

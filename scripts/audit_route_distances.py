@@ -28,8 +28,7 @@ VIBRANT_BELT_ROUTES = (
     ("sye-vibrant", "ribbonia"),
     ("ribbonia", "asteroid-belt-inner-edge"),
     ("asteroid-belt-inner-edge", "asteroid-belt-outer-edge"),
-    ("asteroid-belt-outer-edge", "shchierbin"),
-    ("shchierbin", "paracelsin"),
+    ("asteroid-belt-outer-edge", "paracelsin"),
     ("asteroid-belt-outer-edge", "sye-beetlejuice"),
 )
 LATERAL_BANDS = (
@@ -70,7 +69,7 @@ MIN_LENGTHS = {
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
     key("ribbonia", "asteroid-belt-inner-edge"): 16000,
-    key("asteroid-belt-outer-edge", "shchierbin"): 11000,
+    key("asteroid-belt-outer-edge", "paracelsin"): 11000,
     key("asteroid-belt-outer-edge", "sye-beetlejuice"): 65000,
 }
 
@@ -155,7 +154,6 @@ def audit(raw):
         issues.add(f"Missing constellation corridor: {pair[0]} <-> {pair[1]}")
     for a,b in (
         ("sye-vibrant","sye-beetlejuice"),
-        ("ribbonia","shchierbin"),
         ("ribbonia","paracelsin"),
         ("paracelsin","asteroid-belt-inner-edge"),
     ):

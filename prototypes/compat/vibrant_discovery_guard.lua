@@ -36,10 +36,6 @@ function vibrant_discovery_guard.data_final_fixes()
 
 	set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
 
-	if technology_exists("planet-discovery-shchierbin") then
-		set_prerequisites_if_exists("planet-discovery-shchierbin", {"planet-discovery-paracelsin"})
-	end
-
 	set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 	set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
 	set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
@@ -51,7 +47,6 @@ function vibrant_discovery_guard.data_final_fixes()
 
 	for _, technology_name in ipairs({
 		"planet-discovery-muria",
-		"planet-discovery-shchierbin",
 		"planet-discovery-ribbonia",
 		"planet-discovery-paracelsin",
 		"planet-discovery-aquilo",

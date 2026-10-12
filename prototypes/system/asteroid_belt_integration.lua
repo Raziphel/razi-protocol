@@ -13,7 +13,7 @@ local STARMAP_PIXELS_PER_UNIT = 32
 
 local coords = {
   -- Crossing follows a north-east radial corridor at 0.17 turns.
-  -- Fulgora/Ribbonia are inside; Shchierbin/Paracelsin are outside.
+  -- Fulgora/Ribbonia are inside; Paracelsin lies beyond the belt.
   {"asteroid-belt-inner-edge",31,0.17},
   {"asteroid-belt-outer-edge",39,0.17}
 }

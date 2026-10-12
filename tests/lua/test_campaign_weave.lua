@@ -19,9 +19,9 @@ for _, name in ipairs({
   "planet-discovery-arig","planet-discovery-hyarion",
   "planet-discovery-tellus","planet-discovery-corrundum",
   "planet-discovery-gleba","planet-discovery-moshine",
-  "planet-discovery-apia-carnova","panglia_planet_discovery_panglia",
+  "planet-discovery-apia-carnova",
   "planet-discovery-fulgora","planet-discovery-ribbonia",
-  "planet-discovery-paracelsin","planet-discovery-shchierbin",
+  "planet-discovery-paracelsin",
   "planet-discovery-muria","planet-discovery-aquilo",
   "planet-discovery-rubia","planet-discovery-maraxsis",
   "planet-discovery-cubium","planet-discovery-secretas",
@@ -95,12 +95,6 @@ check(has_parent("planet-discovery-tellus","planetaris-polishing-science-pack"),
   "Tellus missing Hyarion science")
 check(has_parent("planet-discovery-apia-carnova","planet-discovery-moshine"),
   "Apia/Carnova missing Moshine research")
-check(has_parent("panglia_planet_discovery_panglia","planet-discovery-apia-carnova"),
-  "Panglia missing Apia/Carnova research")
-check(has_parent("planet-discovery-shchierbin","planet-discovery-muria"),
-  "Middle-frontier link missing")
-check(not has_parent("planet-discovery-shchierbin","galvanization-science-pack"),
-  "Paracelsin's late science must never gate Shchierbin")
 check(has_parent("planet-discovery-maraxsis","planet-discovery-paracelsin"),
   "Maraxsis missing Vibrant research")
 check(has_parent("planet-discovery-frozeta","planet-discovery-tenebris"),

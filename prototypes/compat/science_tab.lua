@@ -76,7 +76,6 @@ function science_tab.data_final_fixes()
 		"biorecycling-science-pack",
 		"muriatic-science-pack",
 		"rubia-biofusion-science-pack",
-		"vanadium-science-pack",
 		"planet-crucible-science-pack",
 		"battlefield-science-pack",
 		"cryogenic-science-pack",

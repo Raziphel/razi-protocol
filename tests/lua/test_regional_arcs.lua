@@ -22,6 +22,6 @@ assert(mod.regional_origin("aquilo","rubia","arc")~=nil,
 assert(mod.regional_origin("vulcanus","gleba","arc")==nil,
   "Mixed-star connection cannot use local arc centre")
 mods.base="2.1.21"
-assert(mod.regional_origin("gleba","panglia","arc")~=nil,
+assert(mod.regional_origin("gleba","moshine","arc")~=nil,
   "Nyxaris routes must support latest 2.1 clients")
 print("Factorio-version-gated regional arc fixtures passed")

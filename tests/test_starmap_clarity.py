@@ -195,10 +195,10 @@ class ConstellationTests(unittest.TestCase):
             "solaris": ("sye-solaris","vulcanus","castra","arig","hyarion",
                         "tellus","corrundum"),
             "nyxaris": ("sye-nyxaris","gleba","moshine",
-                        "apia-carnova-orbit","panglia"),
+                        "apia-carnova-orbit"),
             "vibrant": ("sye-vibrant","fulgora","ribbonia",
                         "asteroid-belt-inner-edge","asteroid-belt-outer-edge",
-                        "paracelsin","shchierbin"),
+                        "paracelsin"),
             "beetlejuice": ("sye-beetlejuice","cubium",
                            "linox-planet_linox","secretas"),
             "umbra": ("sye-umbra","tenebris","crucible-orbit",
@@ -227,8 +227,7 @@ class ConstellationTests(unittest.TestCase):
         for a,b,_,_ in self.routes:
             self.assertNotIn(frozenset((a,b)), {
                 frozenset(("ribbonia","paracelsin")),
-                frozenset(("fulgora","shchierbin")),
-                frozenset(("sye-vibrant","shchierbin"))
+                                frozenset(("sye-vibrant","paracelsin"))
             })
 
     def test_local_world_labels_have_breathing_room(self):
@@ -267,7 +266,7 @@ class ConstellationTests(unittest.TestCase):
                      ("asteroid-belt-outer-edge", "sye-umbra")):
             self.assertNotIn(tuple(sorted((a, b))), edges)
         for a, b in (("ribbonia", "asteroid-belt-inner-edge"),
-                     ("asteroid-belt-outer-edge", "shchierbin"),
+                     ("asteroid-belt-outer-edge", "paracelsin"),
                      ("asteroid-belt-outer-edge", "sye-beetlejuice")):
             self.assertIn(tuple(sorted((a, b))), edges)
         for side, radius in (("inner", 31), ("outer", 39)):
@@ -297,7 +296,7 @@ class ConstellationTests(unittest.TestCase):
             self.assertLess(radius(hot), radius(cooler))
         for inner in ("fulgora", "ribbonia"):
             self.assertLess(radius(inner), 31)
-        for outer in ("shchierbin", "paracelsin"):
+        for outer in ("paracelsin",):
             self.assertGreater(radius(outer), 39)
         self.assertGreater(radius("maraxsis"), radius("rubia"))
 

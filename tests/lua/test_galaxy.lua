@@ -32,8 +32,8 @@ local function test_routes()
 		"razi-umbra-belt-inner","razi-umbra-belt-outer",
 		"asteroid-belt-inner-edge","asteroid-belt-outer-edge",
 		"solar-system-edge", "castra", "arig", "hyarion", "tellus",
-		"corrundum", "apia-carnova-orbit", "moshine", "panglia",
-		"dea-dia-system-edge", "ribbonia", "paracelsin", "shchierbin",
+		"corrundum", "apia-carnova-orbit", "moshine",
+		"dea-dia-system-edge", "ribbonia", "paracelsin",
 		"secretas", "crucible-orbit", "frozeta"
 	}
 	local planets = {
@@ -90,7 +90,7 @@ local function test_routes()
             },
             ["old-factory-belt-bypass"] = {
                 type="space-connection",name="old-factory-belt-bypass",
-                from="fulgora",to="shchierbin",length=3000
+                from="fulgora",to="paracelsin",length=3000
             },
 			["old-direct-aquilo-rubia"] = {
                 type="space-connection", from="aquilo", to="rubia",
@@ -241,8 +241,8 @@ local function test_routes()
     "A direct route bypasses the native asteroid belt")
   check(routes["razi-ribbonia-asteroid-belt-inner-edge"]~=nil,
     "Missing inner entry to native asteroid belt")
-  check(routes["razi-asteroid-belt-outer-edge-shchierbin"]~=nil,
-    "Missing outer exit to Shchierbin")
+  check(routes["razi-asteroid-belt-outer-edge-paracelsin"]~=nil,
+    "Missing outer exit to Paracelsin")
 
     check(routes["razi-vulcanus-arig"]==nil,
       "Retired crossing line must not appear across Solaris")
@@ -250,8 +250,7 @@ local function test_routes()
         {"razi-vulcanus-hyarion",20000},
         {"razi-hyarion-corrundum",22500},
         {"razi-gleba-apia-carnova-orbit",22000},
-        {"razi-gleba-panglia",23500},
-        {"razi-vulcanus-castra",17500},
+                {"razi-vulcanus-castra",17500},
         {"razi-arig-hyarion",12000},
         {"razi-gleba-moshine",17000},
         {"razi-moshine-apia-carnova-orbit",12000},
@@ -281,7 +280,7 @@ local function test_routes()
 		"Source belt bypass survived outer-tier reconciliation")
 	for _,pair in ipairs({
 		{"ribbonia","asteroid-belt-inner-edge"},
-        {"asteroid-belt-outer-edge","shchierbin"},
+        {"asteroid-belt-outer-edge","paracelsin"},
 		{"asteroid-belt-outer-edge","sye-beetlejuice"}
 	}) do
 		local present=false
@@ -374,9 +373,9 @@ local function test_research()
 		"planet-discovery-castra", "planet-discovery-arig",
 		"planet-discovery-hyarion", "planet-discovery-tellus",
 		"planet-discovery-corrundum", "planet-discovery-apia-carnova",
-		"planet-discovery-moshine", "panglia_planet_discovery_panglia",
+		"planet-discovery-moshine",
 		"planet-discovery-ribbonia", "planet-discovery-paracelsin",
-		"planet-discovery-shchierbin", "planet-discovery-muria",
+		"planet-discovery-muria",
 		"planet-discovery-aquilo", "planet-discovery-rubia",
 		"planet-discovery-maraxsis", "planet-discovery-cubium",
 		"planet-discovery-secretas", "planet-discovery-frozeta",
@@ -451,7 +450,7 @@ local function test_research()
 	local vespera = technologies["vespera-discovery"] or {prerequisites = {}}
 	check(list_contains(vespera.prerequisites, "planet-discovery-corrundum"),
 		"Vespera unlocked without Solaris mastery")
-	check(list_contains(vespera.prerequisites, "panglia_planet_discovery_panglia"),
+	check(list_contains(vespera.prerequisites, "planet-discovery-apia-carnova"),
 		"Vespera unlocked without Nyxaris mastery")
 	check(list_contains(technologies["planet-discovery-muria"].prerequisites, "vespera-discovery"),
 		"Muria lacks Vespera entry gate")
@@ -461,10 +460,8 @@ local function test_research()
       "razi-vespera-belt-survey"), "Rubia bypasses its belt survey")
     check(list_contains(technologies["planet-discovery-vesta"].prerequisites,
       "razi-umbra-belt-survey"), "Vesta bypasses its belt survey")
-  check(list_contains(technologies["planet-discovery-shchierbin"].prerequisites,
-    "space-discovery-asteroid-belt"),"Native belt research gate missing")
   check(list_contains(technologies["planet-discovery-paracelsin"].prerequisites,
-    "planet-discovery-shchierbin"),"Icy Paracelsin unlocked before the belt")
+    "space-discovery-asteroid-belt"),"Icy Paracelsin unlocked before the belt")
 	local edge = technologies["stellar-discovery-solar-system-edge"] or {prerequisites = {}}
 	check(list_contains(edge.prerequisites, "razi-outer-frontier-mastery"),
 		"Deep Space can bypass outer-system mastery")

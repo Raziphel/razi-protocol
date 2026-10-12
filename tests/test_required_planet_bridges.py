@@ -16,7 +16,9 @@ class RequiredWorldTests(unittest.TestCase):
             self.assertIn(name,by_name)
             self.assertFalse(by_name[name].startswith(("? ","+ ")),name)
         self.assertEqual(len(names),13)
-        self.assertIn('! biological-machines-planet-wit',deps)
+        for retired in ('biological-machines-planet-wit','panglia_planet','shchierbin'):
+            self.assertIn('! '+retired,deps)
+            self.assertFalse(any(d.startswith(retired+' >=') for d in deps))
         self.assertIn('planet-muluna >= 2.7.25',deps)
     def test_unsupported_planet_ports_not_forced(self):
         deps=json.loads(contents("info.json"))["dependencies"]

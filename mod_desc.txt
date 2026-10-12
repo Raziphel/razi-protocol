@@ -7,7 +7,7 @@ Instead of leaving every mod on its own disconnected branch, Razi Protocol:
 - Rebuilds the galaxy into progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, plus the Aegis/Bellicos pulsar expedition.
 - Adds system discovery technologies and system milestone cards.
 - Rehomes many planets so the starmap and tech tree follow one readable route.
-- Integrates optional Eneas support plus Linox, Muria, and Shchierbin into that route instead of leaving them as awkward side content.
+- Integrates Eneas, Linox and Muria, while curating away weaker planet detours.
 - Replaces Nexus omega-science clutter with a cleaner Deep Space card-driven endgame when optional Nexus is installed.
 - Pushes the Krastorio intergalactic transceiver into a longer singularity-based finale.
 - Routes optional custom enemy factions onto planets that actually fit their theme.
@@ -29,11 +29,11 @@ The first major custom-system chapter. It connects Castra Prime, Arig, Hyarion, 
 
 ### Nyxaris
 
-The mid-tier science chapter. Apia Carnova, Moshine, and Panglia feed into this stage, with optional Dea Dia and Pelagos folded in when installed.
+The mid-tier science chapter. Apia Carnova and Moshine feed into this stage, with optional Dea Dia and Pelagos folded in when installed.
 
 ### Vibrant
 
-The exotic science chapter. Ribbonia, Paracelsin, Muria, Aquilo, Rubia, Maraxsis, and Shchierbin all live here. Muria and Shchierbin are integrated directly into this route instead of being left on vanilla-style offshoots.
+The exotic science chapter. Ribbonia, Paracelsin, Muria, Aquilo, Rubia and Maraxsis occupy its paired industrial branches.
 
 ### Beetlejuice
 
@@ -64,7 +64,7 @@ Several supported planets are deliberately placed inside the campaign structure:
 
 - Eneas stays an optional early Calidus branch when installed.
 - Muria becomes part of the Vibrant route ahead of Aquilo.
-- Shchierbin now branches from Paracelsin.
+- Vibrant's native asteroid belt now leads directly to Paracelsin.
 - Linox is moved into Beetlejuice instead of hanging off Vulcanus or Solaris.
 
 These placements are reflected in both the starmap and the related discovery progression.
