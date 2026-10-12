@@ -124,6 +124,10 @@ require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
 -- Native recipes and science production are never rewritten.
 require("prototypes.compat.community_industry_exchanges").data_final_fixes()
 
+-- Bring source-native planetary discoveries together at the final
+-- singularity without introducing early scientific softlocks.
+require("prototypes.technology.planetary_unification").data_final_fixes()
+
 -- Extra optional trade networks only in Deep interdependence mode.
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 

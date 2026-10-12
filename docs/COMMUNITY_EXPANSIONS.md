@@ -1,5 +1,12 @@
 # Optional community expansion compatibility, October 2026
 
+> **October 2026 update:** Razi now requires supported Factorio 2.1
+> conventional worlds from this earlier optional list, including Cerys.
+> See [Required Worlds & Bridge Roadmap](PLANETARY_BRIDGES_AND_MASTERY.md)
+> for current dependency policy and the three unresolved compatibility blockers.
+> The historical details below document the earlier integration pass.
+
+
 This pass covers the 16 specific mods proposed for Razi Protocol.
 They are side-content and optional sources of unique materials and gameplay.
 **No optional planet is required for any of the eight Razi system tech cards,

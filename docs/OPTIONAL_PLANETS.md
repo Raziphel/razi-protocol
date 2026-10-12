@@ -1,5 +1,12 @@
 # Optional Planet Expeditions
 
+> **October 2026 update:** Razi now requires supported Factorio 2.1
+> conventional worlds from this earlier optional list, including Eneas and the optional-world group; Cerys is mandatory too.
+> See [Required Worlds & Bridge Roadmap](PLANETARY_BRIDGES_AND_MASTERY.md)
+> for current dependency policy and the three unresolved compatibility blockers.
+> The historical details below document the earlier integration pass.
+
+
 Six new planet mods are supported as **non-mandatory** destinations. The five
 established candidates are **recommended** dependencies (so users are prompted
 to install them with Razi Protocol); new experimental Athos is **optional**.

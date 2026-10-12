@@ -122,6 +122,20 @@ New bonuses are limited to 25% output at 15–20% longer crafting time,
 with additional imported ingredients and no productivity/recycling bonus.
 See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
 
+## Required planetary campaign and non-planet bridges
+
+Cerys, Eneas and twelve other formerly optional or recommended 2.1 worlds
+are now part of the required installation. Existing destination technologies
+are woven into the **final** stable-singularity milestone where reachable
+without tech cycles. Native recipes and moon puzzles remain untouched.
+
+Dea Dia and Pelagos currently have only Factorio 2.0 portal releases, and
+Ferrum's documented 2.1 build has a version-floor mismatch. Those three
+remain guarded optional worlds until compatible releases can be validated.
+No new non-planet mod is installed merely for its ideas.
+
+See [Required Worlds & Bridge Roadmap](docs/PLANETARY_BRIDGES_AND_MASTERY.md).
+
 ## Planet Integrations
 
 Some world relationships need particular care:
