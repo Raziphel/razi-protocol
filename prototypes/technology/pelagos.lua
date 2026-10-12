@@ -1,9 +1,10 @@
 -- Pelagos can feed Aquilo/lithium in its own mod settings, so gating its
 -- discovery behind nyxaris-discovery creates a technology cycle.
 -- Prefer the Dea Dia branch when both optional integrations are installed.
--- Otherwise use Nyxaris directly for the optional ocean-world branch.
+-- Fall back through Panglia when Pelagos is installed on its own.
 set_first_existing_prerequisite("planet-discovery-pelagos", {
 	"system-discovery-dea-dia",
+	"panglia_planet_discovery_panglia",
 	"nyxaris-discovery"
 })
 set_technology_unit_ingredients_if_exists("planet-discovery-pelagos", build_integrated_science_ingredients({

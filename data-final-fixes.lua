@@ -54,6 +54,8 @@ end
 
 deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")
+deleteRoute("sye-vibrant-shchierbin")
+deleteRoutesBetween("sye-vibrant", "shchierbin")
 
 local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
 if ribbonia then

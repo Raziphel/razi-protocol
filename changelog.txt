@@ -1,23 +1,4 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.1.11
-Date: 12. 10. 2026
-  Balancing:
-    - Curated the planet roster, retiring Panglia's unfinished beta and Shchierbin's modest vanadium detour.
-    - Reconnected Nyxaris around Apia-Carnova and Moshine with optional Pelagos and Dea Dia branches.
-    - Moved Linox inward within Beetlejuice to fit its harsh solar-scorched identity.
-
-  Changes:
-    - Removed retired planet routes, research hooks, science references, enemy routing, dossiers and Chronicle quests.
-    - Updated quest projects to link Apia and Moshine research as well as Paracelsin and Muria chemistry.
-    - Corrected planet descriptions for Vesta, Linox, Apia-Carnova and other worlds.
-    - Added a quality audit listing the curated roster and existing-save migration precautions.
-
-  Compatibility:
-    - Explicitly excludes the retired planet mods from this campaign.
-    - Preserved main chapter discoveries, routes, technology gates, and all original vanilla Space Age planets.
-    - The GitHub workflow remains manually triggered only; no automatic Actions runs added.
-
----------------------------------------------------------------------------------------------------
 Version: 2.1.10
 Date: 12. 10. 2026
   Graphics:

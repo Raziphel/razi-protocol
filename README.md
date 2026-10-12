@@ -9,7 +9,6 @@ Instead of leaving every planet on its own island, Razi Protocol rebuilds the ru
 - [Architecture and data-stage layout](docs/ARCHITECTURE.md): module ownership, loading order, Chronicle storage, and compatibility boundaries.
 - [Repository health and cleanup decisions](docs/CODE-HEALTH.md): findings, safe removals, and remaining game-test risks.
 - [Chronicle game QA](docs/CHRONICLE-QA.md): save migration, multiplayer and GUI checks.
-- [Planet quality gate](docs/PLANET-QUALITY-AUDIT.md): curated roster, removals, design criteria and save-upgrade guidance.
 - Run `python3 tools/audit_repository.py` locally for a no-dependency, read-only static check. The GitHub Actions workflow remains manual-only.
 
 ## Why It Exists
@@ -30,7 +29,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
-- Integrates optional Eneas support plus Linox and Muria directly into the intended campaign flow, while retiring unfinished or redundant planet branches.
+- Integrates optional Eneas support plus Linox, Muria, and Shchierbin directly into the intended campaign flow.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
 - Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
@@ -66,7 +65,7 @@ After reaching later star systems, the expedition can research **five optional R
 | Cubium and Tenebris discovery | Vibrant Tech Cards | Tenebris bioluminescence + Cubium gas manipulation |
 | Intergalactic Singularity Theory | Beetlejuice Tech Cards | Promethium + Crucible research |
 
-When their science packs exist, additional **optional research exchange recipes** bring in Cerys/Muluna, Dea Dia/Pelagos, Moshine/Dea Dia-related science, Muria/Paracelsin, and Promethium-882/Pulsar projects without blocking the base exchanges. The recipe inputs are built from the final installed card recipes, not hardcoded guesses about missing mod packs.
+When their science packs exist, additional **optional research exchange recipes** bring in Cerys/Muluna, Dea Dia/Pelagos, Moshine/Dea Dia-related science, Muria/Shchierbin, and Promethium-882/Pulsar projects without blocking the base exchanges. The recipe inputs are built from the final installed card recipes, not hardcoded guesses about missing mod packs.
 
 The five exchange discoveries are also Chronicle side quests. These are **production optimizations**, not shortcuts to a new star system. More advanced discoveries feed back into early-system research, rewarding planet-to-planet supply lines.
 
@@ -75,7 +74,7 @@ The five exchange discoveries are also Chronicle side quests. These are **produc
 Razi Protocol includes an in-game **Expedition Chronicle**, opened from its own **Expedition Chronicle** button at the top of the game screen. It is a story-driven journal, not a parallel set of unlocks. Its missions follow the actual Space Age and K2SO research milestones from the opening rocket all the way through activating the intergalactic transceiver.
 
 - Six ordered chapters: **Calidus**, **Solaris**, **Nyxaris**, **Vibrant**, **Beetlejuice** and **Deep Space**.
-- **A chapter-spanning quest roster** with research milestones, operational spaceflight objectives, first landings and interplanetary research projects. Planetary arrival quests only appear when the planet and its discovery technology are installed.
+- **86 story missions**: 52 technology research milestones, 2 operational spaceflight milestones, 24 first-landing missions and 8 interplanetary research projects. Planetary arrival quests only appear when the planet and its discovery technology are installed.
 - Chapter introductions and epilogues tell a continuous expedition story. Optional-mod missions appear only when their technology exists. Branch labels do not promise that installed mods have no research prerequisites: the real technology tree remains authoritative.
 - Quest and chapter status comes from the force's research progress. The journal adds **no new research locks**, completion rewards or planet-access shortcuts.
 - **Cross-planet projects** check several researched technologies across different worlds, show the required research and progress count, and give the expedition a narrative reason to combine its discoveries. Missing optional technologies are skipped, and a project needs at least two real technologies to appear.
@@ -125,11 +124,11 @@ Solaris is the first major custom-system branch. It brings Castra Prime, Arig, H
 
 ### Nyxaris
 
-Nyxaris is the shared mid-tier chapter. Apia-Carnova and Moshine form its biological and technological research partnership, with optional Dea Dia and Pelagos branches when compatible.
+Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia and Pelagos progression when either is installed.
 
 ### Vibrant
 
-Vibrant is the exotic science chapter. It holds Ribbonia, Paracelsin, Muria, Aquilo, Rubia, and Maraxsis. It is the point where the campaign starts leaning into stranger science packs, more specialized planets, and stronger thematic enemy placements.
+Vibrant is the exotic science chapter. It holds Ribbonia, Paracelsin, Muria, Aquilo, Rubia, Maraxsis, and Shchierbin. It is the point where the campaign starts leaning into stranger science packs, more specialized planets, and stronger thematic enemy placements.
 
 ### Beetlejuice
 
@@ -162,7 +161,8 @@ Several planets are not just "supported"; they are deliberately placed into the 
 
 - Eneas stays an optional early Calidus moon branch when installed.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
-- Linox is moved into the hot inner orbit of Beetlejuice as a later Cubium-side branch.
+- Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
+- Linox is moved into Beetlejuice as a later Cubium-side branch.
 
 These are not cosmetic placements only. Razi Protocol also adjusts their route assumptions, discovery placement, and nearby progression gates so the starmap and tech tree tell the same story.
 
@@ -188,7 +188,7 @@ Optional Void Processing is still supported, but it is treated as a late Deep Sp
 Razi Protocol supports several optional enemy packs and places them where they fit best.
 
 - Arachnids: Arig, Nexus, Crucible
-- Armoured biters: Hyarion, Nexus, Crucible
+- Armoured biters: Panglia, Hyarion, Nexus, Crucible
 - Cold biters: Aquilo, Paracelsin, Frozeta, optional Cerys, Nexus
 - Electric flying enemies: Corrundum, Ribbonia, Nexus, plus their native Fulgora theme
 - Explosive biters: Moshine, Nexus
@@ -239,11 +239,13 @@ Core content in the intended experience includes:
 - PlanetsLib
 - Muluna
 - Linox
+- Shchierbin
 - Muria
 - Dea Dia (optional)
 - Corrundum
 - Apia
 - Moshine
+- Panglia
 - Pelagos (optional)
 - Tenebris Prime
 - Secretas
@@ -257,7 +259,7 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Panglia (unfinished beta) and Shchierbin (lightweight vanadium detour) are no longer part of the curated pack. Disable these mods before enabling this revision. Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
 ## Modpack Guidance
 

@@ -14,6 +14,7 @@ local armoured_biter_units = {
 }
 
 local armoured_planets = {
+	"panglia",
 	"hyarion",
 	"nexus",
 	"crucible"
@@ -24,6 +25,28 @@ local armoured_enemy_entities = {
 }
 
 local armoured_biter_tiles = {
+	"panglia-volcanic-soil-dark",
+	"panglia-volcanic-soil-light",
+	"panglia-volcanic-ash-soil",
+	"panglia-volcanic-ash-flats",
+	"panglia-volcanic-ash-light",
+	"panglia-volcanic-ash-dark",
+	"panglia-volcanic-cracks",
+	"panglia-volcanic-cracks-warm",
+	"panglia-volcanic-folds",
+	"panglia-volcanic-folds-flat",
+	"panglia-volcanic-folds-warm",
+	"panglia-volcanic-pumice-stones",
+	"panglia-volcanic-cracks-hot",
+	"panglia-volcanic-jagged-ground",
+	"panglia-volcanic-smooth-stone",
+	"panglia-volcanic-smooth-stone-warm",
+	"panglia-volcanic-ash-cracks",
+	"panglia-midland-turquoise-bark",
+	"panglia-midland-turquoise-bark-2",
+	"panglia-wetland-light-dead-skin",
+	"panglia-wetland-dead-skin",
+	"panglia-midland-cracked-lichen-dark",
 	"hyarion-jagged-ground",
 	"hyarion-cracks-hot",
 	"hyarion-cracks-warm",

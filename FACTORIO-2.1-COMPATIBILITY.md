@@ -6,8 +6,6 @@ Razi Protocol now declares Factorio 2.1. Every direct dependency was checked aga
 
 ## Result
 
-**October 12 roster update:** Panglia and Shchierbin are now explicitly incompatible with Razi Protocol to remove unfinished or redundant worlds from the curated experience. The counts and in-engine load result below describe the previous roster and are not a claim that the reduced roster has been game-tested.
-
 - 94 direct positive dependencies were audited: 77 have native Factorio 2.1 releases and 17 do not.
 - 190 portal mods were inspected across the direct dependency set and its required transitive dependencies.
 - 102 portal-hosted mods remain on the required load path, and all 102 have native 2.1 releases. Factorio's bundled `quality` and `recycler` feature modules are also reached transitively.
@@ -32,10 +30,12 @@ The minimum versions below are now recorded in `info.json`.
 - `planetaris-hyarion >= 1.3.23`
 - `planetaris-arig >= 1.1.44`
 - `linox >= 1.8.9`
+- `shchierbin >= 0.3.19`
 - `Muria >= 1.8.6`
 - `corrundum >= 1.0.49`
 - `apia >= 0.3.1`
 - `Moshine >= 1.2.10`
+- `panglia_planet >= 0.6.1`
 - `tenebris-prime >= 1.3.12`
 - `secretas >= 1.0.37`
 - `maraxsis >= 1.39.1`
@@ -133,7 +133,7 @@ These declarations intentionally remain in `info.json` without invented 2.1 vers
 
 ## Loader validation
 
-Before the October planet removal, a required-only installation containing all 103 native dependencies plus Factorio's built-in dependencies was staged under Factorio 2.1.19. `--dump-data` completed successfully through settings, every data stage, final prototype validation, and data dump generation.
+A required-only installation containing all 103 native dependencies plus Factorio's built-in dependencies was staged under Factorio 2.1.19. `--dump-data` completed successfully through settings, every data stage, final prototype validation, and data dump generation.
 
 That validation exposed two Razi-owned compatibility issues, which are now fixed:
 
