@@ -200,7 +200,7 @@ local function register_part(part,index)
     localised_description={"item-description."..part.name}
   }
   local recipe={
-    type="recipe",name=part.name,category="crafting",enabled=false,
+    type="recipe",name=part.name,categories={"crafting"},enabled=false,
     ingredients=table.deepcopy(part.ingredients),
     results={{type="item",name=part.name,amount=part.output}},
     energy_required=part.energy,main_product=part.name,
