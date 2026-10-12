@@ -107,6 +107,11 @@ rawset(_G,"settings",nil)
 rawset(_G,"data",{raw={technology={
  ["vibrant-discovery"]=tech(),["vespera-discovery"]=tech()
 },planet={},["space-location"]={}}})
+-- With no candidate worlds installed, skip the giant recipe and
+-- technology scan. The direct named prerequisite checks still work.
+setmetatable(data.raw.technology,{__pairs=function()
+  error("Unnecessary world/research scan with no candidate worlds")
+end})
 module.data_final_fixes()
 assertok(not data.raw.technology["research-cerys"],
   "The weave fabricated an absent optional mod")

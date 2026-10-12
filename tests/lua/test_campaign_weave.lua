@@ -66,7 +66,13 @@ for i=1,600 do
     results={{type="item",name="irrelevant-product-"..i,amount=1}}
   }
 end
+local lab_scans=0
+setmetatable(raw.lab,{__pairs=function(t)
+  lab_scans=lab_scans+1
+  return next,t,nil
+end})
 M.data_final_fixes()
+check(lab_scans==1,"Campaign weave rebuilt its lab inputs for each science check")
 -- The deliverability check and the later ingredient insertion must both
 -- evaluate the same owner, not silently relax the provenance rule.
 local source=assert(io.open("prototypes/technology/campaign_weave.lua","r"))
@@ -131,6 +137,7 @@ check(t["planet-discovery-carna"]==nil and t["planet-discovery-pelagos"]==nil,
 local snapshots={}
 for name,v in pairs(t) do snapshots[name]={#v.prerequisites,#v.unit.ingredients} end
 M.data_final_fixes()
+check(lab_scans==1,"Repeated campaign weaving rescanned lab inputs")
 for name,v in pairs(t) do
   check(#v.prerequisites==snapshots[name][1] and
     #v.unit.ingredients==snapshots[name][2],"Duplicate research on repeated pass: "..name)

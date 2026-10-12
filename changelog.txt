@@ -1,3 +1,12 @@
+Version: 2.1.21
+Date: 13. 10. 2026
+  Startup performance:
+    - Reuse crafting-machine category/port indexes and lab science compatibility across optional industry recipes.
+    - Build campaign research unlock indexes only for recipes producing relevant science packs.
+    - Limit regional bridge producer checks to the installed candidate worlds' actual science requirements; skip broad scanning when none are installed.
+    - Preserve native crafting restrictions, planet surfaces, recipes, research prerequisites, starmap visuals and save data.
+    - Add data-stage cache and research-guard regression checks.
+
 Version: 2.1.20
 Date: 13. 10. 2026
   Runtime performance:

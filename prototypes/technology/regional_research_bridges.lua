@@ -47,14 +47,18 @@ function M.safe_link(target,parent)
   end
   return true
 end
+local watched_worlds={}
+for _,phase in ipairs(M.phases) do
+  for _,world in ipairs(phase.worlds) do watched_worlds[world]=true end
+end
 local function native_unlocks()
-  -- Build once from actual technology effects, not one catalogue scan
-  -- per optional world. Stable ordering across repeated Factorio loads.
+  -- Only the few worlds involved in paired frontier research matter here.
   local by_world={}
   for id,t in pairs(data.raw.technology or {}) do
     if active(id) then
       for _,effect in ipairs(t.effects or {}) do
-        if effect.type=="unlock-space-location" and effect.space_location then
+        if effect.type=="unlock-space-location"
+          and watched_worlds[effect.space_location] then
           local list=by_world[effect.space_location]
           if not list then list={} by_world[effect.space_location]=list end
           list[#list+1]=id
@@ -79,15 +83,17 @@ end
 -- A source discovery can look early while the science used to research it
 -- is manufactured by a recipe locked behind the *next* paired star.
 -- Index only once and require a known producer not gated by either frontier.
-local function production_index()
-  local products,unlockers={},{}
+local function production_index(wanted)
+  local products,unlockers,recipes={},{},{}
+  if not next(wanted) then return products,unlockers end
   local function record(recipe_name,variant)
     if not variant then return end
     local function add(name,kind)
-      if not name or kind=="fluid" then return end
-      local list=products[name] or {}
+      if not name or kind=="fluid" or not wanted[name] then return end
+      local list=products[name]
+      if not list then list={} products[name]=list end
       list[#list+1]=recipe_name
-      products[name]=list
+      recipes[recipe_name]=true
     end
     add(variant.result,"item")
     for _,entry in ipairs(variant.results or {}) do
@@ -101,13 +107,15 @@ local function production_index()
       record(name,recipe.expensive)
     end
   end
+  -- A matching science product is the only reason to inspect an unlock.
+  if not next(recipes) then return products,unlockers end
   for id,node in pairs(data.raw.technology or {}) do
     if active(id) then
       for _,effect in ipairs(node.effects or {}) do
-        if effect.type=="unlock-recipe" and effect.recipe then
-          local list=unlockers[effect.recipe] or {}
+        if effect.type=="unlock-recipe" and recipes[effect.recipe] then
+          local list=unlockers[effect.recipe]
+          if not list then list={} unlockers[effect.recipe]=list end
           list[#list+1]=id
-          unlockers[effect.recipe]=list
         end
       end
     end
@@ -146,8 +154,23 @@ end
 function M.data_final_fixes()
   if not interdependence.enabled() then return end
   for _,edge in ipairs(M.bridges) do M.safe_link(edge[1],edge[2]) end
+  local has_world=false
+  for name in pairs(watched_worlds) do
+    if present(name) then has_world=true break end
+  end
+  if not has_world then return end
   local sources=native_unlocks()
-  local producers,unlockers=production_index()
+  local wanted={}
+  for _,phase in ipairs(M.phases) do
+    for _,name in ipairs(phase.worlds) do
+      local candidate=native_unlock(name,sources)
+      local node=candidate and tech(candidate)
+      for _,entry in ipairs(node and node.unit and node.unit.ingredients or {}) do
+        wanted[entry.name or entry[1]]=true
+      end
+    end
+  end
+  local producers,unlockers=production_index(wanted)
   for _,phase in ipairs(M.phases) do
     for _,name in ipairs(phase.worlds) do
       local candidate=native_unlock(name,sources)

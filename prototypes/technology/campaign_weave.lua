@@ -104,14 +104,20 @@ local function build_indexes()
     index_variant(rawget(recipe, "normal"), recipe_name, wanted, producers)
     index_variant(rawget(recipe, "expensive"), recipe_name, wanted, producers)
   end
-  for name, tech in pairs(data.raw.technology or {}) do
-    for _, effect in ipairs(tech.effects or {}) do
-      if effect.type == "unlock-recipe" and effect.recipe then
-        local matches = unlockers[effect.recipe]
-        if not matches then
-          matches = {}; unlockers[effect.recipe] = matches
+  -- There's no need to retain unlocks for every unrelated recipe
+  -- installed by this modpack. Only science producers are queried below.
+  local relevant={}
+  for _,recipes in pairs(producers) do
+    for _,recipe_name in ipairs(recipes) do relevant[recipe_name]=true end
+  end
+  if next(relevant) then
+    for name, tech in pairs(data.raw.technology or {}) do
+      for _, effect in ipairs(tech.effects or {}) do
+        if effect.type=="unlock-recipe" and relevant[effect.recipe] then
+          local matches=unlockers[effect.recipe]
+          if not matches then matches={} unlockers[effect.recipe]=matches end
+          matches[#matches+1]=name
         end
-        matches[#matches + 1] = name
       end
     end
   end
@@ -148,15 +154,24 @@ local function has_production_recipe_before(pack,target,owner)
   return false
 end
 
+local lab_inputs
 local function has_compatible_lab(ingredients, pack)
-  for _, lab in pairs(data.raw.lab or {}) do
-    if lab.inputs then
-      local accepted = {}
-      for _, item in ipairs(lab.inputs) do accepted[item] = true end
-      local valid = accepted[pack] == true
-      for _, ingredient in ipairs(ingredients) do
+  if not lab_inputs then
+    lab_inputs={}
+    for _,lab in pairs(data.raw.lab or {}) do
+      if lab.inputs then
+        local accepted={}
+        for _,item in ipairs(lab.inputs) do accepted[item]=true end
+        lab_inputs[#lab_inputs+1]=accepted
+      end
+    end
+  end
+  for _,accepted in ipairs(lab_inputs) do
+    if accepted[pack] then
+      local valid=true
+      for _,ingredient in ipairs(ingredients) do
         if not accepted[ingredient.name or ingredient[1]] then
-          valid = false
+          valid=false
           break
         end
       end
