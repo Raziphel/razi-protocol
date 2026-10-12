@@ -137,6 +137,19 @@ function theme.planet_icon(parent, planet, size)
   return nil
 end
 
+function theme.system_portrait(parent, chapter_id, size)
+  if chapter_id == "calidus" or chapter_id == "deep-space" then
+    return theme.chapter_icon(parent, chapter_id, size or 64)
+  end
+  local sprite = "razi-system-portrait-" .. chapter_id
+  if helpers and helpers.is_valid_sprite_path and helpers.is_valid_sprite_path(sprite) then
+    local image = parent.add{type = "sprite", sprite = sprite, resize_to_sprite = false}
+    image.style.size = size or 76
+    return image
+  end
+  return theme.chapter_icon(parent, chapter_id, size or 64)
+end
+
 function theme.technology_icon(parent, technology_name, size)
   if not technology_name then return nil end
   local path = "technology/" .. technology_name

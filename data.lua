@@ -1,3 +1,4 @@
+require "prototypes.graphics.starmap_portraits"
 require "prototypes.system.calidus"
 require("prototypes.system.bellicos").data()
 require "prototypes.system.eneas"

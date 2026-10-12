@@ -48,6 +48,11 @@ Beetlejuice's orbital spacing is adjusted for readability: Vesta moves closer to
 
 The System Atlas now distinguishes route types and shapes. The vanilla starmap remains the navigation interface; native Factorio does not expose a general-purpose backdrop texture or arbitrary route colors, so this update intentionally avoids claiming those unsupported effects.
 
+
+### Matching Chronicle star portraits
+
+The Chronicle Overview and System Atlas now render the same four corona graphics used in the native starmap. A compact Deep Space landmark panel shows any installed edge, shattered-planet, black-hole and Oort Cloud destinations and their actual discovery state. These are navigational references, not additional world spawns.
+
 ## Cross-System Research Exchanges
 
 After reaching later star systems, the expedition can research **five optional Research Exchanges** that convert combinations of sciences from different planet mods into more efficient versions of existing Tech Cards. Each exchange unlocks a crafting recipe producing **three system cards** from **two complete batches** of its original ingredients plus **one additional science pack from each of two specialist planetary disciplines**. The original card recipe remains unchanged, and no new recipe is required to progress through the story.

@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.10
+Date: 12. 10. 2026
+  Graphics:
+    - Reused the four original starmap corona sprites as campaign chapter portraits in the Chronicle Overview and System Atlas.
+    - Added a Deep Space landmark guide for installed outer-system and anomalous space locations, including current discovery states.
+
+  Compatibility:
+    - Used native Factorio sprite prototypes and existing space-location discovery checks.
+    - Kept the main route graph and travel mechanics untouched.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.9
 Date: 12. 10. 2026
   Graphics:

@@ -87,7 +87,7 @@ local function chapter_summary(parent, ctx, player, chapter, ledger, wide)
   local done, total = totals(ctx, force, ledger, chapter)
   local head = theme.card(parent, {padding = 12})
   local row = theme.row(head, 12)
-  theme.chapter_icon(row, chapter.id, 46)
+  theme.system_portrait(row, chapter.id, 72)
   local stack = theme.column(row, 3)
   theme.heading(stack, chapter.title, chapter.id)
   theme.caption(stack, chapter.subtitle)
@@ -429,8 +429,35 @@ local function route_entries(name)
 end
 
 local function atlas(parent, ctx, player, chapter, ledger, state)
-  theme.heading(parent, "SYSTEM ATLAS  /  " .. chapter.title, chapter.id)
+  local identity = theme.card(parent, {padding = 10})
+  local branding = theme.row(identity, 12)
+  theme.system_portrait(branding, chapter.id, 100)
+  local details = theme.column(branding, 4)
+  theme.heading(details, "SYSTEM ATLAS  /  " .. chapter.title, chapter.id)
+  theme.caption(details, chapter.subtitle)
+  theme.badge(details, "RAZI PROTOCOL | EXPEDITION CHART", "active",
+    theme.tint(chapter.id))
   theme.caption(parent, "Map connections describe possible paths, not unlocked travel. Corridor badges distinguish local lanes, slipstreams and hazardous outer routes.")
+  if chapter.id == "deep-space" then
+    theme.heading(parent, "DEEP-SPACE LANDMARKS", chapter.id)
+    theme.caption(parent, "Late-expedition markers, hazards and anomalous navigation points. These are existing modpack destinations, not new travel shortcuts.")
+    local landmarks = {
+      {"solar-system-edge", "Edge of the charted solar system"},
+      {"shattered-planet", "High-risk promethium frontier"},
+      {"black-hole-approach", "Gravitational anomaly approach"},
+      {"black-hole", "Event-horizon destination"},
+      {"oort-cloud", "Remote outer-cloud passage"}
+    }
+    for _, entry in ipairs(landmarks) do
+      if prototypes.space_location[entry[1]] then
+        local card = theme.card(parent, {padding=6})
+        local status = player.force.is_space_location_unlocked(entry[1])
+        theme.label(card, entry[2], {bold=true, color=theme.tint(chapter.id)})
+        theme.badge(card, status and "CHARTED" or "AWAITING DISCOVERY",
+          status and "completed" or "locked")
+      end
+    end
+  end
   local picker = theme.card(parent)
   theme.heading(picker, "Destinations", chapter.id)
   local buttons = picker.add{type="table", column_count=3}

@@ -58,3 +58,10 @@ These steps deliberately use manual Factorio testing so normal pushes do not con
 4. Confirm Frozeta has an outer independent orbit, Vesta sits closer to Beetlejuice, and all original space routes still connect.
 5. Check four additional system projects, their chronological progress, save persistence and optional Pelagos handling.
 6. Validate labels in English and Russian without changing prototype research, recipe cost, or route availability.
+
+## Star portraits and landmarks (2.1.10)
+
+1. Check the Atlas and chapter Overview show the matching transparent corona portrait for Solaris, Nyxaris, Vibrant and Beetlejuice.
+2. Verify Calidus and Deep Space use their existing campaign emblems without sprite-path errors.
+3. In Deep Space, check missing Nexus or Oort Cloud prototypes safely remove the corresponding landmark cards.
+4. Check portrait sizes on 1366x768 and 1920x1080 and with UI scaling at 125% / 150%.
