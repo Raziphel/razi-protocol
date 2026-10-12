@@ -1,4 +1,20 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.6
+Date: 12. 10. 2026
+  Features:
+    - Rebuilt the Expedition Chronicle as a seven-view campaign dashboard with Overview, Missions, Planets, Projects, Timeline, Records and System Atlas.
+    - Added a shared, chapter-coloured GUI theme, science and planet icon cards, progress bars, navigation improvements, compact view and per-player interface preferences.
+    - Added rich planet dossiers, interplanetary project summaries, expedition timing records and a chronological milestone timeline.
+    - Added live route prototype inspection with connection lengths, destination unlock status, and orbiting platform counts without modifying travel paths.
+    - Recorded first constructed space platform and first completed space-platform voyage as story milestones.
+    - Added optional short-lived completion notifications for major expeditions and project breakthroughs.
+
+  Bugfixes:
+    - Preserved imported-save history without inventing previous timestamps.
+    - Kept Chronicle activity separate from the native starmap and research unlocks to avoid conflicting with other UI and progression mods.
+    - Limited periodic tracking and visual work to avoid unnecessary per-tick GUI rebuilding.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.5
 Date: 12. 10. 2026
   Features:
