@@ -102,6 +102,9 @@ for _,name in ipairs({matrix,lattice}) do
   check(item and recipe and tech,"Expected two cross-system components")
   check(recipe.enabled==false and recipe.auto_recycle==false,
     "Component cannot be automatically recycled or auto-unlocked")
+  check(recipe.categories and recipe.categories[1]=="crafting"
+      and recipe.category==nil and recipe.additional_categories==nil,
+    "Component recipe must use Factorio 2.1's unified categories field")
   check(recipe.allow_productivity==false,"Intermediate is productivity-safe")
   check(recipe.results[1].amount==2,"Each batch must produce two components")
   check(#tech.unit.ingredients==2,"No five-pack research soup")
