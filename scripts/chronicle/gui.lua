@@ -1,7 +1,7 @@
 -- Expedition Chronicle screen, shared visual system and optional achievement toasts.
 -- Rendering is event driven; this file does not alter research or routes.
-local theme = require("scripts.chronicle_theme")
-local dossiers = require("scripts.chronicle_planets")
+local theme = require("scripts.chronicle.theme")
+local dossiers = require("scripts.chronicle.planets")
 local ui = {}
 local ROOT = "razi_chronicle_"
 local WINDOW = ROOT .. "window"

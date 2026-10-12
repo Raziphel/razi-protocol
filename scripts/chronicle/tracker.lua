@@ -1,6 +1,6 @@
 -- Expedition Chronicle: technology-backed story and shared force timing.
 -- Times use simulation ticks, so pausing or closing a save does not inflate results.
-local story = require("scripts.journal_story")
+local story = require("scripts.chronicle.story")
 local journal = {}
 
 local ROOT = "razi_protocol_chronicle"
@@ -290,7 +290,7 @@ end
 
 -- The gameplay tracker only owns save-state and events. All seven screens,
 -- the System Atlas and notifications share the same GUI presentation helpers.
-local Chronicle = require("scripts.chronicle_gui")
+local Chronicle = require("scripts.chronicle.gui")
 
 local function context()
   return {

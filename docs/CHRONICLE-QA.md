@@ -1,4 +1,4 @@
-# Expedition Chronicle 2.1.6 QA Checklist
+# Expedition Chronicle 2.1.7 QA Checklist
 
 These steps deliberately use manual Factorio testing so normal pushes do not consume GitHub Actions minutes.
 
@@ -33,3 +33,9 @@ These steps deliberately use manual Factorio testing so normal pushes do not con
 - Before-installation historical time cannot be reconstructed from a save.
 - The route panel reflects prototype connections and destination unlocks; it does not claim that every route is currently traversable by an actual space platform.
 - This release extends the Chronicle and adds a reusable theme. It does not replace external GUI mods or the native Factorio starmap controls.
+
+## Architecture migration validation
+
+- Verify moving Lua modules into `scripts/chronicle/` loads without any stale `require` paths.
+- Confirm `storage.razi_protocol_chronicle` keeps existing force and player records on update.
+- Confirm the manual-only GitHub Actions check was not enabled or triggered by this release.

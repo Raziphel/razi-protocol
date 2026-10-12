@@ -112,7 +112,7 @@ end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
-local journal = require("scripts.journal")
+local journal = require("scripts.chronicle.tracker")
 
 script.on_init(function()
 	check_existing_transceivers()

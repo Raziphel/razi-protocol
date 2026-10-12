@@ -4,6 +4,13 @@ Razi Protocol is a large progression, compatibility, and starmap overhaul for *F
 
 Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into the intergalactic transceiver finale. When Nexus is installed, its black-hole and Sol content becomes an additional Deep Space branch.
 
+## Maintainer Documentation
+
+- [Architecture and data-stage layout](docs/ARCHITECTURE.md): module ownership, loading order, Chronicle storage, and compatibility boundaries.
+- [Repository health and cleanup decisions](docs/CODE-HEALTH.md): findings, safe removals, and remaining game-test risks.
+- [Chronicle game QA](docs/CHRONICLE-QA.md): save migration, multiplayer and GUI checks.
+- Run `python3 tools/audit_repository.py` locally for a no-dependency, read-only static check. The GitHub Actions workflow remains manual-only.
+
 ## Why It Exists
 
 Big Space Age planet packs are fun, but they also tend to suffer from the same problems:

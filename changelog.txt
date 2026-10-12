@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.7
+Date: 12. 10. 2026
+  Changes:
+    - Organized the Chronicle story, runtime tracking, GUI, theme and planet dossiers under scripts/chronicle while retaining saved force and player data.
+    - Added architecture, maintenance and manual QA documentation and an offline repository audit script.
+    - Removed the fully commented-out experimental routes file, unused legacy orbit sprites and empty editor metadata files.
+
+  Bugfixes:
+    - Kept the native data-stage entry points, progression, map routes, and intergalactic transceiver event hooks unchanged.
+    - Preserved manual-only GitHub Actions checks to avoid automatic runner usage.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.6
 Date: 12. 10. 2026
   Features:
