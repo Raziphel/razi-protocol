@@ -138,6 +138,17 @@ function theme.planet_icon(parent, planet, size)
   return nil
 end
 
+function theme.technology_icon(parent, technology_name, size)
+  if not technology_name then return nil end
+  local path = "technology/" .. technology_name
+  if helpers and helpers.is_valid_sprite_path and helpers.is_valid_sprite_path(path) then
+    local icon = parent.add{type = "sprite", sprite = path}
+    icon.style.size = size or 30
+    return icon
+  end
+  return nil
+end
+
 function theme.chapter_icon(parent, chapter_id, size)
   local path = theme.icons[chapter_id]
   if path and helpers and helpers.is_valid_sprite_path and helpers.is_valid_sprite_path(path) then
