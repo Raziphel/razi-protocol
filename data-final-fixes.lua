@@ -131,6 +131,9 @@ require("prototypes.technology.planetary_unification").data_final_fixes()
 -- Keep required cross-planet logistics and defense technologies aligned
 -- with Razi's actual chapter discoveries. Source recipes stay unchanged.
 require("prototypes.technology.galactic_mod_research").data_final_fixes()
+-- Bridge source-native science discoveries between existing stars.
+-- Cycle guarded and never inserts source recipes or science cost multipliers.
+require("prototypes.technology.regional_research_bridges").data_final_fixes()
 -- Highlight Razi's main research chapters using the engine's native
 -- "Show only essential technologies" research filter.
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
