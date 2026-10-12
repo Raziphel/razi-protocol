@@ -1,0 +1,30 @@
+-- Editorial descriptions for the Chronicle dossier and system atlas.
+-- These do not change prototype stats, tech prerequisites or planet routes.
+return {
+  vulcanus = {role="Foundry frontier", hazard="Extreme heat and volcanic terrain", science={"metallurgic-science-pack"}, links="Fulgora's electronics and Gleba's biology complete the inner-world research triangle."},
+  fulgora = {role="Electrical archaeology", hazard="Lightning and scrap-built industry", science={"electromagnetic-science-pack"}, links="Recover electromagnetic engineering to complement Vulcanus production and Gleba processing."},
+  gleba = {role="Living industry", hazard="Spoilage and ecological production cycles", science={"agricultural-science-pack"}, links="Biological industry completes the triad needed for the first interstellar coordinates."},
+  muluna = {role="Lunar expedition", hazard="Off-world logistics and specialised lunar science", science={"lunar-science-pack"}, links="Connect orbital research to the first lunar infrastructure beyond Nauvis."},
+  castra = {role="Solaris beachhead", hazard="Hostile frontier logistics", science={"battlefield-science-pack"}, links="Castra is the industrial and military opening to the Solaris chain."},
+  arig = {role="Compression works", hazard="Frontier materials and throughput", science={"planetaris-compression-science-pack"}, links="Its industry feeds the connected Hyarion, Tellus and Corrundum disciplines."},
+  hyarion = {role="Precision manufacturing", hazard="Demanding industrial processes", science={"planetaris-polishing-science-pack"}, links="Build a higher-precision supply chain between Arig and Tellus."},
+  tellus = {role="Bioengineering frontier", hazard="New industrial ecology", science={"planetaris-bioengineering-science-pack"}, links="Tellus broadens the industrial chain before Corrundum's electrical research."},
+  corrundum = {role="Electrochemical terminus", hazard="Electrical and chemical engineering", science={"electrochemical-science-pack"}, links="Completes the Solaris expedition and sets up the Nyxaris slipstream."},
+  ["apia-carnova"] = {role="Living systems research", hazard="Biological adaptation", science={"apicultural-science-pack"}, links="One of the Nyxaris branch's three environmental research pillars."},
+  moshine = {role="Environmental engineering", hazard="Unstable and extreme atmospheric conditions", science={"thermodynamic-science-pack"}, links="Its environmental lessons reinforce Apia and Panglia research."},
+  panglia = {role="Hostile biological frontier", hazard="Wildlife and biological threats", science={"planetaris-pathological-science-pack"}, links="Panglia challenges the expedition's survival and defence designs."},
+  pelagos = {role="Oceanic research branch", hazard="Marine production and transport", science={"pelagos-science-pack"}, links="Optional Nyxaris research that broadens the biology and ocean-industry story."},
+  ribbonia = {role="Exotic-science entry", hazard="Unfamiliar matter and electrical threats", science={"ribbonia-alien-science-pack"}, links="Ribbonia opens the path to Paracelsin and the exotic Vibrant studies."},
+  aquilo = {role="Cryogenic infrastructure", hazard="Extreme cold and frozen machinery", science={"cryogenic-science-pack"}, links="Cold-weather engineering enables Rubia's branch and later Frozeta work."},
+  rubia = {role="Biological fusion", hazard="Living production chains", science={"rubia-biofusion-science-pack"}, links="Links Aquilo's route with Maraxsis and provides specialised bioindustry."},
+  maraxsis = {role="Subsurface engineering", hazard="Submerged or hard-to-access construction", science={"hydraulic-science-pack"}, links="The last branch of the Aquilo-Rubia-Maraxsis journey."},
+  muria = {role="Chemical materials branch", hazard="Unusual chemical processing", science={"muriatic-science-pack"}, links="An Aquilo-linked branch contributing additional materials research."},
+  shchierbin = {role="Specialised chemistry", hazard="Demanding chemical industry", science={"vanadium-science-pack"}, links="An offshoot from Paracelsin with its own advanced materials route."},
+  cubium = {role="Outer-system logic", hazard="Intricate production chains", science={"gas-manipulation-science-pack"}, links="Begins the route through Secretas and Frozeta."},
+  tenebris = {role="Low-light frontier", hazard="Darkness and hostile ecology", science={"bioluminescent-science-pack"}, links="The second outer-system route toward Crucible and Vesta."},
+  secretas = {role="Outer-system secrets", hazard="Unusual resource routes", science={"golden-science-pack"}, links="The intermediate world between Cubium and Frozeta."},
+  frozeta = {role="Frozen outer frontier", hazard="Extreme cold", science={"cryogenic-science-pack"}, links="Tests the Aquilo techniques near the edge of known space."},
+  vesta = {role="Thermal extremes", hazard="Volcanic hazards", science={"thermodynamic-science-pack"}, links="Works with Crucible's extreme engineering along the outer expedition."},
+  ["linox-planet_linox"] = {role="Later Cubium branch", hazard="Specialised planet conditions", science={}, links="The optional-looking detour sits on a later Cubium-side connection within Beetlejuice."},
+  nexus = {role="Deep-space research", hazard="Extreme physics and late-game engineering", science={"promethium-882-science-pack","antimatter-science-pack"}, links="Optional black-hole and Omega research extends the final transceiver storyline."}
+}
