@@ -139,18 +139,11 @@ end
 local function recent_key(row)
   return row.kind..":"..row.id
 end
-local function is_recent(p,row)
-  local key=recent_key(row)
-  for _,entry in ipairs(p.recent) do
-    if entry==key then return true end
-  end
-  return false
-end
-local function matches(p,row)
+local function matches(p,row,search,recent)
   if p.group~="all" and p.group~=row.group then return false end
   if row.kind=="platforms" and p.role_filter~="all"
     and p.role_filter~=row.role then return false end
-  local text=p.search:lower()
+  local text=search
   if text~="" then
     local name=(row.name or ""):lower()
     local group=row.group
@@ -166,7 +159,7 @@ local function matches(p,row)
   elseif p.filter=="attention" then
     if row.kind=="worlds" and row.status~="locked" then return false end
     if row.kind=="platforms" and (row.warnings or 0)==0 then return false end
-  elseif p.filter=="recent" and not is_recent(p,row) then
+  elseif p.filter=="recent" and not recent[recent_key(row)] then
     return false
   end
   return true
@@ -174,21 +167,31 @@ end
 local function rows_for(player,p)
   local all=p.tab=="worlds" and collect_worlds(player,p) or collect_platforms(player,p)
   local filtered={}
+  local search=(p.search or ""):lower()
+  local recent={}
+  if p.filter=="recent" then
+    for _,id in ipairs(p.recent) do recent[id]=true end
+  end
   for _,row in ipairs(all) do
-    if matches(p,row) then filtered[#filtered+1]=row end
+    if matches(p,row,search,recent) then
+      row.sort_group=catalog.position(row.group)
+      row.sort_name=row.name:lower()
+      filtered[#filtered+1]=row
+    end
   end
   table.sort(filtered,function(a,b)
     if p.priority_sort and a.kind=="platforms" and b.kind=="platforms"
       and a.warnings~=b.warnings then return a.warnings>b.warnings end
-    local x,y=catalog.position(a.group),catalog.position(b.group)
-    if x~=y then return x<y end
+    if a.sort_group~=b.sort_group then
+      return a.sort_group<b.sort_group
+    end
     local af,bf=p.favorites[a.kind][a.id],p.favorites[b.kind][b.id]
     if (not not af)~=(not not bf) then return not not af end
     if a.kind=="platforms" and b.kind=="platforms" and a.role~=b.role then
       return a.role<b.role
     end
-    if a.name:lower()~=b.name:lower() then
-      return a.name:lower()<b.name:lower()
+    if a.sort_name~=b.sort_name then
+      return a.sort_name<b.sort_name
     end
     return a.id<b.id
   end)
@@ -356,9 +359,13 @@ end
 local function position_map_button(player,anchor)
   local scale=math.max(player.display_scale,0.5)
   local width=math.floor(player.display_resolution.width/scale)
-  -- Screen-root elements are on top of the map, NOT part of the shortcut bar.
-  -- Leave the top-left native surface/planet selector unobstructed.
-  anchor.location={x=math.max(8,width-244),y=86}
+  -- Only move the floating map button when its position actually changes.
+  -- Writing the same GUI location every 30 ticks forces extra layout work.
+  local x=math.max(8,width-244)
+  local current=anchor.location
+  if not current or current.x~=x or current.y~=86 then
+    anchor.location={x=x,y=86}
+  end
 end
 
 function M.sync_map_button(player)

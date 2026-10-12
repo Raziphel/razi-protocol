@@ -18,6 +18,16 @@ local edges={
 local path,cost=A.shortest_path(force,"a","c",edges)
 check(path and #path==3 and path[2]=="b" and cost==130,
   "Atlas must choose the shortest actual listed distance")
+local unlock_checks={}
+force.is_space_location_unlocked=function(name)
+  unlock_checks[name]=(unlock_checks[name] or 0)+1
+  return name~="x"
+end
+local cached_path,cached_cost=A.shortest_path(force,"a","c",edges)
+check(cached_path and cached_cost==130
+  and unlock_checks.a<=2 and unlock_checks.b==1
+  and unlock_checks.c<=2,
+  "One route inspection repeated the same engine unlock checks")
 local direct,zero=A.shortest_path(force,"a","a",edges)
 check(#direct==1 and zero==0,"Origin path not handled")
 check(A.shortest_path(force,"a","x",edges)==nil,
@@ -32,6 +42,22 @@ local unlock=A.unlock_research(force,"c")
 check(#unlock==1 and #unlock[1].missing==1
   and unlock[1].missing[1].name=="b",
   "Atlas must report unresearched native prerequisite")
+local prototype_scans=0
+prototypes.technology=setmetatable({
+  ["planet-c"]={effects={{
+    type="unlock-space-location",space_location="c"
+  }}}
+},{__pairs=function(t)
+  prototype_scans=prototype_scans+1
+  return next,t,nil
+end})
+local from_index=A.unlock_research(force,"c")
+local from_cache=A.unlock_research(force,"c")
+check(prototype_scans==1 and #from_index==1 and #from_cache==1,
+  "Opening multiple planet details should reuse research unlock prototypes")
+force.technologies["planet-c"].prerequisites.b.researched=true
+check(#A.unlock_research(force,"c")[1].missing==0,
+  "Cached unlock names must still show freshly completed prerequisites")
 local largest,count=A.asteroid_profile({
   {asteroid="small-metallic-asteroid"},
   {asteroid="huge-oxide-asteroid"},

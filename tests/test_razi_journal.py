@@ -150,6 +150,17 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertNotIn("math.min(960",ui)
         self.assertNotIn('vertical_scroll_policy="always"',ui)
 
+    def test_codex_runtime_work_is_bounded(self):
+        ui=read("scripts/razi_journal.lua")
+        self.assertIn('local function world_unlocks()',ui)
+        self.assertIn('unlock_techs=catalog',ui)
+        self.assertIn('function M.view_status(force,context)',ui)
+        self.assertIn('quests_by_chapter[quest.chapter]',ui)
+        self.assertIn('local state=view.states[quest.id]',ui)
+        self.assertIn('done,total,ready=view.done,view.total,view.ready',ui)
+        self.assertIn('render_chapters(body,player,p,context,size,view)',ui)
+        self.assertNotIn('for _,quest in ipairs(defs.quests) do\n      if quest.chapter==chapter.id',ui)
+
     def test_visible_during_normal_play_not_shortcut_bar(self):
         control=read("control.lua")
         ui=read("scripts/razi_journal.lua")

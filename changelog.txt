@@ -1,3 +1,12 @@
+Version: 2.1.20
+Date: 13. 10. 2026
+  Runtime performance:
+    - Index native world-discovery research and space connections once per runtime session instead of on each Atlas/Codex view.
+    - Reuse one 204-quest state pass across Codex chapter navigation and completion totals.
+    - Avoid redundant GUI repositioning on every 30-tick starmap poll.
+    - Cache unlocked-planet checks within route planning and normalize Atlas search, recent filters and sorting keys once per redraw.
+    - Keep research status live and preserve all chapter art, routes, gameplay, and saved progress.
+
 Version: 2.1.19
 Date: 13. 10. 2026
   Maintenance:

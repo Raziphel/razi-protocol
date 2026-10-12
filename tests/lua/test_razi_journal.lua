@@ -59,6 +59,28 @@ local start=M.summary(force)
 local complete,total,active=M.summary(force)
 check(start==0 and total==204-15-9 and active>=1,
   "At least both initial factory/opening branches must be listed")
+-- One campaign pass should calculate each quest exactly once while still
+-- matching the public summary and the individual mission states.
+local original_state=M.state
+local evaluations=0
+M.state=function(...)
+  evaluations=evaluations+1
+  return original_state(...)
+end
+local view=M.view_status(force,M.context(force))
+M.state=original_state
+check(evaluations==#defs.quests,
+  "Codex redraw must not rescan the quest list for every chapter")
+check(view.done==complete and view.total==total and view.ready==active,
+  "One-pass Codex counts differ from the campaign summary")
+local counted=0
+for _,chapter in ipairs(defs.chapters) do
+  local group=view.chapters[chapter.id]
+  check(group and group.total>=group.completed,
+    "Chapter status lost a research milestone")
+  counted=counted+group.total
+end
+check(counted==view.total,"Chapter totals disagree with the campaign")
 -- A disabled upstream alternative disappears instead of creating a
 -- phantom objective or blocking the main campaign.
 local guarded=force.technologies["razi-network-aquilo-outer-controllers"]
@@ -196,4 +218,27 @@ check(not storage.razi_journal_pending_forces,
 M.on_removed(42)
 check(not storage.razi_expedition_journal[42],
   "Deleted player preferences were not cleaned")
+-- Prototype research effects are static. The index is built once, while
+-- researched flags are still read live from each force.
+local catalog_scans=0
+local static_techs=setmetatable({
+  ["discovery-native-igrys"]={hidden=false,effects={{
+    type="unlock-space-location",space_location="igrys"
+  }}}
+},{__pairs=function(t)
+  catalog_scans=catalog_scans+1
+  return next,t,nil
+end})
+rawset(_G,"prototypes",{technology=static_techs})
+local first_index=M.discovery_index(force)
+local second_index=M.discovery_index(force)
+check(catalog_scans==1 and first_index.igrys and second_index.igrys,
+  "Research unlock prototypes were rescanned on each Codex refresh")
+force.technologies["discovery-native-igrys"].researched=false
+check(not M.discovery_index(force).igrys.researched,
+  "Indexed unlocks must still report current research status")
+force.technologies["discovery-native-igrys"].researched=true
+check(M.discovery_index(force).igrys.researched,
+  "The Codex should follow new research without refreshing its catalog")
+rawset(_G,"prototypes",nil)
 print("Expedition Journal: chapters, branches, skipped content and save backfill passed")

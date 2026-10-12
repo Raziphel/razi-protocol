@@ -141,3 +141,29 @@ October 2026 starmap polish reuses existing PNGs for corridor glow and six
 additional stellar coronas. It introduces no new on-disk textures and does
 not require per-tick runtime rendering. Verify any increase in sprite layer
 processing in a real startup benchmark.
+
+## In-game UI work (2.1.20)
+
+The Codex and Galactic Operations are intentionally built around user
+interaction rather than new tick-based scanners. A few internal changes
+cut down work without reducing graphics quality or changing the refresh rate:
+
+- The Codex builds its planet research-unlock catalogue once per runtime
+  session from the installed technology prototypes. Each view still uses the
+  current force's live research state, so newly researched planets show up.
+- A Codex redraw now groups its 204 quests by chapter and computes their
+  states in one pass. Search and filter use that result rather than
+  recalculating every quest for all 18 chapter headers.
+- The Galaxy Atlas keeps immutable technology and connection indexes in
+  module memory. Route planning still checks the current force's unlocked
+  planets but does not repeat the same check for each edge.
+- The floating starmap button only receives a new GUI location when the
+  resolution or UI scale has actually moved it. Normal map-state polling is
+  unchanged.
+- The planet/platform list normalizes search text, recent items, sorting
+  names and group ranks once per redraw rather than during every comparison.
+
+These caches are **not written to storage** and do not affect save size.
+Research completion, optional planet availability and the starmap routes
+remain controlled by Factorio. The included fixtures check these behaviors;
+measurable UPS/UI improvements require timings from the full modpack in-game.
