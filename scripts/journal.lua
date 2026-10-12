@@ -22,12 +22,13 @@ local function ledger_for(force)
   local db = database()
   local ledger = db.forces[force.index]
   if not ledger then
-    ledger = {chapters = {}, quests = {}, visits = {}}
+    ledger = {chapters = {}, quests = {}, visits = {}, platforms = {}}
     db.forces[force.index] = ledger
   end
   ledger.chapters = ledger.chapters or {}
   ledger.quests = ledger.quests or {}
   ledger.visits = ledger.visits or {}
+  ledger.platforms = ledger.platforms or {}
   return ledger
 end
 
@@ -74,6 +75,7 @@ local function project_technologies(force, quest)
 end
 
 local function quest_present(force, quest)
+  if quest.platform or quest.trip then return true end
   if quest.planet then
     return game.planets[quest.planet] ~= nil
       and (not quest.after or technology_for(force, quest.after) ~= nil)
@@ -85,6 +87,8 @@ local function quest_present(force, quest)
 end
 
 local function quest_finished(force, ledger, quest)
+  if quest.platform then return ledger.platforms.first ~= nil end
+  if quest.trip then return ledger.platforms.trip ~= nil end
   if quest.planet then
     return ledger.visits[quest.planet] ~= nil
       and (not quest.after or researched(force, quest.after))
@@ -102,6 +106,7 @@ end
 
 local function quest_accessible(force, quest, entered)
   if not entered then return false end
+  if quest.platform or quest.trip then return true end
   if quest.planet then
     return not quest.after or researched(force, quest.after)
   end
@@ -120,6 +125,27 @@ local function observe_surface(player, imported)
   if visits[planet.name] then return false end
   visits[planet.name] = {tick = game.tick, imported = imported == true}
   return true
+end
+
+local function observe_platforms(force, imported)
+  local ledger = ledger_for(force)
+  if ledger.platforms.first and ledger.platforms.trip then return false end
+  local changed = false
+  for _, platform in pairs(force.platforms) do
+    if platform.valid then
+      local hub = platform.hub
+      if not ledger.platforms.first and hub and hub.valid then
+        ledger.platforms.first = {tick = game.tick, imported = imported == true}
+        changed = true
+      end
+      if not ledger.platforms.trip and platform.completed_trips > 0 then
+        ledger.platforms.trip = {tick = game.tick, imported = imported == true}
+        changed = true
+      end
+    end
+    if ledger.platforms.first and ledger.platforms.trip then break end
+  end
+  return changed
 end
 
 local function first_observed(record, imported)
@@ -143,7 +169,7 @@ end
 local function sync_force(force, imported)
   if not (force and force.valid) then return false end
   local ledger = ledger_for(force)
-  local changed = false
+  local changed = observe_platforms(force, imported)
   local announcements = {}
 
   for _, chapter in ipairs(story) do
@@ -189,14 +215,20 @@ local function sync_force(force, imported)
         end
         if quest_finished(force, ledger, quest) then
           local visit = quest.planet and ledger.visits[quest.planet]
-          if finish_observed(quest_state, imported or (visit and visit.imported)) then
+          local platform = quest.platform and ledger.platforms.first or
+            (quest.trip and ledger.platforms.trip)
+          if finish_observed(quest_state, imported or
+            (visit and visit.imported) or (platform and platform.imported)) then
             changed = true
             if not imported and not quest_state.completed_before_tracking and
-              (quest.project or quest.planet or quest.tech == chapter.finish) then
+              (quest.project or quest.planet or quest.platform or quest.trip or
+                quest.tech == chapter.finish) then
               announcements[#announcements + 1] = {
                 title = quest.title,
                 detail = quest.planet and "Landfall recorded" or
-                  (quest.project and "Interplanetary project complete" or "Research milestone complete"),
+                  (quest.platform and "First operational space platform" or
+                  (quest.trip and "First platform voyage complete" or
+                  (quest.project and "Interplanetary project complete" or "Research milestone complete"))),
                 chapter = chapter.id
               }
             end
@@ -385,6 +417,12 @@ function journal.register_events()
           end
         end
       end
+      for kind, old_platform in pairs(source.platforms or {}) do
+        local current = destination.platforms[kind]
+        if not current or old_platform.tick < current.tick then
+          destination.platforms[kind] = old_platform
+        end
+      end
       for planet, old_visit in pairs(source.visits or {}) do
         local current = destination.visits[planet]
         if not current or old_visit.tick < current.tick then
@@ -395,6 +433,22 @@ function journal.register_events()
     end
     sync_force(event.destination, false)
     refresh_force(event.destination)
+  end)
+  script.on_event(defines.events.on_space_platform_built_entity, function(event)
+    local force = event.platform and event.platform.force
+    if force and not ledger_for(force).platforms.first then
+      local changed, announcements = sync_force(force, false)
+      if changed then refresh_force(force) end
+      post_updates(force, announcements)
+    end
+  end)
+  script.on_event(defines.events.on_space_platform_changed_state, function(event)
+    local force = event.platform and event.platform.force
+    if force and not ledger_for(force).platforms.trip then
+      local changed, announcements = sync_force(force, false)
+      if changed then refresh_force(force) end
+      post_updates(force, announcements)
+    end
   end)
   script.on_event(defines.events.on_research_started, function(event)
     -- An explicit start captures the beginning of very short techs that can
