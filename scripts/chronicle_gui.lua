@@ -31,11 +31,13 @@ local function preferences(ctx, player)
       tab = "overview",
       chapter = db.selection[player.index] or ctx.story[1].id,
       filter = "all",
-      notifications = true
+      notifications = true,
+      compact = false
     }
     db.ui[player.index] = state
   end
   if state.notifications == nil then state.notifications = true end
+  if state.compact == nil then state.compact = false end
   if not state.tab then state.tab = "overview" end
   if not state.chapter then state.chapter = ctx.story[1].id end
   return state
@@ -115,7 +117,13 @@ local function add_objective_card(parent, ctx, player, chapter, quest, ledger, c
   local status, category = theme.status(finished, started)
   local card = theme.card(parent)
   local line = theme.row(card, 8)
-  if quest.planet then theme.planet_icon(line, quest.planet, 29) end
+  if quest.planet then
+    theme.planet_icon(line, quest.planet, 29)
+  elseif quest.tech then
+    theme.technology_icon(line, quest.tech, 29)
+  else
+    theme.chapter_icon(line, chapter.id, 29)
+  end
   local text = theme.column(line, 3)
   theme.label(text, quest.title, {bold = true, color = theme.tint(chapter.id)})
   local badges = theme.row(text, 4)
@@ -125,7 +133,7 @@ local function add_objective_card(parent, ctx, player, chapter, quest, ledger, c
   theme.badge(badges, type_name, quest.project and "project" or
     (quest.planet or quest.platform or quest.trip) and "landing" or "active")
   if quest.side then theme.badge(badges, "BRANCH", "branch") end
-  theme.label(card, quest.story, {width = 650})
+  if not compact then theme.label(card, quest.story, {width = 650}) end
   theme.caption(card, ctx.status_text(record, finished, false))
 
   if quest.project then
@@ -214,7 +222,7 @@ local function missions(parent, ctx, player, chapter, ledger, state)
   local shown = 0
   for _, quest in ipairs(chapter.quests) do
     if mission_filter(ctx, player.force, ledger, quest, state.filter) then
-      add_objective_card(parent, ctx, player, chapter, quest, ledger, false)
+      add_objective_card(parent, ctx, player, chapter, quest, ledger, state.compact)
       shown = shown + 1
     end
   end
@@ -383,6 +391,9 @@ local function records(parent, ctx, player, _, ledger, state)
   theme.button(parent, ROOT .. "notifications", state.notifications and
     "Completion popups: ON" or "Completion popups: OFF", false,
     "Toggle the Chronicle's short, non-intrusive expedition popups")
+  theme.button(parent, ROOT .. "compact", state.compact and
+    "Mission cards: COMPACT" or "Mission cards: EXPANDED", false,
+    "Choose concise mission cards or detailed story cards")
   theme.caption(parent, "These settings only affect your own interface, not other members of your multiplayer force.")
   theme.heading(parent, "CHRONICLE TIMING RULES", "nyxaris")
   theme.caption(parent, "A quest's time to beat starts when the research becomes available, or when a chapter's landing/project objective opens. All times are saved in simulation ticks, not wall time.")
@@ -604,6 +615,10 @@ function ui.click(player, name, ctx)
     return true
   elseif name == ROOT .. "notifications" then
     state.notifications = not state.notifications
+    ui.render(player, ctx)
+    return true
+  elseif name == ROOT .. "compact" then
+    state.compact = not state.compact
     ui.render(player, ctx)
     return true
   elseif name == ROOT .. "toast_close" then
