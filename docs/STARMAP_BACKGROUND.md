@@ -33,3 +33,23 @@ Seventeen additional original textures bring the atlas to **33 PNG assets**: eig
 **Default Subtle** composes 32 sprite layers behind the game's stars, native belts and routes. **Cinematic** composes 40 layers by adding low-opacity expanded filament passes which reuse the same texture assets. The optional Observatory ring adds one additional layer. Both modes keep main route colours visible. Under the new **Detailed galactic scenery** setting, users can disable all new textures and revert to the original 16-layer background without losing the Razi universe theme.
 
 Every image remains 1024 pixels or smaller. The new artwork is constructed only at data loading and adds no per-tick effects or star-map GUI polling. Original asteroid encounters and planet gates remain unchanged.
+
+## Quiet nebula architecture (October 2026)
+
+The default subtle map now has ten **extra static layers**:
+
+- Four dim, distant chromatic dust wisps positioned outside the dense
+  navigable seven-star hexagon.
+- Six small secondary star halos that preserve the original icon-sized
+  silhouettes and system colors.
+- The existing Calidus Dyson corona remains behind source orbit markers.
+
+These use preexisting Razi PNGs; no added spritesheets, large images,
+new light shaders, background tick logic or memory-heavy GUI scans.
+`razi-starmap-galactic-ornaments` can independently remove all ten
+additional layers. It works in Subtle and Cinematic themes, remains
+off in Background Off mode, and is automatically skipped if the
+external Better Starmap Background owns the art.
+
+This is a **static data-stage sprite layer**. Native sun routes, planet
+locations, weather, hazards and unlock logic are unchanged.

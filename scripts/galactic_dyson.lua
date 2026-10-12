@@ -1,8 +1,8 @@
--- Compact read-only overview for the existing SLP Dyson Sphere 2.1 port.
--- Never mirror or mutate the source mod's satellite/repeater state. Those
--- structures have their own controls; tech research is not physical progress.
+-- Read-only Stelllar Works. Research is real; satellites and network MW
+-- are unknown until the source mod exposes an official telemetry API.
 local M={}
 local L=function(name,...) return {"razi-ops."..name,...} end
+local runtime=require("scripts.galactic_dyson_runtime")
 M.stages={
  {"planet-discovery-sunorbit","dyson-outer"},
  {"slp-solar-system-sun2","dyson-inner"},
@@ -26,20 +26,68 @@ function M.status(force)
  end
  return completed,total,stages
 end
-function M.render(parent,player)
- local head=label(parent,L("dyson-title"))
- head.style.font="heading-2"
- label(parent,L("dyson-subtitle"))
- local completed,total,stages=M.status(player.force)
- label(parent,L("dyson-stage-progress",tostring(completed),tostring(total)))
- if total>0 then
-   local progress=parent.add{type="progressbar",
-     value=completed/math.max(total,1)}
-   progress.style.horizontally_stretchable=true
+function M.research_phase(completed)
+ if completed>=6 then return "mastery" end
+ if completed>=4 then return "distribution" end
+ if completed>=3 then return "construction" end
+ if completed>=2 then return "plasma" end
+ return "survey"
+end
+local function inspection(parent,player)
+ local status=runtime.snapshot(player.force)
+ local frame=parent.add{type="frame",direction="vertical",
+   style="inside_shallow_frame"}
+ frame.style.horizontally_stretchable=true
+ local title=label(frame,L("dyson-infrastructure-heading"))
+ title.style.font="default-bold"
+ if status.physical_available then
+   label(frame,L("dyson-receivers",tostring(status.receivers)))
+   if #status.sites==0 then
+     label(frame,L("dyson-no-sites"))
+   else
+     for i=1,math.min(#status.sites,12) do
+       local site=status.sites[i]
+       label(frame,L("dyson-receiver-site",site.name,tostring(site.count)))
+     end
+     if #status.sites>12 then
+       label(frame,L("dyson-site-overflow",tostring(#status.sites-12)))
+     end
+   end
+ else
+   label(frame,L("dyson-receivers-unknown"))
  end
+ label(frame,L("dyson-source-telemetry-unknown"))
+end
+function M.render(parent,player)
+ local heading=parent.add{type="flow",direction="horizontal"}
+ heading.style.horizontally_stretchable=true
+ local title=label(heading,L("dyson-title"))
+ title.style.font="heading-2"
+ local completed,total,stages=M.status(player.force)
+ local phase=M.research_phase(completed)
+ local hero=parent.add{type="frame",direction="horizontal",
+   style="inside_shallow_frame"}
+ hero.style.horizontally_stretchable=true
+ local art=hero.add{type="sprite",sprite="razi-dyson-works-"..phase}
+ art.resize_to_sprite=false
+ art.style.width=128
+ art.style.height=128
+ local copy=hero.add{type="flow",direction="vertical"}
+ copy.style.horizontally_stretchable=true
+ local phase_title=label(copy,L("dyson-phase-"..phase))
+ phase_title.style.font="heading-2"
+ label(copy,L("dyson-subtitle"))
+ label(copy,L("dyson-stage-progress",tostring(completed),tostring(total)))
+ local progress=copy.add{type="progressbar",
+   value=total>0 and completed/total or 0}
+ progress.style.horizontally_stretchable=true
+ label(copy,L("dyson-phase-disclaimer"))
+ inspection(parent,player)
+ local research=label(parent,L("dyson-research-heading"))
+ research.style.font="default-bold"
  local scroll=parent.add{type="scroll-pane",direction="vertical"}
- scroll.style.height=math.max(240,math.min(480,
-   math.floor(player.display_resolution.height/math.max(player.display_scale,1)*0.50)))
+ scroll.style.height=math.max(200,math.min(310,
+   math.floor(player.display_resolution.height/math.max(player.display_scale,1)*.30)))
  scroll.style.horizontally_stretchable=true
  for _,stage in ipairs(stages) do
    local frame=scroll.add{type="frame",direction="vertical",
@@ -62,7 +110,7 @@ function M.render(parent,player)
      if #missing==0 then label(frame,L("dyson-ready")) end
    end
  end
- if total==0 then label(parent,L("dyson-unavailable")) end
+ if total==0 then label(scroll,L("dyson-unavailable")) end
  label(parent,L("dyson-satellites"))
  label(parent,L("dyson-safety"))
 end

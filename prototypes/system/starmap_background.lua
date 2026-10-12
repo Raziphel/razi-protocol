@@ -83,6 +83,37 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
   -- New fine-grain scenery adds structure at a smaller visual scale.
   -- These textures sit behind every source-owned planet, sun and route.
   if details~=false then
+    -- Decorative, noninteractive fine-detail layers. These stay outside
+    -- the busy six-system shipping lanes and reuse already-loaded textures.
+    -- Never render line-shaped decorations that could resemble routes.
+    if option("razi-starmap-galactic-ornaments",true) then
+      local wisps={
+        {x=-167,y=-85,file="dust-lane-2.png",w=768,h=384,scale=4.0,
+         color={r=.36,g=.68,b=.94}},
+        {x=169,y=89,file="dust-lane-2.png",w=768,h=384,scale=4.0,
+         color={r=.78,g=.43,b=.72}},
+        {x=-170,y=72,file="galactic-current.png",w=768,h=384,scale=3.5,
+         color={r=.32,g=.64,b=.72}},
+        {x=176,y=-74,file="galactic-current.png",w=768,h=384,scale=3.5,
+         color={r=.63,g=.39,b=.83}}
+      }
+      for _,wisp in ipairs(wisps) do
+        insert_asset(result,wisp.file,wisp.w,wisp.h,wisp.scale,
+          wisp.x,wisp.y,wisp.color,cine and .22 or .11)
+      end
+      -- Smaller complementary halos add depth without painting over the
+      -- source planet icons. Use the six external stars, never Calidus.
+      for _,system in ipairs(systems) do
+        if system.name~="calidus" and system.name~="deep-space" then
+          local x,y=anchor(system.name)
+          if x and y then
+            insert_asset(result,"glow-"..system.name..".png",
+              512,512,cine and 3.2 or 2.8,x,y,system.tint,
+              cine and .18 or .09)
+          end
+        end
+      end
+    end
     -- A counter-flowing galaxy arm joins the six-star ring visually.
     insert_asset(result,"dust-lane-2.png",768,384,9,8,-43,
       {r=.63,g=.47,b=.78},cine and .51 or .25)
