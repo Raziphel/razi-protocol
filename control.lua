@@ -185,8 +185,10 @@ script.on_event(defines.events.on_gui_click,function(event)
   razi_journal.gui_click(event)
 end)
 script.on_event(defines.events.on_gui_text_changed,galactic_operations.text_changed)
-script.on_event(defines.events.on_gui_selection_state_changed,
-  galactic_operations.selection_changed)
+script.on_event(defines.events.on_gui_selection_state_changed,function(event)
+  galactic_operations.selection_changed(event)
+  razi_journal.selection_changed(event)
+end)
 script.on_event(defines.events.on_gui_checked_state_changed,
   galactic_operations.checkbox_changed)
 script.on_event(defines.events.on_gui_closed,function(event)

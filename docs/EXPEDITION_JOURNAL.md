@@ -1,6 +1,6 @@
 # The Razi Expedition Journal
 
-A completely original 153-milestone, 17-chapter guided journey written
+A completely original 186-milestone, 17-chapter guided journey written
 for the seven-system Factorio 2.1 K2SO campaign. Inspired by the *idea*
 of an in-game journal, but not dependent on Quest Book or a fork of its
 source code, UI, texts or reward engine.
@@ -10,9 +10,20 @@ source code, UI, texts or reward engine.
 - A compact book button appears in Factorio's **top GUI** during normal
   factory gameplay, on planets, and in remote view.
 - **Ctrl+Shift+J** opens or closes the journal. It is rebindable.
-- Choose one of 17 expandable chapters. The left column shows just the
-  open chapter so 153 milestones do not crowd a small screen. Filter by
-  All, Ready, Unfinished or Completed.
+- The expanded expedition window uses the available display area up to 1,370
+  Factorio GUI units wide. Its left column is a structured **chapter index**
+  with wrapped titles, progress counts, colored chapter headings, and a
+  direct drop-down jump to any of the 17 chapters.
+- The right-hand panel provides a full-width reading column with a separate
+  research objective card and field notes, including Nexus combat and world
+  weather information where available. Filter by All, Ready, Unfinished or
+  Completed using a separate row from the main tabs.
+- **No horizontal scrollbars.** All text is bounded and wraps inside its
+  panel. Vertical scrollbars are visually hidden, but mouse-wheel scrolling
+  still works when the expanded chapters or stories exceed screen height.
+  Arrow buttons and the chapter jump selector remain accessible without
+  scrolling. `Next entry` walks through available quests in the current
+  chapter. The archive uses the same clean two-column presentation.
 - Choose a chapter or quest in the left column; the right shows its
   original narrative, exact current research goal, up to four real
   unresearched Factorio technology prerequisites, and actionable tips.
@@ -68,8 +79,10 @@ Vibrant/Vespera and Beetlejuice/Umbra remain free parallel branches.
 
 - **Zero** new research/science packs, technologies, recipes, items,
   entity prototypes, quest reward grants or required planets.
-- **No periodic scans.** Journal screens refresh when opened, manually
-  refreshed or when the player's force finishes a real technology.
+- **No new scans.** Journal screens refresh when opened, manually
+  refreshed, when their force finishes a native technology, and through
+  the existing limited Nexus boss tracker update. Scripted research bursts
+  remain coalesced into one deferred refresh per force.
 - **One** GUI event dispatcher added alongside existing Galactic Operations.
 - Existing UI events remain delegated, not replaced by separate
   competing handlers.
@@ -101,7 +114,7 @@ The Unwritten Atlas does not guess the technology identifier of its
 journal or finishing native research. Missing optional mods simply
 do not appear. The event-driven GUI performs no periodic polling.
 
-Twelve substantial recovered transmission records weave an original
+Fifteen substantial recovered transmission records weave an original
 mystery through Calidus, Muluna, Castra, Moshine, Cerys, the asteroid
 belt, Maraxsis, Tenebris, manufacturing, Dyson construction and the
 final signal. They unlock after the matching **researched** native
