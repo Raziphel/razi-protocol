@@ -1,6 +1,8 @@
 -- Razi Galactic Atlas. Reads the loaded prototypes and force research only
 -- when a player requests an inspection. Never unlocks or creates a surface.
 local M={}
+local trials=require("scripts.razi_nexus_trials")
+local weather=require("scripts.razi_weather_guide")
 local function L(key,...) return {"razi-ops."..key,...} end
 local function label(parent,caption)
   return parent.add{type="label",caption=caption}
@@ -155,6 +157,25 @@ function M.render(parent,player,id,p)
   label(frame,L(unlocked and "atlas-known" or "atlas-locked"))
   if unlocked then
     label(frame,proto.localised_description)
+    if id=="nexus" then
+      local outcome=trials.snapshot(player.force)
+      if outcome then
+        bold(frame,L("atlas-nexus-heading"))
+        label(frame,L("atlas-nexus-victories",
+          tostring(outcome.count),tostring(outcome.total)))
+        frame.add{type="button",caption=L("atlas-nexus-codex"),
+          tags={razi_ops_action="nexus-codex",value="arachnid-queen"}}
+      end
+    end
+    local atmosphere=weather.for_quest({world=id})
+    if atmosphere then
+      bold(frame,L("atlas-weather-heading"))
+      local description=label(frame,{"journal-weather."..atmosphere.world})
+      description.style.single_line=false
+      description.style.horizontally_stretchable=true
+      label(frame,L(atmosphere.enabled
+        and "atlas-weather-enabled" or "atlas-weather-disabled"))
+    end
     local conditions=proto.type=="planet" and proto.surface_properties or nil
     if conditions then
       bold(frame,L("atlas-environment"))

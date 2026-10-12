@@ -13,4 +13,7 @@ return {
  {id="sphere",unlock="dyson-build",origin="STELLAR WORKS / CALIDUS"},
  {id="threshold",unlock="outer-mastery",origin="RESTRICTED SCIENCE DIVISION / DEEP SPACE"},
  {id="answer",unlock="stable-singularity",origin="LAST ARCHIVE ENTRY / TRANSMISSION READY"},
+ {id="nexus-signal",unlock="nexus-whisper",origin="NEXUS SURVEY / THE FIRST BEACON"},
+ {id="nexus-nine",unlock="nexus-convergence",origin="NEXUS EXPEDITION / THE THIRD CIRCLE"},
+ {id="nexus-silence-record",unlock="nexus-silence",origin="NEXUS ARCHIVE / THE SILENCED TRANSMISSION"},
 }

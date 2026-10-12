@@ -1,8 +1,18 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.10
-Date: 13. 10. 2026
-  Bugfixes:
-    - Coalesce scripted research bursts into one Expedition Journal refresh, preventing `/cheat` from rebuilding open journal and tracker interfaces hundreds of times in one tick.
+Date: 12. 10. 2026
+  Nexus Trials:
+    - Track nine individual Nexus boss victories via the source's per-force read-only remote API; never equate a stage unlock with a completed boss fight.
+    - Add six native technology preparation milestones and new story/tactical notes for all nine bosses.
+    - Open the source Nexus Codex from the Expedition Journal and Galactic Atlas; refresh only visible or pinned boss goals using the existing ten-second maintenance tick.
+    - Add three recovered Nexus archive transmissions unlocked by Whisper, Convergence and Silence research.
+    - Preserve the source's nine-trophy warp key, bosses, storm shards, lairs, scripted research and route rewards.
+  Celestial Weather:
+    - Provide an atmospheric field guide for eleven modded worlds with source startup-toggle status in both major GUIs.
+    - Keep source weather particle effects, Paracelsin's default-off winter and native planetary hazards intact.
+  Compatibility:
+    - Leave Outer Rim experimental because its own 2.9.x changelog warns K2SO integration may crash or fail and redraws sensitive routes.
+    - Add regression coverage for source-owned boss victories and weather toggles; keep GitHub Actions manual-only.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.9

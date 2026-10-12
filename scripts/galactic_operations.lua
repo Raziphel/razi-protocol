@@ -4,6 +4,7 @@
 local M={}
 local catalog=require("scripts.galactic_catalog")
 local atlas=require("scripts.galactic_atlas")
+local trials=require("scripts.razi_nexus_trials")
 local fleet=require("scripts.galactic_fleet")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
@@ -533,6 +534,12 @@ function M.gui_click(event)
     dyson_runtime.invalidate(player.force)
   end
   if action=="close" then close(player);return end
+  if action=="nexus-codex" then
+    if not trials.open_codex(player,value) then
+      player.print(L("atlas-nexus-codex-unavailable"))
+    end
+    return
+  end
   if action=="tab" then
     if value~="worlds" and value~="platforms"
       and value~="campaign" and value~="trade"

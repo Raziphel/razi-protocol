@@ -10,11 +10,11 @@ Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DN
 
 ## Nexus and Celestial Weather (2.1)
 
-Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi's Expedition Journal tracks the Whisper, Chorus, Convergence and Silence milestones without creating duplicate reward items, overriding scripted research, or bypassing the boss encounter controls. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
+Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi now tracks all **nine individual boss victories** from the source mod\'s read-only per-force snapshot, as well as Whisper, Chorus, Convergence, bearings and Silence. Six preparation milestones follow photon electronics, storm prediction, shielding, and omega power. Both the Journal and Galactic Atlas can open the original Nexus Codex. No duplicate bosses, trophies or rewards are added. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
 
-Celestial Weather (Updated) and Celestial Weather Additions (2.1) provide configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. Razi does not add separate weather loops.
+Celestial Weather (Updated) and Celestial Weather Additions (2.1) provide configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. An **Atmospheric Field Guide** now appears in the Expedition Journal and planetary Atlas, showing each source setting and relevant environment notes. Razi does not add separate weather loops.
 
-Outer Rim remains an **optional, experimental compatibility** addition. Its new cross-world sciences may be useful, but it can rewrite tech prerequisites and planetary routes across different Razi star systems. Before making it mandatory, we need a verified Factorio 2.1 load and a progression audit with it enabled.
+Outer Rim remains **optional and experimental**. Its 2.9.x update redraws routes and distributes research between worlds in different Razi systems, while its own author flags K2SO integration as unreliable. Do not make it a prerequisite for the seven-system campaign. See [Nexus and Atmosphere Integration](docs/NEXUS-ATMOSPHERE-INTEGRATION.md) for source-owned systems, quality gates and the testing plan.
 
 ## Muluna compatibility
 

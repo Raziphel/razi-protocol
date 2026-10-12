@@ -5,6 +5,8 @@
 local M={}
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
+local trials=require("scripts.razi_nexus_trials")
+local weather=require("scripts.razi_weather_guide")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -67,7 +69,7 @@ function M.discovery_index(force)
   return indexed
 end
 function M.context(force)
-  return {discoveries=M.discovery_index(force)}
+  return {discoveries=M.discovery_index(force),nexus=trials.snapshot(force)}
 end
 local function technology(force,quest,context)
   local t
@@ -83,16 +85,24 @@ local function technology(force,quest,context)
   return t
 end
 function M.available(force,quest,context)
-  return technology(force,quest,context)~=nil
+  if not technology(force,quest,context) then return false end
+  if quest.boss then
+    return (context or M.context(force)).nexus~=nil
+  end
+  return true
 end
 function M.complete(force,quest,context)
+  if quest.boss then
+    local snapshot=(context or M.context(force)).nexus
+    return M.available(force,quest,context)
+      and trials.defeated(snapshot,quest.boss)
+  end
   local t=technology(force,quest,context)
   return t~=nil and t.researched==true
 end
 function M.state(force,quest,context)
-  local t=technology(force,quest,context)
-  if not t then return "unavailable" end
-  if t.researched then return "complete" end
+  if not M.available(force,quest,context) then return "unavailable" end
+  if M.complete(force,quest,context) then return "complete" end
   for _,required in ipairs(quest.requires or {}) do
     local prior=defs.by_id[required]
     -- Source content not present in this modpack is not a phantom
@@ -173,8 +183,11 @@ local function render_tracker(player)
     caption={"journal-title."..quest.id},
     tags={razi_journal_action="tracker-open"}}
   heading.style.horizontally_stretchable=true
-  wrap(frame,L(M.complete(player.force,quest,context)
-    and "tracker-done" or "tracker-pending"))
+  wrap(frame,L(quest.boss
+    and (M.complete(player.force,quest,context)
+      and "tracker-boss-done" or "tracker-boss-pending")
+    or (M.complete(player.force,quest,context)
+      and "tracker-done" or "tracker-pending")))
 end
 M.render_tracker=render_tracker
 local function render_details(parent,player,quest,p,context)
@@ -201,8 +214,17 @@ local function render_details(parent,player,quest,p,context)
   local objective=label(scroll,L("objective-heading"))
   objective.style.font="default-bold"
   local native=technology(player.force,quest,context)
-  label(scroll,{"",L(quest.world and "objective-discovery" or "objective-research",
-    native and native.localised_name or quest.world or quest.tech)})
+  if quest.boss then
+    label(scroll,{"",L("objective-boss")," ",
+      {"nexus-bosses.boss-"..quest.boss}})
+    local record=context.nexus
+    if record then
+      label(scroll,L("nexus-victories",tostring(record.count),tostring(record.total)))
+    end
+  else
+    label(scroll,{"",L(quest.world and "objective-discovery" or "objective-research",
+      native and native.localised_name or quest.world or quest.tech)})
+  end
   if native and not native.researched then
     local blockers={}
     for _,prior in pairs(native.prerequisites or {}) do
@@ -227,7 +249,19 @@ local function render_details(parent,player,quest,p,context)
   local notes=label(scroll,L("tip-heading"))
   notes.style.font="default-bold"
   wrap(scroll,{"journal-tip."..quest.id})
+  local forecast=weather.for_quest(quest)
+  if forecast then
+    local climate_title=label(scroll,L("weather-heading"))
+    climate_title.style.font="default-bold"
+    wrap(scroll,{"journal-weather."..forecast.world})
+    label(scroll,L(forecast.enabled
+      and "weather-active" or "weather-inactive"))
+  end
   local actions=panel.add{type="flow",direction="horizontal"}
+  if quest.boss then
+    actions.add{type="button",caption=L("nexus-open-codex"),
+      tags={razi_journal_action="nexus-codex",id=quest.boss}}
+  end
   local pinned=p.tracker and p.pinned==quest.id
   actions.add{type="button",caption=L(pinned and "tracker-hide" or "tracker-show"),
     tags={razi_journal_action="pin",id=quest.id}}
@@ -430,7 +464,9 @@ function M.on_removed(index)
     storage.razi_expedition_journal[index]=nil
   end
 end
-local function refresh_force(force)
+function M.on_research(event)
+  -- Called only on a completed native technology, never each tick.
+  local force=event and event.research and event.research.force
   if not force then return end
   for _,player in pairs(game.connected_players or {}) do
     if player.force==force then
@@ -441,27 +477,26 @@ local function refresh_force(force)
     end
   end
 end
-function M.on_research(event)
-  -- Called only on a completed native technology, never each tick.
-  local force=event and event.research and event.research.force
-  if not force then return end
-  -- Commands such as /cheat complete hundreds of technologies on one tick.
-  -- Rebuilding the open journal for every scripted completion can overwhelm
-  -- Factorio's GUI renderer, so coalesce the burst into the next UI refresh.
-  if event.by_script then
-    storage.razi_journal_pending_forces=
-      storage.razi_journal_pending_forces or {}
-    storage.razi_journal_pending_forces[force.name]=true
-    return
-  end
-  refresh_force(force)
-end
-function M.flush_research_refreshes()
-  local pending=storage.razi_journal_pending_forces
-  if not pending then return end
-  storage.razi_journal_pending_forces=nil
-  for force_name in pairs(pending) do
-    refresh_force(game.forces[force_name])
+-- Refresh only visible boss objectives during the existing ten-second
+-- maintenance tick. No global entity scans or per-tick remote calls.
+function M.refresh_nexus_visible()
+  if not (remote and remote.interfaces and
+    remote.interfaces["nexus-bosses"]) then return end
+  for _,player in pairs(game.connected_players or {}) do
+    local p=storage.razi_expedition_journal
+      and storage.razi_expedition_journal[player.index]
+    if p then
+      local frame=player.gui.screen[FRAME]
+      if frame and frame.valid and (p.chapter=="deepworks"
+        or (p.selected and defs.by_id[p.selected]
+          and defs.by_id[p.selected].boss)) then
+        draw(player)
+      end
+      if p.tracker and p.pinned and defs.by_id[p.pinned]
+        and defs.by_id[p.pinned].boss then
+        render_tracker(player)
+      end
+    end
   end
 end
 function M.gui_click(event)
@@ -474,6 +509,12 @@ function M.gui_click(event)
   if not (player and player.valid) then return end
   if action=="toggle" then M.toggle(player);return end
   if action=="close" then close(player);return end
+  if action=="nexus-codex" then
+    if not trials.open_codex(player,tags.id) then
+      player.print(L("nexus-codex-unavailable"))
+    end
+    return
+  end
   if action=="tracker-open" then
     local p=pref(player.index)
     p.selected=p.pinned

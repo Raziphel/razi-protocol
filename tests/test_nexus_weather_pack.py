@@ -32,11 +32,40 @@ class NexusWeatherIntegration(unittest.TestCase):
         for name in ("nexus-whisper","nexus-chorus","nexus-convergence",
                      "nexus-silence","nexus-signal-bearing"):
             self.assertIn('tech="'+name+'"',journal)
+        for boss in ("arachnid-queen","watcher","rogue-spidertron",
+                     "twin-maws","colossus","plague-hulk",
+                     "storm-guardian","devourer","last-commander"):
+            self.assertIn('boss="'+boss+'"',journal)
+        for tech in ("photon-electronics","advanced-magnetic-shielding",
+                     "nexus-storm-prediction","omega-substation",
+                     "omega-accumulator","omega-beacon"):
+            self.assertIn('tech="'+tech+'"',journal)
+        bridge=read("scripts/razi_nexus_trials.lua")
+        self.assertIn('pcall(remote.call,"nexus-bosses","get_state")',bridge)
+        self.assertIn('pcall(remote.call,"nexus-bosses","open_codex"',bridge)
+        self.assertNotIn('set_ignore_player_presence',bridge)
+        self.assertNotIn('mark_defeated',bridge)
         # Neither cloned trophies nor a competing key/research system.
         for source in ("prototypes/compat/nexus_endgame.lua",
                        "prototypes/technology/transceiver_endgame.lua"):
             self.assertNotIn('name = "nexus-warp-key"',read(source))
         self.assertIn('["Nexus-Updated"]',read("prototypes/compat/nexus_endgame.lua"))
+    def test_native_codex_and_weather_atlas(self):
+        atlas=read("scripts/galactic_atlas.lua")
+        operations=read("scripts/galactic_operations.lua")
+        journal=read("scripts/razi_journal.lua")
+        guide=read("scripts/razi_weather_guide.lua")
+        self.assertIn('trials.snapshot(player.force)',atlas)
+        self.assertIn('weather.for_quest({world=id})',atlas)
+        self.assertIn('action=="nexus-codex"',operations)
+        self.assertIn('action=="nexus-codex"',journal)
+        self.assertIn('function M.refresh_nexus_visible()',journal)
+        self.assertNotIn('script.on_nth_tick',journal)
+        for planet in ("panglia","muria","vesta","rubia","paracelsin",
+                       "cubium","rabbasca","igrys","khemia","carna","pelagos"):
+            self.assertIn(planet+'={',guide)
+        self.assertIn('settings.startup[config[2]]',guide)
+
     def test_no_auto_ci(self):
         workflow=read(".github/workflows/check.yml")
         self.assertIn("workflow_dispatch:",workflow)
