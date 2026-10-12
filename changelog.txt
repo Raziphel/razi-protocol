@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.4
+Date: 12. 10. 2026
+  Features:
+    - Added the Expedition Chronicle with six connected story chapters and more than fifty technology-based quest milestones.
+    - Added shared force completion records with reach times, finish times, and chapter or quest durations in simulation hours, minutes, and seconds.
+    - Added chapter introductions, epilogues, optional installed-mod branches, and an in-game journal with a dedicated top-screen button.
+
+  Compatibility:
+    - Saved expedition records across reloads and handled force changes, new forces, and merged forces.
+    - Kept quest tracking observational so it adds no research locks or progression bypasses.
+
+  Bugfixes:
+    - Avoided fabricating completion times for milestones achieved before installing the chronicle.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 08. 10. 2026
   Compatibility:
