@@ -8,16 +8,10 @@ local renamed_research_triggers = {}
 -- ske_ammonia_vesta makes kr-ammonia, which blocks s1_electrolysis,
 -- ske_heating_conductor and everything after them. K2SO pull request #144
 -- renames the triggers too; until it is released, do the same here.
---
--- moon-eneas researches upgrade-uranium-ammo by crafting
--- uranium-rounds-magazine, which Krastorio 2 replaces by
--- kr-uranium-rifle-magazine. The trigger takes the K2 magazine, as K2SO does
--- for the rifle ammo of the base game.
 local renamed = {}
 for _, name in ipairs({"oxygen", "hydrogen", "chlorine", "sand", "glass", "silicon", "lithium", "ammonia"}) do
 	renamed[name] = "kr-" .. name
 end
-renamed["uranium-rounds-magazine"] = "kr-uranium-rifle-magazine"
 
 local function made_by_a_recipe()
 	local made = {}

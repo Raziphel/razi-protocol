@@ -24,7 +24,7 @@ native discovery and science, and are excluded from mandatory chapter mastery.
 See [Optional Planet Expeditions](OPTIONAL_PLANETS.md) for installation notes
 and upstream links.
 
-Eneas extends Calidus; Cerys follows Fulgora to Vibrant. Pelagos and Dea Dia extend Nyxaris,
+Cerys follows Fulgora to Vibrant. Pelagos and Dea Dia extend Nyxaris,
 with Dea Dia retaining its native subsystem. Nexus-Updated and
 VoidProcessing-Updated extend the late-game universe without being mandatory
 for the normal Razi victory condition.

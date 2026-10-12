@@ -9,7 +9,7 @@ local layout = require("prototypes.system.galaxy_layout")
 
 local membership = {
 	-- Main game and Calidus.
-	nauvis = "calidus", muluna = "calidus", eneas = "calidus",
+	nauvis = "calidus", muluna = "calidus",
 	["sye-calidus"] = "calidus", ["razi-calidus-drift"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris",
@@ -142,7 +142,7 @@ local retired_belts = {
   {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
 }
 
-local calidus_locations = {"nauvis", "muluna", "eneas", "sye-calidus",
+local calidus_locations = {"nauvis", "muluna", "sye-calidus",
   "razi-calidus-drift"}
 
 local function has_endpoint(name)

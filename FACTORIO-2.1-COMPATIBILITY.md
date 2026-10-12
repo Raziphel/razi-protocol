@@ -31,6 +31,7 @@ The minimum versions below are now recorded in `info.json`.
 - `planetaris-tellus >= 1.1.11`
 - `planetaris-hyarion >= 1.3.23`
 - `planetaris-arig >= 1.1.44`
+- `Cerys-Moon-of-Fulgora >= 4.24.17`
 - `linox >= 1.8.9`
 - `Muria >= 1.8.6`
 - `corrundum >= 1.0.49`
@@ -59,11 +60,6 @@ The minimum versions below are now recorded in `info.json`.
 
 ### Optional
 
-- `Cerys-Moon-of-Fulgora >= 4.24.17`
-- `moon-eneas >= 1.0.10`
-- `assets-eneas >= 1.0.2`
-- `mferrari_lib >= 0.7.5`
-- `informatron >= 0.5.0`
 - `Arachnids_enemy >= 1.2.1`
 - `Electric_flying_enemies >= 0.2.0`
 - `Explosive_biters >= 2.4.0`
@@ -73,8 +69,6 @@ The minimum versions below are now recorded in `info.json`.
 - `Explosive_biters_K2_compatibility >= 1.0.3`
 - `Toxic_biters_K2_compatibility >= 1.0.3`
 - `visible-planets >= 1.8.2`
-- `Construction_Drones_Forked >= 1.1.18`
-- `RPGsystem >= 2.1.3`
 - `rubia-minus-memes >= 1.1.0`
 - `shield-projector >= 0.3.0`
 - `turret-activation-delay >= 0.3.5`

@@ -220,18 +220,6 @@ set_science_after("beetlejuice-discovery", "vibrant")
 -- Base/inner-system planet discoveries.
 set_science_through("planet-discovery-muluna", "base")
 set_science_through("moon-discovery-cerys", "base")
-set_many_science_through({
-	"moon-discovery-eneas",
-	"planet-discovery-eneas"
-}, "base")
-add_first_existing_prerequisite("moon-discovery-eneas", {
-	"planet-discovery-muluna",
-	"moon-discovery-cerys"
-})
-add_first_existing_prerequisite("planet-discovery-eneas", {
-	"planet-discovery-muluna",
-	"moon-discovery-cerys"
-})
 add_existing_prerequisites("solaris-discovery", {
 	"planet-discovery-muluna"
 })
