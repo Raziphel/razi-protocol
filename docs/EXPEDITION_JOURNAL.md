@@ -1,9 +1,27 @@
-# The Razi Expedition Journal
+# The Protocol Codex (Razi Expedition Journal)
 
 A completely original 186-milestone, 17-chapter guided journey written
 for the seven-system Factorio 2.1 K2SO campaign. Inspired by the *idea*
 of an in-game journal, but not dependent on Quest Book or a fork of its
 source code, UI, texts or reward engine.
+
+## Visual overhaul
+
+The journal now appears in-game as **The Protocol Codex**, retaining all old
+quest IDs, per-player preferences, completion records and timings. Goals use
+native technology or space-location icons. The reading pane puts your actual
+research objective and prerequisites before optional narrative sections.
+
+When provided by installed mods, the Codex illustrates the **science packs**
+needed for the selected research and shows **placeable buildings and item
+recipes** unlocked by it, with buildings prioritized. These represent real
+technology effects, not invented building-count quests. Missing sprites,
+recipes, items and technologies are handled safely.
+
+Search milestone IDs, technology names, planets and chapters in the left rail.
+Results filter as you type and matching chapters expand automatically. Clear
+search, jump chapters, or go to the previous or next entry. Icon galleries are
+bounded and wrap into columns so no sideways scrolling is introduced.
 
 ## Access
 
