@@ -230,13 +230,22 @@ local function unlock_technology(recipe_name, guard)
   return nil
 end
 
+-- Lab inputs are stable by the time the exchange modules run.
+-- Building this once is cheaper than rebuilding each lab's set per recipe.
+local lab_input_sets
 local function lab_can_research(packs)
-  for _, lab in pairs(data.raw.lab or {}) do
-    local available = {}
-    for _, science in ipairs(lab.inputs or {}) do available[science] = true end
-    local all = true
-    for _, science in ipairs(packs) do
-      if not available[science] then all = false break end
+  if not lab_input_sets then
+    lab_input_sets={}
+    for _,lab in pairs(data.raw.lab or {}) do
+      local accepted={}
+      for _,science in ipairs(lab.inputs or {}) do accepted[science]=true end
+      lab_input_sets[#lab_input_sets+1]=accepted
+    end
+  end
+  for _,available in ipairs(lab_input_sets) do
+    local all=true
+    for _,science in ipairs(packs) do
+      if not available[science] then all=false break end
     end
     if all then return true end
   end
@@ -280,30 +289,38 @@ local function machine_fluid_ports(machine)
   return inputs, outputs
 end
 
-local function machine_can_craft(category, base, additional, world)
-  local ingredients = {}
-  for _, entry in ipairs(base.ingredients) do
-    ingredients[#ingredients + 1] = entry
-  end
-  for _, entry in ipairs(additional) do
-    ingredients[#ingredients + 1] = entry
-  end
-  local required_inputs = distinct_fluid_count(ingredients)
-  local required_outputs = distinct_fluid_count(base.results)
-  for _, family in ipairs({"assembling-machine", "furnace"}) do
-    for _, machine in pairs(data.raw[family] or {}) do
-      if not machine.fixed_recipe and matches_surface(machine, world) then
-        local suitable_category = false
-        for _, value in ipairs(machine.crafting_categories or {}) do
-          if value == category then suitable_category = true break end
-        end
-        if suitable_category then
-          local inputs, outputs = machine_fluid_ports(machine)
-          if inputs >= required_inputs and outputs >= required_outputs then
-            return true
-          end
+-- The big packs can have hundreds of assemblers and furnaces. Their
+-- categories and fluid ports don't change while these recipes are created.
+local machines_by_category
+local function crafting_machine_index()
+  if machines_by_category then return machines_by_category end
+  local index={}
+  for _,family in ipairs({"assembling-machine","furnace"}) do
+    for _,machine in pairs(data.raw[family] or {}) do
+      if not machine.fixed_recipe then
+        local inputs,outputs=machine_fluid_ports(machine)
+        for _,category in ipairs(machine.crafting_categories or {}) do
+          local list=index[category]
+          if not list then list={} index[category]=list end
+          list[#list+1]={machine=machine,inputs=inputs,outputs=outputs}
         end
       end
+    end
+  end
+  machines_by_category=index
+  return index
+end
+
+local function machine_can_craft(category, base, additional, world)
+  local ingredients={}
+  for _,entry in ipairs(base.ingredients) do ingredients[#ingredients+1]=entry end
+  for _,entry in ipairs(additional) do ingredients[#ingredients+1]=entry end
+  local required_inputs=distinct_fluid_count(ingredients)
+  local required_outputs=distinct_fluid_count(base.results)
+  for _,candidate in ipairs(crafting_machine_index()[category] or {}) do
+    if candidate.inputs>=required_inputs and candidate.outputs>=required_outputs
+      and matches_surface(candidate.machine,world) then
+      return true
     end
   end
   return false

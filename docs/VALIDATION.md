@@ -210,3 +210,14 @@ native recipe quantities, independent late tech prerequisites, missing mods,
 suppliers and machines, original recipe preservation, disabled optional
 settings, and repeat-run stability. This is a synthetic prototype fixture,
 not a complete live Factorio 2.1 startup and playtest.
+
+## Startup performance regression checks (2.1.21)
+
+The Lua fixtures in `tests/lua/test_planet_production_exchanges.lua`,
+`tests/lua/test_campaign_weave.lua` and
+`tests/lua/test_regional_research_bridges.lua` cover cached machine/lab
+catalogues, unchanged research guards and the empty-optional-world fast path.
+
+For a real benchmark, check `docs/STARTUP_PERFORMANCE.md`. Tests can check
+recipe and tech behaviour, but cannot substitute for a full dependency-load
+timing or test Factorio's sprite atlas build.

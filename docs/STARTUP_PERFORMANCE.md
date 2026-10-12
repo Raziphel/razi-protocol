@@ -167,3 +167,30 @@ These caches are **not written to storage** and do not affect save size.
 Research completion, optional planet availability and the starmap routes
 remain controlled by Factorio. The included fixtures check these behaviors;
 measurable UPS/UI improvements require timings from the full modpack in-game.
+
+## Data-stage indexing pass (2.1.21)
+
+The optional industrial recipes share one machine-category catalogue instead
+of scanning every furnace and assembling machine for each exchange. Fluid port
+counts are calculated when the catalogue is built; individual planet surface
+conditions are still checked for each proposed recipe. The same engine reuses
+a one-time lookup of which science packs each lab accepts.
+
+The campaign weave and regional research bridges now keep recipe-unlock
+information for **only the science ingredients they actually check**. The
+regional pass also exits without a broad scan when none of its optional
+candidate worlds is installed. These changes do not remove crafting checks
+or relax science/progression constraints.
+
+These are in-memory data-stage lookups and are discarded once prototype
+building finishes. They add no save data and do not change any images.
+A game update or new mod release will invalidate Factorio's prototype and
+sprite caches, so judge startup improvements on *repeat* launches with the
+same exact mod list and settings, not the first rebuild.
+
+To compare before and after, collect `factorio-current.log` for both versions
+and compare the elapsed durations of **Loading mod settings**, **Loading mod
+prototypes**, **Building prototypes**, **Loading sprites**, and overall
+startup. A faster Lua data stage will not fix slow texture decompression or
+third-party prototype creation. No measured seconds saved are claimed without
+an actual before/after run of the full modpack.

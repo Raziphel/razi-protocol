@@ -180,6 +180,17 @@ local function product(recipe, name)
 end
 
 local full, module=setup()
+-- Even with a large machine/lab catalogue, exchange checks should only
+-- enumerate both catalogues once across all candidate recipes.
+local machine_scans,lab_scans=0,0
+setmetatable(full["assembling-machine"],{__pairs=function(t)
+  machine_scans=machine_scans+1
+  return next,t,nil
+end})
+setmetatable(full.lab,{__pairs=function(t)
+  lab_scans=lab_scans+1
+  return next,t,nil
+end})
 -- Irrelevant technologies must not change native unlock selection.
 for i=1,600 do
   full.technology["unrelated-tech-"..i]={
@@ -189,6 +200,8 @@ for i=1,600 do
 end
 local original=clone(full.recipe)
 module.data_final_fixes()
+check(machine_scans==1 and lab_scans==1,
+  "Manufacturing compatibility rebuilt its machine or lab catalog per recipe")
 local names={
   "razi-bio-rare-metal-casting",
   "razi-electrobiological-components",
@@ -244,6 +257,8 @@ check(#full.technology[names[2]].prerequisites==3,
 check(#full.technology[names[3]].prerequisites==4,
   "Aquilo, Gleba, Fulgora and native energy control research required")
 module.data_final_fixes()
+check(machine_scans==1 and lab_scans==1,
+  "Repeated exchange registration scanned all machines or labs again")
 for _, name in ipairs(names) do
   check(full.recipe[name] and full.technology[name],
     "Repeated integration removed or duplicated a recipe")
