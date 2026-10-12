@@ -1,6 +1,6 @@
 # Planet Quality Gate (2026-10-12)
 
-**Current curated dev version:** Razi Protocol 2.1.8.
+**Current curated dev version:** Razi Protocol 2.1.10.
 
 This is a source-code, campaign integration, and publicly described mod-mechanics review. It is **not** proof that the entire Factorio 2.1 + K2SO stack has loaded or that every saved-game path is completable.
 
