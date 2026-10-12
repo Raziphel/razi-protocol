@@ -2,6 +2,7 @@
 import re
 import struct
 import unittest
+import zlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 MANIFEST=(ROOT/"prototypes/system/route_highlight_manifest.lua").read_text()
@@ -25,6 +26,24 @@ class RouteHighlightTests(unittest.TestCase):
             self.assertTrue(p.is_file(),p)
             raw=p.read_bytes()
             self.assertEqual(raw[:8],b'\x89PNG\r\n\x1a\n')
+            offset=8
+            chunks=[]
+            while offset < len(raw):
+                self.assertGreaterEqual(len(raw)-offset,12,p)
+                length=struct.unpack(">I",raw[offset:offset+4])[0]
+                chunk_type=raw[offset+4:offset+8]
+                end=offset+8+length
+                self.assertLessEqual(end+4,len(raw),p)
+                expected_crc=struct.unpack(">I",raw[end:end+4])[0]
+                actual_crc=zlib.crc32(raw[offset+4:end]) & 0xffffffff
+                self.assertEqual(actual_crc,expected_crc,(p,chunk_type))
+                chunks.append((chunk_type,length))
+                offset=end+4
+                if chunk_type==b'IEND':
+                    break
+            self.assertEqual(chunks[0],(b'IHDR',13),p)
+            self.assertEqual(chunks[-1],(b'IEND',0),p)
+            self.assertEqual(offset,len(raw),p)
             self.assertEqual(struct.unpack(">II",raw[16:24]),(w,h))
             self.assertIn(tuple(raw[24:26]),((2,3),(1,3)))
             self.assertLessEqual(max(w,h),2048)
