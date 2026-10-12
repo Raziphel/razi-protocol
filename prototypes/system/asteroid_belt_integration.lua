@@ -1,79 +1,61 @@
--- Required MrLumme Asteroid Belt. Its native 5,000 km crossing,
--- difficulty, mining, and science are source-owned; only the visual home of
--- the crossing and its two gateway markers are repositioned here.
---
--- Original source artwork now rings Vibrant's SUN. Virtual stars disappear
--- during PlanetsLib final fixes, so gateways use global root-star orbits.
-local M = {}
-
-local HOST = "vibrant"
-local SOURCE_SPRITE = "__AsteroidBelt__/graphics/sprite/asteroid-belt.png"
-local RING_SCALE = 1.12
-local STARMAP_PIXELS_PER_UNIT = 32
-
-local coords = {
-  -- Crossing follows a north-east radial corridor at 0.17 turns.
-  -- Fulgora/Ribbonia are inside; Paracelsin lies beyond the belt.
+-- Razi's original Vibrant metallic ring; no graphics or code from AsteroidBelt.
+-- Map coordinates and legacy names remain stable for existing expedition saves.
+local M={}
+local HOST="vibrant"
+local PIXELS=32
+local ASSET="__razi-protocol__/graphics/starmap/razi/"
+local coords={
   {"asteroid-belt-inner-edge",31,0.17},
   {"asteroid-belt-outer-edge",39,0.17}
 }
-
-local function get_location(name)
-  if (data.raw["space-location"] or {})[name] then
-    return "space-location",data.raw["space-location"][name]
-  end
-  if (data.raw.planet or {})[name] then
-    return "planet",data.raw.planet[name]
-  end
-  return nil
-end
-
+M.coords=coords
 function M.data_final_fixes()
-  if not mods["AsteroidBelt"] then return end
   local layout=require("prototypes.system.galaxy_layout")
   local cx,cy=layout.anchor_position(HOST)
-  if not cx or not cy then error("Razi: missing Vibrant sun coordinates") end
-  local updates={}
-  for _,item in ipairs(coords) do
-    local kind=get_location(item[1])
-    if kind then
-      local a=item[3]*2*math.pi
-      local x=cx+item[2]*math.sin(a)
-      local y=cy-item[2]*math.cos(a)
-      -- Both waypoints lie north-east of root star. Use the standard
-      -- one-argument atan for Factorio's supported Lua runtime.
-      if x<=0 or y>=0 then error("Razi: Vibrant belt quadrant changed") end
-      local radius=math.sqrt(x*x+y*y)
+  if not cx or not cy then return end
+  for _,entry in ipairs(coords) do
+    local location=(data.raw["space-location"] or {})[entry[1]]
+    if location then
+      local radians=entry[3]*2*math.pi
+      local x=cx+entry[2]*math.sin(radians)
+      local y=cy-entry[2]*math.cos(radians)
+      if x<=0 or y>=0 then error("Razi: Vibrant belt moved to unexpected sector") end
+      local distance=math.sqrt(x*x+y*y)
       local turn=0.25-math.atan(-y/x)/(2*math.pi)
-      updates[#updates+1]={type=kind,name=item[1],draw_orbit=false,
-        orbit={parent={type="space-location",name="star"},
-               distance=radius,orientation=turn}}
+      location.orbit={parent={type="space-location",name="star"},
+        distance=distance,orientation=turn}
+      location.origin={x=0,y=0}
+      location.distance=distance
+      location.orientation=turn
+      location.draw_orbit=false
     end
   end
-  if #updates>0 then PlanetsLib:update(updates) end
-  for _,item in ipairs(coords) do
-    local _,loc=get_location(item[1])
-    if loc then loc.draw_orbit=false end
-  end
-  -- AsteroidBelt inserts its sprite in utility-sprites.starmap_star at
-  -- source data-final-fixes. Reposition exactly that layer, leaving its
-  -- contents and every unrelated star/background layer unchanged.
-  -- Center the original source bitmap on Vibrant's virtual star artwork.
-  local shift_x=cx*STARMAP_PIXELS_PER_UNIT
-  local shift_y=cy*STARMAP_PIXELS_PER_UNIT
+  -- Decorative native textures only. No animation, no source mod assets.
   local utility=(data.raw["utility-sprites"] or {}).default
-  local sprite=utility and utility.starmap_star
-  for _,layer in ipairs((sprite and sprite.layers) or {}) do
-    if type(layer)=="table" and layer.filename==SOURCE_SPRITE then
-      layer.scale=RING_SCALE
-      layer.shift={shift_x,shift_y}
+  local star=utility and utility.starmap_star
+  if not (star and type(star.layers)=="table") then return end
+  local sprites={
+    {name="belt-vibrant.png",scale=4.4,alpha=.39,tint={r=.70,g=.57,b=.96}},
+    {name="debris-vibrant.png",scale=4.0,alpha=.27,tint={r=.88,g=.71,b=1}}
+  }
+  for _,sprite in ipairs(sprites) do
+    local filename=ASSET..sprite.name
+    local already=false
+    for _,layer in ipairs(star.layers) do
+      if layer.filename==filename and layer.scale==sprite.scale
+        and layer.shift and math.abs(layer.shift[1]-cx*PIXELS)<.01
+        and math.abs(layer.shift[2]-cy*PIXELS)<.01 then
+        already=true;break
+      end
     end
-  end
-  if type(log)=="function" then
-    log(string.format(
-      "[Razi Protocol/asteroid-belt] Ring around Vibrant sun at (%.2f,%.2f), scale %.2f",
-      cx,cy,RING_SCALE))
+    if not already then
+      star.layers[#star.layers+1]={
+        type="sprite",filename=filename,size={512,512},
+        scale=sprite.scale,shift={cx*PIXELS,cy*PIXELS},
+        priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
+        tint={r=sprite.tint.r,g=sprite.tint.g,b=sprite.tint.b,a=sprite.alpha}
+      }
+    end
   end
 end
-
 return M

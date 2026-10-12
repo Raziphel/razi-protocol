@@ -44,6 +44,7 @@ local progression = {
   {"first_crossing", true, false, false},
   {"industrial_deep", true, false, false},
   {"middle_crossing", true, true, false},
+  {"belt_vibrant_crossing", true, true, false},
   {"belt_vespera_crossing", true, true, false},
   {"outer_crossing", true, true, true},
   {"belt_umbra_crossing", true, true, true},
@@ -124,6 +125,37 @@ ok(probability(first.asteroid_spawn_definitions, "imersite-asteroid-chunk") == 0
    "Changed duplicate Imersite asteroid curve")
 profiles.preserve_custom(first, duplicate)
 ok(#first.asteroid_spawn_definitions == 3, "Duplicated custom asteroid definitions")
+
+-- Route asteroid fields must be a localized MIDPOINT spike, not a
+-- permanent boost that accidentally changes modded resource profiles.
+local field_route={asteroid_spawn_definitions=util.spawn_definitions()}
+local original_modded=field_route.asteroid_spawn_definitions[6]
+local original_points=original_modded.spawn_points
+profiles.apply(field_route,"middle_crossing")
+profiles.apply_field(field_route,1.8)
+local medium_points
+for _,def in ipairs(field_route.asteroid_spawn_definitions) do
+  if def.asteroid=="medium-oxide-asteroid" then medium_points=def.spawn_points end
+end
+ok(medium_points and #medium_points>=5,
+  "Field should create a smooth midpoint hazard window")
+local centre,edge
+for _,point in ipairs(medium_points) do
+  if math.abs(point.distance-0.5)<.001 then centre=point.probability end
+  if math.abs(point.distance-0.3)<.001 then edge=point.probability end
+end
+ok(centre and edge and centre>edge,
+  "Field must be more dangerous in the middle of the journey")
+ok(field_route.asteroid_spawn_definitions[6]==original_modded and
+  original_modded.spawn_points==original_points,
+  "Custom asteroid species were modified by route fields")
+local before_points=medium_points
+profiles.apply_field(field_route,1.8)
+for _,def in ipairs(field_route.asteroid_spawn_definitions) do
+  if def.asteroid=="medium-oxide-asteroid" then
+    ok(def.spawn_points==before_points,"Field multiplier stacked twice")
+  end
+end
 
 -- Stationary Calidus platforms must be small-only, not merely
 -- a lower probability of getting hit by a medium or huge asteroid.

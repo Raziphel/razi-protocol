@@ -25,4 +25,13 @@ guide.kind="first"
 local first=highlights.layers_for_guide(guide,{r=.3,g=.7,b=.9},"subtle")
 assert(first[3].tint.a<plain[3].tint.a,
   "Early system routes must remain visually quieter")
+local marker=highlights.field_marker({
+  from="sye-solaris",to="sye-vibrant",
+  start={20,30},finish={60,50}
+},"subtle")
+assert(marker and marker.shift[1]==40*32 and marker.shift[2]==40*32,
+  "Real route field marker must track the actual midpoint")
+assert(marker.tint.a<=.11,"Route debris details must remain subtle")
+assert(not highlights.field_marker({from="nauvis",to="muluna"},"subtle"),
+  "Unlisted routes must never gain fake asteroid fields")
 print("Starmap route light tests passed")

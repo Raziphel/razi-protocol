@@ -422,3 +422,12 @@ Its five research-phase portraits do **not** impersonate physical
 satellite construction progress. The space map gets ten quiet nebula
 and star accents using already bundled art. Both changes have safe
 startup controls and no recurring game scans.
+
+### Razi Asteroid Frontier (2.1.14)
+
+Razi now owns the physical Vibrant, Vespera and Umbra asteroid belts rather
+than depending on the original AsteroidBelt mod. Four existing long-distance
+corridors include concentrated midroute asteroid fields, with corresponding
+faint starmap details. The legacy Vibrant rim names and survey technology are
+retained for save migration. **Back up older saves and disable AsteroidBelt**
+before upgrading. See [Asteroid Routes](docs/ASTEROID_ROUTES.md).

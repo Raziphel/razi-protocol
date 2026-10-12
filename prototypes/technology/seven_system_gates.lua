@@ -188,8 +188,8 @@ function gates.data_final_fixes()
 	-- Keep Cerys with its parent Fulgora, while preserving native moon techs.
 	add_existing_prerequisites("moon-discovery-cerys", {"planet-discovery-fulgora"})
 	replace_requirements("planet-discovery-ribbonia", {"vibrant-discovery"}, frontier, 900)
-	-- Preserve original AsteroidBelt science. Its research unlocks both
-	-- native edge waypoints; crossing them is a physical travel requirement.
+	-- Preserve the legacy Vibrant survey ID. Razi research unlocks both
+	-- Razi-owned edge waypoints; the crossing is a physical travel requirement.
 	ensure_unlock("space-discovery-asteroid-belt", "asteroid-belt-inner-edge")
 	ensure_unlock("space-discovery-asteroid-belt", "asteroid-belt-outer-edge")
 	replace_requirements("planet-discovery-paracelsin",
@@ -205,8 +205,8 @@ function gates.data_final_fixes()
 		{"planet-discovery-rubia"}, frontier, 1100)
 
 	-- The next parallel pair demands both second-tier branches.
-	-- The required upstream asteroid field is the shared middle-to-outer
-	-- expedition gateway. Its own science remains source-owned.
+	-- The Razi-owned Vibrant asteroid field is the shared middle-to-outer
+	-- expedition gateway. Its science is now Razi-owned.
 	local outer_prereqs = {
 		"vibrant-discovery", "vespera-discovery",
 		"space-discovery-asteroid-belt"

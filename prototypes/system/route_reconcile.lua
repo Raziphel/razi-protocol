@@ -30,8 +30,8 @@ local membership = {
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
 	frozeta = "beetlejuice",
-	-- The native AsteroidBelt remains a science gate for both outer
-	-- discoveries. Its edge-to-edge crossing must remain source-owned.
+	-- Razi's Vibrant metallic belt remains a science gate for both outer
+	-- discoveries. Its edge-to-edge crossing remains a physical part of the travel graph.
 	["asteroid-belt-inner-edge"] = "mid-outer-belt",
 	["asteroid-belt-outer-edge"] = "mid-outer-belt",
 	["sye-umbra"] = "umbra", tenebris = "umbra",
@@ -63,8 +63,8 @@ local route_specifications = {
   -- and a late-game crosslink. They avoid diagonals through Calidus.
   {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
-  -- The 5,000 km source-owned AsteroidBelt is a mandatory science step.
-  -- Keep its source asteroids, route names and original loot untouched.
+  -- The Razi-owned 5,000 km Vibrant belt is a mandatory science step.
+  -- Preserve its legacy connection ID and Razi-owned asteroid loot.
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
 	-- Dense neighboring industrial worlds get a few short cargo loops.
@@ -157,10 +157,10 @@ local function key_for(a, b)
 	return a .. "|" .. b
 end
 
--- The original AsteroidBelt is a true inner/outer boundary at Vibrant.
+-- Razi's first-party Vibrant belt is a true inner/outer boundary at Vibrant.
 -- Some dependencies add old same-system shortcuts in their final-fixes;
 -- remove ONLY crossings between Razi's known inner and outer locations.
--- Never remove the one native edge-to-edge connection, even on repeated
+-- Never remove the one Razi-owned edge-to-edge connection, even on repeated
 -- reconciliation. Optional source moons within the inner region stay inside.
 local vibrant_inner = {
   ["sye-vibrant"]=true, fulgora=true, ribbonia=true, cerys=true,
@@ -169,6 +169,16 @@ local vibrant_inner = {
 local vibrant_outer = {
   paracelsin=true, ["asteroid-belt-outer-edge"]=true
 }
+-- Localized obstacle fields; the first Calidus routes remain untouched.
+local route_fields={
+  ["sye-solaris|sye-vibrant"]=1.50,
+  ["sye-nyxaris|sye-vespera"]=1.48,
+  ["sye-beetlejuice|sye-umbra"]=1.68,
+  ["secretas|solar-system-edge"]=1.85
+}
+local function field_strength(a,b)
+  return route_fields[key_for(a,b)]
+end
 local function bypasses_vibrant_belt(a,b)
   if key_for(a,b)==key_for("asteroid-belt-inner-edge","asteroid-belt-outer-edge") then
     return false
@@ -309,6 +319,8 @@ function route_reconcile.data_final_fixes()
 					route.shape = "line"
 				end
 				hazard_profiles.apply(route, hazard)
+				local strength=field_strength(from,to)
+				if strength then hazard_profiles.apply_field(route,strength) end
 				if route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
 				end
@@ -324,6 +336,8 @@ function route_reconcile.data_final_fixes()
                             and membership[from] ~= membership[to]) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
+				local strength=field_strength(from,to)
+				if strength then hazard_profiles.apply_field(connection,strength) end
 				connection.origin=regional_origin(from,to,connection.shape)
 				data:extend({connection})
 				routes_by_pair[pair] = {route_name}

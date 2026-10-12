@@ -47,6 +47,28 @@ function M.layers_for_guide(guide,color,mode)
     layer(4,clear and .58 or .36)
   }
 end
+-- Quiet pockets of debris at the halfway point of selected REAL routes.
+-- Uses existing Razi texture art, never draws fictitious route lines.
+local field_art={
+  ["sye-solaris|sye-vibrant"]={image="debris-vibrant.png",tint={r=.69,g=.60,b=.98}},
+  ["sye-nyxaris|sye-vespera"]={image="debris-vespera.png",tint={r=.46,g=.83,b=1}},
+  ["sye-beetlejuice|sye-umbra"]={image="debris-umbra.png",tint={r=.92,g=.49,b=.65}},
+  ["secretas|solar-system-edge"]={image="rift-deep-space.png",tint={r=.57,g=.65,b=1}}
+}
+function M.field_marker(guide,mode)
+  local art=field_art[key(guide.from,guide.to)]
+  if not art then return nil end
+  return {
+    type="sprite",
+    filename="__razi-protocol__/graphics/starmap/razi/"..art.image,
+    size={512,512},scale=1.7,
+    shift={((guide.start[1]+guide.finish[1])/2)*32,
+      ((guide.start[2]+guide.finish[2])/2)*32},
+    priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
+    tint={r=art.tint.r,g=art.tint.g,b=art.tint.b,
+      a=mode=="clear" and .20 or .105}
+  }
+end
 function M.data_final_fixes()
   local option=settings and settings.startup
     and settings.startup["razi-route-highlight-style"]
@@ -80,6 +102,10 @@ function M.data_final_fixes()
       or guide.kind=="belt"
       or (guide.kind=="belt-approach" and mode=="clear"))
     if aligned and appropriate and not existing[guide.filename] then
+      -- Placed UNDER the corresponding route spine. The original mask
+      -- remains accurate, and the dust cannot invent a traversable edge.
+      local marker=M.field_marker(guide,mode)
+      if marker then art.layers[#art.layers+1]=marker end
       local c=hazards.color(route)
       for _,layer in ipairs(M.layers_for_guide(guide,c,mode)) do
         art.layers[#art.layers+1]=layer
