@@ -87,6 +87,17 @@ M.quests={
 local extended=require("scripts.razi_journal_expansion")
 for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end
 for _,quest in ipairs(extended.quests) do M.quests[#M.quests+1]=quest end
+local industry=require("scripts.razi_journal_industry")
+-- Place the industrial atlas next to the existing supply-network chapter,
+-- not after the final intergalactic signal.
+for _,chapter in ipairs(industry.chapters) do
+  local position
+  for i,current in ipairs(M.chapters) do
+    if current.id=="network" then position=i+1 break end
+  end
+  table.insert(M.chapters,position or #M.chapters+1,chapter)
+end
+for _,quest in ipairs(industry.quests) do M.quests[#M.quests+1]=quest end
 M.by_id={}
 for _,quest in ipairs(M.quests) do M.by_id[quest.id]=quest end
 return M

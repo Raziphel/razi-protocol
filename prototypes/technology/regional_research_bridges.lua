@@ -2,6 +2,7 @@
 -- worlds. Source planet unlock techs are discovered from real effects,
 -- not guesses. No new recipes, science packs or additional surfaces.
 local M={}
+local interdependence=require("prototypes.compat.interdependence_mode")
 M.bridges={
   {"planet-discovery-corrundum","planet-discovery-apia-carnova"},
   {"planet-discovery-secretas","planet-discovery-tenebris"},
@@ -75,9 +76,79 @@ local function native_unlock(name,by_world)
     end
   end
 end
+
+-- A source discovery can look early while the science used to research it
+-- is manufactured by a recipe locked behind the *next* paired star.
+-- Index only once and require a known producer not gated by either frontier.
+local function production_index()
+  local products,unlockers={},{}
+  local function record(recipe_name,variant)
+    if not variant then return end
+    local function add(name,kind)
+      if not name or kind=="fluid" then return end
+      local list=products[name] or {}
+      list[#list+1]=recipe_name
+      products[name]=list
+    end
+    add(variant.result,"item")
+    for _,entry in ipairs(variant.results or {}) do
+      add(entry.name or entry[1],entry.type)
+    end
+  end
+  for name,recipe in pairs(data.raw.recipe or {}) do
+    if not recipe.hidden then
+      record(name,recipe)
+      record(name,recipe.normal)
+      record(name,recipe.expensive)
+    end
+  end
+  for id,node in pairs(data.raw.technology or {}) do
+    if active(id) then
+      for _,effect in ipairs(node.effects or {}) do
+        if effect.type=="unlock-recipe" and effect.recipe then
+          local list=unlockers[effect.recipe] or {}
+          list[#list+1]=id
+          unlockers[effect.recipe]=list
+        end
+      end
+    end
+  end
+  return products,unlockers
+end
+local function science_after_gateway(candidate,phase,products,unlockers)
+  for _,ingredient in ipairs((tech(candidate).unit or {}).ingredients or {}) do
+    local pack=ingredient.name or ingredient[1]
+    for _,gateway in ipairs(phase.gates) do
+      if tech(pack) and ancestor(pack,gateway) then return true end
+    end
+    local makers=products[pack]
+    if makers then
+      local obtainable=false
+      for _,recipe_name in ipairs(makers) do
+        local recipe=(data.raw.recipe or {})[recipe_name]
+        if recipe and recipe.enabled~=false then
+          obtainable=true;break
+        end
+        for _,unlocker in ipairs(unlockers[recipe_name] or {}) do
+          local future=false
+          for _,gateway in ipairs(phase.gates) do
+            if ancestor(unlocker,gateway) then future=true;break end
+          end
+          if not future then obtainable=true;break end
+        end
+        if obtainable then break end
+      end
+      if not obtainable then return true end
+    end
+  end
+  return false
+end
+
 function M.data_final_fixes()
+  if not interdependence.enabled() then return end
   for _,edge in ipairs(M.bridges) do M.safe_link(edge[1],edge[2]) end
   local sources=native_unlocks()
+  local producers,unlockers=production_index()
   for _,phase in ipairs(M.phases) do
     for _,name in ipairs(phase.worlds) do
       local candidate=native_unlock(name,sources)
@@ -92,22 +163,10 @@ function M.data_final_fixes()
           end
         end
       end
-      -- Some source mods place later-world sciences directly into a
-      -- discovery's unit without making that pack a tech prerequisite.
-      -- If the science technology exists and itself needs the next
-      -- gateway, do not gate that gateway behind this source.
-      if safe then
-        for _,ingredient in ipairs((tech(candidate).unit or {}).ingredients or {}) do
-          local pack=ingredient.name or ingredient[1]
-          for _,gateway in ipairs(phase.gates) do
-            if tech(pack) and ancestor(pack,gateway) then
-              safe=false
-              break
-            end
-          end
-          if not safe then break end
-        end
-      end
+      -- A direct science technology or its recipe may itself require the
+      -- destination gateway even when the candidate tech graph does not.
+      if safe and science_after_gateway(candidate,phase,producers,unlockers)
+        then safe=false end
       if safe then
         for _,gateway in ipairs(phase.gates) do
           M.safe_link(gateway,candidate)

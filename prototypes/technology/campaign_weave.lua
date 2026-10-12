@@ -166,10 +166,10 @@ local function has_compatible_lab(ingredients, pack)
   return false
 end
 
-local function add_science(target, pack)
+local function add_science(target, pack, owner)
   local t = technology(target)
   if not (t and t.unit and t.unit.ingredients) then return end
-  if not has_production_recipe_before(pack, target) then return end
+  if not has_production_recipe_before(pack, target, owner) then return end
   for _, ingredient in ipairs(t.unit.ingredients) do
     if (ingredient.name or ingredient[1]) == pack then return end
   end
@@ -212,7 +212,7 @@ function M.data_final_fixes()
       local pack, owner = milestone[1], milestone[2]
       if safely_deliverable(target,pack,owner)
         and link(pack,owner) and link(target,pack) then
-        add_science(target,pack)
+        add_science(target,pack,owner)
       end
     end
   end

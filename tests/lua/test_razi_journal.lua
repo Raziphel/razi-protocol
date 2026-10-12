@@ -3,8 +3,8 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
-check(#defs.chapters==17,"Seventeen Razi expedition chapters expected")
-check(#defs.quests==186,"Razi Expedition Journal should include 186 milestones")
+check(#defs.chapters==18,"Eighteen Protocol Codex chapters expected")
+check(#defs.quests==204,"Protocol Codex should include 204 milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -22,6 +22,14 @@ for _,q in ipairs(defs.quests) do
   for _,req in ipairs(q.requires) do
     check(quest_ids[req],"Unregistered prerequisite "..req)
   end
+end
+-- Industry missions are tied to existing optional research, not new
+-- recipe-count flags, planets or scripted completion conditions.
+for _,id in ipairs({"alliance-optical-coils","alliance-vesta-magnets",
+  "alliance-aquilo-outer"}) do
+  local quest=defs.by_id[id]
+  check(quest and quest.chapter=="alliances" and quest.site,
+    "Industrial partnership missing prototype-backed guidance: "..id)
 end
 local force={technologies={}}
 for _,q in ipairs(defs.quests) do
@@ -49,8 +57,15 @@ for _,screen in ipairs({
 end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
-check(start==0 and total==186-15-9 and active>=1,
+check(start==0 and total==204-15-9 and active>=1,
   "At least both initial factory/opening branches must be listed")
+-- A disabled upstream alternative disappears instead of creating a
+-- phantom objective or blocking the main campaign.
+local guarded=force.technologies["razi-network-aquilo-outer-controllers"]
+force.technologies["razi-network-aquilo-outer-controllers"]=nil
+check(M.state(force,defs.by_id["alliance-aquilo-outer"])=="unavailable",
+  "Deep-only trade must not appear in Balanced mode")
+force.technologies["razi-network-aquilo-outer-controllers"]=guarded
 local a=defs.by_id["solaris-gate"]
 local b=defs.by_id["nyxaris-gate"]
 force.technologies["space-science-pack"].researched=true

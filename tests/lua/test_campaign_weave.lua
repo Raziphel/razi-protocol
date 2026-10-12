@@ -67,6 +67,14 @@ for i=1,600 do
   }
 end
 M.data_final_fixes()
+-- The deliverability check and the later ingredient insertion must both
+-- evaluate the same owner, not silently relax the provenance rule.
+local source=assert(io.open("prototypes/technology/campaign_weave.lua","r"))
+local body=source:read("*a")
+source:close()
+check(body:find("add_science(target,pack,owner)",1,true)
+  and body:find("has_production_recipe_before(pack, target, owner)",1,true),
+  "Research ingredient pass discarded source-world ownership")
 local function has_parent(name,need)
   for _, p in ipairs(t[name].prerequisites) do if p==need then return true end end
   return false

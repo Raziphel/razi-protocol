@@ -21,6 +21,7 @@ local palette={
   umbra={r=.80,g=.50,b=.61},
   stellar={r=1,g=.81,b=.50},
   network={r=.54,g=.86,b=.84},
+  alliances={r=.97,g=.70,b=.43},
   finale={r=.72,g=.77,b=1},
   foundations={r=.85,g=.76,b=.60},
   fleet={r=.53,g=.79,b=.99},
@@ -259,7 +260,7 @@ end
 local function matches_query(quest,query)
   if not query or query=="" then return true end
   local corpus=(quest.id.." "..quest.chapter.." "..(quest.tech or "")
-    .." "..(quest.world or "")):lower():gsub("[-_]"," ")
+    .." "..(quest.world or "").." "..(quest.site or "")):lower():gsub("[-_]"," ")
   for word in query:lower():gsub("[-_]"," "):gmatch("%S+") do
     if not corpus:find(word,1,true) then return false end
   end
@@ -337,6 +338,49 @@ local function unlock_gallery(native)
     return false
   end)
   return result
+end
+
+
+-- Exact recipe illustration for Razi's source-proven alternate processes.
+-- Reads one recipe by ID only while its quest is viewed: no global scans.
+local function recipe_gallery(parent,quest,native,width)
+  if not (quest.site and native and prototypes
+      and prototypes.recipe) then return end
+  local recipe=prototypes.recipe[quest.tech]
+  if not (recipe and not recipe.hidden) then return end
+  local unlocked=false
+  for _,effect in ipairs(native.prototype and native.prototype.effects or {}) do
+    if effect.type=="unlock-recipe" and effect.recipe==quest.tech then
+      unlocked=true;break
+    end
+  end
+  if not unlocked then return end
+  local function cards(entries)
+    local output={}
+    for _,entry in ipairs(entries or {}) do
+      local name=entry.name
+      local kind=entry.type=="fluid" and "fluid" or "item"
+      local proto=prototypes[kind] and prototypes[kind][name]
+      local path=name and sprite_if_valid(kind.."/"..name)
+      if proto and path then
+        output[#output+1]={sprite=path,name=proto.localised_name,
+          tooltip=proto.localised_name}
+      end
+    end
+    return output
+  end
+  local materials=cards(recipe.ingredients)
+  local products=cards(recipe.products)
+  if #materials==0 or #products==0 then return end
+  local panel=parent.add{type="frame",direction="vertical",
+    style="inside_deep_frame"}
+  panel.style.width=width
+  panel.style.padding=10
+  subtitle(panel,"factory-diagram",width-26)
+  wrap(panel,L("site-advisory",{"journal-workshop."..quest.id}),width-26)
+  draw_gallery(panel,"factory-imports",materials,width-26,10)
+  draw_gallery(panel,"factory-outputs",products,width-26,5)
+  wrap(panel,L("factory-source-owned"),width-26)
 end
 
 local function render_tracker(player)
@@ -457,6 +501,7 @@ local function render_details(parent,player,quest,p,context,size)
       science_gallery(native),text_width,12)
     draw_gallery(prose,"recipe-unlock-heading",
       unlock_gallery(native),text_width,8)
+    recipe_gallery(prose,quest,native,text_width)
   end
   section(prose,"tip-heading",{"journal-tip."..quest.id},text_width)
   section(prose,"chapter-context",

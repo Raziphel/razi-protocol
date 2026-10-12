@@ -36,10 +36,15 @@ local force={name="player",technologies={}}
 rawset(_G,"helpers",{is_valid_sprite_path=function() return true end})
 rawset(_G,"prototypes",{
  item={
+   bioflux={localised_name="Bioflux"},
+   ["kr-rare-metals"]={localised_name="Rare metals"},
    ["automation-science-pack"]={localised_name="Automation science"},
    ["assembling-machine-1"]={localised_name="Assembler",
      place_result={name="assembling-machine-1",localised_name="Assembler"}}},
  recipe={
+   ["razi-bio-rare-metal-casting"]={localised_name="Imported rare metals",
+     ingredients={{type="item",name="bioflux",amount=2}},
+     products={{type="item",name="kr-rare-metals",amount=4}}},
    ["assembling-machine-1"]={localised_name="Assembler",
      products={{type="item",name="assembling-machine-1"}}}}
 })
@@ -54,6 +59,8 @@ for _,quest in ipairs(defs.quests) do
 end
 force.technologies.automation.prototype.effects={
   {type="unlock-recipe",recipe="assembling-machine-1"}}
+force.technologies["razi-bio-rare-metal-casting"].prototype.effects={
+  {type="unlock-recipe",recipe="razi-bio-rare-metal-casting"}}
 force.technologies.automation.research_unit_ingredients={
   {name="automation-science-pack",amount=1}}
 local player={valid=true,index=1,force=force,
@@ -110,6 +117,22 @@ check(journal.preferences(1).query=="automation",
 journal.preferences(1).query=""
 created={}
 journal.draw(player)
+journal.preferences(1).selected="alliance-bio-metals"
+journal.preferences(1).chapter="alliances"
+created={}
+journal.draw(player)
+local industry_sprites={}
+for _,entry in ipairs(created) do
+  if entry.sprite then industry_sprites[entry.sprite]=true end
+end
+check(industry_sprites["item/bioflux"] and industry_sprites["item/kr-rare-metals"],
+  "Factory research should illustrate real recipe imports and outputs")
+check(journal.matches_query(defs.by_id["alliance-bio-metals"],"vulcanus"),
+  "Search should find suggested production worlds")
+journal.preferences(1).selected="first-signal"
+journal.preferences(1).chapter="calidus"
+created={}
+journal.draw(player)
 local picker
 local selector
 for _,element in ipairs(created) do
@@ -117,7 +140,7 @@ for _,element in ipairs(created) do
   if element.tags and element.tags.razi_journal_action=="select"
     and element.type=="button" then selector=element end
 end
-check(picker and picker.items and #picker.items==17 and picker.selected_index,
+check(picker and picker.items and #picker.items==18 and picker.selected_index,
   "The chapter jump dropdown is absent")
 check(selector and selector.tags.id,
   "Wrapped quest rows require a guaranteed clickable button")
