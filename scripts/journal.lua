@@ -144,6 +144,7 @@ local function sync_force(force, imported)
   if not (force and force.valid) then return false end
   local ledger = ledger_for(force)
   local changed = false
+  local announcements = {}
 
   for _, chapter in ipairs(story) do
     local state = ledger.chapters[chapter.id]
@@ -159,7 +160,15 @@ local function sync_force(force, imported)
       if first_observed(state, imported) then changed = true end
     end
     if researched(force, chapter.finish) then
-      if finish_observed(state, imported) then changed = true end
+      if finish_observed(state, imported) then
+        changed = true
+        if not imported and not state.completed_before_tracking then
+          announcements[#announcements + 1] = {
+            title = "Chapter complete: " .. chapter.title,
+            detail = chapter.outro, chapter = chapter.id
+          }
+        end
+      end
     end
 
     for _, quest in ipairs(chapter.quests) do
@@ -182,12 +191,21 @@ local function sync_force(force, imported)
           local visit = quest.planet and ledger.visits[quest.planet]
           if finish_observed(quest_state, imported or (visit and visit.imported)) then
             changed = true
+            if not imported and not quest_state.completed_before_tracking and
+              (quest.project or quest.planet or quest.tech == chapter.finish) then
+              announcements[#announcements + 1] = {
+                title = quest.title,
+                detail = quest.planet and "Landfall recorded" or
+                  (quest.project and "Interplanetary project complete" or "Research milestone complete"),
+                chapter = chapter.id
+              }
+            end
           end
         end
       end
     end
   end
-  return changed
+  return changed, announcements
 end
 
 local function elapsed(ticks)
@@ -227,208 +245,65 @@ local function status_text(record, finished, is_chapter)
   return "Not reached yet"
 end
 
+-- The gameplay tracker only owns save-state and events. All seven screens,
+-- the System Atlas and notifications share the same GUI presentation helpers.
+local Chronicle = require("scripts.chronicle_gui")
+
+local function context()
+  return {
+    db = database,
+    ledger_for = ledger_for,
+    story = story,
+    technology_for = technology_for,
+    researched = researched,
+    quest_key = quest_key,
+    quest_present = quest_present,
+    quest_finished = quest_finished,
+    project_technologies = project_technologies,
+    chapter_available = function(force, chapter)
+      return chapter.entry == nil or researched(force, chapter.entry)
+    end,
+    chapter_completed = function(force, chapter)
+      return researched(force, chapter.finish)
+    end,
+    elapsed = elapsed,
+    status_text = status_text,
+    sync_force = sync_force
+  }
+end
+
 local function ensure_toggle(player)
-  if not (player and player.valid) then return end
-  if not player.gui.top[TOGGLE] then
-    player.gui.top.add{
-      type = "button",
-      name = TOGGLE,
-      caption = "Expedition Chronicle",
-      tooltip = "Razi Protocol story, quests, chapter progress and completion times"
-    }
-  end
+  Chronicle.ensure_toggle(player)
 end
 
 local function close_window(player)
-  local frame = player.gui.screen[WINDOW]
-  if frame and frame.valid then
-    if player.opened == frame then player.opened = nil end
-    if frame.valid then frame.destroy() end
-  end
-end
-
-local function add_wrapped(parent, caption, width)
-  local label = parent.add{type = "label", caption = caption}
-  label.style.single_line = false
-  label.style.maximal_width = width or 630
-  return label
-end
-
-local function chapter_available(force, chapter)
-  return chapter.entry == nil or researched(force, chapter.entry)
-end
-
-local function chapter_completed(force, chapter)
-  return researched(force, chapter.finish)
-end
-
-local function show_chapter(player, chapter, sidebar, detail, ledger)
-  local force = player.force
-  local selected_id = database().selection[player.index]
-  local selected = selected_id == chapter.id
-  local reached = chapter_available(force, chapter)
-  local beaten = chapter_completed(force, chapter)
-  local state = ledger.chapters[chapter.id]
-
-  local prefix = beaten and "[DONE] " or (reached and "[OPEN] " or "[LOCKED] ")
-  local button = sidebar.add{
-    type = "button",
-    name = CHAPTER_PREFIX .. chapter.id,
-    caption = prefix .. chapter.title
-  }
-  button.style.minimal_width = 255
-  if selected then button.enabled = false end
-  if not selected then return end
-
-  add_wrapped(detail, chapter.title, 650)
-  add_wrapped(detail, chapter.subtitle, 650)
-  add_wrapped(detail, beaten and "CHAPTER COMPLETE" or (reached and "CHAPTER ACTIVE" or "CHAPTER LOCKED"), 650)
-  add_wrapped(detail, status_text(state, beaten, true), 650)
-  detail.add{type = "line"}
-  add_wrapped(detail, chapter.intro, 650)
-  detail.add{type = "line"}
-
-  local counted, witnessed = 0, 0
-  for _, quest in ipairs(chapter.quests) do
-    if quest_present(force, quest) then
-      counted = counted + 1
-      if quest_finished(force, ledger, quest) then witnessed = witnessed + 1 end
-    end
-  end
-  add_wrapped(detail, "Recorded milestones: " .. witnessed .. " / " .. counted ..
-    " | Chapter exits follow real research prerequisites, including installed branches.", 650)
-
-  for _, quest in ipairs(chapter.quests) do
-    if quest_present(force, quest) then
-      local quest_state = ledger.quests[quest_key(quest)]
-      local complete = quest_finished(force, ledger, quest)
-      local started = quest_state and quest_state.reached_tick ~= nil
-      local mark = complete and "[DONE] " or (started and "[ACTIVE] " or "[LOCKED] ")
-      local card = detail.add{type = "frame", direction = "vertical"}
-      local mission_type = quest.project and " | Interplanetary project"
-        or (quest.planet and " | Landing mission" or "")
-      add_wrapped(card, mark .. quest.title .. mission_type ..
-        (quest.side and " | Branch mission" or ""), 620)
-      add_wrapped(card, quest.story, 620)
-      if quest.route then add_wrapped(card, "Expedition link: " .. quest.route, 620) end
-      add_wrapped(card, status_text(quest_state, complete, false), 620)
-      if quest.project then
-        local parts, total = 0, 0
-        for _, technology in ipairs(project_technologies(force, quest)) do
-          total = total + 1
-          if technology.researched then parts = parts + 1 end
-        end
-        add_wrapped(card, "Linked research: " .. parts .. " / " .. total, 620)
-        for _, technology in ipairs(project_technologies(force, quest)) do
-          add_wrapped(card, (technology.researched and "[DONE] " or "[NEEDED] ") ..
-            "[technology=" .. technology.name .. "]", 620)
-        end
-      elseif quest.planet then
-        local visited = ledger.visits[quest.planet]
-        add_wrapped(card, "Planetary destination: " .. quest.planet ..
-          (visited and " | Visited" or " | Awaiting landing"), 620)
-        if quest.after and not researched(force, quest.after) then
-          add_wrapped(card, "First unlock: [technology=" .. quest.after .. "]", 620)
-        end
-      elseif not complete then
-        local technology = technology_for(force, quest.tech)
-        if technology then
-          add_wrapped(card, "Research goal: [technology=" .. technology.name .. "]", 620)
-        end
-      end
-    end
-  end
-
-  if beaten then
-    detail.add{type = "line"}
-    add_wrapped(detail, "CHAPTER EPILOGUE", 650)
-    add_wrapped(detail, chapter.outro, 650)
-  elseif not reached then
-    add_wrapped(detail, "The previous main expedition must open this chapter. Branch objectives are recorded independently.", 650)
-  end
+  Chronicle.close(player)
 end
 
 local function render(player)
-  local frame = player.gui.screen[WINDOW]
-  if not (frame and frame.valid) then return end
-  local columns = frame["razi_chronicle_columns"]
-  if not (columns and columns.valid) then return end
-  local sidebar = columns["razi_chronicle_sidebar"]
-  local detail = columns["razi_chronicle_detail"]
-  sidebar.clear()
-  detail.clear()
-
-  local selection = database().selection
-  if not selection[player.index] then selection[player.index] = story[1].id end
-  local valid_selection = false
-  for _, chapter in ipairs(story) do
-    if chapter.id == selection[player.index] then valid_selection = true end
-  end
-  if not valid_selection then selection[player.index] = story[1].id end
-
-  local ledger = ledger_for(player.force)
-  add_wrapped(sidebar, "Shared progress: " .. player.force.name, 260)
-  add_wrapped(sidebar, "Save playtime: " .. elapsed(game.tick), 260)
-  sidebar.add{type = "line"}
-  for _, chapter in ipairs(story) do
-    show_chapter(player, chapter, sidebar, detail, ledger)
-  end
-  add_wrapped(sidebar, "Clock: HH:MM:SS of active simulation time. Times are shared by your force.", 260)
+  Chronicle.render(player, context())
 end
 
 local function open_window(player)
-  ensure_toggle(player)
-  if player.gui.screen[WINDOW] then
-    close_window(player)
-    return
-  end
   sync_force(player.force, false)
-  local frame = player.gui.screen.add{
-    type = "frame",
-    name = WINDOW,
-    direction = "vertical"
-  }
-  frame.auto_center = true
-  local header = frame.add{type = "flow", direction = "horizontal"}
-  header.drag_target = frame
-  local title = header.add{
-    type = "label",
-    caption = "RAZI PROTOCOL | Expedition Chronicle",
-    style = "frame_title"
-  }
-  title.drag_target = frame
-  local drag = header.add{type = "empty-widget", style = "draggable_space_header"}
-  drag.style.horizontally_stretchable = true
-  drag.style.height = 28
-  drag.drag_target = frame
-  header.add{type = "button", name = REFRESH, caption = "Refresh", tooltip = "Update timers and mission progress"}
-  header.add{type = "button", name = CLOSE, caption = "X", tooltip = "Close chronicle"}
-  local columns = frame.add{
-    type = "flow",
-    name = "razi_chronicle_columns",
-    direction = "horizontal"
-  }
-  local sidebar = columns.add{
-    type = "scroll-pane",
-    name = "razi_chronicle_sidebar",
-    direction = "vertical"
-  }
-  sidebar.style.minimal_width = 265
-  sidebar.style.maximal_height = 650
-  local detail = columns.add{
-    type = "scroll-pane",
-    name = "razi_chronicle_detail",
-    direction = "vertical"
-  }
-  detail.style.minimal_width = 680
-  detail.style.maximal_height = 650
-  player.opened = frame
-  render(player)
+  Chronicle.open(player, context())
 end
 
 local function refresh_force(force)
   for _, player in pairs(force.connected_players) do
     if player.gui.screen[WINDOW] then render(player) end
+  end
+end
+
+local function post_updates(force, events)
+  if not events or #events == 0 then return end
+  local last = events[#events]
+  local title = #events == 1 and last.title or
+    (tostring(#events) .. " new Chronicle milestones")
+  local detail = #events == 1 and last.detail or
+    ("Latest: " .. last.title)
+  for _, player in pairs(force.connected_players) do
+    Chronicle.notify(player, context(), title, detail, last.chapter)
   end
 end
 
@@ -454,7 +329,10 @@ function journal.on_configuration_changed()
     observe_surface(player, true)
     sync_force(player.force, true)
     ensure_toggle(player)
-    if player.gui.screen[WINDOW] then render(player) end
+    if player.gui.screen[WINDOW] then
+      close_window(player)
+      open_window(player)
+    end
   end
 end
 
@@ -478,8 +356,9 @@ function journal.register_events()
   script.on_event(defines.events.on_player_changed_surface, function(event)
     local player = game.get_player(event.player_index)
     if player and observe_surface(player, false) then
-      sync_force(player.force, false)
-      refresh_force(player.force)
+      local changed, announcements = sync_force(player.force, false)
+      if changed then refresh_force(player.force) end
+      post_updates(player.force, announcements)
     end
   end)
   script.on_event(defines.events.on_force_created, function(event)
@@ -521,33 +400,27 @@ function journal.register_events()
     -- An explicit start captures the beginning of very short techs that can
     -- otherwise finish between five-second polling passes.
     local force = event.research and event.research.force
-    if force and sync_force(force, false) then refresh_force(force) end
+    if force then
+      local changed, announcements = sync_force(force, false)
+      if changed then refresh_force(force) end
+      post_updates(force, announcements)
+    end
   end)
   script.on_event(defines.events.on_research_finished, function(event)
     local force = event.research and event.research.force
-    if force and sync_force(force, false) then refresh_force(force) end
+    if force then
+      local changed, announcements = sync_force(force, false)
+      if changed then refresh_force(force) end
+      post_updates(force, announcements)
+    end
   end)
   script.on_event(defines.events.on_gui_click, function(event)
     local element = event.element
     if not (element and element.valid) then return end
     local player = game.get_player(event.player_index)
     if not player then return end
-    if element.name == TOGGLE then
-      open_window(player)
-    elseif element.name == CLOSE then
-      close_window(player)
-    elseif element.name == REFRESH then
-      sync_force(player.force, false)
-      render(player)
-    elseif string.sub(element.name, 1, #CHAPTER_PREFIX) == CHAPTER_PREFIX then
-      local id = string.sub(element.name, #CHAPTER_PREFIX + 1)
-      for _, chapter in ipairs(story) do
-        if chapter.id == id then
-          database().selection[player.index] = id
-          render(player)
-          break
-        end
-      end
+    if element.name:sub(1, 15) == "razi_chronicle_" then
+      Chronicle.click(player, element.name, context())
     end
   end)
   script.on_event(defines.events.on_gui_closed, function(event)
@@ -559,11 +432,16 @@ function journal.register_events()
   end)
   -- Slow polling detects newly available technologies, scripted research
   -- unlocks and the special build-triggered transceiver research.
+  script.on_nth_tick(120, function()
+    Chronicle.expire_toasts(context())
+  end)
   script.on_nth_tick(300, function()
     for _, force in pairs(game.forces) do
       -- Only rebuild windows when progress changes. A timed full rerender
       -- resets long chapter scroll positions, so the Refresh button is manual.
-      if sync_force(force, false) then refresh_force(force) end
+      local changed, announcements = sync_force(force, false)
+      if changed then refresh_force(force) end
+      post_updates(force, announcements)
     end
   end)
 end
