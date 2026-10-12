@@ -151,6 +151,10 @@ require("prototypes.compat.deep_interdependence").data_final_fixes()
 -- leave native recipes, discoveries, and production chains untouched.
 require("prototypes.compat.galactic_industry_bridges").data_final_fixes()
 
+-- Panglia returns to the data frontier with provenance-checked, nonmandatory
+-- reciprocal glass and optical-cable export recipes.
+require("prototypes.compat.panglia_industry").data_final_fixes()
+
 -- Bonus recipes consume the shared cross-world components. They preserve
 -- native outputs, world crafting restrictions and source research.
 require("prototypes.compat.network_components").register_premium()

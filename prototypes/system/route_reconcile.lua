@@ -18,7 +18,7 @@ local membership = {
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris",
 	hyarion = "solaris", tellus = "solaris", corrundum = "solaris",
 	["sye-nyxaris"] = "nyxaris", ["apia-carnova-orbit"] = "nyxaris",
-	moshine = "nyxaris", pelagos = "nyxaris",
+	moshine = "nyxaris", panglia = "nyxaris", pelagos = "nyxaris",
 	-- Vibrant, Vespera.
 	["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
 	paracelsin = "vibrant",
@@ -88,11 +88,16 @@ local route_specifications = {
 	{"gleba", "moshine", 17000, "biological"},
 	{"gleba", "apia-carnova-orbit", 22000, "biological"},
 	{"moshine", "apia-carnova-orbit", 12000, "biological"},
+	-- Post-Moshine data expedition: direct route plus an Apia cargo leg.
+	{"moshine", "panglia", 25000, "biological_deep"},
+	{"apia-carnova-orbit", "panglia", 21000, "biological_deep"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
 	{"sye-nyxaris", "gleba", 18000, "biological"},
 	{"sye-nyxaris", "apia-carnova-orbit", 23000, "biological"},
 	{"sye-nyxaris", "moshine", 22000, "biological"},
 	{"moshine", "pelagos", 16000, "biological_deep"},
+	-- Optional oceanic freight return once both local destinations are known.
+	{"panglia", "pelagos", 20000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
 	-- Vibrant's chemistry strand.
 	{"sye-vibrant", "fulgora", 17000, "electrical"},

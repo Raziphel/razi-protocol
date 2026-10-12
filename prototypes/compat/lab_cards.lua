@@ -51,6 +51,7 @@ local system_card_definitions = {
 		unlock_technology_candidates = {
 			"planet-discovery-moshine",
 			"planet-discovery-apia-carnova",
+			"panglia_planet_discovery_panglia"
 		},
 		ingredients = {
 			"calidus-tech-card", "agricultural-science-pack",

@@ -11,15 +11,16 @@ class RequiredWorldTests(unittest.TestCase):
         deps=json.loads(contents("info.json"))["dependencies"]
         by_name={d.lstrip("?+ ").split(" >= ")[0]:d for d in deps
                  if d.strip() and not d.startswith("!")}
-        names=["Cerys-Moon-of-Fulgora","moon-eneas","Igrys","planet-rabbasca","foliax","obsidiax","carna","Velora","nulla","alchemy-khemia","Arcanyx","biological-machines-planet-balack"]
+        names=["Cerys-Moon-of-Fulgora","moon-eneas","Igrys","planet-rabbasca","foliax","obsidiax","carna","Velora","nulla","alchemy-khemia","Arcanyx","biological-machines-planet-balack","panglia_planet"]
         for name in names:
             self.assertIn(name,by_name)
             self.assertFalse(by_name[name].startswith(("? ","+ ")),name)
         self.assertEqual(len(names),12)
-        for retired in ('PlanetAthos','biological-machines-planet-wit','panglia_planet','shchierbin'):
+        for retired in ('PlanetAthos','biological-machines-planet-wit','shchierbin'):
             self.assertIn('! '+retired,deps)
             self.assertFalse(any(d.startswith(retired+' >=') for d in deps))
         self.assertIn('planet-muluna >= 2.7.25',deps)
+        self.assertIn('panglia_planet >= 0.7.2',deps)
     def test_unsupported_planet_ports_not_forced(self):
         deps=json.loads(contents("info.json"))["dependencies"]
         for name in ("dea-dia-system","pelagos","planet-ferrum"):

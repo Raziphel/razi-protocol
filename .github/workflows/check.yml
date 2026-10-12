@@ -70,6 +70,8 @@ jobs:
         run: lua5.2 tests/lua/test_modded_planet_exchanges.lua
       - name: Test Ferrum and Balack manufacturing integration
         run: lua5.2 tests/lua/test_community_industry_exchanges.lua
+      - name: Test Panglia source progress and reciprocal factories
+        run: lua5.2 tests/lua/test_panglia_integration.lua
       - name: Check K2SO machine parity and planetary tech gates
         run: lua5.2 tests/lua/test_k2so_machines.lua
       - name: Check Linox hard-mode pre-arrival science

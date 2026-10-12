@@ -11,7 +11,7 @@ local systems={
      "planet-discovery-tellus","planet-discovery-corrundum"}},
   {"nyxaris","nyxaris-discovery","nyxaris-tech-card",
     {"planet-discovery-gleba","planet-discovery-moshine",
-     "planet-discovery-apia-carnova"}},
+     "planet-discovery-apia-carnova","panglia_planet_discovery_panglia"}},
   {"vibrant","vibrant-discovery","vibrant-tech-card",
     {"planet-discovery-fulgora","moon-discovery-cerys",
      "planet-discovery-ribbonia",

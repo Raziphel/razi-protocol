@@ -18,7 +18,7 @@ for _,name in ipairs({
 }) do places[name]={name=name} end
 for _,name in ipairs({
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
-  "gleba","moshine","fulgora","ribbonia","paracelsin",
+  "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
   "muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta",
   "cerys","rabbasca","optional-source-world"
@@ -67,6 +67,9 @@ local hx,hy=layout.anchor_position("hyarion")
 local sx,sy=layout.anchor_position("solaris")
 check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-22)<.01,
   "Hyarion must not share Vulcanus's close orbital lane")
+local px,py=layout.anchor_position("panglia")
+check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-44)<.01,
+  "Panglia must have its own Nyxaris orbital lane")
 local vx,vy=layout.anchor_position("vibrant")
 for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
     {"paracelsin",49}}) do
@@ -152,7 +155,7 @@ check(math.abs(hx)<1 and math.abs(hy-20)<.01,
 -- All planets directly orbiting a Razi star get Factorio 2.1 native
 -- rings, not only the old handpicked six signature planets.
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
-  "corrundum","gleba","moshine","fulgora","ribbonia",
+  "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
   "paracelsin","muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta"}) do
   check(planets[name].draw_orbit==true,

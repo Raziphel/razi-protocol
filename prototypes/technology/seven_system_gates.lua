@@ -91,6 +91,7 @@ local frontier_mastery = {
 	"planet-discovery-corrundum",
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
+	"panglia_planet_discovery_panglia"
 }
 local exotic_mastery = {
 	"planet-discovery-fulgora",
@@ -161,6 +162,13 @@ function gates.data_final_fixes()
 	}) do
 		replace_requirements(name, {"nyxaris-discovery"}, calidus, 850)
 	end
+	-- Preserve Panglia\'s original data-cell science, foundry and Moshine
+	-- extraction prerequisites. Replacing its science cost here would bypass
+	-- its native intelligence progression and mask an impossible bootstrap.
+	add_existing_prerequisites("panglia_planet_discovery_panglia", {
+		"nyxaris-discovery", "planet-discovery-moshine",
+		"planet-discovery-apia-carnova"
+	})
 	replace_requirements("system-discovery-dea-dia", {"nyxaris-discovery"}, calidus, 900)
 	replace_requirements("planet-discovery-pelagos",
 		{"nyxaris-discovery"}, calidus, 900)

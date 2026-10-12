@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -32,6 +32,7 @@
     "corrundum >= 1.0.49",
     "apia >= 0.3.1",
     "Moshine >= 1.2.10",
+    "panglia_planet >= 0.7.2",
     "? pelagos",
     "tenebris-prime >= 1.3.12",
     "secretas >= 1.0.37",
@@ -92,8 +93,7 @@
     "biological-machines-planet-balack >= 1.1.2",
     "! PlanetAthos",
     "! biological-machines-planet-wit",
-    "! shchierbin",
-    "! panglia_planet"
+    "! shchierbin"
   ],
   "quality_required": true,
   "rail_bridges_required": true,
