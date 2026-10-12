@@ -21,11 +21,12 @@ local function ledger_for(force)
   local db = database()
   local ledger = db.forces[force.index]
   if not ledger then
-    ledger = {chapters = {}, quests = {}}
+    ledger = {chapters = {}, quests = {}, visits = {}}
     db.forces[force.index] = ledger
   end
   ledger.chapters = ledger.chapters or {}
   ledger.quests = ledger.quests or {}
+  ledger.visits = ledger.visits or {}
   return ledger
 end
 
@@ -54,6 +55,69 @@ local function can_research(technology)
   for _, prerequisite in pairs(technology.prerequisites or {}) do
     if not prerequisite.researched then return false end
   end
+  return true
+end
+
+
+local function quest_key(quest)
+  return quest.id or quest.tech
+end
+
+local function project_technologies(force, quest)
+  local result = {}
+  for _, name in ipairs(quest.requires or {}) do
+    local tech = force.technologies[name]
+    if tech then result[#result + 1] = tech end
+  end
+  return result
+end
+
+local function quest_present(force, quest)
+  if quest.planet then
+    return game.planets[quest.planet] ~= nil
+      and (not quest.after or technology_for(force, quest.after) ~= nil)
+  end
+  if quest.project then
+    return #project_technologies(force, quest) >= 2
+  end
+  return technology_for(force, quest.tech) ~= nil
+end
+
+local function quest_finished(force, ledger, quest)
+  if quest.planet then
+    return ledger.visits[quest.planet] ~= nil
+      and (not quest.after or researched(force, quest.after))
+  end
+  if quest.project then
+    local technologies = project_technologies(force, quest)
+    if #technologies < 2 then return false end
+    for _, technology in ipairs(technologies) do
+      if not technology.researched then return false end
+    end
+    return true
+  end
+  return researched(force, quest.tech)
+end
+
+local function quest_accessible(force, quest, entered)
+  if not entered then return false end
+  if quest.planet then
+    return not quest.after or researched(force, quest.after)
+  end
+  if quest.project then
+    return true -- Projects start with their chapter, never grant new unlocks.
+  end
+  return can_research(technology_for(force, quest.tech))
+end
+
+local function observe_surface(player, imported)
+  if not (player and player.valid and player.force and player.force.valid) then return false end
+  local surface = player.physical_surface
+  local planet = surface and surface.valid and surface.planet
+  if not (planet and planet.valid) then return false end
+  local visits = ledger_for(player.force).visits
+  if visits[planet.name] then return false end
+  visits[planet.name] = {tick = game.tick, imported = imported == true}
   return true
 end
 
@@ -98,22 +162,26 @@ local function sync_force(force, imported)
     end
 
     for _, quest in ipairs(chapter.quests) do
-      local technology = technology_for(force, quest.tech)
-      if technology then
-        local quest_state = ledger.quests[quest.tech]
+      if quest_present(force, quest) then
+        local id = quest_key(quest)
+        local quest_state = ledger.quests[id]
         if not quest_state then
           quest_state = {}
-          ledger.quests[quest.tech] = quest_state
+          ledger.quests[id] = quest_state
         end
-        if technology.researched then
-          -- A technology already finished when the mod is installed has no
-          -- knowable historical finish tick. Never fabricate a split time.
-          if not imported and entered and quest_state.reached_tick == nil then
-            if first_observed(quest_state, false) then changed = true end
+        if quest_accessible(force, quest, entered) then
+          -- Already-completed research on an imported save has no reliable
+          -- unlock tick. Starting its timer now would invent a zero split.
+          local completed = quest_finished(force, ledger, quest)
+          if not completed or quest.planet or quest.project then
+            if first_observed(quest_state, imported) then changed = true end
           end
-          if finish_observed(quest_state, imported) then changed = true end
-        elseif entered and can_research(technology) then
-          if first_observed(quest_state, imported) then changed = true end
+        end
+        if quest_finished(force, ledger, quest) then
+          local visit = quest.planet and ledger.visits[quest.planet]
+          if finish_observed(quest_state, imported or (visit and visit.imported)) then
+            changed = true
+          end
         end
       end
     end
@@ -221,27 +289,51 @@ local function show_chapter(player, chapter, sidebar, detail, ledger)
 
   local counted, witnessed = 0, 0
   for _, quest in ipairs(chapter.quests) do
-    if technology_for(force, quest.tech) then
+    if quest_present(force, quest) then
       counted = counted + 1
-      if researched(force, quest.tech) then witnessed = witnessed + 1 end
+      if quest_finished(force, ledger, quest) then witnessed = witnessed + 1 end
     end
   end
   add_wrapped(detail, "Recorded milestones: " .. witnessed .. " / " .. counted ..
     " | Chapter exits follow real research prerequisites, including installed branches.", 650)
 
   for _, quest in ipairs(chapter.quests) do
-    local technology = technology_for(force, quest.tech)
-    if technology then
-      local quest_state = ledger.quests[quest.tech]
-      local complete = technology.researched or (quest_state and quest_state.completed_tick ~= nil)
+    if quest_present(force, quest) then
+      local quest_state = ledger.quests[quest_key(quest)]
+      local complete = quest_finished(force, ledger, quest)
       local started = quest_state and quest_state.reached_tick ~= nil
       local mark = complete and "[DONE] " or (started and "[ACTIVE] " or "[LOCKED] ")
       local card = detail.add{type = "frame", direction = "vertical"}
-      add_wrapped(card, mark .. quest.title .. (quest.side and " | Branch mission" or ""), 620)
+      local mission_type = quest.project and " | Interplanetary project"
+        or (quest.planet and " | Landing mission" or "")
+      add_wrapped(card, mark .. quest.title .. mission_type ..
+        (quest.side and " | Branch mission" or ""), 620)
       add_wrapped(card, quest.story, 620)
+      if quest.route then add_wrapped(card, "Expedition link: " .. quest.route, 620) end
       add_wrapped(card, status_text(quest_state, complete, false), 620)
-      if not complete then
-        add_wrapped(card, "Research goal: [technology=" .. technology.name .. "]", 620)
+      if quest.project then
+        local parts, total = 0, 0
+        for _, technology in ipairs(project_technologies(force, quest)) do
+          total = total + 1
+          if technology.researched then parts = parts + 1 end
+        end
+        add_wrapped(card, "Linked research: " .. parts .. " / " .. total, 620)
+        for _, technology in ipairs(project_technologies(force, quest)) do
+          add_wrapped(card, (technology.researched and "[DONE] " or "[NEEDED] ") ..
+            "[technology=" .. technology.name .. "]", 620)
+        end
+      elseif quest.planet then
+        local visited = ledger.visits[quest.planet]
+        add_wrapped(card, "Planetary destination: " .. quest.planet ..
+          (visited and " | Visited" or " | Awaiting landing"), 620)
+        if quest.after and not researched(force, quest.after) then
+          add_wrapped(card, "First unlock: [technology=" .. quest.after .. "]", 620)
+        end
+      elseif not complete then
+        local technology = technology_for(force, quest.tech)
+        if technology then
+          add_wrapped(card, "Research goal: [technology=" .. technology.name .. "]", 620)
+        end
       end
     end
   end
@@ -343,10 +435,12 @@ function journal.on_init()
   -- on_init also runs when the mod is first installed into an existing save.
   -- Research completed before that instant has no historically valid split.
   local imported = game.tick > 10
-  for _, force in pairs(game.forces) do
-    sync_force(force, imported)
+  for _, force in pairs(game.forces) do sync_force(force, imported) end
+  for _, player in pairs(game.players) do
+    observe_surface(player, imported)
+    sync_force(player.force, imported)
+    ensure_toggle(player)
   end
-  for _, player in pairs(game.players) do ensure_toggle(player) end
 end
 
 function journal.on_configuration_changed()
@@ -355,6 +449,8 @@ function journal.on_configuration_changed()
     sync_force(force, true)
   end
   for _, player in pairs(game.players) do
+    observe_surface(player, true)
+    sync_force(player.force, true)
     ensure_toggle(player)
     if player.gui.screen[WINDOW] then render(player) end
   end
@@ -362,17 +458,38 @@ end
 
 function journal.register_events()
   script.on_event(defines.events.on_player_created, function(event)
-    ensure_toggle(game.get_player(event.player_index))
+    local player = game.get_player(event.player_index)
+    ensure_toggle(player)
+    if player then
+      observe_surface(player, false)
+      sync_force(player.force, false)
+    end
   end)
   script.on_event(defines.events.on_player_joined_game, function(event)
-    ensure_toggle(game.get_player(event.player_index))
+    local player = game.get_player(event.player_index)
+    ensure_toggle(player)
+    if player then
+      observe_surface(player, false)
+      sync_force(player.force, false)
+    end
+  end)
+  script.on_event(defines.events.on_player_changed_surface, function(event)
+    local player = game.get_player(event.player_index)
+    if player and observe_surface(player, false) then
+      sync_force(player.force, false)
+      refresh_force(player.force)
+    end
   end)
   script.on_event(defines.events.on_force_created, function(event)
     sync_force(event.force, false)
   end)
   script.on_event(defines.events.on_player_changed_force, function(event)
     local player = game.get_player(event.player_index)
-    if player and player.gui.screen[WINDOW] then render(player) end
+    if player then
+      observe_surface(player, false)
+      sync_force(player.force, false)
+      if player.gui.screen[WINDOW] then render(player) end
+    end
   end)
   script.on_event(defines.events.on_forces_merged, function(event)
     local db = database()
@@ -385,6 +502,12 @@ function journal.register_events()
           if not existing or (old_record.completed_tick and not existing.completed_tick) then
             destination[kind][id] = old_record
           end
+        end
+      end
+      for planet, old_visit in pairs(source.visits or {}) do
+        local current = destination.visits[planet]
+        if not current or old_visit.tick < current.tick then
+          destination.visits[planet] = old_visit
         end
       end
       db.forces[event.source_index] = nil
@@ -427,7 +550,14 @@ function journal.register_events()
   -- unlocks and the special build-triggered transceiver research.
   script.on_nth_tick(300, function()
     for _, force in pairs(game.forces) do
-      if sync_force(force, false) then refresh_force(force) end
+      if sync_force(force, false) then
+        refresh_force(force)
+      elseif game.tick % 600 == 0 then
+        -- Live timers in open windows, without rendering every tick.
+        for _, player in pairs(force.connected_players) do
+          if player.gui.screen[WINDOW] then render(player) end
+        end
+      end
     end
   end)
 end
