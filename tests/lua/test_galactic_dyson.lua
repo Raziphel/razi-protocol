@@ -14,3 +14,9 @@ check(empty_done==0 and empty_total==0 and #empty==0,
 local catalog=require("scripts.galactic_catalog")
 check(catalog.system("nauvis")=="calidus","Native Nauvis classification changed")
 print("Read-only Dyson UI progress and missing-source fallback passed")
+
+check(m.research_phase(0)=="survey" and m.research_phase(2)=="plasma"
+ and m.research_phase(3)=="construction"
+ and m.research_phase(4)=="distribution"
+ and m.research_phase(6)=="mastery",
+ "Research-phase art is not mapping native milestones")

@@ -8,6 +8,7 @@ local fleet=require("scripts.galactic_fleet")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
 local dyson=require("scripts.galactic_dyson")
+local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local FRAME="razi_galactic_operations"
 local MAP_ANCHOR="razi_ops_map_anchor"
 local MAP_BUTTON="razi_ops_map_button"
@@ -528,6 +529,9 @@ function M.gui_click(event)
   local p=preferences(player.index)
   local action,value=tags.razi_ops_action,tags.value
   if action=="map-toggle" then M.toggle(player);return end
+  if action=="refresh" and p.tab=="dyson" then
+    dyson_runtime.invalidate(player.force)
+  end
   if action=="close" then close(player);return end
   if action=="tab" then
     if value~="worlds" and value~="platforms"

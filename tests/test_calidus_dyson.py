@@ -33,6 +33,32 @@ class DysonIntegrationTests(unittest.TestCase):
           'require("prototypes.compat.calidus_dyson").data_final_fixes()'),
           src.index(
           'require("prototypes.compat.calidus_dyson").connect_calidus()'))
+    def test_read_only_receiver_bridge_and_caching(self):
+        runtime=read("scripts/galactic_dyson_runtime.lua")
+        self.assertIn('place_result',runtime)
+        self.assertIn('force.get_entity_count(name)',runtime)
+        self.assertIn('surface.count_entities_filtered{',runtime)
+        self.assertIn('M.cache_ticks=600',runtime)
+        self.assertIn('satellite_count=nil',runtime)
+        self.assertIn('allocated_mw=nil',runtime)
+        self.assertNotIn('script.on_nth_tick',runtime)
+        self.assertNotIn('remote.call(',runtime)
+        ui=read("scripts/galactic_dyson.lua")
+        self.assertIn('runtime.snapshot(player.force)',ui)
+        self.assertIn('razi-dyson-works-',ui)
+        self.assertIn('dyson-source-telemetry-unknown',ui)
+        ops=read("scripts/galactic_operations.lua")
+        self.assertIn('dyson_runtime.invalidate(player.force)',ops)
+    def test_small_static_gui_sprites_and_map_layers(self):
+        sprite=read("prototypes/ui/dyson_stages.lua")
+        self.assertEqual(sprite.count('{"survey"'),1)
+        self.assertEqual(sprite.count('{"mastery"'),1)
+        self.assertIn('scale=0.25',sprite)
+        backdrop=read("prototypes/system/starmap_background.lua")
+        self.assertIn('razi-starmap-galactic-ornaments',backdrop)
+        self.assertIn('wisps=',backdrop)
+        self.assertIn('system.name~="calidus"',backdrop)
+        self.assertIn('cine and .22 or .11',backdrop)
     def test_map_ui_and_localization(self):
         script=read("scripts/galactic_operations.lua")
         self.assertIn('add_button(tabs,L("dyson-tab"),"tab","dyson")',script)

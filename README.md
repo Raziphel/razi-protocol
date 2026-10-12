@@ -377,3 +377,14 @@ The original, static seven-system starmap now has a galaxy-wide starfield, disti
 ### Expanded Galactic Scenery
 
 The star map also includes finer spiral nebula filaments, additional dust currents, scattered distant star clusters, atmospheric debris around all three belts, and Deep Space lensing. **Detailed galactic scenery** is on by default; disable it for the earlier minimalist backdrop. For a navigational-astronomy look, the optional **Observatory constellation ring** starts off so it will never be mistaken for a travel route. All sprites remain 1024px or smaller.
+
+### Calidus Stellar Works: live infrastructure and galaxy presentation
+
+Stellar Works now reports native placed Dyson receiver entities where the
+source mod exposes placeable receiver prototypes, plus the receiving
+surfaces and real research prerequisites. True satellite and MW telemetry
+are intentionally shown as unavailable until a source API exists.
+Its five research-phase portraits do **not** impersonate physical
+satellite construction progress. The space map gets ten quiet nebula
+and star accents using already bundled art. Both changes have safe
+startup controls and no recurring game scans.

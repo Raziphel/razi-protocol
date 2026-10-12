@@ -75,3 +75,29 @@ run the technology-graph, science-lab and routing audits. All research
 changes are save-affecting, so back up saves before toggling them.
 
 The data-stage source audit is not equivalent to in-engine playtesting.
+
+## Stellar Works II: genuine receiver census and research artwork
+
+The map-native **Stellar Works** tab now includes a visual construction
+phase (derived from **researched technology only**), a cached placed-
+receiver census, per-surface receiver counts, and honest diagnostics.
+Read-only entity candidates are resolved from source-owned
+`ds-energy-loader-mk1`, `ds-energy-loader-mk2`, and
+`ds-energy-loader-mk3` item `place_result` prototypes. Exact placed
+receiver counts use the engine's `LuaForce.get_entity_count` and
+`LuaSurface.count_entities_filtered` methods, and are sampled only
+when a player opens or refreshes the GUI, with a 600-tick cache. Player
+cache refresh uses the existing Galactic Operations refresh control.
+
+**Important:** the installed SLP fork does not advertise a documented
+read-only satellite-count and energy-delivery API. Razi therefore does
+not report or synthesize its private satellite count, repeater totals,
+allocated megawatts or real physical sphere-completion percentage.
+A research-phase illustration is never presented as physical progress.
+A true satellite-driven starmap phase also cannot be changed at runtime
+through data-stage `starmap_star` textures. That visual remains
+static; evolving research illustrations live in the GUI.
+
+The five GUI sprites reuse existing Razi artwork. No additional art
+files, periodic game-tick callbacks, source-mod runtime edits or
+source-state migrations are required.
