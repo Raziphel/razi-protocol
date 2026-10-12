@@ -112,6 +112,10 @@ require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 -- Ensure Crucible/Vesta science cannot be needed to discover their own worlds.
 require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 
+-- Two shared factory components must exist BEFORE the exchange-engine
+-- indexing pass. Their supplier prerequisites are validated at data stage.
+require("prototypes.compat.network_components").data_final_fixes()
+
 -- Higher-efficiency, nonmandatory industry exchanges between source planets.
 -- Add only after all K2SO items, recipes, and research data are reconciled.
 require("prototypes.compat.planet_production_exchanges").data_final_fixes()
@@ -144,6 +148,10 @@ require("prototypes.compat.deep_interdependence").data_final_fixes()
 -- Multi-world shipping and manufacturing rewards. Optional bonuses only;
 -- leave native recipes, discoveries, and production chains untouched.
 require("prototypes.compat.galactic_industry_bridges").data_final_fixes()
+
+-- Bonus recipes consume the shared cross-world components. They preserve
+-- native outputs, world crafting restrictions and source research.
+require("prototypes.compat.network_components").register_premium()
 
 -- Space Age assigns connection defaults before this stage. Repair only routes
 -- still lacking icon data after every Razi and compatibility route exists.

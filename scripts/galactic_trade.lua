@@ -47,6 +47,32 @@ function M.render(parent,player)
   status.add{type="label",caption=L("trade-hub-setup")}
   status.add{type="label",caption=L("trade-pad-setup")}
   status.add{type="label",caption=L("trade-ship-autonomy")}
+  -- Read only existing ForceTechnology and prototype objects. Research
+  -- and shipping remain managed by Factorio and Planet Express.
+  local parts={
+    {id="razi-network-precision-matrix",worlds=4},
+    {id="razi-network-extreme-lattice",worlds=8}
+  }
+  local shown=false
+  for _,part in ipairs(parts) do
+    local technology=player.force.technologies[part.id]
+    if technology then
+      if not shown then
+        local heading=parent.add{type="label",caption=L("trade-components")}
+        heading.style.font="default-bold"
+        shown=true
+      end
+      parent.add{type="label",caption={"",
+        technology.researched and L("trade-component-ready")
+          or L("trade-component-locked"),"  ",
+        technology.localised_name}}
+      parent.add{type="label",caption=L("trade-component-description",
+        tostring(part.worlds))}
+    end
+  end
+  if shown then
+    parent.add{type="label",caption=L("trade-component-hint")}
+  end
   local count=0
   local next_techs={}
   for _,tech in pairs(player.force.technologies or {}) do
