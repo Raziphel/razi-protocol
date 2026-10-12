@@ -7,6 +7,7 @@ local atlas=require("scripts.galactic_atlas")
 local fleet=require("scripts.galactic_fleet")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
+local dyson=require("scripts.galactic_dyson")
 local FRAME="razi_galactic_operations"
 local MAP_ANCHOR="razi_ops_map_anchor"
 local MAP_BUTTON="razi_ops_map_button"
@@ -288,6 +289,7 @@ local function redraw(player)
   body.clear()
   if p.tab=="campaign" then campaign.render(body,player);return end
   if p.tab=="trade" then trade.render(body,player);return end
+  if p.tab=="dyson" then dyson.render(body,player);return end
   local rows,total=rows_for(player,p)
   local page_rows,page,pages=M.page_slice(rows,p.page,PAGE_SIZE)
   p.page=page
@@ -424,6 +426,7 @@ local function open(player)
   add_button(tabs,L("platforms-tab"),"tab","platforms")
   add_button(tabs,L("campaign-tab"),"tab","campaign")
   add_button(tabs,L("trade-tab"),"tab","trade")
+  add_button(tabs,L("dyson-tab"),"tab","dyson")
   local search=frame.add{
     type="textfield",name="razi_ops_search",
     text=p.search,tooltip=L("search-tooltip")
@@ -528,7 +531,8 @@ function M.gui_click(event)
   if action=="close" then close(player);return end
   if action=="tab" then
     if value~="worlds" and value~="platforms"
-      and value~="campaign" and value~="trade" then return end
+      and value~="campaign" and value~="trade"
+      and value~="dyson" then return end
     p.tab=value;p.page=1;p.focus=nil
     local frame=player.gui.screen[FRAME]
     if frame and frame.valid then

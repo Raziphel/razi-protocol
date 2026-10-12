@@ -52,6 +52,16 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
   -- Connect the star systems without covering their orbit/route labels.
   insert_asset(result,"galactic-current.png",768,384,9,0,-9,
     {r=.33,g=.56,b=.78},cine and .54 or .24)
+  if halos~=false and mods and mods["slp-dyson-sphere-reworked-fork"]
+    and option("razi-dyson-calidus-layout",true) then
+    -- Restrained stellar-engineering coronas around the home star. Reuse
+    -- existing Calidus artwork; never render fake navigation route lines.
+    -- Keep it behind the sun, planets and satellite orbit markers.
+    insert_asset(result,"filament-calidus.png",512,512,2.7,0,0,
+      {r=1,g=.64,b=.29},cine and .32 or .16)
+    insert_asset(result,"chart-constellation.png",512,512,2.1,0,0,
+      {r=1,g=.72,b=.40},cine and .21 or .10)
+  end
   if halos~=false then
     for _,s in ipairs(systems) do
       local x,y=anchor(s.name)

@@ -142,6 +142,10 @@ require("prototypes.technology.regional_research_bridges").data_final_fixes()
 -- "Show only essential technologies" research filter.
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
 
+-- Use the existing Dyson Sphere Reworked build/launch chain as a staged
+-- Calidus megaproject. K2 plasma science conversion remains source-owned.
+require("prototypes.compat.calidus_dyson").data_final_fixes()
+
 -- Extra optional trade networks only in Deep interdependence mode.
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 
@@ -156,6 +160,10 @@ require("prototypes.compat.network_components").register_premium()
 -- Space Age assigns connection defaults before this stage. Repair only routes
 -- still lacking icon data after every Razi and compatibility route exists.
 require("prototypes.system.route_icons").data_final_fixes()
+
+-- Give the installed Dyson source's first stellar location a modest local
+-- Calidus connection without overwriting its own inner solar routes.
+require("prototypes.compat.calidus_dyson").connect_calidus()
 
 -- Final native tooltip fields for all surviving route prototypes.
 require("prototypes.system.route_intel").data_final_fixes()

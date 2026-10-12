@@ -111,6 +111,20 @@ The October 2026 optional modpack expansion now recognizes additional planets an
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
+## Calidus Dyson Sphere megaproject
+
+Razi includes the maintained Factorio 2.1
+[SLP Dyson Sphere Reworked port](https://mods.factorio.com/mod/slp-dyson-sphere-reworked-fork)
+and [K2 Dyson Rebalance](https://mods.factorio.com/mod/k2-dyson-sphere-rebalance).
+Solar-orbit destinations become a distinct Calidus home-system
+construction project. Razi ties its six native research technologies to
+existing planet-industry milestones, while preserving source-owned plasma,
+satellite launches, receiver power caps and planetary repeaters.
+
+Galactic Operations now has a read-only **Stellar Works** page.
+See [Calidus Stellar Engineering](docs/CALIDUS_DYSON.md) for progression,
+configuration, remaining source-limitations and save compatibility.
+
 ## Shared interplanetary factory components
 
 Razi now adds **two craftable shared engineering components** based on
