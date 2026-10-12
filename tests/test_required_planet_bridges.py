@@ -1,0 +1,35 @@
+"""Protect the required-planet selection from broken 2.0 dependencies."""
+from pathlib import Path
+import json
+import unittest
+
+ROOT=Path(__file__).resolve().parents[1]
+def contents(p):
+    return (ROOT/p).read_text(encoding="utf-8")
+class RequiredWorldTests(unittest.TestCase):
+    def test_supported_worlds_are_required(self):
+        deps=json.loads(contents("info.json"))["dependencies"]
+        by_name={d.lstrip("?+ ").split(" >= ")[0]:d for d in deps
+                 if d.strip() and not d.startswith("!")}
+        names=["Cerys-Moon-of-Fulgora","moon-eneas","Igrys","planet-rabbasca","foliax","obsidiax","carna","PlanetAthos","Velora","nulla","alchemy-khemia","Arcanyx","biological-machines-planet-wit","biological-machines-planet-balack"]
+        for name in names:
+            self.assertIn(name,by_name)
+            self.assertFalse(by_name[name].startswith(("? ","+ ")),name)
+        self.assertEqual(len(names),14)
+    def test_unsupported_planet_ports_not_forced(self):
+        deps=json.loads(contents("info.json"))["dependencies"]
+        for name in ("dea-dia-system","pelagos","planet-ferrum"):
+            self.assertTrue(any(d.startswith("? "+name) for d in deps))
+    def test_safe_staged_unification(self):
+        code=contents("prototypes/technology/planetary_unification.lua")
+        self.assertIn('razi-stable-intergalactic-singularity',code)
+        self.assertIn('unlock-space-location',code)
+        self.assertIn("not reaches(candidate,",code)
+        self.assertIn('"cerys"',code)
+        self.assertIn('"bm-balack"',code)
+        self.assertNotIn("unit.ingredients",code)
+        entry=contents("data-final-fixes.lua")
+        self.assertEqual(entry.count(
+            'require("prototypes.technology.planetary_unification").data_final_fixes()'),1)
+if __name__=="__main__":
+    unittest.main()
