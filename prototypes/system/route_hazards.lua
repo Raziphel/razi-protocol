@@ -1,5 +1,5 @@
--- One source of truth for graphical risk colours and route hover intelligence.
--- Reads final spawn prototypes; never mutates asteroid populations or progression.
+-- Route danger levels for the map legend and hover text.
+-- Uses the asteroid spawn definitions without changing them.
 local M = {}
 local colors = {
   {r=0.31,g=0.74,b=0.98}, -- no recorded hostile spawns: blue

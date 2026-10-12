@@ -1,5 +1,5 @@
--- Razi's authored seven-system classification. Other mods' planets are
--- never removed: an unknown destination appears under "Unassigned".
+-- Planet groups used by the Atlas and other UI.
+-- Unknown destinations go into Unassigned rather than disappearing.
 local M={}
 M.groups={"calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra","deep-space","unassigned"}
 local members={}

@@ -1,6 +1,5 @@
--- Optional partnerships between three to five discovered worlds.
--- Existing native manufacturing always remains available; no main science
--- or planet discovery is changed. Missing producers simply skip a bonus.
+-- Multi-world manufacturing bonuses.
+-- These are alternatives for established factories, not chapter requirements.
 local engine=require("prototypes.compat.planet_production_exchanges")
 local M={}
 local balanced={

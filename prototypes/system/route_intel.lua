@@ -1,5 +1,5 @@
--- Native Space Age route tooltip enrichment, calculated once in data-final-fixes.
--- No control.lua polling, GUIs, or extra runtime work.
+-- Extra route details for the native starmap tooltip.
+-- Built during the data stage, not during play.
 local M={}
 local hazards=require("prototypes.system.route_hazards")
 local catalog=require("scripts.galactic_catalog")

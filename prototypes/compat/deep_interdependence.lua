@@ -1,6 +1,5 @@
--- Extended, optional planetary trade. Only Deep mode builds these prototypes.
--- These are source-derived recipes with a <=30% deterministic item bonus.
--- All nine stay behind the native recipe, supplier research and discoveries.
+-- More specialised imports for Deep interdependence.
+-- Keep the extra output below 30% of the original batch.
 local mode = require("prototypes.compat.interdependence_mode")
 local production = require("prototypes.compat.planet_production_exchanges")
 local M = {}

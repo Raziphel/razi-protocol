@@ -1,6 +1,5 @@
--- The Razi Expedition Journal is an original guided narrative, not a
--- Quest Book dependency. Source-owned technologies remain authoritative.
--- IDs are persistent and must not be renamed after release.
+-- The Codex quest list. Keep these IDs stable for existing saves.
+-- Research and world discovery still come from the installed mods.
 local M={}
 M.chapters={
  {id="calidus",title="journal-chapter.calidus",intro="journal-chapter-story.calidus"},

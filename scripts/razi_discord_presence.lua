@@ -1,6 +1,5 @@
--- Optional per-player Discord Rich Presence exporter.
--- Only Factorio helpers.write_file runs here. Discord IPC is handled by a
--- separately launched local companion, never by game simulation code.
+-- Writes an opt-in presence snapshot for the local Discord companion.
+-- The game never connects to Discord IPC itself.
 local M={}
 local journal=require("scripts.razi_journal")
 local definitions=require("scripts.razi_journal_data")

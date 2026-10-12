@@ -1,5 +1,4 @@
--- Read-only atmosphere notes for the world's installed visual effects.
--- Never edits the weather mod settings or manufactures fake weather events.
+-- Weather notes pulled from the installed add-ons and their settings.
 local M={}
 local worlds={
   panglia={"panglia_planet_discovery_panglia","shibadisaster-cwa-enable-panglia-changes"},

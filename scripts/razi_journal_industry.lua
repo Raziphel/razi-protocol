@@ -1,7 +1,5 @@
--- Industrial Constellations: optional real recipe-research milestones.
--- IDs remain stable; the original source mods retain authority over crafting,
--- production conditions, unlock research, and quantities.
--- An absent optional technology does not appear as a phantom quest.
+-- Extra Codex missions for cross-planet factory research.
+-- Missing optional techs are handled by the journal when it builds the list.
 return {
  chapters={{id="alliances",title="journal-chapter.alliances",
    intro="journal-chapter-story.alliances"}},

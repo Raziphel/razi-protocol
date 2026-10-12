@@ -1,8 +1,5 @@
--- Research-based final galaxy charter. Researching the native destination
--- discovery tech of each installed, conventional Razi world is part of the
--- existing stable-singularity finale. No technology, recipe, or source-mod
--- planet discovery is replaced, and no new lab/science pack is required.
--- This is an endgame audit, not a barrier to reaching any of those worlds.
+-- The singularity finale pulls together the planets you have discovered.
+-- Look up their existing world-unlock research rather than hardcoding tech IDs.
 local M={}
 local techs=function() return data.raw.technology or {} end
 local worlds={

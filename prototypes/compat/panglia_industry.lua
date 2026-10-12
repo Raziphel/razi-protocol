@@ -1,7 +1,5 @@
--- Panglia is a late Nyxaris data frontier, not a free laboratory.
--- The existing industrial exchange engine checks native research,
--- obtainable supplier outputs, machine capacity, surface conditions and
--- lab compatibility before creating either alternate recipe.
+-- Panglia's glass and Moshine's optics can feed each other's factories.
+-- Both recipes go through the usual exchange checks.
 local engine = require("prototypes.compat.planet_production_exchanges")
 local M = {}
 

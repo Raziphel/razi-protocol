@@ -1,6 +1,5 @@
--- Lightweight cross-system technology bridges for the existing Razi
--- worlds. Source planet unlock techs are discovered from real effects,
--- not guesses. No new recipes, science packs or additional surfaces.
+-- Research handoffs between nearby systems.
+-- Discovery techs are found from their unlock effects.
 local M={}
 local interdependence=require("prototypes.compat.interdependence_mode")
 M.bridges={

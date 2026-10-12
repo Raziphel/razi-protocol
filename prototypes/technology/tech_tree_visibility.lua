@@ -1,7 +1,5 @@
--- High-signal research tree view for a large Factorio 2.1 modpack.
--- "Show only essential technologies" now keeps the actual Razi chapter
--- milestones visible. Technology costs, research triggers, unlock effects
--- and the original planet-mod technology tree are NOT changed here.
+-- Which research stays visible with Factorio's essential-tech filter.
+-- Only the display flags change here.
 local M={}
 local chapters={
   "solaris-discovery","nyxaris-discovery",

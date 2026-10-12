@@ -1,6 +1,5 @@
--- Protocol Codex chapter art direction. No save data, events or prototypes.
--- Runtime icons reuse source-owned installed artwork and always fall back to
--- the Razi Codex emblem when a candidate is missing in a particular modpack.
+-- Colors and icons for each Codex chapter.
+-- Use the installed game's sprites, falling back to our route emblem.
 local M={}
 M.themes={
   calidus={primary={r=1,g=0.75,b=0.43},soft={r=0.77,g=0.64,b=0.47},

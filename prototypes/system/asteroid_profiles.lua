@@ -1,4 +1,4 @@
--- Razi route hazards: vanilla spawn curves are adjusted, modded entries are not.
+-- Asteroid spawn profiles for Razi's routes and belt crossings.
 local M = {}
 local util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
 local presets = {

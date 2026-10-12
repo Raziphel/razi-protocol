@@ -1,5 +1,5 @@
--- Original static, Razi-authored galaxy artwork.
--- All layers are behind existing Space Age, PlanetsLib and source belt art.
+-- Galaxy backdrop and stellar detail layers.
+-- Draw these behind the map's routes and other mods' orbit artwork.
 local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"

@@ -1,7 +1,5 @@
--- Optional exchanges between the actual communities' planet mods.
--- Every recipe keeps its parent mod's process and adds a tangible off-world
--- material contribution. No discovery, system card, or starter recipe uses
--- any of these alternatives.
+-- Bonus recipes for trading materials between the planet mods.
+-- Keep these separate from their normal production chains.
 local production = require("prototypes.compat.planet_production_exchanges")
 
 local rules = {

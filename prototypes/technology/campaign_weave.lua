@@ -1,5 +1,5 @@
--- Intertwine existing planet sciences without new items or optional requirements.
--- Run after the authoritative seven-system discovery gates.
+-- Research links between the planet branches.
+-- Apply this after the main star-system gates so the opening choices stay free.
 local M = {}
 local interdependence = require("prototypes.compat.interdependence_mode")
 local rules = {

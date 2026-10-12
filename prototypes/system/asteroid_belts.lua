@@ -1,5 +1,5 @@
--- Razi-owned asteroid frontiers. Preserve the legacy Vibrant rim identifiers
--- for migration from the retired AsteroidBelt dependency.
+-- Belt entrances and hazards for Vibrant, Vespera and Umbra.
+-- Keep the old Vibrant IDs so existing saves still find their waypoints.
 local hazards=require("prototypes.system.asteroid_profiles")
 local icon="__space-age__/graphics/icons/solar-system-edge.png"
 local belts={
