@@ -5,6 +5,7 @@ Date: 12. 10. 2026
     - Remove Nulla 1.0.2 from the curated pack after its radio-interference final-fixes pass crashed when another overhaul removed the vanilla electric-furnace prototype.
     - Mark Nulla incompatible because the failure occurs inside Nulla before Razi Protocol can safely guard or repair the missing prototype.
     - Remove Nulla routes, atlas entries, journal content and planetary-unification integration while preserving the remaining Vespera roster.
+    - Repair an unmatched route-reconciliation block terminator exposed by full-pack data-stage validation.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.7
