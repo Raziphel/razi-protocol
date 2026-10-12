@@ -111,6 +111,24 @@ The October 2026 optional modpack expansion now recognizes additional planets an
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
+## Shared interplanetary factory components
+
+Razi now adds **two craftable shared engineering components** based on
+proven source materials rather than another batch of science requirements:
+
+- **Precision Control Matrix**: Moshine optical cable, Paracelsin zinc,
+  Fulgoran holmium and Vulcanus K2SO rare metals. Consumed by
+  manufacturing alternatives on Aquilo, Rubia and Linox.
+- **Extreme-Environment Lattice**: a precision matrix with Rubia
+  craptonite, Tenebris chitosan, Linox rare earths and stable Gleba
+  carbon fiber. Supports high-end Vesta factories and Deep Balack.
+
+They are optional, unlock after the native suppliers, require shipping,
+and never enter compulsory science cards or the original source recipes.
+The Galactic Operations Cargo Network page shows their research status.
+
+See [Shared Factory Components](docs/SHARED_FACTORY_COMPONENTS.md).
+
 ## Multi-world industrial partnerships
 
 The optional Galactic Industrial Network adds **14 extra recipes** joining

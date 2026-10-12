@@ -328,10 +328,17 @@ local function recipe_icon(base, product, bonus)
     end
   end
   local marker = raw("item", bonus)
-  if marker and marker.icon then
+  -- Community items and Razi's own shared components may use layered
+  -- `icons` without a plain `icon`. Show the shipping input on the
+  -- premium recipe regardless of which valid icon representation it uses.
+  local layer = marker and (marker.icon
+    and {icon=marker.icon, icon_size=marker.icon_size or 64}
+    or marker.icons and marker.icons[1])
+  if layer and layer.icon then
+    local size=layer.icon_size or 64
     icons[#icons + 1] = {
-      icon=marker.icon, icon_size=marker.icon_size or 64,
-      scale=0.24, shift={8, 8}
+      icon=layer.icon,icon_size=size,
+      scale=0.24*64/size,shift={8,8}
     }
   end
   return icons
@@ -603,6 +610,15 @@ function M.data_final_fixes()
   if not interdependence.enabled() or not (mods and mods["Krastorio2-spaced-out"])
     or not enabled("razi-enable-k2so-production-exchanges") then return end
   for _, rule in ipairs(exchanges) do register_exchange(rule) end
+end
+
+-- A K2SO manufacturing alternative that is available from Balanced onwards.
+-- Respect the independent K2SO exchange toggle rather than unintentionally
+-- routing K2SO recipes through the modded-world toggle.
+function M.register_k2so_balanced(rules)
+  if not interdependence.enabled() or not (mods and mods["Krastorio2-spaced-out"])
+    or not enabled("razi-enable-k2so-production-exchanges") then return end
+  for _,rule in ipairs(rules or {}) do register_exchange(rule) end
 end
 
 function M.register_additional(rules)
