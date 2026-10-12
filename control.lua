@@ -1,4 +1,5 @@
 local galactic_operations = require("scripts.galactic_operations")
+local razi_journal = require("scripts.razi_journal")
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local nexus_visibility_technologies = {
@@ -126,11 +127,13 @@ end
 script.on_init(function()
   check_existing_transceivers()
   galactic_operations.sync_all_map_buttons()
+  razi_journal.sync_all()
 end)
 script.on_configuration_changed(function(event)
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
   galactic_operations.sync_all_map_buttons()
+  razi_journal.sync_all()
 end)
 script.on_nth_tick(600, check_existing_transceivers)
 -- The engine has no starmap-open event. Check only the small per-player
@@ -147,25 +150,50 @@ script.on_event({
 
 -- Galactic Operations is launched from its floating map button.
 -- The optional Ctrl+Shift+G input works only while viewing the map.
+script.on_event("razi-journal-toggle",function(event)
+  local player=game.get_player(event.player_index)
+  if player then razi_journal.toggle(player) end
+end)
+script.on_event(defines.events.on_research_finished,razi_journal.on_research)
+
 script.on_event("razi-galactic-operations-input",function(event)
   local player=game.get_player(event.player_index)
   if player then galactic_operations.toggle(player) end
 end)
 script.on_event(defines.events.on_player_controller_changed,
   galactic_operations.map_context_changed)
-script.on_event(defines.events.on_player_joined_game,
-  galactic_operations.map_context_changed)
-script.on_event(defines.events.on_player_created,
-  galactic_operations.map_context_changed)
-script.on_event(defines.events.on_gui_click,galactic_operations.gui_click)
+script.on_event(defines.events.on_player_joined_game,function(event)
+  galactic_operations.map_context_changed(event)
+  local player=game.get_player(event.player_index)
+  if player then razi_journal.sync(player) end
+end)
+script.on_event(defines.events.on_player_created,function(event)
+  galactic_operations.map_context_changed(event)
+  local player=game.get_player(event.player_index)
+  if player then razi_journal.sync(player) end
+end)
+script.on_event(defines.events.on_gui_click,function(event)
+  galactic_operations.gui_click(event)
+  razi_journal.gui_click(event)
+end)
 script.on_event(defines.events.on_gui_text_changed,galactic_operations.text_changed)
 script.on_event(defines.events.on_gui_selection_state_changed,
   galactic_operations.selection_changed)
 script.on_event(defines.events.on_gui_checked_state_changed,
   galactic_operations.checkbox_changed)
-script.on_event(defines.events.on_gui_closed,galactic_operations.gui_closed)
-script.on_event(defines.events.on_player_display_resolution_changed,
-  galactic_operations.on_display_changed)
-script.on_event(defines.events.on_player_display_scale_changed,
-  galactic_operations.on_display_changed)
-script.on_event(defines.events.on_player_removed,galactic_operations.on_removed)
+script.on_event(defines.events.on_gui_closed,function(event)
+  galactic_operations.gui_closed(event)
+  razi_journal.gui_closed(event)
+end)
+script.on_event(defines.events.on_player_display_resolution_changed,function(event)
+  galactic_operations.on_display_changed(event)
+  razi_journal.on_display_changed(event)
+end)
+script.on_event(defines.events.on_player_display_scale_changed,function(event)
+  galactic_operations.on_display_changed(event)
+  razi_journal.on_display_changed(event)
+end)
+script.on_event(defines.events.on_player_removed,function(event)
+  galactic_operations.on_removed(event)
+  razi_journal.on_removed(event.player_index)
+end)

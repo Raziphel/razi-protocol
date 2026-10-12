@@ -111,6 +111,19 @@ The October 2026 optional modpack expansion now recognizes additional planets an
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
+## Razi Expedition Journal
+
+A built-in **54-milestone expedition journal across ten original story
+chapters** guides the full seven-system K2SO campaign. Open it during
+normal gameplay using the small top-row book button or **Ctrl+Shift+J**;
+pin a goal to a compact optional tracker. Every milestone has original
+narrative and practical engineering notes. Progress uses native
+force research, supports existing saves and parallel worlds, and skips
+unavailable mod technologies. It introduces no rewards, extra research
+gates or dependency on the unrelated Quest Book mod.
+
+See [Expedition Journal](docs/EXPEDITION_JOURNAL.md).
+
 ## Calidus Dyson Sphere megaproject
 
 Razi includes the maintained Factorio 2.1
