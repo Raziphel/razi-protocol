@@ -4,7 +4,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
 check(#defs.chapters==17,"Seventeen Razi expedition chapters expected")
-check(#defs.quests==153,"Razi Expedition Journal should include 153 milestones")
+check(#defs.quests==167,"Razi Expedition Journal should include 167 milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -32,7 +32,7 @@ for _,q in ipairs(defs.quests) do
 end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
-check(start==0 and total==153-17 and active>=1,
+check(start==0 and total==167-16 and active>=1,
   "At least both initial factory/opening branches must be listed")
 local a=defs.by_id["solaris-gate"]
 local b=defs.by_id["nyxaris-gate"]

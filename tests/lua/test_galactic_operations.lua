@@ -39,7 +39,7 @@ print("Galactic Operations selection and map visibility fixtures passed")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
 check(#campaign.systems==8,"Seven-system campaign UI lost a chapter")
-local first={name="x",researched=true},second={name="y",researched=false}
+local first,second={name="x",researched=true},{name="y",researched=false}
 local finished,total,pending=campaign.progress({technologies={x=first,y=second}},
   {"x","y","not-installed"})
 check(finished==1 and total==2 and #pending==1 and pending[1]==second,
@@ -54,7 +54,7 @@ check(summary.unlocked and summary.ships==0 and summary.unscheduled==0,
 -- Newly required world identities must match route and campaign chapter maps.
 for _,value in ipairs({
  {"muluna","calidus"},{"velora","nyxaris"},{"ferrum","vibrant"},
- {"khemia","vibrant"},{"obsidiax","vespera"},{"nulla","vespera"},
+ {"khemia","vibrant"},{"obsidiax","vespera"},
  {"bm-balack","vespera"},{"carna","umbra"},{"arcanyx","umbra"}
 }) do
  check(catalog.system(value[1])==value[2],

@@ -18,7 +18,7 @@ local worlds={
   "fulgora","cerys","ribbonia","paracelsin",
   "khemia","ferrum",
   -- Vespera
-  "muria","aquilo","rubia","maraxsis","obsidiax","nulla",
+  "muria","aquilo","rubia","maraxsis","obsidiax",
   "bm-balack",
   -- Beetlejuice
   "cubium","linox-planet_linox","secretas","frozeta",

@@ -2,9 +2,9 @@
 
 ## Installation policy (October 2026)
 
-Razi Protocol now requires **12 formerly optional/recommended conventional
+Razi Protocol now requires **11 formerly optional/recommended conventional
 planet or moon mods** with known Factorio 2.1 releases, including Cerys,
-Eneas, Igrys, Rabbasca, Foliax, Obsidiax, Carna, Velora, Nulla, Khemia,
+Eneas, Igrys, Rabbasca, Foliax, Obsidiax, Carna, Velora, Khemia,
 Arcanyx and Balack. This brings those worlds into the same
 installed campaign as the existing core Planetaris/K2SO planets.
 
@@ -22,7 +22,7 @@ Hephaestus, Solar Halo and Rabbasca Underground have specialized nonplanet
 location mechanics. None of those are silently made ordinary planets.
 
 Cerys and Eneas are genuine moons. Preserve their native mechanics,
-discovery, and orbital connections. Rabbasca, Velora and Nulla likewise
+discovery, and orbital connections. Rabbasca and Velora likewise
 retain their native parent worlds. Do not move the unique Cerys nuclear
 puzzle behind a manufactured Razi science bottleneck.
 

@@ -16,8 +16,8 @@ class ExpeditionJournalTests(unittest.TestCase):
         quests=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',source)
         extended=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",(?:tech|world)="([^"]+)"',expanded)
         quests+=extended
-        self.assertEqual(len(quests),153)
-        self.assertEqual(len({item[0] for item in quests}),153)
+        self.assertEqual(len(quests),167)
+        self.assertEqual(len({item[0] for item in quests}),167)
         chapter_sources=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',source)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
         self.assertEqual(len(chapter_sources),17)

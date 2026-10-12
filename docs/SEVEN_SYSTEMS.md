@@ -184,7 +184,7 @@ the canonical Razi route manifest and final starmap anchors as fixtures.
 New guarded late-addition paths use native moon, special surface and
 solar-station handling. Ferrum and Khemia join Vibrant's electrically and
 chemically focused worlds; Arcanyx joins Umbra's experimental side branches;
-Velora stays Gleba's moon and Nulla stays Aquilo's moon. Balack remains a
+Velora stays Gleba's moon. Balack remains a
 dangerous post-Aquilo destination inside Vespera. Muluna remains Nauvis's required moon.
 Solar Halo and Rabbasca Underground retain their source-owned layouts.
 

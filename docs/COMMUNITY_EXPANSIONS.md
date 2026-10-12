@@ -7,7 +7,7 @@
 > The historical details below document the earlier integration pass.
 
 
-This document reviews community planets and their integrations. Wit was retired because it conflicts with required Muluna; Athos was retired after its technology graph prevented the full pack from loading.
+This document reviews community planets and their integrations. Wit was retired because it conflicts with required Muluna; Athos was retired after its technology graph prevented the full pack from loading; Nulla was retired after its unguarded final-fixes compatibility code crashed in the curated pack.
 The active integrations are side-content and optional sources of unique materials and gameplay.
 **No optional planet is required for any of the eight Razi system tech cards,
 the seven-system campaign, or the base endgame.** None is allowed to replace
@@ -25,7 +25,7 @@ factory. A successful static test does not prove that all mods load together.
 | `Solar-Halo` | Registered, native-only, discovery gate when present | Solar orbit and station | Keep the mod's `halo-solar-orbit` and `halo-solar-station` connection and flare asteroids; native Vulcanus entrance. |
 | `planet-ferrum` | Guarded side-world integration | Vibrant; native Fulgora/Vulcanus routes | Remote-view-only artificial planet. Preserve choice-driven tech and native rare-earth bridges with Linox/Moshine; no forced landing. |
 | `Velora` | Guarded moon integration | Gleba moon, Nyxaris | Original moon orbit, native enemy population, science and resource chain. Add a short connection only if missing. |
-| `nulla` | Guarded moon integration | Aquilo moon, Vespera | Keep abandoned factory / drone challenge and native local route. No pre-Aquilo unlock. |
+| `nulla` | **Excluded** | Removed Aquilo moon | Nulla 1.0.2 assumes the vanilla electric-furnace prototype still exists and crashes in its radio-interference final-fixes pass when another overhaul removes it. |
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
 | `Arcanyx` | Guarded side-world integration | Umbra experimental branch | Voidcraft/Iridescent Industry and prism production untouched. Connect toward Tenebris only if no native local route exists. |
 | `Hephaestus` | Registered, native-only | Original megastructure and warp routes | This mod is not a conventional planet. Avoid rewriting runtime surfaces and mass-relay routes without inspecting real output. |
@@ -61,8 +61,8 @@ while the Vulcanus-to-Ferrum link is calibrated to 115,000 km now that
 it crosses from Solaris to Vibrant; this closes a 10,000 km interstellar
 shortcut without discarding native resource asteroids.
 Its discovery technology may be chapter-gated but its
-dynamic research choices are untouched. The moons Velora and Nulla
-keep original orbital relationships. Balack keeps its original, hard
+dynamic research choices are untouched. The moon Velora keeps its
+original orbital relationship. Balack keeps its original, hard
 Aquilo-side hazardous path. Special worlds (Rabbasca Underground,
 Hephaestus, Shattered) retain all native mechanisms and paths.
 Solar Halo's unique flare route and solar station are never overwritten.

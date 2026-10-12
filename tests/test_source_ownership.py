@@ -28,7 +28,7 @@ class TestSourceOwnership(unittest.TestCase):
             # Eleven inspected 2.1 community mods. Nonstandard locations
             # retain their source mod's surface, station or warp machinery.
             "rabbasca-underground", "skewer_shattered_planet",
-            "Solar-Halo", "planet-ferrum", "Velora", "nulla",
+            "Solar-Halo", "planet-ferrum", "Velora",
             "Hephaestus", "alchemy-khemia", "Arcanyx",
             "biological-machines-planet-balack",
         }
@@ -38,6 +38,7 @@ class TestSourceOwnership(unittest.TestCase):
                          "Solar-Halo", "Hephaestus"}.issubset(names))
         self.assertNotIn("biological-machines-planet-wit", names)
         self.assertIn("! PlanetAthos", info["dependencies"])
+        self.assertIn("! nulla", info["dependencies"])
         self.assertIn("! biological-machines-planet-wit", info["dependencies"])
         # Prevent future decorative optional dependencies without any
         # corresponding Razi content or explicitly preserved source behavior.
@@ -45,7 +46,7 @@ class TestSourceOwnership(unittest.TestCase):
             encoding="utf-8")
         for mod_id in {
             "rabbasca-underground", "skewer_shattered_planet",
-            "Solar-Halo", "planet-ferrum", "Velora", "nulla",
+            "Solar-Halo", "planet-ferrum", "Velora",
             "Hephaestus", "alchemy-khemia", "Arcanyx",
             "biological-machines-planet-balack"
         }:
