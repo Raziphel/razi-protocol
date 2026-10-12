@@ -34,6 +34,27 @@ M.FRAME=FRAME
 M.TOP=TOP
 M.TRACKER=TRACKER
 
+-- Research-all commands can emit thousands of completion events at once.
+-- Only quest milestones and the native unlocks for journal side-worlds
+-- affect the journal. Other technologies must never trigger a GUI rebuild.
+local research_goals,world_goals={},{}
+for _,quest in ipairs(defs.quests) do
+  if quest.tech then research_goals[quest.tech]=true end
+  if quest.world then world_goals[quest.world]=true end
+end
+function M.research_affects_journal(research)
+  if not research then return false end
+  if research_goals[research.name] then return true end
+  local proto=research.prototype
+  for _,effect in pairs(proto and proto.effects or {}) do
+    if effect.type=="unlock-space-location"
+      and world_goals[effect.space_location] then
+      return true
+    end
+  end
+  return false
+end
+
 local function pref(index)
   storage.razi_expedition_journal=storage.razi_expedition_journal or {}
   local value=storage.razi_expedition_journal[index]
@@ -699,18 +720,17 @@ local function refresh_force(force)
   end
 end
 function M.on_research(event)
-  -- /cheat and other scripted unlocks can finish hundreds of technologies in
-  -- one simulation tick. Rebuilding an open journal for every event overloads
-  -- Factorio's GUI renderer, so collapse that burst into one later refresh.
-  local force=event and event.research and event.research.force
-  if not force then return end
-  if event.by_script then
-    storage.razi_journal_pending_forces=
-      storage.razi_journal_pending_forces or {}
-    storage.razi_journal_pending_forces[force.name]=true
-    return
-  end
-  refresh_force(force)
+  -- /cheat, research_all_technologies, and other bulk unlocks raise one
+  -- event per technology. The by_script flag does not distinguish every
+  -- console/engine cheat path, so NEVER rebuild GUI from this handler.
+  local research=event and event.research
+  local force=research and research.force
+  if not (force and M.research_affects_journal(research)) then return end
+  -- Coalesce all relevant events for a force into a single GUI refresh on
+  -- the existing 30-tick maintenance callback, including normal research.
+  storage.razi_journal_pending_forces=
+    storage.razi_journal_pending_forces or {}
+  storage.razi_journal_pending_forces[force.name]=true
 end
 function M.flush_research_refreshes()
   local pending=storage.razi_journal_pending_forces
