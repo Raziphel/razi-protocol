@@ -41,7 +41,6 @@ return {
   {id="khemia",chapter="outposts",world="khemia",requires={"vibrant-gate"}},
   {id="ferrum",chapter="outposts",world="ferrum",requires={"vibrant-gate"}},
   {id="obsidiax",chapter="outposts",world="obsidiax",requires={"vespera-gate"}},
-  {id="nulla",chapter="outposts",world="nulla",requires={"vespera-gate"}},
   {id="balack",chapter="outposts",world="bm-balack",requires={"vespera-gate"}},
   {id="carna",chapter="outposts",world="carna",requires={"umbra-gate"}},
   {id="arcanyx",chapter="outposts",world="arcanyx",requires={"umbra-gate"}},

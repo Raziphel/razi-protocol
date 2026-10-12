@@ -16,7 +16,7 @@ local groups={
            "asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
   vespera={"sye-vespera","muria","aquilo","rubia","maraxsis",
            "razi-vespera-belt-inner","razi-vespera-belt-outer","obsidiax",
-           "nulla","bm-balack"},
+           "bm-balack"},
   beetlejuice={"sye-beetlejuice","cubium","linox-planet_linox","secretas",
                "frozeta"},
   umbra={"sye-umbra","tenebris","crucible","crucible-orbit","vesta",

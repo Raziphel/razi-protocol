@@ -105,7 +105,7 @@ pass in-engine testing.
 - [x] Preserve Solar Halo flares, Ferrum's remote operations, Balack's huge asteroid routes, and native moons
 - [x] Keep Rabbasca's invisible underground warp stabilizer off the ordinary space map
 - [x] Add fixtures for absent mods, native-route preservation, gated discoveries and technology cycles
-- [ ] Verify actual prototype IDs for Velora, Nulla, Khemia, Arcanyx and Hephaestus using full post-load Factorio data
+- [ ] Verify actual prototype IDs for Velora, Khemia, Arcanyx and Hephaestus using full post-load Factorio data
 - [ ] Verify Ferrum choice-driven research alongside Razi system cards and K2SO
 - [ ] Resolve Balack/Wit changes to promethium science and early space science in the full modpack
 - [ ] Confirm no Hephaestus mass relay bypasses a locked star discovery

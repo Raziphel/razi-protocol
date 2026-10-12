@@ -1,6 +1,6 @@
 # Planet Quality Gate (2026-10-12)
 
-**Current curated dev version:** Razi Protocol 2.1.7.
+**Current curated dev version:** Razi Protocol 2.1.8.
 
 This is a source-code, campaign integration, and publicly described mod-mechanics review. It is **not** proof that the entire Factorio 2.1 + K2SO stack has loaded or that every saved-game path is completable.
 
@@ -18,14 +18,15 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 | Nyxaris | Panglia | **Restore, required (0.7.2+)**. Timewarp-powered industry, DNA sampling, cloning, and simulation create a substantial post-Moshine industrial puzzle; keep its native tech costs and test beta stability. |
 | Vibrant | Fulgora, Ribbonia, Paracelsin, Ferrum and Khemia where installed | Retain their electrical/ringworld/cryogenic and specialty industries. |
 | Vibrant | Shchierbin | **Exclude.** Comparatively limited vanadium detour; preserve the larger asteroid belt's gameplay by connecting its outer side directly to Paracelsin. |
-| Vespera | Muria, Aquilo, Rubia, Maraxsis, Obsidiax, Nulla, Balack | Retain the cold, corrosive, submerged and high-risk challenges. Balack does not require Wit. |
+| Vespera | Muria, Aquilo, Rubia, Maraxsis, Obsidiax, Balack | Retain the cold, corrosive, submerged and high-risk challenges. Balack does not require Wit. |
+| Vespera | Nulla | **Exclude.** Nulla 1.0.2 dereferences a missing vanilla electric-furnace prototype in its radio-interference final-fixes pass and prevents the curated full pack from loading. |
 | Beetlejuice | Cubium, Linox, Secretas, Frozeta | Retain specialized constrained factories and salvage. |
 | Umbra | Tenebris, Crucible, Vesta, Carna, Arcanyx | Retain darkness, extreme pressure, gas-giant and outer industry. |
 | Deep Space | Aegis/Bellicos, optional Nexus and Void Processing | Retain as the transceiver and postgame frontier. |
 
 ## Integration implemented
 
-- The required `info.json` now includes `panglia_planet >= 0.7.2`; `PlanetAthos`, `biological-machines-planet-wit` and `shchierbin` remain explicitly incompatible. Muluna stays required.
+- The required `info.json` now includes `panglia_planet >= 0.7.2`; `nulla`, `PlanetAthos`, `biological-machines-planet-wit` and `shchierbin` are explicitly incompatible. Muluna stays required.
 - Muluna remains mandatory; Wit-specific discoveries, routes, production exchanges, atlas catalog entries and quests are removed. Balack's independent integration remains.
 - Nyxaris's late chapter now requires Panglia discovery after Moshine and Apia-Carnova, preserving the native datacell/foundry costs. Panglia has cargo routes to Moshine and Apia-Carnova; optional Pelagos remains accessible from Moshine and receives an additional Panglia cargo link.
 - Vibrant's native AsteroidBelt retains its hazardous source-owned inner/outer crossing. The outer waypoint now routes to Paracelsin, which still requires belt research. Shchierbin science, route, dossiers, quests and prerequisite gates are gone.
@@ -34,7 +35,7 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 
 ## Upgrading an existing save
 
-**Back up your save before enabling or disabling planet mods.** Reintroducing Panglia restores its surface and researches only after Factorio loads its source mod; factories and surfaces belonging to retired Athos, Wit or Shchierbin may be lost when removed. Recover items and move characters out first, then validate on a copied save. Users of the Biological Machines Modpack should also disable that package if it requires Wit.
+**Back up your save before enabling or disabling planet mods.** Reintroducing Panglia restores its surface and researches only after Factorio loads its source mod; factories and surfaces belonging to retired Athos, Wit, Shchierbin or Nulla may be lost when removed. Recover items and move characters out first, then validate on a copied save. Users of the Biological Machines Modpack should also disable that package if it requires Wit.
 
 Panglia is still beta; its full data-stage load, source dependency compatibility, Moshine datacell bootstrap, long-running DNA acquisition and saved-game migration require a real Factorio 2.1 playtest. The normal game engine and final full-modpack tests are **not** available through the current GitHub connector. Run Factorio with the entire curated loadout, test a new and old save, and verify Calidus (Muluna), Nyxaris, the Vibrant asteroid belt, Vespera, Beetlejuice, Umbra, and transceiver research; test optional Pelagos, Dea Dia, and Nexus permutations separately. GitHub Actions remain manual-only.
 
@@ -42,6 +43,7 @@ Panglia is still beta; its full data-stage load, source dependency compatibility
 
 - https://mods.factorio.com/mod/planet-muluna
 - https://mods.factorio.com/mod/PlanetAthos
+- https://mods.factorio.com/mod/nulla
 - https://mods.factorio.com/mod/biological-machines-planet-wit
 - https://mods.factorio.com/mod/panglia_planet
 - https://mods.factorio.com/mod/shchierbin

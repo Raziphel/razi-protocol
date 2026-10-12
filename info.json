@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -86,11 +86,11 @@
     "? Solar-Halo >= 1.2.0",
     "? planet-ferrum >= 0.1.4",
     "Velora >= 2.2.2",
-    "nulla >= 1.0.2",
     "? Hephaestus >= 0.3.7",
     "alchemy-khemia >= 0.3.6",
     "Arcanyx >= 1.1.5",
     "biological-machines-planet-balack >= 1.1.2",
+    "! nulla",
     "! PlanetAthos",
     "! biological-machines-planet-wit",
     "! shchierbin"

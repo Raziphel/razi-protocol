@@ -14,7 +14,6 @@ package.loaded["prototypes.system.asteroid_profiles"]={
 local configs={
   {"planet-ferrum","ferrum"},
   {"Velora","velora"},
-  {"nulla","nulla"},
   {"alchemy-khemia","khemia"},
   {"Arcanyx","arcanyx"},
   {"biological-machines-planet-balack","bm-balack"},
@@ -135,7 +134,7 @@ check(raw.planet.arcanyx.orbit.parent.name=="umbra",
   "Arcanyx did not join the optional dark frontier")
 check(raw.planet["bm-balack"].orbit.parent.name=="vespera",
   "Balack did not join Vespera's post-Aquilo region")
-for _,name in ipairs({"velora","nulla",
+for _,name in ipairs({"velora",
   "rabbasca-underground"}) do
   check(not moved[name] and raw.planet[name].orbit.parent.name=="original-parent",
     "A moon or hidden underground world was reparented: "..name)
@@ -155,14 +154,11 @@ check(raw["space-connection"]["razi-expansion-arcanyx-tenebris"],
   "Arcanyx optional Umbra branch is disconnected")
 check(raw["space-connection"]["razi-expansion-velora-gleba"],
   "Missing native moon route should be restored for Velora")
-check(raw["space-connection"]["razi-expansion-nulla-aquilo"],
-  "Missing native moon route should be restored for Nulla")
 for _,pair in ipairs({
   {"ferrum","vibrant-discovery"},
   {"khemia","vibrant-discovery"},
   {"arcanyx","umbra-discovery"},
   {"velora","planet-discovery-gleba"},
-  {"nulla","planet-discovery-aquilo"},
   {"bm-balack","planet-discovery-aquilo"},
   {"halo-solar-orbit","solaris-discovery"}
 }) do

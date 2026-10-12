@@ -116,7 +116,7 @@ Vespera and Umbra currently tint existing icon assets, rather than introducing u
 
 ## Expanded Community Planet Compatibility
 
-The October 2026 optional modpack expansion now recognizes additional planets and atypical space destinations, including Ferrum, Velora, Nulla, Khemia, Arcanyx, Balack, Solar Halo, Rabbasca Underground, and the Shattered Planet extension. Each remains optional; Razi integrates them only when their actual mod and world prototypes exist.
+The October 2026 optional modpack expansion now recognizes additional planets and atypical space destinations, including Ferrum, Velora, Khemia, Arcanyx, Balack, Solar Halo, Rabbasca Underground, and the Shattered Planet extension. Each remains optional; Razi integrates them only when their actual mod and world prototypes exist. Nulla is excluded because its final-fixes compatibility pass crashes in the curated full pack.
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
