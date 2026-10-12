@@ -150,11 +150,31 @@ check(weather.for_quest(defs.by_id["muria"])==nil,
 rawset(_G,"script",nil)
 rawset(_G,"settings",nil)
 rawset(_G,"game",{connected_players={},forces={player=force}})
-for _=1,500 do
-  M.on_research({research={force=force},by_script=true})
+check(M.research_affects_journal({name="automation"}),
+  "Direct quest research must refresh the journal")
+check(M.research_affects_journal({name="native-igrys",prototype={effects={{
+  type="unlock-space-location",space_location="igrys"
+}}}}),"Native world-unlock research must refresh the journal")
+check(not M.research_affects_journal({name="unrelated",prototype={effects={{
+  type="unlock-recipe",recipe="iron-plate"
+}}}}),"Unrelated research must not repaint the journal")
+storage.razi_journal_pending_forces=nil
+M.on_research({research={name="unrelated",force=force}})
+check(not storage.razi_journal_pending_forces,
+  "Unrelated research must not schedule a journal refresh")
+for i=1,1000 do
+  -- /cheat may generate non-script-marked events; BOTH kinds must batch.
+  M.on_research({research={name="automation",force=force},
+    by_script=i%2==0})
 end
+M.on_research({research={name="native-igrys",force=force,
+  prototype={effects={{type="unlock-space-location",space_location="igrys"}}}},
+  by_script=true})
 check(storage.razi_journal_pending_forces.player,
-  "Scripted research storms should collapse into one pending force refresh")
+  "All research storms should collapse into one pending force refresh")
+local count=0
+for _ in pairs(storage.razi_journal_pending_forces) do count=count+1 end
+check(count==1,"A bulk unlock must schedule only one force refresh")
 M.flush_research_refreshes()
 check(not storage.razi_journal_pending_forces,
   "Deferred journal refreshes should be consumed together")
