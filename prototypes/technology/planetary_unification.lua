@@ -10,7 +10,7 @@ local worlds={
   "muluna","eneas",
   -- Solaris
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
-  "igrys","athos",
+  "igrys",
   -- Nyxaris
   "gleba","moshine","apia-carnova-orbit",
   "foliax","rabbasca","velora",

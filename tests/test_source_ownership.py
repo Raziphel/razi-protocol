@@ -25,7 +25,6 @@ class TestSourceOwnership(unittest.TestCase):
             "Arachnids_enemy", "ArmouredBiters21Compat",
             "Electric_flying_enemies", "Explosive_biters",
             "Toxic_biters", "Imersite-Asteroids", "LithiumBattery",
-            "PlanetAthos",
             # Eleven inspected 2.1 community mods. Nonstandard locations
             # retain their source mod's surface, station or warp machinery.
             "rabbasca-underground", "skewer_shattered_planet",
@@ -38,6 +37,7 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertTrue({"dea-dia-system", "pelagos", "planet-ferrum",
                          "Solar-Halo", "Hephaestus"}.issubset(names))
         self.assertNotIn("biological-machines-planet-wit", names)
+        self.assertIn("! PlanetAthos", info["dependencies"])
         self.assertIn("! biological-machines-planet-wit", info["dependencies"])
         # Prevent future decorative optional dependencies without any
         # corresponding Razi content or explicitly preserved source behavior.

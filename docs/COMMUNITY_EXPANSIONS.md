@@ -7,8 +7,8 @@
 > The historical details below document the earlier integration pass.
 
 
-This document reviews community planets and their integrations. Wit was retired because it conflicts with required Muluna.
-They are side-content and optional sources of unique materials and gameplay.
+This document reviews community planets and their integrations. Wit was retired because it conflicts with required Muluna; Athos was retired after its technology graph prevented the full pack from loading.
+The active integrations are side-content and optional sources of unique materials and gameplay.
 **No optional planet is required for any of the eight Razi system tech cards,
 the seven-system campaign, or the base endgame.** None is allowed to replace
 another mod's native science, enemy control, landing mechanic or specialized
@@ -16,11 +16,10 @@ factory. A successful static test does not prove that all mods load together.
 
 | Mod portal ID | Status | Home or treatment | Safety and intended role |
 | --- | --- | --- | --- |
-| `Igrys` | Already integrated, recommended | Solaris | Native magical/glass industry, Razi local route and discovery. |
-| `planet-rabbasca` | Already integrated, recommended | Gleba moon, Nyxaris | Preserves unique energy field, native orbit, hop limits, and research. |
-| `foliax` | Already integrated, recommended | Nyxaris | Botany/arcane production stays source-authored. |
-| `obsidiax` | Already integrated, recommended | Vespera | Frozen lava world retains rock growing and thermal mechanics. |
-| `PlanetAthos` | Already integrated, optional | Solaris | Stone crushing and carbon loop; native science stays optional. |
+| `Igrys` | Already integrated, required install | Solaris | Native magical/glass industry, Razi local route and discovery. |
+| `planet-rabbasca` | Already integrated, required install | Gleba moon, Nyxaris | Preserves unique energy field, native orbit, hop limits, and research. |
+| `foliax` | Already integrated, required install | Nyxaris | Botany/arcane production stays source-authored. |
+| `obsidiax` | Already integrated, required install | Vespera | Frozen lava world retains rock growing and thermal mechanics. |
 | `rabbasca-underground` | Registered, native-only | Hidden Rabbasca stabilizer | A *non-space-accessible* traveling underground environment. Never add a launch corridor or reveal on the starmap. |
 | `skewer_shattered_planet` | Registered, native-only | Original Shattered Planet endgame | Do not duplicate the Shattered Planet location, isotopes, or native science gates. Combined endgame requires live validation. |
 | `Solar-Halo` | Registered, native-only, discovery gate when present | Solar orbit and station | Keep the mod's `halo-solar-orbit` and `halo-solar-station` connection and flare asteroids; native Vulcanus entrance. |
@@ -30,6 +29,7 @@ factory. A successful static test does not prove that all mods load together.
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
 | `Arcanyx` | Guarded side-world integration | Umbra experimental branch | Voidcraft/Iridescent Industry and prism production untouched. Connect toward Tenebris only if no native local route exists. |
 | `Hephaestus` | Registered, native-only | Original megastructure and warp routes | This mod is not a conventional planet. Avoid rewriting runtime surfaces and mass-relay routes without inspecting real output. |
+| `PlanetAthos` | **Excluded** | Removed Solaris side world | Planet Athos 1.1.3 creates a cyclic technology graph in the full pack and fails during its recursive data-stage traversal. |
 | `biological-machines-planet-wit` | **Excluded** | Competing Nauvis moon | Conflicts with required Muluna; no route or science integration remains. |
 | `biological-machines-planet-balack` | Guarded high-risk side-world integration | Vespera after Aquilo | Preserve original enormous asteroid traffic, promethium technology, fabrication and dangerous enemies. |
 

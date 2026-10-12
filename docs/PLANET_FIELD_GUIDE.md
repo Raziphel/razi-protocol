@@ -17,10 +17,9 @@
 
 ## Additional expeditions
 
-The new recommended planet adventures are Igrys (Solaris), Rabbasca (Gleba's
-moon), Foliax (Nyxaris), Obsidiax (Vespera), and Carna (Umbra). Athos is an
-experimental optional planet in Solaris. All retain native discovery and
-science, and are excluded from mandatory chapter mastery.
+The additional planet adventures are Igrys (Solaris), Rabbasca (Gleba's
+moon), Foliax (Nyxaris), Obsidiax (Vespera), and Carna (Umbra). All retain
+native discovery and science, and are excluded from mandatory chapter mastery.
 
 See [Optional Planet Expeditions](OPTIONAL_PLANETS.md) for installation notes
 and upstream links.

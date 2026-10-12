@@ -18,8 +18,6 @@ local additions = {
 		41.323603, 0.312167, 21000},
 	{"carna", "carna", "umbra", "sye-umbra", "umbra-discovery",
 		36.821891, 0.602458, 20500},
-	{"PlanetAthos", "athos", "solaris", "sye-solaris", "solaris-discovery",
-		49.467673, 0.493553, 19000},
 	{"planet-rabbasca", "rabbasca", "nyxaris", "gleba",
 		"planet-discovery-gleba", nil, nil, 13000}
 }

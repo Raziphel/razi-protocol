@@ -35,7 +35,6 @@ return {
   {id="bulk-cargo",chapter="fleet",tech="bulk-inserter",requires={"platform"}},
   {id="eneas",chapter="outposts",world="eneas",requires={"muluna"}},
   {id="igrys",chapter="outposts",world="igrys",requires={"solaris-gate"}},
-  {id="athos",chapter="outposts",world="athos",requires={"solaris-gate"}},
   {id="foliax",chapter="outposts",world="foliax",requires={"nyxaris-gate"}},
   {id="rabbasca",chapter="outposts",world="rabbasca",requires={"gleba"}},
   {id="velora",chapter="outposts",world="velora",requires={"nyxaris-gate"}},

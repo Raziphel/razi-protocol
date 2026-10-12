@@ -54,7 +54,7 @@ Protocol directly integrates it or needs ordering against it.
 - `spiderbots`
 - `Tenebris_plants_retexture`
 
-## Still declared (14)
+## Still declared (13)
 
 - `Arachnids_enemy`
 - `ArmouredBiters21Compat`
@@ -64,7 +64,6 @@ Protocol directly integrates it or needs ordering against it.
 - `Imersite-Asteroids`
 - `LithiumBattery`
 - `Nexus-Updated`
-- `PlanetAthos`
 - `Toxic_biters`
 - `VoidProcessing-Updated`
 - `dea-dia-system`

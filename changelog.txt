@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.6
+Date: 12. 10. 2026
+  Compatibility:
+    - Remove the unstable Planet Athos dependency and its Razi Protocol integration after full-pack data loading exposed a cyclic technology graph in Planet Athos 1.1.3.
+    - Mark Planet Athos as incompatible so an already-enabled copy cannot reproduce the startup failure alongside Razi Protocol.
+    - Keep the remaining curated planet roster and its guarded integrations unchanged.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.5
 Date: 12. 10. 2026
   Planet curation:

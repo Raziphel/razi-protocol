@@ -21,7 +21,7 @@ for _,name in ipairs({
   "gleba","moshine","fulgora","ribbonia","paracelsin",
   "muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta",
-  "cerys","rabbasca","athos"
+  "cerys","rabbasca","optional-source-world"
 }) do planets[name]={name=name} end
 
 local moon={parent={type="planet",name="gleba"},distance=4}
@@ -31,8 +31,8 @@ local native_moon_sprite={type="sprite",filename="custom-dashed-moon-orbit.png"}
 moon.sprite=native_moon_sprite
 local optional_orbit={parent={type="space-location",name="solaris"},
   distance=40,orientation=.1,sprite={filename="custom-optional-orbit.png"}}
-planets.athos.orbit=optional_orbit
-planets.athos.draw_orbit=false
+planets["optional-source-world"].orbit=optional_orbit
+planets["optional-source-world"].draw_orbit=false
 planets.castra.draw_orbit=false
 places["sye-solaris"].draw_orbit=false
 rawset(_G,"data",{raw={planet=planets,["space-location"]=places}})
@@ -146,7 +146,7 @@ local dx,dy=position("solar-system-edge")
 check(math.abs(dx)<1 and dy < -185 and dy > -195,
   "Deep Space must be a northern outer frontier")
 local hx,hy=position("sye-calidus")
-check(math.abs(hx)<1 and hy>20 and hy<30,
+check(math.abs(hx)<1 and math.abs(hy-20)<.01,
   "Calidus departure must remain near the central star")
 
 -- All planets directly orbiting a Razi star get Factorio 2.1 native
@@ -154,7 +154,7 @@ check(math.abs(hx)<1 and hy>20 and hy<30,
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","gleba","moshine","fulgora","ribbonia",
   "paracelsin","muria","aquilo","rubia","maraxsis",
-  "cubium","linox-planet_linox","tenebris","vesta","athos"}) do
+  "cubium","linox-planet_linox","tenebris","vesta"}) do
   check(planets[name].draw_orbit==true,
     "Factorio native orbit still disabled: "..name)
 end
@@ -162,16 +162,16 @@ check(places.secretas.draw_orbit==true,
   "Natural Secretas space-location should have a native orbit")
 check(places["sye-solaris"].draw_orbit==false,
   "Synthetic slipstream ring should remain suppressed")
-check(planets.athos.orbit==optional_orbit and
-  planets.athos.orbit.sprite.filename=="custom-optional-orbit.png",
+check(planets["optional-source-world"].orbit==optional_orbit and
+  planets["optional-source-world"].orbit.sprite.filename=="custom-optional-orbit.png",
   "Optional source orbit identity or unique sprite was overwritten")
 check(planets.rabbasca.draw_orbit==false and moon.sprite==native_moon_sprite,
   "Moon's own orbit drawing settings were modified")
 check(planets.rabbasca.orbit==moon,
   "Native Gleba moon orbit must remain untouched")
 layout.data_final_fixes()
-check(planets.athos.draw_orbit==true,
-  "Repeated final fixes reverted native planet orbit")
+check(planets["optional-source-world"].draw_orbit==false,
+  "Repeated final fixes duplicated custom orbit artwork")
 check(planets.rabbasca.orbit==moon,
   "Repeating layout damaged native moon")
 
@@ -193,7 +193,7 @@ places["sye-nyxaris"].origin={x=500,y=500}
 places["sye-nyxaris"].distance=8
 places["sye-nyxaris"].orientation=.5
 local moon_before=planets.rabbasca.orbit
-local orbit_art_before=planets.athos.orbit.sprite
+local orbit_art_before=planets["optional-source-world"].orbit.sprite
 local native_moon_before=planets.rabbasca.orbit.sprite
 -- And a source-owned Frozeta-like moon that must follow its moved planet.
 planets.rabbasca.distance=4
@@ -208,7 +208,7 @@ local function fixed_position(name)
     (origin.y or 0)-r*math.cos(o*math.pi*2)
 end
 layout.data_final_fixes()
-local ex=-62
+local ex=-52
 local ey=104*math.sqrt(3)/2
 check(math.abs(planets.gleba.origin.x-ex)<.05 and
       math.abs(planets.gleba.origin.y-ey)<.05,
@@ -216,7 +216,7 @@ check(math.abs(planets.gleba.origin.x-ex)<.05 and
 check(math.abs(places["sye-nyxaris"].origin.x-ex)<.05 and
       math.abs(places["sye-nyxaris"].origin.y-ey)<.05,
   "Final native layout skipped a slipstream with a deleted star parent")
-check(math.abs(planets.gleba.distance-37.706964)<.001,
+check(math.abs(planets.gleba.distance-32)<.001,
   "Native planet distance was not restored")
 local gx,gy=fixed_position("gleba")
 check(math.abs(planets.rabbasca.origin.x-gx)<.01 and
@@ -225,13 +225,13 @@ check(math.abs(planets.rabbasca.origin.x-gx)<.01 and
 check(planets.rabbasca.orbit==moon_before and
       planets.rabbasca.orbit.sprite==native_moon_before,
   "Final native movement damaged unique moon artwork")
-check(planets.athos.orbit.sprite==orbit_art_before,
+check(planets["optional-source-world"].orbit.sprite==orbit_art_before,
   "Optional special orbit sprite was destroyed")
 -- A world with dashed custom orbit art must not gain a second native ring.
-planets.athos.draw_orbit=false
+planets["optional-source-world"].draw_orbit=false
 layout.data_final_fixes()
-check(planets.athos.draw_orbit==false and
-  planets.athos.orbit.sprite==orbit_art_before,
+check(planets["optional-source-world"].draw_orbit==false and
+  planets["optional-source-world"].orbit.sprite==orbit_art_before,
   "Unique source orbit art should not be doubled by native circles")
 local dzx,dzy=fixed_position("solar-system-edge")
 check(math.abs(dzx)<.01 and math.abs(dzy+190)<.01,

@@ -7,10 +7,9 @@
 > The historical details below document the earlier integration pass.
 
 
-Six new planet mods are supported as **non-mandatory** destinations. The five
-established candidates are **recommended** dependencies (so users are prompted
-to install them with Razi Protocol); new experimental Athos is **optional**.
-Installing them
+Five new planet mods are supported as **non-mandatory** campaign destinations.
+They are required installation dependencies of the current full pack, but
+their worlds do not become progression gates. Installing them
 does not alter the required seven-system mastery cards or transceiver victory.
 
 These are external, separately downloadable mods. Razi Protocol contains no
@@ -23,7 +22,6 @@ copied artwork, control scripts, music, or surface generation from their authors
 | Foliax | `foliax` | Nyxaris | Botany, arcane processing and improved biolabs | 2.1 candidate, guarded routes |
 | Obsidiax | `obsidiax` | Vespera | No mining, fire-and-ice industry, cultivated rocks | 2.1 candidate, guarded routes |
 | Carna | `carna` | Umbra | Frozen factories, salvage, mechanoids and plasma | 2.1 candidate, guarded routes |
-| Athos | `PlanetAthos` | Solaris | Carbon and stone processing, earthquakes | Experimental 2.1 candidate, opt-in only |
 
 ### Design choices
 
@@ -36,7 +34,7 @@ copied artwork, control scripts, music, or surface generation from their authors
   but other source-owned local or special travel routes are preserved.
 * Rabbasca remains a Gleba moon, with its original orbital relationship. A
   Gleba-to-Rabbasca connection is added only if not provided natively.
-* The six destinations never become required for frontier mastery or cards.
+* The five destinations never become required for frontier mastery or cards.
   Special integrations and bonus alternate recipes should be considered only
   after their complete Factorio 2.1 mod combinations have been run in-engine.
 
@@ -47,7 +45,6 @@ copied artwork, control scripts, music, or surface generation from their authors
 - [Foliax](https://mods.factorio.com/mod/foliax)
 - [Obsidiax](https://mods.factorio.com/mod/obsidiax)
 - [Carna](https://mods.factorio.com/mod/carna)
-- [Athos](https://mods.factorio.com/mod/PlanetAthos)
 
 ### Validation before release
 
@@ -59,9 +56,8 @@ connections. Check recipe craftability and labs, and test native surface
 mechanics. Keep copies of old saves; changing a planet's star-system orbit and
 space connections can affect existing space-platform routes.
 
-Athos is especially new, and Carna has substantial environment simulation.
-Both need in-game performance and K2SO checks before they can be considered
-mature default choices.
+Carna has substantial environment simulation and needs in-game performance and
+K2SO checks before it can be considered a mature default choice.
 
 **Note on game-version dependencies:** Rabbasca requires a modern Factorio
 2.1.20 build; other planets may require their own assets and libraries. Let

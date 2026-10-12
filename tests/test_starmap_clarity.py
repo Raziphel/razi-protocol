@@ -107,8 +107,8 @@ class ConstellationTests(unittest.TestCase):
                            "Deep Space drifted too far outside compact view")
 
     def test_compact_ring_respects_large_optional_orbits(self):
-        # Athos (~49.5) and Ferrum (~51.4) have the largest supported
-        # non-moon orbital tracks. Their neighboring star circles need a gap.
+        # Ferrum (~51.4) has the largest supported non-moon optional orbit.
+        # Its neighboring star circles still need a gap.
         from itertools import combinations
         for a, b in combinations(STARS, 2):
             distance = math.dist(self.coords[a], self.coords[b])

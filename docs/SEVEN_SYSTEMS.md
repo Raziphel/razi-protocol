@@ -16,7 +16,7 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 ### Main system ownership
 
 * **Calidus:** Nauvis, Muluna, Calidus Drift orbital salvage stop; optional Eneas
-* **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys, optional Athos
+* **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys
 * **Nyxaris:** Gleba, Moshine, Apia/Carnova; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
 * **Vibrant:** Fulgora, Ribbonia, Paracelsin; optional Cerys (Fulgora moon)
 * **Vespera:** Muria, Aquilo, Rubia, Maraxsis; recommended Obsidiax
