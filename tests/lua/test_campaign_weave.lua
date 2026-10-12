@@ -80,10 +80,13 @@ check(has_pack("planet-discovery-castra","metallurgic-science-pack"),
   "Castra is not using producible science accepted by one lab")
 check(has_parent("planet-discovery-castra","native-castra"),
   "Native prerequisites were overwritten")
-check(has_parent("planet-discovery-arig","battlefield-science-pack"),
-  "Arig lacks Castra military research")
+check(not has_parent("planet-discovery-arig","battlefield-science-pack"),
+  "Locked source-pack recipe must not become a mandatory prerequisite")
 check(not has_pack("planet-discovery-arig","battlefield-science-pack"),
   "Arig was charged science that only Arig research itself unlocks")
+check(not has_parent("planet-discovery-hyarion","battlefield-science-pack")
+  and not has_pack("planet-discovery-hyarion","battlefield-science-pack"),
+  "Arig and Hyarion must remain independent branches after Castra")
 check(has_parent("planet-discovery-tellus","planet-discovery-gleba"),
   "Tellus missing Gleba cross-system discovery")
 check(has_parent("planet-discovery-tellus","planetaris-compression-science-pack"),
@@ -96,6 +99,8 @@ check(has_parent("panglia_planet_discovery_panglia","planet-discovery-apia-carno
   "Panglia missing Apia/Carnova research")
 check(has_parent("planet-discovery-shchierbin","planet-discovery-muria"),
   "Middle-frontier link missing")
+check(not has_parent("planet-discovery-shchierbin","galvanization-science-pack"),
+  "Paracelsin's late science must never gate Shchierbin")
 check(has_parent("planet-discovery-maraxsis","planet-discovery-paracelsin"),
   "Maraxsis missing Vibrant research")
 check(has_parent("planet-discovery-frozeta","planet-discovery-tenebris"),

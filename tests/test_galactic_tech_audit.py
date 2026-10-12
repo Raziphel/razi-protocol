@@ -31,5 +31,20 @@ class TechGraphAuditTests(unittest.TestCase):
           "lab":{"lab":{"inputs":["science"]}},"planet":{"x":{}}})
         self.assertEqual(s["locations_without_research_unlock"],[])
         self.assertEqual(s["unresearchable_science_combinations"],{})
+    def test_planetary_finale_coverage_reports_gaps(self):
+        fixture={"technology":{
+          "razi-stable-intergalactic-singularity":{
+            "prerequisites":["planet-discovery-fulgora"]},
+          "planet-discovery-fulgora":{"effects":[
+            {"type":"unlock-space-location","space_location":"fulgora"}]},
+          "moon-discovery-cerys":{"effects":[
+            {"type":"unlock-space-location","space_location":"cerys"}]}},
+          "planet":{"fulgora":{},"cerys":{},"bm-wit":{}}}
+        s=MODULE.analyze(fixture)["planetary_milestone_coverage"]
+        self.assertEqual(s["catalogued_worlds_present"],3)
+        self.assertEqual(s["on_singularity_path"],1)
+        self.assertIn("cerys",s["missing_from_finale"])
+        self.assertIn("bm-wit",s["no_native_research_unlock"])
+
 if __name__=="__main__":
     unittest.main()

@@ -13,6 +13,9 @@ class NativeTreeTests(unittest.TestCase):
         for no in ("t.unit=","t.prerequisites=","t.effects="):
             self.assertNotIn(no,text)
         self.assertIn('"razi-outer-frontier-mastery"',text)
+        self.assertIn('unification.worlds',text)
+        self.assertIn('node.essential=true',text)
+        self.assertIn('effect.type=="unlock-space-location"',text)
     def test_data_stage_wired(self):
         self.assertEqual(src("data-final-fixes.lua").count(
             'require("prototypes.technology.tech_tree_visibility").data_final_fixes()'),1)

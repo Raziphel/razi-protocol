@@ -17,7 +17,7 @@ recipe has been validated in-engine.
 | Panglia | Apia/Carnova biology and Moshine research |
 | Ribbonia | Fulgora electromagnetics |
 | Paracelsin | Ribbonia science |
-| Shchierbin | Paracelsin galvanization and Muria chemistry |
+| Shchierbin | Ribbonia alien science and Muria chemistry; Paracelsin is later |
 | Aquilo | Muria chemistry and Fulgora discovery |
 | Rubia | Aquilo cryogenics and the Vespera belt survey |
 | Maraxsis | Rubia biofusion and Paracelsin discovery |
@@ -44,7 +44,7 @@ the next frontier opens.
   it and **one existing lab can accept its entire set of science ingredients**.
   If not, the technology milestone remains but the unusable research-pack
   requirement is skipped. We never make all labs universal.
-- No recommended/optional planet becomes a mandatory dependency.
+- Source-world dependencies are added only to real discoveries and guarded against cycles; the current installed planet set is required, while incompatible 2.0 planets remain conditional.
 - Tech IDs, recipe outputs, space routes and native planet production
   restrictions are unchanged. Reloading the pass cannot duplicate links.
 
@@ -58,3 +58,15 @@ targeted conditional fixes when verified. Existing saves also need testing.
 
 Implementation: `prototypes/technology/campaign_weave.lua`. Regression:
 `tests/lua/test_campaign_weave.lua`.
+
+## Focused 2026 technology-tree pass
+
+The condensed research tree now marks the **native unlock technologies
+of all installed Razi-catalogued planets and moons** as essential, alongside
+the seven-system chapter backbone. Source mod technology order, visibility,
+effects, recipes and cost are unchanged.
+
+Additional interdependencies are applied in
+`prototypes/technology/regional_research_bridges.lua`. See
+[Focused Tech Tree Rework](FOCUSED_TECH_TREE_REWORK.md) for the exact
+two-way planetary branches and safeguards.

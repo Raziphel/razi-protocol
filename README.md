@@ -122,6 +122,21 @@ New bonuses are limited to 25% output at 15–20% longer crafting time,
 with additional imported ingredients and no productivity/recycling bonus.
 See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
 
+## Connected research across every frontier
+
+Razi's focused tech-tree pass now guards science prerequisites against
+late-only supply recipes, corrects Shchierbin's science handoff, and
+adds five cross-system research links. It uses native Igrys and Foliax
+research to connect the first frontier to the middle systems, and native
+Cerys and Obsidiax research to connect the middle to the outer systems,
+only where verified cycle-safe in the installed technology graph.
+
+The compact **Show only essential technologies** view now includes
+installed Razi planets' original discovery research, not only the
+main star-system milestones. No new mandatory science pack, technology
+prototype or research cost is introduced. Details are in
+[Focused Tech Tree Rework](docs/FOCUSED_TECH_TREE_REWORK.md).
+
 ## Required planetary campaign and non-planet bridges
 
 Cerys, Eneas and twelve other formerly optional or recommended 2.1 worlds

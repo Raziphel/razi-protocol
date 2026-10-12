@@ -12,7 +12,10 @@ local rules = {
 {"panglia_planet_discovery_panglia", {"planet-discovery-apia-carnova", "planet-discovery-moshine"}, {{"apicultural-science-pack", "planet-discovery-apia-carnova"}, {"thermodynamic-science-pack", "planet-discovery-moshine"}}},
 {"planet-discovery-ribbonia", {"planet-discovery-fulgora"}, {{"electromagnetic-science-pack", "planet-discovery-fulgora"}}},
 {"planet-discovery-paracelsin", {}, {{"ribbonia-alien-science-pack", "planet-discovery-ribbonia"}}},
-{"planet-discovery-shchierbin", {"planet-discovery-muria"}, {{"galvanization-science-pack", "planet-discovery-paracelsin"}, {"muriatic-science-pack", "planet-discovery-muria"}}},
+-- Shchierbin is BEFORE Paracelsin, not after it.
+{"planet-discovery-shchierbin", {"planet-discovery-muria"},
+ {{"ribbonia-alien-science-pack","planet-discovery-ribbonia"},
+  {"muriatic-science-pack","planet-discovery-muria"}}},
 {"planet-discovery-aquilo", {"planet-discovery-fulgora"}, {{"muriatic-science-pack", "planet-discovery-muria"}}},
 {"planet-discovery-rubia", {}, {{"cryogenic-science-pack", "planet-discovery-aquilo"}}},
 {"planet-discovery-maraxsis", {"planet-discovery-paracelsin"}, {{"rubia-biofusion-science-pack", "planet-discovery-rubia"}}},
@@ -113,20 +116,29 @@ end
 -- Existence of a recipe alone is not evidence that the pack can be made.
 -- An otherwise valid science requirement softlocks its discovery when the
 -- recipe can only be unlocked *by* that same discovery or a later research.
-local function recipe_accessible_before(recipe_name, recipe, target_name)
-  if recipe.enabled ~= false then return true end
-  for _, name in ipairs(unlockers_by_recipe[recipe_name] or {}) do
-    if not depends_on(name, target_name) then return true end
+-- Do not silently force a sibling world to be researched just
+-- because its discovery happens to unlock a producer for this science.
+local function world_discovery(name)
+  return name:match("^planet%-discovery%-")
+    or name:match("^moon%-discovery%-")
+    or name:match("^panglia_planet_discovery_")
+end
+
+local function recipe_accessible_before(recipe_name,recipe,target,owner)
+  if recipe.enabled~=false then return true end
+  for _,name in ipairs(unlockers_by_recipe[recipe_name] or {}) do
+    local requires_peer=world_discovery(name) and name~=owner
+      and not depends_on(target,name)
+    if not requires_peer and not depends_on(name,target) then return true end
   end
   return false
 end
 
-local function has_production_recipe_before(pack, target_name)
-  for _, recipe_name in ipairs(producers_by_pack[pack] or {}) do
-    local recipe = data.raw.recipe[recipe_name]
-    if recipe and recipe_accessible_before(recipe_name, recipe, target_name) then
-      return true
-    end
+local function has_production_recipe_before(pack,target,owner)
+  for _,recipe_name in ipairs(producers_by_pack[pack] or {}) do
+    local recipe=data.raw.recipe[recipe_name]
+    if recipe and recipe_accessible_before(recipe_name,recipe,target,owner)
+      then return true end
   end
   return false
 end
@@ -162,6 +174,21 @@ local function add_science(target, pack)
   end
 end
 
+-- Never add a prerequisite before verifying that the associated
+-- planet science is producible before the target and a lab can use it.
+-- Otherwise merely skipping the ingredient can still leave a softlock.
+local function safely_deliverable(target,pack,owner)
+  local destination,material,source_tech=technology(target),
+    technology(pack),technology(owner)
+  if not (destination and material and source_tech and pack_exists(pack))
+    then return false end
+  if not (destination.unit and destination.unit.ingredients) then return false end
+  if depends_on(pack,target) or depends_on(owner,target)
+    or depends_on(owner,pack) then return false end
+  if not has_production_recipe_before(pack,target,owner) then return false end
+  return has_compatible_lab(destination.unit.ingredients,pack)
+end
+
 function M.data_final_fixes()
   -- The core seven-system technology gates are handled separately.
   if not interdependence.enabled() then return end
@@ -178,9 +205,9 @@ function M.data_final_fixes()
     local target = rule[1]
     for _, milestone in ipairs(rule[3]) do
       local pack, owner = milestone[1], milestone[2]
-      if technology(target) and technology(owner) and technology(pack)
-        and pack_exists(pack) and link(pack, owner) and link(target, pack) then
-        add_science(target, pack)
+      if safely_deliverable(target,pack,owner)
+        and link(pack,owner) and link(target,pack) then
+        add_science(target,pack)
       end
     end
   end
