@@ -2,6 +2,19 @@
 -- Rendering is event driven; this file does not alter research or routes.
 local theme = require("scripts.chronicle.theme")
 local dossiers = require("scripts.chronicle.planets")
+local function corridor_type(from, to)
+  local deep = {["solar-system-edge"]=true, ["shattered-planet"]=true,
+    nexus=true, ["black-hole"]=true, ["black-hole-approach"]=true,
+    ["oort-cloud"]=true, sol=true}
+  if deep[from] or deep[to] then return "DEEP SPACE", "Long-haul hazard corridor" end
+  if from:match("^sye%-") and to:match("^sye%-") then
+    return "SLIPSTREAM", "Interstellar system-to-system corridor"
+  end
+  if from:match("^sye%-") or to:match("^sye%-") then
+    return "APPROACH", "Slipstream entry or exit"
+  end
+  return "LOCAL LANE", "Regional planetary route"
+end
 local ui = {}
 local ROOT = "razi_chronicle_"
 local WINDOW = ROOT .. "window"
@@ -401,8 +414,10 @@ local function route_entries(name)
   for id, route in pairs(prototypes.space_connection or {}) do
     if route.from.name == name or route.to.name == name then
       local destination = route.from.name == name and route.to.name or route.from.name
+      local category, note = corridor_type(route.from.name, route.to.name)
       routes[#routes + 1] = {
-        id = id, destination = destination, length = route.length
+        id = id, destination = destination, length = route.length,
+        category = category, note = note, shape = route.shape
       }
     end
   end
@@ -415,7 +430,7 @@ end
 
 local function atlas(parent, ctx, player, chapter, ledger, state)
   theme.heading(parent, "SYSTEM ATLAS  /  " .. chapter.title, chapter.id)
-  theme.caption(parent, "Live space-connection prototypes from the installed modpack. Connections do not mean the associated research or platform route is already unlocked.")
+  theme.caption(parent, "Map connections describe possible paths, not unlocked travel. Corridor badges distinguish local lanes, slipstreams and hazardous outer routes.")
   local picker = theme.card(parent)
   theme.heading(picker, "Destinations", chapter.id)
   local buttons = picker.add{type="table", column_count=3}
@@ -462,6 +477,9 @@ local function atlas(parent, ctx, player, chapter, ledger, state)
     theme.label(head, route.destination:gsub("%-", " "), {bold=true})
     theme.caption(card, "Connection: " .. route.id ..
       (route.length and (" | " .. tostring(route.length) .. " km") or ""))
+    theme.badge(card, route.category, "active", theme.tint(chapter.id))
+    theme.caption(card, route.note .. " | " ..
+      (route.shape == "line" and "Straight corridor" or "Orbital arc"))
     if prototypes.space_location[route.destination] then
       theme.caption(card, "Destination: " ..
         (player.force.is_space_location_unlocked(route.destination) and

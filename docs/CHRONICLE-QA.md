@@ -49,3 +49,12 @@ These steps deliberately use manual Factorio testing so normal pushes do not con
 5. Verify source cards can be researched in a lab accepting both the current and next system's cards. Check the Promethium branch with and without Nexus.
 6. Ensure quality modules and recycling do not create an infinite science card loop. The exchange recipes disallow productivity and auto recycling.
 7. Confirm the five new Chronicle side quests appear after their tech prototypes exist and existing saved chapter times remain intact.
+
+## Starmap visuals and route polish (2.1.9)
+
+1. Verify corona layers render beneath existing Solaris, Nyxaris, Vibrant and Beetlejuice stars, including PlanetsLib sprite-only conversion.
+2. Confirm route hover works over every stellar glow and that duplicate or untranslated tooltip fields do not appear.
+3. Inspect regional arcs, interstellar straight corridors, asteroid belts and deep-space hazards in the native starmap.
+4. Confirm Frozeta has an outer independent orbit, Vesta sits closer to Beetlejuice, and all original space routes still connect.
+5. Check four additional system projects, their chronological progress, save persistence and optional Pelagos handling.
+6. Validate labels in English and Russian without changing prototype research, recipe cost, or route availability.

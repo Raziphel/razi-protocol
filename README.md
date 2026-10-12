@@ -38,6 +38,16 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
+## Starmap Beauty and Regional Expeditions
+
+The custom Solaris, Nyxaris, Vibrant and Beetlejuice stars now use **original transparent corona artwork** layered underneath their existing portraits. Each star has its own palette (amber industrial light, teal-violet biohazard, exotic magenta-green, and distant ember-blue). These are native `starmap_icons`, so they do not add route-blocking decorative sprites.
+
+Razi Protocol now adds native tooltip labels for routes and destinations: **regional lanes, slipstream approaches, interstellar crossings and deep-space corridors**. Existing custom route art is preserved, while unspecified long-haul Razi connections use Factorio 2.1's straight-line representation. Their lengths, asteroid fields and unlock conditions are untouched.
+
+Beetlejuice's orbital spacing is adjusted for readability: Vesta moves closer to the star, while Frozeta is now a distant independent icy planet rather than appearing next to Secretas. The remaining two branches have more breathing room. Four additional **system-convergence Chronicle projects** represent the combined planet research of Solaris, Nyxaris, Vibrant and Beetlejuice. These are optional documentation milestones, not gameplay locks.
+
+The System Atlas now distinguishes route types and shapes. The vanilla starmap remains the navigation interface; native Factorio does not expose a general-purpose backdrop texture or arbitrary route colors, so this update intentionally avoids claiming those unsupported effects.
+
 ## Cross-System Research Exchanges
 
 After reaching later star systems, the expedition can research **five optional Research Exchanges** that convert combinations of sciences from different planet mods into more efficient versions of existing Tech Cards. Each exchange unlocks a crafting recipe producing **three system cards** from **two complete batches** of its original ingredients plus **one additional science pack from each of two specialist planetary disciplines**. The original card recipe remains unchanged, and no new recipe is required to progress through the story.

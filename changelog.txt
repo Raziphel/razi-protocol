@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.9
+Date: 12. 10. 2026
+  Graphics:
+    - Added four transparent system-corona artworks layered beneath the Solaris, Nyxaris, Vibrant and Beetlejuice stars.
+    - Rebalanced Beetlejuice orbital spacing, moving volcanic Vesta inward and icy Frozeta into a separate outer orbit.
+    - Added native route metadata and straight-line treatment for unstyled interstellar and deep-space links.
+
+  Features:
+    - Expanded the System Atlas with route classifications and route-shape descriptions.
+    - Added four optional, multi-planet Chronicle system-convergence projects.
+    - Refined Exchange research names and route hover localization.
+
+  Compatibility:
+    - Preserved existing routes, asteroid hazards, discovery gates and planet recipes.
+    - Avoided large independent decorative starmap hitboxes that could obstruct route selection.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.8
 Date: 12. 10. 2026
   Features:

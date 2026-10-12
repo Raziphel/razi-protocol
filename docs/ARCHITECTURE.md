@@ -16,6 +16,8 @@ This document describes the current Factorio 2.1 structure. Dependencies in `inf
 | `prototypes/technology/` | Technology prerequisites and progression across modded systems |
 | `prototypes/compat/` | Narrow optional-mod and other prototype interoperability fixes |
 | `prototypes/compat/research_exchanges.lua` | Late-stage Tech Card manufacturing recipes and cross-system research integrations |
+| `prototypes/compat/starmap_polish.lua` | Native route and location metadata, non-destructive shape selection |
+| `graphics/starmap/` | Original transparent system corona PNGs for layered star icons |
 | `scripts/chronicle/story.lua` | Story text and quest definitions, without gameplay side effects |
 | `scripts/chronicle/tracker.lua` | Runtime milestones, save-safe persistent progress and event wiring |
 | `scripts/chronicle/gui.lua` | Seven-tab Chronicle, per-player navigation and notifications |

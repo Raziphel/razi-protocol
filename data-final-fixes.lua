@@ -74,6 +74,10 @@ if starmap_star and starmap_star.layers then
 	end
 end
 
+-- Apply native route labels only after the system's route cleanup and optional
+-- mod compatibility passes. No asteroid patterns or unlocks are changed.
+require("prototypes.compat.starmap_polish").data_final_fixes()
+
 -- Planet packs frequently append their science inputs without checking whether
 -- another compatibility pass already added the same pack. Duplicate lab inputs
 -- are invalid in Factorio 2.1, so normalize them after every Razi compatibility
