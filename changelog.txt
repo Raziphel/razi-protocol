@@ -1,3 +1,12 @@
+Version: 2.1.19
+Date: 13. 10. 2026
+  Maintenance:
+    - Tidy module comments and remove repeated boilerplate across the campaign, route and compatibility code.
+    - Rewrite the mod description and clean up the README and developer notes.
+    - Correct old planet placements in the public description.
+    - Simplify the Codex's chapter color lookup.
+    - No changes to planet research, recipe definitions, route data or saved quest progress.
+
 Version: 2.1.18
 Date: 13. 10. 2026
   Protocol Codex art direction:

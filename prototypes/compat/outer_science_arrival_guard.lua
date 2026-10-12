@@ -1,7 +1,5 @@
--- Some planets' native hard-mode science rewrites assume their original
--- positions in Space Age. Razi places Crucible and Vesta much farther out.
--- Prevent their exclusive sciences from being required by their own landing
--- discovery or by the prerequisite chain leading to that discovery.
+-- Crucible and Vesta moved outward in the campaign.
+-- Strip their late science packs from research needed to reach them.
 local guard = {}
 
 local families = {

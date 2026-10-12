@@ -1,9 +1,8 @@
 # Interwoven planetary progression
 
-Razi Protocol uses the original planet mods' technologies and scientific
-production chains to build a connected seven-system research campaign. This
-is an incremental first implementation, not a claim that every upstream mod
-recipe has been validated in-engine.
+The seven-system campaign borrows research milestones from the planets
+themselves. This is the intended progression order; final recipe access
+still needs checking with a full modpack load.
 
 ## Research handoffs
 
@@ -17,7 +16,6 @@ recipe has been validated in-engine.
 | Panglia | Apia/Carnova biology and Moshine research |
 | Ribbonia | Fulgora electromagnetics |
 | Paracelsin | Ribbonia science |
-| Shchierbin | Ribbonia alien science and Muria chemistry; Paracelsin is later |
 | Aquilo | Muria chemistry and Fulgora discovery |
 | Rubia | Aquilo cryogenics and the Vespera belt survey |
 | Maraxsis | Rubia biofusion and Paracelsin discovery |

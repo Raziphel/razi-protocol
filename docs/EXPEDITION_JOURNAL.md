@@ -1,18 +1,17 @@
 # The Protocol Codex (Razi Expedition Journal)
 
-A completely original 204-milestone, 18-chapter guided journey written
-for the seven-system Factorio 2.1 K2SO campaign. Inspired by the *idea*
-of an in-game journal, but not dependent on Quest Book or a fork of its
-source code, UI, texts or reward engine.
+The Codex is the campaign guide for Razi Protocol. It currently has 204
+milestones across 18 chapters, from your first assembler to the end of
+the intergalactic expedition. It reads the game's research progress
+instead of tracking a second set of quest flags.
 
-## Industrial Constellations (new chapter)
+## Industrial Constellations
 
-Eighteen optional industry missions now interpret existing guarded recipe
-technologies as source-backed research milestones. They span K2SO, Moshine,
-Paracelsin, Rubia, Linox, Tenebris, Vesta, Panglia's neighbouring trade
-network, Balack, Aquilo, and other specialist sources. Each mission records a
-real existing technology; absent alternatives (including Deep-only recipes in
-Balanced mode) do not appear or impede main progression.
+This chapter is for the factories that need cargo from more than one
+planet. There are 18 trade and manufacturing milestones covering Moshine,
+Paracelsin, Rubia, Linox, Tenebris, Vesta, Balack, Aquilo and K2SO.
+The corresponding research has to exist in the current modpack for an
+objective to show up. Deep-mode recipes stay out of Balanced mode.
 
 For these missions, the Codex examines **only the selected native recipe**,
 illustrating its actual input and output prototypes and identifying a suggested
@@ -22,12 +21,10 @@ has shipped, built, or manufactured a quantity.
 
 ## Chapter art direction (2.1.18)
 
-All **18 chapters** now have a unique, contrast-minded primary color, a softer
-text accent, a source-artwork sigil, and a localized atmospheric subtitle.
-These are declared in `scripts/razi_journal_themes.lua` and do not touch
-gameplay, recipe prototypes, or saved progress. Icons are selected from real
-installed technology, item, or space-location sprites with a safe Razi Codex
-fallback when source assets are missing.
+Each chapter has its own colors, icon and short atmospheric line.
+They're set in `scripts/razi_journal_themes.lua`. The icons come from
+installed game sprites; if one isn't available, the Codex uses its
+fallback emblem.
 
 Chapter colors and motifs are present in the index headings, the currently
 expanded chapter, chapter completion meters, selected objective text, reader

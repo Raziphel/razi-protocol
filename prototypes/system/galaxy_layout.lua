@@ -1,12 +1,10 @@
--- Calidus-centered hexagonal star ring with an isolated northern endgame.
+-- System positions, orbit spacing and the route layout.
+-- The local planet/moon relationships need to survive every map pass.
 local M = {}
 
--- Campaign order follows the ring from south to north: first, middle, outer.
--- Preserve local planets, native moons and the six-star visual ring. The
--- Calidus departure hub moves slightly closer to home for visual clarity.
--- Six systems share radius 104 and exact hexagonal compass bearings.
--- North is NEGATIVE Y (Factorio orientation 0); Deep Space is north, but closer.
--- Source-inspired hot/desert worlds move inward and cold/remote worlds outward.
+-- Star positions follow the three expedition tiers.
+-- Factorio's north points toward negative Y.
+-- Hot worlds stay closer to their sun, colder worlds farther out.
 -- These are visual orbit distances only; gameplay climates remain source-owned.
 local anchors = {
   {"space-location","solaris","star",104,0.416667},

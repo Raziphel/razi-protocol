@@ -1,5 +1,4 @@
--- Original in-world fiction; recordings unlock on native research,
--- not on fictitious planet visits or physical Dyson satellite counts.
+-- Recovered Codex transmissions, unlocked by their matching research.
 return {
  {id="reception",unlock="first-signal",origin="SURVEY LOG / CALIDUS"},
  {id="moon",unlock="muluna",origin="ASTRONOMICAL DIVISION / MULUNA"},

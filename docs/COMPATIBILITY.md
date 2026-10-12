@@ -1,8 +1,8 @@
 # Compatibility and Integration Policy
 
-This project integrates many independent Factorio 2.1 planet mods. We should
-make them feel cohesive while preserving the ability of upstream maintainers
-to update independently.
+Most of the planets in this pack come from other developers. Compatibility
+patches should be small, easy to track and safe to remove once the original
+mod fixes the problem.
 
 ## Working with Alex and other maintainers
 

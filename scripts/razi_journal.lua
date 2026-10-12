@@ -1,7 +1,5 @@
--- Razi Expedition Journal. A distinct, first-party story/learning interface.
--- Does not change research, grant items or replace source planetary progress.
--- All progress is read from LuaForce technology state; per-player storage
--- contains preferences only, making older saves and force merging safe.
+-- The Protocol Codex reads research progress from each force.
+-- Player storage is just UI preferences, so an older save can reopen it.
 local M={}
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
@@ -12,8 +10,6 @@ local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
 local L=function(key,...) return {"journal-ui."..key,...} end
 local themes=require("scripts.razi_journal_themes")
-local palette={}
-for id,theme in pairs(themes.themes) do palette[id]=theme.primary end
 M.chapter_theme=themes.get
 M.chapter_icon=themes.icon
 
@@ -21,9 +17,8 @@ M.FRAME=FRAME
 M.TOP=TOP
 M.TRACKER=TRACKER
 
--- Research-all commands can emit thousands of completion events at once.
--- Only quest milestones and the native unlocks for journal side-worlds
--- affect the journal. Other technologies must never trigger a GUI rebuild.
+-- The research-all cheat can fire thousands of events. We only need to
+-- redraw for Codex milestones and world discovery unlocks.
 local research_goals,world_goals={},{}
 for _,quest in ipairs(defs.quests) do
   if quest.tech then research_goals[quest.tech]=true end
@@ -883,7 +878,7 @@ local function draw(player,focus_search)
   if p.view=="archive" then
     local unlocked,all=M.unlocked_records(player.force,context)
     tint(label(filterbar,L("archive-progress",
-      tostring(unlocked),tostring(all))),palette.echoes)
+      tostring(unlocked),tostring(all))),themes.get("echoes").primary)
   else
     subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do

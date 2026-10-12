@@ -24,12 +24,12 @@ require("prototypes.compat.logistics_cleanup").data_final_fixes()
 require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 
-deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
-deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
-deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
-deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4
--- Muria's orbit and routes are owned by seven_systems.lua and the final
--- route_reconcile.lua pass; do not destroy and rebuild its links here.
+-- Old interstellar shortcuts cut across the revised map.
+-- Muria's routes are handled by seven_systems and route_reconcile.
+deleteRoute("crucible-maraxsis")
+deleteRoute("crucible-orbit-ribbonia")
+deleteRoute("moshine-ribbonia")
+deleteRoute("igrys-orbit-ribbonia")
 
 deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")
@@ -51,10 +51,7 @@ if starmap_star and starmap_star.layers then
 	end
 end
 
--- Planet packs frequently append their science inputs without checking whether
--- another compatibility pass already added the same pack. Duplicate lab inputs
--- are invalid in Factorio 2.1, so normalize them after every Razi compatibility
--- module has finished.
+-- Duplicate lab science inputs are invalid in Factorio 2.1.
 for _, lab in pairs(data.raw.lab or {}) do
 	if lab.inputs then
 		local unique_inputs = {}
@@ -65,113 +62,69 @@ for _, lab in pairs(data.raw.lab or {}) do
 	end
 end
 
--- Reconcile the final route network after every source compatibility pass.
 require("prototypes.system.route_reconcile").data_final_fixes()
 
--- The final campaign gates must override earlier source compatibility rules.
+-- Set the campaign gates after the earlier compatibility passes.
 require("prototypes.technology.seven_system_gates").data_final_fixes()
--- Small home-system salvage stop, available after early space science.
 require("prototypes.system.calidus_expansion").data_final_fixes()
 
--- Weave the seven-system planet discoveries through upstream research.
 require("prototypes.technology.campaign_weave").data_final_fixes()
 
--- Optional planet destinations: native science retained, chapter travel attached.
 require("prototypes.system.optional_planets").data_final_fixes()
 require("prototypes.system.community_expansions").data_final_fixes()
 
--- Center the native belt artwork on Vibrant's sun, with waypoints
--- anchored to the surviving root star. Keep original asteroid hazards.
 require("prototypes.system.asteroid_belt_integration").data_final_fixes()
 
--- Apply our approved star/planet coordinates last, after optional orbits.
--- Keep this explicit in the data-stage entrypoint so it cannot be skipped.
+-- Position the map after optional planets register their orbits.
 require("prototypes.system.galaxy_layout").data_final_fixes()
 
--- Restore each source planet's original description and append Razi expedition context.
 require("prototypes.system.planet_descriptions").data_final_fixes()
 
--- The final K2SO pass reconciles planet recipes and integrates research data
--- into system cards after all source compatibility and layout passes.
+-- K2SO recipe names must settle before any exchange recipes are built.
 require("prototypes.compat.k2so_planet_integration").data_final_fixes()
 
--- Restore equivalent baseline crafting on K2SO upgrades after all planetary
--- recipe-category rewrites, and anchor late K2 technologies to their worlds.
 require("prototypes.compat.k2so_planet_machines").data_final_fixes()
 
--- Linox can optionally inject its own science into pre-Linox Aquilo research.
--- Keep the outer system reachable without weakening post-arrival hard mode.
+-- Avoid a Linox science requirement on the research needed to reach it.
 require("prototypes.compat.linox_science_guard").data_final_fixes()
 
--- Scan one final time after K2SO's legacy-item material reconciliation so
--- craft-item and craft-fluid triggers cannot remain on removed recipe outputs.
+-- Fix triggers after material and recipe renames are settled.
 require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 
--- Ensure Crucible/Vesta science cannot be needed to discover their own worlds.
 require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 
--- Two shared factory components must exist BEFORE the exchange-engine
--- indexing pass. Their supplier prerequisites are validated at data stage.
+-- Create the shared components before building their exchange recipes.
 require("prototypes.compat.network_components").data_final_fixes()
 
--- Higher-efficiency, nonmandatory industry exchanges between source planets.
--- Add only after all K2SO items, recipes, and research data are reconciled.
 require("prototypes.compat.planet_production_exchanges").data_final_fixes()
 
--- Additional cross-mod industrial exchanges use their source mods' true
--- producer research and preserve specialist surface/crafting restrictions.
 require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
 
--- Source-derived optional high-end exchanges for Ferrum, Wit and Balack.
--- Native recipes and science production are never rewritten.
 require("prototypes.compat.community_industry_exchanges").data_final_fixes()
 
--- Bring source-native planetary discoveries together at the final
--- singularity without introducing early scientific softlocks.
 require("prototypes.technology.planetary_unification").data_final_fixes()
 
--- Keep required cross-planet logistics and defense technologies aligned
--- with Razi's actual chapter discoveries. Source recipes stay unchanged.
 require("prototypes.technology.galactic_mod_research").data_final_fixes()
--- Bridge source-native science discoveries between existing stars.
--- Cycle guarded and never inserts source recipes or science cost multipliers.
 require("prototypes.technology.regional_research_bridges").data_final_fixes()
--- Highlight Razi's main research chapters using the engine's native
--- "Show only essential technologies" research filter.
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
 
--- Use the existing Dyson Sphere Reworked build/launch chain as a staged
--- Calidus megaproject. K2 plasma science conversion remains source-owned.
 require("prototypes.compat.calidus_dyson").data_final_fixes()
 
--- Extra optional trade networks only in Deep interdependence mode.
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 
--- Multi-world shipping and manufacturing rewards. Optional bonuses only;
--- leave native recipes, discoveries, and production chains untouched.
 require("prototypes.compat.galactic_industry_bridges").data_final_fixes()
 
--- Panglia returns to the data frontier with provenance-checked, nonmandatory
--- reciprocal glass and optical-cable export recipes.
 require("prototypes.compat.panglia_industry").data_final_fixes()
 
--- Bonus recipes consume the shared cross-world components. They preserve
--- native outputs, world crafting restrictions and source research.
 require("prototypes.compat.network_components").register_premium()
 
--- Space Age assigns connection defaults before this stage. Repair only routes
--- still lacking icon data after every Razi and compatibility route exists.
+-- Fix iconless routes after the final connection list is ready.
 require("prototypes.system.route_icons").data_final_fixes()
 
--- Give the installed Dyson source's first stellar location a modest local
--- Calidus connection without overwriting its own inner solar routes.
 require("prototypes.compat.calidus_dyson").connect_calidus()
 
--- Final native tooltip fields for all surviving route prototypes.
 require("prototypes.system.route_intel").data_final_fixes()
 
--- Insert Razi's original galaxy sky and system halos behind route guides.
 require("prototypes.system.starmap_background").data_final_fixes()
 
--- Final cosmetic-only starmap pass, after every connection and orbit has settled.
 require("prototypes.system.route_highlights").data_final_fixes()

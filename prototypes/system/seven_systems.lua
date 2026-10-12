@@ -1,4 +1,4 @@
--- Seven-system galaxy: two new stellar regions and deliberate orbital spacing.
+-- Extra stars and orbit positions for the seven-system map.
 local function location_exists(kind, name)
 	return data.raw[kind] and data.raw[kind][name]
 end

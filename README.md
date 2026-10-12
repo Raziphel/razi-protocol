@@ -1,8 +1,8 @@
 # Razi Protocol
 
-Razi Protocol is a large progression, compatibility, and starmap overhaul for *Factorio: Space Age* built around a huge Krastorio 2 Spaced Out modpack. Its goal is simple: turn a massive pile of excellent planet mods into one coherent campaign.
+Razi Protocol started as my attempt to make an absurdly large Space Age planet pack feel like one game. It's built for Factorio 2.1 and Krastorio 2 Spaced Out.
 
-Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into the intergalactic transceiver finale. When Nexus is installed, its black-hole and Sol content becomes an additional Deep Space branch.
+The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. I've also been rebuilding the starmap and extending the journey out to the intergalactic transceiver. Nexus has its own late-game branch.
 
 ## Planet quality gate
 
@@ -10,7 +10,7 @@ Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DN
 
 ## Nexus and Celestial Weather (2.1)
 
-Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi now tracks all **nine individual boss victories** from the source mod\'s read-only per-force snapshot, as well as Whisper, Chorus, Convergence, bearings and Silence. Six preparation milestones follow photon electronics, storm prediction, shielding, and omega power. Both the Journal and Galactic Atlas can open the original Nexus Codex. No duplicate bosses, trophies or rewards are added. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
+Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi now tracks all **nine individual boss victories** from the source mod's read-only per-force snapshot, as well as Whisper, Chorus, Convergence, bearings and Silence. Six preparation milestones follow photon electronics, storm prediction, shielding, and omega power. Both the Journal and Galactic Atlas can open the original Nexus Codex. No duplicate bosses, trophies or rewards are added. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
 
 Celestial Weather (Updated) and Celestial Weather Additions (2.1) provide configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. An **Atmospheric Field Guide** now appears in the Expedition Journal and planetary Atlas, showing each source setting and relevant environment notes. Razi does not add separate weather loops.
 
@@ -20,7 +20,7 @@ Outer Rim remains **optional and experimental**. Its 2.9.x update redraws routes
 
 **Muluna remains the required Nauvis moon.** The independent Biological Machines planet **Wit** is incompatible with Muluna and is explicitly excluded (`! biological-machines-planet-wit`). Razi Protocol does not require or integrate Wit; keep Muluna enabled and disable Wit in Factorio's mod manager. Do not enable the complete Biological Machines Modpack because it requires Wit. **Balack remains supported independently** and does not depend on Wit.
 
-## Why It Exists
+## Why I Made It
 
 Big Space Age planet packs are fun, but they also tend to suffer from the same problems:
 
@@ -30,9 +30,9 @@ Big Space Age planet packs are fun, but they also tend to suffer from the same p
 - Too many endgame add-ons fighting over the same progression space.
 - Too many optional enemy and compatibility mods that do not naturally land where they make thematic sense.
 
-Razi Protocol is the layer that turns that chaos into an intentional galaxy route.
+I wanted a galaxy you can actually navigate, with different ways through it and reasons to revisit earlier factories.
 
-## What It Changes
+## What's Different
 
 - Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice, Umbra, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
 - Adds system discovery technologies for the major custom systems.
@@ -128,7 +128,7 @@ The October 2026 optional modpack expansion now recognizes additional planets an
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
-## Razi Expedition Journal
+## The Protocol Codex
 
 A built-in **204-milestone Protocol Codex across eighteen original story
 chapters** guides the full seven-system K2SO campaign. Open it during

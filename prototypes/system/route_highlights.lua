@@ -1,6 +1,5 @@
--- Risk-colored expedition lines over matching native starmap connections.
--- This is sprite-only artwork; the travel graph, hover targets, and unlocks
--- remain entirely Factorio-owned. Unknown/moved routes are never overdrawn.
+-- The colored lines sit over existing Space Age routes.
+-- They don't add connections or change how travel unlocks.
 local M = {}
 local manifest = require("prototypes.system.route_highlight_manifest")
 local hazards = require("prototypes.system.route_hazards")

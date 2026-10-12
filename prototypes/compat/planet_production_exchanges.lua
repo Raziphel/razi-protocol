@@ -1,6 +1,5 @@
--- Optional production exchanges between K2SO's established planet industries.
--- These are alternate recipes, not replacements or ingredients for core science.
--- A shortcut must never unlock the native product before its original research.
+-- Optional cross-planet production recipes.
+-- Each alternative has to respect the original recipe's research unlock.
 local M = {}
 local interdependence = require("prototypes.compat.interdependence_mode")
 

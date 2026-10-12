@@ -1,9 +1,8 @@
-# Modded-planet industrial network, first dedicated pass
+# Modded-planet manufacturing
 
-Razi Protocol's modded planets should exchange distinctive products, not
-just vanilla iron and copper. This pass integrates **six modded sources and
-seven specialized manufacturing methods** in an optional manufacturing web.
-It adds no dependency and does not replace the source mods' recipe names.
+I wanted the planet mods to trade their interesting materials, not just
+iron and copper. These seven alternate production methods tie six of
+those industries together. The original recipes still work.
 
 | Native factory | Off-world source(s) | Existing source recipe | Specialized output | Native → exchange output |
 | --- | --- | --- | --- | --- |

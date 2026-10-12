@@ -1,6 +1,5 @@
--- Shared manufactured components link earlier world exports to later
--- factories. Registration is entirely data-stage and fails closed when a
--- source mod, native recipe, science card or real supplier unlock is absent.
+-- Components assembled from several planetary supply chains.
+-- Skip registration when a material, machine or research unlock is missing.
 local M={}
 local mode=require("prototypes.compat.interdependence_mode")
 local factory=require("prototypes.compat.planet_production_exchanges")

@@ -1,6 +1,6 @@
--- Authoritative last-stage research gates for the seven-system campaign.
--- This runs after the legacy planet passes so their rules cannot reintroduce
--- shortcuts, optional dependencies or later-chapter science requirements.
+-- Final pass for the seven-system research gates.
+-- Earlier compatibility patches can change prerequisites, so set the
+-- campaign's route order here.
 local gates = {}
 
 local function tech(name)

@@ -1,6 +1,5 @@
--- K2SO planetary research backbone and late material-name reconciliation.
--- Runs after source compatibility passes and the Razi campaign/card builders.
--- All changes are prototype-guarded; missing optional planets are untouched.
+-- K2SO research data and material compatibility.
+-- This runs after the planet mods and system cards have been set up.
 local integration = {}
 
 -- Every K2SO research-data family joins the existing Razi progression at

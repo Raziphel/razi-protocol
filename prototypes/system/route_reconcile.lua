@@ -1,7 +1,5 @@
--- The last word on Razi-owned routes. Run after all source mod fixes.
--- Preserve native intra-system routes (especially Apia, Crucible and Bellicos).
--- Interstellar graph: Calidus opens two branches, each advances through
--- midgame and outer systems, with only one first and one outer crosslink.
+-- Final route pass, after the individual planet and star-system mods.
+-- Keep local planet connections while cleaning up the interstellar graph.
 local route_reconcile = {}
 local hazard_profiles = require("prototypes.system.asteroid_profiles")
 local route_icons = require("prototypes.system.route_icons")

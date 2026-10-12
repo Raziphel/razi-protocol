@@ -1,7 +1,5 @@
--- Linox optional hard mode imports its own science into Aquilo-era research.
--- In Razi, Linox instead sits beyond Cubium in the outer Beetlejuice system.
--- Remove only the science requirement on technologies needed to REACH Linox.
--- Preserve Linox science on research that can be completed after arrival.
+-- Linox is a late Beetlejuice destination.
+-- Its hard-mode science cannot be required to discover Linox itself.
 local compat = {}
 
 local late_science = "linox-item_linox-science-pack"

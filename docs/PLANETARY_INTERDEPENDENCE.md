@@ -1,8 +1,8 @@
 # Planetary Interdependence: modes, economy and progression
 
-This document describes Razi-authored optional **integration**, not an
-unverified claim of in-game playtesting. Existing source-mod mechanics remain
-intact and the campaign's seven core system gates always remain active.
+Interdependence decides how much of the cross-planet production network
+you want to use. The seven main star-system gates still work in every mode.
+The modpack needs a full in-game progression check before release.
 
 ## Startup modes
 
