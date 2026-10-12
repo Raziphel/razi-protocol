@@ -127,6 +127,10 @@ require("prototypes.compat.community_industry_exchanges").data_final_fixes()
 -- Extra optional trade networks only in Deep interdependence mode.
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 
+-- Multi-world shipping and manufacturing rewards. Optional bonuses only;
+-- leave native recipes, discoveries, and production chains untouched.
+require("prototypes.compat.galactic_industry_bridges").data_final_fixes()
+
 -- Space Age assigns connection defaults before this stage. Repair only routes
 -- still lacking icon data after every Razi and compatibility route exists.
 require("prototypes.system.route_icons").data_final_fixes()
