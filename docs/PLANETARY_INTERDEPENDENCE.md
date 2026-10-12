@@ -93,3 +93,19 @@ free items. Native recipe research never unlocks early.
 
 Lua fixture tests protect the mode switch and source structure. They do
 **not** replace the full Factorio 2.1 binary/modpack smoke tests.
+
+## The Industrial Constellations campaign guide (2.1.17)
+
+The Protocol Codex surfaces 18 optional, real-tech industrial milestones for
+existing guarded alternative recipes. It also displays prototype-backed recipe
+inputs and outputs, and a suggested workshop location. No missions are added to
+the technology graph, and missing or Deep-only alternative technologies never
+become invisible progression requirements.
+
+Research bridge mode Off now disables the late regional bridge pass as well as
+the original campaign weave. The bridge auditor checks whether known science
+ingredient producer recipes are unlocked only after a destination gateway,
+rather than relying solely on identically named science technologies.
+
+The authored base, recipe, and world rules are unchanged. This is no substitute
+for fresh-save and existing-save playthroughs with the complete modpack.

@@ -38,6 +38,16 @@ end
 for _,edge in ipairs(module.bridges) do
  assertok(techs[edge[1]] and techs[edge[2]],"Test source missing")
 end
+-- Turning off planetary interdependence must switch off BOTH research
+-- passes. The original campaign gates remain in seven_system_gates.
+rawset(_G,"settings",{startup={
+  ["razi-planetary-interdependence"]={value="off"}
+}})
+module.data_final_fixes()
+assertok(not parent("planet-discovery-corrundum",
+  "planet-discovery-apia-carnova"),
+  "Off mode must not silently add regional bridge prerequisites")
+settings.startup["razi-planetary-interdependence"]={value="balanced"}
 module.data_final_fixes()
 for _,edge in ipairs(module.bridges) do
  assertok(parent(edge[1],edge[2]),"Missing native cross-system edge")
@@ -76,6 +86,23 @@ module.data_final_fixes()
 assertok(not parent("beetlejuice-discovery","research-obsidiax")
  and not parent("umbra-discovery","research-obsidiax"),
  "Future-only science cannot gate the preceding system")
+-- A recipe unlock *behind* a paired gateway is unsafe even when the
+-- research ingredient has no technology with the same name.
+techs["research-obsidiax"].unit.ingredients={{"late-ingredient",1}}
+techs["future-ingredient-unlock"]=tech({"beetlejuice-discovery"},{
+  {type="unlock-recipe",recipe="late-ingredient-recipe"}})
+data.raw.recipe={
+  ["late-ingredient-recipe"]={enabled=false,results={{
+    type="item",name="late-ingredient",amount=1}}}}
+techs["beetlejuice-discovery"].prerequisites={
+  "vibrant-discovery","vespera-discovery"}
+techs["umbra-discovery"].prerequisites={
+  "vibrant-discovery","vespera-discovery"}
+module.data_final_fixes()
+assertok(not parent("beetlejuice-discovery","research-obsidiax")
+  and not parent("umbra-discovery","research-obsidiax"),
+  "Hidden future recipe unlock created a research softlock")
+rawset(_G,"settings",nil)
 -- Missing optional mods cannot create fake destination technologies.
 rawset(_G,"data",{raw={technology={
  ["vibrant-discovery"]=tech(),["vespera-discovery"]=tech()

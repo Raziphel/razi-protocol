@@ -130,7 +130,7 @@ The current scope protects original moon orbits, underground-only surfaces, spec
 
 ## Razi Expedition Journal
 
-A built-in **186-milestone expedition journal across seventeen original story
+A built-in **204-milestone Protocol Codex across eighteen original story
 chapters** guides the full seven-system K2SO campaign. Open it during
 normal gameplay using the small top-row book button or **Ctrl+Shift+J**;
 pin a goal to a compact optional tracker. Every milestone has original

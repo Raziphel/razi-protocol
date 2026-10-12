@@ -1,3 +1,12 @@
+Version: 2.1.17
+Date: 13. 10. 2026
+  Interplanetary campaign integration:
+    - Add the 18-milestone Industrial Constellations chapter to the Protocol Codex, bringing the campaign to 204 milestones in 18 chapters.
+    - Show actual source-prototype recipe inputs and products for optional planetary manufacturing research.
+    - Connect guarded cross-world industry alternatives to real planet and earlier technology milestones without adding new mandatory unlocks.
+    - Respect Off interdependence for regional research links; screen known science producer recipes unlocked only behind future chapter gateways.
+    - Preserve source planet mechanics, native recipes, existing save IDs, Research-all coalescing, and optional Deep recipe availability.
+
 Version: 2.1.16
 Date: 13. 10. 2026
   Protocol Codex UI:

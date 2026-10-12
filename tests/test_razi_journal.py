@@ -15,12 +15,16 @@ class ExpeditionJournalTests(unittest.TestCase):
         expanded=read("scripts/razi_journal_expansion.lua")
         quests=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',source)
         extended=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",(?:tech|world)="([^"]+)"',expanded)
-        quests+=extended
-        self.assertEqual(len(quests),186)
-        self.assertEqual(len({item[0] for item in quests}),186)
+        industry=read("scripts/razi_journal_industry.lua")
+        partnerships=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',industry)
+        self.assertEqual(len(partnerships),18)
+        quests+=extended+partnerships
+        self.assertEqual(len(quests),204)
+        self.assertEqual(len({item[0] for item in quests}),204)
         chapter_sources=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',source)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
-        self.assertEqual(len(chapter_sources),17)
+        chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',industry)
+        self.assertEqual(len(chapter_sources),18)
         language=read("locale/en/razi_journal.cfg")
         sections={}
         for block in re.split(r'(?m)^\[([^\]]+)\]\s*',language)[1:][::2]:
@@ -49,6 +53,22 @@ class ExpeditionJournalTests(unittest.TestCase):
             for section in ("journal-record-title","journal-record-origin",
                             "journal-record-body"):
                 self.assertIn(rec,sections[section])
+    def test_industry_prototype_origins(self):
+        catalog=read("scripts/razi_journal_industry.lua")
+        recipes="".join(read(path) for path in (
+            "prototypes/compat/planet_production_exchanges.lua",
+            "prototypes/compat/modded_planet_exchanges.lua",
+            "prototypes/compat/community_industry_exchanges.lua",
+            "prototypes/compat/galactic_industry_bridges.lua",
+            "prototypes/compat/network_components.lua"))
+        technologies=set(re.findall(r'tech="([^"]+)"',catalog))
+        self.assertEqual(len(technologies),18)
+        for name in technologies:
+            self.assertIn(name,recipes, f"Industry quest has no registered recipe source: {name}")
+        ui=read("scripts/razi_journal.lua")
+        self.assertIn('effect.recipe==quest.tech',ui)
+        self.assertIn('recipe_gallery(prose,quest,native,text_width)',ui)
+
     def test_only_authoritative_research_progress(self):
         source=read("scripts/razi_journal.lua")
         self.assertIn("force.technologies[quest.tech]",source)
@@ -86,6 +106,8 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('name="razi_journal_search"',ui)
         self.assertIn('science_gallery(native)',ui)
         self.assertIn('unlock_gallery(native)',ui)
+        self.assertIn('recipe_gallery(prose,quest,native,text_width)',ui)
+        self.assertIn('prototypes.recipe[quest.tech]',ui)
         self.assertIn('quest_art(player.force,quest,context)',ui)
         self.assertIn('column_count=size.reader<700 and 2 or 4',ui)
         self.assertIn('tags={razi_journal_action="select",id=quest.id}',ui)
@@ -121,6 +143,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertNotIn('type="technology"',data)
         self.assertNotIn('data:extend',data)
         self.assertNotIn('data:extend',read("scripts/razi_journal_expansion.lua"))
+        self.assertNotIn('data:extend',read("scripts/razi_journal_industry.lua"))
         self.assertNotIn('data:extend',read("scripts/razi_journal_records.lua"))
         manifest=read("info.json")
         self.assertNotIn('"quest-book"',manifest)

@@ -1,9 +1,24 @@
 # The Protocol Codex (Razi Expedition Journal)
 
-A completely original 186-milestone, 17-chapter guided journey written
+A completely original 204-milestone, 18-chapter guided journey written
 for the seven-system Factorio 2.1 K2SO campaign. Inspired by the *idea*
 of an in-game journal, but not dependent on Quest Book or a fork of its
 source code, UI, texts or reward engine.
+
+## Industrial Constellations (new chapter)
+
+Eighteen optional industry missions now interpret existing guarded recipe
+technologies as source-backed research milestones. They span K2SO, Moshine,
+Paracelsin, Rubia, Linox, Tenebris, Vesta, Panglia's neighbouring trade
+network, Balack, Aquilo, and other specialist sources. Each mission records a
+real existing technology; absent alternatives (including Deep-only recipes in
+Balanced mode) do not appear or impede main progression.
+
+For these missions, the Codex examines **only the selected native recipe**,
+illustrating its actual input and output prototypes and identifying a suggested
+workshop world. Recipe limits, machine categories, environmental restrictions,
+and source-mod outputs remain authoritative. Research is *not* proof the player
+has shipped, built, or manufactured a quantity.
 
 ## Visual overhaul
 
@@ -31,7 +46,7 @@ bounded and wrap into columns so no sideways scrolling is introduced.
 - The expanded expedition window uses the available display area up to 1,370
   Factorio GUI units wide. Its left column is a structured **chapter index**
   with wrapped titles, progress counts, colored chapter headings, and a
-  direct drop-down jump to any of the 17 chapters.
+  direct drop-down jump to any of the 18 chapters.
 - The right-hand panel provides a full-width reading column with a separate
   research objective card and field notes, including Nexus combat and world
   weather information where available. Filter by All, Ready, Unfinished or
