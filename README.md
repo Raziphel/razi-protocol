@@ -111,6 +111,17 @@ The October 2026 optional modpack expansion now recognizes additional planets an
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
+## Multi-world industrial partnerships
+
+The optional Galactic Industrial Network adds **14 extra recipes** joining
+three to five existing planetary industries. Ten become available in
+Balanced mode; four more are Deep-only. Each requires the participating
+worlds, their genuine supplier recipes and original research. The native
+manufacturing recipe remains available with no new science requirements.
+New bonuses are limited to 25% output at 15–20% longer crafting time,
+with additional imported ingredients and no productivity/recycling bonus.
+See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
+
 ## Planet Integrations
 
 Some world relationships need particular care:

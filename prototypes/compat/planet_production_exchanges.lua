@@ -125,6 +125,22 @@ local exchanges = {
     },
     batch = 1, bonus = 5, count = 1450, time = 60,
     bonus_icon = "bioluminescent-crystal"
+  },
+  {
+    name="razi-galactic-vulcanus-bioptic-casting",
+    source="kr-casting-rare-metals",product="kr-rare-metals",
+    category="metallurgy",working_world="vulcanus",
+    required_mods={"Moshine"},
+    planets={"planet-discovery-vulcanus","planet-discovery-gleba",
+      "planet-discovery-moshine"},
+    science={"solaris-tech-card","nyxaris-tech-card"},
+    supplier_recipes={{recipe="bioflux",product="bioflux"},
+      {recipe="optical-cable",product="optical-cable"}},
+    additional={{type="item",name="bioflux",amount=2},
+      {type="item",name="optical-cable",amount=2}},
+    batch=4,bonus=1,count=750,time=45,
+    bonus_icon="optical-cable",require_supplier_provenance=true,
+    max_bonus_fraction=0.25,time_multiplier=1.15
   }
 }
 
@@ -383,6 +399,27 @@ local function register_exchange(rule)
   for _, extra in ipairs(rule.additional) do
     if not valid_ingredient(extra) then return end
   end
+
+  -- Stricter opt-in requirements for the newly introduced multi-world
+  -- factories. All imports must be actual producer outputs, and all such
+  -- recipes remain optional even when a supplier mod is missing.
+  if rule.require_supplier_provenance then
+    for _, extra in ipairs(rule.additional) do
+      if extra.type~="item" then return end
+      local proven=false
+      for _, supplied in ipairs(rule.supplier_recipes or {}) do
+        if supplied.product==name_of(extra) then proven=true break end
+      end
+      if not proven then return end
+    end
+  end
+  if rule.time_multiplier~=nil
+    and (type(rule.time_multiplier)~="number"
+      or rule.time_multiplier<1.1 or rule.time_multiplier>1.3) then return end
+  if rule.max_bonus_fraction~=nil
+    and (type(rule.max_bonus_fraction)~="number"
+      or rule.max_bonus_fraction<=0
+      or rule.max_bonus_fraction>0.30) then return end
   -- Stronger cross-world alternatives cannot silently print unlimited items.
   -- Deep recipes must have at least two discoveries, an actual import and a
   -- deterministic item output; native batches and byproducts remain unchanged.
@@ -397,6 +434,18 @@ local function register_exchange(rule)
       return
     end
   end
+  -- The more connected recipes must never turn late multi-world
+  -- logistics into unbounded output multiplication. Legacy recipes
+  -- keep their existing economics and 30% default crafting-time penalty.
+  if rule.max_bonus_fraction~=nil then
+    local native_amount
+    for _, result in ipairs(base.results or {}) do
+      if name_of(result)==rule.product then native_amount=result.amount end
+    end
+    if not native_amount or rule.bonus > native_amount*rule.batch
+      *rule.max_bonus_fraction then return end
+  end
+
   for _, pack in ipairs(rule.science) do
     if not raw("tool", pack) then return end
   end
@@ -477,7 +526,8 @@ local function register_exchange(rule)
   alternative.categories = {rule.category}
   alternative.category = nil
   alternative.surface_conditions = conditions
-  alternative.energy_required = (base.energy_required or 1) * rule.batch * 1.3
+  alternative.energy_required = (base.energy_required or 1) * rule.batch
+    * (rule.time_multiplier or 1.3)
   alternative.auto_recycle = false
   alternative.allow_decomposition = false
   -- Rewards cross-planet shipping without stacking free bonus throughput
