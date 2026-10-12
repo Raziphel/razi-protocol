@@ -8,6 +8,14 @@ Instead of leaving every planet on its own island, Razi Protocol rebuilds the ru
 
 Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DNA, and simulation progression is source-owned; Razi connects it after Moshine and Apia/Carnova and supplies a small, optional two-way industry loop. Muluna remains mandatory; Planet Wit and Shchierbin are still excluded. Back up existing saves before changing planetary mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
 
+## Nexus and Celestial Weather (2.1)
+
+Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi's Expedition Journal tracks the Whisper, Chorus, Convergence and Silence milestones without creating duplicate reward items, overriding scripted research, or bypassing the boss encounter controls. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
+
+Celestial Weather (Updated) and Celestial Weather Additions (2.1) provide configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. Razi does not add separate weather loops.
+
+Outer Rim remains an **optional, experimental compatibility** addition. Its new cross-world sciences may be useful, but it can rewrite tech prerequisites and planetary routes across different Razi star systems. Before making it mandatory, we need a verified Factorio 2.1 load and a progression audit with it enabled.
+
 ## Muluna compatibility
 
 **Muluna remains the required Nauvis moon.** The independent Biological Machines planet **Wit** is incompatible with Muluna and is explicitly excluded (`! biological-machines-planet-wit`). Razi Protocol does not require or integrate Wit; keep Muluna enabled and disable Wit in Factorio's mod manager. Do not enable the complete Biological Machines Modpack because it requires Wit. **Balack remains supported independently** and does not depend on Wit.
