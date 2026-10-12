@@ -31,6 +31,20 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
+## Expedition Chronicle
+
+Razi Protocol includes an in-game **Expedition Chronicle**, opened from its own **Expedition Chronicle** button at the top of the game screen. It is a story-driven journal, not a parallel set of unlocks. Its missions follow the actual Space Age and K2SO research milestones from the opening rocket all the way through activating the intergalactic transceiver.
+
+- Six ordered chapters: **Calidus**, **Solaris**, **Nyxaris**, **Vibrant**, **Beetlejuice** and **Deep Space**.
+- More than fifty story missions covering planetary discoveries, science breakthroughs, installed-system branches and the final singularity sequence.
+- Chapter introductions and epilogues tell a continuous expedition story. Optional-mod missions appear only when their technology exists. Branch labels do not promise that installed mods have no research prerequisites: the real technology tree remains authoritative.
+- Quest and chapter status comes from the force's research progress. The journal adds **no new research locks**, completion rewards or planet-access shortcuts.
+- A saved first-reached tick and first-completed tick for each quest and chapter, with **time to reach**, **time to beat** and live progress durations displayed as HH:MM:SS of simulation time.
+- A **shared force record** for multiplayer. Timings are persisted in the map save, including across reconnects and reloads. There is no background or real-world-clock timer.
+- In an existing save, previously completed research is recognised, but earlier completion timestamps cannot be reconstructed. Such entries honestly show **historical time unavailable**. Timers that start after adding the journal are clearly marked as partial.
+
+A chapter finishes when its final research gate is completed. As a result, optional research branches remain visible without the journal independently blocking the next chapter.
+
 ## Campaign Structure
 
 Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bucket of planets.
