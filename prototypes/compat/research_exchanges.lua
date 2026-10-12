@@ -120,7 +120,7 @@ local function make_exchange_recipe(definition, source, item, pair, variant)
     localised_description = {"recipe-description.razi-research-exchange"},
     icon = item.icon,
     icon_size = item.icon_size or 256,
-    category = "crafting",
+    categories = {"crafting"},
     subgroup = source.subgroup or "system-tech-card",
     order = "zz[razi-exchange]-" .. definition.id .. "-" .. variant,
     enabled = false,
