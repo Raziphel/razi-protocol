@@ -365,8 +365,8 @@ end
 local function route_entries(name)
   local routes = {}
   for id, route in pairs(prototypes.space_connection or {}) do
-    if route.from == name or route.to == name then
-      local destination = route.from == name and route.to or route.from
+    if route.from.name == name or route.to.name == name then
+      local destination = route.from.name == name and route.to.name or route.from.name
       routes[#routes + 1] = {
         id = id, destination = destination, length = route.length
       }
@@ -539,7 +539,7 @@ function ui.open(player, ctx)
   sidebar.style.height = height - 105
   sidebar.style.padding = 7
   local main = body.add{type="scroll-pane", name=ROOT .. "main", direction="vertical"}
-  main.style.width = width - sidebar.style.minimal_width - 36
+  main.style.width = width - math.max(190, math.floor(width * 0.245)) - 36
   main.style.height = height - 105
   main.style.padding = 8
   player.opened = frame
@@ -598,7 +598,7 @@ function ui.click(player, name, ctx)
       ui.render(player, ctx)
       return true
     end
-  elseif name:sub(1, #ROOT .. "atlas_") == ROOT .. "atlas_" then
+  elseif name:sub(1, #(ROOT .. "atlas_")) == ROOT .. "atlas_" then
     local planet = name:sub(#(ROOT .. "atlas_") + 1)
     if game.planets[planet] then
       state.planet = planet
