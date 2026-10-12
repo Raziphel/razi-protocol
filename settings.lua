@@ -32,6 +32,12 @@ data:extend({
   startup_toggle("razi-enable-modded-planet-exchanges",
     "ba[integration]-b[modded-planets]"),
 
+  -- HOME SYSTEM MEGAPROJECT
+  startup_toggle("razi-dyson-milestone-weave",
+    "bb[stellar]-a[research]"),
+  startup_toggle("razi-dyson-calidus-layout",
+    "bb[stellar]-b[calidus-placement]"),
+
   -- QUALITY OF LIFE
   startup_toggle("razi-hide-redundant-assembler-tiers",
     "ca[quality-of-life]-a[redundant-assemblers]"),

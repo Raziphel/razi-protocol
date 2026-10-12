@@ -58,6 +58,14 @@ settings.startup["razi-starmap-background-style"].value="off"
 bg.data_final_fixes()
 ok(#sprites.layers==1,"Off mode edited source")
 settings.startup["razi-starmap-background-style"].value="subtle"
+mods["slp-dyson-sphere-reworked-fork"]="1.0.5"
+local dyson_layers=bg.make_layers("subtle",true,true,true,false)
+ok(#dyson_layers==40,
+  "Calidus Dyson coronas should reuse exactly two native Razi textures")
+local dyson_layers_disabled=bg.make_layers("subtle",false,true,true,false)
+ok(#dyson_layers_disabled==16,
+  "Halo toggle must also suppress optional Dyson decorations")
+mods["slp-dyson-sphere-reworked-fork"]=nil
 mods["Better_Starmap_Background"]=true
 bg.data_final_fixes()
 ok(#sprites.layers==1,"External background conflict")

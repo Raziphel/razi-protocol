@@ -28,8 +28,30 @@ local groups={
 for group,names in pairs(groups) do
   for _,name in ipairs(names) do members[name]=group end
 end
+-- Discover source-owned solar location identifiers from the live SLP
+-- technologies rather than hardcoding names that can vary by port.
+local dyson_worlds
+local function source_dyson_locations()
+ if dyson_worlds~=nil then return dyson_worlds end
+ dyson_worlds={}
+ local available=(prototypes and prototypes.technology)
+   or (game and game.technology_prototypes)
+ if available then
+   for _,id in ipairs({"planet-discovery-sunorbit","slp-solar-system-sun2"}) do
+     local tech=available[id]
+     for _,effect in pairs(tech and tech.effects or {}) do
+       if effect.type=="unlock-space-location" and effect.space_location then
+         dyson_worlds[effect.space_location]=true
+       end
+     end
+   end
+ end
+ return dyson_worlds
+end
+
 function M.system(name)
   if type(name)~="string" then return "unassigned" end
+  if source_dyson_locations()[name] then return "calidus" end
   return members[name] or "unassigned"
 end
 function M.position(group)
