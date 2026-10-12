@@ -36,7 +36,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 Razi Protocol includes an in-game **Expedition Chronicle**, opened from its own **Expedition Chronicle** button at the top of the game screen. It is a story-driven journal, not a parallel set of unlocks. Its missions follow the actual Space Age and K2SO research milestones from the opening rocket all the way through activating the intergalactic transceiver.
 
 - Six ordered chapters: **Calidus**, **Solaris**, **Nyxaris**, **Vibrant**, **Beetlejuice** and **Deep Space**.
-- **84 story missions**: 52 technology milestones, 24 first-landing missions and 8 interplanetary research projects. Planetary arrival quests only appear when the planet and its discovery technology are installed.
+- **86 story missions**: 52 technology research milestones, 2 operational spaceflight milestones, 24 first-landing missions and 8 interplanetary research projects. Planetary arrival quests only appear when the planet and its discovery technology are installed.
 - Chapter introductions and epilogues tell a continuous expedition story. Optional-mod missions appear only when their technology exists. Branch labels do not promise that installed mods have no research prerequisites: the real technology tree remains authoritative.
 - Quest and chapter status comes from the force's research progress. The journal adds **no new research locks**, completion rewards or planet-access shortcuts.
 - **Cross-planet projects** check several researched technologies across different worlds, show the required research and progress count, and give the expedition a narrative reason to combine its discoveries. Missing optional technologies are skipped, and a project needs at least two real technologies to appear.
@@ -47,6 +47,26 @@ Razi Protocol includes an in-game **Expedition Chronicle**, opened from its own 
 - In an existing save, previously completed research is recognised, but earlier completion timestamps cannot be reconstructed. Such entries honestly show **historical time unavailable**. Timers that start after adding the journal are clearly marked as partial.
 
 A chapter finishes when its final research gate is completed. Landing expeditions and cross-planet research projects are additional campaign objectives, not invisible requirements for travel. They can be completed after a chapter's main story ends. In this pass there are **no changes to item recipes, research dependencies or planet access**; the additional integrations are story, exploration and research tracking.
+
+## Chronicle UI and Expedition Atlas (2.1.6)
+
+The Chronicle is now a complete campaign dashboard rather than a single quest list. It uses a shared Factorio-native GUI theme with chapter colors, science icons, progress bars, status badges, modular mission cards, responsive sizing and per-player preferences.
+
+Seven views are available from the same window:
+
+- **Overview:** current chapter story, overall completion, live statistics and the next open objectives.
+- **Missions:** all recorded quests with All, Active, Completed and Branch filters, with a compact or expanded card layout.
+- **Planets:** planet dossiers with researched discovery state, confirmed first landfall, environmental context, relevant science and linked expedition roles.
+- **Projects:** combined planetary research goals, chapter grouping and per-technology completion markers.
+- **Timeline:** an ordered first-hand history of recorded quests, system chapters, first landings and platform milestones. Events from before tracking existed are not backdated.
+- **Records:** chapter timing records and progress statistics, plus personal popup and compact-view settings.
+- **System Atlas:** inspect installed route prototypes, route lengths, destination unlock states and friendly orbital platform counts for chapter planets. This complements the native starmap rather than modifying its travel rules.
+
+The Chronicle also tracks a force's **first built operational space platform** and **first completed space-platform trip**, bringing the total to **86 defined missions** (54 milestones, including platform objectives, plus 24 landings and 8 multi-world projects).
+
+**Short completion notifications** appear for major project, chapter, landing and spaceflight milestones, then disappear automatically. You can disable them in Records. The GUI retains selected chapter, tab, mission filter and personal UI options across saves. It only renders on relevant events or when you request a refresh, never every tick.
+
+The shared theme module is reusable by future Razi Protocol custom GUIs. The existing native planet selector, platform management screens and starmap are **not** directly replaced by this release: overriding those without stable anchors risks clashes with other UI mods.
 
 ## Campaign Structure
 
