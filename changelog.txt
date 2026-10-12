@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.9
+Date: 12. 10. 2026
+  Nexus and atmospheric integration:
+    - Add the 2.1 Nexus Updated, Nexus Rebalanced and Nexus Bosses collection, plus source threat and boss-enemy requirements, to the curated dev modpack.
+    - Add 2.1 Celestial Weather and Celestial Weather Additions with original configurable effects and no duplicate simulation loops.
+    - Track Nexus Whisper, signal bearings, Chorus, Convergence and Silence in the original expedition story; preserve boss-owned trophies, warp key and scripted stage triggers.
+    - Leave Outer Rim optional and explicitly experimental pending a full route, technology and source-mod dependency audit.
+    - Keep automatic GitHub Actions disabled; a real game-load and long-run boss-weather playtest remain outstanding.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.8
 Date: 12. 10. 2026
   Compatibility:
