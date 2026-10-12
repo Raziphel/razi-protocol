@@ -1,6 +1,7 @@
 -- Expedition Chronicle screen, shared visual system and optional achievement toasts.
 -- Rendering is event driven; this file does not alter research or routes.
 local theme = require("scripts.chronicle_theme")
+local dossiers = require("scripts.chronicle_planets")
 local ui = {}
 local ROOT = "razi_chronicle_"
 local WINDOW = ROOT .. "window"
@@ -227,6 +228,24 @@ local function planet_dossier(parent, ctx, player, chapter, quest, ledger)
   theme.badge(stack, visited and "LANDED" or (discovered and "DISCOVERED" or "UNCHARTED"),
     visited and "completed" or (discovered and "active" or "locked"))
   theme.caption(card, quest.story)
+  local info = dossiers[quest.planet]
+  if info then
+    theme.badge(card, info.role:upper(), "landing", theme.tint(chapter.id))
+    theme.caption(card, "Environment: " .. info.hazard)
+    theme.caption(card, "Campaign role: " .. info.links)
+    if info.science and #info.science > 0 then
+      local sciences = theme.column(card, 2)
+      theme.heading(sciences, "RELEVANT RESEARCH", chapter.id)
+      for _, name in ipairs(info.science) do
+        local technology = player.force.technologies[name]
+        if technology then
+          theme.label(sciences,
+            (technology.researched and "[color=green]COMPLETE[/color]  " or "UNRESEARCHED  ") ..
+              "[technology=" .. name .. "]", {width=590})
+        end
+      end
+    end
+  end
   theme.caption(card, "Discovery: " .. (discovered and "Researched" or "Not researched"))
   theme.caption(card, "First visit: " .. (visited and
     (visited.imported and "Before arrival tracking started" or ctx.elapsed(visited.tick))
@@ -407,6 +426,14 @@ local function atlas(parent, ctx, player, chapter, ledger, state)
   local visited = ledger.visits[selection]
   theme.badge(dossier, visited and "SURFACE VISITED" or "SURFACE UNVISITED",
     visited and "completed" or "locked")
+  local info = dossiers[selection]
+  if info then
+    theme.caption(dossier, "Speciality: " .. info.role)
+    theme.caption(dossier, "Hazards: " .. info.hazard)
+    theme.caption(dossier, info.links)
+  end
+  local orbiting = game.planets[selection].get_space_platforms(player.force)
+  theme.caption(dossier, tostring(#orbiting) .. " friendly space platforms in orbit")
   local routes = route_entries(selection)
   theme.caption(dossier, tostring(#routes) .. " defined space connections")
   if #routes == 0 then theme.caption(dossier, "No route prototypes connect to this destination.") end
@@ -477,7 +504,10 @@ function ui.render(player, ctx)
     theme.button(header, CHAPTER_PREFIX .. node.id,
       (completed and "OK " or (available and "> " or "? ")) .. display_title(node),
       chapter.id == node.id)
-    theme.progress(entry, done, count, 105)
+    local progress = entry.add{type="progressbar", value=done / math.max(1, count)}
+  progress.style.width = 130
+  progress.style.height = 10
+  theme.caption(entry, done .. " of " .. count .. " missions")
   end
   theme.rule(sidebar)
   theme.caption(sidebar, "Save: " .. ctx.elapsed(game.tick))
