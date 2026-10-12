@@ -525,9 +525,11 @@ function ui.render(player, ctx)
     local entry = theme.card(sidebar, {padding=6})
     local header = theme.row(entry, 6)
     theme.chapter_icon(header, node.id, 25)
+    local short_title = node.title:match("^%u+%. ([^|]+)") or node.id
+    short_title = short_title:gsub("%s+$", "")
     theme.button(header, CHAPTER_PREFIX .. node.id,
-      (completed and "OK " or (available and "> " or "? ")) .. display_title(node),
-      chapter.id == node.id)
+      (completed and "OK " or (available and "> " or "? ")) .. short_title,
+      chapter.id == node.id, node.title)
     local progress = entry.add{type="progressbar", value=done / math.max(1, count)}
   progress.style.width = 130
   progress.style.height = 10
