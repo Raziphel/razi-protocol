@@ -300,6 +300,23 @@ Razi Protocol exists because of the wider Factorio modding community. The planet
 Please see [Credits.txt](Credits.txt) for the full acknowledgement list. If you are a mod author and want credit wording adjusted or content removed, contact Raziphel on Discord.
 
 
+## Interstellar cargo and defense integration
+
+Two required non-planet mods extend the factory network without adding any
+new planet: [Planet Express](https://mods.factorio.com/mod/planet-express)
+(v2.1.9+) dispatches actual cargo platforms using real rockets, and
+[Rocket Turrets Upgraded](https://mods.factorio.com/mod/upgraded-rocket-turrets)
+(v2.1.1+) adds a four-tier defense manufacturing ladder across Vulcanus,
+Fulgora, Aquilo and space platforms. Razi safely anchors their source-owned
+technologies to matching planet research where valid. It never overwrites
+Planet Express schedules or turret damage/recipes.
+
+The Galactic Operations map-window gains **Research & Campaign** and
+**Cargo Network** pages, including technology prerequisites, card-unlock
+readiness and the source mod's actual fleet configuration guidance.
+The new tech-graph audit works on an exported Factorio data-raw dump.
+See [Cargo & Research Integration](docs/CARGO_AND_RESEARCH.md).
+
 ## Galactic Operations UI
 
 A first-party, seven-system-aware planet and space-platform dashboard is included. Open the **Galactic Ops** button in Remote View on the space map, or optionally press **Ctrl+Shift+G** while viewing the map. It never occupies the shortcut bar. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).
