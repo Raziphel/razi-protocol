@@ -53,3 +53,28 @@ external Better Starmap Background owns the art.
 
 This is a **static data-stage sprite layer**. Native sun routes, planet
 locations, weather, hazards and unlock logic are unchanged.
+
+## Stellar micro-scenery pass
+
+The fine-detail / galactic-ornament layers now have an independently
+switchable **Stellar micro-details** setting (default On). It places:
+
+- Eight small, tinted star-swarm pockets near the *far side* of the seven
+  principal regions plus Deep Space, away from their navigable planet icons.
+- Eight faint filament shadows paired with those pockets, giving the systems
+  distinct shapes even at the edge of their charts.
+- Four dim distant stellar echoes in otherwise empty outer sky.
+- Six low-opacity dust/debris flecks around the three belt corridors,
+  behind the genuine belt symbols and danger-coloured routes.
+
+The new pass adds **26 lightweight sprite references** from the *existing*
+paletted Razi textures, without adding a new sprite file, simulation work,
+dynamic rendering, or any claimed change to Factorio's discoveries.
+Subtle mode now builds 74 base scenery layers when all visual toggles
+are enabled; Cinematic builds 76. Disable micro-details to restore the
+previous 48-layer Subtle treatment, disable Fine Details to return to the
+original 16-layer background, or disable Background entirely.
+
+Visual staging order remains: background atmosphere, micro scenery, native
+orbital art and source belts, then highlighted real routes. This is static
+parallax-*style* composition, not animation or simulated twinkling.

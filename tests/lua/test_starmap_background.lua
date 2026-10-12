@@ -24,7 +24,7 @@ rawset(_G,"settings",{startup={
 }})
 rawset(_G,"mods",{})
 local parts=bg.make_layers("subtle",true,true)
-ok(#parts==48,"Extra nebula ornamentation should add ten restrained layers")
+ok(#parts==74,"Micro-detail scenery should add 26 restrained layers")
 for _,layer in ipairs(parts) do
   ok(layer.size[1]<=1024 and layer.size[2]<=1024,"oversized atlas sprite")
   ok(layer.filename:find("graphics/starmap/razi",1,true),"foreign texture")
@@ -37,19 +37,19 @@ for _,layer in ipairs(parts) do
 end
 ok(coronas==6,"Six outer-star coronas must use the already loaded art")
 bg.data_final_fixes()
-ok(#sprites.layers==49,"Fine-detail artwork layers absent")
+ok(#sprites.layers==75,"Fine-detail artwork layers absent")
 ok(sprites.layers[1].filename:find("sky%-1"),"Background not underneath")
-ok(sprites.layers[39]==original,"Source sprite replaced")
+ok(sprites.layers[75]==original,"Source sprite replaced")
 bg.data_final_fixes()
-ok(#sprites.layers==49,"Idempotence failed")
+ok(#sprites.layers==75,"Idempotence failed")
 ok(#bg.make_layers("off",true,true)==0,"Off mode still draws")
 ok(#bg.make_layers("subtle",false,false,false,false)==5,
   "Optional layers did not disable")
 ok(#bg.make_layers("subtle",true,true,false,false)==16,
   "Disabling fine details should restore original 16 layers")
-ok(#bg.make_layers("subtle",true,true,true,true)==49,
+ok(#bg.make_layers("subtle",true,true,true,true)==75,
   "Opt-in cartography must add only one chart")
-ok(#bg.make_layers("cinematic",true,true,true,false)==50,
+ok(#bg.make_layers("cinematic",true,true,true,false)==76,
   "Cinematic should add eight faint expanded filaments")
 local cine=bg.make_layers("cinematic",true,true)
 ok(cine[1].tint.a>parts[1].tint.a,"Cinematic brightness not increased")
@@ -62,12 +62,26 @@ settings.startup["razi-starmap-galactic-ornaments"]={value=false}
 ok(#bg.make_layers("subtle",true,true,true,false)==38,
   "Ornament toggle must preserve the original subtle map")
 settings.startup["razi-starmap-galactic-ornaments"].value=true
+settings.startup["razi-starmap-micro-details"]={value=false}
+ok(#bg.make_layers("subtle",true,true,true,false)==48,
+  "Turning off micro-details must preserve existing galaxy scenery")
+settings.startup["razi-starmap-micro-details"].value=true
+local pockets,shreds=0,0
+for _,layer in ipairs(parts) do
+  if layer.scale==1.55 and layer.filename:find("cluster%-") then
+    pockets=pockets+1
+    ok(layer.tint.a<=.16,"Micro starfields must remain subordinate to planets")
+  end
+  if layer.scale==2.2 or layer.scale==2.4 then shreds=shreds+1 end
+end
+ok(pockets==8,"Every stellar region needs one distant star pocket")
+ok(shreds==6,"All three asteroid belts need two wispy debris details")
 mods["slp-dyson-sphere-reworked-fork"]="1.0.5"
 local dyson_layers=bg.make_layers("subtle",true,true,true,false)
-ok(#dyson_layers==50,
+ok(#dyson_layers==76,
   "Calidus Dyson coronas should reuse exactly two native Razi textures")
 local dyson_layers_disabled=bg.make_layers("subtle",false,true,true,false)
-ok(#dyson_layers_disabled==16,
+ok(#dyson_layers_disabled==30,
   "Halo toggle must also suppress optional Dyson decorations")
 mods["slp-dyson-sphere-reworked-fork"]=nil
 mods["Better_Starmap_Background"]=true

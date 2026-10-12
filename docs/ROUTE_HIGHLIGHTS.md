@@ -37,3 +37,17 @@ The full in-game view should be checked after updating the six-star layout.
 
 Assets in `graphics/route-highlights/` must be regenerated if the
 corresponding layout anchors move or the route topology is replaced.
+
+## Route lighting refinement
+
+Expedition masks now use three render passes from the **same source PNG**:
+a near-invisible broad bloom, a tighter middle halo, and the unchanged
+crisp centerline. The small differences in scale keep the luminous fringe
+close to the accurate original endpoints. Early routes stay restrained;
+outer corridors and belt crossings get a modest increase in contrast.
+Colors still come from the final actual asteroid hazard definitions.
+
+The pass is idempotent by guide filename and still skips missing, moved,
+or unsupported curved routes. At most 42 route layers are composed from
+the 14 existing masks (rather than 28 before). There are no per-tick
+animations, rebuilt render objects, new routes, or extra textures.
