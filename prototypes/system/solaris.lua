@@ -4,8 +4,13 @@ PlanetsLib:extend({
     {
         type = "space-location",
         name = "solaris",
-        starmap_icon = "__razi-protocol__/graphics/icons/SolarisStar.png",
-        starmap_icon_size = 1024,
+        -- Native layered corona creates no independent route-covering sprite.
+        starmap_icons = {
+            {icon = "__razi-protocol__/graphics/starmap/solaris-corona.png",
+             icon_size = 256, scale = 1.0, draw_background = false},
+            {icon = "__razi-protocol__/graphics/icons/SolarisStar.png",
+             icon_size = 1024, scale = 0.20, draw_background = false}
+        },
         orbit = {
             parent = {
                 type = "space-location",

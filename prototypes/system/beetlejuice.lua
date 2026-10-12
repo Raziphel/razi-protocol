@@ -2,8 +2,13 @@ PlanetsLib:extend({
     {
         type = "space-location",
         name = "beetlejuice",
-        starmap_icon = "__razi-protocol__/graphics/icons/BeetleJuiceStar.png",
-        starmap_icon_size = 1024,
+        -- Native layered corona creates no independent route-covering sprite.
+        starmap_icons = {
+            {icon = "__razi-protocol__/graphics/starmap/beetlejuice-corona.png",
+             icon_size = 256, scale = 1.0, draw_background = false},
+            {icon = "__razi-protocol__/graphics/icons/BeetleJuiceStar.png",
+             icon_size = 1024, scale = 0.20, draw_background = false}
+        },
         orbit = {
             parent = {
                 type = "space-location",
@@ -46,7 +51,7 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 21,
+			distance = 17,
 			orientation = 0.21,
 		},
 	},
@@ -74,7 +79,7 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 22,
+			distance = 24,
 			orientation = 0.6,
 		},
 	},
@@ -102,7 +107,7 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 25,
+			distance = 13,
 			orientation = 0.4,
 		},
 	},
@@ -116,7 +121,7 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 32,
+			distance = 33,
 			orientation = 0.15,
 		},
 	},
@@ -128,10 +133,10 @@ PlanetsLib:update({
 		orbit = {
 			parent = {
 				type = "space-location",
-				name = "secretas",
+				name = "beetlejuice",
 			},
-			distance = 4.5,
-			orientation = 0.18,
+			distance = 40,
+			orientation = 0.03,
 		},
 	},
 })
