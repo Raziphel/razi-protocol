@@ -39,7 +39,7 @@ local definitions = {
     count = 1000,
     main = {"bioluminescent-science-pack", "gas-manipulation-science-pack"},
     branches = {
-      {"muriatic-science-pack", "vanadium-science-pack"}
+      {"muriatic-science-pack", "paracelsin-galvanization-science-pack"}
     }
   },
   {

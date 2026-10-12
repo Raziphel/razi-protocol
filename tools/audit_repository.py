@@ -19,6 +19,12 @@ def warning(message: str) -> None:
 
 def main() -> int:
     info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
+    dependencies = info.get("dependencies", [])
+    for retired in ("panglia_planet", "shchierbin"):
+        if f"! {retired}" not in dependencies:
+            error(f"info.json: missing curated-roster exclusion for {retired}")
+        if any(re.match(r"^[?~]?\s*" + re.escape(retired) + r"(?:\s|$)", dep) for dep in dependencies):
+            error(f"info.json: retired planet {retired} remains a positive dependency")
     version = info.get("version")
     if info.get("name") != "razi-protocol":
         error("info.json: unexpected mod name")
@@ -59,6 +65,9 @@ def main() -> int:
         error("Chronicle story missing")
     else:
         story = story_path.read_text(encoding="utf-8")
+        for retired in ("panglia_planet_discovery_panglia", "planet-discovery-shchierbin"):
+            if retired in story:
+                error(f"Chronicle still contains retired planet objective: {retired}")
         keys = re.findall(r"\{tech\s*=\s*['\"]([^'\"]+)['\"]", story)
         keys += re.findall(r"\{id\s*=\s*['\"]([^'\"]+)['\"]", story)
         duplicate = sorted({key for key in keys if keys.count(key) > 1})

@@ -15,7 +15,7 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "beetlejuice",
 			},
-			distance = 19,
+			distance = 7,
 			orientation = 0.1,
 		},
 	},
