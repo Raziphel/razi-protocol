@@ -25,10 +25,12 @@ require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
 
-deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
-deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
-deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
-deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4
+-- Remove obsolete cross-system shortcuts that would bypass the intended
+-- chapter routes. Preserve the deliberately connected local planet branches.
+deleteRoute("crucible-maraxsis")
+deleteRoute("crucible-orbit-ribbonia")
+deleteRoute("moshine-ribbonia")
+deleteRoute("igrys-orbit-ribbonia")
 deleteRoute("sye-vibrant-muria")
 deleteRoutesBetween("sye-vibrant", "muria")
 

@@ -1,6 +1,8 @@
 local compat = {}
 
-local xy_k2so_placeholder_connections = { -- Cuz fuckin hell xy loves to complain.
+-- The enhancement fork expects several cross-system routes during data setup.
+-- Temporary placeholders are installed only until its compatibility pass ends.
+local xy_k2so_placeholder_connections = {
 	{
 		name = "nauvis-moshine",
 		from = "nauvis",
