@@ -55,16 +55,58 @@ M.preferences=pref
 -- Find actual native world-discovery research via source mod effect data.
 -- One pass per journal view, rather than guessing 19 third-party tech IDs
 -- or rescanning thousands of technologies for each side-world quest.
-function M.discovery_index(force)
-  local indexed={}
-  for _,tech in pairs(force and force.technologies or {}) do
-    local proto=tech.prototype
-    if proto and not proto.hidden then
+-- Prototype effects never change during a game. Keep their names in a
+-- runtime-only index, then look up the current force's research as needed.
+-- Test fixtures without prototypes.technology still use the original scan.
+local unlock_techs
+local function world_unlocks()
+  if unlock_techs then return unlock_techs end
+  local catalog={}
+  local registered=prototypes and prototypes.technology
+  if not registered then return nil end
+  for name,proto in pairs(registered) do
+    if not proto.hidden then
       for _,effect in pairs(proto.effects or {}) do
         if effect.type=="unlock-space-location" and effect.space_location then
-          local existing=indexed[effect.space_location]
-          if not existing or (tech.researched and not existing.researched) then
-            indexed[effect.space_location]=tech
+          local entries=catalog[effect.space_location]
+          if not entries then
+            entries={}
+            catalog[effect.space_location]=entries
+          end
+          entries[#entries+1]=name
+        end
+      end
+    end
+  end
+  unlock_techs=catalog
+  return catalog
+end
+function M.discovery_index(force)
+  local indexed={}
+  local technologies=force and force.technologies or {}
+  local catalog=world_unlocks()
+  if catalog then
+    for world,names in pairs(catalog) do
+      for _,name in ipairs(names) do
+        local tech=technologies[name]
+        if tech and tech.prototype and not tech.prototype.hidden then
+          local previous=indexed[world]
+          if not previous or (tech.researched and not previous.researched) then
+            indexed[world]=tech
+          end
+        end
+      end
+    end
+  else
+    for _,tech in pairs(technologies) do
+      local proto=tech.prototype
+      if proto and not proto.hidden then
+        for _,effect in pairs(proto.effects or {}) do
+          if effect.type=="unlock-space-location" and effect.space_location then
+            local previous=indexed[effect.space_location]
+            if not previous or (tech.researched and not previous.researched) then
+              indexed[effect.space_location]=tech
+            end
           end
         end
       end
@@ -139,13 +181,48 @@ function M.next_quest(force,context)
     if M.state(force,q,context)~="unavailable" then return q end
   end
 end
-function M.show_in_filter(force,quest,filter,context)
-  local state=M.state(force,quest,context)
+local function state_matches_filter(state,filter)
   if state=="unavailable" then return false end
   if filter=="ready" then return state=="active" end
   if filter=="unfinished" then return state~="complete" end
   if filter=="done" then return state=="complete" end
   return true
+end
+function M.show_in_filter(force,quest,filter,context)
+  return state_matches_filter(M.state(force,quest,context),filter)
+end
+
+-- Calculate the visible campaign once per redraw. The navigator used to
+-- walk all quests for every chapter and repeat most of these state checks.
+local quests_by_chapter={}
+for _,chapter in ipairs(defs.chapters) do quests_by_chapter[chapter.id]={} end
+for _,quest in ipairs(defs.quests) do
+  local list=quests_by_chapter[quest.chapter]
+  if list then list[#list+1]=quest end
+end
+function M.view_status(force,context)
+  context=context or M.context(force)
+  local view={states={},chapters={},done=0,total=0,ready=0}
+  for _,chapter in ipairs(defs.chapters) do
+    local result={quests={},completed=0,total=0}
+    for _,quest in ipairs(quests_by_chapter[chapter.id] or {}) do
+      local state=M.state(force,quest,context)
+      view.states[quest.id]=state
+      if state~="unavailable" then
+        result.quests[#result.quests+1]=quest
+        result.total=result.total+1
+        view.total=view.total+1
+        if state=="complete" then
+          result.completed=result.completed+1
+          view.done=view.done+1
+        elseif state=="active" then
+          view.ready=view.ready+1
+        end
+      end
+    end
+    view.chapters[chapter.id]=result
+  end
+  return view
 end
 -- Dimensions are in Factorio GUI units, after the player's UI scale.
 -- Explicitly budget both columns to prevent the horizontal scroll bars
@@ -561,7 +638,7 @@ end
 
 -- Wrapped, selectable labels replace the old too-wide chapter and quest
 -- buttons. One chapter jump selector covers distant chapters with no bars.
-local function render_chapters(parent,player,p,context,size)
+local function render_chapters(parent,player,p,context,size,view)
   local frame=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   frame.style.width=size.rail
@@ -597,19 +674,13 @@ local function render_chapters(parent,player,p,context,size)
 
   for index,chapter in ipairs(defs.chapters) do
     local theme=themes.get(chapter.id)
+    local data=view.chapters[chapter.id]
+    local completed,total=data.completed,data.total
     local available={}
-    local completed,total=0,0
-    for _,quest in ipairs(defs.quests) do
-      if quest.chapter==chapter.id
-        and M.available(player.force,quest,context) then
-        total=total+1
-        if M.complete(player.force,quest,context) then
-          completed=completed+1
-        end
-        if M.show_in_filter(player.force,quest,p.filter,context)
-          and matches_query(quest,p.query) then
-          available[#available+1]=quest
-        end
+    for _,quest in ipairs(data.quests) do
+      if state_matches_filter(view.states[quest.id],p.filter)
+        and matches_query(quest,p.query) then
+        available[#available+1]=quest
       end
     end
     if #available>0 then
@@ -655,7 +726,7 @@ local function render_chapters(parent,player,p,context,size)
       progress.style.color=theme.primary
       if open then
         for _,quest in ipairs(available) do
-          local state=M.state(player.force,quest,context)
+          local state=view.states[quest.id]
           local item=card.add{type="flow",direction="horizontal"}
           item.style.width=inner-34
           item.style.horizontal_spacing=7
@@ -829,7 +900,13 @@ local function draw(player,focus_search)
   end
 
   local context=M.context(player.force)
-  local done,total,ready=M.summary(player.force,context)
+  local view=p.view=="archive" and nil or M.view_status(player.force,context)
+  local done,total,ready
+  if view then
+    done,total,ready=view.done,view.total,view.ready
+  else
+    done,total,ready=M.summary(player.force,context)
+  end
   local totals=frame.add{type="frame",direction="horizontal",
     style="inside_shallow_frame_with_padding"}
   totals.style.horizontally_stretchable=true
@@ -900,7 +977,7 @@ local function draw(player,focus_search)
     render_archive(body,player,p,context,size)
   else
     local selected=select_quest(player.force,p,context)
-    local search=render_chapters(body,player,p,context,size)
+    local search=render_chapters(body,player,p,context,size,view)
     if focus_search then pcall(function() search.focus() end) end
     if selected then
       render_details(body,player,selected,p,context,size)

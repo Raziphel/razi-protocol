@@ -34,6 +34,31 @@ check(not ui.in_map_view(mock),"Non-remote controller must not display button")
 mock.controller_type=1
 mock.connected=false
 check(not ui.in_map_view(mock),"Disconnected player must not display button")
+-- The 30-tick map check should not keep rewriting an unchanged position.
+local moves=0
+local anchor=setmetatable({valid=true},{
+  __index=function(t,key)
+    if key=="location" then return rawget(t,"_location") end
+  end,
+  __newindex=function(t,key,value)
+    if key=="location" then
+      moves=moves+1
+      rawset(t,"_location",value)
+    else rawset(t,key,value) end
+  end
+})
+local map_player={
+  valid=true,connected=true,controller_type=1,render_mode=1,
+  display_scale=1,display_resolution={width=1920,height=1080},
+  gui={screen={razi_ops_map_anchor=anchor}}
+}
+ui.sync_map_button(map_player)
+ui.sync_map_button(map_player)
+check(moves==1,"Steady map button location was written every poll")
+map_player.display_resolution.width=1600
+ui.sync_map_button(map_player)
+check(moves==2 and anchor.location.x==1356,
+  "Map button must move when the player's resolution changes")
 print("Galactic Operations selection and map visibility fixtures passed")
 
 local campaign=require("scripts.galactic_campaign")

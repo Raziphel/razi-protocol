@@ -27,18 +27,49 @@ local function named_location(id)
 end
 -- Source techs are discovered from the real final technology effects.
 -- No hard-coded optional planet prerequisites or assumed science packs.
+local unlock_catalog
+local function location_research_catalog()
+  if unlock_catalog then return unlock_catalog end
+  if not (prototypes and prototypes.technology) then return nil end
+  local index={}
+  for name,proto in pairs(prototypes.technology) do
+    for _,effect in pairs(proto.effects or {}) do
+      if effect.type=="unlock-space-location" and effect.space_location then
+        local names=index[effect.space_location]
+        if not names then
+          names={}
+          index[effect.space_location]=names
+        end
+        names[#names+1]=name
+      end
+    end
+  end
+  unlock_catalog=index
+  return index
+end
 function M.unlock_research(force,id)
   local choices={}
-  for _,tech in pairs(force.technologies or {}) do
-    for _,effect in pairs(tech.prototype.effects or {}) do
-      if effect.type=="unlock-space-location" and effect.space_location==id then
-        local missing={}
-        for _,prior in pairs(tech.prerequisites or {}) do
-          if not prior.researched then missing[#missing+1]=prior end
+  local function add_tech(tech)
+    if not tech then return end
+    local missing={}
+    for _,prior in pairs(tech.prerequisites or {}) do
+      if not prior.researched then missing[#missing+1]=prior end
+    end
+    table.sort(missing,function(a,b) return a.name<b.name end)
+    choices[#choices+1]={tech=tech,missing=missing}
+  end
+  local index=location_research_catalog()
+  if index then
+    for _,name in ipairs(index[id] or {}) do
+      add_tech(force.technologies and force.technologies[name])
+    end
+  else
+    for _,tech in pairs(force.technologies or {}) do
+      for _,effect in pairs(tech.prototype.effects or {}) do
+        if effect.type=="unlock-space-location" and effect.space_location==id then
+          add_tech(tech)
+          break
         end
-        table.sort(missing,function(a,b) return a.name<b.name end)
-        choices[#choices+1]={tech=tech,missing=missing}
-        break
       end
     end
   end
@@ -55,10 +86,17 @@ function M.shortest_path(force,start,destination,connections)
   if not known(force,start) or not known(force,destination) then return nil end
   if start==destination then return {start},0 end
   local graph={}
+  -- Cache the unlock checks for each location within this route query.
+  local checked={}
+  local function accessible(name)
+    if not name then return false end
+    if checked[name]==nil then checked[name]=not not known(force,name) end
+    return checked[name]
+  end
   for _,edge in pairs(connections or prototypes.space_connection or {}) do
     local a=edge.from and edge.from.name
     local b=edge.to and edge.to.name
-    if known(force,a) and known(force,b) and edge.length
+    if accessible(a) and accessible(b) and edge.length
       and edge.length>0 then
       graph[a]=graph[a] or {}
       graph[b]=graph[b] or {}
@@ -115,9 +153,27 @@ function M.asteroid_profile(definitions)
   for _ in pairs(types) do count=count+1 end
   return size,count
 end
+local connections_by_world
+local function connection_index()
+  if connections_by_world then return connections_by_world end
+  local index={}
+  for _,edge in pairs(prototypes.space_connection or {}) do
+    local a,b=edge.from and edge.from.name,edge.to and edge.to.name
+    if a and b then
+      index[a]=index[a] or {}
+      index[a][#index[a]+1]=edge
+      if b~=a then
+        index[b]=index[b] or {}
+        index[b][#index[b]+1]=edge
+      end
+    end
+  end
+  connections_by_world=index
+  return index
+end
 local function connected_routes(force,id,show_locked)
   local results={}
-  for _,edge in pairs(prototypes.space_connection or {}) do
+  for _,edge in ipairs(connection_index()[id] or {}) do
     local a,b=edge.from and edge.from.name,edge.to and edge.to.name
     local other=a==id and b or b==id and a or nil
     local location=other and prototypes.space_location[other]
