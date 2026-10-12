@@ -35,7 +35,23 @@ rawset(_G,"PlanetsLib",{extend=function(_,locations)
   end
 end})
 require("prototypes.system.asteroid_belts")
-check(#moves == 4, "Exactly four belt rims should exist")
+check(#moves == 6, "All six original Razi belt rims should exist")
+for _,side in ipairs({"inner","outer"}) do
+  local name="asteroid-belt-"..side.."-edge"
+  local loc=raw["space-location"][name]
+  check(loc and loc.orbit.parent.name=="vibrant",
+    "Vibrant's legacy rim IDs must now be Razi-owned")
+  check(#loc.asteroid_spawn_definitions==3,
+    "Vibrant rims should be resource-rich")
+end
+local crossing=raw["space-connection"] and
+  raw["space-connection"]["asteroid-belt-inner-edge-asteroid-belt-outer-edge"]
+check(crossing and crossing.length==5000
+  and crossing.from=="asteroid-belt-inner-edge"
+  and crossing.to=="asteroid-belt-outer-edge",
+  "Razi's physically traversable Vibrant crossing is missing")
+check(crossing.icon and crossing.asteroid_spawn_definitions,
+  "Vibrant core lacks its own hazard profile or route icon")
 for _, parent in ipairs({"vespera","umbra"}) do
   for _, side in ipairs({"inner","outer"}) do
     local loc=raw["space-location"]["razi-"..parent.."-belt-"..side]
@@ -47,6 +63,12 @@ for _, parent in ipairs({"vespera","umbra"}) do
   end
 end
 require("prototypes.technology.asteroid_belts")
+local legacy_tech=raw.technology["space-discovery-asteroid-belt"]
+check(legacy_tech and legacy_tech.prerequisites[1]=="planet-discovery-ribbonia",
+  "Vibrant belt survey must be gated by earlier Ribbonia research")
+check(legacy_tech.effects[1].space_location=="asteroid-belt-inner-edge"
+  and legacy_tech.effects[2].space_location=="asteroid-belt-outer-edge",
+  "Legacy survey ID must unlock both Razi-owned rims")
 local survey_science = {
   vespera = {"solaris-tech-card", "nyxaris-tech-card"},
   umbra = {"vibrant-tech-card", "vespera-tech-card"}

@@ -165,3 +165,13 @@ Deep Space to the north and Bellicos beyond it. Treat the required
 Vibrant sun asteroid ring as a distinct midgame hazard landmark, not
 something every new player sees circling Nauvis. Avoid additional direct
 outer-system routes that would bypass the native asteroid crossing.
+
+## First-party asteroid frontier (2.1.14)
+
+Razi now replaces the required upstream AsteroidBelt with three Razi-owned
+physical crossings: Vibrant, Vespera and Umbra. The original Vibrant waypoint
+and research names remain for save migration; the surrounding ring uses
+existing Razi textures rather than external art. Four longer routes also have
+concentrated midroute asteroid fields and dim decorative field markers.
+See [ASTEROID_ROUTES.md](ASTEROID_ROUTES.md) for the current implementation;
+earlier references in this file to source-owned AsteroidBelt are historical.

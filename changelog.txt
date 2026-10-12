@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.14
+Date: 13. 10. 2026
+  Asteroid Frontier:
+    - Replace the required AsteroidBelt mod with an original Razi-authored Vibrant belt, retaining legacy rim, connection and survey technology identifiers to support existing-save migration.
+    - Keep the 5,000 km mandatory Vibrant crossing and existing 6,500 km Vespera and 8,000 km Umbra belts; all three have first-party resource-rich rims, travel hazards and research gates.
+    - Add four corridor-local asteroid fields with stronger midpoint encounters and gradual approach/departure probability curves, without new routes or simulation-tick work.
+    - Preserve third-party asteroid species, custom resource spawn data, vanilla asteroid size caps and route-bypass protections.
+    - Add restrained, first-party debris field art on existing real route-guide masks; preserve the current starmap styles and avoid extra textures.
+    - Update source ownership, map documentation, and Lua regression checks.
+  Migration:
+    - AsteroidBelt is now an incompatible external dependency. Back up saves before disabling it.
+    - In-game migration and full-modpack tests remain necessary, particularly for old ship schedules, source mod compatibility and crossing progression.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.13
 Date: 13. 10. 2026
   Galactic scenery:

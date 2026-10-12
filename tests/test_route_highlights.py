@@ -65,6 +65,8 @@ class RouteHighlightTests(unittest.TestCase):
         self.assertIn('layer(4.084,clear and .075 or .032)',module)
         self.assertIn('layer(4.029,clear and .19 or .10)',module)
         self.assertIn('not existing[guide.filename]',module)
+        self.assertIn('M.field_marker(guide,mode)',module)
+        self.assertIn('rift-deep-space.png',module)
         self.assertIn('math.abs(p[1]-guide.start[1])<1.5',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('connection.length=',module)

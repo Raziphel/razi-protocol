@@ -24,6 +24,7 @@ local presets = {
   outer_void={"gleba_aquilo",1.34,"fulgora_aquilo","carbonic"},
   outer_void_deep={"gleba_aquilo",1.42,"fulgora_aquilo","carbonic"},
   deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"},
+  belt_vibrant_crossing={"gleba_aquilo",1.32,"fulgora_aquilo","metallic"},
   belt_vespera_approach={"gleba_aquilo",1.20,"fulgora_aquilo","oxide"},
   belt_vespera_crossing={"gleba_aquilo",1.48,"fulgora_aquilo","oxide"},
   belt_vespera_departure={"gleba_aquilo",1.19,"fulgora_aquilo","oxide"},
@@ -46,6 +47,7 @@ local size_tiers = {
   outer_industry="outer", outer_void="outer",
   outer_industry_deep="outer_deep", outer_void_deep="outer_deep",
   deep_edge="edge",
+  belt_vibrant_crossing="belt_middle",
   belt_vespera_approach="middle_deep",
   belt_vespera_crossing="belt_middle",
   belt_vespera_departure="middle_deep",
@@ -110,6 +112,7 @@ end
 -- Vanilla asteroid models are introduced explicitly only at the two
 -- designated belt crossings, guarded by the actual installed prototypes.
 local belt_escalations = {
+  belt_vibrant_crossing={big=0.0035},
   belt_vespera_crossing={big=0.007},
   belt_umbra_crossing={big=0.010, huge=0.0008}
 }
@@ -208,6 +211,69 @@ function M.apply(route, profile)
   end
   done[route] = true
 end
+-- Static asteroid fields spike in the MIDSECTION of selected routes.
+-- These data-stage knots preserve source-owned custom asteroid species.
+local field_done=setmetatable({}, {__mode="k"})
+local function sample(points,distance)
+  local ordered={}
+  for _,point in ipairs(points) do
+    if type(point.distance)=="number"
+      and type(point.probability)=="number" then
+      ordered[#ordered+1]=point
+    end
+  end
+  table.sort(ordered,function(a,b) return a.distance<b.distance end)
+  if #ordered==0 then return nil,nil end
+  if distance<=ordered[1].distance then
+    return ordered[1].probability,ordered[1].speed
+  end
+  for i=2,#ordered do
+    local a,b=ordered[i-1],ordered[i]
+    if distance<=b.distance then
+      local span=b.distance-a.distance
+      local t=span>0 and (distance-a.distance)/span or 0
+      return a.probability+(b.probability-a.probability)*t,
+        (a.speed or 0.015)+((b.speed or 0.015)-(a.speed or 0.015))*t
+    end
+  end
+  return ordered[#ordered].probability,ordered[#ordered].speed
+end
+function M.apply_field(route,multiplier)
+  if not route or field_done[route] then return end
+  field_done[route]=true
+  if type(multiplier)~="number" or multiplier<=1 then return end
+  for i,def in ipairs(route.asteroid_spawn_definitions or {}) do
+    local size=vanilla_sizes[def.asteroid]
+    local points=def.spawn_points or {}
+    if size and #points>0 then
+      local original=copy(points)
+      local result={}
+      for _,point in ipairs(original) do
+        if type(point.distance)=="number"
+          and (point.distance<0.30 or point.distance>0.70) then
+          result[#result+1]=point
+        end
+      end
+      for _,knot in ipairs({
+        {0.30,1},{0.40,1+(multiplier-1)*0.6},
+        {0.50,multiplier},{0.60,1+(multiplier-1)*0.6},{0.70,1}
+      }) do
+        local probability,speed=sample(original,knot[1])
+        if probability and speed and speed>0 then
+          result[#result+1]={distance=knot[1],
+            probability=math.max(0,probability*knot[2]),speed=speed}
+        end
+      end
+      if #result>0 then
+        table.sort(result,function(a,b) return a.distance<b.distance end)
+        local edited=copy(def)
+        edited.spawn_points=result
+        route.asteroid_spawn_definitions[i]=edited
+      end
+    end
+  end
+end
+
 function M.preserve_custom(target, duplicate)
   local incoming = duplicate.asteroid_spawn_definitions or {}
   if #incoming == 0 then return end

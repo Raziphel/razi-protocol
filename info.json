@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.13",
+  "version": "2.1.14",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -11,7 +11,8 @@
     "space-age >= 2.1.20",
     "razi_lib >= 1.0.0",
     "PlanetsLib >= 2.0.9",
-    "AsteroidBelt >= 1.2.11",
+    "! AsteroidBelt",
+    "! kry-asteroid-belt",
     "bellicos-and-aegis >= 0.4.0",
     "Krastorio2-spaced-out >= 2.0.17",
     "slp-dyson-sphere-reworked-fork >= 1.0.5",

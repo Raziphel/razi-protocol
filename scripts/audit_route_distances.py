@@ -158,7 +158,7 @@ def audit(raw):
         ("paracelsin","asteroid-belt-inner-edge"),
     ):
         if key(a,b) in links:
-            issues.add(f"AsteroidBelt physical bypass: {a} <-> {b}")
+            issues.add(f"Razi metallic belt physical bypass: {a} <-> {b}")
     native=links.get(key("asteroid-belt-inner-edge","asteroid-belt-outer-edge"))
     if native and native[0][1].get("length")!=5000:
         issues.add("Original native AsteroidBelt crossing changed")

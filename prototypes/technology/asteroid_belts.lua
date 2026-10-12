@@ -4,6 +4,21 @@
 -- worlds beyond its own belt crossing (Rubia/Maraxsis and Vesta).
 data:extend({
   {
+    -- Reuse former AsteroidBelt research identifier for save continuity.
+    type="technology",name="space-discovery-asteroid-belt",
+    localised_name={"technology-name.space-discovery-asteroid-belt"},
+    localised_description={"technology-description.space-discovery-asteroid-belt"},
+    icon="__space-age__/graphics/icons/solar-system-edge.png",
+    icon_size=64,essential=true,order="ec[vibrant]-b[belt]",
+    prerequisites={"planet-discovery-ribbonia"},
+    unit={count=1000,time=45,
+      ingredients={{"solaris-tech-card",1},{"nyxaris-tech-card",1}}},
+    effects={
+      {type="unlock-space-location",space_location="asteroid-belt-inner-edge"},
+      {type="unlock-space-location",space_location="asteroid-belt-outer-edge"}
+    }
+  },
+  {
     type="technology", name="razi-vespera-belt-survey",
     localised_name={"technology-name.razi-vespera-belt-survey"},
     icon="__space-age__/graphics/icons/solar-system-edge.png",

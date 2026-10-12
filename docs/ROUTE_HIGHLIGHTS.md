@@ -51,3 +51,10 @@ The pass is idempotent by guide filename and still skips missing, moved,
 or unsupported curved routes. At most 42 route layers are composed from
 the 14 existing masks (rather than 28 before). There are no per-tick
 animations, rebuilt render objects, new routes, or extra textures.
+
+## In-transit asteroid field ornaments
+
+Four existing route guides now have faint native Razi debris or gravity-lens
+sprites centered at their real midpoints to indicate concentrated asteroid
+spawn windows. These visuals do not create additional connections, consume
+new textures, or execute on simulation ticks.
