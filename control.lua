@@ -112,12 +112,19 @@ end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
-script.on_init(check_existing_transceivers)
+local journal = require("scripts.journal")
+
+script.on_init(function()
+	check_existing_transceivers()
+	journal.on_init()
+end)
 script.on_configuration_changed(function()
 	check_existing_transceivers()
 	repair_nexus_technology_visibility()
+	journal.on_configuration_changed()
 end)
 script.on_nth_tick(600, check_existing_transceivers)
+journal.register_events()
 script.on_event({
 	defines.events.on_built_entity,
 	defines.events.on_robot_built_entity,
