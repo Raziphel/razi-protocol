@@ -431,3 +431,14 @@ corridors include concentrated midroute asteroid fields, with corresponding
 faint starmap details. The legacy Vibrant rim names and survey technology are
 retained for save migration. **Back up older saves and disable AsteroidBelt**
 before upgrading. See [Asteroid Routes](docs/ASTEROID_ROUTES.md).
+
+## Discord Rich Presence (optional)
+
+Razi Protocol Dev can now show the actual Expedition Journal chapter,
+pinned or active quest, campaign progress and optional planet/platform
+location on a custom **Playing Razi Protocol** Discord card. Per-player
+sharing is **off by default**. A small original Node.js desktop helper
+reads the local exported state and connects to Discord. No bot or
+in-game HTTP traffic. See
+[Discord Presence setup](docs/DISCORD_PRESENCE.md) for the required
+Discord application ID, desktop helper and preview commands.

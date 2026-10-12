@@ -1,5 +1,6 @@
 local galactic_operations = require("scripts.galactic_operations")
 local razi_journal = require("scripts.razi_journal")
+local razi_discord_presence = require("scripts.razi_discord_presence")
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local nexus_visibility_technologies = {
@@ -135,6 +136,13 @@ script.on_configuration_changed(function(event)
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
 end)
+-- Export at most once per 15 game seconds; disabled players do no work.
+script.on_nth_tick(900, razi_discord_presence.write)
+script.on_event(defines.events.on_string_translated,
+  razi_discord_presence.on_string_translated)
+script.on_event(defines.events.on_runtime_mod_setting_changed,
+  razi_discord_presence.on_setting_changed)
+
 script.on_nth_tick(600, function()
   check_existing_transceivers()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
@@ -206,4 +214,5 @@ end)
 script.on_event(defines.events.on_player_removed,function(event)
   galactic_operations.on_removed(event)
   razi_journal.on_removed(event.player_index)
+  razi_discord_presence.on_player_removed(event)
 end)

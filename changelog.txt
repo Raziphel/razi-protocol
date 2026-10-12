@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.15
+Date: 13. 10. 2026
+  Discord Rich Presence:
+    - Introduce an original opt-in Expedition Journal presence exporter with real chapter, quest, completion, location and session-time data.
+    - Use native localized Journal chapters and quest titles, respecting the pinned objective, current active selection, or next actionable milestone.
+    - Export at most once every 900 ticks using Factorio's local per-player script-output API, without runtime network access or extra GUI refreshes.
+    - Add a tiny dependency-free Node.js Discord IPC companion, offline preview mode, stale state handling, and 15-second update limits.
+    - Add independent per-player sharing controls for quest and location, disabled-by-default opt-in, documentation and regression fixtures.
+    - A Discord developer Application ID and running desktop Discord client are needed; in-game Discord connectivity remains untested until desktop integration.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.14
 Date: 13. 10. 2026
   Asteroid Frontier:

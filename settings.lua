@@ -77,3 +77,23 @@ data:extend({
     order="cb[starmap]-e[chart]"
   }
 })
+
+-- DISCORD PRESENCE / LOCAL COMPANION. Per-user, opt-in and runtime-only.
+-- A separate desktop app reads only the consenting player's local JSON file.
+data:extend({
+  {
+    type="bool-setting",name="razi-discord-presence-enabled",
+    setting_type="runtime-per-user",default_value=false,
+    order="da[presence]-a[opt-in]"
+  },
+  {
+    type="bool-setting",name="razi-discord-presence-show-quest",
+    setting_type="runtime-per-user",default_value=true,
+    order="da[presence]-b[quest]"
+  },
+  {
+    type="bool-setting",name="razi-discord-presence-show-location",
+    setting_type="runtime-per-user",default_value=true,
+    order="da[presence]-c[location]"
+  }
+})
