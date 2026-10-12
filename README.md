@@ -36,14 +36,17 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 Razi Protocol includes an in-game **Expedition Chronicle**, opened from its own **Expedition Chronicle** button at the top of the game screen. It is a story-driven journal, not a parallel set of unlocks. Its missions follow the actual Space Age and K2SO research milestones from the opening rocket all the way through activating the intergalactic transceiver.
 
 - Six ordered chapters: **Calidus**, **Solaris**, **Nyxaris**, **Vibrant**, **Beetlejuice** and **Deep Space**.
-- More than fifty story missions covering planetary discoveries, science breakthroughs, installed-system branches and the final singularity sequence.
+- **84 story missions**: 52 technology milestones, 24 first-landing missions and 8 interplanetary research projects. Planetary arrival quests only appear when the planet and its discovery technology are installed.
 - Chapter introductions and epilogues tell a continuous expedition story. Optional-mod missions appear only when their technology exists. Branch labels do not promise that installed mods have no research prerequisites: the real technology tree remains authoritative.
 - Quest and chapter status comes from the force's research progress. The journal adds **no new research locks**, completion rewards or planet-access shortcuts.
+- **Cross-planet projects** check several researched technologies across different worlds, show the required research and progress count, and give the expedition a narrative reason to combine its discoveries. Missing optional technologies are skipped, and a project needs at least two real technologies to appear.
+- **First landfalls** record the first time a player physically reaches a planet surface, separately from the planet's discovery research. Arrival events are shared with the force and survive save/reload and force merges. Existing saves cannot reconstruct where someone landed before tracking began.
+- The journal includes a **Refresh** button so players can update live durations without the interface constantly rebuilding and jumping to the top while they read.
 - A saved first-reached tick and first-completed tick for each quest and chapter, with **time to reach**, **time to beat** and live progress durations displayed as HH:MM:SS of simulation time.
 - A **shared force record** for multiplayer. Timings are persisted in the map save, including across reconnects and reloads. There is no background or real-world-clock timer.
 - In an existing save, previously completed research is recognised, but earlier completion timestamps cannot be reconstructed. Such entries honestly show **historical time unavailable**. Timers that start after adding the journal are clearly marked as partial.
 
-A chapter finishes when its final research gate is completed. As a result, optional research branches remain visible without the journal independently blocking the next chapter.
+A chapter finishes when its final research gate is completed. Landing expeditions and cross-planet research projects are additional campaign objectives, not invisible requirements for travel. They can be completed after a chapter's main story ends. In this pass there are **no changes to item recipes, research dependencies or planet access**; the additional integrations are story, exploration and research tracking.
 
 ## Campaign Structure
 
