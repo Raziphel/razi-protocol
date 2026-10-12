@@ -17,3 +17,4 @@ require "prototypes.technology.asteroid_belts"
 
 require("prototypes.ui.galactic_operations")
 require("prototypes.ui.dyson_stages")
+require("prototypes.ui.razi_journal")
