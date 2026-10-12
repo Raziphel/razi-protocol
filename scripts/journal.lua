@@ -7,6 +7,7 @@ local ROOT = "razi_protocol_chronicle"
 local TOGGLE = "razi_chronicle_toggle"
 local WINDOW = "razi_chronicle_window"
 local CLOSE = "razi_chronicle_close"
+local REFRESH = "razi_chronicle_refresh"
 local CHAPTER_PREFIX = "razi_chronicle_chapter_"
 
 local function database()
@@ -400,6 +401,7 @@ local function open_window(player)
   drag.style.horizontally_stretchable = true
   drag.style.height = 28
   drag.drag_target = frame
+  header.add{type = "button", name = REFRESH, caption = "Refresh", tooltip = "Update timers and mission progress"}
   header.add{type = "button", name = CLOSE, caption = "X", tooltip = "Close chronicle"}
   local columns = frame.add{
     type = "flow",
@@ -515,6 +517,12 @@ function journal.register_events()
     sync_force(event.destination, false)
     refresh_force(event.destination)
   end)
+  script.on_event(defines.events.on_research_started, function(event)
+    -- An explicit start captures the beginning of very short techs that can
+    -- otherwise finish between five-second polling passes.
+    local force = event.research and event.research.force
+    if force and sync_force(force, false) then refresh_force(force) end
+  end)
   script.on_event(defines.events.on_research_finished, function(event)
     local force = event.research and event.research.force
     if force and sync_force(force, false) then refresh_force(force) end
@@ -528,6 +536,9 @@ function journal.register_events()
       open_window(player)
     elseif element.name == CLOSE then
       close_window(player)
+    elseif element.name == REFRESH then
+      sync_force(player.force, false)
+      render(player)
     elseif string.sub(element.name, 1, #CHAPTER_PREFIX) == CHAPTER_PREFIX then
       local id = string.sub(element.name, #CHAPTER_PREFIX + 1)
       for _, chapter in ipairs(story) do
@@ -550,14 +561,9 @@ function journal.register_events()
   -- unlocks and the special build-triggered transceiver research.
   script.on_nth_tick(300, function()
     for _, force in pairs(game.forces) do
-      if sync_force(force, false) then
-        refresh_force(force)
-      elseif game.tick % 600 == 0 then
-        -- Live timers in open windows, without rendering every tick.
-        for _, player in pairs(force.connected_players) do
-          if player.gui.screen[WINDOW] then render(player) end
-        end
-      end
+      -- Only rebuild windows when progress changes. A timed full rerender
+      -- resets long chapter scroll positions, so the Refresh button is manual.
+      if sync_force(force, false) then refresh_force(force) end
     end
   end)
 end
