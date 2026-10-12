@@ -64,6 +64,7 @@ return {
     quests = {
       {tech="planet-discovery-apia-carnova", title="The Carnova Frontier", story="Follow the strange biological signatures of Apia Carnova and recover its first practical lessons."},
       {tech="planet-discovery-moshine", title="Storm Logic", story="Moshine's changing conditions demand more than brute-force engineering. Find the science inside the storm."},
+      {tech="razi-calidus-research-exchange", title="The Homeworld Exchange", side=true, story="Return Solaris' compression and Corrundum's electrochemistry to Calidus. Integrate both industries into more efficient Calidus Tech Card production."},
       {tech="planet-discovery-pelagos", title="The Pelagos Current", side=true, story="An oceanic research corridor adds another way to understand hostile, moving environments."},
       {tech="panglia_planet_discovery_panglia", title="Panglia's Warning", story="The frontier is alive, and not always welcoming. Adapt the expedition to a world that pushes back."},
       {id="nyxaris-moshine-landing", planet="moshine", after="planet-discovery-moshine", title="Moshine Field Study", story="Reach Moshine and observe how the environment transforms an industrial blueprint."},
@@ -87,6 +88,7 @@ return {
     outro = "Exotic science has become a working discipline. It points past the bright frontier to the outer systems, where endurance will be the next test.",
     quests = {
       {tech="planet-discovery-ribbonia", title="The Ribbonia Anomaly", story="Our first exotic signatures lead to Ribbonia. Theories that worked in Solaris begin to fail."},
+      {tech="razi-solaris-research-exchange", title="Science Between Frontiers", side=true, story="The thermodynamic discoveries of Moshine and the biology of Apia now reinforce Solaris' older industrial research, rather than replacing it."},
       {tech="planet-discovery-paracelsin", title="The Alchemical Route", story="Paracelsin turns unusual chemistry into a repeatable process, connecting strange discoveries to industry."},
       {tech="planet-discovery-shchierbin", title="The Shchierbin Branch", story="A specialised offshoot from Paracelsin extends the frontier's chemical possibilities."},
       {tech="planet-discovery-muria", title="Muria's New Materials", story="A second branch proves that the exotic sciences are not a single isolated trick."},
@@ -114,8 +116,10 @@ return {
     outro = "The outer system has given us the means to leave familiar space. Beyond the edge, the signal becomes both clearer and more dangerous.",
     quests = {
       {tech="planet-discovery-cubium", title="Cubium's Puzzle", story="The first outer-system industries reward careful automation rather than raw scale."},
+      {tech="razi-nyxaris-research-exchange", title="Exotic Adaptation Exchange", side=true, story="Bring Ribbonia's alien science and Rubia's biological fusion techniques back to Nyxaris' research lines."},
       {tech="linox-technology_planet-discovery-linox", title="The Linox Spur", side=true, story="A Cubium-linked side route makes use of materials the main expedition now knows how to handle."},
       {tech="planet-discovery-tenebris", title="Into Tenebris", story="Enter the dark frontier and learn how to keep a factory alive without familiar conditions."},
+      {tech="razi-vibrant-research-exchange", title="Into the Great Exchange", side=true, story="Link Tenebris' bioluminescence with Cubium's gas manipulation so Vibrant's earlier exotic sciences can be manufactured efficiently at scale."},
       {tech="planet-discovery-crucible", title="The Crucible Test", story="The industrial journey reaches a world where survival and production become the same problem."},
       {tech="planet-discovery-vesta", title="The Furnace Beyond", story="Vesta pushes the hazard curve farther outward, where the tools of earlier chapters finally earn their keep."},
       {tech="planet-discovery-secretas", title="Secrets of the Outer Route", story="Follow the Cubium branch to Secretas and gather the insight hidden along its unusual path."},
@@ -149,6 +153,7 @@ return {
       {tech="black-hole-discovery", title="Beyond the Horizon", side=true, story="A further optional deep-space investigation approaches the black-hole system."},
       {tech="kr-intergalactic-transceiver", title="A Receiver for the Impossible", story="Research the K2SO transceiver architecture. Theory alone is not yet enough to operate it."},
       {tech="razi-singularity-theory", title="Intergalactic Singularity Theory", story="Formulate a way to sustain the channel without tearing it apart."},
+      {tech="razi-beetlejuice-research-exchange", title="The Last Research Convoy", side=true, story="Join Promethium's edge-of-space discoveries with Crucible engineering. The outer-system research network becomes an intergalactic supply chain."},
       {tech="razi-singularity-test-fire", title="Test Fire", story="Prove that the theoretical channel survives a real controlled test."},
       {tech="razi-stable-intergalactic-singularity", title="Stable Singularity", story="Complete the stability research that unlocks the final construction."},
       {tech="razi-intergalactic-transceiver-signal", title="Answer the Signal", story="Activate the intergalactic transceiver. The last step is an engineered machine, not merely another research button."}

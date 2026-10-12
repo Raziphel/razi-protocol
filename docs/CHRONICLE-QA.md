@@ -39,3 +39,13 @@ These steps deliberately use manual Factorio testing so normal pushes do not con
 - Verify moving Lua modules into `scripts/chronicle/` loads without any stale `require` paths.
 - Confirm `storage.razi_protocol_chronicle` keeps existing force and player records on update.
 - Confirm the manual-only GitHub Actions check was not enabled or triggered by this release.
+
+## Cross-system research exchanges (2.1.8)
+
+1. In the intended K2SO pack, verify five Research Exchange technologies unlock at their documented later-stage research milestones.
+2. For each exchange, verify crafting three Tech Cards consumes the complete ingredients for two baseline batches **plus two additional science packs**. There must be no duplicated ingredient prototype entries.
+3. Confirm no Research Exchange is a required prerequisite for any existing planet discovery or K2SO transceiver tech.
+4. Remove optional Cerys, Dea Dia, Pelagos, Nexus packs in alternate mod configurations; the normal exchanges must stay playable and optional alternative recipes must disappear cleanly if their sciences are absent.
+5. Verify source cards can be researched in a lab accepting both the current and next system's cards. Check the Promethium branch with and without Nexus.
+6. Ensure quality modules and recycling do not create an infinite science card loop. The exchange recipes disallow productivity and auto recycling.
+7. Confirm the five new Chronicle side quests appear after their tech prototypes exist and existing saved chapter times remain intact.

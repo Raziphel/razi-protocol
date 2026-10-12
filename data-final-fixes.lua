@@ -24,6 +24,9 @@ require("prototypes.compat.logistics_cleanup").data_final_fixes()
 require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
+-- Exchange recipes consume the final card recipe ingredients. These optional
+-- upgrades must run after cards, discovery research and compatibility fixes.
+require("prototypes.compat.research_exchanges").data_final_fixes()
 
 -- Remove obsolete cross-system shortcuts that would bypass the intended
 -- chapter routes. Preserve the deliberately connected local planet branches.

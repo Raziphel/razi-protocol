@@ -38,6 +38,22 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
+## Cross-System Research Exchanges
+
+After reaching later star systems, the expedition can research **five optional Research Exchanges** that convert combinations of sciences from different planet mods into more efficient versions of existing Tech Cards. Each exchange unlocks a crafting recipe producing **three system cards** from **two complete batches** of its original ingredients plus **one additional science pack from each of two specialist planetary disciplines**. The original card recipe remains unchanged, and no new recipe is required to progress through the story.
+
+| Researched after | Exchange output | Planet-science partnership |
+| --- | --- | --- |
+| Nyxaris discovery | Calidus Tech Cards | Planetaris compression + Corrundum electrochemistry |
+| Vibrant discovery | Solaris Tech Cards | Moshine thermodynamics + Apia biological research |
+| Beetlejuice discovery | Nyxaris Tech Cards | Ribbonia alien science + Rubia biofusion |
+| Cubium and Tenebris discovery | Vibrant Tech Cards | Tenebris bioluminescence + Cubium gas manipulation |
+| Intergalactic Singularity Theory | Beetlejuice Tech Cards | Promethium + Crucible research |
+
+When their science packs exist, additional **optional research exchange recipes** bring in Cerys/Muluna, Dea Dia/Pelagos, Moshine/Dea Dia-related science, Muria/Shchierbin, and Promethium-882/Pulsar projects without blocking the base exchanges. The recipe inputs are built from the final installed card recipes, not hardcoded guesses about missing mod packs.
+
+The five exchange discoveries are also Chronicle side quests. These are **production optimizations**, not shortcuts to a new star system. More advanced discoveries feed back into early-system research, rewarding planet-to-planet supply lines.
+
 ## Expedition Chronicle
 
 Razi Protocol includes an in-game **Expedition Chronicle**, opened from its own **Expedition Chronicle** button at the top of the game screen. It is a story-driven journal, not a parallel set of unlocks. Its missions follow the actual Space Age and K2SO research milestones from the opening rocket all the way through activating the intergalactic transceiver.

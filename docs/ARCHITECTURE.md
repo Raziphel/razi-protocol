@@ -15,6 +15,7 @@ This document describes the current Factorio 2.1 structure. Dependencies in `inf
 | `prototypes/system/` | Star-system positions, planetary connections and conditional systems |
 | `prototypes/technology/` | Technology prerequisites and progression across modded systems |
 | `prototypes/compat/` | Narrow optional-mod and other prototype interoperability fixes |
+| `prototypes/compat/research_exchanges.lua` | Late-stage Tech Card manufacturing recipes and cross-system research integrations |
 | `scripts/chronicle/story.lua` | Story text and quest definitions, without gameplay side effects |
 | `scripts/chronicle/tracker.lua` | Runtime milestones, save-safe persistent progress and event wiring |
 | `scripts/chronicle/gui.lua` | Seven-tab Chronicle, per-player navigation and notifications |
@@ -29,7 +30,7 @@ This document describes the current Factorio 2.1 structure. Dependencies in `inf
 
 `data.lua` loads systems, K2SO setup and technology modules.
 `data-updates.lua` handles early third-party interoperability.
-`data-final-fixes.lua` must continue to apply lab cards **before** the final technology progression pass, and must preserve compatibility modules' ordering. The final lab-input deduplication intentionally runs after all those passes.
+`data-final-fixes.lua` must continue to apply lab cards **before** the final technology progression pass, and must preserve compatibility modules' ordering. The final lab-input deduplication intentionally runs after all those passes. Research exchanges are defined after the base card recipes and compatibility passes, then the lab-input deduplication completes. They use the final Tech Card recipe inputs and do not rewrite the original recipes.
 
 Do not consolidate or reorder the `prototypes/compat/` modules just for tidiness. Their order reflects third-party prototype availability and historical compatibility fixes.
 

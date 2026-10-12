@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.8
+Date: 12. 10. 2026
+  Features:
+    - Added five optional cross-system Research Exchanges that give real productivity benefits for trading planetary science between existing modded systems.
+    - Added alternative exchange manufacturing recipes for installed lunar, oceanic, chemical and deep-space science branches.
+    - Added five Chronicle side quests that follow the late-game research exchanges.
+    - Built recipe requirements from actual installed Tech Card ingredients, maintaining normal recipes and mod-specific science.
+
+  Compatibility:
+    - Exchanges only load when their source tech card, later research prerequisites and two required specialist science packs exist.
+    - Exchange recipes do not auto-recycle or gain additional productivity, and never alter existing technology prerequisites or space routes.
+    - All optional science branches remain alternatives, not new progression requirements.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.7
 Date: 12. 10. 2026
   Changes:
