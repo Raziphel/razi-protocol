@@ -34,6 +34,12 @@ jobs:
         run: lua5.2 tests/lua/test_settings_presentation.lua
       - name: Check Lua compatibility guards
         run: lua5.2 tests/lua/test_compat.lua
+      - name: Check Expedition Journal progress and scripted-research safety
+        run: lua5.2 tests/lua/test_razi_journal.lua
+      - name: Check Journal layout without rendering Factorio
+        run: lua5.2 tests/lua/test_razi_journal_layout.lua
+      - name: Verify Journal translations and responsive UI contract
+        run: python -m unittest tests/test_razi_journal.py
       - name: Check seven-system galaxy and research fixtures
         run: lua5.2 tests/lua/test_galaxy.lua
       - name: Check required route icons and external icon preservation

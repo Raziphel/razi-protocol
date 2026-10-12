@@ -69,6 +69,29 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertNotIn("surface.create_entity",source)
         self.assertNotIn("force.technologies[quest.tech].researched=",source)
         self.assertNotIn("player.insert(",source)
+    def test_responsive_reader_without_horizontal_scrollbars(self):
+        ui=read("scripts/razi_journal.lua")
+        control=read("control.lua")
+        loc=read("locale/en/razi_journal.cfg")
+        self.assertIn('function M.layout(resolution,scale)',ui)
+        self.assertIn('horizontal_scroll_policy="never"',ui)
+        self.assertIn('vertical_scroll_policy="dont-show-but-allow-scrolling"',ui)
+        self.assertIn('pane.style.horizontally_squashable=true',ui)
+        self.assertIn('element.style.maximal_width=width',ui)
+        self.assertIn('choice.style.single_line=false',ui)
+        self.assertIn('name="razi_journal_chapter_picker"',ui)
+        self.assertIn('function M.selection_changed(event)',ui)
+        self.assertIn('razi_journal.selection_changed(event)',control)
+        self.assertIn('tags={razi_journal_action="select",id=quest.id}',ui)
+        self.assertIn('style="inside_shallow_frame_with_padding"',ui)
+        for key in ("navigator-title","archive-navigator","chapter-context",
+                    "completion-heading","ready-heading","next-in-chapter",
+                    "footer-hint","header-eyebrow"):
+            self.assertRegex(loc,r"(?m)^"+key+r"=")
+        self.assertNotIn("left.style.maximal_width=330",ui)
+        self.assertNotIn("math.min(960",ui)
+        self.assertNotIn('vertical_scroll_policy="always"',ui)
+
     def test_visible_during_normal_play_not_shortcut_bar(self):
         control=read("control.lua")
         ui=read("scripts/razi_journal.lua")

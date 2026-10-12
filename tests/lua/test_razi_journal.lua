@@ -30,6 +30,23 @@ for _,q in ipairs(defs.quests) do
       prototype={hidden=false},localised_name=q.tech}
   end
 end
+-- Column budgets remain inside the game display at different UI scales.
+for _,screen in ipairs({
+  {width=1920,height=1080,scale=1},
+  {width=1920,height=1080,scale=1.25},
+  {width=1600,height=900,scale=1.5},
+  {width=1280,height=720,scale=1},
+  {width=1024,height=768,scale=1},
+}) do
+  local d=M.layout(screen,screen.scale)
+  check(d.width <= math.max(420,math.floor(screen.width/screen.scale)-52),
+    "Journal window exceeds the player's display")
+  check(d.rail+d.reader+43==d.width,
+    "Journal reading columns have a broken width budget")
+  check(d.body>0 and d.body<d.height,
+    "Journal needs positive content height")
+  check(d.reader>=190,"Journal reading width is too narrow")
+end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
 check(start==0 and total==186-15-9 and active>=1,

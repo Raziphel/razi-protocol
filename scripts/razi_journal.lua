@@ -143,14 +143,67 @@ function M.show_in_filter(force,quest,filter,context)
   if filter=="done" then return state=="complete" end
   return true
 end
+-- Dimensions are in Factorio GUI units, after the player's UI scale.
+-- Explicitly budget both columns to prevent the horizontal scroll bars
+-- caused by oversized localized labels and autosizing buttons.
+function M.layout(resolution,scale)
+  scale=math.max(0.5,scale or 1)
+  local screen_w=math.floor((resolution and resolution.width or 1600)/scale)
+  local screen_h=math.floor((resolution and resolution.height or 900)/scale)
+  local width=math.min(1370,math.max(420,screen_w-52))
+  local height=math.min(930,math.max(390,screen_h-64))
+  local compact=width<1020 or height<660
+  local rail=math.min(compact and 335 or 425,
+    math.max(235,math.floor(width*(compact and .33 or .32))))
+  local reader=width-rail-43
+  return {width=width,height=height,rail=rail,reader=reader,
+    body=math.max(200,height-(compact and 230 or 284)),
+    compact=compact}
+end
 local function label(parent,caption)
   return parent.add{type="label",caption=caption}
 end
-local function wrap(parent,caption)
+local function wrap(parent,caption,width)
   local element=label(parent,caption)
   element.style.single_line=false
   element.style.horizontally_stretchable=true
+  if width then element.style.maximal_width=width end
   return element
+end
+local function tint(element,color)
+  element.style.font_color=color
+  return element
+end
+local function subtitle(parent,key,width)
+  local item=label(parent,L(key))
+  item.style.font="default-bold"
+  item.style.font_color={r=.84,g=.69,b=.46}
+  if width then item.style.maximal_width=width end
+  return item
+end
+local function section(parent,key,caption,width)
+  local block=parent.add{type="flow",direction="vertical"}
+  block.style.horizontally_stretchable=true
+  block.style.vertical_spacing=5
+  subtitle(block,key,width)
+  if caption then wrap(block,caption,width) end
+  return block
+end
+local function wheel_pane(parent,name,width,height)
+  local pane=parent.add{type="scroll-pane",name=name,
+    horizontal_scroll_policy="never",
+    vertical_scroll_policy="dont-show-but-allow-scrolling"}
+  pane.style.width=width
+  pane.style.height=math.max(120,height)
+  pane.style.horizontally_squashable=true
+  pane.style.vertically_squashable=true
+  return pane
+end
+local function chapter_index(id)
+  for i,chapter in ipairs(defs.chapters) do
+    if chapter.id==id then return i end
+  end
+  return 1
 end
 local function select_quest(force,p,context)
   local selected=p.selected and defs.by_id[p.selected]
@@ -190,40 +243,61 @@ local function render_tracker(player)
       and "tracker-done" or "tracker-pending")))
 end
 M.render_tracker=render_tracker
-local function render_details(parent,player,quest,p,context)
+local function render_details(parent,player,quest,p,context,size)
   local panel=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
-  panel.style.horizontally_stretchable=true
-  panel.style.vertically_stretchable=true
-  local title=label(panel,{"journal-title."..quest.id})
+    style="inside_shallow_frame_with_padding"}
+  panel.style.width=size.reader
+  panel.style.height=size.body
+  local inner=size.reader-38
+  local status=M.state(player.force,quest,context)
+
+  local eyebrow=panel.add{type="flow",direction="horizontal"}
+  eyebrow.style.horizontally_stretchable=true
+  local sequence=label(eyebrow,L("entry-number",tostring(chapter_index(quest.chapter))))
+  sequence.style.font="default-bold"
+  tint(sequence,palette[quest.chapter] or palette.calidus)
+  local status_label=label(eyebrow,L("status-"..status))
+  status_label.style.font="default-bold"
+  local title=wrap(panel,{"journal-title."..quest.id},inner)
   title.style.font="heading-2"
-  label(panel,L("status-"..M.state(player.force,quest,context)))
-  local objective_bar=panel.add{type="progressbar",
-    value=M.complete(player.force,quest,context) and 1 or 0}
-  objective_bar.style.horizontally_stretchable=true
-  local scroll=panel.add{type="scroll-pane",direction="vertical"}
-  scroll.style.horizontally_stretchable=true
-  scroll.style.vertically_stretchable=true
-  local chapter_intro=label(scroll,{"journal-chapter."..quest.chapter})
+  local chapter_intro=label(panel,{"journal-chapter."..quest.chapter})
   chapter_intro.style.font="default-bold"
   chapter_intro.style.font_color=palette[quest.chapter] or palette.calidus
-  wrap(scroll,{"journal-chapter-story."..quest.chapter})
-  local section=label(scroll,L("story-heading"))
-  section.style.font="default-bold"
-  wrap(scroll,{"journal-story."..quest.id})
-  local objective=label(scroll,L("objective-heading"))
-  objective.style.font="default-bold"
+  local objective_bar=panel.add{type="progressbar",
+    value=status=="complete" and 1 or 0}
+  objective_bar.style.width=inner
+  objective_bar.style.height=9
+
+  local content_height=size.body-(size.compact and 188 or 197)
+  local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
+  local text_width=inner-18
+  local prose=scroll.add{type="flow",direction="vertical"}
+  prose.style.width=text_width
+  prose.style.vertical_spacing=17
+  section(prose,"chapter-context",
+    {"journal-chapter-story."..quest.chapter},text_width)
+  section(prose,"story-heading",{"journal-story."..quest.id},text_width)
+
+  local objective=prose.add{type="frame",direction="vertical",
+    style="inside_deep_frame"}
+  objective.style.width=text_width
+  objective.style.padding=10
+  subtitle(objective,"objective-heading",text_width-26)
   local native=technology(player.force,quest,context)
   if quest.boss then
-    label(scroll,{"",L("objective-boss")," ",
-      {"nexus-bosses.boss-"..quest.boss}})
+    wrap(objective,{"",L("objective-boss")," ",
+      {"nexus-bosses.boss-"..quest.boss}},text_width-26)
     local record=context.nexus
     if record then
-      label(scroll,L("nexus-victories",tostring(record.count),tostring(record.total)))
+      tint(label(objective,L("nexus-victories",
+        tostring(record.count),tostring(record.total))),
+        {r=.55,g=.87,b=.75})
     end
   else
-    label(scroll,{"",L(quest.world and "objective-discovery" or "objective-research",
-      native and native.localised_name or quest.world or quest.tech)})
+    wrap(objective,{"",L(quest.world and "objective-discovery"
+      or "objective-research",
+      native and native.localised_name or quest.world or quest.tech)},
+      text_width-26)
   end
   if native and not native.researched then
     local blockers={}
@@ -232,46 +306,69 @@ local function render_details(parent,player,quest,p,context)
     end
     table.sort(blockers,function(a,b) return a.name<b.name end)
     for i=1,math.min(4,#blockers) do
-      label(scroll,{"",L("native-prerequisite")," ",
-        blockers[i].localised_name})
+      wrap(objective,{"",L("native-prerequisite")," ",
+        blockers[i].localised_name},text_width-26)
     end
   end
-  if not M.complete(player.force,quest,context) then
+  if status~="complete" then
     for _,required in ipairs(quest.requires or {}) do
       local prior=defs.by_id[required]
       if prior and M.available(player.force,prior,context)
         and not M.complete(player.force,prior,context) then
-        label(scroll,{"",L("requires-heading")," ",
-          {"journal-title."..prior.id}})
+        wrap(objective,{"",L("requires-heading")," ",
+          {"journal-title."..prior.id}},text_width-26)
       end
     end
   end
-  local notes=label(scroll,L("tip-heading"))
-  notes.style.font="default-bold"
-  wrap(scroll,{"journal-tip."..quest.id})
+  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width)
   local forecast=weather.for_quest(quest)
   if forecast then
-    local climate_title=label(scroll,L("weather-heading"))
-    climate_title.style.font="default-bold"
-    wrap(scroll,{"journal-weather."..forecast.world})
-    label(scroll,L(forecast.enabled
-      and "weather-active" or "weather-inactive"))
+    local sky=section(prose,"weather-heading",
+      {"journal-weather."..forecast.world},text_width)
+    tint(wrap(sky,L(forecast.enabled and "weather-active"
+      or "weather-inactive"),text_width),
+      forecast.enabled and {r=.54,g=.85,b=.75} or {r=.72,g=.74,b=.79})
   end
+
   local actions=panel.add{type="flow",direction="horizontal"}
+  actions.style.horizontal_spacing=8
   if quest.boss then
     actions.add{type="button",caption=L("nexus-open-codex"),
       tags={razi_journal_action="nexus-codex",id=quest.boss}}
   end
   local pinned=p.tracker and p.pinned==quest.id
-  actions.add{type="button",caption=L(pinned and "tracker-hide" or "tracker-show"),
+  actions.add{type="button",caption=L(pinned
+    and "tracker-hide" or "tracker-show"),
     tags={razi_journal_action="pin",id=quest.id}}
+  actions.add{type="button",caption=L("next-in-chapter"),
+    tags={razi_journal_action="next-in-chapter"}}
 end
-local function render_chapters(parent,player,p,context)
-  local left=parent.add{type="scroll-pane",direction="vertical"}
-  left.style.minimal_width=250
-  left.style.maximal_width=330
-  left.style.vertically_stretchable=true
-  for _,chapter in ipairs(defs.chapters) do
+
+-- Wrapped, selectable labels replace the old too-wide chapter and quest
+-- buttons. One chapter jump selector covers distant chapters with no bars.
+local function render_chapters(parent,player,p,context,size)
+  local frame=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  frame.style.width=size.rail
+  frame.style.height=size.body
+  local inner=size.rail-35
+  subtitle(frame,"navigator-title",inner)
+  local names={}
+  for _,ch in ipairs(defs.chapters) do
+    names[#names+1]={"journal-chapter."..ch.id}
+  end
+  local dropdown=frame.add{type="drop-down",
+    name="razi_journal_chapter_picker",items=names,
+    selected_index=chapter_index(p.chapter)}
+  dropdown.style.width=inner
+  local scroll=wheel_pane(frame,"razi_journal_navigation",
+    inner,size.body-105)
+  local column=scroll.add{type="flow",direction="vertical"}
+  column.style.width=inner-13
+  column.style.vertical_spacing=7
+  local selected_element
+
+  for index,chapter in ipairs(defs.chapters) do
     local available={}
     local completed,total=0,0
     for _,quest in ipairs(defs.quests) do
@@ -287,28 +384,68 @@ local function render_chapters(parent,player,p,context)
       end
     end
     if #available>0 then
-      local is_open=p.chapter==chapter.id
-      local title=left.add{type="button",
-        caption={"",is_open and "▾ " or "▸ ",
-          {"journal-chapter."..chapter.id},"  ",
-          L("chapter-progress",tostring(completed),tostring(total))},
-        tags={razi_journal_action="chapter",id=chapter.id}}
-      title.style.font="default-bold"
-      title.style.horizontally_stretchable=true
-      if is_open then
+      local open=p.chapter==chapter.id
+      local card=column.add{type="frame",direction="vertical",
+        style="inside_shallow_frame"}
+      card.style.width=inner-16
+      card.style.padding=8
+      local head=card.add{type="flow",direction="horizontal"}
+      head.style.horizontal_spacing=7
+      local toggle=head.add{type="button",style="tool_button",
+        caption=open and "▾" or "▸",
+        tags={razi_journal_action="chapter",id=chapter.id},
+        tooltip={"journal-chapter."..chapter.id}}
+      toggle.style.width=29
+      toggle.style.height=29
+      local heading=wrap(head,{"journal-chapter."..chapter.id},inner-80)
+      heading.style.font="default-bold"
+      heading.style.font_color=palette[chapter.id] or palette.calidus
+      heading.style.vertical_align="center"
+      local counts=card.add{type="flow",direction="horizontal"}
+      counts.style.horizontal_spacing=8
+      local count=label(counts,
+        L("chapter-progress-short",tostring(completed),tostring(total)))
+      count.style.font_color={r=.7,g=.74,b=.78}
+      local progress=counts.add{type="progressbar",
+        value=total>0 and completed/total or 0}
+      progress.style.width=math.max(90,inner-155)
+      progress.style.height=7
+      if open then
         for _,quest in ipairs(available) do
           local state=M.state(player.force,quest,context)
-          local btn=left.add{type="button",
-            caption={"",state=="complete" and "[color=#7CD9AD]✓[/color] "
-                or state=="active" and "[color=#F2CE83]●[/color] "
-                or "[color=#9B9FAE]○[/color] ",
-              {"journal-title."..quest.id}},
-            tags={razi_journal_action="select",id=quest.id}}
-          btn.style.horizontally_stretchable=true
-          if quest.id==p.selected then btn.style.font="default-bold" end
+          local item=card.add{type="flow",direction="horizontal"}
+          item.style.width=inner-34
+          item.style.horizontal_spacing=7
+          local control=item.add{type="button",style="tool_button",
+            caption=state=="complete" and "✓"
+              or state=="active" and "●" or "○",
+            tags={razi_journal_action="select",id=quest.id},
+            tooltip={"journal-title."..quest.id}}
+          control.style.width=27
+          control.style.height=27
+          local color=state=="complete" and {r=.48,g=.85,b=.67}
+            or state=="active" and {r=.98,g=.79,b=.46}
+            or {r=.58,g=.61,b=.68}
+          control.style.font_color=color
+          local choice=item.add{type="label",style="clickable_label",
+            caption={"journal-title."..quest.id},
+            tags={razi_journal_action="select",id=quest.id},
+            tooltip=L("select-objective")}
+          choice.style.single_line=false
+          choice.style.maximal_width=inner-75
+          choice.style.font_color=quest.id==p.selected
+            and {r=1,g=.89,b=.62} or {r=.94,g=.94,b=.94}
+          if quest.id==p.selected then
+            choice.style.font="default-bold"
+            selected_element=choice
+          end
         end
       end
     end
+  end
+  -- A selected objective remains visible even after rebuilding the panel.
+  if selected_element then
+    pcall(function() scroll.scroll_to_element(selected_element) end)
   end
 end
 -- The archive is not another quest chain. Each story entry opens only
@@ -322,115 +459,201 @@ function M.unlocked_records(force,context)
   end
   return unlocked,#records
 end
-local function render_archive(parent,player,p,context)
-  local left=parent.add{type="scroll-pane",direction="vertical"}
-  left.style.minimal_width=245
-  left.style.maximal_width=315
-  left.style.vertically_stretchable=true
-  local chosen
+local function render_archive(parent,player,p,context,size)
+  local rail=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  rail.style.width=size.rail
+  rail.style.height=size.body
+  subtitle(rail,"archive-navigator",size.rail-38)
+  local left=wheel_pane(rail,"razi_journal_archive_navigation",
+    size.rail-35,size.body-61)
+  local collection=left.add{type="flow",direction="vertical"}
+  collection.style.width=size.rail-56
+  collection.style.vertical_spacing=12
+  local chosen,focus
   for _,record in ipairs(records) do
     local quest=defs.by_id[record.unlock]
     local opened=quest and M.complete(player.force,quest,context)
     if opened and (not chosen or record.id==p.record) then chosen=record end
-    local button=left.add{type="button",
-      caption={"",opened and "[color=#7CD9AD]◈[/color] "
-          or "[color=#999BA4]◇[/color] ",
-        {"journal-record-title."..record.id}},
+    local row=collection.add{type="flow",direction="horizontal"}
+    row.style.horizontal_spacing=8
+    local mark=row.add{type="button",style="tool_button",
+      caption=opened and "◈" or "◇",
+      enabled=opened and true or false,
+      tags={razi_journal_action="record",id=record.id},
+      tooltip={"journal-record-title."..record.id}}
+    mark.style.width=27
+    mark.style.height=27
+    mark.style.font_color=opened and {r=.45,g=.86,b=.73}
+      or {r=.59,g=.62,b=.68}
+    local choice=row.add{type="label",style="clickable_label",
+      caption={"journal-record-title."..record.id},
       tags={razi_journal_action="record",id=record.id}}
-    button.style.horizontally_stretchable=true
-    button.enabled=opened and true or false
+    choice.style.single_line=false
+    choice.style.maximal_width=size.rail-105
+    choice.style.font_color=opened and {r=.95,g=.95,b=.95}
+      or {r=.58,g=.60,b=.65}
+    if opened and record.id==p.record then
+      choice.style.font="default-bold"
+      focus=choice
+    end
   end
+  if focus then pcall(function() left.scroll_to_element(focus) end) end
+
+  local paper=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  paper.style.width=size.reader
+  paper.style.height=size.body
   if not chosen then
-    label(parent,L("archive-sealed"))
+    subtitle(paper,"archive-sealed-heading",size.reader-48)
+    wrap(paper,L("archive-sealed"),size.reader-48)
     return
   end
   p.record=chosen.id
-  local pane=parent.add{type="scroll-pane",direction="vertical"}
-  pane.style.horizontally_stretchable=true
-  pane.style.vertically_stretchable=true
-  local title=label(pane,{"journal-record-title."..chosen.id})
+  subtitle(paper,"archive-entry-label",size.reader-48)
+  local title=wrap(paper,{"journal-record-title."..chosen.id},size.reader-48)
   title.style.font="heading-2"
-  local origin=label(pane,{"journal-record-origin."..chosen.id})
+  local origin=label(paper,{"journal-record-origin."..chosen.id})
   origin.style.font_color=palette.echoes
-  wrap(pane,{"journal-record-body."..chosen.id})
-  label(pane,L("archive-disclaimer"))
+  paper.add{type="line",direction="horizontal"}
+  local reading=wheel_pane(paper,"razi_journal_archive_reading",
+    size.reader-38,size.body-179)
+  local page=reading.add{type="flow",direction="vertical"}
+  page.style.width=size.reader-67
+  page.style.vertical_spacing=18
+  wrap(page,{"journal-record-body."..chosen.id},size.reader-67)
+  wrap(paper,L("archive-disclaimer"),size.reader-48)
 end
 
 local function draw(player)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
+  local size=M.layout(player.display_resolution,player.display_scale)
   frame.clear()
+  frame.style.width=size.width
+  frame.style.padding=12
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
-  local name=label(head,L("window"))
-  name.style.font="heading-2"
+  head.style.vertical_align="center"
+  head.style.horizontal_spacing=12
+  local insignia=head.add{type="sprite",sprite="razi-journal-book-icon"}
+  insignia.style.width=40
+  insignia.style.height=40
+  local heading=head.add{type="flow",direction="vertical"}
+  heading.style.vertical_spacing=1
+  local title=label(heading,L(size.compact and "window-compact" or "window"))
+  title.style.font=size.compact and "heading-2" or "heading-1"
+  tint(label(heading,L("header-eyebrow")),{r=.78,g=.69,b=.53})
   local drag=head.add{type="empty-widget",style="draggable_space"}
   drag.style.horizontally_stretchable=true
-  drag.style.height=30
+  drag.style.height=35
   drag.drag_target=frame
   head.add{type="button",caption=L("refresh"),
     tags={razi_journal_action="refresh"}}
   head.add{type="button",caption=L("close"),
     tags={razi_journal_action="close"}}
-  wrap(frame,L("subtitle"))
+  if not size.compact then
+    local description=wrap(frame,L("subtitle-short"),size.width-42)
+    description.style.font_color={r=.74,g=.77,b=.81}
+  end
+
   local context=M.context(player.force)
   local done,total,ready=M.summary(player.force,context)
-  label(frame,L("summary",tostring(done),tostring(total),tostring(ready)))
-  local overall=frame.add{type="progressbar",
+  local totals=frame.add{type="frame",direction="horizontal",
+    style="inside_shallow_frame_with_padding"}
+  totals.style.horizontally_stretchable=true
+  totals.style.vertical_align="center"
+  local metric=totals.add{type="flow",direction="vertical"}
+  metric.style.vertical_spacing=2
+  subtitle(metric,"completion-heading")
+  local completed=label(metric,L("completion-value",
+    tostring(done),tostring(total)))
+  completed.style.font="heading-2"
+  completed.style.font_color={r=.51,g=.86,b=.73}
+  local readiness=totals.add{type="flow",direction="vertical"}
+  readiness.style.vertical_spacing=2
+  subtitle(readiness,"ready-heading")
+  local ready_label=label(readiness,L("ready-value",tostring(ready)))
+  ready_label.style.font="heading-2"
+  ready_label.style.font_color={r=1,g=.78,b=.45}
+  local meter=totals.add{type="flow",direction="vertical"}
+  meter.style.horizontally_stretchable=true
+  meter.style.vertical_spacing=5
+  subtitle(meter,"campaign-progress-heading")
+  local overall=meter.add{type="progressbar",
     value=total>0 and done/total or 0}
   overall.style.horizontally_stretchable=true
-  local actions=frame.add{type="flow",direction="horizontal"}
-  actions.style.horizontally_stretchable=true
+  overall.style.height=12
+
+  local toolbar=frame.add{type="flow",direction="horizontal"}
+  toolbar.style.horizontal_spacing=8
   for _,view in ipairs({"quests","archive"}) do
-    local button=actions.add{type="button",caption=L("view-"..view),
+    local active=p.view==view
+    local button=toolbar.add{type="button",
+      caption=L("view-"..view),
       tags={razi_journal_action="view",id=view}}
-    if p.view==view then button.style.font="default-bold" end
+    button.style.font=active and "default-bold" or "default"
+    button.style.font_color=active and {r=1,g=.85,b=.53}
+      or {r=.90,g=.90,b=.90}
   end
   if p.view~="archive" then
-    actions.add{type="button",caption=L("next-milestone"),
+    toolbar.add{type="button",caption=L("next-milestone"),
       tags={razi_journal_action="next"}}
   end
+  local filterbar=frame.add{type="flow",direction="horizontal"}
+  filterbar.style.horizontal_spacing=7
+  filterbar.style.vertical_align="center"
   if p.view=="archive" then
-    local opened,all=M.unlocked_records(player.force,context)
-    label(frame,L("archive-progress",tostring(opened),tostring(all)))
+    local unlocked,all=M.unlocked_records(player.force,context)
+    tint(label(filterbar,L("archive-progress",
+      tostring(unlocked),tostring(all))),palette.echoes)
   else
+    subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
-      local button=actions.add{type="button",
+      local active=p.filter==filter
+      local button=filterbar.add{type="button",
         caption=L("filter-"..filter),
         tags={razi_journal_action="filter",id=filter}}
-      if p.filter==filter then button.style.font="default-bold" end
+      button.style.font=active and "default-bold" or "default"
+      button.style.font_color=active and {r=1,g=.84,b=.51}
+        or {r=.86,g=.86,b=.86}
     end
   end
+
   local body=frame.add{type="flow",direction="horizontal"}
-  body.style.horizontally_stretchable=true
-  body.style.height=math.max(300,math.min(580,
-    math.floor(player.display_resolution.height/math.max(1,player.display_scale)*.57)))
+  body.style.width=size.width-24
+  body.style.height=size.body
+  body.style.horizontal_spacing=8
   if p.view=="archive" then
-    render_archive(body,player,p,context)
+    render_archive(body,player,p,context,size)
   else
     local selected=select_quest(player.force,p,context)
-    render_chapters(body,player,p,context)
+    render_chapters(body,player,p,context,size)
     if selected then
-      render_details(body,player,selected,p,context)
+      render_details(body,player,selected,p,context,size)
     else
-      wrap(body,L("missing-quest"))
+      local empty=body.add{type="frame",
+        style="inside_shallow_frame_with_padding"}
+      empty.style.width=size.reader
+      wrap(empty,L("missing-quest"),size.reader-40)
     end
   end
-  wrap(frame,L("no-reward"))
+  local foot=label(frame,L("footer-hint"))
+  foot.style.font_color={r=.63,g=.67,b=.71}
 end
 M.draw=draw
 local function open(player)
   local frame=player.gui.screen[FRAME]
   if frame and frame.valid then draw(player);return end
-  local scale=math.max(1,player.display_scale)
-  local width=math.max(480,math.min(960,
-    math.floor(player.display_resolution.width/scale)-64))
+  local size=M.layout(player.display_resolution,player.display_scale)
+  local scale=math.max(.5,player.display_scale or 1)
   frame=player.gui.screen.add{type="frame",name=FRAME,direction="vertical"}
-  frame.style.width=width
-  frame.location={x=math.max(8,math.floor(
-    (player.display_resolution.width/scale-width)/2)),
-    y=math.max(20,math.floor(player.display_resolution.height/scale*.07))}
+  frame.style.width=size.width
+  frame.location={
+    x=math.max(8,math.floor((player.display_resolution.width/scale-size.width)/2)),
+    y=math.max(10,math.floor((player.display_resolution.height/scale-size.height)/2))
+  }
   player.opened=frame
   draw(player)
 end
@@ -573,6 +796,21 @@ function M.gui_click(event)
       p.filter="all"
       p.view="quests"
     end
+  elseif action=="next-in-chapter" then
+    local context=M.context(player.force)
+    local choices={}
+    for _,quest in ipairs(defs.quests) do
+      if quest.chapter==p.chapter and M.available(player.force,quest,context)
+        and M.show_in_filter(player.force,quest,p.filter,context) then
+        choices[#choices+1]=quest
+      end
+    end
+    for i,quest in ipairs(choices) do
+      if quest.id==p.selected then
+        p.selected=choices[i%#choices+1].id
+        break
+      end
+    end
   elseif action=="pin" and defs.by_id[tags.id] then
     if p.tracker and p.pinned==tags.id then
       p.tracker=false
@@ -581,6 +819,26 @@ function M.gui_click(event)
     end
     render_tracker(player)
   elseif action~="refresh" then return end
+  draw(player)
+end
+function M.selection_changed(event)
+  local element=event and event.element
+  if not (element and element.valid
+    and element.name=="razi_journal_chapter_picker") then return end
+  local chapter=defs.chapters[element.selected_index]
+  local player=game.get_player(event.player_index)
+  if not (chapter and player and player.valid) then return end
+  local p=pref(player.index)
+  p.chapter=chapter.id
+  p.filter="all"
+  local context=M.context(player.force)
+  for _,quest in ipairs(defs.quests) do
+    if quest.chapter==chapter.id
+      and M.available(player.force,quest,context) then
+      p.selected=quest.id
+      break
+    end
+  end
   draw(player)
 end
 function M.gui_closed(event)

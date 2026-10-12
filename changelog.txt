@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.12
+Date: 13. 10. 2026
+  Expedition Journal visual redesign:
+    - Replace the cramped 960-unit window with a centered, screen-scaled expedition reader up to 1,370 GUI units wide.
+    - Rebuild the two-column layout with a generous reading pane, clearly separated chapter/index cards, colored chapter accents, prominent progress summary and research objective panels.
+    - Fix unwanted horizontal scrolling: every journal and archive scroll pane explicitly forbids horizontal scrolling and constrains/wraps localized content to its column.
+    - Hide vertical scrollbar chrome while retaining mouse-wheel scrolling; add a direct 17-chapter selector so long chapters remain easy to navigate.
+    - Split quest/archive tabs from status filters; add responsive sizing, a next-entry control, and better navigation for selected and archived objectives.
+    - Preserve Nexus source-owned boss milestones, Celestial Weather field notes, pinned trackers and the 2.1.11 coalesced scripted research refresh safeguard.
+    - Add screen/scale layout regression coverage without enabling automatic CI.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.11
 Date: 13. 10. 2026
   Compatibility:
