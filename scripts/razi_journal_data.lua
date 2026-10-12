@@ -70,6 +70,9 @@ M.quests={
  {id="test-fire",chapter="finale",tech="razi-singularity-test-fire",requires={"singularity-theory"}},
  {id="stable-singularity",chapter="finale",tech="razi-stable-intergalactic-singularity",requires={"test-fire"}},
 }
+local extended=require("scripts.razi_journal_expansion")
+for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end
+for _,quest in ipairs(extended.quests) do M.quests[#M.quests+1]=quest end
 M.by_id={}
 for _,quest in ipairs(M.quests) do M.by_id[quest.id]=quest end
 return M

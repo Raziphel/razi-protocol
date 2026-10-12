@@ -113,11 +113,13 @@ The current scope protects original moon orbits, underground-only surfaces, spec
 
 ## Razi Expedition Journal
 
-A built-in **54-milestone expedition journal across ten original story
+A built-in **157-milestone expedition journal across seventeen original story
 chapters** guides the full seven-system K2SO campaign. Open it during
 normal gameplay using the small top-row book button or **Ctrl+Shift+J**;
 pin a goal to a compact optional tracker. Every milestone has original
-narrative and practical engineering notes. Progress uses native
+narrative and practical engineering notes, plus twelve recovered
+story transmissions, collapsible chapters, filters and a next-milestone
+navigator. Progress uses native
 force research, supports existing saves and parallel worlds, and skips
 unavailable mod technologies. It introduces no rewards, extra research
 gates or dependency on the unrelated Quest Book mod.

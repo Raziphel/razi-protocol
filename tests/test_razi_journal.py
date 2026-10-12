@@ -12,11 +12,15 @@ def ids(section):
 class ExpeditionJournalTests(unittest.TestCase):
     def test_quest_catalog_and_locale(self):
         source=read("scripts/razi_journal_data.lua")
+        expanded=read("scripts/razi_journal_expansion.lua")
         quests=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',source)
-        self.assertEqual(len(quests),54)
-        self.assertEqual(len({item[0] for item in quests}),54)
+        extended=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",(?:tech|world)="([^"]+)"',expanded)
+        quests+=extended
+        self.assertEqual(len(quests),157)
+        self.assertEqual(len({item[0] for item in quests}),157)
         chapter_sources=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',source)
-        self.assertEqual(len(chapter_sources),10)
+        chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
+        self.assertEqual(len(chapter_sources),17)
         language=read("locale/en/razi_journal.cfg")
         sections={}
         for block in re.split(r'(?m)^\[([^\]]+)\]\s*',language)[1:][::2]:
@@ -31,10 +35,31 @@ class ExpeditionJournalTests(unittest.TestCase):
             self.assertIn(chapter,chapter_sources)
             for section in ("journal-title","journal-story","journal-tip"):
                 self.assertIn(quest,sections[section])
+    def test_archived_transmissions_are_source_research_gated(self):
+        records=read("scripts/razi_journal_records.lua")
+        all_records=re.findall(r'\{id="([^"]+)",unlock="([^"]+)"',records)
+        self.assertEqual(len(all_records),12)
+        self.assertEqual(len(set(x[0] for x in all_records)),12)
+        locale=read("locale/en/razi_journal.cfg")
+        sections={}
+        parsed=re.split(r'(?m)^\[([^\]]+)\]\s*',locale)
+        for i in range(1,len(parsed),2):
+            sections[parsed[i]]=ids(parsed[i+1])
+        for rec,_ in all_records:
+            for section in ("journal-record-title","journal-record-origin",
+                            "journal-record-body"):
+                self.assertIn(rec,sections[section])
     def test_only_authoritative_research_progress(self):
         source=read("scripts/razi_journal.lua")
         self.assertIn("force.technologies[quest.tech]",source)
-        self.assertIn('M.state(force,quest)',source)
+        self.assertIn('M.state(force,quest,context)',source)
+        self.assertIn('M.discovery_index(force)',source)
+        self.assertIn('effect.type=="unlock-space-location"',source)
+        self.assertIn('M.unlocked_records(force,context)',source)
+        self.assertIn('razi_journal_action="chapter"',source)
+        self.assertIn('razi_journal_action="view"',source)
+        self.assertIn('razi_journal_action="next"',source)
+        self.assertIn('p.chapter==tags.id and false or tags.id',source)
         self.assertIn('function M.next_quest(force)',source)
         self.assertIn('function M.on_research(event)',source)
         self.assertNotIn("script.on_nth_tick",source)
@@ -59,6 +84,8 @@ class ExpeditionJournalTests(unittest.TestCase):
         data=read("scripts/razi_journal_data.lua")
         self.assertNotIn('type="technology"',data)
         self.assertNotIn('data:extend',data)
+        self.assertNotIn('data:extend',read("scripts/razi_journal_expansion.lua"))
+        self.assertNotIn('data:extend',read("scripts/razi_journal_records.lua"))
         manifest=read("info.json")
         self.assertNotIn('"quest-book"',manifest)
 if __name__=="__main__":
