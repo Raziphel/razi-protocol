@@ -20,6 +20,31 @@ workshop world. Recipe limits, machine categories, environmental restrictions,
 and source-mod outputs remain authoritative. Research is *not* proof the player
 has shipped, built, or manufactured a quantity.
 
+## Chapter art direction (2.1.18)
+
+All **18 chapters** now have a unique, contrast-minded primary color, a softer
+text accent, a source-artwork sigil, and a localized atmospheric subtitle.
+These are declared in `scripts/razi_journal_themes.lua` and do not touch
+gameplay, recipe prototypes, or saved progress. Icons are selected from real
+installed technology, item, or space-location sprites with a safe Razi Codex
+fallback when source assets are missing.
+
+Chapter colors and motifs are present in the index headings, the currently
+expanded chapter, chapter completion meters, selected objective text, reader
+banners, objective and lore section rules, science/recipe galleries, the
+recovered-transmission reader, and the pinned tracker. The interface uses
+native Factorio progress bars for narrow colored rules instead of a custom
+draw loop or per-tick graphics work.
+
+The index progress numbers and bars occupy separate rows to avoid
+horizontal overflow on narrow screens. Gallery artwork has a subtle native
+framed tile, and the selected quest remains visually distinct from status.
+
+**Scope:** cosmetic runtime UI only. All 204 stable quest IDs, 18 chapter IDs,
+authoritative research completion, disabled-content filtering, localization
+keys, and keyboard shortcuts remain intact. Verify with an in-game load and
+at several display scales after deploying.
+
 ## Visual overhaul
 
 The journal now appears in-game as **The Protocol Codex**, retaining all old
