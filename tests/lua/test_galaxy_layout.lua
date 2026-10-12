@@ -18,8 +18,8 @@ for _,name in ipairs({
 }) do places[name]={name=name} end
 for _,name in ipairs({
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
-  "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
-  "shchierbin","muria","aquilo","rubia","maraxsis",
+  "gleba","moshine","fulgora","ribbonia","paracelsin",
+  "muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta",
   "cerys","rabbasca","athos"
 }) do planets[name]={name=name} end
@@ -67,16 +67,13 @@ local hx,hy=layout.anchor_position("hyarion")
 local sx,sy=layout.anchor_position("solaris")
 check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-22)<.01,
   "Hyarion must not share Vulcanus's close orbital lane")
-local shchierbin_x,shchierbin_y=layout.anchor_position("shchierbin")
 local vx,vy=layout.anchor_position("vibrant")
 for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
-    {"shchierbin",45},{"paracelsin",49}}) do
+    {"paracelsin",49}}) do
   local px,py=layout.anchor_position(pair[1])
   check(math.abs(math.sqrt((px-vx)^2+(py-vy)^2)-pair[2])<.01,
     "Vibrant climate radius mismatch: "..pair[1])
 end
-check(shchierbin_x>120 and shchierbin_y<0,
-  "Asteroid Belt host is no longer the Vibrant outer planet")
 layout.data_updates()
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.
@@ -155,8 +152,8 @@ check(math.abs(hx)<1 and hy>20 and hy<30,
 -- All planets directly orbiting a Razi star get Factorio 2.1 native
 -- rings, not only the old handpicked six signature planets.
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
-  "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
-  "paracelsin","shchierbin","muria","aquilo","rubia","maraxsis",
+  "corrundum","gleba","moshine","fulgora","ribbonia",
+  "paracelsin","muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta","athos"}) do
   check(planets[name].draw_orbit==true,
     "Factorio native orbit still disabled: "..name)

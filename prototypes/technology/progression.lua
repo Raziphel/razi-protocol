@@ -285,24 +285,20 @@ add_existing_prerequisites("vibrant-discovery", {
 -- Nyxaris branch.
 set_prerequisites_if_exists("planet-discovery-apia-carnova", {"nyxaris-discovery"})
 set_prerequisites_if_exists("planet-discovery-moshine", {"nyxaris-discovery"})
-set_prerequisites_if_exists("panglia_planet_discovery_panglia", {"nyxaris-discovery"})
 -- Prefer the Dea Dia branch when both optional integrations are installed,
--- otherwise let standalone Pelagos enter through Panglia and Nyxaris.
+-- otherwise let standalone Pelagos enter directly through Nyxaris.
 set_first_existing_prerequisite("planet-discovery-pelagos", {
 	"system-discovery-dea-dia",
-	"panglia_planet_discovery_panglia",
 	"nyxaris-discovery"
 })
 set_many_science_after({
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
-	"panglia_planet_discovery_panglia",
 	"planet-discovery-pelagos"
 }, "solaris")
 add_existing_prerequisites("vibrant-discovery", {
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
-	"panglia_planet_discovery_panglia",
 	"planet-discovery-pelagos"
 })
 
@@ -311,18 +307,12 @@ if technology_exists("planet-discovery-muria") then
 	set_prerequisites_if_exists("planet-discovery-muria", {"vibrant-discovery"})
 end
 
-if technology_exists("planet-discovery-shchierbin") then
-	set_prerequisites_if_exists("planet-discovery-shchierbin", {"planet-discovery-paracelsin"})
-end
-
 set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
 set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
 set_prerequisites_if_exists("muriatic-science-pack", {"planet-discovery-muria"})
-set_prerequisites_if_exists("vanadium-science-pack", {"planet-discovery-shchierbin"})
 set_many_science_after({
 	"muriatic-science-pack",
-	"vanadium-science-pack"
 }, "vibrant")
 set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
 set_first_existing_prerequisite("planet-discovery-maraxsis", {

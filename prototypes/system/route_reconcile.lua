@@ -18,10 +18,10 @@ local membership = {
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris",
 	hyarion = "solaris", tellus = "solaris", corrundum = "solaris",
 	["sye-nyxaris"] = "nyxaris", ["apia-carnova-orbit"] = "nyxaris",
-	moshine = "nyxaris", panglia = "nyxaris", pelagos = "nyxaris",
+	moshine = "nyxaris", pelagos = "nyxaris",
 	-- Vibrant, Vespera.
 	["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
-	paracelsin = "vibrant", shchierbin = "vibrant",
+	paracelsin = "vibrant",
 	["sye-vespera"] = "vespera", muria = "vespera", aquilo = "vespera",
 	["razi-vespera-belt-inner"] = "vespera",
 	["razi-vespera-belt-outer"] = "vespera",
@@ -66,7 +66,6 @@ local route_specifications = {
   -- The 5,000 km source-owned AsteroidBelt is a mandatory science step.
   -- Keep its source asteroids, route names and original loot untouched.
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
-  {"asteroid-belt-outer-edge", "shchierbin", 16000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
 	-- Dense neighboring industrial worlds get a few short cargo loops.
 	-- Keep the original discovery prerequisites; these routes only provide
@@ -88,21 +87,18 @@ local route_specifications = {
 	-- of routing every load through their distant slipstream hub.
 	{"gleba", "moshine", 17000, "biological"},
 	{"gleba", "apia-carnova-orbit", 22000, "biological"},
-	{"gleba", "panglia", 23500, "biological_deep"},
 	{"moshine", "apia-carnova-orbit", 12000, "biological"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
 	{"sye-nyxaris", "gleba", 18000, "biological"},
 	{"sye-nyxaris", "apia-carnova-orbit", 23000, "biological"},
 	{"sye-nyxaris", "moshine", 22000, "biological"},
-	{"sye-nyxaris", "panglia", 24000, "biological_deep"},
-	{"panglia", "pelagos", 16000, "biological_deep"},
+	{"moshine", "pelagos", 16000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
 	-- Vibrant's chemistry strand.
 	{"sye-vibrant", "fulgora", 17000, "electrical"},
 	{"fulgora", "ribbonia", 19500, "electrical"},
 	{"sye-vibrant", "ribbonia", 23500, "electrical"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
-	{"shchierbin", "paracelsin", 22000, "chemistry_deep"},
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
 	{"asteroid-belt-outer-edge", "paracelsin", 14000, "chemistry_deep"},
@@ -166,7 +162,7 @@ local vibrant_inner = {
   ["asteroid-belt-inner-edge"]=true
 }
 local vibrant_outer = {
-  shchierbin=true, paracelsin=true, ["asteroid-belt-outer-edge"]=true
+  paracelsin=true, ["asteroid-belt-outer-edge"]=true
 }
 local function bypasses_vibrant_belt(a,b)
   if key_for(a,b)==key_for("asteroid-belt-inner-edge","asteroid-belt-outer-edge") then

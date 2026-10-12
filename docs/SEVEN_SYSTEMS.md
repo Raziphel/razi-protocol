@@ -9,7 +9,7 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 | Stage | Parallel A | Parallel B | Exit gate |
 |---|---|---|---|
 | Early | Solaris | Nyxaris | Both sets of frontier planet research |
-| Middle | Vibrant | Vespera | Shchierbin + Maraxsis |
+| Middle | Vibrant | Vespera | Paracelsin + Maraxsis |
 | Outer | Beetlejuice | Umbra | Frozeta + Vesta + Linox |
 | Finale | Outer Frontier Mastery | Deep Space | Stable Singularity and Intergalactic Signal Lock |
 
@@ -17,8 +17,8 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 
 * **Calidus:** Nauvis, Muluna, Calidus Drift orbital salvage stop; optional Eneas
 * **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys, optional Athos
-* **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
-* **Vibrant:** Fulgora, Ribbonia, Paracelsin, Shchierbin; optional Cerys (Fulgora moon)
+* **Nyxaris:** Gleba, Moshine, Apia/Carnova; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
+* **Vibrant:** Fulgora, Ribbonia, Paracelsin; optional Cerys (Fulgora moon)
 * **Vespera:** Muria, Aquilo, Rubia, Maraxsis; recommended Obsidiax
 * **Beetlejuice:** Cubium, Linox, Secretas, Frozeta
 * **Umbra:** Tenebris, Crucible and its orbit, Vesta; recommended Carna
@@ -46,20 +46,20 @@ belt journey through Vibrant:
 Calidus → Solaris → Vibrant → Ribbonia → Belt inner == Belt outer → Beetlejuice
         ↘ Nyxaris → Vespera → Umbra
 Solaris ↔ Nyxaris                    Beetlejuice ↔ Umbra
-Belt outer → Shchierbin → frozen Paracelsin
+Belt outer → frozen Paracelsin
 Beetlejuice / Umbra → Deep Space after Outer Frontier Mastery
 ```
 
 The native inner-to-outer crossing retains its original 5,000 km length
 and unique asteroid resources. Total Vibrant-to-Beetlejuice travel via
 Ribbonia and the belt is about 137.5k km (23.5+24+5+85k).
-Shchierbin requires the source belt research, and Paracelsin follows it.
+Paracelsin requires the source belt research and sits beyond its physical crossing.
 
 Local branches remain connected inside their own systems, including:
 
     Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
-    Nyxaris: Gleba | Moshine | Apia/Carnova | Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
-    Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> Shchierbin -> frozen Paracelsin (+ Cerys)
+    Nyxaris: Gleba | Moshine | Apia/Carnova (+ Rabbasca / Foliax / Pelagos / Dea Dia)
+    Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> frozen Paracelsin (+ Cerys)
              Belt Outer -> Paracelsin is an extra post-crossing return link
     Vespera: Muria -> Aquilo -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
@@ -91,8 +91,8 @@ Razi's reconciliation pass only removes source routes where **both** endpoints b
 `prototypes/technology/seven_system_gates.lua` is deliberately the final technology-rule pass. Earlier per-planet and compatibility passes can still run, but the canonical chapter gate rules execute after them.
 
 * Solaris and Nyxaris: Calidus research and Calidus card
-* Vibrant and Vespera: both first-frontier cards plus Corrundum, Apia/Carnova, Moshine and Panglia discoveries
-* Beetlejuice and Umbra: both second-frontier cards plus Shchierbin and Maraxsis discoveries
+* Vibrant and Vespera: both first-frontier cards plus Corrundum, Apia/Carnova, Moshine discoveries
+* Beetlejuice and Umbra: both second-frontier cards plus Paracelsin and Maraxsis discoveries
 * Outer Frontier Mastery: both outer cards plus Frozeta, Vesta and Linox discoveries
 
 The `*-discovery` technology IDs of existing systems were retained. New IDs are `vespera-discovery`, `umbra-discovery`, and `razi-outer-frontier-mastery`. The new science-card prototype IDs are `vespera-tech-card` and `umbra-tech-card`. Any later rework must keep those stable for existing saves.
@@ -158,7 +158,7 @@ crosslink and the appropriate progression-gated diagonals.
 Ordinary planetary legs remain roughly 10,000 to 25,000 km, including the
 Asteroid Belt segments. Castra's hub and the longer Hyarion branch have been
 adjusted to reflect their final positions. Ribbonia's approach and the
-Paracelsin/Shchierbin chemical frontier are now spaced progressively.
+Paracelsin chemical frontier are now spaced progressively.
 
 Razi's route reconciler prefers an already-existing original connection name
 and preserves source asteroid resources. It now also preserves a **native
@@ -185,7 +185,7 @@ New guarded late-addition paths use native moon, special surface and
 solar-station handling. Ferrum and Khemia join Vibrant's electrically and
 chemically focused worlds; Arcanyx joins Umbra's experimental side branches;
 Velora stays Gleba's moon and Nulla stays Aquilo's moon. Balack remains a
-dangerous post-Aquilo destination inside Vespera. Wit stays near Nauvis.
+dangerous post-Aquilo destination inside Vespera. Muluna remains Nauvis's required moon.
 Solar Halo and Rabbasca Underground retain their source-owned layouts.
 
 Native authors' unusual worlds are not flattened into Razi's standard
@@ -200,7 +200,7 @@ definitions and short local Fulgora connection untouched.
 The 2026-10 starmap uses a 104-unit six-star radius (previously 124)
 so most systems fit on screen with substantially less panning. Deep Space
 is north at radius 190; the Aegis/Bellicos annex begins beyond it.
-The mandatory native Asteroid Belt still rings Shchierbin, not Nauvis.
+The mandatory native Asteroid Belt surrounds Vibrant and still blocks the approach to Paracelsin.
 
 ## October 2026 stellar arc and neighbouring-world polish
 
@@ -214,7 +214,7 @@ same-system connections for established late-stage freight logistics:
 | Solaris | Vulcanus ↔ Arig | 19,500 km |
 | Solaris | Hyarion ↔ Corrundum | 22,500 km |
 | Nyxaris | Gleba ↔ Apia/Carnova Orbit | 22,000 km |
-| Nyxaris | Gleba ↔ Panglia | 23,500 km |
+| Nyxaris | Gleba ↔ Moshine | 17,000 km |
 
 These routes never unlock worlds or change research. The source belt in
 Vibrant, Vespera's Debris Divide and Umbra's Shattered Divide are preserved.

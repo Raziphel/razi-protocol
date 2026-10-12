@@ -4,7 +4,6 @@
 local M={}
 M.bridges={
   {"planet-discovery-corrundum","planet-discovery-apia-carnova"},
-  {"panglia_planet_discovery_panglia","planet-discovery-tellus"},
   {"planet-discovery-secretas","planet-discovery-tenebris"},
   {"planet-discovery-crucible","planet-discovery-cubium"},
   {"planet-discovery-frozeta","planet-discovery-crucible"}

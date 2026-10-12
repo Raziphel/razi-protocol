@@ -8,8 +8,8 @@
 | --- | --- | --- | --- |
 | Calidus | Nauvis, Muluna | Home automation and lunar spaceflight; lunar expansion | Base Space Age and Muluna |
 | Solaris | Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum | Metallurgy, industrial and military breakthroughs; multiple initial approaches | Planetaris and Castra Prime |
-| Nyxaris | Gleba, Moshine, Apia/Carnova, Panglia | Agricultural, computational and alien biology science, challenging environments | Native Apia/Carnova subsystem |
-| Vibrant | Fulgora, Ribbonia, Paracelsin, Shchierbin | Electromagnetics, alien chemistry, galvanization and specialist processing | Preserve source surface requirements |
+| Nyxaris | Gleba, Moshine, Apia/Carnova | Agricultural, computational and alien biology science, challenging environments | Native Apia/Carnova subsystem |
+| Vibrant | Fulgora, Ribbonia, Paracelsin | Electromagnetics, alien chemistry, galvanization and specialist processing | Preserve source surface requirements |
 | Vespera | Muria, Aquilo, Rubia, Maraxsis | Harsh environments, cooling, fluid and materials engineering | Muria entrance; native Aquilo/Maraxsis content |
 | Beetlejuice | Cubium, Linox, Secretas, Frozeta | Outer-rim production and resource specialization | Secretas to Frozeta; Linox fork |
 | Umbra | Tenebris, Crucible, Vesta | Late experimental engineering, high-risk planet sciences | Crucible Orbit and Vesta routes |

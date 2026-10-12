@@ -12,10 +12,10 @@ local worlds={
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
   "igrys","athos",
   -- Nyxaris
-  "gleba","moshine","apia-carnova-orbit","panglia",
+  "gleba","moshine","apia-carnova-orbit",
   "foliax","rabbasca","velora",
   -- Vibrant
-  "fulgora","cerys","ribbonia","paracelsin","shchierbin",
+  "fulgora","cerys","ribbonia","paracelsin",
   "khemia","ferrum",
   -- Vespera
   "muria","aquilo","rubia","maraxsis","obsidiax","nulla",

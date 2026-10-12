@@ -9,13 +9,8 @@ local rules = {
 {"planet-discovery-tellus", {"planet-discovery-gleba"}, {{"planetaris-compression-science-pack", "planet-discovery-arig"}, {"planetaris-polishing-science-pack", "planet-discovery-hyarion"}, {"agricultural-science-pack", "planet-discovery-gleba"}}},
 {"planet-discovery-corrundum", {}, {{"planetaris-bioengineering-science-pack", "planet-discovery-tellus"}, {"planetaris-pathological-science-pack", "planet-discovery-tellus"}}},
 {"planet-discovery-apia-carnova", {"planet-discovery-gleba", "planet-discovery-moshine"}, {{"agricultural-science-pack", "planet-discovery-gleba"}, {"thermodynamic-science-pack", "planet-discovery-moshine"}}},
-{"panglia_planet_discovery_panglia", {"planet-discovery-apia-carnova", "planet-discovery-moshine"}, {{"apicultural-science-pack", "planet-discovery-apia-carnova"}, {"thermodynamic-science-pack", "planet-discovery-moshine"}}},
 {"planet-discovery-ribbonia", {"planet-discovery-fulgora"}, {{"electromagnetic-science-pack", "planet-discovery-fulgora"}}},
 {"planet-discovery-paracelsin", {}, {{"ribbonia-alien-science-pack", "planet-discovery-ribbonia"}}},
--- Shchierbin is BEFORE Paracelsin, not after it.
-{"planet-discovery-shchierbin", {"planet-discovery-muria"},
- {{"ribbonia-alien-science-pack","planet-discovery-ribbonia"},
-  {"muriatic-science-pack","planet-discovery-muria"}}},
 {"planet-discovery-aquilo", {"planet-discovery-fulgora"}, {{"muriatic-science-pack", "planet-discovery-muria"}}},
 {"planet-discovery-rubia", {}, {{"cryogenic-science-pack", "planet-discovery-aquilo"}}},
 {"planet-discovery-maraxsis", {"planet-discovery-paracelsin"}, {{"rubia-biofusion-science-pack", "planet-discovery-rubia"}}},
@@ -121,7 +116,6 @@ end
 local function world_discovery(name)
   return name:match("^planet%-discovery%-")
     or name:match("^moon%-discovery%-")
-    or name:match("^panglia_planet_discovery_")
 end
 
 local function recipe_accessible_before(recipe_name,recipe,target,owner)

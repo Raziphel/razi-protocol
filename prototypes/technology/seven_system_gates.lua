@@ -91,11 +91,9 @@ local frontier_mastery = {
 	"planet-discovery-corrundum",
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
-	"panglia_planet_discovery_panglia"
 }
 local exotic_mastery = {
 	"planet-discovery-fulgora",
-	"planet-discovery-shchierbin",
 	"planet-discovery-maraxsis"
 }
 local outer_mastery = {
@@ -154,19 +152,18 @@ function gates.data_final_fixes()
 		{"planet-discovery-arig", "planet-discovery-hyarion"}, calidus, 900)
 	replace_requirements("planet-discovery-corrundum", {"planet-discovery-tellus"}, calidus, 1100)
 
-	-- Gleba anchors Nyxaris's biological progression, alongside the three
+	-- Gleba anchors Nyxaris's biological progression, alongside the two
 	-- existing research destinations. Optional Dea Dia/Pelagos stay optional.
 	replace_requirements("planet-discovery-gleba", {"nyxaris-discovery"}, calidus, 600)
 	for _, name in ipairs({
 		"planet-discovery-apia-carnova",
 		"planet-discovery-moshine",
-		"panglia_planet_discovery_panglia"
 	}) do
 		replace_requirements(name, {"nyxaris-discovery"}, calidus, 850)
 	end
 	replace_requirements("system-discovery-dea-dia", {"nyxaris-discovery"}, calidus, 900)
 	replace_requirements("planet-discovery-pelagos",
-		{"panglia_planet_discovery_panglia"}, calidus, 900)
+		{"nyxaris-discovery"}, calidus, 900)
 
 	-- Both first-tier systems must be mastered before either next destination
 	-- opens. Requiring the previous pair's cards means genuine production.
@@ -187,10 +184,8 @@ function gates.data_final_fixes()
 	-- native edge waypoints; crossing them is a physical travel requirement.
 	ensure_unlock("space-discovery-asteroid-belt", "asteroid-belt-inner-edge")
 	ensure_unlock("space-discovery-asteroid-belt", "asteroid-belt-outer-edge")
-	replace_requirements("planet-discovery-shchierbin",
-		{"planet-discovery-ribbonia", "space-discovery-asteroid-belt"}, frontier, 900)
 	replace_requirements("planet-discovery-paracelsin",
-		{"planet-discovery-shchierbin"}, frontier, 1000)
+		{"planet-discovery-ribbonia", "space-discovery-asteroid-belt"}, frontier, 1000)
 
 	-- Vespera: Muria is the beginning of the Aquilo/Rubia/Maraxsis branch.
 	replace_requirements("planet-discovery-muria", {"vespera-discovery"}, frontier, 900)

@@ -51,7 +51,6 @@ local system_card_definitions = {
 		unlock_technology_candidates = {
 			"planet-discovery-moshine",
 			"planet-discovery-apia-carnova",
-			"panglia_planet_discovery_panglia"
 		},
 		ingredients = {
 			"calidus-tech-card", "agricultural-science-pack",
@@ -70,7 +69,6 @@ local system_card_definitions = {
 			"solaris-tech-card", "nyxaris-tech-card",
 			"electromagnetic-science-pack", "ribbonia-alien-science-pack",
 			"galvanization-science-pack", "paracelsin-galvanization-science-pack",
-			"vanadium-science-pack"
 		},
 		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
@@ -166,7 +164,6 @@ local modded_science_ids = {
 	"kr-matter-tech-card",
 	"kr-singularity-tech-card",
 	"muriatic-science-pack",
-	"vanadium-science-pack",
 	"calidus-tech-card",
 	"solaris-tech-card",
 	"nyxaris-tech-card",

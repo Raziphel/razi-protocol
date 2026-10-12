@@ -49,7 +49,6 @@ CARD_SCIENCE_ORIGINS = {
     "vibrant-tech-card": {
         "electromagnetic-science-pack": "planet-discovery-fulgora",
         "ribbonia-alien-science-pack": "planet-discovery-ribbonia",
-        "vanadium-science-pack": "planet-discovery-shchierbin",
         "kr-electromagnetic-research-data": "planet-discovery-fulgora",
     },
     "vespera-tech-card": {

@@ -1,17 +1,8 @@
 local water_loop = {}
 
--- Water goes round through hydrogen and oxygen: Shchierbin's electrolysis makes
--- 100 hydrogen and 800 oxygen from 100 water (with Muluna), and Vesta's ske_h2o
--- makes 30 water from 20 hydrogen and 10 oxygen. K2SO makes both mods use
--- kr-hydrogen and kr-oxygen, so one round gives 150 water for 100, for power
--- only. With productivity it grows much faster: the base productivity of a
--- machine applies even to a recipe with allow_productivity = false (the K2
--- advanced chemical plant makes a round x2.3, the electrochemical plant x3.4),
--- and Vesta's own electrolysis even allows productivity modules.
--- maximum_productivity = 0 is the cap the game applies to every source,
--- machine bonus included. The round itself stays and costs power.
+-- Keep Vesta's reciprocal hydrogen/oxygen recipes safe from K2SO machine
+-- base productivity, even when their own recipe productivity is disabled.
 local recipes = {
-	"water-electrolysis-shchierbin",
 	"ske_h2o",
 	"ske_water_electrolysis"
 }

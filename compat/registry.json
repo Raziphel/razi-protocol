@@ -26,10 +26,9 @@
       "id": "water-productivity-loop",
       "module": "prototypes/compat/water_loop.lua",
       "upstream_mods": [
-        "shchierbin",
         "skewer_planet_vesta"
       ],
-      "purpose": "Cap productivity on demonstrated cross-mod hydrogen/oxygen/water loop.",
+      "purpose": "Cap productivity on Vesta's reciprocal water/hydrogen/oxygen recipes to prevent K2SO machine base bonuses creating a positive resource loop.",
       "upstream_status": "needs-review",
       "fixture": "tests/test_audit_compatibility.py"
     },

@@ -90,18 +90,6 @@ local nyxaris_locations = {
             orientation = 0.91,
         },
     },
-    {
-        type = "planet",
-        name = "panglia",
-        orbit = {
-            parent = {
-                type = "space-location",
-                name = "nyxaris",
-            },
-            distance = 18,
-            orientation = 0.72,
-        },
-    },
 }
 
 if mods["pelagos"] then
@@ -134,7 +122,6 @@ deleteRoute("apia-carnova-orbit-aquilo")
 deleteRoute("pelagos-apia-carnova-orbit")
 deleteRoute("nauvis-moshine")
 deleteRoute("vulcanus-moshine")
-deleteRoute("gleba-panglia")
 deleteRoute("star-pelagos")
 deleteRoute("pelagos-corrundum")
 deleteRoute("maraxsis-pelagos")
@@ -156,14 +143,6 @@ local connections = {
 		from = "sye-nyxaris",
 		to = "moshine",
 		length = 15000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
-	{
-		type = "space-connection",
-		name = "sye-nyxaris-panglia",
-		from = "sye-nyxaris",
-		to = "panglia",
-		length = 25000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
 }
@@ -201,8 +180,8 @@ end
 if mods["pelagos"] then
 	add_connection_if_locations_exist({
 		type = "space-connection",
-		name = "panglia-pelagos",
-		from = "panglia",
+		name = "moshine-pelagos",
+		from = "moshine",
 		to = "pelagos",
 		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)

@@ -4,6 +4,10 @@ Razi Protocol is a large progression, compatibility, and starmap overhaul for *F
 
 Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into the intergalactic transceiver finale. When Nexus is installed, its black-hole and Sol content becomes an additional Deep Space branch.
 
+## Planet quality gate
+
+Muluna is preserved. Panglia and Shchierbin are retired from the curated dev pack: they are explicitly incompatible, their discoveries no longer gate later systems, and the native Vibrant Asteroid Belt still gates the outer-side Paracelsin expedition. Back up saves before uninstalling their source mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
+
 ## Muluna compatibility
 
 **Muluna remains the required Nauvis moon.** The independent Biological Machines planet **Wit** is incompatible with Muluna and is explicitly excluded (`! biological-machines-planet-wit`). Razi Protocol does not require or integrate Wit; keep Muluna enabled and disable Wit in Factorio's mod manager. Do not enable the complete Biological Machines Modpack because it requires Wit. **Balack remains supported independently** and does not depend on Wit.
@@ -26,7 +30,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
-- Integrates optional Eneas support plus Linox, Muria, and Shchierbin directly into the intended campaign flow.
+- Integrates Eneas, Linox and Muria into the campaign without retaining redundant or unfinished planets.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
 - Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
@@ -59,8 +63,8 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 | --- | --- | --- | --- |
 | Home | **Calidus** | Nauvis, Muluna, Calidus Drift salvage anchorage; optional Eneas | Familiar Space Age industry, the first system card |
 | Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys, optional Athos | Military and advanced industrial science |
-| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
-| Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin, Shchierbin; optional Cerys | Alien chemistry and galvanization |
+| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
+| Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |
 | Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
 | Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
 | Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta; Carna | Unusual and dangerous late-game experimentation |
@@ -111,7 +115,7 @@ Vespera and Umbra currently tint existing icon assets, rather than introducing u
 
 ## Expanded Community Planet Compatibility
 
-The October 2026 optional modpack expansion now recognizes additional planets and atypical space destinations, including Ferrum, Velora, Nulla, Khemia, Arcanyx, Wit, Balack, Solar Halo, Rabbasca Underground, and the Shattered Planet extension. Each remains optional; Razi integrates them only when their actual mod and world prototypes exist.
+The October 2026 optional modpack expansion now recognizes additional planets and atypical space destinations, including Ferrum, Velora, Nulla, Khemia, Arcanyx, Balack, Solar Halo, Rabbasca Underground, and the Shattered Planet extension. Each remains optional; Razi integrates them only when their actual mod and world prototypes exist.
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
@@ -176,7 +180,7 @@ See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
 ## Connected research across every frontier
 
 Razi's focused tech-tree pass now guards science prerequisites against
-late-only supply recipes, corrects Shchierbin's science handoff, and
+late-only supply recipes, preserves the asteroid-belt-to-Paracelsin science handoff, and
 adds five cross-system research links. It uses native Igrys and Foliax
 research to connect the first frontier to the middle systems, and native
 Cerys and Obsidiax research to connect the middle to the outer systems,
@@ -207,10 +211,10 @@ See [Required Worlds & Bridge Roadmap](docs/PLANETARY_BRIDGES_AND_MASTERY.md).
 Some world relationships need particular care:
 
 - **Muria** now serves as the entry point to Vespera: Muria -> Aquilo -> Rubia -> Maraxsis. It is no longer entered through Vibrant.
-- **Ribbonia -> Paracelsin -> Shchierbin** is Vibrant's core science chain.
+- **Ribbonia -> Asteroid Belt -> Paracelsin** is Vibrant's core science chain.
 - **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
 - **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
-- **Moshine, Apia/Carnova and Panglia** open independently from Nyxaris, with Pelagos and Dea Dia remaining optional.
+- **Moshine and Apia/Carnova** form Nyxaris's main science branch, with Pelagos and Dea Dia remaining optional.
 - **Aegis and Bellicos** keep their complete internal pulsar/stargate expedition beyond the solar-system edge.
 
 The last data-stage route pass removes unintended cross-chapter shortcuts among the systems Razi owns, without deleting internal source-mod networks.
@@ -265,7 +269,7 @@ save until the real engine and all optional combinations have been tested.
 Razi Protocol supports several optional enemy packs and places them where they fit best.
 
 - Arachnids: Arig, Nexus, Crucible
-- Armoured biters: Panglia, Hyarion, Nexus, Crucible
+- Armoured biters: Hyarion, Nexus, Crucible
 - Cold biters: Aquilo, Paracelsin, Frozeta, optional Cerys, Nexus
 - Electric flying enemies: Corrundum, Ribbonia, Nexus, plus their native Fulgora theme
 - Explosive biters: Moshine, Nexus
@@ -316,13 +320,11 @@ Core content in the intended experience includes:
 - PlanetsLib
 - Muluna
 - Linox
-- Shchierbin
 - Muria
 - Dea Dia (optional)
 - Corrundum
 - Apia
 - Moshine
-- Panglia
 - Pelagos (optional)
 - Tenebris Prime
 - Secretas

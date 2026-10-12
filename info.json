@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -27,13 +27,11 @@
     "Cerys-Moon-of-Fulgora >= 4.24.17",
     "moon-eneas >= 1.0.10",
     "linox >= 1.8.9",
-    "shchierbin >= 0.3.19",
     "Muria >= 1.8.6",
     "? dea-dia-system",
     "corrundum >= 1.0.49",
     "apia >= 0.3.1",
     "Moshine >= 1.2.10",
-    "panglia_planet >= 0.6.1",
     "? pelagos",
     "tenebris-prime >= 1.3.12",
     "secretas >= 1.0.37",
@@ -93,7 +91,9 @@
     "alchemy-khemia >= 0.3.6",
     "Arcanyx >= 1.1.5",
     "biological-machines-planet-balack >= 1.1.2",
-    "! biological-machines-planet-wit"
+    "! biological-machines-planet-wit",
+    "! shchierbin",
+    "! panglia_planet"
   ],
   "quality_required": true,
   "rail_bridges_required": true,
