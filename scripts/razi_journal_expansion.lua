@@ -33,7 +33,6 @@ return {
   {id="asteroid-reprocessing",chapter="fleet",tech="asteroid-reprocessing",requires={"asteroid-processing"}},
   {id="thrusters",chapter="fleet",tech="space-platform-thruster",requires={"platform"}},
   {id="bulk-cargo",chapter="fleet",tech="bulk-inserter",requires={"platform"}},
-  {id="eneas",chapter="outposts",world="eneas",requires={"muluna"}},
   {id="igrys",chapter="outposts",world="igrys",requires={"solaris-gate"}},
   {id="foliax",chapter="outposts",world="foliax",requires={"nyxaris-gate"}},
   {id="rabbasca",chapter="outposts",world="rabbasca",requires={"gleba"}},

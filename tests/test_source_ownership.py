@@ -20,7 +20,7 @@ class TestSourceOwnership(unittest.TestCase):
         import json
         info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
         expected = {
-            "Cerys-Moon-of-Fulgora", "moon-eneas", "dea-dia-system",
+            "Cerys-Moon-of-Fulgora", "dea-dia-system",
             "pelagos", "Nexus-Updated", "VoidProcessing-Updated",
             "Arachnids_enemy", "ArmouredBiters21Compat",
             "Electric_flying_enemies", "Explosive_biters",
@@ -40,6 +40,11 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertIn("! PlanetAthos", info["dependencies"])
         self.assertIn("! nulla", info["dependencies"])
         self.assertIn("! biological-machines-planet-wit", info["dependencies"])
+        self.assertIn("! moon-eneas", info["dependencies"])
+        self.assertNotIn("moon-eneas", names)
+        self.assertFalse((ROOT / "prototypes/system/eneas.lua").exists())
+        self.assertNotIn("prototypes.system.eneas", (
+            ROOT / "data.lua").read_text(encoding="utf-8"))
         # Prevent future decorative optional dependencies without any
         # corresponding Razi content or explicitly preserved source behavior.
         module = (ROOT / "prototypes/system/community_expansions.lua").read_text(

@@ -68,7 +68,6 @@ function science_tab.data_final_fixes()
 	}
 
 	local planet_science_packs = {
-		"ambition-science-pack",
 		"space-logistic-science-pack",
 		"pulsar-science-pack",
 		"bioluminescent-science-pack",

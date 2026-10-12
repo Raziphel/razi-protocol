@@ -8,14 +8,14 @@ Razi's own routes now have actual asteroid-size ceilings, not just density nerfs
 
 | Frontier | Natural vanilla sizes | What players need |
 | --- | --- | --- |
-| **Calidus (Nauvis, Muluna, Eneas)** | Resource chunks and **small only** | Basic platform defenses |
+| **Calidus (Nauvis, Muluna)** | Resource chunks and **small only** | Basic platform defenses |
 | **Solaris / Nyxaris** | Small and medium; **no big/huge** | First proper turrets and ammunition logistics |
 | **Vibrant / Vespera** | Small, medium, **big**; no huge | Improved coverage, ammo production and durability |
 | **Beetlejuice / Umbra** | All sizes, huge initially uncommon | Developed warships and layered defenses |
 | **Umbra belt / Deep Space** | Big and huge concentrated | Serious long-distance combat platforms |
 
 For Razi-managed Calidus routes, the same small-only rule also applies to
-existing moon routes. Nauvis, Muluna, Eneas and the Calidus transit point
+existing moon routes. Nauvis, Muluna and the Calidus transit point
 receive a defensive clamp for vanilla stationary asteroid spawns.
 **Modded asteroid species and their spawn curves remain unchanged.**
 

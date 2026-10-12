@@ -6,6 +6,8 @@ Date: 12. 10. 2026
     - Mark Nulla incompatible because the failure occurs inside Nulla before Razi Protocol can safely guard or repair the missing prototype.
     - Remove Nulla routes, atlas entries, journal content and planetary-unification integration while preserving the remaining Vespera roster.
     - Repair an unmatched route-reconciliation block terminator exposed by full-pack data-stage validation.
+    - Remove Eneas support and mark `moon-eneas` incompatible so it cannot force Construction Drones, RPG System, and their unrelated helper mods into the curated pack.
+    - Remove Eneas routes, progression, atlas, journal, locale, science-tab, and planetary-unification integration.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.7

@@ -37,7 +37,7 @@ Suggested smoke-test configurations:
 - Required-only Factorio 2.1 pack (the release baseline)
 - Required pack with all seven system gates unlocked and Outer Frontier Mastery completed
 - Required pack + Nexus-Updated
-- Required pack + supported optional planets such as Cerys or Eneas
+- Required pack + supported optional planets such as Cerys
 - Required pack + each optional enemy family
 - All compatible optional integrations together, where releases exist
 

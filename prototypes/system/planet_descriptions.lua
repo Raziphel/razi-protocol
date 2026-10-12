@@ -5,7 +5,7 @@ local descriptions = {}
 local configured = setmetatable({}, {__mode = "k"})
 
 local destinations = {
-  calidus = {"nauvis", "muluna", "eneas", "sye-calidus",
+  calidus = {"nauvis", "muluna", "sye-calidus",
     "razi-calidus-drift"},
   solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys", "halo-solar-orbit", "halo-solar-station", "solaris", "sye-solaris"},
   nyxaris = {"gleba", "moshine", "panglia", "apia", "carnova", "foliax", "rabbasca", "velora", "pelagos", "lemures", "prosephina", "nyxaris", "sye-nyxaris", "apia-carnova-orbit", "star-dea-dia", "dea-dia-system-edge"},

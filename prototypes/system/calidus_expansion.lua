@@ -1,5 +1,5 @@
 -- A compact salvage stop for the Calidus/Nauvis home system.
--- Muluna remains the required landable moon; Eneas is still optional.
+-- Muluna remains the required landable moon.
 local M = {}
 local hazards = require("prototypes.system.asteroid_profiles")
 M.name = "razi-calidus-drift"

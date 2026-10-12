@@ -30,7 +30,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
-- Integrates Eneas, Linox and Muria into the campaign without retaining redundant or unfinished planets.
+- Integrates Linox and Muria into the campaign without retaining redundant or unfinished planets.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
 - Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
@@ -61,7 +61,7 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 
 | Tier | System | Planets | Identity |
 | --- | --- | --- | --- |
-| Home | **Calidus** | Nauvis, Muluna, Calidus Drift salvage anchorage; optional Eneas | Familiar Space Age industry, the first system card |
+| Home | **Calidus** | Nauvis, Muluna, Calidus Drift salvage anchorage | Familiar Space Age industry, the first system card |
 | Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys | Military and advanced industrial science |
 | Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
 | Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |
@@ -85,7 +85,7 @@ Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, w
 
 ### Optional regions
 
-- **Eneas** remains with Calidus; **Cerys** follows Fulgora to Vibrant and **Rabbasca** follows Gleba to Nyxaris.
+- **Cerys** follows Fulgora to Vibrant and **Rabbasca** follows Gleba to Nyxaris.
 - **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
 - **Panglia** has direct Moshine and Apia/Carnova freight routes, a distinct Nyxaris orbit, new Chronicle research objectives, and guarded Moshine optical-cable / Panglite-glass production exchanges. Neither bonus recipe replaces native manufacturing.
 - **Nexus-Updated and VoidProcessing-Updated** remain optional Deep Space expansions, never prerequisites to reach the main transceiver finale.
@@ -195,8 +195,10 @@ prototype or research cost is introduced. Details are in
 
 ## Required planetary campaign and non-planet bridges
 
-Cerys, Eneas and twelve other formerly optional or recommended 2.1 worlds
-are now part of the required installation. Existing destination technologies
+Cerys and ten other formerly optional or recommended 2.1 worlds are now
+part of the required installation. Eneas is explicitly incompatible because
+its source mod forces unrelated Construction Drones and RPG System dependencies.
+Existing destination technologies
 are woven into the **final** stable-singularity milestone where reachable
 without tech cycles. Native recipes and moon puzzles remain untouched.
 
@@ -339,7 +341,7 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
 ## Modpack Guidance
 

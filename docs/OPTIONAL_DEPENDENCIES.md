@@ -6,9 +6,10 @@ adventures remain unchanged. Removing an optional declaration does **not**
 remove or block a mod the player has installed; it stops suggesting that Razi
 Protocol directly integrates it or needs ordering against it.
 
-## Removed from info.json (45)
+## Removed from info.json or explicitly blocked (46)
 
 - `assets-eneas >= 1.0.2`
+- `moon-eneas >= 1.0.10` (blocked as incompatible)
 - `spidertron-unit-07`
 - `mferrari_lib >= 0.7.5`
 - `informatron >= 0.5.0`
@@ -54,7 +55,7 @@ Protocol directly integrates it or needs ordering against it.
 - `spiderbots`
 - `Tenebris_plants_retexture`
 
-## Still declared (13)
+## Still declared (12)
 
 - `Arachnids_enemy`
 - `ArmouredBiters21Compat`
@@ -67,11 +68,10 @@ Protocol directly integrates it or needs ordering against it.
 - `Toxic_biters`
 - `VoidProcessing-Updated`
 - `dea-dia-system`
-- `moon-eneas`
 - `pelagos`
 
 These are retained for work with optional planetary locations, star routes,
-Cerys/Eneas, later chapter research, conditional enemy placement, the Nexus
+Cerys, later chapter research, conditional enemy placement, the Nexus
 and Void expeditions, K2SO/LithiumBattery compatibility, and Imersite asteroids.
 The independent recommended planet mods remain as `+` dependencies and
 need their own full-engine testing.

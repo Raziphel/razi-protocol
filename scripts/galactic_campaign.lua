@@ -4,7 +4,7 @@ local M={}
 local function L(key,...) return {"razi-ops."..key,...} end
 local systems={
   {"calidus","space-science-pack","calidus-tech-card",
-    {"planet-discovery-muluna","moon-discovery-eneas"}},
+    {"planet-discovery-muluna"}},
   {"solaris","solaris-discovery","solaris-tech-card",
     {"planet-discovery-vulcanus","planet-discovery-castra",
      "planet-discovery-arig","planet-discovery-hyarion",
