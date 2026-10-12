@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.13
+Date: 13. 10. 2026
+  Galactic scenery:
+    - Add 26 restrained star swarms, nebula pocket filaments, distant stellar sparks and asteroid belt wisps, reusing Razi's existing paletted artwork.
+    - Keep micro-details behind native stars, orbits, hazards and planetary routes; no new simulation or per-tick rendering.
+    - Add an independently configurable Stellar micro-details startup option, enabled by default and compatible with Subtle and Cinematic backgrounds.
+    - Refine validated interstellar route guides into three faint-to-sharp glow passes, with slightly stronger emphasis on outer routes and dangerous asteroid crossings.
+    - Make route overlays idempotent and continue skipping relocated or unsupported route masks.
+  Stability:
+    - Coalesce all Journal research events and ignore unrelated technology completions to prevent repeated interface redraws during bulk cheat research.
+    - Add static Lua and Python safety checks. A full installed-modpack and in-game visual/performance playtest is still required.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.12
 Date: 13. 10. 2026
   Expedition Journal visual redesign:

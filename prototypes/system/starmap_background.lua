@@ -40,6 +40,72 @@ local function insert_asset(layers,file,w,h,scale,x,y,rgb,alpha)
     tint={r=rgb.r,g=rgb.g,b=rgb.b,a=alpha}
   }
 end
+-- Quiet, handcrafted background pockets around each system's far side.
+-- Relative offsets follow the stellar anchors when the galaxy is relocated.
+-- These are NOT waypoints, planets or charted routes.
+local micro_scenes={
+  {name="calidus",dx=-48,dy=-49,cluster=1},
+  {name="solaris",dx=41,dy=43,cluster=2},
+  {name="nyxaris",dx=-43,dy=42,cluster=3},
+  {name="vibrant",dx=53,dy=-34,cluster=2},
+  {name="vespera",dx=-53,dy=-34,cluster=1},
+  {name="beetlejuice",dx=43,dy=-41,cluster=3},
+  {name="umbra",dx=-43,dy=-41,cluster=2},
+  {name="deep-space",dx=52,dy=-16,cluster=1}
+}
+-- Sparse distant signals brighten the blank corners without tracing lines.
+local distant_sparks={
+  {185,35,1,{r=.48,g=.77,b=.96}},
+  {-190,33,2,{r=.75,g=.53,b=.87}},
+  {31,191,3,{r=.91,g=.62,b=.41}},
+  {-25,-223,1,{r=.53,g=.61,b=.98}}
+}
+-- Decorative belt-adjacent fragments. Main hazard rings and the native
+-- crossing guides remain authoritative and are rendered on top of these.
+local belt_fragments={
+  {name="vibrant",dx=30,dy=-17},
+  {name="vespera",dx=19,dy=10},
+  {name="umbra",dx=21,dy=-6}
+}
+local function insert_micro_scenery(layers,cine,halos,atmosphere)
+  if halos~=false then
+    for _,scene in ipairs(micro_scenes) do
+      local x,y=anchor(scene.name)
+      local tint
+      for _,system in ipairs(systems) do
+        if system.name==scene.name then tint=system.tint;break end
+      end
+      if x and y and tint then
+        -- Translucent filament pockets and tiny distant star swarms.
+        insert_asset(layers,"filament-"..scene.name..".png",512,512,2.6,
+          x+scene.dx,y+scene.dy,tint,cine and .17 or .08)
+        insert_asset(layers,"cluster-"..scene.cluster..".png",384,384,1.55,
+          x+scene.dx+9,y+scene.dy-7,tint,cine and .16 or .075)
+      end
+    end
+  end
+  for _,spark in ipairs(distant_sparks) do
+    insert_asset(layers,"cluster-"..spark[3]..".png",384,384,1.6,
+      spark[1],spark[2],spark[4],cine and .14 or .065)
+  end
+  if atmosphere~=false then
+    for _,fragment in ipairs(belt_fragments) do
+      local x,y=anchor(fragment.name)
+      if x and y then
+        local tint
+        for _,belt in ipairs(belts) do
+          if belt.name==fragment.name then tint=belt.tint;break end
+        end
+        if tint then
+          insert_asset(layers,"debris-"..fragment.name..".png",512,512,2.2,
+            x+fragment.dx,y+fragment.dy,tint,cine and .21 or .115)
+          insert_asset(layers,"belt-"..fragment.name..".png",512,512,2.4,
+            x+fragment.dx+5,y+fragment.dy+3,tint,cine and .13 or .065)
+        end
+      end
+    end
+  end
+end
 function M.make_layers(mode,halos,atmosphere,details,cartography)
   if mode~="subtle" and mode~="cinematic" then return {} end
   local cine=mode=="cinematic"
@@ -112,6 +178,11 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
               cine and .18 or .09)
           end
         end
+      end
+      -- Fully static small-scale art, separate from the large nebula layers.
+      -- Turn it off without sacrificing the existing eleven-region backdrop.
+      if option("razi-starmap-micro-details",true) then
+        insert_micro_scenery(result,cine,halos,atmosphere)
       end
     end
     -- A counter-flowing galaxy arm joins the six-star ring visually.

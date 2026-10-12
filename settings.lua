@@ -67,6 +67,8 @@ data:extend({
   startup_toggle("razi-starmap-fine-details","cb[starmap]-d[details]"),
   startup_toggle("razi-starmap-galactic-ornaments",
     "cb[starmap]-d2[quiet-nebula-structure]"),
+  startup_toggle("razi-starmap-micro-details",
+    "cb[starmap]-d3[micro-details]"),
   {
     type="bool-setting",
     name="razi-starmap-cartography",

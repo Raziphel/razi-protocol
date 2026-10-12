@@ -25,17 +25,27 @@ local function current_position(name)
           (origin.y or origin[2] or 0)-radius*math.cos(radians)}
 end
 
--- Both strokes reuse the exact same texture. The glow is broader
--- and much fainter; it never draws a route that the native graph lacks.
+-- Three carefully aligned strokes reuse the original route mask.
+-- Broad, very faint bloom -> inner halo -> crisp navigable line.
+-- Outer lanes and dangerous belt crossings have more visual weight,
+-- without changing engine-owned route shape, discoverability or hazards.
+local guide_weights={
+  first=.93,middle=1,outer=1.10,belt=1.25,["belt-approach"]=.82
+}
 function M.layers_for_guide(guide,color,mode)
+  local clear=mode=="clear"
+  local weight=guide_weights[guide.kind] or 1
   local function layer(scale,alpha)
     return {type="sprite",filename=guide.filename,size=guide.size,
       shift=guide.shift,scale=scale,priority="extra-high-no-scale",
       flags={"gui-icon"},blend_mode="normal",
-      tint={r=color.r,g=color.g,b=color.b,a=alpha}}
+      tint={r=color.r,g=color.g,b=color.b,a=alpha*weight}}
   end
-  return {layer(4.035,mode=="clear" and .17 or .075),
-          layer(4,mode=="clear" and .58 or .36)}
+  return {
+    layer(4.084,clear and .075 or .032),
+    layer(4.029,clear and .19 or .10),
+    layer(4,clear and .58 or .36)
+  }
 end
 function M.data_final_fixes()
   local option=settings and settings.startup
@@ -48,6 +58,12 @@ function M.data_final_fixes()
   local routes={}
   for _,route in pairs(data.raw["space-connection"] or {}) do
     if route.from and route.to then routes[key(route.from,route.to)]=route end
+  end
+  -- Data-final-fixes can be invoked twice by integration tools; preserve
+  -- one set of route light sprites per original mask filename.
+  local existing={}
+  for _,layer in ipairs(art.layers) do
+    if layer.filename then existing[layer.filename]=true end
   end
   local painted,skipped=0,0
   for _,guide in ipairs(manifest) do
@@ -63,11 +79,12 @@ function M.data_final_fixes()
     local appropriate=route and (route.shape=="line"
       or guide.kind=="belt"
       or (guide.kind=="belt-approach" and mode=="clear"))
-    if aligned and appropriate then
+    if aligned and appropriate and not existing[guide.filename] then
       local c=hazards.color(route)
       for _,layer in ipairs(M.layers_for_guide(guide,c,mode)) do
         art.layers[#art.layers+1]=layer
       end
+      existing[guide.filename]=true
       painted=painted+1
     else
       skipped=skipped+1
