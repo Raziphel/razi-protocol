@@ -20,6 +20,13 @@ existing saves before experimenting with a substantially different modpack.
 Note that map-generation changes generally affect newly generated chunks,
 not enemies that already exist in an established save.
 
+## Required cross-planet integrations
+
+Planet Express and Rocket Turrets Upgraded are required non-planet content
+mods. They preserve their own research, user interfaces and factory
+restrictions. Razi's additional Campaign / Cargo Network pages are
+read-only and add no player settings.
+
 ## Production Integration
 
 **Cyan heading.**

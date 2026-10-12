@@ -128,6 +128,13 @@ require("prototypes.compat.community_industry_exchanges").data_final_fixes()
 -- singularity without introducing early scientific softlocks.
 require("prototypes.technology.planetary_unification").data_final_fixes()
 
+-- Keep required cross-planet logistics and defense technologies aligned
+-- with Razi's actual chapter discoveries. Source recipes stay unchanged.
+require("prototypes.technology.galactic_mod_research").data_final_fixes()
+-- Highlight Razi's main research chapters using the engine's native
+-- "Show only essential technologies" research filter.
+require("prototypes.technology.tech_tree_visibility").data_final_fixes()
+
 -- Extra optional trade networks only in Deep interdependence mode.
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 

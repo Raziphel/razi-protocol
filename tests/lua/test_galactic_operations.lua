@@ -35,3 +35,36 @@ mock.controller_type=1
 mock.connected=false
 check(not ui.in_map_view(mock),"Disconnected player must not display button")
 print("Galactic Operations selection and map visibility fixtures passed")
+
+local campaign=require("scripts.galactic_campaign")
+local trade=require("scripts.galactic_trade")
+check(#campaign.systems==8,"Seven-system campaign UI lost a chapter")
+local first={name="x",researched=true},second={name="y",researched=false}
+local finished,total,pending=campaign.progress({technologies={x=first,y=second}},
+  {"x","y","not-installed"})
+check(finished==1 and total==2 and #pending==1 and pending[1]==second,
+  "Campaign UI should only count existing native discoveries")
+local blocked,n=campaign.blockers({prerequisites={first,second}},3)
+check(n==1 and blocked[1].name=="y","Real technology prerequisites missing")
+local summary=trade.summary({platforms={},technologies={
+  ["interplanetary-trade-logistics"]={researched=true}}})
+check(summary.unlocked and summary.ships==0 and summary.unscheduled==0,
+  "Cargo trade readiness should be read-only and safe on empty worlds")
+
+-- Newly required world identities must match route and campaign chapter maps.
+for _,value in ipairs({
+ {"bm-wit","calidus"},{"velora","nyxaris"},{"ferrum","vibrant"},
+ {"khemia","vibrant"},{"obsidiax","vespera"},{"nulla","vespera"},
+ {"bm-balack","vespera"},{"carna","umbra"},{"arcanyx","umbra"}
+}) do
+ check(catalog.system(value[1])==value[2],
+   "New required-world catalogue mismatch: "..value[1])
+end
+local index=campaign.discovery_index({technologies={
+ some={name="some",prototype={effects={{
+  type="unlock-space-location",space_location="cerys"}}}},
+ another={name="another",prototype={effects={{
+  type="unlock-space-location",space_location="bm-wit"}}}}
+}})
+check(index.vibrant[1]=="some" and index.calidus[1]=="another",
+  "Campaign did not discover native moon research dynamically")

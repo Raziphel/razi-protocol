@@ -5,6 +5,8 @@ local M={}
 local catalog=require("scripts.galactic_catalog")
 local atlas=require("scripts.galactic_atlas")
 local fleet=require("scripts.galactic_fleet")
+local campaign=require("scripts.galactic_campaign")
+local trade=require("scripts.galactic_trade")
 local FRAME="razi_galactic_operations"
 local MAP_ANCHOR="razi_ops_map_anchor"
 local MAP_BUTTON="razi_ops_map_button"
@@ -284,6 +286,8 @@ local function redraw(player)
   local body=frame.razi_ops_body
   if not (body and body.valid) then return end
   body.clear()
+  if p.tab=="campaign" then campaign.render(body,player);return end
+  if p.tab=="trade" then trade.render(body,player);return end
   local rows,total=rows_for(player,p)
   local page_rows,page,pages=M.page_slice(rows,p.page,PAGE_SIZE)
   p.page=page
@@ -418,12 +422,15 @@ local function open(player)
   local tabs=frame.add{type="flow",direction="horizontal"}
   add_button(tabs,L("worlds-tab"),"tab","worlds")
   add_button(tabs,L("platforms-tab"),"tab","platforms")
+  add_button(tabs,L("campaign-tab"),"tab","campaign")
+  add_button(tabs,L("trade-tab"),"tab","trade")
   local search=frame.add{
     type="textfield",name="razi_ops_search",
     text=p.search,tooltip=L("search-tooltip")
   }
   search.style.horizontally_stretchable=true
-  local filters=frame.add{type="flow",direction="horizontal"}
+  local filters=frame.add{type="flow",name="razi_ops_filters",
+    direction="horizontal"}
   filters.add{type="label",caption=L("filter")}
   local filter=filters.add{
     type="drop-down",name="razi_ops_filter",
@@ -470,6 +477,10 @@ local function open(player)
   }
   local body=frame.add{type="flow",name="razi_ops_body",direction="vertical"}
   body.style.horizontally_stretchable=true
+  local listing=p.tab=="worlds" or p.tab=="platforms"
+  search.visible=listing
+  filters.visible=listing
+  options.visible=p.tab=="worlds"
   options.razi_ops_waypoints.visible=p.tab=="worlds"
   options.razi_ops_locked.visible=p.tab=="worlds"
   player.opened=frame
@@ -516,12 +527,17 @@ function M.gui_click(event)
   if action=="map-toggle" then M.toggle(player);return end
   if action=="close" then close(player);return end
   if action=="tab" then
-    if value~="worlds" and value~="platforms" then return end
+    if value~="worlds" and value~="platforms"
+      and value~="campaign" and value~="trade" then return end
     p.tab=value;p.page=1;p.focus=nil
     local frame=player.gui.screen[FRAME]
     if frame and frame.valid then
+      frame.razi_ops_options.visible=value=="worlds"
       frame.razi_ops_options.razi_ops_waypoints.visible=value=="worlds"
       frame.razi_ops_options.razi_ops_locked.visible=value=="worlds"
+      local listing=value=="worlds" or value=="platforms"
+      frame.razi_ops_search.visible=listing
+      frame.razi_ops_filters.visible=listing
       frame.razi_ops_roles.visible=value=="platforms"
       frame.razi_ops_sorter.visible=value=="platforms"
     end
