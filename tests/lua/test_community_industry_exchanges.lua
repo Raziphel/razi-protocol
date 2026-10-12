@@ -26,12 +26,10 @@ end
 
 local names={
   "razi-ferrum-linox-optical-magnets",
-  "razi-wit-ferrum-grid-storage",
   "razi-balack-rubia-chitosan-shielding"
 }
 local bases={
   "ferrum-rare-earth-magnet",
-  "bm-advanced-accumulator",
   "bm-radiation-sheilding"
 }
 
@@ -41,7 +39,7 @@ local function fixture(opts)
   for _,name in ipairs({
     "ferrum-rare-earth-oxide","ferrum-rare-earth-magnet",
     "rare-earth-powder","stone","optical-cable",
-    "bm-advanced-accumulator","low-density-structure","lithium-plate",
+    "low-density-structure","lithium-plate",
     "quantum-processor","supercapacitor","bm-mixed-gas-power-cell",
     "bm-radiation-sheilding","tungsten-carbide","carbon-fiber",
     "promethium-asteroid-chunk","bioflux","craptonite-frame","chitosan",
@@ -56,12 +54,6 @@ local function fixture(opts)
         item("ferrum-rare-earth-oxide",5),
         fluid("electrolyte",10),fluid("molten-iron",20)},
       {item("ferrum-rare-earth-magnet",1)}),
-    ["bm-advanced-accumulator"]=recipe("bm-advanced-accumulator",
-      "electromagnetics",{
-        item("low-density-structure",20),item("lithium-plate",50),
-        item("quantum-processor",10),item("supercapacitor",100),
-        item("bm-mixed-gas-power-cell",50)},
-      {item("bm-advanced-accumulator",1)}),
     ["bm-radiation-sheilding"]=recipe("bm-radiation-sheilding",
       "bm-bio-cube",{
         item("tungsten-carbide",5),item("carbon-fiber",10),
@@ -81,11 +73,10 @@ local function fixture(opts)
       {item("chitin",8),fluid("sulfuric-acid",50)},
       {item("chitosan",4)})
   }
-  -- Native unlock for Ferrum's magnet, Wit accumulator and Balack shielding
+  -- Native unlock for Ferrum magnets and Balack shielding
   -- are real technology IDs, not convenient synthetic names.
   local unlocks={
     ["ferrum-rare-earth-processing"]="ferrum-rare-earth-magnet",
-    ["bm-advanced-accumulator"]="bm-advanced-accumulator",
     ["bm-planet-discovery-balack"]="bm-radiation-sheilding",
     ["linox-refining"]="linox-recipe_rare-earth-refining",
     ["moshine-optics"]="optical-cable",
@@ -100,7 +91,7 @@ local function fixture(opts)
   end
   for _,name in ipairs({
     "planet-discovery-ferrum","linox-technology_planet-discovery-linox",
-    "planet-discovery-moshine","bm-planet-discovery-wit",
+    "planet-discovery-moshine",
     "planet-discovery-rubia","planet-discovery-tenebris"}) do
     technologies[name]=technologies[name] or {
       name=name,prerequisites={},
@@ -108,7 +99,6 @@ local function fixture(opts)
   end
   local planets={
     ferrum={surface_properties={pressure=2000,["ferrum-habitability"]=100}},
-    ["bm-wit"]={surface_properties={pressure=5}},
     ["bm-balack"]={surface_properties={pressure=1500}}
   }
   local machine={
@@ -123,7 +113,6 @@ local function fixture(opts)
     ["Krastorio2-spaced-out"]="2.0.17",
     ["planet-ferrum"]="0.1.4",linox="1.8.9",
     Moshine="1.2.10",
-    ["biological-machines-planet-wit"]="1.1.3",
     ["biological-machines-planet-balack"]="1.1.2",
     rubia="0.69.159",["tenebris-prime"]="1.3.12"
   }
@@ -178,11 +167,7 @@ local specs={
   {name=names[1],native=bases[1],output="ferrum-rare-earth-magnet",
     original=1,batch=3,bonus=1,inputs={"rare-earth-powder","optical-cable"},
     prerequisite="ferrum-rare-earth-processing",fluids=2},
-  {name=names[2],native=bases[2],output="bm-advanced-accumulator",
-    original=1,batch=4,bonus=1,
-    inputs={"ferrum-rare-earth-magnet","rare-earth-powder","optical-cable"},
-    prerequisite="bm-advanced-accumulator",fluids=0},
-  {name=names[3],native=bases[3],output="bm-radiation-sheilding",
+  {name=names[2],native=bases[2],output="bm-radiation-sheilding",
     original=5,batch=2,bonus=2,
     inputs={"craptonite-frame","chitosan"},
     prerequisite="bm-planet-discovery-balack",fluids=1}
@@ -211,16 +196,13 @@ for _,spec in ipairs(specs) do
       "Supplier ingredient missing: "..name)
   end
 end
--- Native Ferrum fluids, Wit power electronics and Balack promethium
+-- Native Ferrum chemistry and Balack promethium
 -- are always scaled with the original base recipe rather than replaced.
 check(amount(raw.recipe[names[1]].ingredients,"electrolyte")==30
   and amount(raw.recipe[names[1]].ingredients,"molten-iron")==60,
   "Ferrum native chemistry was shortcut")
-check(amount(raw.recipe[names[2]].ingredients,"supercapacitor")==400
-  and amount(raw.recipe[names[2]].ingredients,"bm-mixed-gas-power-cell")==200,
-  "Wit late storage was made prematurely inexpensive")
-check(amount(raw.recipe[names[3]].ingredients,"promethium-asteroid-chunk")==2
-  and amount(raw.recipe[names[3]].ingredients,"heavy-oil")==20,
+check(amount(raw.recipe[names[2]].ingredients,"promethium-asteroid-chunk")==2
+  and amount(raw.recipe[names[2]].ingredients,"heavy-oil")==20,
   "Balack native promethium and oil costs were bypassed")
 for _,name in ipairs(bases) do
   check(amount(raw.recipe[name].results,before[name].results[1].name)
@@ -237,20 +219,18 @@ local function absent(opts,without)
   end
 end
 absent({off=true},names)
-absent({mod="planet-ferrum"},{names[1],names[2]})
-absent({mod="Moshine"},{names[1],names[2]})
-absent({mod="biological-machines-planet-wit"},{names[2]})
-absent({mod="biological-machines-planet-balack"},{names[3]})
-absent({mod="rubia"},{names[3]})
-absent({ingredient="chitosan"},{names[3]})
-absent({ingredient="rare-earth-powder"},{names[1],names[2]})
-absent({native_recipe="ferrum-rare-earth-magnet"},{names[1],names[2]})
-absent({native_unlock="ferrum-rare-earth-processing"},{names[1],names[2]})
-absent({native_disabled="bm-advanced-accumulator"},{names[2]})
-absent({homeworld="bm-balack"},{names[3]})
+absent({mod="planet-ferrum"},{names[1]})
+absent({mod="Moshine"},{names[1]})
+absent({mod="biological-machines-planet-balack"},{names[2]})
+absent({mod="rubia"},{names[2]})
+absent({ingredient="chitosan"},{names[2]})
+absent({ingredient="rare-earth-powder"},{names[1]})
+absent({native_recipe="ferrum-rare-earth-magnet"},{names[1]})
+absent({native_unlock="ferrum-rare-earth-processing"},{names[1]})
+absent({homeworld="bm-balack"},{names[2]})
 absent({fluid_ports="foundry"},{names[1]})
-absent({fluid_ports="bm-bio-cube"},{names[3]})
-absent({wrong_category="bm-radiation-sheilding"},{names[3]})
+absent({fluid_ports="bm-bio-cube"},{names[2]})
+absent({wrong_category="bm-radiation-sheilding"},{names[2]})
 local f=assert(io.open("data-final-fixes.lua","r"))
 local entry=f:read("*a") f:close()
 local established=assert(entry:find(
@@ -258,4 +238,4 @@ local established=assert(entry:find(
 local expanded=assert(entry:find(
   'require("prototypes.compat.community_industry_exchanges").data_final_fixes()',1,true))
 check(established<expanded,"Community exchanges should follow modded production setup")
-print("Ferrum, Wit and Balack optional industry exchanges passed")
+print("Ferrum and Balack optional industry exchanges passed")

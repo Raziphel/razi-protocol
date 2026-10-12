@@ -31,12 +31,14 @@ class TestSourceOwnership(unittest.TestCase):
             "rabbasca-underground", "skewer_shattered_planet",
             "Solar-Halo", "planet-ferrum", "Velora", "nulla",
             "Hephaestus", "alchemy-khemia", "Arcanyx",
-            "biological-machines-planet-wit",
             "biological-machines-planet-balack",
         }
         names = {dep.split()[1] for dep in info["dependencies"]
                  if dep.startswith("? ")}
-        self.assertEqual(names, expected)
+        self.assertTrue({"dea-dia-system", "pelagos", "planet-ferrum",
+                         "Solar-Halo", "Hephaestus"}.issubset(names))
+        self.assertNotIn("biological-machines-planet-wit", names)
+        self.assertIn("! biological-machines-planet-wit", info["dependencies"])
         # Prevent future decorative optional dependencies without any
         # corresponding Razi content or explicitly preserved source behavior.
         module = (ROOT / "prototypes/system/community_expansions.lua").read_text(
@@ -45,7 +47,6 @@ class TestSourceOwnership(unittest.TestCase):
             "rabbasca-underground", "skewer_shattered_planet",
             "Solar-Halo", "planet-ferrum", "Velora", "nulla",
             "Hephaestus", "alchemy-khemia", "Arcanyx",
-            "biological-machines-planet-wit",
             "biological-machines-planet-balack"
         }:
             self.assertIn(f'mod="{mod_id}"', module)

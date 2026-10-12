@@ -4,6 +4,10 @@ Razi Protocol is a large progression, compatibility, and starmap overhaul for *F
 
 Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into the intergalactic transceiver finale. When Nexus is installed, its black-hole and Sol content becomes an additional Deep Space branch.
 
+## Muluna compatibility
+
+**Muluna remains the required Nauvis moon.** The independent Biological Machines planet **Wit** is incompatible with Muluna and is explicitly excluded (`! biological-machines-planet-wit`). Razi Protocol does not require or integrate Wit; keep Muluna enabled and disable Wit in Factorio's mod manager. Do not enable the complete Biological Machines Modpack because it requires Wit. **Balack remains supported independently** and does not depend on Wit.
+
 ## Why It Exists
 
 Big Space Age planet packs are fun, but they also tend to suffer from the same problems:

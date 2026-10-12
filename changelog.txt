@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.4
+Date: 12. 10. 2026
+  Compatibility:
+    - Keep required Muluna; remove the incompatible Biological Machines: Planet Wit dependency and explicitly exclude it.
+    - Remove Wit routes, atlas entries, journal objectives, planetary unification, community exchanges and deep industry bridge.
+    - Preserve Balack and other Biological Machines integrations that do not require Wit.
+    - Update regression coverage for the corrected curated planet roster.
+    - Retain manual-only GitHub workflows to avoid unnecessary Actions usage.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 08. 10. 2026
   Compatibility:

@@ -7,7 +7,7 @@ local M={}
 local techs=function() return data.raw.technology or {} end
 local worlds={
   -- Calidus
-  "muluna","eneas","bm-wit",
+  "muluna","eneas",
   -- Solaris
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
   "igrys","athos",

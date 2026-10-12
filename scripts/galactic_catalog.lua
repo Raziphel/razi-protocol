@@ -5,7 +5,7 @@ M.groups={"calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra
 local members={}
 local groups={
   calidus={"nauvis","muluna","eneas","sye-calidus",
-           "razi-calidus-drift","bm-wit"},
+           "razi-calidus-drift"},
   solaris={"sye-solaris","vulcanus","castra","arig","hyarion","tellus","corrundum",
            "igrys","igrys-orbit","athos","PlanetAthos","halo-solar-orbit","halo-solar-station"},
   nyxaris={"sye-nyxaris","gleba","rabbasca","moshine","apia","carnova",

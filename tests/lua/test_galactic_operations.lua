@@ -53,7 +53,7 @@ check(summary.unlocked and summary.ships==0 and summary.unscheduled==0,
 
 -- Newly required world identities must match route and campaign chapter maps.
 for _,value in ipairs({
- {"bm-wit","calidus"},{"velora","nyxaris"},{"ferrum","vibrant"},
+ {"muluna","calidus"},{"velora","nyxaris"},{"ferrum","vibrant"},
  {"khemia","vibrant"},{"obsidiax","vespera"},{"nulla","vespera"},
  {"bm-balack","vespera"},{"carna","umbra"},{"arcanyx","umbra"}
 }) do
@@ -64,7 +64,7 @@ local index=campaign.discovery_index({technologies={
  some={name="some",prototype={effects={{
   type="unlock-space-location",space_location="cerys"}}}},
  another={name="another",prototype={effects={{
-  type="unlock-space-location",space_location="bm-wit"}}}}
+  type="unlock-space-location",space_location="muluna"}}}}
 }})
 check(index.vibrant[1]=="some" and index.calidus[1]=="another",
   "Campaign did not discover native moon research dynamically")

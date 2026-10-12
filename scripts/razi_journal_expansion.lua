@@ -34,7 +34,6 @@ return {
   {id="thrusters",chapter="fleet",tech="space-platform-thruster",requires={"platform"}},
   {id="bulk-cargo",chapter="fleet",tech="bulk-inserter",requires={"platform"}},
   {id="eneas",chapter="outposts",world="eneas",requires={"muluna"}},
-  {id="wit",chapter="outposts",world="bm-wit",requires={"space-science"}},
   {id="igrys",chapter="outposts",world="igrys",requires={"solaris-gate"}},
   {id="athos",chapter="outposts",world="athos",requires={"solaris-gate"}},
   {id="foliax",chapter="outposts",world="foliax",requires={"nyxaris-gate"}},

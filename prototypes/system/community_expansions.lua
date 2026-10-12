@@ -29,12 +29,7 @@ local candidates = {
   {mod="biological-machines-planet-balack", name="bm-balack",
     system="vespera", gate="planet-discovery-aquilo", hub="aquilo",
     radius=41.637729, orientation=0.816913, km=30000, profile="cryogenic_deep",
-    preserve_routes=true},
-  -- Wit produces early space science and belongs to Nauvis. Its moon
-  -- relationship is not an ordinary Razi star-system orbital slot.
-  {mod="biological-machines-planet-wit", name="bm-wit",
-    system="calidus", gate=nil, hub="nauvis",
-    moon=true, km=12000, profile="starter"}
+    preserve_routes=true}
 }
 
 -- Nonstandard content is registered via optional dependencies, but must
