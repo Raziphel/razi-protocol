@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.11
+Date: 13. 10. 2026
+  Compatibility:
+    - Restore coalesced Expedition Journal refreshes for scripted research bursts such as /cheat after the Nexus journal expansion accidentally removed that safety path.
+    - Preserve immediate journal updates for normal completed research and all Nexus boss and atmospheric field-guide additions.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.10
 Date: 12. 10. 2026
   Nexus Trials:
