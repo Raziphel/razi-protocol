@@ -120,8 +120,10 @@ local function add_objective_card(parent, ctx, player, chapter, quest, ledger, c
   theme.label(text, quest.title, {bold = true, color = theme.tint(chapter.id)})
   local badges = theme.row(text, 4)
   theme.badge(badges, status, category)
-  theme.badge(badges, quest.project and "PROJECT" or (quest.planet and "LANDING" or "RESEARCH"),
-    quest.project and "project" or (quest.planet and "landing" or "active"))
+  local type_name = quest.project and "PROJECT" or (quest.planet and "LANDING" or
+    (quest.platform or quest.trip) and "SPACEFLIGHT" or "RESEARCH")
+  theme.badge(badges, type_name, quest.project and "project" or
+    (quest.planet or quest.platform or quest.trip) and "landing" or "active")
   if quest.side then theme.badge(badges, "BRANCH", "branch") end
   theme.label(card, quest.story, {width = 650})
   theme.caption(card, ctx.status_text(record, finished, false))
@@ -150,6 +152,10 @@ local function add_objective_card(parent, ctx, player, chapter, quest, ledger, c
       theme.button(card, PLANET_PREFIX .. quest.planet, "Inspect planet & routes", false,
         "Open the System Atlas for this world")
     end
+  elseif quest.platform or quest.trip then
+    theme.caption(card, quest.platform and
+      "Objective: construct an operational space platform hub" or
+      "Objective: finish an interplanetary platform journey")
   elseif not finished and not compact then
     local tech = ctx.technology_for(player.force, quest.tech)
     if tech then theme.caption(card, "Next research: [technology=" .. tech.name .. "]") end
@@ -308,7 +314,9 @@ local function timeline(parent, ctx, player, _, ledger)
       local state = ledger.quests[ctx.quest_key(quest)]
       if state and state.completed_tick and not state.completed_before_tracking and
         not quest.planet then
-        entry(state.completed_tick, quest.title, quest.project and "Project completed" or "Research achieved", chapter.id)
+        entry(state.completed_tick, quest.title, quest.project and "Project completed" or
+          (quest.platform and "First space platform" or (quest.trip and "First voyage" or
+          "Research achieved")), chapter.id)
       end
     end
   end
@@ -447,6 +455,11 @@ local function atlas(parent, ctx, player, chapter, ledger, state)
     theme.label(head, route.destination:gsub("%-", " "), {bold=true})
     theme.caption(card, "Connection: " .. route.id ..
       (route.length and (" | " .. tostring(route.length) .. " km") or ""))
+    if prototypes.space_location[route.destination] then
+      theme.caption(card, "Destination: " ..
+        (player.force.is_space_location_unlocked(route.destination) and
+          "Unlocked" or "Requires discovery / unlock"))
+    end
   end
 end
 
@@ -558,19 +571,20 @@ function ui.open(player, ctx)
   filler.drag_target = frame
   theme.button(heading, ROOT .. "refresh", "Refresh", false, "Update the Chronicle without closing the window")
   theme.button(heading, ROOT .. "close", "X", false, "Close Chronicle")
-  local navigation = theme.row(frame, 4)
-  navigation.name = ROOT .. "navigation"
+  local navigation = frame.add{type="table", name=ROOT .. "navigation", column_count=4}
+  navigation.style.horizontal_spacing = 4
+  navigation.style.vertical_spacing = 3
   navigation.style.horizontally_stretchable = true
 
   local body = frame.add{type="flow", name=ROOT .. "body", direction="horizontal"}
   body.style.horizontally_stretchable = true
   local sidebar = body.add{type="scroll-pane", name=ROOT .. "sidebar", direction="vertical"}
   sidebar.style.width = math.max(190, math.floor(width * 0.245))
-  sidebar.style.height = height - 105
+  sidebar.style.height = height - 145
   sidebar.style.padding = 7
   local main = body.add{type="scroll-pane", name=ROOT .. "main", direction="vertical"}
   main.style.width = width - math.max(190, math.floor(width * 0.245)) - 36
-  main.style.height = height - 105
+  main.style.height = height - 145
   main.style.padding = 8
   player.opened = frame
   ui.render(player, ctx)
