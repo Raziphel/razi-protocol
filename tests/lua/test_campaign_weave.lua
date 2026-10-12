@@ -20,6 +20,9 @@ for _, name in ipairs({
   "planet-discovery-tellus","planet-discovery-corrundum",
   "planet-discovery-gleba","planet-discovery-moshine",
   "planet-discovery-apia-carnova",
+  "panglia_planet_discovery_panglia",
+  "panglia_tech_timewarp_data","panglia_advanced_optics_nanotech",
+  "panglia_dna_manipulation","panglia_sentient_processor",
   "planet-discovery-fulgora","planet-discovery-ribbonia",
   "planet-discovery-paracelsin",
   "planet-discovery-muria","planet-discovery-aquilo",
@@ -95,6 +98,12 @@ check(has_parent("planet-discovery-tellus","planetaris-polishing-science-pack"),
   "Tellus missing Hyarion science")
 check(has_parent("planet-discovery-apia-carnova","planet-discovery-moshine"),
   "Apia/Carnova missing Moshine research")
+check(has_parent("panglia_tech_timewarp_data","planet-discovery-moshine"),
+  "Panglia timewarp research should be connected to Moshine")
+check(has_parent("panglia_advanced_optics_nanotech","planet-discovery-apia-carnova"),
+  "Panglia nanoscale optics should be connected to Apia/Carnova")
+check(has_parent("panglia_dna_manipulation","planet-discovery-tellus"),
+  "Panglia DNA research should recognize Tellus bioengineering")
 check(has_parent("planet-discovery-maraxsis","planet-discovery-paracelsin"),
   "Maraxsis missing Vibrant research")
 check(has_parent("planet-discovery-frozeta","planet-discovery-tenebris"),

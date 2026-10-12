@@ -175,6 +175,19 @@
       "purpose": "Two optional manufacturing variants joining Ferrum/Linox/Moshine rare earth materials and Balack/Rubia/Tenebris radiation materials. Wit is excluded because it conflicts with required Muluna.",
       "upstream_status": "local-only",
       "fixture": "tests/lua/test_community_industry_exchanges.lua"
+    },
+    {
+      "id": "panglia-biooptic-exchanges",
+      "module": "prototypes/compat/panglia_industry.lua",
+      "upstream_mods": [
+        "panglia_planet",
+        "Moshine",
+        "apia",
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Reciprocal, source-guarded Panglite glass and Moshine optical-cable bonus recipes using Gleba bioflux. Native surface pressure, data-cell unlocks, manufacturer checks and productivity caps are respected.",
+      "upstream_status": "source-audited; engine-validation-pending",
+      "fixture": "tests/lua/test_panglia_integration.lua"
     }
   ]
 }

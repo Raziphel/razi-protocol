@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.7
+Date: 12. 10. 2026
+  Planet restoration:
+    - Bring Panglia 0.7.2 back as a required Nyxaris expedition while preserving required Muluna and the exclusion of Wit and Shchierbin.
+    - Give Panglia a unique outer Nyxaris orbit and direct Moshine and Apia-Carnova freight routes, with optional Pelagos return traffic.
+    - Retain the native Panglia discovery's Moshine data-cell costs, author-owned prerequisite research, timewarp mechanics, DNA gathering and simulations.
+    - Connect Panglia after Moshine and Apia; count its discovery in genuine first-frontier research mastery without making sentient-processor grinding mandatory for Vibrant.
+    - Tie DNA and simulation research into Apia, Tellus and Moshine with cycle-guarded, real-lab-checked interdependence.
+    - Add two provenance-checked, nonmandatory Panglite-glass and Moshine optical-cable export recipes, each limited to 25 percent gross bonus output without productivity stacking.
+    - Add fourteen new Panglia Chronicle objectives, research hints, map briefings, static regression fixtures and mod-compatibility documentation.
+    - Full Factorio 2.1 load, source version interactions and existing-save checks remain necessary; no automatic GitHub Actions enabled.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.6
 Date: 12. 10. 2026
   Compatibility:

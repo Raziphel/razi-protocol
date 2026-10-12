@@ -17,7 +17,7 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 
 * **Calidus:** Nauvis, Muluna, Calidus Drift orbital salvage stop; optional Eneas
 * **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys
-* **Nyxaris:** Gleba, Moshine, Apia/Carnova; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
+* **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
 * **Vibrant:** Fulgora, Ribbonia, Paracelsin; optional Cerys (Fulgora moon)
 * **Vespera:** Muria, Aquilo, Rubia, Maraxsis; recommended Obsidiax
 * **Beetlejuice:** Cubium, Linox, Secretas, Frozeta
@@ -58,7 +58,7 @@ Paracelsin requires the source belt research and sits beyond its physical crossi
 Local branches remain connected inside their own systems, including:
 
     Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
-    Nyxaris: Gleba | Moshine | Apia/Carnova (+ Rabbasca / Foliax / Pelagos / Dea Dia)
+    Nyxaris: Gleba | Moshine -> Apia/Carnova -> Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
     Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> frozen Paracelsin (+ Cerys)
              Belt Outer -> Paracelsin is an extra post-crossing return link
     Vespera: Muria -> Aquilo -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
@@ -75,7 +75,7 @@ Asteroid Belt discovery. Keep the Deep Space finale behind its existing
 Outer Frontier Mastery prerequisites.
 
 Short same-tier shuttles make planetary logistics more natural:
-Vulcanus↔Castra, Arig↔Hyarion, Gleba↔Moshine, Moshine↔Apia-Carnova
+Vulcanus↔Castra, Arig↔Hyarion, Gleba↔Moshine, Moshine↔Apia-Carnova, Moshine↔Panglia and Apia-Carnova↔Panglia
 Orbit, Linox↔Secretas and Umbra's hub↔Crucible Orbit.
 Research remains the authority for when destinations unlock; the
 native Vibrant crossing, Vespera and Umbra debris encounters cannot
@@ -91,7 +91,7 @@ Razi's reconciliation pass only removes source routes where **both** endpoints b
 `prototypes/technology/seven_system_gates.lua` is deliberately the final technology-rule pass. Earlier per-planet and compatibility passes can still run, but the canonical chapter gate rules execute after them.
 
 * Solaris and Nyxaris: Calidus research and Calidus card
-* Vibrant and Vespera: both first-frontier cards plus Corrundum, Apia/Carnova, Moshine discoveries
+* Vibrant and Vespera: both first-frontier cards plus Corrundum, Apia/Carnova, Moshine and Panglia discoveries
 * Beetlejuice and Umbra: both second-frontier cards plus Paracelsin and Maraxsis discoveries
 * Outer Frontier Mastery: both outer cards plus Frozeta, Vesta and Linox discoveries
 
@@ -215,6 +215,8 @@ same-system connections for established late-stage freight logistics:
 | Solaris | Hyarion ↔ Corrundum | 22,500 km |
 | Nyxaris | Gleba ↔ Apia/Carnova Orbit | 22,000 km |
 | Nyxaris | Gleba ↔ Moshine | 17,000 km |
+| Nyxaris | Moshine ↔ Panglia | 25,000 km |
+| Nyxaris | Apia/Carnova Orbit ↔ Panglia | 21,000 km |
 
 These routes never unlock worlds or change research. The source belt in
 Vibrant, Vespera's Debris Divide and Umbra's Shattered Divide are preserved.

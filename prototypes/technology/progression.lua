@@ -285,6 +285,12 @@ add_existing_prerequisites("vibrant-discovery", {
 -- Nyxaris branch.
 set_prerequisites_if_exists("planet-discovery-apia-carnova", {"nyxaris-discovery"})
 set_prerequisites_if_exists("planet-discovery-moshine", {"nyxaris-discovery"})
+-- No generic science-cost overwrite for Panglia. Its real Moshine data
+-- cells, source foundry dependency and DNA progression must stay intact.
+add_existing_prerequisites("panglia_planet_discovery_panglia", {
+	"nyxaris-discovery", "planet-discovery-moshine",
+	"planet-discovery-apia-carnova"
+})
 -- Prefer the Dea Dia branch when both optional integrations are installed,
 -- otherwise let standalone Pelagos enter directly through Nyxaris.
 set_first_existing_prerequisite("planet-discovery-pelagos", {

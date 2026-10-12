@@ -38,7 +38,7 @@ local function test_routes()
 	}
 	local planets = {
 		"nauvis", "muluna", "vulcanus", "gleba", "fulgora",
-		"muria", "aquilo", "rubia", "maraxsis", "cubium",
+		"panglia", "muria", "aquilo", "rubia", "maraxsis", "cubium",
 		"tenebris", "crucible", "vesta", "linox-planet_linox"
 	}
 	local space_locations = {}
@@ -254,6 +254,8 @@ local function test_routes()
         {"razi-arig-hyarion",12000},
         {"razi-gleba-moshine",17000},
         {"razi-moshine-apia-carnova-orbit",12000},
+        {"razi-moshine-panglia",25000},
+        {"razi-apia-carnova-orbit-panglia",21000},
         {"razi-asteroid-belt-outer-edge-paracelsin",14000},
         {"razi-linox-planet_linox-secretas",22000},
         {"razi-sye-umbra-crucible-orbit",17000}
@@ -373,7 +375,7 @@ local function test_research()
 		"planet-discovery-castra", "planet-discovery-arig",
 		"planet-discovery-hyarion", "planet-discovery-tellus",
 		"planet-discovery-corrundum", "planet-discovery-apia-carnova",
-		"planet-discovery-moshine",
+		"planet-discovery-moshine", "panglia_planet_discovery_panglia",
 		"planet-discovery-ribbonia", "planet-discovery-paracelsin",
 		"planet-discovery-muria",
 		"planet-discovery-aquilo", "planet-discovery-rubia",
@@ -394,6 +396,13 @@ local function test_research()
 			unit = {count = 100, time = 30, ingredients = {{"space-science-pack", 1}}}
 		}
 	end
+	-- The source discovery uses Moshine data cells and a real foundry.
+	technologies["panglia_planet_discovery_panglia"].prerequisites = {
+		"foundry","agricultural-science-pack","moshine-tech-data-extractor"
+	}
+	technologies["panglia_planet_discovery_panglia"].unit = {
+		count=250,time=60,ingredients={{"datacell-raw-data",1}}
+	}
 	local cards = {
 		"calidus-tech-card", "solaris-tech-card", "nyxaris-tech-card",
 		"vibrant-tech-card", "vespera-tech-card", "beetlejuice-tech-card",
@@ -450,6 +459,15 @@ local function test_research()
 	local vespera = technologies["vespera-discovery"] or {prerequisites = {}}
 	check(list_contains(vespera.prerequisites, "planet-discovery-corrundum"),
 		"Vespera unlocked without Solaris mastery")
+	check(list_contains(vespera.prerequisites, "panglia_planet_discovery_panglia"),
+		"Panglia must contribute to Nyxaris mastery")
+	local panglia=technologies["panglia_planet_discovery_panglia"]
+	check(list_contains(panglia.prerequisites,"planet-discovery-moshine")
+	  and list_contains(panglia.prerequisites,"planet-discovery-apia-carnova"),
+	  "Panglia must follow Moshine and Apia/Carnova")
+	check(list_contains(panglia.prerequisites,"foundry") and
+	  panglia.unit.ingredients[1][1]=="datacell-raw-data",
+	  "Panglia native data-cell and foundry research was overwritten")
 	check(list_contains(vespera.prerequisites, "planet-discovery-apia-carnova"),
 		"Vespera unlocked without Nyxaris mastery")
 	check(list_contains(technologies["planet-discovery-muria"].prerequisites, "vespera-discovery"),

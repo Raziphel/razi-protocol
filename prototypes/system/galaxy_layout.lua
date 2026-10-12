@@ -36,6 +36,8 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.245823},
   -- Apia/Carnova no longer shares an almost identical ring with Gleba.
   {"space-location","apia-carnova-orbit","nyxaris",39,0.316108},
+  -- Dedicated orbital lane: visually distinct from Apia and Moshine.
+  {"planet","panglia","nyxaris",44,0.44},
   {"planet","fulgora","vibrant",22,0.558152},
   {"planet","ribbonia","vibrant",27,0.397307},
   {"planet","paracelsin","vibrant",49,0.238},

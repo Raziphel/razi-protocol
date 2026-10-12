@@ -9,6 +9,16 @@ local rules = {
 {"planet-discovery-tellus", {"planet-discovery-gleba"}, {{"planetaris-compression-science-pack", "planet-discovery-arig"}, {"planetaris-polishing-science-pack", "planet-discovery-hyarion"}, {"agricultural-science-pack", "planet-discovery-gleba"}}},
 {"planet-discovery-corrundum", {}, {{"planetaris-bioengineering-science-pack", "planet-discovery-tellus"}, {"planetaris-pathological-science-pack", "planet-discovery-tellus"}}},
 {"planet-discovery-apia-carnova", {"planet-discovery-gleba", "planet-discovery-moshine"}, {{"agricultural-science-pack", "planet-discovery-gleba"}, {"thermodynamic-science-pack", "planet-discovery-moshine"}}},
+-- Link Panglia to actual upstream industries while keeping source-authored
+-- Moshine data cells, DNA triggers, cloning and timewarp machines unchanged.
+{"panglia_tech_timewarp_data", {"planet-discovery-moshine"},
+ {{"thermodynamic-science-pack", "planet-discovery-moshine"}}},
+{"panglia_advanced_optics_nanotech", {"planet-discovery-apia-carnova"}, {}},
+{"panglia_dna_manipulation", {"planet-discovery-tellus", "planet-discovery-apia-carnova"},
+ {{"planetaris-bioengineering-science-pack", "planet-discovery-tellus"},
+  {"apicultural-science-pack", "planet-discovery-apia-carnova"}}},
+{"panglia_sentient_processor", {"planet-discovery-tellus"},
+ {{"planetaris-bioengineering-science-pack", "planet-discovery-tellus"}}},
 {"planet-discovery-ribbonia", {"planet-discovery-fulgora"}, {{"electromagnetic-science-pack", "planet-discovery-fulgora"}}},
 {"planet-discovery-paracelsin", {}, {{"ribbonia-alien-science-pack", "planet-discovery-ribbonia"}}},
 {"planet-discovery-aquilo", {"planet-discovery-fulgora"}, {{"muriatic-science-pack", "planet-discovery-muria"}}},
@@ -116,6 +126,7 @@ end
 local function world_discovery(name)
   return name:match("^planet%-discovery%-")
     or name:match("^moon%-discovery%-")
+    or name:match("^panglia_planet_discovery_")
 end
 
 local function recipe_accessible_before(recipe_name,recipe,target,owner)

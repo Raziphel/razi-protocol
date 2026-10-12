@@ -6,7 +6,7 @@ Instead of leaving every planet on its own island, Razi Protocol rebuilds the ru
 
 ## Planet quality gate
 
-Muluna is preserved. Panglia and Shchierbin are retired from the curated dev pack: they are explicitly incompatible, their discoveries no longer gate later systems, and the native Vibrant Asteroid Belt still gates the outer-side Paracelsin expedition. Back up saves before uninstalling their source mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
+Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DNA, and simulation progression is source-owned; Razi connects it after Moshine and Apia/Carnova and supplies a small, optional two-way industry loop. Muluna remains mandatory; Planet Wit and Shchierbin are still excluded. Back up existing saves before changing planetary mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
 
 ## Muluna compatibility
 
@@ -63,7 +63,7 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 | --- | --- | --- | --- |
 | Home | **Calidus** | Nauvis, Muluna, Calidus Drift salvage anchorage; optional Eneas | Familiar Space Age industry, the first system card |
 | Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys | Military and advanced industrial science |
-| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
+| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
 | Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |
 | Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
 | Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
@@ -87,6 +87,7 @@ Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, w
 
 - **Eneas** remains with Calidus; **Cerys** follows Fulgora to Vibrant and **Rabbasca** follows Gleba to Nyxaris.
 - **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
+- **Panglia** has direct Moshine and Apia/Carnova freight routes, a distinct Nyxaris orbit, new Chronicle research objectives, and guarded Moshine optical-cable / Panglite-glass production exchanges. Neither bonus recipe replaces native manufacturing.
 - **Nexus-Updated and VoidProcessing-Updated** remain optional Deep Space expansions, never prerequisites to reach the main transceiver finale.
 - Aegis/Bellicos is **required** by the current pack and retains its own internal pulsar and stargate routes.
 
@@ -214,7 +215,7 @@ Some world relationships need particular care:
 - **Ribbonia -> Asteroid Belt -> Paracelsin** is Vibrant's core science chain.
 - **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
 - **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
-- **Moshine and Apia/Carnova** form Nyxaris's main science branch, with Pelagos and Dea Dia remaining optional.
+- **Moshine and Apia/Carnova** feed into **Panglia**, whose original Moshine data cells, DNA analysis, timewarp research and cloning remain essential. Pelagos and Dea Dia remain optional.
 - **Aegis and Bellicos** keep their complete internal pulsar/stargate expedition beyond the solar-system edge.
 
 The last data-stage route pass removes unintended cross-chapter shortcuts among the systems Razi owns, without deleting internal source-mod networks.

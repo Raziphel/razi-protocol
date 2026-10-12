@@ -92,6 +92,16 @@ local nyxaris_locations = {
     },
 }
 
+-- Panglia follows Moshine in its original source technology chain.
+-- Global galaxy_layout remains the final authority on orbit placement.
+if mods["panglia_planet"] and data.raw.planet and data.raw.planet["panglia"] then
+    table.insert(nyxaris_locations, {
+        type = "planet", name = "panglia",
+        orbit = {parent = {type = "space-location", name = "nyxaris"},
+                 distance = 44, orientation = 0.44}
+    })
+end
+
 if mods["pelagos"] then
     table.insert(nyxaris_locations, {
         type = "planet",
@@ -122,6 +132,8 @@ deleteRoute("apia-carnova-orbit-aquilo")
 deleteRoute("pelagos-apia-carnova-orbit")
 deleteRoute("nauvis-moshine")
 deleteRoute("vulcanus-moshine")
+-- The original Gleba path would bypass Panglia\'s Moshine discovery chain.
+deleteRoute("gleba-panglia")
 deleteRoute("star-pelagos")
 deleteRoute("pelagos-corrundum")
 deleteRoute("maraxsis-pelagos")

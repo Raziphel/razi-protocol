@@ -29,7 +29,7 @@ The first major custom-system chapter. It connects Castra Prime, Arig, Hyarion, 
 
 ### Nyxaris
 
-The mid-tier science chapter. Apia Carnova and Moshine feed into this stage, with optional Dea Dia and Pelagos folded in when installed.
+The first biological and computational frontier. Moshine data science and Apia-Carnova's biology lead into Panglia's timewarp, DNA analysis and simulated intelligence. Optional Dea Dia and Pelagos remain independent side expeditions.
 
 ### Vibrant
 
