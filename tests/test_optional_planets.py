@@ -1,4 +1,4 @@
-"""Validate optional-planet manifest names, references and required boundary."""
+"""Validate integrated-planet manifest names, references and required boundary."""
 import json
 import re
 from pathlib import Path
@@ -11,15 +11,13 @@ MODS = {
     "foliax": "nyxaris",
     "obsidiax": "vespera",
     "carna": "umbra",
-    "PlanetAthos": "solaris",
 }
 
 class OptionalPlanetTests(unittest.TestCase):
-    def test_six_integrations_are_optional(self):
+    def test_five_integrations_are_declared(self):
         dependencies = json.loads((ROOT / "info.json").read_text())["dependencies"]
-        names = [dep.split()[1] for dep in dependencies
-                 if dep.startswith("? ") or dep.startswith("+ ")]
-        recommended = [dep.split()[1] for dep in dependencies if dep.startswith("+ ")]
+        names = [dep.lstrip("?+ ").split(" >= ")[0] for dep in dependencies
+                 if not dep.startswith("!")]
         source = (ROOT / "prototypes/system/optional_planets.lua").read_text()
         for mod, host in MODS.items():
             with self.subTest(mod=mod):
@@ -27,12 +25,14 @@ class OptionalPlanetTests(unittest.TestCase):
                 self.assertIn('{"' + mod + '",', source)
                 self.assertIn('"' + host + '"', source)
 
-    def test_mature_planets_are_recommended_but_not_required(self):
+    def test_integrated_planets_are_required_and_athos_is_excluded(self):
         dependencies = json.loads((ROOT / "info.json").read_text())["dependencies"]
-        recommended = {dep.split()[1] for dep in dependencies if dep.startswith("+ ")}
+        by_name = {dep.lstrip("?+ ").split(" >= ")[0]: dep for dep in dependencies
+                   if not dep.startswith("!")}
         for mod in ("Igrys", "planet-rabbasca", "foliax", "obsidiax", "carna"):
-            self.assertIn(mod, recommended)
-        self.assertNotIn("PlanetAthos", recommended)
+            self.assertIn(mod, by_name)
+            self.assertFalse(by_name[mod].startswith(("? ", "+ ")))
+        self.assertIn("! PlanetAthos", dependencies)
 
     def test_optional_science_is_not_required_for_milestones(self):
         gates = (ROOT / "prototypes/technology/seven_system_gates.lua").read_text()

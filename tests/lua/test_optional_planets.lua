@@ -19,7 +19,7 @@ end
 
 local function run_fixture(enabled, cycle)
 	local planet_names = {
-		"igrys", "rabbasca", "foliax", "obsidiax", "carna", "athos"
+		"igrys", "rabbasca", "foliax", "obsidiax", "carna"
 	}
 	local planets = {gleba = {}}
 	for _, name in ipairs(planet_names) do planets[name] = {name = name} end
@@ -86,8 +86,7 @@ end
 
 local enabled = {
 	Igrys = "1.5.40", ["planet-rabbasca"] = "0.22.4",
-	foliax = "2.0.40", obsidiax = "1.0.29",
-	carna = "0.3.22", PlanetAthos = "1.1.2"
+	foliax = "2.0.40", obsidiax = "1.0.29", carna = "0.3.22"
 }
 local integration, planets, routes, techs, moved, moon, native_moon, special =
 	run_fixture(enabled, false)
@@ -96,7 +95,6 @@ check(planets.igrys.orbit.parent.name == "solaris", "Igrys didn't join Solaris")
 check(planets.foliax.orbit.parent.name == "nyxaris", "Foliax didn't join Nyxaris")
 check(planets.obsidiax.orbit.parent.name == "vespera", "Obsidiax didn't join Vespera")
 check(planets.carna.orbit.parent.name == "umbra", "Carna didn't join Umbra")
-check(planets.athos.orbit.parent.name == "solaris", "Athos didn't join Solaris")
 check(not moved.rabbasca and planets.rabbasca == moon, "Rabbasca lost native moon orbit")
 check(routes["gleba-rabbasca"] == native_moon, "Rabbasca native connection removed")
 check(routes["carna-special-link"] == special, "Source-owned special route removed")
@@ -109,8 +107,7 @@ for _, pair in ipairs({
 	{"igrys", "sye-solaris", "solaris-discovery"},
 	{"foliax", "sye-nyxaris", "nyxaris-discovery"},
 	{"obsidiax", "sye-vespera", "vespera-discovery"},
-	{"carna", "sye-umbra", "umbra-discovery"},
-	{"athos", "sye-solaris", "solaris-discovery"}
+	{"carna", "sye-umbra", "umbra-discovery"}
 }) do
 	local name, hub, gate = pair[1], pair[2], pair[3]
 	check(routes["razi-optional-" .. name .. "-" .. hub] ~= nil, name .. " route missing")
@@ -139,4 +136,4 @@ local _, _, _, cycle_techs = run_fixture(enabled, true)
 check(#cycle_techs["planet-discovery-carna"].prerequisites == 1,
 	"Optional planet admission introduced a research cycle")
 
-print("Six optional-planet admission fixtures passed")
+print("Five optional-planet admission fixtures passed")

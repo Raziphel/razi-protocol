@@ -7,7 +7,7 @@ local groups={
   calidus={"nauvis","muluna","eneas","sye-calidus",
            "razi-calidus-drift"},
   solaris={"sye-solaris","vulcanus","castra","arig","hyarion","tellus","corrundum",
-           "igrys","igrys-orbit","athos","PlanetAthos","halo-solar-orbit","halo-solar-station"},
+           "igrys","igrys-orbit","halo-solar-orbit","halo-solar-station"},
   nyxaris={"sye-nyxaris","gleba","rabbasca","moshine","apia","carnova",
            "apia-carnova-orbit","pelagos","foliax","dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},

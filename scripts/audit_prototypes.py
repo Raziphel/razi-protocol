@@ -76,7 +76,6 @@ OPTIONAL_PLANET_DESTINATIONS = {
     "foliax": ("nyxaris", "sye-nyxaris", "nyxaris-discovery"),
     "obsidiax": ("vespera", "sye-vespera", "vespera-discovery"),
     "carna": ("umbra", "sye-umbra", "umbra-discovery"),
-    "athos": ("solaris", "sye-solaris", "solaris-discovery"),
 }
 
 CAMPAIGN_TECHNOLOGIES = (

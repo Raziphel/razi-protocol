@@ -62,7 +62,7 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 | Tier | System | Planets | Identity |
 | --- | --- | --- | --- |
 | Home | **Calidus** | Nauvis, Muluna, Calidus Drift salvage anchorage; optional Eneas | Familiar Space Age industry, the first system card |
-| Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys, optional Athos | Military and advanced industrial science |
+| Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys | Military and advanced industrial science |
 | Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
 | Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |
 | Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
@@ -121,7 +121,7 @@ The current scope protects original moon orbits, underground-only surfaces, spec
 
 ## Razi Expedition Journal
 
-A built-in **157-milestone expedition journal across seventeen original story
+A built-in **155-milestone expedition journal across seventeen original story
 chapters** guides the full seven-system K2SO campaign. Open it during
 normal gameplay using the small top-row book button or **Ctrl+Shift+J**;
 pin a goal to a compact optional tracker. Every milestone has original

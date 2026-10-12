@@ -1,6 +1,6 @@
 # The Razi Expedition Journal
 
-A completely original 157-milestone, 17-chapter guided journey written
+A completely original 153-milestone, 17-chapter guided journey written
 for the seven-system Factorio 2.1 K2SO campaign. Inspired by the *idea*
 of an in-game journal, but not dependent on Quest Book or a fork of its
 source code, UI, texts or reward engine.
@@ -11,7 +11,7 @@ source code, UI, texts or reward engine.
   factory gameplay, on planets, and in remote view.
 - **Ctrl+Shift+J** opens or closes the journal. It is rebindable.
 - Choose one of 17 expandable chapters. The left column shows just the
-  open chapter so 157 milestones do not crowd a small screen. Filter by
+  open chapter so 153 milestones do not crowd a small screen. Filter by
   All, Ready, Unfinished or Completed.
 - Choose a chapter or quest in the left column; the right shows its
   original narrative, exact current research goal, up to four real

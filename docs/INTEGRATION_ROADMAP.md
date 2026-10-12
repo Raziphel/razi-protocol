@@ -58,17 +58,16 @@ verification** after the first cleanup pass. It is not a release changelog.
 - [ ] Verify source ownership of native travel routes and technology unlock effects
 - [ ] Add guarded integration and fixture tests before making the dependency required
 
-## Phase 7: Six additional planet destinations
+## Phase 7: Five additional planet destinations
 
 - [x] Screen 2.1 candidates for distinct gameplay, updates and compatibility
-- [x] Add five mature recommendations and experimental optional Athos
+- [x] Add five mature recommendations
 - [x] Attach guarded planet travel, star ownership, and native discovery gates
 - [x] Preserve Rabbasca's Gleba moon orbit and native source links
 - [x] Add isolated regression fixtures for absent mods and research cycles
 - [ ] Run each recommended planet with actual Factorio 2.1 + K2SO
 - [ ] Run the all-recommended combination and check modded machine restrictions
 - [ ] Test Asteroid defenses and the normal seven-system tech card victory
-- [ ] Verify Athos before recommending it by default
 
 ## Release condition
 
@@ -100,7 +99,7 @@ pass in-engine testing.
 ## Phase 10: Community expansion, 16 additional mod recommendations
 
 - [x] Audit the full Discord request against 2026-10-11 mod portal/source descriptions
-- [x] Retain the five already-supported worlds (Rabbasca, Igrys, Foliax, Obsidiax, Athos)
+- [x] Retain the four compatible already-supported worlds (Rabbasca, Igrys, Foliax, Obsidiax)
 - [x] Register eleven newly requested mods as optional 2.1-compatible dependencies
 - [x] Attach selected ordinary planets to appropriate stars without creating research bypasses
 - [x] Preserve Solar Halo flares, Ferrum's remote operations, Balack's huge asteroid routes, and native moons

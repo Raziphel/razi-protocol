@@ -49,7 +49,6 @@ for _, pair in ipairs({
 end
 check(planet.unrelated.localised_description == "Keep this unchanged",
   "Unrelated source world was modified")
-check(not planet.athos and not locations.athos, "Missing optional planet was created")
 local first = planet.nauvis.localised_description
 descriptions.data_final_fixes()
 check(planet.nauvis.localised_description == first,

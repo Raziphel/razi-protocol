@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -80,7 +80,6 @@
     "foliax >= 2.0.37",
     "obsidiax >= 1.0.29",
     "carna >= 0.3.22",
-    "PlanetAthos >= 1.1.2",
     "? rabbasca-underground >= 0.10.3",
     "? skewer_shattered_planet >= 1.0.42",
     "? Solar-Halo >= 1.2.0",
@@ -91,6 +90,7 @@
     "alchemy-khemia >= 0.3.6",
     "Arcanyx >= 1.1.5",
     "biological-machines-planet-balack >= 1.1.2",
+    "! PlanetAthos",
     "! biological-machines-planet-wit",
     "! shchierbin",
     "! panglia_planet"
