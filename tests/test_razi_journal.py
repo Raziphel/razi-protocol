@@ -82,6 +82,12 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('name="razi_journal_chapter_picker"',ui)
         self.assertIn('function M.selection_changed(event)',ui)
         self.assertIn('razi_journal.selection_changed(event)',control)
+        self.assertIn('razi_journal.text_changed(event)',control)
+        self.assertIn('name="razi_journal_search"',ui)
+        self.assertIn('science_gallery(native)',ui)
+        self.assertIn('unlock_gallery(native)',ui)
+        self.assertIn('quest_art(player.force,quest,context)',ui)
+        self.assertIn('column_count=size.reader<700 and 2 or 4',ui)
         self.assertIn('tags={razi_journal_action="select",id=quest.id}',ui)
         self.assertIn('style="inside_shallow_frame_with_padding"',ui)
         for key in ("navigator-title","archive-navigator","chapter-context",

@@ -60,11 +60,12 @@ local function pref(index)
   local value=storage.razi_expedition_journal[index]
   if not value then
     value={selected=nil,pinned=nil,tracker=false,
-      chapter=nil,filter="all",view="quests",record=nil}
+      chapter=nil,filter="all",view="quests",record=nil,query=""}
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
   value.view=value.view or "quests"
+  value.query=value.query or ""
   return value
 end
 M.preferences=pref
@@ -237,6 +238,107 @@ local function select_quest(force,p,context)
   p.chapter=selected and selected.chapter or false
   return selected
 end
+
+-- All icons are resolved from the installed Factorio prototypes, not guessed
+-- mod-specific assets. Keep work confined to visible GUI construction.
+local function sprite_if_valid(path)
+  if not path then return nil end
+  if helpers and helpers.is_valid_sprite_path and
+    not helpers.is_valid_sprite_path(path) then return nil end
+  return path
+end
+local function quest_art(force,quest,context)
+  if quest.world then
+    local image=sprite_if_valid("space-location/"..quest.world)
+    if image then return image end
+  end
+  local tech=technology(force,quest,context)
+  return tech and sprite_if_valid("technology/"..tech.name)
+    or "razi-journal-book-icon"
+end
+local function matches_query(quest,query)
+  if not query or query=="" then return true end
+  local corpus=(quest.id.." "..quest.chapter.." "..(quest.tech or "")
+    .." "..(quest.world or "")):lower():gsub("[-_]"," ")
+  for word in query:lower():gsub("[-_]"," "):gmatch("%S+") do
+    if not corpus:find(word,1,true) then return false end
+  end
+  return true
+end
+M.matches_query=matches_query
+
+local function draw_gallery(parent,key,entries,width,max_items)
+  if #entries==0 then return end
+  local block=parent.add{type="flow",direction="vertical"}
+  block.style.vertical_spacing=5
+  subtitle(block,key,width)
+  local columns=math.max(1,math.min(5,math.floor(width/116)))
+  local card_width=math.max(68,math.floor((width-(columns-1)*8)/columns)-3)
+  local grid=block.add{type="table",column_count=columns}
+  grid.style.horizontal_spacing=8
+  grid.style.vertical_spacing=9
+  for i=1,math.min(max_items,#entries) do
+    local entry=entries[i]
+    local card=grid.add{type="flow",direction="vertical"}
+    card.style.width=card_width
+    card.style.vertical_spacing=3
+    local picture=card.add{type="sprite",sprite=entry.sprite,
+      tooltip=entry.tooltip or entry.name}
+    picture.style.width=38
+    picture.style.height=38
+    local caption=wrap(card,entry.name,card_width)
+    caption.style.font_color={r=.86,g=.9,b=.94}
+  end
+  if #entries>max_items then
+    wrap(block,L("more-unlocks",tostring(#entries-max_items)),width)
+  end
+end
+local function science_gallery(native)
+  local result={}
+  for _,ingredient in ipairs(native and native.research_unit_ingredients or {}) do
+    local path=sprite_if_valid("item/"..ingredient.name)
+    local item=prototypes and prototypes.item
+      and prototypes.item[ingredient.name]
+    if path then result[#result+1]={
+      sprite=path,name=item and item.localised_name or ingredient.name,
+      tooltip=L("science-per-unit",tostring(ingredient.amount or 1))} end
+  end
+  return result
+end
+local function unlock_gallery(native)
+  local result,seen={},{}
+  for _,effect in ipairs(native and native.prototype
+    and native.prototype.effects or {}) do
+    if effect.type=="unlock-recipe" and effect.recipe and
+      not seen[effect.recipe] then
+      seen[effect.recipe]=true
+      local recipe=prototypes and prototypes.recipe
+        and prototypes.recipe[effect.recipe]
+      if recipe and not recipe.hidden then
+        local output=recipe.main_product or
+          (recipe.products and recipe.products[1])
+        local item=output and output.type~="fluid"
+          and prototypes and prototypes.item and prototypes.item[output.name]
+        local building=item and item.place_result
+        local sprite=building and sprite_if_valid("entity/"..building.name)
+          or output and sprite_if_valid(
+            (output.type=="fluid" and "fluid/" or "item/")..output.name)
+          or sprite_if_valid("recipe/"..effect.recipe)
+        if sprite then result[#result+1]={
+          sprite=sprite,
+          name=(building and building.localised_name)
+            or (item and item.localised_name) or recipe.localised_name,
+          tooltip=recipe.localised_name,building=building and true or false} end
+      end
+    end
+  end
+  table.sort(result,function(a,b)
+    if a.building~=b.building then return a.building end
+    return false
+  end)
+  return result
+end
+
 local function render_tracker(player)
   local area=player.gui.left
   local old=area[TRACKER]
@@ -253,7 +355,12 @@ local function render_tracker(player)
   local frame=area.add{type="frame",name=TRACKER,direction="vertical",
     caption=L("tracker-title")}
   frame.style.maximal_width=265
-  local heading=frame.add{type="button",
+  local line=frame.add{type="flow",direction="horizontal"}
+  line.style.horizontal_spacing=7
+  local marker=line.add{type="sprite",sprite=quest_art(player.force,quest,context)}
+  marker.style.width=30
+  marker.style.height=30
+  local heading=line.add{type="button",
     caption={"journal-title."..quest.id},
     tags={razi_journal_action="tracker-open"}}
   heading.style.horizontally_stretchable=true
@@ -271,6 +378,16 @@ local function render_details(parent,player,quest,p,context,size)
   panel.style.height=size.body
   local inner=size.reader-38
   local status=M.state(player.force,quest,context)
+  local hero=panel.add{type="flow",direction="horizontal"}
+  hero.style.horizontal_spacing=10
+  local art=hero.add{type="sprite",
+    sprite=quest_art(player.force,quest,context)}
+  art.style.width=size.compact and 42 or 54
+  art.style.height=size.compact and 42 or 54
+  local hero_text=hero.add{type="flow",direction="vertical"}
+  hero_text.style.vertical_spacing=2
+  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-82)
+  hero_title.style.font="heading-2"
 
   local eyebrow=panel.add{type="flow",direction="horizontal"}
   eyebrow.style.horizontally_stretchable=true
@@ -279,8 +396,6 @@ local function render_details(parent,player,quest,p,context,size)
   tint(sequence,palette[quest.chapter] or palette.calidus)
   local status_label=label(eyebrow,L("status-"..status))
   status_label.style.font="default-bold"
-  local title=wrap(panel,{"journal-title."..quest.id},inner)
-  title.style.font="heading-2"
   local chapter_intro=label(panel,{"journal-chapter."..quest.chapter})
   chapter_intro.style.font="default-bold"
   chapter_intro.style.font_color=palette[quest.chapter] or palette.calidus
@@ -289,16 +404,12 @@ local function render_details(parent,player,quest,p,context,size)
   objective_bar.style.width=inner
   objective_bar.style.height=9
 
-  local content_height=size.body-(size.compact and 188 or 197)
+  local content_height=size.body-(size.compact and 227 or 243)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
   local text_width=inner-18
   local prose=scroll.add{type="flow",direction="vertical"}
   prose.style.width=text_width
   prose.style.vertical_spacing=17
-  section(prose,"chapter-context",
-    {"journal-chapter-story."..quest.chapter},text_width)
-  section(prose,"story-heading",{"journal-story."..quest.id},text_width)
-
   local objective=prose.add{type="frame",direction="vertical",
     style="inside_deep_frame"}
   objective.style.width=text_width
@@ -341,7 +452,16 @@ local function render_details(parent,player,quest,p,context,size)
       end
     end
   end
+  if native then
+    draw_gallery(prose,"science-pack-heading",
+      science_gallery(native),text_width,12)
+    draw_gallery(prose,"recipe-unlock-heading",
+      unlock_gallery(native),text_width,8)
+  end
   section(prose,"tip-heading",{"journal-tip."..quest.id},text_width)
+  section(prose,"chapter-context",
+    {"journal-chapter-story."..quest.chapter},text_width)
+  section(prose,"story-heading",{"journal-story."..quest.id},text_width)
   local forecast=weather.for_quest(quest)
   if forecast then
     local sky=section(prose,"weather-heading",
@@ -351,8 +471,11 @@ local function render_details(parent,player,quest,p,context,size)
       forecast.enabled and {r=.54,g=.85,b=.75} or {r=.72,g=.74,b=.79})
   end
 
-  local actions=panel.add{type="flow",direction="horizontal"}
+  -- Never let the long Nexus and pin actions overflow narrow readers.
+  local actions=panel.add{type="table",
+    column_count=size.reader<700 and 2 or 4}
   actions.style.horizontal_spacing=8
+  actions.style.vertical_spacing=6
   if quest.boss then
     actions.add{type="button",caption=L("nexus-open-codex"),
       tags={razi_journal_action="nexus-codex",id=quest.boss}}
@@ -361,6 +484,8 @@ local function render_details(parent,player,quest,p,context,size)
   actions.add{type="button",caption=L(pinned
     and "tracker-hide" or "tracker-show"),
     tags={razi_journal_action="pin",id=quest.id}}
+  actions.add{type="button",caption=L("previous-in-chapter"),
+    tags={razi_journal_action="previous-in-chapter"}}
   actions.add{type="button",caption=L("next-in-chapter"),
     tags={razi_journal_action="next-in-chapter"}}
 end
@@ -382,12 +507,24 @@ local function render_chapters(parent,player,p,context,size)
     name="razi_journal_chapter_picker",items=names,
     selected_index=chapter_index(p.chapter)}
   dropdown.style.width=inner
+  subtitle(frame,"search-heading",inner)
+  local find_row=frame.add{type="flow",direction="horizontal"}
+  find_row.style.horizontal_spacing=5
+  local search=find_row.add{type="textfield",name="razi_journal_search",
+    text=p.query or "",tooltip=L("search-tooltip")}
+  search.style.width=inner-44
+  local clear=find_row.add{type="button",style="tool_button",
+    caption="×",tooltip=L("clear-search"),
+    tags={razi_journal_action="clear-search"}}
+  clear.style.width=32
+  clear.style.height=32
   local scroll=wheel_pane(frame,"razi_journal_navigation",
-    inner,size.body-105)
+    inner,size.body-151)
   local column=scroll.add{type="flow",direction="vertical"}
   column.style.width=inner-13
   column.style.vertical_spacing=7
   local selected_element
+  local found=false
 
   for index,chapter in ipairs(defs.chapters) do
     local available={}
@@ -399,13 +536,15 @@ local function render_chapters(parent,player,p,context,size)
         if M.complete(player.force,quest,context) then
           completed=completed+1
         end
-        if M.show_in_filter(player.force,quest,p.filter,context) then
+        if M.show_in_filter(player.force,quest,p.filter,context)
+          and matches_query(quest,p.query) then
           available[#available+1]=quest
         end
       end
     end
     if #available>0 then
-      local open=p.chapter==chapter.id
+      found=true
+      local open=p.query~="" or p.chapter==chapter.id
       local card=column.add{type="frame",direction="vertical",
         style="inside_shallow_frame"}
       card.style.width=inner-16
@@ -437,6 +576,10 @@ local function render_chapters(parent,player,p,context,size)
           local item=card.add{type="flow",direction="horizontal"}
           item.style.width=inner-34
           item.style.horizontal_spacing=7
+          local icon=item.add{type="sprite",sprite=quest_art(
+            player.force,quest,context)}
+          icon.style.width=24
+          icon.style.height=24
           local control=item.add{type="button",style="tool_button",
             caption=state=="complete" and "✓"
               or state=="active" and "●" or "○",
@@ -453,7 +596,7 @@ local function render_chapters(parent,player,p,context,size)
             tags={razi_journal_action="select",id=quest.id},
             tooltip=L("select-objective")}
           choice.style.single_line=false
-          choice.style.maximal_width=inner-75
+          choice.style.maximal_width=inner-108
           choice.style.font_color=quest.id==p.selected
             and {r=1,g=.89,b=.62} or {r=.94,g=.94,b=.94}
           if quest.id==p.selected then
@@ -464,10 +607,12 @@ local function render_chapters(parent,player,p,context,size)
       end
     end
   end
-  -- A selected objective remains visible even after rebuilding the panel.
-  if selected_element then
+  if not found then wrap(column,L("nothing-found"),inner-28) end
+  -- Search results should not jump while the player is still typing.
+  if selected_element and p.query=="" then
     pcall(function() scroll.scroll_to_element(selected_element) end)
   end
+  return search
 end
 -- The archive is not another quest chain. Each story entry opens only
 -- when its source-backed research milestone is actually completed.
@@ -498,15 +643,20 @@ local function render_archive(parent,player,p,context,size)
     if opened and (not chosen or record.id==p.record) then chosen=record end
     local row=collection.add{type="flow",direction="horizontal"}
     row.style.horizontal_spacing=8
-    local mark=row.add{type="button",style="tool_button",
-      caption=opened and "◈" or "◇",
-      enabled=opened and true or false,
-      tags={razi_journal_action="record",id=record.id},
-      tooltip={"journal-record-title."..record.id}}
-    mark.style.width=27
-    mark.style.height=27
-    mark.style.font_color=opened and {r=.45,g=.86,b=.73}
-      or {r=.59,g=.62,b=.68}
+    local mark
+    if opened then
+      mark=row.add{type="sprite-button",style="slot_button",
+        sprite=quest_art(player.force,quest,context),
+        tags={razi_journal_action="record",id=record.id},
+        tooltip={"journal-record-title."..record.id}}
+    else
+      mark=row.add{type="button",style="tool_button",
+        caption="◇",enabled=false,
+        tooltip={"journal-record-title."..record.id}}
+      mark.style.font_color={r=.59,g=.62,b=.68}
+    end
+    mark.style.width=30
+    mark.style.height=30
     local choice=row.add{type="label",style="clickable_label",
       caption={"journal-record-title."..record.id},
       tags={razi_journal_action="record",id=record.id}}
@@ -532,7 +682,16 @@ local function render_archive(parent,player,p,context,size)
   end
   p.record=chosen.id
   subtitle(paper,"archive-entry-label",size.reader-48)
-  local title=wrap(paper,{"journal-record-title."..chosen.id},size.reader-48)
+  local cover=paper.add{type="flow",direction="horizontal"}
+  cover.style.horizontal_spacing=10
+  local entry_quest=defs.by_id[chosen.unlock]
+  if entry_quest then
+    local cover_art=cover.add{type="sprite",
+      sprite=quest_art(player.force,entry_quest,context)}
+    cover_art.style.width=45
+    cover_art.style.height=45
+  end
+  local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-112)
   title.style.font="heading-2"
   local origin=label(paper,{"journal-record-origin."..chosen.id})
   origin.style.font_color=palette.echoes
@@ -546,7 +705,7 @@ local function render_archive(parent,player,p,context,size)
   wrap(paper,L("archive-disclaimer"),size.reader-48)
 end
 
-local function draw(player)
+local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
@@ -650,7 +809,8 @@ local function draw(player)
     render_archive(body,player,p,context,size)
   else
     local selected=select_quest(player.force,p,context)
-    render_chapters(body,player,p,context,size)
+    local search=render_chapters(body,player,p,context,size)
+    if focus_search then pcall(function() search.focus() end) end
     if selected then
       render_details(body,player,selected,p,context,size)
     else
@@ -660,7 +820,7 @@ local function draw(player)
       wrap(empty,L("missing-quest"),size.reader-40)
     end
   end
-  local foot=label(frame,L("footer-hint"))
+  local foot=wrap(frame,L("footer-hint"),size.width-38)
   foot.style.font_color={r=.63,g=.67,b=.71}
 end
 M.draw=draw
@@ -816,7 +976,7 @@ function M.gui_click(event)
       p.filter="all"
       p.view="quests"
     end
-  elseif action=="next-in-chapter" then
+  elseif action=="next-in-chapter" or action=="previous-in-chapter" then
     local context=M.context(player.force)
     local choices={}
     for _,quest in ipairs(defs.quests) do
@@ -827,10 +987,13 @@ function M.gui_click(event)
     end
     for i,quest in ipairs(choices) do
       if quest.id==p.selected then
-        p.selected=choices[i%#choices+1].id
+        local offset=action=="previous-in-chapter" and -2 or 0
+        p.selected=choices[(i+offset)%#choices+1].id
         break
       end
     end
+  elseif action=="clear-search" then
+    p.query=""
   elseif action=="pin" and defs.by_id[tags.id] then
     if p.tracker and p.pinned==tags.id then
       p.tracker=false
@@ -840,6 +1003,30 @@ function M.gui_click(event)
     render_tracker(player)
   elseif action~="refresh" then return end
   draw(player)
+end
+function M.text_changed(event)
+  local element=event and event.element
+  if not (element and element.valid
+    and element.name=="razi_journal_search") then return end
+  local player=game.get_player(event.player_index)
+  if not (player and player.valid) then return end
+  local p=pref(player.index)
+  local query=(element.text or ""):sub(1,80)
+  if p.query==query then return end
+  p.query=query
+  -- Select the first matching visible milestone so the reader follows search.
+  if query~="" then
+    local context=M.context(player.force)
+    for _,quest in ipairs(defs.quests) do
+      if M.show_in_filter(player.force,quest,p.filter,context)
+        and matches_query(quest,query) then
+        p.selected=quest.id
+        p.chapter=quest.chapter
+        break
+      end
+    end
+  end
+  draw(player,true)
 end
 function M.selection_changed(event)
   local element=event and event.element
@@ -851,6 +1038,7 @@ function M.selection_changed(event)
   local p=pref(player.index)
   p.chapter=chapter.id
   p.filter="all"
+  p.query=""
   local context=M.context(player.force)
   for _,quest in ipairs(defs.quests) do
     if quest.chapter==chapter.id

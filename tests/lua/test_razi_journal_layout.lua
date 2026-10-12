@@ -10,6 +10,7 @@ local function node(spec)
   local element={valid=true,type=spec.type,name=spec.name,tags=spec.tags,
     caption=spec.caption,tooltip=spec.tooltip,
     selected_index=spec.selected_index,items=spec.items,
+    sprite=spec.sprite,text=spec.text,
     horizontal_scroll_policy=spec.horizontal_scroll_policy,
     vertical_scroll_policy=spec.vertical_scroll_policy,
     style={},children={}}
@@ -32,6 +33,16 @@ local function node(spec)
   return element
 end
 local force={name="player",technologies={}}
+rawset(_G,"helpers",{is_valid_sprite_path=function() return true end})
+rawset(_G,"prototypes",{
+ item={
+   ["automation-science-pack"]={localised_name="Automation science"},
+   ["assembling-machine-1"]={localised_name="Assembler",
+     place_result={name="assembling-machine-1",localised_name="Assembler"}}},
+ recipe={
+   ["assembling-machine-1"]={localised_name="Assembler",
+     products={{type="item",name="assembling-machine-1"}}}}
+})
 for _,quest in ipairs(defs.quests) do
   if quest.tech then
     force.technologies[quest.tech]={
@@ -41,6 +52,10 @@ for _,quest in ipairs(defs.quests) do
     }
   end
 end
+force.technologies.automation.prototype.effects={
+  {type="unlock-recipe",recipe="assembling-machine-1"}}
+force.technologies.automation.research_unit_ingredients={
+  {name="automation-science-pack",amount=1}}
 local player={valid=true,index=1,force=force,
   display_resolution={width=1920,height=1080},
   display_scale=1.25,
@@ -72,6 +87,29 @@ local wide=journal.layout(player.display_resolution,player.display_scale)
 check(wide.width>960,"The redesigned window was not enlarged")
 check(root.style.width==wide.width,"Frame width ignores resolution")
 check(assert_panes()==2,"Quest view needs only navigator and reader panes")
+local sprites={}
+for _,entry in ipairs(created) do
+  if entry.sprite then sprites[entry.sprite]=true end
+end
+check(sprites["technology/automation"],"Native research art is missing")
+check(sprites["item/automation-science-pack"],"Native science art is missing")
+check(sprites["entity/assembling-machine-1"],"Native building art is missing")
+check(journal.matches_query(defs.by_id["first-signal"],"automation"),
+  "Search must match native technology")
+check(not journal.matches_query(defs.by_id["first-signal"],"maraxsis"),
+  "Search must exclude unrelated technologies")
+local search_field
+for _,entry in ipairs(created) do
+  if entry.name=="razi_journal_search" then search_field=entry end
+end
+check(search_field,"Live search input is missing")
+search_field.text="automation"
+journal.text_changed({player_index=1,element=search_field})
+check(journal.preferences(1).query=="automation",
+  "Typed search should persist in existing player preferences")
+journal.preferences(1).query=""
+created={}
+journal.draw(player)
 local picker
 local selector
 for _,element in ipairs(created) do

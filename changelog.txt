@@ -1,3 +1,12 @@
+Version: 2.1.16
+Date: 13. 10. 2026
+  Protocol Codex UI:
+    - Rename the expedition reader to the Protocol Codex without changing saved progress.
+    - Display actual research, space-location, science, machine and item artwork from installed prototypes.
+    - Put practical objectives ahead of lore and add bounded unlock and ingredient galleries.
+    - Add live milestone search, clear-search control and previous/next navigation.
+    - Preserve native research authority, Nexus victories and event-only redraws.
+
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.15
 Date: 13. 10. 2026
