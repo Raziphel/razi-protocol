@@ -5,6 +5,7 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 local journal=require("scripts.razi_journal")
 local defs=require("scripts.razi_journal_data")
+local themes=require("scripts.razi_journal_themes")
 local created={}
 local function node(spec)
   local element={valid=true,type=spec.type,name=spec.name,tags=spec.tags,
@@ -34,6 +35,28 @@ local function node(spec)
 end
 local force={name="player",technologies={}}
 rawset(_G,"helpers",{is_valid_sprite_path=function() return true end})
+local unique_icons,unique_colors={},{}
+local count=0
+for _,chapter in ipairs(defs.chapters) do
+  local theme=themes.get(chapter.id)
+  local image=themes.icon(chapter.id)
+  check(theme and theme.primary and theme.soft,
+    "Missing chapter palette for "..chapter.id)
+  check(image and not unique_icons[image],
+    "Chapter sigil is absent or duplicated: "..chapter.id)
+  unique_icons[image]=true
+  local key=theme.primary.r.."/"..theme.primary.g.."/"..theme.primary.b
+  check(not unique_colors[key],
+    "Chapter color is duplicated: "..chapter.id)
+  unique_colors[key]=true
+  count=count+1
+end
+check(count==18,"Every campaign chapter needs unique color and artwork")
+local original_sprite_check=helpers.is_valid_sprite_path
+helpers.is_valid_sprite_path=function() return false end
+check(themes.icon("solaris")=="razi-journal-book-icon",
+  "Removed mod artwork must fall back to the Codex emblem")
+helpers.is_valid_sprite_path=original_sprite_check
 rawset(_G,"prototypes",{
  item={
    bioflux={localised_name="Bioflux"},
@@ -101,6 +124,15 @@ end
 check(sprites["technology/automation"],"Native research art is missing")
 check(sprites["item/automation-science-pack"],"Native science art is missing")
 check(sprites["entity/assembling-machine-1"],"Native building art is missing")
+check(sprites[themes.icon("calidus")],
+  "Navigator must show the chapter insignia")
+local tinted=0
+for _,entry in ipairs(created) do
+  if entry.type=="progressbar" and entry.style.color then
+    tinted=tinted+1
+  end
+end
+check(tinted>=2,"Chapter and progress meters should be color themed")
 check(journal.matches_query(defs.by_id["first-signal"],"automation"),
   "Search must match native technology")
 check(not journal.matches_query(defs.by_id["first-signal"],"maraxsis"),
@@ -125,6 +157,8 @@ local industry_sprites={}
 for _,entry in ipairs(created) do
   if entry.sprite then industry_sprites[entry.sprite]=true end
 end
+check(industry_sprites[themes.icon("alliances")],
+  "Industrial chapter must display its own identity")
 check(industry_sprites["item/bioflux"] and industry_sprites["item/kr-rare-metals"],
   "Factory research should illustrate real recipe imports and outputs")
 check(journal.matches_query(defs.by_id["alliance-bio-metals"],"vulcanus"),

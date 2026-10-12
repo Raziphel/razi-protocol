@@ -60,3 +60,23 @@ every Razi-owned graphics path, validates PNG headers, alpha and known dimension
 and protects the dedicated star/card and late route-icon contracts. Lua route
 fixtures additionally verify that every final space connection receives an icon
 without overwriting icon metadata owned by another mod.
+
+## Protocol Codex chapter theming (2.1.18)
+
+The first-party expedition Codex now uses its own shared theme catalog at
+`scripts/razi_journal_themes.lua`. The 18 chapters use distinct colors and
+source-prototype artwork instead of repeated generic buttons:
+
+- Calidus: brass and copper; Solaris: molten orange; Nyxaris: botanical green
+- Vibrant: electric azure; Vespera: arctic lilac; Beetlejuice: mineral gold
+- Umbra: crimson; Stellar Works: solar gold; Network: trade turquoise
+- Industrial Constellations: signal amber; Finale: starlight lavender
+- Foundations: bronze; Fleet: flight blue; Outposts: explorer green
+- Sciences: laboratory violet; Defense: ember red; Deepworks: radiation blue
+- Echoes: archive parchment, with recovered-signal iconography
+
+A localized short mood caption gives each chapter a distinct setting.
+Icons fall back to the Codex crest if the corresponding source mod sprite
+is absent, without introducing new external artwork dependencies. Native
+Factorio frames, progressbars, and modest color rules provide the look,
+with no scripted animations, gameplay changes, or ticker work.

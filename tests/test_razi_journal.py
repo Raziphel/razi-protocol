@@ -39,6 +39,36 @@ class ExpeditionJournalTests(unittest.TestCase):
             self.assertIn(chapter,chapter_sources)
             for section in ("journal-title","journal-story","journal-tip"):
                 self.assertIn(quest,sections[section])
+    def test_every_chapter_has_a_distinct_theme(self):
+        catalog=read("scripts/razi_journal_data.lua")
+        expanded=read("scripts/razi_journal_expansion.lua")
+        industry=read("scripts/razi_journal_industry.lua")
+        chapter_ids=set(re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',
+                                   catalog+expanded+industry))
+        themes=read("scripts/razi_journal_themes.lua")
+        entries=re.findall(
+            r'^  ([a-z0-9]+)=\{primary=\{r=([^,]+),g=([^,]+),b=([^}]+)\},'
+            r'soft=\{r=([^,]+),g=([^,]+),b=([^}]+)\},',
+            themes,re.M)
+        self.assertEqual(chapter_ids,{entry[0] for entry in entries})
+        self.assertEqual(18,len(entries))
+        self.assertEqual(18,len({entry[1:4] for entry in entries}))
+        primary_sprites=re.findall(
+            r'^    icons=\{"([^"]+)"',themes,re.M)
+        self.assertEqual(18,len(set(primary_sprites)))
+        ui=read("scripts/razi_journal.lua")
+        self.assertIn('themes.icon(chapter.id)',ui)
+        self.assertIn('themes.icon(quest.chapter)',ui)
+        self.assertIn('objective_bar.style.color=theme.primary',ui)
+        self.assertIn('progress.style.color=theme.primary',ui)
+        self.assertIn('chapter_intro.style.font_color=theme.primary',ui)
+        self.assertIn('accent_rule(panel,theme,inner,3)',ui)
+        self.assertIn('style="inside_shallow_frame"',ui)
+        locale=read("locale/en/razi_journal.cfg")
+        mood=locale.split("[journal-mood]",1)[1].split("\n[",1)[0]
+        for chapter in chapter_ids:
+            self.assertRegex(mood,rf"(?m)^{chapter}=")
+
     def test_archived_transmissions_are_source_research_gated(self):
         records=read("scripts/razi_journal_records.lua")
         all_records=re.findall(r'\{id="([^"]+)",unlock="([^"]+)"',records)
@@ -67,7 +97,7 @@ class ExpeditionJournalTests(unittest.TestCase):
             self.assertIn(name,recipes, f"Industry quest has no registered recipe source: {name}")
         ui=read("scripts/razi_journal.lua")
         self.assertIn('effect.recipe==quest.tech',ui)
-        self.assertIn('recipe_gallery(prose,quest,native,text_width)',ui)
+        self.assertIn('recipe_gallery(prose,quest,native,text_width,theme)',ui)
 
     def test_only_authoritative_research_progress(self):
         source=read("scripts/razi_journal.lua")

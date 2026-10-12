@@ -1,3 +1,12 @@
+Version: 2.1.18
+Date: 13. 10. 2026
+  Protocol Codex art direction:
+    - Give all 18 chapters distinctive colors, native prototype artwork, and atmospheric subtitles.
+    - Apply themed accents and icons to chapter navigation, selected milestones, reader banners, quest progress, galleries and the pinned objective tracker.
+    - Add subtle native frames to item and building unlock galleries and chapter-specific colored separator lines.
+    - Keep compact chapter progress bars below their captions to avoid horizontal overflow.
+    - Preserve all quest milestones, research completion logic, save preferences and event-driven rendering.
+
 Version: 2.1.17
 Date: 13. 10. 2026
   Interplanetary campaign integration:
