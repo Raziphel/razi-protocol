@@ -1,6 +1,6 @@
 # Nexus, Celestial Weather and Outer Rim integration
 
-**Razi Protocol dev 2.1.10 | October 2026**
+**Razi Protocol dev 2.1.11 | October 2026**
 
 This pass integrates source-owned Nexus trial progress and 2.1 Celestial Weather atmospheric information in the existing Expedition Journal and Galactic Atlas. It does **not** claim full in-game validation, introduce new scripted bosses, or make Outer Rim mandatory.
 

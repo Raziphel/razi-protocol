@@ -132,6 +132,15 @@ check(weather.for_quest(defs.by_id["muria"])==nil,
   "Weather must not appear if the add-on is missing")
 rawset(_G,"script",nil)
 rawset(_G,"settings",nil)
+rawset(_G,"game",{connected_players={},forces={player=force}})
+for _=1,500 do
+  M.on_research({research={force=force},by_script=true})
+end
+check(storage.razi_journal_pending_forces.player,
+  "Scripted research storms should collapse into one pending force refresh")
+M.flush_research_refreshes()
+check(not storage.razi_journal_pending_forces,
+  "Deferred journal refreshes should be consumed together")
 M.on_removed(42)
 check(not storage.razi_expedition_journal[42],
   "Deleted player preferences were not cleaned")
