@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.5
+Date: 12. 10. 2026
+  Features:
+    - Added 24 first-landing missions across Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and optional deep-space planets.
+    - Added 8 interplanetary research projects that combine multiple planets' discoveries, with objective progress in the Expedition Chronicle.
+    - Recorded actual planetary landfalls separately from technology discovery and shared them with the force.
+    - Added a Refresh button for up-to-date quest and chapter durations without interrupting reading.
+
+  Bugfixes:
+    - Preserved discovered planetary visits across saves, force switches, and force merges.
+    - Improved research timing with research-start events and avoided invented zero-duration timestamps for previously completed research.
+    - Kept new missions observational to avoid introducing circular dependencies or surprise technology locks.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.4
 Date: 12. 10. 2026
   Features:
