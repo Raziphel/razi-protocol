@@ -13,6 +13,8 @@ return {
     quests = {
       {tech="automation", title="A Factory Awakens", story="Every expedition starts with a dependable machine. Establish automation before trying to solve the stars."},
       {tech="rocket-silo", title="The First Launch", story="A factory can reach across a planet. A rocket gives it somewhere new to go."},
+      {id="calidus-first-platform", platform=true, title="Our First Shipyard", story="Build the expedition's first operational space platform. A rocket can reach orbit, but a permanent orbital factory can go much farther."},
+      {id="calidus-first-voyage", trip=true, title="The First Crossing", story="Complete a real space-platform journey between locations. From this moment onward, the expedition is not confined to one world."},
       {tech="space-science-pack", title="The Orbital Perspective", story="Put research above the atmosphere. The first true map begins where the surface ends."},
       {tech="planet-discovery-vulcanus", title="Forge of the Inner Worlds", story="Vulcanus teaches us to build with heat, pressure and metals that Nauvis cannot provide."},
       {tech="planet-discovery-fulgora", title="Ghosts in the Circuitry", story="Fulgora's ruins preserve answers to questions nobody remembers asking. Recover their electrical legacy."},
