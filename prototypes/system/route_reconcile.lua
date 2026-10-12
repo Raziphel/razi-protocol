@@ -298,7 +298,6 @@ function route_reconcile.data_final_fixes()
 					routes[name] = nil
 				end
 			end
-			end
 			if keep_name then routes_by_pair[pair] = {keep_name} end
 
 			local route = keep_name and routes[keep_name]
