@@ -81,7 +81,6 @@ function theme.card(parent, options)
   card.style.padding = options.padding or 10
   card.style.margin = {0, 0, 5, 0}
   card.style.horizontally_stretchable = true
-  card.style.vertical_spacing = 5
   return card
 end
 
