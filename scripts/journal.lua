@@ -57,7 +57,7 @@ local function can_research(technology)
   return true
 end
 
-local function first_observed(record, key, imported)
+local function first_observed(record, imported)
   if record.reached_tick == nil then
     record.reached_tick = game.tick
     record.reached_late = imported == true
@@ -91,7 +91,7 @@ local function sync_force(force, imported)
     -- journal pages. Optional planets cannot stall these story gates.
     local entered = chapter.entry == nil or researched(force, chapter.entry)
     if entered then
-      if first_observed(state, "entry", imported) then changed = true end
+      if first_observed(state, imported) then changed = true end
     end
     if researched(force, chapter.finish) then
       if finish_observed(state, imported) then changed = true end
@@ -109,11 +109,11 @@ local function sync_force(force, imported)
           -- A technology already finished when the mod is installed has no
           -- knowable historical finish tick. Never fabricate a split time.
           if not imported and entered and quest_state.reached_tick == nil then
-            if first_observed(quest_state, "quest", false) then changed = true end
+            if first_observed(quest_state, false) then changed = true end
           end
           if finish_observed(quest_state, imported) then changed = true end
         elseif entered and can_research(technology) then
-          if first_observed(quest_state, "quest", imported) then changed = true end
+          if first_observed(quest_state, imported) then changed = true end
         end
       end
     end
@@ -227,17 +227,17 @@ local function show_chapter(player, chapter, sidebar, detail, ledger)
     end
   end
   add_wrapped(detail, "Recorded milestones: " .. witnessed .. " / " .. counted ..
-    " | The chapter's exit research determines chapter completion.", 650)
+    " | Chapter exits follow real research prerequisites, including installed branches.", 650)
 
   for _, quest in ipairs(chapter.quests) do
     local technology = technology_for(force, quest.tech)
     if technology then
       local quest_state = ledger.quests[quest.tech]
-      local complete = technology.researched
+      local complete = technology.researched or (quest_state and quest_state.completed_tick ~= nil)
       local started = quest_state and quest_state.reached_tick ~= nil
       local mark = complete and "[DONE] " or (started and "[ACTIVE] " or "[LOCKED] ")
       local card = detail.add{type = "frame", direction = "vertical"}
-      add_wrapped(card, mark .. quest.title .. (quest.side and " | Side expedition" or ""), 620)
+      add_wrapped(card, mark .. quest.title .. (quest.side and " | Branch mission" or ""), 620)
       add_wrapped(card, quest.story, 620)
       add_wrapped(card, status_text(quest_state, complete, false), 620)
       if not complete then
@@ -251,7 +251,7 @@ local function show_chapter(player, chapter, sidebar, detail, ledger)
     add_wrapped(detail, "CHAPTER EPILOGUE", 650)
     add_wrapped(detail, chapter.outro, 650)
   elseif not reached then
-    add_wrapped(detail, "The previous main expedition must open this chapter. Side expeditions are recorded independently.", 650)
+    add_wrapped(detail, "The previous main expedition must open this chapter. Branch objectives are recorded independently.", 650)
   end
 end
 
@@ -369,6 +369,28 @@ function journal.register_events()
   end)
   script.on_event(defines.events.on_force_created, function(event)
     sync_force(event.force, false)
+  end)
+  script.on_event(defines.events.on_player_changed_force, function(event)
+    local player = game.get_player(event.player_index)
+    if player and player.gui.screen[WINDOW] then render(player) end
+  end)
+  script.on_event(defines.events.on_forces_merged, function(event)
+    local db = database()
+    local source = db.forces[event.source_index]
+    local destination = ledger_for(event.destination)
+    if source then
+      for _, kind in ipairs({"chapters", "quests"}) do
+        for id, old_record in pairs(source[kind] or {}) do
+          local existing = destination[kind][id]
+          if not existing or (old_record.completed_tick and not existing.completed_tick) then
+            destination[kind][id] = old_record
+          end
+        end
+      end
+      db.forces[event.source_index] = nil
+    end
+    sync_force(event.destination, false)
+    refresh_force(event.destination)
   end)
   script.on_event(defines.events.on_research_finished, function(event)
     local force = event.research and event.research.force
