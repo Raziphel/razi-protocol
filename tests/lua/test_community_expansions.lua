@@ -18,7 +18,6 @@ local configs={
   {"alchemy-khemia","khemia"},
   {"Arcanyx","arcanyx"},
   {"biological-machines-planet-balack","bm-balack"},
-  {"biological-machines-planet-wit","bm-wit"},
   {"Solar-Halo","halo-solar-orbit"},
   {"skewer_shattered_planet","shattered-planet"},
   {"rabbasca-underground","rabbasca-underground"},
@@ -69,8 +68,6 @@ local function run(options)
   native.ferrum_vulcanus={name="vulcanus-ferrum",from="vulcanus",to="ferrum",
     length=10000,asteroid_spawn_definitions={{asteroid="native-metallic"}}}
   routes[native.ferrum_vulcanus.name]=native.ferrum_vulcanus
-  native.wit={name="bm-nauvis-wit",from="nauvis",to="bm-wit",length=10000}
-  routes[native.wit.name]=native.wit
   native.balack={name="aquilo-balack",from="aquilo",to="bm-balack",
     length=40000,asteroid_spawn_definitions={{asteroid="native-huge"}}}
   routes[native.balack.name]=native.balack
@@ -138,12 +135,12 @@ check(raw.planet.arcanyx.orbit.parent.name=="umbra",
   "Arcanyx did not join the optional dark frontier")
 check(raw.planet["bm-balack"].orbit.parent.name=="vespera",
   "Balack did not join Vespera's post-Aquilo region")
-for _,name in ipairs({"velora","nulla","bm-wit",
+for _,name in ipairs({"velora","nulla",
   "rabbasca-underground"}) do
   check(not moved[name] and raw.planet[name].orbit.parent.name=="original-parent",
     "A moon or hidden underground world was reparented: "..name)
 end
-for _,key in ipairs({"ferrum","ferrum_vulcanus","wit","balack","halo",
+for _,key in ipairs({"ferrum","ferrum_vulcanus","balack","halo",
   "halo_station","hidden","special"}) do
   check(raw["space-connection"][native[key].name]==native[key],
     "Native source route was lost: "..key)
@@ -152,8 +149,6 @@ check(not raw["space-connection"]["razi-expansion-ferrum-fulgora"],
   "Ferrum should use the native Fulgora route")
 check(not raw["space-connection"]["razi-expansion-bm-balack-aquilo"],
   "Balack should use its native extreme route")
-check(not raw["space-connection"]["razi-expansion-bm-wit-nauvis"],
-  "Wit should use the existing Nauvis moon route")
 check(raw["space-connection"]["razi-expansion-khemia-paracelsin"],
   "Khemia optional chemical branch is disconnected")
 check(raw["space-connection"]["razi-expansion-arcanyx-tenebris"],
@@ -182,8 +177,6 @@ for _,pair in ipairs({
   check(rawget(native_science,"recipe")==pair[1].."-native-science",
     "A mod's native science unlock was damaged")
 end
-check(#raw.technology["unlock-bm-wit"].prerequisites==1,
-  "Wit science should not depend on a foreign planetary chapter")
 check(#raw.technology["unlock-shattered-planet"].prerequisites==1,
   "Shattered and promethium tech must retain native research gates")
 check(raw.planet["rabbasca-underground"].hidden==nil

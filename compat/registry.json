@@ -167,14 +167,13 @@
       "module": "prototypes/compat/community_industry_exchanges.lua",
       "upstream_mods": [
         "planet-ferrum",
-        "biological-machines-planet-wit",
         "biological-machines-planet-balack",
         "linox",
         "Moshine",
         "rubia",
         "tenebris-prime"
       ],
-      "purpose": "Three optional K2SO-enabled manufacturing variants that connect Ferrum/Linox/Moshine rare earths, Wit advanced storage, and Balack/Rubia/Tenebris radiation materials. All source recipes and science gates survive unchanged.",
+      "purpose": "Two optional manufacturing variants joining Ferrum/Linox/Moshine rare earth materials and Balack/Rubia/Tenebris radiation materials. Wit is excluded because it conflicts with required Muluna.",
       "upstream_status": "local-only",
       "fixture": "tests/lua/test_community_industry_exchanges.lua"
     }

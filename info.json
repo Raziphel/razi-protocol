@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -92,8 +92,8 @@
     "? Hephaestus >= 0.3.7",
     "alchemy-khemia >= 0.3.6",
     "Arcanyx >= 1.1.5",
-    "biological-machines-planet-wit >= 1.1.3",
-    "biological-machines-planet-balack >= 1.1.2"
+    "biological-machines-planet-balack >= 1.1.2",
+    "! biological-machines-planet-wit"
   ],
   "quality_required": true,
   "rail_bridges_required": true,

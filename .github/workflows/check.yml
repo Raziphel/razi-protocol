@@ -68,7 +68,7 @@ jobs:
         run: lua5.2 tests/lua/test_outer_production_exchanges.lua
       - name: Test native modded-planet industry bridges
         run: lua5.2 tests/lua/test_modded_planet_exchanges.lua
-      - name: Test Ferrum, Wit and Balack manufacturing integration
+      - name: Test Ferrum and Balack manufacturing integration
         run: lua5.2 tests/lua/test_community_industry_exchanges.lua
       - name: Check K2SO machine parity and planetary tech gates
         run: lua5.2 tests/lua/test_k2so_machines.lua

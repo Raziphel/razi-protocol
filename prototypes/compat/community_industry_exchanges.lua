@@ -1,5 +1,5 @@
 -- Optional, source-faithful production links for the new community worlds.
--- All three are late alternative recipes. They do not participate in Razi's
+-- The two retained alternatives are late-game recipes. They do not participate in Razi's
 -- system cards, and none replaces a source author's original recipe.
 local production = require("prototypes.compat.planet_production_exchanges")
 
@@ -27,35 +27,6 @@ local exchanges = {
     },
     batch=3,bonus=1,count=1100,time=60,
     bonus_icon="rare-earth-powder"
-  },
-  {
-    -- Wit has a long helium-to-interstellar-science path. A bonus on its
-    -- *late* accumulators cannot accelerate the early asteroid collector,
-    -- early space science, or Wit robotics facility.
-    name="razi-wit-ferrum-grid-storage",
-    source_mod="biological-machines-planet-wit",
-    required_mods={"biological-machines-planet-wit","planet-ferrum",
-      "linox","Moshine"},
-    source="bm-advanced-accumulator",product="bm-advanced-accumulator",
-    category="electromagnetics",keep_native_category=true,
-    working_world="bm-wit",
-    planets={"bm-planet-discovery-wit","planet-discovery-ferrum",
-      "linox-technology_planet-discovery-linox",
-      "planet-discovery-moshine"},
-    supplier_recipes={
-      {recipe="ferrum-rare-earth-magnet",
-        product="ferrum-rare-earth-magnet"},
-      {recipe="linox-recipe_rare-earth-refining",product="rare-earth-powder"},
-      {recipe="optical-cable",product="optical-cable"}
-    },
-    science={"vibrant-tech-card","vespera-tech-card"},
-    additional={
-      {type="item",name="ferrum-rare-earth-magnet",amount=4},
-      {type="item",name="rare-earth-powder",amount=4},
-      {type="item",name="optical-cable",amount=4}
-    },
-    batch=4,bonus=1,count=1250,time=60,
-    bonus_icon="ferrum-rare-earth-magnet"
   },
   {
     -- Balack requires native promethium, tungsten, carbon fiber and oil.

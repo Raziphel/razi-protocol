@@ -7,7 +7,7 @@
 > The historical details below document the earlier integration pass.
 
 
-This pass covers the 16 specific mods proposed for Razi Protocol.
+This document reviews community planets and their integrations. Wit was retired because it conflicts with required Muluna.
 They are side-content and optional sources of unique materials and gameplay.
 **No optional planet is required for any of the eight Razi system tech cards,
 the seven-system campaign, or the base endgame.** None is allowed to replace
@@ -30,13 +30,13 @@ factory. A successful static test does not prove that all mods load together.
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
 | `Arcanyx` | Guarded side-world integration | Umbra experimental branch | Voidcraft/Iridescent Industry and prism production untouched. Connect toward Tenebris only if no native local route exists. |
 | `Hephaestus` | Registered, native-only | Original megastructure and warp routes | This mod is not a conventional planet. Avoid rewriting runtime surfaces and mass-relay routes without inspecting real output. |
-| `biological-machines-planet-wit` | Guarded moon integration | Nauvis moon, Calidus | Never move Wit away from Nauvis; preserve its early space science, helium and electricity restrictions. |
+| `biological-machines-planet-wit` | **Excluded** | Competing Nauvis moon | Conflicts with required Muluna; no route or science integration remains. |
 | `biological-machines-planet-balack` | Guarded high-risk side-world integration | Vespera after Aquilo | Preserve original enormous asteroid traffic, promethium technology, fabrication and dangerous enemies. |
 
 ### Why these dependencies are optional
 
 Rabbasca's original high-energy restriction, Ferrum's remotely controlled
-factories, Wit changing *how space science is made*, Arcanyx's Voidcraft
+factories, Arcanyx's Voidcraft
 dependency tree and alternative Shattered Planet gameplay are significant.
 Requiring every mod in the core dependency list before confirming full game
 load would risk making **Razi Protocol itself impossible to install**.
@@ -61,7 +61,7 @@ while the Vulcanus-to-Ferrum link is calibrated to 115,000 km now that
 it crosses from Solaris to Vibrant; this closes a 10,000 km interstellar
 shortcut without discarding native resource asteroids.
 Its discovery technology may be chapter-gated but its
-dynamic research choices are untouched. The moon trio (Velora, Nulla, Wit)
+dynamic research choices are untouched. The moons Velora and Nulla
 keep original orbital relationships. Balack keeps its original, hard
 Aquilo-side hazardous path. Special worlds (Rabbasca Underground,
 Hephaestus, Shattered) retain all native mechanisms and paths.
@@ -74,26 +74,23 @@ pack requires items from these optional worlds.
 
 ### Source-specific compatibility risks
 
-1. **Wit:** Source makes space science and asteroid collectors part of
-   its own moon campaign. We must verify the initial Calidus tech-card
-   bootstrap before enabling it in a recommended full pack.
-2. **Balack:** Source's native promethium requirements and Shattered
+1. **Balack:** Source's native promethium requirements and Shattered
    discovery changes interact with our Outer Frontier Mastery. Verify
    post-load research graphs; do not change its technology by guessing.
-3. **Ferrum:** Its recipe unlock order depends on in-game choices; avoid
+2. **Ferrum:** Its recipe unlock order depends on in-game choices; avoid
    injecting generic science or rewriting those choice rules. It already
    integrates with Linox and Moshine.
-4. **Solar Halo:** Its sun orbit has dedicated flare asteroids. Do not
+3. **Solar Halo:** Its sun orbit has dedicated flare asteroids. Do not
    apply an ordinary Razi asteroid profile to those native routes.
-5. **Rabbasca Underground:** Underground warp surfaces cannot receive
+4. **Rabbasca Underground:** Underground warp surfaces cannot receive
    platforms. No orbital route is created.
-6. **Hephaestus:** The author's shortcuts are controlled by its own
+5. **Hephaestus:** The author's shortcuts are controlled by its own
    technologies; audit their reachable star systems to rule out a
    premature interstellar bypass.
-7. **Arcanyx:** Voidcraft, Iridescent Industry and associated assets
+6. **Arcanyx:** Voidcraft, Iridescent Industry and associated assets
    are substantial. Treat it as optional until K2SO recipe collision
    tests pass.
-8. **Shattered Planet extension:** It expands the existing endgame
+7. **Shattered Planet extension:** It expands the existing endgame
    surface; do not duplicate it or assume its high-tier resources
    are compatible with Razi's singularity victory.
 
@@ -122,25 +119,21 @@ repositories include:
 All installed mod-specific art, recipes, resource tables and sound
 files remain owned by their respective mods; none is copied into Razi.
 
-## Community industrial integration: Ferrum, Wit and Balack
+## Community industrial integration: Ferrum and Balack
 
-The next production pass adds **three more modded-world-to-modded-world
+The next production pass adds **two more modded-world-to-modded-world
 manufacturing bridges**, independent of the earlier seven new exchanges.
 They are gated alternate recipes, not modifications to the original mods.
 
 | Factory | Exports shipped to the factory | Native process still required | New output |
 | --- | --- | --- | --- |
 | **Ferrum** | 3 Linox rare-earth powders, 4 Moshine optical cables | 15 Ferrum rare-earth oxide, 30 electrolyte, 60 molten iron across three native magnet batches | **4 Ferrum rare-earth magnets** rather than 3 |
-| **Wit** | 4 Ferrum magnets, 4 Linox rare-earth powders, 4 Moshine optical cables | Four complete native advanced-accumulator batches, including **400 supercapacitors and 200 mixed-gas cells** | **5 advanced accumulators** rather than 4 |
 | **Balack** | 2 Rubia craptonite frames, 2 Tenebris chitosan | Two native bio-cube shielding batches, including **2 promethium asteroid chunks and 20 heavy oil** | **12 radiation shielding** rather than 10 |
 
-This deliberately keeps Ferrum's branching remote robotics, Wit's
-helium/early-space-science/asteroid-collector bootstrap, and Balack's
-promethium and pollutant-producing factory untouched. The bridge from
-Wit uses its **late** accumulator recipe, not the early space-science
-recipe; Balack's radiation shielding still requires its own promethium
-research. All three use source-appropriate crafting categories and are
-skipped when the destination machine has insufficient fluid ports.
+These exchanges preserve Ferrum's branching remote robotics and Balack's
+promethium-based biofabrication. Both keep their native research gates,
+source-appropriate crafting categories and original recipes. Muluna's
+lunar science remains untouched; Wit is explicitly incompatible.
 
 A new recipe requires the exact source mod, its source recipe and research
 unlock, *every* imported material's native producer recipe and unlock,
@@ -156,8 +149,6 @@ the relevant planets.
 Source files inspected:
 - `benlaflen/planet-ferrum/prototypes/rare-earth.lua` and
   `prototypes/techs.lua`
-- `bradythehuman/Biological-Machines/biological-machines-planet-wit/
-  prototypes/recipes.lua` and `prototypes/technologies.lua`
 - `bradythehuman/Biological-Machines/biological-machines-planet-balack/
   prototypes/recipes.lua` and `prototypes/technologies.lua`
 
