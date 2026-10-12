@@ -138,7 +138,10 @@ end)
 script.on_nth_tick(600, check_existing_transceivers)
 -- The engine has no starmap-open event. Check only the small per-player
 -- render/controller state twice per second; never enumerate planets here.
-script.on_nth_tick(30, galactic_operations.sync_all_map_buttons)
+script.on_nth_tick(30,function(event)
+  galactic_operations.sync_all_map_buttons(event)
+  razi_journal.flush_research_refreshes()
+end)
 script.on_event({
 	defines.events.on_built_entity,
 	defines.events.on_robot_built_entity,
