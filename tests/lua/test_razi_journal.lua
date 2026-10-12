@@ -4,7 +4,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
 check(#defs.chapters==17,"Seventeen Razi expedition chapters expected")
-check(#defs.quests==167,"Razi Expedition Journal should include 167 milestones")
+check(#defs.quests==171,"Razi Expedition Journal should include 171 milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -32,7 +32,7 @@ for _,q in ipairs(defs.quests) do
 end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
-check(start==0 and total==167-16 and active>=1,
+check(start==0 and total==171-15 and active>=1,
   "At least both initial factory/opening branches must be listed")
 local a=defs.by_id["solaris-gate"]
 local b=defs.by_id["nyxaris-gate"]
@@ -87,4 +87,12 @@ check(M.preferences(42).selected=="stable-singularity",
 M.on_removed(42)
 check(not storage.razi_expedition_journal[42],
   "Deleted player preferences were not cleaned")
+force.name="player"
+rawset(_G,"game",{connected_players={},forces={player=force}})
+M.on_research({research={force=force},by_script=true})
+check(storage.razi_journal_pending_forces.player,
+  "Scripted research bursts should defer their journal refresh")
+M.flush_research_refreshes()
+check(not storage.razi_journal_pending_forces,
+  "Deferred journal refreshes should be consumed together")
 print("Expedition Journal: chapters, branches, skipped content and save backfill passed")

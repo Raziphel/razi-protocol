@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.10
+Date: 13. 10. 2026
+  Bugfixes:
+    - Coalesce scripted research bursts into one Expedition Journal refresh, preventing `/cheat` from rebuilding open journal and tracker interfaces hundreds of times in one tick.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.1.9
 Date: 12. 10. 2026
   Nexus and atmospheric integration:

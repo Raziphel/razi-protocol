@@ -430,9 +430,7 @@ function M.on_removed(index)
     storage.razi_expedition_journal[index]=nil
   end
 end
-function M.on_research(event)
-  -- Called only on a completed native technology, never each tick.
-  local force=event and event.research and event.research.force
+local function refresh_force(force)
   if not force then return end
   for _,player in pairs(game.connected_players or {}) do
     if player.force==force then
@@ -441,6 +439,29 @@ function M.on_research(event)
       local p=pref(player.index)
       if p.tracker then render_tracker(player) end
     end
+  end
+end
+function M.on_research(event)
+  -- Called only on a completed native technology, never each tick.
+  local force=event and event.research and event.research.force
+  if not force then return end
+  -- Commands such as /cheat complete hundreds of technologies on one tick.
+  -- Rebuilding the open journal for every scripted completion can overwhelm
+  -- Factorio's GUI renderer, so coalesce the burst into the next UI refresh.
+  if event.by_script then
+    storage.razi_journal_pending_forces=
+      storage.razi_journal_pending_forces or {}
+    storage.razi_journal_pending_forces[force.name]=true
+    return
+  end
+  refresh_force(force)
+end
+function M.flush_research_refreshes()
+  local pending=storage.razi_journal_pending_forces
+  if not pending then return end
+  storage.razi_journal_pending_forces=nil
+  for force_name in pairs(pending) do
+    refresh_force(game.forces[force_name])
   end
 end
 function M.gui_click(event)
