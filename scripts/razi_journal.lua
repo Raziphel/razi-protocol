@@ -4,6 +4,7 @@
 -- contains preferences only, making older saves and force merging safe.
 local M={}
 local defs=require("scripts.razi_journal_data")
+local records=require("scripts.razi_journal_records")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -18,7 +19,14 @@ local palette={
   umbra={r=.80,g=.50,b=.61},
   stellar={r=1,g=.81,b=.50},
   network={r=.54,g=.86,b=.84},
-  finale={r=.72,g=.77,b=1}
+  finale={r=.72,g=.77,b=1},
+  foundations={r=.85,g=.76,b=.60},
+  fleet={r=.53,g=.79,b=.99},
+  outposts={r=.60,g=.85,b=.63},
+  sciences={r=.72,g=.65,b=.95},
+  defense={r=1,g=.62,b=.49},
+  deepworks={r=.67,g=.73,b=.94},
+  echoes={r=.98,g=.79,b=.58}
 }
 M.FRAME=FRAME
 M.TOP=TOP
@@ -28,43 +36,77 @@ local function pref(index)
   storage.razi_expedition_journal=storage.razi_expedition_journal or {}
   local value=storage.razi_expedition_journal[index]
   if not value then
-    value={selected=nil,pinned=nil,tracker=false}
+    value={selected=nil,pinned=nil,tracker=false,
+      chapter=nil,filter="all",view="quests",record=nil}
     storage.razi_expedition_journal[index]=value
   end
+  value.filter=value.filter or "all"
+  value.view=value.view or "quests"
   return value
 end
 M.preferences=pref
-local function technology(force,quest)
-  local t=force and force.technologies and force.technologies[quest.tech]
+
+-- Find actual native world-discovery research via source mod effect data.
+-- One pass per journal view, rather than guessing 19 third-party tech IDs
+-- or rescanning thousands of technologies for each side-world quest.
+function M.discovery_index(force)
+  local indexed={}
+  for _,tech in pairs(force and force.technologies or {}) do
+    local proto=tech.prototype
+    if proto and not proto.hidden then
+      for _,effect in pairs(proto.effects or {}) do
+        if effect.type=="unlock-space-location" and effect.space_location then
+          local existing=indexed[effect.space_location]
+          if not existing or (tech.researched and not existing.researched) then
+            indexed[effect.space_location]=tech
+          end
+        end
+      end
+    end
+  end
+  return indexed
+end
+function M.context(force)
+  return {discoveries=M.discovery_index(force)}
+end
+local function technology(force,quest,context)
+  local t
+  if quest.world then
+    local index=context and context.discoveries or M.discovery_index(force)
+    t=index[quest.world]
+  else
+    t=force and force.technologies and force.technologies[quest.tech]
+  end
   if not t then return nil end
   local proto=t.prototype
   if proto and proto.hidden and not t.researched then return nil end
   return t
 end
-function M.available(force,quest)
-  return technology(force,quest)~=nil
+function M.available(force,quest,context)
+  return technology(force,quest,context)~=nil
 end
-function M.complete(force,quest)
-  local t=technology(force,quest)
+function M.complete(force,quest,context)
+  local t=technology(force,quest,context)
   return t~=nil and t.researched==true
 end
-function M.state(force,quest)
-  local t=technology(force,quest)
+function M.state(force,quest,context)
+  local t=technology(force,quest,context)
   if not t then return "unavailable" end
   if t.researched then return "complete" end
   for _,required in ipairs(quest.requires or {}) do
     local prior=defs.by_id[required]
     -- Source content not present in this modpack is not a phantom
     -- blocker. Its own technology controls actual research prerequisites.
-    if prior and M.available(force,prior)
-      and not M.complete(force,prior) then return "locked" end
+    if prior and M.available(force,prior,context)
+      and not M.complete(force,prior,context) then return "locked" end
   end
   return "active"
 end
-function M.summary(force)
+function M.summary(force,context)
   local completed,total,active=0,0,0
+  context=context or M.context(force)
   for _,q in ipairs(defs.quests) do
-    local state=M.state(force,q)
+    local state=M.state(force,q,context)
     if state~="unavailable" then
       total=total+1
       if state=="complete" then completed=completed+1
@@ -73,14 +115,23 @@ function M.summary(force)
   end
   return completed,total,active
 end
-function M.next_quest(force)
-  -- Both first star branches and both later pairs can be active at once.
+function M.next_quest(force,context)
+  -- Both first-star branches and each later pair can be active at once.
+  context=context or M.context(force)
   for _,q in ipairs(defs.quests) do
-    if M.state(force,q)=="active" then return q end
+    if M.state(force,q,context)=="active" then return q end
   end
   for _,q in ipairs(defs.quests) do
-    if M.state(force,q)~="unavailable" then return q end
+    if M.state(force,q,context)~="unavailable" then return q end
   end
+end
+function M.show_in_filter(force,quest,filter,context)
+  local state=M.state(force,quest,context)
+  if state=="unavailable" then return false end
+  if filter=="ready" then return state=="active" end
+  if filter=="unfinished" then return state~="complete" end
+  if filter=="done" then return state=="complete" end
+  return true
 end
 local function label(parent,caption)
   return parent.add{type="label",caption=caption}
@@ -91,11 +142,15 @@ local function wrap(parent,caption)
   element.style.horizontally_stretchable=true
   return element
 end
-local function select_quest(force,p)
+local function select_quest(force,p,context)
   local selected=p.selected and defs.by_id[p.selected]
-  if selected and M.available(force,selected) then return selected end
-  selected=M.next_quest(force)
+  if selected and M.available(force,selected,context) then
+    if p.chapter==nil then p.chapter=selected.chapter end
+    return selected
+  end
+  selected=M.next_quest(force,context)
   p.selected=selected and selected.id or nil
+  p.chapter=selected and selected.chapter or false
   return selected
 end
 local function render_tracker(player)
@@ -104,9 +159,10 @@ local function render_tracker(player)
   if old and old.valid then old.destroy() end
   local p=pref(player.index)
   if not p.tracker then return end
+  local context=M.context(player.force)
   local quest=p.pinned and defs.by_id[p.pinned]
-  if not quest or not M.available(player.force,quest) then
-    quest=M.next_quest(player.force)
+  if not quest or not M.available(player.force,quest,context) then
+    quest=M.next_quest(player.force,context)
     p.pinned=quest and quest.id or nil
   end
   if not quest then return end
@@ -117,19 +173,20 @@ local function render_tracker(player)
     caption={"journal-title."..quest.id},
     tags={razi_journal_action="tracker-open"}}
   heading.style.horizontally_stretchable=true
-  wrap(frame,L(M.complete(player.force,quest) and "tracker-done" or "tracker-pending"))
+  wrap(frame,L(M.complete(player.force,quest,context)
+    and "tracker-done" or "tracker-pending"))
 end
 M.render_tracker=render_tracker
-local function render_details(parent,player,quest,p)
+local function render_details(parent,player,quest,p,context)
   local panel=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   panel.style.horizontally_stretchable=true
   panel.style.vertically_stretchable=true
   local title=label(panel,{"journal-title."..quest.id})
   title.style.font="heading-2"
-  label(panel,L("status-"..M.state(player.force,quest)))
+  label(panel,L("status-"..M.state(player.force,quest,context)))
   local objective_bar=panel.add{type="progressbar",
-    value=M.complete(player.force,quest) and 1 or 0}
+    value=M.complete(player.force,quest,context) and 1 or 0}
   objective_bar.style.horizontally_stretchable=true
   local scroll=panel.add{type="scroll-pane",direction="vertical"}
   scroll.style.horizontally_stretchable=true
@@ -143,9 +200,9 @@ local function render_details(parent,player,quest,p)
   wrap(scroll,{"journal-story."..quest.id})
   local objective=label(scroll,L("objective-heading"))
   objective.style.font="default-bold"
-  local native=player.force.technologies[quest.tech]
-  label(scroll,{"",L("objective-research",native and native.localised_name
-      or quest.tech)})
+  local native=technology(player.force,quest,context)
+  label(scroll,{"",L(quest.world and "objective-discovery" or "objective-research",
+    native and native.localised_name or quest.world or quest.tech)})
   if native and not native.researched then
     local blockers={}
     for _,prior in pairs(native.prerequisites or {}) do
@@ -157,11 +214,11 @@ local function render_details(parent,player,quest,p)
         blockers[i].localised_name})
     end
   end
-  if not M.complete(player.force,quest) then
+  if not M.complete(player.force,quest,context) then
     for _,required in ipairs(quest.requires or {}) do
       local prior=defs.by_id[required]
-      if prior and M.available(player.force,prior)
-        and not M.complete(player.force,prior) then
+      if prior and M.available(player.force,prior,context)
+        and not M.complete(player.force,prior,context) then
         label(scroll,{"",L("requires-heading")," ",
           {"journal-title."..prior.id}})
       end
@@ -175,40 +232,96 @@ local function render_details(parent,player,quest,p)
   actions.add{type="button",caption=L(pinned and "tracker-hide" or "tracker-show"),
     tags={razi_journal_action="pin",id=quest.id}}
 end
-local function render_chapters(parent,player,p)
+local function render_chapters(parent,player,p,context)
   local left=parent.add{type="scroll-pane",direction="vertical"}
   left.style.minimal_width=250
   left.style.maximal_width=330
   left.style.vertically_stretchable=true
   for _,chapter in ipairs(defs.chapters) do
     local available={}
-    local completed=0
+    local completed,total=0,0
     for _,quest in ipairs(defs.quests) do
-      if quest.chapter==chapter.id and M.available(player.force,quest) then
-        available[#available+1]=quest
-        if M.complete(player.force,quest) then completed=completed+1 end
+      if quest.chapter==chapter.id
+        and M.available(player.force,quest,context) then
+        total=total+1
+        if M.complete(player.force,quest,context) then
+          completed=completed+1
+        end
+        if M.show_in_filter(player.force,quest,p.filter,context) then
+          available[#available+1]=quest
+        end
       end
     end
     if #available>0 then
-      local title=label(left,{"",
-        {"journal-chapter."..chapter.id},"  ",L("chapter-progress",
-         tostring(completed),tostring(#available))})
+      local is_open=p.chapter==chapter.id
+      local title=left.add{type="button",
+        caption={"",is_open and "▾ " or "▸ ",
+          {"journal-chapter."..chapter.id},"  ",
+          L("chapter-progress",tostring(completed),tostring(total))},
+        tags={razi_journal_action="chapter",id=chapter.id}}
       title.style.font="default-bold"
-      title.style.font_color=palette[chapter.id] or palette.calidus
-      for _,quest in ipairs(available) do
-        local state=M.state(player.force,quest)
-        local btn=left.add{type="button",
-          caption={"",state=="complete" and "[color=#7CD9AD]✓[/color] "
-              or state=="active" and "[color=#F2CE83]●[/color] "
-              or "[color=#9B9FAE]○[/color] ",
-            {"journal-title."..quest.id}},
-          tags={razi_journal_action="select",id=quest.id}}
-        btn.style.horizontally_stretchable=true
-        if quest.id==p.selected then btn.style.font="default-bold" end
+      title.style.horizontally_stretchable=true
+      if is_open then
+        for _,quest in ipairs(available) do
+          local state=M.state(player.force,quest,context)
+          local btn=left.add{type="button",
+            caption={"",state=="complete" and "[color=#7CD9AD]✓[/color] "
+                or state=="active" and "[color=#F2CE83]●[/color] "
+                or "[color=#9B9FAE]○[/color] ",
+              {"journal-title."..quest.id}},
+            tags={razi_journal_action="select",id=quest.id}}
+          btn.style.horizontally_stretchable=true
+          if quest.id==p.selected then btn.style.font="default-bold" end
+        end
       end
     end
   end
 end
+-- The archive is not another quest chain. Each story entry opens only
+-- when its source-backed research milestone is actually completed.
+function M.unlocked_records(force,context)
+  context=context or M.context(force)
+  local unlocked=0
+  for _,record in ipairs(records) do
+    local q=defs.by_id[record.unlock]
+    if q and M.complete(force,q,context) then unlocked=unlocked+1 end
+  end
+  return unlocked,#records
+end
+local function render_archive(parent,player,p,context)
+  local left=parent.add{type="scroll-pane",direction="vertical"}
+  left.style.minimal_width=245
+  left.style.maximal_width=315
+  left.style.vertically_stretchable=true
+  local chosen
+  for _,record in ipairs(records) do
+    local quest=defs.by_id[record.unlock]
+    local opened=quest and M.complete(player.force,quest,context)
+    if opened and (not chosen or record.id==p.record) then chosen=record end
+    local button=left.add{type="button",
+      caption={"",opened and "[color=#7CD9AD]◈[/color] "
+          or "[color=#999BA4]◇[/color] ",
+        {"journal-record-title."..record.id}},
+      tags={razi_journal_action="record",id=record.id}}
+    button.style.horizontally_stretchable=true
+    button.enabled=opened and true or false
+  end
+  if not chosen then
+    label(parent,L("archive-sealed"))
+    return
+  end
+  p.record=chosen.id
+  local pane=parent.add{type="scroll-pane",direction="vertical"}
+  pane.style.horizontally_stretchable=true
+  pane.style.vertically_stretchable=true
+  local title=label(pane,{"journal-record-title."..chosen.id})
+  title.style.font="heading-2"
+  local origin=label(pane,{"journal-record-origin."..chosen.id})
+  origin.style.font_color=palette.echoes
+  wrap(pane,{"journal-record-body."..chosen.id})
+  label(pane,L("archive-disclaimer"))
+end
+
 local function draw(player)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
@@ -227,21 +340,48 @@ local function draw(player)
   head.add{type="button",caption=L("close"),
     tags={razi_journal_action="close"}}
   wrap(frame,L("subtitle"))
-  local done,total=M.summary(player.force)
-  label(frame,L("summary",tostring(done),tostring(total)))
+  local context=M.context(player.force)
+  local done,total,ready=M.summary(player.force,context)
+  label(frame,L("summary",tostring(done),tostring(total),tostring(ready)))
   local overall=frame.add{type="progressbar",
     value=total>0 and done/total or 0}
   overall.style.horizontally_stretchable=true
+  local actions=frame.add{type="flow",direction="horizontal"}
+  actions.style.horizontally_stretchable=true
+  for _,view in ipairs({"quests","archive"}) do
+    local button=actions.add{type="button",caption=L("view-"..view),
+      tags={razi_journal_action="view",id=view}}
+    if p.view==view then button.style.font="default-bold" end
+  end
+  if p.view~="archive" then
+    actions.add{type="button",caption=L("next-milestone"),
+      tags={razi_journal_action="next"}}
+  end
+  if p.view=="archive" then
+    local opened,all=M.unlocked_records(player.force,context)
+    label(frame,L("archive-progress",tostring(opened),tostring(all)))
+  else
+    for _,filter in ipairs({"all","ready","unfinished","done"}) do
+      local button=actions.add{type="button",
+        caption=L("filter-"..filter),
+        tags={razi_journal_action="filter",id=filter}}
+      if p.filter==filter then button.style.font="default-bold" end
+    end
+  end
   local body=frame.add{type="flow",direction="horizontal"}
   body.style.horizontally_stretchable=true
   body.style.height=math.max(300,math.min(580,
     math.floor(player.display_resolution.height/math.max(1,player.display_scale)*.57)))
-  local selected=select_quest(player.force,p)
-  render_chapters(body,player,p)
-  if selected then
-    render_details(body,player,selected,p)
+  if p.view=="archive" then
+    render_archive(body,player,p,context)
   else
-    wrap(body,L("missing-quest"))
+    local selected=select_quest(player.force,p,context)
+    render_chapters(body,player,p,context)
+    if selected then
+      render_details(body,player,selected,p,context)
+    else
+      wrap(body,L("missing-quest"))
+    end
   end
   wrap(frame,L("no-reward"))
 end
@@ -323,6 +463,34 @@ function M.gui_click(event)
   if action=="select" and defs.by_id[tags.id]
     and M.available(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
+    p.chapter=defs.by_id[tags.id].chapter
+  elseif action=="chapter" then
+    p.chapter=p.chapter==tags.id and false or tags.id
+  elseif action=="view" and (tags.id=="quests" or tags.id=="archive") then
+    p.view=tags.id
+  elseif action=="record" then
+    local context=M.context(player.force)
+    for _,record in ipairs(records) do
+      if record.id==tags.id then
+        local quest=defs.by_id[record.unlock]
+        if quest and M.complete(player.force,quest,context) then
+          p.record=record.id
+          p.view="archive"
+        end
+        break
+      end
+    end
+  elseif action=="filter" and ({all=true,ready=true,unfinished=true,
+      done=true})[tags.id] then
+    p.filter=tags.id
+  elseif action=="next" then
+    local next=M.next_quest(player.force)
+    if next then
+      p.selected=next.id
+      p.chapter=next.chapter
+      p.filter="all"
+      p.view="quests"
+    end
   elseif action=="pin" and defs.by_id[tags.id] then
     if p.tracker and p.pinned==tags.id then
       p.tracker=false

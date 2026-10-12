@@ -3,8 +3,8 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
-check(#defs.chapters==10,"The seven-star quest chapters were lost")
-check(#defs.quests==54,"Razi Expedition Journal should include 54 milestones")
+check(#defs.chapters==17,"Seventeen Razi expedition chapters expected")
+check(#defs.quests==157,"Razi Expedition Journal should include 157 milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -14,7 +14,9 @@ for _,q in ipairs(defs.quests) do
   check(not quest_ids[q.id],"Duplicate quest ID "..q.id)
   check(seen[q.chapter],"Unknown quest chapter "..q.chapter)
   quest_ids[q.id]=true
-  check(type(q.tech)=="string" and q.tech~="","Invalid research goal")
+  check((type(q.tech)=="string" and q.tech~="")
+    or (type(q.world)=="string" and q.world~=""),
+    "Invalid source research or world-discovery goal")
 end
 for _,q in ipairs(defs.quests) do
   for _,req in ipairs(q.requires) do
@@ -23,12 +25,14 @@ for _,q in ipairs(defs.quests) do
 end
 local force={technologies={}}
 for _,q in ipairs(defs.quests) do
-  force.technologies[q.tech]={name=q.tech,researched=false,
-    prototype={hidden=false},localised_name=q.tech}
+  if q.tech then
+    force.technologies[q.tech]={name=q.tech,researched=false,
+      prototype={hidden=false},localised_name=q.tech}
+  end
 end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
-check(start==0 and total==54 and active>=1,
+check(start==0 and total==157-19 and active>=1,
   "At least both initial factory/opening branches must be listed")
 local a=defs.by_id["solaris-gate"]
 local b=defs.by_id["nyxaris-gate"]
@@ -38,6 +42,27 @@ check(M.state(force,a)=="active" and M.state(force,b)=="active",
 force.technologies["solaris-discovery"].researched=true
 check(M.state(force,a)=="complete" and M.state(force,b)=="active",
   "Research status should be shared by force and independent by branch")
+-- Side-world quests find the actual unlock-space-location research effect.
+force.technologies["discovery-native-igrys"]={
+  name="discovery-native-igrys",researched=false,
+  prototype={hidden=false,effects={{
+    type="unlock-space-location",space_location="igrys"
+  }}}
+}
+local context=M.context(force)
+check(M.available(force,defs.by_id["igrys"],context),
+  "Side-world discovery should be dynamically indexed")
+check(M.state(force,defs.by_id["igrys"],context)=="active",
+  "Side-world research must respect the unlocked opening star")
+force.technologies["discovery-native-igrys"].researched=true
+context=M.context(force)
+check(M.state(force,defs.by_id["igrys"],context)=="complete",
+  "Side-world quest should complete from the real installed unlock research")
+local a,b=M.unlocked_records(force,context)
+check(b==12 and a>=0,"Recovered transmission count mismatch")
+check(not M.show_in_filter(force,defs.by_id["igrys"],"ready",context)
+  and M.show_in_filter(force,defs.by_id["igrys"],"done",context),
+  "Quest status filtering is inconsistent")
 -- Missing/hidden source technologies skip safely instead of creating a
 -- phantom chain prerequisite for unrelated quests.
 force.technologies["planet-discovery-arig"]=nil

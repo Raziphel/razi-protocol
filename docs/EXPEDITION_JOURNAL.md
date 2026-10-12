@@ -1,6 +1,6 @@
 # The Razi Expedition Journal
 
-A completely original 54-milestone, 10-chapter guided journey written
+A completely original 157-milestone, 17-chapter guided journey written
 for the seven-system Factorio 2.1 K2SO campaign. Inspired by the *idea*
 of an in-game journal, but not dependent on Quest Book or a fork of its
 source code, UI, texts or reward engine.
@@ -10,6 +10,9 @@ source code, UI, texts or reward engine.
 - A compact book button appears in Factorio's **top GUI** during normal
   factory gameplay, on planets, and in remote view.
 - **Ctrl+Shift+J** opens or closes the journal. It is rebindable.
+- Choose one of 17 expandable chapters. The left column shows just the
+  open chapter so 157 milestones do not crowd a small screen. Filter by
+  All, Ready, Unfinished or Completed.
 - Choose a chapter or quest in the left column; the right shows its
   original narrative, exact current research goal, up to four real
   unresearched Factorio technology prerequisites, and actionable tips.
@@ -84,3 +87,28 @@ new research requirements. The whole Factorio modpack must still be
 loaded and tested in-game. In particular, verify UI layout/resolution,
 multiplayer force progress, first-login buttons, and the actual
 source technology IDs of every installed mod.
+
+## Expanded story and recovered transmissions
+
+The next Razi chronicle adds **103 optional native research or world-discovery
+milestones** across seven additional chapters: Foundations, Expedition Fleet,
+Unwritten Atlas, Seven Laboratories, Last Line, Black Laboratory and
+Relay Fragments. All 54 original quest identifiers are preserved.
+
+The Unwritten Atlas does not guess the technology identifier of its
+19 extra worlds. Instead, it indexes the **real installed
+`unlock-space-location` technology effect** per force on opening the
+journal or finishing native research. Missing optional mods simply
+do not appear. The event-driven GUI performs no periodic polling.
+
+Twelve substantial recovered transmission records weave an original
+mystery through Calidus, Muluna, Castra, Moshine, Cerys, the asteroid
+belt, Maraxsis, Tenebris, manufacturing, Dyson construction and the
+final signal. They unlock after the matching **researched** native
+technology, not after physically building an entity. This is
+original Razi Protocol fiction, separate from the underlying mods'
+canonical lore.
+
+Side quests and transmissions do not gate travel, alter science, or
+grant rewards. Original parallel star routes remain independent;
+the journal reflects them rather than redefining them.
