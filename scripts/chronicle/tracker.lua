@@ -4,11 +4,7 @@ local story = require("scripts.chronicle.story")
 local journal = {}
 
 local ROOT = "razi_protocol_chronicle"
-local TOGGLE = "razi_chronicle_toggle"
 local WINDOW = "razi_chronicle_window"
-local CLOSE = "razi_chronicle_close"
-local REFRESH = "razi_chronicle_refresh"
-local CHAPTER_PREFIX = "razi_chronicle_chapter_"
 
 local function database()
   storage[ROOT] = storage[ROOT] or {forces = {}, selection = {}}

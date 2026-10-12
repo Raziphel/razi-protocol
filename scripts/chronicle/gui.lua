@@ -68,10 +68,6 @@ local function chapter_state(ctx, force, ledger, chapter)
   return available, finished, record
 end
 
-local function display_title(chapter)
-  return chapter.title:gsub("^%u+%. ", "")
-end
-
 local function chapter_summary(parent, ctx, player, chapter, ledger, wide)
   local force = player.force
   local available, finished, record = chapter_state(ctx, force, ledger, chapter)
