@@ -141,3 +141,7 @@ require("prototypes.system.route_intel").data_final_fixes()
 require("prototypes.system.starmap_background").data_final_fixes()
 
 require("prototypes.system.route_highlights").data_final_fixes()
+
+-- FluxWorks is an optional factory expansion. Run after chapter/route gates so
+-- its manufacturing options cannot redefine the campaign progression.
+require("prototypes.compat.fluxworks").data_final_fixes()
