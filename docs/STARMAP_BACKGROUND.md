@@ -82,12 +82,27 @@ default opacity keeps route lines and labels readable. The new halo has a clear
 core for the real system star; dust is asymmetrical rather than a round smudge;
 and belts use broken particle arcs instead of a soft neon loop.
 
-Sixteen static background sprites are rendered below the current system
+Thirty-six static background sprites are rendered below the current system
 halos, real stars and other game artwork. The existing Subtle and Cinematic
 settings change their opacity; Off disables them. Fine detail, belt and
 cartography switches remain independent, and the existing compatibility
 guard defers to Better_Starmap_Background when installed.
 
 This adds no tick loop, gameplay hazard, research gate, map node or route.
-The indexed textures remain bounded by the asset-contract size limit.
+The transparent textures remain bounded by the asset-contract size limit.
 Full Factorio 2.1 graphics testing at multiple zooms remains necessary.
+
+## Crisp atlas polish (2.1.41)
+
+The starfield now uses a six-by-six grid at 4x source scale. It covers the
+same map area as the former four-by-four grid at 6x scale, but point stars are
+one-third smaller and no longer magnify their soft fringe into square blobs.
+System coronas are also more compact so they frame the real star art without
+washing out planets, labels, or route lines.
+
+Three transparent orientations of a new original dust lane replace the
+repeated central smoke texture. Their narrow granular structure, alternating
+direction, large transparent margins, and slightly reduced render scale
+create localized galactic detail without an obvious repeated stamp. The
+background remains static and keeps the existing Better Starmap Background
+compatibility guard.
