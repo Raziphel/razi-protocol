@@ -67,6 +67,8 @@ class StarmapBackgroundTests(unittest.TestCase):
         self.assertIn('local distant_sparks=',module)
         self.assertNotIn('insert_asset(result,"sky-"',module)
         self.assertIn('razi-starmap-orbit-density',settings)
+        self.assertIn('razi-starmap-soften-bellicos',settings)
+        self.assertIn('s.name=="deep-space"',module)
         self.assertIn('allowed_values={"clean","balanced","full"}',settings)
         self.assertIn('local belt_fragments=',module)
         self.assertIn('razi-starmap-cartography',settings)

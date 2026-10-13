@@ -209,6 +209,9 @@ function M.data_final_fixes()
   -- moon and optional third-party label preferences remain source-owned.
   local label_orientations={
     ["razi-calidus-drift"]=0.75,
+    ["apia-carnova-orbit"]=0.75,
+    ["apia"]=0.25,["carnova"]=0.75,
+    ["rabbasca"]=0.75,["frozeta"]=0.25,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.25,
@@ -218,7 +221,7 @@ function M.data_final_fixes()
     ["razi-umbra-belt-outer"]=0.25
   }
   for name,direction in pairs(label_orientations) do
-    local marker=exists("space-location",name)
+    local marker=exists("space-location",name) or exists("planet",name)
     if marker then marker.label_orientation=direction end
   end
 

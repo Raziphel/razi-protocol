@@ -302,6 +302,14 @@ class ConstellationTests(unittest.TestCase):
             self.assertGreater(radius(outer), 39)
         self.assertGreater(radius("maraxsis"), radius("rubia"))
 
+    def test_pulsar_glare_does_not_change_map_geometry(self):
+        source = (ROOT / "prototypes/system/bellicos.lua").read_text()
+        self.assertIn('local function soften_pulsar_art()', source)
+        self.assertIn('layer.planetslib_orbit_name=="pulsar"', source)
+        self.assertIn('razi-starmap-soften-bellicos', source)
+        self.assertNotIn('layer.scale=', source)
+        self.assertNotIn('layer.shift=', source)
+
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
         self.assertIn('110,0.12', source)
