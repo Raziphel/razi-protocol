@@ -149,6 +149,9 @@ require("prototypes.compat.fluxworks_specializations").data_final_fixes()
 require("prototypes.compat.fluxworks_industry_exchanges").data_final_fixes()
 -- Collapse only prerequisite arrows already implied by other research paths.
 require("prototypes.compat.fluxworks_research_clarity").data_final_fixes()
+-- Ease selected specialist machinery research tolls without altering any
+-- prerequisites, science packs, planet discovery, or standalone FluxWorks.
+require("prototypes.compat.fluxworks_machine_pacing").data_final_fixes()
 
 -- Last coordinates before building colored route art: compatibility mods can
 -- update their prototype a second time without re-baking all star sprites.
