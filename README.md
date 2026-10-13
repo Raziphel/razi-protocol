@@ -55,6 +55,12 @@ The four FluxWorks science packs remain optional mastery research instead of man
 
 See [FluxWorks Integration](docs/FLUXWORKS_INTEGRATION.md) for the exact responsibilities, test matrix and important existing-save warnings. This is still experimental until tested in the actual Factorio engine.
 
+### Seven-System Industrial Atlas
+
+With FluxWorks installed, seven **optional regional industry technologies** offer specialized production for Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra. The Codex adds a matching violet **FluxWorks | Industrial Atlas** chapter with seven engineering missions, suggested factory worlds and short narrative briefings. Nothing becomes a travel requirement.
+
+See [FluxWorks Industrial Atlas](docs/FLUXWORKS_INDUSTRY_ATLAS.md) for details and validation notes.
+
 ## Mod Settings
 
 Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
