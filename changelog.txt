@@ -1,3 +1,13 @@
+Version: 2.1.54
+Date: 14. 10. 2026
+  System tech-card factories and tiered laboratories:
+    - Introduce four buildable Razi laboratory upgrades with five science-card acceptance tiers, improved speed and power costs. Materials progress from Calidus machinery to first-star rare metals, mid-star controls and outer-star rare earths.
+    - Standard labs no longer automatically accept every system card. Existing specialised labs retain native non-card science; advanced and singularity labs have intentional card ceilings with guarded per-research coverage to avoid incompatible modpack lab recipes.
+    - Add five optional two-batch-to-three-card multiplex recipes using genuine world-specific freight, always keeping the original one-card recipe.
+    - Remove later-frontier electrochemistry from base Solaris cards, optional middle-tier galvanisation and hydraulic research from base cards, and post-edge logistics/pulsar packs from the first Deep Space card recipe. Those suppliers remain valuable for later research and optional card manufacturing.
+    - Add four optional Codex research milestones to guide laboratory upgrades, bringing the conditional catalog to 223 entries.
+    - Add English names, source-checked registrations, Lua fixtures, a structural test, docs and manual validation steps. Full Factorio 2.1 startup/old-save verification is still mandatory.
+
 Version: 2.1.53
 Date: 14. 10. 2026
   Native interplanetary coordination:
