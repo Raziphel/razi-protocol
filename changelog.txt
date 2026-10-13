@@ -1,3 +1,11 @@
+Version: 2.1.40
+Date: 13. 10. 2026
+  Original galactic starfield:
+    - Add four independent indexed star textures with warm, blue and white stellar specks.
+    - Use sixteen static sky sprites behind real stars, routes and planets.
+    - Preserve existing Calidus sun and halo polish, graphics presets and compatibility guard.
+    - Update asset and Lua regression tests; in-engine visual validation is still required.
+
 Version: 2.1.37
 Date: 13. 10. 2026
   FluxWorks progression and Codex usability:
