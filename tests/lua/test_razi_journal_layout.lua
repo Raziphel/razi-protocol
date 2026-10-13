@@ -126,6 +126,18 @@ check(sprites["item/automation-science-pack"],"Native science art is missing")
 check(sprites["entity/assembling-machine-1"],"Native building art is missing")
 check(sprites[themes.icon("calidus")],
   "Navigator must show the chapter insignia")
+local top_priority,parallel=0,0
+for _,entry in ipairs(created) do
+  if entry.tags and entry.tags.razi_journal_action=="guidance-select" then
+    local q=defs.by_id[entry.tags.id]
+    check(q and entry.type=="label",
+      "Recommended missions must be clickable real Codex objectives")
+    top_priority=top_priority+1
+    if q.chapter~="calidus" then parallel=parallel+1 end
+  end
+end
+check(top_priority>=1,
+  "Navigator must show at least one genuine research-ready priority")
 local tinted=0
 for _,entry in ipairs(created) do
   if entry.type=="progressbar" and entry.style.color then
@@ -163,6 +175,27 @@ check(industry_sprites["item/bioflux"] and industry_sprites["item/kr-rare-metals
   "Factory research should illustrate real recipe imports and outputs")
 check(journal.matches_query(defs.by_id["alliance-bio-metals"],"vulcanus"),
   "Search should find suggested production worlds")
+-- Recommendation actions are visible even when an old save had a stale
+-- search and completion filter selected. Jumping clears only UI filters.
+journal.preferences(1).filter="done"
+journal.preferences(1).query="no-such-technology"
+created={}
+journal.draw(player)
+local recommendation
+for _,entry in ipairs(created) do
+  if entry.tags and entry.tags.razi_journal_action=="guidance-select" then
+    recommendation=entry
+    break
+  end
+end
+check(recommendation,"Recommendations must remain visible with stale filters")
+local chosen_id=recommendation.tags.id
+journal.gui_click({player_index=1,element=recommendation})
+check(journal.preferences(1).selected==chosen_id
+  and journal.preferences(1).chapter==defs.by_id[chosen_id].chapter
+  and journal.preferences(1).filter=="all"
+  and journal.preferences(1).query=="",
+  "Selecting a recommendation must open its genuine chapter and quest")
 journal.preferences(1).selected="first-signal"
 journal.preferences(1).chapter="calidus"
 created={}

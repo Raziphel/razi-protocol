@@ -136,6 +136,15 @@ check(M.state(force,defs.by_id["stable-singularity"])=="complete",
 local next=M.next_quest(force)
 check(next and M.state(force,next)=="active",
   "Journal should suggest a real active milestone")
+local guide=M.guidance(force,M.context(force))
+check(guide.primary and next.id==guide.primary.quest.id,
+  "Next milestone action and priority navigator must agree")
+check(not guide.primary.disabled and #guide.primary.tech_blockers==0,
+  "Research-blocked objectives must not be labeled research-ready")
+for _,candidate in ipairs(guide.selected) do
+  check(M.state(force,candidate.quest)=="active",
+    "Priorities must be actual available campaign objectives")
+end
 rawset(_G,"storage",{})
 local p=M.preferences(42)
 p.selected="stable-singularity"

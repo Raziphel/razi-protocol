@@ -158,8 +158,38 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('quests_by_chapter[quest.chapter]',ui)
         self.assertIn('local state=view.states[quest.id]',ui)
         self.assertIn('done,total,ready=view.done,view.total,view.ready',ui)
-        self.assertIn('render_chapters(body,player,p,context,size,view)',ui)
+        self.assertIn('render_chapters(body,player,p,context,size,view,plan)',ui)
         self.assertNotIn('for _,quest in ipairs(defs.quests) do\n      if quest.chapter==chapter.id',ui)
+
+    def test_dynamic_expedition_priorities(self):
+        ui=read("scripts/razi_journal.lua")
+        planner=read("scripts/razi_journal_guidance.lua")
+        fixture=read("tests/lua/test_razi_journal_guidance.lua")
+        locale=read("locale/en/razi_journal.cfg")
+        self.assertIn('function M.guidance(force,context,view)',ui)
+        self.assertIn('local plan=view and M.guidance(player.force,context,view)',ui)
+        self.assertIn('plan=plan or M.guidance(player.force,context,view)',ui)
+        self.assertIn('function M.plan(states,lookup)',planner)
+        self.assertIn('entry.tech_blockers=research_blockers(tech)',planner)
+        self.assertIn('entry.disabled=tech.enabled==false',planner)
+        self.assertIn('if not seen[entry.chapter] and #selected<3',planner)
+        self.assertIn('entry.kind="campaign-blocked"',planner)
+        self.assertIn('if frontier(entry.quest) then blocker=entry',planner)
+        self.assertIn('local suggested=M.guidance(force,context)',ui)
+        self.assertIn('if suggested.primary then return suggested.primary.quest',ui)
+        self.assertIn('razi_journal_action="guidance-select"',ui)
+        self.assertIn('p.reveal_selection=true',ui)
+        self.assertIn('scroll.scroll_to_element(selected_element)',ui)
+        self.assertNotIn('data:extend',planner)
+        self.assertNotIn('script.on_tick',planner)
+        self.assertIn('check(initial.ready_count==4',fixture)
+        self.assertIn('check(initial.blocker',fixture)
+        self.assertIn('check(not none.primary',fixture)
+        for key in ("guidance-heading","guidance-main","guidance-parallel",
+                    "guidance-none","guidance-blocker-heading",
+                    "guidance-tech-needs","guidance-quest-needs",
+                    "guidance-disabled"):
+            self.assertRegex(locale,r"(?m)^"+key+r"=")
 
     def test_visible_during_normal_play_not_shortcut_bar(self):
         control=read("control.lua")

@@ -408,3 +408,28 @@ GUI scale. Return to the exact objective. Repeat with the Umbra Pressure
 Frame in Balanced and Deep interdependence modes; missing source
 technology must not advertise a link. Neither operation may create a
 surface, move a player, complete research or dispatch a space platform.
+
+## Recommended expedition objectives (2.1.29)
+
+The planner fixture uses the real 210-quest catalogue and synthetic native
+research states, so a recommendation only becomes research-ready if its
+technology is enabled and all actual prerequisites are researched.
+
+```bash
+lua5.2 tests/lua/test_razi_journal_guidance.lua
+lua5.2 tests/lua/test_razi_journal.lua
+lua5.2 tests/lua/test_razi_journal_layout.lua
+python3 -m unittest discover -s tests -p 'test_razi_journal.py'
+```
+
+Check the Codex at the start of a save, after unlocking Solaris/Nyxaris,
+and after disabling optional planet mods. The primary and parallel
+milestones should remain navigable, the blocker must describe real
+source technology or story prerequisites, and unrelated pinned quest
+preferences must survive navigation. A native technology may be ready
+for research while the required science production is still unavailable;
+the guide makes no claim about inventories or materials.
+
+In particular, verify the priorities stay visible at the top of the
+existing scrollable chapter navigator without adding new horizontal
+scrollbars or increasing the overall Codex window height.

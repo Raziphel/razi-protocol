@@ -6,6 +6,7 @@ local records=require("scripts.razi_journal_records")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
+local guidance=require("scripts.razi_journal_guidance")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -173,8 +174,10 @@ function M.summary(force,context)
   return completed,total,active
 end
 function M.next_quest(force,context)
-  -- Both first-star branches and each later pair can be active at once.
   context=context or M.context(force)
+  local suggested=M.guidance(force,context)
+  if suggested.primary then return suggested.primary.quest end
+  -- A blocked objective can still be inspected, but is not called ready.
   for _,q in ipairs(defs.quests) do
     if M.state(force,q,context)=="active" then return q end
   end
@@ -225,6 +228,16 @@ function M.view_status(force,context)
   end
   return view
 end
+-- Reuse the view already calculated for rendering. This reads live
+-- ForceTechnology prerequisites without storing a second progression state.
+function M.guidance(force,context,view)
+  context=context or M.context(force)
+  view=view or M.view_status(force,context)
+  return guidance.plan(view.states,function(quest)
+    return technology(force,quest,context)
+  end)
+end
+
 -- Dimensions are in Factorio GUI units, after the player's UI scale.
 -- Explicitly budget both columns to prevent the horizontal scroll bars
 -- caused by oversized localized labels and autosizing buttons.
@@ -297,13 +310,14 @@ local function chapter_index(id)
   end
   return 1
 end
-local function select_quest(force,p,context)
+local function select_quest(force,p,context,plan)
   local selected=p.selected and defs.by_id[p.selected]
   if selected and M.available(force,selected,context) then
     if p.chapter==nil then p.chapter=selected.chapter end
     return selected
   end
-  selected=M.next_quest(force,context)
+  selected=plan and plan.primary and plan.primary.quest
+    or M.next_quest(force,context)
   p.selected=selected and selected.id or nil
   p.chapter=selected and selected.chapter or false
   return selected
@@ -654,7 +668,7 @@ end
 
 -- Wrapped, selectable labels replace the old too-wide chapter and quest
 -- buttons. One chapter jump selector covers distant chapters with no bars.
-local function render_chapters(parent,player,p,context,size,view)
+local function render_chapters(parent,player,p,context,size,view,plan)
   local frame=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   frame.style.width=size.rail
@@ -686,6 +700,58 @@ local function render_chapters(parent,player,p,context,size,view)
   column.style.width=inner-13
   column.style.vertical_spacing=7
   local selected_element
+
+  plan=plan or M.guidance(player.force,context,view)
+  local priority=column.add{type="frame",direction="vertical",
+    style="inside_shallow_frame"}
+  priority.style.width=inner-16
+  priority.style.padding=8
+  local heading=wrap(priority,L("guidance-heading"),inner-40)
+  heading.style.font="default-bold"
+  heading.style.font_color={r=.86,g=.73,b=.48}
+  accent_rule(priority,themes.get("network"),math.min(inner-42,135),2)
+  if not plan.primary then
+    wrap(priority,L("guidance-none"),inner-38)
+  else
+    for i,entry in ipairs(plan.selected) do
+      local chapter_theme=themes.get(entry.chapter)
+      local row=priority.add{type="flow",direction="horizontal"}
+      row.style.horizontal_spacing=6
+      local image=row.add{type="sprite",
+        sprite=quest_art(player.force,entry.quest,context)}
+      image.style.width=22
+      image.style.height=22
+      local item=row.add{type="label",style="clickable_label",
+        caption={"",L(i==1 and "guidance-main" or "guidance-parallel"),
+          " ",{"journal-title."..entry.quest.id}},
+        tags={razi_journal_action="guidance-select",id=entry.quest.id},
+        tooltip={"journal-chapter."..entry.chapter}}
+      item.style.single_line=false
+      item.style.maximal_width=inner-79
+      item.style.font_color=chapter_theme.primary
+      if i==1 then item.style.font="default-bold" end
+    end
+  end
+  if plan.blocker then
+    local blocked=plan.blocker
+    local warning=wrap(priority,L("guidance-blocker-heading"),inner-38)
+    warning.style.font="default-bold"
+    warning.style.font_color={r=1,g=.70,b=.46}
+    local link=priority.add{type="label",style="clickable_label",
+      caption={"journal-title."..blocked.quest.id},
+      tags={razi_journal_action="guidance-select",id=blocked.quest.id}}
+    link.style.single_line=false
+    link.style.maximal_width=inner-38
+    if blocked.disabled then
+      wrap(priority,L("guidance-disabled"),inner-38)
+    elseif blocked.tech_blockers and #blocked.tech_blockers>0 then
+      wrap(priority,L("guidance-tech-needs",
+        blocked.tech_blockers[1].localised_name),inner-38)
+    elseif blocked.quest_blockers and #blocked.quest_blockers>0 then
+      wrap(priority,L("guidance-quest-needs",
+        {"journal-title."..blocked.quest_blockers[1]}),inner-38)
+    end
+  end
   local found=false
 
   for index,chapter in ipairs(defs.chapters) do
@@ -780,9 +846,10 @@ local function render_chapters(parent,player,p,context,size,view)
   end
   if not found then wrap(column,L("nothing-found"),inner-28) end
   -- Search results should not jump while the player is still typing.
-  if selected_element and p.query=="" then
+  if selected_element and p.reveal_selection and p.query=="" then
     pcall(function() scroll.scroll_to_element(selected_element) end)
   end
+  p.reveal_selection=nil
   return search
 end
 -- The archive is not another quest chain. Each story entry opens only
@@ -917,6 +984,7 @@ local function draw(player,focus_search)
 
   local context=M.context(player.force)
   local view=p.view=="archive" and nil or M.view_status(player.force,context)
+  local plan=view and M.guidance(player.force,context,view)
   local done,total,ready
   if view then
     done,total,ready=view.done,view.total,view.ready
@@ -992,8 +1060,8 @@ local function draw(player,focus_search)
   if p.view=="archive" then
     render_archive(body,player,p,context,size)
   else
-    local selected=select_quest(player.force,p,context)
-    local search=render_chapters(body,player,p,context,size,view)
+    local selected=select_quest(player.force,p,context,plan)
+    local search=render_chapters(body,player,p,context,size,view,plan)
     if focus_search then pcall(function() search.focus() end) end
     if selected then
       render_details(body,player,selected,p,context,size)
@@ -1033,6 +1101,7 @@ function M.open_quest(player,id)
   p.filter="all"
   p.query=""
   p.view="quests"
+  p.reveal_selection=true
   open(player)
   return true
 end
@@ -1178,10 +1247,14 @@ function M.gui_click(event)
     return
   end
   local p=pref(player.index)
-  if action=="select" and defs.by_id[tags.id]
-    and M.available(player.force,defs.by_id[tags.id]) then
+  if (action=="select" or action=="guidance-select") and
+    defs.by_id[tags.id] and M.available(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
     p.chapter=defs.by_id[tags.id].chapter
+    p.filter="all"
+    p.view="quests"
+    p.query=""
+    p.reveal_selection=true
   elseif action=="chapter" then
     p.chapter=p.chapter==tags.id and false or tags.id
   elseif action=="view" and (tags.id=="quests" or tags.id=="archive") then
@@ -1208,6 +1281,8 @@ function M.gui_click(event)
       p.chapter=next.chapter
       p.filter="all"
       p.view="quests"
+      p.query=""
+      p.reveal_selection=true
     end
   elseif action=="next-in-chapter" or action=="previous-in-chapter" then
     local context=M.context(player.force)
@@ -1272,6 +1347,7 @@ function M.selection_changed(event)
   p.chapter=chapter.id
   p.filter="all"
   p.query=""
+  p.reveal_selection=true
   local context=M.context(player.force)
   for _,quest in ipairs(defs.quests) do
     if quest.chapter==chapter.id
