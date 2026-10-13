@@ -161,7 +161,9 @@ local parts={
     planets={"panglia_planet_discovery_panglia",
       "planet-discovery-moshine","planet-discovery-fulgora"},
     science={"solaris-tech-card","nyxaris-tech-card"},
-    count=520,energy=8,output=2
+    -- Eight bonds amortise the three imported materials over four
+    -- boosted native batches instead of spending one glass per bonus.
+    count=360,energy=10,output=8
   },
   {
     -- This is a late framework built from completed planetary industries.
@@ -188,7 +190,9 @@ local parts={
       "linox-technology_planet-discovery-linox",
       "planet-discovery-crucible","planet-discovery-vesta"},
     science={"beetlejuice-tech-card","umbra-tech-card"},
-    count=1450,energy=16,output=2,deep_only=true
+    -- A multi-world frame is expensive to establish, so each run
+    -- produces enough for repeated outer-world shipments.
+    count=980,energy=20,output=8,deep_only=true
   }
 }
 M.parts=parts
@@ -284,9 +288,12 @@ local function upgrade(name,source,product,category,world,planet_names,
     supplier_recipes={{recipe=component,product=component}},
     additional={{type="item",name=component,amount=1}},
     batch=options.batch or 4,bonus=options.bonus or 1,
+    target_bonus_fraction=options.target_bonus_fraction,
     count=options.count or 900,time=60,
     bonus_icon=component,require_supplier_provenance=true,
-    max_bonus_fraction=0.25,time_multiplier=options.deep and 1.2 or 1.15,
+    max_bonus_fraction=0.25,
+    time_multiplier=options.time_multiplier or
+      (options.deep and 1.2 or 1.15),
     deep_only=options.deep or nil,
     keep_native_category=options.native or nil,
     surface_source=options.surface_source,
@@ -332,13 +339,15 @@ local return_modded={
     "electric-coil","mechanics","paracelsin",
     {"planet-discovery-paracelsin","panglia_planet_discovery_panglia",
      "planet-discovery-moshine","planet-discovery-fulgora"},
-    bond,"Paracelsin",{native=true,count=1050}),
+    bond,"Paracelsin",{native=true,count=520,
+      target_bonus_fraction=0.20,time_multiplier=1.10}),
   upgrade("razi-network-bond-linox-refining","linox-recipe_rare-earth-refining",
     "rare-earth-powder","chemistry","linox-planet_linox",
     {"linox-technology_planet-discovery-linox",
      "panglia_planet_discovery_panglia",
      "planet-discovery-moshine","planet-discovery-fulgora"},
-    bond,"linox",{native=true,count=1250})
+    bond,"linox",{native=true,count=650,
+      target_bonus_fraction=0.20,time_multiplier=1.10})
 }
 local deep_modded={
   upgrade("razi-network-lattice-vesta-foundations","vesta-foundation",
@@ -359,7 +368,8 @@ local pressure_modded={
     {"planet-discovery-vesta","planet-discovery-crucible",
      "linox-technology_planet-discovery-linox",
      "panglia_planet_discovery_panglia"},
-    frame,"skewer_planet_vesta",{deep=true,count=1900})
+    frame,"skewer_planet_vesta",{deep=true,count=960,
+      target_bonus_fraction=0.20,time_multiplier=1.12})
 }
 local pressure_k2={
   upgrade("razi-network-frame-aquilo-controllers","kr-energy-control-unit",
@@ -368,7 +378,8 @@ local pressure_k2={
      "planet-discovery-crucible",
      "linox-technology_planet-discovery-linox",
      "panglia_planet_discovery_panglia"},
-    frame,nil,{deep=true,count=1950,
+    frame,nil,{deep=true,count=1100,
+      target_bonus_fraction=0.20,time_multiplier=1.12,
       surface_source="kr-cryogenic-research-data",surface_world="aquilo"})
 }
 M.premium={

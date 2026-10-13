@@ -318,3 +318,26 @@ Check source versions with `python3 scripts/audit_full_campaign.py` on a
 real Factorio `--dump-data-raw` export. The opt-in network intentionally
 does not register its recipes when a source-mod recipe, machine,
 technology or compatible science lab is absent.
+
+## Industrial economics audit (2.1.25)
+
+Run the new source-only fixtures locally:
+```bash
+lua5.2 tests/lua/test_planet_production_exchanges.lua
+lua5.2 tests/lua/test_outer_production_exchanges.lua
+lua5.2 tests/lua/test_network_components.lua
+python3 -m unittest discover -s tests -p "test_exchange_economy.py"
+```
+
+On an actual complete Factorio `--dump-data-raw` export:
+```bash
+python3 scripts/audit_exchange_economy.py /path/to/data-raw-dump.json
+python3 scripts/audit_full_campaign.py /path/to/data-raw-dump.json \
+  --output full-campaign-audit.json
+```
+The full campaign report now includes an industrial freight economy section.
+It checks source recipe output, added import amounts, throughput, bonus
+caps, productivity and recycling. Its negative results should be reviewed
+against in-game transport and source material production costs; source
+analysis cannot prove actual rocket-level profitability. These commands
+do not create GitHub Actions runs.

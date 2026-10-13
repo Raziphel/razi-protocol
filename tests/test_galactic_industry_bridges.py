@@ -23,7 +23,9 @@ class GalacticIndustryTests(unittest.TestCase):
         engine=src("prototypes/compat/planet_production_exchanges.lua")
         self.assertIn("rule.require_supplier_provenance",engine)
         self.assertIn("rule.max_bonus_fraction",engine)
-        self.assertIn("(rule.time_multiplier or 1.3)",engine)
+        self.assertIn("(rule.time_multiplier or 1.15)",engine)
+        self.assertIn("(base.energy_required or 0.5)",engine)
+        self.assertIn("rule.target_bonus_fraction",engine)
         self.assertIn('name="razi-galactic-vulcanus-bioptic-casting"',engine)
     def test_all_recipes_have_four_locale_entries(self):
         lang=src("locale/en/production.cfg")

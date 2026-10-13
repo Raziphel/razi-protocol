@@ -23,6 +23,8 @@ class FullCampaignTests(unittest.TestCase):
         result = auditor.examine(raw)
         self.assertEqual(result["prototype_issues"], [])
         self.assertEqual(result["blocked_discoveries"], [])
+        self.assertEqual(result["economy_issues"], {})
+        self.assertIn("razi-network-frame-vesta-foundations",result["economy"])
         self.assertEqual(result["worlds_checked"], 0)
         self.assertEqual(result["focus"]["Panglia"]["status"], "not-installed")
         self.assertEqual(result["focus"]["Linox"]["status"], "not-installed")

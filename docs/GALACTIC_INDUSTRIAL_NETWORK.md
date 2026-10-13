@@ -34,11 +34,12 @@ native source ingredients/byproducts are preserved. Every import must
 have a native producing recipe with valid ingredients and, when
 necessary, an actual existing technology to unlock it.
 
-Production bonuses are capped at **25% of the native batch output**.
-The native process is scaled to multiple batches, imported components
-are consumed on top of that cost, and crafting requires **15% extra
-time per base batch in Balanced** or **20% in Deep**. Productivity
-modules and auto-recycling cannot multiply these gains.
+Modern production bonuses are capped at **25% of the native batch
+output**. Recipes scale the native process to several batches and require
+imported components on top of the original cost. The standard network
+recipes still charge 15% more crafting time in Balanced or 20% in Deep;
+the new Panglia return-cargo recipes use 10%, and the Deep pressure-frame
+consumers use 12%. Productivity and auto-recycling cannot multiply gains.
 
 The existing `razi-planetary-interdependence` Off / Balanced / Deep
 setting controls visibility. The independent K2SO and modded-world
@@ -88,3 +89,35 @@ two late freight returns. These are not additional chapter travel gates.
 
 As with the original network, a post-load Factorio prototype dump and
 in-game check remain necessary to verify the actual mod versions installed.
+
+## Economy tuning (2.1.25)
+
+| Recipe family | Before | Tuned | Why |
+| --- | --- | --- | --- |
+| Panglia optical bonds | 2 per 8-second cycle | 8 per 10-second cycle | Freight material overhead is spread across many improved batches |
+| Umbra pressure frames | 2 per 16-second cycle | 8 per 20-second cycle | A very late four-world component must be worth transporting |
+| Panglia bond customers | 1 flat bonus / 4 native batches, 15% slower | About 20 to 25% more output, 10% slower | Real per-machine throughput improvement after the import |
+| Umbra pressure-frame customers | 1 flat bonus / 4 batches, 20% slower | Output-scaled, at most 25% extra, 12% slower | Bulk Vesta foundation recipes otherwise lose throughput |
+| Early Fulgora/Aquilo exchanges | Up to 75 to 100% gross bonus | Four native batches with a 20 to 25% guarded bonus | Eliminate unusually high early yield multipliers |
+| Vesta foundation exchange | One native batch + five items | Four native batches with an output-scaled bonus capped at 25% | Avoid a 50% free-output multiplier |
+
+
+- The two bond customers now cost **520 and 650** research units. The
+  component research costs **360** instead of 520 units.
+- The Deep pressure frame costs **980** research units rather than 1450;
+  its Vesta/Aquilo consumers cost **960/1100** instead of 1900/1950.
+- In the optional exchange engine, recipes without an explicit time
+  multiplier now use a **15%**, rather than **30%**, machine-time
+  surcharge. When a native recipe omits `energy_required`, Razi now
+  follows Factorio's actual **0.5-second default** rather than
+  assuming 1 second.
+- Scaled bonuses are computed from the **current post-load native output
+  amount**, with caps enforced afterwards. Mods that change native
+  batch sizes should not silently break the reward math.
+
+The numbers are tuned for positive *machine throughput*, not a guaranteed
+total-resource profit. Actual cargo costs depend on the planet distances,
+rocket capacity, production modules, power supply and material recycling.
+Use `python3 scripts/audit_exchange_economy.py
+script-output/data-raw-dump.json` to inspect the post-load math and
+in-game freight trials to determine whether to expand a route.
