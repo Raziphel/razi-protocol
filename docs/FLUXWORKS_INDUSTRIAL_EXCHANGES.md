@@ -33,6 +33,12 @@ Five new objectives join the violet **FluxWorks | Industrial Atlas** chapter, af
 
 The chapter and all new prototypes are omitted entirely when FluxWorks is not installed.
 
+## Factory previews and priorities
+
+The Codex now resolves each exchange's actual recipe name rather than attempting to display its technology as a recipe. Recipe input and output cards include quantities, and the suggested compatible machine is shown above the supply lines.
+
+All exchange objectives remain optional and are excluded from the main Protocol campaign completion total. See [FluxWorks Progression Audit](FLUXWORKS_PROGRESSION_AUDIT.md).
+
 ## Safety, startup cost, validation
 
 - All new recipes and technologies are registered through one data-stage pass. Source ingredient, output, fluid and crafting-category existence is checked before creating anything.
