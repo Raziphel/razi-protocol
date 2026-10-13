@@ -1,3 +1,56 @@
+## The Convergence: release blocking tests (2.1.56)
+
+**Factory/prototype:** Load the complete Factorio 2.1 pack and confirm
+the three Convergence recipes, the two commissioning technologies and
+each required source material have real producers and sensible unlocks.
+Verify original card recipes and native K2SO transceiver remain intact,
+and at least one installed *reachable* laboratory researches the
+complete science for both Convergence technologies. Test without Dyson,
+Aegis and Nexus installed to ensure optional research requirements
+cannot create a circular dependency or an impossible endgame. Without
+Nexus Omega Lab, the final authorization may use the existing outer
+science pair, while the physical Deep Space Mandate still requires
+the actual Deep Space card.
+
+**Physical cargo:** On a real force-owned space platform stopped at
+Solar System Edge, carry 3 Stellar Mandates, submit them, then carry
+and submit the remaining 5. Verify the 8-item stage completes, the
+entire input is consumed and force members see the same progress.
+Verify remote map view (even while the physical character is already
+on the platform) and an unrelated planet cannot submit cargo.
+Repeat for 10 Industrial and 6 Deep-Space Mandates. Test save/reload
+between partial submissions and multiple force merge events. Make
+sure unrelated players' cargo and other forces' victory state are
+untouched.
+
+**Win conditions:** Final Deep-Space Mandate delivery must be rejected
+without Synchronization research, without the first two stages, or
+from a planet. Completing research alone must never win. A save which displayed an
+old victory before the update should re-arm the game state only at
+the real final submission, then show the new ending. On the
+last accepted real cargo, Factorio's native victory UI should show
+The Convergence and offer Continue. Test existing saves in which the
+transceiver was already activated. Confirm the K2SO transceiver's
+original victory and Space Age's Solar System Edge victory are both
+suppressed using their supported remote interfaces on new-game init
+and save configuration updates. Reaching the edge should no longer
+claim the new victory before the physical manifests are delivered.
+
+**Performance/compatibility:** No per-tick inventory scan, route
+overrides, new planet, lab entity or source platform schedule changes.
+The first Convergence Codex viewing should not allocate empty
+save-state records. Validate in multiplayer and inspect logs for
+omitted source products or missing science-compatible labs.
+
+Local tests (no unnecessary GitHub Actions):
+```bash
+python3 -m unittest discover -s tests -p 'test_convergence.py'
+python3 -m unittest discover -s tests -p 'test_razi_journal.py'
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+lua tests/lua/test_convergence_prototypes.lua
+lua tests/lua/test_convergence_runtime.lua
+```
+
 ## Native lab removal and Deep Space gateway (2.1.55)
 
 Load a 2.1.54 save with placed/stored Razi lab items. Confirm that JSON

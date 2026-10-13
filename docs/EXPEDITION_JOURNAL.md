@@ -1,3 +1,24 @@
+## The Convergence: post-edge finale (2.1.56)
+
+The existing final chapter now follows the real ending past the native
+transceiver. Six new Codex objectives track the commission, physical
+Stellar and Industrial Mandates, final Synchronization research, physical
+Deep Space delivery and actual victory. This raises the base catalog
+to **225 conditional milestones in 18 chapters**.
+
+Unlike standard Codex goals, the three shipment objectives and victory
+read force-owned Convergence delivery state. Research completion alone
+cannot fake a shipment. Clicking through each objective opens the
+dedicated Convergence panel in Galactic Operations, even outside
+Remote View. The panel displays delivered totals, materials, station
+requirements, technology status and the next stage.
+
+Partial delivered quantities, force win tick and winning contributor
+are saved without changes to the previous quest IDs or their recorded
+completion times. The final stage only fires the real Factorio win
+screen when accepted cargo crosses the actual required threshold.
+It then offers Continue so the expedition can keep exploring.
+
 ## Midfrontier industrial projects (2.1.52)
 
 The Codex adds Fulgora capacitor, Aquilo cryogenic-controller,

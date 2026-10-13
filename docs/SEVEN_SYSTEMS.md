@@ -1,3 +1,38 @@
+## 2.1.56: The Convergence, after the transceiver
+
+The physical K2SO transceiver is a **Deep Space access gate**.
+The actual endgame is now a three-phase, real-cargo megaproject:
+
+1. Reach Solar System Edge and research Convergence Commission. This
+   includes native Aegis discovery and the Calidus Dyson Sphere milestone
+   when those prototype technologies are available and safely upstream.
+2. Manufacture and deliver 8 Stellar Mandates, then 10 Industrial
+   Mandates using Calidus through Vespera cards, finished native
+   electronics and planetary materials.
+3. Research Deep-Space Synchronization and craft 6 Deep-Space Mandates
+   from Beetlejuice, Umbra and Deep Space cards, with additional
+   Promethium/singularity/pulsar materials when their producers exist.
+
+All three products are ordinary recipes for the existing crafting
+machines. They do not use new labs, planets or a substitute shipping
+network. The real cargo must be in a player's main inventory while her
+character is aboard her own force's platform at Solar System Edge or
+an allowed post-edge destination. The GUI never reads remote-view
+inventory to fabricate freight.
+
+Three stage counters are stored per force; partial deliveries are
+persistent, force merges combine only delivered quantities, and the
+last accepted physical cargo triggers the documented native Factorio
+victory screen with Continue. A genuine authorization technology, not
+the source transceiver, gates the final stage. The victory itself is
+deliberate; it is not a side effect of opening the last research.
+Razi suppresses the original K2SO transceiver victory and the
+Space Age Solar System Edge victory through their native, guarded
+`set_no_victory` remote interfaces, if provided.
+
+No automated gameplay polling, new surface generation, native
+transceiver edits or own laboratory prototypes are involved.
+
 ## 2.1.55: Native labs and the transceiver threshold
 
 The four Razi-built 2.1.54 laboratory prototypes have been removed.

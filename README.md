@@ -2,7 +2,7 @@
 
 Razi Protocol started as my attempt to make an absurdly large Space Age planet pack feel like one game. It's built for Factorio 2.1 and Krastorio 2 Spaced Out.
 
-The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. I've also been rebuilding the starmap and extending the journey out to the intergalactic transceiver. Nexus has its own late-game branch.
+The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
 ## Planet quality gate
 
@@ -277,13 +277,36 @@ ingredients needed to reach the edge. The source transceiver's
 activation remains unchanged; its independent victory condition is
 suppressed through K2SO's supported remote interface when available.
 
-The actual finale remains a separate design project. The intended
-direction is a galaxy-wide engineering challenge in Deep Space:
-coordinate mature industry from all earlier systems, construct a
-larger shared megaproject using the Dyson, advanced science and
-native Nexus/Aegis/Bellicos expeditions, then finish with a deliberate
-endgame research and construction milestone. No unfinished finale or
-additional planet is fabricated by this update.
+**The Convergence** is now the playable post-transceiver ending. After
+reaching the Solar System Edge and undertaking the native late-game
+expeditions, research the Convergence Commission. Three physical
+factory-built manifests then turn prior research and materials into
+something the galaxy can ship together:
+
+- **Stellar Mandate:** 8 Calidus/Solaris/Nyxaris research payloads and
+  orbital electronics. Native Dyson Sphere research is a prerequisite
+  when installed and compatible.
+- **Industrial Mandate:** 10 Vibrant/Vespera payloads with rare metals,
+  Gleba bioflux and suitable existing supplier-world components.
+- **Deep-Space Mandate:** 6 Beetlejuice/Umbra/Deep Space payloads,
+  incorporating genuine native post-edge science materials where present.
+
+Manufacture the manifests in original assembling machines. Carry them
+physically onto a platform owned by your force, parked at the Solar
+System Edge or a supported deeper destination. Open **The Convergence**
+from Galactic Operations or from its linked Codex objective; submit
+real items from your character inventory. Team contributions persist
+by force, including partial shipments and force merges. The final
+submission requires Deep-Space Synchronization research and displays
+Factorio's genuine victory screen, with Continue enabled. Razi also
+suppresses the source K2SO transceiver and vanilla Space Age
+Solar System Edge victory triggers where their supported
+`set_no_victory` interfaces are available.
+
+This ending **does not** add a new planet, laboratory, artificial cargo
+teleportation, replacement transceiver, or boss. It works with optional
+source content when that content exists, but never pretends to have
+shipped cargo merely because research was completed.
 
 **Laboratory tiers** reuse the installed native machines instead of
 adding custom Razi labs. Existing 2.1.54 custom lab items and entities

@@ -73,7 +73,7 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertIn('function M.layout(resolution,scale)',operations)
         self.assertIn('local compact=outer<860',operations)
         self.assertIn('type="table",name="razi_ops_tabs"',operations)
-        self.assertIn('column_count=layout.compact and 3 or 5',operations)
+        self.assertIn('column_count=layout.compact and 3 or 6',operations)
         self.assertIn('type="frame",direction="vertical",style="inside_shallow_frame"',operations)
         self.assertIn('sprite=row_sprite(row)',operations)
         self.assertIn('helpers.is_valid_sprite_path(source)',operations)

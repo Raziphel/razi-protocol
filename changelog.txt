@@ -1,3 +1,13 @@
+Version: 2.1.56
+Date: 14. 10. 2026
+  The Convergence, Razi Protocol's post-transceiver ending:
+    - Guarded post-edge research Commission and Deep-Space Synchronization using existing native labs and all seven system tech cards.
+    - Three existing-assembler recipes for physical Stellar, Industrial and Deep-Space Mandates, using native goods and conditional Dyson/Aegis source milestones.
+    - Deliver actual player-carried freight at a force-owned space platform parked at the Solar System Edge or a supported deeper destination; partial contributions are saved by force and cooperative.
+    - Final researched and delivered mandate invokes the native Factorio victory screen with Continue; guard both K2SO's original transceiver victory and Space Age's solar-edge victory through their existing remote interfaces.
+    - Add an interactive Convergence tab to Galactic Operations, linked Codex milestones, force merge safeguards, new localization and Lua/static test fixtures.
+    - Full Factorio 2.1 modpack startup, native source reachability, real platform submissions and old-save validation remain required. No Actions runs triggered.
+
 Version: 2.1.55
 Date: 14. 10. 2026
   Native labs, transceiver threshold, and endgame direction:
