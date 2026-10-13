@@ -22,7 +22,7 @@ class FirstFrontierIndustryTests(unittest.TestCase):
     def test_only_optional_industry_is_registered(self):
         source = read("prototypes/compat/first_frontier_industry.lua")
         hooks = read("data-final-fixes.lua")
-        self.assertEqual(len(re.findall(r'\\bname="razi-frontier-[^"]+"', source)), 3)
+        self.assertEqual(len(re.findall(r'\bname="razi-frontier-[^"]+"', source)), 3)
         self.assertEqual(source.count("require_supplier_provenance=true"), 3)
         self.assertEqual(source.count("max_bonus_fraction=0.25"), 3)
         self.assertEqual(source.count("keep_native_category=true"), 3)
@@ -44,7 +44,7 @@ class FirstFrontierIndustryTests(unittest.TestCase):
             self.assertIn('id="' + quest + '"', entries)
             self.assertIn('tech="' + name + '"', entries)
             for section in ("journal-title", "journal-story", "journal-tip"):
-                body=journal.split("[" + section + "]", 1)[1].split("\\n[", 1)[0]
+                body=journal.split("[" + section + "]", 1)[1].split("\n[", 1)[0]
                 self.assertRegex(body, rf"(?m)^{re.escape(quest)}=")
 
     def test_campaign_gates_remain_untouched(self):
