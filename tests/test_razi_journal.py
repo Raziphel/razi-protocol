@@ -239,5 +239,18 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertNotIn('data:extend',read("scripts/razi_journal_records.lua"))
         manifest=read("info.json")
         self.assertNotIn('"quest-book"',manifest)
+    def test_no_runtime_require_on_cargo_codex_gui_click(self):
+        catalog=read("scripts/galactic_trade_catalog.lua")
+        journal=read("scripts/razi_journal.lua")
+        operations=read("scripts/galactic_operations.lua")
+        control=read("control.lua")
+        self.assertIn('local journal_definitions=require("scripts.razi_journal_data")', catalog)
+        self.assertIn('local quest=journal_definitions.by_id[id]', catalog)
+        self.assertNotIn('  local definitions=require("scripts.razi_journal_data")', catalog)
+        self.assertNotIn('    local operations=require("scripts.galactic_operations")', journal)
+        self.assertNotIn('    local journal=require("scripts.razi_journal")', operations)
+        self.assertIn('galactic_operations.bind_journal(razi_journal)', control)
+        self.assertIn('journal_module.open_quest(player,quest_id)', operations)
+
 if __name__=="__main__":
     unittest.main()

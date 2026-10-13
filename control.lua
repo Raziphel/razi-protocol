@@ -1,5 +1,6 @@
 local galactic_operations = require("scripts.galactic_operations")
 local razi_journal = require("scripts.razi_journal")
+galactic_operations.bind_journal(razi_journal)
 local razi_discord_presence = require("scripts.razi_discord_presence")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local Events = require("__razi_lib__/runtime/events")

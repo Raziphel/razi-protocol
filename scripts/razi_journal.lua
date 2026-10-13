@@ -6,6 +6,7 @@ local records=require("scripts.razi_journal_records")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
+local operations=require("scripts.galactic_operations")
 local guidance=require("scripts.razi_journal_guidance")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
@@ -946,6 +947,9 @@ local function render_archive(parent,player,p,context,size)
   wrap(paper,L("archive-disclaimer"),size.reader-48)
 end
 
+function M.quest_by_id(id)
+  return defs.by_id[id]
+end
 local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
@@ -1246,8 +1250,6 @@ function M.gui_click(event)
     if not (chain and cargo_catalog.is_installed(player.force,chain)) then
       return
     end
-    -- Lazy require avoids a UI module cycle during game initialisation.
-    local operations=require("scripts.galactic_operations")
     if operations.open_cargo(player,chain,target) then
       close(player)
     end

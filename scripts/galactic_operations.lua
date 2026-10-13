@@ -9,6 +9,10 @@ local fleet=require("scripts.galactic_fleet")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
+local journal_module
+function M.bind_journal(module)
+  journal_module=module
+end
 local dyson=require("scripts.galactic_dyson")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local FRAME="razi_galactic_operations"
@@ -813,12 +817,10 @@ function M.gui_click(event)
     local linked=cargo_catalog.chain_for_technology(value)
     if not (quest_id and cargo_catalog.is_installed(player.force,linked)
       and player.force.technologies[value]) then return end
-    local journal=require("scripts.razi_journal")
-    local definitions=require("scripts.razi_journal_data")
-    local quest=definitions.by_id[quest_id]
-    if not (quest and journal.available(player.force,quest)) then return end
+    local quest=journal_module and journal_module.quest_by_id(quest_id)
+    if not (quest and journal_module.available(player.force,quest)) then return end
     close(player)
-    journal.open_quest(player,quest_id)
+    journal_module.open_quest(player,quest_id)
     return
   elseif action=="clear-search" then
     p.search="";p.page=1

@@ -1,6 +1,8 @@
 -- Shared IDs for the Cargo Network presentation.
 -- This module contains labels and source identities, never inferred stock.
 local M={}
+-- Resolve quest data at control load, not inside GUI callbacks.
+local journal_definitions=require("scripts.razi_journal_data")
 M.chains={
   {
     id="razi-network-precision-matrix",key="matrix",
@@ -67,8 +69,7 @@ function M.quest_for_technology(name)
   return quest_by_technology[name]
 end
 function M.chain_for_quest(id)
-  local definitions=require("scripts.razi_journal_data")
-  local quest=definitions.by_id[id]
+  local quest=journal_definitions.by_id[id]
   if not quest then return nil end
   local chain=M.chain_for_technology(quest.tech)
   return chain,quest.tech
