@@ -162,6 +162,43 @@ local function supplier_recipe(parent,part,width)
   end
 end
 
+-- Research requirements use Factorio's live technology state. They are
+-- only drawn for expanded cards, not collected on every fleet refresh.
+local function science_requirements(parent,tech,width)
+  local ingredients=tech and tech.research_unit_ingredients or {}
+  if #ingredients==0 then return end
+  local count=tech.research_unit_count
+  heading(parent,L("trade-science-heading"),width)
+  if count and count>0 then
+    wrap(parent,L("trade-science-units",tostring(count)),width)
+  end
+  local grid=parent.add{type="table",column_count=width<270 and 1 or 2}
+  grid.style.horizontal_spacing=6
+  grid.style.vertical_spacing=4
+  for i=1,math.min(9,#ingredients) do
+    local input=ingredients[i]
+    local name=input.name or input[1]
+    if name then
+      local line=grid.add{type="flow",direction="horizontal"}
+      line.style.vertical_align="center"
+      local image=sprite_for("item",name)
+      if image then
+        local sprite=line.add{type="sprite",sprite=image}
+        sprite.style.width=18
+        sprite.style.height=18
+      end
+      local item=item_proto(name,"item")
+      local amount=input.amount or input[2] or 1
+      wrap(line,{"",tostring(amount)," × ",
+        item and item.localised_name or name},
+        math.max(90,math.floor(width/(width<270 and 1 or 2))-32))
+    end
+  end
+  if #ingredients>9 then
+    wrap(parent,L("trade-science-more",tostring(#ingredients-9)),width)
+  end
+end
+
 local function blockers(parent,state,width)
   if state.status~="blocked" then return end
   heading(parent,L("trade-prerequisites",tostring(state.count)),width)
@@ -219,8 +256,11 @@ local function consumers(parent,row,width,p)
       codex_link(parent,consumer.name,L("trade-open-codex-short"))
     end
     if p.cargo_focus==row.config.id and
-      consumer.state.status=="blocked" and p.cargo_target==consumer.name then
-      blockers(parent,consumer.state,width)
+      p.cargo_target==consumer.name then
+      science_requirements(parent,consumer.technology,width)
+      if consumer.state.status=="blocked" then
+        blockers(parent,consumer.state,width)
+      end
     end
   end
 end
@@ -258,6 +298,7 @@ local function render_chain(parent,row,p,width)
     source_worlds(card,entry,width-20)
     heading(card,L("trade-ingredients"),width-20)
     supplier_recipe(card,entry,width-20)
+    science_requirements(card,row.technology,width-20)
     blockers(card,row.state,width-20)
   end
   consumers(card,row,width-20,p)

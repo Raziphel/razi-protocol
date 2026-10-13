@@ -147,3 +147,17 @@ ceilings to smooth the jump between consecutive optional research
 projects. The four core component studies are visible with Factorio's
 essential technology filter. See `docs/RESEARCH_TREE_BALANCE.md`
 for the full list, rationale, and a standalone science pacing audit.
+
+## Reusing native planetary research (2.1.31)
+
+The late industrial trees now optionally reuse actual native sciences
+from Moshine, Paracelsin, Aquilo, Rubia, Linox, Tenebris, Vesta and
+Crucible. The prerequisites are checked against their native recipe
+unlockers and a common lab and are never added to the technologies
+used to first discover these planets. Balanced includes proven
+existing-world research. Deep adds more of the outer-world sciences.
+
+The new source-aware guard never creates synthetic science, expands
+lab acceptance or makes a planet dependent on its own pack.
+See `docs/RESEARCH_TREE_BALANCE.md` for the exact guarded
+science-to-industry mappings and verification commands.

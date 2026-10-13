@@ -100,6 +100,38 @@ class ResearchBalanceTests(unittest.TestCase):
         self.assertTrue(any(x["code"]=="factory-price-spike"
                             for x in report["advisories"]))
 
+    def test_native_planet_must_not_need_its_own_science(self):
+        raw=fixture()
+        raw["technology"]["planet-discovery-vesta"]={
+            "prerequisites":["vesta-preparation"],
+            "unit":{"count":500,"ingredients":[["vibrant-tech-card",1]]}}
+        raw["technology"]["vesta-preparation"]={
+            "unit":{"count":600,
+                    "ingredients":[["gas-manipulation-science-pack",1]]}}
+        report=audit.examine(raw)
+        self.assertEqual(len(report["native_arrival_errors"]),1)
+        self.assertEqual(report["native_arrival_errors"][0]["code"],
+                         "own-world-science-before-arrival")
+        self.assertEqual(report["native_arrival_errors"][0]["techs"],
+                         ["vesta-preparation"])
+        raw["technology"]["vesta-preparation"]["unit"]["ingredients"]=[
+            ["vibrant-tech-card",1]]
+        self.assertFalse(audit.examine(raw)["native_arrival_errors"])
+
+    def test_native_pack_reuse_is_counted_without_claiming_manufacturing(self):
+        raw=fixture()
+        raw["tool"]["thermodynamic-science-pack"]={}
+        raw["lab"]["advanced"]["inputs"].append(
+            "thermodynamic-science-pack")
+        raw["technology"]["razi-network-precision-matrix"]["unit"][
+            "ingredients"].append(["thermodynamic-science-pack",1])
+        report=audit.examine(raw)
+        self.assertEqual(report["planetary_science_reuse"],
+                         {"thermodynamic-science-pack":1})
+        self.assertEqual(report["errors"],[])
+        self.assertIn("thermodynamic-science-pack",
+                      report["science_usage"])
+
     def test_no_technology_table_is_safe_advisory(self):
         report=audit.examine({})
         self.assertEqual(report["errors"],[])

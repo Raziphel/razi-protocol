@@ -27,6 +27,8 @@ class FullCampaignTests(unittest.TestCase):
         self.assertEqual(result["research_errors"], [])
         self.assertEqual(len(result["research_tree"]["paired_entries"]),3)
         self.assertIn("industry_research_prices",result["research_tree"])
+        self.assertIn("planetary_science_reuse",result["research_tree"])
+        self.assertEqual(result["research_tree"]["native_arrival_errors"], [])
         self.assertIn("razi-network-frame-vesta-foundations",result["economy"])
         self.assertEqual(result["worlds_checked"], 0)
         self.assertEqual(result["focus"]["Panglia"]["status"], "not-installed")

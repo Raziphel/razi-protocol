@@ -127,6 +127,10 @@ require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 -- networks without adding any requirement to a first-visit world gate.
 require("prototypes.technology.research_tree_polish").data_final_fixes()
 
+-- Reuse native planetary science only for already-accessible Razi
+-- industries and only with an obtainable recipe and a matching lab.
+require("prototypes.technology.planetary_science_weave").data_final_fixes()
+
 -- Fix iconless routes after the final connection list is ready.
 require("prototypes.system.route_icons").data_final_fixes()
 

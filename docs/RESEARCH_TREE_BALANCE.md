@@ -88,3 +88,68 @@ Research availability is not proof that science can physically be made.
 No static audit can validate every platform arrival, specialized
 machine, surface restriction or scripted source-mod unlock without
 running Factorio. Build-cost and logistics balance require playtesting.
+
+## Native science returns to late factories (2.1.31)
+
+The new `planetary_science_weave` pass only considers Razi's existing
+optional component and premium factory technologies. It never rewrites
+the native discovery science costs, science production recipes or lab
+prototype inputs. These eight original packs have additional *possible*
+research customers:
+
+| Native science pack | World of origin | Existing Razi industry targeted |
+| --- | --- | --- |
+| Thermodynamic | Moshine | Precision Matrix, Panglia Optic Bond |
+| Electrochemical | Paracelsin | Precision Matrix, bonded coils |
+| Cryogenic | Aquilo | Precision Matrix controllers, pressure-frame controllers |
+| Rubia biofusion | Rubia | Rubia logistics, Extreme Lattice |
+| Linox science | Linox | Panglia-bond refining, Deep Vesta pressure foundations |
+| Bioluminescent | Tenebris | Extreme Lattice, Deep Balack shielding |
+| Gas manipulation | Vesta | Lattice magnets, Lattice foundations, Deep pressure frame |
+| Crucible science | Crucible | Deep pressure frame, Vesta/Aquilo pressure-frame upgrades |
+
+There are 18 planned guarded science-to-research connections across
+the four component families. **A line is only activated when all
+conditions hold:** the native science item exists, an actual production
+recipe exists with valid direct ingredients, that recipe is available
+before the Razi technology, the originating planet's discovery is
+already upstream, any surface-specific recipe requirements match its
+source world, and a single existing laboratory already accepts the
+entire combined science list. The native producer's unlocking
+technology becomes an explicit prerequisite when necessary and safe.
+
+The result is deliberately different for each optional mod configuration.
+An unsupported source recipe or incompatible lab **skips the extra
+science**. No Razi science recipe, new laboratory, or fake world is
+generated as a fallback. Balanced interdependence offers established
+planet sciences to industrial projects; Deep additionally connects the
+Crucible, Vesta, Linox and Tenebris sciences to extreme outer-industry
+research. With interdependence Off, nothing is changed.
+
+### In-game inspection
+
+The Galactic Operations **Cargo Network** tab now displays each
+expanded component's actual research count and science ingredients,
+including these integrations when they are registered. A Codex jump
+to a factory upgrade also shows its actual researched science mix
+in the expanded downstream research. No source lab data is inferred,
+and tooltips do not assert that a required science has already been
+manufactured, delivered or consumed.
+
+### How to validate
+
+Run both the Lua fixture and the post-load research auditor:
+
+```bash
+lua5.2 tests/lua/test_planetary_science_weave.lua
+python3 -m unittest discover -s tests -p 'test_planetary_science_weave.py'
+python3 -m unittest discover -s tests -p 'test_research_balance.py'
+python3 scripts/audit_research_balance.py /path/to/data-raw-dump.json --json
+```
+
+The audit now also flags any native world-discovery technology, or
+any prerequisite technology on its discovery path, that demands that
+world's own science pack. It reports which of these eight sciences are
+actually reused in the loaded Razi industries, rather than claiming
+that all 18 optional rules were accepted. Native lab acceptance and
+recipe existence alone cannot prove supply in an in-game factory.

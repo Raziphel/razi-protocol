@@ -1,3 +1,13 @@
+Version: 2.1.31
+Date: 13. 10. 2026
+  Planetary science and research integration:
+    - Add 18 conditional native-science connections across the four industrial networks, reusing Moshine, Paracelsin, Rubia, Aquilo, Linox, Tenebris, Crucible and Vesta production.
+    - Require existing source technologies, real recipe outputs and ingredients, research-cycle safety, matching planetary surface conditions and a lab accepting all science packs.
+    - Never change world-arrival research, create duplicate science packs or broaden native laboratory inputs; missing modded sources simply skip their optional requirements.
+    - Show actual installed technology science counts and ingredients in expanded Galactic Cargo Network component and downstream research panels.
+    - Expand the science audit to detect own-world science required before discovery and report native packs actually reused by Razi industry.
+    - Add Lua and Python regression fixtures, research documentation and complete modpack verification guidance.
+
 Version: 2.1.30
 Date: 13. 10. 2026
   Grand technology tree integration and pacing:
