@@ -118,6 +118,11 @@ require("prototypes.compat.panglia_industry").data_final_fixes()
 
 require("prototypes.compat.network_components").register_premium()
 
+-- Late integration passes may add research requirements after the initial
+-- landing checks. Recheck the Linox, Crucible and Vesta arrival chains.
+require("prototypes.compat.linox_science_guard").data_final_fixes()
+require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
+
 -- Fix iconless routes after the final connection list is ready.
 require("prototypes.system.route_icons").data_final_fixes()
 

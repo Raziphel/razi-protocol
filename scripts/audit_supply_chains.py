@@ -11,6 +11,8 @@ from collections import defaultdict
 from pathlib import Path
 
 MILESTONES = {
+    "Panglia": ("panglia_planet_discovery_panglia", (
+        "datacell-raw-data", "panglia_panglite_glass")),
     "Aquilo": ("planet-discovery-aquilo", (
         "cryogenic-science-pack", "kr-cryogenic-research-data",
         "kr-matter-research-data", "kr-quantum-computer")),
@@ -90,17 +92,20 @@ def technology_ancestors(technologies, goal):
     return seen
 
 def surface_allowed(prototype, properties):
+    """True, False, or None when the dump lacks a needed surface property."""
+    unknown = False
     for limit in seq(prototype.get("surface_conditions")):
         if not isinstance(limit, dict):
             continue
         value = properties.get(limit.get("property"))
         if not isinstance(value, (int, float)):
+            unknown = True
             continue
         if limit.get("min") is not None and value < limit["min"]:
             return False
         if limit.get("max") is not None and value > limit["max"]:
             return False
-    return True
+    return None if unknown else True
 
 class SupplyTrace:
     def __init__(self, raw):
@@ -174,8 +179,12 @@ class SupplyTrace:
             properties = obj(obj(self.worlds.get(place)).get("surface_properties"))
             if not properties:
                 uncertain = True
-            elif surface_allowed(recipe, properties):
-                return True
+            else:
+                allowed = surface_allowed(recipe, properties)
+                if allowed is True:
+                    return True
+                if allowed is None:
+                    uncertain = True
         return None if uncertain else False
 
     def category_machines(self, recipe, places):
@@ -196,8 +205,12 @@ class SupplyTrace:
                 properties = obj(obj(self.worlds.get(place)).get("surface_properties"))
                 if not properties:
                     uncertain = True
-                elif surface_allowed(machine, properties):
-                    return True
+                else:
+                    allowed = surface_allowed(machine, properties)
+                    if allowed is True:
+                        return True
+                    if allowed is None:
+                        uncertain = True
         if not matching:
             return False
         return None if uncertain or not places else False
@@ -268,6 +281,62 @@ class SupplyTrace:
         return {"item": name, "status": status,
                 "best": best, "producer_count": len(candidates)}
 
+    def audit_planets(self):
+        """All installed planets, not just the handful of known risky worlds.
+
+        Alternative discoverers are checked separately. An uncertain recipe
+        branch is not enough to declare a world impossible to reach.
+        """
+        unlocks = defaultdict(list)
+        for name, tech in self.technologies.items():
+            if not isinstance(tech, dict) or tech.get("hidden") is True \
+                    or tech.get("enabled") is False:
+                continue
+            for effect in seq(tech.get("effects")):
+                if isinstance(effect, dict) and effect.get("type") == "unlock-space-location":
+                    world = effect.get("space_location")
+                    if world in obj(self.raw.get("planet")):
+                        unlocks[world].append(name)
+
+        reports = {}
+        for world in sorted(obj(self.raw.get("planet"))):
+            if world == "nauvis":
+                continue
+            options = []
+            for name in sorted(set(unlocks.get(world, ()))):
+                tech = self.technologies[name]
+                before = technology_ancestors(self.technologies, name)
+                known = self.known_worlds(before)
+                science = [self.trace(pack, before, known, goal=name)
+                           for pack in science_names(tech)]
+                states = {node["status"] for node in science}
+                if "blocked" in states or "cycle" in states:
+                    status = "blocked"
+                elif states.intersection({"unverified", "depth-limit", "unresolved"}):
+                    status = "unverified"
+                elif not science:
+                    status = "trigger-or-scripted" if tech.get("research_trigger") \
+                        else "no-science"
+                else:
+                    status = "traceable"
+                options.append({"technology": name, "status": status,
+                                "science": science,
+                                "prearrival_worlds": sorted(known)})
+            if not options:
+                state = "no-visible-native-unlock"
+            elif all(choice["status"] == "blocked" for choice in options):
+                state = "blocked"
+            elif any(choice["status"] == "traceable" for choice in options):
+                state = "traceable"
+            else:
+                state = "unverified"
+            reports[world] = {
+                "status": state, "unlockers": options,
+                "note": "Supply is inferred. Native routes, scripted unlocks, "
+                        "surface mining and transport require an in-game check."
+            }
+        return reports
+
     def analyze(self):
         report = {}
         known = set(obj(self.raw.get("item"))) | set(obj(self.raw.get("tool")))
@@ -315,7 +384,14 @@ def main():
                         help="Factorio script-output/data-raw-dump.json")
     parser.add_argument("--json", action="store_true",
                         help="Emit nested recipe chains as JSON")
+    parser.add_argument("--all-worlds", action="store_true",
+                        help="Also audit all installed planet discoveries")
+    parser.add_argument("--strict", action="store_true",
+                        help="Exit nonzero for definite blocked discovery chains "
+                             "(requires --all-worlds)")
     args = parser.parse_args()
+    if args.strict and not args.all_worlds:
+        parser.error("--strict requires --all-worlds")
     with args.dump.open(encoding="utf-8") as f:
         raw = json.load(f)
     raw = obj(raw)
@@ -323,12 +399,28 @@ def main():
         raw = raw["raw"]
     if not obj(raw.get("recipe")) or not obj(raw.get("technology")):
         parser.error("Full Factorio post-load recipe/technology tables are required")
-    results = SupplyTrace(raw).analyze()
+    tracer = SupplyTrace(raw)
+    results = tracer.analyze()
+    planets = tracer.audit_planets() if args.all_worlds else {}
     if args.json:
-        print(json.dumps(results, indent=2))
+        payload = {"milestones": results, "planets": planets} \
+            if args.all_worlds else results
+        print(json.dumps(payload, indent=2))
     else:
         summarize(results)
-    return 0  # Advisory; never claim a partial chain proves engine failure.
+        if args.all_worlds:
+            print(f"\\nPlanet research sweep: {len(planets)} installed worlds")
+            for name, entry in planets.items():
+                owners = ", ".join(choice["technology"]
+                                   for choice in entry["unlockers"])
+                print(f"  {entry['status']}: {name}" +
+                      (f"  ({owners})" if owners else "  (no visible unlock)"))
+    blocked = [name for name, entry in planets.items()
+               if entry["status"] == "blocked"]
+    if args.strict and blocked:
+        print(f"Blocked planet research detected: {', '.join(blocked)}")
+        return 1
+    return 0  # An unverified path alone must not block a release.
 
 if __name__ == "__main__":
     raise SystemExit(main())
