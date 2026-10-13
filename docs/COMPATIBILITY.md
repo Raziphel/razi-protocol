@@ -85,6 +85,21 @@ resource supply, surface conditions, native connections, save stability and
 which system's research tier they fit. Do not add experimental planet mods to
 required dependencies until those checks pass.
 
+## Curated K2SO compatibility bridges (2.1)
+
+`corrundum-krastorio-compatibility-plus >= 1.1.2` is a required dependency
+on the same footing as Null's Tweaks, xyrc's Null Fork, Castra, Rubia,
+Paracelsin and Cubium compatibility bridges. Keep third-party conversions
+source-owned. Razi's Solaris system card already consumes the native
+Corrundum electrochemical science pack.
+
+`secretas-krastorio-compatibility-plus` currently has a Factorio 2.0
+release and must not enter the required Factorio 2.1 stack. The distinct
+`secretas-orbit-patch >= 1.1.3` is optional because Outer Rim expressly
+excludes it; Razi also preserves Secretas/Frozeta source moon orbits.
+See [K2SO integration](K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership)
+for ownership and in-engine validation requirements.
+
 ## K2SO integration for every enabled planet
 
 Razi's final K2SO pass reconciles known K2SO material aliases on all installed planet recipes without rewriting Null's intentionally visible common fluids. Its existing system cards also import native K2SO planetary research data from accessible earlier regions. See [K2SO Planet Integration](K2SO_PLANET_INTEGRATION.md) for the science matrix, guards and remaining engine tests.

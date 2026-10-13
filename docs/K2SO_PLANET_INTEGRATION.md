@@ -4,6 +4,49 @@ This is a cross-mod integration pass, not a replacement for the original
 authors' mechanics. Razi uses **Krastorio 2 Spaced Out (K2SO)** as a research
 and production backbone, while keeping each world recognizably its own.
 
+## Community K2SO compatibility ownership
+
+Razi curates the community's maintained K2SO planet integrations rather than
+reimplementing each author's technology, research-data, or fluid conversions.
+The native planet-specific conversions must remain source-owned while Razi
+places their resulting sciences into the correct chapter progression.
+
+| Bridge | Dependency | Razi integration boundary |
+| --- | --- | --- |
+| Null's K2SO Tweaks | Required: `nulls-k2so-tweaks` | Protect its intentionally visible common gases; final fluid sync already exists. |
+| xyrc Enhancements (Null's Fork) | Required: `xy-k2so-enhancements-nulls-fork` | Let it own generic K2SO conversions; Razi removes obsolete placeholder space routes. |
+| Castra Compatibility+ | Required: `castra-krastorio-compatibility-plus` | Keep source ammo/tech-card behavior; Razi uses battlefield science in Solaris. |
+| Corrundum Compatibility+ | **New required:** `corrundum-krastorio-compatibility-plus >= 1.1.2` | Source owns electrochemical research-data/tech-card chain; Razi's Solaris system card already uses electrochemical science. |
+| Rubia Compatibility+ | Required: `rubia-krastorio-compatibility-plus` | Keep source Rubia/K2SO conversions; Razi uses biofusion science in Vespera. |
+| Paracelsin Compatibility+ | Required: `paracelsin-krastorio-compatibility-plus` | Keep native galvanization conversion; Razi's Null-compatible common-gas resync remains guarded. |
+| Cubium K2SO Fork | Required: `k2so-cubium-compatibility-fork` | Retain upstream Cubium/K2SO interactions and Beetlejuice golden science. |
+| Secretas/Frozeta K2SO Compatibility+ | **Not required:** `secretas-krastorio-compatibility-plus` | Latest listed release is Factorio 2.0, not the pack's Factorio 2.1. Recheck for a verified port later. |
+| Secretas/Frozeta Orbit Patch | **Optional:** `secretas-orbit-patch >= 1.1.3` | Factorio 2.1 visual orbit improvement; Outer Rim explicitly excludes it. Razi must retain original moon parentage. |
+
+Corrundum's compatibility conversion and the `electrochemical-science-pack`
+are separate concerns: Razi **already** adds native electrochemical science
+to `solaris-tech-card`. Do not duplicate any conversion or add a new
+mandatory research-data input until a real 2.1 prototype dump confirms
+that it can be crafted and unlocked before the consuming tech.
+
+The optional orbit patch is **not** the incompatible Secretas K2SO
+Compatibility+ mod. Players with Outer Rim must leave the orbit patch
+disabled. Razi's existing orbit reconciliation keeps Secretas' native
+Frozeta moon attached while relocating it to Beetlejuice.
+
+Before a public release, load the complete required stack in Factorio 2.1,
+confirm Corrundum conversion technology, lab input combinations and Solaris
+science-card access, then inspect Secretas/Frozeta orbits without the patch,
+with the patch and without Outer Rim. Run `scripts/audit_prototypes.py`,
+`scripts/audit_compatibility.py` and `scripts/audit_full_campaign.py`
+against a real `--dump-data-raw` snapshot. Static checks alone cannot
+prove that the expanded pack is playable.
+
+Mod Portal references:
+- https://mods.factorio.com/mod/corrundum-krastorio-compatibility-plus
+- https://mods.factorio.com/mod/secretas-krastorio-compatibility-plus
+- https://mods.factorio.com/mod/secretas-orbit-patch
+
 ## Planetary research-data deliveries
 
 These existing K2SO items are now ingredients in existing Razi System Tech
