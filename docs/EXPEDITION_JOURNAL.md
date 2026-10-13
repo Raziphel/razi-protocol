@@ -1,3 +1,17 @@
+## Midfrontier industrial projects (2.1.52)
+
+The Codex adds Fulgora capacitor, Aquilo cryogenic-controller,
+Paracelsin electrocoil and Rubia craptonite-frame milestones, each with
+an engineering note, a story, a real technology goal and a suggested
+manufacturing world. The Paracelsin/Rubia goals count in the campaign
+if their respective guarded research prototypes are installed;
+Fulgora/Aquilo remain side projects.
+
+There are now **218 conditional milestones in 18 chapters**, tracked
+through genuine force research and existing Codex state checks. No
+research is awarded by clicking a quest, and a modpack lacking any
+optional manufacturing technology does not display that milestone.
+
 ## First-frontier workshop stories (2.1.51)
 
 Three new optional engineering objectives in the **Industrial

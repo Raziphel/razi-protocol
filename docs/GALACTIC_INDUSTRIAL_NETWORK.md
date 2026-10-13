@@ -1,3 +1,26 @@
+## Vibrant–Vespera reciprocal factories (2.1.52)
+
+Four middle-tier optional recipes share completed native products:
+**Fulgora** makes fortified supercapacitors with Aquilo controllers
+and Moshine cable; **Aquilo** combines Fulgora capacitors with Moshine
+optics for stable cryogenic controls; **Paracelsin** reinforces
+electric coils with Rubia craptonite and Fulgora holmium; **Rubia**
+builds conductive craptonite frames with Paracelsin coils and Fulgora
+capacitors.
+
+All follow the existing guarded native-recipe exchange engine: real
+supplier recipes and unlock research, correct manufacturing world and
+category, matching lab science, unchanged native source inputs and
+byproducts, four source batches, one bonus item capped at 25%, and
+12–15% extra machine time. Productivity and automatic recycling remain
+disabled. Missing mod content suppresses only the affected premium recipe.
+
+The Paracelsin and Rubia research milestones are conditional
+prerequisites of the **outer** system discoveries. Their premium recipes
+are not ingredients of one another, so the integration does not produce
+a circular industrial dependency. Their native products, not the bonus
+recipes, establish the freight exchange.
+
 ## First-frontier manufacturing triangle (2.1.51)
 
 Three new **optional** guarded native-recipe alternatives reward keeping the
