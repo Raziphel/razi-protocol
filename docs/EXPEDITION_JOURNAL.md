@@ -236,3 +236,11 @@ The recommendation calculation reuses the Codex's already computed
 index initialized when the module loads. Tests cover simultaneous star
 branches, native and story blockers, disabled source technologies,
 missing optional planets, empty states and deterministic tie-breaking.
+
+## Codex navigation polish (October 2026)
+
+The Codex status row now gives completion, ready objectives and the overall
+progress bar more breathing room. The selected chapter still drives accent
+colours, while a tighter reading flow, clearer expedition-priority card,
+stronger chapter bars and wider header actions improve scanning at desktop
+scale. Horizontal scrolling remains disabled in both reader columns.
