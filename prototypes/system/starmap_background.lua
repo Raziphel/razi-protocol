@@ -1,276 +1,117 @@
--- Galaxy backdrop and stellar detail layers.
--- Draw these behind the map's routes and other mods' orbit artwork.
+-- A calm galactic atlas. Soft system light, a few distant stars, and
+-- optional single belt rings; no stitched tiles, repeating portals or swirls.
 local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local systems={
-  {name="calidus",tint={r=.98,g=.69,b=.38}},
-  {name="solaris",tint={r=1,g=.52,b=.26}},
-  {name="nyxaris",tint={r=.32,g=.88,b=.73}},
-  {name="vibrant",tint={r=.51,g=.45,b=.99}},
-  {name="vespera",tint={r=.47,g=.81,b=.97}},
-  {name="beetlejuice",tint={r=.98,g=.31,b=.55}},
-  {name="umbra",tint={r=.67,g=.29,b=.43}},
-  {name="deep-space",tint={r=.33,g=.49,b=.88}}
+  {name="calidus",tint={r=1,g=.76,b=.51},strength=1},
+  {name="solaris",tint={r=1,g=.51,b=.30},strength=.84},
+  {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
+  {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
+  {name="vespera",tint={r=.61,g=.78,b=.96},strength=.77},
+  {name="beetlejuice",tint={r=.94,g=.43,b=.64},strength=.80},
+  {name="umbra",tint={r=.66,g=.35,b=.55},strength=.66},
+  {name="deep-space",tint={r=.40,g=.57,b=.82},strength=.48}
 }
 local belts={
-  {name="vibrant",tint={r=.70,g=.57,b=.96}},
-  {name="vespera",tint={r=.52,g=.84,b=.98}},
-  {name="umbra",tint={r=.95,g=.40,b=.59}}
+  {name="vibrant",tint={r=.75,g=.66,b=.93},scale=24},
+  {name="vespera",tint={r=.59,g=.78,b=.93},scale=17},
+  {name="umbra",tint={r=.91,g=.57,b=.68},scale=17}
 }
-
+local WHITE={r=1,g=1,b=1}
 local function option(name,default)
-  local s=settings and settings.startup and settings.startup[name]
-  if s==nil then return default end
-  return s.value
+  local value=settings and settings.startup and settings.startup[name]
+  if value==nil then return default end
+  return value.value
 end
 local function anchor(name)
   if name=="calidus" then return 0,0 end
-  if name=="deep-space" then
-    return layout.anchor_position("solar-system-edge")
-  end
-  return layout.anchor_position(name)
+  return layout.anchor_position(name=="deep-space"
+    and "solar-system-edge" or name)
 end
-local function insert_asset(layers,file,w,h,scale,x,y,rgb,alpha)
+local function insert_asset(layers,file,scale,x,y,color,alpha)
   layers[#layers+1]={
-    type="sprite",filename=ASSET..file,size={w,h},
+    type="sprite",filename=ASSET..file,size={128,128},
     scale=scale,shift={x*32,y*32},
     priority="extra-high-no-scale",flags={"gui-icon"},
     blend_mode="normal",
-    tint={r=rgb.r,g=rgb.g,b=rgb.b,a=alpha}
+    tint={r=color.r,g=color.g,b=color.b,a=alpha}
   }
-end
--- Quiet, handcrafted background pockets around each system's far side.
--- Relative offsets follow the stellar anchors when the galaxy is relocated.
--- These are NOT waypoints, planets or charted routes.
-local micro_scenes={
-  {name="calidus",dx=-48,dy=-49,cluster=1},
-  {name="solaris",dx=41,dy=43,cluster=2},
-  {name="nyxaris",dx=-43,dy=42,cluster=3},
-  {name="vibrant",dx=53,dy=-34,cluster=2},
-  {name="vespera",dx=-53,dy=-34,cluster=1},
-  {name="beetlejuice",dx=43,dy=-41,cluster=3},
-  {name="umbra",dx=-43,dy=-41,cluster=2},
-  {name="deep-space",dx=52,dy=-16,cluster=1}
-}
--- Sparse distant signals brighten the blank corners without tracing lines.
-local distant_sparks={
-  {185,35,1,{r=.48,g=.77,b=.96}},
-  {-190,33,2,{r=.75,g=.53,b=.87}},
-  {31,191,3,{r=.91,g=.62,b=.41}},
-  {-25,-223,1,{r=.53,g=.61,b=.98}}
-}
--- Decorative belt-adjacent fragments. Main hazard rings and the native
--- crossing guides remain authoritative and are rendered on top of these.
-local belt_fragments={
-  {name="vibrant",dx=30,dy=-17},
-  {name="vespera",dx=19,dy=10},
-  {name="umbra",dx=21,dy=-6}
-}
-local function insert_micro_scenery(layers,cine,halos,atmosphere)
-  if halos~=false then
-    for _,scene in ipairs(micro_scenes) do
-      local x,y=anchor(scene.name)
-      local tint
-      for _,system in ipairs(systems) do
-        if system.name==scene.name then tint=system.tint;break end
-      end
-      if x and y and tint then
-        -- Translucent filament pockets and tiny distant star swarms.
-        insert_asset(layers,"filament-"..scene.name..".png",512,512,2.6,
-          x+scene.dx,y+scene.dy,tint,cine and .10 or .05)
-        insert_asset(layers,"cluster-"..scene.cluster..".png",384,384,1.55,
-          x+scene.dx+9,y+scene.dy-7,tint,cine and .09 or .04)
-      end
-    end
-  end
-  for _,spark in ipairs(distant_sparks) do
-    insert_asset(layers,"cluster-"..spark[3]..".png",384,384,1.6,
-      spark[1],spark[2],spark[4],cine and .08 or .04)
-  end
-  if atmosphere~=false then
-    for _,fragment in ipairs(belt_fragments) do
-      local x,y=anchor(fragment.name)
-      if x and y then
-        local tint
-        for _,belt in ipairs(belts) do
-          if belt.name==fragment.name then tint=belt.tint;break end
-        end
-        if tint then
-          insert_asset(layers,"debris-"..fragment.name..".png",512,512,2.2,
-            x+fragment.dx,y+fragment.dy,tint,cine and .11 or .05)
-          -- One belt silhouette is enough; no second offset ring.
-        end
-      end
-    end
-  end
 end
 function M.make_layers(mode,halos,atmosphere,details,cartography)
   if mode~="subtle" and mode~="cinematic" then return {} end
-  local cine=mode=="cinematic"
-  local result={}
-  -- Seam-free starfield: the old sky quadrants had hard rectangular edges.
-  -- Native stars and localized nebula art supply the backdrop instead.
-  -- Connect the star systems without covering their orbit/route labels.
-  insert_asset(result,"galactic-current.png",768,384,9,0,-9,
-    {r=.33,g=.56,b=.78},cine and .27 or .12)
-  if halos~=false and mods and mods["slp-dyson-sphere-reworked-fork"]
-    and option("razi-dyson-calidus-layout",true) then
-    -- Restrained stellar-engineering coronas around the home star. Reuse
-    -- existing Calidus artwork; never render fake navigation route lines.
-    -- Keep it behind the sun, planets and satellite orbit markers.
-    insert_asset(result,"filament-calidus.png",512,512,2.7,0,0,
-      {r=1,g=.64,b=.29},cine and .20 or .10)
-    insert_asset(result,"chart-constellation.png",512,512,2.1,0,0,
-      {r=1,g=.72,b=.40},cine and .12 or .06)
-  end
+  local cinematic=mode=="cinematic"
+  local layers={}
   if halos~=false then
-    for _,s in ipairs(systems) do
-      local x,y=anchor(s.name)
+    for _,system in ipairs(systems) do
+      local x,y=anchor(system.name)
       if x and y then
-        local alpha=s.name=="deep-space" and (cine and .25 or .14)
-          or (cine and .44 or .23)
-        insert_asset(result,"glow-"..s.name..".png",512,512,7,x,y,s.tint,alpha)
+        insert_asset(layers,"atlas-halo.png",
+          system.name=="calidus" and 14 or 13,
+          x,y,system.tint,(cinematic and .81 or .58)*system.strength)
       end
     end
   end
   if atmosphere~=false then
-    for _,b in ipairs(belts) do
-      local x,y=anchor(b.name)
+    for _,belt in ipairs(belts) do
+      local x,y=anchor(belt.name)
       if x and y then
-        insert_asset(result,"belt-"..b.name..".png",512,512,6,x,y,b.tint,
-          cine and .36 or .16)
+        insert_asset(layers,"atlas-belt.png",belt.scale,x,y,
+          belt.tint,cinematic and .48 or .30)
       end
     end
   end
-  -- New fine-grain scenery adds structure at a smaller visual scale.
-  -- These textures sit behind every source-owned planet, sun and route.
   if details~=false then
-    -- Decorative, noninteractive fine-detail layers. These stay outside
-    -- the busy six-system shipping lanes and reuse already-loaded textures.
-    -- Never render line-shaped decorations that could resemble routes.
+    -- These specks inhabit otherwise empty margins, not travel lanes.
     if option("razi-starmap-galactic-ornaments",true) then
-      local wisps={
-        {x=-167,y=-85,file="dust-lane-2.png",w=768,h=384,scale=4.0,
-         color={r=.36,g=.68,b=.94}},
-        {x=169,y=89,file="dust-lane-2.png",w=768,h=384,scale=4.0,
-         color={r=.78,g=.43,b=.72}},
-        {x=-170,y=72,file="galactic-current.png",w=768,h=384,scale=3.5,
-         color={r=.32,g=.64,b=.72}},
-        {x=176,y=-74,file="galactic-current.png",w=768,h=384,scale=3.5,
-         color={r=.63,g=.39,b=.83}}
+      local pockets={
+        {-169,-18,{r=.58,g=.74,b=.91}},
+        {162,47,{r=.71,g=.58,b=.87}},
+        {9,-254,{r=.55,g=.68,b=.89}},
+        {-7,161,{r=.82,g=.68,b=.48}}
       }
-      for _,wisp in ipairs(wisps) do
-        insert_asset(result,wisp.file,wisp.w,wisp.h,wisp.scale,
-          wisp.x,wisp.y,wisp.color,cine and .11 or .055)
-      end
-      -- Smaller complementary halos add depth without painting over the
-      -- source planet icons. Use the six external stars, never Calidus.
-      for _,system in ipairs(systems) do
-        if system.name~="calidus" and system.name~="deep-space" then
-          local x,y=anchor(system.name)
-          if x and y then
-            insert_asset(result,"glow-"..system.name..".png",
-              512,512,cine and 3.2 or 2.8,x,y,system.tint,
-              cine and .10 or .05)
-          end
-        end
-      end
-      -- Fully static small-scale art, separate from the large nebula layers.
-      -- Turn it off without sacrificing the existing eleven-region backdrop.
-      if option("razi-starmap-micro-details",true) then
-        insert_micro_scenery(result,cine,halos,atmosphere)
+      for _,p in ipairs(pockets) do
+        insert_asset(layers,"atlas-dust.png",20,p[1],p[2],p[3],
+          cinematic and .72 or .49)
       end
     end
-    -- A counter-flowing galaxy arm joins the six-star ring visually.
-    insert_asset(result,"dust-lane-2.png",768,384,9,8,-43,
-      {r=.63,g=.47,b=.78},cine and .24 or .12)
-    -- Star nurseries in the outer void, away from main system markers.
-    local clusters={
-      {169,139,{r=.45,g=.73,b=1}},
-      {-162,137,{r=.89,g=.51,b=.84}},
-      {-170,-148,{r=.52,g=.86,b=.83}}
-    }
-    for i,cluster in ipairs(clusters) do
-      insert_asset(result,"cluster-"..i..".png",384,384,6.2,
-        cluster[1],cluster[2],cluster[3],cine and .36 or .22)
-    end
-    if halos~=false then
-      for _,system in ipairs(systems) do
-        local x,y=anchor(system.name)
+    if option("razi-starmap-micro-details",true) then
+      for _,name in ipairs({"nyxaris","vespera","umbra","vibrant"}) do
+        local x,y=anchor(name)
         if x and y then
-          -- Filaments are hollow at the centre to preserve stellar icons.
-          insert_asset(result,"filament-"..system.name..".png",512,512,
-            5,x,y,system.tint,
-            system.name=="deep-space" and (cine and .19 or .105)
-              or (cine and .38 or .20))
-          -- Reuse the filament's texture for a very faint outer corona.
-          -- Six stellar hubs gain subtle depth; Calidus and Deep Space keep
-          -- their distinct native silhouettes.
-          if cine or (system.name~="calidus" and system.name~="deep-space") then
-            insert_asset(result,"filament-"..system.name..".png",512,512,
-              cine and 6.5 or 6.15,x,y,system.tint,cine and .08 or .04)
-          end
+          insert_asset(layers,"atlas-dust.png",10,x+41,y-33,
+            WHITE,cinematic and .38 or .26)
         end
       end
-    end
-    if atmosphere~=false then
-      for _,belt in ipairs(belts) do
-        local x,y=anchor(belt.name)
-        if x and y then
-          insert_asset(result,"debris-"..belt.name..".png",512,512,
-            6,x,y,belt.tint,cine and .30 or .16)
-        end
-      end
-    end
-    local x,y=anchor("deep-space")
-    if x and y then
-      insert_asset(result,"rift-deep-space.png",512,512,4.7,x,y,
-        {r=.48,g=.61,b=.95},cine and .23 or .135)
-      insert_asset(result,"cluster-1.png",384,384,1.65,
-        x-28,y+24,{r=.51,g=.69,b=.92},cine and .11 or .065)
     end
   end
   if cartography==true then
-    -- Decorative, never a navigation connection; disabled by default.
-    insert_asset(result,"chart-constellation.png",512,512,16,0,0,
-      {r=.51,g=.70,b=.84},cine and .25 or .17)
+    -- An optional star pocket, never another fake orbit/connection.
+    insert_asset(layers,"atlas-dust.png",13,0,-42,WHITE,.42)
   end
-  return result
+  return layers
 end
 function M.data_final_fixes()
   local mode=option("razi-starmap-background-style","subtle")
-  if mode=="off" then return end
   if mode~="subtle" and mode~="cinematic" then return end
-  -- Avoid two simultaneous sky wallpapers; neither source art nor
-  -- the external mod is ever mutated when both are installed.
-  if mods and mods["Better_Starmap_Background"] then
-    if type(log)=="function" then
-      log("[Razi Protocol/starmap-art] Skipped for Better_Starmap_Background")
-    end
-    return
-  end
+  if mods and mods["Better_Starmap_Background"] then return end
   local utility=(data.raw["utility-sprites"] or {}).default
   local sprite=utility and utility.starmap_star
-  if not (sprite and type(sprite.layers)=="table") then
-    if type(log)=="function" then
-      log("[Razi Protocol/starmap-art] Layered star sprite unavailable")
-    end
-    return
-  end
+  if not (sprite and type(sprite.layers)=="table") then return end
+  -- An integration pass may be repeated: never stack duplicate art.
   for _,layer in ipairs(sprite.layers) do
-    if layer.filename==ASSET.."sky-1.png" then return end
+    if layer.filename==ASSET.."atlas-halo.png"
+      or layer.filename==ASSET.."atlas-belt.png"
+      or layer.filename==ASSET.."atlas-dust.png" then return end
   end
   local new=M.make_layers(mode,
     option("razi-starmap-system-halos",true),
     option("razi-starmap-belt-atmosphere",true),
     option("razi-starmap-fine-details",true),
     option("razi-starmap-cartography",false))
-  -- Prepend in natural order. Native belts, authored star graphics and
-  -- subsequent risk-coloured route guides remain ABOVE these textures.
   for i=#new,1,-1 do table.insert(sprite.layers,1,new[i]) end
   if type(log)=="function" then
-    log("[Razi Protocol/starmap-art] "..#new.." backdrop layers: "..mode)
+    log("[Razi Protocol/starmap-art] Clean atlas "..#new.." layers ("..mode..")")
   end
 end
 M.systems=systems

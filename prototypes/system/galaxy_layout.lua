@@ -55,6 +55,24 @@ local anchors = {
   {"planet","vesta","umbra",29.600886,0.004323},
 }
 
+-- The optional worlds were previously repositioned in data-final-fixes
+-- with PlanetsLib:update, after PlanetsLib removed the sprite-only star
+-- prototypes. Register these known orbital plans with both native passes.
+-- Only installed planets are touched; moon owners remain unchanged.
+local optional_orbits={
+  {name="igrys",star="solaris",radius=36.810881,turn=0.881451},
+  {name="foliax",star="nyxaris",radius=36.376917,turn=0.169757},
+  {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
+  {name="carna",star="umbra",radius=36.821891,turn=0.602458},
+  {name="ferrum",star="vibrant",radius=51.444741,turn=0.545675},
+  {name="khemia",star="vibrant",radius=41.598564,turn=0.287184},
+  {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
+  {name="bm-balack",star="vespera",radius=41.637729,turn=0.816913}
+}
+for _,world in ipairs(optional_orbits) do
+  anchors[#anchors+1]={"planet",world.name,world.star,world.radius,world.turn}
+end
+
 local stars = {
   solaris=true, nyxaris=true, vibrant=true, vespera=true,
   beetlejuice=true, umbra=true
@@ -212,6 +230,10 @@ function M.data_final_fixes()
     ["apia-carnova-orbit"]=0.75,
     ["apia"]=0.25,["carnova"]=0.75,
     ["rabbasca"]=0.75,["frozeta"]=0.25,
+    ["igrys"]=0.25,["foliax"]=0.25,
+    ["obsidiax"]=0.25,["carna"]=0.75,
+    ["ferrum"]=0.75,["khemia"]=0.25,
+    ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.25,
