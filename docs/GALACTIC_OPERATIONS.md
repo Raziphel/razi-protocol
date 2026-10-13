@@ -9,11 +9,26 @@ Razi Protocol's independent, native Factorio 2.1 planet and space-platform dashb
 - The map button hides automatically when returning to normal gameplay. It updates within half a second after a map view change; it does not poll the fleet or planet list.
 - The original Space Age planet and platform selector stays available.
 - The panel is draggable and scales to the player's display resolution.
+- At narrow UI resolutions, the five main tabs use compact captions and
+  two rows, while search and system filters stack instead of overflowing.
+- The destination and platform directories use vertically arranged cards,
+  each with a verified native planet/space-location icon when available,
+  a visible star-system label, current status and accessible actions.
+- A four-cell summary highlights the available records, filtered matches,
+  ships in transit and fleet warnings.
+- Planet-name search accepts translated, player-visible names after the
+  game's native asynchronous translation completes. Internal IDs and
+  star-system names remain searchable. Translations are cached per player
+  and locale, and batched into a single refresh on the existing 30-tick
+  map-button check. No additional on-tick polling is added.
 
 ## Worlds and destinations
 
 - Razi's seven campaign star systems appear in their progression order, with unrecognised optional mod worlds collected under **Other & Optional Systems**.
-- Search by destination internal name or star-system group, narrow to a single system, and switch between all, accessible, favourites, locked destinations, or recently viewed destinations.
+- Search by the visible translated name, destination internal ID or star
+  system. The **Clear** button resets search without clearing favourites.
+  Narrow to one system and switch between all, accessible, favourites,
+  locked destinations or recently viewed destinations.
 - The default list shows only planets that the force has unlocked. Enable **Show locked destinations** explicitly to inspect other non-hidden worlds.
 - **Include slipstreams and waypoints** allows navigating the large orbital network without cluttering the default planet list.
 - **View** enters Remote View only if the game already has an existing, accessible planet surface. The UI never creates a surface or bypasses a discovery technology.
@@ -21,7 +36,10 @@ Razi Protocol's independent, native Factorio 2.1 planet and space-platform dashb
 ## Platform fleet
 
 - Enumerates the player's force-owned, nonhidden, non-deleting platforms.
-- Displays in-transit, in-orbit, paused, unscheduled and under-construction states; ongoing connections show their two endpoints.
+- Displays in-transit, in-orbit, paused, unscheduled and under-construction
+  states; ongoing connections show their two endpoints. Up to two concrete
+  warning explanations appear on each affected platform card, with a count
+  for any additional signals.
 - Filters for travelling craft, attention-needed craft, favourites and recently opened craft. Bookmarks are private per player.
 - Fleet mission roles classify ships automatically from their names, with editable per-player overrides (cargo, science, defense, exploration, construction, general). Filter the fleet by mission without renaming the ship, editing its schedule, or changing another player's annotations.
 - **View** changes only the Remote View camera to an existing platform surface, never moves the character, starts a schedule, or renames a platform.
@@ -79,3 +97,23 @@ exercise localization, native GUI scaling, route permissions and mixed
 planet-mod research effects. The dashboard is informational by design.
 
 Additional Atlas route annotations display the largest size word detected in declared asteroid prototype names. These are not numerical danger ratings, and unknown modded asteroid naming is explicitly unclassified. The chosen planet's Razi industrial research is listed only when the real tech graph contains a direct discovery prerequisite. The inspector is vertically scrollable on compact screens.
+
+## Directory visual polish (2.1.26)
+
+The previous rigid horizontal rows required four or five fixed-width labels
+and buttons, which became difficult to read at higher GUI scales. They now
+use stacked information cards that wrap native translated planet names,
+prioritise actions, retain actual fleet diagnostics and display a native
+sprite only if Factorio verifies its path.
+
+All previous player favourites, platform roles, notes, filters, recent
+destinations, search preferences, inspection focus and page selection are
+preserved. The original map-only button and keyboard shortcut are unchanged.
+Pages contain 16 records so a large space-platform fleet doesn't rebuild
+more than necessary when the player types.
+
+This is a user interface pass, not a rewrite of Factorio's space platform
+scheduler. No ships are moved, no surfaces are created, and no planet
+technology or recipes are changed. Runtime inspection with a complete
+modpack is still required for display scale, translated world names and
+rare third-party planet icons.

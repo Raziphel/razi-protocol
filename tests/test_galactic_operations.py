@@ -13,7 +13,7 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertNotIn('on_lua_shortcut',control)
         self.assertIn('on_gui_text_changed',control)
         self.assertIn('on_gui_selection_state_changed',control)
-        self.assertIn('PAGE_SIZE=22',ui)
+        self.assertIn('PAGE_SIZE=16',ui)
         self.assertIn('razi_ops_role_filter',ui)
         self.assertIn('razi_ops_role_',ui)
         self.assertIn('p.roles[id]',ui)
@@ -57,14 +57,53 @@ class GalacticOperationsTests(unittest.TestCase):
         operations=(ROOT/"scripts/galactic_operations.lua").read_text()
         atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
         self.assertIn('if not current or current.x~=x or current.y~=86 then',operations)
-        self.assertIn('local search=(p.search or ""):lower()',operations)
+        self.assertIn('local search=lower(p.search or "")',operations)
         self.assertIn('local recent={}',operations)
-        self.assertIn('row.sort_name=row.name:lower()',operations)
+        self.assertIn('row.sort_name=lower(row.display_search or row.name)',operations)
         self.assertIn('row.sort_group=catalog.position(row.group)',operations)
         self.assertIn('local function location_research_catalog()',atlas)
         self.assertIn('local function connection_index()',atlas)
         self.assertIn('local function accessible(name)',atlas)
         self.assertNotIn('script.on_nth_tick',atlas)
+
+    def test_responsive_cards_and_localized_search(self):
+        operations=(ROOT/"scripts/galactic_operations.lua").read_text()
+        locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        control=(ROOT/"control.lua").read_text()
+        self.assertIn('function M.layout(resolution,scale)',operations)
+        self.assertIn('local compact=outer<860',operations)
+        self.assertIn('type="table",name="razi_ops_tabs"',operations)
+        self.assertIn('column_count=layout.compact and 3 or 5',operations)
+        self.assertIn('type="frame",direction="vertical",style="inside_shallow_frame"',operations)
+        self.assertIn('sprite=row_sprite(row)',operations)
+        self.assertIn('helpers.is_valid_sprite_path(source)',operations)
+        self.assertIn('row.display_search or ""',operations)
+        self.assertIn('row.location_search or ""',operations)
+        self.assertIn('player.request_translation(caption)',operations)
+        self.assertIn('function M.on_string_translated(event)',operations)
+        self.assertIn('p.translation_dirty=true',operations)
+        self.assertIn('p.translation_requested[name]=true',operations)
+        self.assertIn('galactic_operations.on_string_translated(event)',control)
+        self.assertIn('razi_discord_presence.on_string_translated(event)',control)
+        self.assertIn('search-translating=',locale)
+        self.assertIn('clear-search=',locale)
+        for section in ('list-title-worlds','list-title-platforms',
+                        'stat-total','stat-matches','stat-transit','stat-attention',
+                        'fleet-more-warnings'):
+            self.assertIn(section+'=',locale)
+
+    def test_actions_and_saved_preferences_remain(self):
+        code=(ROOT/"scripts/galactic_operations.lua").read_text()
+        for key in ('p.favorites','p.roles','p.notes','p.recent',
+                    'p.atlas_origin','p.priority_sort'):
+            self.assertIn(key,code)
+        self.assertIn('row.alerts[i]',code)
+        self.assertIn('frame.razi_ops_search_tools.visible=listing',code)
+        self.assertIn('frame.razi_ops_options.visible=value=="worlds"',code)
+        self.assertIn('player.set_controller{type=defines.controllers.remote',code)
+        self.assertIn('p.search="";p.page=1',code)
+        self.assertNotIn('create_surface(',code)
+        self.assertNotIn('create_space_platform(',code)
 
     def test_all_seven_systems(self):
         catalog=(ROOT/"scripts/galactic_catalog.lua").read_text()

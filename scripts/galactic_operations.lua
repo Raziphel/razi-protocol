@@ -17,7 +17,66 @@ local MAP_SPRITE="razi-galactic-operations-map-icon"
 -- The engine's native starmap header isn't a LuaGuiElement. This floating
 -- entry appears while Remote View displays the chart, beside its controls.
 -- It is never inserted into Factorio's quickbar or shortcut bar.
-local PAGE_SIZE=22
+local PAGE_SIZE=16
+local SYSTEM_COLORS={
+  calidus={r=.72,g=.82,b=.95},solaris={r=1,g=.69,b=.43},
+  nyxaris={r=.57,g=.87,b=.66},vibrant={r=.60,g=.80,b=1},
+  vespera={r=.69,g=.73,b=1},beetlejuice={r=1,g=.77,b=.48},
+  umbra={r=.81,g=.61,b=.94},["deep-space"]={r=.86,g=.66,b=.80},
+  unassigned={r=.70,g=.76,b=.82}
+}
+local function group_color(group)
+  return SYSTEM_COLORS[group] or SYSTEM_COLORS.unassigned
+end
+-- Values are Factorio GUI units, not physical pixels. Narrow displays get
+-- two lines of controls instead of a sideways-scrolling command centre.
+function M.layout(resolution,scale)
+  local factor=math.max(scale or 1,0.5)
+  local width=math.floor((resolution.width or 1280)/factor)
+  local height=math.floor((resolution.height or 720)/factor)
+  local outer=math.max(235,math.min(970,width-28))
+  local compact=outer<860
+  return {width=outer,compact=compact,
+    card_width=math.max(165,outer-76),
+    title_width=math.max(75,outer-185),
+    list_height=math.max(120,math.min(360,math.floor(height*0.34))),
+    inspector_height=math.max(100,math.min(210,math.floor(height*0.20))),
+    viewport_height=height}
+end
+local function lower(value)
+  if helpers and helpers.multilingual_to_lower then
+    return helpers.multilingual_to_lower(value)
+  end
+  return value:lower()
+end
+function M.search_matches(row,search)
+  if search=="" then return true end
+  for _,value in ipairs({row.name or "",row.display_search or "",
+                         row.group or "",row.location_search or ""}) do
+    if lower(value):find(search,1,true) then return true end
+  end
+  return false
+end
+local sprite_cache={}
+local function row_sprite(row)
+  if row.kind=="platforms" then
+    local source="entity/space-platform-hub"
+    return helpers and helpers.is_valid_sprite_path
+      and helpers.is_valid_sprite_path(source) and source or MAP_SPRITE
+  end
+  local cached=sprite_cache[row.id]
+  if cached then return cached end
+  for _,kind in ipairs({"planet","space-location"}) do
+    local source=kind.."/"..row.id
+    if helpers and helpers.is_valid_sprite_path
+      and helpers.is_valid_sprite_path(source) then
+      sprite_cache[row.id]=source
+      return source
+    end
+  end
+  sprite_cache[row.id]=MAP_SPRITE
+  return MAP_SPRITE
+end
 local FILTERS={"all","favorites","active","attention","recent"}
 local ROLES={"all","general","freighter","science","defense","exploration","construction"}
 local ROLE_CHOICES={"auto","general","freighter","science","defense","exploration","construction"}
@@ -46,7 +105,8 @@ local function preferences(index)
   if not p then
     p={tab="worlds",filter="all",group="all",search="",page=1,
        waypoints=false,locked=false,role_filter="all",roles={},favorites={worlds={},platforms={}},
-       collapsed={},recent={},notes={},focus=nil,atlas_origin=nil,priority_sort=false}
+       collapsed={},recent={},notes={},focus=nil,atlas_origin=nil,priority_sort=false,
+       translations={},translation_requested={},translation_pending={}}
     storage.razigui[index]=p
   end
   p.favorites=p.favorites or {worlds={},platforms={}}
@@ -58,6 +118,9 @@ local function preferences(index)
   p.roles=p.roles or {}
   p.role_filter=p.role_filter or "all"
   p.priority_sort=p.priority_sort or false
+  p.translations=p.translations or {}
+  p.translation_requested=p.translation_requested or {}
+  p.translation_pending=p.translation_pending or {}
   return p
 end
 local function is_unlocked(force,name)
@@ -97,6 +160,22 @@ function M.page_slice(rows,page,size)
   return output,page,pages
 end
 
+-- Translation is asynchronous. Request each visible name just once per
+-- player's locale, never on every redraw or every search keystroke.
+local function request_world_name(player,p,name,caption)
+  if p.translation_locale~=player.locale then
+    p.translation_locale=player.locale
+    p.translations={}
+    p.translation_requested={}
+    p.translation_pending={}
+  end
+  if p.translations[name] or p.translation_requested[name] then return end
+  if not player.connected or not player.request_translation then return end
+  local id=player.request_translation(caption)
+  p.translation_requested[name]=true
+  p.translation_pending[id]=name
+end
+
 local function collect_worlds(player,p)
   local entries={}
   local force=player.force
@@ -105,8 +184,10 @@ local function collect_worlds(player,p)
       local unlocked=is_unlocked(force,name)
       if unlocked or p.locked then
         local accessible=unlocked and has_surface(name) or false
+        request_world_name(player,p,name,proto.localised_name)
         entries[#entries+1]={
           id=name,name=name,caption=proto.localised_name,
+          display_search=p.translations[name],
           kind="worlds",group=catalog.system(name),
           status=not unlocked and "locked" or accessible and "visited" or "unvisited",
           ready=accessible,unlocked=unlocked
@@ -121,13 +202,17 @@ local function collect_platforms(player,p)
   for index,platform in pairs(player.force.platforms) do
     if valid_platform(platform) then
       local diagnostics=fleet.snapshot(platform)
+      local place=platform.space_location or platform.last_visited_space_location
+      if place then request_world_name(player,p,place.name,place.localised_name) end
       entries[#entries+1]={
         id=tostring(index),index=index,name=platform.name,
         caption=platform.name,kind="platforms",
         group=platform_group(platform),status=platform_status(platform),
         ready=platform.surface and platform.surface.valid or false,
-        location=platform.space_location or platform.last_visited_space_location,
+        location=place,
         connection=platform.space_connection,
+        location_search=place and (p.translations[place.name] or place.name),
+        alerts=diagnostics.warnings,
         role=p.roles[tostring(index)] or infer_role(platform.name),
         manual_role=p.roles[tostring(index)]~=nil,
         warnings=diagnostics.warning_count
@@ -143,14 +228,7 @@ local function matches(p,row,search,recent)
   if p.group~="all" and p.group~=row.group then return false end
   if row.kind=="platforms" and p.role_filter~="all"
     and p.role_filter~=row.role then return false end
-  local text=search
-  if text~="" then
-    local name=(row.name or ""):lower()
-    local group=row.group
-    if not name:find(text,1,true) and not group:find(text,1,true) then
-      return false
-    end
-  end
+  if not M.search_matches(row,search) then return false end
   if p.filter=="favorites" and not p.favorites[row.kind][row.id] then
     return false
   elseif p.filter=="active" then
@@ -167,7 +245,7 @@ end
 local function rows_for(player,p)
   local all=p.tab=="worlds" and collect_worlds(player,p) or collect_platforms(player,p)
   local filtered={}
-  local search=(p.search or ""):lower()
+  local search=lower(p.search or "")
   local recent={}
   if p.filter=="recent" then
     for _,id in ipairs(p.recent) do recent[id]=true end
@@ -175,7 +253,7 @@ local function rows_for(player,p)
   for _,row in ipairs(all) do
     if matches(p,row,search,recent) then
       row.sort_group=catalog.position(row.group)
-      row.sort_name=row.name:lower()
+      row.sort_name=lower(row.display_search or row.name)
       filtered[#filtered+1]=row
     end
   end
@@ -221,68 +299,100 @@ local function summary(player)
   end
   return total,transit,attention
 end
-local function paint_row(parent,row,p)
+local function paint_row(parent,row,p,layout)
   local band=parent.add{type="frame",direction="vertical",style="inside_shallow_frame"}
-  band.style.horizontally_stretchable=true
-  local line=band.add{type="flow",direction="horizontal"}
-  line.style.vertical_align="center"
-  local favorite=p.favorites[row.kind][row.id]
-  add_button(line,favorite and "★" or "☆","favorite",
-    recent_key(row),L("favorite-tooltip"))
-  local title=line.add{type="label",caption=row.caption}
+  band.style.width=layout.card_width
+  band.style.padding=9
+  local header=band.add{type="flow",direction="horizontal"}
+  header.style.vertical_align="center"
+  header.style.horizontal_spacing=8
+  local icon=header.add{type="sprite",sprite=row_sprite(row)}
+  icon.style.width=layout.compact and 26 or 32
+  icon.style.height=layout.compact and 26 or 32
+  local heading=header.add{type="flow",direction="vertical"}
+  heading.style.vertical_spacing=2
+  local title=heading.add{type="label",caption=row.caption}
   title.style.font="default-bold"
-  title.style.minimal_width=210
-  local status=line.add{type="label",caption=L("status-"..row.status)}
-  status.style.minimal_width=110
-  if row.status=="paused" or row.status=="unscheduled" or row.status=="locked" then
-    accent(status,{r=1,g=0.55,b=0.32})
+  title.style.single_line=false
+  title.style.maximal_width=math.max(60,layout.card_width-
+    (layout.compact and 125 or 115))
+  local group=heading.add{type="label",caption=L("group-"..row.group)}
+  group.style.font_color=group_color(row.group)
+  group.style.single_line=false
+  group.style.maximal_width=math.max(60,layout.card_width-
+    (layout.compact and 125 or 115))
+  local favorite=p.favorites[row.kind][row.id]
+  add_button(header,favorite and "★" or "☆","favorite",
+    recent_key(row),L("favorite-tooltip"))
+
+  local detail=band.add{type="flow",direction="horizontal"}
+  detail.style.vertical_align="center"
+  local state=detail.add{type="label",caption=L("status-"..row.status)}
+  state.style.font="default-bold"
+  state.style.single_line=false
+  state.style.maximal_width=layout.card_width-25
+  if row.status=="paused" or row.status=="unscheduled"
+    or row.status=="locked" or row.status=="building" then
+    accent(state,{r=1,g=.65,b=.38})
   elseif row.status=="transit" or row.status=="visited" then
-    accent(status,{r=0.35,g=0.84,b=0.62})
+    accent(state,{r=.49,g=.88,b=.71})
   end
+
   if row.kind=="platforms" then
-    local place=line.add{type="label",caption=row.location
-      and row.location.localised_name or L("between-worlds")}
-    place.style.minimal_width=165
-  else
-    local place=line.add{type="label",caption=L("group-"..row.group)}
-    place.style.minimal_width=165
-  end
-  if row.ready then
-    add_button(line,L("view"),"view",recent_key(row),L("view-tooltip"))
-  else
-    local btn=add_button(line,L("no-view"),"not-available",
-      recent_key(row),L("no-view-tooltip"))
-    btn.enabled=false
-  end
-  add_button(line,L(row.kind=="worlds" and "atlas-open" or "fleet-open"),
-    "details",recent_key(row),L("details-tooltip"))
-  if row.kind=="platforms" then
+    local where=row.location and row.location.localised_name or L("between-worlds")
+    local place=band.add{type="label",caption=where}
+    place.style.single_line=false
+    place.style.maximal_width=layout.card_width-25
+    if row.connection then
+      local route=band.add{type="label",
+        caption=L("flight-route",row.connection.from.localised_name,
+          row.connection.to.localised_name)}
+      route.style.single_line=false
+      route.style.maximal_width=layout.card_width-25
+      accent(route,{r=.57,g=.76,b=.96})
+    end
     if (row.warnings or 0)>0 then
       local warning=band.add{type="label",
         caption=L("fleet-warnings",tostring(row.warnings))}
-      accent(warning,{r=1,g=0.63,b=0.32})
+      accent(warning,{r=1,g=.69,b=.42})
+      for i=1,math.min(2,#(row.alerts or {})) do
+        local hint=band.add{type="label",
+          caption=L("fleet-warning-"..row.alerts[i])}
+        hint.style.single_line=false
+        hint.style.maximal_width=layout.card_width-25
+      end
+      if row.warnings>2 then
+        local more=band.add{type="label",caption=L("fleet-more-warnings",
+          tostring(row.warnings-2))}
+        accent(more,{r=.92,g=.76,b=.57})
+      end
     end
-    local mission=band.add{type="flow",direction="horizontal"}
+    local mission=band.add{type="flow",
+      direction=layout.compact and "vertical" or "horizontal"}
+    mission.style.vertical_align="center"
     mission.add{type="label",caption=L("mission")}
     local choice=mission.add{type="drop-down",
       name="razi_ops_role_"..row.id,
       items={L("role-auto"),L("role-general"),L("role-freighter"),
              L("role-science"),L("role-defense"),L("role-exploration"),
              L("role-construction")},
-      tags={razi_ops_role_id=row.id}
-    }
+      tags={razi_ops_role_id=row.id}}
+    choice.style.width=layout.compact
+      and math.max(95,layout.card_width-35)
+      or math.max(95,math.min(225,layout.card_width-98))
     local chosen=row.manual_role and row.role or "auto"
     for i,value in ipairs(ROLE_CHOICES) do
       if chosen==value then choice.selected_index=i;break end
     end
-    mission.add{type="label",caption=L("role-"..row.role)}
-    if row.connection then
-      local detail=band.add{type="label",
-        caption=L("flight-route",row.connection.from.localised_name,
-          row.connection.to.localised_name)}
-      accent(detail,{r=0.57,g=0.73,b=0.96})
-    end
   end
+  local actions=band.add{type="flow",direction="horizontal"}
+  actions.style.horizontal_spacing=8
+  local view=add_button(actions,row.ready and L("view") or L("no-view"),
+    row.ready and "view" or "not-available",
+    recent_key(row),row.ready and L("view-tooltip") or L("no-view-tooltip"))
+  view.enabled=row.ready
+  add_button(actions,L(row.kind=="worlds" and "atlas-open" or "fleet-open"),
+    "details",recent_key(row),L("details-tooltip"))
 end
 
 local function redraw(player)
@@ -295,20 +405,45 @@ local function redraw(player)
   if p.tab=="campaign" then campaign.render(body,player);return end
   if p.tab=="trade" then trade.render(body,player);return end
   if p.tab=="dyson" then dyson.render(body,player);return end
+  local layout=M.layout(player.display_resolution,player.display_scale)
   local rows,total=rows_for(player,p)
   local page_rows,page,pages=M.page_slice(rows,p.page,PAGE_SIZE)
   p.page=page
-  local total_platforms,traveling,warnings=summary(player)
-  local stats=body.add{type="label",caption=L("overview",tostring(total),
-    tostring(#rows),tostring(total_platforms),tostring(traveling),tostring(warnings))}
-  accent(stats,{r=0.68,g=0.79,b=0.91})
+  local _,traveling,warnings=summary(player)
+  local heading=body.add{type="label",caption=L(p.tab=="worlds"
+    and "list-title-worlds" or "list-title-platforms")}
+  heading.style.font="heading-2"
+  heading.style.font_color={r=.56,g=.77,b=.96}
+  local stats=body.add{type="table",
+    column_count=layout.compact and 2 or 4}
+  stats.style.horizontal_spacing=6
+  stats.style.vertical_spacing=6
+  for _,metric in ipairs({
+    {"stat-total",total},{"stat-matches",#rows},
+    {"stat-transit",traveling},{"stat-attention",warnings}
+  }) do
+    local tile=stats.add{type="frame",direction="vertical",
+      style="inside_shallow_frame"}
+    local number=tile.add{type="label",caption=tostring(metric[2])}
+    number.style.font="heading-2"
+    number.style.font_color=metric[1]=="stat-attention" and warnings>0
+      and {r=1,g=.67,b=.41} or {r=.53,g=.80,b=.98}
+    local caption=tile.add{type="label",caption=L(metric[1])}
+    caption.style.single_line=false
+    caption.style.maximal_width=layout.compact
+      and math.max(90,math.floor(layout.card_width/2)-22)
+      or math.max(105,math.floor(layout.card_width/4)-18)
+  end
 
   local list=body.add{type="scroll-pane",direction="vertical"}
   list.style.horizontally_stretchable=true
-  list.style.height=math.max(210,math.min(420,
-    math.floor(player.display_resolution.height/math.max(player.display_scale,1)*0.45)))
+  list.horizontal_scroll_policy="never"
+  list.style.height=p.focus and math.max(110,math.floor(layout.list_height*.78))
+    or layout.list_height
   if #page_rows==0 then
-    list.add{type="label",caption=L("empty")}
+    local pending=p.tab=="worlds" and p.search~=""
+      and next(p.translation_pending or {})
+    list.add{type="label",caption=L(pending and "search-translating" or "empty")}
   end
   local last_group=nil
   for _,row in ipairs(page_rows) do
@@ -316,9 +451,9 @@ local function redraw(player)
       last_group=row.group
       local group_header=list.add{type="label",caption=L("group-"..row.group)}
       group_header.style.font="heading-2"
-      accent(group_header,{r=0.46,g=0.77,b=0.96})
+      accent(group_header,group_color(row.group))
     end
-    paint_row(list,row,p)
+    paint_row(list,row,p,layout)
   end
   local footer=body.add{type="flow",direction="horizontal"}
   footer.style.vertical_align="center"
@@ -332,8 +467,8 @@ local function redraw(player)
     -- from pushing Galactic Operations below smaller displays.
     local inspector=body.add{type="scroll-pane",direction="vertical"}
     inspector.style.horizontally_stretchable=true
-    inspector.style.height=math.max(130,math.min(235,
-      math.floor(player.display_resolution.height/math.max(player.display_scale,1)*0.26)))
+    inspector.horizontal_scroll_policy="never"
+    inspector.style.height=layout.inspector_height
     local kind,id=p.focus:match("^(worlds):(.+)$")
     if not kind then kind,id=p.focus:match("^(platforms):(.+)$") end
     if kind==p.tab and kind=="worlds" then
@@ -402,6 +537,27 @@ end
 function M.sync_all_map_buttons()
   for _,player in pairs(game.connected_players) do
     M.sync_map_button(player)
+    local p=storage.razigui and storage.razigui[player.index]
+    if p and p.translation_dirty then
+      p.translation_dirty=nil
+      local frame=player.gui.screen[FRAME]
+      if (p.tab=="worlds" or p.tab=="platforms") and p.search~=""
+        and frame and frame.valid then redraw(player) end
+    end
+  end
+end
+
+function M.on_string_translated(event)
+  local p=storage.razigui and storage.razigui[event.player_index]
+  local pending=p and p.translation_pending
+  local name=pending and pending[event.id]
+  if not name then return end
+  pending[event.id]=nil
+  if event.translated and type(event.result)=="string" then
+    p.translations[name]=lower(event.result)
+    -- Paint once in the existing 30-tick map check, not once per
+    -- translated planet. Names are stored per player and locale.
+    p.translation_dirty=true
   end
 end
 
@@ -413,53 +569,74 @@ local function open(player)
   if player.gui.screen[FRAME] then return end
   local p=preferences(player.index)
   local resolution=player.display_resolution
-  local scale=math.max(player.display_scale,1)
-  local width=math.max(460,math.min(840,math.floor(resolution.width/scale)-70))
+  local scale=math.max(player.display_scale,0.5)
+  local layout=M.layout(resolution,scale)
+  local width=layout.width
   local frame=player.gui.screen.add{
     type="frame",name=FRAME,direction="vertical",caption=L("title")
   }
   frame.style.width=width
+  frame.style.maximal_height=math.max(230,layout.viewport_height-24)
   frame.location={x=math.max(0,math.floor((resolution.width/scale-width)/2)),
-                  y=math.max(25,math.floor(resolution.height/scale*0.08))}
+                  y=math.max(12,math.floor(resolution.height/scale*0.04))}
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
-  head.add{type="label",caption=L("subtitle")}
+  local eyebrow=head.add{type="label",
+    caption=L(layout.compact and "subtitle-compact" or "subtitle")}
+  eyebrow.style.single_line=false
+  eyebrow.style.maximal_width=layout.compact and 155 or 350
   local drag=head.add{type="empty-widget",style="draggable_space"}
   drag.style.horizontally_stretchable=true
   drag.style.height=28
   drag.drag_target=frame
   add_button(head,L("refresh"),"refresh","")
   add_button(head,"✕","close","")
-  local tabs=frame.add{type="flow",direction="horizontal"}
-  add_button(tabs,L("worlds-tab"),"tab","worlds")
-  add_button(tabs,L("platforms-tab"),"tab","platforms")
-  add_button(tabs,L("campaign-tab"),"tab","campaign")
-  add_button(tabs,L("trade-tab"),"tab","trade")
-  add_button(tabs,L("dyson-tab"),"tab","dyson")
-  local search=frame.add{
+  local tabs=frame.add{type="table",name="razi_ops_tabs",
+    column_count=layout.compact and 3 or 5}
+  tabs.style.horizontal_spacing=5
+  tabs.style.vertical_spacing=5
+  for _,entry in ipairs({
+    {"worlds","worlds-tab"},{"platforms","platforms-tab"},
+    {"campaign","campaign-tab"},{"trade","trade-tab"},
+    {"dyson","dyson-tab"}
+  }) do
+    local caption=entry[2]..(layout.compact and "-short" or "")
+    local button=add_button(tabs,L(caption),"tab",entry[1])
+    button.toggled=entry[1]==p.tab
+  end
+  local search_tools=frame.add{type="flow",
+    name="razi_ops_search_tools",direction="horizontal"}
+  search_tools.style.horizontally_stretchable=true
+  local search=search_tools.add{
     type="textfield",name="razi_ops_search",
     text=p.search,tooltip=L("search-tooltip")
   }
   search.style.horizontally_stretchable=true
+  search.style.width=math.max(150,width-126)
+  add_button(search_tools,L("clear-search"),"clear-search")
   local filters=frame.add{type="flow",name="razi_ops_filters",
-    direction="horizontal"}
-  filters.add{type="label",caption=L("filter")}
-  local filter=filters.add{
+    direction=layout.compact and "vertical" or "horizontal"}
+  local filter_row=filters.add{type="flow",direction="horizontal"}
+  filter_row.add{type="label",caption=L("filter")}
+  local filter=filter_row.add{
     type="drop-down",name="razi_ops_filter",
     items={L("filter-all"),L("filter-favorites"),L("filter-active"),
            L("filter-attention"),L("filter-recent")}
   }
+  filter.style.width=layout.compact and math.max(135,width-125) or 195
   for index,value in ipairs(FILTERS) do
     if value==p.filter then filter.selected_index=index end
   end
-  filters.add{type="label",caption=L("system")}
+  local group_row=filters.add{type="flow",direction="horizontal"}
+  group_row.add{type="label",caption=L("system")}
   local groups={}
   for _,group in ipairs(group_options) do
     groups[#groups+1]=L("group-"..group)
   end
-  local selector=filters.add{
+  local selector=group_row.add{
     type="drop-down",name="razi_ops_group",items=groups
   }
+  selector.style.width=layout.compact and math.max(135,width-125) or 255
   for index,value in ipairs(group_options) do
     if p.group==value then selector.selected_index=index end
   end
@@ -490,7 +667,7 @@ local function open(player)
   local body=frame.add{type="flow",name="razi_ops_body",direction="vertical"}
   body.style.horizontally_stretchable=true
   local listing=p.tab=="worlds" or p.tab=="platforms"
-  search.visible=listing
+  search_tools.visible=listing
   filters.visible=listing
   options.visible=p.tab=="worlds"
   options.razi_ops_waypoints.visible=p.tab=="worlds"
@@ -558,11 +735,26 @@ function M.gui_click(event)
       frame.razi_ops_options.razi_ops_waypoints.visible=value=="worlds"
       frame.razi_ops_options.razi_ops_locked.visible=value=="worlds"
       local listing=value=="worlds" or value=="platforms"
-      frame.razi_ops_search.visible=listing
+      frame.razi_ops_search_tools.visible=listing
       frame.razi_ops_filters.visible=listing
       frame.razi_ops_roles.visible=value=="platforms"
       frame.razi_ops_sorter.visible=value=="platforms"
+      local tabs=frame.razi_ops_tabs
+      if tabs then
+        for _,button in pairs(tabs.children) do
+          local meta=button.tags
+          if meta and meta.razi_ops_action=="tab" then
+            button.toggled=meta.value==value
+          end
+        end
+      end
     end
+  elseif action=="clear-search" then
+    p.search="";p.page=1
+    local frame=player.gui.screen[FRAME]
+    local field=frame and frame.razi_ops_search_tools
+      and frame.razi_ops_search_tools.razi_ops_search
+    if field and field.valid then field.text="" end
   elseif action=="page" then
     p.page=math.max(1,p.page+value)
   elseif action=="priority" then

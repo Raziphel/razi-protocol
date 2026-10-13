@@ -138,8 +138,10 @@ script.on_configuration_changed(function(event)
 end)
 -- Export at most once per 15 game seconds; disabled players do no work.
 script.on_nth_tick(900, razi_discord_presence.write)
-script.on_event(defines.events.on_string_translated,
-  razi_discord_presence.on_string_translated)
+script.on_event(defines.events.on_string_translated,function(event)
+  razi_discord_presence.on_string_translated(event)
+  galactic_operations.on_string_translated(event)
+end)
 script.on_event(defines.events.on_runtime_mod_setting_changed,
   razi_discord_presence.on_setting_changed)
 

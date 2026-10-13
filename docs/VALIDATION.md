@@ -341,3 +341,27 @@ caps, productivity and recycling. Its negative results should be reviewed
 against in-game transport and source material production costs; source
 analysis cannot prove actual rocket-level profitability. These commands
 do not create GitHub Actions runs.
+
+## Galactic Operations card layout and localisation (2.1.26)
+
+Run existing fixtures from the mod root:
+
+```bash
+lua5.2 tests/lua/test_galactic_operations.lua
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+```
+
+The suite now checks layout budgets on 1920×1080, 1280×720 (150% scale),
+1024×768 (150% scale), 900×600 and ultrawide resolutions, plus paging,
+translated planet-name matching, platform location matching and the
+shared translation event. Planet icons are validated with Factorio's
+`helpers.is_valid_sprite_path` before rendering. Missing icons use the
+existing Galactic Operations artwork.
+
+**Manual game check:** Change the GUI scale between 100% and 150%, filter
+a large mixed fleet, switch tabs, select a planet, assign and reset a
+private fleet role, favourite a destination, open the Atlas, and use
+the Clear search action. Repeat with a non-English game locale. Ensure the
+existing Discord presence translation handler continues to receive its
+events. Native platform schedules, hub cargo and surfaces must remain
+unchanged. This verification requires a real Factorio runtime.
