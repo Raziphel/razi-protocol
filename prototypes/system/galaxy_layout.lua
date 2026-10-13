@@ -17,7 +17,7 @@ local anchors = {
   {"space-location","sye-calidus","star",20,0.5},
   -- Southwest freight stop: a deliberate, short westbound leg from the
   -- southern slipstream rather than a detached node above the sun.
-  {"space-location","razi-calidus-drift","star",28,0.625},
+  {"space-location","razi-calidus-drift","star",27,0.56},
   {"space-location","sye-solaris","solaris",27,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
@@ -155,6 +155,26 @@ function M.data_updates()
     end
   end
   if #updates>0 then PlanetsLib:update(updates) end
+  -- Khemia can have both a native planet AND a source space-location.
+  -- The original resolver only picked the planet; PlanetsLib could bake
+  -- the other sprite-only icon in Calidus before our final native pass.
+  if exists("planet","khemia") and exists("space-location","khemia") then
+    local item=by_name.khemia
+    local other=exists("space-location","khemia")
+    local orbit={
+      parent={type="space-location",name=item[3]},
+      distance=item[4],orientation=item[5]
+    }
+    if other.orbit and other.orbit.sprite then
+      orbit.sprite=other.orbit.sprite
+    end
+    PlanetsLib:update({{
+      type="space-location",name="khemia",orbit=orbit
+    }})
+    if type(log)=="function" then
+      log("[Razi Protocol/Calidus] Repositioned duplicate Khemia space-location BEFORE sprite baking")
+    end
+  end
   -- Place source-owned Khemia BEFORE PlanetsLib bakes its starmap icon.
   -- It is not enough to reparent it in data-final-fixes after rendering.
   local vx,vy=anchor_position("vibrant")
@@ -162,6 +182,14 @@ function M.data_updates()
     for _,kind in ipairs({"planet","space-location"}) do
       local body=exists(kind,"khemia")
       if body then
+        local orbit={
+          parent={type="space-location",name="vibrant"},
+          distance=41.598564,orientation=0.287184
+        }
+        if body.orbit and body.orbit.sprite then
+          orbit.sprite=body.orbit.sprite
+        end
+        body.orbit=orbit
         body.origin={x=vx,y=vy}
         body.distance=41.598564
         body.orientation=0.287184
@@ -408,6 +436,22 @@ function M.confirm_critical_positions()
         end
       end
     end
+  end
+  if type(log)=="function" then
+    local art=(data.raw["utility-sprites"] or {}).default
+    local star=art and art.starmap_star
+    local marked=0
+    for _,layer in ipairs(star and star.layers or {}) do
+      if layer.planetslib_orbit_name=="khemia" then
+        marked=marked+1
+        local pos=layer.shift or {}
+        log(string.format(
+          "[Razi Protocol/Calidus] Khemia orbit-art layer (%s,%s)",
+          tostring(pos[1] or pos.x),tostring(pos[2] or pos.y)))
+      end
+    end
+    log("[Razi Protocol/Calidus] Khemia audit: "..count..
+      " native prototypes, "..marked.." PlanetsLib orbit-art layers")
   end
   if mods and mods["alchemy-khemia"] and count==0 and type(log)=="function" then
     log("[Razi Protocol/Calidus] WARNING: Khemia mod present but no matching map prototype")

@@ -18,6 +18,7 @@ local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local FRAME="razi_galactic_operations"
 local MAP_ANCHOR="razi_ops_map_anchor"
 local MAP_BUTTON="razi_ops_map_button"
+local MAP_DYSON="razi_ops_dyson_stage"
 local MAP_SPRITE="razi-galactic-operations-map-icon"
 -- The engine's native starmap header isn't a LuaGuiElement. This floating
 -- entry appears while Remote View displays the chart, beside its controls.
@@ -500,12 +501,32 @@ function M.in_map_view(player)
     and player.render_mode~=defines.render_mode.game
 end
 
+function M.on_dyson_research(event)
+  local research=event and event.research
+  local force=research and research.force
+  if not force then return end
+  local matched=false
+  for _,stage in ipairs(dyson.stages) do
+    if stage[1]==research.name then matched=true;break end
+  end
+  if not matched then return end
+  dyson_runtime.invalidate(force)
+  for _,player in pairs(force.connected_players or {}) do
+    M.sync_map_button(player)
+    local p=storage.razigui and storage.razigui[player.index]
+    local frame=player.gui.screen[FRAME]
+    if p and p.tab=="dyson" and frame and frame.valid then
+      redraw(player)
+    end
+  end
+end
+
 local function position_map_button(player,anchor)
   local scale=math.max(player.display_scale,0.5)
   local width=math.floor(player.display_resolution.width/scale)
   -- Only move the floating map button when its position actually changes.
   -- Writing the same GUI location every 30 ticks forces extra layout work.
-  local x=math.max(8,width-244)
+  local x=math.max(8,width-291)
   local current=anchor.location
   if not current or current.x~=x or current.y~=86 then
     anchor.location={x=x,y=86}
@@ -542,6 +563,26 @@ function M.sync_map_button(player)
     text.style.font="default-bold"
     text.style.height=38
   end
+  local completed,total=dyson.status(player.force)
+  local badge=anchor[MAP_DYSON]
+  if total>0 then
+    local wanted="razi-dyson-works-stage-"..math.min(6,completed)
+    if not (badge and badge.valid) then
+      badge=anchor.add{
+        type="sprite-button",name=MAP_DYSON,
+        sprite=wanted,style="slot_button",
+        tags={razi_ops_action="dyson-map"}
+      }
+      badge.style.width=38
+      badge.style.height=38
+    end
+    if badge.sprite~=wanted then badge.sprite=wanted end
+    local state=badge.tags
+    if not state or state.razi_ops_stage~=completed then
+      badge.tags={razi_ops_action="dyson-map",razi_ops_stage=completed}
+      badge.tooltip=L("dyson-map-progress",tostring(completed),tostring(total))
+    end
+  elseif badge and badge.valid then badge.destroy() end
   position_map_button(player,anchor)
 end
 
@@ -766,6 +807,27 @@ function M.gui_click(event)
   local p=preferences(player.index)
   local action,value=tags.razi_ops_action,tags.value
   if action=="map-toggle" then M.toggle(player);return end
+  if action=="dyson-map" then
+    p.tab="dyson";p.page=1;p.focus=nil
+    local frame=player.gui.screen[FRAME]
+    if frame and frame.valid then
+      frame.razi_ops_options.visible=false
+      frame.razi_ops_search_tools.visible=false
+      frame.razi_ops_filters.visible=false
+      frame.razi_ops_roles.visible=false
+      frame.razi_ops_sorter.visible=false
+      for _,tab in pairs(frame.razi_ops_tabs.children) do
+        local meta=tab.tags
+        if meta and meta.razi_ops_action=="tab" then
+          tab.toggled=meta.value=="dyson"
+        end
+      end
+      redraw(player)
+    else
+      open(player)
+    end
+    return
+  end
   if action=="refresh" and p.tab=="dyson" then
     dyson_runtime.invalidate(player.force)
   end

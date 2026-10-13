@@ -54,3 +54,9 @@ Obsolete native Calidus and Dyson solar-orbit routes are only removed for
 positively identified endpoints. Its genuine Vibrant industrial routes,
 recipes and planet surface remain source owned. Look for Razi Protocol
 Calidus Khemia coordinate log entries to diagnose the in-game map.
+
+Players in Remote View see a small Dyson phase badge beside GALACTIC OPS.
+It advances through visual phases 0-6 for their force; selecting the badge
+opens the full research-driven Stellar Works display. The badge is a native
+GUI control, not an inaccurate world-space sprite overlay, and the sun's
+starmap icon stays a fixed orange-gold star for everyone.

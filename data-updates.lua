@@ -88,4 +88,5 @@ clear_invalid_bioluminescent_next_upgrade(data.raw["transport-belt"])
 
 -- Star images are rendered and sprite_only parents deleted during PlanetsLib
 -- data-final-fixes. Position them BEFORE that irreversible rendering pass.
+require("prototypes.system.calidus_sun").data_updates()
 require("prototypes.system.galaxy_layout").data_updates()

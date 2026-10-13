@@ -1,17 +1,20 @@
--- GUI-only visuals reuse original Razi starmap textures at a fraction
--- of their native size. The phase is research-based: no fake satellite count.
-local root="__razi-protocol__/graphics/starmap/razi/"
-local variants={
-  {"survey","glow-calidus.png",{r=1,g=.69,b=.41,a=.88}},
-  {"plasma","filament-calidus.png",{r=1,g=.54,b=.25,a=.90}},
-  {"construction","chart-constellation.png",{r=1,g=.78,b=.52,a=.90}},
-  {"distribution","filament-calidus.png",{r=.66,g=.87,b=1,a=.96}},
-  {"mastery","glow-calidus.png",{r=1,g=.88,b=.62,a=1}}
-}
-for _,variant in ipairs(variants) do
+-- The native star map is immutable per game session. These seven
+-- research-driven frames are displayed in the Stellar Works UI.
+local source="__razi-protocol__/graphics/starmap/razi/calidus-dyson-stages.png"
+for stage=0,6 do
   data:extend({{
-    type="sprite",name="razi-dyson-works-"..variant[1],
-    filename=root..variant[2],size=512,scale=0.25,
-    flags={"gui-icon"},tint=variant[3]
+    type="sprite",name="razi-dyson-works-stage-"..stage,
+    filename=source,x=stage*256,y=0,size=256,scale=.5,
+    flags={"gui-icon"}
+  }})
+end
+-- Retain previous public GUI sprite names as compatibility aliases.
+for name,stage in pairs({
+  survey=0,plasma=2,construction=3,distribution=4,mastery=6
+}) do
+  data:extend({{
+    type="sprite",name="razi-dyson-works-"..name,
+    filename=source,x=stage*256,y=0,size=256,scale=.5,
+    flags={"gui-icon"}
   }})
 end
