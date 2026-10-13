@@ -64,14 +64,23 @@ validated. The default-colored strokes are also dimmer and capped at 600
 static segments instead of 1,800, to avoid visual spaghetti.
 
 
-## Original deep-space starfield (2.1.40)
+## High-resolution deep-space atlas (2.1.40)
 
 The starfield draws inspiration from the starry background of Tserup's mod,
-but all four textures were authored independently for Razi Protocol.
-Four original 512px, four-bit indexed transparent PNGs are arranged across
-a four-by-four atlas covering the central seven systems and the deep-space
-frontier. The star points vary in temperature, brightness and clustering,
-leaving dark breathing room for planets, routes and labels.
+but all textures were authored independently for Razi Protocol. Four original
+1024px indexed transparent PNGs are arranged across a four-by-four atlas
+covering the central seven systems and the deep-space frontier. Their render
+scale is half the earlier value, preserving the same map coverage while giving
+each star twice the source resolution. Star points vary in temperature,
+brightness and clustering while leaving dark breathing room for planets,
+routes and labels.
+
+The halo, dust and belt overlays are now 512px rather than 128px. Their scales
+were reduced by the matching factor of four, so their world-space footprint is
+unchanged but their corona, wisps and asteroid fragments remain crisp. Lower
+default opacity keeps route lines and labels readable. The new halo has a clear
+core for the real system star; dust is asymmetrical rather than a round smudge;
+and belts use broken particle arcs instead of a soft neon loop.
 
 Sixteen static background sprites are rendered below the current system
 halos, real stars and other game artwork. The existing Subtle and Cinematic
@@ -80,5 +89,5 @@ cartography switches remain independent, and the existing compatibility
 guard defers to Better_Starmap_Background when installed.
 
 This adds no tick loop, gameplay hazard, research gate, map node or route.
-The additional indexed textures total about 515 KiB on disk.
+The indexed textures remain bounded by the asset-contract size limit.
 Full Factorio 2.1 graphics testing at multiple zooms remains necessary.

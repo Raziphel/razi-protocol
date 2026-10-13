@@ -70,7 +70,7 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn('location.draw_orbit=false',compat)
         backdrop=read("prototypes/system/starmap_background.lua")
         self.assertIn('razi-starmap-galactic-ornaments',backdrop)
-        self.assertIn('system.name=="calidus" and 8.4',backdrop)
+        self.assertIn('system.name=="calidus" and 2.1',backdrop)
         self.assertIn('strength=.38',backdrop)
         for filename,expected_width in (("calidus-dyson-stages.png",1792),):
             raw=(ROOT/"graphics/starmap/razi"/filename).read_bytes()

@@ -54,7 +54,9 @@ class StarmapBackgroundTests(unittest.TestCase):
             self.assertTrue(transparent)
             self.assertLess(size,350000)
             if name.startswith("atlas-starfield-"):
-                self.assertEqual((w,h,depth,colour),(512,512,4,3))
+                self.assertEqual((w,h,depth,colour),(1024,1024,8,3))
+            if name in ("atlas-halo.png","atlas-dust.png","atlas-belt.png"):
+                self.assertEqual((w,h,depth,colour),(512,512,8,3))
     def test_refined_atlas_uses_full_alpha_gradient(self):
         # Earlier 25-step alpha ramps produced blocky contour bands at
         # large starmap zoom. Every new texture now has 256 alpha entries.
@@ -97,7 +99,8 @@ class StarmapBackgroundTests(unittest.TestCase):
         for legacy in ("filament-","galactic-current.png","sky-",
                        "rift-deep-space.png","dust-lane-2.png"):
             self.assertNotIn(legacy,module)
-        self.assertIn('size={128,128}',module)
+        self.assertIn('local ATMOSPHERE_SIZE=512',module)
+        self.assertIn('size={1024,1024},scale=6',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('space-connection',module)
 if __name__=="__main__":

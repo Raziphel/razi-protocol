@@ -30,7 +30,7 @@ local parts=bg.make_layers("subtle",true,true,true,false)
 ok(#parts==40,"Clean atlas should use 9 halos, 3 belts, 12 dust pockets")
 local counts={sky=0,halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
-  local side=layer.filename:find("atlas%-starfield%-") and 512 or 128
+  local side=layer.filename:find("atlas%-starfield%-") and 1024 or 512
   ok(layer.size[1]==side and layer.size[2]==side,"Unexpected texture size")
   ok(layer.filename:find("graphics/starmap/razi/",1,true),"Foreign sprite")
   ok(layer.tint.a<=.87,"Atlas alpha too bright")
@@ -46,7 +46,7 @@ ok(#sprites.layers==41,"Clean atlas was not attached")
 ok(sprites.layers[1].filename:find("atlas%-starfield%-"),"Atlas not behind native art")
 ok(sprites.layers[#sprites.layers]==native,"Source star art changed")
 bg.data_final_fixes()
-ok(#sprites.layers==25,"Duplicate background layer registration")
+ok(#sprites.layers==41,"Duplicate background layer registration")
 ok(#bg.make_layers("off",true,true,true,false)==0,"Off mode still draws")
 ok(#bg.make_layers("subtle",false,false,false,false)==16,
   "Turning off optional layers must leave native map alone")
