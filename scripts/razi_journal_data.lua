@@ -74,6 +74,7 @@ M.quests={
  {id="dyson-mk2",chapter="stellar",tech="ds-energy-loader-mk2",requires={"dyson-repeaters"}},
  {id="dyson-mk3",chapter="stellar",tech="ds-energy-loader-mk3",requires={"dyson-mk2"}},
  {id="interplanetary-trade",chapter="network",tech="interplanetary-trade-logistics",requires={"space-science"}},
+ {id="signal-network",chapter="network",tech="aai-signal-transmission",requires={"interplanetary-trade"},optional=true},
  {id="first-frontier-relay",chapter="network",tech="razi-first-frontier-relay-components",site="nauvis",requires={"vulcanus","gleba","moshine"},optional=true},
  {id="precision-matrix",chapter="network",tech="razi-network-precision-matrix",requires={"fulgora","moshine"}},
  {id="extreme-lattice",chapter="network",tech="razi-network-extreme-lattice",requires={"precision-matrix","rubia","tenebris"}},
@@ -111,6 +112,20 @@ if script and script.active_mods and script.active_mods["FluxWorks"] then
   end
   for _,quest in ipairs(fluxworks.quests) do
     M.quests[#M.quests+1]=quest
+  end
+end
+-- In 2.1 the native AAI technology has its own research ID. Use the
+-- installed research prototype rather than creating a duplicate or
+-- misreporting completion when a compatible AAI fork renamed the ID.
+if script and script.active_mods
+  and script.active_mods["aai-signal-transmission"] and prototypes
+  and prototypes.technology then
+  local signal_id=require("prototypes.compat.aai_signal_partnerships")
+    .source_technology(prototypes.technology)
+  if signal_id then
+    for _,quest in ipairs(M.quests) do
+      if quest.id=="signal-network" then quest.tech=signal_id break end
+    end
   end
 end
 M.by_id={}

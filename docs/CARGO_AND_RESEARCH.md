@@ -1,3 +1,21 @@
+## Optional native signal network (2.1.53)
+
+AAI Signal Transmission's **native** powered transmitters and receivers
+can be built in separate planetary factories and tuned to one channel.
+They share wire signals such as stock and demand between worlds, making
+Planet Express import/reserve settings easier to coordinate manually.
+AAI owns the communication network; Planet Express owns rocket
+deliveries and platform schedules. Razi shows only the native research
+state and operator instructions in the Cargo Network, never fictional
+signal/channel counts.
+
+When installed and compatible, its source technology also becomes a
+prerequisite for two Razi-owned premium multiworld component researches.
+This is optional from the modpack's perspective and doesn't change
+any first-arrival or system discovery, asteroid route or logistics
+schedule. A source prototype dump and old-save playtest are required
+before promoting the optional integration to a default modpack choice.
+
 # Cargo and Research integration (Factorio 2.1)
 
 ## Two required NON-planet modules

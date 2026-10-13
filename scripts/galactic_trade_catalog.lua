@@ -62,6 +62,18 @@ local quest_by_technology={
   ["razi-network-frame-vesta-foundations"]="alliance-pressure-vesta",
   ["razi-network-frame-aquilo-controllers"]="alliance-pressure-aquilo"
 }
+-- One optional source research appears in the Razi Codex. AAI supplies
+-- the technology and circuits; only the UI mapping belongs to Razi.
+if script and script.active_mods
+  and script.active_mods["aai-signal-transmission"] and prototypes
+  and prototypes.technology then
+  local signal_id=require("prototypes.compat.aai_signal_partnerships")
+    .source_technology(prototypes.technology)
+  if signal_id then
+    quest_by_technology[signal_id]="signal-network"
+    chain_by_technology[signal_id]=signal_id
+  end
+end
 function M.chain_for_technology(name)
   return chain_by_technology[name]
 end

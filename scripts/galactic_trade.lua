@@ -2,6 +2,7 @@
 -- the source mods own production and research, not this UI.
 local M={}
 local catalog=require("scripts.galactic_trade_catalog")
+local signals=require("prototypes.compat.aai_signal_partnerships")
 local function L(key,...) return {"razi-ops."..key,...} end
 local function label(parent,caption,style)
   local obj=parent.add{type="label",caption=caption}
@@ -312,6 +313,31 @@ local function render_chain(parent,row,p,width)
   codex_link(actions,entry.id,L("trade-open-codex"))
 end
 
+-- Read-only communication research and operator guide. AAI owns the
+-- live circuit channels; unlike Planet Express, it provides no shipment
+-- inventory to count here. Never invent connected transmitters.
+local function signal_network(parent,player,width)
+  if not (script and script.active_mods
+    and script.active_mods["aai-signal-transmission"]
+    and prototypes and prototypes.technology) then return end
+  local name=signals.source_technology(prototypes.technology)
+  if not name then return end
+  local tech=player.force.technologies and player.force.technologies[name]
+  if not tech then return end
+  local frame=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame"}
+  frame.style.horizontally_stretchable=true
+  frame.style.padding=8
+  heading(frame,L("trade-signal-heading"),width-36)
+  local status=wrap(frame,L(tech.researched
+    and "trade-signal-researched" or "trade-signal-locked"),width-36)
+  status.style.font_color=tech.researched
+    and {r=.51,g=.87,b=.71} or {r=1,g=.73,b=.46}
+  wrap(frame,L("trade-signal-guide"),width-36)
+  wrap(frame,L("trade-signal-ship-guide"),width-36)
+  codex_link(frame,name,L("trade-signal-codex"))
+end
+
 function M.render(parent,player,p)
   p=p or {}
   local size=layout(player)
@@ -342,6 +368,8 @@ function M.render(parent,player,p)
     and {r=.50,g=.85,b=.68} or {r=1,g=.73,b=.46}
   wrap(freight,L("trade-fleet-counts",tostring(fleet.ships),
     tostring(fleet.transit),tostring(fleet.unscheduled)),size.width-30)
+
+  signal_network(parent,player,size.width)
 
   local scroll=parent.add{type="scroll-pane",direction="vertical"}
   scroll.style.horizontally_stretchable=true

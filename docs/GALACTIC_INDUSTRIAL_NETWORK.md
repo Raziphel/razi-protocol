@@ -1,3 +1,40 @@
+## Native interplanetary communication (2.1.53)
+
+AAI Signal Transmission >=0.6.0 is an **optional** Factorio 2.1
+dependency, reused without importing or copying its proprietary code or
+inventing replacement entities. Players research and construct its own
+powered signal transmitters/receivers on matching channels across
+planets. AAI moves red/green wire circuit values, **not goods**.
+Planet Express remains the only automatic fleet dispatcher; Razi keeps
+its Cargo Network read-only.
+
+For interdependence Balanced and Deep, a valid early native AAI
+communication technology becomes a prerequisite of two Razi-owned
+advanced factory researches: Precision Control Matrix and Panglia
+Optic Bond. The link is not applied when the source is missing, disabled,
+hidden, restricted to the next outer star, or would make a research
+cycle. Off mode never adds the prerequisite. Neither world arrival nor
+AAI's own source technology is modified.
+
+The Cargo Network shows native research completion and concise wiring
+guidance with an optional Codex link. It does **not** claim to detect
+actual channel wiring, receive signals, or change platform requests.
+This leverages the upstream implementation instead of duplicating it.
+
+Other candidates:
+- Orbital Catapult (orbital-cannon >=0.14): 2.1 MIT and mod-defined
+  one-way links, but each link can carry players as well as items and
+  could bypass a required planet-discovery or asteroid-belt crossing.
+  **Not enabled** until the target-research safety behavior can be
+  tested in the full modpack.
+- Cargo Ships >=2.1.8: promising for local water-world logistics, but
+  not interplanetary and not a universal required dependency.
+- Compact circuits >=2.1.0: useful to simplify advanced AAI relay
+  combinator installations, but requires FLIB and adds no essential
+  cross-world content. Trial as player choice.
+- BerbCorp Cargo Bay Loader: 2.1 local landing-pad automation, but
+  overlap with other cargo/proxy mods requires a conflict audit.
+
 ## Vibrant–Vespera reciprocal factories (2.1.52)
 
 Four middle-tier optional recipes share completed native products:
