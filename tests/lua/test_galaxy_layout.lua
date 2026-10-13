@@ -246,9 +246,18 @@ planets.khemia.orientation=.7
 places["razi-calidus-drift"].draw_orbit=true
 layout.confirm_critical_positions()
 local kx,ky=layout.anchor_position("vibrant")
-check(math.abs(planets.khemia.origin.x-kx)<.01 and
-  math.abs(planets.khemia.origin.y-ky)<.01,
-  "Late Khemia positioning did not recover Vibrant anchor")
+local targetX,targetY=layout.anchor_position("khemia")
+local function absolute_coordinates(object)
+  local a=2*math.pi*object.orientation
+  local o=object.origin or {}
+  return (o.x or o[1] or 0)+object.distance*math.sin(a),
+    (o.y or o[2] or 0)-object.distance*math.cos(a)
+end
+local khemiaX,khemiaY=absolute_coordinates(planets.khemia)
+check(planets.khemia.origin==nil
+  and math.abs(khemiaX-targetX)<.01 and math.abs(khemiaY-targetY)<.01
+  and planets.khemia.draw_orbit==false,
+  "Final Khemia must use absolute Vibrant coordinates without a legacy origin")
 check(places["razi-calidus-drift"].draw_orbit==false,
   "Late pass restored a giant drift ring")
 check(planets.khemia.orbit and
@@ -261,8 +270,9 @@ places.khemia={name="khemia",origin={x=0,y=0},
 layout.confirm_critical_positions()
 check(places.khemia.orbit and
   places.khemia.orbit.parent.name=="vibrant" and
-  math.abs(places.khemia.origin.x-kx)<.01 and
-  math.abs(places.khemia.origin.y-ky)<.01,
+  places.khemia.origin==nil and
+  math.abs(select(1,absolute_coordinates(places.khemia))-targetX)<.01 and
+  math.abs(select(2,absolute_coordinates(places.khemia))-targetY)<.01,
   "Secondary Khemia location remains in the home system")
 places.khemia=nil
 check(planets["optional-source-world"].draw_orbit==false,

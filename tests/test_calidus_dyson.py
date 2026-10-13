@@ -57,16 +57,20 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn('for stage=0,6 do',sprite)
         self.assertIn('x=stage*256',sprite)
         self.assertIn('calidus-dyson-stages.png',sprite)
-        self.assertIn('calidus-star.png',
+        self.assertIn('SolarisStar.png',
                       read("prototypes/system/calidus_sun.lua"))
         self.assertIn('prototypes.system.calidus_sun',
                       read("data-updates.lua"))
+        layout=read("prototypes/system/galaxy_layout.lua")
+        self.assertIn('proto.origin=nil',layout)
+        self.assertIn('Khemia %s ABSOLUTE',layout)
+        self.assertIn('body.draw_orbit==false',layout)
+        self.assertTrue((ROOT/"graphics/icons/SolarisStar.png").is_file())
         backdrop=read("prototypes/system/starmap_background.lua")
         self.assertIn('razi-starmap-galactic-ornaments',backdrop)
-        self.assertIn('system.name=="calidus" and 9.8',backdrop)
-        self.assertIn('strength=.62',backdrop)
-        for filename,expected_width in (("calidus-star.png",256),
-                                         ("calidus-dyson-stages.png",1792)):
+        self.assertIn('system.name=="calidus" and 8.4',backdrop)
+        self.assertIn('strength=.46',backdrop)
+        for filename,expected_width in (("calidus-dyson-stages.png",1792),):
             raw=(ROOT/"graphics/starmap/razi"/filename).read_bytes()
             self.assertEqual(raw[:8],b"\x89PNG\r\n\x1a\n")
             self.assertEqual(int.from_bytes(raw[16:20],"big"),expected_width)

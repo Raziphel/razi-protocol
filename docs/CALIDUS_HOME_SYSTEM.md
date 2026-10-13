@@ -60,3 +60,21 @@ It advances through visual phases 0-6 for their force; selecting the badge
 opens the full research-driven Stellar Works display. The badge is a native
 GUI control, not an inaccurate world-space sprite overlay, and the sun's
 starmap icon stays a fixed orange-gold star for everyone.
+
+## Calidus visual correction (2.1.39)
+
+The initial small Calidus sun looked visibly blurry and brown. The home star
+now uses the same full-resolution 1024px stellar artwork family as the
+Solaris/Nyxaris/Vibrant suns. This is intentional asset sharing, not another
+procedurally drawn disc. The source sun's actual magnitude, location and
+power output are unchanged. The broad amber background wash is slightly
+smaller and less opaque; Dyson progress art remains in Galactic Operations.
+
+Khemia has a final *absolute polar* position override rather than relying
+on a relative origin field that has not been honored consistently in the
+actual installed PlanetsLib/Factorio stack. It remains logically parented
+to Vibrant, but stores the exact world-space distance/angle with origin nil
+and its duplicate native orbit ring disabled. Both planet and space-location
+prototypes are handled. The final diagnostic checks that effective rendered
+coordinates match Vibrant's anchor plus Khemia's planned offset, and prints
+both coordinates if debugging is needed.
