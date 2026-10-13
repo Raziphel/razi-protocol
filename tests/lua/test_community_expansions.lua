@@ -55,6 +55,23 @@ local function run(options)
     technologies[name]={name=name,prerequisites={}}
   end
   planets.fulgora={}
+  -- Khemia's source can add direct solar routes, which are no longer
+  -- appropriate when it joins Vibrant.
+  locations["slp-solar-orbit-outer"]={name="slp-solar-orbit-outer"}
+  locations["slp-solar-orbit-inner"]={name="slp-solar-orbit-inner"}
+  technologies["planet-discovery-sunorbit"]={
+    effects={{type="unlock-space-location",
+      space_location="slp-solar-orbit-outer"}}}
+  technologies["slp-solar-system-sun2"]={
+    effects={{type="unlock-space-location",
+      space_location="slp-solar-orbit-inner"}}}
+  for _,edge in ipairs({
+    {name="native-khemia-nauvis",from="khemia",to="nauvis"},
+    {name="native-khemia-inner-sun",from="khemia",
+      to="slp-solar-orbit-inner"},
+    {name="native-khemia-outer-sun",from="khemia",
+      to="slp-solar-orbit-outer"}
+  }) do routes[edge.name]=edge end
   planets.nauvis={}
   planets.gleba={}
   planets.aquilo={}
@@ -130,6 +147,11 @@ check(native.ferrum.length==10000,
   "Ferrum's local Fulgora route must keep its native distance")
 check(raw.planet.khemia.orbit.parent.name=="vibrant",
   "Khemia did not join chemistry frontier")
+for _,name in ipairs({"native-khemia-nauvis",
+  "native-khemia-inner-sun","native-khemia-outer-sun"}) do
+  check(not raw["space-connection"][name],
+    "A source Khemia connection is still pulling routes through Calidus: "..name)
+end
 check(raw.planet.arcanyx.orbit.parent.name=="umbra",
   "Arcanyx did not join the optional dark frontier")
 check(raw.planet["bm-balack"].orbit.parent.name=="vespera",

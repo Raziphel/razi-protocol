@@ -222,3 +222,18 @@ space-location) for Khemia, preserving any custom orbit sprite and
 reanchoring every visible matching prototype to Vibrant. This avoids
 leaving a second instance next to Calidus if a dependency exposes both.
 Coordinates are logged in the Factorio log for future screenshots.
+
+## Calidus visual pass (October 2026)
+
+The home star keeps Nauvis/Muluna and the Dyson solar stations near the
+centre while the Calidus Slip Stream and Drift form one short outbound
+freight spur. Source Nauvis-Muluna routes remain, and redundant Razi
+spokes are pruned when native moon access exists. The original warm
+halo is smaller and the Drift locator quieter. The frontier star anchors,
+asteroid-gate connections and research gates remain untouched.
+
+Khemia is anchored twice to Vibrant, before the irreversible PlanetsLib
+rendering and in the last Factorio-native geometry pass. Source-owned
+solar-orbit IDs are recognized by native technology unlock effects, and
+obsolete Khemia-to-Calidus routes retired. A final coordinate assertion
+and log provide concrete diagnostics.

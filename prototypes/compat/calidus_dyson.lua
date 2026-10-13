@@ -109,6 +109,13 @@ function M.connect_calidus()
  if not id or not hub then return end
  local routes=data.raw["space-connection"] or {}
  local first,second="sye-calidus",id
+ -- An existing Nauvis/Muluna solar-orbit route already reaches this station.
+ -- Do not add another hub spoke across the compact central orbit artwork.
+ local nearby={nauvis=true,muluna=true}
+ for _,r in pairs(routes) do
+   if (r.from==id and nearby[r.to])
+     or (r.to==id and nearby[r.from]) then return end
+ end
  for _,r in pairs(routes) do
    if (r.from==first and r.to==second)
      or (r.from==second and r.to==first) then return end

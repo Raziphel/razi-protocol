@@ -101,3 +101,10 @@ static; evolving research illustrations live in the GUI.
 The five GUI sprites reuse existing Razi artwork. No additional art
 files, periodic game-tick callbacks, source-mod runtime edits or
 source-state migrations are required.
+
+## Compact Calidus layout cleanup
+
+The optional Razi Calidus hub-to-outer-solar-orbit connector is not added
+if an existing Nauvis or Muluna native route already reaches the outer
+station. Otherwise it still supplies the missing access. The source
+Sun-to-inner-Sun connection, Dyson research and receiver mechanics remain.

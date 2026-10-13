@@ -86,6 +86,14 @@ check(#routes==1 and routes[1].to=="slp-solar-orbit-outer"
  "Calidus solar access corridor not constructed")
 mod.connect_calidus()
 check(#routes==1,"Duplicate solar route after repeated registration")
+local connected,c=setup()
+connected["space-location"]["sye-calidus"]={icon="home-hub"}
+connected["space-connection"]["source-nauvis-solar-orbit"]={
+  name="source-nauvis-solar-orbit",from="nauvis",
+  to="slp-solar-orbit-outer",length=9500,shape="arc"}
+c.connect_calidus()
+check(not connected["space-connection"]["razi-calidus-stellar-orbit"],
+  "Existing Nauvis solar-orbit access must not get a second crossing hub link")
 local count=#raw.technology["slp-dyson-sphere"].prerequisites
 mod.data_final_fixes()
 check(#raw.technology["slp-dyson-sphere"].prerequisites==count,
