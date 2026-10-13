@@ -6,6 +6,38 @@ The GitHub Check workflow is available through Actions > Check > Run
 workflow. It includes the Lua fixtures, syntax checks and Python auditors.
 It's intentionally manual to avoid burning through Actions minutes.
 
+## Safe cheat research for very large modpacks
+
+Factorio's built-in `/cheat` calls a synchronous all-technology research
+operation. With many large planet mods, all research and any responding mod
+events run before the simulation can continue. A frozen window may end with
+an external SIGTERM rather than a Lua stack trace.
+
+Use these commands **in a disposable testing save** with the development mod
+installed, rather than `/cheat` or `/c game.player.force.research_all_technologies()`:
+
+- `/razi-cheat` (or `/razi-cheat start`) enables free crafting for the admin
+  who ran it and incrementally researches eligible, not-yet-researched
+  technologies for that player's force.
+- `/razi-cheat status` shows the number of technologies processed.
+- `/razi-cheat cancel` stops future changes, but does **not** undo research
+  that was already granted. Reload a backup if you need to revert it.
+
+Research is visited in prerequisite order, with only one technology changed
+every six game ticks. This intentionally omits the extra starting inventory,
+teleportation and other side effects of the built-in cheat. Disabled or hidden
+source prototypes remain untouched. Each technology change still applies its
+normal research effects, while the Codex waits for the bulk work to finish.
+The job persists across saves and can resume after reloading; status and
+cancel are scoped to the player's force. On a multiplayer server, only admins
+can use the command.
+
+This is a **safer alternate testing workflow**, not an interception or repair
+of the engine's built-in `/cheat`. Third-party mod research hooks or very
+expensive individual technologies can still cause issues. For an actual
+freeze, keep the latest Factorio log, system memory diagnostics and a backup
+save; static fixtures alone do not establish a successful full-pack playtest.
+
 ## Validate the actual modpack in Factorio
 
 Static checks cannot know the final prototype state after every dependency

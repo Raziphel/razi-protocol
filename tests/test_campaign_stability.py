@@ -36,6 +36,22 @@ class CampaignStabilityTests(unittest.TestCase):
         self.assertIn('storage.razi_journal_pending_forces={player=true}',
                       source("tests/lua/test_razi_journal.lua"))
 
+    def test_staged_cheat_never_calls_synchronous_mass_research(self):
+        control=source("control.lua")
+        helper=source("scripts/razi_safe_cheat.lua")
+        journal=source("scripts/razi_journal.lua")
+        self.assertIn('commands.add_command("razi-cheat",',control)
+        self.assertIn('script.on_nth_tick(6, razi_safe_cheat.tick)',control)
+        self.assertIn('function M.command(event)',helper)
+        self.assertIn('function M.tick()',helper)
+        self.assertIn('tech.researched=true',helper)
+        self.assertIn('tech.prerequisites or {}',helper)
+        self.assertIn('player.admin',helper)
+        self.assertIn('function M.defer_research_refresh(force)',journal)
+        self.assertNotIn('research_all_technologies(',helper)
+        self.assertNotIn('enable_all_recipes(',helper)
+        self.assertNotIn('research_recursive(',helper)
+
     def test_campaign_checks_still_exercise_real_source_research(self):
         fixture=source("tests/lua/test_galaxy.lua")
         for token in (
