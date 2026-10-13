@@ -1,3 +1,13 @@
+Version: 2.1.53
+Date: 14. 10. 2026
+  Native interplanetary coordination:
+    - Optionally integrate AAI Signal Transmission 0.6.0 (Factorio 2.1); no copied source code, no invented transmitters, channels, or transport entities.
+    - When installed and early native source research is safe, advanced Precision Matrix and Panglia Optic Bond engineering requires the real AAI transmission technology. Never gate any discovery, travel route, first-visit science, launch or Planet Express.
+    - Add a source-research-tracked communication Codex quest and a localized signal network guide to the existing read-only Cargo Network, including researched state and Codex deep link.
+    - Support source technology aliases, reject future/hidden/circular sources, respect interdependence Off and missing modpacks.
+    - Document Orbital Catapult and other 2.1 candidates as deferred: their player/item links need proven unlock safety before being enabled.
+    - Add Lua and structural regression tests. Full loaded-mod and old-save engine tests still required.
+
 Version: 2.1.52
 Date: 14. 10. 2026
   Middle frontier reciprocal industry and meaningful industrial handoffs:

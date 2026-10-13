@@ -132,6 +132,10 @@ require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 -- networks without adding any requirement to a first-visit world gate.
 require("prototypes.technology.research_tree_polish").data_final_fixes()
 
+-- Reuse real, optional AAI transmission research in Razi-owned advanced
+-- factory projects. AAI retains all transmitters, channels and behavior.
+require("prototypes.compat.aai_signal_partnerships").data_final_fixes()
+
 -- A few valid factory researches become later chapter prerequisites.
 -- Missing producers and future-gated sources must never become blockers.
 require("prototypes.technology.industrial_partnership_gates").data_final_fixes()

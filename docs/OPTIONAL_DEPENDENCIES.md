@@ -1,3 +1,12 @@
+## Restored optional integration in 2.1.53
+
+`aai-signal-transmission >= 0.6.0` is again declared as an **optional**
+dependency because this release now contains an actual guarded research
+handoff, source-research-tracked Codex goal and Cargo Network guidance.
+It is not downloaded automatically as a required dependency, and no
+AAI transmission code or art is redistributed. The retired dependency
+list further below records the previous audit and is historical.
+
 # Optional dependency audit
 
 Razi Protocol now advertises optional dependencies only when it contains
