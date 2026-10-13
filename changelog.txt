@@ -1,3 +1,14 @@
+Version: 2.1.48
+Date: 14. 10. 2026
+  Complete the Solaris ring and replace oversized background stars:
+    - Shift Solaris Slip Stream to a clear northwest external gateway (radius 44, orientation 0.84), keeping Calidus, Nyxaris and Vibrant departures away from the inner local routes.
+    - Slightly shift Igrys clockwise to tighten the northern chord without changing its orbital radius.
+    - Restore the deliberate Corrundum-Igrys northern chord to close the eight-connection local orbital circuit and keep Razi's authoritative whitelist in sync.
+    - Rebuild the four Razi starfield textures as crisp, sparse, tiny pinpoints with rare compact cross sparkles, avoiding blown-out white stars.
+    - Rebalance the atlas alpha for these smaller and more realistic stellar points without touching source sun, belts or other systems' route topology.
+    - Add regression checks for interstellar departure crossings, Solaris ring spacing, native route geometry and art-layer safety.
+    - Real Factorio 2.1 startup, rendering and existing platform-schedule validation remains pending.
+
 Version: 2.1.47
 Date: 14. 10. 2026
   Authoritative Razi travel graph:

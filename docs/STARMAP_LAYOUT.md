@@ -1,3 +1,20 @@
+## Solaris closed orbital circuit (2.1.48)
+
+Solaris now forms one complete eight-connection circuit:
+`Slip Stream → Vulcanus → Castra → Arig → Hyarion → Tellus → Corrundum → Igrys → Slip Stream`.
+
+The sun and seven planets retain their 2.1.46 orbital positions and climate
+order. The **Slip Stream moves to 44 chart units at orientation 0.84**, west
+and somewhat north of the star. Its Calidus, Nyxaris and Vibrant departures
+radiate outward, with no intersection against the local orbital loop.
+Igrys moves a few degrees clockwise to orientation 0.905, keeping that
+northern connection short and clear. The Corrundum ↔ Igrys link is restored at 32,000 km and uses a direct native
+connection with the existing industrial-deep asteroid profile.
+
+This does not introduce new discovery gates or bypass asteroid-belt science.
+The final curated-route authority includes the restored pair automatically.
+After loading an older save, check existing platform schedules.
+
 > **2.1.47 authoritative navigation:** Razi now removes the extra native
 > planetary route pairs that other installed mods put into our seven
 > systems. Approved corridors, asteroid belts, moons, Dyson stations and

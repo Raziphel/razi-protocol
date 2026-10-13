@@ -15,8 +15,10 @@ local anchors = {
   {"space-location","umbra","star",104,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
-  -- Compact western embarkation lane, outside Vulcanus but not detached.
-  {"space-location","sye-solaris","solaris",28,0.75},
+  -- Clear west-northwest external gateway, just beyond the orbital rim.
+  -- Three interstellar departures fan outward, while the northern arc
+  -- from Corrundum to Igrys never intersects the gateway/Vulcanus leg.
+  {"space-location","sye-solaris","solaris",44,0.84},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
   {"space-location","sye-nyxaris","nyxaris",27,0},
@@ -63,7 +65,7 @@ local anchors = {
 -- prototypes. Register these known orbital plans with both native passes.
 -- Only installed planets are touched; moon owners remain unchanged.
 local optional_orbits={
-  {name="igrys",star="solaris",radius=35,turn=0.89},
+  {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=36.376917,turn=0.169757},
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
