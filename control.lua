@@ -141,7 +141,7 @@ end)
 script.on_nth_tick(900, razi_discord_presence.write)
 -- Spread debug research across ticks instead of freezing the whole modpack.
 commands.add_command("razi-cheat",
-  "Safely unlock research for testing. Usage: /razi-cheat [start|status|cancel]",
+  {"razi-cheat.help"},
   razi_safe_cheat.command)
 script.on_nth_tick(6, razi_safe_cheat.tick)
 script.on_event(defines.events.on_string_translated,function(event)
@@ -179,6 +179,9 @@ script.on_event("razi-journal-toggle",function(event)
   if player then razi_journal.toggle(player) end
 end)
 script.on_event(defines.events.on_research_finished,razi_journal.on_research)
+-- /cheat is a built-in command and cannot be replaced. This notification
+-- runs only if the engine gets far enough to emit its console event.
+script.on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)
 
 script.on_event("razi-galactic-operations-input",function(event)
   local player=game.get_player(event.player_index)
@@ -189,7 +192,10 @@ script.on_event(defines.events.on_player_controller_changed,
 script.on_event(defines.events.on_player_joined_game,function(event)
   galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
-  if player then razi_journal.sync(player) end
+  if player then
+    razi_journal.sync(player)
+    razi_safe_cheat.admin_tip(player)
+  end
 end)
 script.on_event(defines.events.on_player_created,function(event)
   galactic_operations.map_context_changed(event)
@@ -226,4 +232,5 @@ script.on_event(defines.events.on_player_removed,function(event)
   galactic_operations.on_removed(event)
   razi_journal.on_removed(event.player_index)
   razi_discord_presence.on_player_removed(event)
+  razi_safe_cheat.on_player_removed(event.player_index)
 end)

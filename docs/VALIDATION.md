@@ -32,6 +32,15 @@ The job persists across saves and can resume after reloading; status and
 cancel are scoped to the player's force. On a multiplayer server, only admins
 can use the command.
 
+Admins also receive a one-time reminder when joining a save.
+When a player enters `/cheat`, the mod listens for Factorio's
+`on_console_command` event and, if the game is still responsive,
+prints a warning recommending `/razi-cheat`. Repeated attempts are
+rate-limited to one reminder per player per ten seconds.
+The harmless `/cheat off` form is ignored. Regular players never receive
+the admin join reminder. These messages do not replace the built-in
+command or run research.
+
 This is a **safer alternate testing workflow**, not an interception or repair
 of the engine's built-in `/cheat`. Third-party mod research hooks or very
 expensive individual technologies can still cause issues. For an actual

@@ -152,4 +152,44 @@ function M.tick()
   if not next(jobs) then storage.razi_cheat_jobs=nil end
 end
 
+-- Built-in commands belong to the engine, and Factorio does not provide
+-- a cancellable pre-command hook. The console event is best-effort only.
+local WARNING_COOLDOWN=600
+local WARNING_TINT={r=1,g=0.77,b=0.47}
+function M.warn_builtin(event)
+  if not (event and type(event.command)=="string"
+    and event.command:lower()=="cheat") then return end
+  local option=(event.parameters or ""):match("^%s*(.-)%s*$"):lower()
+  if option=="off" then return end
+
+  local player=event.player_index and game.get_player(event.player_index)
+  if not (player and player.valid) then return end
+  local last=storage.razi_cheat_last_warning
+    and storage.razi_cheat_last_warning[player.index]
+  if last and game.tick-last<WARNING_COOLDOWN
+    and game.tick>=last then return end
+  storage.razi_cheat_last_warning=storage.razi_cheat_last_warning or {}
+  storage.razi_cheat_last_warning[player.index]=game.tick
+  player.print({"razi-cheat.builtin-warning"},{color=WARNING_TINT})
+end
+
+-- Players testing the pack need to see the alternative BEFORE trying
+-- the built-in command. Show this only once per save, and only to admins.
+function M.admin_tip(player)
+  if not (player and player.valid and player.admin) then return end
+  storage.razi_cheat_tip_seen=storage.razi_cheat_tip_seen or {}
+  if storage.razi_cheat_tip_seen[player.index] then return end
+  storage.razi_cheat_tip_seen[player.index]=true
+  player.print({"razi-cheat.admin-tip"},{color=WARNING_TINT})
+end
+
+function M.on_player_removed(index)
+  if storage.razi_cheat_tip_seen then
+    storage.razi_cheat_tip_seen[index]=nil
+  end
+  if storage.razi_cheat_last_warning then
+    storage.razi_cheat_last_warning[index]=nil
+  end
+end
+
 return M

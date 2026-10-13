@@ -24,7 +24,7 @@ local messages={}
 local player={index=1,valid=true,admin=false,force=force,cheat_mode=false,
   print=function(text) messages[#messages+1]=text end}
 rawset(_G,"storage",{})
-rawset(_G,"game",{forces={player=force},get_player=function(index)
+rawset(_G,"game",{tick=0,forces={player=force},get_player=function(index)
   if index==1 then return player end
 end})
 rawset(_G,"log",function(_) end)
@@ -61,4 +61,33 @@ check(technologies.network.researched and not storage.razi_cheat_jobs,
 check(not technologies.hidden.researched and not technologies.disabled.researched,
   "Research must not grant hidden or source-disabled technologies")
 check(refreshed.player>=4,"Codex should redraw only after deferred work")
-print("Staged research: permissions, pacing, cancel and persistence passed")
+
+-- The reminder runs once per admin, not once per join or every tick.
+local before=#messages
+M.admin_tip(player)
+check(#messages==before+1 and messages[#messages][1]=="razi-cheat.admin-tip",
+  "Admin should see the safe-cheat tip on first join")
+M.admin_tip(player)
+check(#messages==before+1,"Admin reminder should appear only once")
+local visitor={index=2,valid=true,admin=false,
+  print=function(_) error("Ordinary players should not receive the admin tip") end}
+M.admin_tip(visitor)
+check(#messages==before+1,"Non-admin should not receive the tip")
+game.tick=1000
+M.warn_builtin({command="CHEAT",parameters="all",player_index=1})
+check(#messages==before+2
+  and messages[#messages][1]=="razi-cheat.builtin-warning",
+  "The native cheat command should get a targeted warning")
+M.warn_builtin({command="cheat",parameters="",player_index=1})
+check(#messages==before+2,"Repeated cheat use should respect warning cooldown")
+game.tick=1700
+M.warn_builtin({command="cheat",parameters="off",player_index=1})
+M.warn_builtin({command="razi-cheat",parameters="",player_index=1})
+check(#messages==before+2,"Cheat off and the safe command must not warn")
+M.warn_builtin({command="cheat",parameters="",player_index=1})
+check(#messages==before+3,"Warn again after cooldown")
+M.on_player_removed(1)
+check(not storage.razi_cheat_tip_seen[1]
+  and not storage.razi_cheat_last_warning[1],
+  "Deleted players should not leave reminder state behind")
+print("Staged research: permissions, pacing, cancel, persistence and reminders passed")

@@ -52,6 +52,19 @@ class CampaignStabilityTests(unittest.TestCase):
         self.assertNotIn('enable_all_recipes(',helper)
         self.assertNotIn('research_recursive(',helper)
 
+    def test_native_cheat_warning_is_noninvasive(self):
+        control=source("control.lua")
+        helper=source("scripts/razi_safe_cheat.lua")
+        self.assertIn('defines.events.on_console_command,razi_safe_cheat.warn_builtin',control)
+        self.assertIn('razi_safe_cheat.admin_tip(player)',control)
+        self.assertIn('function M.warn_builtin(event)',helper)
+        self.assertIn('function M.admin_tip(player)',helper)
+        self.assertIn('if option=="off" then return end',helper)
+        self.assertIn('WARNING_COOLDOWN=600',helper)
+        self.assertNotIn('commands.add_command("cheat"',control)
+        self.assertNotIn('commands.remove_command("cheat"',control)
+        self.assertIn('razi-cheat.builtin-warning',source("locale/en/razi-cheat.cfg"))
+
     def test_campaign_checks_still_exercise_real_source_research(self):
         fixture=source("tests/lua/test_galaxy.lua")
         for token in (
