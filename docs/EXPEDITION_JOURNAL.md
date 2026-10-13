@@ -1,6 +1,6 @@
 # The Protocol Codex (Razi Expedition Journal)
 
-The Codex is the campaign guide for Razi Protocol. It currently has 204
+The Codex is the campaign guide for Razi Protocol. It currently has 210
 milestones across 18 chapters, from your first assembler to the end of
 the intergalactic expedition. It reads the game's research progress
 instead of tracking a second set of quest flags.
@@ -8,7 +8,7 @@ instead of tracking a second set of quest flags.
 ## Industrial Constellations
 
 This chapter is for the factories that need cargo from more than one
-planet. There are 18 trade and manufacturing milestones covering Moshine,
+planet. There are 24 trade and manufacturing milestones covering Moshine,
 Paracelsin, Rubia, Linox, Tenebris, Vesta, Balack, Aquilo and K2SO.
 The corresponding research has to exist in the current modpack for an
 objective to show up. Deep-mode recipes stay out of Balanced mode.
@@ -37,7 +37,7 @@ The index progress numbers and bars occupy separate rows to avoid
 horizontal overflow on narrow screens. Gallery artwork has a subtle native
 framed tile, and the selected quest remains visually distinct from status.
 
-**Scope:** cosmetic runtime UI only. All 204 stable quest IDs, 18 chapter IDs,
+**Scope:** cosmetic runtime UI only. All original 204 quest IDs plus six new return-cargo missions, 18 chapter IDs,
 authoritative research completion, disabled-content filtering, localization
 keys, and keyboard shortcuts remain intact. Verify with an in-game load and
 at several display scales after deploying.

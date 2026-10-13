@@ -96,7 +96,7 @@ Lua fixture tests protect the mode switch and source structure. They do
 
 ## The Industrial Constellations campaign guide (2.1.17)
 
-The Protocol Codex surfaces 18 optional, real-tech industrial milestones for
+The Protocol Codex surfaces 24 optional, real-tech industrial milestones for
 existing guarded alternative recipes. It also displays prototype-backed recipe
 inputs and outputs, and a suggested workshop location. No missions are added to
 the technology graph, and missing or Deep-only alternative technologies never

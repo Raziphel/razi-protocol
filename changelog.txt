@@ -1,3 +1,12 @@
+Version: 2.1.24
+Date: 13. 10. 2026
+  Galactic factory return cargo:
+    - Give Panglia glass a recurring export role through optical bonds that feed Paracelsin coils and Linox rare-earth refining.
+    - Add a Deep-only Umbra pressure frame requiring Panglia, Linox, Crucible and Vesta supplies, with optional downstream Vesta foundation and Aquilo controller recipes.
+    - Preserve native recipes, crafting categories, source technology unlocks, surface conditions, spoilage mechanics and bonus caps. All recipes remain guarded against missing mods.
+    - Keep the new freight branches independent of unrelated factory components.
+    - Expand the Protocol Codex to 210 milestones across 18 chapters, adding six connected industry objectives and source-backed localisation.
+
 Version: 2.1.23
 Date: 13. 10. 2026
   Progression audit:

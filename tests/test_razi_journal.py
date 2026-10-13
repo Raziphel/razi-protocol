@@ -17,10 +17,10 @@ class ExpeditionJournalTests(unittest.TestCase):
         extended=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",(?:tech|world)="([^"]+)"',expanded)
         industry=read("scripts/razi_journal_industry.lua")
         partnerships=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',industry)
-        self.assertEqual(len(partnerships),18)
+        self.assertEqual(len(partnerships),24)
         quests+=extended+partnerships
-        self.assertEqual(len(quests),204)
-        self.assertEqual(len({item[0] for item in quests}),204)
+        self.assertEqual(len(quests),210)
+        self.assertEqual(len({item[0] for item in quests}),210)
         chapter_sources=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',source)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',industry)
@@ -92,7 +92,7 @@ class ExpeditionJournalTests(unittest.TestCase):
             "prototypes/compat/galactic_industry_bridges.lua",
             "prototypes/compat/network_components.lua"))
         technologies=set(re.findall(r'tech="([^"]+)"',catalog))
-        self.assertEqual(len(technologies),18)
+        self.assertEqual(len(technologies),24)
         for name in technologies:
             self.assertIn(name,recipes, f"Industry quest has no registered recipe source: {name}")
         ui=read("scripts/razi_journal.lua")

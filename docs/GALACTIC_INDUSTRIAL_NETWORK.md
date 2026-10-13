@@ -53,3 +53,38 @@ but still requires a real Factorio 2.1 data-raw dump, recipe/surface
 audit and savegame test before a public release. Some recipes will
 intentionally not appear if upstream versions rename items or remove
 a producer tech.
+
+## Return cargo: Panglia, Crucible and the outer factory (2.1.24)
+
+Two **optional intermediate items** give earlier planetary factories export
+customers without introducing mandatory research gates:
+
+- **Panglia Optic Bond:** Panglia glass + Moshine optical cable + Fulgoran
+  holmium. Built as a portable intermediate and shipped into improved coil
+  production at Paracelsin and rare-earth refinement at Linox.
+- **Umbra Pressure Frame (Deep mode):** One Panglia bond, one Crucible
+  high-pressure science pack, Vesta supermagnets and Linox rare-earth powder.
+  The frame feeds guarded Vesta foundation production and an outer-to-Aquilo
+  K2SO cryogenic-control alternative.
+
+The four consumers only appear if their **native recipes, suppliers,
+source research, science labs and legal manufacturing surface/machine**
+all still exist. Each is an optional copy of an original process.
+All source ingredients and byproducts remain unchanged; the added
+component is *consumed*, batch bonuses are capped at 25%, and the
+recipes cannot use productivity or auto-recycling.
+
+The pressure frame is deliberately **not** made from active or unstable
+Crucible hydrogen. Spoiling and source pressure-machine gameplay are left
+alone. A native high-pressure science producer must exist first, and Deep
+mode must be selected to build this part. If a mod update changes a
+named supplier recipe, the affected collaboration does not register.
+
+The two independent export lines do not require Razi's original Precision
+Control Matrix: Panglia can still ship bonds if one unrelated supplier is
+missing. The new six optional Codex milestones guide players through
+building the Panglia bond, its two customers, the pressure frame and the
+two late freight returns. These are not additional chapter travel gates.
+
+As with the original network, a post-load Factorio prototype dump and
+in-game check remain necessary to verify the actual mod versions installed.
