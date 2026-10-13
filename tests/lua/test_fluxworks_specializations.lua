@@ -113,6 +113,16 @@ assert(not raw.technology["razi-fw-beetlejuice-industry"])
 assert(not raw.recipe["razi-fw-beetlejuice-specialty"])
 assert(raw.technology["razi-fw-umbra-industry"])
 
+-- K2SO's alternate lithium item must not silently remove Vespera.
+raw=setup("lithium-plate")
+raw.item["kr-lithium"]={name="kr-lithium"}
+assert(bridge.data_final_fixes()==7)
+local lithium_found=false
+for _,source in ipairs(raw.recipe["razi-fw-vespera-specialty"].ingredients) do
+  if source.name=="kr-lithium" then lithium_found=true end
+end
+assert(lithium_found,"Vespera did not use K2SO's lithium replacement")
+
 -- An installed non-FluxWorks Razi pack should never gain these prototypes.
 raw=setup()
 _G.mods={}
