@@ -26,8 +26,10 @@ def inspect_png(path):
     assert index==len(buf)
     w,h,depth,colour=struct.unpack(">IIBB",chunks[b"IHDR"][0][:10])
     raw=zlib.decompress(b"".join(chunks[b"IDAT"]))
-    assert len(raw)==h*(1+(w*depth+7)//8),path
-    return w,h,depth,colour,b"tRNS" in chunks,len(buf)
+    channels={0:1,2:3,3:1,4:2,6:4}[colour]
+    assert len(raw)==h*(1+(w*depth*channels+7)//8),path
+    transparent=colour in (4,6) or b"tRNS" in chunks
+    return w,h,depth,colour,transparent,len(buf)
 
 class StarmapBackgroundTests(unittest.TestCase):
     def test_all_sprites_fit_without_giant_atlases(self):
@@ -39,9 +41,10 @@ class StarmapBackgroundTests(unittest.TestCase):
                [f"filament-{name}.png" for name in SYSTEMS] +
                [f"debris-{name}.png" for name in BELTS] +
                [f"cluster-{i}.png" for i in range(1,4)])
-        names += ["atlas-halo.png","atlas-dust.png","atlas-belt.png"]
+        names += ["atlas-halo.png","atlas-belt.png"]
+        names += [f"atlas-dust-{i}.png" for i in range(1,4)]
         names += [f"atlas-starfield-{i}.png" for i in range(1,5)]
-        self.assertEqual(len(names),40)
+        self.assertEqual(len(names),42)
         self.assertEqual(
             {f.name for f in ASSET.glob("*.png")},
             set(names) | NON_BACKGROUND_ASSETS,
@@ -49,18 +52,21 @@ class StarmapBackgroundTests(unittest.TestCase):
         for name in names:
             w,h,depth,colour,transparent,size=inspect_png(ASSET/name)
             self.assertLessEqual(max(w,h),1024)
-            self.assertEqual(colour,3)
+            self.assertIn(colour,(3,4))
             self.assertIn(depth,(2,4,8))
             self.assertTrue(transparent)
             self.assertLess(size,350000)
             if name.startswith("atlas-starfield-"):
                 self.assertEqual((w,h,depth,colour),(1024,1024,8,3))
-            if name in ("atlas-halo.png","atlas-dust.png","atlas-belt.png"):
+            if name in ("atlas-halo.png","atlas-belt.png"):
                 self.assertEqual((w,h,depth,colour),(512,512,8,3))
+            if name.startswith("atlas-dust-"):
+                self.assertEqual((w,h,depth,colour),(512,512,8,4))
     def test_refined_atlas_uses_full_alpha_gradient(self):
         # Earlier 25-step alpha ramps produced blocky contour bands at
-        # large starmap zoom. Every new texture now has 256 alpha entries.
-        for name in ("atlas-halo.png","atlas-dust.png","atlas-belt.png"):
+        # large starmap zoom. The indexed halo and belt keep full ramps;
+        # dust uses direct 8-bit alpha and is covered by the format contract.
+        for name in ("atlas-halo.png","atlas-belt.png"):
             png=(ASSET/name).read_bytes()
             offset=8
             found=False
@@ -94,13 +100,14 @@ class StarmapBackgroundTests(unittest.TestCase):
         self.assertIn('allowed_values={"clean","balanced","full"}',settings)
         self.assertIn('razi-starmap-cartography',settings)
         self.assertIn('default_value=false',settings)
-        for name in ("atlas-halo.png","atlas-dust.png","atlas-belt.png"):
+        for name in ("atlas-halo.png","atlas-belt.png"):
             self.assertIn(name,module)
+        self.assertIn('"atlas-dust-"..',module)
         for legacy in ("filament-","galactic-current.png","sky-",
                        "rift-deep-space.png","dust-lane-2.png"):
             self.assertNotIn(legacy,module)
         self.assertIn('local ATMOSPHERE_SIZE=512',module)
-        self.assertIn('size={1024,1024},scale=6',module)
+        self.assertIn('size={1024,1024},scale=4',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('space-connection',module)
 if __name__=="__main__":

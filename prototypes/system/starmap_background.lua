@@ -1,5 +1,5 @@
--- A calm galactic atlas. Soft system light, a few distant stars, and
--- optional single belt rings; no stitched tiles, repeating portals or swirls.
+-- A calm galactic atlas. Fine stars, compact system light, and sparse dust;
+-- no repeating portals, giant fog banks, or false navigation features.
 local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
@@ -15,13 +15,22 @@ local systems={
   {name="deep-space",tint={r=.40,g=.57,b=.82},strength=.48}
 }
 local belts={
-  {name="vibrant",tint={r=.75,g=.66,b=.93},scale=6},
-  {name="vespera",tint={r=.59,g=.78,b=.93},scale=4.25},
-  {name="umbra",tint={r=.91,g=.57,b=.68},scale=4.25}
+  {name="vibrant",tint={r=.75,g=.66,b=.93},scale=5},
+  {name="vespera",tint={r=.59,g=.78,b=.93},scale=3.75},
+  {name="umbra",tint={r=.91,g=.57,b=.68},scale=3.75}
 }
 local WHITE={r=1,g=1,b=1}
 -- Static Razi-authored starfield, independent of route and planet prototypes.
-local sky_tiles={{1,3,2,4},{4,2,3,1},{2,1,4,3},{3,4,1,2}}
+-- Six smaller tiles per axis cover the same world area as the old 4x4 grid.
+-- The lower scale keeps point stars crisp instead of enlarging their glow 6x.
+local sky_tiles={
+  {1,3,2,4,1,2},
+  {4,2,3,1,4,3},
+  {2,1,4,3,2,4},
+  {3,4,1,2,3,1},
+  {1,2,4,3,1,4},
+  {4,3,1,2,4,2}
+}
 local sky_colors={{.98,.99,1},{1,.98,.95},{.95,.97,1},{1,.97,.99}}
 local function add_starfield(layers,cinematic)
   for row,variants in ipairs(sky_tiles) do
@@ -29,11 +38,11 @@ local function add_starfield(layers,cinematic)
       local rgb=sky_colors[variant]
       layers[#layers+1]={
         type="sprite",filename=ASSET.."atlas-starfield-"..variant..".png",
-        size={1024,1024},scale=6,
-        shift={(col-2.5)*6144,(row-2.5)*6144},
+        size={1024,1024},scale=4,
+        shift={(col-3.5)*4096,(row-3.5)*4096},
         priority="extra-high-no-scale",flags={"gui-icon"},
         blend_mode="normal",
-        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .76 or .58}
+        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .82 or .64}
       }
     end
   end
@@ -67,15 +76,15 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,"atlas-halo.png",
-          system.name=="calidus" and 2.1 or 3.25,
-          x,y,system.tint,(cinematic and .56 or .38)*system.strength)
+          system.name=="calidus" and 1.8 or 2.7,
+          x,y,system.tint,(cinematic and .52 or .34)*system.strength)
       end
     end
   end
   if halos~=false then
     local fx,fy=layout.anchor_position("razi-calidus-drift")
     if fx and fy then
-      insert_asset(layers,"atlas-halo.png",.6,fx,fy,
+      insert_asset(layers,"atlas-halo.png",.5,fx,fy,
         {r=1,g=.75,b=.50},cinematic and .20 or .12)
     end
   end
@@ -92,35 +101,35 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     -- These specks inhabit otherwise empty margins, not travel lanes.
     if option("razi-starmap-galactic-ornaments",true) then
       local pockets={
-        {-169,-18,{r=.58,g=.74,b=.91}},
-        {162,47,{r=.71,g=.58,b=.87}},
-        {9,-254,{r=.55,g=.68,b=.89}},
-        {-7,161,{r=.82,g=.68,b=.48}},
-        -- Broad, transparent dust pockets fill the otherwise empty gaps
-        -- without drawing a fake portal, orbit or route.
-        {0,56,{r=.54,g=.71,b=.83},.55},
-        {0,-59,{r=.62,g=.59,b=.84},.55},
-        {60,-31,{r=.60,g=.58,b=.89},.55},
-        {-63,-33,{r=.59,g=.77,b=.85},.55}
+        {-169,-18,{r=.58,g=.74,b=.91},1,1},
+        {162,47,{r=.71,g=.58,b=.87},1,2},
+        {9,-254,{r=.55,g=.68,b=.89},1,3},
+        {-7,161,{r=.82,g=.68,b=.48},1,2},
+        -- Sparse, transparent dust lanes fill otherwise empty gaps without
+        -- drawing a fake portal, orbit, or route.
+        {0,56,{r=.54,g=.71,b=.83},.55,3},
+        {0,-59,{r=.62,g=.59,b=.84},.55,1},
+        {60,-31,{r=.60,g=.58,b=.89},.55,2},
+        {-63,-33,{r=.59,g=.77,b=.85},.55,3}
       }
       for _,p in ipairs(pockets) do
-        insert_asset(layers,"atlas-dust.png",5,p[1],p[2],p[3],
-          (cinematic and .40 or .26)*(p[4] or 1))
+        insert_asset(layers,"atlas-dust-"..p[5]..".png",4.25,p[1],p[2],p[3],
+          (cinematic and .72 or .50)*(p[4] or 1))
       end
     end
     if option("razi-starmap-micro-details",true) then
-      for _,name in ipairs({"nyxaris","vespera","umbra","vibrant"}) do
+      for index,name in ipairs({"nyxaris","vespera","umbra","vibrant"}) do
         local x,y=anchor(name)
         if x and y then
-          insert_asset(layers,"atlas-dust.png",2.5,x+41,y-33,
-            WHITE,cinematic and .26 or .17)
+          insert_asset(layers,"atlas-dust-"..((index-1)%3+1)..".png",
+            2,x+41,y-33,WHITE,cinematic and .35 or .24)
         end
       end
     end
   end
   if cartography==true then
     -- An optional star pocket, never another fake orbit/connection.
-    insert_asset(layers,"atlas-dust.png",3.25,0,-42,WHITE,.28)
+    insert_asset(layers,"atlas-dust-2.png",2.75,0,-42,WHITE,.38)
   end
   return layers
 end
@@ -137,7 +146,8 @@ function M.data_final_fixes()
     and layer.filename:find(ASSET.."atlas-starfield-",1,true)==1)
     or layer.filename==ASSET.."atlas-halo.png"
       or layer.filename==ASSET.."atlas-belt.png"
-      or layer.filename==ASSET.."atlas-dust.png" then return end
+      or (type(layer.filename)=="string"
+        and layer.filename:find(ASSET.."atlas-dust-",1,true)==1) then return end
   end
   local new=M.make_layers(mode,
     option("razi-starmap-system-halos",true),
