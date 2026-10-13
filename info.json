@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.33",
+  "version": "2.1.34",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -15,6 +15,7 @@
     "! kry-asteroid-belt",
     "bellicos-and-aegis >= 0.4.0",
     "Krastorio2-spaced-out >= 2.0.17",
+    "? FluxWorks >= 0.2.12",
     "slp-dyson-sphere-reworked-fork >= 1.0.5",
     "k2-dyson-sphere-rebalance >= 0.1.2",
     "planet-express >= 2.1.9",
