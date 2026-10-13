@@ -152,12 +152,13 @@ require("prototypes.compat.fluxworks_research_clarity").data_final_fixes()
 -- prerequisites, science packs, planet discovery, or standalone FluxWorks.
 require("prototypes.compat.fluxworks_machine_pacing").data_final_fixes()
 
--- Last coordinates before building colored route art: compatibility mods can
--- update their prototype a second time without re-baking all star sprites.
+-- A final native position check remains necessary for Khemia and orbit owners.
 require("prototypes.system.galaxy_layout").confirm_critical_positions()
 
--- Paint every installed, positionable connection after all mods register routes.
-require("prototypes.system.route_highlights").data_final_fixes()
+-- The old segmented sprite overlay is retired. Space Route Overlay can be
+-- installed separately to draw accurate asteroid-risk colors on live paths.
+-- It has its own optional Razi dependency, so do not create a load-order
+-- cycle by requiring it from this mod.
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.

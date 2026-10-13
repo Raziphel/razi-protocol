@@ -344,6 +344,16 @@ so it cannot be required in our Factorio 2.1 pack. The separate 2.1
 Secretas/Frozeta Orbit Patch is optional because Outer Rim excludes it.
 See [the source ownership matrix](docs/K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership).
 
+## Space route coloring
+
+For clean route colors that follow **real** Factorio 2.1 connections,
+install [Space Route Overlay](https://mods.factorio.com/mod/space-route-overlay)
+version 0.2.7 or newer. Razi's obsolete sprite-segment route painting was
+retired in 2.1.44; without the companion the game draws ordinary native
+connections. Razi's route danger, asteroid fields, and hover tooltips remain.
+The overlay is not a hard dependency because its optional Razi integration
+could otherwise create a circular load order.
+
 ## Compatibility Focus
 
 Razi Protocol is not just a route mod. It is also a cleanup layer for a very busy dependency stack.

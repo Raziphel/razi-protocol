@@ -1,3 +1,14 @@
+Version: 2.1.44
+Date: 13. 10. 2026
+  Correct Solaris path geometry and retire custom route sprites:
+    - Solaris's eight authored local connections now use direct native line geometry instead of giant misplaced arcs; source technology and route danger remain unchanged.
+    - Reposition Igrys in the upper Solaris region without changing its outer orbit radius or native surface.
+    - Retire Razi's inaccurate and offset colored directional-stroke sprite renderer, plus its obsolete startup toggle. It no longer paints duplicates beneath native routes.
+    - Integrate Space Route Overlay 0.2.7+ as an optional, non-load-order companion for accurate asteroid-hazard route colors, avoiding the reverse dependency loop in its optional Razi integration.
+    - Keep native route hover intelligence and deep-space asteroid/belt hazards.
+    - Replace renderer regression checks with explicit no-overdraw and native Solaris path checks.
+    - In-game Factorio 2.1 rendering and old-save platform schedules still require verification.
+
 Version: 2.1.43
 Date: 13. 10. 2026
   Solaris orbital chart and local freight routes:

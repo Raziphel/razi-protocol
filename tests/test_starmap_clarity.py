@@ -188,6 +188,7 @@ class ConstellationTests(unittest.TestCase):
             self.assertEqual(self.anchors[name][0], "solaris")
             self.assertAlmostEqual(self.anchors[name][1], radius)
         self.assertAlmostEqual(self.anchors["sye-solaris"][1], 34)
+        self.assertAlmostEqual(self.anchors["igrys"][2], .95)
         solaris = set(expected) | {"sye-solaris"}
         actual = {frozenset((a,b)) for a,b,_,_ in self.routes
                   if a in solaris and b in solaris}

@@ -43,14 +43,6 @@ data:extend({
     "ca[quality-of-life]-a[redundant-assemblers]"),
   startup_toggle("razi-enable-expedition-briefings",
     "ca[quality-of-life]-b[expedition-briefings]"),
-  {
-    type="string-setting",
-    name="razi-route-highlight-style",
-    setting_type="startup",
-    default_value="subtle",
-    allowed_values={"off","subtle","clear"},
-    order="ca[quality-of-life]-c[route-highlights]"
-  },
   startup_toggle("razi-route-intelligence",
     "ca[quality-of-life]-d[route-intelligence]"),
   -- GALAXY VISUALS
