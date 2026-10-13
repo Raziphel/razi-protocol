@@ -130,10 +130,17 @@ require("prototypes.technology.research_tree_polish").data_final_fixes()
 -- industries and only with an obtainable recipe and a matching lab.
 require("prototypes.technology.planetary_science_weave").data_final_fixes()
 
--- Fix iconless routes after the final connection list is ready.
-require("prototypes.system.route_icons").data_final_fixes()
-
+-- Dyson's actual source station IDs can only be resolved after its native
+-- technology effects exist. Register those connections first, then let
+-- Razi's final authority replace the remaining ordinary source routes.
 require("prototypes.compat.calidus_dyson").connect_calidus()
+
+-- One authoritative seven-system graph, after *all* planet modules have run.
+-- Native moon links, original belt crossing and special source subsystems
+-- have documented exceptions and are never indiscriminately wiped.
+require("prototypes.system.route_authority").data_final_fixes()
+
+require("prototypes.system.route_icons").data_final_fixes()
 
 require("prototypes.system.route_intel").data_final_fixes()
 
