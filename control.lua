@@ -2,6 +2,8 @@ local galactic_operations = require("scripts.galactic_operations")
 local razi_journal = require("scripts.razi_journal")
 local razi_discord_presence = require("scripts.razi_discord_presence")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
+local Events = require("__razi_lib__/runtime/events")
+local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local nexus_visibility_technologies = {
@@ -126,32 +128,32 @@ end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
-script.on_init(function()
+events:on_init(function()
   check_existing_transceivers()
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
 end)
-script.on_configuration_changed(function(event)
+events:on_configuration_changed(function(event)
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
 end)
 -- Export at most once per 15 game seconds; disabled players do no work.
-script.on_nth_tick(900, razi_discord_presence.write)
+events:on_nth_tick(900, razi_discord_presence.write)
 -- Spread debug research across ticks instead of freezing the whole modpack.
 commands.add_command("razi-cheat",
   {"razi-cheat.help"},
   razi_safe_cheat.command)
-script.on_nth_tick(6, razi_safe_cheat.tick)
-script.on_event(defines.events.on_string_translated,function(event)
+events:on_nth_tick(6, razi_safe_cheat.tick)
+events:on_event(defines.events.on_string_translated,function(event)
   razi_discord_presence.on_string_translated(event)
   galactic_operations.on_string_translated(event)
 end)
-script.on_event(defines.events.on_runtime_mod_setting_changed,
+events:on_event(defines.events.on_runtime_mod_setting_changed,
   razi_discord_presence.on_setting_changed)
 
-script.on_nth_tick(600, function()
+events:on_nth_tick(600, function()
   check_existing_transceivers()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
   -- Nexus Bosses remains the only authority for all nine victories.
@@ -159,11 +161,11 @@ script.on_nth_tick(600, function()
 end)
 -- The engine has no starmap-open event. Check only the small per-player
 -- render/controller state twice per second; never enumerate planets here.
-script.on_nth_tick(30, function(event)
+events:on_nth_tick(30, function(event)
   galactic_operations.sync_all_map_buttons(event)
   razi_journal.flush_research_refreshes()
 end)
-script.on_event({
+events:on_event({
 	defines.events.on_built_entity,
 	defines.events.on_robot_built_entity,
 	defines.events.on_entity_cloned,
@@ -174,22 +176,22 @@ script.on_event({
 
 -- Galactic Operations is launched from its floating map button.
 -- The optional Ctrl+Shift+G input works only while viewing the map.
-script.on_event("razi-journal-toggle",function(event)
+events:on_event("razi-journal-toggle",function(event)
   local player=game.get_player(event.player_index)
   if player then razi_journal.toggle(player) end
 end)
-script.on_event(defines.events.on_research_finished,razi_journal.on_research)
+events:on_event(defines.events.on_research_finished,razi_journal.on_research)
 -- /cheat is a built-in command and cannot be replaced. This notification
 -- runs only if the engine gets far enough to emit its console event.
-script.on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)
+events:on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)
 
-script.on_event("razi-galactic-operations-input",function(event)
+events:on_event("razi-galactic-operations-input",function(event)
   local player=game.get_player(event.player_index)
   if player then galactic_operations.toggle(player) end
 end)
-script.on_event(defines.events.on_player_controller_changed,
+events:on_event(defines.events.on_player_controller_changed,
   galactic_operations.map_context_changed)
-script.on_event(defines.events.on_player_joined_game,function(event)
+events:on_event(defines.events.on_player_joined_game,function(event)
   galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
   if player then
@@ -197,40 +199,42 @@ script.on_event(defines.events.on_player_joined_game,function(event)
     razi_safe_cheat.admin_tip(player)
   end
 end)
-script.on_event(defines.events.on_player_created,function(event)
+events:on_event(defines.events.on_player_created,function(event)
   galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
   if player then razi_journal.sync(player) end
 end)
-script.on_event(defines.events.on_gui_click,function(event)
+events:on_event(defines.events.on_gui_click,function(event)
   galactic_operations.gui_click(event)
   razi_journal.gui_click(event)
 end)
-script.on_event(defines.events.on_gui_text_changed,function(event)
+events:on_event(defines.events.on_gui_text_changed,function(event)
   galactic_operations.text_changed(event)
   razi_journal.text_changed(event)
 end)
-script.on_event(defines.events.on_gui_selection_state_changed,function(event)
+events:on_event(defines.events.on_gui_selection_state_changed,function(event)
   galactic_operations.selection_changed(event)
   razi_journal.selection_changed(event)
 end)
-script.on_event(defines.events.on_gui_checked_state_changed,
+events:on_event(defines.events.on_gui_checked_state_changed,
   galactic_operations.checkbox_changed)
-script.on_event(defines.events.on_gui_closed,function(event)
+events:on_event(defines.events.on_gui_closed,function(event)
   galactic_operations.gui_closed(event)
   razi_journal.gui_closed(event)
 end)
-script.on_event(defines.events.on_player_display_resolution_changed,function(event)
+events:on_event(defines.events.on_player_display_resolution_changed,function(event)
   galactic_operations.on_display_changed(event)
   razi_journal.on_display_changed(event)
 end)
-script.on_event(defines.events.on_player_display_scale_changed,function(event)
+events:on_event(defines.events.on_player_display_scale_changed,function(event)
   galactic_operations.on_display_changed(event)
   razi_journal.on_display_changed(event)
 end)
-script.on_event(defines.events.on_player_removed,function(event)
+events:on_event(defines.events.on_player_removed,function(event)
   galactic_operations.on_removed(event)
   razi_journal.on_removed(event.player_index)
   razi_discord_presence.on_player_removed(event)
   razi_safe_cheat.on_player_removed(event.player_index)
 end)
+
+events:install()

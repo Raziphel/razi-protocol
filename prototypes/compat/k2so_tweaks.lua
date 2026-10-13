@@ -1,4 +1,5 @@
 local compat = {}
+local SpaceConnection = require("__razi_lib__/lib/space_connection")
 
 local xy_k2so_placeholder_connections = { -- Cuz fuckin hell xy loves to complain.
 	{
@@ -60,15 +61,10 @@ local function add_xy_k2so_placeholder_connections()
 end
 
 local function remove_xy_k2so_placeholder_connections()
-	if not data.raw["space-connection"] then
-		return
-	end
-
 	for _, connection in pairs(xy_k2so_placeholder_connections) do
-		data.raw["space-connection"][connection.name] = nil
+		SpaceConnection.remove(connection.name)
 	end
-
-	data.raw["space-connection"]["moshine-maraxsis"] = nil
+	SpaceConnection.remove("moshine-maraxsis")
 end
 
 local function item_exists(name)

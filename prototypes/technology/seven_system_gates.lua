@@ -2,18 +2,15 @@
 -- Earlier compatibility patches can change prerequisites, so set the
 -- campaign's route order here.
 local gates = {}
+local Science = require("__razi_lib__/lib/science")
+local Technology = require("__razi_lib__/lib/technology")
 
 local function tech(name)
 	return data.raw.technology and data.raw.technology[name]
 end
 
 local function exists(name)
-	return tech(name) ~= nil
-end
-
-local function science_pack_exists(name)
-	return (data.raw.tool and data.raw.tool[name])
-		or (data.raw.item and data.raw.item[name])
+	return Technology.exists(name)
 end
 
 local function reaches(start, target, visited)
@@ -49,9 +46,7 @@ end
 local function ingredients_of(packs)
 	local result = {}
 	for _, name in ipairs(packs) do
-		if science_pack_exists(name) then
-			result[#result + 1] = {name, 1}
-		end
+		Science.add_pack(result, name)
 	end
 	return result
 end
@@ -102,7 +97,7 @@ local function ensure_transceiver_cards(technology_name, multiplier)
 		"vibrant-tech-card", "vespera-tech-card",
 		"beetlejuice-tech-card", "umbra-tech-card"
 	}) do
-		if science_pack_exists(name) and not existing[name] then
+		if Science.exists(name) and not existing[name] then
 			local amount = 1
 			if name == "beetlejuice-tech-card" or name == "umbra-tech-card" then
 				amount = multiplier

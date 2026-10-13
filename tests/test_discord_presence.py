@@ -22,7 +22,7 @@ class DiscordPresenceTests(unittest.TestCase):
     def test_runtime_handlers_and_companion(self):
         control=(ROOT/"control.lua").read_text()
         bridge=(ROOT/"tools/razi-presence.js").read_text()
-        self.assertIn('script.on_nth_tick(900, razi_discord_presence.write)',control)
+        self.assertIn('events:on_nth_tick(900, razi_discord_presence.write)',control)
         self.assertIn('razi_discord_presence.on_string_translated',control)
         self.assertIn('razi_discord_presence.on_setting_changed',control)
         self.assertIn('razi_discord_presence.on_player_removed',control)

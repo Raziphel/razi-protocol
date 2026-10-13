@@ -8,7 +8,7 @@ class GalacticOperationsTests(unittest.TestCase):
         ui=(ROOT/"scripts/galactic_operations.lua").read_text()
         self.assertIn('galactic_operations.sync_all_map_buttons',control)
         self.assertIn('on_player_controller_changed',control)
-        self.assertIn('script.on_nth_tick(30, function(event)',control)
+        self.assertIn('events:on_nth_tick(30, function(event)',control)
         self.assertIn('galactic_operations.sync_all_map_buttons(event)',control)
         self.assertNotIn('on_lua_shortcut',control)
         self.assertIn('on_gui_text_changed',control)

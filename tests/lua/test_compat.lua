@@ -101,6 +101,7 @@ local function test_nexus_migration_scope()
 		on_nth_tick = function() end,
 		on_event = function() end
 	})
+	rawset(_G, "commands", {add_command = function() end})
 	rawset(_G, "defines", {events = {
 		on_built_entity = 1,
 		on_robot_built_entity = 2,
@@ -116,7 +117,7 @@ local function test_nexus_migration_scope()
 	}
 	local force = {valid = true, technologies = technologies,
 		get_entity_count = function() return 0 end}
-	rawset(_G, "game", {forces = {player = force}})
+	rawset(_G, "game", {forces = {player = force}, connected_players = {}})
 	fresh("control")
 	local run_callback = callback
 	if not run_callback then

@@ -1,4 +1,8 @@
 local nexus_endgame = {}
+local Prototype = require("__razi_lib__/lib/prototype")
+local Recipe = require("__razi_lib__/lib/recipe")
+local Science = require("__razi_lib__/lib/science")
+local Technology = require("__razi_lib__/lib/technology")
 
 local deep_space_card = "deep-space-tech-card"
 
@@ -30,22 +34,7 @@ local function ingredient_amount(ingredient)
 end
 
 local function add_unique_science_pack(ingredients, science_pack, amount)
-	if not (data.raw.tool and data.raw.tool[science_pack]) then
-		return
-	end
-
-	for _, ingredient in ipairs(ingredients) do
-		if ingredient_name(ingredient) == science_pack then
-			if ingredient[2] then
-				ingredient[2] = math.max(ingredient[2], amount)
-			else
-				ingredient.amount = math.max(ingredient.amount or 1, amount)
-			end
-			return
-		end
-	end
-
-	table.insert(ingredients, {science_pack, amount})
+	Science.add_pack(ingredients, science_pack, amount)
 end
 
 local function replace_omega_science(technology)
@@ -100,50 +89,30 @@ local function prune_omega_recipe_unlocks(technology)
 		end
 	end
 
-	if not unlock_exists and data.raw.recipe and data.raw.recipe[deep_space_card] then
-		table.insert(technology.effects, {
-			type = "unlock-recipe",
-			recipe = deep_space_card
-		})
+	if not unlock_exists and Recipe.exists(deep_space_card) then
+		Technology.get(technology.name):unlock(deep_space_card)
 	end
 end
 
 local function tuck_away_omega_recipe(recipe_name)
-	local recipe = data.raw.recipe and data.raw.recipe[recipe_name]
+	local recipe = Recipe.optional(recipe_name)
 	if recipe then
-		recipe.enabled = false
-		recipe.hidden = true
+		recipe:disable():hide()
 		recipe.hide_from_player_crafting = true
 		recipe.hidden_in_factoriopedia = true
 	end
 end
 
 local function tuck_away_omega_tool(tool_name)
-	local tool = data.raw.tool and data.raw.tool[tool_name]
+	local tool = Prototype.optional("tool", tool_name)
 	if tool then
-		tool.hidden = true
+		tool:hide()
 		tool.hidden_in_factoriopedia = true
 	end
 end
 
-local function science_pack_exists(science_pack)
-	return
-		(data.raw.tool and data.raw.tool[science_pack]) or
-		(data.raw.item and data.raw.item[science_pack])
-end
-
 local function add_input_to_lab(lab, science_pack)
-	if not (lab and lab.inputs and science_pack_exists(science_pack)) then
-		return
-	end
-
-	for _, input in ipairs(lab.inputs) do
-		if input == science_pack then
-			return
-		end
-	end
-
-	table.insert(lab.inputs, science_pack)
+	Science.add_lab_input(lab, science_pack)
 end
 
 -- The omega lab is Nexus's own endgame lab: the technologies that used Omega
@@ -178,7 +147,8 @@ function nexus_endgame.data_final_fixes()
 		tuck_away_omega_tool(recipe_name)
 	end
 
-	prune_omega_recipe_unlocks(data.raw.technology and data.raw.technology["promethium-882-research"])
+	local promethium_research = Technology.optional("promethium-882-research")
+	prune_omega_recipe_unlocks(promethium_research and promethium_research:raw())
 	add_endgame_science_to_labs()
 end
 
