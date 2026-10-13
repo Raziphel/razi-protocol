@@ -1,4 +1,4 @@
--- Pure Razi star-map backdrop fixture, without a Factorio process.
+-- New Razi atlas fixture. No Factorio process required.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function ok(v,msg) if not v then error(msg,2) end end
 package.loaded["prototypes.system.galaxy_layout"]={
@@ -12,79 +12,61 @@ package.loaded["prototypes.system.galaxy_layout"]={
   end
 }
 local bg=require("prototypes.system.starmap_background")
-local original={filename="__native__/starmap-star.png",size=512}
-local sprites={layers={original}}
+local native={filename="__native__/starmap-star.png",size=512}
+local sprites={layers={native}}
 rawset(_G,"data",{raw={["utility-sprites"]={default={starmap_star=sprites}}}})
 rawset(_G,"settings",{startup={
   ["razi-starmap-background-style"]={value="subtle"},
   ["razi-starmap-system-halos"]={value=true},
   ["razi-starmap-belt-atmosphere"]={value=true},
   ["razi-starmap-fine-details"]={value=true},
+  ["razi-starmap-galactic-ornaments"]={value=true},
+  ["razi-starmap-micro-details"]={value=true},
   ["razi-starmap-cartography"]={value=false}
 }})
 rawset(_G,"mods",{})
-local parts=bg.make_layers("subtle",true,true)
-ok(#parts==74,"Micro-detail scenery should add 26 restrained layers")
+local parts=bg.make_layers("subtle",true,true,true,false)
+ok(#parts==19,"Clean atlas should use 8 halos, 3 belts, 8 dust pockets")
+local counts={halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
-  ok(layer.size[1]<=1024 and layer.size[2]<=1024,"oversized atlas sprite")
-  ok(layer.filename:find("graphics/starmap/razi",1,true),"foreign texture")
+  ok(layer.size[1]==128 and layer.size[2]==128,"Unexpected texture size")
+  ok(layer.filename:find("graphics/starmap/razi/",1,true),"Foreign sprite")
+  ok(layer.tint.a<=.81,"Atlas alpha too bright")
+  if layer.filename:find("atlas%-halo") then counts.halo=counts.halo+1 end
+  if layer.filename:find("atlas%-belt") then counts.belt=counts.belt+1 end
+  if layer.filename:find("atlas%-dust") then counts.dust=counts.dust+1 end
 end
-local coronas=0
-for _,layer in ipairs(parts) do
-  if layer.filename:find("filament%-") and layer.scale==6.15 then
-    coronas=coronas+1
-  end
-end
-ok(coronas==6,"Six outer-star coronas must use the already loaded art")
+ok(counts.halo==8 and counts.belt==3 and counts.dust==8,
+  "Expected restrained per-system artwork")
 bg.data_final_fixes()
-ok(#sprites.layers==75,"Fine-detail artwork layers absent")
-ok(sprites.layers[1].filename:find("sky%-1"),"Background not underneath")
-ok(sprites.layers[75]==original,"Source sprite replaced")
+ok(#sprites.layers==20,"Clean atlas was not attached")
+ok(sprites.layers[1].filename:find("atlas%-halo"),"Atlas not behind native art")
+ok(sprites.layers[#sprites.layers]==native,"Source star art changed")
 bg.data_final_fixes()
-ok(#sprites.layers==75,"Idempotence failed")
-ok(#bg.make_layers("off",true,true)==0,"Off mode still draws")
-ok(#bg.make_layers("subtle",false,false,false,false)==5,
-  "Optional layers did not disable")
-ok(#bg.make_layers("subtle",true,true,false,false)==16,
-  "Disabling fine details should restore original 16 layers")
-ok(#bg.make_layers("subtle",true,true,true,true)==75,
-  "Opt-in cartography must add only one chart")
-ok(#bg.make_layers("cinematic",true,true,true,false)==76,
-  "Cinematic should add eight faint expanded filaments")
-local cine=bg.make_layers("cinematic",true,true)
-ok(cine[1].tint.a>parts[1].tint.a,"Cinematic brightness not increased")
-sprites.layers={original}
+ok(#sprites.layers==20,"Duplicate background layer registration")
+ok(#bg.make_layers("off",true,true,true,false)==0,"Off mode still draws")
+ok(#bg.make_layers("subtle",false,false,false,false)==0,
+  "Turning off optional layers must leave native map alone")
+ok(#bg.make_layers("subtle",true,true,false,false)==11,
+  "Disabling detail pockets should leave 8 halos and 3 belts")
+ok(#bg.make_layers("subtle",true,true,true,true)==20,
+  "Cartography adds only a single distant dust pocket")
+local cine=bg.make_layers("cinematic",true,true,true,false)
+ok(#cine==#parts and cine[1].tint.a>parts[1].tint.a,
+  "Cinematic should be brighter without extra clutter")
+settings.startup["razi-starmap-galactic-ornaments"].value=false
+ok(#bg.make_layers("subtle",true,true,true,false)==15,
+  "Turning off ornaments removes four star pockets")
+settings.startup["razi-starmap-galactic-ornaments"].value=true
+settings.startup["razi-starmap-micro-details"].value=false
+ok(#bg.make_layers("subtle",true,true,true,false)==15,
+  "Turning off micro-details removes four star pockets")
+sprites.layers={native}
 settings.startup["razi-starmap-background-style"].value="off"
 bg.data_final_fixes()
-ok(#sprites.layers==1,"Off mode edited source")
+ok(#sprites.layers==1,"Off mode affected source art")
 settings.startup["razi-starmap-background-style"].value="subtle"
-settings.startup["razi-starmap-galactic-ornaments"]={value=false}
-ok(#bg.make_layers("subtle",true,true,true,false)==38,
-  "Ornament toggle must preserve the original subtle map")
-settings.startup["razi-starmap-galactic-ornaments"].value=true
-settings.startup["razi-starmap-micro-details"]={value=false}
-ok(#bg.make_layers("subtle",true,true,true,false)==48,
-  "Turning off micro-details must preserve existing galaxy scenery")
-settings.startup["razi-starmap-micro-details"].value=true
-local pockets,shreds=0,0
-for _,layer in ipairs(parts) do
-  if layer.scale==1.55 and layer.filename:find("cluster%-") then
-    pockets=pockets+1
-    ok(layer.tint.a<=.16,"Micro starfields must remain subordinate to planets")
-  end
-  if layer.scale==2.2 or layer.scale==2.4 then shreds=shreds+1 end
-end
-ok(pockets==8,"Every stellar region needs one distant star pocket")
-ok(shreds==6,"All three asteroid belts need two wispy debris details")
-mods["slp-dyson-sphere-reworked-fork"]="1.0.5"
-local dyson_layers=bg.make_layers("subtle",true,true,true,false)
-ok(#dyson_layers==76,
-  "Calidus Dyson coronas should reuse exactly two native Razi textures")
-local dyson_layers_disabled=bg.make_layers("subtle",false,true,true,false)
-ok(#dyson_layers_disabled==30,
-  "Halo toggle must also suppress optional Dyson decorations")
-mods["slp-dyson-sphere-reworked-fork"]=nil
 mods["Better_Starmap_Background"]=true
 bg.data_final_fixes()
-ok(#sprites.layers==1,"External background conflict")
-print("Razi starmap background fixtures passed")
+ok(#sprites.layers==1,"External artwork conflict")
+print("Seam-free Razi star atlas fixtures passed")

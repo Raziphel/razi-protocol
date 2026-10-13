@@ -190,3 +190,12 @@ anchors requires regenerating pre-aligned highlight masks and repeating all
 campaign-clearance tests.
 
 The Apia/Carnova waypoint and recognized nearby moons have opposite text orientations for readability. Coordinates, native orbits, and connected routes remain unchanged.
+
+## Optional planet relocation fix, October 2026
+
+The optional outer-system worlds Igrys, Foliax, Obsidiax, Carna, Ferrum,
+Khemia, Arcanyx and Balack now participate in both the early PlanetsLib
+star-art pass and the final Factorio-native coordinate pass. Previously their
+late PlanetsLib update could silently skip a deleted sprite-only parent star,
+leaving them near Calidus. Their intended host stars, radius and orientation
+are unchanged. Moon parentage, source routes and progression remain intact.

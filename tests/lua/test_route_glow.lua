@@ -1,37 +1,28 @@
--- Route art should reuse the original texture for bloom, halo, and spine.
+-- Native-first route styling: normal travel gets no fake halo.
 package.path="./?.lua;./?/init.lua;"..package.path
-local highlights=require("prototypes.system.route_highlights")
+local h=require("prototypes.system.route_highlights")
 local guide={filename="source-guide.png",size={245,541},
   shift={-100,800},kind="middle"}
-for _,mode in ipairs({"subtle","clear"}) do
-  local layers=highlights.layers_for_guide(guide,{r=.3,g=.7,b=.9},mode)
-  assert(#layers==3,"Each guide needs bloom, halo, and spine")
-  for _,layer in ipairs(layers) do
-    assert(layer.filename==guide.filename,"No new art source allowed")
-    assert(layer.shift==guide.shift,"Guide centre moved")
-  end
-  assert(layers[1].scale>layers[2].scale and
-    layers[2].scale>layers[3].scale,"Glow must fall toward the centre")
-  assert(layers[1].tint.a<layers[2].tint.a and
-    layers[2].tint.a<layers[3].tint.a,"Halo must be softer than spine")
-  assert(layers[3].scale==4,"Route spine must match original geometry")
-end
-local plain=highlights.layers_for_guide(guide,{r=.3,g=.7,b=.9},"subtle")
+local hazard={r=.3,g=.7,b=.9}
+assert(#h.layers_for_guide(guide,hazard,"subtle")==0,
+  "Subtle routes should be the exact native Factorio geometry")
+assert(#h.layers_for_guide(guide,hazard,"off")==0,
+  "Off must not create guide art")
+local layers=h.layers_for_guide(guide,hazard,"clear")
+assert(#layers==1,"Clear routes need only one accurate stroke")
+assert(layers[1].filename==guide.filename and layers[1].shift==guide.shift,
+  "Native-aligned guide mask identity changed")
+assert(layers[1].scale==4,"Guide mask geometry no longer matches native route")
+assert(layers[1].tint.a<.5,"Clear guide should not dominate planet labels")
 guide.kind="belt"
-local belt=highlights.layers_for_guide(guide,{r=.3,g=.7,b=.9},"subtle")
-assert(belt[3].tint.a>plain[3].tint.a,
-  "Actual asteroid crossings need a stronger warning")
+local belt=h.layers_for_guide(guide,hazard,"clear")
+assert(belt[1].tint.a>layers[1].tint.a,
+  "A verified asteroid crossing gets slightly more emphasis")
 guide.kind="first"
-local first=highlights.layers_for_guide(guide,{r=.3,g=.7,b=.9},"subtle")
-assert(first[3].tint.a<plain[3].tint.a,
-  "Early system routes must remain visually quieter")
-local marker=highlights.field_marker({
-  from="sye-solaris",to="sye-vibrant",
-  start={20,30},finish={60,50}
-},"subtle")
-assert(marker and marker.shift[1]==40*32 and marker.shift[2]==40*32,
-  "Real route field marker must track the actual midpoint")
-assert(marker.tint.a<=.11,"Route debris details must remain subtle")
-assert(not highlights.field_marker({from="nauvis",to="muluna"},"subtle"),
-  "Unlisted routes must never gain fake asteroid fields")
-print("Starmap route light tests passed")
+local first=h.layers_for_guide(guide,hazard,"clear")
+assert(first[1].tint.a<layers[1].tint.a,
+  "Early exploration lanes should remain softer")
+assert(not h.field_marker({
+  from="sye-solaris",to="sye-vibrant",start={20,30},finish={60,50}
+},"clear"),"Fuzzy midpoint debris graphic must be removed")
+print("Native-first route styling passed")

@@ -21,7 +21,9 @@ for _,name in ipairs({
   "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
   "muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta",
-  "cerys","rabbasca","optional-source-world"
+  "cerys","rabbasca","optional-source-world",
+  "igrys","foliax","obsidiax","carna","ferrum",
+  "khemia","arcanyx","bm-balack"
 }) do planets[name]={name=name} end
 
 local moon={parent={type="planet",name="gleba"},distance=4}
@@ -90,6 +92,23 @@ for name,bearing in pairs({
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
 layout.data_final_fixes()
+-- The optional outer planets must receive actual native positions, not
+-- just orphaned PlanetsLib orbit metadata.
+for _,entry in ipairs({
+  {"igrys","solaris"}, {"foliax","nyxaris"},
+  {"obsidiax","vespera"}, {"carna","umbra"},
+  {"ferrum","vibrant"}, {"khemia","vibrant"},
+  {"arcanyx","umbra"}, {"bm-balack","vespera"}
+}) do
+  local name,parent=entry[1],entry[2]
+  local px,py=layout.anchor_position(parent)
+  local planet=planets[name]
+  check(planet.orbit and planet.orbit.parent.name==parent,
+    "Optional planet orphaned near Calidus: "..name)
+  check(planet.origin and math.abs(planet.origin.x-px)<.01
+    and math.abs(planet.origin.y-py)<.01,
+    "Optional planet native origin not relocated: "..name)
+end
 for key,orientation in pairs({
   ["razi-vespera-belt-inner"]=.25,["razi-vespera-belt-outer"]=.75,
   ["razi-umbra-belt-inner"]=.75,["razi-umbra-belt-outer"]=.25,

@@ -38,7 +38,8 @@ class StarmapBackgroundTests(unittest.TestCase):
                [f"filament-{name}.png" for name in SYSTEMS] +
                [f"debris-{name}.png" for name in BELTS] +
                [f"cluster-{i}.png" for i in range(1,4)])
-        self.assertEqual(len(names),33)
+        names += ["atlas-halo.png","atlas-dust.png","atlas-belt.png"]
+        self.assertEqual(len(names),36)
         self.assertEqual({f.name for f in ASSET.glob("*.png")},set(names))
         for name in names:
             w,h,depth,colour,transparent,size=inspect_png(ASSET/name)
@@ -63,20 +64,17 @@ class StarmapBackgroundTests(unittest.TestCase):
         self.assertIn('layout.anchor_position',module)
         self.assertIn('razi-starmap-fine-details',settings)
         self.assertIn('razi-starmap-micro-details',settings)
-        self.assertIn('insert_micro_scenery(result,cine,halos,atmosphere)',module)
-        self.assertIn('local distant_sparks=',module)
-        self.assertNotIn('insert_asset(result,"sky-"',module)
         self.assertIn('razi-starmap-orbit-density',settings)
         self.assertIn('razi-starmap-soften-bellicos',settings)
-        self.assertIn('s.name=="deep-space"',module)
         self.assertIn('allowed_values={"clean","balanced","full"}',settings)
-        self.assertIn('local belt_fragments=',module)
         self.assertIn('razi-starmap-cartography',settings)
         self.assertIn('default_value=false',settings)
-        self.assertIn('filament-',module)
-        self.assertIn('debris-',module)
-        self.assertIn('rift-deep-space.png',module)
-        self.assertIn('chart-constellation.png',module)
+        for name in ("atlas-halo.png","atlas-dust.png","atlas-belt.png"):
+            self.assertIn(name,module)
+        for legacy in ("filament-","galactic-current.png","sky-",
+                       "rift-deep-space.png","dust-lane-2.png"):
+            self.assertNotIn(legacy,module)
+        self.assertIn('size={128,128}',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('space-connection',module)
 if __name__=="__main__":
