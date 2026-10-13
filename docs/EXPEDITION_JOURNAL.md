@@ -180,3 +180,12 @@ canonical lore.
 Side quests and transmissions do not gate travel, alter science, or
 grant rewards. Original parallel star routes remain independent;
 the journal reflects them rather than redefining them.
+
+## Research storm behavior (2.1.22)
+
+The Codex updates normally after one technology completes. When a cheat
+or script researches many technologies at once, it combines the GUI work
+and waits three seconds after the last relevant event before drawing
+again. Quest completion is still read from the current force research,
+so no progress is lost. This does not alter or slow the actual research;
+it only avoids repeated GUI builds while mass research is underway.

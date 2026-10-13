@@ -415,20 +415,10 @@ local function test_research()
 		tool = tools,
 		["space-location"] = {}
 	}))
-	rawset(_G, "science_pack_exists", function(name)
-		return data.raw.tool[name] ~= nil
-	end)
-	rawset(_G, "add_existing_prerequisites", function(name, candidates)
-		local target = data.raw.technology[name]
-		if not target then return end
-		target.prerequisites = target.prerequisites or {}
-		for _, candidate in ipairs(candidates) do
-			if data.raw.technology[candidate]
-				and not list_contains(target.prerequisites, candidate) then
-				target.prerequisites[#target.prerequisites + 1] = candidate
-			end
-		end
-	end)
+	-- The data stage loads helpers from util.lua, but this gate now
+	-- implements its checks locally. Test that without mock globals.
+	rawset(_G,"science_pack_exists",nil)
+	rawset(_G,"add_existing_prerequisites",nil)
 
 	reload("prototypes.technology.seven_systems")
 	reload("prototypes.technology.seven_system_gates").data_final_fixes()
@@ -461,6 +451,25 @@ local function test_research()
 		"Vespera unlocked without Solaris mastery")
 	check(list_contains(vespera.prerequisites, "panglia_planet_discovery_panglia"),
 		"Panglia must contribute to Nyxaris mastery")
+	-- A third-party discovery may be moved behind its prospective gateway.
+	-- In that case, skip the circular prerequisite instead of softlocking
+	-- both systems. Ordinary independent worlds remain required.
+	local panglia_node=technologies["panglia_planet_discovery_panglia"]
+	local original_panglia_parents=panglia_node.prerequisites
+	local moved={}
+	for _,parent in ipairs(original_panglia_parents) do moved[#moved+1]=parent end
+	moved[#moved+1]="vespera-discovery"
+	panglia_node.prerequisites=moved
+	reload("prototypes.technology.seven_system_gates").data_final_fixes()
+	check(not list_contains(technologies["vespera-discovery"].prerequisites,
+		"panglia_planet_discovery_panglia"),
+		"Gateway research acquired a cycle through optional source research")
+	panglia_node.prerequisites=original_panglia_parents
+	reload("prototypes.technology.seven_system_gates").data_final_fixes()
+	check(list_contains(technologies["vespera-discovery"].prerequisites,
+		"panglia_planet_discovery_panglia"),
+		"Safe upstream mastery was not restored after a source-mod change")
+
 	local panglia=technologies["panglia_planet_discovery_panglia"]
 	check(list_contains(panglia.prerequisites,"planet-discovery-moshine")
 	  and list_contains(panglia.prerequisites,"planet-discovery-apia-carnova"),

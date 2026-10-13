@@ -186,7 +186,7 @@ check(weather.for_quest(defs.by_id["muria"])==nil,
   "Weather must not appear if the add-on is missing")
 rawset(_G,"script",nil)
 rawset(_G,"settings",nil)
-rawset(_G,"game",{connected_players={},forces={player=force}})
+rawset(_G,"game",{tick=0,connected_players={},forces={player=force}})
 check(M.research_affects_journal({name="automation"}),
   "Direct quest research must refresh the journal")
 check(M.research_affects_journal({name="native-igrys",prototype={effects={{
@@ -199,6 +199,13 @@ storage.razi_journal_pending_forces=nil
 M.on_research({research={name="unrelated",force=force}})
 check(not storage.razi_journal_pending_forces,
   "Unrelated research must not schedule a journal refresh")
+-- Single research completes promptly on the next maintenance tick.
+M.on_research({research={name="automation",force=force}})
+check(storage.razi_journal_pending_forces.player.count==1,
+  "A normal research completion must schedule a refresh")
+M.flush_research_refreshes()
+check(not storage.razi_journal_pending_forces,
+  "Ordinary research should refresh without a burst delay")
 for i=1,1000 do
   -- /cheat may generate non-script-marked events; BOTH kinds must batch.
   M.on_research({research={name="automation",force=force},
@@ -212,9 +219,24 @@ check(storage.razi_journal_pending_forces.player,
 local count=0
 for _ in pairs(storage.razi_journal_pending_forces) do count=count+1 end
 check(count==1,"A bulk unlock must schedule only one force refresh")
+check(storage.razi_journal_pending_forces.player.count==12,
+  "A research storm must cap its per-force event counter")
+M.flush_research_refreshes()
+check(storage.razi_journal_pending_forces.player,
+  "Bulk research must not redraw the Codex while events are arriving")
+game.tick=179
+M.flush_research_refreshes()
+check(storage.razi_journal_pending_forces.player,
+  "Burst cooldown completed too early")
+game.tick=180
 M.flush_research_refreshes()
 check(not storage.razi_journal_pending_forces,
-  "Deferred journal refreshes should be consumed together")
+  "A quiet bulk unlock must refresh and clear its pending work")
+-- Saved games from an earlier build may have a boolean pending marker.
+storage.razi_journal_pending_forces={player=true}
+M.flush_research_refreshes()
+check(not storage.razi_journal_pending_forces,
+  "Legacy pending markers must remain compatible")
 M.on_removed(42)
 check(not storage.razi_expedition_journal[42],
   "Deleted player preferences were not cleaned")
