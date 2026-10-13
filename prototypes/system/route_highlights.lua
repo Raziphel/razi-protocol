@@ -41,9 +41,9 @@ function M.layers_for_guide(guide,color,mode)
       tint={r=color.r,g=color.g,b=color.b,a=alpha*weight}}
   end
   return {
-    layer(4.084,clear and .075 or .032),
-    layer(4.029,clear and .19 or .10),
-    layer(4,clear and .58 or .36)
+    layer(4.084,clear and .04 or .018),
+    layer(4.029,clear and .12 or .06),
+    layer(4,clear and .45 or .27)
   }
 end
 -- Quiet pockets of debris at the halfway point of selected REAL routes.
@@ -65,7 +65,7 @@ function M.field_marker(guide,mode)
       ((guide.start[2]+guide.finish[2])/2)*32},
     priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
     tint={r=art.tint.r,g=art.tint.g,b=art.tint.b,
-      a=mode=="clear" and .20 or .105}
+      a=mode=="clear" and .12 or .06}
   }
 end
 function M.data_final_fixes()
