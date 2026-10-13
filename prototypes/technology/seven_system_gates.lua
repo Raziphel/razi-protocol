@@ -11,6 +11,41 @@ local function exists(name)
 	return tech(name) ~= nil
 end
 
+local function science_pack_exists(name)
+	return (data.raw.tool and data.raw.tool[name])
+		or (data.raw.item and data.raw.item[name])
+end
+
+local function reaches(start, target, visited)
+	if start == target then return true end
+	local node = tech(start)
+	if not node then return false end
+	visited = visited or {}
+	if visited[start] then return false end
+	visited[start] = true
+	for _, parent in ipairs(node.prerequisites or {}) do
+		if reaches(parent, target, visited) then return true end
+	end
+	return false
+end
+
+-- Keep these gate checks local instead of relying on util.lua globals.
+-- Don't introduce a circular dependency if a mod moves its research.
+local function add_existing_prerequisites(name, candidates)
+	local target = tech(name)
+	if not target then return end
+	target.prerequisites = target.prerequisites or {}
+	local seen = {}
+	for _, parent in ipairs(target.prerequisites) do seen[parent] = true end
+	for _, parent in ipairs(candidates) do
+		if not seen[parent] and exists(parent)
+			and parent ~= name and not reaches(parent, name) then
+			target.prerequisites[#target.prerequisites + 1] = parent
+			seen[parent] = true
+		end
+	end
+end
+
 local function ingredients_of(packs)
 	local result = {}
 	for _, name in ipairs(packs) do
@@ -27,10 +62,12 @@ local function replace_requirements(name, prerequisites, science_packs, count)
 		return
 	end
 
-	local filtered = {}
+	local filtered, seen = {}, {}
 	for _, prerequisite in ipairs(prerequisites) do
-		if exists(prerequisite) and prerequisite ~= name then
+		if exists(prerequisite) and prerequisite ~= name
+			and not seen[prerequisite] and not reaches(prerequisite, name) then
 			filtered[#filtered + 1] = prerequisite
+			seen[prerequisite] = true
 		end
 	end
 	t.prerequisites = filtered

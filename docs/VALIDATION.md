@@ -221,3 +221,38 @@ catalogues, unchanged research guards and the empty-optional-world fast path.
 For a real benchmark, check `docs/STARTUP_PERFORMANCE.md`. Tests can check
 recipe and tech behaviour, but cannot substitute for a full dependency-load
 timing or test Factorio's sprite atlas build.
+
+## Campaign gates and mass-research stress test (2.1.22)
+
+The data stage already loads `util.lua`, which provides global helpers for
+science packs and technology prerequisites. The seven-system gate module
+now performs these checks locally, rather than relying on that implicit
+global dependency. Its fixtures no longer install mocked helper globals.
+New prerequisite edges also refuse a cycle when a source mod moves a
+discovery behind the proposed campaign gateway.
+
+The Codex groups bursts of twelve or more relevant research completions
+within a 120-tick window. Normal research still refreshes on the next
+30-tick maintenance pass. A large batch waits for 180 ticks of quiet
+before the next GUI rebuild. Older boolean pending-work entries remain
+readable during save migration.
+
+**In-game check with the actual full modpack:**
+
+1. Boot a copied save with the Codex open; verify the game passes
+   `data-final-fixes` and starts normally.
+2. Confirm Solaris and Nyxaris both open from Calidus; neither should
+   require the other branch's first planet.
+3. Check that Panglia's native data-cell research remains present,
+   that the Vibrant belt is required before Paracelsin, and that
+   Beetlejuice/Umbra still contribute to outer mastery.
+4. On a *disposable test save*, run the mass-research cheat with the
+   Codex open and a quest pinned. The window should redraw once after
+   the research events stop, not on every completion.
+5. If the cheat still stalls, compare `factorio-current.log` with a
+   run that has the Codex closed and a run without Razi. A hang in
+   Factorio's bulk research processing or a different mod cannot
+   be ruled out by the Lua fixtures.
+
+The research burst guard does not change any technology's researched
+state, source unlock, recipe, or the saved Codex preferences.

@@ -1042,31 +1042,53 @@ local function refresh_force(force)
     if player.force==force then
       local frame=player.gui.screen[FRAME]
       if frame and frame.valid then draw(player) end
-      local p=pref(player.index)
-      if p.tracker then render_tracker(player) end
+      local existing=storage.razi_expedition_journal
+        and storage.razi_expedition_journal[player.index]
+      if existing and existing.tracker then render_tracker(player) end
     end
   end
 end
+-- The cheat command can finish hundreds of Codex technologies in a
+-- single burst. A normal unlock redraws on the next 30-tick maintenance
+-- callback, but a bulk unlock gets one redraw after the events settle.
+local RESEARCH_BURST_LIMIT=12
+local RESEARCH_BURST_WINDOW=120
+local RESEARCH_BURST_QUIET=180
 function M.on_research(event)
-  -- /cheat, research_all_technologies, and other bulk unlocks raise one
-  -- event per technology. The by_script flag does not distinguish every
-  -- console/engine cheat path, so NEVER rebuild GUI from this handler.
   local research=event and event.research
   local force=research and research.force
   if not (force and M.research_affects_journal(research)) then return end
-  -- Coalesce all relevant events for a force into a single GUI refresh on
-  -- the existing 30-tick maintenance callback, including normal research.
-  storage.razi_journal_pending_forces=
-    storage.razi_journal_pending_forces or {}
-  storage.razi_journal_pending_forces[force.name]=true
+  local tick=game and game.tick or 0
+  local pending=storage.razi_journal_pending_forces
+  if not pending then
+    pending={}
+    storage.razi_journal_pending_forces=pending
+  end
+  local state=pending[force.name]
+  if type(state)~="table" then
+    state={count=0,first_tick=tick}
+    pending[force.name]=state
+  elseif tick-(state.first_tick or tick)>RESEARCH_BURST_WINDOW then
+    state.count=0
+    state.first_tick=tick
+  end
+  state.count=math.min(RESEARCH_BURST_LIMIT,(state.count or 0)+1)
+  state.last_tick=tick
 end
 function M.flush_research_refreshes()
   local pending=storage.razi_journal_pending_forces
   if not pending then return end
-  storage.razi_journal_pending_forces=nil
-  for force_name in pairs(pending) do
-    refresh_force(game.forces[force_name])
+  local tick=game and game.tick or 0
+  for force_name,state in pairs(pending) do
+    -- A boolean may still exist in an old save's deferred work table.
+    local burst=type(state)=="table" and
+      (state.count or 0)>=RESEARCH_BURST_LIMIT
+    if not burst or tick-(state.last_tick or 0)>=RESEARCH_BURST_QUIET then
+      pending[force_name]=nil
+      refresh_force(game.forces[force_name])
+    end
   end
+  if not next(pending) then storage.razi_journal_pending_forces=nil end
 end
 -- Refresh only visible boss objectives during the existing ten-second
 -- maintenance tick. No global entity scans or per-tick remote calls.

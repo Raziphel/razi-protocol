@@ -1,3 +1,12 @@
+Version: 2.1.22
+Date: 13. 10. 2026
+  Campaign stability:
+    - Keep seven-system science-pack and prerequisite checks local instead of relying on the implicit data-stage globals from util.lua.
+    - Skip duplicate or cyclic campaign prerequisites when optional research changes position.
+    - Defer Codex redraw during large mass-research bursts until the events settle; ordinary research still refreshes normally.
+    - Avoid creating player Codex preferences for unrelated players during force research refreshes.
+    - Add progression and research-storm regression coverage without changing quest IDs, planet routes, or source research recipes.
+
 Version: 2.1.21
 Date: 13. 10. 2026
   Startup performance:
