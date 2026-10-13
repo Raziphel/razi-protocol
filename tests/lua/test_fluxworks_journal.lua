@@ -24,6 +24,10 @@ for _,system in ipairs(systems) do
   assert(quest.chapter=="fluxworks")
   assert(quest.tech=="razi-fw-"..system.."-industry")
   assert(quest.site and #quest.requires>0)
+  assert(quest.optional==true,"Industry research must remain optional")
+  assert(quest.recipe=="razi-fw-"..system.."-specialty")
+  assert(quest.machine==((system=="solaris") and "fw-arc-foundry"
+    or "fw-synthesis-plant"))
   registered=registered+1
 end
 assert(registered==7)
@@ -42,6 +46,10 @@ for _,pair in ipairs(pairs) do
   assert(#quest.requires==2)
   assert(quest.requires[1]=="flux-"..pair[2])
   assert(quest.requires[2]=="flux-"..pair[3])
+  assert(quest.optional==true,"Exchange must stay optional")
+  assert(quest.recipe=="razi-fw-"..pair[1].."-assembly")
+  assert(quest.machine==((pair[1]=="calidus-solaris") and "fw-arc-foundry"
+    or "fw-synthesis-plant"))
 end
 assert(#with.quests==#without.quests+12)
 assert(#with.chapters==#without.chapters+1)
