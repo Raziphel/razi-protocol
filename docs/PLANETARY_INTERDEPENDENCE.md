@@ -130,3 +130,20 @@ whether factory throughput and a supply contract justify the rockets.
 The `audit_exchange_economy.py` script flags negative machine
 throughput, runaway gross bonus and missing imported ingredients.
 It cannot simulate actual transport costs.
+
+## Post-arrival technology-tree integration (2.1.30)
+
+The Razi factory technology families now have a shared research order
+and a small number of source-backed crosslinks that only apply after
+the first viable arrival on each participating world. Balanced
+interdependence introduces Panglia advanced optics as a precursor to
+Panglia-bond alternatives on Paracelsin and Linox. Deep mode joins
+the Extreme Lattice, Panglia optical, Vesta magnet and Umbra pressure
+networks for optional research handoffs. Native technologies and
+the six paired star-system entrances are untouched.
+
+Six older Razi-owned industrial factory upgrades have research price
+ceilings to smooth the jump between consecutive optional research
+projects. The four core component studies are visible with Factorio's
+essential technology filter. See `docs/RESEARCH_TREE_BALANCE.md`
+for the full list, rationale, and a standalone science pacing audit.

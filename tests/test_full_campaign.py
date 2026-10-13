@@ -24,10 +24,29 @@ class FullCampaignTests(unittest.TestCase):
         self.assertEqual(result["prototype_issues"], [])
         self.assertEqual(result["blocked_discoveries"], [])
         self.assertEqual(result["economy_issues"], {})
+        self.assertEqual(result["research_errors"], [])
+        self.assertEqual(len(result["research_tree"]["paired_entries"]),3)
+        self.assertIn("industry_research_prices",result["research_tree"])
         self.assertIn("razi-network-frame-vesta-foundations",result["economy"])
         self.assertEqual(result["worlds_checked"], 0)
         self.assertEqual(result["focus"]["Panglia"]["status"], "not-installed")
         self.assertEqual(result["focus"]["Linox"]["status"], "not-installed")
+
+    def test_research_polish_only_runs_after_source_arrival_guards(self):
+        file=(ROOT/"data-final-fixes.lua").read_text(encoding="utf8")
+        new='require("prototypes.technology.research_tree_polish").data_final_fixes()'
+        last_guard='require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()'
+        self.assertEqual(file.count(new),1)
+        self.assertGreater(file.index(new),file.rfind(last_guard))
+        self.assertGreater(file.index(new),file.index(
+            'require("prototypes.compat.network_components").register_premium()'))
+        polish=(ROOT/"prototypes/technology/research_tree_polish.lua").read_text(
+            encoding="utf8")
+        self.assertIn("M.safe_link(target,parent)",polish)
+        self.assertIn("mode.deep()",polish)
+        self.assertIn('node.essential=true',polish)
+        self.assertNotIn("data:extend",polish)
+        self.assertNotIn('["solaris-discovery"]=',polish)
 
     def test_post_integration_arrival_guards_run_last(self):
         entrypoint = (ROOT / "data-final-fixes.lua").read_text(encoding="utf-8")
