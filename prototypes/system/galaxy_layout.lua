@@ -395,15 +395,32 @@ function M.confirm_critical_positions()
             }
             if old and old.sprite then orbit.sprite=old.sprite end
             proto.orbit=orbit
-            proto.origin={x=x,y=y}
-            proto.distance=item[4]
-            proto.orientation=item[5]
-            if name=="razi-calidus-drift" then proto.draw_orbit=false end
+            local dx,dy=polar(item[4],item[5])
+            if name=="khemia" then
+              -- Factorio's old absolute-polar path and modern origin path
+              -- disagree in affected packs. For this one stubborn planet,
+              -- store the complete galactic coordinates in native polar
+              -- fields and remove its origin so it cannot render at Calidus.
+              local ax,ay=x+dx,y+dy
+              proto.origin=nil
+              proto.distance=math.sqrt(ax*ax+ay*ay)
+              proto.orientation=((math.atan2 and math.atan2(ax,-ay)
+                or math.atan(ax,-ay))/(2*math.pi))%1
+              proto.draw_orbit=false
+            else
+              proto.origin={x=x,y=y}
+              proto.distance=item[4]
+              proto.orientation=item[5]
+              proto.draw_orbit=false
+            end
             if type(log)=="function" then
-              local dx,dy=polar(item[4],item[5])
+              local o=proto.origin or {}
+              local px,py=polar(proto.distance,proto.orientation)
+              px=px+(o.x or o[1] or 0)
+              py=py+(o.y or o[2] or 0)
               log(string.format(
-                "[Razi Protocol/starmap] anchored %s (%s) at %.2f,%.2f",
-                name,kind,x+dx,y+dy))
+                "[Razi Protocol/starmap] FINAL %s (%s) actual %.2f,%.2f target %.2f,%.2f",
+                name,kind,px,py,x+dx,y+dy))
             end
           end
         end
@@ -412,27 +429,29 @@ function M.confirm_critical_positions()
     end
   end
 
-  -- Absolute map-space verification, rather than checking only the orbit
-  -- metadata. Log the resulting coordinates when Khemia remains suspicious.
+  -- Compare the effective *rendered* coordinates instead of asserting on
+  -- origin values alone. This catches the regression where Khemia had the
+  -- correct parent metadata but was visibly still next to Nauvis.
   local vx,vy=anchor_position("vibrant")
   local count=0
   if vx and vy then
+    local dx,dy=polar(by_name.khemia[4],by_name.khemia[5])
+    local targetX,targetY=vx+dx,vy+dy
     for _,kind in ipairs({"planet","space-location"}) do
       local body=exists(kind,"khemia")
       if body then
         count=count+1
+        local ox,oy=polar(body.distance or 0,body.orientation or 0)
         local origin=body.origin or {}
-        local ox,oy=origin.x or origin[1] or 0,
-          origin.y or origin[2] or 0
-        assert(math.abs(ox-vx)<.001 and math.abs(oy-vy)<.001
-          and math.abs((body.distance or 0)-41.598564)<.001
-          and math.abs((body.orientation or 0)-0.287184)<.00001,
-          "Khemia is outside Vibrant after final layout: "..kind)
+        ox=ox+(origin.x or origin[1] or 0)
+        oy=oy+(origin.y or origin[2] or 0)
+        assert(math.abs(ox-targetX)<.01 and math.abs(oy-targetY)<.01
+          and body.origin==nil and body.draw_orbit==false,
+          "Khemia still has Calidus coordinates after absolute placement: "..kind)
         if type(log)=="function" then
-          local dx,dy=polar(body.distance,body.orientation)
           log(string.format(
-            "[Razi Protocol/Calidus] Khemia %s verified at %.2f,%.2f; Vibrant centre %.2f,%.2f",
-            kind,ox+dx,oy+dy,vx,vy))
+            "[Razi Protocol/Calidus] Khemia %s ABSOLUTE %.2f,%.2f target %.2f,%.2f; origin=nil",
+            kind,ox,oy,targetX,targetY))
         end
       end
     end
