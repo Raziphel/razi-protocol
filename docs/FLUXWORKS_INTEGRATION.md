@@ -45,6 +45,10 @@ The Protocol Codex gains a conditional **FluxWorks | Industrial Atlas** chapter 
 
 See [Seven-System Industrial Atlas](FLUXWORKS_INDUSTRY_ATLAS.md) for the suggested working worlds, ingredients, unlocks, completion semantics and testing.
 
+## Linked workshops and cleaner research
+
+The industrial atlas now includes five optional cross-system recipe/research pairs, connected to the original seven specializations. The companion compatibility pass also removes research arrows that are already implied transitively, without lifting any actual research requirement. See [Industrial Exchanges](FLUXWORKS_INDUSTRIAL_EXCHANGES.md).
+
 ## Engine validation required
 
 This integration still needs a full **Factorio 2.1 + K2SO + Razi** game load. Source-level review cannot substitute for prototype-building and practical save tests.

@@ -49,6 +49,19 @@ The chapter is not registered without FluxWorks. The Codex correctly treats miss
 - `locale/en/razi_fluxworks_specializations.cfg`: production and technology names/descriptions.
 - `locale/en/razi_journal_fluxworks.cfg`: objective titles, tips and journal stories.
 
+## Connected manufacturing
+
+Five optional research exchanges link the original seven specialist factories:
+- Calidus–Solaris: aerospace frames using mesh and annealed cermet.
+- Nyxaris–Vibrant: bioelectronic processing units.
+- Solaris–Vespera: cryothermal storage components.
+- Vibrant–Beetlejuice: quantum resonance cells.
+- Nyxaris–Umbra: organic rift stabilizers.
+
+Each exchange requires both associated optional FluxWorks industry technologies, without gating the Protocol campaign. The Codex now tracks twelve optional FluxWorks researches, including these five workshop connections. Regional specialty recipes also have a five-input budget to reduce excessive shipping requirements.
+
+See [Inter-System Exchanges and Research Clarity](FLUXWORKS_INDUSTRIAL_EXCHANGES.md) for the full rules and testing notes.
+
 ## Regression and release checks
 
 ```sh

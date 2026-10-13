@@ -84,6 +84,7 @@ for _,system in ipairs(identifiers) do
   assert(technology.type=="technology" and recipe.type=="recipe")
   assert(recipe.allow_productivity==false and recipe.enabled==false)
   assert(recipe.main_product==recipe.results[1].name)
+  assert(#recipe.ingredients<=5,"Optional factory recipe exceeds five ingredient lanes")
   assert(#technology.prerequisites>=2 and #technology.unit.ingredients>=2)
   local found=false
   for _,effect in ipairs(technology.effects) do

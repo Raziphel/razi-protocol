@@ -61,6 +61,12 @@ With FluxWorks installed, seven **optional regional industry technologies** offe
 
 See [FluxWorks Industrial Atlas](docs/FLUXWORKS_INDUSTRY_ATLAS.md) for details and validation notes.
 
+### Linked FluxWorks factory networks
+
+Five optional industry exchanges connect pairs of FluxWorks system workshops, from Calidus–Solaris aerospace framing to Nyxaris–Umbra living phase technology. The FluxWorks Codex chapter has twelve research-tracked objectives, and duplicate FluxWorks technology arrows are simplified without lifting research requirements. Source-mod recipes and the campaign gates stay intact.
+
+See [FluxWorks Industrial Exchanges](docs/FLUXWORKS_INDUSTRIAL_EXCHANGES.md).
+
 ## Mod Settings
 
 Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.

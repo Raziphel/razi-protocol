@@ -22,5 +22,22 @@ return {
       site="secretas",requires={"secretas"}},
     {id="flux-umbra",chapter="fluxworks",tech="razi-fw-umbra-industry",
       site="tenebris",requires={"tenebris"}},
+    -- Cooperative workshops. These are follow-up discoveries, not required
+    -- completions for any world-discovery or story milestone.
+    {id="flux-link-calidus-solaris",chapter="fluxworks",
+      tech="razi-fw-calidus-solaris-exchange",site="vulcanus",
+      requires={"flux-calidus","flux-solaris"}},
+    {id="flux-link-nyxaris-vibrant",chapter="fluxworks",
+      tech="razi-fw-nyxaris-vibrant-exchange",site="fulgora",
+      requires={"flux-nyxaris","flux-vibrant"}},
+    {id="flux-link-solaris-vespera",chapter="fluxworks",
+      tech="razi-fw-solaris-vespera-exchange",site="aquilo",
+      requires={"flux-solaris","flux-vespera"}},
+    {id="flux-link-vibrant-beetlejuice",chapter="fluxworks",
+      tech="razi-fw-vibrant-beetlejuice-exchange",site="secretas",
+      requires={"flux-vibrant","flux-beetlejuice"}},
+    {id="flux-link-nyxaris-umbra",chapter="fluxworks",
+      tech="razi-fw-nyxaris-umbra-exchange",site="tenebris",
+      requires={"flux-nyxaris","flux-umbra"}},
   },
 }
