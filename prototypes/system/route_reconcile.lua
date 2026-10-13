@@ -13,7 +13,7 @@ local membership = {
 	gleba = "nyxaris", rabbasca = "nyxaris",
 	fulgora = "vibrant", cerys = "vibrant",
 	-- Solaris and Nyxaris.
-	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris",
+	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris", igrys = "solaris",
 	hyarion = "solaris", tellus = "solaris", corrundum = "solaris",
 	["sye-nyxaris"] = "nyxaris", ["apia-carnova-orbit"] = "nyxaris",
 	moshine = "nyxaris", panglia = "nyxaris", pelagos = "nyxaris",
@@ -63,19 +63,19 @@ local route_specifications = {
   -- Preserve its legacy connection ID and Razi-owned asteroid loot.
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
-	-- Dense neighboring industrial worlds get a few short cargo loops.
-	-- Keep the original discovery prerequisites; these routes only provide
-	-- logistical choices once both endpoints are researched.
-	{"vulcanus", "castra", 17500, "industrial"},
-	-- Extra short freight loops inside Solaris. Native discovery gates remain.
-	{"vulcanus", "hyarion", 20000, "industrial_deep"},
-	{"hyarion", "corrundum", 22500, "industrial_deep"},
-	{"arig", "hyarion", 12000, "industrial_deep"},
-	-- Solaris's twin opening branches.
-	{"sye-solaris", "vulcanus", 18000, "industrial"},
-	{"castra", "arig", 18000, "industrial"},
-	{"hyarion", "tellus", 16500, "industrial_deep"},
-	{"tellus", "corrundum", 18000, "industrial_deep"},
+  -- Solaris has a readable clockwise local corridor. The two arrivals
+  -- reach the hot inner world and the far outer industrial world without
+  -- sending long diagonals through the star. All native planet researches
+  -- and local factory mechanics remain source-owned.
+  {"sye-solaris", "vulcanus", 18000, "industrial"},
+  {"sye-solaris", "igrys", 26500, "industrial_deep"},
+  {"vulcanus", "castra", 17500, "industrial"},
+  {"castra", "arig", 16000, "industrial"},
+  {"arig", "hyarion", 12000, "industrial_deep"},
+  {"hyarion", "tellus", 16500, "industrial_deep"},
+  {"tellus", "corrundum", 18000, "industrial_deep"},
+  -- An outer orbital ferry: Factorio draws this around the sun, not through it.
+  {"corrundum", "igrys", 32000, "industrial_deep"},
 	-- Nyxaris neighbors can exchange biological supplies directly instead
 	-- of routing every load through their distant slipstream hub.
 	{"gleba", "moshine", 17000, "biological"},
@@ -248,14 +248,26 @@ function route_reconcile.data_final_fixes()
 	-- Remove any legacy Drift routes before indexing the live galaxy.
 	clean_calidus_routes(routes)
 
-	-- A short-lived development shuttle crossed the existing Castra/Hyarion
-	-- connection in the compact Solaris map. Keep source-authored connections
-	-- untouched, but retire our own awkward line in favor of a cleaner
-	-- Vulcanus/Hyarion supply corridor. This runs before indexing routes.
-	local retired=routes["razi-vulcanus-arig"]
-	if retired and retired.from=="vulcanus" and retired.to=="arig" then
-		routes["razi-vulcanus-arig"]=nil
-	end
+  -- Previous Razi-owned connections were also authored in Solaris's data
+  -- stage. Drop only those specific old IDs with their expected endpoints;
+  -- preserve source-mod routes, custom asteroid definitions and other worlds.
+  local retired_solaris={
+    ["sye-solaris-castra"]={"sye-solaris","castra"},
+    ["castra-hyarion"]={"castra","hyarion"},
+    ["hyarion-corrundum"]={"hyarion","corrundum"},
+    ["razi-sye-solaris-castra"]={"sye-solaris","castra"},
+    ["razi-castra-hyarion"]={"castra","hyarion"},
+    ["razi-vulcanus-hyarion"]={"vulcanus","hyarion"},
+    ["razi-hyarion-corrundum"]={"hyarion","corrundum"},
+    ["razi-vulcanus-arig"]={"vulcanus","arig"}
+  }
+  for name,endpoints in pairs(retired_solaris) do
+    local old=routes[name]
+    if old and old.from and old.to and
+      key_for(old.from,old.to)==key_for(endpoints[1],endpoints[2]) then
+      routes[name]=nil
+    end
+  end
 
 	-- Remove only the two direct journeys now replaced by real belt hops.
 	-- This must happen before new routes are created or the old connection
@@ -330,6 +342,13 @@ function route_reconcile.data_final_fixes()
 			if route then
 				route.from, route.to = from, to
 				route.length = balanced_length(keep_name, route.length, length, from, to)
+        -- The old Solaris data stage left its local links without an arc
+        -- centre. On 2.1.20+ use Solaris as the centre; on older clients
+        -- retain a direct line rather than an arbitrary Calidus-centred arc.
+        if membership[from]=="solaris" and membership[to]=="solaris"
+          and not route.shape and not route.origin then
+          route.shape=supports_regional_arcs() and "arc" or "line"
+        end
 				if membership[from] and membership[to]
 					and membership[from] ~= membership[to] then
 					route.shape = "line"

@@ -1,3 +1,8 @@
+> **Solaris 2.1.43:** The Solaris ambient glow strength is reduced while
+> preserving the original star core and shared static starfield. Planet orbit
+> repositioning and transport-graph changes are documented in
+> [STARMAP_LAYOUT.md](STARMAP_LAYOUT.md#solaris-local-orbital-chart-2143).
+
 > **Current 2.1.42 atlas baseline:** Calidus Drift is retired. The 6×6
 > original indexed star atlas remains, with lower contrast and smaller
 > system light, belt particles and fine detail; route highlight opacity has

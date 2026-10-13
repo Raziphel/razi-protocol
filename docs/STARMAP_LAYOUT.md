@@ -1,3 +1,44 @@
+## Solaris local orbital chart (2.1.43)
+
+Solaris is the first detailed region-by-region map polish pass after Calidus
+Drift's retirement. The source planets keep all original surface conditions,
+research, science recipes, facilities, native moon relations and graphics.
+
+The final starmap uses Razi-relative radii, not astronomical AU or a new
+planet-temperature simulation:
+
+| World | Map radius | Turn | Interpretation |
+| --- | ---: | ---: | --- |
+| Vulcanus | 18 | 0.67 | Inner volcanic orbit |
+| Hyarion | 24 | 0.40 | Crystal/lava inner orbit |
+| Arig | 30 | 0.53 | Hot desert orbit |
+| Castra | 37 | 0.61 | Mid-system military industry |
+| Tellus | 43 | 0.25 | Temperate-biosphere visual band |
+| Corrundum | 50 | 0.13 | Dense-atmosphere industrial outer orbit |
+| Igrys | 54 | 0.86 | Remote rocky industry (not assumed icy) |
+| Solaris Slip Stream | 34 | 0.75 | Western departure approach |
+
+The deliberately sparse local corridor follows:
+
+`Slip Stream → Vulcanus → Castra → Arig → Hyarion → Tellus → Corrundum → Igrys`
+
+and has a second Slip Stream → Igrys outer arrival. This is transport
+connectivity, **not a change to research/planet discovery requirements**.
+The long Corrundum/Igrys leg is an arc around Solaris, not a diameter across
+the sun. Prior Razi-authored `sye-solaris-castra`, `castra-hyarion`,
+`hyarion-corrundum` and similar redundant route IDs are removed only when
+they still connect their expected endpoints, preserving unrelated native and
+special third-party connections.
+
+The final map keeps the 1024px Solaris sun, with a weaker decorative ambient
+halo. The galaxy and other stars remain in their established locations.
+
+**Engine verification remains necessary:** check at full-system and galaxy
+zoom for sprite-only star offset, icon/label overlap, source-owned extra
+connections, in-game arc centres (2.1.20+), actual research gates and
+platform schedules following an update. Regression fixtures exercise
+the intended graph and layout but cannot replace the installed modpack.
+
 > **2.1.42 current map:** Calidus Drift has been retired. Older experimental
 > descriptions below are historical. The active home system contains Nauvis,
 > Muluna, and the Calidus Slip Stream, with no extra Drift orbit or sprite.

@@ -15,19 +15,23 @@ local anchors = {
   {"space-location","umbra","star",104,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
-  {"space-location","sye-solaris","solaris",27,0.75},
+  -- Departure traffic approaches Solaris from the west, outside the hot core.
+  {"space-location","sye-solaris","solaris",34,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
   {"space-location","sye-nyxaris","nyxaris",27,0},
   {"space-location","sye-vespera","vespera",26,0.25},
   {"space-location","sye-umbra","umbra",27,0.5},
-  {"planet","vulcanus","solaris",18,0.690759},
-  {"planet","castra","solaris",38.550528,0.554718},
-  {"planet","arig","solaris",27,0.48},
-  -- Separate Hyarion and Vulcanus orbit rings while retaining their climate tiers.
-  {"planet","hyarion","solaris",22,0.389024},
-  {"planet","tellus","solaris",33.571265,0.249329},
-  {"planet","corrundum","solaris",24.630737,0.076626},
+  -- Solaris orbits: magma and hot desert near the star, Castra's industrial
+  -- band beyond them, then Tellus's biosphere and the dense atmospheric
+  -- outer worlds. Distances are chart units, not simulated temperatures.
+  -- Angles separate neighboring labels while retaining genuine orbit radii.
+  {"planet","vulcanus","solaris",18,0.67},
+  {"planet","hyarion","solaris",24,0.40},
+  {"planet","arig","solaris",30,0.53},
+  {"planet","castra","solaris",37,0.61},
+  {"planet","tellus","solaris",43,0.25},
+  {"planet","corrundum","solaris",50,0.13},
   {"planet","gleba","nyxaris",32,0.091528},
   {"planet","moshine","nyxaris",22,0.245823},
   -- Apia/Carnova no longer shares an almost identical ring with Gleba.
@@ -58,7 +62,7 @@ local anchors = {
 -- prototypes. Register these known orbital plans with both native passes.
 -- Only installed planets are touched; moon owners remain unchanged.
 local optional_orbits={
-  {name="igrys",star="solaris",radius=36.810881,turn=0.881451},
+  {name="igrys",star="solaris",radius=54,turn=0.86},
   {name="foliax",star="nyxaris",radius=36.376917,turn=0.169757},
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
