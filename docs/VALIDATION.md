@@ -1,3 +1,33 @@
+## Tiered tech-card laboratories (2.1.54)
+
+Check these in a fresh and an existing save after a complete modpack
+load. Unlock the Frontier lab with Calidus, Constellation with
+Solaris/Nyxaris, Astral with Vibrant/Vespera, and Deep Space with
+Beetlejuice/Umbra. Confirm the previous lab tier cannot normally
+accept the next pair's cards, and that source K2SO speciality labs still
+accept their own non-Razi science packs.
+
+Use the actual technology GUI for mixed science-card research, not
+merely its listed ingredients, to verify one craftable lab accepts the
+entire set. The final compatibility pass may grant a narrowly scoped
+exception for source mod science combinations. Verify none of the lab
+build recipes requires material locked behind its own tier.
+
+Also compare the standard card recipe against each optional bulk
+recipe on Solaris, Nyxaris, Vibrant, Vespera and Deep Space. Two
+complete native card batches and extra freight must yield exactly
+three cards, without productivity stacking, and must not unlock before
+its stated optional supplier world. Confirm old cards and researched
+technologies are retained after update.
+
+Suggested manual regression commands (no automatic Actions run):
+
+```bash
+python3 -m unittest discover -s tests -p "test_system_card_progression.py"
+lua tests/lua/test_system_card_laboratories.lua
+lua tests/lua/test_system_card_manufacturing.lua
+```
+
 # Razi Protocol validation
 
 ## Manual checks without automatic GitHub Actions

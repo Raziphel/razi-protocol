@@ -181,3 +181,8 @@ require("prototypes.system.route_highlights").data_final_fixes()
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
 require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
+
+-- Late-stage source recipes and research are final now. Add optional bulk
+-- card manufacture and apply laboratory card tiers only after other mods.
+require("prototypes.compat.system_card_manufacturing").data_final_fixes()
+require("prototypes.compat.system_card_laboratories").data_final_fixes()

@@ -38,7 +38,9 @@ local system_card_definitions = {
 			"planetaris-polishing-science-pack",
 			"planetaris-bioengineering-science-pack",
 			"planetaris-pathological-science-pack",
-			"planetaris-refraction-science-pack", "electrochemical-science-pack"
+			"planetaris-refraction-science-pack"
+            -- Paracelsin electrochemistry is reached in the NEXT frontier.
+            -- It must not block the Solaris card used to enter Vibrant.
 		},
 		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
 	},
@@ -68,8 +70,9 @@ local system_card_definitions = {
 		unlock_technology_candidates = {"planet-discovery-ribbonia"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
-			"electromagnetic-science-pack", "ribbonia-alien-science-pack",
-			"galvanization-science-pack", "paracelsin-galvanization-science-pack",
+			"electromagnetic-science-pack", "ribbonia-alien-science-pack"
+            -- Keep Paracelsin and Ferrum galvanisation for later industry
+            -- rather than requiring it for the first Vibrant card.
 		},
 		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
@@ -82,8 +85,8 @@ local system_card_definitions = {
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
 			"muriatic-science-pack", "cryogenic-science-pack",
-			"biorecycling-science-pack", "rubia-biofusion-science-pack",
-			"hydraulic-science-pack"
+			"biorecycling-science-pack", "rubia-biofusion-science-pack"
+            -- Maraxsis hydraulics remain a late Vespera specialty.
 		},
 		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
@@ -120,8 +123,9 @@ local system_card_definitions = {
 		unlock_technology_candidates = {"razi-singularity-theory", "promethium-882-research"},
 		ingredients = {
 			"beetlejuice-tech-card", "umbra-tech-card",
-			"promethium-science-pack", "space-logistic-science-pack",
-			"pulsar-science-pack"
+			"promethium-science-pack"
+            -- Aegis/Bellicos logistics and pulsar science lie beyond the
+            -- first Deep Space experiments. They remain optional freight.
 		},
 		fallback_ingredients = {"beetlejuice-tech-card", "umbra-tech-card"}
 	}

@@ -1,3 +1,61 @@
+## Card production and laboratory tiers (2.1.54)
+
+System cards now have an intentional five-stage laboratory ladder:
+
+| Lab | Permitted Razi system cards | Construction requirements |
+| --- | --- | --- |
+| Ordinary Lab | Calidus | Existing lab, no new research |
+| Frontier Laboratory | Calidus, Solaris, Nyxaris | Lab + advanced processors and low-density structure |
+| Constellation Laboratory | Earlier cards + Vibrant, Vespera | Frontier lab, Vulcanus rare metals, Gleba bioflux and Moshine optics |
+| Astral Laboratory | Earlier cards + Beetlejuice, Umbra | Constellation lab, Fulgoran holmium, Aquilo controls, Rubia frames |
+| Deep Space Laboratory | All eight cards, including Deep Space | Astral lab, Linox rare earths and Vesta supermagnets |
+
+The four laboratory research milestones are also tracked in the optional
+Codex Network chapter. Missing lab research prototypes are filtered from
+the active quest list; completion is based on actual research.
+
+The Frontier lab is unlocked through Calidus science; the Constellation
+lab requires Solaris and Nyxaris cards; Astral uses Vibrant and Vespera
+cards; Deep Space uses Beetlejuice and Umbra cards. No lab technology
+demands a card that only that laboratory tier could accept.
+
+Source-mod labs keep their native non-Razi science packs. Razi adds
+card restrictions to the regular lab (Calidus), biolab/thermodynamic
+lab/advanced K2SO lab (first frontier), K2SO singularity and pressure
+labs (outer), and Omega lab (all tiers). Because planet mods sometimes
+add unusual mixed-pack technologies, a final compatibility pass checks
+each installed technology with Razi cards against a **single real lab**.
+Only if no lab supports the combination does it add the missing Razi
+cards to the best available specialist lab that already accepts all
+other native science ingredients. This prevents a hard lock, but in
+specific mod combinations it may relax the ideal tier restriction.
+No lab gets unrelated science packs copied into its inputs.
+
+### Card manufacturing choices
+
+Every primary one-card recipe survives. Five guarded supplementary
+**two-to-three** multiplex recipes become available only after
+their native supplier world research: Solaris (Corrundum tungsten +
+Vulcanus rare metals), Nyxaris (Apia milestone + Gleba bioflux +
+Moshine optics), Vibrant (Paracelsin electrocoils + Fulgoran holmium),
+Vespera (Rubia composites + Gleba carbon fiber) and Deep Space
+(Aegis/Bellicos logistics and pulsar science). Each requires two complete
+original card ingredient sets and produces three cards. They disable
+productivity and are optional, not prerequisites for arrival research.
+
+This pass also eliminates a concrete circular dependency: the Solaris
+card no longer consumes Paracelsin electrochemical science, which is
+only obtainable after Vibrant. Similarly, first-tier Vibrant and Vespera
+cards no longer directly demand later optional galvanisation/hydraulic
+packs, and the first Deep Space card no longer demands Aegis/Bellicos
+post-edge science.
+
+**Validation still required**: full data-raw dump, real source research
+and crafting reachability, every required science combination in a
+single physical lab, recipe availability with optional mod sets, and
+fresh plus older Factorio saves. No mod-owned non-card lab capability
+or player research state is deliberately removed.
+
 # Research tree and science pacing
 
 Razi Protocol's technology tree links seven planetary systems into a long
