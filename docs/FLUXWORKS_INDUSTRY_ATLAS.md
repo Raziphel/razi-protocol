@@ -62,6 +62,12 @@ Each exchange requires both associated optional FluxWorks industry technologies,
 
 See [Inter-System Exchanges and Research Clarity](FLUXWORKS_INDUSTRIAL_EXCHANGES.md) for the full rules and testing notes.
 
+## Codex recipe previews and optional progress
+
+Each of the seven specialty quests and five exchange quests now selects its real recipe and production machine. The Codex shows the required quantities, actual products and recommended workshop world. These dozen industrial objectives remain in their chapter's progress without lowering the overall **Protocol campaign completion** percentage. Optional industry research is also ranked behind ready story and exploration milestones.
+
+Razi's companion profile applies modest research-count and time ceilings to eight core FluxWorks engineering technologies, without removing prerequisites or changing standalone FluxWorks. See [Progression and Usability Audit](FLUXWORKS_PROGRESSION_AUDIT.md).
+
 ## Regression and release checks
 
 ```sh
