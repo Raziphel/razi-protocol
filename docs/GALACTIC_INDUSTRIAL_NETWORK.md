@@ -121,3 +121,18 @@ rocket capacity, production modules, power supply and material recycling.
 Use `python3 scripts/audit_exchange_economy.py
 script-output/data-raw-dump.json` to inspect the post-load math and
 in-game freight trials to determine whether to expand a route.
+
+## Tracking the freight network in Galactic Operations (2.1.27)
+
+Open the space map's **Galactic Ops → Cargo** tab to inspect real
+technology readiness for Precision Matrix, Panglia Optic Bond,
+Extreme Lattice and Umbra Pressure Frame. The upstream worlds and known
+downstream factory upgrades are grouped by component. Missing optional
+research is omitted and the Deep-only component appears only when its
+technology is actually installed.
+
+Choose **View sources and recipe** to inspect loaded ingredient amounts,
+recipe output and specific outstanding technology prerequisites. The
+overview deliberately does not claim factories are operating or cargo
+has been delivered just because a research objective is complete.
+Actual Planet Express cargo and fleet schedules remain owned by that mod.

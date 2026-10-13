@@ -118,6 +118,90 @@ local summary=trade.summary({platforms={},technologies={
 check(summary.unlocked and summary.ships==0 and summary.unscheduled==0,
   "Cargo trade readiness should be read-only and safe on empty worlds")
 
+-- The cargo dashboard reflects loaded technologies rather than claiming that
+-- optional industries are running when their source mods are absent.
+local trade_catalog=require("scripts.galactic_trade_catalog")
+check(#trade_catalog.chains==4,"All four cross-world components need dashboard entries")
+local chainIDs={
+  ["razi-network-precision-matrix"]=true,
+  ["razi-network-panglia-optic-bond"]=true,
+  ["razi-network-extreme-lattice"]=true,
+  ["razi-network-umbra-pressure-frame"]=true
+}
+for _,entry in ipairs(trade_catalog.chains) do
+  check(chainIDs[entry.id],"Unknown industrial component in cargo dashboard")
+  check(#entry.worlds>=3 and #entry.upgrades>=2,
+    "Cargo component lost its source or downstream factory list")
+end
+local blocked={name="late-discovery",researched=false}
+local prereq={name="early-discovery",researched=true}
+local matrix={name="razi-network-precision-matrix",researched=true}
+local bond={name="razi-network-panglia-optic-bond",researched=false,
+  prerequisites={blocked,prereq}}
+local ready={name="razi-network-extreme-lattice",researched=false,
+  prerequisites={prereq}}
+local finished={name="razi-network-matrix-cryo-controllers",researched=true}
+local waiting={name="razi-network-bond-linox-refining",researched=false,
+  prerequisites={blocked}}
+local installed={
+  [matrix.name]=matrix,[bond.name]=bond,[ready.name]=ready,
+  [finished.name]=finished,[waiting.name]=waiting
+}
+local full=trade_catalog.snapshot({technologies=installed})
+check(full.available==3 and full.researched==1 and full.ready==1,
+  "Component state must reflect actual force research")
+check(full.upgrades==2 and full.parts[1].researched_upgrades==1,
+  "Installed downstream upgrades must not be invented")
+check(full.parts[2].state.status=="blocked"
+  and full.parts[2].state.missing[1]==blocked,
+  "Cargo details need real missing research prerequisites")
+check(trade_catalog.state({prototype={hidden=true}}).status=="absent",
+  "Hidden optional technology must not be advertised")
+check(trade_catalog.snapshot({technologies={}}).available==0,
+  "No source component should be advertised on an empty pack")
+
+local function fake_gui()
+  local element={style={},children={}}
+  element.add=function(spec)
+    local child=fake_gui()
+    child.type=spec.type
+    child.tags=spec.tags
+    child.caption=spec.caption
+    element.children[#element.children+1]=child
+    return child
+  end
+  return element
+end
+rawset(_G,"prototypes",{recipe={
+  [matrix.name]={ingredients={{name="holmium-plate",amount=1}},
+    products={{name=matrix.name,amount=2}}}
+},item={},fluid={},space_location={}})
+rawset(_G,"helpers",{is_valid_sprite_path=function() return false end})
+local player={display_resolution={width=1920,height=1080},
+  display_scale=1,force={technologies=installed,platforms={}}}
+local root=fake_gui()
+trade.render(root,player,{cargo_focus=matrix.name})
+local function count_actions(element,action)
+  local count=element.tags and element.tags.razi_ops_action==action and 1 or 0
+  for _,child in ipairs(element.children) do
+    count=count+count_actions(child,action)
+  end
+  return count
+end
+check(count_actions(root,"cargo-focus")==3,
+  "Every installed component must have a working expand action")
+local compact=fake_gui()
+player.display_resolution={width=1000,height=700}
+player.display_scale=1.5
+trade.render(compact,player,{cargo_focus=nil})
+check(count_actions(compact,"cargo-focus")==3,
+  "Compact layout must retain every component action")
+local none=fake_gui()
+player.force.technologies={}
+trade.render(none,player,{})
+check(count_actions(none,"cargo-focus")==0,
+  "Missing optional industries must not render phantom component cards")
+
 -- Newly required world identities must match route and campaign chapter maps.
 for _,value in ipairs({
  {"muluna","calidus"},{"velora","nyxaris"},{"ferrum","vibrant"},

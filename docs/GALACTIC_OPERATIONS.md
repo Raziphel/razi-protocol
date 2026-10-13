@@ -117,3 +117,42 @@ scheduler. No ships are moved, no surfaces are created, and no planet
 technology or recipes are changed. Runtime inspection with a complete
 modpack is still required for display scale, translated world names and
 rare third-party planet icons.
+
+## Cargo Network command centre (2.1.27)
+
+The **Cargo Network** tab now tracks the four component families already
+registered by the industrial compatibility modules:
+
+1. Precision Control Matrix: Vulcanus, Moshine, Fulgora and Paracelsin.
+   Existing downstream industries: Aquilo, Rubia and Linox.
+2. Panglia Optic Bond: Panglia, Moshine and Fulgora. Export markets:
+   Paracelsin coils and Linox rare-earth refining.
+3. Extreme-Environment Lattice: Rubia, Tenebris, Linox and Gleba.
+   Downstream research: Vesta and Balack where installed.
+4. Umbra Pressure Frame (Deep interdependence): Panglia, Crucible, Linox
+   and Vesta. Downstream research: Vesta foundations and Aquilo controllers.
+
+Cards are **only shown when their native Razi component technology really
+exists and is visible** in the player's force. Consumer research is also
+looked up by its actual technology identifier; unavailable mod branches
+do not show fictional products or readiness states. Components have icons
+validated using the engine's sprite registry. Expanding one card reveals
+the existing recipe's ingredient prototypes and output count, source
+world names and real missing technology prerequisites.
+
+A dashboard summary reports available component lines, researched lines,
+loaded downstream upgrades and actually travelling space platforms.
+Research is clearly distinguished from live factory output: this is a
+read-only operational guide, not an invented production telemetry or a
+replacement for Planet Express's scheduling and landing-pad interfaces.
+
+Cards reflow into one column at higher UI scales or narrow resolutions,
+two columns on larger displays, inside a bounded vertical scroll area.
+The dispatch help stays alongside the industry cards rather than in a
+second disconnected menu. The selected detail card is a per-player
+preference, and all original tabs, planetary favourites, fleet roles and
+notes remain intact.
+
+This path uses a small **fixed ten-technology direct-lookup registry**,
+rather than scanning every installed research technology on each render.
+It adds no new tick processing, inventory scans or platform mutations.

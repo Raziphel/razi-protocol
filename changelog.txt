@@ -1,3 +1,13 @@
+Version: 2.1.27
+Date: 13. 10. 2026
+  Cargo Network command centre:
+    - Replace the old two-item text summary with responsive source-to-consumer cards for all four existing industrial components.
+    - Show real component technology readiness, known source worlds, guarded recipe ingredients and output, and each installed downstream upgrade.
+    - Add research progress indicators, explanatory status colours and collapsible prerequisite details without confusing research with cargo delivery.
+    - Give the dashboard compact summary metrics, a scrollable two-column/one-column layout and preserved Planet Express dispatch guidance.
+    - Avoid new runtime polling and technology-wide scans; preserve platform schedules, research progression and existing per-player settings.
+    - Add UI and catalogue regression coverage for absent optional mods, Deep-only components and narrow screens.
+
 Version: 2.1.26
 Date: 13. 10. 2026
   Galactic Operations visual and usability overhaul:
