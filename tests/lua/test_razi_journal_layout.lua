@@ -204,4 +204,37 @@ for _,size in ipairs({
   check(d.reader>=190,"Story pane too narrow for readable content")
   check(d.body<d.height,"Reader must leave space for toolbar and header")
 end
-print("Journal GUI: large window, wrapped navigation, hidden scrollbars and jump selector passed")
+-- Cross-navigation selects an existing quest without changing researched
+-- technologies or rebuilding the saved campaign milestone IDs.
+check(not journal.open_quest(player,"quest-does-not-exist"),
+  "Unknown Codex milestones must be rejected")
+created={}
+check(journal.open_quest(player,"precision-matrix"),
+  "Existing industrial milestones should open by exact quest ID")
+check(journal.preferences(1).selected=="precision-matrix"
+  and journal.preferences(1).chapter=="network"
+  and journal.preferences(1).view=="quests"
+  and journal.preferences(1).query=="",
+  "Cargo link must select the exact milestone and clear stale filters")
+local bridge
+for _,entry in ipairs(created) do
+  if entry.tags and entry.tags.razi_journal_action=="open-cargo" then
+    bridge=entry
+  end
+end
+check(bridge and bridge.tags.id=="precision-matrix",
+  "Industry quest must offer the real cargo chain navigation")
+local operations=require("scripts.galactic_operations")
+local original_open_cargo=operations.open_cargo
+local called
+operations.open_cargo=function(_,chain,technology_name)
+  called={chain,technology_name}
+  return false
+end
+journal.gui_click({player_index=1,element=bridge})
+operations.open_cargo=original_open_cargo
+check(called and called[1]=="razi-network-precision-matrix"
+  and called[2]=="razi-network-precision-matrix",
+  "Codex must deep-link to the correct installed Cargo Network factory")
+
+print("Journal GUI: large window, wrapped navigation, hidden scrollbars and cargo bridge passed")

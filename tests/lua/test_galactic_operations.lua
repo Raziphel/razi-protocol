@@ -122,6 +122,29 @@ check(summary.unlocked and summary.ships==0 and summary.unscheduled==0,
 -- optional industries are running when their source mods are absent.
 local trade_catalog=require("scripts.galactic_trade_catalog")
 check(#trade_catalog.chains==4,"All four cross-world components need dashboard entries")
+local definitions=require("scripts.razi_journal_data")
+local linked=0
+for _,entry in ipairs(trade_catalog.chains) do
+  for _,name in ipairs({entry.id,table.unpack(entry.upgrades)}) do
+    check(trade_catalog.chain_for_technology(name)==entry.id,
+      "Missing Cargo Network reverse mapping: "..name)
+    local id=trade_catalog.quest_for_technology(name)
+    if id then
+      check(definitions.by_id[id] and definitions.by_id[id].tech==name,
+        "Cargo link must target a real Codex quest: "..name)
+      local chain,target=trade_catalog.chain_for_quest(id)
+      check(chain==entry.id and target==name,
+        "Codex return route must preserve the exact factory technology")
+      linked=linked+1
+    end
+  end
+end
+check(linked==11,"Cargo Network expected 11 real Codex milestone links")
+check(trade_catalog.chain_for_quest("made-up-objective")==nil,
+  "Unknown quests must not open arbitrary cargo chains")
+check(trade_catalog.quest_for_technology(
+  "razi-network-matrix-linox-refining")==nil,
+  "Do not fabricate quests for optional research without a Codex entry")
 local chainIDs={
   ["razi-network-precision-matrix"]=true,
   ["razi-network-panglia-optic-bond"]=true,
@@ -159,6 +182,15 @@ check(trade_catalog.state({prototype={hidden=true}}).status=="absent",
   "Hidden optional technology must not be advertised")
 check(trade_catalog.snapshot({technologies={}}).available==0,
   "No source component should be advertised on an empty pack")
+check(not ui.open_cargo({valid=true,force={technologies={}}},
+  "razi-network-precision-matrix"),
+  "Missing component must not open the full Galactic Operations UI")
+check(not ui.open_cargo({valid=true,force={technologies={
+  ["razi-network-precision-matrix"]={
+    prototype={hidden=true}
+  }
+}}}, "razi-network-precision-matrix"),
+  "Hidden components must not open through forged Codex links")
 
 local function fake_gui()
   local element={style={},children={}}
@@ -190,6 +222,8 @@ local function count_actions(element,action)
 end
 check(count_actions(root,"cargo-focus")==3,
   "Every installed component must have a working expand action")
+check(count_actions(root,"cargo-codex")==5,
+  "The visible components and their existing Codex quests need return links")
 local compact=fake_gui()
 player.display_resolution={width=1000,height=700}
 player.display_scale=1.5

@@ -5,6 +5,7 @@ local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
+local cargo_catalog=require("scripts.galactic_trade_catalog")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -597,6 +598,21 @@ local function render_details(parent,player,quest,p,context,size)
       end
     end
   end
+  -- The link is informational and never turns a researched milestone
+  -- into a claim that freight actually shipped or a factory is running.
+  local cargo_id=cargo_catalog.chain_for_quest(quest.id)
+  if cargo_id and cargo_catalog.is_installed(player.force,cargo_id) then
+    local bridge=prose.add{type="frame",direction="vertical",
+      style="inside_shallow_frame_with_padding"}
+    bridge.style.width=text_width
+    local heading=wrap(bridge,L("cargo-bridge-heading"),text_width-26)
+    heading.style.font="default-bold"
+    heading.style.font_color=theme.primary
+    wrap(bridge,L("cargo-bridge-description"),text_width-26)
+    local link=bridge.add{type="button",caption=L("cargo-bridge-open"),
+      tags={razi_journal_action="open-cargo",id=quest.id}}
+    link.tooltip=L("cargo-bridge-tooltip")
+  end
   if native then
     draw_gallery(prose,"science-pack-heading",
       science_gallery(native),text_width,12,theme)
@@ -1007,6 +1023,19 @@ local function open(player)
   draw(player)
 end
 M.open=open
+function M.open_quest(player,id)
+  local quest=defs.by_id[id]
+  if not (player and player.valid and quest
+    and M.available(player.force,quest)) then return false end
+  local p=pref(player.index)
+  p.selected=quest.id
+  p.chapter=quest.chapter
+  p.filter="all"
+  p.query=""
+  p.view="quests"
+  open(player)
+  return true
+end
 local function close(player)
   local frame=player.gui.screen[FRAME]
   if frame and frame.valid then frame.destroy() end
@@ -1125,6 +1154,20 @@ function M.gui_click(event)
   if action=="nexus-codex" then
     if not trials.open_codex(player,tags.id) then
       player.print(L("nexus-codex-unavailable"))
+    end
+    return
+  end
+  if action=="open-cargo" then
+    local quest=defs.by_id[tags.id]
+    if not (quest and M.available(player.force,quest)) then return end
+    local chain,target=cargo_catalog.chain_for_quest(quest.id)
+    if not (chain and cargo_catalog.is_installed(player.force,chain)) then
+      return
+    end
+    -- Lazy require avoids a UI module cycle during game initialisation.
+    local operations=require("scripts.galactic_operations")
+    if operations.open_cargo(player,chain,target) then
+      close(player)
     end
     return
   end

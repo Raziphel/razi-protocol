@@ -156,3 +156,35 @@ notes remain intact.
 This path uses a small **fixed ten-technology direct-lookup registry**,
 rather than scanning every installed research technology on each render.
 It adds no new tick processing, inventory scans or platform mutations.
+
+## Cargo Network and Protocol Codex navigation (2.1.28)
+
+The **Cargo** dashboard and **Protocol Codex** now share a small, stable
+registry of actual source technology and quest IDs. There are 11 linked
+Codex milestones in the four component families; other optional upgrades
+are displayed without pretending that a separate quest exists.
+
+- From a linked **industrial Codex milestone**, choose **Inspect in Cargo
+  Network**. The related cargo family opens with its recipe/source details
+  expanded and the exact selected component or upgrade highlighted.
+- From a **Cargo component or linked upgrade**, choose **Open Protocol
+  Codex** or **Codex milestone**. The real quest opens in the correct
+  chapter, with the search and view filters reset so the objective is
+  visible. It does not award research, complete a quest or alter saves.
+- Links disappear if the component's actual technology is not installed,
+  is hidden, or the current source pack has no matching Codex objective.
+  An unavailable industry cannot be reached by forging GUI event values.
+- Cargo may be opened **directly from the Codex** during normal gameplay
+  without switching the player to Remote View. This does not expose the
+  original Galactic Operations map button outside Remote View. Closing
+  the window resets its temporary direct-open flag. Display-scale changes
+  preserve an already open direct Cargo view; other map views still follow
+  the existing map-only lifecycle.
+- Research prerequisites are displayed for both the source component
+  and a selected downstream factory technology. Research completion is
+  not a measurement of actual factory construction or shipping.
+
+Navigation adds no new per-tick polling, prototype mutation, research
+events, surface creation or space platform changes. The source research,
+current fleet ownership and all established quest completion history
+remain authoritative.
