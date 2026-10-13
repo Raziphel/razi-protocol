@@ -37,6 +37,14 @@ FluxWorks Rift Exchange remains available as an advanced reward but refuses item
 - FluxWorks standalone modules are retained and guarded instead of deleted.
 - No changes to Razi's normal progression when FluxWorks is missing.
 
+## Seven-System Industrial Atlas
+
+Beyond the original four production bridges, Razi now offers **seven optional industry specializations**, one for each main system. They produce useful existing FluxWorks components from native regional resources, and are researched through standalone optional industry technologies. None are prerequisites for travel or the story.
+
+The Protocol Codex gains a conditional **FluxWorks | Industrial Atlas** chapter only when FluxWorks is installed. Each objective tracks completion of its corresponding optional research, not the physical construction of a factory.
+
+See [Seven-System Industrial Atlas](FLUXWORKS_INDUSTRY_ATLAS.md) for the suggested working worlds, ingredients, unlocks, completion semantics and testing.
+
 ## Engine validation required
 
 This integration still needs a full **Factorio 2.1 + K2SO + Razi** game load. Source-level review cannot substitute for prototype-building and practical save tests.
