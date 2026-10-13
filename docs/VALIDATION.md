@@ -1,31 +1,29 @@
-## Tiered tech-card laboratories (2.1.54)
+## Native lab removal and Deep Space gateway (2.1.55)
 
-Check these in a fresh and an existing save after a complete modpack
-load. Unlock the Frontier lab with Calidus, Constellation with
-Solaris/Nyxaris, Astral with Vibrant/Vespera, and Deep Space with
-Beetlejuice/Umbra. Confirm the previous lab tier cannot normally
-accept the next pair's cards, and that source K2SO speciality labs still
-accept their own non-Razi science packs.
+Load a 2.1.54 save with placed/stored Razi lab items. Confirm that JSON
+prototype migration converts each of the four removed labs to a
+regular Lab and that the inventory of science packs, wires and research
+progress behaves acceptably. Back up saves first. The cost of the old
+lab upgrade materials is not refunded.
 
-Use the actual technology GUI for mixed science-card research, not
-merely its listed ingredients, to verify one craftable lab accepts the
-entire set. The final compatibility pass may grant a narrowly scoped
-exception for source mod science combinations. Verify none of the lab
-build recipes requires material locked behind its own tier.
+In a fresh game confirm that original K2SO Advanced, Moshine
+Thermodynamics, K2SO Singularity, Pressure and Nexus Omega labs accept
+their listed Razi cards while retaining unrelated science packs. Review
+the installed *actual lab recipes*: freight additions must occur only
+when every supplier's research is an ancestor of the original lab unlock.
 
-Also compare the standard card recipe against each optional bulk
-recipe on Solaris, Nyxaris, Vibrant, Vespera and Deep Space. Two
-complete native card batches and extra freight must yield exactly
-three cards, without productivity stacking, and must not unlock before
-its stated optional supplier world. Confirm old cards and researched
-technologies are retained after update.
+Build and fully activate the actual K2SO transceiver after completing
+the two outer frontiers. Confirm its signal research gates the Solar
+System Edge, without requiring Promethium, Nexus, Shattered Planet or
+science produced beyond the edge. Confirm K2SO's native victory is
+suppressed if its supported `set_no_victory` remote interface exists. Verify existing saves with an already
+activated transceiver, and test older/disabled mod combinations.
 
-Suggested manual regression commands (no automatic Actions run):
-
+Manual regression:
 ```bash
-python3 -m unittest discover -s tests -p "test_system_card_progression.py"
+python3 -m unittest discover -s tests -p 'test_system_card_progression.py'
 lua tests/lua/test_system_card_laboratories.lua
-lua tests/lua/test_system_card_manufacturing.lua
+lua tests/lua/test_deep_space_arrival.lua
 ```
 
 # Razi Protocol validation

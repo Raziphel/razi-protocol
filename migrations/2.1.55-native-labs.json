@@ -1,0 +1,38 @@
+{
+  "entity": [
+    [
+      "razi-frontier-lab",
+      "lab"
+    ],
+    [
+      "razi-constellation-lab",
+      "lab"
+    ],
+    [
+      "razi-astral-lab",
+      "lab"
+    ],
+    [
+      "razi-deep-space-lab",
+      "lab"
+    ]
+  ],
+  "item": [
+    [
+      "razi-frontier-lab",
+      "lab"
+    ],
+    [
+      "razi-constellation-lab",
+      "lab"
+    ],
+    [
+      "razi-astral-lab",
+      "lab"
+    ],
+    [
+      "razi-deep-space-lab",
+      "lab"
+    ]
+  ]
+}

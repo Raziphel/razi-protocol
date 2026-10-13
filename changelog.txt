@@ -1,3 +1,15 @@
+Version: 2.1.55
+Date: 14. 10. 2026
+  Native labs, transceiver threshold, and endgame direction:
+    - Remove every Razi-created lab, item, recipe and technology from 2.1.54. The four old lab Codex tasks and localizations are retired.
+    - Map any 2.1.54 built or stored Razi labs back to vanilla labs using a Factorio JSON save migration. No special materials are reimbursed.
+    - Assign five Razi card acceptance tiers to actual existing labs: vanilla Lab, K2SO Advanced Lab, Moshine Thermodynamics Lab, K2SO Singularity/Pressure Labs, and Nexus Omega Lab. Preserve all unrelated native inputs and use a targeted compatibility fallback for mixed science.
+    - Guard selected native laboratory recipe improvements behind their own prior source recipes and research, never a future-only supply chain.
+    - Rework stable intergalactic singularity as a pre-Deep-Space engineering project using seven available system cards instead of endgame-only Promethium/K2 tech cards. Activating the original K2SO transceiver now gates research unlocking the Solar System Edge, when that source chain is acyclic.
+    - Deep Space, Shattered Planet, Nexus and the existing late branches remain for a separate proper finale. Preserve the original K2SO transceiver entity and construction recipe.
+    - Document Factorio's grouped mod-setting sort: order can prioritize settings inside Razi Protocol, never force Razi ahead of other mods without renaming its internal mod identity.
+    - Full Factorio 2.1 startup, source-lab and old-save tests are still required; no extra GitHub Actions run requested.
+
 Version: 2.1.54
 Date: 14. 10. 2026
   System tech-card factories and tiered laboratories:

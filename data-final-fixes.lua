@@ -67,6 +67,10 @@ require("prototypes.system.route_reconcile").data_final_fixes()
 -- Set the campaign gates after the earlier compatibility passes.
 require("prototypes.technology.seven_system_gates").data_final_fixes()
 
+-- Transceiver activation opens the Solar System Edge and Deep Space.
+-- It is no longer the final campaign victory.
+require("prototypes.technology.deep_space_arrival").data_final_fixes()
+
 require("prototypes.technology.campaign_weave").data_final_fixes()
 
 require("prototypes.system.optional_planets").data_final_fixes()
@@ -182,7 +186,8 @@ require("prototypes.system.route_highlights").data_final_fixes()
 -- endgame labs have already registered it as an input.
 require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
 
--- Late-stage source recipes and research are final now. Add optional bulk
--- card manufacture and apply laboratory card tiers only after other mods.
+-- Late-stage source recipes and research are final now. Keep optional
+-- bulk card manufacture, but tier only the EXISTING source-mod labs.
+-- The retired four Razi-created labs are not registered.
 require("prototypes.compat.system_card_manufacturing").data_final_fixes()
 require("prototypes.compat.system_card_laboratories").data_final_fixes()
