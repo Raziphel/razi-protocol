@@ -146,6 +146,26 @@ local exchanges = {
     batch=4,bonus=1,count=750,time=45,
     bonus_icon="optical-cable",require_supplier_provenance=true,
     max_bonus_fraction=0.25,time_multiplier=1.15
+  },
+  -- Let the Calidus factory benefit from supplies developed across the
+  -- first two stars. Every source recipe and supplier unlock still applies.
+  {
+    name="razi-first-frontier-relay-components",
+    source="kr-electronic-components",product="kr-electronic-components",
+    category="crafting",working_world="nauvis",
+    required_mods={"Moshine"},
+    planets={"planet-discovery-vulcanus","planet-discovery-gleba",
+      "planet-discovery-moshine"},
+    science={"solaris-tech-card","nyxaris-tech-card"},
+    supplier_recipes={{recipe="kr-casting-rare-metals",product="kr-rare-metals"},
+      {recipe="bioflux",product="bioflux"},
+      {recipe="optical-cable",product="optical-cable"}},
+    additional={{type="item",name="kr-rare-metals",amount=2},
+      {type="item",name="bioflux",amount=1},
+      {type="item",name="optical-cable",amount=2}},
+    batch=4,bonus=1,count=600,time=45,
+    bonus_icon="optical-cable",require_supplier_provenance=true,
+    max_bonus_fraction=0.25,time_multiplier=1.12
   }
 }
 

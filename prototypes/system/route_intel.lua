@@ -59,6 +59,10 @@ function M.annotate(route)
         localise("system-"..from),localise("system-"..to))
     additions[#additions+1]=field("sector",desc,228)
   end
+  additions[#additions+1]=field("haul",
+    localise("haul-"..hazards.haul_class(route)),229)
+  additions[#additions+1]=field("composition",
+    localise("mix-"..report.mix),230)
   for _,extra in ipairs(additions) do fields[#fields+1]=extra end
   route.custom_tooltip_fields=fields
   return true

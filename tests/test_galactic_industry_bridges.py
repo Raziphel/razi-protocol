@@ -27,12 +27,14 @@ class GalacticIndustryTests(unittest.TestCase):
         self.assertIn("(base.energy_required or 0.5)",engine)
         self.assertIn("rule.target_bonus_fraction",engine)
         self.assertIn('name="razi-galactic-vulcanus-bioptic-casting"',engine)
+        self.assertIn('name="razi-first-frontier-relay-components"',engine)
     def test_all_recipes_have_four_locale_entries(self):
         lang=src("locale/en/production.cfg")
         mod=src("prototypes/compat/galactic_industry_bridges.lua")
         for name in re.findall(r'\bname="(razi-network-[^"]+)"',mod):
             self.assertEqual(lang.count(name+"="),4)
         self.assertEqual(lang.count("razi-galactic-vulcanus-bioptic-casting="),4)
+        self.assertEqual(lang.count("razi-first-frontier-relay-components="),4)
     def test_no_new_mandatory_research_or_worldgen(self):
         m=src("prototypes/compat/galactic_industry_bridges.lua")
         for token in ("unlock-space-location","map_gen_settings",
