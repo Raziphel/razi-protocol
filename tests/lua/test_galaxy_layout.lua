@@ -56,11 +56,14 @@ end})
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
 local dx,dy=layout.anchor_position("razi-calidus-drift")
-check(dx < -20 and dy < -15 and dy > -27,
-  "Calidus Drift should stand opposite the southern departure corridor")
+check(dx < -19 and dx > -21 and dy > 19 and dy < 21,
+  "Calidus Drift must be southwest of the sun beside the outbound hub")
 local hub_x,hub_y=layout.anchor_position("sye-calidus")
 check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
   "Calidus departure portal drifted from the compact central approach")
+check(math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)>15 and
+  math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)<24,
+  "Drift should be a short freight hop from the slipstream")
 -- Native rings should not pile up at nearly identical radii.
 local ax,ay=layout.anchor_position("apia-carnova-orbit")
 local nx,ny=layout.anchor_position("nyxaris")
@@ -92,6 +95,8 @@ for name,bearing in pairs({
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
 layout.data_final_fixes()
+check(places["razi-calidus-drift"].draw_orbit==false,
+  "Freight stop should not draw a massive Calidus orbit")
 -- The optional outer planets must receive actual native positions, not
 -- just orphaned PlanetsLib orbit metadata.
 for _,entry in ipairs({
@@ -217,6 +222,19 @@ check(planets.rabbasca.draw_orbit==false and moon.sprite==native_moon_sprite,
 check(planets.rabbasca.orbit==moon,
   "Native Gleba moon orbit must remain untouched")
 layout.data_final_fixes()
+-- A late, conflicting source update must not pull the chemistry world back
+-- into Calidus or restore Drift's giant native orbit ring.
+planets.khemia.origin={x=0,y=0}
+planets.khemia.distance=17
+planets.khemia.orientation=.7
+places["razi-calidus-drift"].draw_orbit=true
+layout.confirm_critical_positions()
+local kx,ky=layout.anchor_position("vibrant")
+check(math.abs(planets.khemia.origin.x-kx)<.01 and
+  math.abs(planets.khemia.origin.y-ky)<.01,
+  "Late Khemia positioning did not recover Vibrant anchor")
+check(places["razi-calidus-drift"].draw_orbit==false,
+  "Late pass restored a giant drift ring")
 check(planets["optional-source-world"].draw_orbit==false,
   "Repeated final fixes duplicated custom orbit artwork")
 check(planets.rabbasca.orbit==moon,

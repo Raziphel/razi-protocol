@@ -199,3 +199,18 @@ star-art pass and the final Factorio-native coordinate pass. Previously their
 late PlanetsLib update could silently skip a deleted sprite-only parent star,
 leaving them near Calidus. Their intended host stars, radius and orientation
 are unchanged. Moon parentage, source routes and progression remain intact.
+
+## Calidus Drift and Khemia correction (October 2026)
+
+The Calidus salvage destination is now at radius 28, orientation 0.625
+(southwest of the star), closer to the main southward departure hub. It
+never draws a native orbital circle. The mod's source prototype and its
+shared layout agree, preventing a next-load jump.
+
+Khemia's optional chemistry world is explicitly resolved as a planet or
+space-location depending on the installed source mod. Before star-art
+cleanup and again in the native final pass, it is positioned with Vibrant's
+absolute origin, radius 41.598564, turn 0.287184. A final O(2) targeted
+pass protects Khemia and Drift if another late compatibility adjustment
+reapplies old origin values. No research prerequisites or space route
+lengths are changed.
