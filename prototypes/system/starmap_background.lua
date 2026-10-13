@@ -3,6 +3,7 @@
 local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
+local ATMOSPHERE_SIZE=512
 local systems={
   {name="calidus",tint={r=1,g=.86,b=.42},strength=.38},
   {name="solaris",tint={r=1,g=.51,b=.30},strength=.84},
@@ -14,9 +15,9 @@ local systems={
   {name="deep-space",tint={r=.40,g=.57,b=.82},strength=.48}
 }
 local belts={
-  {name="vibrant",tint={r=.75,g=.66,b=.93},scale=24},
-  {name="vespera",tint={r=.59,g=.78,b=.93},scale=17},
-  {name="umbra",tint={r=.91,g=.57,b=.68},scale=17}
+  {name="vibrant",tint={r=.75,g=.66,b=.93},scale=6},
+  {name="vespera",tint={r=.59,g=.78,b=.93},scale=4.25},
+  {name="umbra",tint={r=.91,g=.57,b=.68},scale=4.25}
 }
 local WHITE={r=1,g=1,b=1}
 -- Static Razi-authored starfield, independent of route and planet prototypes.
@@ -28,11 +29,11 @@ local function add_starfield(layers,cinematic)
       local rgb=sky_colors[variant]
       layers[#layers+1]={
         type="sprite",filename=ASSET.."atlas-starfield-"..variant..".png",
-        size={512,512},scale=12,
+        size={1024,1024},scale=6,
         shift={(col-2.5)*6144,(row-2.5)*6144},
         priority="extra-high-no-scale",flags={"gui-icon"},
         blend_mode="normal",
-        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .87 or .68}
+        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .76 or .58}
       }
     end
   end
@@ -49,7 +50,7 @@ local function anchor(name)
 end
 local function insert_asset(layers,file,scale,x,y,color,alpha)
   layers[#layers+1]={
-    type="sprite",filename=ASSET..file,size={128,128},
+    type="sprite",filename=ASSET..file,size={ATMOSPHERE_SIZE,ATMOSPHERE_SIZE},
     scale=scale,shift={x*32,y*32},
     priority="extra-high-no-scale",flags={"gui-icon"},
     blend_mode="normal",
@@ -66,15 +67,15 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,"atlas-halo.png",
-          system.name=="calidus" and 8.4 or 13,
-          x,y,system.tint,(cinematic and .81 or .58)*system.strength)
+          system.name=="calidus" and 2.1 or 3.25,
+          x,y,system.tint,(cinematic and .56 or .38)*system.strength)
       end
     end
   end
   if halos~=false then
     local fx,fy=layout.anchor_position("razi-calidus-drift")
     if fx and fy then
-      insert_asset(layers,"atlas-halo.png",2.4,fx,fy,
+      insert_asset(layers,"atlas-halo.png",.6,fx,fy,
         {r=1,g=.75,b=.50},cinematic and .20 or .12)
     end
   end
@@ -83,7 +84,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(belt.name)
       if x and y then
         insert_asset(layers,"atlas-belt.png",belt.scale,x,y,
-          belt.tint,cinematic and .48 or .30)
+          belt.tint,cinematic and .34 or .22)
       end
     end
   end
@@ -103,23 +104,23 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         {-63,-33,{r=.59,g=.77,b=.85},.55}
       }
       for _,p in ipairs(pockets) do
-        insert_asset(layers,"atlas-dust.png",20,p[1],p[2],p[3],
-          (cinematic and .72 or .49)*(p[4] or 1))
+        insert_asset(layers,"atlas-dust.png",5,p[1],p[2],p[3],
+          (cinematic and .40 or .26)*(p[4] or 1))
       end
     end
     if option("razi-starmap-micro-details",true) then
       for _,name in ipairs({"nyxaris","vespera","umbra","vibrant"}) do
         local x,y=anchor(name)
         if x and y then
-          insert_asset(layers,"atlas-dust.png",10,x+41,y-33,
-            WHITE,cinematic and .38 or .26)
+          insert_asset(layers,"atlas-dust.png",2.5,x+41,y-33,
+            WHITE,cinematic and .26 or .17)
         end
       end
     end
   end
   if cartography==true then
     -- An optional star pocket, never another fake orbit/connection.
-    insert_asset(layers,"atlas-dust.png",13,0,-42,WHITE,.42)
+    insert_asset(layers,"atlas-dust.png",3.25,0,-42,WHITE,.28)
   end
   return layers
 end
