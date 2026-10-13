@@ -47,6 +47,14 @@ I wanted a galaxy you can actually navigate, with different ways through it and 
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
+## FluxWorks industrial companion (experimental)
+
+FluxWorks 0.2.12+ is an optional expansion to Razi's manufacturing. Its four Flux spectra, specialized machines, phase logistics, and K2SO production are now compatible with Razi's seven-system campaign. FluxWorks does **not** replace the Shattered Planet space location, victory, global planet resources, or chapter research in companion mode.
+
+The four FluxWorks science packs remain optional mastery research instead of mandatory costs for ordinary industrial technologies. Four additional production recipes are attached to the Solaris, Nyxaris, Vibrant, and Vespera chapters. Rift Exchange transfers require Outer Frontier Mastery so the logistics system cannot skip the main campaign.
+
+See [FluxWorks Integration](docs/FLUXWORKS_INTEGRATION.md) for the exact responsibilities, test matrix and important existing-save warnings. This is still experimental until tested in the actual Factorio engine.
+
 ## Mod Settings
 
 Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
