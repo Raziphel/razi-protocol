@@ -1,3 +1,25 @@
+## First-frontier manufacturing triangle (2.1.51)
+
+Three new **optional** guarded native-recipe alternatives reward keeping the
+first two stars connected even after exploration. Moshine's native silicon
+cells can import Vulcanus rare metals and Gleba bioflux. Gleba's native
+carbon-fiber production can import Moshine optical cable and Vulcanus rare
+metals. Castra's original piercing-magazine production can import Gleba
+carbon fiber and Moshine silicon cells.
+
+Each alternative processes four original recipe batches with one bonus
+output, charges 12-15% additional machine time and requires actual upstream
+supplier recipes, native research, a supported manufacturing category,
+a permitted surface and compatible science labs. The original recipes,
+item prototypes, research unlocks and surface restrictions are unchanged.
+No productivity or auto-recycling bonus can stack on top.
+
+Registration uses the existing modded-planet exchange preference, and skips
+an alternative when its source recipes or required technologies are missing
+or incompatible. No planetary discovery or chapter science card depends
+on these alternatives. Verify actual mod-prototype dump, technology
+reachability and factory throughput in Factorio 2.1 before release.
+
 ## Return freight: Calidus relay electronics (2.1.50)
 
 The optional `razi-first-frontier-relay-components` research adds a
