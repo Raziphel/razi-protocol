@@ -62,3 +62,23 @@ explicitly centered, short, radial-safe local arcs. Other native arcs remain
 as their authentic gray Factorio curves until their exact path can be
 validated. The default-colored strokes are also dimmer and capped at 600
 static segments instead of 1,800, to avoid visual spaghetti.
+
+
+## Original deep-space starfield (2.1.40)
+
+The starfield draws inspiration from the starry background of Tserup's mod,
+but all four textures were authored independently for Razi Protocol.
+Four original 512px, four-bit indexed transparent PNGs are arranged across
+a four-by-four atlas covering the central seven systems and the deep-space
+frontier. The star points vary in temperature, brightness and clustering,
+leaving dark breathing room for planets, routes and labels.
+
+Sixteen static background sprites are rendered below the current system
+halos, real stars and other game artwork. The existing Subtle and Cinematic
+settings change their opacity; Off disables them. Fine detail, belt and
+cartography switches remain independent, and the existing compatibility
+guard defers to Better_Starmap_Background when installed.
+
+This adds no tick loop, gameplay hazard, research gate, map node or route.
+The additional indexed textures total about 515 KiB on disk.
+Full Factorio 2.1 graphics testing at multiple zooms remains necessary.

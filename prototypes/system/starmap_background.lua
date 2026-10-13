@@ -19,6 +19,24 @@ local belts={
   {name="umbra",tint={r=.91,g=.57,b=.68},scale=17}
 }
 local WHITE={r=1,g=1,b=1}
+-- Static Razi-authored starfield, independent of route and planet prototypes.
+local sky_tiles={{1,3,2,4},{4,2,3,1},{2,1,4,3},{3,4,1,2}}
+local sky_colors={{.98,.99,1},{1,.98,.95},{.95,.97,1},{1,.97,.99}}
+local function add_starfield(layers,cinematic)
+  for row,variants in ipairs(sky_tiles) do
+    for col,variant in ipairs(variants) do
+      local rgb=sky_colors[variant]
+      layers[#layers+1]={
+        type="sprite",filename=ASSET.."atlas-starfield-"..variant..".png",
+        size={512,512},scale=12,
+        shift={(col-2.5)*6144,(row-2.5)*6144},
+        priority="extra-high-no-scale",flags={"gui-icon"},
+        blend_mode="normal",
+        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .87 or .68}
+      }
+    end
+  end
+end
 local function option(name,default)
   local value=settings and settings.startup and settings.startup[name]
   if value==nil then return default end
@@ -42,6 +60,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
   if mode~="subtle" and mode~="cinematic" then return {} end
   local cinematic=mode=="cinematic"
   local layers={}
+  add_starfield(layers,cinematic)
   if halos~=false then
     for _,system in ipairs(systems) do
       local x,y=anchor(system.name)
@@ -113,7 +132,9 @@ function M.data_final_fixes()
   if not (sprite and type(sprite.layers)=="table") then return end
   -- An integration pass may be repeated: never stack duplicate art.
   for _,layer in ipairs(sprite.layers) do
-    if layer.filename==ASSET.."atlas-halo.png"
+    if (type(layer.filename)=="string"
+    and layer.filename:find(ASSET.."atlas-starfield-",1,true)==1)
+    or layer.filename==ASSET.."atlas-halo.png"
       or layer.filename==ASSET.."atlas-belt.png"
       or layer.filename==ASSET.."atlas-dust.png" then return end
   end
