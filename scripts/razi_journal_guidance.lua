@@ -38,6 +38,8 @@ local function score(quest)
   return (frontier(quest) and 18 or 0)
     +(quest.site and 9 or 0)
     +math.min(24,(dependents[quest.id] or 0)*5)
+    -- Industry is worth showing, but never outranks ready story research.
+    -(quest.optional and 36 or 0)
 end
 local function ordered(a,b)
   if a.score~=b.score then return a.score>b.score end
