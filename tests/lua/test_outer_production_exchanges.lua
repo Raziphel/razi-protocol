@@ -188,9 +188,9 @@ check(product(raw.recipe[targets[3]],"gold-plate")==5
   "Cubium/Secretas synergy should output five gold plates from four batches")
 check(ingredient(raw.recipe[targets[3]],"holmium-plate")==1,
   "Fulgora does not contribute to Cubium's gold processing")
-check(product(raw.recipe[targets[4]],"vesta-foundation")==15,
-  "Vesta's improved foundation yield is wrong")
-check(ingredient(raw.recipe[targets[4]],"vesta_nitrogen")==1000
+check(product(raw.recipe[targets[4]],"vesta-foundation")==48,
+  "Vesta must produce 48 from forty native foundations plus 20 percent bonus")
+check(ingredient(raw.recipe[targets[4]],"vesta_nitrogen")==4000
   and ingredient(raw.recipe[targets[4]],"bioluminescent-crystal")==2,
   "Vesta foundation lost original gas or Tenebris bioluminescence")
 for _, original in ipairs({"biopolymer","linox-recipe_rare-earth-refining",

@@ -20,7 +20,7 @@ class SharedManufacturingTests(unittest.TestCase):
         self.assertIn('factory.register_k2so_balanced(balanced_k2)',source)
         self.assertIn('factory.register_additional(balanced_modded)',source)
         self.assertIn('factory.register_additional(deep_modded)',source)
-        self.assertEqual(source.count('upgrade("razi-network-'),6)
+        self.assertEqual(source.count('upgrade("razi-network-'),10)
     def test_different_source_settings_stay_independent(self):
         engine=src("prototypes/compat/planet_production_exchanges.lua")
         self.assertIn('function M.register_k2so_balanced(rules)',engine)
@@ -39,13 +39,20 @@ class SharedManufacturingTests(unittest.TestCase):
         self.assertLess(file.index(base),file.index(after))
     def test_locale_items_recipes_techs(self):
         module=src("prototypes/compat/network_components.lua")
-        names={"razi-network-precision-matrix","razi-network-extreme-lattice"}
+        names={"razi-network-precision-matrix","razi-network-extreme-lattice",
+               "razi-network-panglia-optic-bond",
+               "razi-network-umbra-pressure-frame"}
         names.update(re.findall(r'upgrade\("(razi-network-[^"]+)"',module))
-        self.assertEqual(len(names),8)
+        self.assertEqual(len(names),14)
         text=src("locale/en/production.cfg")
         for name in names:
-            self.assertEqual(text.count(name+"="),6 if name in ("razi-network-precision-matrix","razi-network-extreme-lattice") else 4)
-        for name in ("razi-network-precision-matrix","razi-network-extreme-lattice"):
+            self.assertEqual(text.count(name+"="),6 if name in (
+                "razi-network-precision-matrix","razi-network-extreme-lattice",
+                "razi-network-panglia-optic-bond",
+                "razi-network-umbra-pressure-frame") else 4)
+        for name in ("razi-network-precision-matrix","razi-network-extreme-lattice",
+                     "razi-network-panglia-optic-bond",
+                     "razi-network-umbra-pressure-frame"):
             self.assertEqual(text.count(name+"="),6)
     def test_native_tech_and_recipe_unchanged(self):
         s=src("prototypes/compat/network_components.lua")

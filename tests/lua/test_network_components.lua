@@ -130,7 +130,8 @@ for _,name in ipairs({matrix,lattice,bond}) do
       and recipe.category==nil and recipe.additional_categories==nil,
     "Component recipe must use Factorio 2.1's unified categories field")
   check(recipe.allow_productivity==false,"Intermediate is productivity-safe")
-  check(recipe.results[1].amount==2,"Each batch must produce two components")
+  check(recipe.results[1].amount==(name==bond and 8 or 2),
+    "Initial and return-cargo components must keep their balanced batch size")
   check(#tech.unit.ingredients==2,"No five-pack research soup")
   check(item.icons and #item.icons>=2,
     "Portable component should have a distinctive layered source icon")
@@ -150,6 +151,8 @@ check(#matrix_inputs==4,"Precision part no longer has four distinct exports")
 check(#raw.recipe[lattice].ingredients==5,
   "Extreme part no longer uses earlier framework + four exports")
 check(#raw.recipe[bond].ingredients==3
+  and raw.technology[bond].unit.count==360
+  and raw.recipe[bond].energy_required==10
   and has(raw.technology[bond],"panglia_planet_discovery_panglia"),
   "Panglia optical export is not tied to its native glass factory")
 check(not raw.item[frame],
@@ -172,6 +175,18 @@ for _,group in ipairs({
       "Premium recipe must consume a guarded imported part")
   end
 end
+for i,rule in ipairs(module.premium.return_modded) do
+  check(rule.target_bonus_fraction==0.20 and rule.time_multiplier==1.10
+    and rule.count==(i==1 and 520 or 650),
+    "Panglia bonds must fund useful, affordable downstream recipes")
+end
+check(module.premium.pressure_modded[1].target_bonus_fraction==0.20
+  and module.premium.pressure_modded[1].time_multiplier==1.12
+  and module.premium.pressure_modded[1].count==960,
+  "Bulk Vesta foundations must earn a native-output-scaled bonus")
+check(module.premium.pressure_k2[1].target_bonus_fraction==0.20
+  and module.premium.pressure_k2[1].count==1100,
+  "Aquilo's return freight is incorrectly priced")
 module.data_final_fixes()
 check(#raw.recipe[lattice].ingredients==5,
   "Repeated registration should preserve production identities")
@@ -208,6 +223,9 @@ check(has(deep_raw.technology[frame],bond)
   and has(deep_raw.technology[frame],"planet-discovery-vesta"),
   "Pressure framework must wait for Panglia, Crucible and Vesta")
 check(#deep_raw.recipe[frame].ingredients==4
+  and deep_raw.recipe[frame].results[1].amount==8
+  and deep_raw.recipe[frame].energy_required==20
+  and deep_raw.technology[frame].unit.count==980
   and deep_raw.recipe[frame].allow_productivity==false,
   "Deep framework must consume all source exports without productivity")
 deep_network.register_premium()

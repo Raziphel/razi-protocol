@@ -184,7 +184,7 @@ three to five existing planetary industries. Ten become available in
 Balanced mode; four more are Deep-only. Each requires the participating
 worlds, their genuine supplier recipes and original research. The native
 manufacturing recipe remains available with no new science requirements.
-New bonuses are limited to 25% output at 15–20% longer crafting time,
+Modern bonuses are capped at 25% output, generally at 10–20% longer crafting time,
 with additional imported ingredients and no productivity/recycling bonus.
 See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
 

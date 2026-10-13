@@ -109,3 +109,24 @@ rather than relying solely on identically named science technologies.
 
 The authored base, recipe, and world rules are unchanged. This is no substitute
 for fresh-save and existing-save playthroughs with the complete modpack.
+
+## Why a 25% bonus is not always profitable (2.1.25)
+
+A four-batch alternative with a single bonus item gives +25% output.
+If the same recipe takes **30% longer**, output per second actually
+falls by about 3.8%, *before counting freight*. The default time
+penalty is now 15%. More expensive Panglia bond or Umbra pressure-frame
+recipes have a smaller 10% / 12% machine-time penalty and bounded
+output bonuses computed from their real native batch sizes.
+
+A source producing ten foundations per native batch cannot use the
+same flat +1 bonus as a recipe making one coil: the resulting output
+ratio would be too small to justify extra time and cargo. The new
+output-scaled calculation addresses this without changing the source
+recipe, product quality, specialist machine or spoilage mechanics.
+
+An exchange may still be a net loss of *materials*. Players must decide
+whether factory throughput and a supply contract justify the rockets.
+The `audit_exchange_economy.py` script flags negative machine
+throughput, runaway gross bonus and missing imported ingredients.
+It cannot simulate actual transport costs.

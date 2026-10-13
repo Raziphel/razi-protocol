@@ -31,7 +31,9 @@ local exchanges = {
       {type="item", name="bioflux", amount=1},
       {type="item", name="holmium-plate", amount=1}
     },
-    batch = 1, bonus = 3, count = 550, time = 45,
+    batch = 4, bonus = 1, target_bonus_fraction = 0.20,
+    max_bonus_fraction = 0.25, time_multiplier = 1.12,
+    count = 550, time = 45,
     bonus_icon = "holmium-plate",
     not_after = {"beetlejuice-discovery", "umbra-discovery"}
   },
@@ -50,7 +52,9 @@ local exchanges = {
       {type="item", name="carbon-fiber", amount=4},
       {type="fluid", name="fluoroketone-cold", amount=10}
     },
-    batch = 1, bonus = 1, count = 900, time = 60,
+    batch = 4, bonus = 1, target_bonus_fraction = 0.20,
+    max_bonus_fraction = 0.25, time_multiplier = 1.12,
+    count = 780, time = 60,
     bonus_icon = "supercapacitor",
     not_after = {"beetlejuice-discovery", "umbra-discovery"}
   },
@@ -122,7 +126,9 @@ local exchanges = {
       {type="item", name="holmium-plate", amount=2},
       {type="item", name="bioluminescent-crystal", amount=2}
     },
-    batch = 1, bonus = 5, count = 1450, time = 60,
+    batch = 4, bonus = 1, target_bonus_fraction = 0.20,
+    max_bonus_fraction = 0.25, time_multiplier = 1.12,
+    count = 980, time = 60,
     bonus_icon = "bioluminescent-crystal"
   },
   {
@@ -443,31 +449,30 @@ local function register_exchange(rule)
     and (type(rule.max_bonus_fraction)~="number"
       or rule.max_bonus_fraction<=0
       or rule.max_bonus_fraction>0.30) then return end
-  -- Stronger cross-world alternatives cannot silently print unlimited items.
-  -- Deep recipes must have at least two discoveries, an actual import and a
-  -- deterministic item output; native batches and byproducts remain unchanged.
+  -- Compute the bonus from the *loaded* native recipe when requested.
+  -- This matters for multi-output products such as Vesta foundations:
+  -- a fixed +1 on forty native products would lose throughput.
+  local native_amount
+  for _, result in ipairs(base.results) do
+    if name_of(result)==rule.product then native_amount=result.amount end
+  end
+  if type(native_amount)~="number" or native_amount<=0
+    or type(rule.batch)~="number" or rule.batch<1 then return end
+  local bonus=rule.bonus
+  if rule.target_bonus_fraction~=nil then
+    local share=rule.target_bonus_fraction
+    if type(share)~="number" or share<0.16 or share>0.25 then return end
+    bonus=math.max(1,math.floor(native_amount*rule.batch*share+0.000001))
+  end
+  if type(bonus)~="number" or bonus<1 then return end
+  -- No Razi exchange may increase a native deterministic batch by more
+  -- than 30%; explicitly constrained modern freight recipes cap at 25%.
   if rule.deep_only then
-    if #rule.planets < 2 or #rule.additional == 0
-      or rule.batch < 1 or rule.bonus < 1 then return end
-    local native_amount
-    for _, result in ipairs(base.results) do
-      if name_of(result) == rule.product then native_amount = result.amount end
-    end
-    if not native_amount or rule.bonus > native_amount * rule.batch * 0.30 then
-      return
-    end
+    if #rule.planets<2 or #rule.additional==0
+      or bonus>native_amount*rule.batch*0.30 then return end
   end
-  -- The more connected recipes must never turn late multi-world
-  -- logistics into unbounded output multiplication. Legacy recipes
-  -- keep their existing economics and 30% default crafting-time penalty.
-  if rule.max_bonus_fraction~=nil then
-    local native_amount
-    for _, result in ipairs(base.results or {}) do
-      if name_of(result)==rule.product then native_amount=result.amount end
-    end
-    if not native_amount or rule.bonus > native_amount*rule.batch
-      *rule.max_bonus_fraction then return end
-  end
+  if rule.max_bonus_fraction~=nil and bonus>native_amount*rule.batch
+    *rule.max_bonus_fraction+0.000001 then return end
 
   for _, pack in ipairs(rule.science) do
     if not raw("tool", pack) then return end
@@ -549,8 +554,11 @@ local function register_exchange(rule)
   alternative.categories = {rule.category}
   alternative.category = nil
   alternative.surface_conditions = conditions
-  alternative.energy_required = (base.energy_required or 1) * rule.batch
-    * (rule.time_multiplier or 1.3)
+  -- A 25% bonus with a 30% time penalty actually reduces throughput.
+  -- Imported materials already pay the logistics price, so use a smaller
+  -- default machine-time premium for legacy alternatives.
+  alternative.energy_required = (base.energy_required or 0.5) * rule.batch
+    * (rule.time_multiplier or 1.15)
   alternative.auto_recycle = false
   alternative.allow_decomposition = false
   -- Rewards cross-planet shipping without stacking free bonus throughput
@@ -571,7 +579,7 @@ local function register_exchange(rule)
       if product[field] then product[field] = product[field] * rule.batch end
     end
     if name_of(product) == rule.product then
-      product.amount = product.amount + rule.bonus
+      product.amount = product.amount + bonus
     end
   end
   for _, ingredient in ipairs(rule.additional) do

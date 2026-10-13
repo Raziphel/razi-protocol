@@ -225,15 +225,17 @@ check(ingredient(full.recipe[names[1]],"bioflux")==2,
   "Gleba is not providing industrial bioflux")
 check(product(full.recipe[names[1]],"kr-dirty-water")==20,
   "Native casting byproduct was not preserved and scaled")
-check(product(full.recipe[names[2]],"kr-electronic-components")==7,
-  "Fulgora and Gleba electronics should improve component yield")
+check(product(full.recipe[names[2]],"kr-electronic-components")==19,
+  "Fulgora electronics must yield 19 from sixteen native components")
+check(ingredient(full.recipe[names[2]],"kr-silicon")==8,
+  "Electronics must retain all four native silicon batches")
 check(ingredient(full.recipe[names[2]],"holmium-plate")==1
   and ingredient(full.recipe[names[2]],"bioflux")==1,
   "Missing Fulgora or Gleba import")
 check(full.recipe[names[2]].surface_conditions[1].property=="magnetic-field",
   "Electromagnetic exchange escaped Fulgora's magnetic-field restriction")
-check(product(full.recipe[names[3]],"kr-energy-control-unit")==2,
-  "Cryogenic control units need a tangible higher-output exchange")
+check(product(full.recipe[names[3]],"kr-energy-control-unit")==5,
+  "Cryogenic controllers must yield five from four native units")
 check(ingredient(full.recipe[names[3]],"carbon-fiber")==4
   and ingredient(full.recipe[names[3]],"supercapacitor")==2
   and ingredient(full.recipe[names[3]],"fluoroketone-cold")==10,
@@ -375,6 +377,61 @@ end
 check(off_raw.recipe["kr-casting-rare-metals"],
   "Master Off must retain K2SO's original production")
 rawset(_G, "settings", nil)
+
+-- Native recipes with many outputs need proportional bonus math. A
+-- fixed +1 on 16 components would be worse than the old four native runs.
+local economic, economic_engine=setup()
+economic["assembling-machine"].standard={crafting_categories={"crafting"}}
+local rule={
+  name="razi-fixture-bulk-electronics",source="kr-electronic-components",
+  product="kr-electronic-components",category="crafting",
+  working_world="fulgora",
+  planets={"planet-discovery-fulgora","planet-discovery-gleba"},
+  science={"solaris-tech-card","nyxaris-tech-card"},
+  additional={{type="item",name="holmium-plate",amount=1}},
+  batch=4,bonus=1,target_bonus_fraction=0.20,
+  count=80,time=40,bonus_icon="holmium-plate",
+  max_bonus_fraction=0.25,time_multiplier=1.12
+}
+economic_engine.register_k2so_balanced({rule})
+local bulk=economic.recipe[rule.name]
+check(bulk and product(bulk,"kr-electronic-components")==19,
+  "Four native 4-item batches must gain three guarded bonus items")
+check(math.abs(bulk.energy_required-8.96)<0.0001,
+  "Four native 2s runs must retain the exact 12% time premium")
+check(rule.bonus==1,
+  "Scaled bonuses must not mutate shared author rules between registrations")
+check(ingredient(bulk,"kr-silicon")==8
+  and ingredient(bulk,"holmium-plate")==1,
+  "Dynamic bonuses must not change native supply or imported material costs")
+local excluded,ex_engine=setup()
+excluded["assembling-machine"].standard={crafting_categories={"crafting"}}
+local bad=clone(rule)
+bad.name="razi-fixture-unsafe-bonus"
+bad.target_bonus_fraction=0.40
+ex_engine.register_k2so_balanced({bad})
+check(not excluded.recipe[bad.name] and not excluded.technology[bad.name],
+  "Unsafe >25% dynamic yield must be rejected")
+local implicit,implicit_engine=setup()
+implicit["assembling-machine"].standard={crafting_categories={"crafting"}}
+implicit.recipe["kr-electronic-components"].energy_required=nil
+local default_rule=clone(rule)
+default_rule.name="razi-fixture-default-energy"
+implicit_engine.register_k2so_balanced({default_rule})
+check(implicit.recipe[default_rule.name]
+  and math.abs(implicit.recipe[default_rule.name].energy_required-2.24)<0.0001,
+  "Factorio's implicit 0.5s recipe time must not become a 1s source batch")
+local legacy,legacy_engine=setup()
+legacy["assembling-machine"].standard={crafting_categories={"crafting"}}
+local legacy_rule=clone(rule)
+legacy_rule.name="razi-fixture-legacy-economy"
+legacy_rule.target_bonus_fraction=nil
+legacy_rule.bonus=4
+legacy_rule.time_multiplier=nil
+legacy_engine.register_k2so_balanced({legacy_rule})
+check(legacy.recipe[legacy_rule.name]
+  and math.abs(legacy.recipe[legacy_rule.name].energy_required-9.2)<0.0001,
+  "Default interplanetary batches should cost 15%, not 30%, extra time")
 
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")

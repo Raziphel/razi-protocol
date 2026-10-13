@@ -1,3 +1,13 @@
+Version: 2.1.25
+Date: 13. 10. 2026
+  Interplanetary production balance:
+    - Amortize Panglia bonds and Umbra frames over eight outputs per recipe and lower their research prices.
+    - Price bonded Paracelsin/Linox factory improvements at 520/650 research units and Deep Vesta/Aquilo return cargo at 960/1100.
+    - Recalculate optional freight yields against current native result amounts; cap tuned modern recipes to at most 25% extra product.
+    - Bring oversized Fulgoran electronics, Aquilo control units and Vesta foundations under the same bounded-batch reward system.
+    - Correct Factorio's implicit 0.5-second native craft time and reduce the 30% legacy time penalty to 15%.
+    - Add source recipe, throughput, freight-cost and anti-exploit checks to the complete post-load campaign audit.
+
 Version: 2.1.24
 Date: 13. 10. 2026
   Galactic factory return cargo:
