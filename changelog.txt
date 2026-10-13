@@ -1,3 +1,13 @@
+Version: 2.1.35
+Date: 13. 10. 2026
+  Optional FluxWorks industrial atlas:
+    - Add seven optional system-specific industry technologies and manufacturing alternatives for Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra.
+    - Build on existing FluxWorks and source-planet machines, products, Flux spectra and native materials without adding mandatory research or route gates.
+    - Add a violet, FluxWorks-only Protocol Codex chapter with seven research-tracked industrial objectives, factory tips and expedition stories.
+    - Guard each production route against missing source prototypes and keep all changes absent when FluxWorks is not installed.
+    - Add Lua regression harnesses and technical notes for optional loading, recipe unlocks, required inputs and journal registration.
+    - The industrial atlas remains experimental until tested in Factorio 2.1 with the complete K2SO pack.
+
 Version: 2.1.33
 Date: 13. 10. 2026
   Safe research command guidance:
