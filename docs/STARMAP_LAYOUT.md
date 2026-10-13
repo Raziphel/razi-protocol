@@ -1,3 +1,10 @@
+> **2.1.44 Solaris route correction:** The eight authored Solaris local
+> connections are now direct native Space Age lines, not the previous wide
+> arcs that circled the system and neighboring sectors. Igrys retains its
+> outer radius of 54 chart units but is moved to turn 0.95 to sit more
+> naturally above Solaris. Space Route Overlay 0.2.7+ is the optional
+> risk-color renderer; Razi's fixed segmented overlay was removed.
+
 ## Solaris local orbital chart (2.1.43)
 
 Solaris is the first detailed region-by-region map polish pass after Calidus

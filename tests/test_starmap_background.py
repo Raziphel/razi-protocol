@@ -79,13 +79,12 @@ class StarmapBackgroundTests(unittest.TestCase):
                 offset+=12+length
             self.assertTrue(found,name)
 
-    def test_art_after_orbit_layout_before_route_highlights(self):
+    def test_art_runs_after_orbits_without_route_sprite_overdraw(self):
         source=(ROOT/"data-final-fixes.lua").read_text()
         layout='require("prototypes.system.galaxy_layout").data_final_fixes()'
         art='require("prototypes.system.starmap_background").data_final_fixes()'
-        routes='require("prototypes.system.route_highlights").data_final_fixes()'
         self.assertLess(source.index(layout),source.index(art))
-        self.assertLess(source.index(art),source.index(routes))
+        self.assertNotIn('require("prototypes.system.route_highlights").data_final_fixes()',source)
     def test_settings_and_prototype_ownership(self):
         settings=(ROOT/"settings.lua").read_text()
         module=(ROOT/"prototypes/system/starmap_background.lua").read_text()

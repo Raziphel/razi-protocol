@@ -1,60 +1,43 @@
-# Razi Expedition Route Highlights
+# Space route visuals: native paths with one color renderer
 
-Inspired by [Space Route Overlay](https://mods.factorio.com/mod/space-route-overlay)
-by valent125. Original artwork/masks and implementation, with no copied assets.
+Razi Protocol 2.1.44 retires its broken segmented route-stroke compositor.
+The old baked directional atlas, fixed guide masks and color setting are not
+used. They could not track actual game arcs and produced jagged, offset,
+duplicated colored lines across the galaxy.
 
-**Purpose:** Color only major interstellar journeys and dangerous asteroid
-crossings. Ordinary intra-system supply routes remain unobtrusive instead of
-turning dense planetary clusters into an unreadable colored web.
+## Recommended companion
 
-The default **Subtle** startup setting uses faint, narrow strokes.
-**Clear** uses stronger strokes and displays an additional asteroid-belt
-approach. **Off** disables all visual additions without altering routes.
+Install [Space Route Overlay](https://mods.factorio.com/mod/space-route-overlay)
+**0.2.7 or newer** (by valent125) if you want colored routes. Its overlays
+follow native Space Age routes and automatically reflect the asteroid threats
+of the individual connections. Razi itself no longer attempts to paint those
+lines. With the companion missing, only Factorio's native gray connections
+are displayed, not an inaccurate fallback.
 
-The visual vocabulary is calm teal, amber, orange and violet. The planned
-chapter sets a conservative minimum danger grade; the final asteroid spawn
-definitions can increase that grade. This is not an accurate forecast of
-platform damage, and asteroid hazards themselves never change.
+The mod declares a hidden optional Razi dependency in 0.2.7. Razi records
+`~ space-route-overlay >= 0.2.7` as a compatibility requirement **only when
+it is present**, without imposing a reverse load order. A normal hard
+dependency from Razi to Space Route Overlay would risk a dependency cycle
+with Space Route Overlay's own optional Razi integration. The player installs
+and enables Space Route Overlay in the mod browser. No external source
+assets or implementation are copied into Razi.
 
-The implementation is data-only. No `control.lua` ticks, player events or
-surface render objects are needed. Each layered PNG is indexed (2-bit)
-and tinted by `prototypes/system/route_highlights.lua`. The layer is added
-to Factorio's `utility-sprites.default.starmap_star.layers` only after
-all Razi routes and orbit positions have finalized. It never changes native
-map route shapes, distances, discoveries, or native belt loot.
+## Source ownership
 
-The mask manifests are generated from fixed map endpoint coordinates.
-A mismatch of at least 1.5 map units causes the mask to be dropped so it
-cannot paint a visibly wrong location when another mod moves the endpoints.
-If the original Space Route Overlay mod is also installed, Razi skips its
-graphical pass to avoid double overlays.
+- Factorio and the original planet mods own connection rendering and geometry.
+- `prototypes/system/route_reconcile.lua` owns the Razi-authored travel graph,
+  length, local shape and asteroid profile. Solaris connections are explicit
+  straight lines between real endpoints, not radial arcs with mismatched centers.
+- `prototypes/system/route_hazards.lua` and `route_intel.lua` continue to
+  power the danger tiers, ship advice and belt crossing data in Razi tooltips.
+- Space Route Overlay, when installed, is the only mod responsible for
+  color on the visible connections. No extra GUI / render tick loop is added
+  by Razi.
 
-**Limitations:** Factorio does not expose a color property on individual
-space connections. These masks follow Razi's *straight expedition routes*
-rather than using a native line tint. Short native asteroid crossings have
-separate dotted masks; arbitrary third-party curved routes stay unmodified.
-The full in-game view should be checked after updating the six-star layout.
+## Verification
 
-Assets in `graphics/route-highlights/` must be regenerated if the
-corresponding layout anchors move or the route topology is replaced.
-
-## Route lighting refinement
-
-Expedition masks now use three render passes from the **same source PNG**:
-a near-invisible broad bloom, a tighter middle halo, and the unchanged
-crisp centerline. The small differences in scale keep the luminous fringe
-close to the accurate original endpoints. Early routes stay restrained;
-outer corridors and belt crossings get a modest increase in contrast.
-Colors still come from the final actual asteroid hazard definitions.
-
-The pass is idempotent by guide filename and still skips missing, moved,
-or unsupported curved routes. At most 42 route layers are composed from
-the 14 existing masks (rather than 28 before). There are no per-tick
-animations, rebuilt render objects, new routes, or extra textures.
-
-## In-transit asteroid field ornaments
-
-Four existing route guides now have faint native Razi debris or gravity-lens
-sprites centered at their real midpoints to indicate concentrated asteroid
-spawn windows. These visuals do not create additional connections, consume
-new textures, or execute on simulation ticks.
+Verify both with and without Space Route Overlay on Factorio 2.1. Check
+dangerous asteroid profiles, outer belt edges, long interstellar lines, and
+Solaris's local eight-connection corridor. No route must be colored twice;
+the overlay must not draw an invented arc or cover a neighbor planet.
+A full graphics test with the installed mod and existing save is necessary.

@@ -62,7 +62,7 @@ local anchors = {
 -- prototypes. Register these known orbital plans with both native passes.
 -- Only installed planets are touched; moon owners remain unchanged.
 local optional_orbits={
-  {name="igrys",star="solaris",radius=54,turn=0.86},
+  {name="igrys",star="solaris",radius=54,turn=0.95},
   {name="foliax",star="nyxaris",radius=36.376917,turn=0.169757},
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},

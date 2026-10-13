@@ -342,17 +342,19 @@ function route_reconcile.data_final_fixes()
 			if route then
 				route.from, route.to = from, to
 				route.length = balanced_length(keep_name, route.length, length, from, to)
-        -- The old Solaris data stage left its local links without an arc
-        -- centre. On 2.1.20+ use Solaris as the centre; on older clients
-        -- retain a direct line rather than an arbitrary Calidus-centred arc.
-        if membership[from]=="solaris" and membership[to]=="solaris"
-          and not route.shape and not route.origin then
-          route.shape=supports_regional_arcs() and "arc" or "line"
+        local solaris_local=membership[from]=="solaris"
+          and membership[to]=="solaris"
+        -- Local Solaris logistics are direct chords between their actual
+        -- endpoints. Source-provided default arcs were circling empty space,
+        -- obscuring planets, and sweeping across the neighboring systems.
+        -- A straight chord also works on older Factorio 2.1 clients.
+        if solaris_local then
+          route.shape="line"
+          route.origin=nil
+        elseif membership[from] and membership[to]
+          and membership[from]~=membership[to] then
+          route.shape="line"
         end
-				if membership[from] and membership[to]
-					and membership[from] ~= membership[to] then
-					route.shape = "line"
-				end
 				hazard_profiles.apply(route, hazard)
 				local strength=field_strength(from,to)
 				if strength then hazard_profiles.apply_field(route,strength) end
@@ -360,6 +362,8 @@ function route_reconcile.data_final_fixes()
 					and keep_name:sub(1,5)=="razi-" then
 					route.shape="line"
 					route.origin=nil
+        elseif solaris_local then
+          route.origin=nil
 				elseif route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
 				end
@@ -373,7 +377,8 @@ function route_reconcile.data_final_fixes()
 						length = length,
 						shape = (membership[from] and membership[to]
                             and (membership[from] ~= membership[to]
-                              or membership[from]=="calidus")) and "line" or "arc",
+                              or membership[from]=="calidus"
+                              or membership[from]=="solaris")) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)

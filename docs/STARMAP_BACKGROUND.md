@@ -1,3 +1,10 @@
+> **2.1.44 route correction:** Razi no longer paints 2048px
+> directional-stroke sprite segments behind the map. Factorio owns the true
+> connection geometry, and the optional Space Route Overlay 0.2.7+ handles
+> hazard-based colors when installed. Earlier colored-atlas sections below
+> describe the retired implementation. Solaris also uses native direct
+> connections in place of its oversized local arc sweeps.
+
 > **Solaris 2.1.43:** The Solaris ambient glow strength is reduced while
 > preserving the original star core and shared static starfield. Planet orbit
 > repositioning and transport-graph changes are documented in

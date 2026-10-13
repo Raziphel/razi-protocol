@@ -280,7 +280,9 @@ local function test_routes()
       "razi-sye-solaris-igrys","razi-corrundum-igrys",
       "razi-castra-arig","razi-hyarion-tellus","razi-tellus-corrundum"
     }) do
-      check(routes[new]~=nil,"Missing scenic Solaris corridor: "..new)
+      check(routes[new]~=nil,"Missing Solaris corridor: "..new)
+      check(routes[new].shape=="line" and routes[new].origin==nil,
+        "Solaris route is still an inaccurate oversized arc: "..new)
     end
     for _, local_link in ipairs({
         {"razi-sye-solaris-igrys",26500},
@@ -299,8 +301,23 @@ local function test_routes()
         local connection=routes[local_link[1]]
         check(connection and connection.length==local_link[2],
           "Missing local neighboring-world shuttle: "..local_link[1])
-        check(connection.shape=="arc",
-          "Neighbor shuttle incorrectly became an interstellar line")
+        local solaris=(connection.from=="sye-solaris" or
+          connection.from=="vulcanus" or connection.from=="castra" or
+          connection.from=="arig" or connection.from=="hyarion" or
+          connection.from=="tellus" or connection.from=="corrundum" or
+          connection.from=="igrys") and
+          (connection.to=="sye-solaris" or
+          connection.to=="vulcanus" or connection.to=="castra" or
+          connection.to=="arig" or connection.to=="hyarion" or
+          connection.to=="tellus" or connection.to=="corrundum" or
+          connection.to=="igrys")
+        if solaris then
+          check(connection.shape=="line" and connection.origin==nil,
+            "Solaris connection still draws a giant orbital arc")
+        else
+          check(connection.shape=="arc",
+            "Neighbor shuttle incorrectly became an interstellar line")
+        end
     end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")
     check(routes["native-rubia-maraxsis"].length == 20000,

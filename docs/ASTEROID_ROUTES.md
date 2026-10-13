@@ -1,3 +1,8 @@
+> **Current route visuals (2.1.44):** Razi retains authored asteroid risk
+> definitions and route intel, but no longer paints fixed colored sprite
+> segments. Install the optional Space Route Overlay 0.2.7+ for native-route
+> hazard coloring. The earlier route highlight designs below are historical.
+
 # Razi Asteroid Frontier
 
 **Razi Protocol now owns three physical asteroid belts and four route fields.**

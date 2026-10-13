@@ -79,6 +79,9 @@ for _,entry in ipairs({
   check(math.abs(math.sqrt((x-sx)^2+(y-sy)^2)-entry[2])<.01,
     "Solaris orbit radius mismatch: "..entry[1])
 end
+local igrysX,igrysY=layout.anchor_position("igrys")
+check(igrysX>sx-20 and igrysX<sx-10 and igrysY<sy-45,
+  "Igrys must stay in the upper Solaris chart, away from Nyxaris")
 local departureX,departureY=layout.anchor_position("sye-solaris")
 check(math.abs(math.sqrt((departureX-sx)^2+(departureY-sy)^2)-34)<.01,
   "Solaris departure corridor must sit outside the stellar core")
