@@ -48,3 +48,17 @@ Panglia is still beta; its full data-stage load, source dependency compatibility
 - https://mods.factorio.com/mod/panglia_planet
 - https://mods.factorio.com/mod/shchierbin
 - https://mods.factorio.com/mod/biological-machines-planet-balack
+
+## Post-load research and manufacturing check (2.1.23)
+
+The full campaign audit now checks every installed planet's discovery
+science, rather than just a preset list of endgame planets. Panglia's
+data-cell manufacturing joins the focused checks for Aquilo, Linox,
+Crucible and Vesta. Multiple possible native discoveries are evaluated
+individually, so a valid alternative can prevent a false deadlock report.
+
+Use `python3 scripts/audit_full_campaign.py <data-raw-dump.json>
+--output full-campaign-audit.json` and review the blocked, unverified and
+isolated-route sections separately. A complete unmodified Factorio
+prototype dump is required. A full 80-hour campaign cannot be certified
+from synthetic fixtures.

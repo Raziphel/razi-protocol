@@ -1,3 +1,12 @@
+Version: 2.1.23
+Date: 13. 10. 2026
+  Progression audit:
+    - Add a single full-campaign prototype audit covering all installed planets, technology gates, routes, science supply and manufacturing.
+    - Include Panglia data-cell research in focused supply-chain checks alongside Aquilo, Linox, Crucible and Vesta.
+    - Keep uncertain surface properties and independent source research separate from confirmed deadlocks.
+    - Protect Linox discovery when its own science was the only ingredient, and repeat late-arrival science guards after final integration passes.
+    - Expand synthetic regression fixtures for multi-unlocker worlds, late research rewrites, missing materials and surface restrictions.
+
 Version: 2.1.22
 Date: 13. 10. 2026
   Campaign stability:

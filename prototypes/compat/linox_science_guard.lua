@@ -22,6 +22,22 @@ local function collect_ancestors(name, collected, visited)
   end
 end
 
+-- Use a pack accepted by an installed lab if the late Linox pack
+-- was a technology's entire science requirement.
+local function first_early_science()
+  for _, pack in ipairs({"calidus-tech-card", "space-science-pack"}) do
+    if (data.raw.tool and data.raw.tool[pack])
+      or (data.raw.item and data.raw.item[pack]) then
+      for _, lab in pairs(data.raw.lab or {}) do
+        for _, input in ipairs(lab.inputs or {}) do
+          if input==pack then return pack end
+        end
+      end
+    end
+  end
+  return nil
+end
+
 function compat.data_final_fixes()
   if not (mods and mods["linox"] and mods["Krastorio2-spaced-out"]) then
     return
@@ -33,14 +49,25 @@ function compat.data_final_fixes()
     collect_ancestors(destination, required_before_arrival, visited)
   end
 
+  local fallback = first_early_science()
   for name in pairs(required_before_arrival) do
     local t = technology(name)
     if t and t.unit and t.unit.ingredients then
-      for i = #t.unit.ingredients, 1, -1 do
-        local ingredient = t.unit.ingredients[i]
+      local kept, removed = {}, false
+      for _, ingredient in ipairs(t.unit.ingredients) do
         if (ingredient.name or ingredient[1]) == late_science then
-          table.remove(t.unit.ingredients, i)
+          removed = true
+        else
+          kept[#kept+1] = ingredient
         end
+      end
+      if removed then
+        if #kept == 0 and fallback then
+          kept[1] = {fallback, 1}
+        end
+        -- Without an obtainable fallback, don't produce an invalid
+        -- zero-ingredient research definition. The dump audit flags it.
+        if #kept > 0 then t.unit.ingredients = kept end
       end
     end
   end

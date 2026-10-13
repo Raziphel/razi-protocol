@@ -67,6 +67,12 @@ check(contains(tech["planet-discovery-frozeta"]),
 compat.data_final_fixes()
 check(#tech["solaris-discovery"].unit.ingredients==1,
   "Second pass corrupted research ingredients")
+-- Later compatibility patches may reintroduce Linox science.
+tech["beetlejuice-discovery"].unit.ingredients[#tech["beetlejuice-discovery"].unit.ingredients+1]=
+  {"linox-item_linox-science-pack",1}
+compat.data_final_fixes()
+check(not contains(tech["beetlejuice-discovery"]),
+  "Late integration reintroduced a pre-Linox science deadlock")
 
 local without,guard=setup(false)
 guard.data_final_fixes()

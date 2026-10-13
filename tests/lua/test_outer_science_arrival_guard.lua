@@ -65,6 +65,14 @@ local size=#t["planet-discovery-crucible"].unit.ingredients
 guard.data_final_fixes()
 check(#t["planet-discovery-crucible"].unit.ingredients==size,
   "Arrival guard is not idempotent")
+t["planet-discovery-aquilo"].unit.ingredients[#t["planet-discovery-aquilo"].unit.ingredients+1]=
+  {"planet-crucible-science-pack",1}
+t["planet-discovery-vesta"].unit.ingredients[#t["planet-discovery-vesta"].unit.ingredients+1]=
+  {"gas-manipulation-science-pack",1}
+guard.data_final_fixes()
+check(not contains(t["planet-discovery-aquilo"],"planet-crucible-science-pack")
+  and not contains(t["planet-discovery-vesta"],"gas-manipulation-science-pack"),
+  "Late compatibility research reintroduced pre-arrival science")
 local absent,off=setup(false)
 off.data_final_fixes()
 check(contains(absent["planet-discovery-crucible"],"planet-crucible-science-pack"),

@@ -1,11 +1,10 @@
 # Razi Protocol validation
 
-## Automated on every private main push / pull request
+## Manual checks without automatic GitHub Actions
 
-The GitHub Check workflow runs the existing Factorio Lua lint and syntax
-checks, a small set of compatibility Lua fixture tests, and the post-load
-prototype auditor's Python unit tests. These checks do not require owning or
-downloading Factorio on GitHub Actions.
+The GitHub Check workflow is available through Actions > Check > Run
+workflow. It includes the Lua fixtures, syntax checks and Python auditors.
+It's intentionally manual to avoid burning through Actions minutes.
 
 ## Validate the actual modpack in Factorio
 
@@ -256,3 +255,46 @@ readable during save migration.
 
 The research burst guard does not change any technology's researched
 state, source unlock, recipe, or the saved Codex preferences.
+
+## Complete planet progression audit (2.1.23)
+
+Run Factorio **once with the exact required and optional mods enabled** and
+`--dump-data-raw`. Use the resulting `script-output/data-raw-dump.json`:
+
+```bash
+python3 scripts/audit_full_campaign.py \
+  /path/to/script-output/data-raw-dump.json \
+  --output full-campaign-audit.json
+```
+
+This joins the main prototype graph/route/card checks with a supply-chain
+trace for **every installed planet's native discovery research**. It includes
+a dedicated summary for Panglia, Aquilo, Linox, Crucible and Vesta. The report
+also lists geometrically disconnected planets as an advisory, not an error:
+scripted destinations and special travel mechanics require manual review.
+
+An exit code of 1 means that the final prototype dump has a structural
+prototype issue or a discovery with **only demonstrably blocked science
+paths**. Unknown mining availability, missing discovery effects and
+independent source technology branches are reported separately and never
+silently treated as verified or as fatal.
+
+For a machine-readable stdout report:
+
+```bash
+python3 scripts/audit_full_campaign.py \
+  /path/to/script-output/data-raw-dump.json --json
+```
+
+The Linox and outer-world science guards also run once after the remaining
+technology integrations. This catches late research rewrites that reintroduce
+Linox science before landing, Crucible science before reaching Crucible, or
+Vesta gas research before reaching Vesta. Linox's guard now avoids emitting a
+zero-ingredient technology when the removed science was its only pack.
+
+**Limits:** No real Factorio dump is committed to this repository, and the
+audit has not been executed against the complete installed modpack here.
+An unverified chain is not a confirmed deadlock or a pass. Production machines,
+world-specific resources, transport logistics, scripted gates and native
+research triggers still need a real-game campaign test. Never delete a source
+research requirement automatically based solely on an advisory result.

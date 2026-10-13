@@ -161,5 +161,67 @@ class SupplyTests(unittest.TestCase):
                          "traceable")
         self.assertIn("not proven", report["Vesta"]["caveat"])
 
+    def test_every_installed_planet_has_discovery_report(self):
+        raw = example()
+        reports = audit.SupplyTrace(raw).audit_planets()
+        self.assertNotIn("nauvis", reports)
+        for world in ("aquilo", "crucible", "vesta", "vulcanus"):
+            self.assertIn(world, reports)
+        self.assertEqual(reports["vesta"]["unlockers"][0]["technology"],
+                         "planet-discovery-vesta")
+
+    def test_panglia_native_data_cell_bootstrap_caught(self):
+        raw = example()
+        raw["planet"]["panglia"] = {"surface_properties": {"pressure": 1401}}
+        raw["technology"]["panglia_planet_discovery_panglia"] = {
+            "unit": {"ingredients": [["panglia-data-cell", 1]]},
+            "effects": [{"type": "unlock-space-location",
+                         "space_location": "panglia"}]}
+        raw["technology"]["panglia-data-after-arrival"] = {
+            "prerequisites": ["panglia_planet_discovery_panglia"],
+            "effects": [{"type": "unlock-recipe",
+                         "recipe": "panglia-data-cell"}]}
+        raw["recipe"]["panglia-data-cell"] = {
+            "enabled": False, "ingredients": [{"name": "ice"}],
+            "results": [{"name": "panglia-data-cell"}]}
+        report = audit.SupplyTrace(raw).audit_planets()
+        self.assertEqual(report["panglia"]["status"], "blocked")
+        self.assertEqual(report["panglia"]["unlockers"][0]["science"][0]["best"]["status"],
+                         "future-unlock")
+        raw["recipe"]["early-panglia-data"] = {
+            "enabled": True, "category": "crafting",
+            "ingredients": [{"name": "ice"}],
+            "results": [{"name": "panglia-data-cell"}]}
+        report = audit.SupplyTrace(raw).audit_planets()
+        self.assertEqual(report["panglia"]["status"], "traceable")
+
+    def test_alternative_discovery_stops_false_block(self):
+        raw = example()
+        raw["technology"]["aquilo-alternative"] = {
+            "unit": {"ingredients": [["ice", 1]]},
+            "effects": [{"type": "unlock-space-location",
+                         "space_location": "aquilo"}]}
+        status = audit.SupplyTrace(raw).audit_planets()["aquilo"]
+        self.assertEqual(status["status"], "traceable")
+        self.assertEqual(len(status["unlockers"]), 2)
+
+    def test_surface_property_missing_is_uncertain_not_legal(self):
+        self.assertIsNone(audit.surface_allowed(
+            {"surface_conditions": [{"property": "magnetic-field", "min": 90}]},
+            {"pressure": 1000}))
+        raw = example()
+        raw["recipe"]["planet-crucible-science-pack"]["surface_conditions"] = [
+            {"property": "magnetic-field", "min": 90}]
+        result = audit.SupplyTrace(raw).analyze()["Crucible"]
+        node = result["after_discovery_production"][0]
+        self.assertEqual(node["status"], "unverified")
+
+    def test_missing_native_unlock_remains_advisory(self):
+        raw = example()
+        raw["planet"]["unmapped-sideworld"] = {"surface_properties": {}}
+        report = audit.SupplyTrace(raw).audit_planets()
+        self.assertEqual(report["unmapped-sideworld"]["status"],
+                         "no-visible-native-unlock")
+
 if __name__ == "__main__":
     unittest.main()
