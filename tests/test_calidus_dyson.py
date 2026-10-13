@@ -57,7 +57,7 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn('for stage=0,6 do',sprite)
         self.assertIn('x=stage*256',sprite)
         self.assertIn('calidus-dyson-stages.png',sprite)
-        self.assertIn('SolarisStar.png',
+        self.assertIn('CalidusStar.png',
                       read("prototypes/system/calidus_sun.lua"))
         self.assertIn('prototypes.system.calidus_sun',
                       read("data-updates.lua"))
@@ -65,11 +65,13 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn('proto.origin=nil',layout)
         self.assertIn('Khemia %s ABSOLUTE',layout)
         self.assertIn('body.draw_orbit==false',layout)
-        self.assertTrue((ROOT/"graphics/icons/SolarisStar.png").is_file())
+        self.assertTrue((ROOT/"graphics/icons/CalidusStar.png").is_file())
+        compat=read("prototypes/compat/calidus_dyson.lua")
+        self.assertIn('location.draw_orbit=false',compat)
         backdrop=read("prototypes/system/starmap_background.lua")
         self.assertIn('razi-starmap-galactic-ornaments',backdrop)
         self.assertIn('system.name=="calidus" and 8.4',backdrop)
-        self.assertIn('strength=.46',backdrop)
+        self.assertIn('strength=.38',backdrop)
         for filename,expected_width in (("calidus-dyson-stages.png",1792),):
             raw=(ROOT/"graphics/starmap/razi"/filename).read_bytes()
             self.assertEqual(raw[:8],b"\x89PNG\r\n\x1a\n")
@@ -77,7 +79,7 @@ class DysonIntegrationTests(unittest.TestCase):
             self.assertEqual(int.from_bytes(raw[20:24],"big"),256)
     def test_map_ui_and_localization(self):
         script=read("scripts/galactic_operations.lua")
-        self.assertIn('add_button(tabs,L("dyson-tab"),"tab","dyson")',script)
+        self.assertIn('{"dyson","dyson-tab"}',script)
         self.assertIn('if p.tab=="dyson" then dyson.render(body,player);return end',script)
         lang=read("locale/en/galactic_operations.cfg")
         self.assertIn("dyson-stage-progress=",lang)

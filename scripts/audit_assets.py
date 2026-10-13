@@ -22,6 +22,7 @@ GRAPHICS_REFERENCE = re.compile(
 SOURCE_SUFFIXES = {".lua", ".json", ".cfg"}
 
 REQUIRED_DIMENSIONS = {
+    "graphics/icons/CalidusStar.png": (1024, 1024),
     "graphics/icons/SolarisStar.png": (1024, 1024),
     "graphics/icons/NyxarisStar.png": (1024, 1024),
     "graphics/icons/VibrantStar.png": (1024, 1024),

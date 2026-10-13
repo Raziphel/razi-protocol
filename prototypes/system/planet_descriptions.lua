@@ -9,7 +9,7 @@ local destinations = {
     "razi-calidus-drift"},
   solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys", "halo-solar-orbit", "halo-solar-station", "solaris", "sye-solaris"},
   nyxaris = {"gleba", "moshine", "panglia", "apia", "carnova", "foliax", "rabbasca", "velora", "pelagos", "lemures", "prosephina", "nyxaris", "sye-nyxaris", "apia-carnova-orbit", "star-dea-dia", "dea-dia-system-edge"},
-  vibrant = {"fulgora", "ribbonia", "paracelsin", "cerys", "ferrum", "khemia", "vibrant", "sye-vibrant"},
+  vibrant = {"fulgora", "ribbonia", "paracelsin", "cerys", "ferrum", "alchemy-planet", "vibrant", "sye-vibrant"},
   vespera = {"muria", "aquilo", "rubia", "maraxsis", "obsidiax", "bm-balack", "vespera", "sye-vespera", "razi-vespera-belt-inner", "razi-vespera-belt-outer"},
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "beetlejuice", "sye-beetlejuice"},
   umbra = {"tenebris", "crucible", "vesta", "carna", "arcanyx", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},

@@ -13,7 +13,7 @@ local worlds={
   "foliax","rabbasca","velora",
   -- Vibrant
   "fulgora","cerys","ribbonia","paracelsin",
-  "khemia","ferrum",
+  "alchemy-planet","ferrum",
   -- Vespera
   "muria","aquilo","rubia","maraxsis","obsidiax",
   "bm-balack",

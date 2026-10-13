@@ -7,7 +7,7 @@ local layout = require("prototypes.system.galaxy_layout")
 
 local membership = {
 	-- Main game and Calidus.
-	nauvis = "calidus", muluna = "calidus", khemia = "vibrant",
+	nauvis = "calidus", muluna = "calidus", ["alchemy-planet"] = "vibrant",
 	["sye-calidus"] = "calidus", ["razi-calidus-drift"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris",

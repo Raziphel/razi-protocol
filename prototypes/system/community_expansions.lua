@@ -15,7 +15,10 @@ local candidates = {
   {mod="Velora", name="velora", system="nyxaris",
     gate="planet-discovery-gleba", hub="gleba",
     moon=true, km=14000, profile="biological"},
-  {mod="alchemy-khemia", name="khemia", system="vibrant",
+  -- alchemy-khemia 0.3.6 localises this prototype as Khemia, but its real
+  -- destination ID is alchemy-planet. Using the display name silently left
+  -- the planet and its native Nauvis/Vulcanus routes in Calidus.
+  {mod="alchemy-khemia", name="alchemy-planet", system="vibrant",
     gate="vibrant-discovery", hub="paracelsin",
     radius=41.598564, orientation=0.287184, km=21000, profile="chemistry"},
   {mod="Arcanyx", name="arcanyx", system="umbra",
@@ -132,7 +135,7 @@ local function prune_known_bypass(destination, system)
     -- Remove only normal other-system planet routes, never special
     -- source-owned links to unknown endgame/stargate destinations.
     if other and ((home[other] and home[other]~=system)
-      or (destination=="khemia" and is_calidus_stellar_orbit(other))) then
+      or (destination=="alchemy-planet" and is_calidus_stellar_orbit(other))) then
       -- Khemia's former direct routes to Nauvis or source-owned solar
       -- stations were still drawing webs through Calidus. Only recognized
       -- cross-system links are retired; preserve native alchemy-side routes.

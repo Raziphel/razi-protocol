@@ -12,7 +12,7 @@ local groups={
            "apia-carnova-orbit","pelagos","foliax","dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},
   vibrant={"sye-vibrant","fulgora","cerys","ribbonia",
-           "paracelsin","ferrum","planet-ferrum","khemia",
+           "paracelsin","ferrum","planet-ferrum","alchemy-planet",
            "asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
   vespera={"sye-vespera","muria","aquilo","rubia","maraxsis",
            "razi-vespera-belt-inner","razi-vespera-belt-outer","obsidiax",

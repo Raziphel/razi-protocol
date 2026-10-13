@@ -14,7 +14,7 @@ package.loaded["prototypes.system.asteroid_profiles"]={
 local configs={
   {"planet-ferrum","ferrum"},
   {"Velora","velora"},
-  {"alchemy-khemia","khemia"},
+  {"alchemy-khemia","alchemy-planet"},
   {"Arcanyx","arcanyx"},
   {"biological-machines-planet-balack","bm-balack"},
   {"Solar-Halo","halo-solar-orbit"},
@@ -66,10 +66,10 @@ local function run(options)
     effects={{type="unlock-space-location",
       space_location="slp-solar-orbit-inner"}}}
   for _,edge in ipairs({
-    {name="native-khemia-nauvis",from="khemia",to="nauvis"},
-    {name="native-khemia-inner-sun",from="khemia",
+    {name="alchemy-planet-nauvis",from="alchemy-planet",to="nauvis"},
+    {name="native-khemia-inner-sun",from="alchemy-planet",
       to="slp-solar-orbit-inner"},
-    {name="native-khemia-outer-sun",from="khemia",
+    {name="native-khemia-outer-sun",from="alchemy-planet",
       to="slp-solar-orbit-outer"}
   }) do routes[edge.name]=edge end
   planets.nauvis={}
@@ -103,7 +103,7 @@ local function run(options)
   if options.no_mod then mods_table[options.no_mod]=nil end
   if options.no_planet then planets[options.no_planet]=nil end
   if options.cycle then
-    technologies["vibrant-discovery"].prerequisites={"unlock-khemia"}
+    technologies["vibrant-discovery"].prerequisites={"unlock-alchemy-planet"}
   end
   if options.no_gate then technologies[options.no_gate]=nil end
   if options.no_native_ferrum then
@@ -134,7 +134,7 @@ local function run(options)
 end
 
 local module,raw,native,moved=run()
-for _,name in ipairs({"ferrum","khemia","arcanyx","bm-balack"}) do
+for _,name in ipairs({"ferrum","alchemy-planet","arcanyx","bm-balack"}) do
   check(moved[name],"A new optional world was not positioned: "..name)
 end
 check(raw.planet.ferrum.orbit.parent.name=="vibrant",
@@ -145,9 +145,9 @@ check(native.ferrum_vulcanus.asteroid_spawn_definitions[1].asteroid
   =="native-metallic","Ferrum's native cross-star asteroids were replaced")
 check(native.ferrum.length==10000,
   "Ferrum's local Fulgora route must keep its native distance")
-check(raw.planet.khemia.orbit.parent.name=="vibrant",
+check(raw.planet["alchemy-planet"].orbit.parent.name=="vibrant",
   "Khemia did not join chemistry frontier")
-for _,name in ipairs({"native-khemia-nauvis",
+for _,name in ipairs({"alchemy-planet-nauvis",
   "native-khemia-inner-sun","native-khemia-outer-sun"}) do
   check(not raw["space-connection"][name],
     "A source Khemia connection is still pulling routes through Calidus: "..name)
@@ -170,7 +170,7 @@ check(not raw["space-connection"]["razi-expansion-ferrum-fulgora"],
   "Ferrum should use the native Fulgora route")
 check(not raw["space-connection"]["razi-expansion-bm-balack-aquilo"],
   "Balack should use its native extreme route")
-check(raw["space-connection"]["razi-expansion-khemia-paracelsin"],
+check(raw["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
   "Khemia optional chemical branch is disconnected")
 check(raw["space-connection"]["razi-expansion-arcanyx-tenebris"],
   "Arcanyx optional Umbra branch is disconnected")
@@ -178,7 +178,7 @@ check(raw["space-connection"]["razi-expansion-velora-gleba"],
   "Missing native moon route should be restored for Velora")
 for _,pair in ipairs({
   {"ferrum","vibrant-discovery"},
-  {"khemia","vibrant-discovery"},
+  {"alchemy-planet","vibrant-discovery"},
   {"arcanyx","umbra-discovery"},
   {"velora","planet-discovery-gleba"},
   {"bm-balack","planet-discovery-aquilo"},
@@ -208,19 +208,19 @@ for _ in pairs(raw["space-connection"]) do after=after+1 end
 check(after==before,"Repeated data-final-fixes creates duplicate routes")
 
 local _,off=run({no_mod="alchemy-khemia"})
-check(not off["space-connection"]["razi-expansion-khemia-paracelsin"],
+check(not off["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
   "Missing optional mod still added a new route")
-check(#off.technology["unlock-khemia"].prerequisites==1,
+check(#off.technology["unlock-alchemy-planet"].prerequisites==1,
   "Absent mod incorrectly changed its own technology")
 
 local _,cyclic=run({cycle=true})
-check(#cyclic.technology["unlock-khemia"].prerequisites==1,
+check(#cyclic.technology["unlock-alchemy-planet"].prerequisites==1,
   "An optional discovery cycle was introduced")
 
 local _,missing=run({no_gate="vibrant-discovery"})
-check(not missing["space-connection"]["razi-expansion-khemia-paracelsin"],
+check(not missing["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
   "Missing star technology must not attach a midgame route")
-check(#missing.technology["unlock-khemia"].prerequisites==1,
+check(#missing.technology["unlock-alchemy-planet"].prerequisites==1,
   "Missing prerequisite technology must leave native research alone")
 
 local _,absent=run({no_planet="arcanyx"})
