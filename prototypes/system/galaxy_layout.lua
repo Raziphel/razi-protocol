@@ -15,8 +15,9 @@ local anchors = {
   {"space-location","umbra","star",104,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
-  -- A compact station-sized salvage destination opposite the departure hub.
-  {"space-location","razi-calidus-drift","star",33,0.865},
+  -- Southwest freight stop: a deliberate, short westbound leg from the
+  -- southern slipstream rather than a detached node above the sun.
+  {"space-location","razi-calidus-drift","star",28,0.625},
   {"space-location","sye-solaris","solaris",27,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
@@ -112,8 +113,21 @@ end
 -- This is data-only and valid even after PlanetsLib deletes sprite-only stars.
 M.anchor_position=anchor_position
 
+-- Khemia's evolving source mod can represent its destination as either a
+-- planet or space-location. Resolve the actual prototype before registering
+-- its graphics, rather than silently leaving it beside Calidus.
+local function resolved(item)
+  local kind=item[1]
+  local proto=exists(kind,item[2])
+  if not proto and item[2]=="khemia" and kind=="planet" then
+    kind="space-location"
+    proto=exists(kind,item[2])
+  end
+  return kind,proto
+end
+
 local function source_orbit(item)
-  local existing=exists(item[1],item[2])
+  local _,existing=resolved(item)
   local old=existing and existing.orbit
   -- Preserve source-owned dashed/custom orbit artwork.
   local orbit={
@@ -133,9 +147,10 @@ function M.data_updates()
   end
   local updates={}
   for _,item in ipairs(anchors) do
-    if exists(item[1],item[2]) and exists("space-location",item[3]) then
+    local kind,proto=resolved(item)
+    if proto and exists("space-location",item[3]) then
       updates[#updates+1]={
-        type=item[1],name=item[2],orbit=source_orbit(item)
+        type=kind,name=item[2],orbit=source_orbit(item)
       }
     end
   end
@@ -177,7 +192,7 @@ function M.data_final_fixes()
   end
 
   for _,item in ipairs(anchors) do
-    local location=exists(item[1],item[2])
+    local _,location=resolved(item)
     local px,py=anchor_position(item[3])
     if location and px and py then
       local orbit=source_orbit(item)
@@ -279,7 +294,8 @@ function M.data_final_fixes()
 
   for _,name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-    "solar-system-edge","sye-calidus","sye-solaris","sye-nyxaris",
+    "solar-system-edge","sye-calidus","razi-calidus-drift",
+    "sye-solaris","sye-nyxaris",
     "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"
   }) do
     local location=exists("space-location",name)
@@ -287,7 +303,7 @@ function M.data_final_fixes()
   end
 
   if type(log)=="function" then
-    log("[Razi Protocol/starmap] NATIVE-2026-10-11-v3: placed "..count..
+    log("[Razi Protocol/starmap] NATIVE-2026-10-11-v4: placed "..count..
       " live anchors after sprite-only cleanup; stars are virtual")
     for _,item in ipairs(anchors) do
       if stars[item[2]] or item[2]=="solar-system-edge" then
@@ -304,6 +320,34 @@ function M.data_final_fixes()
           log(string.format("[Razi Protocol/starmap] %s virtual-star-art=(%.2f,%.2f), rendered pre-cleanup",
             item[2],ex,ey))
         end
+      end
+    end
+  end
+end
+
+-- Reapply the two most visible trouble spots after all independent
+-- compatibility passes. Unlike a second full galaxy walk, this costs O(2).
+-- It also repairs Khemia's absolute native coordinates if a late mod moves
+-- only its planet prototype, while keeping source sprite metadata intact.
+function M.confirm_critical_positions()
+  for _,name in ipairs({"razi-calidus-drift","khemia"}) do
+    local item=by_name[name]
+    if item then
+      local kind,proto=resolved(item)
+      local x,y=anchor_position(item[3])
+      if proto and x and y then
+      proto.orbit=source_orbit(item)
+      proto.origin={x=x,y=y}
+      proto.distance=item[4]
+      proto.orientation=item[5]
+      if name=="razi-calidus-drift" then proto.draw_orbit=false end
+      adjust_layer(name,x,y)
+      if type(log)=="function" then
+        local actualX,actualY=polar(proto.distance,proto.orientation)
+        log(string.format(
+          "[Razi Protocol/starmap] verified %s (%s) at %.2f,%.2f (origin %.2f,%.2f)",
+          name,kind,x+actualX,y+actualY,x,y))
+      end
       end
     end
   end

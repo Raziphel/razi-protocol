@@ -21,8 +21,8 @@ function M.data()
       asteroid_spawn_definitions = hazards.belt_edge_resources(0.55),
       orbit = {
         parent = {type = "space-location", name = "star"},
-        distance = 33,
-        orientation = 0.865
+        distance = 28,
+        orientation = 0.625
       }
     }
   })

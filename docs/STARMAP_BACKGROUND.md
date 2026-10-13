@@ -27,3 +27,23 @@ bands visible in the first clean-map screenshot. Four extra, half-strength
 transparent dust pockets fill the central stellar gaps without bringing
 back dense overlapping nebula art. The default composition is 23 small
 sprites rather than the previous 19, with unchanged prototype geometry.
+
+## Full modpack route palette (October 2026)
+
+Factorio 2.1 has no per-connection colour field on SpaceConnectionPrototype.
+Razi now uses one 2048×2048 four-level-alpha indexed PNG with 64 reusable
+directional samples. At data-final-fixes, after all optional routes register,
+every installed visible route with numeric endpoint positions gets coloured
+without changing its shape, origin, asteroid spawn definitions or travel
+length. Straight routes are segmented exactly; curved routes are approximated
+as short polar chords around the source-authored arc centre. A fixed cap of
+1,800 static sprite segments prevents extreme modlists from bogging down
+starmap composition. Unsupported endpoints and excess routes stay native.
+
+The chart gives core lanes turquoise, first-wave fronts green-teal,
+middle-game industrial space amber, outer worlds lilac, and Deep Space rose.
+Real asteroid danger warms a route toward orange and red; belt crossings
+remain clearly distinguished. Subtle is the recommended opacity, Clear is
+stronger, and Off disables the overlays. Space Route Overlay is preferred if
+installed. The engine still draws its own interactive routes underneath,
+which remain authoritative for click/hover navigation.

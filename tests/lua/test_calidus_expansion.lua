@@ -20,6 +20,8 @@ local mod=require("prototypes.system.calidus_expansion")
 mod.data()
 local drift=data.raw["space-location"][mod.name]
 ok(drift and drift.draw_orbit==false,"Missing orbital salvage prototype")
+ok(drift.orbit.distance==28 and drift.orbit.orientation==.625,
+  "The freight stop must sit southwest of Calidus")
 ok(drift.icon_size==64 and drift.starmap_icon_size==64,"Invalid icon sizes")
 ok(drift.asteroid_spawn_definitions[1].probability<.04,"Overpowered stop")
 mod.data()

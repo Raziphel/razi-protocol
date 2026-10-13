@@ -17,6 +17,28 @@ def entries():
             for a,b,kind,path,w,h,sx,sy,ax,ay,bx,by
             in re.findall(PATTERN,MANIFEST)]
 class RouteHighlightTests(unittest.TestCase):
+    def test_shared_directional_strokes_is_valid_indexed_png(self):
+        path=ROOT/"graphics/route-highlights/directional-strokes.png"
+        raw=path.read_bytes()
+        self.assertEqual(raw[:8],b"\x89PNG\r\n\x1a\n")
+        sections={}
+        offset=8
+        while offset<len(raw):
+            count=struct.unpack(">I",raw[offset:offset+4])[0]
+            marker=raw[offset+4:offset+8]
+            payload=raw[offset+8:offset+8+count]
+            actual=struct.unpack(">I",raw[offset+8+count:offset+12+count])[0]
+            self.assertEqual(zlib.crc32(marker+payload)&0xffffffff,actual)
+            sections.setdefault(marker,[]).append(payload)
+            offset+=count+12
+        self.assertEqual(offset,len(raw))
+        self.assertEqual(struct.unpack(">IIBB",sections[b"IHDR"][0][:10]),
+                         (2048,2048,2,3))
+        self.assertEqual(sections[b"tRNS"][0],bytes((0,35,120,205)))
+        pixels=zlib.decompress(b"".join(sections[b"IDAT"]))
+        self.assertEqual(len(pixels),2048*(1+2048//4))
+        self.assertEqual(pixels[0],0)
+
     def test_complete_masks_and_positioned_layers(self):
         rows=entries()
         self.assertEqual(len(rows),14)
@@ -65,14 +87,22 @@ class RouteHighlightTests(unittest.TestCase):
         self.assertIn('if mode=="off"',module)
         self.assertIn('M.color_for_guide(guide,route)',module)
         self.assertIn('severity>=5',module)
-        self.assertIn('first={r=.36,g=.82,b=.88}',module)
-        self.assertIn('not existing[guide.filename]',module)
+        self.assertIn('local stage_colors=',module)
+        self.assertIn('function M.stage_for_location(name)',module)
+        self.assertIn('for _,name in ipairs(entries)',module)
+        self.assertIn('M.strokes_for_connection(route,mode)',module)
+        self.assertIn('SHEET="__razi-protocol__/graphics/route-highlights/directional-strokes.png"',module)
+        self.assertIn('local LIMIT=1800',module)
         self.assertIn('function M.field_marker() return nil end',module)
         self.assertIn('shift=guide.shift,scale=4',module)
         self.assertNotIn('layer(4.084',module)
         self.assertNotIn('rift-deep-space.png',module)
-        self.assertIn('math.abs(p[1]-guide.start[1])<1.5',module)
+        self.assertIn('local function route_point(route,a,b,t)',module)
+        self.assertIn('local o=route.origin or {}',module)
+        self.assertIn('route.shape=="line"',module)
         self.assertNotIn('data:extend',module)
         self.assertNotIn('connection.length=',module)
+        self.assertIsNone(re.search(r'route\.shape\s*=\s*[^=]',module))
+        self.assertNotIn('data.raw["space-connection"][name]=',module)
 if __name__=="__main__":
     unittest.main()
