@@ -242,6 +242,10 @@ function M.data_final_fixes()
   -- moon and optional third-party label preferences remain source-owned.
   local label_orientations={
     ["razi-calidus-drift"]=0.75,
+    -- Separate the compact home-system labels without moving source moons.
+    ["nauvis"]=0.25,["muluna"]=0.75,
+    ["close-sun-orbit"]=0.75,["sun-orbit"]=0.25,
+    ["sye-calidus"]=0.25,
     ["apia-carnova-orbit"]=0.75,
     ["apia"]=0.25,["carnova"]=0.75,
     ["rabbasca"]=0.75,["frozeta"]=0.25,
@@ -333,21 +337,33 @@ function M.confirm_critical_positions()
   for _,name in ipairs({"razi-calidus-drift","khemia"}) do
     local item=by_name[name]
     if item then
-      local kind,proto=resolved(item)
       local x,y=anchor_position(item[3])
-      if proto and x and y then
-      proto.orbit=source_orbit(item)
-      proto.origin={x=x,y=y}
-      proto.distance=item[4]
-      proto.orientation=item[5]
-      if name=="razi-calidus-drift" then proto.draw_orbit=false end
-      adjust_layer(name,x,y)
-      if type(log)=="function" then
-        local actualX,actualY=polar(proto.distance,proto.orientation)
-        log(string.format(
-          "[Razi Protocol/starmap] verified %s (%s) at %.2f,%.2f (origin %.2f,%.2f)",
-          name,kind,x+actualX,y+actualY,x,y))
-      end
+      if x and y then
+        -- If a dependency registers both types under the same ID, neither
+        -- should leave a duplicate "Khemia" icon in the home system.
+        for _,kind in ipairs({"planet","space-location"}) do
+          local proto=exists(kind,name)
+          if proto then
+            local old=proto.orbit
+            local orbit={
+              parent={type="space-location",name=item[3]},
+              distance=item[4],orientation=item[5]
+            }
+            if old and old.sprite then orbit.sprite=old.sprite end
+            proto.orbit=orbit
+            proto.origin={x=x,y=y}
+            proto.distance=item[4]
+            proto.orientation=item[5]
+            if name=="razi-calidus-drift" then proto.draw_orbit=false end
+            if type(log)=="function" then
+              local dx,dy=polar(item[4],item[5])
+              log(string.format(
+                "[Razi Protocol/starmap] anchored %s (%s) at %.2f,%.2f",
+                name,kind,x+dx,y+dy))
+            end
+          end
+        end
+        adjust_layer(name,x,y)
       end
     end
   end

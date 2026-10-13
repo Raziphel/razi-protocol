@@ -214,3 +214,11 @@ absolute origin, radius 41.598564, turn 0.287184. A final O(2) targeted
 pass protects Khemia and Drift if another late compatibility adjustment
 reapplies old origin values. No research prerequisites or space route
 lengths are changed.
+
+## Khemia double-prototype guard
+
+The final safeguard now audits both potential Factorio types (planet and
+space-location) for Khemia, preserving any custom orbit sprite and
+reanchoring every visible matching prototype to Vibrant. This avoids
+leaving a second instance next to Calidus if a dependency exposes both.
+Coordinates are logged in the Factorio log for future screenshots.

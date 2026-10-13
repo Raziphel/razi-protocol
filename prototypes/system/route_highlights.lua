@@ -5,8 +5,9 @@ local hazards=require("prototypes.system.route_hazards")
 local layout=require("prototypes.system.galaxy_layout")
 local SHEET="__razi-protocol__/graphics/route-highlights/directional-strokes.png"
 local CELL=256
-local STEP=20
-local LIMIT=1800
+local STEP=22
+local LIMIT=600
+local MAX_ARC_SWEEP=1.65 -- radians; never draw multi-system loops
 local PI=math.pi
 local TAU=2*PI
 
@@ -122,24 +123,31 @@ function M.field_marker() return nil end
 -- Native arcs use the route's documented origin as the stellar centre.
 -- We approximate their polar sweep with short, contiguous chords instead
 -- of drawing one false straight shortcut across a system.
-local function route_point(route,a,b,t)
-  if route.shape=="line" then
-    return {x=lerp(a.x,b.x,t),y=lerp(a.y,b.y,t)}
-  end
-  local o=route.origin or {}
-  local cx,cy=o.x or o[1] or 0,o.y or o[2] or 0
+local function polar_arc(route,a,b)
+  -- In Factorio the default arc centre is the origin {0,0}. Guessing that
+  -- from relocated worlds produced gigantic false loops in the atlas.
+  -- Only deliberately-authored regional arc centres are safe to paint.
+  if not route.origin then return nil end
+  local o=route.origin
+  local cx,cy=o.x or o[1],o.y or o[2]
+  if type(cx)~="number" or type(cy)~="number" then return nil end
   local ax,ay=a.x-cx,a.y-cy
   local bx,by=b.x-cx,b.y-cy
   local ar,br=math.sqrt(ax*ax+ay*ay),math.sqrt(bx*bx+by*by)
-  if ar<.5 or br<.5 then
-    return {x=lerp(a.x,b.x,t),y=lerp(a.y,b.y,t)}
-  end
-  local start=math.atan2 and math.atan2(ay,ax) or math.atan(ay,ax)
-  local finish=math.atan2 and math.atan2(by,bx) or math.atan(by,bx)
-  local turn=(finish-start+PI)%(TAU)-PI
-  local angle=start+turn*t
-  local radius=lerp(ar,br,t)
-  return {x=cx+radius*math.cos(angle),y=cy+radius*math.sin(angle)}
+  if ar<4 or br<4 then return nil end
+  if math.abs(ar-br)>math.max(ar,br)*.32 then return nil end
+  local start=math.atan(ay,ax)
+  local finish=math.atan(by,bx)
+  local sweep=(finish-start+PI)%TAU-PI
+  if math.abs(sweep)>MAX_ARC_SWEEP then return nil end
+  return {cx=cx,cy=cy,from=start,turn=sweep,ra=ar,rb=br}
+end
+local function route_point(a,b,arc,t)
+  if not arc then return {x=lerp(a.x,b.x,t),y=lerp(a.y,b.y,t)} end
+  local angle=arc.from+arc.turn*t
+  local radius=lerp(arc.ra,arc.rb,t)
+  return {x=arc.cx+radius*math.cos(angle),
+    y=arc.cy+radius*math.sin(angle)}
 end
 function M.strokes_for_connection(route,mode)
   if mode=="off" or not route.from or not route.to or route.hidden then
@@ -147,21 +155,28 @@ function M.strokes_for_connection(route,mode)
   end
   local a,b=M.position(route.from),M.position(route.to)
   if not a or not b then return {} end
-  local sections=math.max(1,math.ceil(math.sqrt((a.x-b.x)^2+
-    (a.y-b.y)^2)/STEP))
-  if route.shape~="line" then sections=math.max(3,sections) end
-  sections=math.min(12,sections)
+  local arc
+  if route.shape~="line" then
+    arc=polar_arc(route,a,b)
+    if not arc then return {} end
+  end
+  local chord=math.sqrt((a.x-b.x)^2+(a.y-b.y)^2)
+  local distance=arc and math.abs(arc.turn)*(arc.ra+arc.rb)/2 or chord
+  if distance<2 then return {} end
+  local sections=math.min(10,math.max(1,math.ceil(distance/STEP)))
   local tint=M.color_for_route(route)
   local stage=route_stage(route)
-  local alpha=(mode=="clear" and .76 or .53)*
-    (stage==1 and .78 or stage==2 and .90 or 1)
+  -- The native line is still drawn underneath. Modest alpha avoids the
+  -- doubled fluorescent line seen around Calidus in the last screenshot.
+  local alpha=(mode=="clear" and .56 or .34)*
+    (stage==1 and .74 or stage==2 and .88 or 1)
   local result={}
   for i=0,sections-1 do
-    local p=route_point(route,a,b,i/sections)
-    local q=route_point(route,a,b,(i+1)/sections)
+    local p=route_point(a,b,arc,i/sections)
+    local q=route_point(a,b,arc,(i+1)/sections)
     local dx,dy=q.x-p.x,q.y-p.y
     local distance=math.sqrt(dx*dx+dy*dy)
-    if distance>.1 then
+    if distance>1 then
       local angle=(math.atan2 and math.atan2(dy,dx)
         or math.atan(dy,dx))%PI
       local tile=math.floor(angle/PI*64+.5)%64
@@ -210,7 +225,7 @@ function M.data_final_fixes()
   end
   if type(log)=="function" then
     log(string.format(
-      "[Razi Protocol/routes] %d/%d real space connections tinted (%d sprites); %d unmapped/hidden/capped",
+      "[Razi Protocol/routes] %d/%d aligned connections tinted (%d sprites); %d native-only arcs/unknown/capped",
       connected,#entries,layers,unknown))
   end
 end

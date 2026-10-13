@@ -235,6 +235,20 @@ check(math.abs(planets.khemia.origin.x-kx)<.01 and
   "Late Khemia positioning did not recover Vibrant anchor")
 check(places["razi-calidus-drift"].draw_orbit==false,
   "Late pass restored a giant drift ring")
+check(planets.khemia.orbit and
+  planets.khemia.orbit.parent.name=="vibrant",
+  "Khemia returned to the wrong stellar parent")
+-- A source mod exposing two starmap prototype types must not leave a
+-- duplicate chemistry node next to Calidus.
+places.khemia={name="khemia",origin={x=0,y=0},
+  distance=13,orientation=.1}
+layout.confirm_critical_positions()
+check(places.khemia.orbit and
+  places.khemia.orbit.parent.name=="vibrant" and
+  math.abs(places.khemia.origin.x-kx)<.01 and
+  math.abs(places.khemia.origin.y-ky)<.01,
+  "Secondary Khemia location remains in the home system")
+places.khemia=nil
 check(planets["optional-source-world"].draw_orbit==false,
   "Repeated final fixes duplicated custom orbit artwork")
 check(planets.rabbasca.orbit==moon,

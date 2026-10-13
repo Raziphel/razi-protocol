@@ -52,6 +52,13 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       end
     end
   end
+  if halos~=false then
+    local fx,fy=layout.anchor_position("razi-calidus-drift")
+    if fx and fy then
+      insert_asset(layers,"atlas-halo.png",3.0,fx,fy,
+        {r=1,g=.73,b=.42},cinematic and .28 or .20)
+    end
+  end
   if atmosphere~=false then
     for _,belt in ipairs(belts) do
       local x,y=anchor(belt.name)
