@@ -67,8 +67,21 @@ check(math.abs(math.sqrt((ax-nx)^2+(ay-ny)^2)-39)<.01,
   "Apia/Carnova orbital lane must be distinct from Gleba")
 local hx,hy=layout.anchor_position("hyarion")
 local sx,sy=layout.anchor_position("solaris")
-check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-22)<.01,
-  "Hyarion must not share Vulcanus's close orbital lane")
+check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-24)<.01,
+  "Hyarion must be a separate hot inner orbit")
+-- Explicit orbital bands are a visible thermal progression, not a renaming
+-- of the source planet's climate or a reordering of its native research.
+for _,entry in ipairs({
+  {"vulcanus",18},{"hyarion",24},{"arig",30},{"castra",37},
+  {"tellus",43},{"corrundum",50},{"igrys",54}
+}) do
+  local x,y=layout.anchor_position(entry[1])
+  check(math.abs(math.sqrt((x-sx)^2+(y-sy)^2)-entry[2])<.01,
+    "Solaris orbit radius mismatch: "..entry[1])
+end
+local departureX,departureY=layout.anchor_position("sye-solaris")
+check(math.abs(math.sqrt((departureX-sx)^2+(departureY-sy)^2)-34)<.01,
+  "Solaris departure corridor must sit outside the stellar core")
 local px,py=layout.anchor_position("panglia")
 check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-44)<.01,
   "Panglia must have its own Nyxaris orbital lane")

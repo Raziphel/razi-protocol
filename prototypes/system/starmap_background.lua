@@ -6,7 +6,7 @@ local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local ATMOSPHERE_SIZE=512
 local systems={
   {name="calidus",tint={r=1,g=.86,b=.42},strength=.38},
-  {name="solaris",tint={r=1,g=.51,b=.30},strength=.84},
+  {name="solaris",tint={r=1,g=.51,b=.30},strength=.67},
   {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
   {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
   {name="vespera",tint={r=.61,g=.78,b=.96},strength=.77},

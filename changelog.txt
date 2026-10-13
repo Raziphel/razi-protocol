@@ -1,3 +1,14 @@
+Version: 2.1.43
+Date: 13. 10. 2026
+  Solaris orbital chart and local freight routes:
+    - Reposition Solaris worlds into distinct thermal and industrial orbital bands: Vulcanus, Hyarion, Arig, Castra, Tellus, Corrundum, Igrys.
+    - Move the Solaris Slip Stream outward for label clearance and give Igrys its own remote outer orbit.
+    - Replace dense triangular crossings with a legible orbital freight corridor, including an outer Corrundum-Igrys ferry and an Igrys-side slipstream arrival.
+    - Retire precise obsolete Razi-owned local route IDs without changing native science unlocks, technologies, recipes, asteroid belts, or cross-system expedition gates.
+    - Restore correctly centered local Solaris arcs in supported 2.1 builds, preventing obsolete default arcs around Calidus.
+    - Soften Solaris background glow without replacing its high-resolution source star artwork.
+    - Add geometry, research-safe route and legacy cleanup regression fixtures; full Factorio 2.1 startup and old-save traffic checks are still required.
+
 Version: 2.1.42
 Date: 13. 10. 2026
   Calidus retirement and star-chart legibility:

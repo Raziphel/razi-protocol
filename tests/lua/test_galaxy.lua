@@ -39,7 +39,7 @@ local function test_routes()
 	local planets = {
 		"nauvis", "muluna", "vulcanus", "gleba", "fulgora",
 		"panglia", "muria", "aquilo", "rubia", "maraxsis", "cubium",
-		"tenebris", "crucible", "vesta", "linox-planet_linox"
+		"tenebris", "crucible", "vesta", "linox-planet_linox", "igrys"
 	}
 	local space_locations = {}
 	local planet_locations = {}
@@ -84,6 +84,22 @@ local function test_routes()
 				type = "space-connection", name = "old-tenebris-link",
 				from = "sye-beetlejuice", to = "tenebris"
 			},
+            ["sye-solaris-castra"] = {
+                type="space-connection",name="sye-solaris-castra",
+                from="sye-solaris",to="castra",length=10000
+            },
+            ["castra-hyarion"] = {
+                type="space-connection",name="castra-hyarion",
+                from="castra",to="hyarion",length=12000
+            },
+            ["hyarion-corrundum"] = {
+                type="space-connection",name="hyarion-corrundum",
+                from="hyarion",to="corrundum",length=15000
+            },
+            ["razi-vulcanus-hyarion"] = {
+                type="space-connection",name="razi-vulcanus-hyarion",
+                from="vulcanus",to="hyarion",length=20000
+            },
             ["legacy-calidus-drift"] = {
                 type="space-connection",name="legacy-calidus-drift",
                 from="razi-calidus-drift",to="sye-calidus",length=17500
@@ -254,9 +270,21 @@ local function test_routes()
 
     check(routes["razi-vulcanus-arig"]==nil,
       "Retired crossing line must not appear across Solaris")
+    for _,old in ipairs({
+      "sye-solaris-castra","castra-hyarion","hyarion-corrundum",
+      "razi-vulcanus-hyarion","razi-hyarion-corrundum"
+    }) do
+      check(routes[old]==nil,"Retired Solaris shortcut survived: "..old)
+    end
+    for _,new in ipairs({
+      "razi-sye-solaris-igrys","razi-corrundum-igrys",
+      "razi-castra-arig","razi-hyarion-tellus","razi-tellus-corrundum"
+    }) do
+      check(routes[new]~=nil,"Missing scenic Solaris corridor: "..new)
+    end
     for _, local_link in ipairs({
-        {"razi-vulcanus-hyarion",20000},
-        {"razi-hyarion-corrundum",22500},
+        {"razi-sye-solaris-igrys",26500},
+        {"razi-corrundum-igrys",32000},
         {"razi-gleba-apia-carnova-orbit",22000},
                 {"razi-vulcanus-castra",17500},
         {"razi-arig-hyarion",12000},

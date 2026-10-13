@@ -16,6 +16,14 @@ def parse_layout():
     pattern = r'\{"(?:planet|space-location)","([^"]+)","([^"]+)",([.\d]+),([.\d]+)\}'
     result = {n: (p, float(r), float(a))
               for n, p, r, a in re.findall(pattern, source)}
+    # Optional planets use the same source-of-truth orbit table with named
+    # keys. Igrys is required by the curated pack and belongs in this audit.
+    match = re.search(
+        r'\{name="igrys",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}',
+        source)
+    if match:
+        parent, radius, angle = match.groups()
+        result["igrys"] = (parent, float(radius), float(angle))
     belt_source = (ROOT / "prototypes/system/asteroid_belt_integration.lua").read_text()
     for name, distance, orientation in re.findall(
             r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
@@ -171,6 +179,34 @@ class ConstellationTests(unittest.TestCase):
                     gap, tolerance,
                     f"{a}->{b} cuts through {star}: {gap:.1f} units")
 
+    def test_solaris_planets_have_real_orbits_and_a_clean_corridor(self):
+        expected = {
+            "vulcanus": 18, "hyarion": 24, "arig": 30,
+            "castra": 37, "tellus": 43, "corrundum": 50, "igrys": 54,
+        }
+        for name, radius in expected.items():
+            self.assertEqual(self.anchors[name][0], "solaris")
+            self.assertAlmostEqual(self.anchors[name][1], radius)
+        self.assertAlmostEqual(self.anchors["sye-solaris"][1], 34)
+        solaris = set(expected) | {"sye-solaris"}
+        actual = {frozenset((a,b)) for a,b,_,_ in self.routes
+                  if a in solaris and b in solaris}
+        intended = {
+            frozenset((a,b)) for a,b in (
+                ("sye-solaris","vulcanus"),("sye-solaris","igrys"),
+                ("vulcanus","castra"),("castra","arig"),
+                ("arig","hyarion"),("hyarion","tellus"),
+                ("tellus","corrundum"),("corrundum","igrys"),
+            )
+        }
+        self.assertEqual(actual,intended)
+        for a,b,_,_ in self.routes:
+            if a in solaris and b in solaris:
+                self.assertGreaterEqual(
+                    segment_clearance(self.coords["solaris"],
+                                      self.coords[a], self.coords[b]),15,
+                    f"Solaris route {a}-{b} intersects the stellar corona")
+
     def test_local_routes_have_no_geometric_crossovers(self):
         for star in STARS:
             family = {"sye-" + star}
@@ -189,6 +225,8 @@ class ConstellationTests(unittest.TestCase):
         neighbors = (
             ("vulcanus","castra",17500),
             ("arig","hyarion",12000),
+            ("hyarion","tellus",16500),
+            ("tellus","corrundum",18000),
             ("gleba","moshine",17000),
             ("moshine","apia-carnova-orbit",12000),
             ("moshine","panglia",25000),
@@ -201,7 +239,7 @@ class ConstellationTests(unittest.TestCase):
                   for a,b,km,kind in self.routes}
         families = {
             "solaris": ("sye-solaris","vulcanus","castra","arig","hyarion",
-                        "tellus","corrundum"),
+                        "tellus","corrundum","igrys"),
             "nyxaris": ("sye-nyxaris","gleba","moshine",
                         "apia-carnova-orbit","panglia"),
             "vibrant": ("sye-vibrant","fulgora","ribbonia",
