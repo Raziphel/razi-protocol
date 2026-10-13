@@ -1,3 +1,9 @@
+> **2.1.45:** A new built-in Razi path renderer replaces the previous
+> retired route layer. It reuses a single small directional atlas,
+> applies consistent short-stroke scaling, and adds only verified paths.
+> No unrelated background graphics or planetary art are changed.
+> See [ROUTE_HIGHLIGHTS.md](ROUTE_HIGHLIGHTS.md).
+
 > **2.1.44 route correction:** Razi no longer paints 2048px
 > directional-stroke sprite segments behind the map. Factorio owns the true
 > connection geometry, and the optional Space Route Overlay 0.2.7+ handles

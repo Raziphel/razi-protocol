@@ -1,49 +1,57 @@
-"""Native route coloring ownership regression for the external renderer."""
+"""Razi-owned, data-stage starmap route renderer regressions."""
 import json
-import unittest
 from pathlib import Path
+import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
+def read(name):
+    return (ROOT/name).read_text(encoding="utf-8")
 
-def source(path):
-    return (ROOT/path).read_text(encoding="utf-8")
-
-class RouteOverlayTests(unittest.TestCase):
-    def test_optional_non_ordered_overlay_avoids_dependency_cycle(self):
-        info=json.loads(source("info.json"))
-        deps=info["dependencies"]
+class BuiltInOverlayTests(unittest.TestCase):
+    def test_no_external_overlay_dependency(self):
+        info=json.loads(read("info.json"))
         self.assertEqual(info["factorio_version"],"2.1")
-        self.assertIn("~ space-route-overlay >= 0.2.7",deps)
-        self.assertFalse(any(
-            d.startswith(("space-route-overlay ", "? space-route-overlay",
-                          "+ space-route-overlay", "(?) space-route-overlay"))
-            for d in deps))
+        self.assertIn("! space-route-overlay",info["dependencies"])
+        self.assertNotIn("~ space-route-overlay >= 0.2.7",info["dependencies"])
+        self.assertFalse(any(d.startswith("? space-route-overlay") or
+            d.startswith("space-route-overlay >=")
+            for d in info["dependencies"]))
 
-    def test_old_sprite_renderer_can_never_draw(self):
-        source_code=source("prototypes/system/route_highlights.lua")
-        final=source("data-final-fixes.lua")
-        self.assertNotIn('require("prototypes.system.route_highlights").data_final_fixes()',final)
-        self.assertNotIn("directional-strokes",final)
-        self.assertNotIn('table.insert(sprite.layers',source_code)
-        self.assertNotIn("utility-sprites",source_code)
-        self.assertNotIn("sprite.layers",source_code)
-        self.assertIn("return 0",source_code)
-        self.assertIn("return {}",source_code)
+    def test_rendered_after_native_positions_and_route_tooltips(self):
+        source=read("data-final-fixes.lua")
+        layout='require("prototypes.system.galaxy_layout").confirm_critical_positions()'
+        overlay='require("prototypes.system.route_highlights").data_final_fixes()'
+        tooltips='require("prototypes.system.route_intel").data_final_fixes()'
+        self.assertLess(source.index(tooltips),source.index(overlay))
+        self.assertLess(source.index(layout),source.index(overlay))
 
-    def test_retire_inert_route_setting_but_retain_tooltips(self):
-        self.assertNotIn("razi-route-highlight-style",source("settings.lua"))
-        self.assertNotIn("razi-route-highlight-style=",source("locale/en/settings.cfg"))
-        self.assertIn("razi-route-intelligence",source("settings.lua"))
-        self.assertIn('require("prototypes.system.route_intel").data_final_fixes()',
-                      source("data-final-fixes.lua"))
+    def test_builtin_style_switches_and_directional_atlas(self):
+        settings=read("settings.lua")
+        self.assertIn('name="razi-route-overlay-mode"',settings)
+        self.assertIn('name="razi-route-overlay-scope"',settings)
+        self.assertIn('default_value="danger"',settings)
+        source=read("prototypes/system/route_highlights.lua")
+        self.assertIn('local SHEET="__razi-protocol__/graphics/route-highlights/directional-strokes.png"',source)
+        self.assertIn("local SEGMENT=6",source)
+        self.assertIn("local LAYER_BUDGET=650",source)
+        self.assertIn('local scope=startup["razi-route-overlay-scope"]',source)
+        self.assertIn('hazards.color(route)',source)
+        self.assertIn('if route.shape=="line" then',source)
+        self.assertIn("if not cx then",source)
+        self.assertIn("if abs(sweep)>.95 then return nil end",source)
+        self.assertIn('trim=math.min(2.2/distance,.16)',source)
+        self.assertIn('table.sort(names)',source)
+        self.assertIn("if layer.filename==SHEET then return 0 end",source)
 
-    def test_sources_preserve_native_route_ownership(self):
-        source_code=source("prototypes/system/route_highlights.lua")
-        self.assertNotIn("data:extend",source_code)
-        self.assertNotIn("data.raw",source_code)
-        self.assertNotIn("route.shape=",source_code)
-        self.assertNotIn("route.length=",source_code)
-        self.assertIn('require("prototypes.system.route_hazards")',source_code)
+    def test_never_edit_real_routes_or_add_runtime_work(self):
+        source=read("prototypes/system/route_highlights.lua")
+        self.assertNotIn("data:extend",source)
+        self.assertNotIn("route.shape=",source)
+        self.assertNotIn("route.length=",source)
+        self.assertNotIn("script.on_event",source)
+        self.assertNotIn("game.tick",source)
+        self.assertNotIn('require("space-route-overlay")',source)
+        self.assertTrue((ROOT/"graphics/route-highlights/directional-strokes.png").is_file())
 
 if __name__=="__main__":
     unittest.main()

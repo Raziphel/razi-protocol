@@ -346,13 +346,14 @@ See [the source ownership matrix](docs/K2SO_PLANET_INTEGRATION.md#community-k2so
 
 ## Space route coloring
 
-For clean route colors that follow **real** Factorio 2.1 connections,
-install [Space Route Overlay](https://mods.factorio.com/mod/space-route-overlay)
-version 0.2.7 or newer. Razi's obsolete sprite-segment route painting was
-retired in 2.1.44; without the companion the game draws ordinary native
-connections. Razi's route danger, asteroid fields, and hover tooltips remain.
-The overlay is not a hard dependency because its optional Razi integration
-could otherwise create a circular load order.
+Razi Protocol Dev includes its **own native-route hazard overlay** from
+2.1.45. It colors actual Factorio 2.1 paths using the existing asteroid
+threat calculations without altering connections or the research tree.
+Two startup settings choose threat or chapter colors and whether to show
+major/belt routes only or every verified local route. The previous
+disconnected color strips have been replaced with short, consistent-width
+segments. No extra mod is required; Space Route Overlay is incompatible to
+avoid drawing the same route twice.
 
 ## Compatibility Focus
 
