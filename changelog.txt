@@ -1,3 +1,12 @@
+Version: 2.1.26
+Date: 13. 10. 2026
+  Galactic Operations visual and usability overhaul:
+    - Replace rigid planet and platform rows with readable responsive cards, native sprite icons where available, colored system identities and four compact dashboard metrics.
+    - Wrap long destination names and group headings; show concrete fleet warnings, routes, assignments and clear actions without horizontal overflow.
+    - Adapt controls, tab captions, column layouts and inspector heights for smaller displays and higher GUI scales.
+    - Search planet names as translated for each player, with per-locale caching, a single coalesced refresh and a Clear action. Keep internal-ID and system searches.
+    - Preserve map-only entry, destination safety, favourites, notes, platform roles and save preferences; add Lua and Python regressions.
+
 Version: 2.1.25
 Date: 13. 10. 2026
   Interplanetary production balance:
