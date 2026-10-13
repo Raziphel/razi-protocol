@@ -56,13 +56,13 @@ end})
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
 local dx,dy=layout.anchor_position("razi-calidus-drift")
-check(dx < -19 and dx > -21 and dy > 19 and dy < 21,
-  "Calidus Drift must be southwest of the sun beside the outbound hub")
+check(dx < -9 and dx > -11 and dy > 24 and dy < 26,
+  "Calidus Drift should sit west and below the departure hub")
 local hub_x,hub_y=layout.anchor_position("sye-calidus")
 check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
   "Calidus departure portal drifted from the compact central approach")
-check(math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)>15 and
-  math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)<24,
+check(math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)>9 and
+  math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)<14,
   "Drift should be a short freight hop from the slipstream")
 -- Native rings should not pile up at nearly identical radii.
 local ax,ay=layout.anchor_position("apia-carnova-orbit")
@@ -83,7 +83,15 @@ for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
   check(math.abs(math.sqrt((px-vx)^2+(py-vy)^2)-pair[2])<.01,
     "Vibrant climate radius mismatch: "..pair[1])
 end
+-- Simulate both source mod prototype types at once, before sprite baking.
+places.khemia={name="khemia",
+  orbit={parent={type="space-location",name="star"},distance=25,orientation=.41}}
 layout.data_updates()
+check(places.khemia.orbit and
+  places.khemia.orbit.parent.name=="vibrant" and
+  places.khemia.origin and math.abs(places.khemia.origin.x-vx)<.01,
+  "Duplicate sprite-only Khemia source was not moved during data-updates")
+places.khemia=nil
 -- Khemia was visible next to the first sun even though its final orbit
 -- metadata named Vibrant. Its absolute origin must already be right in
 -- the earlier PlanetsLib art-baking stage.

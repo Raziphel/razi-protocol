@@ -78,11 +78,11 @@ class ConstellationTests(unittest.TestCase):
     def test_drift_occupies_the_southwest_freight_arc(self):
         anchors=parse_layout()
         self.assertEqual(anchors["razi-calidus-drift"],
-                         ("star",28.0,.625))
+                         ("star",27.0,.56))
         self.assertGreater(math.dist(self.coords["razi-calidus-drift"],
-                                    self.coords["sye-calidus"]),15)
+                                    self.coords["sye-calidus"]),9)
         self.assertLess(math.dist(self.coords["razi-calidus-drift"],
-                                 self.coords["sye-calidus"]),24)
+                                 self.coords["sye-calidus"]),14)
 
     def test_calidus_centered_radial_gallery(self):
         centers = {

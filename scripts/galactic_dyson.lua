@@ -68,7 +68,8 @@ function M.render(parent,player)
  local hero=parent.add{type="frame",direction="horizontal",
    style="inside_shallow_frame"}
  hero.style.horizontally_stretchable=true
- local art=hero.add{type="sprite",sprite="razi-dyson-works-"..phase}
+ local art=hero.add{type="sprite",
+   sprite="razi-dyson-works-stage-"..math.min(6,completed)}
  art.resize_to_sprite=false
  art.style.width=128
  art.style.height=128
@@ -78,6 +79,9 @@ function M.render(parent,player)
  phase_title.style.font="heading-2"
  label(copy,L("dyson-subtitle"))
  label(copy,L("dyson-stage-progress",tostring(completed),tostring(total)))
+ local visual=label(copy,L("dyson-art-stage",tostring(math.min(6,completed))))
+ visual.style.font="default-bold"
+ visual.style.font_color={r=1,g=.76,b=.45}
  local progress=copy.add{type="progressbar",
    value=total>0 and completed/total or 0}
  progress.style.horizontally_stretchable=true

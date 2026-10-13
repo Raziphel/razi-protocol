@@ -202,7 +202,7 @@ are unchanged. Moon parentage, source routes and progression remain intact.
 
 ## Calidus Drift and Khemia correction (October 2026)
 
-The Calidus salvage destination is now at radius 28, orientation 0.625
+The Calidus salvage destination now sits at radius 27, orientation 0.56
 (southwest of the star), closer to the main southward departure hub. It
 never draws a native orbital circle. The mod's source prototype and its
 shared layout agree, preventing a next-load jump.
@@ -237,3 +237,20 @@ rendering and in the last Factorio-native geometry pass. Source-owned
 solar-orbit IDs are recognized by native technology unlock effects, and
 obsolete Khemia-to-Calidus routes retired. A final coordinate assertion
 and log provide concrete diagnostics.
+
+
+## Calidus 2.1.38 visual integration
+
+The original central PlanetsLib source star art is replaced at data-updates,
+while source planets, star magnitude, solar power and other stellar sprites
+remain intact. Drift now sits just west and below the Slip Stream, giving
+its freight spur a short diagonal instead of an awkward horizontal stroke.
+Dual Khemia planet/space-location prototypes are both reparented to Vibrant
+before PlanetsLib's irreversible starmap baking, with distinct source-owned
+orbit sprite properties preserved. Their final native positions are
+verified and any marked PlanetsLib orbit-art layers logged for diagnosis.
+
+A per-force research-driven Dyson badge appears beside Galactic Operations
+in Remote View. Galactic Operations > Stellar Works displays seven art
+stages. The actual starmap star is intentionally static, since Factorio's
+native prototype sprites cannot switch per force at runtime.

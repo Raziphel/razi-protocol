@@ -181,7 +181,10 @@ events:on_event("razi-journal-toggle",function(event)
   local player=game.get_player(event.player_index)
   if player then razi_journal.toggle(player) end
 end)
-events:on_event(defines.events.on_research_finished,razi_journal.on_research)
+events:on_event(defines.events.on_research_finished,function(event)
+  razi_journal.on_research(event)
+  galactic_operations.on_dyson_research(event)
+end)
 -- /cheat is a built-in command and cannot be replaced. This notification
 -- runs only if the engine gets far enough to emit its console event.
 events:on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)

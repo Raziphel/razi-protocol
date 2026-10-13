@@ -4,7 +4,7 @@ local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local systems={
-  {name="calidus",tint={r=1,g=.78,b=.58},strength=.88},
+  {name="calidus",tint={r=1,g=.72,b=.47},strength=.62},
   {name="solaris",tint={r=1,g=.51,b=.30},strength=.84},
   {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
   {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
@@ -47,7 +47,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,"atlas-halo.png",
-          system.name=="calidus" and 12.5 or 13,
+          system.name=="calidus" and 9.8 or 13,
           x,y,system.tint,(cinematic and .81 or .58)*system.strength)
       end
     end
@@ -55,8 +55,8 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
   if halos~=false then
     local fx,fy=layout.anchor_position("razi-calidus-drift")
     if fx and fy then
-      insert_asset(layers,"atlas-halo.png",2.7,fx,fy,
-        {r=1,g=.75,b=.50},cinematic and .24 or .16)
+      insert_asset(layers,"atlas-halo.png",2.4,fx,fy,
+        {r=1,g=.75,b=.50},cinematic and .20 or .12)
     end
   end
   if atmosphere~=false then

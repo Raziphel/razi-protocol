@@ -20,3 +20,8 @@ check(m.research_phase(0)=="survey" and m.research_phase(2)=="plasma"
  and m.research_phase(4)=="distribution"
  and m.research_phase(6)=="mastery",
  "Research-phase art is not mapping native milestones")
+
+local phase={}
+for i,tech in ipairs(m.stages) do phase[tech[1]]={researched=i<=4} end
+local progress=m.status({technologies=phase})
+check(progress==4,"Dyson construction stage must follow actual research")
