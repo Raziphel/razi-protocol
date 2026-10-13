@@ -1,5 +1,4 @@
 require "prototypes.system.calidus"
-require("prototypes.system.calidus_expansion").data()
 require("prototypes.system.bellicos").data()
 require "prototypes.system.solaris"
 require "prototypes.system.nyxaris"

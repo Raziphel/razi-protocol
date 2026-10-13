@@ -1,3 +1,7 @@
+> **2.1.42 Calidus layout:** Calidus Drift is retired. Any earlier
+> descriptions of that temporary destination below are historical; the
+> active home system uses Nauvis, Muluna, and Calidus Slip Stream.
+
 # Seven-System Revamp: Implementation notes
 
 **Development branch:** private `Raziphel/razi-protocol-dev` `main`. This update is **experimental** until tested inside Factorio 2.1.

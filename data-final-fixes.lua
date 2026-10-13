@@ -66,7 +66,6 @@ require("prototypes.system.route_reconcile").data_final_fixes()
 
 -- Set the campaign gates after the earlier compatibility passes.
 require("prototypes.technology.seven_system_gates").data_final_fixes()
-require("prototypes.system.calidus_expansion").data_final_fixes()
 
 require("prototypes.technology.campaign_weave").data_final_fixes()
 

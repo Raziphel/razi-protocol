@@ -1,80 +1,47 @@
-# Calidus: a small but genuine home system
+# Calidus: Nauvis, Muluna, and the departure corridor
 
-Calidus remains deliberately smaller than the six frontier regions.
+Calidus is deliberately the smallest home system. Its sun and source-owned
+solar-orbit destinations stay intact. Nauvis remains the starting world and
+Muluna remains the required landable moon.
 
-| Location | Purpose | Can land? |
-| --- | --- | --- |
-| Nauvis | Starting factories and launch economy | Yes |
-| Muluna | Required landable moon, early space science | Yes |
-| Calidus Drift | New light orbital salvage/collection point | No |
-| Calidus Slip Stream | Existing departure corridor | No |
+**Calidus Drift was retired in Razi Protocol Dev 2.1.42.** No new drift
+location, unlock, halo, or freight route is registered. Existing saves should
+be backed up before updating: any space-platform schedule pointing at the
+retired destination will need a new target.
 
-## Local shipping
+| Location | Gameplay purpose |
+| --- | --- |
+| Nauvis | Starting factories and rocket launches |
+| Muluna | Native Nauvis moon and early science |
+| Calidus Slip Stream (`sye-calidus`) | Departure hub toward Solaris and Nyxaris |
+| Native solar engineering orbits | SLP Dyson Sphere source locations |
 
-- Nauvis ↔ Calidus Slip Stream: **25,000 km**, the main outward corridor.
-- Calidus Slip Stream ↔ Calidus Drift: **17,500 km**, a clean freight spur.
-- Nauvis ↔ Muluna: source-owned native moon access, preserved unchanged.
-- If the source moon route is absent, Muluna ↔ Slip Stream **14,000 km**
-  remains as a fallback so the moon does not become isolated.
+## Travel and safety
 
-The older Nauvis ↔ Drift shortcut and redundant direct Muluna ↔ Slip
-Stream shortcut are removed when native moon access exists.
-Drift sits southwest of the star at radius 28 / turn 0.625, aligned near
-the departure hub instead of spawning a competing upper-star orbit. It uses a Razi-owned existing 64px
-route icon and generates **no planetary surface or new art asset**.
+- Nauvis to Calidus Slip Stream remains **25,000 km**.
+- Native Nauvis-to-Muluna access remains unchanged.
+- Muluna to the Slip Stream remains a **14,000 km fallback** if the native
+  Nauvis/Muluna route is missing.
+- All older routes pointing to Calidus Drift are cleaned from the final map.
+- Calidus retains its small-vanilla-asteroid ceiling; custom source
+  asteroid chunks and native Dyson routes are not removed.
 
-This orbital stop provides metallic, carbonic and oxide asteroid chunks
-at 55% of the existing Razi belt-edge intensity. It has no hostile
-stationary asteroid encounters. As with every Calidus route, the small-only
-vanilla asteroid ceiling is enforced by route reconciliation.
+## Star chart
 
-It unlocks from the existing `space-science-pack` research, or falls back
-to `planet-discovery-muluna` for unusual dependency forks. No research
-prerequisite is added to the central seven-system progression, and neither
-Solaris nor Nyxaris can be reached early because of the new freight links.
+The Calidus sun remains the compact, warm counterpart of the outer stellar
+artwork. The native star and solar-orbit labels are retained, but there is no
+second salvage-node halo or extra orbit clutter. A quieter static starfield
+gives labels and travel lines more breathing room.
 
-*Compatibility:* Old prototype IDs, native moon orbits and existing
-platform schedules are preserved. Real Factorio runtime testing with the
-full modpack and older saves is still required before public release.
+Khemia still belongs to Vibrant and is positioned before PlanetsLib renders
+its sprite and again in the final native coordinate pass. Dyson progression
+continues to appear in the Galactic Operations UI, not as a fake stage of
+the source star on everybody's static map.
 
-## Calidus visual pass (October 2026)
+## Save migration checklist
 
-Calidus is now a restrained two-spoke transit hub. Razi-authored local
-freight links use direct short native paths; source Nauvis/Muluna and
-SLP Dyson machinery connections remain source-owned. The optional Dyson
-hub connector is only added when the outer solar station has no local
-homeward approach. The Calidus background is a smaller warm halo rather
-than an oversized brown circular field; the Drift gets a softer amber
-locator bloom. Existing platform schedules on removed Razi routes may
-need a reachable destination selected after a mod update.
-
-Khemia belongs to Vibrant. It is positioned before PlanetsLib renders
-its source graphics and again at final Factorio-native coordinates.
-Obsolete native Calidus and Dyson solar-orbit routes are only removed for
-positively identified endpoints. Its genuine Vibrant industrial routes,
-recipes and planet surface remain source owned. Look for Razi Protocol
-Calidus Khemia coordinate log entries to diagnose the in-game map.
-
-Players in Remote View see a small Dyson phase badge beside GALACTIC OPS.
-It advances through visual phases 0-6 for their force; selecting the badge
-opens the full research-driven Stellar Works display. The badge is a native
-GUI control, not an inaccurate world-space sprite overlay, and the sun's
-starmap icon stays a fixed orange-gold star for everyone.
-
-## Calidus visual correction (2.1.39)
-
-The initial small Calidus sun looked visibly blurry and brown. The home star
-now uses the same full-resolution 1024px stellar artwork family as the
-Solaris/Nyxaris/Vibrant suns. This is intentional asset sharing, not another
-procedurally drawn disc. The source sun's actual magnitude, location and
-power output are unchanged. The broad amber background wash is slightly
-smaller and less opaque; Dyson progress art remains in Galactic Operations.
-
-Khemia has a final *absolute polar* position override rather than relying
-on a relative origin field that has not been honored consistently in the
-actual installed PlanetsLib/Factorio stack. It remains logically parented
-to Vibrant, but stores the exact world-space distance/angle with origin nil
-and its duplicate native orbit ring disabled. Both planet and space-location
-prototypes are handled. The final diagnostic checks that effective rendered
-coordinates match Vibrant's anchor plus Khemia's planned offset, and prints
-both coordinates if debugging is needed.
+Try old saves with a backup. Change any platform schedule that targeted
+Calidus Drift, confirm native Nauvis/Muluna travel still works, verify the
+Calidus hub opens Solaris and Nyxaris independently, and inspect the
+sun-orbit Dyson destinations. Source/static tests cannot certify in-game
+platform state or the complete Factorio 2.1 modpack load.

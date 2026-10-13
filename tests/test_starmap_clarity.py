@@ -75,14 +75,11 @@ class ConstellationTests(unittest.TestCase):
         self.coords = positions(self.anchors)
         self.routes = parse_routes()
 
-    def test_drift_occupies_the_southwest_freight_arc(self):
-        anchors=parse_layout()
-        self.assertEqual(anchors["razi-calidus-drift"],
-                         ("star",27.0,.56))
-        self.assertGreater(math.dist(self.coords["razi-calidus-drift"],
-                                    self.coords["sye-calidus"]),9)
-        self.assertLess(math.dist(self.coords["razi-calidus-drift"],
-                                 self.coords["sye-calidus"]),14)
+    def test_retired_drift_not_in_live_layout(self):
+        self.assertNotIn("razi-calidus-drift",self.anchors)
+        self.assertNotIn("razi-calidus-drift",self.coords)
+        self.assertFalse(any("razi-calidus-drift" in (start,end)
+                             for start,end,_,_ in self.routes))
 
     def test_calidus_centered_radial_gallery(self):
         centers = {

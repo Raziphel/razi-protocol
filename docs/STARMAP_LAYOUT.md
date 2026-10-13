@@ -1,3 +1,7 @@
+> **2.1.42 current map:** Calidus Drift has been retired. Older experimental
+> descriptions below are historical. The active home system contains Nauvis,
+> Muluna, and the Calidus Slip Stream, with no extra Drift orbit or sprite.
+
 # Razi Protocol starmap: Calidus and the six-star circle
 
 Factorio and PlanetsLib use clockwise turns: **0 north**, **0.25 east**,

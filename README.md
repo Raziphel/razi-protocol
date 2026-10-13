@@ -97,7 +97,7 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 
 | Tier | System | Planets | Identity |
 | --- | --- | --- | --- |
-| Home | **Calidus** | Nauvis, Muluna, Calidus Drift salvage anchorage | Familiar Space Age industry, the first system card |
+| Home | **Calidus** | Nauvis, Muluna, Calidus Slip Stream departure corridor | Familiar Space Age industry, the first system card |
 | Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys | Military and advanced industrial science |
 | Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
 | Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |

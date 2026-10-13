@@ -26,7 +26,7 @@ end
 
 local function test_routes()
 	local places = {
-		"sye-calidus", "razi-calidus-drift", "sye-solaris", "sye-nyxaris", "sye-vibrant",
+		"sye-calidus", "sye-solaris", "sye-nyxaris", "sye-vibrant",
 		"sye-vespera", "sye-beetlejuice", "sye-umbra",
 		"razi-vespera-belt-inner","razi-vespera-belt-outer",
 		"razi-umbra-belt-inner","razi-umbra-belt-outer",
@@ -84,6 +84,10 @@ local function test_routes()
 				type = "space-connection", name = "old-tenebris-link",
 				from = "sye-beetlejuice", to = "tenebris"
 			},
+            ["legacy-calidus-drift"] = {
+                type="space-connection",name="legacy-calidus-drift",
+                from="razi-calidus-drift",to="sye-calidus",length=17500
+            },
             ["old-inner-to-frozen"] = {
                 type="space-connection",name="old-inner-to-frozen",
                 from="ribbonia",to="paracelsin",length=3000
@@ -231,12 +235,12 @@ local function test_routes()
     end
   end
   check(count==7,"Expected seven direct interstellar corridors")
-  local drift=routes["razi-razi-calidus-drift-sye-calidus"]
-  check(drift and drift.length==17500 and drift.shape=="line",
-    "Calidus Drift should have one clean direct hub connection")
-  check(not routes["razi-nauvis-razi-calidus-drift"]
-    and not routes["razi-muluna-sye-calidus"],
-    "Calidus still has redundant Nauvis/Drift/Muluna spokes")
+  for _,route in pairs(routes) do
+    check(route.from~="razi-calidus-drift" and route.to~="razi-calidus-drift",
+      "Old Calidus Drift connection survived")
+  end
+  check(not routes["razi-muluna-sye-calidus"],
+    "Redundant moon-to-hub link survived source moon route")
   check(routes["native-nauvis-muluna"]~=nil,
     "Cleanup must preserve the actual source-owned lunar connection")
   check(routes["razi-sye-calidus-sye-vibrant"]==nil,
