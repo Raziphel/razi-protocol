@@ -331,6 +331,19 @@ Razi Protocol keeps Logistics focused on the normal logistic core, then adds a d
 
 It also includes a few narrow balance passes for overlapping unlocks where two planets solve a similar problem in nearly the same way.
 
+## Factorio 2.1 K2SO planetary compatibility
+
+Corrundum Compatibility+ 1.1.2+ joins the required K2SO integrations with
+Castra, Rubia, Paracelsin, Cubium, Null's Tweaks and xyrc's Null Fork. Corrundum
+owns its electrochemical research-data and tech-card conversion; Razi already
+consumes the native electrochemical science in the Solaris system card and must
+not create duplicate conversion recipes.
+
+Secretas/Frozeta Krastorio Compatibility+ currently targets Factorio 2.0,
+so it cannot be required in our Factorio 2.1 pack. The separate 2.1
+Secretas/Frozeta Orbit Patch is optional because Outer Rim excludes it.
+See [the source ownership matrix](docs/K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership).
+
 ## Compatibility Focus
 
 Razi Protocol is not just a route mod. It is also a cleanup layer for a very busy dependency stack.

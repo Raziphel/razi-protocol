@@ -1,3 +1,11 @@
+Version: 2.1.41
+Date: 13. 10. 2026
+  K2SO compatibility curation:
+    - Require Corrundum Compatibility+ 1.1.2+ for the native 2.1 electrochemical research-data/tech-card bridge.
+    - Recognize the Factorio 2.1 Secretas/Frozeta orbit patch as optional; Outer Rim excludes it.
+    - Leave the Factorio 2.0-only Secretas/Frozeta K2SO Compatibility+ out of the 2.1 required stack.
+    - Document upstream science ownership, progression safeguards and pending Factorio 2.1 smoke tests.
+
 Version: 2.1.40
 Date: 13. 10. 2026
   Original galactic starfield:
