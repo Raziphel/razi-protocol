@@ -67,6 +67,14 @@ Five optional industry exchanges connect pairs of FluxWorks system workshops, fr
 
 See [FluxWorks Industrial Exchanges](docs/FLUXWORKS_INDUSTRIAL_EXCHANGES.md).
 
+### FluxWorks machine progression and Codex previews
+
+When FluxWorks is enabled, the Industrial Atlas now shows each specialization's actual factory recipe, ingredient and output quantities, recommended machine, and suggested production world. Its twelve optional research goals have their own chapter progress and no longer inflate the main campaign's completion totals or distract from higher-priority story research.
+
+Selected FluxWorks engineering technologies also have lighter research costs in **Razi companion mode only**. All requirements and rewards remain intact; standalone FluxWorks is unchanged.
+
+See [FluxWorks Progression and Usability Audit](docs/FLUXWORKS_PROGRESSION_AUDIT.md) for the exact changes and playtest checklist.
+
 ## Mod Settings
 
 Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
