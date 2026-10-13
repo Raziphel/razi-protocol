@@ -67,23 +67,24 @@ check(math.abs(math.sqrt((ax-nx)^2+(ay-ny)^2)-39)<.01,
   "Apia/Carnova orbital lane must be distinct from Gleba")
 local hx,hy=layout.anchor_position("hyarion")
 local sx,sy=layout.anchor_position("solaris")
-check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-24)<.01,
+check(math.abs(math.sqrt((hx-sx)^2+(hy-sy)^2)-21)<.01,
   "Hyarion must be a separate hot inner orbit")
 -- Explicit orbital bands are a visible thermal progression, not a renaming
 -- of the source planet's climate or a reordering of its native research.
 for _,entry in ipairs({
-  {"vulcanus",18},{"hyarion",24},{"arig",30},{"castra",37},
-  {"tellus",43},{"corrundum",50},{"igrys",54}
+  {"vulcanus",17},{"hyarion",21},{"arig",24},{"castra",27},
+  {"tellus",29},{"corrundum",33},{"igrys",35}
 }) do
   local x,y=layout.anchor_position(entry[1])
   check(math.abs(math.sqrt((x-sx)^2+(y-sy)^2)-entry[2])<.01,
     "Solaris orbit radius mismatch: "..entry[1])
 end
 local igrysX,igrysY=layout.anchor_position("igrys")
-check(igrysX>sx-20 and igrysX<sx-10 and igrysY<sy-45,
-  "Igrys must stay in the upper Solaris chart, away from Nyxaris")
+check(igrysX>sx-26 and igrysX<sx-18 and
+  igrysY<sy-22 and igrysY>sy-32,
+  "Igrys must stay in the compact Solaris outer northwest lane")
 local departureX,departureY=layout.anchor_position("sye-solaris")
-check(math.abs(math.sqrt((departureX-sx)^2+(departureY-sy)^2)-34)<.01,
+check(math.abs(math.sqrt((departureX-sx)^2+(departureY-sy)^2)-28)<.01,
   "Solaris departure corridor must sit outside the stellar core")
 local px,py=layout.anchor_position("panglia")
 check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-44)<.01,
@@ -221,12 +222,12 @@ check(places["sye-solaris"].draw_orbit==false,
 -- A cosmetic chart setting must never change the saved orbit geometry.
 settings.startup["razi-starmap-orbit-density"].value="balanced"
 layout.data_final_fixes()
-for _,name in ipairs({"vulcanus","castra","moshine","panglia",
+for _,name in ipairs({"castra","moshine","panglia",
   "fulgora","paracelsin","muria","aquilo","cubium","tenebris"}) do
   check(planets[name].draw_orbit==true,
     "Balanced chart lost a signature orbit: "..name)
 end
-for _,name in ipairs({"arig","hyarion","tellus","corrundum","gleba",
+for _,name in ipairs({"vulcanus","arig","hyarion","tellus","corrundum","gleba",
   "ribbonia","rubia","maraxsis","linox-planet_linox","vesta"}) do
   check(planets[name].draw_orbit==false,
     "Balanced chart kept a crowded orbit: "..name)

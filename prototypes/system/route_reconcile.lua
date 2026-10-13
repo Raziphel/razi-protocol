@@ -63,10 +63,9 @@ local route_specifications = {
   -- Preserve its legacy connection ID and Razi-owned asteroid loot.
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
-  -- Solaris has a readable clockwise local corridor. The two arrivals
-  -- reach the hot inner world and the far outer industrial world without
-  -- sending long diagonals through the star. All native planet researches
-  -- and local factory mechanics remain source-owned.
+  -- Solaris stays compact: the inner industry arc and a separate Igrys
+  -- expedition spur both depart from the western hub. No giant top chord
+  -- between distant outer worlds; research gates remain source-owned.
   {"sye-solaris", "vulcanus", 18000, "industrial"},
   {"sye-solaris", "igrys", 26500, "industrial_deep"},
   {"vulcanus", "castra", 17500, "industrial"},
@@ -74,8 +73,8 @@ local route_specifications = {
   {"arig", "hyarion", 12000, "industrial_deep"},
   {"hyarion", "tellus", 16500, "industrial_deep"},
   {"tellus", "corrundum", 18000, "industrial_deep"},
-  -- An outer orbital ferry: Factorio draws this around the sun, not through it.
-  {"corrundum", "igrys", 32000, "industrial_deep"},
+  -- Igrys is served directly from the Slip Stream. An extra long outer
+  -- Corrundum-Igrys chord made this small system look artificially ringed.
 	-- Nyxaris neighbors can exchange biological supplies directly instead
 	-- of routing every load through their distant slipstream hub.
 	{"gleba", "moshine", 17000, "biological"},
@@ -259,7 +258,8 @@ function route_reconcile.data_final_fixes()
     ["razi-castra-hyarion"]={"castra","hyarion"},
     ["razi-vulcanus-hyarion"]={"vulcanus","hyarion"},
     ["razi-hyarion-corrundum"]={"hyarion","corrundum"},
-    ["razi-vulcanus-arig"]={"vulcanus","arig"}
+    ["razi-vulcanus-arig"]={"vulcanus","arig"},
+    ["razi-corrundum-igrys"]={"corrundum","igrys"}
   }
   for name,endpoints in pairs(retired_solaris) do
     local old=routes[name]
