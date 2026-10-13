@@ -1,3 +1,14 @@
+Version: 2.1.46
+Date: 14. 10. 2026
+  Compact Solaris and quiet first-frontier starmap:
+    - Pull the seven Solaris planets into a much smaller 17-35 unit orbital area, with believable hot inner and outer atmospheric/industrial distances.
+    - Keep the western Slip Stream near its planets and make Igrys a clear upper-left orbital expedition.
+    - Retire the unnecessary Corrundum-Igrys sky chord; retain the separate Slip Stream-Igrys route and all planetary discovery gates.
+    - Use one default Balanced reference orbit for Solaris; Full retains every source planet ring.
+    - Reduce the Solaris atlas corona scale/strength, lower starlight and orbital belt glow, remove four dense fog pockets obscuring first-frontier routes and soften micro-details.
+    - Extend fixture coverage for planet separation, route clearance, old route cleanup, native orbit toggles and atlas layer counts.
+    - In-game full modpack render, GUI label clearance and old save platform schedules remain to be checked.
+
 Version: 2.1.45
 Date: 13. 10. 2026
   Rebuild Razi's original space-route overlay in the dev pack:

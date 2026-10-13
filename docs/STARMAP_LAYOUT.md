@@ -1,3 +1,63 @@
+## Solaris compact orbital polish (2.1.46)
+
+Solaris is now an intentionally **compact** first-frontier system. The
+worlds orbit their original Solaris parent; the values below are chart
+distances, not temperature or astronomical units. Original world
+conditions, science gates, planet art and gravity are unchanged.
+
+| World | Orbital chart radius | Orientation (turns) | Place in system |
+| --- | ---: | ---: | --- |
+| Vulcanus | 17 | 0.69 | Inner magma world |
+| Hyarion | 21 | 0.37 | Hot inner crystals and lava |
+| Arig | 24 | 0.52 | Warm desert orbit |
+| Castra | 27 | 0.61 | Industrial/military middle zone |
+| Tellus | 29 | 0.26 | Temperate visual belt |
+| Corrundum | 33 | 0.13 | Outer atmospheric industry |
+| Igrys | 35 | 0.89 | Northwest outer-world expedition |
+| Solaris Slip Stream | 28 | 0.75 | Western navigation gateway |
+
+### Navigation and map readability
+
+The local travel network is now a **seven-connection, branching corridor**.
+The main arc follows
+`Slip Stream → Vulcanus → Castra → Arig → Hyarion → Tellus → Corrundum`.
+The existing independent `Slip Stream → Igrys` expedition spur remains.
+The retired `Corrundum → Igrys` giant sky chord is cleaned up if present.
+This is strictly a Razi-authored route-topology adjustment: required
+planet discoveries, seven-system expedition links and all existing
+science chains are unchanged. Factorio continues to own clickable
+connections, travel time and source-owned asteroid resources.
+
+All eight chart markers now fit into a 35-unit orbital area instead of
+the earlier 54-unit outer radius. We verify every local planet icon
+remains at least 12.5 chart units from any other and no local line
+cuts across Solaris's central star.
+
+To keep native orbit rings from piling up, **Balanced** now shows one
+Solaris reference orbit (Castra), while **Full** still shows all
+source-orbit rings. The synthetic Slip Stream orbit ring stays hidden.
+
+### Solar atmosphere and chart surroundings
+
+Solaris's native high-resolution sun icon is unchanged, but its extra
+Razi atlas corona is smaller, warmer and more transparent. The full
+galaxy keeps the crisp indexed sky tiles with lower default opacity.
+Four large decorative clouds inside the first-frontier travel corridor
+have been removed; distant dust details are dimmer. We don't need to
+draw an extra fake route or fog feature to identify the system.
+
+### Test checklist
+
+Load an actual Factorio 2.1 save and examine Solaris at system
+and wide-galaxy zoom. Verify the compact planets remain accessible,
+planet labels don't overlap, source-owned research progression still
+permits each discovery, Igrys retains its gateway link, route overlays
+stay aligned, and platforms with old Corrundum/Igrys schedules
+are corrected if necessary. These static checks do not prove the
+rendered result with every third-party planet source installed.
+
+---
+
 > **2.1.45 route rendering:** The native Solaris direct-line geometry from
 > 2.1.44 remains. Razi now owns a rebuilt, path-aware hazard overlay.
 > It uses short, fixed-width segments and verified regional arc origins,

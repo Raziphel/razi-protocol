@@ -6,7 +6,7 @@ local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local ATMOSPHERE_SIZE=512
 local systems={
   {name="calidus",tint={r=1,g=.86,b=.42},strength=.38},
-  {name="solaris",tint={r=1,g=.51,b=.30},strength=.67},
+  {name="solaris",tint={r=1,g=.55,b=.37},strength=.45},
   {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
   {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
   {name="vespera",tint={r=.61,g=.78,b=.96},strength=.77},
@@ -42,7 +42,7 @@ local function add_starfield(layers,cinematic)
         shift={(col-3.5)*4096,(row-3.5)*4096},
         priority="extra-high-no-scale",flags={"gui-icon"},
         blend_mode="normal",
-        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .58 or .38}
+        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .52 or .33}
       }
     end
   end
@@ -76,8 +76,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,"atlas-halo.png",
-          system.name=="calidus" and 1.65 or 2.35,
-          x,y,system.tint,(cinematic and .38 or .25)*system.strength)
+          system.name=="calidus" and 1.65
+            or system.name=="solaris" and 1.95 or 2.35,
+          x,y,system.tint,(cinematic and .34 or .22)*system.strength)
       end
     end
   end
@@ -86,7 +87,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(belt.name)
       if x and y then
         insert_asset(layers,"atlas-belt.png",belt.scale,x,y,
-          belt.tint,cinematic and .28 or .16)
+          belt.tint,cinematic and .25 or .13)
       end
     end
   end
@@ -97,17 +98,13 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         {-169,-18,{r=.58,g=.74,b=.91},1,1},
         {162,47,{r=.71,g=.58,b=.87},1,2},
         {9,-254,{r=.55,g=.68,b=.89},1,3},
-        {-7,161,{r=.82,g=.68,b=.48},1,2},
-        -- Sparse, transparent dust lanes fill otherwise empty gaps without
-        -- drawing a fake portal, orbit, or route.
-        {0,56,{r=.54,g=.71,b=.83},.55,3},
-        {0,-59,{r=.62,g=.59,b=.84},.55,1},
-        {60,-31,{r=.60,g=.58,b=.89},.55,2},
-        {-63,-33,{r=.59,g=.77,b=.85},.55,3}
+        {-7,161,{r=.82,g=.68,b=.48},1,2}
+        -- Keep the busy first-frontier corridor empty: the former four
+        -- huge central fog pockets covered real solar route connections.
       }
       for _,p in ipairs(pockets) do
         insert_asset(layers,"atlas-dust-"..p[5]..".png",4.25,p[1],p[2],p[3],
-          (cinematic and .45 or .29)*(p[4] or 1))
+          (cinematic and .32 or .19)*(p[4] or 1))
       end
     end
     if option("razi-starmap-micro-details",true) then
@@ -115,14 +112,14 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         local x,y=anchor(name)
         if x and y then
           insert_asset(layers,"atlas-dust-"..((index-1)%3+1)..".png",
-            2,x+41,y-33,WHITE,cinematic and .23 or .15)
+            2,x+41,y-33,WHITE,cinematic and .17 or .10)
         end
       end
     end
   end
   if cartography==true then
     -- An optional star pocket, never another fake orbit/connection.
-    insert_asset(layers,"atlas-dust-2.png",2.75,0,-42,WHITE,.26)
+    insert_asset(layers,"atlas-dust-2.png",2.75,0,-42,WHITE,.18)
   end
   return layers
 end

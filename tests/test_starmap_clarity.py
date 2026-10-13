@@ -181,14 +181,14 @@ class ConstellationTests(unittest.TestCase):
 
     def test_solaris_planets_have_real_orbits_and_a_clean_corridor(self):
         expected = {
-            "vulcanus": 18, "hyarion": 24, "arig": 30,
-            "castra": 37, "tellus": 43, "corrundum": 50, "igrys": 54,
+            "vulcanus": 17, "hyarion": 21, "arig": 24,
+            "castra": 27, "tellus": 29, "corrundum": 33, "igrys": 35,
         }
         for name, radius in expected.items():
             self.assertEqual(self.anchors[name][0], "solaris")
             self.assertAlmostEqual(self.anchors[name][1], radius)
-        self.assertAlmostEqual(self.anchors["sye-solaris"][1], 34)
-        self.assertAlmostEqual(self.anchors["igrys"][2], .95)
+        self.assertAlmostEqual(self.anchors["sye-solaris"][1], 28)
+        self.assertAlmostEqual(self.anchors["igrys"][2], .89)
         solaris = set(expected) | {"sye-solaris"}
         actual = {frozenset((a,b)) for a,b,_,_ in self.routes
                   if a in solaris and b in solaris}
@@ -197,10 +197,17 @@ class ConstellationTests(unittest.TestCase):
                 ("sye-solaris","vulcanus"),("sye-solaris","igrys"),
                 ("vulcanus","castra"),("castra","arig"),
                 ("arig","hyarion"),("hyarion","tellus"),
-                ("tellus","corrundum"),("corrundum","igrys"),
+                ("tellus","corrundum"),
             )
         }
         self.assertEqual(actual,intended)
+        self.assertNotIn(frozenset(("corrundum","igrys")),actual)
+        # Eight local markers fit inside a 35-unit disk and do not collapse
+        # into each other, even with the crowded Galactic Ops toolbar.
+        local_positions=[self.coords[world] for world in solaris]
+        for i,first in enumerate(local_positions):
+            for second in local_positions[i+1:]:
+                self.assertGreaterEqual(math.dist(first,second),12.5)
         for a,b,_,_ in self.routes:
             if a in solaris and b in solaris:
                 self.assertGreaterEqual(

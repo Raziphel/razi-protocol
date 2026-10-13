@@ -1,3 +1,9 @@
+> **2.1.46 quiet chart pass:** The extra Solaris halo is smaller and lower
+> opacity, the indexed background is dimmer, and four giant fog patches
+> in the first-frontier travel area have been removed. Native sun artwork
+> stays untouched. Solaris now shows a single reference orbit in Balanced
+> mode. See [Solaris compact polish](STARMAP_LAYOUT.md#solaris-compact-orbital-polish-2146).
+
 > **2.1.45:** A new built-in Razi path renderer replaces the previous
 > retired route layer. It reuses a single small directional atlas,
 > applies consistent short-stroke scaling, and adds only verified paths.

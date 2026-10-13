@@ -344,6 +344,16 @@ so it cannot be required in our Factorio 2.1 pack. The separate 2.1
 Secretas/Frozeta Orbit Patch is optional because Outer Rim excludes it.
 See [the source ownership matrix](docs/K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership).
 
+## Solaris system readability
+
+Version 2.1.46 pulls Solaris's planetary chart in from a 54-unit outer
+orbit to a compact 35-unit extent. Seven purposeful local routes replace
+the old ring: a southern/eastern industrial journey and a separate
+Igrys expedition directly from the Slip Stream. The central Solaris
+corona and busy first-frontier background dust are softer, and Balanced
+orbit settings retain a single reference ring. Original discoveries and
+source planet behavior remain unchanged.
+
 ## Space route coloring
 
 Razi Protocol Dev includes its **own native-route hazard overlay** from

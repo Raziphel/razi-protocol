@@ -15,23 +15,24 @@ local anchors = {
   {"space-location","umbra","star",104,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
-  -- Departure traffic approaches Solaris from the west, outside the hot core.
-  {"space-location","sye-solaris","solaris",34,0.75},
+  -- Compact western embarkation lane, outside Vulcanus but not detached.
+  {"space-location","sye-solaris","solaris",28,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
   {"space-location","sye-nyxaris","nyxaris",27,0},
   {"space-location","sye-vespera","vespera",26,0.25},
   {"space-location","sye-umbra","umbra",27,0.5},
-  -- Solaris orbits: magma and hot desert near the star, Castra's industrial
-  -- band beyond them, then Tellus's biosphere and the dense atmospheric
-  -- outer worlds. Distances are chart units, not simulated temperatures.
-  -- Angles separate neighboring labels while retaining genuine orbit radii.
-  {"planet","vulcanus","solaris",18,0.67},
-  {"planet","hyarion","solaris",24,0.40},
-  {"planet","arig","solaris",30,0.53},
-  {"planet","castra","solaris",37,0.61},
-  {"planet","tellus","solaris",43,0.25},
-  {"planet","corrundum","solaris",50,0.13},
+  -- Solaris's compact, asymmetric orbital sweep. Warm inner worlds sit
+  -- close to the star; Tellus and the denser industrial worlds are
+  -- progressively farther out. Distances are visual, not physical AU.
+  -- Clockwise spacing is intentionally nonuniform, keeping names and
+  -- source planet icons separate without turning travel into a polygon web.
+  {"planet","vulcanus","solaris",17,0.69},
+  {"planet","hyarion","solaris",21,0.37},
+  {"planet","arig","solaris",24,0.52},
+  {"planet","castra","solaris",27,0.61},
+  {"planet","tellus","solaris",29,0.26},
+  {"planet","corrundum","solaris",33,0.13},
   {"planet","gleba","nyxaris",32,0.091528},
   {"planet","moshine","nyxaris",22,0.245823},
   -- Apia/Carnova no longer shares an almost identical ring with Gleba.
@@ -62,7 +63,7 @@ local anchors = {
 -- prototypes. Register these known orbital plans with both native passes.
 -- Only installed planets are touched; moon owners remain unchanged.
 local optional_orbits={
-  {name="igrys",star="solaris",radius=54,turn=0.95},
+  {name="igrys",star="solaris",radius=35,turn=0.89},
   {name="foliax",star="nyxaris",radius=36.376917,turn=0.169757},
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
@@ -313,7 +314,7 @@ function M.data_final_fixes()
     and settings.startup["razi-starmap-orbit-density"]
   local density=orbit_setting and orbit_setting.value or "balanced"
   local balanced={
-    vulcanus=true,castra=true,moshine=true,panglia=true,
+    castra=true,moshine=true,panglia=true,
     fulgora=true,paracelsin=true,muria=true,aquilo=true,
     cubium=true,tenebris=true
   }
