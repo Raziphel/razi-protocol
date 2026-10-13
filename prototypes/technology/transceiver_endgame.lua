@@ -1,11 +1,10 @@
 local transceiver_endgame = {}
+local Science = require("__razi_lib__/lib/science")
 
 local icon = "__Krastorio2Assets__/technologies/intergalactic-transceiver.png"
 
 local function add_science_pack(ingredients, name, amount)
-	if data.raw.tool and data.raw.tool[name] then
-		table.insert(ingredients, {name, amount or 1})
-	end
+	Science.add_pack(ingredients, name, amount)
 end
 
 local function build_transceiver_science(multiplier)

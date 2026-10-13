@@ -8,11 +8,14 @@ def source(path):
     return (ROOT / path).read_text(encoding="utf-8")
 
 class CampaignStabilityTests(unittest.TestCase):
-    def test_discovery_helpers_are_defined_by_the_gate_module(self):
+    def test_discovery_helpers_use_the_library_without_global_fixtures(self):
         gates=source("prototypes/technology/seven_system_gates.lua")
         fixtures=source("tests/lua/test_galaxy.lua")
+        self.assertIn('require("__razi_lib__/lib/science")',gates)
+        self.assertIn('require("__razi_lib__/lib/technology")',gates)
+        self.assertIn('Science.add_pack(result, name)',gates)
+        self.assertIn('Technology.exists(name)',gates)
         for helper in ("science_pack_exists", "add_existing_prerequisites"):
-            self.assertRegex(gates,rf"local function {helper}\(")
             self.assertNotIn(f'rawset(_G, "{helper}", function',fixtures)
         self.assertIn("not reaches(parent, name)",gates)
         self.assertIn("not reaches(prerequisite, name)",gates)
@@ -31,7 +34,7 @@ class CampaignStabilityTests(unittest.TestCase):
         self.assertIn('state.count=math.min(',handler)
         self.assertIn('pending[force.name]=state',handler)
         self.assertIn('refresh_force(game.forces[force_name])',codex)
-        self.assertIn('script.on_nth_tick(30, function(event)',control)
+        self.assertIn('events:on_nth_tick(30, function(event)',control)
         self.assertIn('razi_journal.flush_research_refreshes()',control)
         self.assertIn('storage.razi_journal_pending_forces={player=true}',
                       source("tests/lua/test_razi_journal.lua"))
@@ -41,7 +44,7 @@ class CampaignStabilityTests(unittest.TestCase):
         helper=source("scripts/razi_safe_cheat.lua")
         journal=source("scripts/razi_journal.lua")
         self.assertIn('commands.add_command("razi-cheat",',control)
-        self.assertIn('script.on_nth_tick(6, razi_safe_cheat.tick)',control)
+        self.assertIn('events:on_nth_tick(6, razi_safe_cheat.tick)',control)
         self.assertIn('function M.command(event)',helper)
         self.assertIn('function M.tick()',helper)
         self.assertIn('tech.researched=true',helper)
@@ -63,7 +66,9 @@ class CampaignStabilityTests(unittest.TestCase):
         self.assertIn('WARNING_COOLDOWN=600',helper)
         self.assertNotIn('commands.add_command("cheat"',control)
         self.assertNotIn('commands.remove_command("cheat"',control)
-        self.assertIn('razi-cheat.builtin-warning',source("locale/en/razi-cheat.cfg"))
+        locale=source("locale/en/razi-cheat.cfg")
+        self.assertIn('[razi-cheat]',locale)
+        self.assertIn('builtin-warning=',locale)
 
     def test_campaign_checks_still_exercise_real_source_research(self):
         fixture=source("tests/lua/test_galaxy.lua")

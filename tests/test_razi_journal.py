@@ -194,7 +194,7 @@ class ExpeditionJournalTests(unittest.TestCase):
     def test_visible_during_normal_play_not_shortcut_bar(self):
         control=read("control.lua")
         ui=read("scripts/razi_journal.lua")
-        self.assertIn('script.on_event("razi-journal-toggle"',control)
+        self.assertIn('events:on_event("razi-journal-toggle"',control)
         self.assertIn("razi_journal.gui_click(event)",control)
         self.assertIn("razi_journal.on_research",control)
         self.assertIn("razi_journal.flush_research_refreshes()",control)

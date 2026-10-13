@@ -1,23 +1,23 @@
 local progression_polish = {}
+local Prototype = require("__razi_lib__/lib/prototype")
+local Recipe = require("__razi_lib__/lib/recipe")
+local Science = require("__razi_lib__/lib/science")
+local Technology = require("__razi_lib__/lib/technology")
 
 local function technology(name)
-	return data.raw.technology and data.raw.technology[name]
+	return Prototype.raw("technology", name)
 end
 
 local function recipe(name)
-	return data.raw.recipe and data.raw.recipe[name]
+	return Prototype.raw("recipe", name)
 end
 
 local function recipe_exists(name)
-	return recipe(name) ~= nil
-end
-
-local function science_pack_exists(name)
-	return data.raw.tool and data.raw.tool[name] ~= nil
+	return Recipe.exists(name)
 end
 
 local function technology_exists(name)
-	return technology(name) ~= nil
+	return Technology.exists(name)
 end
 
 local function add_prerequisite(tech, prerequisite)
@@ -25,14 +25,7 @@ local function add_prerequisite(tech, prerequisite)
 		return
 	end
 
-	tech.prerequisites = tech.prerequisites or {}
-	for _, existing in ipairs(tech.prerequisites) do
-		if existing == prerequisite then
-			return
-		end
-	end
-
-	table.insert(tech.prerequisites, prerequisite)
+	Technology.get(tech.name):add_prerequisite(prerequisite)
 end
 
 local function set_order_if_present(technology_name, order)
@@ -56,11 +49,7 @@ local function remove_prerequisite(tech, prerequisite)
 		return
 	end
 
-	for index = #tech.prerequisites, 1, -1 do
-		if tech.prerequisites[index] == prerequisite then
-			table.remove(tech.prerequisites, index)
-		end
-	end
+	Technology.get(tech.name):remove_prerequisite(prerequisite)
 end
 
 local function set_recipe_enabled_state(target_recipe, enabled)
@@ -68,122 +57,40 @@ local function set_recipe_enabled_state(target_recipe, enabled)
 		return
 	end
 
-	target_recipe.enabled = enabled
-	for _, variant in ipairs({target_recipe.normal, target_recipe.expensive}) do
-		if variant then
-			variant.enabled = enabled
-		end
-	end
+	local wrapped = Recipe.get(target_recipe.name)
+	if enabled then wrapped:enable() else wrapped:disable() end
 end
 
 local function science_ingredients(science_packs)
-	local ingredients = {}
-
-	for _, science_pack in ipairs(science_packs) do
-		if science_pack_exists(science_pack) then
-			table.insert(ingredients, {science_pack, 1})
-		end
-	end
-
-	return ingredients
-end
-
-local function ingredient_name(ingredient)
-	return ingredient and (ingredient.name or ingredient[1])
+	return Science.add_existing({}, science_packs)
 end
 
 local function recipe_has_ingredient(recipe_name, ingredient_to_find)
-	local target_recipe = recipe(recipe_name)
-	if not target_recipe or not target_recipe.ingredients then
-		return false
-	end
-
-	for _, ingredient in ipairs(target_recipe.ingredients) do
-		if ingredient_name(ingredient) == ingredient_to_find then
-			return true
-		end
-	end
-
-	return false
+	local target_recipe = Recipe.optional(recipe_name)
+	return target_recipe ~= nil and target_recipe:has_ingredient(ingredient_to_find)
 end
 
 local function remove_recipe_ingredient(recipe_name, ingredient_to_remove)
-	local target_recipe = recipe(recipe_name)
-	if not target_recipe or not target_recipe.ingredients then
-		return
-	end
-
-	for index = #target_recipe.ingredients, 1, -1 do
-		if ingredient_name(target_recipe.ingredients[index]) == ingredient_to_remove then
-			table.remove(target_recipe.ingredients, index)
-		end
-	end
-end
-
-local function technology_has_unlock(technology_name, recipe_name)
-	local target_technology = technology(technology_name)
-	if not target_technology or not target_technology.effects then
-		return false
-	end
-
-	for _, effect in ipairs(target_technology.effects) do
-		if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
-			return true
-		end
-	end
-
-	return false
+	local target_recipe = Recipe.optional(recipe_name)
+	if target_recipe then target_recipe:remove_ingredient(ingredient_to_remove) end
 end
 
 local function add_recipe_unlock(technology_name, recipe_name)
-	local target_technology = technology(technology_name)
-	if not target_technology or not recipe_exists(recipe_name) then
-		return
-	end
-
-	target_technology.effects = target_technology.effects or {}
-	if not technology_has_unlock(technology_name, recipe_name) then
-		table.insert(target_technology.effects, {
-			type = "unlock-recipe",
-			recipe = recipe_name
-		})
-	end
+	local target_technology = Technology.optional(technology_name)
+	if target_technology and recipe_exists(recipe_name) then target_technology:unlock(recipe_name) end
 end
 
 local function remove_recipe_unlock(technology_name, recipe_name)
-	local target_technology = technology(technology_name)
-	if not target_technology or not target_technology.effects then
-		return
-	end
-
-	for index = #target_technology.effects, 1, -1 do
-		local effect = target_technology.effects[index]
-		if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
-			table.remove(target_technology.effects, index)
-		end
-	end
+	local target_technology = Technology.optional(technology_name)
+	if target_technology then target_technology:remove_unlock(recipe_name) end
 end
 
 local function technology_has_dependents(technology_name)
-	for _, target_technology in pairs(data.raw.technology or {}) do
-		for _, prerequisite in ipairs(target_technology.prerequisites or {}) do
-			if prerequisite == technology_name then
-				return true
-			end
-		end
-	end
-
-	return false
+	return Technology.has_dependents(technology_name)
 end
 
 local function first_existing_technology(names)
-	for _, name in ipairs(names) do
-		if technology_exists(name) then
-			return name
-		end
-	end
-
-	return nil
+	return Technology.first_existing_name(names)
 end
 
 local function gate_recipe_to_technology(recipe_names, technology_names, stale_unlock_technologies)

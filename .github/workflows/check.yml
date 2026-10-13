@@ -19,9 +19,17 @@ jobs:
     name: check
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      LUA_INIT: "@tests/lua/razi_lib_bootstrap.lua"
+      RAZI_LIB_PATH: RaziLib
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout RaziLib
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Raziphel/RaziLib
+          path: RaziLib
       - name: Check the mod
         id: factorio_check
         continue-on-error: true

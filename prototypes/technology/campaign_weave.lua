@@ -2,6 +2,7 @@
 -- Apply this after the main star-system gates so the opening choices stay free.
 local M = {}
 local interdependence = require("prototypes.compat.interdependence_mode")
+local Science = require("__razi_lib__/lib/science")
 local rules = {
 {"planet-discovery-castra", {}, {{"metallurgic-science-pack", "planet-discovery-vulcanus"}}},
 {"planet-discovery-arig", {}, {{"battlefield-science-pack", "planet-discovery-castra"}}},
@@ -59,8 +60,7 @@ local function link(target_name, prerequisite_name)
 end
 
 local function pack_exists(pack)
-  return (data.raw.tool and data.raw.tool[pack])
-      or (data.raw.item and data.raw.item[pack])
+  return Science.exists(pack)
 end
 
 local function produces(recipe, pack)
@@ -185,12 +185,9 @@ local function add_science(target, pack, owner)
   local t = technology(target)
   if not (t and t.unit and t.unit.ingredients) then return end
   if not has_production_recipe_before(pack, target, owner) then return end
-  for _, ingredient in ipairs(t.unit.ingredients) do
-    if (ingredient.name or ingredient[1]) == pack then return end
-  end
   -- Research is valid only if one existing lab handles all ingredients.
   if has_compatible_lab(t.unit.ingredients, pack) then
-    t.unit.ingredients[#t.unit.ingredients + 1] = {pack, 1}
+    Science.add_pack(t.unit.ingredients, pack)
   end
 end
 

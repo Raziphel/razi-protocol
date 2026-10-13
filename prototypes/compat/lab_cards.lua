@@ -1,7 +1,7 @@
 local lab_cards = {}
-local Collections = require("__razi_lib__/lib/collections")
 local Prototype = require("__razi_lib__/lib/prototype")
 local Recipe = require("__razi_lib__/lib/recipe")
+local Science = require("__razi_lib__/lib/science")
 local Technology = require("__razi_lib__/lib/technology")
 
 local system_card_subgroup = "system-tech-card"
@@ -194,7 +194,7 @@ local function ensure_item_subgroup(name, group, order)
 end
 
 local function science_pack_exists(name)
-	return Prototype.exists("tool", name) or Prototype.exists("item", name)
+	return Science.exists(name)
 end
 
 local function build_recipe_ingredients(science_packs)
@@ -219,13 +219,7 @@ local function add_recipe_unlock(technology_name, recipe_name)
 end
 
 local function find_first_existing_technology(candidates)
-	for _, technology_name in ipairs(candidates or {}) do
-		if Prototype.exists("technology", technology_name) then
-			return technology_name
-		end
-	end
-
-	return nil
+	return Technology.first_existing_name(candidates)
 end
 
 local function upsert_system_card(card)
@@ -318,7 +312,7 @@ local function upsert_system_card(card)
 end
 
 local function add_unique_input(lab, input_name)
-	Collections.append_unique(lab.inputs, input_name)
+	Science.add_lab_input(lab, input_name)
 end
 
 local function set_science_weight(name, weight)
