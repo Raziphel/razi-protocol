@@ -113,6 +113,9 @@ require("prototypes.compat.deep_interdependence").data_final_fixes()
 
 require("prototypes.compat.galactic_industry_bridges").data_final_fixes()
 
+-- Optional reciprocal factories for the first two stars and Calidus return routes.
+require("prototypes.compat.first_frontier_industry").data_final_fixes()
+
 require("prototypes.compat.panglia_industry").data_final_fixes()
 
 require("prototypes.compat.network_components").register_premium()

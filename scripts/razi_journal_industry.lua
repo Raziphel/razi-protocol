@@ -4,6 +4,9 @@ return {
  chapters={{id="alliances",title="journal-chapter.alliances",
    intro="journal-chapter-story.alliances"}},
  quests={
+  {id="alliance-frontier-moshine-silicon",chapter="alliances",tech="razi-frontier-moshine-biometal-silicon",site="moshine",requires={"moshine","gleba","vulcanus"},optional=true},
+  {id="alliance-frontier-gleba-carbon",chapter="alliances",tech="razi-frontier-gleba-photofiber",site="gleba",requires={"gleba","moshine","vulcanus"},optional=true},
+  {id="alliance-frontier-castra-ballistics",chapter="alliances",tech="razi-frontier-castra-composite-rounds",site="castra",requires={"castra","gleba","moshine"},optional=true},
   {id="alliance-bio-metals",chapter="alliances",tech="razi-bio-rare-metal-casting",site="vulcanus",requires={"vulcanus","gleba"}},
   {id="alliance-holmium-circuits",chapter="alliances",tech="razi-electrobiological-components",site="fulgora",requires={"fulgora","gleba"}},
   {id="alliance-optical-coils",chapter="alliances",tech="razi-modded-paracelsin-optical-coils",site="paracelsin",requires={"paracelsin","moshine"}},

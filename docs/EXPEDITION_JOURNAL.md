@@ -1,3 +1,18 @@
+## First-frontier workshop stories (2.1.51)
+
+Three new optional engineering objectives in the **Industrial
+Constellations** chapter connect Moshine silicon cells, Gleba carbon
+fiber and Castra piercing-magazine manufacturing through actual
+native supplier recipes. Each names its suggested workshop planet
+and has a localized objective, story vignette and engineering hint.
+The Codex derives completion from genuine research, and existing
+Where This Leads links discover related quests without creating
+any fabricated factory-production progress.
+
+The core Codex catalog now contains 214 conditional milestones in
+18 chapters. Unavailable optional exchange technologies are filtered
+out of the current player's view.
+
 ## Campaign handoffs and the Calidus return freight (2.1.50)
 
 The quest reader now lists up to three direct Codex successors for its
