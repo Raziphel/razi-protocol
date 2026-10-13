@@ -158,7 +158,11 @@ for _,entry in ipairs(trade_catalog.chains) do
 end
 local blocked={name="late-discovery",researched=false}
 local prereq={name="early-discovery",researched=true}
-local matrix={name="razi-network-precision-matrix",researched=true}
+local matrix={name="razi-network-precision-matrix",researched=true,
+  research_unit_count=420,
+  research_unit_ingredients={
+    {name="solaris-tech-card",amount=1},
+    {name="thermodynamic-science-pack",amount=1}}}
 local bond={name="razi-network-panglia-optic-bond",researched=false,
   prerequisites={blocked,prereq}}
 local ready={name="razi-network-extreme-lattice",researched=false,
@@ -220,6 +224,19 @@ local function count_actions(element,action)
   end
   return count
 end
+local function caption_exists(element,key)
+  local caption=element.caption
+  if type(caption)=="table" and caption[1]=="razi-ops."..key then
+    return true
+  end
+  for _,child in ipairs(element.children) do
+    if caption_exists(child,key) then return true end
+  end
+  return false
+end
+check(caption_exists(root,"trade-science-heading")
+  and caption_exists(root,"trade-science-units"),
+  "Expanded Cargo research must display real science packs and unit count")
 check(count_actions(root,"cargo-focus")==3,
   "Every installed component must have a working expand action")
 check(count_actions(root,"cargo-codex")==5,

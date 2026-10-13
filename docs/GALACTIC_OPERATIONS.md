@@ -188,3 +188,16 @@ Navigation adds no new per-tick polling, prototype mutation, research
 events, surface creation or space platform changes. The source research,
 current fleet ownership and all established quest completion history
 remain authoritative.
+
+## Science requirements in Cargo Network (2.1.31)
+
+Expanded industrial component cards now show the research-unit count
+and itemised science requirements of the *installed Factorio technology*.
+When a player deep-links from the Protocol Codex to a particular
+downstream factory research, its science requirements appear alongside
+the actual research prerequisites. This display relies on native
+`LuaTechnology.research_unit_ingredients` and
+`LuaTechnology.research_unit_count`, not a hard-coded source-mod
+science list. The interface does not claim actual production or
+cargo delivery. Corrected a duplicate locale key for the
+industrial chain heading.

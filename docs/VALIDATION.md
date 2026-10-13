@@ -475,3 +475,36 @@ Balanced, Deep and Off. At least one of each paired star-system entry
 must remain researchable without completing the other entry. Panglia,
 Aquilo, Linox, Crucible and Vesta must all retain their first viable
 factory setup and all pre-arrival science guards.
+
+## Returning planetary science to later research (2.1.31)
+
+The research weave only operates on Razi-owned optional factory
+technologies, after all planetary discovery guards and industrial
+prototype registration. It requires an upstream source discovery,
+a craftable native science recipe with an earlier research unlock,
+compatible surface conditions, and one existing lab accepting the
+full science set. No lab, source recipe or planet technology is
+modified to make a test pass.
+
+```bash
+lua5.2 tests/lua/test_planetary_science_weave.lua
+python3 -m unittest discover -s tests -p "test_planetary_science_weave.py"
+python3 -m unittest discover -s tests -p "test_research_balance.py"
+python3 -m unittest discover -s tests -p "test_galactic_operations.py"
+python3 scripts/audit_research_balance.py /path/to/data-raw-dump.json --json
+```
+
+The Lua fixture covers missing native producers, unavailable inputs,
+wrong production surfaces, disabled interdependence, source technology
+loops, incompatible labs, repeated passes, and Deep-only recipes.
+The Python audit also checks that a planet never needs its own science
+before arrival, and reports actual reused native science packs in
+loaded Razi industry research.
+
+**Manual validation:** In Balanced and Deep, visit Panglia, Paracelsin,
+Linox, Rubia, Tenebris, Crucible and Vesta as each becomes available.
+Check that research only demands sciences obtainable on worlds already
+unlocked, and that an installed lab accepts the whole combination.
+Expand Cargo Network components and jump to a downstream Codex
+milestone to verify the displayed science requirements match the
+native technology tree. Use the complete modpack, not source mocks.

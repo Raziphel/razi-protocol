@@ -185,6 +185,23 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertNotIn("platform.schedule=",operations)
         self.assertNotIn("data:extend",catalog)
 
+    def test_cargo_cards_show_actual_science_requirements(self):
+        panel=(ROOT/"scripts/galactic_trade.lua").read_text()
+        locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        self.assertIn("local function science_requirements(parent,tech,width)",panel)
+        self.assertIn("tech.research_unit_ingredients",panel)
+        self.assertIn("tech.research_unit_count",panel)
+        self.assertIn("science_requirements(card,row.technology,width-20)",panel)
+        self.assertIn("science_requirements(parent,consumer.technology,width)",panel)
+        self.assertIn("if p.cargo_focus==entry.id then",panel)
+        self.assertIn("p.cargo_target==consumer.name",panel)
+        self.assertIn('sprite_for("item",name)',panel)
+        self.assertNotIn("force.current_research=",panel)
+        for key in ("trade-science-heading","trade-science-units",
+                    "trade-science-more"):
+            self.assertIn(key+"=",locale)
+        self.assertEqual(locale.count("trade-components="),1)
+
     def test_all_seven_systems(self):
         catalog=(ROOT/"scripts/galactic_catalog.lua").read_text()
         for star in ("calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"):

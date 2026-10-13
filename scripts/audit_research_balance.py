@@ -24,6 +24,18 @@ MILESTONES = (
                 "razi-singularity-theory", "razi-singularity-test-fire",
                 "razi-stable-intergalactic-singularity")),
 )
+# Native science should never appear on the path to its own planet.
+# Keep these IDs exact; unknown optional technologies remain advisory.
+WORLD_SCIENCE = (
+    ("planet-discovery-moshine", "thermodynamic-science-pack"),
+    ("planet-discovery-paracelsin", "electrochemical-science-pack"),
+    ("planet-discovery-aquilo", "cryogenic-science-pack"),
+    ("planet-discovery-rubia", "rubia-biofusion-science-pack"),
+    ("planet-discovery-tenebris", "bioluminescent-science-pack"),
+    ("planet-discovery-crucible", "planet-crucible-science-pack"),
+    ("planet-discovery-vesta", "gas-manipulation-science-pack"),
+    ("linox-technology_planet-discovery-linox", "linox-item_linox-science-pack"),
+)
 INDUSTRY = (
     "razi-network-precision-matrix",
     "razi-network-matrix-cryo-controllers",
@@ -91,6 +103,25 @@ def examine(raw):
             if parent in techs: walk(parent)
         reachable_cache[name]=visited
         return visited
+    world_science_checks=[]
+    native_arrival_errors=[]
+    for owner,pack in WORLD_SCIENCE:
+        if owner not in techs: continue
+        path=sorted(ancestors(owner)|{owner})
+        premature=[name for name in path
+                   if pack in science_ingredients(techs.get(name) or {})]
+        world_science_checks.append({
+            "world_discovery":owner,"science_pack":pack,
+            "status":"blocked" if premature else "safe",
+            "premature_requirements":premature
+        })
+        if premature:
+            violation={"severity":"error","code":"own-world-science-before-arrival",
+                "targets":[owner],"packs":[pack],
+                "techs":premature,
+                "detail":"A planet's own science appears on its discovery path."}
+            issues.append(violation)
+            native_arrival_errors.append(violation)
     pairs=[]
     for left,right in PAIRS:
         a,b=techs.get(left),techs.get(right)
@@ -153,13 +184,18 @@ def examine(raw):
                 "targets":[name],"packs":sorted(science),
                 "detail":"No installed laboratory accepts this complete science set."})
     research_prices=[]
+    science_reuse=Counter()
     for name in INDUSTRY:
         node=techs.get(name)
-        if not isinstance(node,dict) or node.get("hidden"): continue
+        if (not isinstance(node,dict) or node.get("hidden")
+            or node.get("enabled") is False): continue
         count=(node.get("unit") or {}).get("count")
         if isinstance(count,(int,float)) and count>0:
+            required=science_ingredients(node)
             research_prices.append({"name":name,"units":count,
-                                    "science_types":list(science_ingredients(node))})
+                                    "science_types":list(required)})
+            for _,pack in WORLD_SCIENCE:
+                if pack in required: science_reuse[pack]+=1
     # Only flag extreme spikes within the Razi factory-upgrade family;
     # not across source mods with radically different research economies.
     counts=sorted(x["units"] for x in research_prices)
@@ -174,6 +210,9 @@ def examine(raw):
                     "median":typical,
                     "detail":"Razi industrial research is unusually expensive."})
     return {"paired_entries":pairs,"stages":stages,
+            "world_science_arrival_checks":world_science_checks,
+            "native_arrival_errors":native_arrival_errors,
+            "planetary_science_reuse":dict(sorted(science_reuse.items())),
             "industry_research_prices":research_prices,
             "science_usage":dict(sorted(used_packs.items())),
             "missing_science_prototypes":missing_packs,
@@ -209,6 +248,10 @@ def main(argv=None):
             print(stage+":",", ".join(
                 x["name"]+"="+str(x["research_units"]) for x in rows)
                 or "not installed")
+        if report["planetary_science_reuse"]:
+            print("Reused planetary sciences:",
+                  ", ".join(f"{k} ({v} techs)" for k,v in
+                            report["planetary_science_reuse"].items()))
         for issue in report["issues"]:
             print(issue["severity"].upper()+":",issue["code"],
                   ", ".join(issue["targets"]))
