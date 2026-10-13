@@ -1152,6 +1152,19 @@ end
 local RESEARCH_BURST_LIMIT=12
 local RESEARCH_BURST_WINDOW=120
 local RESEARCH_BURST_QUIET=180
+-- Staged debug research changes technology flags directly. Keep the Codex
+-- parked until the final unlock settles, without relying on research events.
+function M.defer_research_refresh(force)
+  if not (force and force.name) then return end
+  local pending=storage.razi_journal_pending_forces
+  if not pending then
+    pending={}
+    storage.razi_journal_pending_forces=pending
+  end
+  local tick=game and game.tick or 0
+  pending[force.name]={count=RESEARCH_BURST_LIMIT,
+    first_tick=tick,last_tick=tick}
+end
 function M.on_research(event)
   local research=event and event.research
   local force=research and research.force

@@ -1,6 +1,7 @@
 local galactic_operations = require("scripts.galactic_operations")
 local razi_journal = require("scripts.razi_journal")
 local razi_discord_presence = require("scripts.razi_discord_presence")
+local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local nexus_visibility_technologies = {
@@ -138,6 +139,11 @@ script.on_configuration_changed(function(event)
 end)
 -- Export at most once per 15 game seconds; disabled players do no work.
 script.on_nth_tick(900, razi_discord_presence.write)
+-- Spread debug research across ticks instead of freezing the whole modpack.
+commands.add_command("razi-cheat",
+  "Safely unlock research for testing. Usage: /razi-cheat [start|status|cancel]",
+  razi_safe_cheat.command)
+script.on_nth_tick(6, razi_safe_cheat.tick)
 script.on_event(defines.events.on_string_translated,function(event)
   razi_discord_presence.on_string_translated(event)
   galactic_operations.on_string_translated(event)
