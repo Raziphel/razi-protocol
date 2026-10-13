@@ -4,7 +4,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
 check(#defs.chapters==18,"Eighteen Protocol Codex chapters expected")
-check(#defs.quests==204,"Protocol Codex should include 204 milestones")
+check(#defs.quests==210,"Protocol Codex should include 210 milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -26,7 +26,10 @@ end
 -- Industry missions are tied to existing optional research, not new
 -- recipe-count flags, planets or scripted completion conditions.
 for _,id in ipairs({"alliance-optical-coils","alliance-vesta-magnets",
-  "alliance-aquilo-outer"}) do
+  "alliance-aquilo-outer","alliance-panglia-bond",
+  "alliance-bond-paracelsin","alliance-bond-linox",
+  "alliance-pressure-frame","alliance-pressure-vesta",
+  "alliance-pressure-aquilo"}) do
   local quest=defs.by_id[id]
   check(quest and quest.chapter=="alliances" and quest.site,
     "Industrial partnership missing prototype-backed guidance: "..id)
@@ -57,7 +60,7 @@ for _,screen in ipairs({
 end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
-check(start==0 and total==204-15-9 and active>=1,
+check(start==0 and total==210-15-9 and active>=1,
   "At least both initial factory/opening branches must be listed")
 -- One campaign pass should calculate each quest exactly once while still
 -- matching the public summary and the individual mission states.

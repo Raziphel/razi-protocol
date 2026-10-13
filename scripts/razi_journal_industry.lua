@@ -21,6 +21,12 @@ return {
   {id="alliance-lattice-vesta",chapter="alliances",tech="razi-network-lattice-vesta-magnets",site="vesta",requires={"extreme-lattice","vesta"}},
   {id="alliance-vesta-foundations",chapter="alliances",tech="razi-network-vesta-biofoundations",site="vesta",requires={"vesta","rubia","tenebris"}},
   {id="alliance-balack-vesta",chapter="alliances",tech="razi-network-balack-vesta-shielding",site="bm-balack",requires={"balack","vesta","rubia"}},
-  {id="alliance-aquilo-outer",chapter="alliances",tech="razi-network-aquilo-outer-controllers",site="aquilo",requires={"aquilo","vesta","rubia"}}
+  {id="alliance-aquilo-outer",chapter="alliances",tech="razi-network-aquilo-outer-controllers",site="aquilo",requires={"aquilo","vesta","rubia"}},
+  {id="alliance-panglia-bond",chapter="alliances",tech="razi-network-panglia-optic-bond",site="panglia",requires={"panglia-glass","moshine","fulgora"}},
+  {id="alliance-bond-paracelsin",chapter="alliances",tech="razi-network-bond-paracelsin-coils",site="paracelsin",requires={"alliance-panglia-bond","paracelsin"}},
+  {id="alliance-bond-linox",chapter="alliances",tech="razi-network-bond-linox-refining",site="linox-planet_linox",requires={"alliance-panglia-bond","linox"}},
+  {id="alliance-pressure-frame",chapter="alliances",tech="razi-network-umbra-pressure-frame",site="crucible",requires={"alliance-panglia-bond","crucible","vesta","linox"}},
+  {id="alliance-pressure-vesta",chapter="alliances",tech="razi-network-frame-vesta-foundations",site="vesta",requires={"alliance-pressure-frame","vesta"}},
+  {id="alliance-pressure-aquilo",chapter="alliances",tech="razi-network-frame-aquilo-controllers",site="aquilo",requires={"alliance-pressure-frame","aquilo"}}
  }
 }

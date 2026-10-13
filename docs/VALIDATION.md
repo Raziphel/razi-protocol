@@ -298,3 +298,23 @@ An unverified chain is not a confirmed deadlock or a pass. Production machines,
 world-specific resources, transport logistics, scripted gates and native
 research triggers still need a real-game campaign test. Never delete a source
 research requirement automatically based solely on an advisory result.
+
+## Return-cargo network checks (2.1.24)
+
+The Lua fixture `tests/lua/test_network_components.lua` now checks both
+new guarded components, Deep-mode restrictions, missing Panglia/Crucible,
+source unlocks and premium recipe dispatch. The Codex and locale fixtures
+cover six new industry milestones without renaming the previous 204 IDs.
+
+Run the opt-in Check workflow or locally:
+
+```bash
+lua5.2 tests/lua/test_network_components.lua
+lua5.2 tests/lua/test_razi_journal.lua
+python3 -m unittest tests/test_razi_journal.py
+```
+
+Check source versions with `python3 scripts/audit_full_campaign.py` on a
+real Factorio `--dump-data-raw` export. The opt-in network intentionally
+does not register its recipes when a source-mod recipe, machine,
+technology or compatible science lab is absent.

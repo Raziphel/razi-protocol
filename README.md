@@ -130,7 +130,7 @@ The current scope protects original moon orbits, underground-only surfaces, spec
 
 ## The Protocol Codex
 
-A built-in **204-milestone Protocol Codex across eighteen original story
+A built-in **210-milestone Protocol Codex across eighteen original story
 chapters** guides the full seven-system K2SO campaign. Open it during
 normal gameplay using the small top-row book button or **Ctrl+Shift+J**;
 pin a goal to a compact optional tracker. Every milestone has original

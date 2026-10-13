@@ -151,7 +151,7 @@ cut down work without reducing graphics quality or changing the refresh rate:
 - The Codex builds its planet research-unlock catalogue once per runtime
   session from the installed technology prototypes. Each view still uses the
   current force's live research state, so newly researched planets show up.
-- A Codex redraw now groups its 204 quests by chapter and computes their
+- A Codex redraw now groups its 210 quests by chapter and computes their
   states in one pass. Search and filter use that result rather than
   recalculating every quest for all 18 chapter headers.
 - The Galaxy Atlas keeps immutable technology and connection indexes in

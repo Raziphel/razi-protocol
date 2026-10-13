@@ -68,6 +68,11 @@ for _,id in ipairs({"panglia-biooptic-trade","panglia-optical-return"}) do
  check(milestones[id].chapter=="network",
    "Industry bridges belong in the interplanetary network chapter")
 end
+for _,id in ipairs({"alliance-panglia-bond",
+  "alliance-bond-paracelsin","alliance-bond-linox"}) do
+ check(milestones[id] and milestones[id].chapter=="alliances",
+   "New Panglia freight objective missing from Industry chapter: "..id)
+end
 check(source("data-final-fixes.lua"):find(
   'require("prototypes.compat.panglia_industry").data_final_fixes()',1,true),
   "Panglia's guarded production integration is not registered")
