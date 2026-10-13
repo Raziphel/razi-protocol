@@ -1,3 +1,12 @@
+Version: 2.1.33
+Date: 13. 10. 2026
+  Safe research command guidance:
+    - Remind admins once per save to prefer /razi-cheat over the built-in /cheat in huge modpacks.
+    - Recognize native /cheat console attempts and display a targeted follow-up warning if the simulation remains responsive.
+    - Ignore /cheat off and avoid repeated warning spam with a ten-second cooldown.
+    - Never override the core cheat command, change ordinary gameplay research or advertise a pre-command intercept Factorio does not support.
+    - Add localized English help and alert text, safety coverage, and documentation.
+
 Version: 2.1.32
 Date: 13. 10. 2026
   Cheat-command stability and testing:
