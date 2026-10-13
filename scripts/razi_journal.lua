@@ -8,6 +8,7 @@ local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
 local operations=require("scripts.galactic_operations")
 local guidance=require("scripts.razi_journal_guidance")
+local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -344,7 +345,8 @@ end
 local function matches_query(quest,query)
   if not query or query=="" then return true end
   local corpus=(quest.id.." "..quest.chapter.." "..(quest.tech or "")
-    .." "..(quest.world or "").." "..(quest.site or "")):lower():gsub("[-_]"," ")
+    .." "..(quest.world or "").." "..(quest.site or "")
+    .." "..(quest.recipe or "").." "..(quest.machine or "")):lower():gsub("[-_]"," ")
   for word in query:lower():gsub("[-_]"," "):gmatch("%S+") do
     if not corpus:find(word,1,true) then return false end
   end
@@ -432,15 +434,8 @@ end
 local function recipe_gallery(parent,quest,native,width,theme)
   if not (quest.site and native and prototypes
       and prototypes.recipe) then return end
-  local recipe=prototypes.recipe[quest.tech]
-  if not (recipe and not recipe.hidden) then return end
-  local unlocked=false
-  for _,effect in ipairs(native.prototype and native.prototype.effects or {}) do
-    if effect.type=="unlock-recipe" and effect.recipe==quest.tech then
-      unlocked=true;break
-    end
-  end
-  if not unlocked then return end
+  local recipe=preview.recipe(quest,native,prototypes.recipe)
+  if not recipe then return end
   local function cards(entries)
     local output={}
     for _,entry in ipairs(entries or {}) do
@@ -449,8 +444,9 @@ local function recipe_gallery(parent,quest,native,width,theme)
       local proto=prototypes[kind] and prototypes[kind][name]
       local path=name and sprite_if_valid(kind.."/"..name)
       if proto and path then
-        output[#output+1]={sprite=path,name=proto.localised_name,
-          tooltip=proto.localised_name}
+        local caption={"",proto.localised_name,preview.quantity(entry)}
+        output[#output+1]={sprite=path,name=caption,
+          tooltip=caption}
       end
     end
     return output
@@ -465,9 +461,21 @@ local function recipe_gallery(parent,quest,native,width,theme)
   subtitle(panel,"factory-diagram",width-26,theme)
   if theme then accent_rule(panel,theme,math.min(width-26,168),3) end
   wrap(panel,L("site-advisory",{"journal-workshop."..quest.id}),width-26)
+  -- Existing machines and the original planet can be inspected before
+  -- researching the optional production alternative.
+  if quest.machine and prototypes.item and prototypes.item[quest.machine] then
+    local machine=prototypes.item[quest.machine]
+    local art=sprite_if_valid("item/"..quest.machine)
+    if art then
+      draw_gallery(panel,"factory-equipment",{
+        {sprite=art,name=machine.localised_name,tooltip=machine.localised_name}
+      },width-26,1,theme)
+    end
+  end
   draw_gallery(panel,"factory-imports",materials,width-26,10,theme)
   draw_gallery(panel,"factory-outputs",products,width-26,5,theme)
-  wrap(panel,L("factory-source-owned"),width-26)
+  wrap(panel,L(quest.optional and "factory-optional-note"
+    or "factory-source-owned"),width-26)
 end
 
 local function render_tracker(player)
