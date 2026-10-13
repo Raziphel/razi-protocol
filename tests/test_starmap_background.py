@@ -48,6 +48,22 @@ class StarmapBackgroundTests(unittest.TestCase):
             self.assertIn(depth,(2,8))
             self.assertTrue(transparent)
             self.assertLess(size,350000)
+    def test_refined_atlas_uses_full_alpha_gradient(self):
+        # Earlier 25-step alpha ramps produced blocky contour bands at
+        # large starmap zoom. Every new texture now has 256 alpha entries.
+        for name in ("atlas-halo.png","atlas-dust.png","atlas-belt.png"):
+            png=(ASSET/name).read_bytes()
+            offset=8
+            found=False
+            while offset<len(png):
+                length=int.from_bytes(png[offset:offset+4],"big")
+                kind=png[offset+4:offset+8]
+                if kind==b"tRNS":
+                    self.assertEqual(length,256,name)
+                    found=True
+                offset+=12+length
+            self.assertTrue(found,name)
+
     def test_art_after_orbit_layout_before_route_highlights(self):
         source=(ROOT/"data-final-fixes.lua").read_text()
         layout='require("prototypes.system.galaxy_layout").data_final_fixes()'

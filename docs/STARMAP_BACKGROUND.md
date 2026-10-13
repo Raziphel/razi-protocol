@@ -18,3 +18,12 @@ increases opacity, and Off preserves native rendering. The visual overlay
 is restricted to the 14 authored, position-verified, straight or belt-guide
 masks: curved and unrecognized routes are not painted with inaccurate
 straight lines. This is a map decoration, not a gameplay or pathing change.
+
+## Refined atmosphere assets
+
+The halo, dust and belt PNGs now use the full 256-level alpha range instead
+of the earlier stepped opacity palette. This removes the sharp concentric
+bands visible in the first clean-map screenshot. Four extra, half-strength
+transparent dust pockets fill the central stellar gaps without bringing
+back dense overlapping nebula art. The default composition is 23 small
+sprites rather than the previous 19, with unchanged prototype geometry.

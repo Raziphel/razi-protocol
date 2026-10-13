@@ -68,11 +68,17 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         {-169,-18,{r=.58,g=.74,b=.91}},
         {162,47,{r=.71,g=.58,b=.87}},
         {9,-254,{r=.55,g=.68,b=.89}},
-        {-7,161,{r=.82,g=.68,b=.48}}
+        {-7,161,{r=.82,g=.68,b=.48}},
+        -- Broad, transparent dust pockets fill the otherwise empty gaps
+        -- without drawing a fake portal, orbit or route.
+        {0,56,{r=.54,g=.71,b=.83},.55},
+        {0,-59,{r=.62,g=.59,b=.84},.55},
+        {60,-31,{r=.60,g=.58,b=.89},.55},
+        {-63,-33,{r=.59,g=.77,b=.85},.55}
       }
       for _,p in ipairs(pockets) do
         insert_asset(layers,"atlas-dust.png",20,p[1],p[2],p[3],
-          cinematic and .72 or .49)
+          (cinematic and .72 or .49)*(p[4] or 1))
       end
     end
     if option("razi-starmap-micro-details",true) then

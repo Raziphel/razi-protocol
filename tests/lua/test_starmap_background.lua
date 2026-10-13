@@ -26,7 +26,7 @@ rawset(_G,"settings",{startup={
 }})
 rawset(_G,"mods",{})
 local parts=bg.make_layers("subtle",true,true,true,false)
-ok(#parts==19,"Clean atlas should use 8 halos, 3 belts, 8 dust pockets")
+ok(#parts==23,"Clean atlas should use 8 halos, 3 belts, 12 dust pockets")
 local counts={halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
   ok(layer.size[1]==128 and layer.size[2]==128,"Unexpected texture size")
@@ -36,30 +36,30 @@ for _,layer in ipairs(parts) do
   if layer.filename:find("atlas%-belt") then counts.belt=counts.belt+1 end
   if layer.filename:find("atlas%-dust") then counts.dust=counts.dust+1 end
 end
-ok(counts.halo==8 and counts.belt==3 and counts.dust==8,
+ok(counts.halo==8 and counts.belt==3 and counts.dust==12,
   "Expected restrained per-system artwork")
 bg.data_final_fixes()
-ok(#sprites.layers==20,"Clean atlas was not attached")
+ok(#sprites.layers==24,"Clean atlas was not attached")
 ok(sprites.layers[1].filename:find("atlas%-halo"),"Atlas not behind native art")
 ok(sprites.layers[#sprites.layers]==native,"Source star art changed")
 bg.data_final_fixes()
-ok(#sprites.layers==20,"Duplicate background layer registration")
+ok(#sprites.layers==24,"Duplicate background layer registration")
 ok(#bg.make_layers("off",true,true,true,false)==0,"Off mode still draws")
 ok(#bg.make_layers("subtle",false,false,false,false)==0,
   "Turning off optional layers must leave native map alone")
 ok(#bg.make_layers("subtle",true,true,false,false)==11,
   "Disabling detail pockets should leave 8 halos and 3 belts")
-ok(#bg.make_layers("subtle",true,true,true,true)==20,
+ok(#bg.make_layers("subtle",true,true,true,true)==24,
   "Cartography adds only a single distant dust pocket")
 local cine=bg.make_layers("cinematic",true,true,true,false)
 ok(#cine==#parts and cine[1].tint.a>parts[1].tint.a,
   "Cinematic should be brighter without extra clutter")
 settings.startup["razi-starmap-galactic-ornaments"].value=false
 ok(#bg.make_layers("subtle",true,true,true,false)==15,
-  "Turning off ornaments removes four star pockets")
+  "Turning off ornaments removes eight star pockets")
 settings.startup["razi-starmap-galactic-ornaments"].value=true
 settings.startup["razi-starmap-micro-details"].value=false
-ok(#bg.make_layers("subtle",true,true,true,false)==15,
+ok(#bg.make_layers("subtle",true,true,true,false)==19,
   "Turning off micro-details removes four star pockets")
 sprites.layers={native}
 settings.startup["razi-starmap-background-style"].value="off"
