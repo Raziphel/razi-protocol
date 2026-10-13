@@ -84,6 +84,14 @@ for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
     "Vibrant climate radius mismatch: "..pair[1])
 end
 layout.data_updates()
+-- Khemia was visible next to the first sun even though its final orbit
+-- metadata named Vibrant. Its absolute origin must already be right in
+-- the earlier PlanetsLib art-baking stage.
+check(planets.khemia.origin and
+  math.abs(planets.khemia.origin.x-vx)<.01 and
+  math.abs(planets.khemia.origin.y-vy)<.01 and
+  math.abs(planets.khemia.distance-41.598564)<.01,
+  "Pre-render Khemia artwork was not moved to Vibrant")
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.
 for name,bearing in pairs({

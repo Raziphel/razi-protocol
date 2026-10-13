@@ -155,6 +155,22 @@ function M.data_updates()
     end
   end
   if #updates>0 then PlanetsLib:update(updates) end
+  -- Place source-owned Khemia BEFORE PlanetsLib bakes its starmap icon.
+  -- It is not enough to reparent it in data-final-fixes after rendering.
+  local vx,vy=anchor_position("vibrant")
+  if vx and vy then
+    for _,kind in ipairs({"planet","space-location"}) do
+      local body=exists(kind,"khemia")
+      if body then
+        body.origin={x=vx,y=vy}
+        body.distance=41.598564
+        body.orientation=0.287184
+        if type(log)=="function" then
+          log("[Razi Protocol/Calidus] PRE-RENDER forced Khemia to Vibrant: "..kind)
+        end
+      end
+    end
+  end
   if type(log)=="function" then
     log("[Razi Protocol/starmap] PRE-RENDER-2026-10-11-v3: positioned six sprite-only stars before PlanetsLib cleanup")
     for name in pairs(stars) do
@@ -366,6 +382,35 @@ function M.confirm_critical_positions()
         adjust_layer(name,x,y)
       end
     end
+  end
+
+  -- Absolute map-space verification, rather than checking only the orbit
+  -- metadata. Log the resulting coordinates when Khemia remains suspicious.
+  local vx,vy=anchor_position("vibrant")
+  local count=0
+  if vx and vy then
+    for _,kind in ipairs({"planet","space-location"}) do
+      local body=exists(kind,"khemia")
+      if body then
+        count=count+1
+        local origin=body.origin or {}
+        local ox,oy=origin.x or origin[1] or 0,
+          origin.y or origin[2] or 0
+        assert(math.abs(ox-vx)<.001 and math.abs(oy-vy)<.001
+          and math.abs((body.distance or 0)-41.598564)<.001
+          and math.abs((body.orientation or 0)-0.287184)<.00001,
+          "Khemia is outside Vibrant after final layout: "..kind)
+        if type(log)=="function" then
+          local dx,dy=polar(body.distance,body.orientation)
+          log(string.format(
+            "[Razi Protocol/Calidus] Khemia %s verified at %.2f,%.2f; Vibrant centre %.2f,%.2f",
+            kind,ox+dx,oy+dy,vx,vy))
+        end
+      end
+    end
+  end
+  if mods and mods["alchemy-khemia"] and count==0 and type(log)=="function" then
+    log("[Razi Protocol/Calidus] WARNING: Khemia mod present but no matching map prototype")
   end
 end
 

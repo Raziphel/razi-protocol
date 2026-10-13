@@ -46,7 +46,9 @@ local special = {
 }
 
 local home = {
-  nauvis="calidus", gleba="nyxaris", vulcanus="solaris",
+  nauvis="calidus", muluna="calidus",
+  ["sye-calidus"]="calidus",["razi-calidus-drift"]="calidus",
+  gleba="nyxaris", vulcanus="solaris",
   fulgora="vibrant", aquilo="vespera", paracelsin="vibrant",
   tenebris="umbra", ["sye-vibrant"]="vibrant",
   ["sye-nyxaris"]="nyxaris", ["sye-vespera"]="vespera",
@@ -107,6 +109,20 @@ local function has_local_route(destination, system)
   return false
 end
 
+-- Dyson sphere orbital locations may have arbitrary source IDs, so the
+-- Calidus designation must follow the source technology unlock effects.
+local function is_calidus_stellar_orbit(name)
+  for _,tech_id in ipairs({"planet-discovery-sunorbit",
+    "slp-solar-system-sun2"}) do
+    local tech=(data.raw.technology or {})[tech_id]
+    for _,effect in ipairs(tech and tech.effects or {}) do
+      if effect.type=="unlock-space-location"
+        and effect.space_location==name then return true end
+    end
+  end
+  return false
+end
+
 local function prune_known_bypass(destination, system)
   local routes=data.raw["space-connection"] or {}
   for name, route in pairs(routes) do
@@ -115,7 +131,11 @@ local function prune_known_bypass(destination, system)
     if route.to==destination then other=route.from end
     -- Remove only normal other-system planet routes, never special
     -- source-owned links to unknown endgame/stargate destinations.
-    if other and home[other] and home[other]~=system then
+    if other and ((home[other] and home[other]~=system)
+      or (destination=="khemia" and is_calidus_stellar_orbit(other))) then
+      -- Khemia's former direct routes to Nauvis or source-owned solar
+      -- stations were still drawing webs through Calidus. Only recognized
+      -- cross-system links are retired; preserve native alchemy-side routes.
       routes[name]=nil
     end
   end

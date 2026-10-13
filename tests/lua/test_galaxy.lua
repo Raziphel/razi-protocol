@@ -92,6 +92,11 @@ local function test_routes()
                 type="space-connection",name="old-factory-belt-bypass",
                 from="fulgora",to="paracelsin",length=3000
             },
+			["native-nauvis-muluna"]={
+        type="space-connection",name="native-nauvis-muluna",
+        from="nauvis",to="muluna",length=12000,shape="arc",
+        asteroid_spawn_definitions={}
+      },
 			["old-direct-aquilo-rubia"] = {
                 type="space-connection", from="aquilo", to="rubia",
                 asteroid_spawn_definitions={{
@@ -226,15 +231,14 @@ local function test_routes()
     end
   end
   check(count==7,"Expected seven direct interstellar corridors")
-  for name,km in pairs({
-    ["razi-nauvis-razi-calidus-drift"]=12000,
-    ["razi-razi-calidus-drift-sye-calidus"]=17500,
-    ["razi-muluna-sye-calidus"]=14000
-  }) do
-    local route=routes[name]
-    check(route and route.length==km and route.shape=="arc",
-      "Calidus freight route missing: "..name)
-  end
+  local drift=routes["razi-razi-calidus-drift-sye-calidus"]
+  check(drift and drift.length==17500 and drift.shape=="line",
+    "Calidus Drift should have one clean direct hub connection")
+  check(not routes["razi-nauvis-razi-calidus-drift"]
+    and not routes["razi-muluna-sye-calidus"],
+    "Calidus still has redundant Nauvis/Drift/Muluna spokes")
+  check(routes["native-nauvis-muluna"]~=nil,
+    "Cleanup must preserve the actual source-owned lunar connection")
   check(routes["razi-sye-calidus-sye-vibrant"]==nil,
     "Home system shortcut bypassed the first frontier")
   check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
@@ -356,6 +360,19 @@ local function test_routes()
 	local after = 0
 	for _ in pairs(routes) do after = after + 1 end
 	check(before == after, "Route reconciliation is not idempotent")
+  -- Source moon connections vary between mod versions. If absent, the
+  -- 14,000 km Razi fallback must restore a safe way home.
+  routes["native-nauvis-muluna"]=nil
+  reconciliation.data_final_fixes()
+  check(routes["razi-muluna-sye-calidus"] and
+    routes["razi-muluna-sye-calidus"].shape=="line",
+    "Muluna lost its safe outbound fallback without its source route")
+  routes["native-nauvis-muluna"]={
+    type="space-connection",name="native-nauvis-muluna",
+    from="nauvis",to="muluna",length=12000}
+  reconciliation.data_final_fixes()
+  check(not routes["razi-muluna-sye-calidus"],
+    "Restored native moon route should replace the extra Razi spoke")
 end
 
 local function list_contains(values, wanted)

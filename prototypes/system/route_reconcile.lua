@@ -7,7 +7,7 @@ local layout = require("prototypes.system.galaxy_layout")
 
 local membership = {
 	-- Main game and Calidus.
-	nauvis = "calidus", muluna = "calidus",
+	nauvis = "calidus", muluna = "calidus", khemia = "vibrant",
 	["sye-calidus"] = "calidus", ["razi-calidus-drift"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris",
@@ -44,8 +44,8 @@ local route_specifications = {
   -- redundant Calidus spokes. The fixed hexagonal star art stays unchanged.
   -- Research unlocks each destination hub independently of the visual path.
   {"nauvis", "sye-calidus", 25000, "starter"},
-  -- Calidus's modest local freight triangle; native lunar discovery remains.
-  {"nauvis", "razi-calidus-drift", 12000, "starter"},
+  -- Calidus now has one direct Nauvis -> Slip Stream departure and one
+  -- Drift freight spur. The Muluna branch is a source-route fallback only.
   {"razi-calidus-drift", "sye-calidus", 17500, "starter"},
   {"muluna", "sye-calidus", 14000, "starter"},
   {"sye-calidus", "sye-solaris", 60000, "first_crossing"},
@@ -155,6 +155,33 @@ local function key_for(a, b)
 	return a .. "|" .. b
 end
 
+-- Keep source-owned lunar and Dyson routes, but stop Razi's freight
+-- triangle from stacking multiple Calidus arcs over Nauvis.
+local function clean_calidus_routes(routes)
+  local moon_link=false
+  for _,r in pairs(routes) do
+    if key_for(r.from,r.to)==key_for("nauvis","muluna") then
+      moon_link=true
+      break
+    end
+  end
+  local obsolete={["razi-nauvis-razi-calidus-drift"]=true}
+  if moon_link then obsolete["razi-muluna-sye-calidus"]=true end
+  local removed=0
+  for name in pairs(obsolete) do
+    local connection=routes[name]
+    if connection and connection.from and connection.to
+      and key_for(connection.from,connection.to)==
+        (name=="razi-nauvis-razi-calidus-drift"
+          and key_for("nauvis","razi-calidus-drift")
+          or key_for("muluna","sye-calidus")) then
+      routes[name]=nil
+      removed=removed+1
+    end
+  end
+  return removed,moon_link
+end
+
 -- Razi's first-party Vibrant belt is a true inner/outer boundary at Vibrant.
 -- Some dependencies add old same-system shortcuts in their final-fixes;
 -- remove ONLY crossings between Razi's known inner and outer locations.
@@ -229,6 +256,8 @@ route_reconcile.regional_origin=regional_origin
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
 	local rescued = {}
+	-- Older mod revisions authored a redundant direct Nauvis-Drift chord.
+	clean_calidus_routes(routes)
 
 	-- A short-lived development shuttle crossed the existing Castra/Hyarion
 	-- connection in the compact Solaris map. Keep source-authored connections
@@ -319,7 +348,11 @@ function route_reconcile.data_final_fixes()
 				hazard_profiles.apply(route, hazard)
 				local strength=field_strength(from,to)
 				if strength then hazard_profiles.apply_field(route,strength) end
-				if route.origin==nil then
+				if membership[from]=="calidus" and membership[to]=="calidus"
+					and keep_name:sub(1,5)=="razi-" then
+					route.shape="line"
+					route.origin=nil
+				elseif route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
 				end
 				route_icons.assign(route, hazard)
@@ -331,7 +364,8 @@ function route_reconcile.data_final_fixes()
 						to = to,
 						length = length,
 						shape = (membership[from] and membership[to]
-                            and membership[from] ~= membership[to]) and "line" or "arc",
+                            and (membership[from] ~= membership[to]
+                              or membership[from]=="calidus")) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)
@@ -341,6 +375,15 @@ function route_reconcile.data_final_fixes()
 				routes_by_pair[pair] = {route_name}
 			end
 		end
+	end
+
+	-- Drop the Razi moon-to-hub fallback if the actual source moon already
+	-- connects to Nauvis. This keeps one route to each Calidus branch.
+	local removed,moon_link=clean_calidus_routes(routes)
+	if type(log)=="function" then
+		log("[Razi Protocol/Calidus] Simplified local route graph; "..
+		  removed.." redundant freight links, native lunar access="..
+		  tostring(moon_link))
 	end
 
 	-- Save custom chunks from the two retired direct routes after constructing
