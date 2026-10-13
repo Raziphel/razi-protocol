@@ -97,6 +97,28 @@ function bellicos.data()
 	})
 end
 
+local function soften_pulsar_art()
+  local util=data.raw["utility-sprites"] and data.raw["utility-sprites"].default
+  local layers=util and util.starmap_star and util.starmap_star.layers
+  if type(layers)~="table" then return end
+  local touched=0
+  for _,layer in ipairs(layers) do
+    local filename=type(layer.filename)=="string" and layer.filename:lower() or ""
+    local tagged=layer.planetslib_orbit_name=="pulsar"
+    local source_file=filename:find("__bellicos-and-aegis",1,true)
+      and filename:find("pulsar",1,true)
+    if tagged or source_file then
+      local tint=layer.tint or {r=1,g=1,b=1,a=1}
+      layer.tint={r=tint.r or 1,g=tint.g or 1,b=tint.b or 1,
+        a=math.min(tint.a or 1,.54)}
+      touched=touched+1
+    end
+  end
+  if touched>0 and type(log)=="function" then
+    log("[Razi Protocol/starmap] Dimmed "..touched.." pulsar atlas layers")
+  end
+end
+
 function bellicos.data_final_fixes()
 	if not mods["bellicos-and-aegis"] then
 		return
@@ -108,6 +130,9 @@ function bellicos.data_final_fixes()
 	-- Source data-final-fixes may reparent its giant pulsar after data.lua.
 	-- Reaffirm only existing Razi-managed anchors at the final stage.
 	position_expedition()
+	local glare=settings and settings.startup
+	  and settings.startup["razi-starmap-soften-bellicos"]
+	if not glare or glare.value~=false then soften_pulsar_art() end
 	-- A gateway removed by a later dependency pass must not leave our
 	-- replacement deep-space route pointing to an invalid endpoint.
 	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then

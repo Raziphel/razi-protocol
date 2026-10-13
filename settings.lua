@@ -72,6 +72,7 @@ data:extend({
   },
   startup_toggle("razi-starmap-system-halos","cb[starmap]-b[halos]"),
   startup_toggle("razi-starmap-belt-atmosphere","cb[starmap]-c[belts]"),
+  startup_toggle("razi-starmap-soften-bellicos","cb[starmap]-c2[pulsar-glare]"),
   startup_toggle("razi-starmap-fine-details","cb[starmap]-d[details]"),
   startup_toggle("razi-starmap-galactic-ornaments",
     "cb[starmap]-d2[quiet-nebula-structure]"),

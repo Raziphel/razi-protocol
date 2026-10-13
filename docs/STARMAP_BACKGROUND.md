@@ -101,3 +101,7 @@ art are softer, but their actual connections and hazards are untouched.
 
 Historic layer totals elsewhere in this document refer to prior releases.
 Verify the effect in a real Factorio 2.1 client before publishing to stable.
+
+## Frontier luminosity cleanup
+
+Deep Space uses fainter filaments and a subdued rift plus a small offset blue cluster. The Bellicos pulsar glare option caps recognized source atlas layers to 54% alpha, preserving route geometry, destinations, star icons and Aegis dangers.

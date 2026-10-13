@@ -188,3 +188,5 @@ tech gates and travel distances remain exactly as before.
 The geometry is intentionally not moved during this polish pass. Moving star
 anchors requires regenerating pre-aligned highlight masks and repeating all
 campaign-clearance tests.
+
+The Apia/Carnova waypoint and recognized nearby moons have opposite text orientations for readability. Coordinates, native orbits, and connected routes remain unchanged.

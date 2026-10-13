@@ -128,8 +128,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     for _,s in ipairs(systems) do
       local x,y=anchor(s.name)
       if x and y then
-        insert_asset(result,"glow-"..s.name..".png",512,512,7,x,y,s.tint,
-          cine and .44 or .23)
+        local alpha=s.name=="deep-space" and (cine and .25 or .14)
+          or (cine and .44 or .23)
+        insert_asset(result,"glow-"..s.name..".png",512,512,7,x,y,s.tint,alpha)
       end
     end
   end
@@ -200,7 +201,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         if x and y then
           -- Filaments are hollow at the centre to preserve stellar icons.
           insert_asset(result,"filament-"..system.name..".png",512,512,
-            5,x,y,system.tint,cine and .38 or .20)
+            5,x,y,system.tint,
+            system.name=="deep-space" and (cine and .19 or .105)
+              or (cine and .38 or .20))
           -- Reuse the filament's texture for a very faint outer corona.
           -- Six stellar hubs gain subtle depth; Calidus and Deep Space keep
           -- their distinct native silhouettes.
@@ -223,7 +226,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     local x,y=anchor("deep-space")
     if x and y then
       insert_asset(result,"rift-deep-space.png",512,512,4.7,x,y,
-        {r=.48,g=.61,b=.95},cine and .36 or .21)
+        {r=.48,g=.61,b=.95},cine and .23 or .135)
+      insert_asset(result,"cluster-1.png",384,384,1.65,
+        x-28,y+24,{r=.51,g=.69,b=.92},cine and .11 or .065)
     end
   end
   if cartography==true then
