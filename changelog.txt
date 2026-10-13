@@ -1,3 +1,14 @@
+Version: 2.1.45
+Date: 13. 10. 2026
+  Rebuild Razi's original space-route overlay in the dev pack:
+    - Remove the external Space Route Overlay dependency; mark it incompatible to stop duplicate route drawing.
+    - Reintroduce an entirely first-party route compositor with smaller, uniformly scaled sprites following final native Factorio 2.1 endpoint geometry.
+    - Color by real asteroid danger (or chapter as an option) and preserve purple belt-crossing warnings and existing tooltip analysis.
+    - Respect verified native route origins, omit unsafe/ambiguous arcs and keep planet endpoints visually clear.
+    - Add startup controls for color mode and for major-only versus all verified connection coverage.
+    - Keep the Solaris direct connection layout introduced in 2.1.44 and preserve all gameplay routes, hazards, science, and travel times.
+    - Run static regression checks for idempotence, line and arc geometry and no external dependency; in-game graphics still require testing.
+
 Version: 2.1.44
 Date: 13. 10. 2026
   Correct Solaris path geometry and retire custom route sprites:

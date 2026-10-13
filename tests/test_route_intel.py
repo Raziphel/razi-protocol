@@ -5,11 +5,12 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 
 class RouteIntelIntegrationTests(unittest.TestCase):
-    def test_tooltips_are_registered_without_stroke_renderer(self):
+    def test_tooltips_are_registered_before_owned_renderer(self):
         final=(ROOT/"data-final-fixes.lua").read_text()
         self.assertLess(final.index('require("prototypes.system.route_icons").data_final_fixes()'),
                         final.index('require("prototypes.system.route_intel").data_final_fixes()'))
-        self.assertNotIn('require("prototypes.system.route_highlights").data_final_fixes()',final)
+        self.assertLess(final.index('require("prototypes.system.route_intel").data_final_fixes()'),
+                        final.index('require("prototypes.system.route_highlights").data_final_fixes()'))
         self.assertIn("custom_tooltip_fields",
                       (ROOT/"prototypes/system/route_intel.lua").read_text())
 

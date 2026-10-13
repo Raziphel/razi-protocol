@@ -43,6 +43,18 @@ data:extend({
     "ca[quality-of-life]-a[redundant-assemblers]"),
   startup_toggle("razi-enable-expedition-briefings",
     "ca[quality-of-life]-b[expedition-briefings]"),
+  -- Route colors are generated from final native space-connection prototypes.
+  -- Razi owns this map layer; the external overlay is incompatible.
+  {
+    type="string-setting",name="razi-route-overlay-mode",setting_type="startup",
+    default_value="danger",allowed_values={"off","danger","chapter"},
+    order="ca[quality-of-life]-c[route-overlay-mode]"
+  },
+  {
+    type="string-setting",name="razi-route-overlay-scope",setting_type="startup",
+    default_value="major",allowed_values={"major","all"},
+    order="ca[quality-of-life]-c2[route-overlay-scope]"
+  },
   startup_toggle("razi-route-intelligence",
     "ca[quality-of-life]-d[route-intelligence]"),
   -- GALAXY VISUALS

@@ -84,7 +84,8 @@ class StarmapBackgroundTests(unittest.TestCase):
         layout='require("prototypes.system.galaxy_layout").data_final_fixes()'
         art='require("prototypes.system.starmap_background").data_final_fixes()'
         self.assertLess(source.index(layout),source.index(art))
-        self.assertNotIn('require("prototypes.system.route_highlights").data_final_fixes()',source)
+        overlay='require("prototypes.system.route_highlights").data_final_fixes()'
+        self.assertLess(source.index(art),source.index(overlay))
     def test_settings_and_prototype_ownership(self):
         settings=(ROOT/"settings.lua").read_text()
         module=(ROOT/"prototypes/system/starmap_background.lua").read_text()

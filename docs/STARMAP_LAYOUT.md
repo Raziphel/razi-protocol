@@ -1,3 +1,10 @@
+> **2.1.45 route rendering:** The native Solaris direct-line geometry from
+> 2.1.44 remains. Razi now owns a rebuilt, path-aware hazard overlay.
+> It uses short, fixed-width segments and verified regional arc origins,
+> with an optional chapter palette. Install no external overlay. For
+> full settings and technical details see
+> [ROUTE_HIGHLIGHTS.md](ROUTE_HIGHLIGHTS.md).
+
 > **2.1.44 Solaris route correction:** The eight authored Solaris local
 > connections are now direct native Space Age lines, not the previous wide
 > arcs that circled the system and neighboring sectors. Igrys retains its
