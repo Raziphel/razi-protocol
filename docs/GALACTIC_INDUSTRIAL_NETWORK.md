@@ -1,3 +1,17 @@
+## Return freight: Calidus relay electronics (2.1.50)
+
+The optional `razi-first-frontier-relay-components` research adds a
+Nauvis K2SO electronics alternative consuming imported Vulcanus rare
+metals, Gleba bioflux and Moshine optical cable. It scales four native
+batches, gains one output, charges 12% more crafting time and disables
+productivity and automatic recycling. The native recipe is untouched.
+
+The established exchange registration checks native source outputs,
+actual supplier recipes and research, world discoveries, ingredients,
+machine capability, legal surface and lab science. A missing or modified
+upstream prototype safely suppresses this optional alternative. Its
+Codex milestone is not a required science-card or planet gate.
+
 # Galactic Industrial Network
 
 **Fourteen optional three-to-five-world recipes** are introduced by this

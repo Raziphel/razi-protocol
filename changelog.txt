@@ -1,3 +1,11 @@
+Version: 2.1.50
+Date: 14. 10. 2026
+  Frontier freight, Codex campaign handoffs and native route intelligence:
+    - Give Calidus electronics an optional first-frontier recipe importing verified Vulcanus rare metals, Gleba bioflux and Moshine optical cable.
+    - Introduce an optional Codex milestone and visible related follow-up objectives without inventing tech unlocks.
+    - Categorize actual native route lengths and hostile asteroid size mixtures with no runtime event work.
+    - Extend regression fixtures. Full Factorio 2.1 and existing-save testing remains required.
+
 Version: 2.1.49
 Date: 14. 10. 2026
   Quest and journal GUI icon correction:

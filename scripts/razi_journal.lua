@@ -516,7 +516,7 @@ local function render_tracker(player)
   signal.style.font_color=done and {r=.51,g=.86,b=.73} or theme.soft
 end
 M.render_tracker=render_tracker
-local function render_details(parent,player,quest,p,context,size)
+local function render_details(parent,player,quest,p,context,size,view)
   local panel=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   panel.style.width=size.reader
@@ -608,6 +608,30 @@ local function render_details(parent,player,quest,p,context,size)
         wrap(objective,{"",L("requires-heading")," ",
           {"journal-title."..prior.id}},text_width-26)
       end
+    end
+  end
+  -- Direct campaign handoffs share the force snapshot with the chapter rail.
+  local next_steps=guidance.followups(quest.id,view and view.states,3)
+  if #next_steps>0 then
+    local forecast=prose.add{type="frame",direction="vertical",
+      style="inside_shallow_frame_with_padding"}
+    forecast.style.width=text_width
+    local heading=wrap(forecast,L("next-steps-heading"),text_width-26)
+    heading.style.font="default-bold"
+    heading.style.font_color=theme.primary
+    wrap(forecast,L("next-steps-note"),text_width-26)
+    for _,step in ipairs(next_steps) do
+      local line=forecast.add{type="flow",direction="horizontal"}
+      line.style.horizontal_spacing=8
+      icons.sprite(line,quest_art(player.force,step.quest,context),"quest_row")
+      local note=line.add{type="flow",direction="vertical"}
+      note.style.vertical_spacing=1
+      local link=note.add{type="label",style="clickable_label",
+        caption={"journal-title."..step.quest.id},
+        tags={razi_journal_action="guidance-select",id=step.quest.id}}
+      link.style.single_line=false
+      link.style.maximal_width=text_width-80
+      tint(wrap(note,L("next-step-"..step.state),text_width-80),theme.soft)
     end
   end
   -- The link is informational and never turns a researched milestone
@@ -1068,7 +1092,7 @@ local function draw(player,focus_search)
     local search=render_chapters(body,player,p,context,size,view,plan)
     if focus_search then pcall(function() search.focus() end) end
     if selected then
-      render_details(body,player,selected,p,context,size)
+      render_details(body,player,selected,p,context,size,view)
     else
       local empty=body.add{type="frame",
         style="inside_shallow_frame_with_padding"}

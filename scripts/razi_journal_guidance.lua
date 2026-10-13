@@ -2,11 +2,40 @@
 -- The caller supplies the Codex's existing research/quest snapshot.
 local M={}
 local data=require("scripts.razi_journal_data")
-local dependents={}
+local dependents,downstream={},{}
 for _,quest in ipairs(data.quests) do
   for _,required in ipairs(quest.requires or {}) do
     dependents[required]=(dependents[required] or 0)+1
+    local list=downstream[required]
+    if not list then list={} downstream[required]=list end
+    list[#list+1]=quest
   end
+end
+
+-- Show direct Codex handoffs; real ForceTechnology still decides unlocks.
+function M.followups(id,states,limit)
+  local current=data.by_id[id]
+  local ranked={}
+  local order={active=1,locked=2,complete=3}
+  for _,quest in ipairs(downstream[id] or {}) do
+    local state=states and states[quest.id]
+    if order[state] then
+      ranked[#ranked+1]={quest=quest,state=state,
+        cross=current and quest.chapter~=current.chapter or false}
+    end
+  end
+  table.sort(ranked,function(a,b)
+    if order[a.state]~=order[b.state] then
+      return order[a.state]<order[b.state]
+    end
+    if a.cross~=b.cross then return a.cross end
+    return a.quest.id<b.quest.id
+  end)
+  local result={}
+  for i=1,math.min(math.max(0,limit or 3),#ranked) do
+    result[#result+1]=ranked[i]
+  end
+  return result
 end
 local function frontier(quest)
   if quest.world then return true end

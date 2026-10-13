@@ -74,6 +74,7 @@ M.quests={
  {id="dyson-mk2",chapter="stellar",tech="ds-energy-loader-mk2",requires={"dyson-repeaters"}},
  {id="dyson-mk3",chapter="stellar",tech="ds-energy-loader-mk3",requires={"dyson-mk2"}},
  {id="interplanetary-trade",chapter="network",tech="interplanetary-trade-logistics",requires={"space-science"}},
+ {id="first-frontier-relay",chapter="network",tech="razi-first-frontier-relay-components",requires={"vulcanus","gleba","moshine"},optional=true},
  {id="precision-matrix",chapter="network",tech="razi-network-precision-matrix",requires={"fulgora","moshine"}},
  {id="extreme-lattice",chapter="network",tech="razi-network-extreme-lattice",requires={"precision-matrix","rubia","tenebris"}},
  {id="outer-mastery",chapter="finale",tech="razi-outer-frontier-mastery",requires={"frozeta","vesta","linox"}},

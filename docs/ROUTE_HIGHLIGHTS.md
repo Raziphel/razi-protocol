@@ -1,3 +1,12 @@
+## Native route freight intelligence (2.1.50)
+
+Native space-connection tooltips now give a **haul distance band** using
+actual route kilometres and an **asteroid size mixture** from its
+configured hostile asteroid spawn definitions. The resulting labels
+distinguish one size, multiple sizes, unknown modded asteroid types, or
+none listed. No travel-time estimate, promised encounter, altered route,
+asteroid curve or additional runtime event is involved.
+
 # Razi route overlay (built in)
 
 Razi Protocol Dev **2.1.45** implements its own route overlay. No external

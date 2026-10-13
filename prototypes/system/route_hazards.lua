@@ -40,6 +40,16 @@ function M.kind(route)
   return "local"
 end
 
+-- Freight scale is derived from the real connection length; not an ETA.
+function M.haul_class(route)
+  local length=route and route.length
+  if type(length)~="number" or length<=0 then return "unlisted" end
+  if length<=20000 then return "shuttle" end
+  if length<=75000 then return "regional" end
+  if length<=150000 then return "long-haul" end
+  return "expedition"
+end
+
 function M.inspect(route)
   local peaks={small=0,medium=0,big=0,huge=0}
   local unknown=false
@@ -77,7 +87,14 @@ function M.inspect(route)
   if peaks.big>0 then tier=4 end
   if peaks.huge>0 or peaks.big>=0.05 then tier=5 end
   if unknown then tier=math.max(tier,3) end
-  return {tier=tier,largest=largest,chunks=chunk_count,unknown=unknown}
+  local sizes=0
+  for _,probability in pairs(peaks) do
+    if probability>0 then sizes=sizes+1 end
+  end
+  local mix=(sizes>1 and "mixed") or (sizes==1 and "single") or "unlisted"
+  if unknown then mix="unclassified" end
+  return {tier=tier,largest=largest,chunks=chunk_count,unknown=unknown,
+    size_count=sizes,mix=mix}
 end
 
 function M.color(route)

@@ -1,3 +1,16 @@
+## Campaign handoffs and the Calidus return freight (2.1.50)
+
+The quest reader now lists up to three direct Codex successors for its
+selected milestone, prioritizing active objectives and cross-chapter
+handoffs. Missing optional technologies are not shown. Active, planned and
+completed describe Codex story progress; Factorio's own research tree
+still controls actual access. No tick-time scans are added.
+
+The optional first-frontier relay mission follows Vulcanus, Gleba and
+Moshine and returns the discoveries to Calidus industry. It appears only
+when its guarded source recipe exists. The catalog now includes 211
+conditional milestones across 18 chapters.
+
 ## Quest-first interface and icon normalization (2.1.49)
 
 The Codex is intentionally a **two-view quest book**: **Quests** for
