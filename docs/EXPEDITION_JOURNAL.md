@@ -201,3 +201,38 @@ back to the correct Codex quest when such a quest actually exists.
 Navigation does not change technologies, research completion, ship
 schedules or real cargo. Existing Codex IDs and progress history are
 preserved. Missing optional mods do not create fictional milestones.
+
+## Expedition Priorities (2.1.29)
+
+The chapter navigator now begins with a compact **Expedition Priorities**
+card. Rather than choosing the first unfinished quest in the data file,
+the Codex proposes one primary objective and up to two different active
+chapters to pursue in parallel. Priority weighs significant discoveries,
+industrial work and quests needed for later milestones.
+
+**Researchable now** means the native technology exists, is enabled and
+has no unfinished native research prerequisites; it does **not** mean the
+player has stocked the science packs, built its research lab or completed
+any logistical project. No items, recipes or research are granted.
+
+The card highlights one near-term research or story roadblock when useful.
+It distinguishes a missing native technology prerequisite from an
+incomplete *Codex narrative milestone*, and does not select hidden,
+missing or unsupported optional-mod goals. Disabled source technologies
+remain in the blocked category rather than being advertised as available.
+
+The recommended and alternative quest titles are clickable. Selecting
+one opens its actual chapter, clears incompatible search/filter settings
+and keeps the existing pinned objective untouched. The **Recommended
+next milestone** button and fallback quest selection use the same
+ranking. When an objective is chosen explicitly, the navigator scrolls
+to it; otherwise the priorities remain visible at the top of the
+navigator. No extra window height, horizontal scrolling, new tick work
+or campaign completion state is required.
+
+The recommendation calculation reuses the Codex's already computed
+210-quest status snapshot on normal redraw, looks up live
+`LuaTechnology.prerequisites`, and uses a fixed small dependency-count
+index initialized when the module loads. Tests cover simultaneous star
+branches, native and story blockers, disabled source technologies,
+missing optional planets, empty states and deterministic tie-breaking.

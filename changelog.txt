@@ -1,3 +1,14 @@
+Version: 2.1.29
+Date: 13. 10. 2026
+  Intelligent Protocol Codex expedition guidance:
+    - Replace first-in-file recommendations with real native research readiness, science prerequisite checks and progression-aware prioritisation.
+    - Show a primary objective, up to two parallel objectives across different active chapters and a nearby blocked discovery or industry.
+    - Distinguish story prerequisites from native source-mod research blockers; never present disabled or missing optional technologies as research-ready.
+    - Add clickable, chapter-colored recommendations with native quest icons inside the existing scrollable navigator.
+    - Keep the recommended-next button consistent with the guidance panel, preserve player quest history and make navigation recover from stale search filters.
+    - Reuse the current 210-quest view and a static dependency index to avoid redundant per-redraw state scans.
+    - Add synthetic planner tests, GUI navigation regression checks and documentation.
+
 Version: 2.1.28
 Date: 13. 10. 2026
   Codex and Cargo Network navigation:
