@@ -1,3 +1,14 @@
+Version: 2.1.36
+Date: 13. 10. 2026
+  FluxWorks industry exchanges and cleanup:
+    - Create five optional paired factory networks connecting Calidus/Solaris, Nyxaris/Vibrant, Solaris/Vespera, Vibrant/Beetlejuice and Nyxaris/Umbra.
+    - Unlock established FluxWorks and vanilla industrial products from paired regional inputs without adding new materials or mandatory planet gates.
+    - Add five Codex research objectives, completing the twelve-entry FluxWorks Industrial Atlas with more factory guidance and expedition stories.
+    - Simplify duplicate direct research arrows only when their requirement is already implied by another FluxWorks technology prerequisite.
+    - Reduce avoidable input complexity in optional Vespera cryogel and Beetlejuice quantum fabrication; keep the seven regional specialists within five ingredient lanes.
+    - Guard optional sources, respect two fluid inputs, preserve original recipe names and add regression coverage for mod-free games, graph reachability and exchange unlocks.
+    - Source checks are complete; the full Factorio 2.1 modpack load and save-migration checks remain to be performed.
+
 Version: 2.1.35
 Date: 13. 10. 2026
   Optional FluxWorks industrial atlas:

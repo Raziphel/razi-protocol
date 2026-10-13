@@ -145,6 +145,10 @@ require("prototypes.system.starmap_background").data_final_fixes()
 require("prototypes.compat.fluxworks").data_final_fixes()
 -- Optional industrial projects with their own Codex milestones; never gate routes.
 require("prototypes.compat.fluxworks_specializations").data_final_fixes()
+-- Optional paired workshops require BOTH regional industry milestones.
+require("prototypes.compat.fluxworks_industry_exchanges").data_final_fixes()
+-- Collapse only prerequisite arrows already implied by other research paths.
+require("prototypes.compat.fluxworks_research_clarity").data_final_fixes()
 
 -- Last coordinates before building colored route art: compatibility mods can
 -- update their prototype a second time without re-baking all star sprites.

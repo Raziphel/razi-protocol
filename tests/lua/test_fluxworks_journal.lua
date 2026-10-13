@@ -27,7 +27,23 @@ for _,system in ipairs(systems) do
   registered=registered+1
 end
 assert(registered==7)
-assert(#with.quests==#without.quests+7)
+local pairs={
+  {"calidus-solaris","calidus","solaris"},
+  {"nyxaris-vibrant","nyxaris","vibrant"},
+  {"solaris-vespera","solaris","vespera"},
+  {"vibrant-beetlejuice","vibrant","beetlejuice"},
+  {"nyxaris-umbra","nyxaris","umbra"},
+}
+for _,pair in ipairs(pairs) do
+  local id="flux-link-"..pair[1]
+  local quest=assert(with.by_id[id],"Missing exchange quest "..id)
+  assert(quest.chapter=="fluxworks")
+  assert(quest.tech=="razi-fw-"..pair[1].."-exchange")
+  assert(#quest.requires==2)
+  assert(quest.requires[1]=="flux-"..pair[2])
+  assert(quest.requires[2]=="flux-"..pair[3])
+end
+assert(#with.quests==#without.quests+12)
 assert(#with.chapters==#without.chapters+1)
 assert(with.by_id["first-signal"],"Existing quest ID unexpectedly changed")
-print("Razi FluxWorks journal: conditional chapter and seven objectives OK")
+print("Razi FluxWorks journal: conditional chapter, seven industries and five exchanges OK")

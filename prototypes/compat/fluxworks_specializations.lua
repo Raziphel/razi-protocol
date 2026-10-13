@@ -57,7 +57,7 @@ local regions = {
     count=850,science={"production-science-pack","cryogenic-science-pack","vespera-tech-card"},
     output="fw-aquilo-cryogel",amount=4,category="fw-flux-synthesis",duration=19,
     inputs={
-      ingredient("ice",10),ingredient("lithium-plate",3),ingredient("fw-salt",3),
+      ingredient("ice",12),ingredient("lithium-plate",4),
       ingredient("fluoroketone-cold",40,"fluid"),
       ingredient("fw-purple-flux",30,"fluid"),
     },
@@ -69,8 +69,8 @@ local regions = {
     count=1250,science={"utility-science-pack","beetlejuice-tech-card"},
     output="fw-quantum-computer",amount=1,category="fw-flux-synthesis",duration=26,
     inputs={
-      ingredient("gold-plate",2),ingredient("fw-logic-matrix",3),
-      ingredient("fw-memory-die",4),ingredient("fw-sensor-package",2),
+      ingredient("gold-plate",2),ingredient("fw-logic-matrix",4),
+      ingredient("fw-sensor-package",2),
       ingredient("fw-purple-flux",65,"fluid"),
       ingredient("fw-yellow-flux",35,"fluid"),
     },
@@ -118,8 +118,9 @@ local function valid(spec)
       end
     end
   end
-  -- Synthesis Plant and Arc Foundry have two fluid input ports.
-  return fluids<=2
+  -- Keep these optional recipes approachable: three component lanes
+  -- and two fluids at most, without disturbing native source-mod recipes.
+  return fluids<=2 and #spec.inputs<=5
 end
 
 local function icons(product,colour,partner)
