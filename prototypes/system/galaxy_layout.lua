@@ -66,7 +66,7 @@ local optional_orbits={
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
   {name="ferrum",star="vibrant",radius=51.444741,turn=0.545675},
-  {name="khemia",star="vibrant",radius=41.598564,turn=0.287184},
+  {name="alchemy-planet",star="vibrant",radius=41.598564,turn=0.287184},
   {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
   {name="bm-balack",star="vespera",radius=41.637729,turn=0.816913}
 }
@@ -113,13 +113,10 @@ end
 -- This is data-only and valid even after PlanetsLib deletes sprite-only stars.
 M.anchor_position=anchor_position
 
--- Khemia's evolving source mod can represent its destination as either a
--- planet or space-location. Resolve the actual prototype before registering
--- its graphics, rather than silently leaving it beside Calidus.
 local function resolved(item)
   local kind=item[1]
   local proto=exists(kind,item[2])
-  if not proto and item[2]=="khemia" and kind=="planet" then
+  if not proto and item[2]=="alchemy-planet" and kind=="planet" then
     kind="space-location"
     proto=exists(kind,item[2])
   end
@@ -155,12 +152,11 @@ function M.data_updates()
     end
   end
   if #updates>0 then PlanetsLib:update(updates) end
-  -- Khemia can have both a native planet AND a source space-location.
-  -- The original resolver only picked the planet; PlanetsLib could bake
-  -- the other sprite-only icon in Calidus before our final native pass.
-  if exists("planet","khemia") and exists("space-location","khemia") then
-    local item=by_name.khemia
-    local other=exists("space-location","khemia")
+  -- Some ports can expose both prototype types under the source ID. Move
+  -- both before PlanetsLib bakes starmap art so no duplicate stays at home.
+  if exists("planet","alchemy-planet") and exists("space-location","alchemy-planet") then
+    local item=by_name["alchemy-planet"]
+    local other=exists("space-location","alchemy-planet")
     local orbit={
       parent={type="space-location",name=item[3]},
       distance=item[4],orientation=item[5]
@@ -169,7 +165,7 @@ function M.data_updates()
       orbit.sprite=other.orbit.sprite
     end
     PlanetsLib:update({{
-      type="space-location",name="khemia",orbit=orbit
+      type="space-location",name="alchemy-planet",orbit=orbit
     }})
     if type(log)=="function" then
       log("[Razi Protocol/Calidus] Repositioned duplicate Khemia space-location BEFORE sprite baking")
@@ -180,7 +176,7 @@ function M.data_updates()
   local vx,vy=anchor_position("vibrant")
   if vx and vy then
     for _,kind in ipairs({"planet","space-location"}) do
-      local body=exists(kind,"khemia")
+      local body=exists(kind,"alchemy-planet")
       if body then
         local orbit={
           parent={type="space-location",name="vibrant"},
@@ -295,7 +291,7 @@ function M.data_final_fixes()
     ["rabbasca"]=0.75,["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
     ["obsidiax"]=0.25,["carna"]=0.75,
-    ["ferrum"]=0.75,["khemia"]=0.25,
+    ["ferrum"]=0.75,["alchemy-planet"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
@@ -378,7 +374,7 @@ end
 -- It also repairs Khemia's absolute native coordinates if a late mod moves
 -- only its planet prototype, while keeping source sprite metadata intact.
 function M.confirm_critical_positions()
-  for _,name in ipairs({"razi-calidus-drift","khemia"}) do
+  for _,name in ipairs({"razi-calidus-drift","alchemy-planet"}) do
     local item=by_name[name]
     if item then
       local x,y=anchor_position(item[3])
@@ -396,7 +392,7 @@ function M.confirm_critical_positions()
             if old and old.sprite then orbit.sprite=old.sprite end
             proto.orbit=orbit
             local dx,dy=polar(item[4],item[5])
-            if name=="khemia" then
+            if name=="alchemy-planet" then
               -- Factorio's old absolute-polar path and modern origin path
               -- disagree in affected packs. For this one stubborn planet,
               -- store the complete galactic coordinates in native polar
@@ -435,10 +431,11 @@ function M.confirm_critical_positions()
   local vx,vy=anchor_position("vibrant")
   local count=0
   if vx and vy then
-    local dx,dy=polar(by_name.khemia[4],by_name.khemia[5])
+    local item=by_name["alchemy-planet"]
+    local dx,dy=polar(item[4],item[5])
     local targetX,targetY=vx+dx,vy+dy
     for _,kind in ipairs({"planet","space-location"}) do
-      local body=exists(kind,"khemia")
+      local body=exists(kind,"alchemy-planet")
       if body then
         count=count+1
         local ox,oy=polar(body.distance or 0,body.orientation or 0)
@@ -461,7 +458,7 @@ function M.confirm_critical_positions()
     local star=art and art.starmap_star
     local marked=0
     for _,layer in ipairs(star and star.layers or {}) do
-      if layer.planetslib_orbit_name=="khemia" then
+      if layer.planetslib_orbit_name=="alchemy-planet" then
         marked=marked+1
         local pos=layer.shift or {}
         log(string.format(

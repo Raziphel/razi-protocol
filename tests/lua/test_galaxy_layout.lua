@@ -23,7 +23,7 @@ for _,name in ipairs({
   "cubium","linox-planet_linox","tenebris","vesta",
   "cerys","rabbasca","optional-source-world",
   "igrys","foliax","obsidiax","carna","ferrum",
-  "khemia","arcanyx","bm-balack"
+  "alchemy-planet","arcanyx","bm-balack"
 }) do planets[name]={name=name} end
 
 local moon={parent={type="planet",name="gleba"},distance=4}
@@ -84,21 +84,22 @@ for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
     "Vibrant climate radius mismatch: "..pair[1])
 end
 -- Simulate both source mod prototype types at once, before sprite baking.
-places.khemia={name="khemia",
+places["alchemy-planet"]={name="alchemy-planet",
   orbit={parent={type="space-location",name="star"},distance=25,orientation=.41}}
 layout.data_updates()
-check(places.khemia.orbit and
-  places.khemia.orbit.parent.name=="vibrant" and
-  places.khemia.origin and math.abs(places.khemia.origin.x-vx)<.01,
+check(places["alchemy-planet"].orbit and
+  places["alchemy-planet"].orbit.parent.name=="vibrant" and
+  places["alchemy-planet"].origin and
+  math.abs(places["alchemy-planet"].origin.x-vx)<.01,
   "Duplicate sprite-only Khemia source was not moved during data-updates")
-places.khemia=nil
+places["alchemy-planet"]=nil
 -- Khemia was visible next to the first sun even though its final orbit
 -- metadata named Vibrant. Its absolute origin must already be right in
 -- the earlier PlanetsLib art-baking stage.
-check(planets.khemia.origin and
-  math.abs(planets.khemia.origin.x-vx)<.01 and
-  math.abs(planets.khemia.origin.y-vy)<.01 and
-  math.abs(planets.khemia.distance-41.598564)<.01,
+check(planets["alchemy-planet"].origin and
+  math.abs(planets["alchemy-planet"].origin.x-vx)<.01 and
+  math.abs(planets["alchemy-planet"].origin.y-vy)<.01 and
+  math.abs(planets["alchemy-planet"].distance-41.598564)<.01,
   "Pre-render Khemia artwork was not moved to Vibrant")
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.
@@ -118,7 +119,7 @@ check(places["razi-calidus-drift"].draw_orbit==false,
 for _,entry in ipairs({
   {"igrys","solaris"}, {"foliax","nyxaris"},
   {"obsidiax","vespera"}, {"carna","umbra"},
-  {"ferrum","vibrant"}, {"khemia","vibrant"},
+  {"ferrum","vibrant"}, {"alchemy-planet","vibrant"},
   {"arcanyx","umbra"}, {"bm-balack","vespera"}
 }) do
   local name,parent=entry[1],entry[2]
@@ -240,41 +241,41 @@ check(planets.rabbasca.orbit==moon,
 layout.data_final_fixes()
 -- A late, conflicting source update must not pull the chemistry world back
 -- into Calidus or restore Drift's giant native orbit ring.
-planets.khemia.origin={x=0,y=0}
-planets.khemia.distance=17
-planets.khemia.orientation=.7
+planets["alchemy-planet"].origin={x=0,y=0}
+planets["alchemy-planet"].distance=17
+planets["alchemy-planet"].orientation=.7
 places["razi-calidus-drift"].draw_orbit=true
 layout.confirm_critical_positions()
 local kx,ky=layout.anchor_position("vibrant")
-local targetX,targetY=layout.anchor_position("khemia")
+local targetX,targetY=layout.anchor_position("alchemy-planet")
 local function absolute_coordinates(object)
   local a=2*math.pi*object.orientation
   local o=object.origin or {}
   return (o.x or o[1] or 0)+object.distance*math.sin(a),
     (o.y or o[2] or 0)-object.distance*math.cos(a)
 end
-local khemiaX,khemiaY=absolute_coordinates(planets.khemia)
-check(planets.khemia.origin==nil
+local khemiaX,khemiaY=absolute_coordinates(planets["alchemy-planet"])
+check(planets["alchemy-planet"].origin==nil
   and math.abs(khemiaX-targetX)<.01 and math.abs(khemiaY-targetY)<.01
-  and planets.khemia.draw_orbit==false,
+  and planets["alchemy-planet"].draw_orbit==false,
   "Final Khemia must use absolute Vibrant coordinates without a legacy origin")
 check(places["razi-calidus-drift"].draw_orbit==false,
   "Late pass restored a giant drift ring")
-check(planets.khemia.orbit and
-  planets.khemia.orbit.parent.name=="vibrant",
+check(planets["alchemy-planet"].orbit and
+  planets["alchemy-planet"].orbit.parent.name=="vibrant",
   "Khemia returned to the wrong stellar parent")
 -- A source mod exposing two starmap prototype types must not leave a
 -- duplicate chemistry node next to Calidus.
-places.khemia={name="khemia",origin={x=0,y=0},
+places["alchemy-planet"]={name="alchemy-planet",origin={x=0,y=0},
   distance=13,orientation=.1}
 layout.confirm_critical_positions()
-check(places.khemia.orbit and
-  places.khemia.orbit.parent.name=="vibrant" and
-  places.khemia.origin==nil and
-  math.abs(select(1,absolute_coordinates(places.khemia))-targetX)<.01 and
-  math.abs(select(2,absolute_coordinates(places.khemia))-targetY)<.01,
+check(places["alchemy-planet"].orbit and
+  places["alchemy-planet"].orbit.parent.name=="vibrant" and
+  places["alchemy-planet"].origin==nil and
+  math.abs(select(1,absolute_coordinates(places["alchemy-planet"]))-targetX)<.01 and
+  math.abs(select(2,absolute_coordinates(places["alchemy-planet"]))-targetY)<.01,
   "Secondary Khemia location remains in the home system")
-places.khemia=nil
+places["alchemy-planet"]=nil
 check(planets["optional-source-world"].draw_orbit==false,
   "Repeated final fixes duplicated custom orbit artwork")
 check(planets.rabbasca.orbit==moon,

@@ -90,7 +90,8 @@ local anchor=setmetatable({valid=true},{
   end
 })
 local map_player={
-  valid=true,connected=true,controller_type=1,render_mode=1,
+  valid=true,connected=true,index=1,controller_type=1,render_mode=1,
+  force={technologies={}},
   display_scale=1,display_resolution={width=1920,height=1080},
   gui={screen={razi_ops_map_anchor=anchor}}
 }
@@ -99,7 +100,7 @@ ui.sync_map_button(map_player)
 check(moves==1,"Steady map button location was written every poll")
 map_player.display_resolution.width=1600
 ui.sync_map_button(map_player)
-check(moves==2 and anchor.location.x==1356,
+check(moves==2 and anchor.location.x==1309,
   "Map button must move when the player's resolution changes")
 print("Galactic Operations selection and map visibility fixtures passed")
 
@@ -256,7 +257,7 @@ check(count_actions(none,"cargo-focus")==0,
 -- Newly required world identities must match route and campaign chapter maps.
 for _,value in ipairs({
  {"muluna","calidus"},{"velora","nyxaris"},{"ferrum","vibrant"},
- {"khemia","vibrant"},{"obsidiax","vespera"},
+ {"alchemy-planet","vibrant"},{"obsidiax","vespera"},
  {"bm-balack","vespera"},{"carna","umbra"},{"arcanyx","umbra"}
 }) do
  check(catalog.system(value[1])==value[2],

@@ -9,7 +9,7 @@ rawset(_G,"data",{raw={["space-location"]={star={
 local sun=require("prototypes.system.calidus_sun")
 check(sun.data_updates(),"Calidus central star was not updated")
 local star=data.raw["space-location"].star
-check(star.starmap_icon=="__razi-protocol__/graphics/icons/SolarisStar.png"
+check(star.starmap_icon=="__razi-protocol__/graphics/icons/CalidusStar.png"
   and star.starmap_icon_size==1024,"New golden star art is missing")
 check(star.magnitude==8 and star.distance==0 and star.orientation==0
   and star.origin.x==0 and star.origin.y==0

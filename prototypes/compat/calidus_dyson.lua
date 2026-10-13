@@ -70,8 +70,10 @@ local function calidus_orbit(location,radius,angle)
  location.origin={x=0,y=0}
  location.distance=radius
  location.orientation=angle
+ location.draw_orbit=false
  -- Source icon, surface rules, hazards and planet-specific map settings
- -- are never altered. The outer/inner locations look close to Calidus.
+ -- are never altered. Suppress only the oversized overlapping chart rings;
+ -- the two locations and their native route remain clearly visible.
 end
 
 function M.data_final_fixes()

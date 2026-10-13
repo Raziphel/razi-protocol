@@ -4,7 +4,7 @@ local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local systems={
-  {name="calidus",tint={r=1,g=.73,b=.50},strength=.46},
+  {name="calidus",tint={r=1,g=.86,b=.42},strength=.38},
   {name="solaris",tint={r=1,g=.51,b=.30},strength=.84},
   {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
   {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
