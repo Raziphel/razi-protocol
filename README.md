@@ -344,6 +344,16 @@ so it cannot be required in our Factorio 2.1 pack. The separate 2.1
 Secretas/Frozeta Orbit Patch is optional because Outer Rim excludes it.
 See [the source ownership matrix](docs/K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership).
 
+## Razi-owned space route network
+
+Starting with 2.1.47, Razi enforces **one authoritative travel catalog**
+across all seven systems. Native planet mods no longer add conflicting
+local shortcuts or duplicate links between Razi-managed worlds. Native
+moons, the original belt crossing, Dyson infrastructure and special
+external dimensions stay connected through explicit exceptions. The
+cleanup is on by default; a startup setting can temporarily disable it
+for diagnosis. More in [route authority documentation](docs/ASTEROID_ROUTES.md#authoritative-route-catalog-2147).
+
 ## Solaris system readability
 
 Version 2.1.46 pulls Solaris's planetary chart in from a 54-unit outer

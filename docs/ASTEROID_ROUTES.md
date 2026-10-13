@@ -1,3 +1,68 @@
+## Authoritative route catalog (2.1.47)
+
+Razi Protocol now has **one final route authority** instead of allowing
+every planet mod to bring its own interplanetary shortcuts. This is a late
+prototype pass, after source planets, Razi's seven-system corridors, community
+expansions, optional side worlds, Dyson routes and technology integration
+have all run.
+
+**The rule:** For two known Razi-assigned locations, keep only pairs in
+Razi's `route_reconcile.lua` planned route catalog, the chosen optional
+planet side-route registry, or an explicit protected native connection.
+All other built-in routes between those worlds are deleted, even when
+both planets are in the same solar system. Duplicate route names
+connecting the same approved endpoints are consolidated; source mod
+IDs win where possible, and custom asteroid definitions survive.
+
+**Critical exceptions**, with deliberately narrow scope:
+
+- Nauvis/Muluna's real moon connection, Fulgora/Cerys, Gleba/Rabbasca
+  and other *actual* parent-planet/moon links
+- The original 5,000 km Vibrant inner/outer asteroid belt crossing, its
+  real asteroid resource spawns, and Razi's required approach/departure
+  corridors in all three belt systems
+- Crucible and its source-owned orbit
+- The original Dyson sun-orbit stations and their source technology
+  unlock IDs, plus the native Calidus access they need
+- A single deterministic connection into an otherwise unrecognized
+  third-party dimension/planet when its author supplied multiple paths
+  to our known systems. The external world's internal network is untouched
+
+Known optional planets including Igrys, Foliax, Obsidiax, Ferrum,
+Alchemy/Khemia, Arcanyx, Carna, Rabbasca, Velora and Balack keep an
+explicit home hub. The final pass creates missing links and carries custom
+asteroid resources across whenever a source route is replaced.
+
+This is **not** a blind `data.raw["space-connection"] = {}`: that
+would strand modded locations, break the native asteroid belt, and remove
+travel needed for the Dyson project and boss/endgame dimensions. External
+source-only subnetworks are intentionally retained until incorporated
+into the Razi catalog rather than guessed or wiped.
+
+### Setting and rollback
+
+`razi-curated-space-routes` is a new startup toggle, **on by default**.
+Turning it off bypasses the new final strict pruning pass for compatibility
+diagnosis; the earlier Razi expedition-route balancing still runs. Always
+back up saves before switching. A platform schedule referencing a deleted
+source connection can require choosing a replacement itinerary.
+
+### Diagnostics
+
+Search `factorio-current.log` for `[Razi Protocol/routes] Authoritative
+network:` to see counts for removed shortcuts, protected special links
+and total retained routes.
+
+### Engine acceptance checks
+
+Launch Factorio 2.1 with all required planets, plus optional moon and
+boss mods. Check Solaris and Nyxaris for duplicate local loops, inspect
+the original 5,000 km Vibrant belt crossing and both Razi-owned outer
+belts, verify Dyson station trips and Calidus's moon, and confirm that
+every discovered optional world is reachable. The source prototype
+fixtures verify topology but cannot certify platform schedules or all
+unknown external mod connections.
+
 > **Current route visuals (2.1.44):** Razi retains authored asteroid risk
 > definitions and route intel, but no longer paints fixed colored sprite
 > segments. Install the optional Space Route Overlay 0.2.7+ for native-route

@@ -204,6 +204,13 @@ local allowed = {}
 for _, specification in ipairs(route_specifications) do
 	allowed[key_for(specification[1], specification[2])] = true
 end
+-- A late authority pass owns the final permitted topology after optional
+-- planet/Dyson integration. Export immutable-by-convention catalog data, not
+-- an additional premature cleanup in this earlier reconciliation stage.
+route_reconcile.membership=membership
+route_reconcile.allowed_pairs=allowed
+route_reconcile.specifications=route_specifications
+route_reconcile.pair_key=key_for
 -- Source authors sometimes tune travel time for a planet's own route.
 -- Respect those values if they are near the new system's intended range,
 -- rather than overwriting a native 20,000 km crossing with an arbitrary

@@ -1,3 +1,10 @@
+> **2.1.47 authoritative navigation:** Razi now removes the extra native
+> planetary route pairs that other installed mods put into our seven
+> systems. Approved corridors, asteroid belts, moons, Dyson stations and
+> source-only endgame subnetworks remain reachable. The planned Solaris
+> network no longer has hidden source mod shortcuts behind our route art.
+> See [Authoritative route catalog](ASTEROID_ROUTES.md#authoritative-route-catalog-2147).
+
 ## Solaris compact orbital polish (2.1.46)
 
 Solaris is now an intentionally **compact** first-frontier system. The

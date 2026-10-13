@@ -55,6 +55,8 @@ data:extend({
     default_value="major",allowed_values={"major","all"},
     order="ca[quality-of-life]-c2[route-overlay-scope]"
   },
+  startup_toggle("razi-curated-space-routes",
+    "ca[quality-of-life]-c3[curated-route-authority]"),
   startup_toggle("razi-route-intelligence",
     "ca[quality-of-life]-d[route-intelligence]"),
   -- GALAXY VISUALS

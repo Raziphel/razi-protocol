@@ -1,3 +1,14 @@
+Version: 2.1.47
+Date: 14. 10. 2026
+  Authoritative Razi travel graph:
+    - Add a final, idempotent space-route authority after optional planets, community integrations, Dyson routes and other prototype passes.
+    - Remove ordinary unapproved source-mod connections between all Razi-assigned systems and their planets, including redundant same-system links.
+    - Keep the Razi planned expedition graph and explicitly curated optional-planet hubs; consolidate duplicate approved routes while preserving custom asteroid loot.
+    - Retain the native Nauvis/Muluna and source planet-moon links, original Vibrant belt crossing, Crucible orbit, actual source Dyson orbits and safe access to unknown third-party subsystems.
+    - For unknown external planets, retain at most one deterministic bridge back into Razi's known network instead of uncontrolled multi-system spokes.
+    - Provide a default-on route authority setting, detailed startup log counts and regression fixtures for duplicates, dangerous belt bypasses, asteroid resources and optional world lifelines.
+    - Startup and end-to-end in-game planet, platform and research validation remains pending.
+
 Version: 2.1.46
 Date: 14. 10. 2026
   Compact Solaris and quiet first-frontier starmap:
