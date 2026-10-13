@@ -143,6 +143,8 @@ require("prototypes.system.starmap_background").data_final_fixes()
 -- FluxWorks is an optional factory expansion. Run after chapter/route gates so
 -- its manufacturing options cannot redefine the campaign progression.
 require("prototypes.compat.fluxworks").data_final_fixes()
+-- Optional industrial projects with their own Codex milestones; never gate routes.
+require("prototypes.compat.fluxworks_specializations").data_final_fixes()
 
 -- Last coordinates before building colored route art: compatibility mods can
 -- update their prototype a second time without re-baking all star sprites.
