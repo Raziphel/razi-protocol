@@ -189,3 +189,15 @@ and waits three seconds after the last relevant event before drawing
 again. Quest completion is still read from the current force research,
 so no progress is lost. This does not alter or slow the actual research;
 it only avoids repeated GUI builds while mass research is underway.
+
+## Industrial quest shortcuts (2.1.28)
+
+The Protocol Codex now links 11 existing industrial milestones to the four
+installed Cargo Network component families. **Inspect in Cargo Network**
+opens the appropriate component's source and production details, with the
+specific researched technology highlighted. The Cargo dashboard links
+back to the correct Codex quest when such a quest actually exists.
+
+Navigation does not change technologies, research completion, ship
+schedules or real cargo. Existing Codex IDs and progress history are
+preserved. Missing optional mods do not create fictional milestones.

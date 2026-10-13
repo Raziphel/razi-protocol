@@ -37,6 +37,48 @@ M.chains={
     }
   }
 }
+-- Stable links between real research and the existing Codex entries.
+-- No substitute milestones are created for optional factory upgrades that
+-- do not yet have their own quest.
+local chain_by_technology={}
+for _,entry in ipairs(M.chains) do
+  chain_by_technology[entry.id]=entry.id
+  for _,name in ipairs(entry.upgrades) do
+    chain_by_technology[name]=entry.id
+  end
+end
+local quest_by_technology={
+  ["razi-network-precision-matrix"]="precision-matrix",
+  ["razi-network-extreme-lattice"]="extreme-lattice",
+  ["razi-network-panglia-optic-bond"]="alliance-panglia-bond",
+  ["razi-network-umbra-pressure-frame"]="alliance-pressure-frame",
+  ["razi-network-matrix-cryo-controllers"]="alliance-matrix-aquilo",
+  ["razi-network-matrix-rubia-logistics"]="alliance-matrix-rubia",
+  ["razi-network-lattice-vesta-magnets"]="alliance-lattice-vesta",
+  ["razi-network-bond-paracelsin-coils"]="alliance-bond-paracelsin",
+  ["razi-network-bond-linox-refining"]="alliance-bond-linox",
+  ["razi-network-frame-vesta-foundations"]="alliance-pressure-vesta",
+  ["razi-network-frame-aquilo-controllers"]="alliance-pressure-aquilo"
+}
+function M.chain_for_technology(name)
+  return chain_by_technology[name]
+end
+function M.quest_for_technology(name)
+  return quest_by_technology[name]
+end
+function M.chain_for_quest(id)
+  local definitions=require("scripts.razi_journal_data")
+  local quest=definitions.by_id[id]
+  if not quest then return nil end
+  local chain=M.chain_for_technology(quest.tech)
+  return chain,quest.tech
+end
+function M.is_installed(force,chain)
+  local definitions=force and force.technologies or {}
+  local tech=chain and definitions[chain]
+  return tech and (not tech.prototype or not tech.prototype.hidden)
+end
+
 function M.state(tech)
   if not tech or (tech.prototype and tech.prototype.hidden) then
     return {status="absent",missing={},count=0}

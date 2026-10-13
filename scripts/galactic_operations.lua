@@ -8,6 +8,7 @@ local trials=require("scripts.razi_nexus_trials")
 local fleet=require("scripts.galactic_fleet")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
+local cargo_catalog=require("scripts.galactic_trade_catalog")
 local dyson=require("scripts.galactic_dyson")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local FRAME="razi_galactic_operations"
@@ -483,6 +484,10 @@ end
 local function close(player)
   local frame=player.gui.screen[FRAME]
   if frame and frame.valid then frame.destroy() end
+  -- A direct Codex link may open Cargo outside Remote View. Returning to
+  -- normal map-only behaviour on close prevents sticky floating windows.
+  local p=storage.razigui and storage.razigui[player.index]
+  if p then p.cargo_direct=nil;p.cargo_origin=nil end
 end
 
 function M.in_map_view(player)
@@ -508,7 +513,9 @@ function M.sync_map_button(player)
   local anchor=player.gui.screen[MAP_ANCHOR]
   if not M.in_map_view(player) then
     if anchor and anchor.valid then anchor.destroy() end
-    if player.gui.screen[FRAME] then close(player) end
+    local p=storage.razigui and storage.razigui[player.index]
+    if player.gui.screen[FRAME] and not
+      (p and p.cargo_direct and p.tab=="trade") then close(player) end
     return
   end
   if not (anchor and anchor.valid) then
@@ -683,6 +690,47 @@ function M.toggle(player)
     open(player)
   end
 end
+-- Called only by an explicit Codex action. The map launch button still
+-- appears exclusively inside Remote View. No surface switching occurs.
+function M.open_cargo(player,chain,target)
+  if not (player and player.valid and
+    cargo_catalog.is_installed(player.force,chain)) then return false end
+  local known=false
+  for _,entry in ipairs(cargo_catalog.chains) do
+    if entry.id==chain then known=true;break end
+  end
+  if not known or (target and
+    cargo_catalog.chain_for_technology(target)~=chain) then return false end
+  local p=preferences(player.index)
+  p.tab="trade"
+  p.cargo_focus=chain
+  p.cargo_target=target
+  p.cargo_origin=chain
+  p.cargo_direct=not M.in_map_view(player)
+  local frame=player.gui.screen[FRAME]
+  if frame and frame.valid then
+    -- Reuse the open window rather than destroying player.opened and
+    -- accidentally clearing the direct-link preference in gui_closed.
+    frame.razi_ops_options.visible=false
+    frame.razi_ops_search_tools.visible=false
+    frame.razi_ops_filters.visible=false
+    frame.razi_ops_roles.visible=false
+    frame.razi_ops_sorter.visible=false
+    local tabs=frame.razi_ops_tabs
+    if tabs then
+      for _,button in pairs(tabs.children) do
+        local meta=button.tags
+        if meta and meta.razi_ops_action=="tab" then
+          button.toggled=meta.value=="trade"
+        end
+      end
+    end
+    redraw(player)
+  else
+    open(player)
+  end
+  return true
+end
 local function record_recent(p,key)
   for i=#p.recent,1,-1 do
     if p.recent[i]==key then table.remove(p.recent,i) end
@@ -751,12 +799,27 @@ function M.gui_click(event)
     end
   elseif action=="cargo-focus" then
     if p.tab~="trade" then return end
+    if not cargo_catalog.is_installed(player.force,value) then return end
     local allowed=false
-    for _,entry in ipairs(require("scripts.galactic_trade_catalog").chains) do
+    for _,entry in ipairs(cargo_catalog.chains) do
       if entry.id==value then allowed=true;break end
     end
     if not allowed then return end
     p.cargo_focus=p.cargo_focus==value and nil or value
+    p.cargo_target=nil
+  elseif action=="cargo-codex" then
+    if p.tab~="trade" then return end
+    local quest_id=cargo_catalog.quest_for_technology(value)
+    local linked=cargo_catalog.chain_for_technology(value)
+    if not (quest_id and cargo_catalog.is_installed(player.force,linked)
+      and player.force.technologies[value]) then return end
+    local journal=require("scripts.razi_journal")
+    local definitions=require("scripts.razi_journal_data")
+    local quest=definitions.by_id[quest_id]
+    if not (quest and journal.available(player.force,quest)) then return end
+    close(player)
+    journal.open_quest(player,quest_id)
+    return
   elseif action=="clear-search" then
     p.search="";p.page=1
     local frame=player.gui.screen[FRAME]
@@ -874,8 +937,17 @@ function M.on_display_changed(event)
   local player=game.get_player(event.player_index)
   if not player then return end
   if player.gui.screen[FRAME] then
+    local p=preferences(player.index)
+    local was_direct=p.cargo_direct and p.tab=="trade"
+    local chain,target=p.cargo_origin or p.cargo_focus,p.cargo_target
     close(player)
-    if M.in_map_view(player) then open(player) end
+    if M.in_map_view(player) then
+      open(player)
+    elseif was_direct then
+      -- Keep a Codex-launched Cargo view open when UI scale changes,
+      -- without enabling the map button during ordinary gameplay.
+      M.open_cargo(player,chain,target)
+    end
   end
   M.sync_map_button(player)
 end

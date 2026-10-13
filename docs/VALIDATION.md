@@ -387,3 +387,24 @@ Pressure Frame is absent in Balanced; collapse and expand cards,
 inspect a recipe with missing supplies, and check real native
 ingredient counts from the current enabled mods. Do not treat a
 researched technology as proof of live manufacturing or delivery.
+
+## Cargo ↔ Protocol Codex navigation regression (2.1.28)
+
+The existing Galactic Operations and Protocol Codex fixtures now check
+the entire eleven-milestone ID map, the actions behind both link
+directions, invalid technology rejection, and exact quest selection:
+
+```bash
+lua5.2 tests/lua/test_galactic_operations.lua
+lua5.2 tests/lua/test_razi_journal_layout.lua
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+python3 -m unittest discover -s tests -p 'test_razi_journal.py'
+```
+
+Live verification: Open a Panglia industrial Codex objective outside
+Remote View and follow its Cargo link. Check that the Cargo panel
+remains visible after the existing 30-tick map check and after changing
+GUI scale. Return to the exact objective. Repeat with the Umbra Pressure
+Frame in Balanced and Deep interdependence modes; missing source
+technology must not advertise a link. Neither operation may create a
+surface, move a player, complete research or dispatch a space platform.

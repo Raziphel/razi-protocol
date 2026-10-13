@@ -1,3 +1,13 @@
+Version: 2.1.28
+Date: 13. 10. 2026
+  Codex and Cargo Network navigation:
+    - Link eleven established industrial quest objectives to the four real component chains in Galactic Operations.
+    - Highlight matching downstream factory research and actual missing prerequisites when following a Codex objective into Cargo.
+    - Add Cargo-to-Codex actions only for installed technologies with genuine Codex quests; reject invalid targets.
+    - Keep direct Cargo navigation available outside Remote View while preserving the map-only Operations button.
+    - Restore direct Cargo on GUI scale changes; retain existing bookmarks, mission roles, progress and research.
+    - Expand Lua and Python regression coverage and update UI documentation.
+
 Version: 2.1.27
 Date: 13. 10. 2026
   Cargo Network command centre:

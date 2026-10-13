@@ -174,7 +174,16 @@ local function blockers(parent,state,width)
   end
 end
 
-local function consumers(parent,row,width)
+local function codex_link(parent,technology_name,caption)
+  local id=catalog.quest_for_technology(technology_name)
+  if not id then return false end
+  parent.add{type="button",caption=caption,
+    tooltip=L("trade-open-codex-tooltip"),
+    tags={razi_ops_action="cargo-codex",value=technology_name}}
+  return true
+end
+
+local function consumers(parent,row,width,p)
   if #row.upgrades==0 then
     wrap(parent,L("trade-no-upgrades"),width)
     return
@@ -187,8 +196,13 @@ local function consumers(parent,row,width)
   bar.style.height=7
   bar.style.color={r=.47,g=.80,b=.67}
   for _,consumer in ipairs(row.upgrades) do
-    local line=parent.add{type="flow",direction="horizontal"}
+    local line=parent.add{type="flow",
+      direction=width<350 and "vertical" or "horizontal"}
     line.style.vertical_align="center"
+    if p.cargo_target==consumer.name then
+      local selected=wrap(line,L("trade-linked-target"),width-30)
+      selected.style.font_color={r=.68,g=.82,b=.98}
+    end
     local image=sprite_for("technology",consumer.name)
     if image then
       local icon=line.add{type="sprite",sprite=image}
@@ -201,6 +215,13 @@ local function consumers(parent,row,width)
     local mark=label(line,L("trade-state-short-"..consumer.state.status))
     mark.style.font_color=consumer.state.status=="researched"
       and {r=.51,g=.88,b=.69} or {r=1,g=.75,b=.49}
+    if catalog.quest_for_technology(consumer.name) then
+      codex_link(parent,consumer.name,L("trade-open-codex-short"))
+    end
+    if p.cargo_focus==row.config.id and
+      consumer.state.status=="blocked" and p.cargo_target==consumer.name then
+      blockers(parent,consumer.state,width)
+    end
   end
 end
 
@@ -229,18 +250,25 @@ local function render_chain(parent,row,p,width)
     deep.style.font_color={r=.86,g=.67,b=.97}
   end
   wrap(card,L("trade-chain-"..entry.key),width-20)
+  if p.cargo_target==entry.id then
+    local selected=wrap(card,L("trade-linked-target"),width-20)
+    selected.style.font_color={r=.67,g=.84,b=.98}
+  end
   if p.cargo_focus==entry.id then
     source_worlds(card,entry,width-20)
     heading(card,L("trade-ingredients"),width-20)
     supplier_recipe(card,entry,width-20)
     blockers(card,row.state,width-20)
   end
-  consumers(card,row,width-20)
-  local actions=card.add{type="flow",direction="horizontal"}
+  consumers(card,row,width-20,p)
+  local actions=card.add{type="flow",
+    direction=width<350 and "vertical" or "horizontal"}
+  actions.style.horizontal_spacing=8
   local action=actions.add{type="button",
     caption=L(p.cargo_focus==entry.id and "trade-hide-details"
       or "trade-details"),tags={razi_ops_action="cargo-focus",value=entry.id}}
   action.style.font="default-bold"
+  codex_link(actions,entry.id,L("trade-open-codex"))
 end
 
 function M.render(parent,player,p)

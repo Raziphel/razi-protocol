@@ -179,6 +179,27 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn("player.gui.screen",ui)
         self.assertNotIn('type="shortcut"',read("prototypes/ui/razi_journal.lua"))
         self.assertIn('require("prototypes.ui.razi_journal")',read("data.lua"))
+    def test_industry_quests_can_open_real_cargo_chains(self):
+        journal=read("scripts/razi_journal.lua")
+        catalog=read("scripts/galactic_trade_catalog.lua")
+        operations=read("scripts/galactic_operations.lua")
+        ui=read("locale/en/razi_journal.cfg")
+        self.assertIn('local cargo_catalog=require("scripts.galactic_trade_catalog")',
+                      journal)
+        self.assertIn('cargo_catalog.chain_for_quest(quest.id)',journal)
+        self.assertIn('cargo_catalog.is_installed(player.force,cargo_id)',journal)
+        self.assertIn('razi_journal_action="open-cargo"',journal)
+        self.assertIn('operations.open_cargo(player,chain,target)',journal)
+        self.assertIn('function M.open_quest(player,id)',journal)
+        self.assertIn('p.filter="all"',journal)
+        self.assertIn('p.view="quests"',journal)
+        self.assertIn('function M.quest_for_technology(name)',catalog)
+        self.assertIn('function M.chain_for_quest(id)',catalog)
+        self.assertIn('function M.open_cargo(player,chain,target)',operations)
+        for name in ("cargo-bridge-heading","cargo-bridge-description",
+                     "cargo-bridge-open","cargo-bridge-tooltip"):
+            self.assertRegex(ui,r"(?m)^"+name+r"=")
+
     def test_no_new_research_or_dependency(self):
         data=read("scripts/razi_journal_data.lua")
         self.assertNotIn('type="technology"',data)

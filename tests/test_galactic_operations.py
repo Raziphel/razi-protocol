@@ -122,7 +122,7 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertIn('sprite_for("item",entry.id)',trade)
         self.assertIn('source_worlds(card,entry,width-20)',trade)
         self.assertIn('supplier_recipe(card,entry,width-20)',trade)
-        self.assertIn('consumers(card,row,width-20)',trade)
+        self.assertIn('consumers(card,row,width-20,p)',trade)
         self.assertIn('scroll.horizontal_scroll_policy="never"',trade)
         self.assertIn('column_count=size.compact and 1 or 2',trade)
         self.assertIn('trade-research-not-production',trade)
@@ -156,6 +156,34 @@ class GalacticOperationsTests(unittest.TestCase):
                     "trade-chain-bond","trade-chain-frame",
                     "trade-yield","trade-dispatch-guide"):
             self.assertIn(key+"=",locale)
+
+    def test_codex_cargo_deep_links_keep_save_data_read_only(self):
+        catalog=(ROOT/"scripts/galactic_trade_catalog.lua").read_text()
+        codex=(ROOT/"scripts/razi_journal.lua").read_text()
+        operations=(ROOT/"scripts/galactic_operations.lua").read_text()
+        cargo=(ROOT/"scripts/galactic_trade.lua").read_text()
+        for helper in ("chain_for_technology","quest_for_technology",
+                       "chain_for_quest","is_installed"):
+            self.assertIn("function M."+helper+"(",catalog)
+        self.assertIn('function M.open_quest(player,id)',codex)
+        self.assertIn('razi_journal_action="open-cargo"',codex)
+        self.assertIn('cargo_catalog.chain_for_quest(quest.id)',codex)
+        self.assertIn('function M.open_cargo(player,chain,target)',operations)
+        self.assertIn('p.cargo_focus=chain',operations)
+        self.assertIn('p.cargo_target=target',operations)
+        self.assertIn('p.cargo_direct=not M.in_map_view(player)',operations)
+        self.assertIn('p.cargo_origin=chain',operations)
+        self.assertIn('p.cargo_direct and p.tab=="trade"',operations)
+        self.assertIn('action=="cargo-codex"',operations)
+        self.assertIn('journal.open_quest(player,quest_id)',operations)
+        self.assertIn('M.open_cargo(player,chain,target)',operations)
+        self.assertIn('razi_ops_action="cargo-codex"',cargo)
+        self.assertIn('p.cargo_target==consumer.name',cargo)
+        self.assertIn('p.cargo_target==entry.id',cargo)
+        self.assertNotIn("player.set_controller",catalog)
+        self.assertNotIn("create_surface(",cargo)
+        self.assertNotIn("platform.schedule=",operations)
+        self.assertNotIn("data:extend",catalog)
 
     def test_all_seven_systems(self):
         catalog=(ROOT/"scripts/galactic_catalog.lua").read_text()

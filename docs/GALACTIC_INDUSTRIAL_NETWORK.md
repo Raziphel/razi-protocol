@@ -136,3 +136,15 @@ recipe output and specific outstanding technology prerequisites. The
 overview deliberately does not claim factories are operating or cargo
 has been delivered just because a research objective is complete.
 Actual Planet Express cargo and fleet schedules remain owned by that mod.
+
+## Codex-linked industrial navigation (2.1.28)
+
+The Cargo Network dashboard can now open eleven established Codex
+milestones, including the Panglia Optic Bond and Umbra Pressure Frame
+chains. The matching Codex pages have a shortcut back to the specific
+Cargo component and selected downstream technology. Only installed and
+visible technologies with existing quests have return links.
+
+The dashboard reads force research and source prototype recipe details;
+it never claims factory production or freight delivery based on a quest,
+and it does not operate Planet Express.
