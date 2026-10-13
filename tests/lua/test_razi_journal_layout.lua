@@ -7,6 +7,19 @@ local journal=require("scripts.razi_journal")
 local defs=require("scripts.razi_journal_data")
 local themes=require("scripts.razi_journal_themes")
 local created={}
+-- The real Factorio GUI throws if a FrameStyle receives FlowStyle spacing.
+-- Keep the mock strict enough to catch this regression before game startup.
+local function gui_style(kind)
+  local style={}
+  if kind=="frame" then
+    setmetatable(style,{__newindex=function(target,key,value)
+      check(key~="horizontal_spacing" and key~="vertical_spacing",
+        "Flow-only spacing applied to a Factorio frame: "..key)
+      rawset(target,key,value)
+    end})
+  end
+  return style
+end
 local function node(spec)
   local element={valid=true,type=spec.type,name=spec.name,tags=spec.tags,
     caption=spec.caption,tooltip=spec.tooltip,
@@ -14,7 +27,7 @@ local function node(spec)
     sprite=spec.sprite,text=spec.text,
     horizontal_scroll_policy=spec.horizontal_scroll_policy,
     vertical_scroll_policy=spec.vertical_scroll_policy,
-    style={},children={}}
+    style=gui_style(spec.type),children={}}
   created[#created+1]=element
   function element.add(child)
     local item=node(child)

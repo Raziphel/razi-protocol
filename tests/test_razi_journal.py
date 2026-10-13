@@ -261,5 +261,16 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('horizontal_scroll_policy="never"',source)
         self.assertIn('local function wheel_pane(',source)
 
+    def test_frame_styles_do_not_use_flow_spacing(self):
+        source=read("scripts/razi_journal.lua")
+        self.assertNotIn("totals.style.horizontal_spacing=",source)
+        self.assertNotIn("priority.style.vertical_spacing=",source)
+        self.assertIn('metrics_row.style.horizontal_spacing=',source)
+        self.assertIn('local metric=metrics_row.add',source)
+        self.assertIn('local readiness=metrics_row.add',source)
+        self.assertIn('local meter=metrics_row.add',source)
+        fixture=read("tests/lua/test_razi_journal_layout.lua")
+        self.assertIn('Flow-only spacing applied to a Factorio frame:',fixture)
+
 if __name__=="__main__":
     unittest.main()

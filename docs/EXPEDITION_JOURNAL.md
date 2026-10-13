@@ -244,3 +244,12 @@ progress bar more breathing room. The selected chapter still drives accent
 colours, while a tighter reading flow, clearer expedition-priority card,
 stronger chapter bars and wider header actions improve scanning at desktop
 scale. Horizontal scrolling remains disabled in both reader columns.
+
+## Frame-style safety (October 2026)
+
+Factorio's FrameStyle cannot accept FlowStyle-only horizontal_spacing or
+vertical_spacing properties. The campaign metrics header uses a horizontal
+flow inside its native framed summary so the spacing remains adjustable;
+the navigation priorities retain their native frame spacing. A stricter Lua
+GUI mock now rejects invalid frame-style spacing and the Python suite checks
+both problem locations. The quest catalog and saved progress are unaffected.
