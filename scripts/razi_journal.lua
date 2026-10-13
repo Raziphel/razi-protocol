@@ -569,7 +569,7 @@ local function render_details(parent,player,quest,p,context,size)
   local text_width=inner-18
   local prose=scroll.add{type="flow",direction="vertical"}
   prose.style.width=text_width
-  prose.style.vertical_spacing=17
+  prose.style.vertical_spacing=13
   local objective=prose.add{type="frame",direction="vertical",
     style="inside_deep_frame"}
   objective.style.width=text_width
@@ -706,10 +706,11 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   local priority=column.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   priority.style.width=inner-16
-  priority.style.padding=8
+  priority.style.padding=11
+  priority.style.vertical_spacing=7
   local heading=wrap(priority,L("guidance-heading"),inner-40)
   heading.style.font="default-bold"
-  heading.style.font_color={r=.86,g=.73,b=.48}
+  heading.style.font_color={r=1,g=.84,b=.60}
   accent_rule(priority,themes.get("network"),math.min(inner-42,135),2)
   if not plan.primary then
     wrap(priority,L("guidance-none"),inner-38)
@@ -805,7 +806,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       local progress=counts.add{type="progressbar",
         value=total>0 and completed/total or 0}
       progress.style.width=math.max(95,inner-43)
-      progress.style.height=7
+      progress.style.height=9
       progress.style.color=theme.primary
       if open then
         for _,quest in ipairs(available) do
@@ -962,7 +963,7 @@ local function draw(player,focus_search)
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
-  head.style.horizontal_spacing=12
+  head.style.horizontal_spacing=16
   local insignia=head.add{type="sprite",
     sprite=themes.icon(p.chapter or "calidus")}
   insignia.style.width=40
@@ -972,15 +973,18 @@ local function draw(player,focus_search)
   local title=label(heading,L(size.compact and "window-compact" or "window"))
   title.style.font=size.compact and "heading-2" or "heading-1"
   title.style.font_color=window_theme.primary
-  tint(label(heading,L("header-eyebrow")),window_theme.soft)
+  local kicker=tint(label(heading,L("header-eyebrow")),window_theme.soft)
+  kicker.style.font="default-bold"
   local drag=head.add{type="empty-widget",style="draggable_space"}
   drag.style.horizontally_stretchable=true
   drag.style.height=35
   drag.drag_target=frame
-  head.add{type="button",caption=L("refresh"),
+  local refresh=head.add{type="button",caption=L("refresh"),
     tags={razi_journal_action="refresh"}}
-  head.add{type="button",caption=L("close"),
+  refresh.style.minimal_width=size.compact and 66 or 94
+  local dismiss=head.add{type="button",caption=L("close"),
     tags={razi_journal_action="close"}}
+  dismiss.style.minimal_width=size.compact and 66 or 94
   if not size.compact then
     local description=wrap(frame,L("subtitle-short"),size.width-42)
     description.style.font_color={r=.74,g=.77,b=.81}
@@ -999,31 +1003,35 @@ local function draw(player,focus_search)
     style="inside_shallow_frame_with_padding"}
   totals.style.horizontally_stretchable=true
   totals.style.vertical_align="center"
+  totals.style.horizontal_spacing=size.compact and 9 or 24
+  totals.style.padding=10
   local metric=totals.add{type="flow",direction="vertical"}
-  metric.style.vertical_spacing=2
+  metric.style.vertical_spacing=4
+  metric.style.minimal_width=size.compact and 96 or 165
   subtitle(metric,"completion-heading")
   local completed=label(metric,L("completion-value",
     tostring(done),tostring(total)))
   completed.style.font="heading-2"
   completed.style.font_color={r=.51,g=.86,b=.73}
   local readiness=totals.add{type="flow",direction="vertical"}
-  readiness.style.vertical_spacing=2
+  readiness.style.vertical_spacing=4
+  readiness.style.minimal_width=size.compact and 92 or 156
   subtitle(readiness,"ready-heading")
   local ready_label=label(readiness,L("ready-value",tostring(ready)))
   ready_label.style.font="heading-2"
   ready_label.style.font_color={r=1,g=.78,b=.45}
   local meter=totals.add{type="flow",direction="vertical"}
   meter.style.horizontally_stretchable=true
-  meter.style.vertical_spacing=5
+  meter.style.vertical_spacing=7
   subtitle(meter,"campaign-progress-heading")
   local overall=meter.add{type="progressbar",
     value=total>0 and done/total or 0}
   overall.style.horizontally_stretchable=true
-  overall.style.height=12
+  overall.style.height=14
   overall.style.color=themes.get(p.chapter or "calidus").primary
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
-  toolbar.style.horizontal_spacing=8
+  toolbar.style.horizontal_spacing=12
   for _,view in ipairs({"quests","archive"}) do
     local active=p.view==view
     local button=toolbar.add{type="button",
@@ -1038,7 +1046,7 @@ local function draw(player,focus_search)
       tags={razi_journal_action="next"}}
   end
   local filterbar=frame.add{type="flow",direction="horizontal"}
-  filterbar.style.horizontal_spacing=7
+  filterbar.style.horizontal_spacing=9
   filterbar.style.vertical_align="center"
   if p.view=="archive" then
     local unlocked,all=M.unlocked_records(player.force,context)
@@ -1060,7 +1068,7 @@ local function draw(player,focus_search)
   local body=frame.add{type="flow",direction="horizontal"}
   body.style.width=size.width-24
   body.style.height=size.body
-  body.style.horizontal_spacing=8
+  body.style.horizontal_spacing=12
   if p.view=="archive" then
     render_archive(body,player,p,context,size)
   else

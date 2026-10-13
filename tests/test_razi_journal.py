@@ -252,5 +252,14 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('galactic_operations.bind_journal(razi_journal)', control)
         self.assertIn('journal_module.open_quest(player,quest_id)', operations)
 
+    def test_codex_layout_polish_keeps_native_scroll_controls(self):
+        source=read("scripts/razi_journal.lua")
+        self.assertIn('totals.style.horizontal_spacing=size.compact and 9 or 24',source)
+        self.assertIn('overall.style.height=14',source)
+        self.assertIn('priority.style.vertical_spacing=7',source)
+        self.assertIn('progress.style.height=9',source)
+        self.assertIn('horizontal_scroll_policy="never"',source)
+        self.assertIn('local function wheel_pane(',source)
+
 if __name__=="__main__":
     unittest.main()
