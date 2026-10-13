@@ -51,8 +51,8 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn('dyson_runtime.invalidate(player.force)',ops)
     def test_small_static_gui_sprites_and_map_layers(self):
         sprite=read("prototypes/ui/dyson_stages.lua")
-        self.assertEqual(sprite.count('{"survey"'),1)
-        self.assertEqual(sprite.count('{"mastery"'),1)
+        self.assertIn("survey=0",sprite)
+        self.assertIn("mastery=6",sprite)
         self.assertIn('scale=.5',sprite)
         self.assertIn('for stage=0,6 do',sprite)
         self.assertIn('x=stage*256',sprite)
@@ -65,6 +65,12 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn('razi-starmap-galactic-ornaments',backdrop)
         self.assertIn('system.name=="calidus" and 9.8',backdrop)
         self.assertIn('strength=.62',backdrop)
+        for filename,expected_width in (("calidus-star.png",256),
+                                         ("calidus-dyson-stages.png",1792)):
+            raw=(ROOT/"graphics/starmap/razi"/filename).read_bytes()
+            self.assertEqual(raw[:8],b"\x89PNG\r\n\x1a\n")
+            self.assertEqual(int.from_bytes(raw[16:20],"big"),expected_width)
+            self.assertEqual(int.from_bytes(raw[20:24],"big"),256)
     def test_map_ui_and_localization(self):
         script=read("scripts/galactic_operations.lua")
         self.assertIn('add_button(tabs,L("dyson-tab"),"tab","dyson")',script)
@@ -73,7 +79,8 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn("dyson-stage-progress=",lang)
         self.assertIn("dyson-art-stage=",lang)
         self.assertIn("dyson-map-progress=",lang)
-        self.assertIn("M.on_dyson_research(event)",read("control.lua"))
+        self.assertIn("galactic_operations.on_dyson_research(event)",
+                      read("control.lua"))
         self.assertIn("on_dyson_research",script)
         self.assertIn("razi_ops_dyson_stage",script)
         self.assertIn("dyson-satellites=",lang)
