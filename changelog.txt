@@ -1,3 +1,13 @@
+Version: 2.1.37
+Date: 13. 10. 2026
+  FluxWorks progression and Codex usability:
+    - Fix the twelve FluxWorks Codex factory previews to use actual unlocked recipe IDs instead of treating their technology ID as a recipe.
+    - Show production ingredient quantities, outputs, the relevant FluxWorks machine and a suggested manufacturing world.
+    - Add workshop guidance and keep optional FluxWorks objectives' chapter progress separate from compulsory Protocol campaign completion and primary story research recommendations.
+    - Lighten eight consecutive specialist FluxWorks research costs in the Razi companion profile, preserving all prerequisites, science pack types and original unlock rewards.
+    - Preserve the standalone FluxWorks mod and the stable Protocol release; no new progression gates, runtime event loops or save ID migrations.
+    - Add regression coverage and migration notes. Full Factorio 2.1/K2SO/FluxWorks integration playtesting is still required.
+
 Version: 2.1.36
 Date: 13. 10. 2026
   FluxWorks industry exchanges and cleanup:
