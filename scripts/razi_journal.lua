@@ -14,6 +14,7 @@ local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
 local L=function(key,...) return {"journal-ui."..key,...} end
 local themes=require("scripts.razi_journal_themes")
+local icons=require("scripts.razi_journal_icons")
 M.chapter_theme=themes.get
 M.chapter_icon=themes.icon
 
@@ -370,10 +371,7 @@ local function draw_gallery(parent,key,entries,width,max_items,theme)
       style="inside_shallow_frame"}
     card.style.width=card_width
     card.style.padding=4
-    local picture=card.add{type="sprite",sprite=entry.sprite,
-      tooltip=entry.tooltip or entry.name}
-    picture.style.width=34
-    picture.style.height=34
+    icons.sprite(card,entry.sprite,"gallery",entry.tooltip or entry.name)
     local caption=wrap(card,entry.name,card_width-10)
     caption.style.font_color=theme and theme.soft
       or {r=.86,g=.9,b=.94}
@@ -497,18 +495,14 @@ local function render_tracker(player)
   frame.style.maximal_width=286
   local chapter=frame.add{type="flow",direction="horizontal"}
   chapter.style.horizontal_spacing=7
-  local chapter_art=chapter.add{type="sprite",sprite=themes.icon(quest.chapter)}
-  chapter_art.style.width=22
-  chapter_art.style.height=22
+  icons.sprite(chapter,themes.icon(quest.chapter),"tracker_chapter")
   local chapter_text=wrap(chapter,{"journal-chapter."..quest.chapter},225)
   chapter_text.style.font="default-bold"
   chapter_text.style.font_color=theme.primary
   accent_rule(frame,theme,245,3)
   local line=frame.add{type="flow",direction="horizontal"}
   line.style.horizontal_spacing=7
-  local marker=line.add{type="sprite",sprite=quest_art(player.force,quest,context)}
-  marker.style.width=30
-  marker.style.height=30
+  icons.sprite(line,quest_art(player.force,quest,context),"tracker_quest")
   local heading=line.add{type="label",style="clickable_label",
     caption={"journal-title."..quest.id},
     tags={razi_journal_action="tracker-open"}}
@@ -533,10 +527,8 @@ local function render_details(parent,player,quest,p,context,size)
   local banner=panel.add{type="flow",direction="horizontal"}
   banner.style.horizontal_spacing=10
   banner.style.vertical_align="center"
-  local seal=banner.add{type="sprite",sprite=themes.icon(quest.chapter),
-    tooltip={"journal-chapter."..quest.chapter}}
-  seal.style.width=size.compact and 30 or 42
-  seal.style.height=size.compact and 30 or 42
+  icons.sprite(banner,themes.icon(quest.chapter),"chapter_seal",
+    {"journal-chapter."..quest.chapter})
   local identification=banner.add{type="flow",direction="vertical"}
   identification.style.vertical_spacing=2
   local chapter_intro=label(identification,{"journal-chapter."..quest.chapter})
@@ -549,13 +541,10 @@ local function render_details(parent,player,quest,p,context,size)
   accent_rule(panel,theme,inner,3)
   local hero=panel.add{type="flow",direction="horizontal"}
   hero.style.horizontal_spacing=10
-  local art=hero.add{type="sprite",
-    sprite=quest_art(player.force,quest,context)}
-  art.style.width=size.compact and 42 or 54
-  art.style.height=size.compact and 42 or 54
+  icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
   local hero_text=hero.add{type="flow",direction="vertical"}
   hero_text.style.vertical_spacing=2
-  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-82)
+  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-57)
   hero_title.style.font="heading-2"
   hero_title.style.font_color=theme.primary
 
@@ -727,10 +716,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       local chapter_theme=themes.get(entry.chapter)
       local row=priority.add{type="flow",direction="horizontal"}
       row.style.horizontal_spacing=6
-      local image=row.add{type="sprite",
-        sprite=quest_art(player.force,entry.quest,context)}
-      image.style.width=22
-      image.style.height=22
+      icons.sprite(row,quest_art(player.force,entry.quest,context),
+        "priority")
       local item=row.add{type="label",style="clickable_label",
         caption={"",L(i==1 and "guidance-main" or "guidance-parallel"),
           " ",{"journal-title."..entry.quest.id}},
@@ -784,12 +771,9 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       card.style.padding=8
       local head=card.add{type="flow",direction="horizontal"}
       head.style.horizontal_spacing=6
-      local chapter_art=head.add{type="sprite-button",style="slot_button",
-        sprite=themes.icon(chapter.id),
-        tags={razi_journal_action="chapter",id=chapter.id},
-        tooltip={"journal-chapter."..chapter.id}}
-      chapter_art.style.width=34
-      chapter_art.style.height=34
+      icons.button(head,themes.icon(chapter.id),"chapter_button",
+        {razi_journal_action="chapter",id=chapter.id},
+        {"journal-chapter."..chapter.id})
       local toggle=head.add{type="button",style="tool_button",
         caption=open and "▾" or "▸",
         tags={razi_journal_action="chapter",id=chapter.id},
@@ -822,10 +806,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           local item=card.add{type="flow",direction="horizontal"}
           item.style.width=inner-34
           item.style.horizontal_spacing=7
-          local icon=item.add{type="sprite",sprite=quest_art(
-            player.force,quest,context)}
-          icon.style.width=24
-          icon.style.height=24
+          icons.sprite(item,quest_art(player.force,quest,context),
+            "quest_row")
           local control=item.add{type="button",style="tool_button",
             caption=state=="complete" and "✓"
               or state=="active" and "●" or "○",
@@ -893,18 +875,17 @@ local function render_archive(parent,player,p,context,size)
     row.style.horizontal_spacing=8
     local mark
     if opened then
-      mark=row.add{type="sprite-button",style="slot_button",
-        sprite=quest_art(player.force,quest,context),
-        tags={razi_journal_action="record",id=record.id},
-        tooltip={"journal-record-title."..record.id}}
+      mark=icons.button(row,quest_art(player.force,quest,context),
+        "archive_button",{razi_journal_action="record",id=record.id},
+        {"journal-record-title."..record.id})
     else
       mark=row.add{type="button",style="tool_button",
         caption="◇",enabled=false,
         tooltip={"journal-record-title."..record.id}}
       mark.style.font_color={r=.59,g=.62,b=.68}
     end
-    mark.style.width=30
-    mark.style.height=30
+    mark.style.width=icons.size("archive_button")
+    mark.style.height=icons.size("archive_button")
     local choice=row.add{type="label",style="clickable_label",
       caption={"journal-record-title."..record.id},
       tags={razi_journal_action="record",id=record.id}}
@@ -937,12 +918,10 @@ local function render_archive(parent,player,p,context,size)
   cover.style.horizontal_spacing=10
   local entry_quest=defs.by_id[chosen.unlock]
   if entry_quest then
-    local cover_art=cover.add{type="sprite",
-      sprite=quest_art(player.force,entry_quest,context)}
-    cover_art.style.width=45
-    cover_art.style.height=45
+    icons.sprite(cover,quest_art(player.force,entry_quest,context),
+      "archive_cover")
   end
-  local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-112)
+  local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-94)
   title.style.font="heading-2"
   local origin=label(paper,{"journal-record-origin."..chosen.id})
   origin.style.font_color=archive_theme.primary
@@ -972,10 +951,8 @@ local function draw(player,focus_search)
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
   head.style.horizontal_spacing=16
-  local insignia=head.add{type="sprite",
-    sprite=themes.icon(p.chapter or "calidus")}
-  insignia.style.width=40
-  insignia.style.height=40
+  icons.sprite(head,themes.icon(p.chapter or "calidus"),
+    "window_emblem")
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
   local title=label(heading,L(size.compact and "window-compact" or "window"))
@@ -1045,6 +1022,8 @@ local function draw(player,focus_search)
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
   toolbar.style.horizontal_spacing=12
+  -- The Codex is a focused quest book with a separate story journal.
+  -- Navigation and records stay together; operational tools remain outside.
   for _,view in ipairs({"quests","archive"}) do
     local active=p.view==view
     local button=toolbar.add{type="button",
@@ -1142,12 +1121,8 @@ function M.sync(player)
   if not (player and player.valid) then return end
   local top=player.gui.top[TOP]
   if not (top and top.valid) then
-    top=player.gui.top.add{type="sprite-button",
-      name=TOP,sprite="razi-journal-book-icon",
-      style="slot_button",tooltip=L("button-tooltip"),
-      tags={razi_journal_action="toggle"}}
-    top.style.width=36
-    top.style.height=36
+    top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",
+      {razi_journal_action="toggle"},L("button-tooltip"),TOP)
   end
   render_tracker(player)
 end

@@ -24,7 +24,8 @@ local function node(spec)
   local element={valid=true,type=spec.type,name=spec.name,tags=spec.tags,
     caption=spec.caption,tooltip=spec.tooltip,
     selected_index=spec.selected_index,items=spec.items,
-    sprite=spec.sprite,text=spec.text,
+    sprite=spec.sprite,resize_to_sprite=spec.resize_to_sprite,
+    text=spec.text,
     horizontal_scroll_policy=spec.horizontal_scroll_policy,
     vertical_scroll_policy=spec.vertical_scroll_policy,
     style=gui_style(spec.type),children={}}
@@ -139,6 +140,29 @@ check(sprites["item/automation-science-pack"],"Native science art is missing")
 check(sprites["entity/assembling-machine-1"],"Native building art is missing")
 check(sprites[themes.icon("calidus")],
   "Navigator must show the chapter insignia")
+-- Native sprite art can be larger than the requested GUI box. All Codex
+-- widgets must ignore intrinsic dimensions, even on heavily modded packs.
+local roles=require("scripts.razi_journal_icons")
+local icon_count=0
+for _,entry in ipairs(created) do
+  if entry.sprite then
+    local width=entry.style.size or entry.style.width
+    local height=entry.style.size or entry.style.height
+    check(type(width)=="number" and type(height)=="number"
+      and width==height and width<=36,
+      "Oversized or unbounded Codex sprite: "..tostring(entry.sprite))
+    if entry.type=="sprite" then
+      check(entry.resize_to_sprite==false,
+        "Natural-size sprite expansion was not disabled")
+      check(entry.style.stretch_image_to_widget_size==true,
+        "Source image not fitted to the icon box")
+    end
+    icon_count=icon_count+1
+  end
+end
+check(icon_count>=4 and roles.size("quest_hero")==36
+  and roles.size("quest_row")==20 and roles.size("gallery")==28,
+  "Codex icon sizing policy is missing")
 local top_priority,parallel=0,0
 for _,entry in ipairs(created) do
   if entry.tags and entry.tags.razi_journal_action=="guidance-select" then
@@ -283,4 +307,4 @@ check(called and called[1]=="razi-network-precision-matrix"
   and called[2]=="razi-network-precision-matrix",
   "Codex must deep-link to the correct installed Cargo Network factory")
 
-print("Journal GUI: large window, wrapped navigation, hidden scrollbars and cargo bridge passed")
+print("Journal GUI: bounded sprites, quest-first layout, hidden scrollbars and cargo bridge passed")

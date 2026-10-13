@@ -1,3 +1,31 @@
+## Quest-first interface and icon normalization (2.1.49)
+
+The Codex is intentionally a **two-view quest book**: **Quests** for
+campaign chapters, objectives, search, science and requirements; and
+**Journal** for transmissions recovered through genuine research. Its
+separate Galactic Operations panel remains available for navigation and
+trade but is not duplicated inside the Codex.
+
+All displayed research, planet and item art now passes through
+`scripts/razi_journal_icons.lua`. Factorio sprite widgets normally
+size themselves to the native sprite. Large modded technology graphics
+were defeating explicit width/height assignments and distorting rows.
+Codex sprites now set `resize_to_sprite=false`, a fixed square image
+box and `stretch_image_to_widget_size=true` so the sprite content
+fits the assigned dimensions. Icon buttons use fixed native slot sizing.
+
+Typical sizes: 18–20 UI units for navigation/priority, 26–28 for
+chapters and galleries, and **36 maximum** for selected quest cover art.
+Tracker and story icons follow the same rule. These are GUI units,
+so Factorio's display scale still applies. The journal retains 210
+source-researched milestones, all eighteen chapters, recovered signals,
+search, pins, and the quest/cargo deep links. The current update changes
+appearance and tab wording only, not research or unlock semantics.
+
+The existing GUI mock and structural regression tests enforce bounded
+sprite dimensions at multiple display scales. A full in-game check
+with a large third-party planet sprite remains necessary.
+
 # The Protocol Codex (Razi Expedition Journal)
 
 The Codex is the campaign guide for Razi Protocol. It currently has 210

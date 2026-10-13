@@ -1,3 +1,13 @@
+Version: 2.1.49
+Date: 14. 10. 2026
+  Quest and journal GUI icon correction:
+    - Centralize icon sizing in one reusable, bounded sprite helper; prevent Factorio from expanding modded technology, item and space-location artwork to its natural dimensions.
+    - Normalize chapter, quest, research gallery, recommended objective, tracker, archive, window and toolbar icon sizes; no quest art exceeds 36 GUI units.
+    - Rename Codex tabs to Quests and Journal, simplify their presentation and retain both quest progression and recovered research-gated lore.
+    - Preserve all 210 quests, chapter colors, search, tracked objectives, detailed science/recipe previews and quest-to-cargo navigation.
+    - Add Lua GUI mock and Python structural checks for sprite resizing and fixed dimensions across the entire Codex.
+    - Validate real Factorio 2.1 rendering and modded giant technology sprites in-game before final release.
+
 Version: 2.1.48
 Date: 14. 10. 2026
   Complete the Solaris ring and replace oversized background stars:
