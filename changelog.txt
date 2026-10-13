@@ -1,3 +1,12 @@
+Version: 2.1.52
+Date: 14. 10. 2026
+  Middle frontier reciprocal industry and meaningful industrial handoffs:
+    - Add four optional, source-checked production alternatives for Fulgora supercapacitors, Aquilo control units, Paracelsin electrocoils and Rubia craptonite frames.
+    - In normal interdependence modes, one available first-frontier engineering milestone helps open Vibrant and Vespera. Native source research remains authoritative.
+    - When safe and installed, Paracelsin and Rubia's complementary workshop research becomes a prerequisite for both outer star systems, without requiring any mutually-dependent premium recipe.
+    - Suppress individual requirements when missing, disabled, unsafe or dependent on the future gate; preserve Off mode, native factories, first visits and save technology identifiers.
+    - Add four Codex milestones, stories, workshop hints, recipe names and tests. Full Factorio 2.1 native-load and old-save validation still required.
+
 Version: 2.1.51
 Date: 14. 10. 2026
   First-frontier manufacturing triangle:

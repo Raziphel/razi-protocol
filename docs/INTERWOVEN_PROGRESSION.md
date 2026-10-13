@@ -1,3 +1,33 @@
+## Industrial research handoffs (2.1.52)
+
+The seven stars now give a small number of real collaboration technologies
+a place on the main research route. This is a **technology milestone**, not
+a claim that freight has shipped or a factory has actually produced cargo.
+
+At the first-to-middle transition, **one** registered, valid first-star
+collaboration is selected in order: Calidus electronics relay, Vulcanus
+bio-optical casting, Moshine bio-metal silicon, then early Vulcanus bio
+casting. That selected research is appended to both Vibrant and Vespera
+discovery technologies. The other early partnerships remain optional.
+
+At the middle-to-outer transition, a guarded Paracelsin shielded-coil
+research and a guarded Rubia conductive-frame research are appended to
+both Beetlejuice and Umbra discoveries, **only if they really exist and
+are reachable before those destinations**. These two recipes consume native
+outputs from the other world, never one another's alternative output.
+Fulgora's and Aquilo's new factories remain side projects.
+
+Off mode leaves research unchanged. No missing or disabled source can gate
+progress; dependencies moved behind the target's future gateway are rejected,
+the two sibling gateways are treated as a pair, and repeated registration
+is idempotent. Native world arrivals, original production recipes, research
+identifiers and save data remain untouched. Tech trees are only amended
+after all source exchange technologies have registered and the existing
+research tree has been polished.
+
+A full post-mod-load prototype audit, real science-chain review and old-save
+testing are still needed before release.
+
 # Interwoven planetary progression
 
 The seven-system campaign borrows research milestones from the planets

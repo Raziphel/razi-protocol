@@ -116,6 +116,9 @@ require("prototypes.compat.galactic_industry_bridges").data_final_fixes()
 -- Optional reciprocal factories for the first two stars and Calidus return routes.
 require("prototypes.compat.first_frontier_industry").data_final_fixes()
 
+-- Reciprocal Fulgora, Aquilo, Paracelsin and Rubia manufacturing.
+require("prototypes.compat.middle_frontier_industry").data_final_fixes()
+
 require("prototypes.compat.panglia_industry").data_final_fixes()
 
 require("prototypes.compat.network_components").register_premium()
@@ -128,6 +131,10 @@ require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 -- Post-arrival industries may connect the finished planetary supply
 -- networks without adding any requirement to a first-visit world gate.
 require("prototypes.technology.research_tree_polish").data_final_fixes()
+
+-- A few valid factory researches become later chapter prerequisites.
+-- Missing producers and future-gated sources must never become blockers.
+require("prototypes.technology.industrial_partnership_gates").data_final_fixes()
 
 -- Reuse native planetary science only for already-accessible Razi
 -- industries and only with an obtainable recipe and a matching lab.
