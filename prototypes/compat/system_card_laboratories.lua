@@ -1,5 +1,5 @@
--- Razi's laboratory ladder. Native labs retain their original
--- non-system science inputs; the only restricted inputs are our cards.
+-- Curate Razi system cards in the EXISTING Factorio/K2SO/planet labs.
+-- This module deliberately defines no entities, items, recipes or labs.
 local M={}
 local cards={
  "calidus-tech-card","solaris-tech-card","nyxaris-tech-card",
@@ -7,235 +7,204 @@ local cards={
  "umbra-tech-card","deep-space-tech-card"
 }
 M.cards=cards
-local rank={}
-for i,id in ipairs(cards) do rank[id]=math.ceil((i+1)/2) end
-rank["calidus-tech-card"]=1
-rank["solaris-tech-card"]=2
-rank["nyxaris-tech-card"]=2
-rank["vibrant-tech-card"]=3
-rank["vespera-tech-card"]=3
-rank["beetlejuice-tech-card"]=4
-rank["umbra-tech-card"]=4
-rank["deep-space-tech-card"]=5
-M.rank=rank
+M.rank={
+ ["calidus-tech-card"]=1,
+ ["solaris-tech-card"]=2,["nyxaris-tech-card"]=2,
+ ["vibrant-tech-card"]=3,["vespera-tech-card"]=3,
+ ["beetlejuice-tech-card"]=4,["umbra-tech-card"]=4,
+ ["deep-space-tech-card"]=5
+}
+-- Each name here belongs to its original mod. Moshine's laboratory
+-- gives the middle pair its distinct tier; if absent, elevate K2SO's
+-- advanced lab rather than inventing a new machine.
 M.native={
- ["lab"]=1,["biolab"]=2,["thermodynamics-lab"]=2,
- ["kr-advanced-lab"]=2,["pressure-lab"]=4,
- ["kr-singularity-lab"]=4,["omega-lab"]=5
+ ["lab"]=1,["biolab"]=2,["kr-advanced-lab"]=2,
+ ["thermodynamics-lab"]=3,
+ ["pressure-lab"]=4,["kr-singularity-lab"]=4,["omega-lab"]=5
 }
-M.steps={
- {id="razi-frontier-lab",tier=2,base="lab",source="kr-advanced-lab",
-  prereqs={"space-science-pack"},science={"calidus-tech-card"},
-  materials={{"lab",1},{"processing-unit",12},{"low-density-structure",20}},
-  count=240,power="120kW",speed=1.5},
- {id="razi-constellation-lab",tier=3,base="lab",
-  source="kr-advanced-lab",prereqs={"solaris-discovery","nyxaris-discovery"},
-  science={"solaris-tech-card","nyxaris-tech-card"},
-  materials={{"razi-frontier-lab",1},{"kr-rare-metals",16},
-    {"bioflux",12},{"optical-cable",12}},
-  count=360,power="220kW",speed=2},
- {id="razi-astral-lab",tier=4,base="lab",
-  source="kr-singularity-lab",prereqs={"vibrant-discovery","vespera-discovery"},
-  science={"vibrant-tech-card","vespera-tech-card"},
-  materials={{"razi-constellation-lab",1},{"holmium-plate",16},
-    {"kr-energy-control-unit",12},{"craptonite-frame",12}},
-  count=480,power="350kW",speed=2.5},
- {id="razi-deep-space-lab",tier=5,base="lab",
-  source="kr-singularity-lab",
-  prereqs={"beetlejuice-discovery","umbra-discovery"},
-  science={"beetlejuice-tech-card","umbra-tech-card"},
-  materials={{"razi-astral-lab",1},{"rare-earth-powder",18},
-    {"supermagnet",12}},
-  count=620,power="500kW",speed=3}
+M.recipe_upgrades={
+ {lab="thermodynamics-lab",
+  materials={{name="optical-cable",recipe="optical-cable",amount=6}}},
+ {lab="kr-singularity-lab",
+  materials={{name="holmium-plate",recipe="holmium-plate",amount=10},
+   {name="kr-energy-control-unit",recipe="kr-energy-control-unit",amount=6}}},
+ {lab="omega-lab",
+  materials={{name="rare-earth-powder",recipe="rare-earth-powder",amount=10},
+   {name="supermagnet",recipe="supermagnet",amount=6}}}
 }
-local function raw(kind,name)
- return data.raw[kind] and data.raw[kind][name]
+local function raw(type,name)
+ return (data.raw[type] or {})[name]
 end
-local function item_exists(name)
- return raw("item",name) or raw("tool",name)
-end
-local function copy(value)
- if table.deepcopy then return table.deepcopy(value) end
- local t={}
- for k,v in pairs(value) do t[k]=type(v)=="table" and copy(v) or v end
- return t
-end
-local function add_unique(inputs,name)
- for _,v in ipairs(inputs) do if v==name then return end end
- inputs[#inputs+1]=name
-end
-local function available(step)
- if not (raw("lab",step.base) and raw("item",step.base)) then return false end
- if raw("lab",step.id) or item_exists(step.id)
-  or raw("technology",step.id) or raw("recipe",step.id) then return false end
- for _,name in ipairs(step.prereqs) do
-  if not raw("technology",name) then return false end
- end
- for _,name in ipairs(step.science) do
-  if not raw("tool",name) then return false end
- end
- for _,material in ipairs(step.materials) do
-  if not item_exists(material[1]) then return false end
- end
- return true
-end
-local function create(step)
- local native=raw("lab",step.base)
- local source=raw("lab",step.source) or native
- local entity=copy(native)
- entity.name=step.id
- entity.localised_name={"entity-name."..step.id}
- entity.minable=copy(native.minable or {mining_time=.2})
- entity.minable.result=step.id
- entity.next_upgrade=nil
- entity.fast_replaceable_group=nil
- entity.researching_speed=step.speed
- entity.energy_usage=step.power
- -- Native science support comes from the source upgrade if installed.
- -- Special labs and their original science packs remain untouched.
- -- Upstream integrations sometimes append the same pack twice; Factorio
- -- rejects duplicated lab input names when assigning prototype IDs.
- entity.inputs={}
- for _,name in ipairs(source.inputs or native.inputs or {}) do
-  add_unique(entity.inputs,name)
- end
- for _,card in ipairs(cards) do
-  if rank[card]<=step.tier and item_exists(card) then
-   add_unique(entity.inputs,card)
-  end
- end
- for i=#entity.inputs,1,-1 do
-  if rank[entity.inputs[i]] and rank[entity.inputs[i]]>step.tier then
-   table.remove(entity.inputs,i)
-  end
- end
- local lab_item=copy(raw("item",step.base))
- lab_item.name=step.id
- lab_item.place_result=step.id
- lab_item.localised_name={"item-name."..step.id}
- lab_item.order="e[razi-laboratory]-"..step.tier
- local base_icon=lab_item.icon or "__base__/graphics/icons/lab.png"
- local icon_size=lab_item.icon_size or 64
- local card=raw("tool",cards[step.tier==5 and 8 or step.tier*2-1])
- lab_item.icon=nil
- lab_item.icon_size=nil
- lab_item.icons={{icon=base_icon,icon_size=icon_size},
-   {icon=card and card.icon or "__base__/graphics/icons/lab.png",
-    icon_size=card and (card.icon_size or 256) or 64,
-    scale=card and .15 or .32,shift={8,8}}}
- -- Reuse the original lab graphics in-world, but keep a distinct tier
- -- icon in inventory, the tech tree and machine detail views.
- entity.icons=copy(lab_item.icons)
- entity.icon=nil
- entity.icon_size=nil
- local inputs={}
- for _,part in ipairs(step.materials) do
-  inputs[#inputs+1]={type="item",name=part[1],amount=part[2]}
- end
- local science={}
- for _,name in ipairs(step.science) do science[#science+1]={name,1} end
- local recipe={type="recipe",name=step.id,enabled=false,
-  categories={"crafting"},energy_required=20,
-  localised_name={"recipe-name."..step.id},
-  ingredients=inputs,results={{type="item",name=step.id,amount=1}},
-  icons=copy(lab_item.icons),subgroup=lab_item.subgroup,
-  order=lab_item.order,allow_productivity=false}
- local technology={type="technology",name=step.id,
-  localised_name={"technology-name."..step.id},
-  localised_description={"technology-description."..step.id},
-  icons=copy(lab_item.icons),
-  prerequisites=copy(step.prereqs),unit={count=step.count,time=45,
-   ingredients=science},effects={{type="unlock-recipe",recipe=step.id}},
-  order="a[razi-laboratories]-"..step.tier}
- data:extend({entity,lab_item,recipe,technology})
- return true
-end
-local function set_native_tiers()
- for id,tier in pairs(M.native) do
-  local lab=raw("lab",id)
-  if lab and lab.inputs then
-   local keep,seen={},{}
-   for _,input in ipairs(lab.inputs) do
-    if not seen[input] and (not rank[input] or rank[input]<=tier) then
-     keep[#keep+1]=input
-     seen[input]=true
-    end
-   end
-   -- A late mod may have omitted Razi's lower cards entirely.
-   -- Adding only cards within the tier is always safe.
-   for _,card in ipairs(cards) do
-    if rank[card]<=tier and item_exists(card) and not seen[card] then
-     keep[#keep+1]=card;seen[card]=true
-    end
-   end
-   lab.inputs=keep
-  end
+local function add(inputs,name,seen)
+ if not seen[name] then
+  inputs[#inputs+1]=name
+  seen[name]=true
  end
 end
-local function accepts(lab,ingredients)
+local function accepts(lab,science)
  if not (lab and lab.inputs) then return false end
- local lookup={}
- for _,s in ipairs(lab.inputs) do lookup[s]=true end
- for _,s in ipairs(ingredients) do if not lookup[s] then return false end end
+ local present={}
+ for _,id in ipairs(lab.inputs) do present[id]=true end
+ for _,id in ipairs(science) do
+  if not present[id] then return false end
+ end
  return true
 end
-local function restore_research_coverage()
- local labs=data.raw.lab or {}
- for _,technology in pairs(data.raw.technology or {}) do
-  local unit=technology.unit
-  if unit and unit.ingredients and technology.enabled~=false
-    and not technology.hidden then
-   local needed,science_cards={},{}
-   local maximum=1
-   for _,ingredient in ipairs(unit.ingredients) do
-    local name=ingredient.name or ingredient[1]
-    if name then
-     needed[#needed+1]=name
-     if rank[name] then
-      science_cards[#science_cards+1]=name
-      maximum=math.max(maximum,rank[name])
+local function ancestor(start,wanted,techs,visited)
+ if start==wanted then return true end
+ local tech=techs[start]
+ if not tech then return false end
+ visited=visited or {}
+ if visited[start] then return false end
+ visited[start]=true
+ for _,parent in ipairs(tech.prerequisites or {}) do
+  if ancestor(parent,wanted,techs,visited) then return true end
+ end
+ return false
+end
+local function unlock_index(techs)
+ local index={}
+ for name,tech in pairs(techs) do
+  for _,effect in ipairs(tech.effects or {}) do
+   if effect.type=="unlock-recipe" and effect.recipe then
+    local list=index[effect.recipe] or {}
+    list[#list+1]=name
+    index[effect.recipe]=list
+   end
+  end
+ end
+ for _,list in pairs(index) do table.sort(list) end
+ return index
+end
+local function product(recipe,id)
+ if recipe.result==id then return true end
+ for _,entry in ipairs(recipe.results or {}) do
+  if (entry.name or entry[1])==id then return true end
+ end
+ return false
+end
+local function safe_upgrades()
+ local recipes=data.raw.recipe or {}
+ local techs=data.raw.technology or {}
+ local indexed=unlock_index(techs)
+ for _,rule in ipairs(M.recipe_upgrades) do
+  local recipe=recipes[rule.lab]
+  -- Only modify native locked crafting recipes, and only if the native
+  -- research ALREADY includes all required supplier research. Do not
+  -- rewrite a lab to need materials from a future discovery.
+  if recipe and recipe.enabled==false and not recipe.hidden
+    and recipe.ingredients and not recipe.normal and not recipe.expensive then
+   local unlock
+   for _,candidate in ipairs(indexed[rule.lab] or {}) do
+    if techs[candidate] and techs[candidate].enabled~=false
+      and not techs[candidate].hidden then
+     unlock=candidate
+     break
+    end
+   end
+   local ok=unlock~=nil
+   for _,supply in ipairs(rule.materials) do
+    local source=recipes[supply.recipe]
+    local valid=source and not source.hidden
+      and product(source,supply.name)
+      and (raw("item",supply.name) or raw("tool",supply.name))
+    if not valid then ok=false break end
+    if source.enabled==false then
+     local proven=false
+     for _,source_unlock in ipairs(indexed[supply.recipe] or {}) do
+      if ancestor(unlock,source_unlock,techs) then
+       proven=true break
+      end
+     end
+     if not proven then ok=false break end
+    end
+   end
+   if ok then
+    local existing={}
+    for _,ingredient in ipairs(recipe.ingredients) do
+     existing[ingredient.name or ingredient[1]]=true
+    end
+    for _,supply in ipairs(rule.materials) do
+     if not existing[supply.name] then
+      recipe.ingredients[#recipe.ingredients+1]={
+       type="item",name=supply.name,amount=supply.amount}
      end
     end
    end
-   if #science_cards>0 then
-    local found=false
-    for _,lab in pairs(labs) do
-     if accepts(lab,needed) then found=true break end
+  end
+ end
+end
+local function assign_labs()
+ local labs=data.raw.lab or {}
+ if not labs["thermodynamics-lab"] then
+  M.native["kr-advanced-lab"]=3
+ end
+ for name,tier in pairs(M.native) do
+  local lab=labs[name]
+  if lab and lab.inputs then
+   local fresh,seen={},{}
+   for _,input in ipairs(lab.inputs) do
+    local level=M.rank[input]
+    if not level or level<=tier then add(fresh,input,seen) end
+   end
+   for _,card in ipairs(cards) do
+    if M.rank[card]<=tier and raw("tool",card) then
+     add(fresh,card,seen)
     end
-    if not found then
-     -- A targeted escape hatch: preserve all native packs on the lab.
-     -- Never make ordinary labs universal. Only install the missing
-     -- Razi cards into a lab ALREADY supporting every other pack.
-     local noncards={}
-     for _,name in ipairs(needed) do
-      if not rank[name] then noncards[#noncards+1]=name end
+   end
+   lab.inputs=fresh
+  end
+ end
+end
+local function restore_science()
+ local labs=data.raw.lab or {}
+ for _,tech in pairs(data.raw.technology or {}) do
+  local unit=tech.unit
+  if tech.enabled~=false and not tech.hidden
+   and unit and unit.ingredients and #unit.ingredients>0 then
+   local all,own,other={}, {}, {}
+   local tier=1
+   for _,part in ipairs(unit.ingredients) do
+    local name=part.name or part[1]
+    if name then
+     all[#all+1]=name
+     if M.rank[name] then
+      own[#own+1]=name
+      tier=math.max(tier,M.rank[name])
+     else
+      other[#other+1]=name
      end
-     local by_tier={
-      [1]={"lab"},
-      [2]={"razi-frontier-lab","kr-advanced-lab",
-           "biolab","thermodynamics-lab"},
-      [3]={"razi-constellation-lab"},
-      [4]={"razi-astral-lab","kr-singularity-lab","pressure-lab"},
-      [5]={"razi-deep-space-lab","omega-lab"}
-     }
-     -- Prefer the EARLIEST laboratory with the correct science tier.
-     -- A late-game Omega lab cannot be the sole theoretical solution
-     -- for a research needed to enter Vibrant.
-     local order={}
-     for tier=maximum,5 do order[#order+1]=tier end
-     for tier=maximum-1,1,-1 do order[#order+1]=tier end
-     for _,tier in ipairs(order) do
-      for _,lab_name in ipairs(by_tier[tier] or {}) do
-       local lab=labs[lab_name]
-       if accepts(lab,noncards) then
-        for _,card in ipairs(science_cards) do
-         add_unique(lab.inputs,card)
-        end
-        found=true
+    end
+   end
+   if #own>0 then
+    local satisfied=false
+    for _,lab in pairs(labs) do
+     if accepts(lab,all) then satisfied=true break end
+    end
+    if not satisfied then
+     -- Check complete non-Razi science sets; never add a native pack.
+     -- Prefer the correct tier and above before any lower-tier exception.
+     local ordered={}
+     for level=tier,5 do ordered[#ordered+1]=level end
+     for level=tier-1,1,-1 do ordered[#ordered+1]=level end
+     local selection
+     for _,level in ipairs(ordered) do
+      for _,name in ipairs({"thermodynamics-lab","kr-advanced-lab",
+        "kr-singularity-lab","pressure-lab","omega-lab",
+        "biolab","lab"}) do
+       if M.native[name]==level and accepts(labs[name],other) then
+        selection=labs[name]
         break
        end
       end
-      if found then break end
+      if selection then break end
+     end
+     if selection then
+      local seen={}
+      for _,name in ipairs(selection.inputs) do seen[name]=true end
+      for _,name in ipairs(own) do add(selection.inputs,name,seen) end
+     else
+      if log then log("Razi science: no installed lab accepts all native packs for "..tech.name) end
      end
     end
    end
@@ -243,10 +212,8 @@ local function restore_research_coverage()
  end
 end
 function M.data_final_fixes()
- for _,step in ipairs(M.steps) do
-  if available(step) then create(step) end
- end
- set_native_tiers()
- restore_research_coverage()
+ assign_labs()
+ safe_upgrades()
+ restore_science()
 end
 return M

@@ -1,93 +1,84 @@
-"""Regression for staged system cards and buildable Razi labs."""
+"""Guard native lab tiers and preserved card recipes without inventing labs."""
 import json
 import re
 import unittest
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
+def read(path):
+    return (ROOT/path).read_text(encoding="utf-8")
 
-def read(filename):
-    return (ROOT / filename).read_text(encoding="utf-8")
-
-class TechCardProgressionTests(unittest.TestCase):
-    def test_eight_cards_keep_early_science_behind_accessible_worlds(self):
+class SystemCardProgressionTests(unittest.TestCase):
+    def test_original_card_production_stays_available(self):
         source=read("prototypes/compat/lab_cards.lua")
-        # Inspect each definition, not the global optional modded-science list.
         for card,forbidden in (
             ("solaris-tech-card","electrochemical-science-pack"),
             ("vibrant-tech-card","paracelsin-galvanization-science-pack"),
             ("vespera-tech-card","hydraulic-science-pack"),
-            ("deep-space-tech-card","space-logistic-science-pack"),
-            ("deep-space-tech-card","pulsar-science-pack")
-        ):
-            definition=re.search(
-                r'\bname = "' + re.escape(card) + r'".*?fallback_ingredients',
-                source,re.S)
-            self.assertIsNotNone(definition,card)
-            # Comments can name removed sources; only ingredient quotes count.
-            ingredient_body=definition.group().split("ingredients = {",1)[1].split("}",1)[0]
-            self.assertNotIn('"' + forbidden + '"',ingredient_body)
+            ("deep-space-tech-card","space-logistic-science-pack")):
+            body=re.search(r'\bname = "'+re.escape(card)+
+                r'".*?fallback_ingredients',source,re.S)
+            self.assertIsNotNone(body)
+            items=body.group().split("ingredients = {",1)[1].split("}",1)[0]
+            self.assertNotIn('"'+forbidden+'"',items)
+        self.assertIn('upsert_system_card(card)',source)
+        self.assertIn('system_card_definitions',source)
 
-    def test_four_real_labs_and_five_science_tiers(self):
+    def test_no_razi_owned_lab_prototypes(self):
         source=read("prototypes/compat/system_card_laboratories.lua")
-        for tier,name in enumerate((
-            "razi-frontier-lab","razi-constellation-lab",
-            "razi-astral-lab","razi-deep-space-lab"),start=2):
-            self.assertRegex(source,
-                r'id="' + name + r'",tier=' + str(tier))
-        for id,value in (
-            ("calidus-tech-card",1),("solaris-tech-card",2),
-            ("nyxaris-tech-card",2),("vibrant-tech-card",3),
-            ("vespera-tech-card",3),("beetlejuice-tech-card",4),
-            ("umbra-tech-card",4),("deep-space-tech-card",5)):
-            self.assertIn('rank["'+id+'"]='+str(value),source)
-        self.assertIn('["lab"]=1',source)
+        for name in ("razi-frontier-lab","razi-constellation-lab",
+                     "razi-astral-lab","razi-deep-space-lab"):
+            self.assertNotIn(name,source)
+            self.assertNotIn(name+'=',read("locale/en/names.cfg"))
+            self.assertNotIn('tech="'+name+'"',
+                             read("scripts/razi_journal_data.lua"))
+        self.assertNotIn("data:extend",source)
+        self.assertIn('["kr-advanced-lab"]=2',source)
+        self.assertIn('["thermodynamics-lab"]=3',source)
         self.assertIn('["kr-singularity-lab"]=4',source)
         self.assertIn('["omega-lab"]=5',source)
-        self.assertIn("restore_research_coverage()",source)
-        self.assertIn("accepts(lab,noncards)",source)
-        self.assertNotIn("research_all_technologies",source)
+        self.assertIn("restore_science()",source)
 
-    def test_multiplex_recipes_are_optional_and_not_productivity_stacking(self):
-        source=read("prototypes/compat/system_card_manufacturing.lua")
-        pairs=re.findall(r'name="(razi-[\w-]+-multiplex-cards)",card="([^"]+)"',source)
-        self.assertEqual(len(pairs),5)
-        self.assertEqual(len(set(pairs)),5)
-        self.assertIn('part.amount=part.amount*2',source)
-        self.assertIn('name=rule.card,amount=3',source)
-        self.assertIn("allow_productivity=false",source)
-        self.assertIn("not recipes[rule.name]",source)
-        self.assertIn("valid_base(base,rule.card)",source)
-        self.assertNotIn('source-recipe=',source)
-
-    def test_registrations_locales_and_docs(self):
-        root=read("data-final-fixes.lua")
-        self.assertLess(
-            root.index('require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()'),
-            root.index('require("prototypes.compat.system_card_manufacturing").data_final_fixes()'))
-        self.assertLess(
-            root.index('require("prototypes.compat.system_card_manufacturing").data_final_fixes()'),
-            root.index('require("prototypes.compat.system_card_laboratories").data_final_fixes()'))
-        names=read("locale/en/names.cfg")
-        for lab in ("razi-frontier-lab","razi-constellation-lab",
-                    "razi-astral-lab","razi-deep-space-lab"):
-            self.assertGreaterEqual(names.count(lab+"="),5)
-        for recipe in ("razi-solaris-multiplex-cards","razi-nyxaris-multiplex-cards",
-                       "razi-vibrant-multiplex-cards","razi-vespera-multiplex-cards",
-                       "razi-deep-space-multiplex-cards"):
-            self.assertEqual(names.count(recipe+"="),2)
-        journal=read("scripts/razi_journal_data.lua")
-        stories=read("locale/en/razi_journal.cfg")
-        for quest in ("lab-frontier","lab-constellation","lab-astral",
-                      "lab-deep-space"):
-            self.assertIn('id="'+quest+'"',journal)
-            self.assertEqual(stories.count(quest+"="),3)
-        self.assertIn('self.assertEqual(len(quests),223)',
+    def test_retired_lab_save_migration(self):
+        migration=json.loads(read("migrations/2.1.55-native-labs.json"))
+        for kind in ("item","entity"):
+            self.assertEqual(len(migration[kind]),4)
+            self.assertTrue(all(target=="lab"
+                for old,target in migration[kind]))
+        self.assertNotIn('lab-frontier=',
+            read("locale/en/razi_journal.cfg"))
+        self.assertIn('self.assertEqual(len(quests),219)',
                       read("tests/test_razi_journal.py"))
-        info=json.loads(read("info.json"))
-        self.assertEqual(info["version"],"2.1.54")
-        self.assertEqual(info["factorio_version"],"2.1")
-        self.assertIn("laboratory tiers",read("docs/RESEARCH_TREE_BALANCE.md").lower())
+
+    def test_transceiver_is_new_edge_gateway(self):
+        source=read("prototypes/technology/deep_space_arrival.lua")
+        self.assertIn('"razi-intergalactic-transceiver-signal"',source)
+        self.assertIn('"stellar-discovery-solar-system-edge"',source)
+        self.assertIn('pre_edge_science(entry[3])',source)
+        self.assertIn('reachable(parent,"stellar-discovery-solar-system-edge")',source)
+        self.assertIn('not found then',source)
+        hook=read("data-final-fixes.lua")
+        self.assertLess(hook.index(
+            'require("prototypes.technology.seven_system_gates").data_final_fixes()'),
+            hook.index(
+            'require("prototypes.technology.deep_space_arrival").data_final_fixes()'))
+        self.assertLess(hook.index(
+            'require("prototypes.technology.deep_space_arrival").data_final_fixes()'),
+            hook.index(
+            'require("prototypes.technology.planetary_unification").data_final_fixes()'))
+
+    def test_original_transceiver_victory_is_not_the_finale(self):
+        control=read("control.lua")
+        self.assertIn("preserve_deep_space_campaign()",control)
+        self.assertIn('api["set_no_victory"]',control)
+        self.assertIn('remote.call("kr-intergalactic-transceiver",',control)
+        self.assertIn('"set_no_victory",true)',control)
+        self.assertNotIn('set_game_state(',control)
+
+    def test_settings_limit_and_version(self):
+        settings=read("settings.lua")
+        self.assertIn('razi-planetary-interdependence',settings)
+        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.55")
 
 if __name__=="__main__":
     unittest.main()

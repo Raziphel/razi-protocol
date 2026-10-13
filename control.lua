@@ -127,14 +127,27 @@ local function on_entity_built(event)
 	check_entity(event.entity or event.destination or event.created_entity)
 end
 
+-- K2SO's native transceiver may also declare victory when activated.
+-- Razi uses that same activation to unlock Deep Space instead. Suppress
+-- only the source victory, never its charge or entity-conversion logic.
+local function preserve_deep_space_campaign()
+  if not (remote and remote.interfaces) then return end
+  local api=remote.interfaces["kr-intergalactic-transceiver"]
+  if api and api["set_no_victory"] then
+    remote.call("kr-intergalactic-transceiver","set_no_victory",true)
+  end
+end
+
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(function()
+  preserve_deep_space_campaign()
   check_existing_transceivers()
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
+	preserve_deep_space_campaign()
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
   galactic_operations.sync_all_map_buttons()

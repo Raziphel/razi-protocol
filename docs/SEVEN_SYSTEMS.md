@@ -1,3 +1,26 @@
+## 2.1.55: Native labs and the transceiver threshold
+
+The four Razi-built 2.1.54 laboratory prototypes have been removed.
+Existing 2.1.54 saves migrate their lab entities and items to ordinary
+Labs. Tiered acceptance of Razi's eight system tech cards now reuses
+native K2SO, Moshine, Gleba and Nexus laboratories, including conditional
+science-combination exceptions where source packs require them.
+
+The transceiver's three Razi preparation technologies now use all
+seven pre-edge system cards, without post-edge Promethium science. A
+charged and activated original K2SO transceiver researches the native
+Razi Signal Lock, which becomes a guarded prerequisite to enter the
+Solar System Edge. The edge leads onward to Deep Space; it is no longer
+the conclusion. K2SO's native transceiver victory is suppressed via its
+documented remote interface when it exists. This does **not** invent
+a new victory condition: a larger post-edge finale has yet to be
+designed and tested.
+
+Settings order remains limited by Factorio's interface: the engine
+groups by mod before using individual setting order strings. Razi
+cannot reliably place its group above all other mods without changing
+its existing internal mod name and threatening save compatibility.
+
 > **2.1.42 Calidus layout:** Calidus Drift is retired. Any earlier
 > descriptions of that temporary destination below are historical; the
 > active home system uses Nauvis, Muluna, and Calidus Slip Stream.

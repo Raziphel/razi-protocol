@@ -25,9 +25,10 @@ local systems={
   {"umbra","umbra-discovery","umbra-tech-card",
     {"planet-discovery-tenebris","planet-discovery-crucible",
      "planet-discovery-vesta"}},
-  {"deep-space","razi-outer-frontier-mastery","deep-space-tech-card",
-    {"razi-singularity-theory","razi-singularity-test-fire",
-     "razi-stable-intergalactic-singularity"}}
+  {"deep-space","stellar-discovery-solar-system-edge","deep-space-tech-card",
+    {"razi-outer-frontier-mastery","razi-singularity-theory",
+     "razi-singularity-test-fire","razi-stable-intergalactic-singularity",
+     "razi-intergalactic-transceiver-signal"}}
 }
 M.systems=systems
 local function name(t,id)

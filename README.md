@@ -40,7 +40,7 @@ I wanted a galaxy you can actually navigate, with different ways through it and 
 - Rehomes many planets so they sit in a cleaner route and unlock order.
 - Integrates Linox and Muria into the campaign without retaining redundant or unfinished planets.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
-- Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
+- Uses K2SO's real intergalactic transceiver as the **gateway into Deep Space**. The solar-system edge, Aegis/Bellicos, Shattered Planet, Nexus and other late expeditions remain for the proper final act.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
@@ -104,7 +104,7 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 | Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
 | Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
 | Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta; Carna | Unusual and dangerous late-game experimentation |
-| Finale | **Deep Space** | Aegis/Bellicos, the solar-system edge, Shattered Planet; optional Nexus/black-hole branches | Pulsar science, Promethium, transceiver |
+| Gateway → Deep Space | **Solar System Edge** | Transceiver activation opens the Aegis/Bellicos and Shattered Planet expeditions, with Nexus/black-hole branches | Seven system cards, native K2SO transceiver; Deep Space science afterward |
 
 ### The interstellar routes
 
@@ -124,7 +124,7 @@ Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, w
 - **Cerys** follows Fulgora to Vibrant and **Rabbasca** follows Gleba to Nyxaris.
 - **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
 - **Panglia** has direct Moshine and Apia/Carnova freight routes, a distinct Nyxaris orbit, new Chronicle research objectives, and guarded Moshine optical-cable / Panglite-glass production exchanges. Neither bonus recipe replaces native manufacturing.
-- **Nexus-Updated and VoidProcessing-Updated** remain optional Deep Space expansions, never prerequisites to reach the main transceiver finale.
+- **Nexus and Void-related endgame branches** remain beyond the transceiver gateway, not required for the seven-star arrival sequence.
 - Aegis/Bellicos is **required** by the current pack and retains its own internal pulsar and stargate routes.
 
 ### Progression principles
@@ -146,7 +146,7 @@ Eight cards now connect the scientific ladder:
 7. Umbra Tech Card
 8. Deep Space Tech Card
 
-The first pair of frontiers uses Calidus science. The second pair consumes Solaris and Nyxaris cards. The third pair uses Vibrant and Vespera cards. **Beetlejuice and Umbra** cards converge at the Outer Frontier mastery gate and the singularity finale.
+The first pair of frontiers uses Calidus science. The second pair consumes Solaris and Nyxaris cards. The third pair uses Vibrant and Vespera cards. **Beetlejuice and Umbra** cards converge at Outer Frontier Mastery, enabling the transceiver expedition gateway rather than ending the game.
 
 Vespera and Umbra currently tint existing icon assets, rather than introducing unsupported or unapproved new artwork. Dedicated star and card art are a separate polish pass. The card recipes contain only science expected from their required core planets, rather than injecting science from optional integrations.
 
@@ -262,18 +262,32 @@ The last data-stage route pass removes unintended cross-chapter shortcuts among 
 
 ## Endgame Philosophy
 
-Deep Space is a genuine finale after **both** outer-frontier chapters.
+The first seven star systems are the **preparation**, not the ending.
 
-Outer Frontier Mastery requires science from Beetlejuice and Umbra and is inserted ahead of the existing outer-edge research when that native technology is available. The transceiver sequence then proceeds through:
+Outer Frontier Mastery requires real Beetlejuice and Umbra research. It
+leads to Intergalactic Singularity Theory, Test Fire and Stable
+Singularity, then the original K2SO transceiver must be constructed,
+charged and activated. Razi observes that real activated machine to
+research **Intergalactic Signal Lock**. When the native technology chain
+is safe, that research is required to unlock the Solar System Edge.
 
-- Intergalactic Singularity Theory
-- Intergalactic Singularity Test Fire
-- Stable Intergalactic Singularity
-- Intergalactic Signal Lock
+All seven system tech cards now feed this gateway. Promethium and
+Deep Space cards remain **after** arrival rather than circular
+ingredients needed to reach the edge. The source transceiver's
+activation remains unchanged; its independent victory condition is
+suppressed through K2SO's supported remote interface when available.
 
-All seven main chapter cards participate in the singularity research ladder. Deep Space remains a separate endgame card, especially for Nexus.
+The actual finale remains a separate design project. The intended
+direction is a galaxy-wide engineering challenge in Deep Space:
+coordinate mature industry from all earlier systems, construct a
+larger shared megaproject using the Dyson, advanced science and
+native Nexus/Aegis/Bellicos expeditions, then finish with a deliberate
+endgame research and construction milestone. No unfinished finale or
+additional planet is fabricated by this update.
 
-When optional Nexus is installed, its Omega science is condensed into the Deep Space card. Nexus, Oort Cloud, Sol and optional black-hole content are additional Deep Space adventures, not mandatory prerequisites for the campaign's primary victory.
+**Laboratory tiers** reuse the installed native machines instead of
+adding custom Razi labs. Existing 2.1.54 custom lab items and entities
+migrate back to ordinary vanilla Labs when upgrading saves.
 
 ## Compatibility and Modpack Quality
 
