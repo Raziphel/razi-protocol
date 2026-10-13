@@ -26,6 +26,7 @@ class K2SOCompatibilityDependencies(unittest.TestCase):
                  if not dep.startswith(("? ", "! ", "~ "))}
         self.assertFalse(expected - names, sorted(expected - names))
         self.assertIn("corrundum-krastorio-compatibility-plus >= 1.1.2", self.deps)
+        self.assertIn("rubia-krastorio-compatibility-plus >= 1.3.1", self.deps)
 
     def test_orbit_patch_optional_for_outer_rim(self):
         self.assertIn("? secretas-orbit-patch >= 1.1.3", self.deps)

@@ -17,7 +17,7 @@ places their resulting sciences into the correct chapter progression.
 | xyrc Enhancements (Null's Fork) | Required: `xy-k2so-enhancements-nulls-fork` | Let it own generic K2SO conversions; Razi removes obsolete placeholder space routes. |
 | Castra Compatibility+ | Required: `castra-krastorio-compatibility-plus` | Keep source ammo/tech-card behavior; Razi uses battlefield science in Solaris. |
 | Corrundum Compatibility+ | **New required:** `corrundum-krastorio-compatibility-plus >= 1.1.2` | Source owns electrochemical research-data/tech-card chain; Razi's Solaris system card already uses electrochemical science. |
-| Rubia Compatibility+ | Required: `rubia-krastorio-compatibility-plus` | Keep source Rubia/K2SO conversions; Razi uses biofusion science in Vespera. |
+| Rubia Compatibility+ | Required: `rubia-krastorio-compatibility-plus >= 1.3.1` | Keep source Rubia/K2SO conversions; Razi uses biofusion science in Vespera. |
 | Paracelsin Compatibility+ | Required: `paracelsin-krastorio-compatibility-plus` | Keep native galvanization conversion; Razi's Null-compatible common-gas resync remains guarded. |
 | Cubium K2SO Fork | Required: `k2so-cubium-compatibility-fork` | Retain upstream Cubium/K2SO interactions and Beetlejuice golden science. |
 | Secretas/Frozeta K2SO Compatibility+ | **Not required:** `secretas-krastorio-compatibility-plus` | Latest listed release is Factorio 2.0, not the pack's Factorio 2.1. Recheck for a verified port later. |

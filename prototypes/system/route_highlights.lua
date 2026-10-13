@@ -23,8 +23,7 @@ local stage_by_star={
   vibrant=3,vespera=3,beetlejuice=4,umbra=4,
   ["solar-system-edge"]=5,["deep-space"]=5
 }
-local known_home={nauvis=true,muluna=true,["sye-calidus"]=true,
-  ["razi-calidus-drift"]=true}
+local known_home={nauvis=true,muluna=true,["sye-calidus"]=true}
 local alias={
   ["sye-solaris"]="solaris",["sye-nyxaris"]="nyxaris",
   ["sye-vibrant"]="vibrant",["sye-vespera"]="vespera",
@@ -168,7 +167,7 @@ function M.strokes_for_connection(route,mode)
   local stage=route_stage(route)
   -- The native line is still drawn underneath. Modest alpha avoids the
   -- doubled fluorescent line seen around Calidus in the last screenshot.
-  local alpha=(mode=="clear" and .56 or .34)*
+  local alpha=(mode=="clear" and .45 or .26)*
     (stage==1 and .74 or stage==2 and .88 or 1)
   local result={}
   for i=0,sections-1 do

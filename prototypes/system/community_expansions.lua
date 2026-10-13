@@ -50,7 +50,7 @@ local special = {
 
 local home = {
   nauvis="calidus", muluna="calidus",
-  ["sye-calidus"]="calidus",["razi-calidus-drift"]="calidus",
+  ["sye-calidus"]="calidus",
   gleba="nyxaris", vulcanus="solaris",
   fulgora="vibrant", aquilo="vespera", paracelsin="vibrant",
   tenebris="umbra", ["sye-vibrant"]="vibrant",

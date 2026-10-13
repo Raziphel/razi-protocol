@@ -1,3 +1,13 @@
+Version: 2.1.42
+Date: 13. 10. 2026
+  Calidus retirement and star-chart legibility:
+    - Retire the Calidus Drift prototype, unlock and freight routes; clean stale Razi-owned Drift connections. Check existing platform schedules before loading an older save.
+    - Preserve the native Nauvis and Muluna link, the original Calidus departure hub, source Dyson orbits and the seven-system progression.
+    - Remove four redundant Solaris and Nyxaris crosslinks while preserving planet-to-planet freight alternatives and arrival gates.
+    - Dim the six-by-six star atlas; shrink ambient system coronas and orbital belt backgrounds, quiet cosmic dust, and reduce route highlight overdraw.
+    - Require Rubia Krastorio Compatibility+ 1.3.1 for the current Factorio 2.1 bridge.
+    - Update the retirement and background fixtures. Real Factorio engine/saved-game testing is still required.
+
 Version: 2.1.41
 Date: 13. 10. 2026
   K2SO compatibility curation:

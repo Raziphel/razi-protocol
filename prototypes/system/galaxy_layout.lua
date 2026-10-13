@@ -15,9 +15,6 @@ local anchors = {
   {"space-location","umbra","star",104,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
-  -- Southwest freight stop: a deliberate, short westbound leg from the
-  -- southern slipstream rather than a detached node above the sun.
-  {"space-location","razi-calidus-drift","star",27,0.56},
   {"space-location","sye-solaris","solaris",27,0.75},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
@@ -281,7 +278,6 @@ function M.data_final_fixes()
   -- Only Razi-owned hubs and rims get fixed orientations. Native planet,
   -- moon and optional third-party label preferences remain source-owned.
   local label_orientations={
-    ["razi-calidus-drift"]=0.75,
     -- Separate the compact home-system labels without moving source moons.
     ["nauvis"]=0.25,["muluna"]=0.75,
     ["close-sun-orbit"]=0.75,["sun-orbit"]=0.25,
@@ -338,7 +334,7 @@ function M.data_final_fixes()
 
   for _,name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-    "solar-system-edge","sye-calidus","razi-calidus-drift",
+    "solar-system-edge","sye-calidus",
     "sye-solaris","sye-nyxaris",
     "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"
   }) do
@@ -374,7 +370,7 @@ end
 -- It also repairs Khemia's absolute native coordinates if a late mod moves
 -- only its planet prototype, while keeping source sprite metadata intact.
 function M.confirm_critical_positions()
-  for _,name in ipairs({"razi-calidus-drift","alchemy-planet"}) do
+  for _,name in ipairs({"alchemy-planet"}) do
     local item=by_name[name]
     if item then
       local x,y=anchor_position(item[3])

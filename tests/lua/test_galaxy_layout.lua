@@ -9,7 +9,7 @@ local planets = {}
 local places = {star={name="star"}}
 for _,name in ipairs({
   "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-  "solar-system-edge","sye-calidus","razi-calidus-drift",
+  "solar-system-edge","sye-calidus",
   "sye-solaris","sye-nyxaris","sye-vibrant","sye-vespera",
   "sye-beetlejuice","sye-umbra","apia-carnova-orbit",
   "crucible-orbit","secretas",
@@ -55,15 +55,11 @@ end})
 
 package.loaded["prototypes.system.galaxy_layout"]=nil
 local layout=require("prototypes.system.galaxy_layout")
-local dx,dy=layout.anchor_position("razi-calidus-drift")
-check(dx < -9 and dx > -11 and dy > 24 and dy < 26,
-  "Calidus Drift should sit west and below the departure hub")
+check(layout.anchor_position("razi-calidus-drift")==nil,
+  "Retired Calidus Drift must not have an orbit")
 local hub_x,hub_y=layout.anchor_position("sye-calidus")
 check(math.abs(hub_x)<.01 and math.abs(hub_y-20)<.01,
-  "Calidus departure portal drifted from the compact central approach")
-check(math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)>9 and
-  math.sqrt((dx-hub_x)^2+(dy-hub_y)^2)<14,
-  "Drift should be a short freight hop from the slipstream")
+  "Calidus departure hub moved")
 -- Native rings should not pile up at nearly identical radii.
 local ax,ay=layout.anchor_position("apia-carnova-orbit")
 local nx,ny=layout.anchor_position("nyxaris")
@@ -112,8 +108,6 @@ for name,bearing in pairs({
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
 layout.data_final_fixes()
-check(places["razi-calidus-drift"].draw_orbit==false,
-  "Freight stop should not draw a massive Calidus orbit")
 -- The optional outer planets must receive actual native positions, not
 -- just orphaned PlanetsLib orbit metadata.
 for _,entry in ipairs({
@@ -240,11 +234,10 @@ check(planets.rabbasca.orbit==moon,
   "Native Gleba moon orbit must remain untouched")
 layout.data_final_fixes()
 -- A late, conflicting source update must not pull the chemistry world back
--- into Calidus or restore Drift's giant native orbit ring.
+-- into Calidus.
 planets["alchemy-planet"].origin={x=0,y=0}
 planets["alchemy-planet"].distance=17
 planets["alchemy-planet"].orientation=.7
-places["razi-calidus-drift"].draw_orbit=true
 layout.confirm_critical_positions()
 local kx,ky=layout.anchor_position("vibrant")
 local targetX,targetY=layout.anchor_position("alchemy-planet")
@@ -259,8 +252,6 @@ check(planets["alchemy-planet"].origin==nil
   and math.abs(khemiaX-targetX)<.01 and math.abs(khemiaY-targetY)<.01
   and planets["alchemy-planet"].draw_orbit==false,
   "Final Khemia must use absolute Vibrant coordinates without a legacy origin")
-check(places["razi-calidus-drift"].draw_orbit==false,
-  "Late pass restored a giant drift ring")
 check(planets["alchemy-planet"].orbit and
   planets["alchemy-planet"].orbit.parent.name=="vibrant",
   "Khemia returned to the wrong stellar parent")

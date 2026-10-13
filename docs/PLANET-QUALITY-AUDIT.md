@@ -10,7 +10,7 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 
 | System | Curated content | Decision |
 | --- | --- | --- |
-| Calidus | Nauvis, **Muluna**, Calidus Drift | Retain. Muluna is mandatory. |
+| Calidus | Nauvis, **Muluna**, Calidus Slip Stream | Retain. Muluna is mandatory. |
 | Calidus | Biological Machines: Planet Wit | **Exclude.** Muluna declares it incompatible; do not make the player remove Muluna. |
 | Solaris | Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum, Igrys | Retain the mechanical variety and existing discoveries. |
 | Solaris | Athos | **Exclude.** Planet Athos 1.1.3 creates a cyclic technology graph during full-pack data loading. |

@@ -1,3 +1,8 @@
+> **Current 2.1.42 atlas baseline:** Calidus Drift is retired. The 6×6
+> original indexed star atlas remains, with lower contrast and smaller
+> system light, belt particles and fine detail; route highlight opacity has
+> also been reduced. The sections below document historical art experiments.
+
 # Clean starmap redesign
 
 The default star map renders new 128-pixel feathered halo, dust and belt sprites instead of the legacy tiled nebula, portal, swirl and filament textures. Cinematic raises opacity without adding more layers. Subtle route mode uses native Factorio lines; Clear adds one verified low-contrast stroke. No tick-based art or planet-route gameplay changes.

@@ -8,7 +8,7 @@ local layout = require("prototypes.system.galaxy_layout")
 local membership = {
 	-- Main game and Calidus.
 	nauvis = "calidus", muluna = "calidus", ["alchemy-planet"] = "vibrant",
-	["sye-calidus"] = "calidus", ["razi-calidus-drift"] = "calidus",
+	["sye-calidus"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris",
 	fulgora = "vibrant", cerys = "vibrant",
@@ -43,10 +43,8 @@ local route_specifications = {
   -- Two carefully staged expedition branches; do not redraw a web of
   -- redundant Calidus spokes. The fixed hexagonal star art stays unchanged.
   -- Research unlocks each destination hub independently of the visual path.
+  -- Direct home-system departure; Muluna retains its native lunar route.
   {"nauvis", "sye-calidus", 25000, "starter"},
-  -- Calidus now has one direct Nauvis -> Slip Stream departure and one
-  -- Drift freight spur. The Muluna branch is a source-route fallback only.
-  {"razi-calidus-drift", "sye-calidus", 17500, "starter"},
   {"muluna", "sye-calidus", 14000, "starter"},
   {"sye-calidus", "sye-solaris", 60000, "first_crossing"},
   {"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
@@ -75,10 +73,7 @@ local route_specifications = {
 	{"arig", "hyarion", 12000, "industrial_deep"},
 	-- Solaris's twin opening branches.
 	{"sye-solaris", "vulcanus", 18000, "industrial"},
-	{"sye-solaris", "castra", 21000, "industrial"},
 	{"castra", "arig", 18000, "industrial"},
-	{"castra", "hyarion", 22000, "industrial"},
-	{"arig", "tellus", 16500, "industrial_deep"},
 	{"hyarion", "tellus", 16500, "industrial_deep"},
 	{"tellus", "corrundum", 18000, "industrial_deep"},
 	-- Nyxaris neighbors can exchange biological supplies directly instead
@@ -91,7 +86,6 @@ local route_specifications = {
 	{"apia-carnova-orbit", "panglia", 21000, "biological_deep"},
 	-- Nyxaris. Optional Dea Dia keeps its own native internal network.
 	{"sye-nyxaris", "gleba", 18000, "biological"},
-	{"sye-nyxaris", "apia-carnova-orbit", 23000, "biological"},
 	{"sye-nyxaris", "moshine", 22000, "biological"},
 	{"moshine", "pelagos", 16000, "biological_deep"},
 	-- Optional oceanic freight return once both local destinations are known.
@@ -140,8 +134,7 @@ local retired_belts = {
   {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
 }
 
-local calidus_locations = {"nauvis", "muluna", "sye-calidus",
-  "razi-calidus-drift"}
+local calidus_locations = {"nauvis", "muluna", "sye-calidus"}
 
 local function has_endpoint(name)
 	return (data.raw.planet and data.raw.planet[name])
@@ -155,26 +148,22 @@ local function key_for(a, b)
 	return a .. "|" .. b
 end
 
--- Keep source-owned lunar and Dyson routes, but stop Razi's freight
--- triangle from stacking multiple Calidus arcs over Nauvis.
+-- Remove obsolete Drift endpoints left by earlier development saves. Native
+-- Nauvis/Muluna and Dyson routes must survive this local retirement.
 local function clean_calidus_routes(routes)
   local moon_link=false
-  for _,r in pairs(routes) do
-    if key_for(r.from,r.to)==key_for("nauvis","muluna") then
+  for _,route in pairs(routes) do
+    if route.from and route.to and
+        key_for(route.from,route.to)==key_for("nauvis","muluna") then
       moon_link=true
       break
     end
   end
-  local obsolete={["razi-nauvis-razi-calidus-drift"]=true}
-  if moon_link then obsolete["razi-muluna-sye-calidus"]=true end
   local removed=0
-  for name in pairs(obsolete) do
-    local connection=routes[name]
-    if connection and connection.from and connection.to
-      and key_for(connection.from,connection.to)==
-        (name=="razi-nauvis-razi-calidus-drift"
-          and key_for("nauvis","razi-calidus-drift")
-          or key_for("muluna","sye-calidus")) then
+  for name,route in pairs(routes) do
+    if route.from=="razi-calidus-drift" or route.to=="razi-calidus-drift"
+      or (moon_link and name=="razi-muluna-sye-calidus"
+        and route.from=="muluna" and route.to=="sye-calidus") then
       routes[name]=nil
       removed=removed+1
     end
@@ -256,7 +245,7 @@ route_reconcile.regional_origin=regional_origin
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
 	local rescued = {}
-	-- Older mod revisions authored a redundant direct Nauvis-Drift chord.
+	-- Remove any legacy Drift routes before indexing the live galaxy.
 	clean_calidus_routes(routes)
 
 	-- A short-lived development shuttle crossed the existing Castra/Hyarion
