@@ -167,7 +167,7 @@ function M.summary(force,context)
   context=context or M.context(force)
   for _,q in ipairs(defs.quests) do
     local state=M.state(force,q,context)
-    if state~="unavailable" then
+    if state~="unavailable" and not q.optional then
       total=total+1
       if state=="complete" then completed=completed+1
       elseif state=="active" then active=active+1 end
@@ -217,11 +217,11 @@ function M.view_status(force,context)
       if state~="unavailable" then
         result.quests[#result.quests+1]=quest
         result.total=result.total+1
-        view.total=view.total+1
+        if not quest.optional then view.total=view.total+1 end
         if state=="complete" then
           result.completed=result.completed+1
-          view.done=view.done+1
-        elseif state=="active" then
+          if not quest.optional then view.done=view.done+1 end
+        elseif state=="active" and not quest.optional then
           view.ready=view.ready+1
         end
       end
