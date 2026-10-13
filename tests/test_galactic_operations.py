@@ -105,6 +105,58 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertNotIn('create_surface(',code)
         self.assertNotIn('create_space_platform(',code)
 
+    def test_cargo_network_dashboard_uses_actual_source_content(self):
+        trade=(ROOT/"scripts/galactic_trade.lua").read_text()
+        listing=(ROOT/"scripts/galactic_trade_catalog.lua").read_text()
+        source=(ROOT/"prototypes/compat/network_components.lua").read_text()
+        ops=(ROOT/"scripts/galactic_operations.lua").read_text()
+        locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        self.assertIn('trade.render(body,player,p)',ops)
+        self.assertIn('action=="cargo-focus"',ops)
+        self.assertIn('p.cargo_focus=p.cargo_focus==value and nil or value',ops)
+        self.assertIn('for _,entry in ipairs(M.chains)',listing)
+        self.assertIn('if state.status~="absent" then',listing)
+        self.assertIn('tech.prerequisites or {}',listing)
+        self.assertIn('catalog.snapshot(player.force)',trade)
+        self.assertIn('prototypes.recipe[part.id]',trade)
+        self.assertIn('sprite_for("item",entry.id)',trade)
+        self.assertIn('source_worlds(card,entry,width-20)',trade)
+        self.assertIn('supplier_recipe(card,entry,width-20)',trade)
+        self.assertIn('consumers(card,row,width-20)',trade)
+        self.assertIn('scroll.horizontal_scroll_policy="never"',trade)
+        self.assertIn('column_count=size.compact and 1 or 2',trade)
+        self.assertIn('trade-research-not-production',trade)
+        self.assertNotIn('platform.schedule=',trade)
+        self.assertNotIn('create_surface(',trade)
+        self.assertNotIn('on_nth_tick(',trade)
+        for name in (
+            "razi-network-precision-matrix",
+            "razi-network-panglia-optic-bond",
+            "razi-network-extreme-lattice",
+            "razi-network-umbra-pressure-frame",
+        ):
+            self.assertIn(f'id="{name}"',listing)
+            self.assertIn(f'name="{name}"',source)
+        for name in (
+            "razi-network-matrix-cryo-controllers",
+            "razi-network-matrix-rubia-logistics",
+            "razi-network-matrix-linox-refining",
+            "razi-network-bond-paracelsin-coils",
+            "razi-network-bond-linox-refining",
+            "razi-network-lattice-vesta-magnets",
+            "razi-network-lattice-vesta-foundations",
+            "razi-network-lattice-balack-shielding",
+            "razi-network-frame-vesta-foundations",
+            "razi-network-frame-aquilo-controllers",
+        ):
+            self.assertIn(f'"{name}"',listing)
+            self.assertIn(f'upgrade("{name}"',source)
+        for key in ("trade-state-researched","trade-state-ready",
+                    "trade-state-blocked","trade-no-components",
+                    "trade-chain-bond","trade-chain-frame",
+                    "trade-yield","trade-dispatch-guide"):
+            self.assertIn(key+"=",locale)
+
     def test_all_seven_systems(self):
         catalog=(ROOT/"scripts/galactic_catalog.lua").read_text()
         for star in ("calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"):

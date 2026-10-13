@@ -403,7 +403,7 @@ local function redraw(player)
   if not (body and body.valid) then return end
   body.clear()
   if p.tab=="campaign" then campaign.render(body,player);return end
-  if p.tab=="trade" then trade.render(body,player);return end
+  if p.tab=="trade" then trade.render(body,player,p);return end
   if p.tab=="dyson" then dyson.render(body,player);return end
   local layout=M.layout(player.display_resolution,player.display_scale)
   local rows,total=rows_for(player,p)
@@ -749,6 +749,14 @@ function M.gui_click(event)
         end
       end
     end
+  elseif action=="cargo-focus" then
+    if p.tab~="trade" then return end
+    local allowed=false
+    for _,entry in ipairs(require("scripts.galactic_trade_catalog").chains) do
+      if entry.id==value then allowed=true;break end
+    end
+    if not allowed then return end
+    p.cargo_focus=p.cargo_focus==value and nil or value
   elseif action=="clear-search" then
     p.search="";p.page=1
     local frame=player.gui.screen[FRAME]

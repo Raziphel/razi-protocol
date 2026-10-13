@@ -365,3 +365,25 @@ the Clear search action. Repeat with a non-English game locale. Ensure the
 existing Discord presence translation handler continues to receive its
 events. Native platform schedules, hub cargo and surfaces must remain
 unchanged. This verification requires a real Factorio runtime.
+
+## Cargo Network dashboard (2.1.27)
+
+Run the existing Galactic Operations test suite (now expanded for all
+four industrial components and ten downstream technology IDs):
+
+```bash
+lua5.2 tests/lua/test_galactic_operations.lua
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+```
+
+The Lua fixture checks native-tech filtering, missing optional branches,
+research blockers, completed consumers, direct recipe rendering and narrow
+layout actions with a mock GUI. The Python check guards data-stage
+technology IDs, locale keys and read-only Factorio API usage. The
+dashboard does not poll inventories or transit every tick.
+
+In a real game, compare Balanced versus Deep and verify the Umbra
+Pressure Frame is absent in Balanced; collapse and expand cards,
+inspect a recipe with missing supplies, and check real native
+ingredient counts from the current enabled mods. Do not treat a
+researched technology as proof of live manufacturing or delivery.
