@@ -47,3 +47,18 @@ remain clearly distinguished. Subtle is the recommended opacity, Clear is
 stronger, and Off disables the overlays. Space Route Overlay is preferred if
 installed. The engine still draws its own interactive routes underneath,
 which remain authoritative for click/hover navigation.
+
+## Calidus atlas cleanup (October 2026)
+
+The first system now separates home-world and moon labels (Nauvis east,
+Muluna west, solar orbit waypoints on opposing sides) without relocating
+source-owned moon positions. The Calidus Drift salvage node has one small,
+low-opacity amber ambient halo rather than another huge orbital ring.
+
+The overdrawn all-route atlas had incorrectly reconstructed native arcs
+without a known centre as circular sweeps around {0,0}. It now **never
+guesses** that geometry: colored strokes cover straight connections and
+explicitly centered, short, radial-safe local arcs. Other native arcs remain
+as their authentic gray Factorio curves until their exact path can be
+validated. The default-colored strokes are also dimmer and capped at 600
+static segments instead of 1,800, to avoid visual spaghetti.

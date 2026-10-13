@@ -83,12 +83,17 @@ package.loaded["prototypes.system.galaxy_layout"]={
 package.loaded["prototypes.system.route_highlights"]=nil
 local actual=require("prototypes.system.route_highlights")
 for _,road in pairs(roads) do
-  assert(#actual.strokes_for_connection(road,"subtle")>0,
-    "A real source route was left without a coloured stroke")
+  if road.shape=="line" or road.origin then
+    assert(#actual.strokes_for_connection(road,"subtle")>0,
+      "A positionable straight/explicit regional route lost its tint")
+  else
+    assert(#actual.strokes_for_connection(road,"subtle")==0,
+      "Never invent a wide curve when Factorio owns its origin")
+  end
 end
 local atlas=data.raw["utility-sprites"].default.starmap_star.layers
 actual.data_final_fixes()
-assert(#atlas>=4,"All installed routes must receive static coloured segments")
+assert(#atlas>=2,"Verified routes should receive restrained colored segments")
 for _,sprite in ipairs(atlas) do
   assert(sprite.filename:find("directional%-strokes",1,false),
     "A new overlay did not use the reusable tiny sprite sheet")
@@ -99,4 +104,12 @@ end
 local count=#atlas
 actual.data_final_fixes()
 assert(#atlas==count,"Repeated layout must not duplicate route sprites")
+local explicit={from="fulgora",to="ribbonia",shape="arc",
+  origin={x=104,y=0},asteroid_spawn_definitions={}}
+assert(#actual.strokes_for_connection(explicit,"subtle")>0,
+  "Regional arcs with a confirmed centre may still receive color")
+local runaway={from="nauvis",to="sye-vibrant",shape="arc",
+  origin={x=0,y=0},asteroid_spawn_definitions={}}
+assert(#actual.strokes_for_connection(runaway,"subtle")==0,
+  "Curves sweeping across stars must stay native")
 print("Progression/danger route palette and all-route coverage fixtures passed")
