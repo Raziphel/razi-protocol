@@ -707,7 +707,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     style="inside_shallow_frame"}
   priority.style.width=inner-16
   priority.style.padding=11
-  priority.style.vertical_spacing=7
+  -- FrameStyle has no vertical_spacing; content uses native frame spacing.
   local heading=wrap(priority,L("guidance-heading"),inner-40)
   heading.style.font="default-bold"
   heading.style.font_color={r=1,g=.84,b=.60}
@@ -1003,9 +1003,14 @@ local function draw(player,focus_search)
     style="inside_shallow_frame_with_padding"}
   totals.style.horizontally_stretchable=true
   totals.style.vertical_align="center"
-  totals.style.horizontal_spacing=size.compact and 9 or 24
+  -- FrameStyle does not expose horizontal_spacing. Use a child flow for
+  -- custom column gaps instead of attempting to style the frame itself.
   totals.style.padding=10
-  local metric=totals.add{type="flow",direction="vertical"}
+  local metrics_row=totals.add{type="flow",direction="horizontal"}
+  metrics_row.style.horizontally_stretchable=true
+  metrics_row.style.vertical_align="center"
+  metrics_row.style.horizontal_spacing=size.compact and 9 or 24
+  local metric=metrics_row.add{type="flow",direction="vertical"}
   metric.style.vertical_spacing=4
   metric.style.minimal_width=size.compact and 96 or 165
   subtitle(metric,"completion-heading")
@@ -1013,14 +1018,14 @@ local function draw(player,focus_search)
     tostring(done),tostring(total)))
   completed.style.font="heading-2"
   completed.style.font_color={r=.51,g=.86,b=.73}
-  local readiness=totals.add{type="flow",direction="vertical"}
+  local readiness=metrics_row.add{type="flow",direction="vertical"}
   readiness.style.vertical_spacing=4
   readiness.style.minimal_width=size.compact and 92 or 156
   subtitle(readiness,"ready-heading")
   local ready_label=label(readiness,L("ready-value",tostring(ready)))
   ready_label.style.font="heading-2"
   ready_label.style.font_color={r=1,g=.78,b=.45}
-  local meter=totals.add{type="flow",direction="vertical"}
+  local meter=metrics_row.add{type="flow",direction="vertical"}
   meter.style.horizontally_stretchable=true
   meter.style.vertical_spacing=7
   subtitle(meter,"campaign-progress-heading")
