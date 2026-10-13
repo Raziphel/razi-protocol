@@ -1,3 +1,13 @@
+Version: 2.1.30
+Date: 13. 10. 2026
+  Grand technology tree integration and pacing:
+    - Connect Panglia advanced optics to both optional Paracelsin and Linox optical-bond industries without changing any planet's arrival research.
+    - In Deep interdependence, bridge Extreme Lattice research into Umbra Pressure Frames and link Panglia, Vesta and Aquilo's late industrial component trees.
+    - Smooth science costs for six older Razi-only factory upgrades with conservative research ceilings that never raise existing cheaper values.
+    - Group all fourteen Razi industrial component and upgrade technologies consistently and keep the four shared components visible in the essential research filter.
+    - Add a full post-load research audit for paired system independence, native lab combinations, missing science items and disproportionate research costs.
+    - Integrate research pacing into the full campaign audit; extend Lua and Python regression fixtures and document a safe first-arrival philosophy.
+
 Version: 2.1.29
 Date: 13. 10. 2026
   Intelligent Protocol Codex expedition guidance:

@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import audit_prototypes
 import audit_supply_chains
 import audit_exchange_economy
+import audit_research_balance
 
 FOCUS = {
     "Panglia": "panglia",
@@ -33,6 +34,7 @@ def examine(raw, route_checks=True):
     planets = tracer.audit_planets()
     milestones = tracer.analyze()
     economy = audit_exchange_economy.inspect(raw)
+    research = audit_research_balance.examine(raw)
     focus = {}
     for label, name in FOCUS.items():
         data = planets.get(name)
@@ -50,6 +52,9 @@ def examine(raw, route_checks=True):
     isolated = sorted(name for name in planets if name not in routes)
     return {
         "prototype_issues": graph_issues,
+        "research_tree": research,
+        "research_errors": research["errors"],
+        "research_advisories": research["advisories"],
         "economy": economy,
         "economy_issues": audit_exchange_economy.problems(economy),
         "worlds_checked": len(planets),
@@ -98,6 +103,11 @@ def main(argv=None):
         print(f"Prototype problems: {len(report['prototype_issues'])}")
         for issue in report["prototype_issues"]:
             print(f"  ERROR: {issue}")
+        print(f"Research-tree errors: {len(report['research_errors'])}")
+        print(f"Research-tree advisory notes: {len(report['research_advisories'])}")
+        for issue in report["research_errors"]+report["research_advisories"]:
+            print(f"  {issue['severity'].upper()} {issue['code']}: "
+                  +", ".join(issue["targets"]))
         print(f"Factory freight issues: {len(report['economy_issues'])}")
         for recipe, issues in report["economy_issues"].items():
             for issue in issues:
@@ -120,7 +130,7 @@ def main(argv=None):
             print(f"Full JSON report: {args.output}")
         print("Unverified paths require in-game checks, not automatic fixes.")
     return 1 if (report["prototype_issues"] or report["blocked_discoveries"]
-                 or report["economy_issues"]) else 0
+                 or report["economy_issues"] or report["research_errors"]) else 0
 
 
 if __name__ == "__main__":

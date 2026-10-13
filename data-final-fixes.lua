@@ -123,6 +123,10 @@ require("prototypes.compat.network_components").register_premium()
 require("prototypes.compat.linox_science_guard").data_final_fixes()
 require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 
+-- Post-arrival industries may connect the finished planetary supply
+-- networks without adding any requirement to a first-visit world gate.
+require("prototypes.technology.research_tree_polish").data_final_fixes()
+
 -- Fix iconless routes after the final connection list is ready.
 require("prototypes.system.route_icons").data_final_fixes()
 

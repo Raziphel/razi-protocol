@@ -433,3 +433,45 @@ the guide makes no claim about inventories or materials.
 In particular, verify the priorities stay visible at the top of the
 existing scrollable chapter navigator without adding new horizontal
 scrollbars or increasing the overall Codex window height.
+
+## Galactic technology-tree coherence (2.1.30)
+
+The final post-arrival `prototypes/technology/research_tree_polish.lua` pass
+adds conservative prerequisites **only to Razi's optional industrial
+technology**. It does not touch native planetary discoveries, source
+recipes, labs, science packs or star-system gateway research. A link is
+skipped when the source technology is absent, hidden, disabled, or would
+make a prerequisite cycle. Deep-only weaving runs only with
+`razi-planetary-interdependence=deep`; Off does nothing.
+
+The industrial research price ceilings apply to six older Razi factory
+upgrades rather than rescaling every technology installed by source mods.
+Four major component nodes are marked essential for easier technology
+tree filtering, and the related downstream upgrades are grouped together
+by component family using Razi-owned `order` keys.
+
+To run the new standalone regressions and audit:
+
+```bash
+lua5.2 tests/lua/test_research_tree_polish.lua
+python3 -m unittest discover -s tests -p "test_research_balance.py"
+python3 -m unittest discover -s tests -p "test_full_campaign.py"
+python3 scripts/audit_research_balance.py /path/to/data-raw-dump.json --json
+python3 scripts/audit_full_campaign.py /path/to/data-raw-dump.json \
+  --output full-campaign-audit.json
+```
+
+The pacing audit lists Razi milestone costs and science usage, checks
+Sol/Nyx, Vibrant/Vespera and Beetlejuice/Umbra as independent paired
+entry routes, and flags suspicious cost differences, absent required
+science prototypes and impossible combined laboratory inputs. Only
+definite contradictions are considered errors. Absence of a production
+recipe, inaccessible crafting conditions and unexpected mod-specific
+scripted unlocks still require the separate supply-chain audit and a
+real Factorio playthrough. Do not force-fix advisory source-mod prices.
+
+Test a fresh save and a pre-existing save with interdependence set to
+Balanced, Deep and Off. At least one of each paired star-system entry
+must remain researchable without completing the other entry. Panglia,
+Aquilo, Linox, Crucible and Vesta must all retain their first viable
+factory setup and all pre-arrival science guards.
