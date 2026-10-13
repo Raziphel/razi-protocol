@@ -36,6 +36,7 @@ planets["optional-source-world"].draw_orbit=false
 planets.castra.draw_orbit=false
 places["sye-solaris"].draw_orbit=false
 rawset(_G,"data",{raw={planet=planets,["space-location"]=places}})
+rawset(_G,"settings",{startup={["razi-starmap-orbit-density"]={value="full"}}})
 rawset(_G,"PlanetsLib",{update=function(_,values)
   for _,item in ipairs(values) do
     local dest=data.raw[item.type] and data.raw[item.type][item.name]
@@ -165,6 +166,29 @@ check(places.secretas.draw_orbit==true,
   "Natural Secretas space-location should have a native orbit")
 check(places["sye-solaris"].draw_orbit==false,
   "Synthetic slipstream ring should remain suppressed")
+-- A cosmetic chart setting must never change the saved orbit geometry.
+settings.startup["razi-starmap-orbit-density"].value="balanced"
+layout.data_final_fixes()
+for _,name in ipairs({"vulcanus","castra","moshine","panglia",
+  "fulgora","paracelsin","muria","aquilo","cubium","tenebris"}) do
+  check(planets[name].draw_orbit==true,
+    "Balanced chart lost a signature orbit: "..name)
+end
+for _,name in ipairs({"arig","hyarion","tellus","corrundum","gleba",
+  "ribbonia","rubia","maraxsis","linox-planet_linox","vesta"}) do
+  check(planets[name].draw_orbit==false,
+    "Balanced chart kept a crowded orbit: "..name)
+end
+check(places.secretas.draw_orbit==true,
+  "Balanced chart should retain Secretas's outer orbit")
+settings.startup["razi-starmap-orbit-density"].value="clean"
+layout.data_final_fixes()
+check(planets.vulcanus.draw_orbit==false and
+  planets.castra.draw_orbit==true and
+  places.secretas.draw_orbit==false,
+  "Clean chart should keep only reference rings")
+settings.startup["razi-starmap-orbit-density"].value="full"
+layout.data_final_fixes()
 check(planets["optional-source-world"].orbit==optional_orbit and
   planets["optional-source-world"].orbit.sprite.filename=="custom-optional-orbit.png",
   "Optional source orbit identity or unique sprite was overwritten")

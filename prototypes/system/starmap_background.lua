@@ -78,15 +78,15 @@ local function insert_micro_scenery(layers,cine,halos,atmosphere)
       if x and y and tint then
         -- Translucent filament pockets and tiny distant star swarms.
         insert_asset(layers,"filament-"..scene.name..".png",512,512,2.6,
-          x+scene.dx,y+scene.dy,tint,cine and .17 or .08)
+          x+scene.dx,y+scene.dy,tint,cine and .10 or .05)
         insert_asset(layers,"cluster-"..scene.cluster..".png",384,384,1.55,
-          x+scene.dx+9,y+scene.dy-7,tint,cine and .16 or .075)
+          x+scene.dx+9,y+scene.dy-7,tint,cine and .09 or .04)
       end
     end
   end
   for _,spark in ipairs(distant_sparks) do
     insert_asset(layers,"cluster-"..spark[3]..".png",384,384,1.6,
-      spark[1],spark[2],spark[4],cine and .14 or .065)
+      spark[1],spark[2],spark[4],cine and .08 or .04)
   end
   if atmosphere~=false then
     for _,fragment in ipairs(belt_fragments) do
@@ -98,9 +98,8 @@ local function insert_micro_scenery(layers,cine,halos,atmosphere)
         end
         if tint then
           insert_asset(layers,"debris-"..fragment.name..".png",512,512,2.2,
-            x+fragment.dx,y+fragment.dy,tint,cine and .21 or .115)
-          insert_asset(layers,"belt-"..fragment.name..".png",512,512,2.4,
-            x+fragment.dx+5,y+fragment.dy+3,tint,cine and .13 or .065)
+            x+fragment.dx,y+fragment.dy,tint,cine and .11 or .05)
+          -- One belt silhouette is enough; no second offset ring.
         end
       end
     end
@@ -110,30 +109,27 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
   if mode~="subtle" and mode~="cinematic" then return {} end
   local cine=mode=="cinematic"
   local result={}
-  -- 4 tiles cover -256..256 map units in each direction.
-  for i,p in ipairs({{-128,-128},{128,-128},{-128,128},{128,128}}) do
-    insert_asset(result,"sky-"..i..".png",1024,1024,8,p[1],p[2],
-      {r=.93,g=.97,b=1},cine and .90 or .60)
-  end
+  -- Seam-free starfield: the old sky quadrants had hard rectangular edges.
+  -- Native stars and localized nebula art supply the backdrop instead.
   -- Connect the star systems without covering their orbit/route labels.
   insert_asset(result,"galactic-current.png",768,384,9,0,-9,
-    {r=.33,g=.56,b=.78},cine and .54 or .24)
+    {r=.33,g=.56,b=.78},cine and .27 or .12)
   if halos~=false and mods and mods["slp-dyson-sphere-reworked-fork"]
     and option("razi-dyson-calidus-layout",true) then
     -- Restrained stellar-engineering coronas around the home star. Reuse
     -- existing Calidus artwork; never render fake navigation route lines.
     -- Keep it behind the sun, planets and satellite orbit markers.
     insert_asset(result,"filament-calidus.png",512,512,2.7,0,0,
-      {r=1,g=.64,b=.29},cine and .32 or .16)
+      {r=1,g=.64,b=.29},cine and .20 or .10)
     insert_asset(result,"chart-constellation.png",512,512,2.1,0,0,
-      {r=1,g=.72,b=.40},cine and .21 or .10)
+      {r=1,g=.72,b=.40},cine and .12 or .06)
   end
   if halos~=false then
     for _,s in ipairs(systems) do
       local x,y=anchor(s.name)
       if x and y then
         insert_asset(result,"glow-"..s.name..".png",512,512,7,x,y,s.tint,
-          cine and .74 or .40)
+          cine and .44 or .23)
       end
     end
   end
@@ -142,7 +138,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(b.name)
       if x and y then
         insert_asset(result,"belt-"..b.name..".png",512,512,6,x,y,b.tint,
-          cine and .70 or .34)
+          cine and .36 or .16)
       end
     end
   end
@@ -165,7 +161,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       }
       for _,wisp in ipairs(wisps) do
         insert_asset(result,wisp.file,wisp.w,wisp.h,wisp.scale,
-          wisp.x,wisp.y,wisp.color,cine and .22 or .11)
+          wisp.x,wisp.y,wisp.color,cine and .11 or .055)
       end
       -- Smaller complementary halos add depth without painting over the
       -- source planet icons. Use the six external stars, never Calidus.
@@ -175,7 +171,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
           if x and y then
             insert_asset(result,"glow-"..system.name..".png",
               512,512,cine and 3.2 or 2.8,x,y,system.tint,
-              cine and .18 or .09)
+              cine and .10 or .05)
           end
         end
       end
@@ -187,7 +183,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     end
     -- A counter-flowing galaxy arm joins the six-star ring visually.
     insert_asset(result,"dust-lane-2.png",768,384,9,8,-43,
-      {r=.63,g=.47,b=.78},cine and .51 or .25)
+      {r=.63,g=.47,b=.78},cine and .24 or .12)
     -- Star nurseries in the outer void, away from main system markers.
     local clusters={
       {169,139,{r=.45,g=.73,b=1}},
@@ -196,7 +192,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     }
     for i,cluster in ipairs(clusters) do
       insert_asset(result,"cluster-"..i..".png",384,384,6.2,
-        cluster[1],cluster[2],cluster[3],cine and .60 or .40)
+        cluster[1],cluster[2],cluster[3],cine and .36 or .22)
     end
     if halos~=false then
       for _,system in ipairs(systems) do
@@ -204,13 +200,13 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         if x and y then
           -- Filaments are hollow at the centre to preserve stellar icons.
           insert_asset(result,"filament-"..system.name..".png",512,512,
-            5,x,y,system.tint,cine and .64 or .34)
+            5,x,y,system.tint,cine and .38 or .20)
           -- Reuse the filament's texture for a very faint outer corona.
           -- Six stellar hubs gain subtle depth; Calidus and Deep Space keep
           -- their distinct native silhouettes.
           if cine or (system.name~="calidus" and system.name~="deep-space") then
             insert_asset(result,"filament-"..system.name..".png",512,512,
-              cine and 6.5 or 6.15,x,y,system.tint,cine and .14 or .085)
+              cine and 6.5 or 6.15,x,y,system.tint,cine and .08 or .04)
           end
         end
       end
@@ -220,14 +216,14 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         local x,y=anchor(belt.name)
         if x and y then
           insert_asset(result,"debris-"..belt.name..".png",512,512,
-            6,x,y,belt.tint,cine and .56 or .30)
+            6,x,y,belt.tint,cine and .30 or .16)
         end
       end
     end
     local x,y=anchor("deep-space")
     if x and y then
       insert_asset(result,"rift-deep-space.png",512,512,4.7,x,y,
-        {r=.48,g=.61,b=.95},cine and .58 or .32)
+        {r=.48,g=.61,b=.95},cine and .36 or .21)
     end
   end
   if cartography==true then

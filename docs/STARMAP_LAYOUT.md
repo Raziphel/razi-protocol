@@ -175,3 +175,16 @@ existing Razi textures rather than external art. Four longer routes also have
 concentrated midroute asteroid fields and dim decorative field markers.
 See [ASTEROID_ROUTES.md](ASTEROID_ROUTES.md) for the current implementation;
 earlier references in this file to source-owned AsteroidBelt are historical.
+
+## Visual orbit density (October 2026)
+
+The older rule that all positioned planets draw native orbit rings remains
+available using **Full** orbital chart detail. **Balanced** is now the
+default, reserving a few spaced circles per star; **Clean** leaves one.
+These are visual-only `draw_orbit` changes. The six star coordinates,
+all planet and moon positions, custom orbit graphics, campaign routes,
+tech gates and travel distances remain exactly as before.
+
+The geometry is intentionally not moved during this polish pass. Moving star
+anchors requires regenerating pre-aligned highlight masks and repeating all
+campaign-clearance tests.

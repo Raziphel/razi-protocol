@@ -4,7 +4,7 @@ Original Razi Protocol static artwork for Calidus, Solaris, Nyxaris, Vibrant, Ve
 
 ## Layers and identity
 
-Four transparent sky tiles span map coordinates from -256 to +256 on both axes. A broad dust current visually joins the major systems. Each star has a unique, tinted nebula image and Deep Space has a separate cold-blue veil. Three faint dust rings mark the Vibrant, Vespera and Umbra belt regions.
+The former four sky textures remain bundled but are no longer rendered, because their hard straight boundaries created visible rectangular seams. Native stars provide the continuous dark sky; a subdued dust current joins the major systems. Each star has a unique, tinted nebula image and Deep Space has a separate cold-blue veil. Three faint dust rings mark the Vibrant, Vespera and Umbra belt regions.
 
 Calidus is gold; Solaris is orange; Nyxaris is turquoise; Vibrant is violet; Vespera is pale icy blue; Beetlejuice is magenta; Umbra is burgundy; Deep Space is cold blue.
 
@@ -78,3 +78,26 @@ original 16-layer background, or disable Background entirely.
 Visual staging order remains: background atmosphere, micro scenery, native
 orbital art and source belts, then highlighted real routes. This is static
 parallax-*style* composition, not animation or simulated twinkling.
+
+## Seam-free atlas and orbit decluttering (October 2026)
+
+The four sky quadrants caused block-shaped nebula seams in live Factorio
+screenshots. Both visual modes now omit them, leaving the uninterrupted native
+starfield as the base. No new atlas assets, runtime effects or game ticks are
+required. Nebulae, filaments, clusters, dust streams and belt outlines are
+significantly less opaque; duplicate offset belt outlines have been removed.
+The original sky PNGs remain bundled but unused.
+
+**Orbital chart detail** is a new startup setting:
+- **Clean:** one representative native circle per star system.
+- **Balanced (default):** a few deliberately spaced reference rings.
+- **Full:** all the original positioned planetary circles.
+
+Only Razi-positioned planets have their native orbit visibility changed;
+custom orbit sprites, moons and other mods' optional planets stay source
+owned. World coordinates, routes, asteroid dangers, research, save data and
+space-platform travel do not change. Route overlay bloom and in-transit field
+art are softer, but their actual connections and hazards are untouched.
+
+Historic layer totals elsewhere in this document refer to prior releases.
+Verify the effect in a real Factorio 2.1 client before publishing to stable.

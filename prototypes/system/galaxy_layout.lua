@@ -222,18 +222,34 @@ function M.data_final_fixes()
     if marker then marker.label_orientation=direction end
   end
 
-  -- Native orbits on actual planets are drawn automatically by Factorio.
-  -- Do not suppress every circle or replace third-party moon artwork.
-  for _,planet in pairs(data.raw.planet or {}) do
+  -- Full retains the original native orbital gallery; Balanced keeps
+  -- well-separated reference rings. Clean keeps one per system.
+  -- Source-owned moons and unique orbital sprites are never suppressed.
+  local orbit_setting=settings and settings.startup
+    and settings.startup["razi-starmap-orbit-density"]
+  local density=orbit_setting and orbit_setting.value or "balanced"
+  local balanced={
+    vulcanus=true,castra=true,moshine=true,panglia=true,
+    fulgora=true,paracelsin=true,muria=true,aquilo=true,
+    cubium=true,tenebris=true
+  }
+  local clean={
+    castra=true,panglia=true,fulgora=true,
+    aquilo=true,cubium=true,tenebris=true
+  }
+  for name,planet in pairs(data.raw.planet or {}) do
     local parent=planet.orbit and planet.orbit.parent
-    if parent and parent.type=="space-location" and stars[parent.name]
+    if by_name[name] and parent and parent.type=="space-location"
+      and stars[parent.name]
       and not (planet.orbit and planet.orbit.sprite) then
-      planet.draw_orbit=true
+      planet.draw_orbit=density=="full"
+        or (density=="balanced" and balanced[name]==true)
+        or (density=="clean" and clean[name]==true)
     end
   end
   local secretas=exists("space-location","secretas")
   if secretas and relocated.secretas and not (secretas.orbit and secretas.orbit.sprite) then
-    secretas.draw_orbit=true
+    secretas.draw_orbit=density~="clean"
   end
 
   for _,name in ipairs({

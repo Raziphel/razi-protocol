@@ -62,6 +62,14 @@ data:extend({
     allowed_values={"off","subtle","cinematic"},
     order="cb[starmap]-a[background]"
   },
+  {
+    type="string-setting",
+    name="razi-starmap-orbit-density",
+    setting_type="startup",
+    default_value="balanced",
+    allowed_values={"clean","balanced","full"},
+    order="cb[starmap]-a2[orbit-density]"
+  },
   startup_toggle("razi-starmap-system-halos","cb[starmap]-b[halos]"),
   startup_toggle("razi-starmap-belt-atmosphere","cb[starmap]-c[belts]"),
   startup_toggle("razi-starmap-fine-details","cb[starmap]-d[details]"),
