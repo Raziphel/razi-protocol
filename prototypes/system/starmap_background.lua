@@ -1,4 +1,4 @@
--- A quieter galactic atlas. Fine stars, compact system light, and sparse dust;
+-- Pinpoint Milky Way atlas: tiny colored stars and rare restrained sparkles;
 -- no repeating portals, giant fog banks, or false navigation features.
 local M={}
 local layout=require("prototypes.system.galaxy_layout")
@@ -20,9 +20,9 @@ local belts={
   {name="umbra",tint={r=.91,g=.57,b=.68},scale=3.3}
 }
 local WHITE={r=1,g=1,b=1}
--- Static Razi-authored starfield, independent of route and planet prototypes.
--- Six smaller tiles per axis cover the same world area as the old 4x4 grid.
--- Keep crisp points without drowning out labels and route lines.
+-- Four individually seeded 1024px indexed PNG textures. Mostly single-pixel
+-- dots, rare three-pixel diffraction sparkles, no large blurred white blobs.
+-- Six tiles per axis give a seamless static atlas without runtime updates.
 local sky_tiles={
   {1,3,2,4,1,2},
   {4,2,3,1,4,3},
@@ -42,7 +42,7 @@ local function add_starfield(layers,cinematic)
         shift={(col-3.5)*4096,(row-3.5)*4096},
         priority="extra-high-no-scale",flags={"gui-icon"},
         blend_mode="normal",
-        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .52 or .33}
+        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .91 or .72}
       }
     end
   end
@@ -146,7 +146,7 @@ function M.data_final_fixes()
     option("razi-starmap-cartography",false))
   for i=#new,1,-1 do table.insert(sprite.layers,1,new[i]) end
   if type(log)=="function" then
-    log("[Razi Protocol/starmap-art] Clean atlas "..#new.." layers ("..mode..")")
+    log("[Razi Protocol/starmap-art] Pinpoint sky atlas "..#new.." layers ("..mode..")")
   end
 end
 M.systems=systems

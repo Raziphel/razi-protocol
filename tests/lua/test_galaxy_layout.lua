@@ -84,8 +84,11 @@ check(igrysX>sx-26 and igrysX<sx-18 and
   igrysY<sy-22 and igrysY>sy-32,
   "Igrys must stay in the compact Solaris outer northwest lane")
 local departureX,departureY=layout.anchor_position("sye-solaris")
-check(math.abs(math.sqrt((departureX-sx)^2+(departureY-sy)^2)-28)<.01,
-  "Solaris departure corridor must sit outside the stellar core")
+check(math.abs(math.sqrt((departureX-sx)^2+(departureY-sy)^2)-44)<.01,
+  "Solaris gateway should sit outside the planetary loop")
+check(departureX>sx-39 and departureX<sx-36 and
+  departureY>sy-25 and departureY<sy-22,
+  "Solaris gateway must sit clear of both the northern ring and external lanes")
 local px,py=layout.anchor_position("panglia")
 check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-44)<.01,
   "Panglia must have its own Nyxaris orbital lane")

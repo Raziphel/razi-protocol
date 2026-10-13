@@ -276,14 +276,14 @@ local function test_routes()
       "Retired crossing line must not appear across Solaris")
     for _,old in ipairs({
       "sye-solaris-castra","castra-hyarion","hyarion-corrundum",
-      "razi-vulcanus-hyarion","razi-hyarion-corrundum",
-      "razi-corrundum-igrys"
+      "razi-vulcanus-hyarion","razi-hyarion-corrundum"
     }) do
       check(routes[old]==nil,"Retired Solaris shortcut survived: "..old)
     end
     for _,new in ipairs({
       "razi-sye-solaris-igrys",
-      "razi-castra-arig","razi-hyarion-tellus","razi-tellus-corrundum"
+      "razi-castra-arig","razi-hyarion-tellus","razi-tellus-corrundum",
+      "razi-corrundum-igrys"
     }) do
       check(routes[new]~=nil,"Missing Solaris corridor: "..new)
       check(routes[new].shape=="line" and routes[new].origin==nil,
@@ -291,6 +291,7 @@ local function test_routes()
     end
     for _, local_link in ipairs({
         {"razi-sye-solaris-igrys",26500},
+        {"razi-corrundum-igrys",32000},
         {"razi-gleba-apia-carnova-orbit",22000},
                 {"razi-vulcanus-castra",17500},
         {"razi-arig-hyarion",12000},

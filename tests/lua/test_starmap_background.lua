@@ -26,14 +26,15 @@ rawset(_G,"settings",{startup={
 }})
 rawset(_G,"mods",{})
 local parts=bg.make_layers("subtle",true,true,true,false)
-ok(parts[1].tint.a<=.4,"Default sky too bright")
+ok(parts[1].tint.a>.65 and parts[1].tint.a<.8,
+  "Pinpoint sky should use visible tiny dots instead of faded giant blobs")
 ok(#parts==55,"Solaris clean atlas uses 36 sky tiles, 8 halos, 3 belts, 8 dust pockets")
 local counts={sky=0,halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
   local side=layer.filename:find("atlas%-starfield%-") and 1024 or 512
   ok(layer.size[1]==side and layer.size[2]==side,"Unexpected texture size")
   ok(layer.filename:find("graphics/starmap/razi/",1,true),"Foreign sprite")
-  ok(layer.tint.a<=.87,"Atlas alpha too bright")
+  ok(layer.tint.a<=.94,"Atlas alpha too bright")
   if layer.filename:find("atlas%-starfield%-") then counts.sky=counts.sky+1 end
   if layer.filename:find("atlas%-halo") then counts.halo=counts.halo+1 end
   if layer.filename:find("atlas%-belt") then counts.belt=counts.belt+1 end

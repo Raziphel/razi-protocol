@@ -187,8 +187,9 @@ class ConstellationTests(unittest.TestCase):
         for name, radius in expected.items():
             self.assertEqual(self.anchors[name][0], "solaris")
             self.assertAlmostEqual(self.anchors[name][1], radius)
-        self.assertAlmostEqual(self.anchors["sye-solaris"][1], 28)
-        self.assertAlmostEqual(self.anchors["igrys"][2], .89)
+        self.assertAlmostEqual(self.anchors["sye-solaris"][1], 44)
+        self.assertAlmostEqual(self.anchors["sye-solaris"][2], .84)
+        self.assertAlmostEqual(self.anchors["igrys"][2], .905)
         solaris = set(expected) | {"sye-solaris"}
         actual = {frozenset((a,b)) for a,b,_,_ in self.routes
                   if a in solaris and b in solaris}
@@ -197,12 +198,13 @@ class ConstellationTests(unittest.TestCase):
                 ("sye-solaris","vulcanus"),("sye-solaris","igrys"),
                 ("vulcanus","castra"),("castra","arig"),
                 ("arig","hyarion"),("hyarion","tellus"),
-                ("tellus","corrundum"),
+                ("tellus","corrundum"),("corrundum","igrys"),
             )
         }
         self.assertEqual(actual,intended)
-        self.assertNotIn(frozenset(("corrundum","igrys")),actual)
-        # Eight local markers fit inside a 35-unit disk and do not collapse
+        self.assertIn(frozenset(("corrundum","igrys")),actual)
+        # Planet orbits remain within 35 units; the gateway is outside the
+        # northwest rim and every marker is clear of its neighbors.
         # into each other, even with the crowded Galactic Ops toolbar.
         local_positions=[self.coords[world] for world in solaris]
         for i,first in enumerate(local_positions):
@@ -214,6 +216,21 @@ class ConstellationTests(unittest.TestCase):
                     segment_clearance(self.coords["solaris"],
                                       self.coords[a], self.coords[b]),15,
                     f"Solaris route {a}-{b} intersects the stellar corona")
+
+    def test_solaris_exits_fan_outside_local_ring(self):
+        nodes={"sye-solaris","vulcanus","castra","arig","hyarion",
+               "tellus","corrundum","igrys"}
+        local=[(a,b) for a,b,_,_ in self.routes if a in nodes and b in nodes]
+        gateway=self.coords["sye-solaris"]
+        for target in ("sye-calidus","sye-nyxaris","sye-vibrant"):
+            endpoint=self.coords[target]
+            self.assertGreaterEqual(segment_clearance(
+                self.coords["solaris"],gateway,endpoint),35)
+            for a,b in local:
+                if "sye-solaris" not in (a,b):
+                    self.assertFalse(cross(gateway,endpoint,
+                                           self.coords[a],self.coords[b]),
+                        f"Solaris exit to {target} crosses local {a}-{b}")
 
     def test_local_routes_have_no_geometric_crossovers(self):
         for star in STARS:
@@ -235,6 +252,7 @@ class ConstellationTests(unittest.TestCase):
             ("arig","hyarion",12000),
             ("hyarion","tellus",16500),
             ("tellus","corrundum",18000),
+            ("corrundum","igrys",32000),
             ("gleba","moshine",17000),
             ("moshine","apia-carnova-orbit",12000),
             ("moshine","panglia",25000),

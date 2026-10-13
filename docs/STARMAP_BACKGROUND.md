@@ -1,3 +1,13 @@
+## Fine starfield textures (2.1.48)
+
+The four original 1024×1024 starfield PNG sheets are replaced with
+deterministic, sparse **one-pixel pinpoints**, carefully scattered cool
+and warm white specks and rare three-pixel cross sparkles. No blurry
+five- or ten-pixel star blobs. The familiar 6×6 tile layout, nebulae,
+system star art and textures remain separate; no runtime particle or
+per-frame star generation is involved. Subtle and Cinematic modes still
+exist, using star-dot contrast rather than apparent star diameter.
+
 > **2.1.46 quiet chart pass:** The extra Solaris halo is smaller and lower
 > opacity, the indexed background is dimmer, and four giant fog patches
 > in the first-frontier travel area have been removed. Native sun artwork
