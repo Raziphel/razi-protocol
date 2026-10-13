@@ -112,7 +112,10 @@ local function valid(spec)
       if not (data.raw.fluid and data.raw.fluid[v.name]) then return false end
       fluids=fluids+1
     elseif not prototype_item(v.name) then
-      return false
+      -- K2SO can replace Space Age's lithium-plate with kr-lithium.
+      if not (v.name=="lithium-plate" and prototype_item("kr-lithium")) then
+        return false
+      end
     end
   end
   -- Synthesis Plant and Arc Foundry have two fluid input ports.
@@ -156,6 +159,12 @@ local function tech_recipe(spec,index)
       results={{type="item",name=spec.output,amount=spec.amount}},
       main_product=spec.output,
     }
+    for _,entry in ipairs(recipe.ingredients) do
+      if entry.name=="lithium-plate" and not prototype_item("lithium-plate")
+        and prototype_item("kr-lithium") then
+        entry.name="kr-lithium"
+      end
+    end
     data:extend({recipe})
   end
   if not data.raw.technology[tech_name] then
