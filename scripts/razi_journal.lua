@@ -6,6 +6,7 @@ local records=require("scripts.razi_journal_records")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
+local convergence=require("scripts.razi_convergence")
 local operations=require("scripts.galactic_operations")
 local guidance=require("scripts.razi_journal_guidance")
 local preview=require("scripts.razi_journal_recipe_preview")
@@ -143,6 +144,9 @@ function M.available(force,quest,context)
   return true
 end
 function M.complete(force,quest,context)
+  if quest.convergence then
+    return convergence.completed(force,quest.convergence)
+  end
   if quest.boss then
     local snapshot=(context or M.context(force)).nexus
     return M.available(force,quest,context)
@@ -648,6 +652,15 @@ local function render_details(parent,player,quest,p,context,size,view)
     local link=bridge.add{type="button",caption=L("cargo-bridge-open"),
       tags={razi_journal_action="open-cargo",id=quest.id}}
     link.tooltip=L("cargo-bridge-tooltip")
+  end
+  if quest.convergence or quest.id=="convergence-commission"
+    or quest.id=="convergence-synchronization" then
+    local bridge=prose.add{type="frame",direction="vertical",
+      style="inside_shallow_frame_with_padding"}
+    bridge.style.width=text_width
+    wrap(bridge,L("convergence-codex-description"),text_width-26)
+    bridge.add{type="button",caption=L("convergence-codex-open"),
+      tags={razi_journal_action="open-convergence",id=quest.id}}
   end
   if native then
     draw_gallery(prose,"science-pack-heading",
@@ -1260,6 +1273,14 @@ function M.gui_click(event)
   if action=="nexus-codex" then
     if not trials.open_codex(player,tags.id) then
       player.print(L("nexus-codex-unavailable"))
+    end
+    return
+  end
+  if action=="open-convergence" then
+    local quest=defs.by_id[tags.id]
+    if quest and M.available(player.force,quest)
+      and operations.open_convergence(player) then
+      close(player)
     end
     return
   end

@@ -3,6 +3,7 @@ local razi_journal = require("scripts.razi_journal")
 galactic_operations.bind_journal(razi_journal)
 local razi_discord_presence = require("scripts.razi_discord_presence")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
+local convergence = require("scripts.razi_convergence")
 local Events = require("__razi_lib__/runtime/events")
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -136,6 +137,13 @@ local function preserve_deep_space_campaign()
   if api and api["set_no_victory"] then
     remote.call("kr-intergalactic-transceiver","set_no_victory",true)
   end
+  -- Space Age otherwise awards its own victory as soon as a platform
+  -- reaches Solar System Edge. That location is now the START of the
+  -- Convergence campaign, not the ending.
+  local space_finish=remote.interfaces["space_finish_script"]
+  if space_finish and space_finish["set_no_victory"] then
+    remote.call("space_finish_script","set_no_victory",true)
+  end
 end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
@@ -197,7 +205,9 @@ end)
 events:on_event(defines.events.on_research_finished,function(event)
   razi_journal.on_research(event)
   galactic_operations.on_dyson_research(event)
+  galactic_operations.on_convergence_research(event)
 end)
+events:on_event(defines.events.on_forces_merged,convergence.forces_merged)
 -- /cheat is a built-in command and cannot be replaced. This notification
 -- runs only if the engine gets far enough to emit its console event.
 events:on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)

@@ -191,3 +191,6 @@ require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
 -- The retired four Razi-created labs are not registered.
 require("prototypes.compat.system_card_manufacturing").data_final_fixes()
 require("prototypes.compat.system_card_laboratories").data_final_fixes()
+
+-- Post-transceiver endgame: build real freight with native assemblers and labs.
+require("prototypes.technology.convergence").data_final_fixes()

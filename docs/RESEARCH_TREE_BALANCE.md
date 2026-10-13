@@ -1,3 +1,28 @@
+## True endgame science and freight (2.1.56)
+
+The transceiver science chain remains the **pre-edge gate**. The
+Convergence Commission research is strictly **post-edge**, optionally
+requiring completed, safely upstream Aegis and Dyson research. Both
+The Convergence Commission and Deep-Space Synchronization technologies
+are researched in existing compatible labs, never custom Razi labs.
+When optional Nexus Omega Lab is unavailable, authorization research
+falls back to the two outer system cards accepted by source K2SO labs,
+but the final manufactured cargo still requires Deep Space cards.
+
+The three physical mandates consume native system cards and real
+industrial goods in normal crafting recipes. The first two follow
+Calidus/Solaris/Nyxaris and Vibrant/Vespera; the final one requires
+Beetlejuice/Umbra/Deep Space. Optional completed planet products are
+included only if their actual item and source recipe both exist. The
+source can be missing without creating a phantom item. All three
+recipes disable productivity, decomposition and automatic recycling.
+
+Winning requires real cargo delivered in three stages at a real,
+distant, force-owned space platform. Research unlocks the stages but
+does not grant or simulate production. Completion is recorded by
+force in durable storage and has no connection to automatic win
+conditions from the earlier K2SO transceiver.
+
 ## Native laboratory science tiers (2.1.55)
 
 Razi Protocol does **not** introduce new laboratories. All four prototype

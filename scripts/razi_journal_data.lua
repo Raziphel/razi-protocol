@@ -84,6 +84,12 @@ M.quests={
  {id="singularity-theory",chapter="finale",tech="razi-singularity-theory",requires={"outer-mastery"}},
  {id="test-fire",chapter="finale",tech="razi-singularity-test-fire",requires={"singularity-theory"}},
  {id="stable-singularity",chapter="finale",tech="razi-stable-intergalactic-singularity",requires={"test-fire"}},
+ {id="convergence-commission",chapter="finale",tech="razi-convergence-commission",requires={"edge","aegis"}},
+ {id="convergence-stellar",chapter="finale",tech="razi-convergence-commission",convergence="stellar",requires={"convergence-commission"}},
+ {id="convergence-industry",chapter="finale",tech="razi-convergence-commission",convergence="industry",requires={"convergence-stellar"}},
+ {id="convergence-synchronization",chapter="finale",tech="razi-convergence-synchronization",requires={"convergence-industry"}},
+ {id="convergence-deep-space",chapter="finale",tech="razi-convergence-synchronization",convergence="deep-space",requires={"convergence-synchronization"}},
+ {id="convergence-victory",chapter="finale",tech="razi-convergence-synchronization",convergence="victory",requires={"convergence-deep-space"}},
 }
 local extended=require("scripts.razi_journal_expansion")
 for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end

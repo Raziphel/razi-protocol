@@ -9,6 +9,7 @@ local fleet=require("scripts.galactic_fleet")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
+local convergence=require("scripts.razi_convergence")
 local journal_module
 function M.bind_journal(module)
   journal_module=module
@@ -411,6 +412,7 @@ local function redraw(player)
   if p.tab=="campaign" then campaign.render(body,player);return end
   if p.tab=="trade" then trade.render(body,player,p);return end
   if p.tab=="dyson" then dyson.render(body,player);return end
+  if p.tab=="convergence" then convergence.render(body,player);return end
   local layout=M.layout(player.display_resolution,player.display_scale)
   local rows,total=rows_for(player,p)
   local page_rows,page,pages=M.page_slice(rows,p.page,PAGE_SIZE)
@@ -492,7 +494,10 @@ local function close(player)
   -- A direct Codex link may open Cargo outside Remote View. Returning to
   -- normal map-only behaviour on close prevents sticky floating windows.
   local p=storage.razigui and storage.razigui[player.index]
-  if p then p.cargo_direct=nil;p.cargo_origin=nil end
+  if p then
+    p.cargo_direct=nil;p.cargo_origin=nil
+    p.convergence_direct=nil
+  end
 end
 
 function M.in_map_view(player)
@@ -644,13 +649,13 @@ local function open(player)
   add_button(head,L("refresh"),"refresh","")
   add_button(head,"✕","close","")
   local tabs=frame.add{type="table",name="razi_ops_tabs",
-    column_count=layout.compact and 3 or 5}
+    column_count=layout.compact and 3 or 6}
   tabs.style.horizontal_spacing=5
   tabs.style.vertical_spacing=5
   for _,entry in ipairs({
     {"worlds","worlds-tab"},{"platforms","platforms-tab"},
     {"campaign","campaign-tab"},{"trade","trade-tab"},
-    {"dyson","dyson-tab"}
+    {"dyson","dyson-tab"},{"convergence","convergence-tab"}
   }) do
     local caption=entry[2]..(layout.compact and "-short" or "")
     local button=add_button(tabs,L(caption),"tab",entry[1])
@@ -728,6 +733,19 @@ local function open(player)
   redraw(player)
 end
 
+function M.on_convergence_research(event)
+  local research=event and event.research
+  if not research or (research.name~="razi-convergence-commission"
+    and research.name~="razi-convergence-synchronization") then return end
+  for _,player in pairs(research.force.connected_players or {}) do
+    local frame=player.gui.screen[FRAME]
+    local p=storage.razigui and storage.razigui[player.index]
+    if frame and frame.valid and p and p.tab=="convergence" then
+      redraw(player)
+    end
+  end
+end
+
 function M.toggle(player)
   if player.gui.screen[FRAME] then
     close(player)
@@ -776,6 +794,34 @@ function M.open_cargo(player,chain,target)
   end
   return true
 end
+-- Open the endgame from the Codex outside Remote View. Physical cargo
+-- still requires the character aboard the expedition platform.
+function M.open_convergence(player)
+  if not (player and player.valid and convergence.available(player.force)) then
+    return false
+  end
+  local p=preferences(player.index)
+  p.tab="convergence"
+  p.convergence_direct=not M.in_map_view(player)
+  local frame=player.gui.screen[FRAME]
+  if frame and frame.valid then
+    for _,name in ipairs({"razi_ops_options","razi_ops_search_tools",
+      "razi_ops_filters","razi_ops_roles","razi_ops_sorter"}) do
+      frame[name].visible=false
+    end
+    for _,tab in pairs(frame.razi_ops_tabs.children) do
+      local tags=tab.tags
+      if tags and tags.razi_ops_action=="tab" then
+        tab.toggled=tags.value=="convergence"
+      end
+    end
+    redraw(player)
+  else
+    open(player)
+  end
+  return true
+end
+
 local function record_recent(p,key)
   for i=#p.recent,1,-1 do
     if p.recent[i]==key then table.remove(p.recent,i) end
@@ -832,6 +878,13 @@ function M.gui_click(event)
     dyson_runtime.invalidate(player.force)
   end
   if action=="close" then close(player);return end
+  if action=="convergence-deliver" then
+    if p.tab~="convergence" then return end
+    local message,amount=convergence.deliver(player,value)
+    player.print(L(message,tostring(amount)))
+    redraw(player)
+    return
+  end
   if action=="nexus-codex" then
     if not trials.open_codex(player,value) then
       player.print(L("atlas-nexus-codex-unavailable"))
@@ -841,7 +894,7 @@ function M.gui_click(event)
   if action=="tab" then
     if value~="worlds" and value~="platforms"
       and value~="campaign" and value~="trade"
-      and value~="dyson" then return end
+      and value~="dyson" and value~="convergence" then return end
     p.tab=value;p.page=1;p.focus=nil
     local frame=player.gui.screen[FRAME]
     if frame and frame.valid then
@@ -1003,14 +1056,15 @@ function M.on_display_changed(event)
   if player.gui.screen[FRAME] then
     local p=preferences(player.index)
     local was_direct=p.cargo_direct and p.tab=="trade"
+    local convergence_direct=p.convergence_direct and p.tab=="convergence"
     local chain,target=p.cargo_origin or p.cargo_focus,p.cargo_target
     close(player)
     if M.in_map_view(player) then
       open(player)
     elseif was_direct then
-      -- Keep a Codex-launched Cargo view open when UI scale changes,
-      -- without enabling the map button during ordinary gameplay.
       M.open_cargo(player,chain,target)
+    elseif convergence_direct then
+      M.open_convergence(player)
     end
   end
   M.sync_map_button(player)
