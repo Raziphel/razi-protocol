@@ -1,3 +1,14 @@
+Version: 2.1.72
+Date: 14. 10. 2026
+  Quiet Galaxy interface and artwork:
+    - Refine the existing star coronas individually, preserving the original 1024px painted stars and avoiding extra light or texture layers.
+    - Render Vespera and Umbra's original belt artwork as a single quiet layer each in Subtle; only Cinematic adds faint additional debris.
+    - Make critical route warnings immediately identifiable; simplify ordinary route tooltips rather than overwhelming captains with repeated non-issues.
+    - Group Razi-owned tech milestones under five clear research chapters, retaining the original native tech icons, costs, effects and prerequisites.
+    - Add small 20px source science icons and five-pixel progress bars to the on-demand Galactic Campaign view.
+    - Extend static and Lua fixtures for minimal render layer counts, hazard warning clarity, real research progress and native compatibility.
+    - No new graphics binaries, labs, extra map routes, runtime animations, or automatic CI runs.
+
 Version: 2.1.71
 Date: 14. 10. 2026
   Static starmap artwork polish:
