@@ -82,4 +82,28 @@ check(#guidance.followups("moshine",{
   "Missing optional research must never make a fake objective")
 check(#guidance.followups("missing-quest",{},3)==0,
   "Unknown milestones must have no invented successors")
-print("Codex guidance: readiness, branch diversity, blockers and follow-ups passed")
+-- Already researched source technology cannot turn a physical
+-- shipping task into a fabricated "ready to research" recommendation.
+local cargo=guidance.plan({
+ ["convergence-commission"]="complete",
+ ["convergence-stellar"]="active",
+ ["convergence-industry"]="locked"
+},function(quest)
+ return {name=quest.tech,researched=true,enabled=true,
+   prerequisites={}}
+end)
+check(cargo.primary
+ and cargo.primary.quest.id=="convergence-stellar"
+ and cargo.primary.kind=="delivery-ready",
+ "Active cargo task must guide players to shipping rather than research")
+local transmitting=guidance.plan({
+ ["convergence-ignition"]="complete",
+ ["convergence-victory"]="active"
+},function(quest)
+ return {name=quest.tech,researched=true,enabled=true,
+   prerequisites={}}
+end)
+check(transmitting.primary
+ and transmitting.primary.kind=="transmission-pending",
+ "Post-delivery final victory must be recognized as transmission status")
+print("Codex guidance: readiness, branch diversity, delivery and transmission passed")
