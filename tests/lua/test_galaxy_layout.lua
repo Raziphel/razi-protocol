@@ -93,8 +93,8 @@ local px,py=layout.anchor_position("panglia")
 check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-40)<.01,
   "Panglia must have its own Nyxaris orbital lane")
 local vx,vy=layout.anchor_position("vibrant")
-for _,pair in ipairs({{"fulgora",26},{"ribbonia",26},
-    {"paracelsin",49}}) do
+for _,pair in ipairs({{"fulgora",24},{"ribbonia",26},
+    {"paracelsin",58}}) do
   local px,py=layout.anchor_position(pair[1])
   check(math.abs(math.sqrt((px-vx)^2+(py-vy)^2)-pair[2])<.01,
     "Vibrant climate radius mismatch: "..pair[1])
@@ -105,8 +105,8 @@ check(math.abs(mx-sx0)<3 and math.abs(my-sy0-20)<1,
   "Muria was not offset from the Vespera alternative route")
 local slipx,slipy=layout.anchor_position("sye-vibrant")
 local vx0,vy0=layout.anchor_position("vibrant")
-check(math.abs(math.sqrt((slipx-vx0)^2+(slipy-vy0)^2)-50)<.01
-  and slipx<vx0-40,
+check(math.abs(math.sqrt((slipx-vx0)^2+(slipy-vy0)^2)-60)<.01
+  and slipx<vx0-55,
   "Vibrant Slip Stream should be beyond the metallic ring")
 -- Simulate both source mod prototype types at once, before sprite baking.
 places["alchemy-planet"]={name="alchemy-planet",
@@ -129,7 +129,7 @@ places["alchemy-planet"]=nil
 check(planets["alchemy-planet"].origin and
   math.abs(planets["alchemy-planet"].origin.x-vx)<.01 and
   math.abs(planets["alchemy-planet"].origin.y-vy)<.01 and
-  math.abs(planets["alchemy-planet"].distance-41.598564)<.01,
+  math.abs(planets["alchemy-planet"].distance-61)<.01,
   "Pre-render Khemia artwork was not moved to Vibrant")
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.

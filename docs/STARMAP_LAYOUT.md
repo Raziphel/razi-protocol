@@ -1,14 +1,14 @@
-## Vibrant asteroid belt entrance redesign (October 2026)
+## Vibrant: western asteroid entrance (October 2026)
 
-The western Vibrant Slip Stream has moved outside the metallic belt.
-Both entrance markers are near the star's north-northeast side; the
-Outer Rim to Inner Rim transfer is now a clean radial passage.
-Arrivals must approach the Outer Rim, complete the original 5,000 km
-asteroid crossing, then continue to Ribbonia and Fulgora. The curved
-outside approach goes around the ring instead of cutting its artwork.
-Ferrum joins the exterior network, and the survey can be researched
-immediately after the Vibrant system discovery. This deliberately
-retires old direct platform routes but keeps belt station IDs stable.
+The slipstream and both asteroid entry markers sit west of the star.
+The 31/39-unit rim markers are nearly radial, creating the only route
+that physically crosses the rocky artwork. Interior Ribbonia and Fulgora
+have a short connecting road; exterior Paracelsin, Khemia and Ferrum are
+spread between the northwest and southwest of Vibrant. All other
+Vibrant space connections are plain, belt-safe straight lines, including
+the Beetlejuice departure. The old native 5,000 km crossing and its
+technology ID remain stable. Platform schedules using earlier waypoint
+positions should be reviewed on existing saves.
 
 ## Local planetary route networks (October 2026)
 
@@ -19,8 +19,8 @@ single mandatory chain:
   within the existing closed orbital circuit.
 - Nyxaris links Gleba and the Apia/Carnova orbit directly, alongside the
   established Moshine junction.
-- Vibrant adds the Slip Stream–Ribbonia return leg; Fulgora is moved
-  slightly outward so the chord does not obscure its icon.
+- Vibrant routes arriving traffic through the sole western asteroid
+  crossing before the interior Ribbonia/Fulgora connection.
 - Vespera links the Slip Stream to Aquilo directly and rotates Muria
   slightly to keep the triangular inner routes readable.
 - Beetlejuice already has a Cubium/Linox/Secretas alternative circuit
@@ -388,7 +388,7 @@ shared layout agree, preventing a next-load jump.
 Khemia's optional chemistry world is explicitly resolved as a planet or
 space-location depending on the installed source mod. Before star-art
 cleanup and again in the native final pass, it is positioned with Vibrant's
-absolute origin, radius 41.598564, turn 0.287184. A final O(2) targeted
+absolute origin, radius 61, turn 0.61, outside Vibrant's belt. A targeted
 pass protects Khemia and Drift if another late compatibility adjustment
 reapplies old origin values. No research prerequisites or space route
 lengths are changed.

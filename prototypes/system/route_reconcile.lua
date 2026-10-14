@@ -255,18 +255,6 @@ end
 
 route_reconcile.regional_origin=regional_origin
 
--- An exterior approach must skirt the asteroid ring, not draw a line
--- straight through the star. Modern Factorio uses a specific regional
--- origin for native arc connections.
-local function vibrant_exterior_arc(from,to)
-  if key_for(from,to)~=key_for("sye-vibrant","asteroid-belt-outer-edge")
-    or not supports_regional_arcs() then return nil,nil end
-  local x,y=layout.anchor_position("vibrant")
-  if not x or not y then return nil,nil end
-  return "arc",{x=x,y=y}
-end
-route_reconcile.vibrant_exterior_arc=vibrant_exterior_arc
-
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
 	local rescued = {}
@@ -396,11 +384,6 @@ function route_reconcile.data_final_fixes()
 				elseif route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
 				end
-        local exterior_shape,exterior_origin=vibrant_exterior_arc(from,to)
-        if exterior_shape then
-          route.shape=exterior_shape
-          route.origin=exterior_origin
-        end
 				route_icons.assign(route, hazard)
 			else
 				local connection = route_icons.assign({
@@ -420,11 +403,6 @@ function route_reconcile.data_final_fixes()
 				local strength=field_strength(from,to)
 				if strength then hazard_profiles.apply_field(connection,strength) end
 				connection.origin=regional_origin(from,to,connection.shape)
-        local exterior_shape,exterior_origin=vibrant_exterior_arc(from,to)
-        if exterior_shape then
-          connection.shape=exterior_shape
-          connection.origin=exterior_origin
-        end
 				data:extend({connection})
 				routes_by_pair[pair] = {route_name}
 			end

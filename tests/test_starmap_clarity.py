@@ -16,8 +16,8 @@ def parse_layout():
     pattern = r'\{"(?:planet|space-location)","([^"]+)","([^"]+)",([.\d]+),([.\d]+)\}'
     result = {n: (p, float(r), float(a))
               for n, p, r, a in re.findall(pattern, source)}
-    # Audit the distant Solaris anchor and Nyxaris's optional western world.
-    for name in ("igrys", "foliax"):
+    # Include installed optional Vibrant worlds in belt-crossing clearance.
+    for name in ("igrys", "foliax", "ferrum", "alchemy-planet"):
         match = re.search(
             rf'\{{name="{name}",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}}',
             source)
@@ -121,7 +121,7 @@ class ConstellationTests(unittest.TestCase):
                            "Deep Space drifted too far outside compact view")
 
     def test_compact_ring_respects_large_optional_orbits(self):
-        # Ferrum (~51.4) has the largest supported non-moon optional orbit.
+        # Even with exterior Vibrant worlds, neighboring star art needs a gap.
         # Its neighboring star circles still need a gap.
         from itertools import combinations
         for a, b in combinations(STARS, 2):
@@ -165,7 +165,8 @@ class ConstellationTests(unittest.TestCase):
             x, y = self.coords[star]
             hx, hy = self.coords["sye-" + star]
             self.assertGreater(math.dist((hx, hy), (x, y)), 25)
-            self.assertLess(math.dist((hx, hy), (x, y)), 45)
+            self.assertLess(math.dist((hx, hy), (x, y)),
+                            65 if star=="vibrant" else 45)
 
         for a, b, _, _ in self.routes:
             if a not in self.coords or b not in self.coords:
@@ -173,7 +174,7 @@ class ConstellationTests(unittest.TestCase):
             for star in STARS:
                 gap = segment_clearance(
                     self.coords[star], self.coords[a], self.coords[b])
-                # Sun-belt arrival deliberately ends 14 units from Vibrant.
+                # The one legitimate crossing passes between the belt rims.
                 tolerance = 15
                 self.assertGreaterEqual(
                     gap, tolerance,
@@ -289,56 +290,112 @@ class ConstellationTests(unittest.TestCase):
                                            self.coords[c], self.coords[d]),
                                      f"{star}: {a}-{b} crosses {c}-{d}")
 
-    def test_vibrant_outside_arrival_and_northern_crossing(self):
-        edges={frozenset((a,b)) for a,b,_,_ in self.routes}
-        inner,outer="asteroid-belt-inner-edge","asteroid-belt-outer-edge"
-        gateway="sye-vibrant"
+    def test_vibrant_western_belt_is_the_only_rock_crossing(self):
         star=self.coords["vibrant"]
-        for a,b in ((gateway,outer),(inner,"ribbonia"),
-                    ("ribbonia","fulgora"),(outer,"paracelsin")):
+        slip="sye-vibrant"
+        inner="asteroid-belt-inner-edge"
+        outer="asteroid-belt-outer-edge"
+        edges={frozenset((a,b)) for a,b,_,_ in self.routes}
+        for a,b in ((slip,outer),(inner,"ribbonia"),
+                    ("ribbonia","fulgora"),(outer,"paracelsin"),
+                    (outer,"sye-beetlejuice")):
             self.assertIn(frozenset((a,b)),edges)
-        for a,b in ((gateway,"ribbonia"),(gateway,"fulgora"),
+        for a,b in ((slip,"ribbonia"),(slip,"fulgora"),
                     ("fulgora",outer),("paracelsin",inner)):
             self.assertNotIn(frozenset((a,b)),edges,
-                             "An illegal connection bypasses the belt")
-        self.assertGreater(math.dist(star,self.coords[gateway]),39)
-        self.assertLess(self.coords[gateway][0],star[0]-40)
-        self.assertLess(self.coords[inner][1],star[1]-20)
-        self.assertLess(self.coords[outer][1],star[1]-30)
-        self.assertGreater(self.coords[inner][0],star[0]+10)
-        self.assertGreater(self.coords[outer][0],self.coords[inner][0])
+                             "Direct connection bypasses the belt")
+
+        # Both rim markers and the Slip Stream are west of the star.
+        for name in (slip,inner,outer):
+            self.assertLess(self.coords[name][0],star[0]-25)
         self.assertAlmostEqual(math.dist(star,self.coords[inner]),31,places=3)
         self.assertAlmostEqual(math.dist(star,self.coords[outer]),39,places=3)
-        self.assertGreater(math.dist(self.coords[inner],self.coords[outer]),8.2)
-        self.assertLess(math.dist(self.coords[inner],self.coords[outer]),10)
-        for a,b in ((inner,"ribbonia"),(outer,"paracelsin"),
-                    ("sye-solaris",gateway)):
+        self.assertGreater(math.dist(star,self.coords[slip]),59)
+        self.assertLess(math.dist(self.coords[slip],
+                                  self.coords[outer]),30)
+        self.assertGreater(math.dist(self.coords[inner],
+                                     self.coords[outer]),7.8)
+        self.assertLess(math.dist(self.coords[inner],
+                                  self.coords[outer]),8.5)
+
+        # All real straight routes, including both optional planet branches,
+        # must stay entirely on their respective side of the rocky annulus.
+        optional_source=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        optional={
+            ("ferrum",slip): '{"ferrum","sye-vibrant",19500',
+            ("alchemy-planet","paracelsin"):
+                '{"alchemy-planet","paracelsin",21000',
+        }
+        for pair,text in optional.items():
+            self.assertIn(text,optional_source)
+            self.assertTrue(all(name in self.coords for name in pair))
+
+        exterior=(( "sye-solaris",slip),(slip,outer),
+                  (outer,"sye-beetlejuice"),(outer,"paracelsin"),
+                  ("ferrum",slip),("alchemy-planet","paracelsin"))
+        interior=((inner,"ribbonia"),("ribbonia","fulgora"))
+        for a,b in exterior:
             self.assertGreaterEqual(segment_clearance(
-                star,self.coords[a],self.coords[b]),17)
-        self.assertLess(segment_clearance(
-            star,self.coords[gateway],self.coords[outer]),30)
+                star,self.coords[a],self.coords[b]),38.999,
+                f"Illegal line crosses the rocky belt: {a}-{b}")
+        for a,b in interior:
+            self.assertLessEqual(max(
+                math.dist(star,self.coords[a]),
+                math.dist(star,self.coords[b])),31.001,
+                f"Inner-world route crosses the rocks: {a}-{b}")
+
+        # Catch any current curated route cutting through Vibrant's rocks,
+        # including a later route that was not listed in the local network.
+        # The actual one allowed crossing is a native route, not in this list.
+        for a,b,_,_ in self.routes:
+            if a not in self.coords or b not in self.coords:
+                continue
+            if max(math.dist(star,self.coords[a]),
+                   math.dist(star,self.coords[b]))>31.001:
+                self.assertGreaterEqual(segment_clearance(
+                    star,self.coords[a],self.coords[b]),38.999,
+                    f"{a}-{b} cuts through Vibrant's asteroid belt")
+
+        actual=list(exterior+interior)
+        for i,(a,b) in enumerate(actual):
+            for c,d in actual[i+1:]:
+                if len({a,b,c,d})==4:
+                    self.assertFalse(cross(self.coords[a],self.coords[b],
+                                           self.coords[c],self.coords[d]),
+                                     f"Routes cross each other: {a}-{b}, {c}-{d}")
+        # Marker labels should not sit on another lane.
+        for a,b in actual:
+            for name in (slip,inner,outer,"ribbonia","fulgora",
+                         "paracelsin","ferrum","alchemy-planet"):
+                if name not in (a,b):
+                    self.assertGreaterEqual(segment_clearance(
+                        self.coords[name],self.coords[a],self.coords[b]),
+                        8, f"{a}-{b} obscures {name}")
+
+        source=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
+        self.assertIn('{"asteroid-belt-inner-edge",31,0.77}',source)
+        self.assertIn('{"asteroid-belt-outer-edge",39,0.775}',source)
         routes=(ROOT/"prototypes/system/route_reconcile.lua").read_text()
-        authority=(ROOT/"prototypes/system/route_authority.lua").read_text()
-        self.assertIn('route_reconcile.vibrant_exterior_arc=vibrant_exterior_arc',
-                      routes)
-        self.assertIn('reconcile.vibrant_exterior_arc(route.from,route.to)',
-                      authority)
+        self.assertNotIn('vibrant_exterior_arc',routes)
+        self.assertIn('{"sye-vibrant", "asteroid-belt-outer-edge", 36000',routes)
+        crossing=(ROOT/"prototypes/system/asteroid_belts.lua").read_text()
+        self.assertIn('name="asteroid-belt-inner-edge-asteroid-belt-outer-edge"',
+                      crossing)
+        self.assertIn('length=5000,shape="line"',crossing)
+
+        # Without that one native connection the inner network is isolated.
         graph=defaultdict(set)
         for a,b,_,_ in self.routes:
             graph[a].add(b)
             graph[b].add(a)
-        # The original crossing is native; remove it and verify no bypass.
-        visited={gateway}
-        queue=deque([gateway])
+        reached={slip}
+        queue=deque([slip])
         while queue:
-            for neighbor in graph[queue.popleft()]-visited:
-                visited.add(neighbor)
-                queue.append(neighbor)
-        self.assertNotIn("ribbonia",visited)
-        self.assertNotIn("fulgora",visited)
-        art=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
-        self.assertIn('{"asteroid-belt-inner-edge",31,0.08}',art)
-        self.assertIn('{"asteroid-belt-outer-edge",39,0.095}',art)
+            for nxt in graph[queue.popleft()]-reached:
+                reached.add(nxt)
+                queue.append(nxt)
+        self.assertNotIn("ribbonia",reached)
+        self.assertNotIn("fulgora",reached)
 
     def test_neighbor_links_are_short_non_crossing_and_belt_safe(self):
         neighbors = (

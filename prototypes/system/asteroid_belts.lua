@@ -16,7 +16,7 @@ for _,belt in ipairs(belts) do
     local radius,turn
     if legacy then
       radius=edge=="inner" and 31 or 39
-      turn=edge=="inner" and 0.08 or 0.095
+      turn=edge=="inner" and 0.77 or 0.775
     else
       local distance=belt.system=="vespera" and 22.0 or 22.3
       local bearing=belt.system=="vespera" and 0.32 or 0.21
