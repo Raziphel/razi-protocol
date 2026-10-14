@@ -42,7 +42,7 @@ local function fixture()
    "chemical-science-pack"}}
  for _,pack in ipairs(extra) do lab.inputs[#lab.inputs+1]=pack end
  return {technology=techs,recipe=recipes,tool=items,
-  lab={["real-installed-lab"]=lab}}
+  lab={["lab"]=lab}}
 end
 local function contains(list,wanted)
  for _,entry in ipairs(list or {}) do
