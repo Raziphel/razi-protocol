@@ -12,6 +12,13 @@ M.transmission_beats={
  {tick=540,key="convergence-transmission-alignment"}
 }
 M.transmission_duration=720
+M.module_colors={
+ stellar={r=.98,g=.72,b=.39},
+ industry={r=.43,g=.75,b=.92},
+ ["deep-space"]={r=.67,g=.55,b=.95},
+ resonance={r=.91,g=.53,b=.75},
+ ignition={r=.52,g=.91,b=.76}
+}
 -- Source receiver entity counts are maintained by the Factorio engine.
 -- Actual satellite count and generated megawatts cannot be inferred here.
 function M.dyson_readiness(force)
@@ -107,6 +114,20 @@ function M.completed(force,id)
   end
  end
  return false
+end
+-- Fractional build completion makes each real partial shipment visible.
+-- Deliberately weight the five engineering sections equally.
+function M.assembly_fraction(force)
+ local all=storage and storage.razi_convergence
+ local saved=all and all[force.index]
+ if saved and saved.victory then return 1 end
+ local credit=0
+ for _,rule in ipairs(M.stages) do
+  local donated=saved and saved.delivered
+   and saved.delivered[rule.id] or 0
+  credit=credit+math.min(1,math.max(0,donated/rule.count))
+ end
+ return credit/#M.stages
 end
 function M.progress(force)
  local saved=M.record(force)
@@ -322,9 +343,14 @@ function M.render(parent,player)
  local stat=line(scroll,"convergence-progress",width,
   tostring(progress),tostring(total))
  stat.style.font="default-bold"
- local overall=scroll.add{type="progressbar",value=progress/total}
+ local fraction=M.assembly_fraction(force)
+ local overall=scroll.add{type="progressbar",value=fraction}
  overall.style.horizontally_stretchable=true
  overall.style.height=16
+ overall.style.color={r=.73,g=.58,b=.97}
+ local percent=line(scroll,"convergence-assembly-percent",width,
+  tostring(math.floor(fraction*100+.5)))
+ percent.style.font="default-bold"
  local assembly=line(scroll,"convergence-assembly-heading",width)
  assembly.style.font="heading-2"
  line(scroll,"convergence-assembly-subtitle",width)
@@ -334,7 +360,10 @@ function M.render(parent,player)
  tiles.style.horizontal_spacing=6
  tiles.style.vertical_spacing=6
  for _,rule in ipairs(M.stages) do
-  local completed=won or (saved.delivered[rule.id] or 0)>=rule.count
+  local donated=won and rule.count or
+   math.max(0,math.min(rule.count,saved.delivered[rule.id] or 0))
+  local completed=donated==rule.count
+  local shade=M.module_colors[rule.id]
   local tile=tiles.add{type="frame",style="inside_shallow_frame",
    direction="vertical"}
   tile.style.padding=6
@@ -346,6 +375,13 @@ function M.render(parent,player)
   caption.style.single_line=false
   caption.style.maximal_width=135
   caption.style.font="default-bold"
+  caption.style.font_color=shade
+  local fill=tile.add{type="progressbar",value=donated/rule.count}
+  fill.style.width=math.min(122,math.max(66,
+   math.floor((width-30)/(width>=560 and 5 or
+    (width>=380 and 3 or 2))-18)))
+  fill.style.height=7
+  fill.style.color=shade
   local marker=tile.add{type="label",caption={
    "razi-ops."..(completed and "convergence-tile-complete"
     or "convergence-tile-pending")}}
@@ -434,6 +470,39 @@ function M.render(parent,player)
   line(scroll,"convergence-legacy-victory",width)
  end
  local next_index=M.current(force)
+ if not won and not saved.transmission then
+  local next_rule=M.stages[next_index]
+  if next_rule then
+   local advice=scroll.add{type="frame",
+     style="inside_shallow_frame",direction="vertical"}
+   advice.style.horizontally_stretchable=true
+   local title=line(advice,"convergence-next-action-title",width)
+   title.style.font="heading-2"
+   line(advice,"convergence-next-action-stage",width,
+    {"razi-ops.convergence-stage-"..next_rule.id})
+   local researched=commission.researched
+    and (next_index<3 or sync.researched)
+    and (next_index<5 or ignition.researched)
+   local required=not researched and (not commission.researched
+     and commission or (next_index<5 and sync or ignition))
+   if required then
+    line(advice,"convergence-next-action-research",width,
+     required.localised_name)
+    local shown=0
+    for _,prior in pairs(required.prerequisites or {}) do
+     if not prior.researched and shown<3 then
+      line(advice,"convergence-next-action-prereq",width,
+       prior.localised_name)
+      shown=shown+1
+     end
+    end
+   elseif next_index==5 and not receiver_ready then
+    line(advice,"convergence-next-action-receiver",width)
+   else
+    line(advice,"convergence-next-action-freight",width)
+   end
+  end
+ end
  -- Read one player's carried freight when the panel opens or redraws.
  -- No background inventory scans, and a remote camera cannot deliver it.
  local inventory=player.get_main_inventory()
