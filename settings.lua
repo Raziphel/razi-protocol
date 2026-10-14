@@ -1,5 +1,8 @@
--- FluxWorks-inspired sections use localized rich-text labels and stable
--- alphabetical order prefixes. Only real Razi-owned behavior is configurable.
+-- Settings use localized section labels and stable intra-mod order keys.
+-- The native settings GUI sorts by MOD before comparing these keys.
+-- A title prefix in locale/en/settings.cfg is a best-effort display hint,
+-- not a supported way to override the engine's mod-section ordering.
+-- Only real Razi-owned behavior is configurable.
 -- All existing settings retain their names, types and default values.
 local function startup_toggle(name, order)
   return {
