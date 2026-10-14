@@ -16,7 +16,8 @@ local SIZES={
   quest_row=20,
   gallery=28,
   archive_button=26,
-  archive_cover=32
+  archive_cover=32,
+  project_icon=32
 }
 M.SIZES=SIZES
 

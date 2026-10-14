@@ -1,3 +1,19 @@
+## Expedition Journal: field dossier, not a command dashboard
+
+Use three quiet folios for Quests, Projects, and recovered Journal entries.
+The active chapter is the only prominently surfaced index card. Body copy
+is neutral and readable, with small chapter-colored cues for orientation.
+Actual technologies and source game artwork remain the visual anchors.
+Avoid full-color header text, equal-weight boxed tiles, large ornamental
+progress meters, and unrelated control-room metaphors.
+
+Major projects are named dossiers. Their progress tracks source research and
+physical expedition delivery, not invented completion statistics. Project
+icons are fixed to 32 Factorio GUI units to prevent intrinsic sprite scaling.
+Only the selected dossier gets a stronger accent and the large detail reader
+has one scroll pane. The Dyson art stays backed by its existing stage sprites.
+This redesign adds no texture files or periodic render workload.
+
 ## 2.1.72: Restrained visual hierarchy
 
 The sun PNGs remain the original 1024px Razi textures. Calidus is warm

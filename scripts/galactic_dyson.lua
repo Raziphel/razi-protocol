@@ -60,14 +60,17 @@ local function inspection(parent,player)
 end
 function M.render(parent,player,options)
  options=options or {}
- local heading=parent.add{type="flow",direction="horizontal"}
- heading.style.horizontally_stretchable=true
- local title=label(heading,L("dyson-title"))
- title.style.font="heading-2"
+ if not options.embedded then
+   local heading=parent.add{type="flow",direction="horizontal"}
+   heading.style.horizontally_stretchable=true
+   local title=label(heading,L("dyson-title"))
+   title.style.font="heading-2"
+ end
  local completed,total,stages=M.status(player.force)
  local phase=M.research_phase(completed)
  local hero=parent.add{type="frame",direction="horizontal",
-   style="inside_shallow_frame"}
+   style="inside_deep_frame"}
+ hero.style.padding=12
  hero.style.horizontally_stretchable=true
  local art=hero.add{type="sprite",
    sprite="razi-dyson-works-stage-"..math.min(6,completed)}
@@ -75,15 +78,19 @@ function M.render(parent,player,options)
  local art_size=options.width and options.width<540 and 80 or 128
  art.style.width=art_size
  art.style.height=art_size
+ art.style.stretch_image_to_widget_size=true
  local copy=hero.add{type="flow",direction="vertical"}
  copy.style.horizontally_stretchable=true
  local phase_title=label(copy,L("dyson-phase-"..phase))
  phase_title.style.font="heading-2"
+ phase_title.style.font_color={r=.94,g=.90,b=.79}
  label(copy,L("dyson-subtitle"))
  label(copy,L("dyson-stage-progress",tostring(completed),tostring(total)))
- local visual=label(copy,L("dyson-art-stage",tostring(math.min(6,completed))))
- visual.style.font="default-bold"
- visual.style.font_color={r=1,g=.76,b=.45}
+ if not options.embedded then
+   local visual=label(copy,L("dyson-art-stage",tostring(math.min(6,completed))))
+   visual.style.font="default-bold"
+   visual.style.font_color={r=.70,g=.72,b=.75}
+ end
  local progress=copy.add{type="progressbar",
    value=total>0 and completed/total or 0}
  progress.style.horizontally_stretchable=true
@@ -99,9 +106,10 @@ function M.render(parent,player,options)
    scroll.style.horizontally_stretchable=true
  end
  for _,stage in ipairs(stages) do
-   local frame=scroll.add{type="frame",direction="vertical",
-     style="inside_shallow_frame"}
+   -- Timeline entries read as engineering milestones, not repeated tiles.
+   local frame=scroll.add{type="flow",direction="vertical"}
    frame.style.horizontally_stretchable=true
+   frame.style.vertical_spacing=4
    local h=frame.add{type="flow",direction="horizontal"}
    local caption=label(h,L(stage.heading))
    caption.style.font="default-bold"
@@ -118,6 +126,7 @@ function M.render(parent,player,options)
      end
      if #missing==0 then label(frame,L("dyson-ready")) end
    end
+   scroll.add{type="line",direction="horizontal"}
  end
  if total==0 then label(scroll,L("dyson-unavailable")) end
  label(parent,L("dyson-satellites"))

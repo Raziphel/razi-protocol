@@ -98,16 +98,6 @@ local function status(parent,state,width)
   end
 end
 
-local function tile(parent,title,value,width,color)
-  local tile=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
-  tile.style.width=width
-  tile.style.padding=6
-  local number=label(tile,tostring(value),"heading-2")
-  number.style.font_color=color or {r=.58,g=.79,b=.98}
-  wrap(tile,L(title),width-18)
-end
-
 local function source_worlds(parent,entry,width)
   heading(parent,L("trade-sources"),width)
   local grid=parent.add{type="table",column_count=2}
@@ -347,18 +337,25 @@ function M.render(parent,player,p,options)
   local title=label(parent,L("trade-title"),"heading-2")
   title.style.font_color={r=.58,g=.80,b=.98}
   wrap(parent,L("trade-intro"),size.width)
-  local metrics=parent.add{type="table",
-    column_count=size.compact and 2 or 4}
-  metrics.style.horizontal_spacing=5
-  metrics.style.vertical_spacing=5
-  local metric_width=size.compact
-    and math.max(105,math.floor((size.width-30)/2))
-    or math.floor((size.width-55)/4)
-  tile(metrics,"trade-metric-parts",network.available,metric_width)
-  tile(metrics,"trade-metric-researched",network.researched,metric_width,
-    {r=.51,g=.87,b=.71})
-  tile(metrics,"trade-metric-upgrades",network.upgrades,metric_width)
-  tile(metrics,"trade-metric-transit",fleet.transit,metric_width)
+  -- A single logistics ledger replaces four generic dashboard tiles.
+  -- These counts describe known technologies, never phantom shipments.
+  local ledger=parent.add{type="flow",direction="vertical"}
+  ledger.style.horizontally_stretchable=true
+  ledger.style.vertical_spacing=5
+  local row=ledger.add{type="flow",direction="horizontal"}
+  row.style.horizontal_spacing=8
+  local researched=label(row,tostring(network.researched),"heading-2")
+  researched.style.font_color={r=.85,g=.88,b=.85}
+  local of=label(row,L("trade-ledger-progress",tostring(network.available)))
+  of.style.font_color={r=.64,g=.72,b=.76}
+  local count=label(ledger,
+    L("trade-ledger-upgrades",tostring(network.upgrades),tostring(fleet.transit)))
+  count.style.font_color={r=.66,g=.73,b=.76}
+  local meter=ledger.add{type="progressbar",
+    value=network.available>0 and network.researched/network.available or 0}
+  meter.style.width=math.max(160,size.width-40)
+  meter.style.height=7
+  meter.style.color={r=.49,g=.69,b=.72}
   local freight=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   freight.style.horizontally_stretchable=true
