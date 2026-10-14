@@ -26,7 +26,7 @@ for _,name in ipairs({
   "alchemy-planet","arcanyx","bm-balack"
 }) do planets[name]={name=name} end
 
-local moon={parent={type="planet",name="gleba"},distance=4}
+local moon={parent={type="planet",name="gleba"},distance=4,orientation=.9}
 planets.rabbasca.orbit=moon
 planets.rabbasca.draw_orbit=false
 local native_moon_sprite={type="sprite",filename="custom-dashed-moon-orbit.png"}
@@ -90,7 +90,7 @@ check(departureX>sx-39 and departureX<sx-36 and
   departureY>sy-25 and departureY<sy-22,
   "Solaris gateway must sit clear of both the northern ring and external lanes")
 local px,py=layout.anchor_position("panglia")
-check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-44)<.01,
+check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-40)<.01,
   "Panglia must have its own Nyxaris orbital lane")
 local vx,vy=layout.anchor_position("vibrant")
 for _,pair in ipairs({{"fulgora",22},{"ribbonia",27},
@@ -103,6 +103,11 @@ end
 places["alchemy-planet"]={name="alchemy-planet",
   orbit={parent={type="space-location",name="star"},distance=25,orientation=.41}}
 layout.data_updates()
+check(planets.rabbasca.orbit==moon and moon.parent.name=="gleba"
+  and math.abs(moon.distance-4.2)<.001 and
+  math.abs(moon.orientation-.65)<.001 and
+  moon.sprite==native_moon_sprite,
+  "Rabbasca's pre-render orientation or original orbit sprite changed")
 check(places["alchemy-planet"].orbit and
   places["alchemy-planet"].orbit.parent.name=="vibrant" and
   places["alchemy-planet"].origin and
@@ -250,8 +255,9 @@ check(planets["optional-source-world"].orbit==optional_orbit and
   "Optional source orbit identity or unique sprite was overwritten")
 check(planets.rabbasca.draw_orbit==false and moon.sprite==native_moon_sprite,
   "Moon's own orbit drawing settings were modified")
-check(planets.rabbasca.orbit==moon,
-  "Native Gleba moon orbit must remain untouched")
+check(planets.rabbasca.orbit==moon and
+  math.abs(moon.orientation-.65)<.001,
+  "Rabbasca no longer follows its adjusted Gleba orbit")
 layout.data_final_fixes()
 -- A late, conflicting source update must not pull the chemistry world back
 -- into Calidus.
@@ -289,8 +295,9 @@ check(places["alchemy-planet"].orbit and
 places["alchemy-planet"]=nil
 check(planets["optional-source-world"].draw_orbit==false,
   "Repeated final fixes duplicated custom orbit artwork")
-check(planets.rabbasca.orbit==moon,
-  "Repeating layout damaged native moon")
+check(planets.rabbasca.orbit==moon and
+  math.abs(moon.orientation-.65)<.001,
+  "Repeating layout damaged Rabbasca's revised moon orbit")
 
 
 -- Reproduce the real PlanetsLib 2.0.9 load sequence. PlanetsLib removes
@@ -340,8 +347,10 @@ check(math.abs(planets.rabbasca.origin.x-gx)<.01 and
       math.abs(planets.rabbasca.origin.y-gy)<.01,
   "Source-owned moon origin did not follow its parent's relocation")
 check(planets.rabbasca.orbit==moon_before and
-      planets.rabbasca.orbit.sprite==native_moon_before,
-  "Final native movement damaged unique moon artwork")
+      planets.rabbasca.orbit.sprite==native_moon_before and
+      math.abs(planets.rabbasca.distance-4.2)<.001 and
+      math.abs(planets.rabbasca.orientation-.65)<.001,
+  "Final moon positioning changed source sprites or lost rotation")
 check(planets["optional-source-world"].orbit.sprite==orbit_art_before,
   "Optional special orbit sprite was destroyed")
 -- A world with dashed custom orbit art must not gain a second native ring.
@@ -377,4 +386,15 @@ local layout_call=source:find(
   'require("prototypes.system.galaxy_layout").data_final_fixes()',1,true)
 check(optional and belt and layout_call and optional<belt
   and belt<layout_call,"Final galaxy layout stage ordering is incorrect")
-print("Calidus radial gallery, Factorio native planet orbits and moon preservation passed")
+-- Alternate Rabbasca parent settings are source-owned.
+moon.parent.name="nauvis"
+moon.distance=2
+moon.orientation=.12
+planets.rabbasca.distance=2
+planets.rabbasca.orientation=.12
+layout.data_final_fixes()
+check(moon.parent.name=="nauvis" and moon.distance==2 and
+  moon.orientation==.12 and planets.rabbasca.distance==2 and
+  planets.rabbasca.orientation==.12,
+  "A non-Gleba Rabbasca orbit was incorrectly changed")
+print("Calidus radial gallery, native orbits and Rabbasca positioning passed")

@@ -85,6 +85,10 @@ class DysonIntegrationTests(unittest.TestCase):
         self.assertIn("dyson-stage-progress=",lang)
         self.assertIn("dyson-art-stage=",lang)
         self.assertIn("dyson-map-progress=",lang)
+        self.assertIn("sun graphic does not change mid-save",lang)
+        cheat=read("scripts/razi_safe_cheat.lua")
+        self.assertIn('explain_dyson(job.player_index,force)',cheat)
+        self.assertIn('explain_dyson(player.index,force)',cheat)
         self.assertIn("galactic_operations.on_dyson_research(event)",
                       read("control.lua"))
         self.assertIn("on_dyson_research",script)

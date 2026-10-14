@@ -17,7 +17,9 @@ local technologies={
   ["hidden"]={name="hidden",researched=false,valid=true,
     prototype={enabled=true,hidden=true},prerequisites={}},
   ["disabled"]={name="disabled",researched=false,valid=true,
-    prototype={enabled=false},prerequisites={}}
+    prototype={enabled=false},prerequisites={}},
+  ["slp-dyson-sphere"]={name="slp-dyson-sphere",researched=true,
+    valid=true,prototype={enabled=true},prerequisites={}}
 }
 local force={name="player",valid=true,technologies=technologies}
 local messages={}
@@ -61,6 +63,13 @@ check(technologies.network.researched and not storage.razi_cheat_jobs,
 check(not technologies.hidden.researched and not technologies.disabled.researched,
   "Research must not grant hidden or source-disabled technologies")
 check(refreshed.player>=4,"Codex should redraw only after deferred work")
+check(messages[#messages]:find("satellites still need launching",1,true),
+  "Cheat completion did not explain the Dyson art")
+local before_completed=#messages
+command("start")
+check(#messages==before_completed+2 and
+  messages[#messages]:find("Calidus's map star is static",1,true),
+  "Already completed research should explain Dyson artwork")
 
 -- The reminder runs once per admin, not once per join or every tick.
 local before=#messages
