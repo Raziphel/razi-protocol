@@ -3,6 +3,16 @@
 local M={}
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
+local convergence=require("scripts.razi_convergence")
+-- Known, installed native endpoints only. This annotates the Atlas without
+-- drawing fake paths, changing source location prototypes or leaking secrets.
+M.expedition_briefs={
+ ["solar-system-edge"]="edge",
+ ["shattered-planet"]="shattered",
+ ["nexus"]="nexus",
+ ["razi-deep-space-edge"]="frontier",
+ ["black-hole-approach"]="approach"
+}
 local function L(key,...) return {"razi-ops."..key,...} end
 local function label(parent,caption)
   return parent.add{type="label",caption=caption}
@@ -211,6 +221,18 @@ function M.render(parent,player,id,p)
   head.add{type="button",caption="×",
     tags={razi_ops_action="details-close"}}
   label(frame,L(unlocked and "atlas-known" or "atlas-locked"))
+  local brief=unlocked and M.expedition_briefs[id]
+  if brief and convergence.available(player.force) then
+    local dossier=frame.add{type="frame",direction="vertical",
+      style="inside_shallow_frame"}
+    dossier.style.horizontally_stretchable=true
+    bold(dossier,L("atlas-convergence-heading"))
+    local description=label(dossier,L("atlas-convergence-"..brief))
+    description.style.single_line=false
+    description.style.horizontally_stretchable=true
+    dossier.add{type="button",caption=L("atlas-convergence-open"),
+      tags={razi_ops_action="atlas-convergence"}}
+  end
   if unlocked then
     label(frame,proto.localised_description)
     if id=="nexus" then
