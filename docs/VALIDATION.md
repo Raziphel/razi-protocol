@@ -1,3 +1,35 @@
+## 2.1.70: Native asteroid belt and saved-platform checks
+
+Razi replaces the external AsteroidBelt mod's gameplay with **Razi-owned**
+Vibrant, Vespera and Umbra crossings. Both inner and outer rims should
+offer safe native chunks; Vibrant favors metallic, Vespera oxide and Umbra
+carbonic. Inspect each mid-crossing at 25%, 50% and 75% progress for
+improved native chunks and higher combat asteroid pressure, respecting
+the original big/huge difficulty tiers. Existing modded chunk types must
+remain unchanged. No newly invented asteroid species or runtime spawns.
+
+Do not enable the old AsteroidBelt at the same time: it is incompatible
+in `info.json`. Keep Vibrant's original belt endpoints and survey
+technology ID. Check early survey availability before new Vespera/Umbra
+planet sciences and confirm the actual space-platform path cannot bypass
+either crossing through an unintended source route. Back up saves and
+pause platforms midway through the now-rebalanced crossings before
+testing a fresh install. Check visuals, old schedules, and optional
+native mod integrations; static tests are not enough.
+
+```bash
+lua5.2 tests/lua/test_asteroid_belts.lua
+lua5.2 tests/lua/test_asteroid_profiles.lua
+lua5.2 tests/lua/test_asteroid_belt_ecology.lua
+python3 -m unittest discover -s tests -p 'test_asteroid_belt_ecology.py'
+python3 -m unittest discover -s tests -p 'test_route_distances.py'
+python3 scripts/audit_route_distances.py /path/to/full-data-raw-dump.json
+```
+
+The full dump now checks safe-rim resource spawns, one actual route per
+belt and richer native ore at each route midpoint. Runtime compatibility,
+platform damage balance and UPS remain unverified until Factorio runs.
+
 ## 2.1.69: Mod settings sort-position experiment
 
 Factorio sorts option groups **by mod first**, then sorts the settings
