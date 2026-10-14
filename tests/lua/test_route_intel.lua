@@ -41,26 +41,45 @@ check(hz.color(routes.huge)==hz.belt_color,"Belt art must remain identifiable")
 check(intel.annotate(routes.external),"External route should be annotated")
 local regional={from="vulcanus",to="arig",length=19500,shape="arc"}
 check(intel.annotate(regional),"Known regional route should be annotated")
-check(#regional.custom_tooltip_fields==9,"Regional route needs one sector line")
-local sector=regional.custom_tooltip_fields[7]
-check(sector.name[1]=="razi-route-intel.sector"
-  and sector.value[1]=="razi-route-intel.inside-system",
+local function row(route,key)
+  for _,f in ipairs(route.custom_tooltip_fields or {}) do
+    if type(f.name)=="table" and f.name[1]=="razi-route-intel."..key then
+      return f
+    end
+  end
+end
+check(#regional.custom_tooltip_fields==4,
+  "Harmless local routes should not bury native tooltips in warnings")
+local sector=row(regional,"sector")
+check(sector and sector.value[1]=="razi-route-intel.inside-system",
   "Regional tooltip uses the wrong system identity")
+check(not row(regional,"alert") and not row(regional,"preparation"),
+  "Harmless local freight must not receive combat alerts")
 local cross={from="sye-solaris",to="sye-vibrant",shape="line"}
 intel.annotate(cross)
-check(cross.custom_tooltip_fields[7].value[1]
-  =="razi-route-intel.across-systems","Interstellar sector label missing")
-check(cross.custom_tooltip_fields[8].value[1]=="razi-route-intel.haul-unlisted",
-  "Missing distance must remain unlisted")
-check(cross.custom_tooltip_fields[9].value[1]=="razi-route-intel.mix-unlisted",
-  "Missing spawns must not invent hostile contacts")
+check(row(cross,"sector").value[1]=="razi-route-intel.across-systems",
+  "Interstellar sector label missing")
+check(not row(cross,"haul") and not row(cross,"distance"),
+  "Missing route distance should not produce two unlisted rows")
+check(not row(cross,"composition"),
+  "No classified spawns should leave the tooltip quiet")
+intel.annotate(routes.huge)
+check(row(routes.huge,"alert").value[1]=="razi-route-intel.alert-5",
+  "Critical belt route must show a prominent hazard warning")
+check(row(routes.huge,"progress") and row(routes.huge,"preparation"),
+  "Required belt crossing must carry expedition preparation")
+intel.annotate(routes.unknown)
+check(row(routes.unknown,"unknown") and row(routes.unknown,"preparation"),
+  "Modded contacts must retain an explicit uncertainty warning")
 check(not intel.annotate(regional),"Regional tooltip must not duplicate")
-check(#routes.external.custom_tooltip_fields==9,"Existing tooltip field was lost")
-check(routes.external.custom_tooltip_fields[1].order==12,"External tooltip ownership lost")
+check(#routes.external.custom_tooltip_fields==4,
+  "Quiet external route must preserve only its owned source row and facts")
+check(routes.external.custom_tooltip_fields[1].order==12,
+  "External tooltip ownership lost")
 check(routes.external.localised_description[1]=="other.description",
   "Original description modified")
 check(not intel.annotate(routes.external),"Second application must be idempotent")
-check(#routes.external.custom_tooltip_fields==9,"Fields duplicated")
+check(#routes.external.custom_tooltip_fields==4,"Fields duplicated")
 rawset(_G,"data",{raw={["space-connection"]=routes}})
 rawset(_G,"settings",{startup={["razi-route-intelligence"]={value=false}}})
 intel.data_final_fixes()
