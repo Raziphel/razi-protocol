@@ -177,15 +177,19 @@ function gates.data_final_fixes()
 	replace_requirements("solaris-discovery", calidus_discoveries, calidus, 650)
 	replace_requirements("nyxaris-discovery", calidus_discoveries, calidus, 650)
 
+	-- Solaris's longer required branch once charged substantially more
+	-- Calidus cards than the independent Nyxaris branch. Ease later
+	-- discoveries while preserving the paired entrances, native products,
+	-- and Panglia's source-owned data-cell progression.
 	-- Vulcanus is the Solaris industrial anchor, reached after departing Nauvis.
 	-- Castra opens after Vulcanus, while Arig and Hyarion branch after Castra.
 	replace_requirements("planet-discovery-vulcanus", {"solaris-discovery"}, calidus, 550)
 	replace_requirements("planet-discovery-castra", {"planet-discovery-vulcanus"}, calidus, 600)
-	replace_requirements("planet-discovery-arig", {"planet-discovery-castra"}, calidus, 750)
-	replace_requirements("planet-discovery-hyarion", {"planet-discovery-castra"}, calidus, 750)
+	replace_requirements("planet-discovery-arig", {"planet-discovery-castra"}, calidus, 650)
+	replace_requirements("planet-discovery-hyarion", {"planet-discovery-castra"}, calidus, 650)
 	replace_requirements("planet-discovery-tellus",
-		{"planet-discovery-arig", "planet-discovery-hyarion"}, calidus, 900)
-	replace_requirements("planet-discovery-corrundum", {"planet-discovery-tellus"}, calidus, 1100)
+		{"planet-discovery-arig", "planet-discovery-hyarion"}, calidus, 800)
+	replace_requirements("planet-discovery-corrundum", {"planet-discovery-tellus"}, calidus, 950)
 
 	-- Gleba anchors Nyxaris's biological progression, alongside the two
 	-- existing research destinations. Optional Dea Dia/Pelagos stay optional.
@@ -194,7 +198,7 @@ function gates.data_final_fixes()
 		"planet-discovery-apia-carnova",
 		"planet-discovery-moshine",
 	}) do
-		replace_requirements(name, {"nyxaris-discovery"}, calidus, 850)
+		replace_requirements(name, {"nyxaris-discovery"}, calidus, 800)
 	end
 	-- Preserve Panglia\'s original data-cell science, foundry and Moshine
 	-- extraction prerequisites. Replacing its science cost here would bypass
