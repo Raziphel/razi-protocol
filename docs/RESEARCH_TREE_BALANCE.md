@@ -5,8 +5,9 @@ four unchanged source-card batches plus regional imported materials into
 five cards. That saves 20% of the original source ingredients per finished
 card (25% extra cards per four native batches), before valuing the additional
 freight. Crafting takes 1.15 times the normal time for four native batches,
-providing about 8.7% more cards per machine-hour. Productivity and automatic
-recycling remain disabled. The original one-card recipe and technology
+providing about 8.7% more cards per machine-hour. Productivity, automatic recycling and recipe decomposition remain
+disabled. Optional recipes only register when an existing crafting-category
+assembler has enough ingredient capacity. No machine is created or upgraded. The original one-card recipe and technology
 identifiers are preserved; no laboratories or science-pack types were added.
 
 Two new guarded alternatives give the last two stars an export economy:
