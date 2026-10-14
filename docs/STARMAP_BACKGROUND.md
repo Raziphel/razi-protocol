@@ -1,3 +1,52 @@
+## 2.1.71: Quiet-star atlas and region-specific belts
+
+This is an **actual source change in Razi Protocol Dev**, using its existing
+hand-authored graphics rather than substituting a wallpaper image.
+
+- The 6×6 starfield still uses the four existing 1024px source textures, but
+  now applies tiny deterministic exposure variations from cell to cell.
+  At wide zoom, that softens repeated tiles without runtime drawing, new
+  assets, larger sprites or additional GPU atlas layers.
+- System glow radii and opacity are reduced, particularly at Solaris,
+  so planet markers, chart labels and real routes remain crisp. Vespera's
+  ambient color is now neutral pearl-white; Umbra's is subtle copper
+  rather than a second purple Vibrant.
+- Vibrant's existing `belt-vibrant.png` and `debris-vibrant.png` artwork
+  remains its **only** dedicated ring. The redundant generic Vibrant ring
+  has been removed from the atlas, and its original artwork is prepended
+  behind native star and planet sprites. Its alpha and footprint are
+  reduced without changing the physical asteroid belt geometry.
+- Vespera and Umbra now combine a faint common `atlas-belt.png` layer
+  with their individual existing `debris-vespera.png` and
+  `debris-umbra.png` sprites. Their colors match their star identities,
+  rather than covering the whole system with a neon orbit circle.
+- The four remote dust pockets are smaller and softer; the four
+  micro-accents are shifted beyond main planet orbits, with lower
+  intensity. No false navigation rings, new starmap destinations or
+  planet/route coordinate changes are introduced.
+- Belt-specific route strokes echo each region: metallic violet at
+  Vibrant, pale silver-blue at Vespera and muted ember at Umbra.
+  They're static, narrow and sit under Factorio's clickable route map.
+
+All art switches preserve the existing setting names. The background
+`Off` toggle and belt-atmosphere toggle now consistently suppress
+Vibrant's special ring, just like the generic belts. The optional
+Better Starmap Background mod gets preference for *both* Razi layers.
+Switching artwork off does not touch belt coordinates, unlocks,
+asteroid distributions or saves.
+
+**Source files:** `prototypes/system/starmap_background.lua`,
+`prototypes/system/asteroid_belt_integration.lua`,
+`prototypes/system/route_highlights.lua`. All referenced PNG assets
+were already part of Razi Protocol.
+
+**Manual visual acceptance:** Test Subtle, Cinematic, Off, and
+belt-atmosphere Off with the full modpack at near, medium and full
+galaxy zoom. Inspect whether any route labels overlap dust, whether
+Vibrant is visibly doubled, and whether Vespera/Umbra show distinct
+debris signatures. Static fixture checks do not replace screenshots
+of the actual rendered starmap.
+
 ## Fine starfield textures (2.1.48)
 
 The four original 1024×1024 starfield PNG sheets are replaced with
