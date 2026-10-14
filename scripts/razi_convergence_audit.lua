@@ -40,6 +40,41 @@ local function lab_for(ingredients,labs)
   if all then return lab.name end
  end
 end
+-- A recipe may exist and still be uncraftable if every native machine
+-- excludes its category or has too few item input slots.
+local function crafting_machines(registry)
+ local machines={}
+ local entries
+ if registry.get_entity_filtered then
+  entries=registry.get_entity_filtered{
+   {filter="type",type={"assembling-machine","furnace"}}}
+ else
+  entries=registry.entity or {}
+ end
+ for id,entity in pairs(entries) do
+  if (entity.type=="assembling-machine" or entity.type=="furnace")
+   and entity.crafting_categories then
+   machines[#machines+1]={name=id,
+    categories=entity.crafting_categories,
+    slots=entity.ingredient_count or 65535}
+  end
+ end
+ return machines
+end
+local function supporting_machine(recipe,machines)
+ local slots=0
+ for _,part in ipairs(recipe.ingredients or {}) do
+  if part.type~="fluid" then slots=slots+1 end
+ end
+ for _,machine in ipairs(machines) do
+  for _,category in ipairs(recipe.categories or {}) do
+   if machine.categories[category] and machine.slots>=slots then
+    return machine.name,slots
+   end
+  end
+ end
+ return nil,slots
+end
 local function producers(registry,force)
  local wanted,index={},{}
  -- Collect only physical ingredients actually used by installed
@@ -91,6 +126,7 @@ function M.inspect(force,registry)
   return result
  end
  local labs=laboratories(registry)
+ local machines=crafting_machines(registry)
  local produced=producers(registry,force)
  result.labs=#labs
  local function error_line(line) result.errors[#result.errors+1]=line end
@@ -126,6 +162,16 @@ function M.inspect(force,registry)
    error_line("Researched but recipe locked: "..stage.item)
   else
    result.stages=result.stages+1
+  end
+  if recipe then
+   local machine,slots=supporting_machine(recipe,machines)
+   if not machine then
+    error_line("No native machine supports "..stage.item..
+     " ("..slots.." item ingredients)")
+   else
+    note(stage.id..": craftable by "..machine..
+     " ("..slots.." item ingredients)")
+   end
   end
   -- Check the ACTUAL source producers, not just product item definitions.
   -- Scripts/mining may produce items without a recipe, so report those
