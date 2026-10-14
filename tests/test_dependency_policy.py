@@ -58,6 +58,7 @@ class DependencyPolicyTests(unittest.TestCase):
             "k2-dyson-sphere-rebalance",
             "nulls-k2so-tweaks","xy-k2so-enhancements-nulls-fork",
             "planet-muluna","panglia_planet","Nexus-Updated",
+            "Nexus-Threat-Updated",
             "razi_lib","PlanetsLib",
         ):
             self.assertTrue(any(s.startswith(name+" >=")
@@ -74,8 +75,7 @@ class DependencyPolicyTests(unittest.TestCase):
             "planet-express","upgraded-rocket-turrets",
             "celestial-weather-updated",
             "celestial-weather-additions-updated",
-            "Cold_biters","science-tab","Nexus-Threat-Updated",
-            "Big-Monsters",
+            "Cold_biters","science-tab","Big-Monsters",
         })
         for candidate in recommended:
             self.assertFalse(any(raw.startswith(candidate+" ")
