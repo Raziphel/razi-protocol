@@ -1,27 +1,49 @@
-# Razi Protocol: full dependency audit (2.1.65)
+# Razi Protocol: Direct and transitive dependency audit (2.1.66)
 
-Reviewed 14 October 2026. Every direct manifest declaration is registered with type, group, version floor and justification in [`compat/dependency_policy.json`](../compat/dependency_policy.json).
+Reviewed 14 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
-| Type | Entries | Intent |
+| Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
-| required | 50 | Essential engine, curated campaign and K2SO compatibility |
-| recommended | 9 | Useful but removable companions |
-| optional | 14 | Experimental or conditional content |
-| incompatible | 22 | Known competing or broken mods |
+| required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
+| recommended | 9 | Enhancements without a Razi-enforced install |
+| optional | 14 | Unfinished, experimental or alternate compatible integrations |
+| incompatible | 22 | Known conflicting forks, startup failures and competing starmaps |
 
-## Classification decisions
+## Guaranteed indirectly, so removed from Razi's direct manifest
 
-K2SO, its source assets, the physical transceiver, Razi Library, PlanetsLib, the Dyson network, and the currently curated campaign worlds remain required. Some worlds have guarded code but are still required by campaign design, so a smaller playable profile would need separate progression changes.
+| Still installed through | Guarantees |
+| --- | --- |
+| `Nexus-Updated >= 1.4.1` | [`Nexus-Threat-Updated >= 1.1.0`](https://mods.factorio.com/mod/Nexus-Updated/dependencies) |
+| `k2-dyson-sphere-rebalance >= 0.1.2` | [`slp-dyson-sphere-reworked-fork >= 1.0.5`](https://mods.factorio.com/mod/k2-dyson-sphere-rebalance/dependencies) |
 
-Nexus-Updated remains part of the curated required world set. Nexus Threat remains required because Nexus-Updated directly requires it. Big Monsters is recommended; the separate Nexus Bosses mod independently requires its complete enemy stack when installed. Do not add a direct Nexus Bosses declaration while that addon has an optional dependency on Razi Protocol.
+The transceiver, Dyson sphere stages, Nexus endgame, and all campaign planets retain the same intended mechanics. Transitive hard dependencies load before their requiring mods. We have not disabled the source mods.
 
-The weather pair, Planet Express, upgraded rocket turrets, Science Tab, Frost Biters and Big Monsters are recommended. Science Tab's previously unconditional science item-group assumption was removed, allowing Razi's system cards to use Intermediate Products when Science Tab is absent.
+## Appears redundant, but is a necessary version pin
 
-FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds remain optional. Incompatible route overlays, outdated planet forks and conflicting engines stay explicitly blocked. A '+' recommendation never overrides another mod's hard dependencies.
+The following entries are required by another already-required mod, **but their upstream requirement is less strict**. Removing their Razi entry would lose a version floor, potentially permitting old combinations that the curated research tree has never supported.
 
-## Every direct manifest entry
+| Keep Razi direct requirement | Other required parent | Parent version floor |
+| --- | --- | --- |
+| `planetaris-arig >= 1.1.44` | [`planetaris-unbounded`](https://mods.factorio.com/mod/planetaris-unbounded/dependencies) | none |
+| `planetaris-hyarion >= 1.3.23` | [`planetaris-unbounded`](https://mods.factorio.com/mod/planetaris-unbounded/dependencies) | none |
+| `planetaris-tellus >= 1.1.11` | [`planetaris-unbounded`](https://mods.factorio.com/mod/planetaris-unbounded/dependencies) | none |
+| `Moshine >= 1.2.10` | [`panglia_planet`](https://mods.factorio.com/mod/panglia_planet/dependencies) | `>= 1.2.9` |
+| `cubium >= 1.0.31` | [`k2so-cubium-compatibility-fork`](https://mods.factorio.com/mod/k2so-cubium-compatibility-fork/dependencies) | `>= 1.0.29` |
+| `Krastorio2-spaced-out >= 2.0.17` | [`k2-dyson-sphere-rebalance`](https://mods.factorio.com/mod/k2-dyson-sphere-rebalance/dependencies) | `>= 2.0.0` |
+| `PlanetsLib >= 2.0.9` | [`planet-muluna`](https://mods.factorio.com/mod/planet-muluna/dependencies) | `>= 2.0.8` |
+| `Krastorio2Assets >= 2.1.0` | [`planet-rabbasca`](https://mods.factorio.com/mod/planet-rabbasca/dependencies) | none |
+| `castra-prime >= 0.9.2` | [`castra-krastorio-compatibility-plus`](https://mods.factorio.com/mod/castra-krastorio-compatibility-plus/dependencies) | none |
+| `rubia >= 0.69.159` | [`rubia-krastorio-compatibility-plus`](https://mods.factorio.com/mod/rubia-krastorio-compatibility-plus/dependencies) | `>= 0.69` |
+| `Paracelsin >= 1.10.2` | [`paracelsin-krastorio-compatibility-plus`](https://mods.factorio.com/mod/paracelsin-krastorio-compatibility-plus/dependencies) | `>= 1.6` |
+| `tenebris-prime >= 1.3.12` | [`tenebris-prime-made-in-hide`](https://mods.factorio.com/mod/tenebris-prime-made-in-hide/dependencies) | none |
 
-| Declaration | Audit category |
+## Big Monsters and Nexus Bosses
+
+Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-on explicitly requires `Big-Monsters >= 2.2.1`, `Nexus-Threat-Updated >= 1.1.0`, Toxic Biters, Arachnids and Electric Flying Enemies. Since Nexus Bosses declares `? razi-protocol` and is installed separately, Razi must not introduce a reverse dependency cycle. Big Monsters can remain recommended as an extra enemy addition when the addon is absent; when the addon is installed it will be loaded as a hard transitive dependency regardless of Razi's `+` declaration. [Official Nexus Bosses dependency list](https://mods.factorio.com/mod/nexus-bosses/dependencies).
+
+## All 93 direct dependency declarations
+
+| Declaration | Direct category |
 | --- | --- |
 | **Engine** | **2 entries** |
 | `base >= 2.1.20` | required |
@@ -32,10 +54,9 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | **K2SO core** | **2 entries** |
 | `Krastorio2-spaced-out >= 2.0.17` | required |
 | `Krastorio2Assets >= 2.1.0` | required |
-| **Dyson project** | **2 entries** |
-| `slp-dyson-sphere-reworked-fork >= 1.0.5` | required |
+| **Dyson project** | **1 entries** |
 | `k2-dyson-sphere-rebalance >= 0.1.2` | required |
-| **Deep Space curated** | **3 entries** |
+| **Deep Space curated** | **2 entries** |
 | `bellicos-and-aegis >= 0.4.0` | required |
 | `Nexus-Updated >= 1.4.1` | required |
 | **K2SO compatibility** | **8 entries** |
@@ -47,7 +68,7 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | `rubia-krastorio-compatibility-plus >= 1.3.1` | required |
 | `tenebris-prime-made-in-hide >= 1.1.0` | required |
 | `paracelsin-krastorio-compatibility-plus >= 1.2.0` | required |
-| **Required campaign planets** | **31 entries** |
+| **Curated campaign planets** | **31 entries** |
 | `planet-muluna >= 2.7.25` | required |
 | `planetaris-unbounded >= 1.9.1` | required |
 | `planetaris-tellus >= 1.1.11` | required |
@@ -88,7 +109,6 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | `+ Cold_biters >= 2.3.0` | recommended |
 | `+ Imersite-Asteroids >= 1.3.0` | recommended |
 | `+ science-tab >= 1.13.0` | recommended |
-| `Nexus-Threat-Updated >= 1.1.0` | required |
 | `+ Big-Monsters >= 2.2.1` | recommended |
 | **Opt-in extras** | **14 entries** |
 | `? FluxWorks >= 0.2.12` | optional |
@@ -129,16 +149,15 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | `! biological-machines-planet-wit` | incompatible |
 | `! shchierbin` | incompatible |
 
-## Compatibility and acceptance
+## Automated, repeatable full-graph audit
 
-This review covers all direct dependencies, not the complete recursive graph of every installed mod. Supported sources and the Mod Portal were checked for high-impact companions. A full Factorio 2.1 game-engine load and a copied existing-save playtest are still outstanding.
-
-Run the offline checks locally, without triggering GitHub Actions:
+The repository now includes `scripts/audit_mod_dependencies.py`, which fetches the **native 2.1 release metadata** for every required mod from the Factorio Mod Portal, walks required dependencies recursively, and reports missing versions, conflicts, duplicate direct entries and explicit version pins. The public Mod Portal does not require authentication for the metadata endpoint. Results are cached outside the repo. It does **not** change the manifest or trigger any workflow.
 
 ```bash
+python3 scripts/audit_mod_dependencies.py --json /tmp/razi-mod-deps.json --check
+python3 scripts/audit_mod_dependencies.py --offline --json /tmp/razi-mod-deps-offline.json
+python3 -m unittest discover -s tests -p 'test_mod_dependency_graph.py'
 python3 -m unittest discover -s tests -p 'test_dependency_policy.py'
-python3 -m unittest discover -s tests -p 'test_source_ownership.py'
-python3 -m unittest discover -s tests -p 'test_nexus_weather_pack.py'
 ```
 
-Always back up existing saves before changing enabled mods, even if a dependency is optional. The exact version floors and compatibility declarations are preserved.
+**Validation boundary:** The curated hard guarantees and source dependency pages above have been inspected, and manifest/policy consistency is checked statically. The *complete recursive Mod Portal API traversal has not been executed in this workspace*. A live API run, full Factorio 2.1 load with both baseline and recommended profiles, and old-save verification remain required before a stable release. Preserve manual-only GitHub Actions and back up save files before enabling or removing planet mods.
