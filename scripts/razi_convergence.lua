@@ -499,6 +499,9 @@ function M.render(parent,player)
     end
    elseif next_index==5 and not receiver_ready then
     line(advice,"convergence-next-action-receiver",width)
+   elseif not (force.recipes and force.recipes[next_rule.item]
+    and force.recipes[next_rule.item].enabled) then
+    line(advice,"convergence-next-action-recipe",width)
    else
     line(advice,"convergence-next-action-freight",width)
    end
@@ -539,6 +542,11 @@ function M.render(parent,player)
   local carried=inventory and inventory.valid
    and inventory.get_item_count(rule.item) or 0
   line(card,"convergence-carried",width,tostring(carried))
+  local recipe=force.recipes and force.recipes[rule.item]
+  local recipe_state=not recipe and "convergence-recipe-unavailable"
+   or (recipe.enabled and "convergence-recipe-ready"
+   or "convergence-recipe-locked")
+  line(card,recipe_state,width)
   line(card,"convergence-stage-description-"..rule.id,width)
   local build=card.add{type="label",caption=L(
     "convergence-build-"..rule.id)}
