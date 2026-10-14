@@ -30,14 +30,23 @@ function M.data_final_fixes()
       location.draw_orbit=false
     end
   end
+  -- Keep the orbital coordinates available for save migration even when
+  -- the user switches off Razi artwork. Cosmetic settings never affect travel.
+  local startup=settings and settings.startup or {}
+  local mode=startup["razi-starmap-background-style"]
+  local atmosphere=startup["razi-starmap-belt-atmosphere"]
+  if (mode and mode.value=="off")
+    or (atmosphere and atmosphere.value==false)
+    or (mods and mods["Better_Starmap_Background"]) then return end
   -- Decorative native textures only. No animation, no source mod assets.
   local utility=(data.raw["utility-sprites"] or {}).default
   local star=utility and utility.starmap_star
   if not (star and type(star.layers)=="table") then return end
   local sprites={
-    {name="belt-vibrant.png",scale=4.4,alpha=.39,tint={r=.70,g=.57,b=.96}},
-    {name="debris-vibrant.png",scale=4.0,alpha=.27,tint={r=.88,g=.71,b=1}}
+    {name="belt-vibrant.png",scale=4.02,alpha=.29,tint={r=.70,g=.57,b=.96}},
+    {name="debris-vibrant.png",scale=3.7,alpha=.165,tint={r=.88,g=.71,b=1}}
   }
+  local additions={}
   for _,sprite in ipairs(sprites) do
     local filename=ASSET..sprite.name
     local already=false
@@ -49,13 +58,18 @@ function M.data_final_fixes()
       end
     end
     if not already then
-      star.layers[#star.layers+1]={
+      additions[#additions+1]={
         type="sprite",filename=filename,size={512,512},
         scale=sprite.scale,shift={cx*PIXELS,cy*PIXELS},
         priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
         tint={r=sprite.tint.r,g=sprite.tint.g,b=sprite.tint.b,a=sprite.alpha}
       }
     end
+  end
+  -- Background atmospheres sit behind native stars, moons, route lines and
+  -- hover targets. The generic atlas is prepended in a later graphics pass.
+  for i=#additions,1,-1 do
+    table.insert(star.layers,1,additions[i])
   end
 end
 return M
