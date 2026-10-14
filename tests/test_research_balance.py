@@ -220,6 +220,13 @@ class ResearchBalanceTests(unittest.TestCase):
             "machine_throughput_change"],0)
         self.assertLess(result["multiplex_card_economy"][0][
             "machine_throughput_change"],0.10)
+        raw["assembling-machine"]={"small":{
+            "crafting_categories":["crafting"],"ingredient_count":2}}
+        report=audit.examine(raw)
+        self.assertTrue(any(issue["code"]=="multiplex-economy-invalid"
+                            for issue in report["errors"]))
+        raw["assembling-machine"]["small"]["ingredient_count"]=8
+        self.assertFalse(audit.examine(raw)["errors"])
 
     def test_freight_cards_cannot_skip_native_batches_or_amplify_bonus(self):
         raw=fixture()
