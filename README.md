@@ -4,6 +4,20 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.63: Science and research progression overhaul.** The main
+star gateways now cost 650/1,200/1,600 system-card research units
+per paired tier, with Outer Frontier Mastery at 1,900. Ordinary
+system-card manufacturing scales from 10 to 28 seconds, with extra
+native planetary science at the outer/deep-space frontier but no
+recursive multiplication of predecessor cards. Fourteen Razi factory
+research prices are rebalanced; the optional post-arrival native
+science integration expands to 30 guarded candidates. The science
+auditor reports actual card recipe inputs and detects cyclic card
+manufacturing dependencies. Existing source laboratories, independent
+paired-star routes, technology identities and old Convergence shipment
+records are preserved. A full in-engine modpack and save-migration
+validation pass remains outstanding; GitHub CI is still manual-only.
+
 **2.1.62: Original final-act art and manufacturing.** The five Mandates
 now use individual 64px icons. The last Ignition Mandate is built from
 three factory-made components consuming all eight mandatory system
