@@ -31,6 +31,13 @@ local systems={
      "razi-intergalactic-transceiver-signal"}}
 }
 M.systems=systems
+-- Use the same declaration as data-stage registration so the Campaign
+-- never advertises freight alternatives that were not installed.
+local multiplex_by_card={}
+for _,rule in ipairs(require("prototypes.compat.system_card_manufacturing").rules) do
+  multiplex_by_card[rule.card]=rule.name
+end
+M.multiplex_by_card=multiplex_by_card
 local function name(t,id)
   return t and t.localised_name or id
 end
@@ -158,6 +165,13 @@ function M.render(parent,player)
     label(section,{"",L("campaign-card")," ",
       recipe and recipe.enabled and L("campaign-card-ready")
         or L("campaign-card-pending")})
+    local freight_id=multiplex_by_card[system[3]]
+    local freight=freight_id and player.force.recipes
+      and player.force.recipes[freight_id]
+    if freight then
+      label(section,{"  ",L(freight.enabled
+        and "campaign-multiplex-ready" or "campaign-multiplex-pending")})
+    end
     for i=1,math.min(3,#pending) do
       label(section,{"",L("campaign-pending")," ",name(pending[i],pending[i].name)})
     end
