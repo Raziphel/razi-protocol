@@ -1,3 +1,13 @@
+## 2.1.67: Supplier roles in Galactic Atlas
+
+Unlocked source planets now display their actual installed Cargo Network
+component links, using the same source-world identifiers and technology
+research states as the Cargo panel. Each Atlas entry opens the matching
+existing Cargo Network card for real component ingredients, source worlds
+and downstream research. Undiscovered planets remain spoiler-safe. This
+does not create a new trade route or require optional components for a
+system card; original native production and freight remain unchanged.
+
 ## Native interplanetary communication (2.1.53)
 
 AAI Signal Transmission >=0.6.0 is an **optional** Factorio 2.1
