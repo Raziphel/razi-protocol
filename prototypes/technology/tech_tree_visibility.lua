@@ -1,16 +1,27 @@
 -- Which research stays visible with Factorio's essential-tech filter.
 -- Only the display flags change here.
 local M={}
-local chapters={
-  "solaris-discovery","nyxaris-discovery",
-  "vibrant-discovery","vespera-discovery",
-  "beetlejuice-discovery","umbra-discovery",
-  "razi-vespera-belt-survey","razi-umbra-belt-survey",
-  "razi-outer-frontier-mastery",
-  "razi-singularity-theory","razi-singularity-test-fire",
-  "razi-stable-intergalactic-singularity",
-  "razi-intergalactic-transceiver-signal"
+-- These rows are purely a visual sort order for our own milestones.
+-- The base game still owns research connections and technology icons.
+-- Keep native discoveries on their original research branches.
+M.chapter_groups={
+  {key="a[first-frontier]",techs={"solaris-discovery","nyxaris-discovery"}},
+  {key="b[middle-frontier]",techs={"vibrant-discovery","vespera-discovery",
+    "space-discovery-asteroid-belt","razi-vespera-belt-survey"}},
+  {key="c[outer-frontier]",techs={"beetlejuice-discovery","umbra-discovery",
+    "razi-umbra-belt-survey","razi-outer-frontier-mastery"}},
+  {key="d[deep-space]",techs={"razi-singularity-theory",
+    "razi-singularity-test-fire","razi-stable-intergalactic-singularity",
+    "razi-intergalactic-transceiver-signal"}},
+  {key="e[convergence]",techs={"razi-convergence-commission",
+    "razi-convergence-synchronization","razi-convergence-ignition"}}
 }
+local chapters={}
+for _,group in ipairs(M.chapter_groups) do
+  for _,name in ipairs(group.techs) do
+    chapters[#chapters+1]=name
+  end
+end
 M.chapters=chapters
 -- Show all native world-discovery research in the essential-tech filter.
 -- Unlike the Razi-owned chapters, do NOT rename or reorder source nodes.
@@ -27,12 +38,14 @@ local function native_discovery(node)
 end
 function M.data_final_fixes()
   local techs=data.raw.technology or {}
-  for index,name in ipairs(chapters) do
-    local t=techs[name]
-    if t and not t.hidden and t.enabled~=false then
-      t.essential=true
-      -- Only reorder Razi-owned campaign nodes, not other mods' techs.
-      t.order=string.format("f[razi-campaign]-%02d",index)
+  for _,group in ipairs(M.chapter_groups) do
+    for index,name in ipairs(group.techs) do
+      local t=techs[name]
+      if t and not t.hidden and t.enabled~=false then
+        t.essential=true
+        -- Only Razi-owned milestones; no changes to native prerequisites.
+        t.order=string.format("f[razi-campaign]-%s-%02d",group.key,index)
+      end
     end
   end
   for _,node in pairs(techs) do
