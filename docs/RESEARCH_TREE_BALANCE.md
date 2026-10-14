@@ -1,3 +1,19 @@
+## 2.1.62: Three native-machine Ignition assemblies
+
+Ignition now consumes three assembled physical components instead of
+putting ten or more ingredients into a single crafting machine:
+Calidus Stellar Frame, Outer-System Engineering Matrix and
+Deep-Space Resonance Lens. Across their existing-native-assembler
+recipes, they still consume all eight required system tech cards.
+Optional source materials are limited to the installed machine's
+input-slot capacity. This neither creates a lab nor rewrites source
+recipes.
+
+Old Convergence deliveries and research history remain intact.
+The read-only /razi-audit now checks all five Mandate recipes plus
+these three component recipes. A full modpack startup and source
+research-path verification remain outstanding.
+
 ## Loaded-technology verification (2.1.61)
 
 Administrators can now run `/razi-audit` to compare the three
