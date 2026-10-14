@@ -18,7 +18,7 @@ function M.status(force)
  local stages,total,completed={},0,0
  for _,stage in ipairs(M.stages) do
    local t=force.technologies[stage[1]]
-   if t then
+   if t and not (t.prototype and t.prototype.hidden) then
      total=total+1
      if t.researched then completed=completed+1 end
      stages[#stages+1]={tech=t,heading=stage[2]}
@@ -124,7 +124,11 @@ function M.render(parent,player,options)
      for i=1,math.min(#missing,3) do
        label(frame,{"",L("dyson-requires")," ",missing[i].localised_name})
      end
-     if #missing==0 then label(frame,L("dyson-ready")) end
+     if stage.tech.enabled==false then
+       label(frame,L("dyson-disabled"))
+     elseif #missing==0 then
+       label(frame,L("dyson-ready"))
+     end
    end
    scroll.add{type="line",direction="horizontal"}
  end

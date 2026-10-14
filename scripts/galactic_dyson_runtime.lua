@@ -48,6 +48,10 @@ function M.inspect(force,worlds,registry)
   for _,name in ipairs(names) do
     result.receivers=result.receivers+force.get_entity_count(name)
   end
+  -- Most forces have no stellar receivers yet. A zero count is definitive;
+  -- do not traverse every surface to confirm what the native force index
+  -- already knows.
+  if result.receivers==0 then return result end
   -- Surface breakdown is only sampled when a player opens/refreshes
   -- Stellar Works. Never scan on a periodic game tick.
   for _,surface in pairs(worlds or {}) do
