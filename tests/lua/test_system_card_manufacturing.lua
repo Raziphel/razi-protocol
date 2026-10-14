@@ -33,7 +33,9 @@ for _,tech in ipairs({"planet-discovery-corrundum",
  technologies[tech]={effects={}}
 end
 rawset(_G,"data",{raw={recipe=raw_recipes,technology=technologies,
- tool=tools,item=items}})
+ tool=tools,item=items,
+ ["assembling-machine"]={large={crafting_categories={"crafting"},
+   ingredient_count=16}}}})
 function data:extend(objects)
  for _,object in ipairs(objects) do
   check(not self.raw[object.type][object.name],"Duplicate recipe")
@@ -70,4 +72,9 @@ items["bioflux"]=nil
 mod.data_final_fixes()
 check(raw_recipes["razi-nyxaris-multiplex-cards"]==nil,
  "Missing supplier must disable only its own freight option")
+raw_recipes["razi-umbra-multiplex-cards"]=nil
+data.raw["assembling-machine"].large.ingredient_count=3
+mod.data_final_fixes()
+check(raw_recipes["razi-umbra-multiplex-cards"]==nil,
+ "Unavailable ingredient-capable machines must suppress only optional synthesis")
 print("Card multiplex: native conservation, freight, science and safety passed")
