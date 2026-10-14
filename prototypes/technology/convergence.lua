@@ -276,13 +276,17 @@ function M.data_final_fixes()
  local unlock_tech={
   [M.commission]=begin,[M.authorization]=ending,[M.ignition]=ignition
  }
- local new={
+ local new={begin,ending,ignition}
+ for _,subgroup in ipairs({
   {type="item-subgroup",name="razi-convergence-parts",
    group="intermediate-products",order="zzz-a[convergence-parts]"},
   {type="item-subgroup",name="razi-convergence-mandates",
-   group="intermediate-products",order="zzz-b[convergence-mandates]"},
-  begin,ending,ignition
- }
+   group="intermediate-products",order="zzz-b[convergence-mandates]"}
+ }) do
+  if not raw("item-subgroup",subgroup.name) then
+   new[#new+1]=subgroup
+  end
+ end
  local function add_item_recipe(rule,icon,subgroup,ingredients,energy)
   local item={type="item",name=rule.item,
    stack_size=100,weight=1000,
