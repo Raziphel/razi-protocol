@@ -38,7 +38,10 @@ class DistributedIndustryTests(unittest.TestCase):
                          "nyxaris-discovery"):
             self.assertNotIn('tech="'+critical+'"',source)
         self.assertIn("reaches(techs,parent,rule.tech)",source)
-        self.assertIn("has_lab(raw,needed)",source)
+        self.assertIn("M.has_lab(raw,needed)",source)
+        self.assertIn("M.early_labs={",source)
+        self.assertIn('["kr-advanced-lab"]=true',source)
+        self.assertNotIn('["kr-singularity-lab"]=true',source)
         self.assertIn("is_produced(raw,name)",source)
         self.assertIn("target.unit.ingredients[#target.unit.ingredients+1]",source)
         self.assertNotIn("data:extend",source)
