@@ -223,13 +223,14 @@ local hx,hy=position("sye-calidus")
 check(math.abs(hx)<1 and math.abs(hy-20)<.01,
   "Calidus departure must remain near the central star")
 
--- All planets directly orbiting a Razi star get Factorio 2.1 native
--- rings, not only the old handpicked six signature planets.
-for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
+-- Full draws a native orbit for every positioned Razi star planet.
+-- Reuse this list below so Off is tested against the same complete set.
+local managed_planets={"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","igrys","gleba","moshine","panglia","foliax",
   "fulgora","ribbonia","paracelsin","muria","aquilo","rubia",
   "maraxsis","obsidiax","cubium","linox-planet_linox",
-  "tenebris","vesta","carna","ferrum","arcanyx","bm-balack"}) do
+  "tenebris","vesta","carna","ferrum","arcanyx","bm-balack"}
+for _,name in ipairs(managed_planets) do
   check(planets[name].draw_orbit==true,
     "Factorio native orbit still disabled: "..name)
 end
@@ -258,8 +259,29 @@ check(planets.vulcanus.draw_orbit==false and
   planets.castra.draw_orbit==true and
   places.secretas.draw_orbit==false,
   "Clean chart should keep only reference rings")
+-- Off must clear all native rings from managed planets (even those
+-- previously true), without erasing native moon art or custom sprites.
+settings.startup["razi-starmap-orbit-density"].value="off"
+layout.data_final_fixes()
+for _,name in ipairs(managed_planets) do
+  check(planets[name].draw_orbit==false,
+    "Off left a native planetary ring visible: "..name)
+end
+check(places.secretas.draw_orbit==false,
+  "Off left Secretas's native space-location ring visible")
+check(places["sye-solaris"].draw_orbit==false,
+  "Off drew a synthetic Slip Stream orbit")
+check(planets.rabbasca.draw_orbit==false and moon.sprite==native_moon_sprite
+  and planets["optional-source-world"].orbit==optional_orbit,
+  "Off damaged a moon orbit or source-owned sprite")
 settings.startup["razi-starmap-orbit-density"].value="full"
 layout.data_final_fixes()
+for _,name in ipairs(managed_planets) do
+  check(planets[name].draw_orbit==true,
+    "Switching back to Full did not restore the native ring: "..name)
+end
+check(places.secretas.draw_orbit==true,
+  "Full did not restore Secretas's native orbit")
 check(planets["optional-source-world"].orbit==optional_orbit and
   planets["optional-source-world"].orbit.sprite.filename=="custom-optional-orbit.png",
   "Optional source orbit identity or unique sprite was overwritten")
@@ -310,6 +332,13 @@ settings.startup["razi-starmap-orbit-density"].value="balanced"
 layout.confirm_critical_positions()
 check(planets["alchemy-planet"].draw_orbit==false,
   "Balanced density should still suppress Khemia's orbit")
+settings.startup["razi-starmap-orbit-density"].value="off"
+layout.confirm_critical_positions()
+check(planets["alchemy-planet"].draw_orbit==false,
+  "Off must suppress Khemia's native orbit without moving it")
+check(math.abs(select(1,absolute_coordinates(planets["alchemy-planet"]))-targetX)<.01
+  and math.abs(select(2,absolute_coordinates(planets["alchemy-planet"]))-targetY)<.01,
+  "Turning Khemia's ring off changed its position")
 settings.startup["razi-starmap-orbit-density"].value="full"
 layout.confirm_critical_positions()
 check(planets["alchemy-planet"].draw_orbit==true,
@@ -392,8 +421,9 @@ end
 local settings_file=assert(io.open("settings.lua","r"))
 local setting_source=settings_file:read("*a"); settings_file:close()
 check(setting_source:find('name="razi-starmap-orbit-density"',1,true)
-  and setting_source:find('default_value="full"',1,true),
-  "Full native planetary rings should be the default")
+  and setting_source:find('default_value="full"',1,true)
+  and setting_source:find('allowed_values={"full","balanced","clean","off"}',1,true),
+  "Full should be the default, with a native-ring Off switch")
 local data_updates_file=assert(io.open("data-updates.lua","r"))
 local updates_source=data_updates_file:read("*a")
 data_updates_file:close()
