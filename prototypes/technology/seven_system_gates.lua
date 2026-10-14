@@ -170,10 +170,12 @@ function gates.data_final_fixes()
 	}) do
 		ensure_unlock(name .. "-discovery", "sye-" .. name)
 	end
+	-- Gateway costs follow the practical expense of crafting system cards,
+	-- not merely the number of packs in the research unit.
 	-- Both first stars unlock using Nauvis science only. In particular, do
 	-- not require metallurgic, electromagnetic, or agricultural science here.
-	replace_requirements("solaris-discovery", calidus_discoveries, calidus, 1000)
-	replace_requirements("nyxaris-discovery", calidus_discoveries, calidus, 1000)
+	replace_requirements("solaris-discovery", calidus_discoveries, calidus, 650)
+	replace_requirements("nyxaris-discovery", calidus_discoveries, calidus, 650)
 
 	-- Vulcanus is the Solaris industrial anchor, reached after departing Nauvis.
 	-- Castra opens after Vulcanus, while Arig and Hyarion branch after Castra.
@@ -209,10 +211,10 @@ function gates.data_final_fixes()
 	-- opens. Requiring the previous pair's cards means genuine production.
 	replace_requirements("vibrant-discovery",
 		with_gate("solaris-discovery", with_gate("nyxaris-discovery", frontier_mastery)),
-		exotic, 1500)
+		exotic, 1200)
 	replace_requirements("vespera-discovery",
 		with_gate("solaris-discovery", with_gate("nyxaris-discovery", frontier_mastery)),
-		exotic, 1500)
+		exotic, 1200)
 
 	-- Vibrant is Fulgora's home. Electromagnetic science is obtained *inside*
 	-- this tier, never from Calidus or the initial Solaris/Nyxaris entrances.
@@ -246,8 +248,8 @@ function gates.data_final_fixes()
 	for _, name in ipairs(exotic_mastery) do
 		outer_prereqs[#outer_prereqs + 1] = name
 	end
-	replace_requirements("beetlejuice-discovery", outer_prereqs, outer, 1900)
-	replace_requirements("umbra-discovery", outer_prereqs, outer, 1900)
+	replace_requirements("beetlejuice-discovery", outer_prereqs, outer, 1600)
+	replace_requirements("umbra-discovery", outer_prereqs, outer, 1600)
 
 	replace_requirements("planet-discovery-cubium", {"beetlejuice-discovery"}, outer, 1100)
 	replace_requirements("planet-discovery-secretas", {"planet-discovery-cubium"}, outer, 1200)
@@ -267,7 +269,7 @@ function gates.data_final_fixes()
 	for _, name in ipairs(outer_mastery) do
 		final_prereqs[#final_prereqs + 1] = name
 	end
-	replace_requirements("razi-outer-frontier-mastery", final_prereqs, finale, 2200)
+	replace_requirements("razi-outer-frontier-mastery", final_prereqs, finale, 1900)
 	add_existing_prerequisites("stellar-discovery-solar-system-edge",
 		{"razi-outer-frontier-mastery"})
 	add_existing_prerequisites("promethium-science-pack",
