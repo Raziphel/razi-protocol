@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-14",
   "factorio_version": "2.1",
-  "notes": "Direct manifest audit. Curated-required can be a design policy, not a proof of unguarded Lua use. Transitive dependencies, actual engine loading, and save safety require separate verification.",
+  "notes": "Direct manifest audit, updated after checking required transitive dependency guarantees and version constraints. The Dyson fork remains guaranteed by K2 Dyson Sphere Rebalance >= 0.1.2; Nexus Threat remains guaranteed by Nexus-Updated >= 1.4.1. Re-run scripts/audit_mod_dependencies.py against the live Factorio Mod Portal to detect upstream dependency changes. Native engine and save compatibility are not proven.",
   "dependencies": [
     {
       "mod": "base",
@@ -80,13 +80,6 @@
       "declaration": "+ aai-signal-transmission >= 0.6.0",
       "group": "recommended",
       "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
-    },
-    {
-      "mod": "slp-dyson-sphere-reworked-fork",
-      "type": "required",
-      "declaration": "slp-dyson-sphere-reworked-fork >= 1.0.5",
-      "group": "dyson",
-      "reason": "Curated Calidus Dyson project and K2SO compatibility"
     },
     {
       "mod": "k2-dyson-sphere-rebalance",
@@ -654,13 +647,6 @@
       "declaration": "! shchierbin",
       "group": "conflict",
       "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
-    },
-    {
-      "mod": "Nexus-Threat-Updated",
-      "type": "required",
-      "declaration": "Nexus-Threat-Updated >= 1.1.0",
-      "group": "deep",
-      "reason": "Nexus-Updated is a required campaign world and its current Mod Portal release requires Nexus-Threat-Updated >= 1.1.0"
     },
     {
       "mod": "Big-Monsters",
