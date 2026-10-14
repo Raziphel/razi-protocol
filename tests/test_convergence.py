@@ -78,6 +78,10 @@ class ConvergenceTests(unittest.TestCase):
                      'tech.prerequisites', 'local function cyclic_research',
                      'function M.command(event)',
                      'No installed lab accepts all packs',
+                     'local function crafting_machines(registry)',
+                     'local function supporting_machine(recipe,machines)',
+                     'entity.ingredient_count or 65535',
+                     'No native machine supports',
                      'Researched but recipe locked',
                      'local produced=producers(registry,force)'):
             if part=="tech.prerequisites":
