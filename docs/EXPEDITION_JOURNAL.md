@@ -1,3 +1,19 @@
+## 2.1.60: Cleaner handoffs to Convergence
+
+The Protocol Codex now labels actual physical Mandate contributions
+as DELIVER or SHIP in its recommendation list. After final delivery,
+its unresolved victory step is a pending SIGNAL, not a claim that
+the player still needs to research Ignition. The surrounding
+parallel-star recommendations remain available. The source research
+requirements still come from the real Factorio technology graph.
+
+The Galactic Operations finale panel gives a true fractional assembly
+percentage and per-module progress bars, shows exactly which Mandate
+recipe is unlocked, and identifies up to three actual missing native
+research prerequisites for the currently active production stage.
+Five native deep-space Atlas destinations now link directly to this
+panel without bypassing any transport or unlock requirements.
+
 ## The Seven-Sun Array (2.1.59)
 
 The five visible array modules, Dyson coupling readout and finale
