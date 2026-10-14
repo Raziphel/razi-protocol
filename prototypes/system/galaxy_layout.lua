@@ -24,7 +24,7 @@ local anchors = {
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
   -- Northern arrivals flank the corona instead of threading through it.
   {"space-location","sye-nyxaris","nyxaris",41,0.04},
-  {"space-location","sye-vespera","vespera",26,0.25},
+  {"space-location","sye-vespera","vespera",27,0.25},
   {"space-location","sye-umbra","umbra",27,0.5},
   -- Solaris's compact, asymmetric orbital sweep. Warm inner worlds sit
   -- close to the star; Tellus and the denser industrial worlds are
@@ -50,13 +50,17 @@ local anchors = {
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.685},
   {"planet","paracelsin","vibrant",48,0.68},
-  -- Offset Muria from the parallel gateway-to-Aquilo cargo leg.
-  {"planet","muria","vespera",20,0.49},
-  {"planet","aquilo","vespera",40,0.497561},
-  {"space-location","razi-vespera-belt-inner","vespera",28.834477,0.594031},
-  {"space-location","razi-vespera-belt-outer","vespera",28.890877,0.654938},
-  {"planet","rubia","vespera",31,0.739398},
-  {"planet","maraxsis","vespera",44,0.857126},
+  -- Vespera's main itinerary follows a tidy southern-to-western crescent:
+  -- gateway -> Muria/Aquilo -> one physical belt -> Rubia -> Maraxsis.
+  -- Muria stays off the parallel gateway-to-Aquilo leg, and the paired
+  -- belt markers sit along the arc instead of crowding a single orbit.
+  -- Spaced radii also keep Full native orbit rings distinct.
+  {"planet","muria","vespera",20,0.48},
+  {"planet","aquilo","vespera",38,0.50},
+  {"space-location","razi-vespera-belt-inner","vespera",30,0.61},
+  {"space-location","razi-vespera-belt-outer","vespera",37,0.685},
+  {"planet","rubia","vespera",43,0.77},
+  {"planet","maraxsis","vespera",51,0.86},
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
   {"space-location","secretas","beetlejuice",40,0.048826},
@@ -74,12 +78,12 @@ local anchors = {
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
-  {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
+  {name="obsidiax",star="vespera",radius=33,turn=0.32},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
-  {name="bm-balack",star="vespera",radius=41.637729,turn=0.816913}
+  -- Balack is Aquilo\u0027s optional southern spur, not a cross-star diagonal.\n  {name="bm-balack",star="vespera",radius=47,turn=0.42}
 }
 for _,world in ipairs(optional_orbits) do
   anchors[#anchors+1]={"planet",world.name,world.star,world.radius,world.turn}
@@ -326,7 +330,7 @@ function M.data_final_fixes()
     ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
-    ["obsidiax"]=0.25,["carna"]=0.75,
+    ["obsidiax"]=0.25,["carna"]=0.75,\n    ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,

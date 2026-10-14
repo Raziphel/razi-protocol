@@ -41,6 +41,56 @@ class StarmapReadabilityTests(unittest.TestCase):
         self.assertIn('["razi-vespera-belt-inner"]=0.25', layout)
         self.assertIn('["razi-vespera-belt-outer"]=0.75', layout)
 
+    def test_vespera_crescent_has_no_crossing_or_obstructed_routes(self):
+        # Include the optional worlds that final route authority attaches.
+        names = ("sye-vespera", "muria", "aquilo",
+                 "razi-vespera-belt-inner", "razi-vespera-belt-outer",
+                 "rubia", "maraxsis", "obsidiax", "bm-balack")
+        points = geom.positions(self.anchors)
+        local = [(r["source"], r["destination"]) for r in self.routes
+                 if r["source"] in names and r["destination"] in names]
+        local.extend((("obsidiax", "sye-vespera"),
+                      ("bm-balack", "aquilo")))
+        for i, (a, b) in enumerate(local):
+            self.assertGreaterEqual(
+                geom.chord_clearance((points["vespera"][0], points["vespera"][1]),
+                                     points[a], points[b]), 15,
+                (a, b, "star clearance"))
+            for other in names:
+                if other not in (a, b):
+                    self.assertGreaterEqual(
+                        geom.chord_clearance(points[other],
+                                             points[a], points[b]), 7,
+                        (a, b, other, "marker clearance"))
+            for c, d in local[i + 1:]:
+                if len({a, b, c, d}) == 4:
+                    self.assertFalse(geom.segments_cross(
+                        points[a], points[b], points[c], points[d]),
+                        (a, b, c, d))
+        anchors = {a["name"]: a for a in self.anchors}
+        planets = ("muria", "aquilo", "rubia", "maraxsis",
+                   "obsidiax", "bm-balack")
+        for i, a in enumerate(planets):
+            for b in planets[i + 1:]:
+                self.assertGreaterEqual(
+                    abs(anchors[a]["radius"] - anchors[b]["radius"]), 3.5,
+                    (a, b, "native orbit ring gap"))
+        self.assertGreater(
+            geom.distance(points["razi-vespera-belt-inner"],
+                          points["razi-vespera-belt-outer"]), 14)
+
+    def test_vespera_local_routes_use_straight_rendering(self):
+        reconcile = (ROOT / "prototypes/system/route_reconcile.lua").read_text()
+        authority = (ROOT / "prototypes/system/route_authority.lua").read_text()
+        self.assertIn('membership[from]=="vespera"', reconcile)
+        self.assertIn('or a=="vespera"', authority)
+        self.assertIn('pair("obsidiax","sye-vespera")', authority)
+        self.assertIn('pair("bm-balack","aquilo")', authority)
+        routes = {(r["source"], r["destination"]) for r in self.routes}
+        self.assertIn(("razi-vespera-belt-inner",
+                       "razi-vespera-belt-outer"), routes)
+        self.assertNotIn(("aquilo", "rubia"), routes)
+
     def test_no_save_game_or_tick_work(self):
         for name in ("scripts/audit_starmap_readability.py",
                      "prototypes/system/galaxy_layout.lua"):
