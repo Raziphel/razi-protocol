@@ -96,7 +96,7 @@ class DependencyGraphTests(unittest.TestCase):
     def test_our_real_declarations_keep_nonredundant_pins(self):
         info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
         deps = info["dependencies"]
-        self.assertEqual(info["version"], "2.1.72")
+        self.assertEqual(info["version"], "2.1.73")
         self.assertIn("Nexus-Updated >= 1.4.1", deps)
         self.assertIn("k2-dyson-sphere-rebalance >= 0.1.2", deps)
         self.assertNotIn("Nexus-Threat-Updated >= 1.1.0", deps)
