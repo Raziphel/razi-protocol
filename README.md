@@ -4,6 +4,13 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.64: Curated recommended companions.** Factorio 2.1's new
+recommended dependency marker now advertises AAI Signal Transmission
+and Imersite Asteroids without requiring either. FluxWorks and other
+larger or incompatible optional integrations remain opt-in while their
+minimum releases and full-game compatibility are verified. See
+[Optional Dependencies](docs/OPTIONAL_DEPENDENCIES.md) for the policy.
+
 **2.1.63: Science and research progression overhaul.** The main
 star gateways now cost 650/1,200/1,600 system-card research units
 per paired tier, with Outer Frontier Mastery at 1,900. Ordinary
