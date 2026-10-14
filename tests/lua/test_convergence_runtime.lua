@@ -65,6 +65,8 @@ check(message=="convergence-delivered" and used==3,
 check(m.record(force).delivered.stellar==3
  and inventory.items[m.stages[1].item]==0,
  "No free credit for unseen items")
+check(math.abs(m.assembly_fraction(force)-3/8/5)<.00001,
+ "A real partial shipment must advance the visible array proportionally")
 message,used=m.deliver(player,"industry")
 check(message=="convergence-wrong-stage" and used==0,
  "Later stages cannot be donated early")
@@ -159,8 +161,9 @@ check(m.current(legacy_force)==#m.stages+1
  and m.completed(legacy_force,"ignition"),
  "2.1.57 winner must remain fully credited after adding two phases")
 local progress,total,won=m.progress(legacy_force)
-check(won and progress==5 and total==5 and done==1,
- "Loading an old victory must not trigger another game-ending event")
+check(won and progress==5 and total==5 and done==1
+ and m.assembly_fraction(legacy_force)==1,
+ "Loading an old victory must preserve a fully assembled array")
 local migration_force=fixture(4)
 migration_force.technologies[mods.authorization].researched=true
 migration_force.recipes={}
@@ -172,4 +175,37 @@ check(migration_force.recipes[m.stages[3].item].enabled
  and migration_force.recipes[m.stages[4].item].enabled
  and not migration_force.recipes[m.stages[5].item].enabled,
  "Recipe migration must respect actual research, including final Ignition")
-print("Convergence: five real shipments, research gates, legacy wins and merges passed")
+-- Two simultaneous force transmissions merged during the finale must
+-- retain the earlier accepted accord, archive its origin, and win once.
+local donor=fixture(5)
+local recipient=fixture(6)
+storage.razi_convergence[5]={
+ delivered={stellar=8,industry=10,["deep-space"]=6,
+  resonance=4,ignition=1},victory=false,
+ transmission={started=1000,beat=1,
+  operator="Earlier Engineer",site="nexus"}
+}
+storage.razi_convergence[6]={
+ delivered={stellar=8,industry=10,["deep-space"]=6,
+  resonance=4,ignition=1},victory=false,
+ transmission={started=1050,beat=1,
+  operator="Later Engineer",site="shattered-planet"}
+}
+storage.razi_convergence_pending[5]=true
+storage.razi_convergence_pending[6]=true
+m.forces_merged({source_index=5,destination_index=6})
+check(storage.razi_convergence[5]==nil
+ and storage.razi_convergence[6].transmission.started==1000
+ and storage.razi_convergence_pending[5]==nil
+ and storage.razi_convergence_pending[6],
+ "Merged forces must preserve exactly one earliest transmission")
+game.tick=1720
+m.advance(game.tick)
+check(m.completed(recipient,"victory") and done==2
+ and m.record(recipient).completed_by=="Earlier Engineer"
+ and m.record(recipient).completed_site=="nexus"
+ and not storage.razi_convergence_pending[6],
+ "Merged force must win once with the actual earlier contributor")
+m.advance(game.tick+60)
+check(done==2,"Merged transmission must not replay another victory")
+print("Convergence: partial freight, receiver gates, restored signals, force merges and legacy wins passed")
