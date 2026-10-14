@@ -9,7 +9,7 @@ Every manifest entry is reviewed; the contract is checked by
 | Category | Current direct entries |
 | --- | ---: |
 | Required | 48 |
-| Recommended (`+`) | 9 |
+| Recommended (`+`) | 15 |
 | Optional (`?`) | 14 |
 | Incompatible (`!`) | 22 |
 
@@ -29,6 +29,42 @@ non-negotiable prerequisite chain:
 - Science Tab 1.13.0+: grouped science UI; Razi's cards fall back to
   Intermediate Products when it is absent
 - Big Monsters 2.2.1+: source-owned enemy encounters
+
+## Orbital and industry companions (October 2026)
+
+See [Frontier Companions](FRONTIER_COMPANIONS.md) for the source-owned
+research weave, Catapult opt-in rules and full in-game test matrix.
+
+Six Factorio 2.1 mods are advertised as **recommended**, not required.
+Each belongs to a concrete gameplay niche without replacing Razi's
+original star map, courier freight rules, tech cards or endgame:
+
+| Recommended mod | Role | Razi integration |
+| --- | --- | --- |
+| [Various Cargo Bays](https://mods.factorio.com/mod/Various_Cargo_Bays) 1.1.0+ | Throughput-specialized pod bays and storage bays | Source recipes untouched; Cargo Network companion field notes |
+| [Space Age Railway Expansion](https://mods.factorio.com/mod/space-age-railway-expansion) 0.0.18+ | Nuclear/fusion rail progression | Source-checked optional research weave, guard-skips unavailable labs |
+| [Shield Generators](https://mods.factorio.com/mod/shield-generators) 0.7.0+ | Base and turret shields | Late superconducting-shield science integration only when resolvable |
+| [Circuit Launchable Rockets](https://mods.factorio.com/mod/CircuitLaunchableRockets) 1.4.6+ | Physical automated launches | Preserve native launcher behavior and settings |
+| [Cargo Bay Limit Research](https://mods.factorio.com/mod/CargoBayLimitResearch) 1.1.2+ | Opt-in capacity-research challenge | Preserve dynamic source science and player limit settings |
+| [Platform Logistics Overhaul](https://mods.factorio.com/mod/platform-logistics-overhaul) 2.1.2+ | Same-orbit pod priority logistics | No changes to its real-pod transport behavior |
+
+**Orbital Catapult** (https://mods.factorio.com/mod/orbital-cannon) has
+special upstream instructions: its author requests only `~ orbital-cannon`
+as a dependency to avoid breaking final-fixes starmap order. That form would
+make the mod required, so Razi deliberately does **not** declare it as
+recommended or required. Instead, its prototype-link bridge is off by
+default, detects the source mod if manually installed, and offers only
+Muria/Aquilo reversible local links. It does **not** touch the mandatory
+Aquilo -> Vespera belt -> Rubia crossing or any inter-system route.
+This experimental link still requires full in-game load and unlock testing.
+
+Warning: Cargo Bay Limit Research **changes placement limits even if Razi
+does not touch its code**; backup a save before enabling it. Shield Generators
+loads the author's `migratus-orchestrus` dependency and has Lua-driven
+shields, so large combat saves need UPS measurements. Platform Logistics
+Overhaul and Space Age Railway Expansion are recent and should be evaluated
+on disposable saves first. These are portal recommendations, not blanket
+compatibility certifications.
 
 ## Deliberately optional
 

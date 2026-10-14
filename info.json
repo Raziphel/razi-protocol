@@ -99,7 +99,13 @@
     "! PlanetAthos",
     "! biological-machines-planet-wit",
     "! shchierbin",
-    "+ Big-Monsters >= 2.2.1"
+    "+ Big-Monsters >= 2.2.1",
+    "+ Various_Cargo_Bays >= 1.1.0",
+    "+ space-age-railway-expansion >= 0.0.18",
+    "+ shield-generators >= 0.7.0",
+    "+ CircuitLaunchableRockets >= 1.4.6",
+    "+ CargoBayLimitResearch >= 1.1.2",
+    "+ platform-logistics-overhaul >= 2.1.2"
   ],
   "quality_required": true,
   "rail_bridges_required": true,

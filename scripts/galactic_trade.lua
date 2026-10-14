@@ -369,6 +369,35 @@ function M.render(parent,player,p,options)
 
   signal_network(parent,player,size.width)
 
+  -- Installed companion field notes. No remote calls or repeated scans;
+  -- this section is created only when the Cargo dossier is opened.
+  local companion_ids={
+    {"Various_Cargo_Bays","companion-pod-bays"},
+    {"space-age-railway-expansion","companion-trains"},
+    {"shield-generators","companion-shields"},
+    {"CircuitLaunchableRockets","companion-circuits"},
+    {"CargoBayLimitResearch","companion-bay-limits"},
+    {"platform-logistics-overhaul","companion-platform-hubs"},
+    {"orbital-cannon","companion-catapult"}
+  }
+  local installed=script and script.active_mods or {}
+  local active={}
+  for _,entry in ipairs(companion_ids) do
+    if installed[entry[1]] then active[#active+1]=entry[2] end
+  end
+  if #active>0 then
+    local companions=parent.add{type="flow",direction="vertical"}
+    companions.style.vertical_spacing=5
+    local heading=companions.add{type="label",
+      caption=L("companion-ledger-heading")}
+    heading.style.font="default-bold"
+    heading.style.font_color={r=.71,g=.83,b=.87}
+    for _,key in ipairs(active) do
+      local line=wrap(companions,L(key),size.width-38)
+      line.style.font_color={r=.73,g=.77,b=.80}
+    end
+  end
+
   local scroll=options.embedded and parent
     or parent.add{type="scroll-pane",direction="vertical"}
   if not options.embedded then

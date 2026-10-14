@@ -203,3 +203,7 @@ require("prototypes.technology.convergence").data_final_fixes()
 -- planetary science, after all source science, labs and routes have settled.
 -- The pass skips incomplete or circular changes instead of forcing them.
 require("prototypes.technology.distributed_industry").data_final_fixes()
+
+-- Optional rail and shield tech after all existing laboratories/source
+-- research are finalized. Guarded skips avoid unreachable planet science.
+require("prototypes.compat.frontier_companions").data_final_fixes()

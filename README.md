@@ -1,5 +1,16 @@
 # Razi Protocol
 
+**Orbital infrastructure companion update (October 2026):**
+Six source-owned Factorio 2.1 mods are now recommended for advanced space
+freight, railway engineering, shields, and circuit automation. The optional
+technology weave adds source-guarded late science where lab compatibility
+allows and can be disabled. Orbital Catapult is a manual opt-in only:
+its author's required load-order strategy makes a conventional recommended
+dependency unsafe. No source planet routes, cargo schedules, existing
+research IDs, or physical freight are replaced. This requires a live
+full-pack validation; see the [integration and smoke-test guide](docs/FRONTIER_COMPANIONS.md).
+
+
 **2.1.73: Distribute technologies across planets.** The
 original nuclear, construction-robot and logistic-robot research
 now has carefully guarded off-world science requirements:

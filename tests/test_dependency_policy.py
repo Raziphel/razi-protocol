@@ -75,6 +75,9 @@ class DependencyPolicyTests(unittest.TestCase):
             "celestial-weather-updated",
             "celestial-weather-additions-updated",
             "Cold_biters","science-tab","Big-Monsters",
+            "Various_Cargo_Bays","space-age-railway-expansion",
+            "shield-generators","CircuitLaunchableRockets",
+            "CargoBayLimitResearch","platform-logistics-overhaul",
         })
         for candidate in recommended:
             self.assertFalse(any(raw.startswith(candidate+" ")
