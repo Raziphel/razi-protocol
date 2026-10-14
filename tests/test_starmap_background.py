@@ -79,6 +79,21 @@ class StarmapBackgroundTests(unittest.TestCase):
                 offset+=12+length
             self.assertTrue(found,name)
 
+    def test_quiet_sky_and_region_specific_belts(self):
+        source=(ROOT/"prototypes/system/starmap_background.lua").read_text()
+        vibrant=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
+        self.assertIn("local sky_exposure={",source)
+        self.assertIn("sky_exposure[row][col]",source)
+        self.assertIn('debris="debris-vespera.png"',source)
+        self.assertIn('debris="debris-umbra.png"',source)
+        self.assertNotIn('{name="vibrant",tint={r=.75',source)
+        self.assertIn('name="vespera",tint={r=.86,g=.88,b=.87}',source)
+        self.assertIn('name="umbra",tint={r=.73,g=.48,b=.29}',source)
+        self.assertIn("table.insert(star.layers,1,additions[i])",vibrant)
+        self.assertIn('mode.value=="off"',vibrant)
+        self.assertIn('atmosphere.value==false',vibrant)
+        self.assertIn('mods["Better_Starmap_Background"]',vibrant)
+
     def test_art_runs_after_orbits_without_route_sprite_overdraw(self):
         source=(ROOT/"data-final-fixes.lua").read_text()
         layout='require("prototypes.system.galaxy_layout").data_final_fixes()'
