@@ -1,3 +1,22 @@
+## 2.1.58: Five physical phases and the final accord
+
+The Convergence now extends beyond the three original mandates.
+After Synchronization and the Deep-Space freight, craft and deliver
+**4 Pulsar Resonance Mandates**, drawing on Beetlejuice/Umbra/Deep
+Space cards, holmium and guarded native pulsar/antimatter suppliers.
+Then research **Convergence Ignition Protocol**, which can require
+the installed Calidus Dyson distribution and receiver upgrades, and
+deliver **1 Convergence Ignition Mandate** containing all seven star
+system cards and the Deep Space card.
+
+This fifth player-carried delivery is the ONLY new-game victory
+trigger. Source-owned Dyson systems and Nexus content remain original.
+No new laboratory, ship, surface, boss or secondary victory mechanism
+is created. Source-produced optional ingredients are only included
+where the installed mod supplies their item and recipe. A completed
+2.1.57 Convergence win remains complete when the extra phases are
+added; each force retains its existing shipment ledger.
+
 ## 2.1.56: The Convergence, after the transceiver
 
 The physical K2SO transceiver is a **Deep Space access gate**.
