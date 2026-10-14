@@ -1,3 +1,34 @@
+## 2.1.68: Practical science economy and factory return freight
+
+The seven post-arrival **freight-assisted system-card recipes** now process
+four unchanged source-card batches plus regional imported materials into
+five cards. That saves 20% of the original source ingredients per finished
+card (25% extra cards per four native batches), before valuing the additional
+freight. Crafting takes 1.15 times the normal time for four native batches,
+providing about 8.7% more cards per machine-hour. Productivity and automatic
+recycling remain disabled. The original one-card recipe and technology
+identifiers are preserved; no laboratories or science-pack types were added.
+
+Two new guarded alternatives give the last two stars an export economy:
+Beetlejuice combines Linox rare earths and Secretas gold after Secretas;
+Umbra combines Tenebris chitosan, Vesta supermagnets and Linox rare earths
+after Vesta. They only register when the relevant source items and native
+research unlocks exist. These are *production rewards*, never additional
+costs on native first discovery or mandatory card manufacture.
+
+The first-frontier Razi discovery costs are also lighter: Arig/Hyarion
+750 to 650, Tellus 900 to 800, Corrundum 1,100 to 950, and the Moshine /
+Apia-Carnova discoveries 850 to 800 units. Solaris and Nyxaris retain
+independent 650-unit system entries; the subsequent paired gateways remain
+1,200 and 1,600, with Outer Frontier Mastery at 1,900. Panglia's source
+data-cell discovery is untouched.
+
+The science audit now reports both first-frontier Razi card demand and
+the effective gross bonus, crafting rate and extra imported resources for
+each installed multiplex recipe. It flags any bonus above the 25% ceiling,
+missing ordinary inputs, insufficient crafting time or enabled productivity /
+automatic recycling. No static report certifies freight travel efficiency.
+
 ## 2.1.67: Visible card demand and real-lab compatibility
 
 `scripts/audit_research_balance.py` now reports the direct system-card
