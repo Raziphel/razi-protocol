@@ -69,6 +69,7 @@ local function score(quest)
     +math.min(24,(dependents[quest.id] or 0)*5)
     -- Industry is worth showing, but never outranks ready story research.
     -(quest.optional and 36 or 0)
+    +(quest.convergence and 60 or 0)
 end
 local function ordered(a,b)
   if a.score~=b.score then return a.score>b.score end
@@ -85,14 +86,22 @@ function M.plan(states,lookup)
         local entry={quest=quest,tech=tech,score=score(quest),
           order=order,chapter=quest.chapter}
         if state=="active" then
-          entry.tech_blockers=research_blockers(tech)
-          entry.disabled=tech.enabled==false
-          if not entry.disabled and #entry.tech_blockers==0 then
-            entry.kind="ready"
+          if quest.convergence then
+            -- A physical cargo delivery is not another technology unlock.
+            entry.kind=quest.convergence=="victory"
+              and "transmission-pending" or "delivery-ready"
+            entry.tech_blockers={}
             ready[#ready+1]=entry
           else
-            entry.kind="research-blocked"
-            delayed[#delayed+1]=entry
+            entry.tech_blockers=research_blockers(tech)
+            entry.disabled=tech.enabled==false
+            if not entry.disabled and #entry.tech_blockers==0 then
+              entry.kind="ready"
+              ready[#ready+1]=entry
+            else
+              entry.kind="research-blocked"
+              delayed[#delayed+1]=entry
+            end
           end
         elseif state=="locked" then
           entry.quest_blockers=quest_blockers(quest,states)
