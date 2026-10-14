@@ -175,6 +175,15 @@ check(migration_force.recipes[m.stages[3].item].enabled
  and migration_force.recipes[m.stages[4].item].enabled
  and not migration_force.recipes[m.stages[5].item].enabled,
  "Recipe migration must respect actual research, including final Ignition")
+for _,part in ipairs(mods.assemblies) do
+ migration_force.recipes[part.item]={enabled=false}
+end
+migration_force.technologies[mods.ignition].researched=true
+m.repair_recipe_unlocks(migration_force)
+for _,part in ipairs(mods.assemblies) do
+ check(migration_force.recipes[part.item].enabled,
+  "Existing researched save must unlock all three new assembly recipes")
+end
 -- Two simultaneous force transmissions merged during the finale must
 -- retain the earlier accepted accord, archive its origin, and win once.
 local donor=fixture(5)
