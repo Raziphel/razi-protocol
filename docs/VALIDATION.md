@@ -1,3 +1,41 @@
+## The Convergence transmission, source Dyson and save safety (2.1.59)
+
+- With a recognisable native Dyson energy receiver item/entity installed,
+  the last delivery must fail **without consuming cargo** until the same
+  force owns at least one placed receiver. The live count is the
+  engine-maintained `get_entity_count`; no surface search and no invented
+  satellite/energy telemetry. In incompatible source combinations where
+  no receiver entity can be identified, this physical gate is skipped
+  rather than permanently blocking a save. Native Dyson research
+  prerequisites still apply.
+- Deliver the final Ignition Mandate and confirm exactly one item is
+  consumed and the 12-second four-beat sequence starts. The win screen
+  must not appear immediately. The player may disconnect or save at
+  3, 6 and 9 seconds without losing or duplicating a beat. At the
+  12-second mark the original Factorio ending appears with Continue.
+- Repeat using two multiplayer forces. Only the force that delivered
+  the final mandate should get the force-wide signal updates. Merging
+  forces mid-sequence should retain one active sequence and yield one
+  victory. Reload a 2.1.57/2.1.58 already-won force: the victory must
+  remain complete without starting a transmission or asking for receivers.
+- Inspect Galactic Operations at 1024px, 1280px, 1920px and ultrawide
+  resolutions. The construction tracker should wrap from five to
+  three or two columns; progress bars, real receiver count, in-progress
+  beats and shipment details must stay readable without horizontal
+  scrolling.
+- Performance: Confirm the one-second event touches only pending
+  forces and only redraws Convergence windows when a beat changes.
+  The code must not poll satellite state, generate worlds, change source
+  ship schedules or allocate an entity/particle every tick.
+
+Mock/source checks:
+```bash
+lua5.2 tests/lua/test_convergence_runtime.lua
+lua5.2 tests/lua/test_convergence_prototypes.lua
+python3 -m unittest discover -s tests -p 'test_convergence.py'
+python3 -m unittest discover -s tests -p 'test_razi_journal.py'
+```
+
 ## The Convergence: five-stage validation (2.1.58)
 
 **Tech graph:** Commission must unlock only Stellar/Industrial recipes;
