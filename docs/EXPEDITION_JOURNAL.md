@@ -1,3 +1,20 @@
+## The Convergence: Resonance & Ignition (2.1.58)
+
+The finale includes five player-carried delivery objectives and three
+research milestones. Pulsar Resonance follows the existing Deep-Space
+shipment, and the new Convergence Ignition Protocol opens the final
+one-item accord. Its recipe combines all seven system cards plus the
+Deep-Space card, and real manufactured components. The three new
+Codex milestones are **convergence-resonance**,
+**convergence-ignition-research** and **convergence-ignition**.
+The base catalog now has **228 conditional milestones in 18 chapters**.
+
+Delivering the fifth final shipment, not merely doing the research or
+reaching the Solar System Edge, invokes Factorio's real victory screen
+and allows continued play. Existing won saves from the 2.1.57
+three-shipment ending retain their victory and force-wide progress.
+No new lab, platform or independent industry simulation is created.
+
 ## The Convergence: post-edge finale (2.1.56)
 
 The existing final chapter now follows the real ending past the native
