@@ -104,6 +104,11 @@ function M.state(tech)
     if not prior.researched then missing[#missing+1]=prior end
   end
   table.sort(missing,function(a,b) return a.name<b.name end)
+  -- Prerequisites alone do not make research available. Other installed
+  -- mods can gate a technology through its enabled flag.
+  if tech.enabled==false then
+    return {status="disabled",missing=missing,count=#missing}
+  end
   return {status=#missing==0 and "ready" or "blocked",
     missing=missing,count=#missing}
 end

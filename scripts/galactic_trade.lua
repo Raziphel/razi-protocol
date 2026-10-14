@@ -191,7 +191,8 @@ local function science_requirements(parent,tech,width)
 end
 
 local function blockers(parent,state,width)
-  if state.status~="blocked" then return end
+  if (state.status~="blocked" and state.status~="disabled")
+    or state.count==0 then return end
   heading(parent,L("trade-prerequisites",tostring(state.count)),width)
   for i=1,math.min(3,#state.missing) do
     wrap(parent,{"",L("trade-needs"),"  ",
@@ -249,9 +250,7 @@ local function consumers(parent,row,width,p)
     if p.cargo_focus==row.config.id and
       p.cargo_target==consumer.name then
       science_requirements(parent,consumer.technology,width)
-      if consumer.state.status=="blocked" then
-        blockers(parent,consumer.state,width)
-      end
+      blockers(parent,consumer.state,width)
     end
   end
 end

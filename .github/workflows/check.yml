@@ -104,6 +104,8 @@ jobs:
         run: lua5.2 tests/lua/test_convergence_runtime.lua
       - name: Check five-stage manufacturing and native labs
         run: lua5.2 tests/lua/test_convergence_prototypes.lua
+      - name: Check project dossiers and zero-scan receiver telemetry
+        run: lua5.2 tests/lua/test_project_dossiers.lua
       - name: Check Codex physical-shipment guidance
         run: lua5.2 tests/lua/test_razi_journal_guidance.lua
       - name: Test Factorio prototype auditor
