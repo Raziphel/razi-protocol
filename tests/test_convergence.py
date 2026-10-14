@@ -24,6 +24,30 @@ class ConvergenceTests(unittest.TestCase):
         self.assertNotIn('type="lab"',proto)
         self.assertNotIn('type="planet"',proto)
 
+    def test_mandate_icon_integrity_and_three_part_research(self):
+        import struct
+        import zlib
+        source=read("prototypes/technology/convergence.lua")
+        for name in ("stellar","industrial","deep-space","resonance","ignition"):
+            image=(ROOT/"graphics"/"icons"/"convergence"/(name+".png")).read_bytes()
+            self.assertEqual(image[:8],bytes.fromhex("89504e470d0a1a0a"))
+            self.assertEqual(struct.unpack(">II",image[16:24]),(64,64))
+            pos=8
+            while pos<len(image):
+                n=struct.unpack(">I",image[pos:pos+4])[0]
+                checksum=struct.unpack(">I",image[pos+8+n:pos+12+n])[0]
+                self.assertEqual(zlib.crc32(image[pos+4:pos+8+n])&0xffffffff,
+                                 checksum)
+                pos+=12+n
+            self.assertEqual(pos,len(image))
+        self.assertIn('M.assemblies={',source)
+        self.assertIn('M.max_recipe_inputs=6',source)
+        self.assertIn('local slots=native_crafting_slots()',source)
+        self.assertIn('ignition.effects[#ignition.effects+1]',source)
+        self.assertIn('group="intermediate-products"',source)
+        runtime=read("scripts/razi_convergence.lua")
+        self.assertIn('for _,part in ipairs(defs.assemblies or {})',runtime)
+
     def test_five_genuinely_manufactured_non_productivity_manifests(self):
         proto=read("prototypes/technology/convergence.lua")
         entries=re.findall(r'\{id="([^"]+)",item="([^"]+)",count=(\d+)',proto)
