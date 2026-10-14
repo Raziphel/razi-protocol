@@ -1,3 +1,50 @@
+## 2.1.63: Research and science balance release gate
+
+1. Load the **complete Factorio 2.1 modpack** from scratch in Off,
+   Balanced and Deep interdependence modes. Inspect technology and
+   Factorio startup logs, not just individual Lua fixtures.
+2. Confirm Solaris/Nyxaris, Vibrant/Vespera and Beetlejuice/Umbra remain
+   independently researchable paired entrances, with reduced symmetric
+   costs of 650, 1,200 and 1,600 units respectively. Outer Frontier
+   Mastery costs 1,900 units.
+3. Craft all eight ordinary system cards. Verify times of 10, 12, 16,
+   22 and 28 seconds by tier; outer native science amounts double
+   without doubling the predecessor system cards. Confirm the optional
+   freight recipes still multiply the **final** ordinary recipe.
+4. Verify 30 optional native-science weave candidates do not change
+   any world's first-discovery requirements. Open an installed native
+   lab for each *actual* combined research set, especially a technology
+   receiving multiple native sciences. Test intentionally missing
+   suppliers, missing laboratories and reversed source prerequisites.
+5. Run the existing `/razi-audit` in-game and export a complete
+   `--dump-data-raw` for `audit_research_balance.py`,
+   `audit_tech_tree.py`, `audit_supply_chains.py`, and
+   `audit_full_campaign.py`. The research report now detects
+   card-manufacturing ingredient loops as definite errors.
+6. Open an existing save with partially completed research and an
+   earlier Convergence win. Confirm quest IDs, completed research,
+   shipments, Mandates, laboratory entities and saved progress are
+   preserved. Recheck the final victory path separately.
+7. Compare early/middle/outer research pacing in a playable save, not
+   only numerical unit costs. Real recipe producers, world surfaces,
+   factory throughput and cargo travel still require playtesting.
+
+Focused repository regressions (manual only):
+
+```bash
+lua5.2 tests/lua/test_research_tree_polish.lua
+lua5.2 tests/lua/test_planetary_science_weave.lua
+lua5.2 tests/lua/test_system_card_laboratories.lua
+lua5.2 tests/lua/test_system_card_manufacturing.lua
+python3 -m unittest discover -s tests -p 'test_research_balance.py'
+python3 -m unittest discover -s tests -p 'test_planetary_science_weave.py'
+python3 -m unittest discover -s tests -p 'test_system_card_progression.py'
+```
+
+No automatic GitHub Actions builds are enabled by this pass.
+Full in-engine testing and real startup/performance benchmarks have
+not yet been completed.
+
 ## 2.1.62: Original icon, machine and migration checks
 
 Confirm five unique Convergence PNG icons render at normal and 150%
