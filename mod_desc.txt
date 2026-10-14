@@ -30,15 +30,15 @@ The asteroid belts and major travel routes have their own progression. The map s
 
 ## The Protocol Codex
 
-The in-game Codex catalogs 225 conditional research and exploration milestones across 18 chapters. You can search the objectives, browse science and recipe unlocks, pin a goal, read recovered transmissions and track how long each part of your run took.
+The in-game Codex catalogs 228 conditional research and exploration milestones across 18 chapters. You can search the objectives, browse science and recipe unlocks, pin a goal, read recovered transmissions and track how long each part of your run took.
 
 Each chapter has its own colours, art and atmosphere. Open it from the small top-row button or press **Ctrl + Shift + J**.
 
 ## More to Explore
 
-- The native K2SO intergalactic transceiver opens Deep Space; three physical, factory-built Convergence Mandates form the new true ending.
+- The native K2SO intergalactic transceiver opens Deep Space. The real ending is a five-stage, physically delivered Convergence megaproject tied to all seven systems, the Calidus Dyson works and deep-space industry. The last shipment starts a save-safe final transmission before the native victory screen.
 - A Calidus Dyson Sphere project with staged construction.
-- Galactic Operations for navigating a very crowded planet and platform list.
+- Galactic Operations for navigating a crowded planet and platform list, with an integrated Convergence console, partial construction meters and native Deep Space expedition briefings.
 - A custom starmap with better local connections, route descriptions and space scenery.
 - Curated enemy encounters, including optional enemy mods on the planets that suit them.
 - A dedicated Vehicles & Infrastructure crafting tab and tidier science groups.
