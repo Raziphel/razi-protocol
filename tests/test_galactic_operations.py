@@ -164,7 +164,6 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertIn('p.translation_dirty=true',operations)
         self.assertIn('p.translation_requested[name]=true',operations)
         self.assertIn('galactic_operations.on_string_translated(event)',control)
-        self.assertIn('razi_discord_presence.on_string_translated(event)',control)
         self.assertIn('search-translating=',locale)
         self.assertIn('clear-search=',locale)
         for section in ('list-title-worlds','list-title-platforms',

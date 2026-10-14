@@ -130,10 +130,9 @@ now contains `[mod-name] razi-protocol=! Razi Protocol`, while
 `info.json` keeps `name=razi-protocol` and `title=Razi Protocol`.
 In Factorio 2.1, start the curated full modpack and open
 **Settings > Mod settings > Startup**. Check whether Razi's section moves
-above the alphabetically listed mod titles. Also inspect **Per player**
-for its Discord Presence options. If the order is based on an internal
-identifier or dependency sort, the display hint will change its visible
-heading but **will not** move its section. In that case, do not add
+above the alphabetically listed mod titles. If the order is based on an
+internal identifier or dependency sort, the display hint will change its
+visible heading but **will not** move its section. In that case, do not add
 additional punctuation, rename the actual mod, or rewrite other mods'
 settings: revert the display hint and rely on settings search/filter.
 No unconditional "always first" behavior can be certified in this repo.
@@ -984,10 +983,10 @@ existing Galactic Operations artwork.
 **Manual game check:** Change the GUI scale between 100% and 150%, filter
 a large mixed fleet, switch tabs, select a planet, assign and reset a
 private fleet role, favourite a destination, open the Atlas, and use
-the Clear search action. Repeat with a non-English game locale. Ensure the
-existing Discord presence translation handler continues to receive its
-events. Native platform schedules, hub cargo and surfaces must remain
-unchanged. This verification requires a real Factorio runtime.
+the Clear search action. Repeat with a non-English game locale. Confirm
+localized search updates continue to arrive through the Galactic Operations
+translation handler. Native platform schedules, hub cargo and surfaces must
+remain unchanged. This verification requires a real Factorio runtime.
 
 ## Cargo Network dashboard (2.1.27)
 

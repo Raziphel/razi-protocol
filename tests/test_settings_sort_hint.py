@@ -24,7 +24,7 @@ class SettingsTitleHintTests(unittest.TestCase):
         source = (ROOT / "settings.lua").read_text(encoding="utf-8")
         names = re.findall(r'razi-[a-z0-9-]+', source)
         self.assertIn("razi-planetary-interdependence", names)
-        self.assertIn("razi-discord-presence-enabled", names)
+        self.assertIn("razi-starmap-background-style", names)
         self.assertIn("razi-route-overlay-mode", names)
         self.assertNotIn("data.raw", source)
         self.assertNotIn("data:extend({{", source)
