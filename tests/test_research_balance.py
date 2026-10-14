@@ -74,6 +74,30 @@ class ResearchBalanceTests(unittest.TestCase):
         self.assertTrue(any(x["code"]=="no-shared-science-lab"
                             for x in report["errors"]))
 
+    def test_lab_coverage_identifies_existing_native_labs(self):
+        raw=fixture()
+        result=audit.examine(raw)
+        self.assertEqual(result["science_lab_coverage"][
+            "razi-network-precision-matrix"],["advanced"])
+        raw["lab"]["advanced"]["inputs"]=["calidus-tech-card"]
+        result=audit.examine(raw)
+        self.assertEqual(result["science_lab_coverage"][
+            "razi-network-precision-matrix"],[])
+        self.assertIn("razi-network-precision-matrix",
+                      result["unresearchable_lab_combinations"])
+
+    def test_stage_card_demand_counts_research_units_not_technologies(self):
+        raw=fixture()
+        raw["technology"]["solaris-discovery"]["unit"]["count"]=650
+        raw["technology"]["nyxaris-discovery"]["unit"]["count"]=650
+        report=audit.examine(raw)
+        self.assertEqual(report["stage_card_demand"]["calidus"],
+                         {"cards":{"calidus-tech-card":1300},
+                          "direct_card_items":1300})
+        self.assertEqual(report["stage_card_demand"]["middle"][
+            "direct_card_items"],2000)
+        self.assertFalse(report["stage_card_demand"]["finale"]["cards"])
+
     def test_missing_prototype_and_disabled_optional_world(self):
         raw=fixture()
         del raw["tool"]["vespera-tech-card"]
