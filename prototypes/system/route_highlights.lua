@@ -100,14 +100,28 @@ local function tier(name,pos)
   end
   return nearest
 end
+-- Navigation colors echo the actual physical belt artworks. The inner
+-- and outer locations are still native, clickable Factorio route endpoints.
+local belt_strokes={
+  vibrant={r=.76,g=.59,b=.95}, -- metallic / violet
+  vespera={r=.72,g=.84,b=.96}, -- frost / pearlescent
+  umbra={r=.97,g=.54,b=.41}    -- shattered / copper-ember
+}
 function M.color_for_route(route,mode)
+  if hazards.is_belt_crossing(route) then
+    local a,b=route.from or "",route.to or ""
+    if a:find("razi%-vespera%-belt") or b:find("razi%-vespera%-belt") then
+      return belt_strokes.vespera
+    end
+    if a:find("razi%-umbra%-belt") or b:find("razi%-umbra%-belt") then
+      return belt_strokes.umbra
+    end
+    return belt_strokes.vibrant
+  end
   if mode~="chapter" then return hazards.color(route) end
   local a,b=M.position(route.from),M.position(route.to)
   if not a or not b then return hazards.color(route) end
   local grade=math.max(tier(route.from,a),tier(route.to,b))
-  if hazards.is_belt_crossing(route) then
-    return {r=.88,g=.56,b=.98}
-  end
   return chapters[grade] or chapters[5]
 end
 function M.color_for_guide(_,route)
@@ -175,7 +189,7 @@ function M.strokes_for_connection(route,mode,scope)
   if usable/count>8.5 then return {} end
   local color=M.color_for_route(route,mode)
   local alpha=(major and .34 or .17)
-  if hazards.is_belt_crossing(route) then alpha=.42 end
+  if hazards.is_belt_crossing(route) then alpha=.37 end
   local out={}
   for i=0,count-1 do
     local t0=trim+(1-2*trim)*i/count
