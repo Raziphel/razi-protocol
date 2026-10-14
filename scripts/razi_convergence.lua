@@ -564,11 +564,32 @@ function M.render(parent,player)
     local owned=inventory and inventory.valid
      and inventory.get_item_count(part.item) or 0
     local part_recipe=force.recipes and force.recipes[part.item]
-    line(card,"convergence-component-line",width,
+    local row=card.add{type="flow",direction="horizontal"}
+    row.style.horizontal_spacing=7
+    local picture=row.add{type="sprite",sprite="item/"..part.item}
+    picture.style.width=25
+    picture.style.height=25
+    local status=line(row,"convergence-component-line",width-44,
      {"item-name."..part.item},tostring(owned),
      part_recipe and part_recipe.enabled
        and {"razi-ops.convergence-component-craftable"}
        or {"razi-ops.convergence-component-research"})
+    status.style.single_line=false
+    status.style.font_color=owned>0 and {r=.49,g=.87,b=.71}
+     or {r=.89,g=.76,b=.94}
+    -- Read the force's ACTUAL installed recipe, including its optional
+    -- source-material choices. No guessed shopping list or tick polling.
+    if part_recipe and part_recipe.enabled then
+     local ingredients={"",L("convergence-component-inputs")}
+     for j,input in ipairs(part_recipe.ingredients or {}) do
+      if j>1 then ingredients[#ingredients+1]="   " end
+      ingredients[#ingredients+1]="[item="..input.name.."] "..
+       tostring(input.amount or 1)
+     end
+     local detail=card.add{type="label",caption=ingredients}
+     detail.style.single_line=false
+     detail.style.maximal_width=width
+    end
    end
   end
   local build=card.add{type="label",caption=L(
