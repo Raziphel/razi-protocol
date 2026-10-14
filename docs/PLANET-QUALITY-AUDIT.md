@@ -1,6 +1,6 @@
-# Planet Quality Gate (2026-10-12)
+# Planet Quality Gate (reviewed 2026-10-14)
 
-**Current curated dev version:** Razi Protocol 2.1.11.
+**Current curated dev version:** Razi Protocol 2.1.67.
 
 This is a source-code, campaign integration, and publicly described mod-mechanics review. It is **not** proof that the entire Factorio 2.1 + K2SO stack has loaded or that every saved-game path is completable.
 
@@ -62,3 +62,18 @@ Use `python3 scripts/audit_full_campaign.py <data-raw-dump.json>
 isolated-route sections separately. A complete unmodified Factorio
 prototype dump is required. A full 80-hour campaign cannot be certified
 from synthetic fixtures.
+
+## 2.1.67: Whole-pack planet review queue
+
+`scripts/audit_full_campaign.py` now exposes `planet_review_queue` for
+**every installed native planet**, rather than relying on the five named
+high-risk worlds alone. The queue retains each world's discovery alternatives,
+static science-production verdict and whether any prototype route is listed
+from Nauvis. The priorities are `blocker`, `review` and `static-clear`.
+
+This makes planet-by-planet manual review actionable without silently adding
+mandatory research, changing planet positions or fabricating industry.
+Unknown source-scripted discoveries and disconnected optional surfaces remain
+review tasks, not automatically fixed bugs. Match any proposed new industrial
+partnership against a real supplier recipe, research unlock, working source
+machine, and the existing Cargo Network before changing balance.
