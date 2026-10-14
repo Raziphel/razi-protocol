@@ -194,6 +194,9 @@ class ConvergenceTests(unittest.TestCase):
                     "convergence-submit=",
                     "convergence-victory-title="):
             self.assertIn(key,ops_locale)
+        description=read("mod_desc.txt")
+        self.assertIn("228 conditional research",description)
+        self.assertIn("five-stage, physically delivered Convergence",description)
         self.assertEqual(json.loads(read("info.json"))["version"],"2.1.60")
 
 if __name__=="__main__":
