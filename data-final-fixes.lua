@@ -158,6 +158,10 @@ require("prototypes.compat.calidus_dyson").connect_calidus()
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.system.route_authority").data_final_fixes()
 
+-- Harvest-rich native asteroid belts get final source-safe spawn curves only
+-- after the approved crossings and route IDs have been reconciled.
+require("prototypes.system.belt_expeditions").data_final_fixes()
+
 require("prototypes.system.route_icons").data_final_fixes()
 
 require("prototypes.system.route_intel").data_final_fixes()
