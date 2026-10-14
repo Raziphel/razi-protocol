@@ -1,3 +1,33 @@
+## Recommended optional companions (2.1.64)
+
+Factorio 2.1 supports a `+ ` prefix in `info.json` for
+**recommended dependencies**. This is different from a hard requirement:
+players can still use Razi Protocol without the companion mod.
+
+The first curated recommendations are:
+
+| Mod | Why it is recommended | Required minimum |
+| --- | --- | --- |
+| AAI Signal Transmission | Integrated cross-planet circuit networks, guarded Razi industry research, Cargo Network guidance and an optional Codex objective | 0.6.0 |
+| Imersite Asteroids | Source-owned K2SO asteroid mining integrated with Razi's original asteroid corridors and mid/late-game Imersite access | 1.3.0 |
+
+The two current Mod Portal releases support Factorio 2.1, and their
+version floors exist publicly. No new recipes, worlds, dependencies,
+save data or Razi code paths are introduced by this change.
+Disabling either recommended mod must remain supported.
+
+**Not yet recommended:** FluxWorks requires `>= 0.2.12` in Razi
+Dev but its latest publicly listed release at the time of this review
+is 0.2.10 and its companion integration still needs end-to-end
+testing. Dea Dia and Pelagos remain 2.0-only Mod Portal releases.
+The Secretas/Frozeta orbit patch is optional because of Outer Rim
+compatibility, and Solar Halo / the larger optional planets need a
+full 2.1 route-and-research validation pass before promotion.
+
+Recommended means a curated suggestion, not a claim that adding or
+removing a mod is save-safe. Always back up an active game before
+changing the enabled mod set.
+
 ## Restored optional integration in 2.1.53
 
 `aai-signal-transmission >= 0.6.0` is again declared as an **optional**
@@ -10,8 +40,8 @@ list further below records the previous audit and is historical.
 # Optional dependency audit
 
 Razi Protocol now advertises optional dependencies only when it contains
-an actual integration or compatibility patch. The `+` recommended planet
-adventures remain unchanged. Removing an optional declaration does **not**
+an actual integration or compatibility patch. The `+` recommendations listed above are deliberate;
+additional optional planets remain opt-in. Removing an optional declaration does **not**
 remove or block a mod the player has installed; it stops suggesting that Razi
 Protocol directly integrates it or needs ordering against it.
 
