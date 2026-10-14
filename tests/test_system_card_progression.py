@@ -24,6 +24,22 @@ class SystemCardProgressionTests(unittest.TestCase):
         self.assertIn('upsert_system_card(card)',source)
         self.assertIn('system_card_definitions',source)
 
+    def test_eight_card_manufacturing_tiers(self):
+        source=read("prototypes/compat/lab_cards.lua")
+        for card,seconds,native_amount in (
+            ("calidus",10,1),("solaris",12,1),("nyxaris",12,1),
+            ("vibrant",16,1),("vespera",16,1),
+            ("beetlejuice",22,2),("umbra",22,2),
+            ("deep-space",28,2)):
+            match=re.search(r'name = "'+card+r'-tech-card".*?'
+                            r'craft_time = (\\d+), regional_science_amount = (\\d+)',
+                            source,re.S)
+            self.assertIsNotNone(match,card)
+            self.assertEqual((int(match.group(1)),int(match.group(2))),
+                             (seconds,native_amount))
+        self.assertIn('science_pack:match("%-tech%-card$")',source)
+        self.assertIn(':set_energy(card.craft_time or 10)',source)
+
     def test_no_razi_owned_lab_prototypes(self):
         source=read("prototypes/compat/system_card_laboratories.lua")
         for name in ("razi-frontier-lab","razi-constellation-lab",
@@ -78,7 +94,7 @@ class SystemCardProgressionTests(unittest.TestCase):
     def test_settings_limit_and_version(self):
         settings=read("settings.lua")
         self.assertIn('razi-planetary-interdependence',settings)
-        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.55")
+        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.63")
 
 if __name__=="__main__":
     unittest.main()
