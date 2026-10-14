@@ -3,8 +3,9 @@
 Administrators can now run `/razi-audit` to compare the three
 Convergence research packs with the installed native laboratories,
 check that the current force has all five Mandate recipes, detect
-missing/disabled recipe unlocks and flag direct cycles in the final
-research ancestry. It also lists actual source recipe producer
+missing/disabled recipe unlocks, verify a native machine handles
+each Mandate's ingredient count and crafting category, and flag
+direct cycles in the final research ancestry. It also lists actual source recipe producer
 visibility and real Dyson receiver counts when known.
 
 This is a live, read-only compatibility *screening*, not a complete
