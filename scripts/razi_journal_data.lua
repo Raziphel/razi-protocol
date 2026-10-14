@@ -89,7 +89,10 @@ M.quests={
  {id="convergence-industry",chapter="finale",tech="razi-convergence-commission",convergence="industry",requires={"convergence-stellar"}},
  {id="convergence-synchronization",chapter="finale",tech="razi-convergence-synchronization",requires={"convergence-industry"}},
  {id="convergence-deep-space",chapter="finale",tech="razi-convergence-synchronization",convergence="deep-space",requires={"convergence-synchronization"}},
- {id="convergence-victory",chapter="finale",tech="razi-convergence-synchronization",convergence="victory",requires={"convergence-deep-space"}},
+ {id="convergence-resonance",chapter="finale",tech="razi-convergence-synchronization",convergence="resonance",requires={"convergence-deep-space"}},
+ {id="convergence-ignition-research",chapter="finale",tech="razi-convergence-ignition",requires={"convergence-resonance"}},
+ {id="convergence-ignition",chapter="finale",tech="razi-convergence-ignition",convergence="ignition",requires={"convergence-ignition-research"}},
+ {id="convergence-victory",chapter="finale",tech="razi-convergence-ignition",convergence="victory",requires={"convergence-ignition"}},
 }
 local extended=require("scripts.razi_journal_expansion")
 for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end
