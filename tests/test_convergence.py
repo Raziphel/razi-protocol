@@ -68,6 +68,39 @@ class ConvergenceTests(unittest.TestCase):
         self.assertNotIn("on_nth_tick",runtime)
         self.assertNotIn("platform.schedule=",runtime)
 
+    def test_dyson_coupling_and_saved_final_transmission(self):
+        runtime=read("scripts/razi_convergence.lua")
+        ops=read("scripts/galactic_operations.lua")
+        control=read("control.lua")
+        source=read("scripts/galactic_dyson_runtime.lua")
+        locale=read("locale/en/galactic_operations.cfg")
+        self.assertIn("dyson_runtime.resolve_receiver_names(prototypes)",runtime)
+        self.assertIn("force.get_entity_count(name)",runtime)
+        self.assertIn('return false,"convergence-need-receiver"',runtime)
+        self.assertIn("if not M.dyson_readiness(force) then",runtime)
+        self.assertIn("M.transmission_duration=720",runtime)
+        self.assertIn("function M.advance(tick)",runtime)
+        self.assertIn("function M.restore_pending()",runtime)
+        self.assertIn("storage.razi_convergence_pending",runtime)
+        self.assertIn("function M.refresh_convergence(force)",ops)
+        self.assertIn('research.name~="razi-convergence-ignition"',ops)
+        self.assertIn("convergence.restore_pending()",control)
+        self.assertIn("convergence.advance(event.tick)",control)
+        self.assertIn("galactic_operations.refresh_convergence(force)",control)
+        self.assertIn('events:on_nth_tick(60,function(event)',control)
+        self.assertIn('column_count=width>=560 and 5',runtime)
+        self.assertIn("get_entity_count",source)
+        for key in ("convergence-dyson-title","convergence-dyson-ready",
+                    "convergence-dyson-missing","convergence-tile-complete",
+                    "convergence-transmission-heading",
+                    "convergence-transmission-sealed",
+                    "convergence-transmission-dyson",
+                    "convergence-transmission-resonance",
+                    "convergence-transmission-alignment",
+                    "convergence-transmission-started",
+                    "convergence-need-receiver"):
+            self.assertIn(key+"=",locale)
+
     def test_native_game_victory_waits_for_delivery(self):
         runtime=read("scripts/razi_convergence.lua")
         self.assertIn("function M.deliver(player,id)",runtime)
@@ -127,7 +160,7 @@ class ConvergenceTests(unittest.TestCase):
                     "convergence-submit=",
                     "convergence-victory-title="):
             self.assertIn(key,ops_locale)
-        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.58")
+        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.59")
 
 if __name__=="__main__":
     unittest.main()
