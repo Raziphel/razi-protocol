@@ -403,6 +403,8 @@ function M.render(parent,player,id,p)
         local purpose=label(frame,L("trade-chain-"..role.config.key))
         purpose.style.single_line=false
         purpose.style.horizontally_stretchable=true
+        frame.add{type="button",caption=L("atlas-supply-open"),
+          tags={razi_ops_action="atlas-cargo",value=role.config.id}}
       end
     end
   end
