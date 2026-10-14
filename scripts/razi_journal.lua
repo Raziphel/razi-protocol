@@ -759,9 +759,17 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       row.style.horizontal_spacing=6
       icons.sprite(row,quest_art(player.force,entry.quest,context),
         "priority")
+      local prefix
+      if entry.kind=="delivery-ready" then
+        prefix=i==1 and "guidance-main-delivery"
+          or "guidance-parallel-delivery"
+      elseif entry.kind=="transmission-pending" then
+        prefix="guidance-transmission"
+      else
+        prefix=i==1 and "guidance-main" or "guidance-parallel"
+      end
       local item=row.add{type="label",style="clickable_label",
-        caption={"",L(i==1 and "guidance-main" or "guidance-parallel"),
-          " ",{"journal-title."..entry.quest.id}},
+        caption={"",L(prefix)," ",{"journal-title."..entry.quest.id}},
         tags={razi_journal_action="guidance-select",id=entry.quest.id},
         tooltip={"journal-chapter."..entry.chapter}}
       item.style.single_line=false
