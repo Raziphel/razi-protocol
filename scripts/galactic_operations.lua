@@ -883,6 +883,10 @@ function M.gui_click(event)
     dyson_runtime.invalidate(player.force)
   end
   if action=="close" then close(player);return end
+  if action=="atlas-convergence" then
+    M.open_convergence(player)
+    return
+  end
   if action=="convergence-deliver" then
     if p.tab~="convergence" then return end
     local message,amount=convergence.deliver(player,value)
