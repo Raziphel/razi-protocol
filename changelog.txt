@@ -1,3 +1,14 @@
+Version: 2.1.62
+Date: 14. 10. 2026
+  Original Mandate art and endgame construction:
+    - Five original icon files now represent individual Convergence Mandates and final research milestones instead of reusing science cards.
+    - Reuse native assemblers and two tidy Intermediate Products subgroups, without introducing any new lab, machine, planet, or route.
+    - Forge the final Ignition Mandate from Calidus Stellar Frame, Outer-System Engineering Matrix and Deep-Space Resonance Lens. Together the components require all eight existing system cards and factory-made resources.
+    - Keep optional source materials within actual native assembler ingredient capacity. Preserve five saved delivery milestones and the existing final transmission.
+    - Display component counts and research unlock states; repair all three new recipe unlocks on older saves already researched for Ignition.
+    - Extend the opt-in, read-only /razi-audit and regression fixtures to cover all eight real recipes, lab compatibility, existing machine input limits, and old-save migration.
+    - Full Factorio gameplay testing and benchmarks are still needed. No automatic GitHub Actions checks were triggered.
+
 Version: 2.1.61
 Date: 14. 10. 2026
   Runtime validation and performance pass:
