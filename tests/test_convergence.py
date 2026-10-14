@@ -87,6 +87,9 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("convergence.restore_pending()",control)
         self.assertIn("convergence.advance(event.tick)",control)
         self.assertIn("galactic_operations.refresh_convergence(force)",control)
+        self.assertIn("saved.completed_site=",runtime)
+        self.assertIn('"convergence-archive-title"',runtime)
+        self.assertIn('"convergence-archive-time"',runtime)
         self.assertIn('events:on_nth_tick(60,function(event)',control)
         self.assertIn('column_count=width>=560 and 5',runtime)
         self.assertIn("get_entity_count",source)
@@ -98,7 +101,12 @@ class ConvergenceTests(unittest.TestCase):
                     "convergence-transmission-resonance",
                     "convergence-transmission-alignment",
                     "convergence-transmission-started",
-                    "convergence-need-receiver"):
+                    "convergence-need-receiver",
+                    "convergence-archive-title",
+                    "convergence-archive-message",
+                    "convergence-archive-operator",
+                    "convergence-archive-site",
+                    "convergence-archive-time"):
             self.assertIn(key+"=",locale)
 
     def test_native_game_victory_waits_for_delivery(self):
