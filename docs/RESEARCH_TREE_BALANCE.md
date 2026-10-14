@@ -1,3 +1,29 @@
+## 2.1.73: Deliberate planetary technology distribution
+
+Razi now moves selected *existing* technologies instead of making
+Nauvis a complete pre-rocket factory. Gleba agriculture opens
+construction robots and personal roboports; metallurgic and
+agricultural science together open nuclear reactors and logistic
+robots. Fulgora's electromagnetic science opens the advanced
+logistic system; Cerys nuclear science opens nuclear fuel
+reprocessing when its source prototypes support it. Planet Express
+freight research can also require both opening industries, and
+AAI communication research can move to Fulgora when installed.
+
+These requirements only apply after a **guarded whole-pack check**
+that the installed source pack has a producer, all tech prerequisites
+exist without a cycle, and a permitted early science lab accepts
+the full science mix. Original research IDs, recipe effects, unit
+counts, early rocket bootstrap, and paired chapter entries remain
+unchanged. The startup switch `razi-distributed-technology` can
+restore the source tech tree. The Codex's robot and nuclear quests
+now appear under planetary science rather than the Nauvis
+Foundations, without changing their persistent IDs.
+
+The research auditor reports each applied science distribution
+or conservative skip. A real modpack playtest remains necessary
+before adding more technology locks.
+
 ## 2.1.68: Practical science economy and factory return freight
 
 The seven post-arrival **freight-assisted system-card recipes** now process
