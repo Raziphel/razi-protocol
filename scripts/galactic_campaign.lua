@@ -56,6 +56,24 @@ function M.blockers(technology,limit)
   for i=1,math.min(#missing,limit or 3) do result[i]=missing[i] end
   return result,#missing
 end
+-- A research unit's price alone hides the actual number of late-tier
+-- cards needed. Read the installed technology rather than guessing a
+-- fixed K2SO science mixture or changing the game's research cost.
+function M.direct_science_demand(technology)
+  local count=technology and technology.research_unit_count
+  if type(count)~="number" or count<=0 then return {} end
+  local result={}
+  for _,pack in ipairs(technology.research_unit_ingredients or {}) do
+    local name=pack.name or pack[1]
+    local amount=pack.amount or pack[2] or 1
+    if name and type(amount)=="number" and amount>0 then
+      result[#result+1]={name=name,count=count*amount}
+    end
+  end
+  table.sort(result,function(a,b) return a.name<b.name end)
+  return result
+end
+
 -- Index the real installed planet unlock effects once per explicit UI
 -- refresh, so supported moons/side worlds appear without maintaining a
 -- fragile per-mod list of guessed technology identifiers.
@@ -112,6 +130,20 @@ function M.render(parent,player)
         gate.researched and L("atlas-done") or L("atlas-pending")," ",
         name(gate,system[2])})
       if not gate.researched then
+        local demand=M.direct_science_demand(gate)
+        if #demand>0 then
+          label(section,L("campaign-science-demand"))
+          for i=1,math.min(4,#demand) do
+            local item=demand[i]
+            local proto=prototypes and prototypes.item
+              and prototypes.item[item.name]
+            label(section,{"","  ",tostring(item.count)," × ",
+              proto and proto.localised_name or item.name})
+          end
+          if #demand>4 then
+            label(section,L("campaign-science-more",tostring(#demand-4)))
+          end
+        end
         local missing,n=M.blockers(gate,3)
         if n==0 then label(section,L("campaign-ready"))
         else
