@@ -17,6 +17,12 @@ local TRACKER="razi_expedition_objective_tracker"
 local L=function(key,...) return {"journal-ui."..key,...} end
 local themes=require("scripts.razi_journal_themes")
 local icons=require("scripts.razi_journal_icons")
+-- A field-manual palette: chapter hues are restrained accents, not the ink.
+local COLOR={
+  ink={r=.94,g=.93,b=.89}, muted={r=.69,g=.73,b=.76},
+  quiet={r=.52,g=.58,b=.63}, green={r=.61,g=.82,b=.69},
+  amber={r=.91,g=.75,b=.52}
+}
 M.chapter_theme=themes.get
 M.chapter_icon=themes.icon
 
@@ -261,11 +267,11 @@ function M.layout(resolution,scale)
   local width=math.min(1370,math.max(420,screen_w-52))
   local height=math.min(930,math.max(390,screen_h-64))
   local compact=width<1020 or height<660
-  local rail=math.min(compact and 335 or 425,
-    math.max(235,math.floor(width*(compact and .33 or .32))))
+  local rail=math.min(compact and 295 or 326,
+    math.max(235,math.floor(width*(compact and .31 or .265))))
   local reader=width-rail-43
   return {width=width,height=height,rail=rail,reader=reader,
-    body=math.max(200,height-(compact and 230 or 284)),
+    body=math.max(200,height-(compact and 215 or 250)),
     compact=compact}
 end
 local function label(parent,caption)
@@ -285,7 +291,7 @@ end
 local function subtitle(parent,key,width,theme)
   local item=label(parent,L(key))
   item.style.font="default-bold"
-  item.style.font_color=theme and theme.primary or {r=.84,g=.69,b=.46}
+  item.style.font_color=theme and theme.soft or COLOR.muted
   if width then item.style.maximal_width=width end
   return item
 end
@@ -502,13 +508,14 @@ local function render_tracker(player)
   local frame=area.add{type="frame",name=TRACKER,direction="vertical",
     caption=L("tracker-title")}
   frame.style.maximal_width=286
+  frame.style.padding=9
   local chapter=frame.add{type="flow",direction="horizontal"}
   chapter.style.horizontal_spacing=7
   icons.sprite(chapter,themes.icon(quest.chapter),"tracker_chapter")
   local chapter_text=wrap(chapter,{"journal-chapter."..quest.chapter},225)
   chapter_text.style.font="default-bold"
   chapter_text.style.font_color=theme.primary
-  accent_rule(frame,theme,245,3)
+  accent_rule(frame,theme,108,2)
   local line=frame.add{type="flow",direction="horizontal"}
   line.style.horizontal_spacing=7
   icons.sprite(line,quest_art(player.force,quest,context),"tracker_quest")
@@ -522,7 +529,7 @@ local function render_tracker(player)
   local signal=wrap(frame,L(quest.boss
     and (done and "tracker-boss-done" or "tracker-boss-pending")
     or (done and "tracker-done" or "tracker-pending")),245)
-  signal.style.font_color=done and {r=.51,g=.86,b=.73} or theme.soft
+  signal.style.font_color=done and COLOR.green or COLOR.muted
 end
 M.render_tracker=render_tracker
 local function render_details(parent,player,quest,p,context,size,view)
@@ -530,6 +537,7 @@ local function render_details(parent,player,quest,p,context,size,view)
     style="inside_shallow_frame_with_padding"}
   panel.style.width=size.reader
   panel.style.height=size.body
+  panel.style.padding=15
   local inner=size.reader-38
   local status=M.state(player.force,quest,context)
   local theme=themes.get(quest.chapter)
@@ -547,23 +555,25 @@ local function render_details(parent,player,quest,p,context,size,view)
     local atmosphere=label(identification,{"journal-mood."..quest.chapter})
     atmosphere.style.font_color=theme.soft
   end
-  accent_rule(panel,theme,inner,3)
+  accent_rule(panel,theme,math.min(148,inner),3)
   local hero=panel.add{type="flow",direction="horizontal"}
   hero.style.horizontal_spacing=10
   icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
   local hero_text=hero.add{type="flow",direction="vertical"}
   hero_text.style.vertical_spacing=2
   local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-57)
-  hero_title.style.font="heading-2"
-  hero_title.style.font_color=theme.primary
+  hero_title.style.font="heading-1"
+  hero_title.style.font_color=COLOR.ink
 
   local eyebrow=panel.add{type="flow",direction="horizontal"}
   eyebrow.style.horizontally_stretchable=true
   local sequence=label(eyebrow,L("entry-number",tostring(chapter_index(quest.chapter))))
   sequence.style.font="default-bold"
-  tint(sequence,theme.soft)
+  tint(sequence,COLOR.quiet)
   local status_label=label(eyebrow,L("status-"..status))
   status_label.style.font="default-bold"
+  status_label.style.font_color=status=="complete" and COLOR.green
+    or status=="active" and COLOR.amber or COLOR.muted
   -- The completion status is already visible; give the reader that space.
   local content_height=size.body-(size.compact and 225 or 248)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
@@ -574,9 +584,9 @@ local function render_details(parent,player,quest,p,context,size,view)
   local objective=prose.add{type="frame",direction="vertical",
     style="inside_deep_frame"}
   objective.style.width=text_width
-  objective.style.padding=10
+  objective.style.padding=13
   subtitle(objective,"objective-heading",text_width-26,theme)
-  accent_rule(objective,theme,math.min(text_width-26,185),3)
+  accent_rule(objective,theme,math.min(text_width-26,96),2)
   local native=technology(player.force,quest,context)
   if quest.boss then
     wrap(objective,{"",L("objective-boss")," ",
@@ -705,6 +715,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     style="inside_shallow_frame_with_padding"}
   frame.style.width=size.rail
   frame.style.height=size.body
+  frame.style.padding=12
   local inner=size.rail-35
   subtitle(frame,"navigator-title",inner)
   local names={}
@@ -730,18 +741,18 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     inner,size.body-151)
   local column=scroll.add{type="flow",direction="vertical"}
   column.style.width=inner-13
-  column.style.vertical_spacing=5
+  column.style.vertical_spacing=7
   local selected_element
 
   plan=plan or M.guidance(player.force,context,view)
   local priority=column.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="inside_deep_frame"}
   priority.style.width=inner-16
   priority.style.padding=8
   -- FrameStyle has no vertical_spacing; content uses native frame spacing.
   local heading=wrap(priority,L("guidance-heading"),inner-40)
   heading.style.font="default-bold"
-  heading.style.font_color={r=1,g=.84,b=.60}
+  heading.style.font_color=COLOR.amber
   if not plan.primary then
     wrap(priority,L("guidance-none"),inner-38)
   else
@@ -766,7 +777,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
         tooltip={"journal-chapter."..entry.chapter}}
       item.style.single_line=false
       item.style.maximal_width=inner-79
-      item.style.font_color=chapter_theme.primary
+      item.style.font_color=i==1 and COLOR.ink or COLOR.muted
       if i==1 then item.style.font="default-bold" end
     end
   end
@@ -774,7 +785,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     local blocked=plan.blocker
     local warning=wrap(priority,L("guidance-blocker-heading"),inner-38)
     warning.style.font="default-bold"
-    warning.style.font_color={r=1,g=.70,b=.46}
+    warning.style.font_color=COLOR.amber
     local link=priority.add{type="label",style="clickable_label",
       caption={"journal-title."..blocked.quest.id},
       tags={razi_journal_action="guidance-select",id=blocked.quest.id}}
@@ -806,10 +817,12 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     if #available>0 then
       found=true
       local open=p.query~="" or p.chapter==chapter.id
-      local card=column.add{type="frame",direction="vertical",
-        style="inside_shallow_frame"}
+      -- Only the expanded chapter gets a surfaced panel. Collapsed
+      -- chapters read like a quiet table of contents.
+      local card=column.add{type=open and "frame" or "flow",
+        direction="vertical",style=open and "inside_shallow_frame" or nil}
       card.style.width=inner-16
-      card.style.padding=6
+      card.style.padding=open and 8 or 3
       local head=card.add{type="flow",direction="horizontal"}
       head.style.horizontal_spacing=6
       icons.button(head,themes.icon(chapter.id),"chapter_button",
@@ -819,21 +832,21 @@ local function render_chapters(parent,player,p,context,size,view,plan)
         caption=open and "▾" or "▸",
         tags={razi_journal_action="chapter",id=chapter.id},
         tooltip={"journal-chapter."..chapter.id}}
-      toggle.style.width=24
-      toggle.style.height=30
-      toggle.style.font_color=theme.primary
+      toggle.style.width=22
+      toggle.style.height=26
+      toggle.style.font_color=open and theme.primary or COLOR.quiet
       local heading=wrap(head,{"journal-chapter."..chapter.id},inner-112)
       heading.style.font="default-bold"
-      heading.style.font_color=theme.primary
+      heading.style.font_color=open and COLOR.ink or COLOR.muted
       heading.style.vertical_align="center"
       if open then
-        accent_rule(card,theme,inner-40,2)
+        accent_rule(card,theme,math.min(82,inner-40),2)
       end
       local counts=card.add{type="flow",direction="vertical"}
       counts.style.vertical_spacing=3
       local count=label(counts,
         L("chapter-progress-short",tostring(completed),tostring(total)))
-      count.style.font_color=theme.soft
+      count.style.font_color=COLOR.quiet
       local progress=counts.add{type="progressbar",
         value=total>0 and completed/total or 0}
       progress.style.width=math.max(95,inner-43)
@@ -865,7 +878,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           choice.style.single_line=false
           choice.style.maximal_width=inner-108
           choice.style.font_color=quest.id==p.selected
-            and theme.primary or {r=.94,g=.94,b=.94}
+            and COLOR.ink or COLOR.muted
           if quest.id==p.selected then
             control.style.font_color=theme.primary
             choice.style.font="default-bold"
@@ -943,6 +956,7 @@ local function render_archive(parent,player,p,context,size)
     style="inside_shallow_frame_with_padding"}
   paper.style.width=size.reader
   paper.style.height=size.body
+  paper.style.padding=16
   if not chosen then
     subtitle(paper,"archive-sealed-heading",size.reader-48)
     wrap(paper,L("archive-sealed"),size.reader-48)
@@ -952,7 +966,7 @@ local function render_archive(parent,player,p,context,size)
   local chosen_quest=defs.by_id[chosen.unlock]
   local archive_theme=themes.get(chosen_quest and chosen_quest.chapter or "echoes")
   subtitle(paper,"archive-entry-label",size.reader-48,archive_theme)
-  accent_rule(paper,archive_theme,size.reader-42,3)
+  accent_rule(paper,archive_theme,math.min(142,size.reader-42),3)
   local cover=paper.add{type="flow",direction="horizontal"}
   cover.style.horizontal_spacing=10
   local entry_quest=defs.by_id[chosen.unlock]
@@ -961,9 +975,10 @@ local function render_archive(parent,player,p,context,size)
       "archive_cover")
   end
   local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-94)
-  title.style.font="heading-2"
+  title.style.font="heading-1"
+  title.style.font_color=COLOR.ink
   local origin=label(paper,{"journal-record-origin."..chosen.id})
-  origin.style.font_color=archive_theme.primary
+  origin.style.font_color=COLOR.muted
   paper.add{type="line",direction="horizontal"}
   local reading=wheel_pane(paper,"razi_journal_archive_reading",
     size.reader-38,size.body-179)
@@ -986,7 +1001,7 @@ local function draw(player,focus_search)
   local window_theme=themes.get(chapter_theme)
   frame.clear()
   frame.style.width=size.width
-  frame.style.padding=12
+  frame.style.padding=16
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
@@ -995,9 +1010,9 @@ local function draw(player,focus_search)
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
   local title=label(heading,L(size.compact and "window-compact" or "window"))
-  title.style.font="heading-2"
-  title.style.font_color=window_theme.primary
-  local kicker=tint(label(heading,L("header-eyebrow")),window_theme.soft)
+  title.style.font="heading-1"
+  title.style.font_color=COLOR.ink
+  local kicker=tint(label(heading,L("header-eyebrow")),COLOR.muted)
   kicker.style.font="default-bold"
   local drag=head.add{type="empty-widget",style="draggable_space"}
   drag.style.horizontally_stretchable=true
@@ -1011,7 +1026,7 @@ local function draw(player,focus_search)
   dismiss.style.minimal_width=size.compact and 66 or 94
   if not size.compact then
     local description=wrap(frame,L("subtitle-short"),size.width-42)
-    description.style.font_color={r=.74,g=.77,b=.81}
+    description.style.font_color=COLOR.quiet
   end
 
   local context=M.context(player.force)
@@ -1023,56 +1038,52 @@ local function draw(player,focus_search)
   else
     done,total,ready=M.summary(player.force,context)
   end
-  local totals=frame.add{type="frame",direction="horizontal",
-    style="inside_shallow_frame_with_padding"}
+  -- Editorial status strip: honest progress, no generic dashboard tiles.
+  local totals=frame.add{type="flow",direction="vertical"}
   totals.style.horizontally_stretchable=true
-  totals.style.vertical_align="center"
-  -- FrameStyle does not expose horizontal_spacing. Use a child flow for
-  -- custom column gaps instead of attempting to style the frame itself.
-  totals.style.padding=7
+  totals.style.vertical_spacing=4
   local metrics_row=totals.add{type="flow",direction="horizontal"}
   metrics_row.style.horizontally_stretchable=true
   metrics_row.style.vertical_align="center"
   metrics_row.style.horizontal_spacing=size.compact and 8 or 18
-  local metric=metrics_row.add{type="flow",direction="vertical"}
-  metric.style.vertical_spacing=2
-  metric.style.minimal_width=size.compact and 88 or 138
+  local metric=metrics_row.add{type="flow",direction="horizontal"}
+  metric.style.horizontal_spacing=5
   subtitle(metric,"completion-heading")
-  local completed=label(metric,L("completion-value",
-    tostring(done),tostring(total)))
-  completed.style.font="heading-2"
-  completed.style.font_color={r=.51,g=.86,b=.73}
-  local readiness=metrics_row.add{type="flow",direction="vertical"}
-  readiness.style.vertical_spacing=2
-  readiness.style.minimal_width=size.compact and 88 or 138
+  local completed=label(metric,L("completion-value",tostring(done),tostring(total)))
+  completed.style.font="default-bold"
+  completed.style.font_color=COLOR.ink
+  local readiness=metrics_row.add{type="flow",direction="horizontal"}
+  readiness.style.horizontal_spacing=5
   subtitle(readiness,"ready-heading")
   local ready_label=label(readiness,L("ready-value",tostring(ready)))
-  ready_label.style.font="heading-2"
-  ready_label.style.font_color={r=1,g=.78,b=.45}
-  local meter=metrics_row.add{type="flow",direction="vertical"}
+  ready_label.style.font="default-bold"
+  ready_label.style.font_color=COLOR.amber
+  local meter=totals.add{type="flow",direction="vertical"}
   meter.style.horizontally_stretchable=true
-  meter.style.vertical_spacing=4
-  subtitle(meter,"campaign-progress-heading")
+  meter.style.vertical_spacing=2
   local overall=meter.add{type="progressbar",
     value=total>0 and done/total or 0}
   overall.style.horizontally_stretchable=true
   overall.style.height=9
-  overall.style.color=themes.get(p.chapter or "calidus").primary
+  overall.style.color=window_theme.primary
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
-  toolbar.style.horizontal_spacing=8
-  -- The Codex is a focused quest book with a separate story journal.
-  -- Navigation and records stay together; operational tools remain outside.
+  toolbar.style.horizontal_spacing=20
+  toolbar.style.vertical_align="bottom"
+  -- The three folios use typographic navigation and a slender active rule.
   for _,view in ipairs({"quests","projects","archive"}) do
     local active=p.view==view
-    local button=toolbar.add{type="button",
-      caption=L("view-"..view),
-      tags={razi_journal_action="view",id=view}}
+    local folio=toolbar.add{type="flow",direction="vertical"}
+    folio.style.vertical_spacing=4
+    local button=folio.add{type="label",style="clickable_label",
+      caption=L("view-"..view),tags={razi_journal_action="view",id=view}}
     button.style.font=active and "default-bold" or "default"
-    button.style.font_color=active and window_theme.primary
-      or {r=.90,g=.90,b=.90}
+    button.style.font_color=active and COLOR.ink or COLOR.muted
+    if active then accent_rule(folio,window_theme,76,2) end
   end
   if p.view=="quests" then
+    local spacer=toolbar.add{type="empty-widget"}
+    spacer.style.horizontally_stretchable=true
     toolbar.add{type="button",caption=L("next-milestone"),
       tags={razi_journal_action="next"}}
   end
@@ -1089,19 +1100,18 @@ local function draw(player,focus_search)
     subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
       local active=p.filter==filter
-      local button=filterbar.add{type="button",
+      local button=filterbar.add{type="label",style="clickable_label",
         caption=L("filter-"..filter),
         tags={razi_journal_action="filter",id=filter}}
       button.style.font=active and "default-bold" or "default"
-      button.style.font_color=active and window_theme.primary
-        or {r=.86,g=.86,b=.86}
+      button.style.font_color=active and COLOR.ink or COLOR.quiet
     end
   end
 
   local body=frame.add{type="flow",direction="horizontal"}
-  body.style.width=size.width-24
+  body.style.width=size.width-33
   body.style.height=size.body
-  body.style.horizontal_spacing=12
+  body.style.horizontal_spacing=10
   if p.view=="archive" then
     render_archive(body,player,p,context,size)
   elseif p.view=="projects" then
@@ -1120,7 +1130,7 @@ local function draw(player,focus_search)
     end
   end
   local foot=wrap(frame,L("footer-hint"),size.width-38)
-  foot.style.font_color={r=.63,g=.67,b=.71}
+  foot.style.font_color=COLOR.quiet
 end
 M.draw=draw
 local function open(player)

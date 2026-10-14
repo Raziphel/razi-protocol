@@ -1,5 +1,19 @@
 > **Current UI (October 2026):** The Protocol Codex now has Quests, Projects, and Journal views. Open it with Ctrl+Shift+J. Projects contains Dyson Sphere, Cargo Network, Transceiver, and Convergence. Ctrl+Shift+G opens Projects directly. The separate Galactic Operations window and floating starmap button are retired. Older sections below describe the prior interface.
 
+## October 2026: Expedition Codex visual language
+
+The journal is now presented as an expedition field manual. The heading
+and primary reading text use neutral ink; local chapter colors are reserved
+for short navigation rules, statuses and selected milestones. An understated
+folio tab row replaces a wall of competing buttons. The active chapter receives
+the raised panel, while unopened chapters become entries in a compact index.
+
+**Projects** use a project index with restrained existing game art and actual
+stage completion. A separate dossier pane contains native Dyson construction,
+cargo chains, Transceiver state and Convergence deliveries. Small screens use
+a two-column selection grid above one scrollable reader. The original physical
+game systems remain authoritative. No new sprite atlas, decorative game tick,
+save migration, research technology or fake power/satellite telemetry is added.
 ## 2.1.62: Building the last physical Mandate
 
 The five existing Convergence shipment objectives and saved

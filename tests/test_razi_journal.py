@@ -63,7 +63,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('local content_height=size.body-(size.compact and 225 or 248)',ui)
         self.assertIn('progress.style.color=theme.primary',ui)
         self.assertIn('chapter_intro.style.font_color=theme.primary',ui)
-        self.assertIn('accent_rule(panel,theme,inner,3)',ui)
+        self.assertIn('accent_rule(panel,theme,math.min(148,inner),3)',ui)
         self.assertIn('style="inside_shallow_frame"',ui)
         locale=read("locale/en/razi_journal.cfg")
         mood=locale.split("[journal-mood]",1)[1].split("\n[",1)[0]
