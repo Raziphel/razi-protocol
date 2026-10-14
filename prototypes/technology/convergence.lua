@@ -3,6 +3,7 @@
 local M={}
 M.commission="razi-convergence-commission"
 M.authorization="razi-convergence-synchronization"
+M.ignition="razi-convergence-ignition"
 M.shipments={
  {id="stellar",item="razi-convergence-stellar-mandate",count=8,
   icon="calidus-tech-card",ingredients={
@@ -16,12 +17,29 @@ M.shipments={
   supplies={{"holmium-plate",6},{"optical-cable",6},
    {"craptonite-frame",6}}},
  {id="deep-space",item="razi-convergence-deep-space-mandate",count=6,
-  icon="deep-space-tech-card",ingredients={
+  unlock=M.authorization,icon="deep-space-tech-card",ingredients={
    {"beetlejuice-tech-card",2},{"umbra-tech-card",2},
    {"deep-space-tech-card",2}},
   supplies={{"promethium-science-pack",4},
    {"kr-singularity-tech-card",2},{"pulsar-science-pack",2},
-   {"supermagnet",3}}}
+   {"supermagnet",3}}},
+ {id="resonance",item="razi-convergence-resonance-mandate",count=4,
+  unlock=M.authorization,icon="deep-space-tech-card",ingredients={
+   {"beetlejuice-tech-card",2},{"umbra-tech-card",2},
+   {"deep-space-tech-card",2},{"processing-unit",12},
+   {"holmium-plate",8}},
+  supplies={{"pulsar-science-pack",8},
+   {"antimatter-science-pack",4},{"supermagnet",6}}},
+ {id="ignition",item="razi-convergence-ignition-mandate",count=1,
+  unlock=M.ignition,icon="calidus-tech-card",ingredients={
+   {"calidus-tech-card",8},{"solaris-tech-card",8},
+   {"nyxaris-tech-card",8},{"vibrant-tech-card",8},
+   {"vespera-tech-card",8},{"beetlejuice-tech-card",8},
+   {"umbra-tech-card",8},{"deep-space-tech-card",12},
+   {"processing-unit",40},{"low-density-structure",40}},
+  supplies={{"pulsar-science-pack",12},
+   {"promethium-science-pack",12},{"antimatter-science-pack",8},
+   {"supermagnet",8}}}
 }
 local function raw(kind,id)
  return (data.raw[kind] or {})[id]
@@ -126,7 +144,8 @@ function M.data_final_fixes()
  -- Research the true transceiver and reach the Edge first.
  if not tech["stellar-discovery-solar-system-edge"]
   or not tech["razi-intergalactic-transceiver-signal"]
-  or tech[M.commission] or tech[M.authorization] then return end
+  or tech[M.commission] or tech[M.authorization]
+  or tech[M.ignition] then return end
  local products=producer_index()
  for _,rule in ipairs(M.shipments) do
   if not raw("tool",rule.icon) or not raw("recipe",rule.icon)
@@ -169,7 +188,20 @@ function M.data_final_fixes()
    append(ending,id)
   end
  end
- local new={begin,ending}
+ -- Dyson distribution joins the last engineering commission when
+ -- installed, preserving source recipes and research ownership.
+ local ignition=make_technology(M.ignition,final_icon,
+  {M.authorization},final_science,1800)
+ for _,id in ipairs({"slp-dyson-sphere-grounded",
+   "ds-energy-loader-mk2"}) do
+  if optional_parent(tech,M.ignition,id) then
+   append(ignition,id)
+  end
+ end
+ local unlock_tech={
+  [M.commission]=begin,[M.authorization]=ending,[M.ignition]=ignition
+ }
+ local new={begin,ending,ignition}
  for _,rule in ipairs(M.shipments) do
   local source=raw("tool",rule.icon)
   local icon=source.icons and {icons=clone(source.icons)}
@@ -207,9 +239,9 @@ function M.data_final_fixes()
   for k,v in pairs(icon) do recipe[k]=clone(v) end
   new[#new+1]=item
   new[#new+1]=recipe
-  -- The final mandate is a genuine post-synchronization production tier,
-  -- not a recipe silently granted by the opening commission.
-  local unlock=rule.id=="deep-space" and ending or begin
+  -- The final accord is researched after the previous physical stages.
+  -- Never grant its recipe from the opening Commission.
+  local unlock=unlock_tech[rule.unlock or M.commission]
   unlock.effects[#unlock.effects+1]={type="unlock-recipe",
     recipe=rule.item}
  end
