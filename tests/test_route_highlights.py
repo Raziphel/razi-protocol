@@ -57,8 +57,9 @@ class BuiltInOverlayTests(unittest.TestCase):
     def test_never_edit_real_routes_or_add_runtime_work(self):
         source=read("prototypes/system/route_highlights.lua")
         self.assertNotIn("data:extend",source)
-        self.assertNotIn("route.shape=",source)
-        self.assertNotIn("route.length=",source)
+        # Comparisons such as route.shape=="line" are read-only.
+        # Reject assignments without mistaking equality checks for edits.
+        self.assertNotRegex(source,r"route\\.(?:shape|length)\\s*=(?!=)")
         self.assertNotIn("script.on_event",source)
         self.assertNotIn("game.tick",source)
         self.assertNotIn('require("space-route-overlay")',source)
