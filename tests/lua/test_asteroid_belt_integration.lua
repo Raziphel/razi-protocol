@@ -31,21 +31,45 @@ for _,entry in ipairs({{inner,31},{outer,39}}) do
     "Belt rim Y coordinate changed")
 end
 check(#layers==4,"Expected exactly two first-party decorative layers")
-for i=3,4 do
+for i=1,2 do
   local layer=layers[i]
   check(layer.filename:find("__razi%-protocol__/graphics/starmap/razi/"),
     "Belt still references an upstream mod texture")
   check(math.abs(layer.shift[1]-cx*32)<.01 and
     math.abs(layer.shift[2]-cy*32)<.01,"Decorative ring not sun-centered")
 end
-check(layers[1].shift[1]==2 and layers[2].shift[1]==37,
-  "Existing source art was modified")
+check(layers[3].shift[1]==2 and layers[4].shift[1]==37,
+  "Existing source art was modified or belt art drew above the native layers")
+check(layers[1].tint.a<.31 and layers[2].tint.a<.18,
+  "Vibrant haze is too strong for the native star and planet markers")
 belt.data_final_fixes()
 check(#layers==4,"Repeated data-stage pass duplicated belt artwork")
 data.raw["space-location"][outer.name]=nil
 belt.data_final_fixes()
 check(#layers==4 and inner.orbit,
   "Missing legacy rim should be handled without crashing")
+-- Cosmetic toggles affect the artwork only, never the saved coordinates.
+table.remove(layers,1)
+table.remove(layers,1)
+rawset(_G,"settings",{startup={
+  ["razi-starmap-background-style"]={value="off"},
+  ["razi-starmap-belt-atmosphere"]={value=true}
+}})
+belt.data_final_fixes()
+check(#layers==2 and inner.orbit,
+  "Background Off should suppress the ring without removing navigation")
+settings.startup["razi-starmap-background-style"].value="subtle"
+settings.startup["razi-starmap-belt-atmosphere"].value=false
+belt.data_final_fixes()
+check(#layers==2,"Belt atmosphere Off must suppress Vibrant debris")
+settings.startup["razi-starmap-belt-atmosphere"].value=true
+mods["Better_Starmap_Background"]=true
+belt.data_final_fixes()
+check(#layers==2,"External sky background should not be covered")
+mods["Better_Starmap_Background"]=nil
+belt.data_final_fixes()
+check(#layers==4 and layers[1].filename:find("belt%-vibrant"),
+  "Original Vibrant art must return when toggles are enabled again")
 local f=assert(io.open("info.json","r"))
 local info=f:read("*a");f:close()
 check(info:find('"! AsteroidBelt"',1,true),
