@@ -1,3 +1,12 @@
+Version: 2.1.57
+Date: 14. 10. 2026
+  The Convergence: phase-gated manufacturing and cargo UX:
+    - Deep-Space Mandate crafting now unlocks with Deep-Space Synchronization, not the earlier Commission; no existing science or lab prototypes were replaced.
+    - The expedition panel now shows native progress bars, clearly marked phase states and exact cargo held in the player's main inventory.
+    - Submission buttons only enable for the currently active phase when the real player carries its freight aboard an eligible, force-owned expedition platform.
+    - Update prototype and structural tests; leave the delivery ledger, route network, multiplayer progress and original transceiver untouched.
+    - Live Factorio 2.1 load, existing-save migration and in-game deliveries remain to be validated.
+
 Version: 2.1.56
 Date: 14. 10. 2026
   The Convergence, Razi Protocol's post-transceiver ending:
