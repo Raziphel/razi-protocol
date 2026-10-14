@@ -1,3 +1,43 @@
+## The Convergence: five-stage validation (2.1.58)
+
+**Tech graph:** Commission must unlock only Stellar/Industrial recipes;
+Synchronization must unlock Deep-Space/Pulsar Resonance recipes;
+Convergence Ignition Protocol alone unlocks the final accord.
+Check research cost and preconditions in source Dynamo/Dyson and Aegis
+combinations, including missing Nexus Omega Lab. Never create a lab.
+Inspect that the optional installed native supplies are genuinely
+manufacturable before a release, and that the final mandate's eight
+card families are accessible without a technology cycle.
+
+**Runtime progression:** 8 Stellar -> 10 Industrial -> 6 Deep Space ->
+4 Pulsar Resonance -> 1 Ignition. First three stages alone must NOT win.
+Fourth stage cannot win. The fifth should win exactly once after
+its own research. Keep Remote View and invalid/platform-owning force
+checks; wrong stage and missing items must not consume anything.
+
+**Saves/migrations:** Load a completed 2.1.57 save and confirm
+M.current reports finished, both new shipment milestones count as
+completed for that previously won force, and the native victory
+does not replay on load. On a partial 2.1.57 save, existing deliveries
+are untouched. Verify newly installed recipe unlocks are enabled only
+if their corresponding research is already complete. Force merges
+must preserve earlier and new contributions, never resetting the
+source game's science tree.
+
+**UI:** Confirm five stage bars, carried counts, and research guidance
+on 1024px to 4K UI scaling. The user must be physically aboard a
+force-owned expedition platform to submit freight. No inventory scans
+or heavy physics polling should be introduced.
+
+Source-level fixtures (run locally without new Actions workflows):
+```bash
+python3 -m unittest discover -s tests -p 'test_convergence.py'
+python3 -m unittest discover -s tests -p 'test_razi_journal.py'
+lua5.2 tests/lua/test_convergence_prototypes.lua
+lua5.2 tests/lua/test_convergence_runtime.lua
+lua5.2 tests/lua/test_razi_journal.lua
+```
+
 ## The Convergence: release blocking tests (2.1.57)
 
 **Phase gating and panel:** Convergence Commission must unlock ONLY Stellar
