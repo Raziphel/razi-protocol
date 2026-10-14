@@ -88,8 +88,9 @@ function M.data_final_fixes()
     if not item(part[1]) then approved=false break end
    end
   end
+  local ingredients
   if approved then
-   local ingredients=duplicate(base.ingredients)
+   ingredients=duplicate(base.ingredients)
    for _,part in ipairs(ingredients) do
     part.amount=part.amount*4
    end
