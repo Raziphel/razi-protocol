@@ -56,8 +56,8 @@ for _,r in ipairs(m.shipments) do
   "Each Mandate must appear in the dedicated manufacturing group")
  check(#recipes[r.item].ingredients<=6,
   "Every Mandate must fit an existing six-input assembler")
- local art=r.id=="industry" and "industrial" or r.id
- check(items[r.item].icon=="__razi-protocol__/graphics/icons/convergence/"..art..".png",
+ local art=r.id
+ check(items[r.item].icon=="__razi-protocol__/graphics/icons/convergence/razi-convergence-"..art..".png",
   "Each Mandate must use its original icon asset")
  check(recipes[r.item].allow_productivity==false,
   "Productivity may duplicate the required freight")
