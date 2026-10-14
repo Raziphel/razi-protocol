@@ -15,7 +15,8 @@ rawset(_G,"game",{
 local function fixture(index)
  local force={index=index,name="Test Force "..index,technologies={
   [mods.commission]={researched=true},
-  [mods.authorization]={researched=true}
+  [mods.authorization]={researched=true},
+  [mods.ignition]={researched=false}
  }}
  local inventory={valid=true,items={}}
  function inventory.get_item_count(name)
@@ -71,12 +72,26 @@ check(message=="convergence-need-platform",
  "Remote View must never submit from the physical platform")
 player.controller_type=1
 m.deliver(player,"deep-space")
-check(m.completed(force,"victory") and done==1,
- "Last real shipment should win exactly once")
-local before=inventory.items[m.stages[3].item]
-message=m.deliver(player,"deep-space")
+check(m.current(force)==4 and done==0,
+ "Deep Space should lead to Pulsar Resonance, not an early win")
+inventory.items[m.stages[4].item]=m.stages[4].count
+message,used=m.deliver(player,"resonance")
+check(message=="convergence-delivered" and used==m.stages[4].count
+ and m.current(force)==5 and done==0,
+ "Pulsar Resonance should lead to final ignition")
+inventory.items[m.stages[5].item]=1
+message=m.deliver(player,"ignition")
+check(message=="convergence-need-ignition" and done==0,
+ "Final accord cannot skip Ignition research")
+force.technologies[mods.ignition].researched=true
+message,used=m.deliver(player,"ignition")
+check(message=="convergence-delivered" and used==1
+ and m.completed(force,"victory") and done==1,
+ "Final physical accord should trigger one victory")
+local before=inventory.items[m.stages[5].item]
+message=m.deliver(player,"ignition")
 check(message=="convergence-wrong-stage" and done==1
- and inventory.items[m.stages[3].item]==before,
+ and inventory.items[m.stages[5].item]==before,
  "Double click cannot consume extra items or repeat victory")
 local new_force,new_player,other=fixture(2)
 check(not m.completed(new_force,"victory"),
@@ -86,4 +101,27 @@ m.deliver(new_player,"stellar")
 m.forces_merged({source_index=2,destination_index=1})
 check(not storage.razi_convergence[2] and
  m.completed(force,"stellar"),"Merging forces retains real progress")
-print("Convergence: inventory, location, force isolation, victory and merge passed")
+local legacy_force=fixture(3)
+storage.razi_convergence[3]={
+ delivered={stellar=8,industry=10,["deep-space"]=6},victory=true,
+ victory_tick=10,completed_by="Legacy Engineer"
+}
+check(m.current(legacy_force)==#m.stages+1
+ and m.completed(legacy_force,"resonance")
+ and m.completed(legacy_force,"ignition"),
+ "2.1.57 winner must remain fully credited after adding two phases")
+local progress,total,won=m.progress(legacy_force)
+check(won and progress==5 and total==5 and done==1,
+ "Loading an old victory must not trigger another game-ending event")
+local migration_force=fixture(4)
+migration_force.technologies[mods.authorization].researched=true
+migration_force.recipes={}
+for _,stage in ipairs(m.stages) do
+ migration_force.recipes[stage.item]={enabled=false}
+end
+m.repair_recipe_unlocks(migration_force)
+check(migration_force.recipes[m.stages[3].item].enabled
+ and migration_force.recipes[m.stages[4].item].enabled
+ and not migration_force.recipes[m.stages[5].item].enabled,
+ "Recipe migration must respect actual research, including final Ignition")
+print("Convergence: five real shipments, research gates, legacy wins and merges passed")
