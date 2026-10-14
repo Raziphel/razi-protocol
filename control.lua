@@ -4,6 +4,7 @@ galactic_operations.bind_journal(razi_journal)
 local razi_discord_presence = require("scripts.razi_discord_presence")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local convergence = require("scripts.razi_convergence")
+local convergence_audit = require("scripts.razi_convergence_audit")
 local Events = require("__razi_lib__/runtime/events")
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -92,7 +93,11 @@ local function check_existing_transceivers()
 
 	-- get_entity_count is O(1): the engine keeps the counts, so no surface search.
 	for _, force in pairs(game.forces) do
-		if force.get_entity_count(active_transceiver_name) > 0 then
+		local technology=force.technologies[transceiver_gate_technology]
+		-- Most forces already have the gate. Avoid even an O(1) count
+		-- after research, including the 10-minute safeguard poll.
+		if technology and not technology.researched
+			and force.get_entity_count(active_transceiver_name)>0 then
 			unlock_transceiver_gate(force)
 		end
 	end
@@ -188,6 +193,9 @@ end)
 commands.add_command("razi-cheat",
   {"razi-cheat.help"},
   razi_safe_cheat.command)
+-- Explicit diagnostic only. Never scans recipes, labs or source mods on ticks.
+commands.add_command("razi-audit",
+  {"razi-audit.help"},convergence_audit.command)
 events:on_nth_tick(6, razi_safe_cheat.tick)
 events:on_event(defines.events.on_string_translated,function(event)
   razi_discord_presence.on_string_translated(event)
