@@ -144,6 +144,10 @@ function M.available(force,quest,context)
   return true
 end
 function M.complete(force,quest,context)
+  -- A 2.1.57 victory must keep the new retrospective research objective
+  -- complete, even though that technology did not exist when it won.
+  if quest.id=="convergence-ignition-research"
+    and convergence.completed(force,"victory") then return true end
   if quest.convergence then
     return convergence.completed(force,quest.convergence)
   end
