@@ -100,7 +100,7 @@
     "! PlanetAthos",
     "! biological-machines-planet-wit",
     "! shchierbin",
-    "+ Nexus-Threat-Updated >= 1.1.0",
+    "Nexus-Threat-Updated >= 1.1.0",
     "+ Big-Monsters >= 2.2.1"
   ],
   "quality_required": true,
