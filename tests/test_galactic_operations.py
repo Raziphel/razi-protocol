@@ -22,6 +22,24 @@ class GalacticOperationsTests(unittest.TestCase):
                     "atlas-convergence-open"):
             self.assertIn(key+"=",strings)
 
+    def test_atlas_planetary_roles_link_to_existing_cargo_network(self):
+        atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
+        gui=(ROOT/"scripts/galactic_operations.lua").read_text()
+        locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        self.assertIn('function M.planet_supply_links(force,id)',atlas)
+        self.assertIn('local function supply_index()',atlas)
+        self.assertIn('local state=catalog.state(technology)',atlas)
+        self.assertIn('if state.status~="absent" then',atlas)
+        self.assertIn('if unlocked then\\n    -- These are actual',atlas)
+        self.assertIn('razi_ops_action="atlas-cargo"',atlas)
+        self.assertIn('elseif action=="atlas-cargo" then',gui)
+        self.assertIn('M.open_cargo(player,value)',gui)
+        for name in ("atlas-supply-heading","atlas-supply-explanation",
+                     "atlas-supply-open"):
+            self.assertIn(name+"=",locale)
+        self.assertNotIn("create_surface(",atlas)
+        self.assertNotIn("platform.schedule=",atlas)
+
     def test_atlas_industry_reverse_index_is_cached(self):
         atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
         code=(ROOT/"control.lua").read_text()
