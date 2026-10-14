@@ -46,19 +46,33 @@ M.deep={
   {"razi-network-lattice-vesta-foundations","razi-network-panglia-optic-bond"},
   {"razi-network-frame-vesta-foundations","razi-network-lattice-vesta-magnets"},
   {"razi-network-frame-aquilo-controllers","razi-network-matrix-cryo-controllers"},
-  {"razi-network-lattice-balack-shielding","razi-network-panglia-optic-bond"}
+  {"razi-network-lattice-balack-shielding","razi-network-panglia-optic-bond"},
+  -- Deep factories reward completing earlier regional component networks.
+  {"razi-network-lattice-balack-shielding","razi-network-matrix-linox-refining"},
+  {"razi-network-frame-vesta-foundations","razi-network-matrix-rubia-logistics"},
+  {"razi-network-frame-aquilo-controllers","razi-network-bond-linox-refining"}
 }
 
 -- This explicitly reduces a handful of disproportionately priced Razi
 -- upgrade choices. Existing cheaper modpack overrides remain cheaper.
 -- Do not apply global count multipliers to thousands of native technologies.
 M.science_budget={
-  ["razi-network-matrix-cryo-controllers"]=800,
-  ["razi-network-matrix-rubia-logistics"]=820,
-  ["razi-network-matrix-linox-refining"]=820,
-  ["razi-network-lattice-vesta-magnets"]=1050,
-  ["razi-network-lattice-vesta-foundations"]=1320,
-  ["razi-network-lattice-balack-shielding"]=1360
+  -- The four Razi components are vital industries, not cost walls.
+  ["razi-network-precision-matrix"]=400,
+  ["razi-network-panglia-optic-bond"]=340,
+  ["razi-network-extreme-lattice"]=650,
+  ["razi-network-umbra-pressure-frame"]=900,
+  -- Cross-world upgrades should not dwarf the research for their worlds.
+  ["razi-network-matrix-cryo-controllers"]=760,
+  ["razi-network-matrix-rubia-logistics"]=780,
+  ["razi-network-matrix-linox-refining"]=780,
+  ["razi-network-bond-paracelsin-coils"]=480,
+  ["razi-network-bond-linox-refining"]=600,
+  ["razi-network-lattice-vesta-magnets"]=1000,
+  ["razi-network-lattice-vesta-foundations"]=1250,
+  ["razi-network-lattice-balack-shielding"]=1300,
+  ["razi-network-frame-vesta-foundations"]=900,
+  ["razi-network-frame-aquilo-controllers"]=1000
 }
 M.families={
   {"razi-network-precision-matrix","f[razi-industry]-a[precision]"},
