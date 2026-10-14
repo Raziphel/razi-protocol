@@ -31,6 +31,18 @@ local systems={
      "razi-intergalactic-transceiver-signal"}}
 }
 M.systems=systems
+-- Eight restrained chapter accents, reused for one short progress bar and
+-- a single heading. The actual tech-card icons are source-owned assets.
+M.palette={
+  calidus={r=.94,g=.77,b=.46},
+  solaris={r=.94,g=.56,b=.37},
+  nyxaris={r=.44,g=.80,b=.65},
+  vibrant={r=.59,g=.62,b=.93},
+  vespera={r=.83,g=.87,b=.91},
+  beetlejuice={r=.91,g=.52,b=.70},
+  umbra={r=.81,g=.55,b=.38},
+  ["deep-space"]={r=.57,g=.68,b=.91}
+}
 -- Use the same declaration as data-stage registration so the Campaign
 -- never advertises freight alternatives that were not installed.
 local multiplex_by_card={}
@@ -125,12 +137,27 @@ function M.render(parent,player)
       direction="vertical"}
     section.style.horizontally_stretchable=true
     local head=section.add{type="flow",direction="horizontal"}
+    head.style.vertical_align="center"
+    -- A single 20px science-card sprite; never a scaled-up technology icon.
+    if prototypes and prototypes.item and prototypes.item[system[3]] then
+      local marker=head.add{type="sprite",sprite="item/"..system[3],
+        resize_to_sprite=false}
+      marker.style.size=20
+      marker.style.stretch_image_to_widget_size=true
+    end
     local label_name=label(head,L("group-"..system[1]))
     label_name.style.font="default-bold"
+    label_name.style.font_color=M.palette[system[1]]
     local actual=discoveries[system[1]]
     local finished,total,pending=M.progress(player.force,
       actual and #actual>0 and actual or system[4])
     label(head,L("campaign-count",tostring(finished),tostring(total)))
+    if total>0 then
+      local bar=section.add{type="progressbar",value=finished/total}
+      bar.style.horizontally_stretchable=true
+      bar.style.height=5
+      bar.style.color=M.palette[system[1]]
+    end
     local gate=player.force.technologies[system[2]]
     if gate then
       local gate_label=label(section,{"",L("campaign-gate")," ",
