@@ -212,6 +212,9 @@ function M.render(parent,player)
   or "convergence-sync-pending",width)
  local saved=M.record(force)
  local next_index=M.current(force)
+ -- Read one player's carried freight when the panel opens or redraws.
+ -- No background inventory scans, and a remote camera cannot deliver it.
+ local inventory=player.get_main_inventory()
  for i,rule in ipairs(M.stages) do
   local card=scroll.add{type="frame",style="inside_shallow_frame",
    direction="vertical"}
@@ -229,6 +232,19 @@ function M.render(parent,player)
    tostring(donated),tostring(rule.count))
   amount.style.font_color=donated>=rule.count
    and {r=.49,g=.87,b=.71} or {r=.98,g=.74,b=.49}
+  local meter=card.add{type="progressbar",
+   value=math.min(1,donated/rule.count)}
+  meter.style.horizontally_stretchable=true
+  meter.style.height=12
+  local status=i<next_index and "finished"
+   or (i>next_index and "pending")
+   or (i==3 and not sync.researched and "synchronization")
+   or "active"
+  local state=line(card,"convergence-status-"..status,width)
+  state.style.font="default-bold"
+  local carried=inventory and inventory.valid
+   and inventory.get_item_count(rule.item) or 0
+  line(card,"convergence-carried",width,tostring(carried))
   line(card,"convergence-stage-description-"..rule.id,width)
   local build=card.add{type="label",caption=L(
     "convergence-build-"..rule.id)}
@@ -237,7 +253,7 @@ function M.render(parent,player)
   local button=card.add{type="button",
    caption=L("convergence-submit"),
    tags={razi_ops_action="convergence-deliver",value=rule.id}}
-  button.enabled=i==next_index and where~=nil
+  button.enabled=i==next_index and carried>0 and where~=nil
    and (i~=3 or sync.researched) and commission.researched
  end
  line(scroll,"convergence-continued-play",width)
