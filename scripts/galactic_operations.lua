@@ -733,17 +733,22 @@ local function open(player)
   redraw(player)
 end
 
-function M.on_convergence_research(event)
-  local research=event and event.research
-  if not research or (research.name~="razi-convergence-commission"
-    and research.name~="razi-convergence-synchronization") then return end
-  for _,player in pairs(research.force.connected_players or {}) do
+function M.refresh_convergence(force)
+  if not force then return end
+  for _,player in pairs(force.connected_players or {}) do
     local frame=player.gui.screen[FRAME]
     local p=storage.razigui and storage.razigui[player.index]
     if frame and frame.valid and p and p.tab=="convergence" then
       redraw(player)
     end
   end
+end
+function M.on_convergence_research(event)
+  local research=event and event.research
+  if not research or (research.name~="razi-convergence-commission"
+    and research.name~="razi-convergence-synchronization"
+    and research.name~="razi-convergence-ignition") then return end
+  M.refresh_convergence(research.force)
 end
 
 function M.toggle(player)
