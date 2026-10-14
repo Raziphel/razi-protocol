@@ -370,7 +370,11 @@ local function add_system_cards_to_regular_labs()
 end
 
 function lab_cards.data_final_fixes()
-	ensure_item_subgroup(system_card_subgroup, "science", "0[system-tech-card]")
+	-- Science Tab is a recommended companion, not an essential mod.
+	-- Vanilla Factorio has no guaranteed `science` item group.
+	local group = data.raw["item-group"] and data.raw["item-group"]["science"]
+		and "science" or "intermediate-products"
+	ensure_item_subgroup(system_card_subgroup, group, "0[system-tech-card]")
 
 	for _, card in ipairs(system_card_definitions) do
 		upsert_system_card(card)
