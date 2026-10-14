@@ -176,6 +176,21 @@ class ResearchBalanceTests(unittest.TestCase):
                          ["metallurgic-science-pack"])
         self.assertEqual(rows["solaris-tech-card"]["total_ingredient_items"],3)
 
+    def test_frontier_branches_count_direct_cards_not_native_panglia(self):
+        raw=fixture()
+        for system,names in audit.FRONTIER_BRANCHES.items():
+            for name in names:
+                raw["technology"][name]={"unit":{
+                    "count":100,"ingredients":[["calidus-tech-card",1]]}}
+        raw["technology"]["panglia_planet_discovery_panglia"]={
+            "unit":{"count":3000,"ingredients":[["data-cell",1]]}}
+        result=audit.examine(raw)
+        self.assertEqual(result["first_frontier_card_demand"]["solaris"][
+            "direct_card_items"],600)
+        self.assertEqual(result["first_frontier_card_demand"]["nyxaris"][
+            "direct_card_items"],300)
+        self.assertNotIn("data-cell",str(result["first_frontier_card_demand"]))
+
     def test_freight_card_alternatives_have_bounded_value(self):
         raw=fixture()
         raw["recipe"]={
