@@ -1,5 +1,5 @@
--- Writes an opt-in presence snapshot for the local Discord companion.
--- The game never connects to Discord IPC itself.
+-- Writes a local Journal snapshot for the optional Discord companion.
+-- Factorio Lua cannot connect to Discord IPC or start a local program.
 local M={}
 local journal=require("scripts.razi_journal")
 local definitions=require("scripts.razi_journal_data")

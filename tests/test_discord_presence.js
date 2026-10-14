@@ -16,6 +16,7 @@ function run(){
   return JSON.parse(result.stdout);
 }
 try{
+  assert.equal(run().app_id,"1559834052867915857","Application ID must be preconfigured");
   assert.equal(run().fresh,false,"Absent state must not publish presence");
   fs.writeFileSync(file,JSON.stringify({schema:1,enabled:true,
     chapter:"vibrant",chapter_number:4,
