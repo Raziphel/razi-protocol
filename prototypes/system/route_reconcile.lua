@@ -10,7 +10,7 @@ local membership = {
 	nauvis = "calidus", muluna = "calidus", ["alchemy-planet"] = "vibrant",
 	["sye-calidus"] = "calidus",
 	vulcanus = "solaris",
-	gleba = "nyxaris", rabbasca = "nyxaris",
+	gleba = "nyxaris", rabbasca = "nyxaris", velora = "nyxaris", foliax = "nyxaris",
 	fulgora = "vibrant", cerys = "vibrant",
 	-- Solaris and Nyxaris.
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris", igrys = "solaris",
@@ -75,10 +75,9 @@ local route_specifications = {
   {"tellus", "corrundum", 18000, "industrial_deep"},
   -- Northern outer arc closes the circuit without routing through the sun.
   {"corrundum", "igrys", 32000, "industrial_deep"},
-	-- Nyxaris neighbors can exchange biological supplies directly instead
-	-- of routing every load through their distant slipstream hub.
+	-- Nyxaris connects its biological crescent without the redundant
+	-- Gleba-to-Apia chord through Moshine. Both hub departures stay available.
 	{"gleba", "moshine", 17000, "biological"},
-	{"gleba", "apia-carnova-orbit", 22000, "biological"},
 	{"moshine", "apia-carnova-orbit", 12000, "biological"},
 	-- Post-Moshine data expedition: direct route plus an Apia cargo leg.
 	{"moshine", "panglia", 25000, "biological_deep"},
@@ -348,13 +347,11 @@ function route_reconcile.data_final_fixes()
 			if route then
 				route.from, route.to = from, to
 				route.length = balanced_length(keep_name, route.length, length, from, to)
-        local solaris_local=membership[from]=="solaris"
-          and membership[to]=="solaris"
-        -- Local Solaris logistics are direct chords between their actual
-        -- endpoints. Source-provided default arcs were circling empty space,
-        -- obscuring planets, and sweeping across the neighboring systems.
-        -- A straight chord also works on older Factorio 2.1 clients.
-        if solaris_local then
+        local local_chord=membership[from]==membership[to]
+          and (membership[from]=="solaris" or membership[from]=="nyxaris")
+        -- The local Solaris and Nyxaris networks use direct chords.
+        -- Source arcs without regional origins curve around Calidus instead.
+        if local_chord then
           route.shape="line"
           route.origin=nil
         elseif membership[from] and membership[to]
@@ -368,7 +365,7 @@ function route_reconcile.data_final_fixes()
 					and keep_name:sub(1,5)=="razi-" then
 					route.shape="line"
 					route.origin=nil
-        elseif solaris_local then
+        elseif local_chord then
           route.origin=nil
 				elseif route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
@@ -384,7 +381,8 @@ function route_reconcile.data_final_fixes()
 						shape = (membership[from] and membership[to]
                             and (membership[from] ~= membership[to]
                               or membership[from]=="calidus"
-                              or membership[from]=="solaris")) and "line" or "arc",
+                              or membership[from]=="solaris"
+                              or membership[from]=="nyxaris")) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)

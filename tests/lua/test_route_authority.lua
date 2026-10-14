@@ -81,6 +81,8 @@ local roads={
   ["razi-solaris"]=route("razi-solaris","vulcanus","sye-solaris",18000,
     {{asteroid="modded-special-ore",probability=.3}}),
   ["rogue-nauvis-vulcanus"]=route("rogue-nauvis-vulcanus","nauvis","vulcanus",1000),
+  ["rogue-solar-orbit-vulcanus"]=route("rogue-solar-orbit-vulcanus","sun-orbit","vulcanus",1000),
+  ["rogue-close-orbit-vulcanus"]=route("rogue-close-orbit-vulcanus","close-sun-orbit","vulcanus",1000),
   ["rogue-solaris-castra"]=route("rogue-solaris-castra","sye-solaris","castra",9000),
   ["rogue-extra"]=route("rogue-extra","sye-vespera","aquilo",14000),
   ["native-belt"]=belt,
@@ -114,7 +116,8 @@ rawset(_G,"settings",{startup={
 local manager=require("prototypes.system.route_authority")
 local removed=manager.data_final_fixes()
 check(removed>=5,"Unmanaged routes and duplicates were not removed")
-for _,id in ipairs({"rogue-nauvis-vulcanus","rogue-solaris-castra",
+for _,id in ipairs({"rogue-nauvis-vulcanus","rogue-solar-orbit-vulcanus",
+  "rogue-close-orbit-vulcanus","rogue-solaris-castra",
   "rogue-extra","razi-solaris","nexus-calidus","ferrum-old-source"}) do
   check(roads[id]==nil,"Source shortcut survived final authority: "..id)
 end
@@ -155,6 +158,9 @@ for _ in pairs(roads) do again=again+1 end
 check(count==again,"Idempotency produced duplicate routes")
 settings.startup["razi-curated-space-routes"].value=false
 roads["rogue-disabled"]=route("rogue-disabled","nauvis","castra",1000)
-check(manager.data_final_fixes()==0 and roads["rogue-disabled"]~=nil,
-  "Disabling authority should preserve original mod connections")
+roads["rogue-stellar-disabled"]=route("rogue-stellar-disabled",
+  "sun-orbit","vulcanus",1000)
+check(manager.data_final_fixes()==1 and roads["rogue-disabled"]~=nil
+  and roads["rogue-stellar-disabled"]==nil,
+  "Disabling general authority must still remove the unwanted sun route")
 print("Razi-only route authority, native lifelines and safety fixtures passed")

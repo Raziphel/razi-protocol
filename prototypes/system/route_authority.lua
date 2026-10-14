@@ -55,6 +55,17 @@ local function is_stellar(id)
   end
   return false
 end
+-- The Dyson sun-orbit stations must be reached through Calidus, not by a
+-- source-mod shortcut into Vulcanus. Resolve dynamic source IDs through the
+-- actual discovery effects, with the two known IDs as safe fallbacks.
+local function unwanted_solaris_sun_route(a,b)
+  local other
+  if a=="vulcanus" then other=b
+  elseif b=="vulcanus" then other=a
+  else return false end
+  return other=="close-sun-orbit" or other=="sun-orbit"
+    or is_stellar(other)
+end
 local function native_parent_link(a,b)
   local child=exists(a)
   local parent=child and child.orbit and child.orbit.parent
@@ -147,11 +158,20 @@ local function dedupe(routes,check)
 end
 
 function M.data_final_fixes()
-  local setting=settings and settings.startup
-    and settings.startup["razi-curated-space-routes"]
-  if setting and setting.value==false then return 0 end
   local routes=data.raw["space-connection"]
   if not routes then return 0 end
+  -- Never retain the stray Vulcanus-to-sun-orbit chord, including when the
+  -- broader curated-network cleanup is disabled for compatibility testing.
+  local forbidden=0
+  for name,route in pairs(routes) do
+    if unwanted_solaris_sun_route(route.from,route.to) then
+      routes[name]=nil
+      forbidden=forbidden+1
+    end
+  end
+  local setting=settings and settings.startup
+    and settings.startup["razi-curated-space-routes"]
+  if setting and setting.value==false then return forbidden end
   local approved=approved_pairs()
   -- Sources can register a planet after the earlier route reconciliation.
   -- Ensure every present, approved endpoint still gets its planned connection.
@@ -175,7 +195,8 @@ function M.data_final_fixes()
     local a,b=member[from],member[to]
     -- Without two known same-system owners, a default arc would loop
     -- around Calidus rather than connect these actual relocated endpoints.
-    local line=not (a and b) or a~=b or a=="calidus" or a=="solaris"
+    local line=not (a and b) or a~=b or a=="calidus"
+      or a=="solaris" or a=="nyxaris"
     local shape=line and "line" or "arc"
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
@@ -280,6 +301,16 @@ function M.data_final_fixes()
     end
   end
   removed=removed+dedupe(routes,approved)
+  -- A surviving source-created Nyxaris route can still carry its old
+  -- Calidus-centred arc. Straighten only interplanetary routes, leaving
+  -- original planet-to-moon geometry and native orbital links alone.
+  for _,route in pairs(routes) do
+    if member[route.from]=="nyxaris" and member[route.to]=="nyxaris"
+      and not native_parent_link(route.from,route.to) then
+      route.shape="line"
+      route.origin=nil
+    end
+  end
   if type(log)=="function" then
     local kept=0
     for _ in pairs(routes) do kept=kept+1 end
@@ -287,6 +318,6 @@ function M.data_final_fixes()
       "[Razi Protocol/routes] Authoritative network: %d ordinary shortcuts removed; %d protected/unknown-world bridges; %d total retained (Razi authored + native exceptions)",
       removed,exceptions,kept))
   end
-  return removed
+  return removed+forbidden
 end
 return M
