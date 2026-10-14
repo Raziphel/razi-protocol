@@ -1,5 +1,16 @@
 # Razi Protocol
 
+**2.1.72: Quiet Galaxy visual and research pass.** Kept every source
+stellar PNG but fitted each of the eight ambient halos to its identity
+without extra sprites. Vespera and Umbra now show one hand-authored
+belt image in Subtle mode, with optional faint extra debris only in
+Cinematic. Asteroid navigation warnings are prominent for true danger
+and absent from calm routes. Campaign chapters gain compact, native
+science-card markers and completion bars; Razi-owned technology
+milestones sort into five readable frontier groups without affecting
+native research mechanics. No added labs, orbit edits, costly animations
+or extra background textures.
+
 **2.1.71: Starmap artwork refinement.** Polished the actual in-mod
 starfield, system coronas and asteroid-belt drawing. Existing Razi PNG
 assets now render with quieter repeat-free tile exposure, smaller stellar
