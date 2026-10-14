@@ -38,6 +38,43 @@ end
 -- Source techs are discovered from the real final technology effects.
 -- No hard-coded optional planet prerequisites or assumed science packs.
 local unlock_catalog
+-- Built once per runtime session, from immutable final prototypes.
+-- Opening a destination no longer walks every force technology.
+local industry_by_parent
+local function industry_catalog()
+  if industry_by_parent then return industry_by_parent end
+  local index={}
+  if not (prototypes and prototypes.technology) then return index end
+  for id,tech in pairs(prototypes.technology) do
+    if id:sub(1,5)=="razi-" and not tech.hidden then
+      for parent in pairs(tech.prerequisites or {}) do
+        local names=index[parent]
+        if not names then names={};index[parent]=names end
+        names[#names+1]=id
+      end
+    end
+  end
+  for _,names in pairs(index) do table.sort(names) end
+  industry_by_parent=index
+  return index
+end
+function M.related_industries(force,research)
+  local index=industry_catalog()
+  local seen,related={},{}
+  for _,node in ipairs(research or {}) do
+    for _,id in ipairs(index[node.tech.name] or {}) do
+      if not seen[id] then
+        seen[id]=true
+        local tech=force.technologies and force.technologies[id]
+        if tech and not tech.prototype.hidden then
+          related[#related+1]=tech
+        end
+      end
+    end
+  end
+  table.sort(related,function(a,b) return a.name<b.name end)
+  return related
+end
 local function location_research_catalog()
   if unlock_catalog then return unlock_catalog end
   if not (prototypes and prototypes.technology) then return nil end
@@ -312,20 +349,7 @@ function M.render(parent,player,id,p)
   if unlocked and #research>0 then
     -- Only actual available technology links are displayed. Razi-owned
     -- exchanges can depend on a world without making that world mandatory.
-    local discovery={}
-    for _,node in ipairs(research) do discovery[node.tech.name]=true end
-    local industries={}
-    for _,tech in pairs(player.force.technologies or {}) do
-      if tech.name:sub(1,5)=="razi-" and not tech.prototype.hidden then
-        for name in pairs(tech.prerequisites or {}) do
-          if discovery[name] then
-            industries[#industries+1]=tech
-            break
-          end
-        end
-      end
-    end
-    table.sort(industries,function(a,b) return a.name<b.name end)
+    local industries=M.related_industries(player.force,research)
     if #industries>0 then
       bold(frame,L("atlas-industry"))
       for i=1,math.min(6,#industries) do
