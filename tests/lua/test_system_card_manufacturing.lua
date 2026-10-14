@@ -8,25 +8,28 @@ local function clone(v)
 end
 table.deepcopy=clone
 local names={"solaris-tech-card","nyxaris-tech-card",
- "vibrant-tech-card","vespera-tech-card","deep-space-tech-card"}
+ "vibrant-tech-card","vespera-tech-card",
+ "beetlejuice-tech-card","umbra-tech-card","deep-space-tech-card"}
 local tools,raw_recipes,technologies,items={},{},{},{}
 for _,name in ipairs(names) do
  tools[name]={icon="__base__/graphics/icons/automation-science-pack.png",
   icon_size=64}
  raw_recipes[name]={name=name,enabled=false,
-   categories={"crafting"},
+   categories={"crafting"},energy_required=12,
    ingredients={{type="item",name="calidus-tech-card",amount=1}},
    results={{type="item",name=name,amount=1}}}
 end
 items["calidus-tech-card"]={}
 for _,part in ipairs({"kr-rare-metals","tungsten-plate","bioflux",
  "optical-cable","electric-coil","holmium-plate","craptonite-frame",
- "carbon-fiber","space-logistic-science-pack","pulsar-science-pack"}) do
+ "carbon-fiber","gold-plate","rare-earth-powder","chitosan",
+ "supermagnet","space-logistic-science-pack","pulsar-science-pack"}) do
  items[part]={}
 end
 for _,tech in ipairs({"planet-discovery-corrundum",
  "planet-discovery-apia-carnova","planet-discovery-paracelsin",
- "planet-discovery-rubia","discovery-aegis-outer"}) do
+ "planet-discovery-rubia","planet-discovery-secretas",
+ "planet-discovery-vesta","discovery-aegis-outer"}) do
  technologies[tech]={effects={}}
 end
 rawset(_G,"data",{raw={recipe=raw_recipes,technology=technologies,
@@ -44,12 +47,14 @@ for _,rule in ipairs(mod.rules) do
  local native=assert(raw_recipes[rule.card])
  check(native.ingredients[1].amount==1,
   "Original card manufacture has been changed")
- check(recipe.results[1].amount==3 and
-  recipe.ingredients[1].amount==2,
-  "Bulk route must need two full source batches for three cards")
- check(#recipe.ingredients==#native.ingredients+2,
+ check(recipe.results[1].amount==5 and
+  recipe.ingredients[1].amount==4,
+  "Bulk route must need four complete source batches for five cards")
+ check(math.abs(recipe.energy_required - native.energy_required*4*1.15)<0.0001,
+  "Freight recipe should charge 15 percent extra native-batch time")
+ check(#recipe.ingredients==#native.ingredients+#rule.freight,
   "Missing actual native freight inputs")
- check(recipe.allow_productivity==false,
+ check(recipe.auto_recycle==false and recipe.allow_productivity==false,
   "No free productivity amplification")
  local registered=false
  for _,effect in ipairs(technologies[rule.unlock].effects) do
