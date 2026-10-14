@@ -1,3 +1,13 @@
+Version: 2.1.67
+Date: 14. 10. 2026
+  Science, industry and planet polish:
+    - In the Galactic Atlas, display installed supplier components for unlocked worlds, sourced from the Cargo Network's real chain catalog and live research state.
+    - Add direct links from world supply roles to their detailed Cargo Network recipes and consumers; keep existing prototypes, ship schedules and saved progress unchanged.
+    - Audit direct system-card item demand by research stage and list compatible existing labs for the actual installed science mixtures.
+    - Add a sorted review queue for every installed planet based on native discovery production and listed geometric route evidence.
+    - Expand the read-only Python and Lua regression fixtures and in-game validation checklist. No new labs, worlds or mandatory recipes; no automatic CI.
+    - The full Factorio 2.1 pack and saved-game performance tests have not yet been run.
+
 Version: 2.1.66
 Date: 14. 10. 2026
   Full upstream dependency review:
