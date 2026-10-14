@@ -9,8 +9,8 @@ now have a documented required/recommended/optional/incompatible
 classification. K2SO, its required compatibility patches, curated
 campaign planets and Nexus remain part of the intended galaxy.
 Weather, Planet Express, Rocket Turrets, Science Tab, Frost Biters,
-Nexus Threat and Big Monsters are now recommended rather than
-mandatory. Razi's science cards use Intermediate Products if Science
+Big Monsters are now recommended rather than mandatory.
+Nexus Threat stays required because Nexus-Updated depends on it. Razi's science cards use Intermediate Products if Science
 Tab is absent. The registry and regression tests prevent undeclared
 category drift. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md).
 Full Factorio startup and installed-save tests remain outstanding.
