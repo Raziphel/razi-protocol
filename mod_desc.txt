@@ -48,7 +48,6 @@ without adding another crafting machine or research laboratory.
 - A custom starmap with better local connections, route descriptions and space scenery.
 - Curated enemy encounters, including optional enemy mods on the planets that suit them.
 - A dedicated Vehicles & Infrastructure crafting tab and tidier science groups.
-- An optional Discord Rich Presence companion.
 - Nexus, bosses, Celestial Weather and other supported integrations where installed.
 
 Most of the pack is controlled through startup settings. Some settings change research or recipes, so back up a save before switching an ongoing campaign.

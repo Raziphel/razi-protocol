@@ -99,23 +99,3 @@ data:extend({
     order="cb[starmap]-e[chart]"
   }
 })
-
--- DISCORD PRESENCE / LOCAL COMPANION. Export locally by default.
--- Players can opt out; a separate program is still needed for Discord IPC.
-data:extend({
-  {
-    type="bool-setting",name="razi-discord-presence-enabled",
-    setting_type="runtime-per-user",default_value=true,
-    order="da[presence]-a[opt-in]"
-  },
-  {
-    type="bool-setting",name="razi-discord-presence-show-quest",
-    setting_type="runtime-per-user",default_value=true,
-    order="da[presence]-b[quest]"
-  },
-  {
-    type="bool-setting",name="razi-discord-presence-show-location",
-    setting_type="runtime-per-user",default_value=false,
-    order="da[presence]-c[location]"
-  }
-})

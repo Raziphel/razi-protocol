@@ -1,7 +1,6 @@
 local galactic_operations = require("scripts.galactic_operations")
 local razi_journal = require("scripts.razi_journal")
 galactic_operations.bind_journal(razi_journal)
-local razi_discord_presence = require("scripts.razi_discord_presence")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
@@ -176,8 +175,6 @@ events:on_configuration_changed(function(event)
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
 end)
--- Export at most once per 15 game seconds; disabled players do no work.
-events:on_nth_tick(900, razi_discord_presence.write)
 -- An idle Convergence has no pending work. Active force transmissions
 -- advance once per second and only redraw their open final panels.
 events:on_nth_tick(60,function(event)
@@ -198,12 +195,8 @@ commands.add_command("razi-audit",
   {"razi-audit.help"},convergence_audit.command)
 events:on_nth_tick(6, razi_safe_cheat.tick)
 events:on_event(defines.events.on_string_translated,function(event)
-  razi_discord_presence.on_string_translated(event)
   galactic_operations.on_string_translated(event)
 end)
-events:on_event(defines.events.on_runtime_mod_setting_changed,
-  razi_discord_presence.on_setting_changed)
-
 events:on_nth_tick(600, function()
   check_existing_transceivers()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
@@ -253,16 +246,12 @@ events:on_event(defines.events.on_player_joined_game,function(event)
   if player then
     razi_journal.sync(player)
     razi_safe_cheat.admin_tip(player)
-    razi_discord_presence.write()
   end
 end)
 events:on_event(defines.events.on_player_created,function(event)
   galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
-  if player then
-    razi_journal.sync(player)
-    razi_discord_presence.write()
-  end
+  if player then razi_journal.sync(player) end
 end)
 events:on_event(defines.events.on_gui_click,function(event)
   galactic_operations.gui_click(event)
@@ -293,7 +282,6 @@ end)
 events:on_event(defines.events.on_player_removed,function(event)
   galactic_operations.on_removed(event)
   razi_journal.on_removed(event.player_index)
-  razi_discord_presence.on_player_removed(event)
   razi_safe_cheat.on_player_removed(event.player_index)
 end)
 
