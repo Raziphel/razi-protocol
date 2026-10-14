@@ -4,15 +4,18 @@ local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local ATMOSPHERE_SIZE=512
+-- One quiet halo per system. Individual radii follow the existing star
+-- silhouettes instead of adding new rings or swapping the painted suns.
+-- Strength is deliberately bounded below 0.8 for atlas legibility.
 local systems={
-  {name="calidus",tint={r=1,g=.86,b=.42},strength=.38},
-  {name="solaris",tint={r=1,g=.55,b=.37},strength=.45},
-  {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
-  {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
-  {name="vespera",tint={r=.86,g=.88,b=.87},strength=.71},
-  {name="beetlejuice",tint={r=.94,g=.43,b=.64},strength=.80},
-  {name="umbra",tint={r=.73,g=.48,b=.29},strength=.60},
-  {name="deep-space",tint={r=.40,g=.57,b=.82},strength=.48}
+  {name="calidus",tint={r=1,g=.87,b=.53},strength=.38,radius=1.50},
+  {name="solaris",tint={r=1,g=.54,b=.35},strength=.44,radius=1.72},
+  {name="nyxaris",tint={r=.46,g=.83,b=.69},strength=.72,radius=1.94},
+  {name="vibrant",tint={r=.54,g=.60,b=.96},strength=.73,radius=1.90},
+  {name="vespera",tint={r=.88,g=.89,b=.84},strength=.61,radius=1.95},
+  {name="beetlejuice",tint={r=.92,g=.47,b=.64},strength=.72,radius=1.93},
+  {name="umbra",tint={r=.75,g=.48,b=.30},strength=.51,radius=1.82},
+  {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
 }
 -- Vibrant has its own Razi-authored ring in asteroid_belt_integration.
 -- Don't paint a second generic ring over its sun and orbital markers.
@@ -92,10 +95,8 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     for _,system in ipairs(systems) do
       local x,y=anchor(system.name)
       if x and y then
-        insert_asset(layers,"atlas-halo.png",
-          system.name=="calidus" and 1.55
-            or system.name=="solaris" and 1.78 or 2.03,
-          x,y,system.tint,(cinematic and .31 or .19)*system.strength)
+        insert_asset(layers,"atlas-halo.png",system.radius,
+          x,y,system.tint,(cinematic and .30 or .185)*system.strength)
       end
     end
   end
