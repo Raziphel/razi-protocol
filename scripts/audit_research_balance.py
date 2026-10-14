@@ -214,7 +214,20 @@ def inspect_multiplex_recipes(raw, issues):
             reasons.append("Missing additional imported materials")
         if time_ratio is None or time_ratio<1.15-1e-6:
             reasons.append("Freight recipe must charge 15 percent extra crafting time")
-        if alternative.get("allow_productivity") is not False or alternative.get("auto_recycle") is not False:
+        machines=raw.get("assembling-machine") or {}
+        if isinstance(machines,dict) and machines:
+            slots=len(alt_inputs)
+            compatible=any(
+                isinstance(machine,dict) and not machine.get("fixed_recipe")
+                and "crafting" in (machine.get("crafting_categories") or [])
+                and (machine.get("ingredient_count") is None
+                     or machine.get("ingredient_count")>=slots)
+                for machine in machines.values())
+            if not compatible:
+                reasons.append("No existing crafting machine supports all inputs")
+        if (alternative.get("allow_productivity") is not False
+                or alternative.get("auto_recycle") is not False
+                or alternative.get("allow_decomposition") is not False):
             reasons.append("Freight bonus must disable productivity and recycling")
         if reasons:
             issues.append({"severity":"error","code":"multiplex-economy-invalid",
