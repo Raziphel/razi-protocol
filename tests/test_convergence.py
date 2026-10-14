@@ -107,7 +107,9 @@ class ConvergenceTests(unittest.TestCase):
                      'entity.ingredient_count or 65535',
                      'No native machine supports',
                      'Researched but recipe locked',
-                     'local produced=producers(registry,force)'):
+                     'local produced=producers(registry,force)',
+                     'result.locked_sources=result.locked_sources+1',
+                     'warned_materials[part.name]=true'):
             if part=="tech.prerequisites":
                 self.assertIn("tech.prerequisites or {}",source)
             else:
