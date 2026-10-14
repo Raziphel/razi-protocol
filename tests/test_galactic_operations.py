@@ -22,6 +22,14 @@ class GalacticOperationsTests(unittest.TestCase):
                     "atlas-convergence-open"):
             self.assertIn(key+"=",strings)
 
+    def test_campaign_reuses_native_card_freight(self):
+        campaign=(ROOT/"scripts/galactic_campaign.lua").read_text()
+        locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        self.assertIn("multiplex_by_card",campaign)
+        self.assertIn("player.force.recipes[freight_id]",campaign)
+        self.assertIn("campaign-multiplex-ready=",locale)
+        self.assertIn("campaign-multiplex-pending=",locale)
+
     def test_campaign_displays_native_science_demand_without_new_labs(self):
         campaign=(ROOT/"scripts/galactic_campaign.lua").read_text()
         locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
