@@ -78,7 +78,7 @@ local anchors = {
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
-  {name="obsidiax",star="vespera",radius=33,turn=0.32},
+  {name="obsidiax",star="vespera",radius=34,turn=0.35},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
