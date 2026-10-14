@@ -125,6 +125,8 @@ local function finish(force,player)
  saved.victory=true
  saved.victory_tick=game.tick
  saved.completed_by=player.name
+ saved.completed_site=saved.transmission and saved.transmission.site
+  or saved.completed_site
  if game.print then
   game.print({"razi-ops.convergence-broadcast",force.name})
  end
@@ -267,6 +269,7 @@ function M.forces_merged(event)
  target.victory=target.victory or source.victory
  target.victory_tick=target.victory_tick or source.victory_tick
  target.completed_by=target.completed_by or source.completed_by
+ target.completed_site=target.completed_site or source.completed_site
  if not target.victory then
   local a,b=target.transmission,source.transmission
   if b and (not a or b.started<a.started) then
@@ -350,6 +353,27 @@ function M.render(parent,player)
  if won then
   local win=line(scroll,"convergence-won",width)
   win.style.font_color={r=.48,g=.9,b=.72}
+  local archive=scroll.add{type="frame",
+   style="inside_shallow_frame",direction="vertical"}
+  archive.style.horizontally_stretchable=true
+  local title=line(archive,"convergence-archive-title",width)
+  title.style.font="heading-2"
+  line(archive,"convergence-archive-message",width)
+  if saved.completed_by then
+   line(archive,"convergence-archive-operator",width,saved.completed_by)
+  end
+  if saved.completed_site then
+   line(archive,"convergence-archive-site",width,
+    saved.completed_site:gsub("-"," "))
+  end
+  if saved.victory_tick then
+   local seconds=math.floor(saved.victory_tick/60)
+   local hours=math.floor(seconds/3600)
+   local minutes=math.floor(seconds%3600/60)
+   local secs=seconds%60
+   line(archive,"convergence-archive-time",width,
+    string.format("%d:%02d:%02d",hours,minutes,secs))
+  end
  end
  -- A built, force-owned receiver is tangible evidence of the Dyson grid.
  -- The source mod remains authoritative for real satellite count and MW.
