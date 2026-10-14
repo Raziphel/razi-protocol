@@ -4,6 +4,14 @@ local M={}
 local defs=require("prototypes.technology.convergence")
 local convergence=require("scripts.razi_convergence")
 local research={defs.commission,defs.authorization,defs.ignition}
+-- Audit both the original force-wide delivery milestones and the three
+-- physical component crafts added to the final Ignition chain.
+local function all_recipes()
+ local results={}
+ for _,rule in ipairs(defs.shipments) do results[#results+1]=rule end
+ for _,rule in ipairs(defs.assemblies or {}) do results[#results+1]=rule end
+ return results
+end
 local function table_contains(items,name)
  for _,item in ipairs(items or {}) do
   if item==name then return true end
@@ -80,7 +88,7 @@ local function producers(registry,force)
  -- Collect only physical ingredients actually used by installed
  -- Convergence recipes. Do not allocate a giant product index for the
  -- entire modpack when an admin requests a small report.
- for _,stage in ipairs(defs.shipments) do
+ for _,stage in ipairs(all_recipes()) do
   local recipe=force.recipes and force.recipes[stage.item]
   for _,part in ipairs(recipe and recipe.ingredients or {}) do
    if part.type~="fluid" then wanted[part.name]=true end
@@ -119,7 +127,7 @@ local function cyclic_research(force)
  end
 end
 function M.inspect(force,registry)
- local result={errors={},notes={},labs=0,stages=0,
+ local result={errors={},notes={},labs=0,stages=0,components=0,
   missing_producers=0,unlocked=0}
  if not (force and force.technologies and force.recipes and registry) then
   result.errors[1]="No force or runtime prototype registry available"
@@ -153,15 +161,24 @@ function M.inspect(force,registry)
  end
  local cycle=cyclic_research(force)
  if cycle then error_line("Research prerequisite cycle: "..cycle) end
- for _,stage in ipairs(defs.shipments) do
+ for _,stage in ipairs(all_recipes()) do
   local recipe=force.recipes[stage.item]
-  local unlock=force.technologies[stage.unlock or defs.commission]
+  local component=stage.item~="razi-convergence-ignition-mandate"
+   and (stage.item=="razi-convergence-calidus-frame"
+    or stage.item=="razi-convergence-outer-matrix"
+    or stage.item=="razi-convergence-void-lens")
+  local unlock=force.technologies[component and defs.ignition
+   or (stage.unlock or defs.commission)]
   if not recipe then
    error_line("Missing Mandate recipe: "..stage.item)
   elseif unlock and unlock.researched and not recipe.enabled then
    error_line("Researched but recipe locked: "..stage.item)
   else
-   result.stages=result.stages+1
+   if component then
+    result.components=result.components+1
+   else
+    result.stages=result.stages+1
+   end
   end
   if recipe then
    local machine,slots=supporting_machine(recipe,machines)
@@ -223,7 +240,9 @@ function M.command(event)
  local output=player or game
  output.print("[Razi Audit] "..force.name..
   ": "..#report.errors.." blockers, "..report.stages.."/"..
-   #defs.shipments.." Mandate recipes, "..report.labs.." native labs")
+   #defs.shipments.." Mandate recipes, "..report.components.."/"..
+   #(defs.assemblies or {}).." ignition components, "..report.labs..
+   " native labs")
  for i=1,math.min(16,#report.errors) do
   output.print("[Razi Audit] BLOCKER: "..report.errors[i])
  end
