@@ -1,6 +1,6 @@
 -- Resource-rich, optional second ways to produce system cards.
--- A freight batch consumes TWO complete native card recipes plus real
--- native materials, and yields THREE cards. No source content is replaced.
+-- A freight batch consumes FOUR complete native card recipes plus real
+-- native materials, and yields FIVE cards. No source content is replaced.
 local M={}
 M.rules={
  {name="razi-solaris-multiplex-cards",card="solaris-tech-card",
@@ -15,6 +15,12 @@ M.rules={
  {name="razi-vespera-multiplex-cards",card="vespera-tech-card",
   unlock="planet-discovery-rubia",
   freight={{"craptonite-frame",8},{"carbon-fiber",8}}},
+ {name="razi-beetlejuice-multiplex-cards",card="beetlejuice-tech-card",
+  unlock="planet-discovery-secretas",
+  freight={{"gold-plate",6},{"rare-earth-powder",4}}},
+ {name="razi-umbra-multiplex-cards",card="umbra-tech-card",
+  unlock="planet-discovery-vesta",
+  freight={{"chitosan",4},{"supermagnet",3},{"rare-earth-powder",3}}},
  {name="razi-deep-space-multiplex-cards",card="deep-space-tech-card",
   unlock="discovery-aegis-outer",
   freight={{"space-logistic-science-pack",2},{"pulsar-science-pack",2}}}
@@ -70,7 +76,7 @@ function M.data_final_fixes()
   if approved then
    local ingredients=duplicate(base.ingredients)
    for _,part in ipairs(ingredients) do
-    part.amount=part.amount*2
+    part.amount=part.amount*4
    end
    for _,part in ipairs(rule.freight) do
     ingredients[#ingredients+1]={type="item",name=part[1],
@@ -83,12 +89,12 @@ function M.data_final_fixes()
     icon=card.icons and nil or card.icon,
     icon_size=card.icons and nil or card.icon_size,
     icons=card.icons and duplicate(card.icons) or nil,
-    categories={"crafting"},enabled=false,energy_required=24,
+    categories={"crafting"},enabled=false,energy_required=(base.energy_required or 10)*4*1.15,
     allow_productivity=false,auto_recycle=false,
     subgroup="system-tech-card",
     order="s[system]-z[multiplex]-"..rule.card,
     ingredients=ingredients,
-    results={{type="item",name=rule.card,amount=3}}}
+    results={{type="item",name=rule.card,amount=5}}}
    data:extend({recipe})
    technology.effects=technology.effects or {}
    local found=false
