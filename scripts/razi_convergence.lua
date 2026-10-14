@@ -320,6 +320,48 @@ function M.render(parent,player)
   local win=line(scroll,"convergence-won",width)
   win.style.font_color={r=.48,g=.9,b=.72}
  end
+ local saved=M.record(force)
+ -- A built, force-owned receiver is tangible evidence of the Dyson grid.
+ -- The source mod remains authoritative for real satellite count and MW.
+ local receiver_ready,receivers=M.dyson_readiness(force)
+ local dyson=scroll.add{type="frame",style="inside_shallow_frame",
+   direction="vertical"}
+ dyson.style.horizontally_stretchable=true
+ local heading=line(dyson,"convergence-dyson-title",width)
+ heading.style.font="heading-2"
+ line(dyson,receivers==nil and "convergence-dyson-unknown"
+  or (receiver_ready and "convergence-dyson-ready"
+  or "convergence-dyson-missing"),width,tostring(receivers or 0))
+ for _,id in ipairs({"slp-dyson-sphere",
+    "slp-dyson-sphere-grounded","ds-energy-loader-mk2"}) do
+  local tech=force.technologies[id]
+  if tech then
+   line(dyson,tech.researched and "convergence-dyson-tech-done"
+    or "convergence-dyson-tech-pending",width,tech.localised_name)
+  end
+ end
+ local sequence=saved.transmission
+ if sequence and not won then
+  local panel=scroll.add{type="frame",style="inside_shallow_frame",
+   direction="vertical"}
+  panel.style.horizontally_stretchable=true
+  local title=line(panel,"convergence-transmission-heading",width)
+  title.style.font="heading-2"
+  local elapsed=math.max(0,game.tick-sequence.started)
+  local meter=panel.add{type="progressbar",
+   value=math.min(1,elapsed/M.transmission_duration)}
+  meter.style.horizontally_stretchable=true
+  line(panel,"convergence-transmission-duration",width,
+   tostring(math.max(0,math.ceil(
+    (M.transmission_duration-elapsed)/60))))
+  for i,beat in ipairs(M.transmission_beats) do
+   local label=line(panel,
+    i<=(sequence.beat or 1) and "convergence-transmission-beat-done"
+     or "convergence-transmission-beat-pending",width,
+    {"razi-ops."..beat.key})
+   if i==sequence.beat then label.style.font="default-bold" end
+  end
+ end
  local where=M.location(player)
  line(scroll,where and "convergence-at-site"
   or "convergence-travel",width)
@@ -332,7 +374,6 @@ function M.render(parent,player)
   or "convergence-sync-pending",width)
  line(scroll,ignition.researched and "convergence-ignition-complete"
   or "convergence-ignition-pending",width)
- local saved=M.record(force)
  if won and (saved.delivered.resonance or 0)<M.stages[4].count then
   line(scroll,"convergence-legacy-victory",width)
  end
@@ -382,7 +423,8 @@ function M.render(parent,player)
    tags={razi_ops_action="convergence-deliver",value=rule.id}}
   button.enabled=i==next_index and carried>0 and where~=nil
    and (i<3 or sync.researched)
-   and (i<5 or ignition.researched) and commission.researched
+   and (i<5 or (ignition.researched and receiver_ready))
+   and commission.researched
  end
  line(scroll,"convergence-continued-play",width)
 end
