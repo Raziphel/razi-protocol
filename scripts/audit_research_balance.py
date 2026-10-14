@@ -136,6 +136,89 @@ def inspect_card_recipes(raw, issues):
     return rows
 
 
+
+# Seven optional freight-supported science-card recipes. Source industry
+# remains available even when the imported materials are absent.
+MULTIPLEX_CARDS = (
+    "solaris", "nyxaris", "vibrant", "vespera",
+    "beetlejuice", "umbra", "deep-space",
+)
+
+
+def inspect_multiplex_recipes(raw, issues):
+    recipes=raw.get("recipe") or {}
+    if not isinstance(recipes,dict):
+        return []
+    rows=[]
+    def amounts(recipe, key):
+        out={}
+        for part in recipe.get(key) or []:
+            if isinstance(part,dict):
+                name,value=part.get("name"),part.get("amount")
+                kind=part.get("type","item")
+            elif isinstance(part,list) and len(part)>1:
+                name,value,kind=part[0],part[1],"item"
+            else:
+                continue
+            if kind!="fluid" and isinstance(name,str) and isinstance(value,(int,float)):
+                out[name]=out.get(name,0)+value
+        return out
+    for system in MULTIPLEX_CARDS:
+        card=system+"-tech-card"
+        name="razi-"+system+"-multiplex-cards"
+        alternative=recipes.get(name)
+        if not isinstance(alternative,dict):
+            continue
+        base=recipes.get(card)
+        if not isinstance(base,dict):
+            issues.append({"severity":"error","code":"multiplex-source-missing",
+                "targets":[name], "detail":"Freight card recipe has no original synthesis."})
+            continue
+        base_inputs=amounts(base,"ingredients")
+        alt_inputs=amounts(alternative,"ingredients")
+        output=amounts(alternative,"results").get(card,0)
+        base_output=amounts(base,"results").get(card,0)
+        batch=4
+        expected=base_output*batch
+        imported={ingredient:amount-base_inputs.get(ingredient,0)*batch
+                  for ingredient,amount in alt_inputs.items()
+                  if amount>base_inputs.get(ingredient,0)*batch}
+        baseline_time=base.get("energy_required",0.5)
+        alt_time=alternative.get("energy_required",0.5)
+        time_ratio=(alt_time/(baseline_time*batch)
+                    if isinstance(baseline_time,(int,float)) and baseline_time>0
+                    and isinstance(alt_time,(int,float)) else None)
+        bonus=(output/expected-1 if expected>0 else None)
+        throughput=(output*baseline_time/(base_output*alt_time)-1
+                    if base_output>0 and isinstance(alt_time,(int,float))
+                    and alt_time>0 and isinstance(baseline_time,(int,float))
+                    else None)
+        reasons=[]
+        if base_output!=1 or output!=5 or bonus is None or bonus>0.25+1e-6:
+            reasons.append("Expected exactly five cards from four ordinary batches")
+        if not base_inputs or any(
+                alt_inputs.get(ingredient,0)<amount*batch
+                for ingredient,amount in base_inputs.items()):
+            reasons.append("Alternative omits original card manufacturing ingredients")
+        if not imported:
+            reasons.append("Missing additional imported materials")
+        if time_ratio is None or time_ratio<1.15-1e-6:
+            reasons.append("Freight recipe must charge 15 percent extra crafting time")
+        if alternative.get("allow_productivity") is not False or alternative.get("auto_recycle") is not False:
+            reasons.append("Freight bonus must disable productivity and recycling")
+        if reasons:
+            issues.append({"severity":"error","code":"multiplex-economy-invalid",
+                "targets":[name],"detail":"; ".join(reasons)})
+        rows.append({"recipe":name,"card":card,"source_batches":batch,
+            "output":output,"gross_bonus_fraction":bonus,
+            "machine_throughput_change":throughput,
+            "time_multiplier":time_ratio,
+            "additional_materials":dict(sorted(imported.items())),
+            "status":"review" if reasons else "within-budget",
+            "caveat":"Actual item value and cargo shipping still require playtesting."})
+    return rows
+
+
 def science_ingredients(node):
     unit = node.get("unit") or {}
     if not isinstance(unit, dict):
@@ -271,6 +354,7 @@ def examine(raw):
                     "targets":[name],"packs":sorted(science),
                     "detail":"No installed laboratory accepts this complete science set."})
     card_recipes=inspect_card_recipes(raw,issues)
+    multiplex=inspect_multiplex_recipes(raw,issues)
     # Count the direct card demand of each campaign stage, rather than
     # equating a cheap research unit with an expensive late-tier card.
     # This deliberately excludes recursive precursor manufacturing and
@@ -318,6 +402,7 @@ def examine(raw):
                     "detail":"Razi industrial research is unusually expensive."})
     return {"paired_entries":pairs,"stages":stages,
             "system_card_manufacturing":card_recipes,
+            "multiplex_card_economy":multiplex,
             "stage_card_demand":stage_card_demand,
             "science_lab_coverage":lab_coverage,
             "world_science_arrival_checks":world_science_checks,
@@ -363,6 +448,9 @@ def main(argv=None):
                 print(stage+" direct card demand:",
                       ", ".join(f"{name}={count:g}" for name,count in
                                 estimate["cards"].items()))
+        for entry in report["multiplex_card_economy"]:
+            print(entry["recipe"],entry["status"],"bonus",
+                  str(entry["gross_bonus_fraction"]))
         if report["planetary_science_reuse"]:
             print("Reused planetary sciences:",
                   ", ".join(f"{k} ({v} techs)" for k,v in
