@@ -20,14 +20,14 @@ local function xy(location)
   return location.distance*math.sin(theta),
     -location.distance*math.cos(theta)
 end
-for _,entry in ipairs({{inner,31},{outer,39}}) do
+for _,entry in ipairs({{inner,31,.08},{outer,39,.095}}) do
   local loc,radius=entry[1],entry[2]
   check(loc.orbit.parent.name=="star" and not loc.draw_orbit,
     "Vibrant belt must use a native root-star orbit")
   local x,y=xy(loc)
-  check(math.abs(x-(cx+radius*math.sin(.17*2*math.pi)))<.01,
+  check(math.abs(x-(cx+radius*math.sin(entry[3]*2*math.pi)))<.01,
     "Belt rim X coordinate changed")
-  check(math.abs(y-(cy-radius*math.cos(.17*2*math.pi)))<.01,
+  check(math.abs(y-(cy-radius*math.cos(entry[3]*2*math.pi)))<.01,
     "Belt rim Y coordinate changed")
 end
 check(#layers==4,"Expected exactly two first-party decorative layers")

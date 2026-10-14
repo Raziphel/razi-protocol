@@ -1,3 +1,15 @@
+## Vibrant asteroid belt entrance redesign (October 2026)
+
+The western Vibrant Slip Stream has moved outside the metallic belt.
+Both entrance markers are near the star's north-northeast side; the
+Outer Rim to Inner Rim transfer is now a clean radial passage.
+Arrivals must approach the Outer Rim, complete the original 5,000 km
+asteroid crossing, then continue to Ribbonia and Fulgora. The curved
+outside approach goes around the ring instead of cutting its artwork.
+Ferrum joins the exterior network, and the survey can be researched
+immediately after the Vibrant system discovery. This deliberately
+retires old direct platform routes but keeps belt station IDs stable.
+
 ## Local planetary route networks (October 2026)
 
 The star systems now support nearby transport alternatives instead of a

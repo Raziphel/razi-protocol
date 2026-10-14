@@ -11,6 +11,7 @@ local members={
   nauvis="calidus",muluna="calidus",["sye-calidus"]="calidus",
   ["sye-solaris"]="solaris",vulcanus="solaris",castra="solaris",
   ["sye-vespera"]="vespera",fulgora="vibrant",aquilo="vespera",
+  ["sye-vibrant"]="vibrant",
   ["asteroid-belt-inner-edge"]="mid-outer-belt",
   ["asteroid-belt-outer-edge"]="mid-outer-belt",
   ["crucible-orbit"]="umbra",crucible="umbra",
@@ -62,7 +63,7 @@ end
 planets["child-moon"].orbit={parent={type="planet",name="nauvis"}}
 local spaces={}
 for _,name in ipairs({"sye-calidus","sye-solaris","sye-vespera",
-  "sye-umbra",
+  "sye-umbra","sye-vibrant",
   "asteroid-belt-inner-edge","asteroid-belt-outer-edge",
   "crucible-orbit","close-sun-orbit","sun-orbit"}) do
   spaces[name]={name=name}
@@ -96,6 +97,8 @@ local roads={
   ["nexus-calidus"]=route("nexus-calidus","nauvis","remote-nexus",3000),
   ["ferrum-old-source"]=route("ferrum-old-source","ferrum","vulcanus",15000,
     {{asteroid="ferrum-native-crystal",probability=.26}}),
+  ["ferrum-original-inner"]=route("ferrum-original-inner","ferrum","fulgora",14000,
+    {{asteroid="ferrum-inner-debris",probability=.17}}),
   ["nexus-solaris"]=route("nexus-solaris","sye-solaris","remote-nexus",25000),
   ["external-internal"]=internal
 }
@@ -121,7 +124,7 @@ local removed=manager.data_final_fixes()
 check(removed>=5,"Unmanaged routes and duplicates were not removed")
 for _,id in ipairs({"rogue-nauvis-vulcanus","rogue-solar-orbit-vulcanus",
   "rogue-close-orbit-vulcanus","rogue-solaris-castra",
-  "rogue-extra","razi-solaris","nexus-calidus","ferrum-old-source"}) do
+  "rogue-extra","razi-solaris","nexus-calidus","ferrum-old-source","ferrum-original-inner"}) do
   check(roads[id]==nil,"Source shortcut survived final authority: "..id)
 end
 check(roads["native-solaris"]~=nil,
@@ -145,18 +148,23 @@ check(roads["native-crucible"]~=nil,"Crucible access was lost")
 check(roads["nexus-solaris"]~=nil,"External boss world lost its lifeline")
 check(roads["external-internal"]==internal,
   "Source-only special network was destroyed")
-check(roads["razi-curated-ferrum-fulgora"]~=nil,
-  "Known optional Ferrum world is not linked to Razi's designated hub")
+check(roads["razi-curated-ferrum-sye-vibrant"]~=nil,
+  "Ferrum must stay outside Vibrant's asteroid crossing")
+check(not roads["razi-curated-ferrum-fulgora"],
+  "Ferrum still offers a bypass into Fulgora")
 for _,name in ipairs({"razi-curated-tenebris-carna",
   "razi-curated-sye-umbra-arcanyx"}) do
   check(roads[name] and roads[name].shape=="line",
     "Optional Umbra neighbor loop missing: "..name)
 end
 local ferrumResource=false
-for _,entry in ipairs(roads["razi-curated-ferrum-fulgora"].asteroid_spawn_definitions) do
+local ferrumDebris=false
+for _,entry in ipairs(roads["razi-curated-ferrum-sye-vibrant"].asteroid_spawn_definitions) do
   if entry.asteroid=="ferrum-native-crystal" then ferrumResource=true end
+  if entry.asteroid=="ferrum-inner-debris" then ferrumDebris=true end
 end
-check(ferrumResource,"Reassigned optional planet lost custom asteroid loot")
+check(ferrumResource and ferrumDebris,
+  "Ferrum migration lost a native modded asteroid resource")
 local count=0
 for _ in pairs(roads) do count=count+1 end
 check(manager.data_final_fixes()==0,

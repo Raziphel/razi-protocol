@@ -18,7 +18,7 @@ local side_routes={
   {"obsidiax","sye-vespera",21000,"cryogenic_deep"},
   {"carna","sye-umbra",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
-  {"ferrum","fulgora",19500,"electrical"},
+  {"ferrum","sye-vibrant",19500,"electrical"},
   {"alchemy-planet","paracelsin",21000,"chemistry_deep"},
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
@@ -203,6 +203,9 @@ function M.data_final_fixes()
     local shape=line and "line" or "arc"
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
+    local exterior_shape,exterior_origin=reconcile.vibrant_exterior_arc
+      and reconcile.vibrant_exterior_arc(from,to)
+    if exterior_shape then shape,origin=exterior_shape,exterior_origin end
     data:extend({icons.assign({
       type="space-connection",name=name,from=from,to=to,
       length=km,shape=shape,origin=origin,
@@ -304,12 +307,20 @@ function M.data_final_fixes()
     end
   end
   removed=removed+dedupe(routes,approved)
-  -- After reconciliation, cover both retained source links and newly
-  -- generated arrivals. Apply only to the surviving Solaris/Vibrant route.
+  -- Enforce actual radial belt transit even when an installed mod
+  -- contributed the original route, and keep the exterior approach on
+  -- the safe star-centred curve.
   for _,route in pairs(routes) do
-    if route.from and route.to
-      and pair(route.from,route.to)==pair("sye-solaris","sye-vibrant") then
-      profiles.apply_vibrant_arrival(route)
+    if route.from and route.to then
+      if pair(route.from,route.to)==
+        pair("asteroid-belt-inner-edge","asteroid-belt-outer-edge") then
+        route.shape="line"
+        route.origin=nil
+      else
+        local shape,origin=reconcile.vibrant_exterior_arc
+          and reconcile.vibrant_exterior_arc(route.from,route.to)
+        if shape then route.shape,route.origin=shape,origin end
+      end
     end
   end
   -- Source-created Nyxaris/Vibrant arcs can still be centred on Calidus.

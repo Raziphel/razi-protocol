@@ -50,9 +50,9 @@ local route_specifications = {
   {"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
   -- After the two first-frontier discoveries, each strand continues
   -- outward to its own middle system rather than through Calidus.
-  -- Approach asteroids rise near the painted ring; the inner-to-outer
-  -- belt remains a separate researched crossing with its own encounters.
-  {"sye-solaris", "sye-vibrant", 100000, "belt_vibrant_arrival"},
+  -- The arriving platform lands OUTSIDE the rocks. The actual physical
+  -- passage is the separate 5,000 km outer-to-inner belt connection.
+  {"sye-solaris", "sye-vibrant", 100000, "middle_crosslink"},
   {"sye-nyxaris", "sye-vespera", 90000, "middle_crosslink"},
   -- Outer systems remain locked behind their original science requirements,
   -- especially space-discovery-asteroid-belt.
@@ -61,8 +61,9 @@ local route_specifications = {
   -- and a late-game crosslink. They avoid diagonals through Calidus.
   {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
-  -- The Razi-owned 5,000 km Vibrant belt is a mandatory science step.
-  -- Preserve its legacy connection ID and Razi-owned asteroid loot.
+  -- Only the exterior Slip Stream reaches the Outer Rim; Ribbonia is
+  -- reachable from the Inner Rim. Keep Ribbonia's original link ID.
+  {"sye-vibrant", "asteroid-belt-outer-edge", 36000, "chemistry"},
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
   -- Solaris closes into one clean orbital loop. The gateway is outside the
@@ -95,11 +96,8 @@ local route_specifications = {
 	-- Optional oceanic freight return once both local destinations are known.
 	{"panglia", "pelagos", 20000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
-	-- Fulgora and Ribbonia form a local loop with the gateway.
-	-- Outer worlds still require the actual metallic belt crossing.
-	{"sye-vibrant", "fulgora", 17000, "electrical"},
+	-- Inner-world industry stays linked without an outer belt bypass.
 	{"fulgora", "ribbonia", 19500, "electrical"},
-	{"sye-vibrant", "ribbonia", 23500, "electrical"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
@@ -184,15 +182,16 @@ end
 -- Never remove the one Razi-owned edge-to-edge connection, even on repeated
 -- reconciliation. Optional source moons within the inner region stay inside.
 local vibrant_inner = {
-  ["sye-vibrant"]=true, fulgora=true, ribbonia=true, cerys=true,
+  fulgora=true, ribbonia=true, cerys=true,
   ["asteroid-belt-inner-edge"]=true
 }
 local vibrant_outer = {
-  paracelsin=true, ["asteroid-belt-outer-edge"]=true
+  ["sye-vibrant"]=true, paracelsin=true, ferrum=true,
+  ["alchemy-planet"]=true, ["asteroid-belt-outer-edge"]=true
 }
 -- Localized obstacle fields; the first Calidus routes remain untouched.
 local route_fields={
-  ["sye-solaris|sye-vibrant"]=1.30,
+  ["sye-solaris|sye-vibrant"]=1.50,
   ["sye-nyxaris|sye-vespera"]=1.48,
   ["sye-beetlejuice|sye-umbra"]=1.68,
   ["secretas|solar-system-edge"]=1.85
@@ -256,6 +255,18 @@ end
 
 route_reconcile.regional_origin=regional_origin
 
+-- An exterior approach must skirt the asteroid ring, not draw a line
+-- straight through the star. Modern Factorio uses a specific regional
+-- origin for native arc connections.
+local function vibrant_exterior_arc(from,to)
+  if key_for(from,to)~=key_for("sye-vibrant","asteroid-belt-outer-edge")
+    or not supports_regional_arcs() then return nil,nil end
+  local x,y=layout.anchor_position("vibrant")
+  if not x or not y then return nil,nil end
+  return "arc",{x=x,y=y}
+end
+route_reconcile.vibrant_exterior_arc=vibrant_exterior_arc
+
 function route_reconcile.data_final_fixes()
 	local routes = data.raw["space-connection"] or {}
 	local rescued = {}
@@ -308,7 +319,12 @@ function route_reconcile.data_final_fixes()
 	for name, connection in pairs(routes) do
 		local from_system = membership[connection.from]
 		local to_system = membership[connection.to]
-		if bypasses_vibrant_belt(connection.from, connection.to)
+    -- Retain only Ferrum's source link until final route authority can
+    -- migrate its custom asteroids to the approved exterior connection.
+    local migrating_ferrum=key_for(connection.from,connection.to)
+      ==key_for("ferrum","fulgora")
+		if (bypasses_vibrant_belt(connection.from, connection.to)
+        and not migrating_ferrum)
 			or (from_system and to_system and from_system ~= to_system
 				and not allowed[key_for(connection.from, connection.to)]) then
 			routes[name] = nil
@@ -380,6 +396,11 @@ function route_reconcile.data_final_fixes()
 				elseif route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
 				end
+        local exterior_shape,exterior_origin=vibrant_exterior_arc(from,to)
+        if exterior_shape then
+          route.shape=exterior_shape
+          route.origin=exterior_origin
+        end
 				route_icons.assign(route, hazard)
 			else
 				local connection = route_icons.assign({
@@ -399,6 +420,11 @@ function route_reconcile.data_final_fixes()
 				local strength=field_strength(from,to)
 				if strength then hazard_profiles.apply_field(connection,strength) end
 				connection.origin=regional_origin(from,to,connection.shape)
+        local exterior_shape,exterior_origin=vibrant_exterior_arc(from,to)
+        if exterior_shape then
+          connection.shape=exterior_shape
+          connection.origin=exterior_origin
+        end
 				data:extend({connection})
 				routes_by_pair[pair] = {route_name}
 			end

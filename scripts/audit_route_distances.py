@@ -25,10 +25,10 @@ LATERAL_LINKS = (
 )
 CAMPAIGN_ROUTES = STARTER_BRANCHES + MIDDLE_BRANCHES + OUTER_BRANCHES + LATERAL_LINKS
 VIBRANT_BELT_ROUTES = (
-    ("sye-vibrant", "fulgora"),
-    ("fulgora", "ribbonia"),
-    ("ribbonia", "asteroid-belt-inner-edge"),
-    ("asteroid-belt-inner-edge", "asteroid-belt-outer-edge"),
+    ("sye-vibrant", "asteroid-belt-outer-edge"),
+    ("asteroid-belt-outer-edge", "asteroid-belt-inner-edge"),
+    ("asteroid-belt-inner-edge", "ribbonia"),
+    ("ribbonia", "fulgora"),
     ("asteroid-belt-outer-edge", "paracelsin"),
     ("asteroid-belt-outer-edge", "sye-beetlejuice"),
 )
@@ -69,6 +69,7 @@ MIN_LENGTHS = {
     key("sye-beetlejuice", "sye-umbra"): 120000,
     key("secretas", "solar-system-edge"): 100000,
     key("vesta", "solar-system-edge"): 120000,
+    key("sye-vibrant", "asteroid-belt-outer-edge"): 25000,
     key("ribbonia", "asteroid-belt-inner-edge"): 16000,
     key("asteroid-belt-outer-edge", "paracelsin"): 11000,
     key("asteroid-belt-outer-edge", "sye-beetlejuice"): 65000,
@@ -216,6 +217,8 @@ def audit(raw):
         issues.add(f"Missing constellation corridor: {pair[0]} <-> {pair[1]}")
     for a,b in (
         ("sye-vibrant","sye-beetlejuice"),
+        ("sye-vibrant","ribbonia"),
+        ("sye-vibrant","fulgora"),
         ("ribbonia","paracelsin"),
         ("paracelsin","asteroid-belt-inner-edge"),
     ):
@@ -240,17 +243,15 @@ def audit(raw):
             elif any(a>=b for a,b in zip(amounts,amounts[1:])):
                 issues.add(f"Branch {index} distances not rising by chapter")
     journey=(
-        ("sye-vibrant","fulgora"),
-        ("fulgora","ribbonia"),
-        ("ribbonia","asteroid-belt-inner-edge"),
-        ("asteroid-belt-inner-edge","asteroid-belt-outer-edge"),
-        ("asteroid-belt-outer-edge","sye-beetlejuice"),
+        ("sye-vibrant","asteroid-belt-outer-edge"),
+        ("asteroid-belt-outer-edge","asteroid-belt-inner-edge"),
+        ("asteroid-belt-inner-edge","ribbonia"),
+        ("ribbonia","fulgora"),
     )
     if all(key(a,b) in links for a,b in journey):
         distance=sum(links[key(a,b)][0][1].get("length",0) for a,b in journey)
-        middle=links.get(key("sye-solaris","sye-vibrant"))
-        if middle and distance<=middle[0][1].get("length",0):
-            issues.add("Native belt journey underpriced vs middle tier")
+        if distance<45000:
+            issues.add("Vibrant belt entry journey underpriced")
     first=links.get(key("sye-solaris","sye-nyxaris"))
     if first and all(key(a,b) in links for a,b in STARTER_BRANCHES):
         direct=first[0][1].get("length")

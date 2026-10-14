@@ -50,6 +50,8 @@ check(crossing and crossing.length==5000
   and crossing.from=="asteroid-belt-inner-edge"
   and crossing.to=="asteroid-belt-outer-edge",
   "Razi's physically traversable Vibrant crossing is missing")
+check(crossing.shape=="line",
+  "Real asteroid belt passage must be a short radial line")
 check(crossing.icon and crossing.asteroid_spawn_definitions,
   "Vibrant core lacks its own hazard profile or route icon")
 for _, parent in ipairs({"vespera","umbra"}) do
@@ -64,8 +66,8 @@ for _, parent in ipairs({"vespera","umbra"}) do
 end
 require("prototypes.technology.asteroid_belts")
 local legacy_tech=raw.technology["space-discovery-asteroid-belt"]
-check(legacy_tech and legacy_tech.prerequisites[1]=="planet-discovery-ribbonia",
-  "Vibrant belt survey must be gated by earlier Ribbonia research")
+check(legacy_tech and legacy_tech.prerequisites[1]=="vibrant-discovery",
+  "Vibrant belt must be discoverable before reaching Ribbonia")
 check(legacy_tech.effects[1].space_location=="asteroid-belt-inner-edge"
   and legacy_tech.effects[2].space_location=="asteroid-belt-outer-edge",
   "Legacy survey ID must unlock both Razi-owned rims")

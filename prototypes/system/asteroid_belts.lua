@@ -16,7 +16,7 @@ for _,belt in ipairs(belts) do
     local radius,turn
     if legacy then
       radius=edge=="inner" and 31 or 39
-      turn=0.17
+      turn=edge=="inner" and 0.08 or 0.095
     else
       local distance=belt.system=="vespera" and 22.0 or 22.3
       local bearing=belt.system=="vespera" and 0.32 or 0.21
@@ -42,7 +42,7 @@ data:extend({{
   type="space-connection",
   name="asteroid-belt-inner-edge-asteroid-belt-outer-edge",
   from="asteroid-belt-inner-edge",to="asteroid-belt-outer-edge",
-  length=5000,shape="arc",
+  length=5000,shape="line",
   icon=icon,icon_size=64,
   asteroid_spawn_definitions=hazards.create("belt_vibrant_crossing")
 }})
