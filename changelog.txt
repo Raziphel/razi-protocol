@@ -1,3 +1,14 @@
+Version: 2.1.66
+Date: 14. 10. 2026
+  Full upstream dependency review:
+    - Remove two genuinely redundant direct requirements while preserving their transitive installation and load order: Nexus-Threat-Updated >= 1.1.0 (owned by Nexus-Updated) and slp-dyson-sphere-reworked-fork >= 1.0.5 (owned by k2-dyson-sphere-rebalance).
+    - Keep Big Monsters recommended: Nexus Bosses separately requires it, but Nexus-Updated does not.
+    - Document 12 direct requirements retained for stricter version minimums despite being required by another source mod.
+    - Add scripts/audit_mod_dependencies.py to recursively resolve native 2.1 releases through the public Mod Portal API, flag missing mods, version conflicts, duplicate entries and pinned minima without any automatic GitHub Actions.
+    - Add offline regression fixtures and source-linked transitive dependency evidence.
+    - Direct list: 48 required, 9 recommended, 14 optional and 22 incompatible (93 total).
+    - The full live API traversal and Factorio engine tests were not run in this environment.
+
 Version: 2.1.65
 Date: 14. 10. 2026
   Dependency classification audit:
