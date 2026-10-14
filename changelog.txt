@@ -1,3 +1,14 @@
+Version: 2.1.60
+Date: 14. 10. 2026
+  Seven-Sun Array, Codex, Atlas and save-safety polish:
+    - Show fractional assembly progress for partial shipments and distinct, color-coded meter bars for all five existing Convergence phases. Responsively choose five, three or two columns rather than overflowing compact screens.
+    - Show the current research blocker using the installed force's actual prerequisites, the genuine mandate recipe-enabled state, and a clear Dyson receiver requirement. No recipes, source labs or research prerequisites are fabricated to fill gaps.
+    - Protocol Codex guidance now distinguishes physical Convergence deliveries and pending final transmissions from ready-to-research technologies, with separate localized action labels.
+    - Add unlocked native Deep Space destination dossiers in the Galactic Atlas for Solar System Edge, Shattered Planet, Nexus, Deep Space Edge and Black-Hole Approach. Dossiers link directly to the finale without generating routes or changing source world positions.
+    - Add engine-guarded mock regressions for fractional cargo contribution and simultaneous force merges during the final transmission, preserving the earliest signal, original operator and one native victory.
+    - Skip idle Convergence work when no transmission is pending. Existing physical cargo, source Dyson/Nexus behaviors and 2.1.57 or later victories remain unchanged.
+    - Full Factorio 2.1 modpack loading, real source recipe unlocks, hardware UI scale testing and in-game force-merge saves remain mandatory release checks. No automatic GitHub Actions runs requested.
+
 Version: 2.1.59
 Date: 14. 10. 2026
   Convergence: Seven-Sun Array and transmission finale:
