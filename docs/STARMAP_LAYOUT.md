@@ -376,12 +376,17 @@ earlier references in this file to source-owned AsteroidBelt are historical.
 
 ## Visual orbit density (October 2026)
 
-The older rule that all positioned planets draw native orbit rings remains
-available using **Full** orbital chart detail. **Balanced** is now the
-default, reserving a few spaced circles per star; **Clean** leaves one.
-These are visual-only `draw_orbit` changes. The six star coordinates,
-all planet and moon positions, custom orbit graphics, campaign routes,
-tech gates and travel distances remain exactly as before.
+**Full** is the default: all positioned, visible planets draw native
+orbit rings. Players can choose **Balanced** (several rings per system),
+**Clean** (a few reference rings), or **Off** (no Razi-managed native
+planetary rings). Off also hides Secretas's native space-location
+circle and Khemia's native ring without moving those worlds. Custom
+source orbit sprites and moon rings are not touched.
+
+This setting changes only `draw_orbit`. Existing saved startup settings
+can retain Balanced until the player selects Full. All star coordinates,
+planet/moon positions, campaign routes, custom orbit graphics, technology
+gates and travel distances remain untouched.
 
 The geometry is intentionally not moved during this polish pass. Moving star
 anchors requires regenerating pre-aligned highlight masks and repeating all

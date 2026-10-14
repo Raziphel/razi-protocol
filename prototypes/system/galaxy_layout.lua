@@ -343,8 +343,9 @@ function M.data_final_fixes()
   end
 
   -- PlanetsLib 2.0 uses native Factorio 2.1 origin-based orbit drawing.
-  -- Full is the standard orbital chart. Keep the two simpler presets,
-  -- and never replace existing custom orbit sprites or moon artwork.
+  -- Full is the default native chart, with Balanced/Clean for fewer
+  -- rings and Off for none of Razi's native planetary rings. Preserve
+  -- source moon orbits and existing handcrafted orbit sprites.
   local orbit_setting=settings and settings.startup
     and settings.startup["razi-starmap-orbit-density"]
   local density=orbit_setting and orbit_setting.value or "full"
@@ -369,7 +370,7 @@ function M.data_final_fixes()
   end
   local secretas=exists("space-location","secretas")
   if secretas and relocated.secretas and not (secretas.orbit and secretas.orbit.sprite) then
-    secretas.draw_orbit=density~="clean"
+    secretas.draw_orbit=density=="full" or density=="balanced"
   end
 
   for _,name in ipairs({

@@ -80,7 +80,7 @@ data:extend({
     name="razi-starmap-orbit-density",
     setting_type="startup",
     default_value="full",
-    allowed_values={"clean","balanced","full"},
+    allowed_values={"full","balanced","clean","off"},
     order="cb[starmap]-a2[orbit-density]"
   },
   startup_toggle("razi-starmap-system-halos","cb[starmap]-b[halos]"),
