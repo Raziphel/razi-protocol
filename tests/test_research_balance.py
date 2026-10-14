@@ -132,6 +132,39 @@ class ResearchBalanceTests(unittest.TestCase):
         self.assertIn("thermodynamic-science-pack",
                       report["science_usage"])
 
+    def test_tiered_card_manufacturing_report(self):
+        raw=fixture()
+        raw["recipe"]={
+            "calidus-tech-card":{"ingredients":[
+                {"name":"automation-science-pack","amount":1}],
+                "energy_required":10},
+            "solaris-tech-card":{"ingredients":[
+                {"name":"calidus-tech-card","amount":1},
+                {"name":"metallurgic-science-pack","amount":2}],
+                "energy_required":12},
+        }
+        report=audit.examine(raw)
+        self.assertEqual(report["errors"],[])
+        rows={r["card"]:r for r in report["system_card_manufacturing"]}
+        self.assertEqual(rows["solaris-tech-card"]["required_cards"],
+                         ["calidus-tech-card"])
+        self.assertEqual(rows["solaris-tech-card"]["other_inputs"],
+                         ["metallurgic-science-pack"])
+        self.assertEqual(rows["solaris-tech-card"]["total_ingredient_items"],3)
+
+    def test_card_manufacturing_cycle_is_a_hard_error(self):
+        raw=fixture()
+        raw["recipe"]={
+            "solaris-tech-card":{"ingredients":[["nyxaris-tech-card",1]]},
+            "nyxaris-tech-card":{"ingredients":[["solaris-tech-card",1]]},
+        }
+        report=audit.examine(raw)
+        cycles=[i for i in report["errors"]
+                if i["code"]=="system-card-recipe-cycle"]
+        self.assertEqual(len(cycles),1)
+        self.assertEqual(set(cycles[0]["targets"]),
+                         {"solaris-tech-card","nyxaris-tech-card"})
+
     def test_no_technology_table_is_safe_advisory(self):
         report=audit.examine({})
         self.assertEqual(report["errors"],[])
