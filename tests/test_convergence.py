@@ -28,8 +28,8 @@ class ConvergenceTests(unittest.TestCase):
         import struct
         import zlib
         source=read("prototypes/technology/convergence.lua")
-        for name in ("stellar","industrial","deep-space","resonance","ignition"):
-            image=(ROOT/"graphics"/"icons"/"convergence"/(name+".png")).read_bytes()
+        for name in ("stellar","industry","deep-space","resonance","ignition"):
+            image=(ROOT/"graphics"/"icons"/"convergence"/("razi-convergence-"+name+".png")).read_bytes()
             self.assertEqual(image[:8],bytes.fromhex("89504e470d0a1a0a"))
             self.assertEqual(struct.unpack(">II",image[16:24]),(64,64))
             pos=8
