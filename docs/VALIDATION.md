@@ -1,3 +1,49 @@
+## 2.1.61: loaded-modpack checks and regression status
+
+**Available directly in Factorio:** With your full Factorio 2.1
+modpack loaded, an administrator enters `/razi-audit`. The command
+reports Convergence registration, each of its three research science
+pack sets and whether at least one native laboratory accepts ALL of
+them, the five actual `force.recipes` unlock states, real producer
+recipe visibility, existing Dyson receiver count and direct research
+prerequisite cycles. Missing producer recipes are warnings rather
+than proven softlocks because source mods may mine or generate items
+scriptedly. It does not change unlocks or create storage rows.
+
+**Run the pre-existing manual workflow only if a dedicated verification
+pass is wanted:** GitHub Actions > Check > Run workflow. This workflow
+is opt-in and now includes `tests/lua/test_convergence_audit.lua`,
+`tests/lua/test_atlas_industry_index.lua`, Convergence inventory/merge
+fixtures and the Python regression discovery alongside the existing
+Factorio-mod-tools static checks. No workflow was triggered during
+this change.
+
+**Must still be performed on the real installed game:** A new-game
+startup, import/upgrade of a previously won save, quest-to-recipe
+craftability and source research graph reachability, multiplayer
+force merges during the final twelve-second transmission, GUI scaling
+and FPS/UPS comparison before/after 2.1.61. A prototype being present
+and a production recipe listed does not prove the source planet is
+reachable. No Factorio executable/full modpack/save was present during
+development, so these gameplay and speed measurements remain unknown.
+
+**Performance verification:** Profile the Galaxy Atlas while opening
+many different worlds, rather than inferring UPS gains from source
+changes. The prototype-to-industry index is cached per script session,
+with actual per-force research/visibility checked on every inspection.
+A normal Convergence run performs no audit work unless an administrator
+explicitly runs the command. The transceiver safeguard stops counting
+entities for forces whose gate research is already complete.
+
+```bash
+lua5.2 tests/lua/test_convergence_audit.lua
+lua5.2 tests/lua/test_atlas_industry_index.lua
+lua5.2 tests/lua/test_convergence_prototypes.lua
+lua5.2 tests/lua/test_convergence_runtime.lua
+python3 -m unittest discover -s tests -p 'test_convergence.py'
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+```
+
 ## 2.1.60 release gate: responsive finale and full research reachability
 
 **UI:** Compare Galactic Operations at 1024x768, 1280x720, 1600x900,
