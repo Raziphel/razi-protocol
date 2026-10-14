@@ -142,7 +142,7 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn('research.name~="razi-convergence-ignition"',ops)
         self.assertIn("convergence.restore_pending()",control)
         self.assertIn("convergence.advance(event.tick)",control)
-        self.assertIn("galactic_operations.refresh_convergence(force)",control)
+        self.assertIn("razi_journal.refresh_convergence(force)",control)
         self.assertIn("saved.completed_site=",runtime)
         self.assertIn('"convergence-archive-title"',runtime)
         self.assertIn('"convergence-archive-time"',runtime)
@@ -222,7 +222,7 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn('action=="convergence-deliver"',ops)
         journal=read("scripts/razi_journal.lua")
         self.assertIn('if quest.convergence then',journal)
-        self.assertIn('operations.open_convergence(player)',journal)
+        self.assertIn('M.open_project(player,\"convergence\")',journal)
         defs=read("scripts/razi_journal_data.lua")
         for id in ("convergence-commission","convergence-stellar",
                    "convergence-industry","convergence-synchronization",

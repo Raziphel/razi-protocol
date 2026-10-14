@@ -89,8 +89,8 @@ class DysonIntegrationTests(unittest.TestCase):
         cheat=read("scripts/razi_safe_cheat.lua")
         self.assertIn('explain_dyson(job.player_index,force)',cheat)
         self.assertIn('explain_dyson(player.index,force)',cheat)
-        self.assertIn("galactic_operations.on_dyson_research(event)",
-                      read("control.lua"))
+        self.assertIn("razi_journal.on_research(event)",read("control.lua"))
+        self.assertIn("projects.refresh(player.force)",read("scripts/razi_journal.lua"))
         self.assertIn("on_dyson_research",script)
         self.assertIn("razi_ops_dyson_stage",script)
         self.assertIn("dyson-satellites=",lang)

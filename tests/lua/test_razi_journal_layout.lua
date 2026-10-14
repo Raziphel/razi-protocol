@@ -294,17 +294,17 @@ for _,entry in ipairs(created) do
 end
 check(bridge and bridge.tags.id=="precision-matrix",
   "Industry quest must offer the real cargo chain navigation")
-local operations=require("scripts.galactic_operations")
-local original_open_cargo=operations.open_cargo
+local original_open_project=journal.open_project
 local called
-operations.open_cargo=function(_,chain,technology_name)
-  called={chain,technology_name}
+journal.open_project=function(_,kind,chain,technology_name)
+  called={kind,chain,technology_name}
   return false
 end
 journal.gui_click({player_index=1,element=bridge})
-operations.open_cargo=original_open_cargo
-check(called and called[1]=="razi-network-precision-matrix"
-  and called[2]=="razi-network-precision-matrix",
+journal.open_project=original_open_project
+check(called and called[1]=="cargo"
+  and called[2]=="razi-network-precision-matrix"
+  and called[3]=="razi-network-precision-matrix",
   "Codex must deep-link to the correct installed Cargo Network factory")
 
 print("Journal GUI: bounded sprites, quest-first layout, hidden scrollbars and cargo bridge passed")

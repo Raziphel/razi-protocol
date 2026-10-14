@@ -134,7 +134,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('icons.sprite(card,entry.sprite,"gallery"',ui)
         self.assertIn('icons.button(head,themes.icon(chapter.id)',ui)
         self.assertIn('icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")',ui)
-        self.assertIn('for _,view in ipairs({"quests","archive"}) do',ui)
+        self.assertIn('for _,view in ipairs({"quests","projects","archive"}) do',ui)
         self.assertIn("view-quests=Quests",locale)
         self.assertIn("view-archive=Journal",locale)
         self.assertNotIn('local insignia=head.add{type="sprite"',ui)
@@ -239,7 +239,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('cargo_catalog.chain_for_quest(quest.id)',journal)
         self.assertIn('cargo_catalog.is_installed(player.force,cargo_id)',journal)
         self.assertIn('razi_journal_action="open-cargo"',journal)
-        self.assertIn('operations.open_cargo(player,chain,target)',journal)
+        self.assertIn('M.open_project(player,\"cargo\",chain,target)',journal)
         self.assertIn('function M.open_quest(player,id)',journal)
         self.assertIn('p.filter="all"',journal)
         self.assertIn('p.view="quests"',journal)
@@ -269,7 +269,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertNotIn('  local definitions=require("scripts.razi_journal_data")', catalog)
         self.assertNotIn('    local operations=require("scripts.galactic_operations")', journal)
         self.assertNotIn('    local journal=require("scripts.razi_journal")', operations)
-        self.assertIn('galactic_operations.bind_journal(razi_journal)', control)
+        self.assertIn('razi_journal.open_project(player)', control)
         self.assertIn('journal_module.open_quest(player,quest_id)', operations)
 
     def test_codex_layout_polish_keeps_native_scroll_controls(self):
