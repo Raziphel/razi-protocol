@@ -1,3 +1,13 @@
+Version: 2.1.70
+Date: 14. 10. 2026
+  First-party asteroid belt ecology:
+    - Study Asteroid Belt's public source for physical resource rims and concentrated transit hazards. Preserve original mod credits, no borrowed scripts or artwork.
+    - Specialize Vibrant in metallic ore, Vespera in oxide and Umbra in carbonic asteroid chunks, keeping all installed native chunk families harvestable on their safe rims.
+    - Add real in-transit native chunk harvest seams with dense middle crossings and distinct middle-threat multipliers of 1.25x / 1.50x / 1.70x.
+    - Apply resource fields after Razi's final curated route authority; protect source-mod custom asteroid species and Razi's old Vibrant crossing IDs.
+    - Add original resource-table and modded asteroid preservation fixtures, exact-crossing checks, and post-load resource audit.
+    - No per-tick asteroid entities, duplicate belts, added labs, forced source technologies or GitHub Actions runs.
+
 Version: 2.1.69
 Date: 14. 10. 2026
   Mod settings discoverability:
