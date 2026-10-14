@@ -24,6 +24,14 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertEqual(set(recommended), {
             "+ aai-signal-transmission >= 0.6.0",
             "+ Imersite-Asteroids >= 1.3.0",
+            "+ planet-express >= 2.1.9",
+            "+ upgraded-rocket-turrets >= 2.1.1",
+            "+ celestial-weather-updated >= 1.5.1",
+            "+ celestial-weather-additions-updated >= 1.3.1",
+            "+ Cold_biters >= 2.3.0",
+            "+ science-tab >= 1.13.0",
+            "+ Nexus-Threat-Updated >= 1.1.0",
+            "+ Big-Monsters >= 2.2.1",
         })
         # Only mods with a native 2.1 release and tested integrations
         # should be promoted. Do not recommend unfinished or
