@@ -98,7 +98,14 @@ local function producers(registry,force)
   if not recipe.hidden then
    for _,product in ipairs(recipe.products or {}) do
     if product.type~="fluid" and wanted[product.name] then
-     index[product.name]=true
+     local state=index[product.name]
+     if not state then
+      state={visible=true,enabled=false}
+      index[product.name]=state
+     end
+     local live=recipe.name and force.recipes
+       and force.recipes[recipe.name]
+     if live and live.enabled then state.enabled=true end
     end
    end
   end
@@ -128,7 +135,7 @@ local function cyclic_research(force)
 end
 function M.inspect(force,registry)
  local result={errors={},notes={},labs=0,stages=0,components=0,
-  missing_producers=0,unlocked=0}
+  missing_producers=0,locked_sources=0,unlocked=0}
  if not (force and force.technologies and force.recipes and registry) then
   result.errors[1]="No force or runtime prototype registry available"
   return result
@@ -136,6 +143,7 @@ function M.inspect(force,registry)
  local labs=laboratories(registry)
  local machines=crafting_machines(registry)
  local produced=producers(registry,force)
+ local warned_materials={}
  result.labs=#labs
  local function error_line(line) result.errors[#result.errors+1]=line end
  local function note(line) result.notes[#result.notes+1]=line end
@@ -195,10 +203,18 @@ function M.inspect(force,registry)
   -- conservatively as advisory, never a proven hard progression lock.
   if recipe then
    for _,part in ipairs(recipe.ingredients or {}) do
-    if part.type~="fluid" and not produced[part.name] then
-     result.missing_producers=result.missing_producers+1
-     note("No visible crafting recipe for "..part.name..
-       " ("..stage.id.."); inspect native scripted/mined sources")
+    if part.type~="fluid" and not warned_materials[part.name] then
+     warned_materials[part.name]=true
+     local state=produced[part.name]
+     if not state then
+      result.missing_producers=result.missing_producers+1
+      note("No visible crafting recipe for "..part.name..
+        "; inspect native scripted/mined sources")
+     elseif not state.enabled then
+      result.locked_sources=result.locked_sources+1
+      note("Production not currently researched for "..part.name..
+        "; inspect source unlocks or alternative producers")
+     end
     end
    end
   end
@@ -242,7 +258,9 @@ function M.command(event)
   ": "..#report.errors.." blockers, "..report.stages.."/"..
    #defs.shipments.." Mandate recipes, "..report.components.."/"..
    #(defs.assemblies or {}).." ignition components, "..report.labs..
-   " native labs")
+   " native labs, "..report.missing_producers..
+   " missing visible producers, "..report.locked_sources..
+   " currently locked producers")
  for i=1,math.min(16,#report.errors) do
   output.print("[Razi Audit] BLOCKER: "..report.errors[i])
  end
