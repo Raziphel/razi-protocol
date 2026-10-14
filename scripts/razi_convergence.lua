@@ -313,14 +313,44 @@ function M.render(parent,player)
  end
  local force=player.force
  local progress,total,won=M.progress(force)
+ local saved=M.record(force)
  local stat=line(scroll,"convergence-progress",width,
   tostring(progress),tostring(total))
  stat.style.font="default-bold"
+ local overall=scroll.add{type="progressbar",value=progress/total}
+ overall.style.horizontally_stretchable=true
+ overall.style.height=16
+ local assembly=line(scroll,"convergence-assembly-heading",width)
+ assembly.style.font="heading-2"
+ line(scroll,"convergence-assembly-subtitle",width)
+ local tiles=scroll.add{type="table",
+  column_count=width>=560 and 5 or (width>=380 and 3 or 2)}
+ tiles.style.horizontally_stretchable=true
+ tiles.style.horizontal_spacing=6
+ tiles.style.vertical_spacing=6
+ for _,rule in ipairs(M.stages) do
+  local completed=won or (saved.delivered[rule.id] or 0)>=rule.count
+  local tile=tiles.add{type="frame",style="inside_shallow_frame",
+   direction="vertical"}
+  tile.style.padding=6
+  local image=tile.add{type="sprite",sprite="item/"..rule.item}
+  image.style.width=32
+  image.style.height=32
+  local caption=tile.add{type="label",caption=
+   {"razi-ops.convergence-stage-"..rule.id}}
+  caption.style.single_line=false
+  caption.style.maximal_width=135
+  caption.style.font="default-bold"
+  local marker=tile.add{type="label",caption={
+   "razi-ops."..(completed and "convergence-tile-complete"
+    or "convergence-tile-pending")}}
+  marker.style.font_color=completed and {r=.48,g=.9,b=.72}
+    or {r=.92,g=.74,b=.50}
+ end
  if won then
   local win=line(scroll,"convergence-won",width)
   win.style.font_color={r=.48,g=.9,b=.72}
  end
- local saved=M.record(force)
  -- A built, force-owned receiver is tangible evidence of the Dyson grid.
  -- The source mod remains authoritative for real satellite count and MW.
  local receiver_ready,receivers=M.dyson_readiness(force)
