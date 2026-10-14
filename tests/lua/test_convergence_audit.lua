@@ -35,7 +35,8 @@ for _,stage in ipairs(defs.shipments) do
    amount=ingredient[2]}
   if not registry.recipe["producer-"..name] then
    registry.recipe["producer-"..name]={
-    hidden=false,products={{type="item",name=name,amount=1}}}
+    name="producer-"..name,hidden=false,
+    products={{type="item",name=name,amount=1}}}
    producers=producers+1
   end
  end
@@ -51,6 +52,13 @@ for _,part in ipairs(defs.assemblies or {}) do
    categories={"crafting"},ingredients=ingredients}
 end
 local result=audit.inspect(force,registry)
+check(result.locked_sources>0 and result.missing_producers==0,
+ "Sources that exist but are not researched must not be called missing")
+local first_source=defs.shipments[1].ingredients[1][1]
+force.recipes["producer-"..first_source]={enabled=true}
+local upgraded=audit.inspect(force,registry)
+check(upgraded.locked_sources<result.locked_sources,
+ "A genuinely unlocked native recipe must lower pending sources")
 check(#result.errors==0 and result.stages==5 and result.components==3 and result.labs==1,
  "Correct native science and recipes should have zero blockers")
 check(storage.razi_convergence==nil,
