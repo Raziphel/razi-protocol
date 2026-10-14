@@ -75,6 +75,36 @@ function M.related_industries(force,research)
   table.sort(related,function(a,b) return a.name<b.name end)
   return related
 end
+-- The supply catalog is immutable for this mod load. Keep a reverse index
+-- by native world ID so inspecting a planet never scans all research chains.
+local supply_by_world
+local function supply_index()
+  if supply_by_world then return supply_by_world end
+  local catalog=require("scripts.galactic_trade_catalog")
+  local result={}
+  for _,entry in ipairs(catalog.chains) do
+    for _,world in ipairs(entry.worlds) do
+      result[world]=result[world] or {}
+      result[world][#result[world]+1]=entry
+    end
+  end
+  supply_by_world=result
+  return result
+end
+function M.planet_supply_links(force,id)
+  local catalog=require("scripts.galactic_trade_catalog")
+  local technologies=force and force.technologies or {}
+  local results={}
+  for _,entry in ipairs(supply_index()[id] or {}) do
+    local technology=technologies[entry.id]
+    local state=catalog.state(technology)
+    if state.status~="absent" then
+      results[#results+1]={technology=technology,state=state,config=entry}
+    end
+  end
+  return results
+end
+
 local function location_research_catalog()
   if unlock_catalog then return unlock_catalog end
   if not (prototypes and prototypes.technology) then return nil end
@@ -355,6 +385,24 @@ function M.render(parent,player,id,p)
       for i=1,math.min(6,#industries) do
         local tech=industries[i]
         line(frame,tech.researched and "✓ " or "• ",tech.localised_name)
+      end
+    end
+  end
+  if unlocked then
+    -- These are actual registered manufacturing partnerships, not inferred
+    -- cargo deliveries. Show their source roles only after discovery.
+    local links=M.planet_supply_links(player.force,id)
+    if #links>0 then
+      bold(frame,L("atlas-supply-heading"))
+      local explanation=label(frame,L("atlas-supply-explanation"))
+      explanation.style.single_line=false
+      explanation.style.horizontally_stretchable=true
+      for _,role in ipairs(links) do
+        line(frame,role.technology.localised_name,"  •  ",
+          L("trade-state-short-"..role.state.status))
+        local purpose=label(frame,L("trade-chain-"..role.config.key))
+        purpose.style.single_line=false
+        purpose.style.horizontally_stretchable=true
       end
     end
   end
