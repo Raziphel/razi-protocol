@@ -14,10 +14,15 @@ local systems={
   {name="umbra",tint={r=.66,g=.35,b=.55},strength=.66},
   {name="deep-space",tint={r=.40,g=.57,b=.82},strength=.48}
 }
+-- Vibrant has its own Razi-authored ring in asteroid_belt_integration.
+-- Don't paint a second generic ring over its sun and orbital markers.
+-- The other two belts use their existing hand-painted fragment artwork
+-- at restrained opacity over the same soft atlas-belt foundation.
 local belts={
-  {name="vibrant",tint={r=.75,g=.66,b=.93},scale=4.1},
-  {name="vespera",tint={r=.59,g=.78,b=.93},scale=3.3},
-  {name="umbra",tint={r=.91,g=.57,b=.68},scale=3.3}
+  {name="vespera",tint={r=.59,g=.78,b=.93},scale=3.05,
+    debris="debris-vespera.png",debris_scale=3.20,debris_alpha=.105},
+  {name="umbra",tint={r=.91,g=.57,b=.68},scale=3.12,
+    debris="debris-umbra.png",debris_scale=3.25,debris_alpha=.12}
 }
 local WHITE={r=1,g=1,b=1}
 -- Four individually seeded 1024px indexed PNG textures. Mostly single-pixel
@@ -32,6 +37,17 @@ local sky_tiles={
   {4,3,1,2,4,2}
 }
 local sky_colors={{.98,.99,1},{1,.98,.95},{.95,.97,1},{1,.97,.99}}
+-- The original four tile variants repeat in a 6x6 grid. Small,
+-- deterministic per-cell exposure changes break up the checkerboard
+-- without allocating any new textures or a runtime effect.
+local sky_exposure={
+  {1.00,.89,.96,.86,.98,.91},
+  {.88,.97,.91,1.00,.85,.96},
+  {.95,.87,1.00,.90,.96,.84},
+  {.86,.98,.88,.97,.90,1.00},
+  {.97,.90,.95,.85,1.00,.87},
+  {.89,1.00,.86,.96,.88,.98}
+}
 local function add_starfield(layers,cinematic)
   for row,variants in ipairs(sky_tiles) do
     for col,variant in ipairs(variants) do
@@ -42,7 +58,8 @@ local function add_starfield(layers,cinematic)
         shift={(col-3.5)*4096,(row-3.5)*4096},
         priority="extra-high-no-scale",flags={"gui-icon"},
         blend_mode="normal",
-        tint={r=rgb[1],g=rgb[2],b=rgb[3],a=cinematic and .91 or .72}
+        tint={r=rgb[1],g=rgb[2],b=rgb[3],
+          a=(cinematic and .88 or .70)*sky_exposure[row][col]}
       }
     end
   end
@@ -76,9 +93,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,"atlas-halo.png",
-          system.name=="calidus" and 1.65
-            or system.name=="solaris" and 1.95 or 2.35,
-          x,y,system.tint,(cinematic and .34 or .22)*system.strength)
+          system.name=="calidus" and 1.55
+            or system.name=="solaris" and 1.78 or 2.03,
+          x,y,system.tint,(cinematic and .31 or .19)*system.strength)
       end
     end
   end
@@ -87,7 +104,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(belt.name)
       if x and y then
         insert_asset(layers,"atlas-belt.png",belt.scale,x,y,
-          belt.tint,cinematic and .25 or .13)
+          belt.tint,cinematic and .21 or .115)
+        insert_asset(layers,belt.debris,belt.debris_scale,x,y,
+          belt.tint,belt.debris_alpha*(cinematic and 1.24 or 1))
       end
     end
   end
@@ -103,16 +122,24 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         -- huge central fog pockets covered real solar route connections.
       }
       for _,p in ipairs(pockets) do
-        insert_asset(layers,"atlas-dust-"..p[5]..".png",4.25,p[1],p[2],p[3],
-          (cinematic and .32 or .19)*(p[4] or 1))
+        insert_asset(layers,"atlas-dust-"..p[5]..".png",3.50,p[1],p[2],p[3],
+          (cinematic and .25 or .155)*(p[4] or 1))
       end
     end
     if option("razi-starmap-micro-details",true) then
-      for index,name in ipairs({"nyxaris","vespera","umbra","vibrant"}) do
-        local x,y=anchor(name)
+      local accents={
+        {"nyxaris",-57,18,1},
+        {"vespera",-49,-44,2},
+        {"umbra",52,-42,3},
+        {"vibrant",51,44,2}
+      }
+      for _,accent in ipairs(accents) do
+        local x,y=anchor(accent[1])
         if x and y then
-          insert_asset(layers,"atlas-dust-"..((index-1)%3+1)..".png",
-            2,x+41,y-33,WHITE,cinematic and .17 or .10)
+          -- Keep these delicate fragments beyond inhabited orbital rings.
+          insert_asset(layers,"atlas-dust-"..accent[4]..".png",
+            1.85,x+accent[2],y+accent[3],WHITE,
+            cinematic and .13 or .075)
         end
       end
     end
@@ -136,6 +163,8 @@ function M.data_final_fixes()
     and layer.filename:find(ASSET.."atlas-starfield-",1,true)==1)
     or layer.filename==ASSET.."atlas-halo.png"
       or layer.filename==ASSET.."atlas-belt.png"
+      or layer.filename==ASSET.."debris-vespera.png"
+      or layer.filename==ASSET.."debris-umbra.png"
       or (type(layer.filename)=="string"
         and layer.filename:find(ASSET.."atlas-dust-",1,true)==1) then return end
   end
