@@ -1,3 +1,16 @@
+Version: 2.1.74
+Date: 15. 10. 2026
+  Expedition Journal and orbital companion integration:
+    - Consolidate Galactic Operations into Quests, Projects and Journal, with existing Dyson Sphere, cargo network, transceiver and Convergence controls in one Codex.
+    - Refresh Codex layout as a restrained field dossier: quieter chapter index, project folios, original Dyson artwork and source-backed research progress.
+    - Recommend Various Cargo Bays, Space Age Railway Expansion, Shield Generators, Circuit Launchable Rockets, Cargo Bay Limit Research and Platform Logistics Overhaul without requiring installation.
+    - Weave installed source-owned rail and advanced-shield technologies into appropriate planetary science only if prerequisites, native producers and existing labs are compatible.
+    - Show installed physical logistics and engineering companions in Cargo Network field notes, without copying their features or runtime control loops.
+    - Do not add Orbital Catapult as a regular recommended dependency: the author requires load-order-independent linking, conflicting with optional-install policy. Register local Muria-Aquilo link prototypes only when manually installed and explicitly enabled; OFF by default.
+    - Preserve seven-system and asteroid belt route authority, native Space Age cargo transportation, all saved milestones, Convergence shipments and research IDs.
+    - Add matched dependency policy, compatibility tests, in-game release matrix and startup rollback controls. Full Factorio 2.1/K2SO runtime validation remains required before publication.
+    - Keep CI manual-only; no automatic GitHub Actions runs.
+
 Version: 2.1.73
 Date: 14. 10. 2026
   Planet-distributed technology research:
