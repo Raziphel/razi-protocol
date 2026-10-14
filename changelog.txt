@@ -1,3 +1,16 @@
+Version: 2.1.73
+Date: 14. 10. 2026
+  Planet-distributed technology research:
+    - Require real Gleba agricultural science for existing construction robotics and personal roboport equipment.
+    - Move nuclear reactors and logistic robotics to a shared Vulcanus metallurgy plus Gleba agriculture research payoff.
+    - Move advanced logistic-system research toward Fulgora electromagnetic science, with Cerys nuclear science unlocking spent-fuel reprocessing where available.
+    - Anchor Planet Express specialist freight and AAI Signal Transmission source research to relevant world science when those mods are present and the changes are safe.
+    - Retain the original technology identifiers, native item and recipe unlocks, research counts, and old research progress.
+    - Preserve rocket launch, platform construction, flying robot frames, first-star gates and basic labs before robotics/nuclear unlocks.
+    - Add a default-on independent startup toggle, individual safety skips for missing prototypes, cyclic dependencies and insufficient early labs, plus traceable startup logs.
+    - Move original reactor/robot quests to the planetary science Codex and report actual installed distribution in the science audit.
+    - Add focused Lua/Python source fixtures, manually requested validation and documented rollback. No new labs, tick loops or automatic Actions runs.
+
 Version: 2.1.72
 Date: 14. 10. 2026
   Quiet Galaxy interface and artwork:
