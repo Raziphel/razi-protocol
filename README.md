@@ -8,7 +8,8 @@ The planets still have their own machines, recipes and quirks. What changes is h
 worlds now show their real shared production-chain roles in the Atlas,
 with a direct link to the existing Cargo Network card. Research audits
 report native laboratory coverage and the number of system cards needed
-per campaign research stage. The full campaign audit produces a
+per campaign research stage. Galactic Operations also shows the direct
+science-pack totals for each pending system gateway. The full campaign audit produces a
 planet-by-planet priority queue for blocked, uncertain or disconnected
 discoveries, without rewriting source mod recipes or research. The
 source-only regressions were expanded; the full Factorio 2.1 modpack,
