@@ -79,7 +79,7 @@ class ConvergenceTests(unittest.TestCase):
                      'function M.command(event)',
                      'No installed lab accepts all packs',
                      'Researched but recipe locked',
-                     'local produced=producers(registry)'):
+                     'local produced=producers(registry,force)'):
             if part=="tech.prerequisites":
                 self.assertIn("tech.prerequisites or {}",source)
             else:
