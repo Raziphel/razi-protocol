@@ -62,7 +62,20 @@ def png_info(path: Path) -> tuple[int, int, bool]:
     color_type = header[25]
     if not width or not height:
         raise ValueError("zero-sized PNG")
-    return width, height, color_type in (4, 6)
+    if color_type in (4, 6):
+        return width, height, True
+    if color_type == 3:
+        # Palette PNGs can have full per-colour opacity via a tRNS chunk.
+        # Read the actual chunk headers, not incidental bytes in IDAT.
+        data = path.read_bytes()
+        offset = 8
+        while offset + 12 <= len(data):
+            size = int.from_bytes(data[offset:offset+4], "big")
+            kind = data[offset+4:offset+8]
+            if kind == b"tRNS":
+                return width, height, True
+            offset += 12 + size
+    return width, height, False
 
 
 def discover_references(root: Path) -> list[Reference]:

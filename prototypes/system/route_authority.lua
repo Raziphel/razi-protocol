@@ -304,6 +304,14 @@ function M.data_final_fixes()
     end
   end
   removed=removed+dedupe(routes,approved)
+  -- After reconciliation, cover both retained source links and newly
+  -- generated arrivals. Apply only to the surviving Solaris/Vibrant route.
+  for _,route in pairs(routes) do
+    if route.from and route.to
+      and pair(route.from,route.to)==pair("sye-solaris","sye-vibrant") then
+      profiles.apply_vibrant_arrival(route)
+    end
+  end
   -- Source-created Nyxaris/Vibrant arcs can still be centred on Calidus.
   -- Keep their native route identities and asteroid loot, but make the
   -- normal local legs direct. Parent-moon and belt transit stay untouched.

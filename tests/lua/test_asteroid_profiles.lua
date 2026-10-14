@@ -157,6 +157,42 @@ for _,def in ipairs(field_route.asteroid_spawn_definitions) do
   end
 end
 
+-- Actual asteroid pressure now builds near Vibrant on the arrival route.
+-- Modded species stay intact, and repeated passes cannot amplify it.
+local approach={asteroid_spawn_definitions=util.spawn_definitions()}
+local custom_approach=approach.asteroid_spawn_definitions[6]
+local custom_points=custom_approach.spawn_points
+profiles.apply(approach,"belt_vibrant_arrival")
+profiles.apply_field(approach,1.30)
+ok(profiles.apply_vibrant_arrival(approach),
+  "Solaris-to-Vibrant approach lacks the asteroid field")
+local baseline,peak,exit,curve
+for _,def in ipairs(approach.asteroid_spawn_definitions) do
+  if def.asteroid=="medium-oxide-asteroid" then
+    curve=def.spawn_points
+    for _,point in ipairs(curve) do
+      if math.abs(point.distance-.73)<.001 then baseline=point.probability end
+      if math.abs(point.distance-.94)<.001 then peak=point.probability end
+      if math.abs(point.distance-1)<.001 then exit=point.probability end
+    end
+  end
+end
+ok(curve and baseline and peak and exit and peak>baseline and peak>exit,
+  "Vibrant approach should peak near the visible asteroid ring")
+ok(approach.asteroid_spawn_definitions[6]==custom_approach
+  and custom_approach.spawn_points==custom_points,
+  "Arrival hazard modified a source-owned asteroid")
+ok(not profiles.apply_vibrant_arrival(approach),
+  "Vibrant arrival profile was applied twice")
+for _,def in ipairs(approach.asteroid_spawn_definitions) do
+  if def.asteroid=="medium-oxide-asteroid" then
+    ok(def.spawn_points==curve,"Repeat arrival changed spawn points")
+  end
+end
+ok(probability(approach.asteroid_spawn_definitions,
+  "huge-metallic-asteroid")==0,
+  "First arrival should not contain huge endgame asteroids")
+
 -- Stationary Calidus platforms must be small-only, not merely
 -- a lower probability of getting hit by a medium or huge asteroid.
 local shared_home = util.spawn_definitions()

@@ -10,6 +10,7 @@ local presets = {
   biological={"nauvis_gleba",0.97,"nauvis_fulgora","carbonic"},
   biological_deep={"nauvis_gleba",1.10,"nauvis_fulgora","carbonic"},
   middle_crossing={"gleba_aquilo",1.08,"fulgora_aquilo"},
+  belt_vibrant_arrival={"gleba_aquilo",1.10,"fulgora_aquilo","metallic"},
   middle_crosslink={"fulgora_aquilo",1.13},
   electrical={"fulgora_aquilo",1.08,nil,"metallic"},
   chemistry={"fulgora_aquilo",1.14,nil,"oxide"},
@@ -40,6 +41,7 @@ local size_tiers = {
   industrial="first", biological="first",
   industrial_deep="first_deep", biological_deep="first_deep",
   middle_crossing="middle", middle_crosslink="middle",
+  belt_vibrant_arrival="middle",
   electrical="middle", chemistry="middle", cryogenic="middle",
   chemistry_deep="middle_deep", cryogenic_deep="middle_deep",
   outer_crossing="outer", outer_crosslink="outer",
@@ -343,6 +345,51 @@ function M.apply_field(route,multiplier)
       end
     end
   end
+end
+
+-- The Solaris -> Vibrant corridor cuts through the ring shortly before
+-- arriving at its inner Slip Stream. This gives that approach a real
+-- asteroid encounter, without treating it as the more difficult 5,000 km
+-- inner-to-outer belt crossing. Only vanilla curves are adjusted.
+local vibrant_arrival_done=setmetatable({}, {__mode="k"})
+function M.apply_vibrant_arrival(route)
+  if not route or vibrant_arrival_done[route] then return false end
+  vibrant_arrival_done[route]=true
+  local original=route.asteroid_spawn_definitions
+  if type(original)~="table" then return false end
+  local detached={}
+  local changed=false
+  for i,def in ipairs(original) do
+    detached[i]=def
+    if vanilla[def.asteroid] and type(def.spawn_points)=="table"
+      and #def.spawn_points>0 then
+      local points={}
+      for _,point in ipairs(def.spawn_points) do
+        if type(point.distance)~="number" or point.distance<.73 then
+          points[#points+1]=copy(point)
+        end
+      end
+      for _,mark in ipairs({
+        {.73,1.00},{.81,1.32},{.88,1.72},{.94,1.90},{1,1.15}
+      }) do
+        local probability,speed=sample(def.spawn_points,mark[1])
+        if probability and speed and speed>0 then
+          points[#points+1]={distance=mark[1],
+            probability=math.max(0,probability*mark[2]),speed=speed}
+        end
+      end
+      if #points>0 then
+        table.sort(points,function(a,b)
+          return (a.distance or -1)<(b.distance or -1)
+        end)
+        detached[i]=copy(def)
+        detached[i].spawn_points=points
+        changed=true
+      end
+    end
+  end
+  if changed then route.asteroid_spawn_definitions=detached end
+  return changed
 end
 
 function M.preserve_custom(target, duplicate)

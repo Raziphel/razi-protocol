@@ -40,18 +40,17 @@ for i=1,2 do
 end
 check(layers[3].shift[1]==2 and layers[4].shift[1]==37,
   "Existing source art was modified or belt art drew above the native layers")
--- At this texture's painted annulus radius, roughly six map units per
--- sprite-scale unit, the rubble should lie between the actual 31/39 rims.
+-- The actual rock textures have faceted bright/dark pixels and a thinner
+-- scattered rim. They are not a transparent smooth neon ring anymore.
 for i=1,2 do
   local visual_radius=layers[i].scale*6
   check(visual_radius>31 and visual_radius<39,
-    "The visible Vibrant belt is offset from its native crossing rims")
-  check(layers[i].tint.a<=.27,
-    "Vibrant belt artwork overwhelms planet markers")
+    "Visible belt fragments no longer align with the 31/39-unit rims")
+  check(layers[i].tint.a>.55 and layers[i].tint.a<.9,
+    "Rock fragments are too faint or obscure the star and labels")
 end
-check(layers[2].tint.r>layers[2].tint.b and
-  layers[1].tint.b>layers[1].tint.r,
-  "Metallic debris needs a distinct neutral tint over violet belt haze")
+check(layers[1].tint.r>.85 and layers[2].tint.g>.80,
+  "Mineral fragments should retain neutral, rocky colors")
 belt.data_final_fixes()
 check(#layers==4,"Repeated data-stage pass duplicated belt artwork")
 data.raw["space-location"][outer.name]=nil
