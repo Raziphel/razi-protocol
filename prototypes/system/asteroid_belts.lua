@@ -30,7 +30,7 @@ for _,belt in ipairs(belts) do
       localised_description={"space-location-description."..name},
       icon=icon,icon_size=64,starmap_icon=icon,starmap_icon_size=64,
       draw_orbit=false,solar_power_in_space=belt.solar,
-      asteroid_spawn_definitions=hazards.belt_edge_resources(belt.intensity),
+      asteroid_spawn_definitions=hazards.belt_edge_resources(belt.intensity,belt.system),
       orbit={parent={type="space-location",name=belt.system},
         distance=radius,orientation=turn}
     }
