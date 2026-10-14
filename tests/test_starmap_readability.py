@@ -78,6 +78,12 @@ class StarmapReadabilityTests(unittest.TestCase):
         self.assertGreater(
             geom.distance(points["razi-vespera-belt-inner"],
                           points["razi-vespera-belt-outer"]), 14)
+        # Nyxaris arrives from the southeast. The side destination should
+        # not sit directly on that long interstellar approach.
+        self.assertGreaterEqual(
+            geom.chord_clearance(points["obsidiax"],
+                                 points["sye-vespera"],
+                                 points["sye-nyxaris"]), 10)
 
     def test_vespera_local_routes_use_straight_rendering(self):
         reconcile = (ROOT / "prototypes/system/route_reconcile.lua").read_text()
