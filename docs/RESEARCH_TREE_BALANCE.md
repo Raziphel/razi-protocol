@@ -1,3 +1,21 @@
+## 2.1.60: Endgame research guidance, no source rewrite
+
+The updated Convergence console reads the installed `ForceTechnology`
+prerequisites and `force.recipes` states to explain why a physical
+Mandate cannot yet be manufactured or delivered. It does not
+reprice native planetary technology or fabricate new labs. Codex
+recommendations distinguish already-researched physical freight from
+available native research. No recipe, technology, Dyson supplier or
+Nexus boss prototype is changed by this UI pass.
+
+**Release blocker:** Validate real K2SO, SLP, Aegis, Nexus and optional
+planet inputs in a full post-load data-raw dump. Static producer
+existence does not prove accessibility; check genuine recipe unlock
+prerequisites, the first craftable assemblers, surface conditions,
+and a single existing lab accepting each combined research set.
+Without the full modpack and actual save, no research-cost rebalance
+should be advertised as tested or complete.
+
 ## True endgame science and freight (2.1.56)
 
 The transceiver science chain remains the **pre-edge gate**. The
