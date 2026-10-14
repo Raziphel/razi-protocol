@@ -58,6 +58,21 @@ local function valid_base(recipe,card)
  end
  return true
 end
+-- Multiplex recipes must fit an installed *existing* crafting machine.
+-- Optional high-ingredient variants simply skip registration if none can
+-- handle their inputs. Never create a new assembler to rescue a recipe.
+local function has_crafting_machine(ingredient_count)
+ for _,machine in pairs(data.raw["assembling-machine"] or {}) do
+  if not machine.fixed_recipe and
+   (not machine.ingredient_count
+     or machine.ingredient_count>=ingredient_count) then
+   for _,category in ipairs(machine.crafting_categories or {}) do
+    if category=="crafting" then return true end
+   end
+  end
+ end
+ return false
+end
 function M.data_final_fixes()
  local recipes=data.raw.recipe or {}
  local technologies=data.raw.technology or {}
@@ -82,6 +97,11 @@ function M.data_final_fixes()
     ingredients[#ingredients+1]={type="item",name=part[1],
       amount=part[2]}
    end
+   if not has_crafting_machine(#ingredients) then
+    approved=false
+   end
+  end
+  if approved then
    -- The card icon belongs to Razi. Source mods own all imported icons.
    local recipe={type="recipe",name=rule.name,
     localised_name={"recipe-name."..rule.name},
