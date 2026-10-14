@@ -925,6 +925,12 @@ function M.gui_click(event)
         end
       end
     end
+  elseif action=="atlas-cargo" then
+    -- Reuse the validated Cargo Network deep link. The Atlas never edits
+    -- production, ships, or the player's research.
+    if p.tab~="worlds" then return end
+    M.open_cargo(player,value)
+    return
   elseif action=="cargo-focus" then
     if p.tab~="trade" then return end
     if not cargo_catalog.is_installed(player.force,value) then return end
