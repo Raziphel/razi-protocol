@@ -176,6 +176,52 @@ class ResearchBalanceTests(unittest.TestCase):
                          ["metallurgic-science-pack"])
         self.assertEqual(rows["solaris-tech-card"]["total_ingredient_items"],3)
 
+    def test_freight_card_alternatives_have_bounded_value(self):
+        raw=fixture()
+        raw["recipe"]={
+            "beetlejuice-tech-card":{
+                "energy_required":22,"ingredients":[
+                    {"name":"vibrant-tech-card","amount":1},
+                    {"name":"vespera-tech-card","amount":1}],
+                "results":[{"name":"beetlejuice-tech-card","amount":1}]},
+            "razi-beetlejuice-multiplex-cards":{
+                "energy_required":22*4*1.15,
+                "allow_productivity":False,"auto_recycle":False,
+                "ingredients":[
+                    {"name":"vibrant-tech-card","amount":4},
+                    {"name":"vespera-tech-card","amount":4},
+                    {"name":"gold-plate","amount":6},
+                    {"name":"rare-earth-powder","amount":4}],
+                "results":[{"name":"beetlejuice-tech-card","amount":5}]},
+        }
+        result=audit.examine(raw)
+        self.assertEqual(result["errors"],[])
+        self.assertEqual(result["multiplex_card_economy"][0]["status"],
+                         "within-budget")
+        self.assertAlmostEqual(
+            result["multiplex_card_economy"][0]["gross_bonus_fraction"],0.25)
+        self.assertGreater(result["multiplex_card_economy"][0][
+            "machine_throughput_change"],0)
+        self.assertLess(result["multiplex_card_economy"][0][
+            "machine_throughput_change"],0.10)
+
+    def test_freight_cards_cannot_skip_native_batches_or_amplify_bonus(self):
+        raw=fixture()
+        raw["recipe"]={
+            "umbra-tech-card":{"energy_required":22,
+                "ingredients":[{"name":"vespera-tech-card","amount":1}],
+                "results":[{"name":"umbra-tech-card","amount":1}]},
+            "razi-umbra-multiplex-cards":{
+                "energy_required":22,"allow_productivity":True,
+                "auto_recycle":True,
+                "ingredients":[{"name":"vespera-tech-card","amount":2}],
+                "results":[{"name":"umbra-tech-card","amount":5}]},
+        }
+        report=audit.examine(raw)
+        self.assertEqual(report["multiplex_card_economy"][0]["status"],"review")
+        self.assertTrue(any(item["code"]=="multiplex-economy-invalid"
+                            for item in report["errors"]))
+
     def test_card_manufacturing_cycle_is_a_hard_error(self):
         raw=fixture()
         raw["recipe"]={
