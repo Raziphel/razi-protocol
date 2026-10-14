@@ -14,6 +14,16 @@ PAIRS = (
     ("vibrant-discovery", "vespera-discovery"),
     ("beetlejuice-discovery", "umbra-discovery"),
 )
+# Razi-priced mandatory pre-middle discoveries. Nyxaris also needs
+# Panglia's independent native data-cell path, so these totals are
+# comparable card demand, NOT comparable end-to-end completion times.
+FRONTIER_BRANCHES = {
+    "solaris": ("planet-discovery-vulcanus", "planet-discovery-castra",
+                "planet-discovery-arig", "planet-discovery-hyarion",
+                "planet-discovery-tellus", "planet-discovery-corrundum"),
+    "nyxaris": ("planet-discovery-gleba", "planet-discovery-moshine",
+                "planet-discovery-apia-carnova"),
+}
 MILESTONES = (
     ("calidus", ("solaris-discovery", "nyxaris-discovery")),
     ("middle", ("vibrant-discovery", "vespera-discovery")),
@@ -312,6 +322,24 @@ def examine(raw):
             issues.append({"severity":"advisory","code":"uneven-paired-entry",
                 "targets":[left,right],
                 "detail":"Paired system gate research-unit prices differ by over 35%."})
+    branch_card_demand={}
+    for system,names in FRONTIER_BRANCHES.items():
+        materials=Counter()
+        for name in names:
+            node=techs.get(name) or {}
+            if not isinstance(node,dict) or node.get("enabled") is False:
+                continue
+            count=(node.get("unit") or {}).get("count")
+            if not isinstance(count,(int,float)) or count<=0:
+                continue
+            for pack,amount in science_ingredients(node).items():
+                if pack in SYSTEM_CARDS:
+                    materials[pack]+=count*amount
+        branch_card_demand[system]={
+            "cards":dict(sorted(materials.items())),
+            "direct_card_items":sum(materials.values()),
+            "researches_checked":sum(name in techs for name in names),
+        }
     stages={}
     used_packs=Counter()
     missing_packs={}
@@ -404,6 +432,7 @@ def examine(raw):
             "system_card_manufacturing":card_recipes,
             "multiplex_card_economy":multiplex,
             "stage_card_demand":stage_card_demand,
+            "first_frontier_card_demand":branch_card_demand,
             "science_lab_coverage":lab_coverage,
             "world_science_arrival_checks":world_science_checks,
             "native_arrival_errors":native_arrival_errors,
@@ -443,6 +472,11 @@ def main(argv=None):
             print(stage+":",", ".join(
                 x["name"]+"="+str(x["research_units"]) for x in rows)
                 or "not installed")
+        for name,estimate in report["first_frontier_card_demand"].items():
+            if estimate["researches_checked"]:
+                print(name+" mandatory branch direct card demand:",
+                      estimate["direct_card_items"],
+                      "(excludes native Panglia progression)")
         for stage,estimate in report["stage_card_demand"].items():
             if estimate["direct_card_items"]:
                 print(stage+" direct card demand:",
