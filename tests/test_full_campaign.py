@@ -69,6 +69,22 @@ class FullCampaignTests(unittest.TestCase):
                          "no-visible-native-unlock")
         self.assertFalse(report["blocked_discoveries"])
 
+    def test_all_planets_receive_sorted_static_review_priorities(self):
+        raw=source_tests.fixture()
+        raw["planet"]["unmapped"]={}
+        raw["planet"]["review-scripted"]={}
+        report=auditor.examine(raw)
+        rows={row["planet"]:row for row in report["planet_review_queue"]}
+        self.assertEqual(set(rows),{"unmapped","review-scripted"})
+        self.assertEqual(rows["unmapped"]["priority"],"review")
+        self.assertEqual(rows["unmapped"]["discovery_status"],
+                         "no-visible-native-unlock")
+        self.assertFalse(rows["unmapped"]["has_listed_route"])
+        self.assertIn("No listed route to Nauvis",
+                      "; ".join(rows["unmapped"]["notes"]))
+        self.assertEqual([r["planet"] for r in report["planet_review_queue"]],
+                         ["review-scripted","unmapped"])
+
     def test_blocked_real_world_is_reported(self):
         raw = source_tests.fixture()
         raw["planet"]["panglia"] = {"surface_properties": {"pressure": 1401}}
