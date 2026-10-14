@@ -1,3 +1,31 @@
+## 2.1.71: Space artwork render checks
+
+Test the full constellation at multiple zoom levels with Razi Protocol
+Subtle and Cinematic sky settings, with Fine Details and Galactic
+Ornaments on and off. Expect tiny stars with faint per-tile variations,
+small coronas that don't cover planets or their routes, and no duplicate
+generic ring above Vibrant's existing native art. Vespera should have a
+pale icy debris accent and Umbra a muted copper-red one.
+
+Confirm `razi-starmap-background-style=off` and
+`razi-starmap-belt-atmosphere=false` both hide the Razi Vibrant ring
+without changing actual belt rim positions. If the optional
+`Better_Starmap_Background` mod is enabled, Razi's sky and special
+Vibrant atmosphere should both defer to it. Preserve the game's native
+star layers, click/hover connections, physical travel lengths and
+asteroid spawn definitions.
+
+Regression fixtures (run locally; do not enable automatic Actions):
+```bash
+lua5.2 tests/lua/test_starmap_background.lua
+lua5.2 tests/lua/test_asteroid_belt_integration.lua
+python3 -m unittest discover -s tests -p 'test_starmap_background.py'
+python3 -m unittest discover -s tests -p 'test_route_highlights.py'
+python3 scripts/audit_assets.py
+```
+Artwork changes do not claim gameplay speedups or measured GPU gains.
+A real Factorio render and a copied old save remain the release gate.
+
 ## 2.1.70: Native asteroid belt and saved-platform checks
 
 Razi replaces the external AsteroidBelt mod's gameplay with **Razi-owned**
