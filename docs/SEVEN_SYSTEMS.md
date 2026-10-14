@@ -1,3 +1,21 @@
+## 2.1.59: The assembled signal
+
+Galactic Operations now presents a **five-segment Seven-Sun Array**.
+Each actual shipment fills a segment; the final module only becomes
+eligible after Ignition Protocol research and, when the native source
+exposes identifiable receiver entities, at least one force-owned,
+physically placed Dyson energy receiver. Its entity count is real,
+while satellite count and energy output remain unknown without an
+official source API.
+
+The last delivery accepts real cargo immediately, then launches a
+twelve-second, persisted transmission: carrier secured, Calidus Dyson
+coupling, pulsar synchronization, seven-sun alignment, and the native
+victory result. The signal resumes after reloading a save, does not
+need the original player online, and is moved safely when forces
+merge. No space surface, receiver, sound emitter, lab, transport route
+or cinematic camera is secretly created.
+
 ## 2.1.58: Five physical phases and the final accord
 
 The Convergence now extends beyond the three original mandates.
