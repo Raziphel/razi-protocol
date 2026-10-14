@@ -119,6 +119,8 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("value=donated/rule.count",source)
         self.assertIn("M.module_colors=",source)
         self.assertIn("convergence-next-action-prereq",source)
+        self.assertIn("force.recipes[next_rule.item].enabled",source)
+        self.assertIn("convergence-recipe-unavailable",source)
         self.assertIn("for _,prior in pairs(required.prerequisites or {})",source)
         for name in ("convergence-assembly-percent",
                      "convergence-next-action-title",
@@ -126,7 +128,11 @@ class ConvergenceTests(unittest.TestCase):
                      "convergence-next-action-research",
                      "convergence-next-action-prereq",
                      "convergence-next-action-receiver",
-                     "convergence-next-action-freight"):
+                     "convergence-next-action-freight",
+                     "convergence-next-action-recipe",
+                     "convergence-recipe-ready",
+                     "convergence-recipe-locked",
+                     "convergence-recipe-unavailable"):
             self.assertIn(name+"=",locale)
 
     def test_native_game_victory_waits_for_delivery(self):
