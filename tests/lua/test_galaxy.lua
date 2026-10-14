@@ -292,7 +292,8 @@ local function test_routes()
     for _, local_link in ipairs({
         {"razi-sye-solaris-igrys",26500},
         {"razi-corrundum-igrys",32000},
-        {"razi-gleba-apia-carnova-orbit",22000},
+        {"razi-sye-vibrant-fulgora",17000},
+        {"razi-fulgora-ribbonia",19500},
                 {"razi-vulcanus-castra",17500},
         {"razi-arig-hyarion",12000},
         {"razi-gleba-moshine",17000},
@@ -316,12 +317,19 @@ local function test_routes()
           connection.to=="arig" or connection.to=="hyarion" or
           connection.to=="tellus" or connection.to=="corrundum" or
           connection.to=="igrys")
-        if solaris then
+        local line=solaris
+          or connection.from=="sye-vibrant"
+          or connection.from=="fulgora"
+          or connection.from=="asteroid-belt-outer-edge"
+          or connection.from=="gleba"
+          or connection.from=="moshine"
+          or connection.from=="apia-carnova-orbit"
+        if line then
           check(connection.shape=="line" and connection.origin==nil,
-            "Solaris connection still draws a giant orbital arc")
+            "Regional direct shuttle is still an uncentred arc")
         else
           check(connection.shape=="arc",
-            "Neighbor shuttle incorrectly became an interstellar line")
+            "Non-chord native shuttle incorrectly became a line")
         end
     end
 	check(routes["native-crucible-orbit"] == native_crucible, "Crucible's native route removed")

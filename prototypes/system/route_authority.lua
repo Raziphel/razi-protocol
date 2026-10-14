@@ -196,7 +196,7 @@ function M.data_final_fixes()
     -- Without two known same-system owners, a default arc would loop
     -- around Calidus rather than connect these actual relocated endpoints.
     local line=not (a and b) or a~=b or a=="calidus"
-      or a=="solaris" or a=="nyxaris"
+      or a=="solaris" or a=="nyxaris" or a=="vibrant"
     local shape=line and "line" or "arc"
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
@@ -301,11 +301,13 @@ function M.data_final_fixes()
     end
   end
   removed=removed+dedupe(routes,approved)
-  -- A surviving source-created Nyxaris route can still carry its old
-  -- Calidus-centred arc. Straighten only interplanetary routes, leaving
-  -- original planet-to-moon geometry and native orbital links alone.
+  -- Source-created Nyxaris/Vibrant arcs can still be centred on Calidus.
+  -- Keep their native route identities and asteroid loot, but make the
+  -- normal local legs direct. Parent-moon and belt transit stay untouched.
   for _,route in pairs(routes) do
-    if member[route.from]=="nyxaris" and member[route.to]=="nyxaris"
+    local system=member[route.from]
+    if (system=="nyxaris" or system=="vibrant")
+      and member[route.to]==system
       and not native_parent_link(route.from,route.to) then
       route.shape="line"
       route.origin=nil

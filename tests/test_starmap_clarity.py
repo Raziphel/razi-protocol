@@ -265,6 +265,35 @@ class ConstellationTests(unittest.TestCase):
                                            self.coords[c], self.coords[d]),
                                      f"{star}: {a}-{b} crosses {c}-{d}")
 
+    def test_vibrant_local_corridor_and_belt_art_alignment(self):
+        # One unbroken sequence, no extra gateway chord through Fulgora.
+        edges = {frozenset((a,b)) for a,b,_,_ in self.routes}
+        corridor = (
+            ("sye-vibrant", "fulgora"),
+            ("fulgora", "ribbonia"),
+            ("ribbonia", "asteroid-belt-inner-edge"),
+            ("asteroid-belt-outer-edge", "paracelsin"),
+        )
+        for a,b in corridor:
+            self.assertIn(frozenset((a,b)),edges)
+            self.assertGreaterEqual(
+                segment_clearance(self.coords["vibrant"],
+                                  self.coords[a],self.coords[b]),15)
+        self.assertNotIn(frozenset(("sye-vibrant","ribbonia")),edges)
+        for name in ("fulgora","ribbonia"):
+            self.assertLess(math.dist(self.coords[name],
+                                      self.coords["vibrant"]),31)
+        self.assertGreater(math.dist(self.coords["paracelsin"],
+                                     self.coords["vibrant"]),39)
+        # The art is one restrained original pair, scaled to the midpoint of
+        # the 31/39-unit physical transit, not a third artificial ring.
+        source=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
+        self.assertIn('scale=5.65,alpha=.20',source)
+        self.assertIn('scale=5.75,alpha=.26',source)
+        for layer_scale in (5.65,5.75):
+            self.assertGreater(layer_scale*6,31)
+            self.assertLess(layer_scale*6,39)
+
     def test_neighbor_links_are_short_non_crossing_and_belt_safe(self):
         neighbors = (
             ("vulcanus","castra",17500),

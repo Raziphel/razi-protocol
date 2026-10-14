@@ -25,7 +25,8 @@ LATERAL_LINKS = (
 )
 CAMPAIGN_ROUTES = STARTER_BRANCHES + MIDDLE_BRANCHES + OUTER_BRANCHES + LATERAL_LINKS
 VIBRANT_BELT_ROUTES = (
-    ("sye-vibrant", "ribbonia"),
+    ("sye-vibrant", "fulgora"),
+    ("fulgora", "ribbonia"),
     ("ribbonia", "asteroid-belt-inner-edge"),
     ("asteroid-belt-inner-edge", "asteroid-belt-outer-edge"),
     ("asteroid-belt-outer-edge", "paracelsin"),
@@ -239,7 +240,8 @@ def audit(raw):
             elif any(a>=b for a,b in zip(amounts,amounts[1:])):
                 issues.add(f"Branch {index} distances not rising by chapter")
     journey=(
-        ("sye-vibrant","ribbonia"),
+        ("sye-vibrant","fulgora"),
+        ("fulgora","ribbonia"),
         ("ribbonia","asteroid-belt-inner-edge"),
         ("asteroid-belt-inner-edge","asteroid-belt-outer-edge"),
         ("asteroid-belt-outer-edge","sye-beetlejuice"),

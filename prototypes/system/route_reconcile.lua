@@ -89,10 +89,11 @@ local route_specifications = {
 	-- Optional oceanic freight return once both local destinations are known.
 	{"panglia", "pelagos", 20000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
-	-- Vibrant's chemistry strand.
+	-- Vibrant follows a single readable supply chain to the metallic
+	-- divide. The former gateway-to-Ribbonia chord overlapped Fulgora's
+	-- marker and made a redundant triangular route on the chart.
 	{"sye-vibrant", "fulgora", 17000, "electrical"},
 	{"fulgora", "ribbonia", 19500, "electrical"},
-	{"sye-vibrant", "ribbonia", 23500, "electrical"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
@@ -348,9 +349,10 @@ function route_reconcile.data_final_fixes()
 				route.from, route.to = from, to
 				route.length = balanced_length(keep_name, route.length, length, from, to)
         local local_chord=membership[from]==membership[to]
-          and (membership[from]=="solaris" or membership[from]=="nyxaris")
-        -- The local Solaris and Nyxaris networks use direct chords.
-        -- Source arcs without regional origins curve around Calidus instead.
+          and (membership[from]=="solaris" or membership[from]=="nyxaris"
+            or membership[from]=="vibrant")
+        -- Solaris, Nyxaris and Vibrant use direct local chords.
+        -- Uncentred native arcs can wander across a nearby star.
         if local_chord then
           route.shape="line"
           route.origin=nil
@@ -382,7 +384,8 @@ function route_reconcile.data_final_fixes()
                             and (membership[from] ~= membership[to]
                               or membership[from]=="calidus"
                               or membership[from]=="solaris"
-                              or membership[from]=="nyxaris")) and "line" or "arc",
+                              or membership[from]=="nyxaris"
+                              or membership[from]=="vibrant")) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)
