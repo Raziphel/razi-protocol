@@ -41,6 +41,30 @@ M.shipments={
    {"promethium-science-pack",12},{"antimatter-science-pack",8},
    {"supermagnet",8}}}
 }
+-- The final accord is a physical assembly, not a 10-14 input craft.
+-- All eight required system cards are still consumed by its three parts.
+M.assemblies={
+ {id="calidus-frame",item="razi-convergence-calidus-frame",
+  icon="calidus-tech-card",ingredients={
+   {"calidus-tech-card",8},{"solaris-tech-card",8},
+   {"nyxaris-tech-card",8},{"processing-unit",40}}},
+ {id="outer-matrix",item="razi-convergence-outer-matrix",
+  icon="vibrant-tech-card",ingredients={
+   {"vibrant-tech-card",8},{"vespera-tech-card",8},
+   {"beetlejuice-tech-card",8},{"umbra-tech-card",8},
+   {"low-density-structure",40}}},
+ {id="void-lens",item="razi-convergence-void-lens",
+  icon="deep-space-tech-card",ingredients={
+   {"deep-space-tech-card",12}},
+  supplies={{"pulsar-science-pack",12},
+   {"promethium-science-pack",12},
+   {"antimatter-science-pack",8},{"supermagnet",8}}}
+}
+M.max_recipe_inputs=6
+local artwork={
+ stellar="stellar",industry="industrial",
+ ["deep-space"]="deep-space",resonance="resonance",ignition="ignition"
+}
 local function raw(kind,id)
  return (data.raw[kind] or {})[id]
 end
@@ -88,6 +112,44 @@ local function producer_index()
   end
  end
  return known
+end
+-- Cap every final-act recipe to what at least one installed native
+-- crafting machine can genuinely accept, without creating a lab/machine.
+local function native_crafting_slots()
+ local max_slots=0
+ for _,kind in ipairs({"assembling-machine","furnace"}) do
+  for _,machine in pairs(data.raw[kind] or {}) do
+   for _,category in pairs(machine.crafting_categories or {}) do
+    if category=="crafting" then
+     max_slots=math.max(max_slots,machine.ingredient_count or 65535)
+     break
+    end
+   end
+  end
+ end
+ return math.min(M.max_recipe_inputs,max_slots)
+end
+local function recipe_ingredients(rule,products,limit)
+ local selected={}
+ for _,part in ipairs(rule.ingredients or {}) do
+  selected[#selected+1]={type="item",name=part[1],amount=part[2]}
+ end
+ for _,part in ipairs(rule.supplies or {}) do
+  if #selected>=limit then break end
+  if has_item(part[1]) and products[part[1]] then
+   selected[#selected+1]={type="item",name=part[1],amount=part[2]}
+  end
+ end
+ return selected
+end
+local function native_icon(name)
+ local source=raw("tool",name)
+ return source.icons and {icons=clone(source.icons)}
+    or {icon=source.icon,icon_size=source.icon_size or 256}
+end
+local function mandate_icon(id)
+ return {icon="__razi-protocol__/graphics/icons/convergence/"..
+  artwork[id]..".png",icon_size=64}
 end
 local function unit(candidates,fallback)
  local lab_inputs={}
@@ -147,6 +209,11 @@ function M.data_final_fixes()
   or tech[M.commission] or tech[M.authorization]
   or tech[M.ignition] then return end
  local products=producer_index()
+ local slots=native_crafting_slots()
+ if slots<5 then
+  if log then log("Razi Convergence: no native crafting machine accepts five ingredients") end
+  return
+ end
  for _,rule in ipairs(M.shipments) do
   if not raw("tool",rule.icon) or not raw("recipe",rule.icon)
     or has_item(rule.item) or raw("recipe",rule.item) then return end
@@ -198,49 +265,67 @@ function M.data_final_fixes()
    append(ignition,id)
   end
  end
+ -- A coherent visual identity for the actual three research milestones.
+ for _,entry in ipairs({{begin,"stellar"},{ending,"deep-space"},
+   {ignition,"ignition"}}) do
+  local icon=mandate_icon(entry[2])
+  entry[1].icon=icon.icon
+  entry[1].icon_size=icon.icon_size
+  entry[1].icons=nil
+ end
  local unlock_tech={
   [M.commission]=begin,[M.authorization]=ending,[M.ignition]=ignition
  }
- local new={begin,ending,ignition}
- for _,rule in ipairs(M.shipments) do
-  local source=raw("tool",rule.icon)
-  local icon=source.icons and {icons=clone(source.icons)}
-    or {icon=source.icon,icon_size=source.icon_size or 256}
+ local new={
+  {type="item-subgroup",name="razi-convergence-parts",
+   group="intermediate-products",order="zzz-a[convergence-parts]"},
+  {type="item-subgroup",name="razi-convergence-mandates",
+   group="intermediate-products",order="zzz-b[convergence-mandates]"},
+  begin,ending,ignition
+ }
+ local function add_item_recipe(rule,icon,subgroup,ingredients,energy)
   local item={type="item",name=rule.item,
    stack_size=100,weight=1000,
-   subgroup="intermediate-product",
+   subgroup=subgroup,
    order="zz[razi-convergence]-"..rule.id,
    localised_name={"item-name."..rule.item},
    localised_description={"item-description."..rule.item}}
   for k,v in pairs(icon) do item[k]=clone(v) end
-  local ingredients={}
-  for _,part in ipairs(rule.ingredients) do
-   ingredients[#ingredients+1]={type="item",name=part[1],
-     amount=part[2]}
-  end
-  -- Existing real optional planet products add character but can never
-  -- make the whole ending disappear because a source mod is omitted.
-  for _,part in ipairs(rule.supplies or {}) do
-   if has_item(part[1]) and products[part[1]] then
-    ingredients[#ingredients+1]={type="item",name=part[1],
-     amount=part[2]}
-   end
-  end
   local recipe={type="recipe",name=rule.item,
    localised_name={"recipe-name."..rule.item},
    localised_description={"recipe-description."..rule.item},
-   enabled=false,categories={"crafting"},energy_required=45,
+   enabled=false,categories={"crafting"},energy_required=energy,
    ingredients=ingredients,
    results={{type="item",name=rule.item,amount=1}},
    allow_productivity=false,auto_recycle=false,
    allow_decomposition=false,
-   subgroup="intermediate-product",
+   subgroup=subgroup,
    order="zz[razi-convergence]-"..rule.id}
   for k,v in pairs(icon) do recipe[k]=clone(v) end
   new[#new+1]=item
   new[#new+1]=recipe
-  -- The final accord is researched after the previous physical stages.
-  -- Never grant its recipe from the opening Commission.
+ end
+ -- The three buildable assemblies only become available with Ignition
+ -- research; their separate recipes each need at most five inputs.
+ for _,rule in ipairs(M.assemblies) do
+  if has_item(rule.item) or raw("recipe",rule.item) then return end
+  add_item_recipe(rule,native_icon(rule.icon),"razi-convergence-parts",
+   recipe_ingredients(rule,products,slots),18)
+  ignition.effects[#ignition.effects+1]={type="unlock-recipe",
+   recipe=rule.item}
+ end
+ for _,rule in ipairs(M.shipments) do
+  local ingredients
+  if rule.id=="ignition" then
+   ingredients={}
+   for _,part in ipairs(M.assemblies) do
+    ingredients[#ingredients+1]={type="item",name=part.item,amount=1}
+   end
+  else
+   ingredients=recipe_ingredients(rule,products,slots)
+  end
+  add_item_recipe(rule,mandate_icon(rule.id),"razi-convergence-mandates",
+   ingredients,rule.id=="ignition" and 60 or 45)
   local unlock=unlock_tech[rule.unlock or M.commission]
   unlock.effects[#unlock.effects+1]={type="unlock-recipe",
     recipe=rule.item}
