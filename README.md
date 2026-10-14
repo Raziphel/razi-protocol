@@ -4,6 +4,17 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.67: Science, economy and planetary identity pass.** Discovered
+worlds now show their real shared production-chain roles in the Atlas,
+with a direct link to the existing Cargo Network card. Research audits
+report native laboratory coverage and the number of system cards needed
+per campaign research stage. The full campaign audit produces a
+planet-by-planet priority queue for blocked, uncertain or disconnected
+discoveries, without rewriting source mod recipes or research. The
+source-only regressions were expanded; the full Factorio 2.1 modpack,
+save migration and measured UPS playtests are still required. See
+[Validation](docs/VALIDATION.md).
+
 **2.1.66: Full upstream dependency cross-check.** We removed two
 duplicate hard requirements already satisfied by source mods:
 Nexus-Updated brings Nexus Threat >= 1.1.0 and K2 Dyson Sphere
