@@ -56,7 +56,8 @@ for _,rule in ipairs(mod.rules) do
   "Freight recipe should charge 15 percent extra native-batch time")
  check(#recipe.ingredients==#native.ingredients+#rule.freight,
   "Missing actual native freight inputs")
- check(recipe.auto_recycle==false and recipe.allow_productivity==false,
+ check(recipe.auto_recycle==false and recipe.allow_productivity==false
+  and recipe.allow_decomposition==false,
   "No free productivity amplification")
  local registered=false
  for _,effect in ipairs(technologies[rule.unlock].effects) do
