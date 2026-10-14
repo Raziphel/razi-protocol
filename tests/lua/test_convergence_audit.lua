@@ -11,6 +11,8 @@ local registry={item={},recipe={},entity={
 registry.item["ds-energy-loader-mk1"]={
  place_result={name="test-receiver"}}
 registry.entity["test-receiver"]={type="electric-energy-interface"}
+registry.entity["existing-assembler"]={type="assembling-machine",
+ crafting_categories={crafting=true},ingredient_count=50}
 rawset(_G,"prototypes",registry)
 rawset(_G,"storage",{})
 local force={name="Audited Force",index=9,technologies={},recipes={},
@@ -38,7 +40,7 @@ for _,stage in ipairs(defs.shipments) do
   end
  end
  force.recipes[stage.item]={name=stage.item,enabled=true,
-  ingredients=ingredients}
+  categories={"crafting"},ingredients=ingredients}
 end
 local result=audit.inspect(force,registry)
 check(#result.errors==0 and result.stages==5 and result.labs==1,
@@ -51,6 +53,11 @@ local no_lab=audit.inspect(force,registry)
 check(#no_lab.errors==3,
  "No single native lab accepting the entire research set must be reported")
 registry.entity["existing-lab"].lab_inputs=previous
+registry.entity["existing-assembler"].ingredient_count=2
+local undersized=audit.inspect(force,registry)
+check(#undersized.errors==5,
+ "A real recipe needs a native assembler with enough ingredient slots")
+registry.entity["existing-assembler"].ingredient_count=50
 local last=defs.shipments[#defs.shipments].item
 force.recipes[last].enabled=false
 check(#audit.inspect(force,registry).errors==1,
