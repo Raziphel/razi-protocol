@@ -30,7 +30,7 @@ class GalacticOperationsTests(unittest.TestCase):
         self.assertIn('local function supply_index()',atlas)
         self.assertIn('local state=catalog.state(technology)',atlas)
         self.assertIn('if state.status~="absent" then',atlas)
-        self.assertIn('if unlocked then\\n    -- These are actual',atlas)
+        self.assertIn('-- These are actual registered manufacturing partnerships',atlas)
         self.assertIn('razi_ops_action="atlas-cargo"',atlas)
         self.assertIn('elseif action=="atlas-cargo" then',gui)
         self.assertIn('M.open_cargo(player,value)',gui)
