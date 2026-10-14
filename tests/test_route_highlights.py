@@ -43,6 +43,17 @@ class BuiltInOverlayTests(unittest.TestCase):
         self.assertIn('table.sort(names)',source)
         self.assertIn("if layer.filename==SHEET then return 0 end",source)
 
+    def test_belt_navigational_palettes_are_specific_and_subtle(self):
+        source=read("prototypes/system/route_highlights.lua")
+        self.assertIn("local belt_strokes={",source)
+        self.assertIn("vibrant={r=.76,g=.59,b=.95}",source)
+        self.assertIn("vespera={r=.72,g=.84,b=.96}",source)
+        self.assertIn("umbra={r=.97,g=.54,b=.41}",source)
+        self.assertIn('a:find("razi%-vespera%-belt")',source)
+        self.assertIn('a:find("razi%-umbra%-belt")',source)
+        self.assertIn("if hazards.is_belt_crossing(route) then alpha=.37 end",source)
+        self.assertIn('if mode~="chapter" then return hazards.color(route) end',source)
+
     def test_never_edit_real_routes_or_add_runtime_work(self):
         source=read("prototypes/system/route_highlights.lua")
         self.assertNotIn("data:extend",source)
