@@ -1,5 +1,14 @@
 # Razi Protocol
 
+**2.1.71: Starmap artwork refinement.** Polished the actual in-mod
+starfield, system coronas and asteroid-belt drawing. Existing Razi PNG
+assets now render with quieter repeat-free tile exposure, smaller stellar
+halos, muted dust pockets, one clean Vibrant ring and distinct cool
+Vespera/warm Umbra debris treatments. Belt route strokes inherit the same
+regional colors. Art settings apply consistently; native planets, routes,
+save identifiers and asteroid hazards are unchanged. In-game screenshot
+validation is still needed.
+
 **2.1.70: Native Razi asteroid belts.** The existing Vibrant, Vespera
 and Umbra asteroid belt crossings now have distinct regional resource
 identities: metallic, oxide and carbonic. Physical inner/outer rims
