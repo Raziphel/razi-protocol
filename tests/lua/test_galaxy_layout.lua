@@ -103,6 +103,11 @@ local mx,my=layout.anchor_position("muria")
 local sx0,sy0=layout.anchor_position("vespera")
 check(math.abs(mx-sx0)<3 and math.abs(my-sy0-20)<1,
   "Muria was not offset from the Vespera alternative route")
+local slipx,slipy=layout.anchor_position("sye-vibrant")
+local vx0,vy0=layout.anchor_position("vibrant")
+check(math.abs(math.sqrt((slipx-vx0)^2+(slipy-vy0)^2)-50)<.01
+  and slipx<vx0-40,
+  "Vibrant Slip Stream should be beyond the metallic ring")
 -- Simulate both source mod prototype types at once, before sprite baking.
 places["alchemy-planet"]={name="alchemy-planet",
   orbit={parent={type="space-location",name="star"},distance=25,orientation=.41}}

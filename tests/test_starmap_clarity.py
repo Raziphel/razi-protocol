@@ -258,7 +258,6 @@ class ConstellationTests(unittest.TestCase):
             "solaris": (("vulcanus","castra","arig"),
                         ("hyarion","tellus","corrundum")),
             "nyxaris": (("gleba","moshine","apia-carnova-orbit"),),
-            "vibrant": (("sye-vibrant","fulgora","ribbonia"),),
             "vespera": (("sye-vespera","muria","aquilo"),),
             "beetlejuice": (("cubium","linox-planet_linox","secretas"),),
             "umbra": (("sye-umbra","tenebris","crucible-orbit"),),
@@ -290,37 +289,56 @@ class ConstellationTests(unittest.TestCase):
                                            self.coords[c], self.coords[d]),
                                      f"{star}: {a}-{b} crosses {c}-{d}")
 
-    def test_vibrant_local_corridor_and_belt_art_alignment(self):
-        # A short local return chord, with the asteroid belt still required.
-        edges = {frozenset((a,b)) for a,b,_,_ in self.routes}
-        corridor = (
-            ("sye-vibrant", "fulgora"),
-            ("fulgora", "ribbonia"),
-            ("ribbonia", "asteroid-belt-inner-edge"),
-            ("asteroid-belt-outer-edge", "paracelsin"),
-        )
-        for a,b in corridor:
+    def test_vibrant_outside_arrival_and_northern_crossing(self):
+        edges={frozenset((a,b)) for a,b,_,_ in self.routes}
+        inner,outer="asteroid-belt-inner-edge","asteroid-belt-outer-edge"
+        gateway="sye-vibrant"
+        star=self.coords["vibrant"]
+        for a,b in ((gateway,outer),(inner,"ribbonia"),
+                    ("ribbonia","fulgora"),(outer,"paracelsin")):
             self.assertIn(frozenset((a,b)),edges)
-            self.assertGreaterEqual(
-                segment_clearance(self.coords["vibrant"],
-                                  self.coords[a],self.coords[b]),15)
-        self.assertIn(frozenset(("sye-vibrant","ribbonia")),edges)
-        self.assertGreaterEqual(segment_clearance(
-            self.coords["fulgora"],self.coords["sye-vibrant"],
-            self.coords["ribbonia"]),8)
-        for name in ("fulgora","ribbonia"):
-            self.assertLess(math.dist(self.coords[name],
-                                      self.coords["vibrant"]),31)
-        self.assertGreater(math.dist(self.coords["paracelsin"],
-                                     self.coords["vibrant"]),39)
-        # The art is one restrained original pair, scaled to the midpoint of
-        # the 31/39-unit physical transit, not a third artificial ring.
-        source=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
-        self.assertIn('scale=5.65,alpha=.20',source)
-        self.assertIn('scale=5.75,alpha=.26',source)
-        for layer_scale in (5.65,5.75):
-            self.assertGreater(layer_scale*6,31)
-            self.assertLess(layer_scale*6,39)
+        for a,b in ((gateway,"ribbonia"),(gateway,"fulgora"),
+                    ("fulgora",outer),("paracelsin",inner)):
+            self.assertNotIn(frozenset((a,b)),edges,
+                             "An illegal connection bypasses the belt")
+        self.assertGreater(math.dist(star,self.coords[gateway]),39)
+        self.assertLess(self.coords[gateway][0],star[0]-40)
+        self.assertLess(self.coords[inner][1],star[1]-20)
+        self.assertLess(self.coords[outer][1],star[1]-30)
+        self.assertGreater(self.coords[inner][0],star[0]+10)
+        self.assertGreater(self.coords[outer][0],self.coords[inner][0])
+        self.assertAlmostEqual(math.dist(star,self.coords[inner]),31,places=3)
+        self.assertAlmostEqual(math.dist(star,self.coords[outer]),39,places=3)
+        self.assertGreater(math.dist(self.coords[inner],self.coords[outer]),8.2)
+        self.assertLess(math.dist(self.coords[inner],self.coords[outer]),10)
+        for a,b in ((inner,"ribbonia"),(outer,"paracelsin"),
+                    ("sye-solaris",gateway)):
+            self.assertGreaterEqual(segment_clearance(
+                star,self.coords[a],self.coords[b]),17)
+        self.assertLess(segment_clearance(
+            star,self.coords[gateway],self.coords[outer]),30)
+        routes=(ROOT/"prototypes/system/route_reconcile.lua").read_text()
+        authority=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        self.assertIn('route_reconcile.vibrant_exterior_arc=vibrant_exterior_arc',
+                      routes)
+        self.assertIn('reconcile.vibrant_exterior_arc(route.from,route.to)',
+                      authority)
+        graph=defaultdict(set)
+        for a,b,_,_ in self.routes:
+            graph[a].add(b)
+            graph[b].add(a)
+        # The original crossing is native; remove it and verify no bypass.
+        visited={gateway}
+        queue=deque([gateway])
+        while queue:
+            for neighbor in graph[queue.popleft()]-visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+        self.assertNotIn("ribbonia",visited)
+        self.assertNotIn("fulgora",visited)
+        art=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
+        self.assertIn('{"asteroid-belt-inner-edge",31,0.08}',art)
+        self.assertIn('{"asteroid-belt-outer-edge",39,0.095}',art)
 
     def test_neighbor_links_are_short_non_crossing_and_belt_safe(self):
         neighbors = (
@@ -328,7 +346,7 @@ class ConstellationTests(unittest.TestCase):
             ("vulcanus","arig",21000),
             ("hyarion","corrundum",29500),
             ("gleba","apia-carnova-orbit",26000),
-            ("sye-vibrant","ribbonia",23500),
+            ("ribbonia","asteroid-belt-inner-edge",24000),
             ("arig","hyarion",12000),
             ("hyarion","tellus",16500),
             ("tellus","corrundum",18000),
@@ -417,7 +435,8 @@ class ConstellationTests(unittest.TestCase):
         for a, b in (("maraxsis", "asteroid-belt-inner-edge"),
                      ("asteroid-belt-outer-edge", "sye-umbra")):
             self.assertNotIn(tuple(sorted((a, b))), edges)
-        for a, b in (("ribbonia", "asteroid-belt-inner-edge"),
+        for a, b in (("sye-vibrant","asteroid-belt-outer-edge"),
+                     ("ribbonia", "asteroid-belt-inner-edge"),
                      ("asteroid-belt-outer-edge", "paracelsin"),
                      ("asteroid-belt-outer-edge", "sye-beetlejuice")):
             self.assertIn(tuple(sorted((a, b))), edges)

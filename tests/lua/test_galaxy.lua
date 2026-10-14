@@ -267,9 +267,12 @@ local function test_routes()
     "Home system shortcut bypassed the first frontier")
   check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
     "A direct route bypasses the native asteroid belt")
-  check(routes["razi-sye-vibrant-ribbonia"]~=nil and
+  check(routes["razi-sye-vibrant-asteroid-belt-outer-edge"]~=nil and
     routes["razi-sye-vespera-aquilo"]~=nil,
-    "Inner systems lost their alternative planetary routes")
+    "Exterior supply corridor or Vespera alternative is missing")
+  check(not routes["razi-sye-vibrant-fulgora"]
+    and not routes["razi-sye-vibrant-ribbonia"],
+    "Slip Stream-to-inner planet bypass must be removed")
   check(routes["razi-ribbonia-asteroid-belt-inner-edge"]~=nil,
     "Missing inner entry to native asteroid belt")
   check(routes["razi-asteroid-belt-outer-edge-paracelsin"]~=nil,
@@ -298,10 +301,10 @@ local function test_routes()
         {"razi-vulcanus-arig",21000},
         {"razi-hyarion-corrundum",29500},
         {"razi-gleba-apia-carnova-orbit",26000},
-        {"razi-sye-vibrant-ribbonia",23500},
+        {"razi-sye-vibrant-asteroid-belt-outer-edge",36000},
         {"razi-sye-vespera-aquilo",28000},
-        {"razi-sye-vibrant-fulgora",17000},
         {"razi-fulgora-ribbonia",19500},
+        {"razi-ribbonia-asteroid-belt-inner-edge",24000},
                 {"razi-vulcanus-castra",17500},
         {"razi-arig-hyarion",12000},
         {"razi-gleba-moshine",17000},
@@ -326,6 +329,7 @@ local function test_routes()
           connection.to=="tellus" or connection.to=="corrundum" or
           connection.to=="igrys")
         local line=solaris
+          or connection.from=="ribbonia"
           or connection.from=="sye-vibrant"
           or connection.from=="fulgora"
           or connection.from=="asteroid-belt-outer-edge"

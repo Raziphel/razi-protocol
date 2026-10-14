@@ -19,7 +19,8 @@ local anchors = {
   -- Three interstellar departures fan outward, while the northern arc
   -- from Corrundum to Igrys never intersects the gateway/Vulcanus leg.
   {"space-location","sye-solaris","solaris",44,0.84},
-  {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
+  -- Arrivals begin beyond the western asteroid belt, not inside it.
+  {"space-location","sye-vibrant","vibrant",50,0.76},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
   -- Northern arrivals flank the corona instead of threading through it.
   {"space-location","sye-nyxaris","nyxaris",41,0.04},
@@ -43,9 +44,8 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  -- Separate the storm world from the Slip Stream and Ribbonia.
-  -- Both stay safely inside Vibrant's physical 31-unit belt entrance.
-  -- Fulgora sits above the Ribbonia return chord, clear of its marker.
+  -- The two electrical worlds remain inside the metallic belt. Entry
+  -- now requires the northern Outer Rim-to-Inner Rim crossing.
   {"planet","fulgora","vibrant",26,0.50},
   {"planet","ribbonia","vibrant",26,0.365},
   {"planet","paracelsin","vibrant",49,0.238},
@@ -329,6 +329,8 @@ function M.data_final_fixes()
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
+    ["asteroid-belt-inner-edge"]=0.75,
+    ["asteroid-belt-outer-edge"]=0.25,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.25,
     ["razi-vespera-belt-inner"]=0.25,
     ["razi-vespera-belt-outer"]=0.75,

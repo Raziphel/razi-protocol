@@ -5,8 +5,8 @@ local HOST="vibrant"
 local PIXELS=32
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local coords={
-  {"asteroid-belt-inner-edge",31,0.17},
-  {"asteroid-belt-outer-edge",39,0.17}
+  {"asteroid-belt-inner-edge",31,0.08},
+  {"asteroid-belt-outer-edge",39,0.095}
 }
 M.coords=coords
 function M.data_final_fixes()

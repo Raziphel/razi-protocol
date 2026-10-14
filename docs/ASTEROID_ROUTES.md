@@ -1,3 +1,25 @@
+## Vibrant northern belt entry and real progression (October 2026)
+
+Arriving platforms now stop at an exterior western Slip Stream (50 chart
+units from Vibrant). From there they travel around the outside of the
+rocky ring to the Outer Rim. The existing 5,000 km native asteroid route
+between Outer Rim and Inner Rim is the ONLY entrance to Ribbonia and
+Fulgora. Both rim markers have been moved north-northeast (0.095 turn).
+The nearly radial passage separates the bearings of its inner and
+outer markers (0.08 and 0.095), clearing both route labels. The Slip
+Stream approach uses a native star-centred arc instead of a direct
+chord through the asteroid artwork.
+
+The belt survey now requires `vibrant-discovery` rather than
+Ribbonia's discovery, which sits *beyond* the physical passage.
+Its Solaris/Nyxaris research cards remain craftable beforehand.
+Ferrum now uses an exterior Slip Stream link, while Khemia and
+Paracelsin keep their outer-side connections. The original belt
+waypoint IDs, research ID, 5,000 km route ID, ore and hostile asteroid
+profiles are unchanged. Existing platform schedules containing the
+retired direct Slip Stream-to-Fulgora/Ribbonia routes must be updated.
+No new surface, runtime spawner or GPU sprite layer is introduced.
+
 ## Vibrant arrival and mineral-field artwork (October 2026)
 
 The smooth purple ring has been replaced by faceted mineral fragments and

@@ -10,7 +10,9 @@ data:extend({
     localised_description={"technology-description.space-discovery-asteroid-belt"},
     icon="__space-age__/graphics/icons/solar-system-edge.png",
     icon_size=64,essential=true,order="ec[vibrant]-b[belt]",
-    prerequisites={"planet-discovery-ribbonia"},
+    -- Ribbonia is behind the belt now. Requiring it here would deadlock
+    -- the first Vibrant expedition, so survey from exterior science.
+    prerequisites={"vibrant-discovery"},
     unit={count=1000,time=45,
       ingredients={{"solaris-tech-card",1},{"nyxaris-tech-card",1}}},
     effects={

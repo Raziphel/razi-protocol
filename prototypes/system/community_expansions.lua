@@ -9,7 +9,7 @@ local route_icons = require("prototypes.system.route_icons")
 -- A side branch never contributes science to required seven-system milestones.
 local candidates = {
   {mod="planet-ferrum", name="ferrum", system="vibrant",
-    gate="vibrant-discovery", hub="fulgora",
+    gate="vibrant-discovery", hub="sye-vibrant",
     radius=51.444741, orientation=0.545675, km=19500, profile="electrical",
     preserve_routes=true},
   {mod="Velora", name="velora", system="nyxaris",
