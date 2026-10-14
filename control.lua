@@ -220,8 +220,8 @@ events:on_event({
 }, on_entity_built)
 
 
--- Galactic Operations is launched from its floating map button.
--- The optional Ctrl+Shift+G input works only while viewing the map.
+-- The old Galactic Operations hotkey now opens the Journal's Projects view.
+-- Keep the existing input identifier so player key bindings survive.
 events:on_event("razi-journal-toggle",function(event)
   local player=game.get_player(event.player_index)
   if player then razi_journal.toggle(player) end

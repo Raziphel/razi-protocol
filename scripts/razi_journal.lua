@@ -982,7 +982,8 @@ local function draw(player,focus_search)
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
   local size=M.layout(player.display_resolution,player.display_scale)
-  local window_theme=themes.get(p.chapter or "calidus")
+  local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
+  local window_theme=themes.get(chapter_theme)
   frame.clear()
   frame.style.width=size.width
   frame.style.padding=12
@@ -990,8 +991,7 @@ local function draw(player,focus_search)
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
   head.style.horizontal_spacing=10
-  icons.sprite(head,themes.icon(p.chapter or "calidus"),
-    "window_emblem")
+  icons.sprite(head,themes.icon(chapter_theme),"window_emblem")
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
   local title=label(heading,L(size.compact and "window-compact" or "window"))
@@ -1015,7 +1015,7 @@ local function draw(player,focus_search)
   end
 
   local context=M.context(player.force)
-  local view=p.view=="archive" and nil or M.view_status(player.force,context)
+  local view=p.view=="quests" and M.view_status(player.force,context) or nil
   local plan=view and M.guidance(player.force,context,view)
   local done,total,ready
   if view then
