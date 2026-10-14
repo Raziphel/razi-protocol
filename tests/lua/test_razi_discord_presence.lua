@@ -1,4 +1,4 @@
--- Razi presence: per-player opt-in, real Journal selection and local writing.
+-- Razi presence: automatic local export, Journal selection and privacy.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function ok(a,msg) if not a then error(msg,2) end end
 local quest_a={id="vibrant-gate",chapter="vibrant"}
@@ -19,13 +19,12 @@ package.loaded["scripts.razi_journal"]={
 package.loaded["scripts.galactic_catalog"]={
   system=function(name) return name=="fulgora" and "vibrant" or "unassigned" end
 }
-local enabled=false
 local player={
   index=1,force={index=1},physical_surface={planet={name="fulgora"}},
   mod_settings={
-    ["razi-discord-presence-enabled"]={value=false},
+    ["razi-discord-presence-enabled"]={value=true},
     ["razi-discord-presence-show-quest"]={value=true},
-    ["razi-discord-presence-show-location"]={value=true}
+    ["razi-discord-presence-show-location"]={value=false}
   },
   request_translation=function(value)
     ok(type(value)=="table","Journal translation request missing")
@@ -47,8 +46,7 @@ rawset(_G,"helpers",{
 })
 local presence=require("scripts.razi_discord_presence")
 presence.write()
-ok(#files==0,"Presence leaked without opt-in")
-player.mod_settings["razi-discord-presence-enabled"].value=true
+ok(#files==1 and files[1].index==1,"Default export did not use the local player")
 storage.razi_expedition_journal={
   [1]={tracker=true,pinned="asteroid-belt",selected="vibrant-gate"}
 }
@@ -56,6 +54,10 @@ local state=presence.payload(player)
 ok(state.quest_id=="asteroid-belt","Pinned Journal objective was ignored")
 ok(state.chapter=="vibrant" and state.chapter_number==2,
   "Wrong chapter was exported")
+ok(state.location=="" and state.region=="",
+  "Location should not be revealed by default")
+player.mod_settings["razi-discord-presence-show-location"].value=true
+state=presence.payload(player)
 ok(state.location=="fulgora" and state.region=="vibrant",
   "Native physical planet and system were not resolved")
 ok(state.completed==1 and state.total==2,"Wrong Journal totals")
@@ -66,7 +68,7 @@ ok(state.chapter_title=="Vibrant | The Broken Spectrum"
   and state.quest=="Through the falling stones",
   "Localized Journal text was not cached")
 presence.write()
-ok(#files==1 and files[1].index==1 and files[1].append==false,
+ok(#files==2 and files[2].index==1 and files[2].append==false,
   "The export must target only the local player's file")
 ok(files[1].name=="razi-presence/state.json","Wrong export filename")
 player.mod_settings["razi-discord-presence-show-location"].value=false
@@ -78,7 +80,7 @@ player.mod_settings["razi-discord-presence-enabled"].value=false
 presence.on_setting_changed({
   player_index=1,setting="razi-discord-presence-enabled"
 })
-ok(#files==2 and files[2].body.enabled==false,
+ok(#files==3 and files[3].body.enabled==false,
   "Turning presence off must send a clear marker")
 ok(presence.payload(player)==nil,"Disabled export returned a payload")
 presence.on_player_removed({player_index=1})

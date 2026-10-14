@@ -5,11 +5,12 @@ import unittest
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 
 class DiscordPresenceTests(unittest.TestCase):
-    def test_opt_in_and_local_client_routing(self):
+    def test_automatic_local_export_and_client_routing(self):
         settings=(ROOT/"settings.lua").read_text()
         code=(ROOT/"scripts/razi_discord_presence.lua").read_text()
         self.assertIn('name="razi-discord-presence-enabled"',settings)
-        self.assertIn('setting_type="runtime-per-user",default_value=false',settings)
+        self.assertIn('default_value=true,\n    order="da[presence]-a[opt-in]"',settings)
+        self.assertIn('default_value=false,\n    order="da[presence]-c[location]"',settings)
         self.assertIn('helpers.write_file(FILE,helpers.table_to_json(payload)',code)
         self.assertIn('false,player.index)',code)
         self.assertIn('if allowed(player) then',code)
@@ -31,6 +32,7 @@ class DiscordPresenceTests(unittest.TestCase):
         self.assertIn('cmd:"SET_ACTIVITY"',bridge)
         self.assertIn('this.send(0,{v:1,client_id:this.id})',bridge)
         self.assertIn('razi-logo',bridge)
+        self.assertIn('1559834052867915857',bridge)
         self.assertNotIn('https.request',bridge)
         self.assertNotIn('child_process',bridge)
 

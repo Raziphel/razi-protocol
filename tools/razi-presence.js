@@ -9,7 +9,8 @@ const folder=process.platform==="win32"
   :path.join(os.homedir(),".factorio");
 const file=path.resolve(arg("file")||process.env.RAZI_PRESENCE_FILE||
   path.join(folder,"script-output","razi-presence","state.json"));
-const appId=arg("app-id")||process.env.RAZI_DISCORD_APP_ID||"";
+// Public Razi Protocol Discord Application ID; can be overridden for testing.
+const appId=arg("app-id")||process.env.RAZI_DISCORD_APP_ID||"1559834052867915857";
 const preview=argv.includes("--preview");
 function clean(v,fallback,max=128){
   const s=typeof v==="string"?v:fallback;
@@ -94,8 +95,11 @@ class Bridge{
         });
         this.send(0,{v:1,client_id:this.id});
       });
-      sock.once("error",()=>{if(!connected)attempt()});
-      sock.once("close",()=>{if(!connected)attempt()});
+      // An unsuccessful socket emits both error and close. Skip once.
+      let advanced=false;
+      const next=()=>{if(connected||advanced)return;advanced=true;attempt()};
+      sock.once("error",next);
+      sock.once("close",next);
     };
     attempt();
   }
@@ -140,9 +144,9 @@ class Bridge{
 }
 if(preview){
   const state=readState();
-  console.log(JSON.stringify({file,fresh:!!state,activity:state?format(state).activity:null},null,2));
+  console.log(JSON.stringify({file,app_id:appId,fresh:!!state,activity:state?format(state).activity:null},null,2));
 }else if(!/^\d{17,22}$/.test(appId)){
-  console.error("Set --app-id YOUR_DISCORD_APPLICATION_ID (or RAZI_DISCORD_APP_ID).");
+  console.error("Invalid Discord Application ID. Check --app-id or RAZI_DISCORD_APP_ID.");
   console.error("Read docs/DISCORD_PRESENCE.md. No Discord bot token is required.");
   process.exitCode=2;
 }else{

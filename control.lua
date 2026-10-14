@@ -253,12 +253,16 @@ events:on_event(defines.events.on_player_joined_game,function(event)
   if player then
     razi_journal.sync(player)
     razi_safe_cheat.admin_tip(player)
+    razi_discord_presence.write()
   end
 end)
 events:on_event(defines.events.on_player_created,function(event)
   galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
-  if player then razi_journal.sync(player) end
+  if player then
+    razi_journal.sync(player)
+    razi_discord_presence.write()
+  end
 end)
 events:on_event(defines.events.on_gui_click,function(event)
   galactic_operations.gui_click(event)

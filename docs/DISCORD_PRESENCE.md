@@ -1,92 +1,82 @@
 # Razi Protocol Rich Presence
 
-Original optional Razi Protocol Dev Discord activity integration.
+Razi Protocol exports Expedition Journal progress locally for an optional Discord Rich Presence companion.
 
-## Architecture
+## Hard limit: a mod alone cannot update Discord
 
-Factorio cannot call Discord IPC from a mod. Razi's in-game script reads the
-existing Expedition Journal and exports consenting players' chapter, current
-quest, completion totals and optional location to a local state file.
-The tiny desktop companion connects to the running Discord desktop client.
-It uses only Node.js built-in modules, without a bot, server, npm dependencies
-or any data being sent to a Razi backend.
+A Factorio mod cannot open Discord IPC sockets, call the Discord Social SDK, or
+launch programs. Discord requires a local program to set a player's activity.
+A Discord application ID, webhook, server, or bot cannot remotely set other
+users' playing status. The mod package cannot start a companion automatically.
+Thus **installing only the Factorio mod will not display branded Rich Presence**.
 
-The reference mod is [Discord Rich Presence](https://mods.factorio.com/mod/discord-rich-presence).
-Razi's integration is original and the external mod is not required.
+## Discord application
 
-## Setup (Windows)
+The public Razi Protocol Discord Application ID is **1559834052867915857**.
+It is included in the companion. No player needs to register an application
+or supply an ID or bot token. The Discord app's configured name should be
+Razi Protocol. An optional Rich Presence asset keyed **razi-logo** must be
+uploaded by the app owner to display the custom logo.
 
-1. Create a Discord application named **Razi Protocol** at
-   https://discord.com/developers/applications and copy its **Application ID**.
-   An application ID is public. Do not use a bot token.
-2. Optional: upload Razi's logo under Discord Rich Presence artwork with
-   asset key **razi-logo**. Until that asset exists, the text will work but
-   custom artwork may be absent.
-3. In Factorio, Settings > Mod settings > Per player, enable
-   **Share Razi expedition progress**. It is **off by default**.
-4. With Node.js 18+ installed and Discord desktop open, run:
+## Game configuration
 
-       node tools/razi-presence.js --app-id YOUR_APPLICATION_ID
+The mod now exports chapter, selected quest and milestone progress locally
+by default. No player setting changes are required. In Settings > Mod settings
+> Per player, players can turn **Export expedition progress** off entirely,
+disable quest sharing, or explicitly enable location sharing (off by default).
 
-5. You should see your chapter and pinned/selected/next active journal quest.
-   The Discord application name is what displays **Playing Razi Protocol**.
+The file is written to the **local player's** Factorio script-output directory
+using helpers.write_file(..., for_player), not a multiplayer shared export.
+No names, server IPs, save names, chats, positions, items, authentication,
+Discord tokens or account credentials are included. No Razi backend receives
+the information. It is a local file, not a network request.
 
-For nonstandard Factorio installations, supply the absolute state file path:
+## Companion (one-time external setup is still required)
 
-       node tools/razi-presence.js --app-id YOUR_ID --file "C:\Factorio\script-output\razi-presence\state.json"
+Install Node.js 18+ and open Discord's desktop app. From the repository run:
 
-## Linux
+    node tools/razi-presence.js
 
-Use the same command. By default the bridge looks at
-`~/.factorio/script-output/razi-presence/state.json`.
-Discord must be running and its local IPC socket must be accessible from
-the companion. A sandboxed Discord installation may need IPC permissions.
+No npm dependencies or --app-id arguments are needed. The optional --app-id or
+RAZI_DISCORD_APP_ID override is useful during development.
+
+Windows default state location:
+%APPDATA%\Factorio\script-output\razi-presence\state.json
+
+Linux default state location:
+~/.factorio/script-output/razi-presence/state.json
+
+For nonstandard installations:
+
+    node tools/razi-presence.js --file "C:\Factorio\script-output\razi-presence\state.json"
+
+The companion must keep running during play. Discord desktop must be running,
+and on Linux its IPC socket must be accessible to the companion.
 
 ## Display
 
-- Title: **Razi Protocol** (Discord application name)
-- Details: **Chapter number | localized Expedition Journal chapter title**
-- State: **Quest: translated pinned/selected/next active objective**
-- If quest sharing is off: campaign milestone count
-- Timer: active game session, measured from Factorio simulation ticks
-- Logo: optional `razi-logo` artwork; planet/platform in image tooltip
-  if enabled and artwork configured
+- Application: **Razi Protocol** (from the Discord application name)
+- Details: chapter number and translated Expedition Journal chapter title
+- State: pinned / selected / next active quest, or completed milestone count
+- Timer: elapsed game session
+- Artwork: optional **razi-logo**, optional planet/platform tooltip
 
-Existing Journal technology and boss-win rules remain authoritative.
-Side quests are included when actively selected or pinned. Research and
-progression are never changed by sharing.
+Nothing about sharing changes game progression or Journal completion.
 
-## Privacy
+## Performance and failure behavior
 
-- Export is per-player **opt-in**, and Factorio writes each export only on
-  the consenting player's local client via `for_player`.
-- The export excludes player name, multiplayer server/IP, save name, chat,
-  inventory, coordinates and any account or Discord credentials.
-- Sharing quest title and location can each be disabled independently.
-- Disabling sharing immediately writes a disabled marker.
-- Missing/paused/closed games make the companion clear activity after 60s.
-- The companion ignores incomplete/stale JSON and schema changes.
-- Discord updates are rate limited to 15 seconds; no polling is done
-  inside Factorio other than one lightweight export every 900 ticks.
-- Closing Discord doesn't affect the game. All Discord connectivity is
-  in the separate desktop script.
+- Game writes every 900 ticks (15 game seconds), plus join/setting updates.
+- Discord updates are rate limited to at most once every 15 seconds.
+- Companion skips malformed state, unknown schemas, and >60s stale files.
+- Disabling export immediately writes a disabled marker to clear presence.
+- Discord closing/disconnecting does not affect Factorio.
+- The bridge uses local Discord IPC and built-in Node.js modules only.
 
-## Troubleshooting
+## Local tests
 
-Preview the current file without contacting Discord:
+    node --check tools/razi-presence.js
+    node tests/test_discord_presence.js
+    python -m unittest tests.test_discord_presence
+    node tools/razi-presence.js --preview
 
-       node tools/razi-presence.js --preview
-
-Or specify a custom path with `--file`. If `fresh` is false, enable the
-per-player setting and load a game with Razi Protocol Dev enabled.
-Discord must be the desktop client, not merely Discord in a browser.
-
-Check the syntax of the companion with:
-
-       node --check tools/razi-presence.js
-
-To show branded artwork, upload `razi-logo` under your Discord application's
-Rich Presence assets. No app ID is bundled because one must be created and
-controlled by the owner of Razi Protocol.
-
-The Factorio/Discord integration still needs an end-to-end desktop playtest.
+An actual Discord + Factorio desktop integration test is still needed.

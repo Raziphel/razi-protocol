@@ -100,12 +100,12 @@ data:extend({
   }
 })
 
--- DISCORD PRESENCE / LOCAL COMPANION. Per-user, opt-in and runtime-only.
--- A separate desktop app reads only the consenting player's local JSON file.
+-- DISCORD PRESENCE / LOCAL COMPANION. Export locally by default.
+-- Players can opt out; a separate program is still needed for Discord IPC.
 data:extend({
   {
     type="bool-setting",name="razi-discord-presence-enabled",
-    setting_type="runtime-per-user",default_value=false,
+    setting_type="runtime-per-user",default_value=true,
     order="da[presence]-a[opt-in]"
   },
   {
@@ -115,7 +115,7 @@ data:extend({
   },
   {
     type="bool-setting",name="razi-discord-presence-show-location",
-    setting_type="runtime-per-user",default_value=true,
+    setting_type="runtime-per-user",default_value=false,
     order="da[presence]-c[location]"
   }
 })
