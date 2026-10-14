@@ -18,15 +18,15 @@ before promoting the optional integration to a default modpack choice.
 
 # Cargo and Research integration (Factorio 2.1)
 
-## Two required NON-planet modules
+## Two recommended NON-planet modules
 
-1. **Planet Express >= 2.1.9** (MIT; `planet-express`). Ships use real
+1. **Planet Express >= 2.1.9** (recommended) (MIT; `planet-express`). Ships use real
    rockets and vanilla schedules. Users enrol platforms at their hubs and
    set import demands/reserves in native landing pads. Razi never writes
    Planet Express's storage or platform schedules, preventing competing
    fleet dispatchers. Its native `interplanetary-trade-logistics` technology
    is anchored to existing `space-science-pack` research only when safe.
-2. **Rocket Turrets Upgraded >= 2.1.1** (`upgraded-rocket-turrets`).
+2. **Rocket Turrets Upgraded >= 2.1.1** (recommended) (`upgraded-rocket-turrets`).
    Source owns the four rocket turret tiers and their combat statistics,
    recipes, machinery and planet production restrictions. Razi detects
    their actual source technology/recipe names from the live loaded
@@ -34,8 +34,7 @@ before promoting the optional integration to a default modpack choice.
    relationships to Vulcanus (MK1), Fulgora (MK2) and Aquilo (MK3/MK4).
    No new costs, loops or recipe rebalancing.
 
-Both are required so multiplayer and server mod sets remain consistent.
-Neither adds a new planet. There is no runtime bridge into third-party
+Neither is required to load the Razi campaign. Both are recommended for richer logistics and defense, with guarded prototype hooks when installed. Multiplayer Factorio synchronizes the enabled mod set independently of a hard dependency declaration. Neither adds a new planet. There is no runtime bridge into third-party
 internal tables, no duplicated autotrader, and no new on-tick scheduling.
 
 ## Galactic Operations: new views
