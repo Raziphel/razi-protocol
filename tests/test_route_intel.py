@@ -24,6 +24,20 @@ class RouteIntelIntegrationTests(unittest.TestCase):
         self.assertIn("razi-route-intelligence",
                       (ROOT/"settings.lua").read_text())
 
+    def test_major_hazards_are_visible_without_quiet_route_clutter(self):
+        source=(ROOT/"prototypes/system/route_intel.lua").read_text()
+        locale=(ROOT/"locale/en/routes.cfg").read_text()
+        self.assertIn('if report.tier>=4 then',source)
+        self.assertIn('field("alert",',source)
+        self.assertIn('if report.tier>=3 then',source)
+        self.assertIn('if report.chunks>0 then',source)
+        self.assertIn('if type(route.length)=="number" and route.length>75000 then',source)
+        self.assertIn('if hazards.is_belt_crossing(route) then',source)
+        self.assertIn('alert-4=',locale)
+        self.assertIn('alert-5=',locale)
+        self.assertNotIn('field("composition"',source)
+        self.assertNotIn('route.localised_description=',source)
+
     def test_deep_space_travel_is_retained(self):
         routes=(ROOT/"prototypes/system/route_reconcile.lua").read_text()
         for source in ("secretas","vesta"):
