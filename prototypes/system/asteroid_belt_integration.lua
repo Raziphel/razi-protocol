@@ -42,18 +42,14 @@ function M.data_final_fixes()
   local utility=(data.raw["utility-sprites"] or {}).default
   local star=utility and utility.starmap_star
   if not (star and type(star.layers)=="table") then return end
-  -- The bright annulus of these authored 512px textures is only about
-  -- three-quarters of the image's half-width. The previous scale put the
-  -- visible band at roughly 24 chart units, *inside* the actual 31/39
-  -- unit transit rims. Center the painted divide around 35 units instead.
-  -- The dim violet body sets the silhouette; pale metallic fragments
-  -- identify it as an asteroid field rather than another energy halo.
-  -- Two existing sprites, no extra render passes or runtime entities.
+  -- Faceted mineral fragments replace the old glowing annulus.
+  -- Their 512px painted radius aligns with the physical 31/39-unit rims.
+  -- No extra layers or runtime objects are needed.
   local sprites={
-    {name="belt-vibrant.png",scale=5.65,alpha=.20,
-      tint={r=.67,g=.62,b=.87}},
-    {name="debris-vibrant.png",scale=5.75,alpha=.26,
-      tint={r=.95,g=.86,b=.72}}
+    {name="belt-vibrant.png",scale=5.65,alpha=.84,
+      tint={r=.91,g=.91,b=.97}},
+    {name="debris-vibrant.png",scale=5.75,alpha=.61,
+      tint={r=.90,g=.84,b=.93}}
   }
   local additions={}
   for _,sprite in ipairs(sprites) do

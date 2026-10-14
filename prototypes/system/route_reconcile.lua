@@ -50,7 +50,9 @@ local route_specifications = {
   {"sye-calidus", "sye-nyxaris", 65000, "first_crossing"},
   -- After the two first-frontier discoveries, each strand continues
   -- outward to its own middle system rather than through Calidus.
-  {"sye-solaris", "sye-vibrant", 100000, "middle_crosslink"},
+  -- Approach asteroids rise near the painted ring; the inner-to-outer
+  -- belt remains a separate researched crossing with its own encounters.
+  {"sye-solaris", "sye-vibrant", 100000, "belt_vibrant_arrival"},
   {"sye-nyxaris", "sye-vespera", 90000, "middle_crosslink"},
   -- Outer systems remain locked behind their original science requirements,
   -- especially space-discovery-asteroid-belt.
@@ -190,7 +192,7 @@ local vibrant_outer = {
 }
 -- Localized obstacle fields; the first Calidus routes remain untouched.
 local route_fields={
-  ["sye-solaris|sye-vibrant"]=1.50,
+  ["sye-solaris|sye-vibrant"]=1.30,
   ["sye-nyxaris|sye-vespera"]=1.48,
   ["sye-beetlejuice|sye-umbra"]=1.68,
   ["secretas|solar-system-edge"]=1.85

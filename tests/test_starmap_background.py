@@ -79,6 +79,32 @@ class StarmapBackgroundTests(unittest.TestCase):
                 offset+=12+length
             self.assertTrue(found,name)
 
+    def test_vibrant_textures_are_faceted_rocks_not_a_luminous_disc(self):
+        # Count actual non-transparent pixels in the original-size PNGs.
+        # A filled soft ring would light nearly the whole circumference.
+        for name,low,high in (
+            ("belt-vibrant.png",14000,41000),
+            ("debris-vibrant.png",3000,12500)):
+            data=(ASSET/name).read_bytes()
+            self.assertEqual(data[25],3)
+            pieces=[]
+            offset=8
+            while offset<len(data):
+                length=int.from_bytes(data[offset:offset+4],"big")
+                tag=data[offset+4:offset+8]
+                if tag==b"IDAT":
+                    pieces.append(data[offset+8:offset+8+length])
+                offset+=length+12
+            rows=zlib.decompress(b"".join(pieces))
+            self.assertEqual(len(rows),512*513)
+            bitmap=b"".join(rows[n*513+1:(n+1)*513] for n in range(512))
+            active=sum(pixel!=0 for pixel in bitmap)
+            self.assertGreater(active,low)
+            self.assertLess(active,high)
+            self.assertTrue(all(bitmap[y*512+x]==0 for y in range(220,290)
+                                for x in range(220,290)),
+                            "Belt texture covers Vibrant's central star")
+
     def test_quiet_sky_and_region_specific_belts(self):
         source=(ROOT/"prototypes/system/starmap_background.lua").read_text()
         vibrant=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()

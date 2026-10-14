@@ -1,3 +1,22 @@
+## Vibrant arrival and mineral-field artwork (October 2026)
+
+The smooth purple ring has been replaced by faceted mineral fragments and
+a sparse, irregular rubble cloud. Both 512px indexed-alpha textures are
+loaded once with the existing starmap sprites. No runtime particles, new
+map destinations, or extra belt layers are introduced. The fragmented
+band stays centered between the preserved 31/39-unit belt rim waypoints.
+
+The Solaris-to-Vibrant Slip Stream route enters across the asteroid ring.
+It now uses `belt_vibrant_arrival`: native small/medium asteroids and
+limited big asteroids intensify between 73% and 100% of the incoming
+journey, peaking before reaching the inner gateway. This is a genuine
+space-connection asteroid spawn curve, not a cosmetic animation.
+The 100,000 km distance and its unlock prerequisites remain unchanged.
+The physically mandatory 5,000 km inner-to-outer belt crossing remains
+more dangerous, protecting the Paracelsin/Beetlejuice progression.
+Custom asteroid species from installed mods remain untouched. On
+existing saves, test both travel directions with a defended platform.
+
 ## 2.1.70: First-party belt ecology and real crossing encounters
 
 The older [Asteroid Belt by MrLumme](https://mods.factorio.com/mod/AsteroidBelt)

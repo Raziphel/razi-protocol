@@ -74,6 +74,11 @@ class RouteTests(unittest.TestCase):
         self.assertIn('name="asteroid-belt-inner-edge-asteroid-belt-outer-edge"', belts)
         self.assertIn('name="space-discovery-asteroid-belt"', tech)
         self.assertIn('belt_vibrant_crossing', profiles)
+        self.assertIn('belt_vibrant_arrival', profiles)
+        self.assertIn('function M.apply_vibrant_arrival(route)', profiles)
+        self.assertIn('100000, "belt_vibrant_arrival"',routes)
+        authority=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        self.assertIn('profiles.apply_vibrant_arrival(route)',authority)
         self.assertIn('function M.apply_field(route,multiplier)', profiles)
         self.assertEqual(routes.count('hazard_profiles.apply_field('), 2)
         for pair in ('sye-solaris|sye-vibrant',

@@ -1,3 +1,13 @@
+## Vibrant rocky belt refinement (October 2026)
+
+The smooth original annulus is replaced by a fixed mineral rubble field:
+individual angular rocks with shaded faces, irregular gaps and a
+lower-density spray of debris. Both layers are 512px and use the old
+filenames/settings. There is no tick-based rendering or particle cost.
+The Solaris arrival corridor is also equipped with a real native
+asteroid-spawn surge approaching the inner Slip Stream; the researched
+inner/outer belt jump still has its own stronger encounter.
+
 ## Vibrant: visible metallic divide and clean freight lanes (October 2026)
 
 The existing two 512px Vibrant textures had a bright annulus centered
