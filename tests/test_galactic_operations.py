@@ -22,6 +22,18 @@ class GalacticOperationsTests(unittest.TestCase):
                     "atlas-convergence-open"):
             self.assertIn(key+"=",strings)
 
+    def test_campaign_displays_native_science_demand_without_new_labs(self):
+        campaign=(ROOT/"scripts/galactic_campaign.lua").read_text()
+        locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        self.assertIn("function M.direct_science_demand(technology)",campaign)
+        self.assertIn("technology.research_unit_count",campaign)
+        self.assertIn("technology.research_unit_ingredients",campaign)
+        self.assertIn("local demand=M.direct_science_demand(gate)",campaign)
+        self.assertIn("campaign-science-demand=",locale)
+        self.assertIn("campaign-science-more=",locale)
+        self.assertNotIn("data:extend(",campaign)
+        self.assertNotIn("force.current_research=",campaign)
+
     def test_atlas_planetary_roles_link_to_existing_cargo_network(self):
         atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
         gui=(ROOT/"scripts/galactic_operations.lua").read_text()
