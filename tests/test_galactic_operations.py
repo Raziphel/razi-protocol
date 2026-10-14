@@ -22,6 +22,18 @@ class GalacticOperationsTests(unittest.TestCase):
                     "atlas-convergence-open"):
             self.assertIn(key+"=",strings)
 
+    def test_campaign_visuals_are_compact_and_read_only(self):
+        campaign=(ROOT/"scripts/galactic_campaign.lua").read_text()
+        self.assertIn("M.palette={",campaign)
+        self.assertIn('type="sprite",sprite="item/"..system[3]',campaign)
+        self.assertIn("marker.style.size=20",campaign)
+        self.assertIn('type="progressbar",value=finished/total',campaign)
+        self.assertIn("bar.style.height=5",campaign)
+        self.assertIn("bar.style.color=M.palette[system[1]]",campaign)
+        self.assertIn("if total>0 then",campaign)
+        self.assertNotIn("on_tick",campaign)
+        self.assertNotIn("set_research_queue",campaign)
+
     def test_campaign_reuses_native_card_freight(self):
         campaign=(ROOT/"scripts/galactic_campaign.lua").read_text()
         locale=(ROOT/"locale/en/galactic_operations.cfg").read_text()
