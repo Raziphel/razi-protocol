@@ -37,7 +37,8 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("auto_recycle=false",proto)
         self.assertIn("allow_decomposition=false",proto)
         self.assertIn("products[part[1]]",proto)
-        self.assertIn("begin.effects[#begin.effects+1]",proto)
+        self.assertIn('local unlock=rule.id=="deep-space" and ending or begin',proto)
+        self.assertIn("unlock.effects[#unlock.effects+1]",proto)
         self.assertNotIn("create_surface",proto)
 
     def test_real_player_cargo_and_force_owned_platform(self):
@@ -53,6 +54,9 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("inv.remove{name=rule.item,count=offered}",runtime)
         self.assertIn('saved.delivered[id]=math.min(rule.count,',runtime)
         self.assertIn("storage.razi_convergence",runtime)
+        self.assertIn('type="progressbar"',runtime)
+        self.assertIn('"convergence-carried"',runtime)
+        self.assertIn('carried>0 and where~=nil',runtime)
         self.assertIn("function M.forces_merged(event)",runtime)
         self.assertNotIn("on_nth_tick",runtime)
         self.assertNotIn("platform.schedule=",runtime)
@@ -111,7 +115,7 @@ class ConvergenceTests(unittest.TestCase):
                     "convergence-submit=",
                     "convergence-victory-title="):
             self.assertIn(key,ops_locale)
-        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.56")
+        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.57")
 
 if __name__=="__main__":
     unittest.main()
