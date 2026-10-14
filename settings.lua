@@ -34,6 +34,10 @@ data:extend({
     "ba[integration]-a[k2so-exchanges]"),
   startup_toggle("razi-enable-modded-planet-exchanges",
     "ba[integration]-b[modded-planets]"),
+  -- Move only guarded, optional non-bootstrap technologies into actual
+  -- planetary science. Switch off for legacy/alternate start scenarios.
+  startup_toggle("razi-distributed-technology",
+    "ba[integration]-c[planetary-tech-distribution]"),
 
   -- HOME SYSTEM MEGAPROJECT
   startup_toggle("razi-dyson-milestone-weave",
