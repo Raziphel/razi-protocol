@@ -6,6 +6,10 @@ with an unlocked supplier world, the technology's live research status, and
 the existing Cargo Network description. It does not create logistics, scan
 inventories, reveal undiscovered worlds, or add save data.
 
+The Campaign UI now displays direct pack totals for pending gateway research,
+including live modded science mixtures. Check the shown totals against the
+actual technology screen, including research-trigger technologies and labs.
+
 The post-load research audit now prints direct system-card item demand for each
 campaign stage and reports which *existing* laboratories accept every science
 ingredient together. These are research costs, not the total recursive cost
