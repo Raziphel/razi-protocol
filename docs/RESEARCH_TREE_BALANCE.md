@@ -1,3 +1,51 @@
+## 2.1.63: System card manufacturing and science pacing
+
+Razi now accounts for the *real manufacturing cost* of science cards before
+charging thousands of those cards to unlock the next star. The seven-system
+route structure and existing technology identifiers remain unchanged.
+
+| Research gateway | Old units per gateway | New units per gateway |
+| --- | ---: | ---: |
+| Solaris / Nyxaris | 1,000 | 650 |
+| Vibrant / Vespera | 1,500 | 1,200 |
+| Beetlejuice / Umbra | 1,900 | 1,600 |
+| Outer Frontier Mastery | 2,200 | 1,900 |
+
+**System-card production:** Calidus crafts in 10 seconds; Solaris/Nyxaris
+in 12; Vibrant/Vespera in 16; Beetlejuice/Umbra in 22; Deep Space in 28.
+Only native planetary science ingredients double for the two outer cards
+and Deep Space. Prerequisite **system cards always remain one per recipe**,
+so a late science recipe cannot recursively double the cost of every
+earlier card. No new factories, laboratories, planets or ingredients
+have been added. The five optional freight batch recipes use the final
+ordinary recipes as their baseline.
+
+Four foundational industrial technologies and ten associated Razi
+factory upgrades now have more manageable upper research-cost limits.
+Existing overrides with lower prices are respected. Deep interdependence
+adds three further cycle-checked cross-factory research links.
+
+The guarded planetary science catalog grows from **18 to 30 candidate
+connections**, eight of them Deep-only. Added sources include Apia/Carnova,
+Muria, Ribbonia, Linox and established mid/outer-world sciences.
+Each extra science pack is applied only to an *existing Razi-owned,
+post-arrival factory technology* when its source world's research is
+already upstream, its actual manufacturing recipe is supported, and
+one installed lab can consume the **complete** science mixture. The
+recipe lookup now indexes native outputs once instead of rechecking
+every recipe once per wanted science pack. No source labs receive
+new science inputs through this optional weave.
+
+**Modes:** Off leaves the optional industrial research weave unchanged,
+while keeping the main campaign's science pacing and card manufacturing
+consistent. Balanced enables proven industrial reuse. Deep adds the
+cycle-checked remote-world science and factory link requirements.
+
+The research audit now reports each existing system card's direct input
+items, predecessor cards, ingredient counts and craft time, and treats
+card-to-card production cycles as hard errors. Audits remain advisory
+about *physical* manufacturing, which requires a real Factorio run.
+
 ## 2.1.62: Three native-machine Ignition assemblies
 
 Ignition now consumes three assembled physical components instead of
