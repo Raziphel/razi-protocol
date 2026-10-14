@@ -1,31 +1,27 @@
-## Vibrant rocky belt refinement (October 2026)
+## Vibrant's quiet, broken asteroid field (October 2026)
 
-The smooth original annulus is replaced by a fixed mineral rubble field:
-individual angular rocks with shaded faces, irregular gaps and a
-lower-density spray of debris. Both layers are 512px and use the old
-filenames/settings. There is no tick-based rendering or particle cost.
-The Solaris arrival corridor is also equipped with a real native
-asteroid-spawn surge approaching the inner Slip Stream; the researched
-inner/outer belt jump still has its own stronger encounter.
+The earlier bright white boulder ring was too thick and regular at the
+player's normal chart zoom. Vibrant now uses three small, independent
+512px, indexed-alpha assets:
 
-## Vibrant: visible metallic divide and clean freight lanes (October 2026)
+- `belt-vibrant-core.png`: uneven slate-grey stones with many gaps and
+  a narrower, irregular rocky spine.
+- `belt-vibrant-scatter.png`: occasional smaller fragments beyond the
+  dense part of the orbit, without duplicating another solid ring.
+- `belt-vibrant-dust.png`: low-alpha mineral dust at its edges, barely
+  visible against the black sky.
 
-The existing two 512px Vibrant textures had a bright annulus centered
-around 24 starmap units, while the actual inner/outer asteroid gateways
-are at radii 31 and 39. The new texture scales place the painted belt
-around radius 34–35 without adding another PNG or a false route. Purple
-glow is dimmer and pale metallic rubble is stronger, so the belt reads
-as a field of debris rather than a soft neon ring. Artwork remains
-optional under the existing atmosphere and background settings.
+The western entry sector is quieter to protect Slip Stream and Rim
+labels. Rock colors stay neutral and muted so Vibrant's purple star
+remains the focal point. Original `belt-vibrant.png` and
+`debris-vibrant.png` have been retired from the mod package.
 
-Fulgora and Ribbonia now have better separation inside the ring. Their
-two direct local links replace the old gateway/Fulgora/Ribbonia triangle;
-the route then proceeds through Ribbonia to the original 5,000 km
-inner-to-outer asteroid crossing, with Paracelsin and Beetlejuice
-accessible only on the far side. Source moon routes, asteroid spawns,
-research unlocks and physical travel lengths are unchanged. All
-curated Vibrant local connections use native straight chords so legacy
-unanchored arcs cannot curve across the centre of the system.
+All three assets are static native starmap layers; no runtime effects,
+shader or per-tick particle creation. They are centered on the original
+31/39-unit physical belt, use existing art toggles and respect optional
+Better Starmap Background. Route positions, the required single 5,000 km
+asteroid crossing, its hazards, research and saved planet state are
+unchanged by this artwork-only pass.
 
 ## 2.1.71: Quiet-star atlas and region-specific belts
 
@@ -40,11 +36,9 @@ hand-authored graphics rather than substituting a wallpaper image.
   so planet markers, chart labels and real routes remain crisp. Vespera's
   ambient color is now neutral pearl-white; Umbra's is subtle copper
   rather than a second purple Vibrant.
-- Vibrant's existing `belt-vibrant.png` and `debris-vibrant.png` artwork
-  remains its **only** dedicated ring. The redundant generic Vibrant ring
-  has been removed from the atlas, and its original artwork is prepended
-  behind native star and planet sprites. Its alpha and footprint are
-  reduced without changing the physical asteroid belt geometry.
+- Vibrant's earlier two-texture ring was later replaced by the three-layer
+  broken-rock field described above. The redundant generic atlas ring
+  remains disabled, keeping only one physical belt in the starmap.
 - Vespera and Umbra now combine a faint common `atlas-belt.png` layer
   with their individual existing `debris-vespera.png` and
   `debris-umbra.png` sprites. Their colors match their star identities,

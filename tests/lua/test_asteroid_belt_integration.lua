@@ -30,36 +30,41 @@ for _,entry in ipairs({{inner,31,.77},{outer,39,.775}}) do
   check(math.abs(y-(cy-radius*math.cos(entry[3]*2*math.pi)))<.01,
     "Belt rim Y coordinate changed")
 end
-check(#layers==4,"Expected exactly two first-party decorative layers")
-for i=1,2 do
+check(#layers==5,"Expected three restrained Vibrant belt layers")
+for i=1,3 do
   local layer=layers[i]
   check(layer.filename:find("__razi%-protocol__/graphics/starmap/razi/"),
     "Belt still references an upstream mod texture")
   check(math.abs(layer.shift[1]-cx*32)<.01 and
     math.abs(layer.shift[2]-cy*32)<.01,"Decorative ring not sun-centered")
 end
-check(layers[3].shift[1]==2 and layers[4].shift[1]==37,
-  "Existing source art was modified or belt art drew above the native layers")
--- The actual rock textures have faceted bright/dark pixels and a thinner
--- scattered rim. They are not a transparent smooth neon ring anymore.
-for i=1,2 do
-  local visual_radius=layers[i].scale*6
+check(layers[4].shift[1]==2 and layers[5].shift[1]==37,
+  "Original starmap sprites were displaced by the debris layers")
+local expected={
+  {"belt-vibrant-core.png",.77},
+  {"belt-vibrant-scatter.png",.44},
+  {"belt-vibrant-dust.png",.33}
+}
+for i,entry in ipairs(expected) do
+  local layer=layers[i]
+  check(layer.filename:sub(-#entry[1])==entry[1],
+    "Vibrant sprite order must be core, scatter, dust")
+  check(math.abs(layer.tint.a-entry[2])<.001,
+    "Belt art opacity became too heavy")
+  local visual_radius=layer.scale*6
   check(visual_radius>31 and visual_radius<39,
-    "Visible belt fragments no longer align with the 31/39-unit rims")
-  check(layers[i].tint.a>.55 and layers[i].tint.a<.9,
-    "Rock fragments are too faint or obscure the star and labels")
+    "Belt artwork moved away from the actual crossing rims")
 end
-check(layers[1].tint.r>.85 and layers[2].tint.g>.80,
-  "Mineral fragments should retain neutral, rocky colors")
+check(layers[1].tint.r>.84 and layers[3].tint.b>.90,
+  "Vibrant mineral tint should stay neutral, not purple neon")
 belt.data_final_fixes()
-check(#layers==4,"Repeated data-stage pass duplicated belt artwork")
+check(#layers==5,"Repeated pass added duplicate belt layers")
 data.raw["space-location"][outer.name]=nil
 belt.data_final_fixes()
-check(#layers==4 and inner.orbit,
+check(#layers==5 and inner.orbit,
   "Missing legacy rim should be handled without crashing")
 -- Cosmetic toggles affect the artwork only, never the saved coordinates.
-table.remove(layers,1)
-table.remove(layers,1)
+for i=1,3 do table.remove(layers,1) end
 rawset(_G,"settings",{startup={
   ["razi-starmap-background-style"]={value="off"},
   ["razi-starmap-belt-atmosphere"]={value=true}
@@ -77,10 +82,11 @@ belt.data_final_fixes()
 check(#layers==2,"External sky background should not be covered")
 mods["Better_Starmap_Background"]=nil
 belt.data_final_fixes()
-check(#layers==4 and layers[1].filename:find("belt%-vibrant"),
-  "Original Vibrant art must return when toggles are enabled again")
+check(#layers==5 and layers[1].filename:find("belt%-vibrant%-core")
+  and layers[3].filename:find("belt%-vibrant%-dust"),
+  "Belt textures must return in the correct order after re-enabling")
 local f=assert(io.open("info.json","r"))
 local info=f:read("*a");f:close()
 check(info:find('"! AsteroidBelt"',1,true),
   "Original AsteroidBelt must be excluded to avoid duplicate prototypes")
-print("Razi-owned Vibrant ring, legacy IDs and static art passed")
+print("Vibrant broken-rock field, legacy rims and static sprite controls passed")
