@@ -202,6 +202,7 @@ class ResearchBalanceTests(unittest.TestCase):
             "razi-beetlejuice-multiplex-cards":{
                 "energy_required":22*4*1.15,
                 "allow_productivity":False,"auto_recycle":False,
+                "allow_decomposition":False,
                 "ingredients":[
                     {"name":"vibrant-tech-card","amount":4},
                     {"name":"vespera-tech-card","amount":4},
