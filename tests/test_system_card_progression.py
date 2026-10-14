@@ -32,7 +32,7 @@ class SystemCardProgressionTests(unittest.TestCase):
             ("beetlejuice",22,2),("umbra",22,2),
             ("deep-space",28,2)):
             match=re.search(r'name = "'+card+r'-tech-card".*?'
-                            r'craft_time = (\\d+), regional_science_amount = (\\d+)',
+                            r'craft_time = (\d+), regional_science_amount = (\d+)',
                             source,re.S)
             self.assertIsNotNone(match,card)
             self.assertEqual((int(match.group(1)),int(match.group(2))),
