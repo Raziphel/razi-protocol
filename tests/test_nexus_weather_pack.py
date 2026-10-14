@@ -16,9 +16,10 @@ class NexusWeatherIntegration(unittest.TestCase):
         # companions are optional, and the upstream boss add-on installs
         # its own full enemy dependency chain when enabled.
         self.assertTrue(any(d.startswith("Nexus-Updated >=") for d in deps))
+        self.assertIn("Nexus-Threat-Updated >= 1.1.0",deps)
         recommended=("celestial-weather-updated",
                      "celestial-weather-additions-updated",
-                     "Nexus-Threat-Updated","Big-Monsters")
+                     "Big-Monsters")
         for mod in recommended:
             self.assertTrue(any(d.startswith("+ "+mod+" >=")
                                 for d in deps),mod)
