@@ -25,5 +25,13 @@ check(techs["native-cerys-discovery"].essential
 check(not techs["unrelated-source-discovery"].essential
  and techs["unrelated-source-discovery"].order=="unrelated",
  "Unlisted source tech must retain original prototype flags")
-check(#r.chapters==13,"Missing a major campaign research node")
+check(#r.chapters==17 and #r.chapter_groups==5,
+ "Missing first/middle/outer/deep/convergence research chapters")
+check(techs["solaris-discovery"].order=="f[razi-campaign]-a[first-frontier]-01",
+ "First frontier should be a compact, identifiable research group")
+check(techs["razi-outer-frontier-mastery"].order==
+ "f[razi-campaign]-c[outer-frontier]-04",
+ "Outer mastery should appear after its outer-system survey")
+check(techs["native-planet-tech"].order=="native",
+ "Native research ordering changed unexpectedly")
 print("Native essential-research view includes Razi milestones")
