@@ -227,15 +227,17 @@ function M.advance(tick)
     changed[#changed+1]=index
    else
     local next_beat=(sequence.beat or 1)+1
+    local updated=false
     while M.transmission_beats[next_beat]
       and elapsed>=M.transmission_beats[next_beat].tick do
      sequence.beat=next_beat
      if force.print then
       force.print({"razi-ops."..M.transmission_beats[next_beat].key})
      end
-     changed[#changed+1]=index
+     updated=true
      next_beat=next_beat+1
     end
+    if updated then changed[#changed+1]=index end
    end
   end
  end
@@ -363,8 +365,8 @@ function M.render(parent,player)
    line(archive,"convergence-archive-operator",width,saved.completed_by)
   end
   if saved.completed_site then
-   line(archive,"convergence-archive-site",width,
-    saved.completed_site:gsub("-"," "))
+   local site=saved.completed_site:gsub("-"," ")
+   line(archive,"convergence-archive-site",width,site)
   end
   if saved.victory_tick then
    local seconds=math.floor(saved.victory_tick/60)
