@@ -2,7 +2,29 @@
 -- This module is event/UI driven. No global platform or inventory scans.
 local M={}
 local defs=require("prototypes.technology.convergence")
+local dyson_runtime=require("scripts.galactic_dyson_runtime")
 M.stages=defs.shipments
+-- Native factory delivery starts a short, persistent transmission sequence.
+M.transmission_beats={
+ {tick=0,key="convergence-transmission-sealed"},
+ {tick=180,key="convergence-transmission-dyson"},
+ {tick=360,key="convergence-transmission-resonance"},
+ {tick=540,key="convergence-transmission-alignment"}
+}
+M.transmission_duration=720
+-- Source receiver entity counts are maintained by the Factorio engine.
+-- Actual satellite count and generated megawatts cannot be inferred here.
+function M.dyson_readiness(force)
+ local names=dyson_runtime.resolve_receiver_names(prototypes)
+ if #names==0 or not (force and force.get_entity_count) then
+  return true,nil
+ end
+ local count=0
+ for _,name in ipairs(names) do
+  count=count+force.get_entity_count(name)
+ end
+ return count>0,count
+end
 local destinations={
  ["solar-system-edge"]=true,
  ["shattered-planet"]=true,
@@ -49,8 +71,13 @@ local function stage_ready(force,index)
  if index>=3 and not force.technologies[defs.authorization].researched then
   return false,"convergence-need-synchronization"
  end
- if index>=5 and not force.technologies[defs.ignition].researched then
-  return false,"convergence-need-ignition"
+ if index>=5 then
+  if not force.technologies[defs.ignition].researched then
+   return false,"convergence-need-ignition"
+  end
+  if not M.dyson_readiness(force) then
+   return false,"convergence-need-receiver"
+  end
  end
  return true
 end
@@ -152,7 +179,17 @@ function M.deliver(player,id)
  saved.delivered[id]=math.min(rule.count,
   (saved.delivered[id] or 0)+removed)
  if index==#M.stages and M.current(force)>#M.stages then
-  finish(force,player)
+  -- Consumed cargo has been accepted. Keep the finale in save storage,
+  -- surviving reloads and disconnects without spending the item twice.
+  saved.transmission={
+   started=game.tick,beat=1,operator=player.name,site=M.location(player)
+  }
+  storage.razi_convergence_pending=storage.razi_convergence_pending or {}
+  storage.razi_convergence_pending[force.index]=true
+  if force.print then
+   force.print({"razi-ops."..M.transmission_beats[1].key})
+  end
+  return "convergence-transmission-started",removed
  end
  return "convergence-delivered",removed
 end
@@ -165,6 +202,50 @@ function M.repair_recipe_unlocks(force)
   local recipe=force.recipes[rule.item]
   if research and research.researched and recipe then
    recipe.enabled=true
+  end
+ end
+end
+-- Only visit actively transmitting forces, once per second.
+function M.advance(tick)
+ local waiting=storage and storage.razi_convergence_pending
+ if not waiting then return nil end
+ local changed={}
+ for index in pairs(waiting) do
+  local saved=storage.razi_convergence and storage.razi_convergence[index]
+  local force=game.forces[index]
+  if not (force and saved and saved.transmission) or saved.victory then
+   waiting[index]=nil
+  else
+   local sequence=saved.transmission
+   local elapsed=math.max(0,tick-sequence.started)
+   if elapsed>=M.transmission_duration then
+    finish(force,{name=sequence.operator or "Expedition"})
+    saved.transmission=nil
+    waiting[index]=nil
+    changed[#changed+1]=index
+   else
+    local next_beat=(sequence.beat or 1)+1
+    while M.transmission_beats[next_beat]
+      and elapsed>=M.transmission_beats[next_beat].tick do
+     sequence.beat=next_beat
+     if force.print then
+      force.print({"razi-ops."..M.transmission_beats[next_beat].key})
+     end
+     changed[#changed+1]=index
+     next_beat=next_beat+1
+    end
+   end
+  end
+ end
+ return changed
+end
+function M.restore_pending()
+ local saved=storage and storage.razi_convergence
+ if not saved then return end
+ storage.razi_convergence_pending=storage.razi_convergence_pending or {}
+ for index,state in pairs(saved) do
+  if state.transmission and not state.victory then
+   storage.razi_convergence_pending[index]=true
   end
  end
 end
@@ -186,6 +267,19 @@ function M.forces_merged(event)
  target.victory=target.victory or source.victory
  target.victory_tick=target.victory_tick or source.victory_tick
  target.completed_by=target.completed_by or source.completed_by
+ if not target.victory then
+  local a,b=target.transmission,source.transmission
+  if b and (not a or b.started<a.started) then
+   target.transmission=b
+  end
+ else
+  target.transmission=nil
+ end
+ local waiting=storage.razi_convergence_pending
+ if waiting then
+  waiting[event.source_index]=nil
+  waiting[dest_index]=target.transmission and not target.victory or nil
+ end
  saved[dest_index]=target
  saved[event.source_index]=nil
 end
