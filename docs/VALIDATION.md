@@ -1,3 +1,42 @@
+## 2.1.67: Planetary supply roles and campaign evidence gate
+
+**Static source changes, not a completed in-game certification.** The Galactic
+Atlas now displays the actual installed shared-component technology associated
+with an unlocked supplier world, the technology's live research status, and
+the existing Cargo Network description. It does not create logistics, scan
+inventories, reveal undiscovered worlds, or add save data.
+
+The post-load research audit now prints direct system-card item demand for each
+campaign stage and reports which *existing* laboratories accept every science
+ingredient together. These are research costs, not the total recursive cost
+of crafting precursor cards. The full-campaign auditor also produces a sorted
+`planet_review_queue`: confirmed static discovery blockers first, uncertain
+science or disconnected routes second, and remaining worlds last. A listed
+geometric connection is not proof that a ship can actually travel it.
+
+After loading the **complete** modpack, run the following locally using a
+fresh prototype dump. No GitHub Actions job is needed:
+
+```bash
+python3 scripts/audit_research_balance.py script-output/data-raw-dump.json --strict
+python3 scripts/audit_full_campaign.py script-output/data-raw-dump.json --output full-campaign-audit.json
+lua5.2 tests/lua/test_atlas_industry_index.lua
+python3 -m unittest discover -s tests -p 'test_research_balance.py'
+python3 -m unittest discover -s tests -p 'test_full_campaign.py'
+```
+
+Inspect the planet review queue **world by world**, prioritising Panglia,
+Moshine, Rubia, Linox, Crucible, Vesta and the native Aegis/Nexus endgame.
+Try Off, Balanced, and Deep settings, then repeat with recommended mods
+disabled. In Factorio, open Atlas on an unlocked Moshine and Panglia and
+verify displayed supply roles against the Cargo Network; locked worlds
+must not expose those roles. Compare research before and after completion
+without reopening a save. Check the full science pack mixture against
+the listed lab, actually craft all eight system cards, test the paired
+gateway routes, and restore an old save with partially delivered
+Convergence freight. Profile GUI open time and UPS before calling any
+performance improvement proven.
+
 ## 2.1.63: Research and science balance release gate
 
 1. Load the **complete Factorio 2.1 modpack** from scratch in Off,
