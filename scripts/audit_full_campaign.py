@@ -50,6 +50,30 @@ def examine(raw, route_checks=True):
     routes = audit_prototypes.reachable_locations(
         raw.get("space-connection", {}), "nauvis")
     isolated = sorted(name for name in planets if name not in routes)
+    # Keep every installed world visible to the release review. A missing
+    # route or uncertain supplier is a manual review task, not a fabricated
+    # source-mod defect or permission to rewrite its discovery research.
+    planet_review_queue=[]
+    for name,info in planets.items():
+        status=info["status"]
+        notes=[]
+        if status=="blocked":
+            notes.append("Discovery production path is statically blocked")
+        elif status!="traceable":
+            notes.append("Discovery requires in-game verification: "+status)
+        if name in isolated:
+            notes.append("No listed route to Nauvis in the prototype graph")
+        priority=("blocker" if status=="blocked"
+                  else "review" if notes else "static-clear")
+        planet_review_queue.append({
+            "planet":name, "priority":priority, "discovery_status":status,
+            "unlockers":info.get("unlockers",[]),
+            "has_listed_route":name not in isolated,
+            "notes":notes
+        })
+    priority_order={"blocker":0,"review":1,"static-clear":2}
+    planet_review_queue.sort(key=lambda row:(
+        priority_order[row["priority"]],row["planet"]))
     return {
         "prototype_issues": graph_issues,
         "research_tree": research,
@@ -64,6 +88,7 @@ def examine(raw, route_checks=True):
         "no_geometric_route_from_nauvis": isolated,
         "focus": focus,
         "planets": planets,
+        "planet_review_queue": planet_review_queue,
         "milestones": milestones,
         "limitations": [
             "Routes are checked as geometry, not as an executable travel path.",
@@ -122,6 +147,15 @@ def main(argv=None):
             print("Planet route connections to inspect (advisory):")
             for planet in report["no_geometric_route_from_nauvis"]:
                 print(f"  {planet}")
+        review=[row for row in report["planet_review_queue"]
+                if row["priority"]!="static-clear"]
+        if review:
+            print("Planet-by-planet review queue (first 12):")
+            for row in review[:12]:
+                print(f"  {row['priority'].upper()} {row['planet']}: "
+                      +"; ".join(row["notes"]))
+            if len(review)>12:
+                print(f"  And {len(review)-12} more in the JSON report")
         if report["blocked_discoveries"]:
             print("Confirmed blocked discovery chains:")
             for planet in report["blocked_discoveries"]:
