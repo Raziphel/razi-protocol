@@ -7,11 +7,11 @@ local reconcile=require("prototypes.system.route_reconcile")
 
 M.crossings={
   {system="vibrant",inner="asteroid-belt-inner-edge",
-   outer="asteroid-belt-outer-edge",length=5000},
+   outer="asteroid-belt-outer-edge",length=5000,pressure=1.25},
   {system="vespera",inner="razi-vespera-belt-inner",
-   outer="razi-vespera-belt-outer",length=6500},
+   outer="razi-vespera-belt-outer",length=6500,pressure=1.50},
   {system="umbra",inner="razi-umbra-belt-inner",
-   outer="razi-umbra-belt-outer",length=8000}
+   outer="razi-umbra-belt-outer",length=8000,pressure=1.70}
 }
 local function exists(id)
  return (data.raw.planet or {})[id]
@@ -28,6 +28,7 @@ function M.data_final_fixes()
      and reconcile.pair_key(route.from,route.to)==key then
      -- Do not replace the source route, change its name or its native
      -- passenger schedule. In particular, preserve Vibrant's old ID.
+     profiles.apply_field(route,belt.pressure)
      profiles.enrich_belt_crossing(route,belt.system)
      result[belt.system]=true
      break
