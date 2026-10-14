@@ -114,6 +114,17 @@ check(finished==1 and total==2 and #pending==1 and pending[1]==second,
   "Campaign UI should only count existing native discoveries")
 local blocked,n=campaign.blockers({prerequisites={first,second}},3)
 check(n==1 and blocked[1].name=="y","Real technology prerequisites missing")
+local demand=campaign.direct_science_demand({
+  research_unit_count=650,research_unit_ingredients={
+    {name="solaris-tech-card",amount=2},
+    {name="calidus-tech-card",amount=1}
+  }
+})
+check(#demand==2 and demand[1].name=="calidus-tech-card"
+ and demand[1].count==650 and demand[2].count==1300,
+ "Campaign must show direct research pack demand from actual science counts")
+check(#campaign.direct_science_demand({research_trigger={type="craft-item"}})==0,
+ "Native trigger-only research must not invent a science bill")
 local summary=trade.summary({platforms={},technologies={
   ["interplanetary-trade-logistics"]={researched=true}}})
 check(summary.unlocked and summary.ships==0 and summary.unscheduled==0,
