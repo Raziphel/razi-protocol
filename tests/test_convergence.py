@@ -91,7 +91,8 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn('"convergence-archive-title"',runtime)
         self.assertIn('"convergence-archive-time"',runtime)
         self.assertIn('events:on_nth_tick(60,function(event)',control)
-        self.assertIn('column_count=width>=560 and 5',runtime)
+        self.assertIn('local columns=width>=780 and 5',runtime)
+        self.assertIn('local cell_width=math.floor(',runtime)
         self.assertIn("get_entity_count",source)
         for key in ("convergence-dyson-title","convergence-dyson-ready",
                     "convergence-dyson-missing","convergence-tile-complete",
@@ -113,6 +114,7 @@ class ConvergenceTests(unittest.TestCase):
         source=read("scripts/razi_convergence.lua")
         locale=read("locale/en/galactic_operations.cfg")
         self.assertIn("function M.assembly_fraction(force)",source)
+        self.assertIn("if not waiting or not next(waiting) then return nil end",source)
         self.assertIn("credit/#M.stages",source)
         self.assertIn("value=donated/rule.count",source)
         self.assertIn("M.module_colors=",source)
