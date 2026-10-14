@@ -58,6 +58,9 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("storage.razi_convergence",runtime)
         self.assertIn('if saved.victory then return #M.stages+1 end',runtime)
         self.assertIn("function M.repair_recipe_unlocks(force)",runtime)
+        self.assertIn('"convergence-legacy-victory"',runtime)
+        self.assertIn('quest.id=="convergence-ignition-research"',
+                      read("scripts/razi_journal.lua"))
         self.assertIn('type="progressbar"',runtime)
         self.assertIn('"convergence-carried"',runtime)
         self.assertIn('carried>0 and where~=nil',runtime)
