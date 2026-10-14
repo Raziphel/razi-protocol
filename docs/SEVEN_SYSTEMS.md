@@ -1,3 +1,21 @@
+## 2.1.60: A readable Deep Space frontier
+
+The real native routes are unchanged. Galactic Atlas now annotates
+five known, actual outer destinations with research-safe expedition
+dossiers. Players learn where Convergence freight can be handed
+over, how the source-owned Nexus combat branch relates to the
+separate engineering victory, and how to open the existing finale
+console. A nonexistent or unresearched location is not revealed.
+No extra route overlays, planets, star images or transit mechanisms
+are created in this pass.
+
+The Convergence array has colorful partial build meters and an
+explicit next-action diagnostic for genuine technology prerequisites,
+native recipe unlocks, and force-owned Dyson receivers. The graphical
+indicators measure saved physical freight, not assumed satellite
+energy. A research tree and item unlock audit against the actual
+enabled modpack remains necessary before stable release.
+
 ## 2.1.59: The assembled signal
 
 Galactic Operations now presents a **five-segment Seven-Sun Array**.
