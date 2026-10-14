@@ -94,7 +94,7 @@ class SystemCardProgressionTests(unittest.TestCase):
     def test_settings_limit_and_version(self):
         settings=read("settings.lua")
         self.assertIn('razi-planetary-interdependence',settings)
-        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.64")
+        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.65")
 
 if __name__=="__main__":
     unittest.main()
