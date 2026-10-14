@@ -86,7 +86,7 @@ ok(#bg.make_layers("subtle",true,true,true,false)==52,
   "Turning off ornaments removes four star pockets")
 settings.startup["razi-starmap-galactic-ornaments"].value=true
 settings.startup["razi-starmap-micro-details"].value=false
-ok(#bg.make_layers("subtle",true,true,true,false)==51,
+ok(#bg.make_layers("subtle",true,true,true,false)==52,
   "Turning off micro-details removes four star pockets")
 sprites.layers={native}
 settings.startup["razi-starmap-background-style"].value="off"
