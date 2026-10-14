@@ -1,3 +1,17 @@
+## The Seven-Sun Array (2.1.59)
+
+The five visible array modules, Dyson coupling readout and finale
+transmission appear in Galactic Operations, alongside the existing
+228 conditional Codex milestones. The displayed receiver count comes
+from real force-owned entities when the installed source mod exposes
+their prototypes, not a guessed launch/megawatt statistic.
+
+The final delivery begins a persistent four-beat, twelve-second
+transmission. Each beat announces meaningful progress to the
+contributing force; the native win screen is displayed afterward.
+Saving and reloading preserves the sequence, and existing victories
+are never replayed.
+
 ## The Convergence: Resonance & Ignition (2.1.58)
 
 The finale includes five player-carried delivery objectives and three
