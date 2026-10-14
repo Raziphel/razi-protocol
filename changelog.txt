@@ -1,3 +1,14 @@
+Version: 2.1.68
+Date: 14. 10. 2026
+  Science production and early progression:
+    - Rebalance five existing freight-assisted science-card batches: four original batches plus transported materials now yield five cards at 15% extra crafting time, rather than two batches yielding three.
+    - Introduce guarded Beetlejuice (Secretas gold, Linox rare earths) and Umbra (Tenebris chitosan, Vesta supermagnets, Linox rare earths) card alternatives.
+    - Smooth later Solaris discovery costs and Moshine / Apia-Carnova research without changing paired star gates or Panglia's native data-cell research.
+    - Show registered and available science freight batches in Galactic Operations Campaign; preserve all original card recipes, labs, and research IDs.
+    - Audit all seven freight recipes for bonus ceilings, input conservation, imported resources, time budget and productivity safety.
+    - Report direct Calidus-card spending by mandatory first-frontier branch without pretending to measure native Panglia complexity.
+    - Add focused source regressions and manual full-pack validation steps; do not trigger Actions.
+
 Version: 2.1.67
 Date: 14. 10. 2026
   Science, industry and planet polish:
