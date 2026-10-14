@@ -1,5 +1,19 @@
 # Razi Protocol
 
+**2.1.73: Distribute technologies across planets.** The
+original nuclear, construction-robot and logistic-robot research
+now has carefully guarded off-world science requirements:
+Gleba biology for construction, Vulcanus metallurgy plus Gleba
+agriculture for reactors and logistic robots, Fulgora
+electromagnetism for advanced logistics, and Cerys nuclear science
+for fuel reprocessing when installed. Planet Express and AAI
+source technologies are included conditionally. Early rocket
+construction, native science producers and labs stay available,
+with compatibility skips and a default-on startup rollback
+switch. The Codex and research auditor recognize the new
+planetary journey. See `docs/DISTRIBUTED_TECHNOLOGY.md`.
+In-game startup and old-save testing are still outstanding.
+
 **2.1.72: Quiet Galaxy visual and research pass.** Kept every source
 stellar PNG but fitted each of the eight ambient halos to its identity
 without extra sprites. Vespera and Umbra now show one hand-authored
