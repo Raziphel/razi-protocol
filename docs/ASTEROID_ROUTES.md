@@ -1,3 +1,72 @@
+## 2.1.70: First-party belt ecology and real crossing encounters
+
+The older [Asteroid Belt by MrLumme](https://mods.factorio.com/mod/AsteroidBelt)
+uses two physical resource rims, a difficult 5,000 km crossing, and
+explicitly redirected inner/outer planet routes. Its public source code
+(repository `MrLumme/FactorioMod-AsteroidBelt`, available `AsteroidBelt_1.2.3`
+folder) confirms that broad design. Razi implements its **own** equivalent
+using native Space Age location/connection and asteroid spawn prototypes.
+No original artwork, Lua modules, or custom entity types are copied.
+
+The original external mod patched individual Fulgora/Gleba/Aquilo routes
+and hardcoded several supported mod planets. Razi deliberately does
+not copy that topology. Our central `route_reconcile` +
+`route_authority` passes curate the actual three local corridors,
+protect critical native moons/Dyson routes, and migrate non-vanilla source
+chunks when retired direct corridors are replaced.
+
+All three existing Razi belts now have a **distinct collecting identity**:
+
+| System | Safe rim specialty | Central crossing | Pressure peak |
+| --- | --- | --- | --- |
+| Vibrant Metallic Divide | Metallic chunks | 5,000 km | 1.25x near midpoint |
+| Vespera Debris Divide | Oxide chunks | 6,500 km | 1.50x near midpoint |
+| Umbra Shattered Divide | Carbonic chunks | 8,000 km | 1.70x near midpoint |
+
+Each installed native metallic, carbonic and oxide chunk remains collectible
+at both safe rims, with different weighted concentrations. The **actual
+crossing** now contains a genuine resource seam: native asteroid-chunk
+spawn probability rises toward the middle third of the route, while
+Factorio's own space platform movement and asteroid collectors do the
+harvesting. Medium/big/huge hazards are still determined by Razi's
+existing escalating belt profiles; the additional 1.25–1.70x multiplier
+tapers between 30% and 70% journey completion. Vespera does not gain
+huge asteroids ahead of its normal progression, and no custom source
+asteroid creature is changed.
+
+The early and late stellar chapters **still require the existing original
+technology IDs** and survey costs. Vibrant's three legacy identifiers
+(`asteroid-belt-inner-edge`, `asteroid-belt-outer-edge`,
+`space-discovery-asteroid-belt`) are preserved to minimize save and
+schedule disruption. Neither Vespera nor Umbra first arrival is blocked
+by the science packs that lie beyond its belt. Their resource zones are
+made in prototypes at startup, not via per-tick entities or scripts.
+
+**Source code:** `prototypes/system/asteroid_profiles.lua`,
+`prototypes/system/asteroid_belts.lua`,
+`prototypes/system/belt_expeditions.lua` and the final route authority.
+The new final pass runs after route cleanup, never creates an alternative
+route, and skips missing source locations/chunk prototypes.
+
+**Release validation:** Copy an old save, park/prepare transit platforms,
+restart with the external AsteroidBelt mod still disabled, and inspect the
+three routes on the starmap. Test collection at each rim, difficulty at
+25%/50%/75% of the route, a route with modded Imersite-like resources,
+existing ship schedules and first-arrival research locks. With a real
+post-load data.raw dump, `scripts/audit_route_distances.py` now checks
+safe-rim chunk types, each physical crossing and its resource midpoint.
+Its source-only geometry fixture intentionally lacks asteroid prototypes
+and does not claim full in-game verification.
+
+Run local focused regression fixtures before any stable promotion:
+```bash
+lua5.2 tests/lua/test_asteroid_belts.lua
+lua5.2 tests/lua/test_asteroid_profiles.lua
+lua5.2 tests/lua/test_asteroid_belt_ecology.lua
+python3 -m unittest discover -s tests -p 'test_asteroid_belt_ecology.py'
+python3 -m unittest discover -s tests -p 'test_route_distances.py'
+```
+
 ## Authoritative route catalog (2.1.47)
 
 Razi Protocol now has **one final route authority** instead of allowing
