@@ -4,8 +4,8 @@ Reviewed 14 October 2026. Every direct manifest declaration is registered with t
 
 | Type | Entries | Intent |
 | --- | ---: | --- |
-| required | 49 | Essential engine, curated campaign and K2SO compatibility |
-| recommended | 10 | Useful but removable companions |
+| required | 50 | Essential engine, curated campaign and K2SO compatibility |
+| recommended | 9 | Useful but removable companions |
 | optional | 14 | Experimental or conditional content |
 | incompatible | 22 | Known competing or broken mods |
 
@@ -13,9 +13,9 @@ Reviewed 14 October 2026. Every direct manifest declaration is registered with t
 
 K2SO, its source assets, the physical transceiver, Razi Library, PlanetsLib, the Dyson network, and the currently curated campaign worlds remain required. Some worlds have guarded code but are still required by campaign design, so a smaller playable profile would need separate progression changes.
 
-Nexus-Updated remains part of the curated required world set. Nexus Threat and Big Monsters are recommended; the separate Nexus Bosses mod brings in its own required monster/enemy dependencies when enabled. Do not add a direct Nexus Bosses declaration while that addon has an optional dependency on Razi Protocol.
+Nexus-Updated remains part of the curated required world set. Nexus Threat remains required because Nexus-Updated directly requires it. Big Monsters is recommended; the separate Nexus Bosses mod independently requires its complete enemy stack when installed. Do not add a direct Nexus Bosses declaration while that addon has an optional dependency on Razi Protocol.
 
-The weather pair, Planet Express, upgraded rocket turrets, Science Tab and Frost Biters are recommended. Science Tab's previously unconditional science item-group assumption was removed, allowing Razi's system cards to use Intermediate Products when Science Tab is absent.
+The weather pair, Planet Express, upgraded rocket turrets, Science Tab, Frost Biters and Big Monsters are recommended. Science Tab's previously unconditional science item-group assumption was removed, allowing Razi's system cards to use Intermediate Products when Science Tab is absent.
 
 FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds remain optional. Incompatible route overlays, outdated planet forks and conflicting engines stay explicitly blocked. A '+' recommendation never overrides another mod's hard dependencies.
 
@@ -35,7 +35,7 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | **Dyson project** | **2 entries** |
 | `slp-dyson-sphere-reworked-fork >= 1.0.5` | required |
 | `k2-dyson-sphere-rebalance >= 0.1.2` | required |
-| **Deep Space curated** | **2 entries** |
+| **Deep Space curated** | **3 entries** |
 | `bellicos-and-aegis >= 0.4.0` | required |
 | `Nexus-Updated >= 1.4.1` | required |
 | **K2SO compatibility** | **8 entries** |
@@ -79,7 +79,7 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **10 entries** |
+| **Recommended companions** | **9 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
@@ -88,7 +88,7 @@ FluxWorks, Dea Dia, Pelagos, alternate routes and other experimental side worlds
 | `+ Cold_biters >= 2.3.0` | recommended |
 | `+ Imersite-Asteroids >= 1.3.0` | recommended |
 | `+ science-tab >= 1.13.0` | recommended |
-| `+ Nexus-Threat-Updated >= 1.1.0` | recommended |
+| `Nexus-Threat-Updated >= 1.1.0` | required |
 | `+ Big-Monsters >= 2.2.1` | recommended |
 | **Opt-in extras** | **14 entries** |
 | `? FluxWorks >= 0.2.12` | optional |
