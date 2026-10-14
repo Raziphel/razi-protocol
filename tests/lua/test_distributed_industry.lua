@@ -102,7 +102,7 @@ missing.recipe["metallurgic-science-pack"]=nil
 check(not M.apply(missing,M.core[2]),
  "A missing science producer must not gate nuclear power")
 local no_lab=fixture()
-no_lab.lab["real-installed-lab"].inputs={
+no_lab.lab["lab"].inputs={
  "automation-science-pack","logistic-science-pack","chemical-science-pack",
  "metallurgic-science-pack"}
 check(not M.apply(no_lab,M.core[3]),
