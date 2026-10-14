@@ -4,6 +4,12 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+The Convergence's Stellar and Industrial freight unlocks at the
+Commission; its Deep-Space freight unlocks separately at Synchronization.
+Galactic Operations shows each phase's delivered total, physical cargo
+in your inventory, and an active/locked/completed status. Victory still
+requires real delivery aboard a force-owned expedition platform.
+
 ## Planet quality gate
 
 Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DNA, and simulation progression is source-owned; Razi connects it after Moshine and Apia/Carnova and supplies a small, optional two-way industry loop. Muluna remains mandatory; Planet Wit and Shchierbin are still excluded. Back up existing saves before changing planetary mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
