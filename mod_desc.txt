@@ -39,6 +39,7 @@ Each chapter has its own colours, art and atmosphere. Open it from the small top
 - The native K2SO intergalactic transceiver opens Deep Space. The real ending is a five-stage, physically delivered Convergence megaproject tied to all seven systems, the Calidus Dyson works and deep-space industry. The last shipment starts a save-safe final transmission before the native victory screen.
 - A Calidus Dyson Sphere project with staged construction.
 - Galactic Operations for navigating a crowded planet and platform list, with an integrated Convergence console, partial construction meters and native Deep Space expedition briefings.
+- An admin-only, read-only `/razi-audit` command for checking the real installed endgame science labs, mandate manufacturing, and research prerequisites without changing player progress.
 - A custom starmap with better local connections, route descriptions and space scenery.
 - Curated enemy encounters, including optional enemy mods on the planets that suit them.
 - A dedicated Vehicles & Infrastructure crafting tab and tidier science groups.
