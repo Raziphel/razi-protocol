@@ -4,6 +4,15 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.62: Original final-act art and manufacturing.** The five Mandates
+now use individual 64px icons. The last Ignition Mandate is built from
+three factory-made components consuming all eight mandatory system
+science cards, without needing new machines or labs. Mandates and
+components occupy neighboring subgroups in Intermediate Products.
+The finale GUI shows their crafting states, existing-save Ignition
+unlocks migrate safely, and the read-only /razi-audit checks all
+eight recipes.
+
 **2.1.61: Loaded-modpack audit and runtime performance.** Server
 administrators can use `/razi-audit` to inspect the actual installed
 Convergence laboratory compatibility, Mandate recipe unlocks, missing
