@@ -1,3 +1,13 @@
+Version: 2.1.61
+Date: 14. 10. 2026
+  Runtime validation and performance pass:
+    - Add an admin-only /razi-audit command that inspects the actual installed finale technologies, full science-pack combinations against native lab prototypes, each Mandate's recipe state, producer visibility, native Dyson receivers and research dependency cycles.
+    - Audit is strictly read-only, on-demand and does not allocate new force save records, alter technology progression, teleport entities, change routes or activate background prototype scans.
+    - Optimize large-modpack Atlas inspections by indexing Razi industry technologies by native prerequisite once per runtime session, replacing repeated whole-force research scans. Preserve live technology visibility, sorting and deduplication.
+    - Avoid unnecessary O(1) transceiver entity counts once the destination research gate is already unlocked. Bound the audit's production index to actually installed Mandate ingredients rather than all recipe products.
+    - Add new pure Lua mock regressions for /razi-audit's labs, recipes, cycles and save-state safety and for the Atlas's indexed prerequisite links. Include these and the existing Convergence save/multiplayer tests in the opt-in manual workflow.
+    - No extra mandatory mod, lab, route, entity or automatic GitHub Actions run. Actual full modpack load, post-load recipe reachability, in-engine save recovery and before/after performance benchmarks are NOT performed in this environment.
+
 Version: 2.1.60
 Date: 14. 10. 2026
   Seven-Sun Array, Codex, Atlas and save-safety polish:
