@@ -110,7 +110,16 @@ for _,entry in ipairs(names) do
   "oxide-asteroid-chunk" or "metallic-asteroid-chunk")
  check(rich and sample_at(rich,.5)>sample_at(rich,.05),
   "Distinct central harvesting field missing for "..entry[1])
+ local threat=lookup(route,"medium-oxide-asteroid")
+ check(threat and sample_at(threat,.5)>sample_at(threat,.3),
+  "Mid-belt threat peak missing for "..entry[1])
 end
+local previous=lookup(raw["space-connection"]["vespera"],
+ "oxide-asteroid-chunk").spawn_points
+finale.data_final_fixes()
+check(lookup(raw["space-connection"]["vespera"],
+ "oxide-asteroid-chunk").spawn_points==previous,
+ "Repeated post-load pass must not amplify native resource probability")
 raw["space-connection"]["umbra"]=nil
 check(finale.data_final_fixes().umbra==false,
  "Missing physical crossing must not fabricate another route")
