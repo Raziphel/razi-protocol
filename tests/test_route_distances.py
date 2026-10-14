@@ -149,6 +149,36 @@ class RouteTests(unittest.TestCase):
         self.assertTrue(any("Missing required corridor" in msg
                             for msg in routes_audit.audit(raw)))
 
+    def test_full_belt_ecology_audit_detects_missing_resources_and_safety(self):
+        raw=world()
+        raw["asteroid-chunk"]={
+            name:{} for name in ("metallic-asteroid-chunk",
+                                 "oxide-asteroid-chunk",
+                                 "carbonic-asteroid-chunk")}
+        for system,inner,outer,specialty in routes_audit.BELT_ECOLOGY:
+            for rim in (inner,outer):
+                raw["space-location"][rim]["asteroid_spawn_definitions"]=[{
+                    "type":"asteroid-chunk","asteroid":specialty,
+                    "probability":.05,"speed":.03}]
+            match=next(route for route in raw["space-connection"].values()
+                       if routes_audit.key(route["from"],route["to"])==
+                       routes_audit.key(inner,outer))
+            match["asteroid_spawn_definitions"]=[{
+                "type":"asteroid-chunk","asteroid":specialty,
+                "spawn_points":[{"distance":.05,"probability":.008,"speed":.04},
+                                {"distance":.5,"probability":.025,"speed":.04}]}]
+        self.assertEqual(routes_audit.audit(raw),[])
+        raw["space-location"]["razi-vespera-belt-inner"][
+            "asteroid_spawn_definitions"]=[]
+        errors=routes_audit.audit(raw)
+        self.assertTrue(any("vespera rim lacks" in issue for issue in errors))
+        raw["space-location"]["razi-vespera-belt-inner"][
+            "asteroid_spawn_definitions"]=[{
+                "type":"entity","asteroid":"big-oxide-asteroid",
+                "probability":.08}]
+        self.assertTrue(any("Unsafe combat asteroid" in issue
+                            for issue in routes_audit.audit(raw)))
+
     def test_two_branches_scale_with_chapter(self):
         raw = world()
         self.assertEqual(routes_audit.audit(raw), [])
