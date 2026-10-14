@@ -203,9 +203,6 @@ function M.data_final_fixes()
     local shape=line and "line" or "arc"
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
-    local exterior_shape,exterior_origin=reconcile.vibrant_exterior_arc
-      and reconcile.vibrant_exterior_arc(from,to)
-    if exterior_shape then shape,origin=exterior_shape,exterior_origin end
     data:extend({icons.assign({
       type="space-connection",name=name,from=from,to=to,
       length=km,shape=shape,origin=origin,
@@ -307,20 +304,17 @@ function M.data_final_fixes()
     end
   end
   removed=removed+dedupe(routes,approved)
-  -- Enforce actual radial belt transit even when an installed mod
-  -- contributed the original route, and keep the exterior approach on
-  -- the safe star-centred curve.
+  -- A single native 5,000 km connection traverses the rock band.
+  -- The outside approach has a clear straight corridor too, so never
+  -- reintroduce an arc that swerves into the asteroid artwork.
   for _,route in pairs(routes) do
-    if route.from and route.to then
-      if pair(route.from,route.to)==
-        pair("asteroid-belt-inner-edge","asteroid-belt-outer-edge") then
-        route.shape="line"
-        route.origin=nil
-      else
-        local shape,origin=reconcile.vibrant_exterior_arc
-          and reconcile.vibrant_exterior_arc(route.from,route.to)
-        if shape then route.shape,route.origin=shape,origin end
-      end
+    if route.from and route.to
+      and (pair(route.from,route.to)==
+        pair("asteroid-belt-inner-edge","asteroid-belt-outer-edge")
+        or pair(route.from,route.to)==
+        pair("sye-vibrant","asteroid-belt-outer-edge")) then
+      route.shape="line"
+      route.origin=nil
     end
   end
   -- Source-created Nyxaris/Vibrant arcs can still be centred on Calidus.

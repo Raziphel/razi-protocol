@@ -20,7 +20,7 @@ local anchors = {
   -- from Corrundum to Igrys never intersects the gateway/Vulcanus leg.
   {"space-location","sye-solaris","solaris",44,0.84},
   -- Arrivals begin beyond the western asteroid belt, not inside it.
-  {"space-location","sye-vibrant","vibrant",50,0.76},
+  {"space-location","sye-vibrant","vibrant",60,0.73},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
   -- Northern arrivals flank the corona instead of threading through it.
   {"space-location","sye-nyxaris","nyxaris",41,0.04},
@@ -44,11 +44,11 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  -- The two electrical worlds remain inside the metallic belt. Entry
-  -- now requires the northern Outer Rim-to-Inner Rim crossing.
-  {"planet","fulgora","vibrant",26,0.50},
-  {"planet","ribbonia","vibrant",26,0.365},
-  {"planet","paracelsin","vibrant",49,0.238},
+  -- Inner electrical worlds sit inside the rock ring; the other planets
+  -- form a spaced exterior branch on its west side.
+  {"planet","fulgora","vibrant",24,0.57},
+  {"planet","ribbonia","vibrant",26,0.685},
+  {"planet","paracelsin","vibrant",58,0.66},
   -- Offset Muria from the parallel gateway-to-Aquilo cargo leg.
   {"planet","muria","vespera",20,0.49},
   {"planet","aquilo","vespera",40,0.497561},
@@ -75,8 +75,8 @@ local optional_orbits={
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
-  {name="ferrum",star="vibrant",radius=51.444741,turn=0.545675},
-  {name="alchemy-planet",star="vibrant",radius=41.598564,turn=0.287184},
+  {name="ferrum",star="vibrant",radius=62,turn=0.83},
+  {name="alchemy-planet",star="vibrant",radius=61,turn=0.61},
   {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
   {name="bm-balack",star="vespera",radius=41.637729,turn=0.816913}
 }
@@ -210,15 +210,15 @@ function M.data_updates()
       if body then
         local orbit={
           parent={type="space-location",name="vibrant"},
-          distance=41.598564,orientation=0.287184
+          distance=61,orientation=0.61
         }
         if body.orbit and body.orbit.sprite then
           orbit.sprite=body.orbit.sprite
         end
         body.orbit=orbit
         body.origin={x=vx,y=vy}
-        body.distance=41.598564
-        body.orientation=0.287184
+        body.distance=61
+        body.orientation=0.61
         if type(log)=="function" then
           log("[Razi Protocol/Calidus] PRE-RENDER forced Khemia to Vibrant: "..kind)
         end

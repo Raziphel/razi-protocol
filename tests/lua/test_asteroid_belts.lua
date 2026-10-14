@@ -41,6 +41,8 @@ for _,side in ipairs({"inner","outer"}) do
   local loc=raw["space-location"][name]
   check(loc and loc.orbit.parent.name=="vibrant",
     "Vibrant's legacy rim IDs must now be Razi-owned")
+  check(math.abs(loc.orbit.orientation - (side=="inner" and .77 or .775))<.001,
+    "Vibrant belt rim reverted to the wrong side of the sun")
   check(#loc.asteroid_spawn_definitions==3,
     "Vibrant rims should be resource-rich")
 end

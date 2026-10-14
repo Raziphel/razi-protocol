@@ -10,7 +10,7 @@ local route_icons = require("prototypes.system.route_icons")
 local candidates = {
   {mod="planet-ferrum", name="ferrum", system="vibrant",
     gate="vibrant-discovery", hub="sye-vibrant",
-    radius=51.444741, orientation=0.545675, km=19500, profile="electrical",
+    radius=62, orientation=0.83, km=19500, profile="electrical",
     preserve_routes=true},
   {mod="Velora", name="velora", system="nyxaris",
     gate="planet-discovery-gleba", hub="gleba",
@@ -20,7 +20,7 @@ local candidates = {
   -- the planet and its native Nauvis/Vulcanus routes in Calidus.
   {mod="alchemy-khemia", name="alchemy-planet", system="vibrant",
     gate="vibrant-discovery", hub="paracelsin",
-    radius=41.598564, orientation=0.287184, km=21000, profile="chemistry"},
+    radius=61, orientation=0.61, km=21000, profile="chemistry"},
   {mod="Arcanyx", name="arcanyx", system="umbra",
     gate="umbra-discovery", hub="tenebris",
     radius=39.469081, orientation=0.429241, km=25000, profile="outer_void"},

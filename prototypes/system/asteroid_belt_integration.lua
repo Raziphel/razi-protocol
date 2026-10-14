@@ -5,8 +5,8 @@ local HOST="vibrant"
 local PIXELS=32
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local coords={
-  {"asteroid-belt-inner-edge",31,0.08},
-  {"asteroid-belt-outer-edge",39,0.095}
+  {"asteroid-belt-inner-edge",31,0.77},
+  {"asteroid-belt-outer-edge",39,0.775}
 }
 M.coords=coords
 function M.data_final_fixes()
@@ -19,7 +19,9 @@ function M.data_final_fixes()
       local radians=entry[3]*2*math.pi
       local x=cx+entry[2]*math.sin(radians)
       local y=cy-entry[2]*math.cos(radians)
-      if x<=0 or y>=0 then error("Razi: Vibrant belt moved to unexpected sector") end
+      if x>=cx or x<0 or math.abs(y-cy)>10 then
+        error("Razi: Vibrant belt entries are no longer on the western rim")
+      end
       local distance=math.sqrt(x*x+y*y)
       local turn=0.25-math.atan(-y/x)/(2*math.pi)
       location.orbit={parent={type="space-location",name="star"},

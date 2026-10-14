@@ -20,7 +20,7 @@ local function xy(location)
   return location.distance*math.sin(theta),
     -location.distance*math.cos(theta)
 end
-for _,entry in ipairs({{inner,31,.08},{outer,39,.095}}) do
+for _,entry in ipairs({{inner,31,.77},{outer,39,.775}}) do
   local loc,radius=entry[1],entry[2]
   check(loc.orbit.parent.name=="star" and not loc.draw_orbit,
     "Vibrant belt must use a native root-star orbit")

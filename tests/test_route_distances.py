@@ -248,8 +248,8 @@ class RouteTests(unittest.TestCase):
         # Calidus remains clear; the source belt encircles Vibrant's sun.
         self.assertGreater(coords["sye-solaris"][1], 60)
         self.assertGreater(coords["sye-nyxaris"][1], 55)
-        self.assertGreater(coords["sye-vibrant"][0], 50)
-        self.assertLess(coords["sye-vibrant"][0], 70)
+        self.assertGreater(coords["sye-vibrant"][0], 40)
+        self.assertLess(coords["sye-vibrant"][0], 55)
         self.assertLess(coords["sye-vespera"][0], -70)
         self.assertLess(coords["sye-beetlejuice"][1], -60)
         self.assertLess(coords["sye-umbra"][1], -60)
@@ -257,7 +257,8 @@ class RouteTests(unittest.TestCase):
             __import__("math").dist(coords["asteroid-belt-inner-edge"],
                                     coords["vibrant"]), 31,
             places=3)
-        self.assertGreater(coords["asteroid-belt-inner-edge"][0], 115)
+        self.assertGreater(coords["asteroid-belt-inner-edge"][0], 70)
+        self.assertLess(coords["asteroid-belt-inner-edge"][0], 85)
         self.assertLess(coords["solar-system-edge"][1], -185)
 
 if __name__ == "__main__":

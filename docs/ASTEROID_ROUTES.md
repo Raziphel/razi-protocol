@@ -1,43 +1,22 @@
-## Vibrant northern belt entry and real progression (October 2026)
+## Vibrant: one crossing through the rocks (October 2026)
 
-Arriving platforms now stop at an exterior western Slip Stream (50 chart
-units from Vibrant). From there they travel around the outside of the
-rocky ring to the Outer Rim. The existing 5,000 km native asteroid route
-between Outer Rim and Inner Rim is the ONLY entrance to Ribbonia and
-Fulgora. Both rim markers have been moved north-northeast (0.095 turn).
-The nearly radial passage separates the bearings of its inner and
-outer markers (0.08 and 0.095), clearing both route labels. The Slip
-Stream approach uses a native star-centred arc instead of a direct
-chord through the asteroid artwork.
+Both native 31/39-unit rim markers are now on the **west side**, near
+the Slip Stream. The outer approach, Beetlejuice departure, and optional
+Ferrum and Khemia branches remain outside the rocks; only the preserved
+5,000 km rim-to-rim passage crosses the asteroid graphics. The previous
+star-centred exterior arc and intermediate arrival asteroid surge are
+retired, since those routes no longer touch the belt.
 
-The belt survey now requires `vibrant-discovery` rather than
-Ribbonia's discovery, which sits *beyond* the physical passage.
-Its Solaris/Nyxaris research cards remain craftable beforehand.
-Ferrum now uses an exterior Slip Stream link, while Khemia and
-Paracelsin keep their outer-side connections. The original belt
-waypoint IDs, research ID, 5,000 km route ID, ore and hostile asteroid
-profiles are unchanged. Existing platform schedules containing the
-retired direct Slip Stream-to-Fulgora/Ribbonia routes must be updated.
-No new surface, runtime spawner or GPU sprite layer is introduced.
+Fulgora and Ribbonia form an inner pair and are accessible only through
+the hazardous native belt connection. Paracelsin (58 units) and the
+optional Khemia (61) and Ferrum (62) routes occupy the outer west arc.
+The first belt survey still unlocks after `vibrant-discovery`, so
+players do not need Ribbonia science to enter. Existing crossing ID,
+Razi-owned asteroid curves and resource harvests remain unchanged.
 
-## Vibrant arrival and mineral-field artwork (October 2026)
-
-The smooth purple ring has been replaced by faceted mineral fragments and
-a sparse, irregular rubble cloud. Both 512px indexed-alpha textures are
-loaded once with the existing starmap sprites. No runtime particles, new
-map destinations, or extra belt layers are introduced. The fragmented
-band stays centered between the preserved 31/39-unit belt rim waypoints.
-
-The Solaris-to-Vibrant Slip Stream route enters across the asteroid ring.
-It now uses `belt_vibrant_arrival`: native small/medium asteroids and
-limited big asteroids intensify between 73% and 100% of the incoming
-journey, peaking before reaching the inner gateway. This is a genuine
-space-connection asteroid spawn curve, not a cosmetic animation.
-The 100,000 km distance and its unlock prerequisites remain unchanged.
-The physically mandatory 5,000 km inner-to-outer belt crossing remains
-more dangerous, protecting the Paracelsin/Beetlejuice progression.
-Custom asteroid species from installed mods remain untouched. On
-existing saves, test both travel directions with a defended platform.
+The faceted rock artwork uses the same two static 512px textures.
+Existing platform schedules using earlier direct Slip Stream-to-inner
+worlds must be updated; the rim IDs remain stable.
 
 ## 2.1.70: First-party belt ecology and real crossing encounters
 
