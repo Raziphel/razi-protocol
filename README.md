@@ -1,5 +1,18 @@
 # Razi Protocol
 
+**2.1.70: Native Razi asteroid belts.** The existing Vibrant, Vespera
+and Umbra asteroid belt crossings now have distinct regional resource
+identities: metallic, oxide and carbonic. Physical inner/outer rims
+remain safe harvest stations, while 5,000, 6,500 and 8,000 km crossings
+develop native resource seams and smooth, escalating combat-asteroid
+pressure near their midpoints. We studied MrLumme's external AsteroidBelt
+source for its resource-rim/crossing idea, but continue using Razi's
+curated seven-system route authority, original saved research/route
+identifiers, and native Space Age asteroid prototypes. No source artwork,
+runtime spawning, external belt dependency or extra travel lanes.
+Full-pack and old-save testing is still required.
+
+
 **2.1.69: Easier mod-setting discovery.** English localization now displays
 `! Razi Protocol` as a best-effort early-sorting title in Factorio, without
 renaming the internal `razi-protocol` mod or changing settings and saves.
