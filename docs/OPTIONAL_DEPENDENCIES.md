@@ -1,6 +1,6 @@
-# Dependency categories and optional companions (2.1.65)
+# Dependency categories and optional companions (2.1.66)
 
-The complete direct-mod audit now lives in
+The full audit now includes direct dependencies plus the upstream required graph, version-pin evidence and a repeatable API auditor. The human-readable review lives in
 [Dependency Audit](DEPENDENCY_AUDIT.md) and the matching
 [machine-readable ledger](../compat/dependency_policy.json).
 Every manifest entry is reviewed; the contract is checked by
@@ -8,7 +8,7 @@ Every manifest entry is reviewed; the contract is checked by
 
 | Category | Current direct entries |
 | --- | ---: |
-| Required | 50 |
+| Required | 48 |
 | Recommended (`+`) | 9 |
 | Optional (`?`) | 14 |
 | Incompatible (`!`) | 22 |
@@ -39,9 +39,7 @@ releases. Outer Rim and Secretas orbit patches can compete over
 source-authored routes; they remain opt-in. Smaller content branches
 and the optional enemy compatibility families stay optional.
 
-Nexus-Updated itself stays **required by the curated campaign
-profile** and therefore Nexus-Threat-Updated remains required too,
-since the Nexus source mod depends on it. The standalone Nexus Bosses addon requires its own
+Nexus-Updated stays **required by the curated campaign profile**. It directly requires Nexus-Threat-Updated, so Razi no longer duplicates the exact same hard dependency. Similarly, K2 Dyson Sphere Rebalance requires the correct Dyson Sphere fork; Razi does not need to list it again. The standalone Nexus Bosses addon requires its own
 enemy-mod stack, including Nexus Threat and Big Monsters, when
 installed. It has an optional dependency on Razi, so directly
 depending on Nexus Bosses here would risk a circular graph.
