@@ -108,8 +108,10 @@ class GalacticOperationsTests(unittest.TestCase):
         proto=(ROOT/"prototypes/ui/galactic_operations.lua").read_text()
         loc=(ROOT/"locale/en/galactic_operations.cfg").read_text()
         self.assertNotIn('type="shortcut"',proto)
-        self.assertIn('type="sprite"',proto)
-        self.assertIn('razi-galactic-operations-map-icon',proto)
+        self.assertNotIn('type="sprite"',proto)
+        self.assertNotIn('razi-galactic-operations-map-icon',proto)
+        self.assertIn('razi_journal.open_project(player)',
+                      (ROOT/"control.lua").read_text())
         ui=(ROOT/"scripts/galactic_operations.lua").read_text()
         self.assertIn('MAP_ANCHOR="razi_ops_map_anchor"',ui)
         self.assertIn('type="sprite-button",name=MAP_BUTTON',ui)
