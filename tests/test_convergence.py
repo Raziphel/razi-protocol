@@ -24,20 +24,22 @@ class ConvergenceTests(unittest.TestCase):
         self.assertNotIn('type="lab"',proto)
         self.assertNotIn('type="planet"',proto)
 
-    def test_three_genuinely_manufactured_non_productivity_manifests(self):
+    def test_five_genuinely_manufactured_non_productivity_manifests(self):
         proto=read("prototypes/technology/convergence.lua")
         entries=re.findall(r'\{id="([^"]+)",item="([^"]+)",count=(\d+)',proto)
         self.assertEqual(entries,[
             ("stellar","razi-convergence-stellar-mandate","8"),
             ("industry","razi-convergence-industrial-mandate","10"),
-            ("deep-space","razi-convergence-deep-space-mandate","6")
+            ("deep-space","razi-convergence-deep-space-mandate","6"),
+            ("resonance","razi-convergence-resonance-mandate","4"),
+            ("ignition","razi-convergence-ignition-mandate","1")
         ])
         self.assertIn('categories={"crafting"}',proto)
         self.assertIn("allow_productivity=false",proto)
         self.assertIn("auto_recycle=false",proto)
         self.assertIn("allow_decomposition=false",proto)
         self.assertIn("products[part[1]]",proto)
-        self.assertIn('local unlock=rule.id=="deep-space" and ending or begin',proto)
+        self.assertIn('local unlock=unlock_tech[rule.unlock or M.commission]',proto)
         self.assertIn("unlock.effects[#unlock.effects+1]",proto)
         self.assertNotIn("create_surface",proto)
 
@@ -54,6 +56,8 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("inv.remove{name=rule.item,count=offered}",runtime)
         self.assertIn('saved.delivered[id]=math.min(rule.count,',runtime)
         self.assertIn("storage.razi_convergence",runtime)
+        self.assertIn('if saved.victory then return #M.stages+1 end',runtime)
+        self.assertIn("function M.repair_recipe_unlocks(force)",runtime)
         self.assertIn('type="progressbar"',runtime)
         self.assertIn('"convergence-carried"',runtime)
         self.assertIn('carried>0 and where~=nil',runtime)
@@ -83,6 +87,7 @@ class ConvergenceTests(unittest.TestCase):
         control=read("control.lua")
         self.assertIn('local convergence = require("scripts.razi_convergence")',control)
         self.assertIn("convergence.forces_merged",control)
+        self.assertIn("convergence.repair_recipe_unlocks(force)",control)
         self.assertIn('remote.interfaces["space_finish_script"]',control)
         self.assertIn('remote.call("space_finish_script","set_no_victory",true)',control)
         ops=read("scripts/galactic_operations.lua")
@@ -95,27 +100,31 @@ class ConvergenceTests(unittest.TestCase):
         defs=read("scripts/razi_journal_data.lua")
         for id in ("convergence-commission","convergence-stellar",
                    "convergence-industry","convergence-synchronization",
-                   "convergence-deep-space","convergence-victory"):
+                   "convergence-deep-space","convergence-resonance",
+                   "convergence-ignition-research","convergence-ignition",
+                   "convergence-victory"):
             self.assertIn('id="'+id+'"',defs)
             for section in ("journal-title","journal-story","journal-tip"):
                 text=read("locale/en/razi_journal.cfg").split(
                     "["+section+"]",1)[1].split("\n[",1)[0]
                 self.assertRegex(text,rf"(?m)^{re.escape(id)}=")
-        self.assertIn("self.assertEqual(len(quests),225)",
+        self.assertIn("self.assertEqual(len(quests),228)",
                       read("tests/test_razi_journal.py"))
-        self.assertIn("check(#defs.quests==225",
+        self.assertIn("check(#defs.quests==228",
                       read("tests/lua/test_razi_journal.lua"))
         names=read("locale/en/names.cfg")
         ops_locale=read("locale/en/galactic_operations.cfg")
-        for phase in ("stellar","industrial","deep-space"):
+        for phase in ("stellar","industrial","deep-space","resonance","ignition"):
             name="razi-convergence-"+phase+"-mandate"
             self.assertGreaterEqual(names.count(name+"="),4)
         for key in ("convergence-heading=",
                     "convergence-stage-stellar=",
+                    "convergence-stage-resonance=",
+                    "convergence-stage-ignition=",
                     "convergence-submit=",
                     "convergence-victory-title="):
             self.assertIn(key,ops_locale)
-        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.57")
+        self.assertEqual(json.loads(read("info.json"))["version"],"2.1.58")
 
 if __name__=="__main__":
     unittest.main()
