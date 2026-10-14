@@ -40,14 +40,22 @@ local function lab_for(ingredients,labs)
   if all then return lab.name end
  end
 end
-local function producers(registry)
- local index={}
- -- One index across loaded recipes, not one full recipe scan per material.
+local function producers(registry,force)
+ local wanted,index={},{}
+ -- Collect only physical ingredients actually used by installed
+ -- Convergence recipes. Do not allocate a giant product index for the
+ -- entire modpack when an admin requests a small report.
+ for _,stage in ipairs(defs.shipments) do
+  local recipe=force.recipes and force.recipes[stage.item]
+  for _,part in ipairs(recipe and recipe.ingredients or {}) do
+   if part.type~="fluid" then wanted[part.name]=true end
+  end
+ end
  for _,recipe in pairs(registry.recipe or {}) do
   if not recipe.hidden then
    for _,product in ipairs(recipe.products or {}) do
-    if product.type~="fluid" and product.name then
-     index[product.name]=(index[product.name] or 0)+1
+    if product.type~="fluid" and wanted[product.name] then
+     index[product.name]=true
     end
    end
   end
@@ -83,7 +91,7 @@ function M.inspect(force,registry)
   return result
  end
  local labs=laboratories(registry)
- local produced=producers(registry)
+ local produced=producers(registry,force)
  result.labs=#labs
  local function error_line(line) result.errors[#result.errors+1]=line end
  local function note(line) result.notes[#result.notes+1]=line end
