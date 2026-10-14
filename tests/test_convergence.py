@@ -68,6 +68,32 @@ class ConvergenceTests(unittest.TestCase):
         self.assertNotIn("on_nth_tick",runtime)
         self.assertNotIn("platform.schedule=",runtime)
 
+    def test_live_loaded_modpack_diagnostic_is_read_only(self):
+        source=read("scripts/razi_convergence_audit.lua")
+        control=read("control.lua")
+        locale=read("locale/en/razi_audit.cfg")
+        mock=read("tests/lua/test_convergence_audit.lua")
+        for part in ('function M.inspect(force,registry)',
+                     'registry.get_entity_filtered',
+                     'tech.prerequisites', 'local function cyclic_research',
+                     'function M.command(event)',
+                     'No installed lab accepts all packs',
+                     'Researched but recipe locked',
+                     'local produced=producers(registry)'):
+            if part=="tech.prerequisites":
+                self.assertIn("tech.prerequisites or {}",source)
+            else:
+                self.assertIn(part,source)
+        self.assertIn('commands.add_command("razi-audit"',control)
+        self.assertIn('not player.admin',source)
+        self.assertNotIn('convergence.progress(force)',source.split(
+            "function M.inspect(force,registry)",1)[1].split(
+            "function M.command(event)",1)[0].replace(
+            "-- Intentionally do not call convergence.progress(force):", ""))
+        self.assertIn("storage.razi_convergence==nil",mock)
+        self.assertIn("[razi-audit]",locale)
+        self.assertNotIn("events:on_nth_tick",source)
+
     def test_dyson_coupling_and_saved_final_transmission(self):
         runtime=read("scripts/razi_convergence.lua")
         ops=read("scripts/galactic_operations.lua")
