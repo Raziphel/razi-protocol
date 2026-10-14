@@ -23,7 +23,22 @@ M.rules={
   {"razi-network-umbra-pressure-frame","gas-manipulation-science-pack","planet-discovery-vesta",true},
   {"razi-network-lattice-balack-shielding","bioluminescent-science-pack","planet-discovery-tenebris",true},
   {"razi-network-frame-vesta-foundations","linox-item_linox-science-pack","linox-technology_planet-discovery-linox",true},
-  {"razi-network-frame-aquilo-controllers","planet-crucible-science-pack","planet-discovery-crucible",true}
+  {"razi-network-frame-aquilo-controllers","planet-crucible-science-pack","planet-discovery-crucible",true},
+  -- Return familiar native sciences to factories which already need
+  -- finished materials from those worlds. Arrival stays source-owned.
+  {"razi-network-matrix-rubia-logistics","electrochemical-science-pack","planet-discovery-paracelsin"},
+  {"razi-network-matrix-linox-refining","thermodynamic-science-pack","planet-discovery-moshine"},
+  {"razi-network-panglia-optic-bond","apicultural-science-pack","planet-discovery-apia-carnova"},
+  {"razi-network-bond-paracelsin-coils","apicultural-science-pack","planet-discovery-apia-carnova"},
+  {"razi-network-extreme-lattice","cryogenic-science-pack","planet-discovery-aquilo"},
+  {"razi-network-lattice-vesta-magnets","planet-crucible-science-pack","planet-discovery-crucible"},
+  {"razi-network-frame-vesta-foundations","gas-manipulation-science-pack","planet-discovery-vesta"},
+  {"razi-network-frame-aquilo-controllers","muriatic-science-pack","planet-discovery-muria"},
+  {"razi-network-bond-paracelsin-coils","ribbonia-alien-science-pack","planet-discovery-ribbonia"},
+  -- Deep mode makes the most remote upgrades better science customers.
+  {"razi-network-matrix-linox-refining","linox-item_linox-science-pack","linox-technology_planet-discovery-linox",true},
+  {"razi-network-lattice-balack-shielding","gas-manipulation-science-pack","planet-discovery-vesta",true},
+  {"razi-network-umbra-pressure-frame","bioluminescent-science-pack","planet-discovery-tenebris",true}
 }
 
 local function raw(kind,name)
@@ -81,20 +96,32 @@ local function inputs_exist(recipe)
   return true
 end
 
--- Scan the loaded recipe registry once for just the 8 native science names.
+-- Index only the native science products requested by the guarded rules.
+-- One pass over recipe outputs avoids scanning every recipe for every pack.
 local function sources()
   local wanted={}
   for _,rule in ipairs(M.rules) do wanted[rule[2]]=true end
   local makers,unlockers={},{}
   for name,recipe in pairs(data.raw.recipe or {}) do
-    if not recipe.hidden then
-      for pack in pairs(wanted) do
-        if recipe_produces(recipe,pack) and inputs_exist(recipe) then
+    if not recipe.hidden and inputs_exist(recipe) then
+      local recorded={}
+      local function add_variant(variant)
+        if not variant then return end
+        local function add_pack(pack)
+          if not pack or not wanted[pack] or recorded[pack] then return end
+          recorded[pack]=true
           local bucket=makers[pack] or {}
           bucket[#bucket+1]=name
           makers[pack]=bucket
         end
+        add_pack(variant.result)
+        for _,entry in ipairs(variant.results or {}) do
+          if entry.type~="fluid" then add_pack(result_name(entry)) end
+        end
       end
+      add_variant(recipe)
+      add_variant(recipe.normal)
+      add_variant(recipe.expensive)
     end
   end
   local needed={}
@@ -126,6 +153,9 @@ local source_world={
   ["planet-discovery-tenebris"]="tenebris",
   ["planet-discovery-crucible"]="crucible",
   ["planet-discovery-vesta"]="vesta",
+  ["planet-discovery-apia-carnova"]="apia-carnova",
+  ["planet-discovery-muria"]="muria",
+  ["planet-discovery-ribbonia"]="ribbonia",
   ["linox-technology_planet-discovery-linox"]="linox-planet_linox"
 }
 local function source_surface(recipe,owner)
