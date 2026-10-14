@@ -1,3 +1,15 @@
+Version: 2.1.63
+Date: 14. 10. 2026
+  Research tree and science economy:
+    - Reduce symmetric paired-star gateway costs to 650, 1200 and 1600 units, and outer mastery to 1900, without coupling parallel branches or adding a first-landing science requirement.
+    - Tier all eight original system-card recipes from 10 to 28 seconds. Double only their native outer/deep-space science ingredients, never prerequisite system-card quantities.
+    - Reduce capped costs on all fourteen Razi-owned cross-world component and factory upgrade technologies, without increasing cheaper overrides or repricing source-mod techs.
+    - Add three safe Deep-mode industrial handoffs and twelve new native science reuse candidates, raising the optional catalog to thirty guarded rules (eight Deep-only).
+    - Index native science outputs in one pass, rather than checking every recipe separately for each sought science.
+    - Extend post-load research diagnostics to list card recipe inputs and expose manufacturing dependency cycles as errors.
+    - Update targeted research, science weave, audit, and manufacturing tier regression fixtures. Existing native laboratories, first-discovery source science, technology IDs, save progress, Convergence shipments and manual-only CI are retained.
+    - Full Factorio game-engine loading, enabled-modpack recipe reachability, measured performance and existing-save testing are still required.
+
 Version: 2.1.62
 Date: 14. 10. 2026
   Original Mandate art and endgame construction:
