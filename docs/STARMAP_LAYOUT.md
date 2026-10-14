@@ -1,3 +1,23 @@
+## Native orbital rings for all positioned planets (October 2026)
+
+PlanetsLib 2.0 and Factorio 2.1.20+ use native orbital rings based
+on `origin`, `distance`, `orientation` and `draw_orbit`.
+Our previous Balanced default deliberately suppressed rings for most
+planets. This explains why Solaris showed Castra but not the other
+worlds even though each had a valid orbit.
+
+Full is the new default for the six outer systems. It shows every
+positioned planet orbit without extra static sprites or runtime
+rendering. Balanced and Clean remain as lower-density choices.
+Existing players may retain their saved Balanced startup setting;
+choose Galaxy Visuals -> Orbital chart detail -> Full to opt in.
+
+Moons and custom source orbit sprites remain source-owned. Slip Streams,
+belt markers, decorative stars and deep-space waypoints do not gain
+misleading giant rings. Khemia is now validated with a Vibrant-centered
+native origin in its final compatibility pass, including a duplicate
+prototype guard, rather than a Calidus-centered absolute orbit.
+
 ## Vibrant: western asteroid entrance (October 2026)
 
 The slipstream and both asteroid entry markers sit west of the star.

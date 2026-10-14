@@ -3,7 +3,7 @@
 -- A title prefix in locale/en/settings.cfg is a best-effort display hint,
 -- not a supported way to override the engine's mod-section ordering.
 -- Only real Razi-owned behavior is configurable.
--- All existing settings retain their names, types and default values.
+-- Setting names and types stay stable; Full native orbits are now the default.
 local function startup_toggle(name, order)
   return {
     type = "bool-setting",
@@ -79,7 +79,7 @@ data:extend({
     type="string-setting",
     name="razi-starmap-orbit-density",
     setting_type="startup",
-    default_value="balanced",
+    default_value="full",
     allowed_values={"clean","balanced","full"},
     order="cb[starmap]-a2[orbit-density]"
   },

@@ -226,9 +226,10 @@ check(math.abs(hx)<1 and math.abs(hy-20)<.01,
 -- All planets directly orbiting a Razi star get Factorio 2.1 native
 -- rings, not only the old handpicked six signature planets.
 for _,name in ipairs({"vulcanus","castra","arig","hyarion","tellus",
-  "corrundum","gleba","moshine","panglia","fulgora","ribbonia",
-  "paracelsin","muria","aquilo","rubia","maraxsis",
-  "cubium","linox-planet_linox","tenebris","vesta"}) do
+  "corrundum","igrys","gleba","moshine","panglia","foliax",
+  "fulgora","ribbonia","paracelsin","muria","aquilo","rubia",
+  "maraxsis","obsidiax","cubium","linox-planet_linox",
+  "tenebris","vesta","carna","ferrum","arcanyx","bm-balack"}) do
   check(planets[name].draw_orbit==true,
     "Factorio native orbit still disabled: "..name)
 end
@@ -283,10 +284,12 @@ local function absolute_coordinates(object)
     (o.y or o[2] or 0)-object.distance*math.cos(a)
 end
 local khemiaX,khemiaY=absolute_coordinates(planets["alchemy-planet"])
-check(planets["alchemy-planet"].origin==nil
+check(planets["alchemy-planet"].origin
+  and math.abs(planets["alchemy-planet"].origin.x-kx)<.01
+  and math.abs(planets["alchemy-planet"].origin.y-ky)<.01
   and math.abs(khemiaX-targetX)<.01 and math.abs(khemiaY-targetY)<.01
-  and planets["alchemy-planet"].draw_orbit==false,
-  "Final Khemia must use absolute Vibrant coordinates without a legacy origin")
+  and planets["alchemy-planet"].draw_orbit==true,
+  "Khemia should retain Vibrant coordinates and have its native ring")
 check(planets["alchemy-planet"].orbit and
   planets["alchemy-planet"].orbit.parent.name=="vibrant",
   "Khemia returned to the wrong stellar parent")
@@ -297,11 +300,20 @@ places["alchemy-planet"]={name="alchemy-planet",origin={x=0,y=0},
 layout.confirm_critical_positions()
 check(places["alchemy-planet"].orbit and
   places["alchemy-planet"].orbit.parent.name=="vibrant" and
-  places["alchemy-planet"].origin==nil and
+  places["alchemy-planet"].origin and
   math.abs(select(1,absolute_coordinates(places["alchemy-planet"]))-targetX)<.01 and
-  math.abs(select(2,absolute_coordinates(places["alchemy-planet"]))-targetY)<.01,
-  "Secondary Khemia location remains in the home system")
+  math.abs(select(2,absolute_coordinates(places["alchemy-planet"]))-targetY)<.01 and
+  places["alchemy-planet"].draw_orbit==false,
+  "Secondary Khemia location must stay at Vibrant without another ring")
 places["alchemy-planet"]=nil
+settings.startup["razi-starmap-orbit-density"].value="balanced"
+layout.confirm_critical_positions()
+check(planets["alchemy-planet"].draw_orbit==false,
+  "Balanced density should still suppress Khemia's orbit")
+settings.startup["razi-starmap-orbit-density"].value="full"
+layout.confirm_critical_positions()
+check(planets["alchemy-planet"].draw_orbit==true,
+  "Full density should restore Khemia without moving it")
 check(planets["optional-source-world"].draw_orbit==false,
   "Repeated final fixes duplicated custom orbit artwork")
 check(planets.rabbasca.orbit==moon and
@@ -377,6 +389,11 @@ for name,expect in pairs(original_positions) do
     "Pre-render parent star radius was wrong: "..name)
 end
 
+local settings_file=assert(io.open("settings.lua","r"))
+local setting_source=settings_file:read("*a"); settings_file:close()
+check(setting_source:find('name="razi-starmap-orbit-density"',1,true)
+  and setting_source:find('default_value="full"',1,true),
+  "Full native planetary rings should be the default")
 local data_updates_file=assert(io.open("data-updates.lua","r"))
 local updates_source=data_updates_file:read("*a")
 data_updates_file:close()

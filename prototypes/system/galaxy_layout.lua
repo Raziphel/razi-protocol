@@ -342,12 +342,12 @@ function M.data_final_fixes()
     if marker then marker.label_orientation=direction end
   end
 
-  -- Full retains the original native orbital gallery; Balanced keeps
-  -- well-separated reference rings. Clean keeps one per system.
-  -- Source-owned moons and unique orbital sprites are never suppressed.
+  -- PlanetsLib 2.0 uses native Factorio 2.1 origin-based orbit drawing.
+  -- Full is the standard orbital chart. Keep the two simpler presets,
+  -- and never replace existing custom orbit sprites or moon artwork.
   local orbit_setting=settings and settings.startup
     and settings.startup["razi-starmap-orbit-density"]
-  local density=orbit_setting and orbit_setting.value or "balanced"
+  local density=orbit_setting and orbit_setting.value or "full"
   local balanced={
     castra=true,moshine=true,panglia=true,
     fulgora=true,paracelsin=true,muria=true,aquilo=true,
@@ -360,7 +360,7 @@ function M.data_final_fixes()
   for name,planet in pairs(data.raw.planet or {}) do
     local parent=planet.orbit and planet.orbit.parent
     if by_name[name] and parent and parent.type=="space-location"
-      and stars[parent.name]
+      and stars[parent.name] and not planet.hidden
       and not (planet.orbit and planet.orbit.sprite) then
       planet.draw_orbit=density=="full"
         or (density=="balanced" and balanced[name]==true)
@@ -405,18 +405,20 @@ function M.data_final_fixes()
   end
 end
 
--- Reapply the two most visible trouble spots after all independent
--- compatibility passes. Unlike a second full galaxy walk, this costs O(2).
--- It also repairs Khemia's absolute native coordinates if a late mod moves
--- only its planet prototype, while keeping source sprite metadata intact.
+-- Repair Khemia after any independent compatibility pass, preserving its
+-- world coordinates while restoring a native Vibrant-centered orbit.
+-- A source can expose two prototype types; only the primary draws a ring.
 function M.confirm_critical_positions()
   for _,name in ipairs({"alchemy-planet"}) do
     local item=by_name[name]
     if item then
       local x,y=anchor_position(item[3])
       if x and y then
-        -- If a dependency registers both types under the same ID, neither
-        -- should leave a duplicate "Khemia" icon in the home system.
+        local configured=settings and settings.startup
+          and settings.startup["razi-starmap-orbit-density"]
+        local density=configured and configured.value or "full"
+        local primary=exists("planet",name) and "planet" or "space-location"
+        -- Correct both possible prototype types, but draw only one ring.
         for _,kind in ipairs({"planet","space-location"}) do
           local proto=exists(kind,name)
           if proto then
@@ -428,23 +430,14 @@ function M.confirm_critical_positions()
             if old and old.sprite then orbit.sprite=old.sprite end
             proto.orbit=orbit
             local dx,dy=polar(item[4],item[5])
-            if name=="alchemy-planet" then
-              -- Factorio's old absolute-polar path and modern origin path
-              -- disagree in affected packs. For this one stubborn planet,
-              -- store the complete galactic coordinates in native polar
-              -- fields and remove its origin so it cannot render at Calidus.
-              local ax,ay=x+dx,y+dy
-              proto.origin=nil
-              proto.distance=math.sqrt(ax*ax+ay*ay)
-              proto.orientation=((math.atan2 and math.atan2(ax,-ay)
-                or math.atan(ax,-ay))/(2*math.pi))%1
-              proto.draw_orbit=false
-            else
-              proto.origin={x=x,y=y}
-              proto.distance=item[4]
-              proto.orientation=item[5]
-              proto.draw_orbit=false
-            end
+            -- Factorio draws native circles about origin. Using Khemia's
+            -- absolute galactic polar coordinates would create a false
+            -- ring around Calidus even if the planet icon looked correct.
+            proto.origin={x=x,y=y}
+            proto.distance=item[4]
+            proto.orientation=item[5]
+            proto.draw_orbit=kind==primary and density=="full"
+              and not (old and old.sprite) and not proto.hidden
             if type(log)=="function" then
               local o=proto.origin or {}
               local px,py=polar(proto.distance,proto.orientation)
@@ -479,12 +472,13 @@ function M.confirm_critical_positions()
         ox=ox+(origin.x or origin[1] or 0)
         oy=oy+(origin.y or origin[2] or 0)
         assert(math.abs(ox-targetX)<.01 and math.abs(oy-targetY)<.01
-          and body.origin==nil and body.draw_orbit==false,
-          "Khemia still has Calidus coordinates after absolute placement: "..kind)
+          and body.origin and math.abs(body.origin.x-vx)<.01
+          and math.abs(body.origin.y-vy)<.01,
+          "Khemia's origin or coordinates are outside Vibrant: "..kind)
         if type(log)=="function" then
           log(string.format(
-            "[Razi Protocol/Calidus] Khemia %s ABSOLUTE %.2f,%.2f target %.2f,%.2f; origin=nil",
-            kind,ox,oy,targetX,targetY))
+            "[Razi Protocol/Vibrant] Khemia %s native %.2f,%.2f target %.2f,%.2f; ring=%s",
+            kind,ox,oy,targetX,targetY,tostring(body.draw_orbit)))
         end
       end
     end
