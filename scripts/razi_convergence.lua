@@ -24,7 +24,7 @@ end
 function M.available(force)
  local techs=force and force.technologies
  return techs and techs[defs.commission]
-  and techs[defs.authorization]
+  and techs[defs.authorization] and techs[defs.ignition]
 end
 function M.location(player)
  -- Remote View cannot submit cargo, even if the physical character
@@ -46,13 +46,18 @@ local function stage_ready(force,index)
  if not M.available(force) or not force.technologies[defs.commission].researched then
   return false,"convergence-need-research"
  end
- if index==3 and not force.technologies[defs.authorization].researched then
+ if index>=3 and not force.technologies[defs.authorization].researched then
   return false,"convergence-need-synchronization"
+ end
+ if index>=5 and not force.technologies[defs.ignition].researched then
+  return false,"convergence-need-ignition"
  end
  return true
 end
 function M.current(force)
  local saved=M.record(force)
+ -- Earlier winners keep their completed 2.1.57 campaign.
+ if saved.victory then return #M.stages+1 end
  for i,rule in ipairs(M.stages) do
   if (saved.delivered[rule.id] or 0)<rule.count then return i end
  end
@@ -64,6 +69,11 @@ function M.completed(force,id)
  local saved=all and all[force.index]
  if not saved then return false end
  if id=="victory" then return saved.victory==true end
+ if saved.victory then
+  for _,rule in ipairs(M.stages) do
+   if rule.id==id then return true end
+  end
+ end
  for _,rule in ipairs(M.stages) do
   if rule.id==id then
    return (saved.delivered[id] or 0)>=rule.count
@@ -73,6 +83,7 @@ function M.completed(force,id)
 end
 function M.progress(force)
  local saved=M.record(force)
+ if saved.victory then return #M.stages,#M.stages,true end
  local complete=0
  for _,rule in ipairs(M.stages) do
   if (saved.delivered[rule.id] or 0)>=rule.count then
@@ -103,7 +114,9 @@ local function finish(force,player)
    bullet_points={
     {"razi-ops.convergence-victory-stellar"},
     {"razi-ops.convergence-victory-industry"},
-    {"razi-ops.convergence-victory-deep"}
+    {"razi-ops.convergence-victory-deep"},
+    {"razi-ops.convergence-victory-resonance"},
+    {"razi-ops.convergence-victory-ignition"}
    },
    final_message={"razi-ops.convergence-victory-final"}
   }
@@ -142,6 +155,18 @@ function M.deliver(player,id)
   finish(force,player)
  end
  return "convergence-delivered",removed
+end
+-- Only restore newly introduced recipe unlocks on an existing save.
+-- Never reset the whole science tree or change another mod's research.
+function M.repair_recipe_unlocks(force)
+ if not (force and force.technologies and force.recipes) then return end
+ for _,rule in ipairs(M.stages) do
+  local research=force.technologies[rule.unlock or defs.commission]
+  local recipe=force.recipes[rule.item]
+  if research and research.researched and recipe then
+   recipe.enabled=true
+  end
+ end
 end
 function M.forces_merged(event)
  local saved=storage.razi_convergence
@@ -206,10 +231,13 @@ function M.render(parent,player)
   or "convergence-travel",width)
  local commission=force.technologies[defs.commission]
  local sync=force.technologies[defs.authorization]
+ local ignition=force.technologies[defs.ignition]
  line(scroll,commission.researched and "convergence-commission-complete"
   or "convergence-commission-pending",width)
  line(scroll,sync.researched and "convergence-sync-complete"
   or "convergence-sync-pending",width)
+ line(scroll,ignition.researched and "convergence-ignition-complete"
+  or "convergence-ignition-pending",width)
  local saved=M.record(force)
  local next_index=M.current(force)
  -- Read one player's carried freight when the panel opens or redraws.
@@ -227,7 +255,8 @@ function M.render(parent,player)
   local display=title.add{type="label",caption=L(
     "convergence-stage-"..rule.id)}
   display.style.font="heading-2"
-  local donated=math.min(rule.count,saved.delivered[rule.id] or 0)
+  local donated=won and rule.count
+   or math.min(rule.count,saved.delivered[rule.id] or 0)
   local amount=line(card,"convergence-stage-progress",width,
    tostring(donated),tostring(rule.count))
   amount.style.font_color=donated>=rule.count
@@ -238,7 +267,8 @@ function M.render(parent,player)
   meter.style.height=12
   local status=i<next_index and "finished"
    or (i>next_index and "pending")
-   or (i==3 and not sync.researched and "synchronization")
+   or (i>=5 and not ignition.researched and "ignition")
+   or (i>=3 and not sync.researched and "synchronization")
    or "active"
   local state=line(card,"convergence-status-"..status,width)
   state.style.font="default-bold"
@@ -254,7 +284,8 @@ function M.render(parent,player)
    caption=L("convergence-submit"),
    tags={razi_ops_action="convergence-deliver",value=rule.id}}
   button.enabled=i==next_index and carried>0 and where~=nil
-   and (i~=3 or sync.researched) and commission.researched
+   and (i<3 or sync.researched)
+   and (i<5 or ignition.researched) and commission.researched
  end
  line(scroll,"convergence-continued-play",width)
 end
