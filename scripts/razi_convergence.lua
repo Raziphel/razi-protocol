@@ -227,6 +227,15 @@ function M.repair_recipe_unlocks(force)
    recipe.enabled=true
   end
  end
+ -- The three new 2.1.62 components must be available in existing saves
+ -- where Ignition was already researched before their recipes existed.
+ local ignition=force.technologies[defs.ignition]
+ if ignition and ignition.researched then
+  for _,part in ipairs(defs.assemblies or {}) do
+   local recipe=force.recipes[part.item]
+   if recipe then recipe.enabled=true end
+  end
+ end
 end
 -- Only visit actively transmitting forces, once per second.
 function M.advance(tick)
@@ -548,6 +557,20 @@ function M.render(parent,player)
    or "convergence-recipe-locked")
   line(card,recipe_state,width)
   line(card,"convergence-stage-description-"..rule.id,width)
+  if i==#M.stages then
+   local part_title=line(card,"convergence-component-heading",width)
+   part_title.style.font="default-bold"
+   for _,part in ipairs(defs.assemblies or {}) do
+    local owned=inventory and inventory.valid
+     and inventory.get_item_count(part.item) or 0
+    local part_recipe=force.recipes and force.recipes[part.item]
+    line(card,"convergence-component-line",width,
+     {"item-name."..part.item},tostring(owned),
+     part_recipe and part_recipe.enabled
+       and {"razi-ops.convergence-component-craftable"}
+       or {"razi-ops.convergence-component-research"})
+   end
+  end
   local build=card.add{type="label",caption=L(
     "convergence-build-"..rule.id)}
   build.style.single_line=false
