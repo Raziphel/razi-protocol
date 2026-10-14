@@ -48,6 +48,14 @@ local function fixture(index)
  return force,player,inventory
 end
 local force,player,inventory=fixture(1)
+-- An absent or incompatible receiver prototype must not create
+-- an unfinishable endgame in a reduced modpack.
+local source_registry=prototypes
+rawset(_G,"prototypes",{item={},entity={}})
+local allowed,unknown_count=m.dyson_readiness(force)
+check(allowed and unknown_count==nil,
+ "Missing source receiver should gracefully use research-only fallback")
+rawset(_G,"prototypes",source_registry)
 check(not m.completed(force,"victory"),"Fresh world prewon")
 check(m.current(force)==1,"Start at first delivery")
 inventory.items[m.stages[1].item]=3
