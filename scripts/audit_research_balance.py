@@ -163,10 +163,10 @@ def examine(raw):
     labs=raw.get("lab") or {}
     if not isinstance(techs,dict):
         techs={}
-    lab_inputs=[
-        set(lab.get("inputs") or [])
-        for lab in labs.values() if isinstance(lab,dict)
-    ] if isinstance(labs,dict) else []
+    lab_inputs={
+        name:set(lab.get("inputs") or [])
+        for name,lab in labs.items() if isinstance(lab,dict)
+    } if isinstance(labs,dict) else {}
     packs=set(raw.get("tool") or {}) | set(raw.get("item") or {})
     tracked=set(INDUSTRY)
     for _,group in MILESTONES: tracked.update(group)
@@ -233,6 +233,7 @@ def examine(raw):
     used_packs=Counter()
     missing_packs={}
     lab_gaps={}
+    lab_coverage={}
     for label,group in MILESTONES:
         rows=[]
         for name in group:
@@ -259,13 +260,36 @@ def examine(raw):
             issues.append({"severity":"error","code":"unknown-science-item",
                 "targets":[name],"packs":absent,
                 "detail":"Required science item is absent from loaded item/tool prototypes."})
-        if science and lab_inputs and not any(
-            set(science).issubset(accepted) for accepted in lab_inputs):
-            lab_gaps[name]=sorted(science)
-            issues.append({"severity":"error","code":"no-shared-science-lab",
-                "targets":[name],"packs":sorted(science),
-                "detail":"No installed laboratory accepts this complete science set."})
+        if science:
+            compatible=sorted(
+                lab for lab,accepted in lab_inputs.items()
+                if set(science).issubset(accepted))
+            lab_coverage[name]=compatible
+            if lab_inputs and not compatible:
+                lab_gaps[name]=sorted(science)
+                issues.append({"severity":"error","code":"no-shared-science-lab",
+                    "targets":[name],"packs":sorted(science),
+                    "detail":"No installed laboratory accepts this complete science set."})
     card_recipes=inspect_card_recipes(raw,issues)
+    # Count the direct card demand of each campaign stage, rather than
+    # equating a cheap research unit with an expensive late-tier card.
+    # This deliberately excludes recursive precursor manufacturing and
+    # machine speed: the result is a research order-of-magnitude report.
+    stage_card_demand={}
+    for stage,rows in stages.items():
+        demanded=Counter()
+        for row in rows:
+            count=row["research_units"]
+            if not isinstance(count,(int,float)) or count<=0:
+                continue
+            for card,amount in science_ingredients(
+                    techs.get(row["name"]) or {}).items():
+                if card in SYSTEM_CARDS:
+                    demanded[card]+=count*amount
+        stage_card_demand[stage]={
+            "cards":dict(sorted(demanded.items())),
+            "direct_card_items":sum(demanded.values())
+        }
     research_prices=[]
     science_reuse=Counter()
     for name in INDUSTRY:
@@ -294,6 +318,8 @@ def examine(raw):
                     "detail":"Razi industrial research is unusually expensive."})
     return {"paired_entries":pairs,"stages":stages,
             "system_card_manufacturing":card_recipes,
+            "stage_card_demand":stage_card_demand,
+            "science_lab_coverage":lab_coverage,
             "world_science_arrival_checks":world_science_checks,
             "native_arrival_errors":native_arrival_errors,
             "planetary_science_reuse":dict(sorted(science_reuse.items())),
@@ -332,6 +358,11 @@ def main(argv=None):
             print(stage+":",", ".join(
                 x["name"]+"="+str(x["research_units"]) for x in rows)
                 or "not installed")
+        for stage,estimate in report["stage_card_demand"].items():
+            if estimate["direct_card_items"]:
+                print(stage+" direct card demand:",
+                      ", ".join(f"{name}={count:g}" for name,count in
+                                estimate["cards"].items()))
         if report["planetary_science_reuse"]:
             print("Reused planetary sciences:",
                   ", ".join(f"{k} ({v} techs)" for k,v in
