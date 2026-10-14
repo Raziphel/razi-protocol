@@ -657,10 +657,10 @@
     },
     {
       "mod": "Nexus-Threat-Updated",
-      "type": "recommended",
-      "declaration": "+ Nexus-Threat-Updated >= 1.1.0",
-      "group": "recommended",
-      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+      "type": "required",
+      "declaration": "Nexus-Threat-Updated >= 1.1.0",
+      "group": "deep",
+      "reason": "Nexus-Updated is a required campaign world and its current Mod Portal release requires Nexus-Threat-Updated >= 1.1.0"
     },
     {
       "mod": "Big-Monsters",
