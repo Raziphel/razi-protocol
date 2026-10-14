@@ -267,16 +267,19 @@ local function test_routes()
     "Home system shortcut bypassed the first frontier")
   check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
     "A direct route bypasses the native asteroid belt")
+  check(routes["razi-sye-vibrant-ribbonia"]~=nil and
+    routes["razi-sye-vespera-aquilo"]~=nil,
+    "Inner systems lost their alternative planetary routes")
   check(routes["razi-ribbonia-asteroid-belt-inner-edge"]~=nil,
     "Missing inner entry to native asteroid belt")
   check(routes["razi-asteroid-belt-outer-edge-paracelsin"]~=nil,
     "Missing outer exit to Paracelsin")
 
-    check(routes["razi-vulcanus-arig"]==nil,
-      "Retired crossing line must not appear across Solaris")
+    check(routes["razi-vulcanus-arig"]~=nil,
+      "Solaris neighbor shortcut missing")
     for _,old in ipairs({
       "sye-solaris-castra","castra-hyarion","hyarion-corrundum",
-      "razi-vulcanus-hyarion","razi-hyarion-corrundum"
+      "razi-vulcanus-hyarion"
     }) do
       check(routes[old]==nil,"Retired Solaris shortcut survived: "..old)
     end
@@ -292,6 +295,11 @@ local function test_routes()
     for _, local_link in ipairs({
         {"razi-sye-solaris-igrys",26500},
         {"razi-corrundum-igrys",32000},
+        {"razi-vulcanus-arig",21000},
+        {"razi-hyarion-corrundum",29500},
+        {"razi-gleba-apia-carnova-orbit",26000},
+        {"razi-sye-vibrant-ribbonia",23500},
+        {"razi-sye-vespera-aquilo",28000},
         {"razi-sye-vibrant-fulgora",17000},
         {"razi-fulgora-ribbonia",19500},
                 {"razi-vulcanus-castra",17500},

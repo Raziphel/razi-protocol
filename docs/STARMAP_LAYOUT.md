@@ -1,3 +1,26 @@
+## Local planetary route networks (October 2026)
+
+The star systems now support nearby transport alternatives instead of a
+single mandatory chain:
+
+- Solaris links Vulcanus to Arig and Hyarion to Corrundum as short hops
+  within the existing closed orbital circuit.
+- Nyxaris links Gleba and the Apia/Carnova orbit directly, alongside the
+  established Moshine junction.
+- Vibrant adds the Slip Stream–Ribbonia return leg; Fulgora is moved
+  slightly outward so the chord does not obscure its icon.
+- Vespera links the Slip Stream to Aquilo directly and rotates Muria
+  slightly to keep the triangular inner routes readable.
+- Beetlejuice already has a Cubium/Linox/Secretas alternative circuit
+  and needs no extra crossed line at its gateway.
+- Umbra retains the gateway/Tenebris/Crucible triangle; Tenebris–Carna
+  and gateway–Arcanyx add optional nearby paths when installed.
+
+The original three asteroid belt crossings, source-owned moons,
+research-gated destinations and interstellar hub connections are
+unchanged. Only available destinations receive their matching links.
+Test older platform schedules on a backed-up save after updating.
+
 ## Solaris closed orbital circuit (2.1.48)
 
 Solaris now forms one complete eight-connection circuit:

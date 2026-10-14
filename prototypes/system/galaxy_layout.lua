@@ -45,10 +45,12 @@ local anchors = {
   {"planet","panglia","nyxaris",40,0.49},
   -- Separate the storm world from the Slip Stream and Ribbonia.
   -- Both stay safely inside Vibrant's physical 31-unit belt entrance.
-  {"planet","fulgora","vibrant",21,0.52},
+  -- Fulgora sits above the Ribbonia return chord, clear of its marker.
+  {"planet","fulgora","vibrant",26,0.50},
   {"planet","ribbonia","vibrant",26,0.365},
   {"planet","paracelsin","vibrant",49,0.238},
-  {"planet","muria","vespera",20,0.394284},
+  -- Offset Muria from the parallel gateway-to-Aquilo cargo leg.
+  {"planet","muria","vespera",20,0.49},
   {"planet","aquilo","vespera",40,0.497561},
   {"space-location","razi-vespera-belt-inner","vespera",28.834477,0.594031},
   {"space-location","razi-vespera-belt-outer","vespera",28.890877,0.654938},

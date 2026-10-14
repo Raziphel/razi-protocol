@@ -22,7 +22,10 @@ local side_routes={
   {"alchemy-planet","paracelsin",21000,"chemistry_deep"},
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
-  {"velora","gleba",14000,"biological"}
+  {"velora","gleba",14000,"biological"},
+  -- Optional inner Umbra planets gain nearby choices, not belt shortcuts.
+  {"tenebris","carna",16000,"outer_void"},
+  {"sye-umbra","arcanyx",18000,"outer_void"}
 }
 -- Source-authored orbital links, not speculative Razi shortcuts.
 local native_pairs={
