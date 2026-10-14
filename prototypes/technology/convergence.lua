@@ -62,7 +62,7 @@ M.assemblies={
 }
 M.max_recipe_inputs=6
 local artwork={
- stellar="stellar",industry="industrial",
+ stellar="stellar",industry="industry",
  ["deep-space"]="deep-space",resonance="resonance",ignition="ignition"
 }
 local function raw(kind,id)
@@ -148,7 +148,7 @@ local function native_icon(name)
     or {icon=source.icon,icon_size=source.icon_size or 256}
 end
 local function mandate_icon(id)
- return {icon="__razi-protocol__/graphics/icons/convergence/"..
+ return {icon="__razi-protocol__/graphics/icons/convergence/razi-convergence-"..
   artwork[id]..".png",icon_size=64}
 end
 local function unit(candidates,fallback)
