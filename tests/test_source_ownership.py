@@ -16,6 +16,30 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertIn('"sye-vespera", "muria"', (
             ROOT / "prototypes/system/route_reconcile.lua").read_text(encoding="utf-8"))
 
+    def test_recommended_mods_are_curated_and_nonmandatory(self):
+        import json
+        info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
+        deps=info["dependencies"]
+        recommended=[dep for dep in deps if dep.startswith("+ ")]
+        self.assertEqual(set(recommended), {
+            "+ aai-signal-transmission >= 0.6.0",
+            "+ Imersite-Asteroids >= 1.3.0",
+        })
+        # Only mods with a native 2.1 release and tested integrations
+        # should be promoted. Do not recommend unfinished or
+        # version-incompatible optional content.
+        for blocked in ("FluxWorks", "dea-dia-system", "pelagos",
+                        "secretas-orbit-patch", "outer-rim"):
+            self.assertFalse(any(dep.startswith("+ "+blocked) for dep in deps))
+        normalised=[]
+        for dep in deps:
+            words=dep.split()
+            name=words[1] if words[0] in (
+                "+", "?", "(?)", "~", "!") else words[0]
+            normalised.append(name)
+        self.assertEqual(len(normalised),len(set(normalised)),
+                         "A mod may only have one dependency declaration")
+
     def test_only_integrated_optional_dependencies_are_advertised(self):
         import json
         info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
