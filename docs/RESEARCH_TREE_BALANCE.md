@@ -1,3 +1,18 @@
+## 2.1.67: Visible card demand and real-lab compatibility
+
+`scripts/audit_research_balance.py` now reports the direct system-card
+items consumed by the technology researches in each campaign stage.
+These numbers multiply the final science pack ingredients by actual
+research units; they do **not** silently double nested predecessor
+recipes, change a source mod's technology, or pretend crafting throughput
+has been measured. Compare the report with real factory output before
+adjusting the next balance tier.
+
+`science_lab_coverage` lists the existing installed labs that accept the
+entire science combination for each tracked Razi technology; an empty list
+with a populated lab prototype table raises the existing hard lab-coverage
+error. No new laboratory prototypes or blanket source-lab inputs are added.
+
 ## 2.1.63: System card manufacturing and science pacing
 
 Razi now accounts for the *real manufacturing cost* of science cards before
