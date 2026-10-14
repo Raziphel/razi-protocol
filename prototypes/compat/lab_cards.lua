@@ -14,6 +14,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.calidus-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
+		craft_time = 10, regional_science_amount = 1,
 		unlock_technology_candidates = {"space-science-pack", "planet-discovery-muluna"},
 		ingredients = {
 			"automation-science-pack", "logistic-science-pack",
@@ -30,6 +31,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.solaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/solaris-tech-card.png",
 		order = "s[system]-b[solaris]",
+		craft_time = 12, regional_science_amount = 1,
 		unlock_technology_candidates = {"planet-discovery-castra"},
 		ingredients = {
 			"calidus-tech-card", "metallurgic-science-pack",
@@ -49,6 +51,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.nyxaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/nyxaris-tech-card.png",
 		order = "s[system]-c[nyxaris]",
+		craft_time = 12, regional_science_amount = 1,
 		-- Never put optional Dea Dia / Pelagos science into a mandatory card.
 		unlock_technology_candidates = {
 			"planet-discovery-moshine",
@@ -67,6 +70,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.vibrant-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
 		order = "s[system]-d[vibrant]",
+		craft_time = 16, regional_science_amount = 1,
 		unlock_technology_candidates = {"planet-discovery-ribbonia"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
@@ -81,6 +85,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.vespera-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vespera-tech-card.png",
 		order = "s[system]-e[vespera]",
+		craft_time = 16, regional_science_amount = 1,
 		unlock_technology_candidates = {"planet-discovery-muria"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
@@ -95,6 +100,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.beetlejuice-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
 		order = "s[system]-f[beetlejuice]",
+		craft_time = 22, regional_science_amount = 2,
 		unlock_technology_candidates = {"planet-discovery-cubium"},
 		ingredients = {
 			"vibrant-tech-card", "vespera-tech-card",
@@ -107,6 +113,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.umbra-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/umbra-tech-card.png",
 		order = "s[system]-g[umbra]",
+		craft_time = 22, regional_science_amount = 2,
 		unlock_technology_candidates = {"planet-discovery-tenebris"},
 		ingredients = {
 			"vibrant-tech-card", "vespera-tech-card",
@@ -120,6 +127,7 @@ local system_card_definitions = {
 		localised_name = {"item-name.deep-space-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
 		order = "s[system]-h[deep-space]",
+		craft_time = 28, regional_science_amount = 2,
 		unlock_technology_candidates = {"razi-singularity-theory", "promethium-882-research"},
 		ingredients = {
 			"beetlejuice-tech-card", "umbra-tech-card",
@@ -201,12 +209,16 @@ local function science_pack_exists(name)
 	return Science.exists(name)
 end
 
-local function build_recipe_ingredients(science_packs)
+-- Native frontier sciences become more demanding at the outer edge;
+-- predecessor SYSTEM cards always stay at one per recipe to avoid
+-- multiplying the entire campaign's earlier factories recursively.
+local function build_recipe_ingredients(science_packs, regional_amount)
 	local ingredients = {}
 
 	for _, science_pack in ipairs(science_packs or {}) do
 		if science_pack_exists(science_pack) then
-			table.insert(ingredients, {type = "item", name = science_pack, amount = 1})
+			local amount = science_pack:match("%-tech%-card$") and 1 or (regional_amount or 1)
+			table.insert(ingredients, {type = "item", name = science_pack, amount = amount})
 		end
 	end
 
@@ -227,7 +239,7 @@ local function find_first_existing_technology(candidates)
 end
 
 local function upsert_system_card(card)
-	local ingredients = build_recipe_ingredients(card.ingredients)
+	local ingredients = build_recipe_ingredients(card.ingredients, card.regional_science_amount)
 	if #ingredients == 0 then
 		ingredients = build_recipe_ingredients(card.fallback_ingredients)
 	end
@@ -284,7 +296,7 @@ local function upsert_system_card(card)
 				localised_name = {"", card.localised_name},
 				enabled = false,
 				categories = {"crafting"},
-				energy_required = 10,
+				energy_required = card.craft_time or 10,
 				ingredients = ingredients,
 				results = {
 					{type = "item", name = card.name, amount = 1}
@@ -300,7 +312,7 @@ local function upsert_system_card(card)
 		recipe.localised_name = {"", card.localised_name}
 		recipe
 			:set_categories({"crafting"})
-			:set_energy(10)
+			:set_energy(card.craft_time or 10)
 			:set_ingredients(ingredients)
 			:set_results({
 				{type = "item", name = card.name, amount = 1}
