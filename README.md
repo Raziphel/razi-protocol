@@ -4,6 +4,17 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.68: Seven-system science economy.** Freight-assisted card recipes
+now convert four native batches plus regional imports into five cards, with
+15% additional processing time versus four normal batches. New optional
+Beetlejuice and Umbra recipes reuse Secretas, Linox, Tenebris and Vesta
+manufacturing. First-frontier research has gentler costs on late Solaris
+and Moshine/Apia discoveries, without changing the paired entries,
+native Panglia data-cell progression or old technology IDs. The Campaign
+UI shows installed bonus recipes and the auditor checks bonus ceilings,
+craft time and mandatory first-frontier card spending. A full Factorio
+runtime and old-save playtest are still required.
+
 **2.1.67: Science, economy and planetary identity pass.** Discovered
 worlds now show their real shared production-chain roles in the Atlas,
 with a direct link to the existing Cargo Network card. Research audits
