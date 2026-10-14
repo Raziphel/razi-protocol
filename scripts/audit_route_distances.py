@@ -104,6 +104,67 @@ def positions(raw):
         locate(name)
     return cache
 
+BELT_ECOLOGY = (
+    ("vibrant", "asteroid-belt-inner-edge", "asteroid-belt-outer-edge",
+     "metallic-asteroid-chunk"),
+    ("vespera", "razi-vespera-belt-inner", "razi-vespera-belt-outer",
+     "oxide-asteroid-chunk"),
+    ("umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer",
+     "carbonic-asteroid-chunk"),
+)
+
+
+def belt_ecology_issues(raw, links):
+    """Audit harvested material in a REAL post-load prototype dump.
+
+    The light source-geometry fixture has no asteroid prototypes and skips
+    these checks. No simulated route traffic or production is inferred.
+    """
+    if not obj(raw.get("asteroid-chunk")):
+        return set()
+    locations = obj(raw.get("space-location"))
+    results = set()
+    for system, inner, outer, specialty in BELT_ECOLOGY:
+        if inner not in locations or outer not in locations:
+            results.add(f"Missing {system} resource rim")
+            continue
+        for rim in (inner, outer):
+            definitions = locations[rim].get("asteroid_spawn_definitions", [])
+            available = {d.get("asteroid"): d for d in definitions
+                         if isinstance(d, dict)}
+            chunk = available.get(specialty)
+            if not chunk or chunk.get("type") != "asteroid-chunk" or (
+                    not isinstance(chunk.get("probability"), (int, float))
+                    or chunk["probability"] <= 0):
+                results.add(f"{system} rim lacks its expected {specialty} ore")
+            if any(d.get("type") == "entity" and
+                   isinstance(d.get("probability"), (int, float))
+                   and d["probability"] > 0
+                   for d in definitions if isinstance(d, dict)):
+                results.add(f"Unsafe combat asteroid on {system} safe rim")
+        matching = links.get(key(inner, outer), [])
+        if len(matching) != 1:
+            results.add(f"{system} belt should have one physical crossing")
+            continue
+        route = matching[0][1]
+        definitions = route.get("asteroid_spawn_definitions", [])
+        chunks = {d.get("asteroid"): d for d in definitions
+                  if isinstance(d, dict) and d.get("type") == "asteroid-chunk"}
+        native = chunks.get(specialty)
+        if not native:
+            results.add(f"{system} crossing lacks {specialty} seam")
+            continue
+        points = native.get("spawn_points", [])
+        center = next((p.get("probability") for p in points
+                       if isinstance(p, dict) and p.get("distance") == 0.5), None)
+        entry = next((p.get("probability") for p in points
+                      if isinstance(p, dict) and p.get("distance") == 0.05), None)
+        if (not isinstance(center, (int, float)) or
+                not isinstance(entry, (int, float)) or center <= entry):
+            results.add(f"{system} crossing has no richer mid-belt ore seam")
+    return results
+
+
 def audit(raw):
     routes = obj(raw.get("space-connection"))
     coords = positions(raw)
@@ -111,7 +172,7 @@ def audit(raw):
     for name, route in routes.items():
         if isinstance(route, dict) and route.get("from") and route.get("to"):
             links[key(route["from"], route["to"])].append((name, route))
-    issues = set()
+    issues = belt_ecology_issues(raw, links)
     for a, b in BELT_BYPASSES:
         if key(a, b) in links:
             issues.add(f"Unsafe belt bypass remains: {a} -> {b}")
