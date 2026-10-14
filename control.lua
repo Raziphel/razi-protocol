@@ -149,12 +149,14 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(function()
+  convergence.restore_pending()
   preserve_deep_space_campaign()
   check_existing_transceivers()
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
+	convergence.restore_pending()
 	preserve_deep_space_campaign()
 	check_existing_transceivers()
 	-- Existing saves may have researched older Convergence stages before
@@ -171,6 +173,17 @@ events:on_configuration_changed(function(event)
 end)
 -- Export at most once per 15 game seconds; disabled players do no work.
 events:on_nth_tick(900, razi_discord_presence.write)
+-- An idle Convergence has no pending work. Active force transmissions
+-- advance once per second and only redraw their open final panels.
+events:on_nth_tick(60,function(event)
+  local changed=convergence.advance(event.tick)
+  if changed then
+    for _,index in ipairs(changed) do
+      local force=game.forces[index]
+      if force then galactic_operations.refresh_convergence(force) end
+    end
+  end
+end)
 -- Spread debug research across ticks instead of freezing the whole modpack.
 commands.add_command("razi-cheat",
   {"razi-cheat.help"},
