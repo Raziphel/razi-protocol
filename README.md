@@ -4,6 +4,16 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.59: The Seven-Sun Array is visible in Galactic Operations.**
+Its five construction modules light up as your force delivers physical freight.
+The final phase can require a placed Dyson energy receiver from the original
+Dyson Sphere mod, if a compatible receiver entity is exposed. This is a
+real placed entity, not an invented satellite or energy-production statistic.
+Once the final accord reaches the expedition platform, the transmission
+unfolds in four force-wide updates over twelve seconds, ending with
+Factorio's native victory screen. The sequence survives save/reload and
+previous winners remain victorious.
+
 **2.1.58: The ending now has five physical phases.** After the original
 Stellar, Industrial and Deep-Space shipments, engineers prepare four
 Pulsar Resonance Mandates, research Convergence Ignition Protocol and
