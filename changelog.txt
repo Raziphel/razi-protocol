@@ -1,9 +1,10 @@
 Version: 2.1.65
 Date: 14. 10. 2026
   Dependency classification audit:
-    - Audit all 95 direct mod declarations into 49 required, 10 recommended, 14 optional and 22 incompatible entries.
+    - Audit all 95 direct mod declarations into 50 required, 9 recommended, 14 optional and 22 incompatible entries.
     - Keep K2SO, native assets, Dyson progression, PlanetsLib, Razi Library, required integration patches and all curated campaign planets mandatory.
-    - Promote Planet Express, Rocket Turrets Upgraded, the two Celestial Weather forks, Frost Biters, Science Tab, Nexus Threat and Big Monsters to recommended without altering their version floors.
+    - Promote Planet Express, Rocket Turrets Upgraded, the two Celestial Weather forks, Frost Biters, Science Tab and Big Monsters to recommended without altering their version floors.
+    - Keep Nexus Threat required, because Nexus-Updated directly requires it; a Razi + marker cannot change that upstream requirement.
     - Make the Razi system science subgroup fall back to vanilla Intermediate Products when Science Tab is absent.
     - Keep experimental planets, FluxWorks and alternate-source systems optional; preserve all explicit conflicts and the Nexus Bosses reverse-dependency boundary.
     - Add a complete machine-readable policy ledger, matching human audit and offline regression tests.
