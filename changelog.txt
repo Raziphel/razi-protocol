@@ -1,3 +1,14 @@
+Version: 2.1.58
+Date: 14. 10. 2026
+  The Convergence: Pulsar Resonance and Final Ignition:
+    - The real endgame now has five shipments: 8 Stellar, 10 Industrial, 6 Deep-Space, 4 Pulsar Resonance, and 1 final Ignition Mandate.
+    - Introduce the post-Synchronization Convergence Ignition Protocol technology. Reuse existing installed labs, the seven system cards, Fulgoran holmium, source Dyson research and source-compatible advanced materials without adding a laboratory, destination or transport entity.
+    - Keep the source pulsar, singularity and antimatter products where their prototypes and producers exist. Recipes can be manufactured in ordinary existing assemblers.
+    - Final native victory requires the fifth real player-carried delivery; the third and fourth deliveries no longer end the game. Existing 2.1.57 victories remain won, preserving prior cargo and force merge progress.
+    - Expand the Codex by three quests to 228 conditional milestones; update all five stage panels, native victory messaging, English names and in-game guidance.
+    - Targeted mod-update recipe repair never resets another mod's research. Update Lua and structural regression fixtures.
+    - Real Factorio 2.1 complete-pack startup, native lab/cargo access, source optional materials and existing-save validation are release blockers. No CI workflows were requested.
+
 Version: 2.1.57
 Date: 14. 10. 2026
   The Convergence: phase-gated manufacturing and cargo UX:
