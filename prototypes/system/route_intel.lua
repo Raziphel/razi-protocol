@@ -31,23 +31,38 @@ function M.annotate(route)
   local report=hazards.inspect(route)
   local kind=hazards.kind(route)
   -- Append only: route authors own their names, description and existing fields.
+  -- The old tooltip included up to ten rows, even for a harmless local
+  -- shuttle. Show known facts only; important combat warnings are always
+  -- near the top while routine contacts stay quiet.
   local additions={
     field("route",localise("kind-"..kind),220),
-    field("danger",localise("tier-"..report.tier),221),
-    field("largest",localise("size-"..report.largest),222),
-    field("salvage",report.chunks>0
-      and localise("chunks-present",tostring(report.chunks))
-      or localise("chunks-unlisted"),223),
-    field("distance",type(route.length)=="number"
-      and localise("kilometers",tostring(route.length))
-      or localise("unlisted"),224),
-    field("preparation",localise("prepare-"..report.tier),225)
+    field("danger",localise("tier-"..report.tier),221)
   }
+  if report.tier>=4 then
+    additions[#additions+1]=field("alert",
+      localise("alert-"..report.tier),222)
+  end
+  if report.tier>=3 then
+    additions[#additions+1]=field("largest",
+      localise("size-"..report.largest),223)
+  end
+  if report.chunks>0 then
+    additions[#additions+1]=field("salvage",
+      localise("chunks-present",tostring(report.chunks)),224)
+  end
+  if type(route.length)=="number" and route.length>0 then
+    additions[#additions+1]=field("distance",
+      localise("kilometers",tostring(route.length)),225)
+  end
+  if report.tier>=3 then
+    additions[#additions+1]=field("preparation",
+      localise("prepare-"..report.tier),226)
+  end
   if report.unknown then
-    additions[#additions+1]=field("unknown",localise("unknown-warning"),226)
+    additions[#additions+1]=field("unknown",localise("unknown-warning"),227)
   end
   if hazards.is_belt_crossing(route) then
-    additions[#additions+1]=field("progress",localise("required-belt"),227)
+    additions[#additions+1]=field("progress",localise("required-belt"),228)
   end
   -- Only describe routes with two explicitly catalogued system endpoints.
   -- Unknown third-party planets must never be assigned a guessed sector.
@@ -57,12 +72,12 @@ function M.annotate(route)
       and localise("inside-system",localise("system-"..from))
       or localise("across-systems",
         localise("system-"..from),localise("system-"..to))
-    additions[#additions+1]=field("sector",desc,228)
+    additions[#additions+1]=field("sector",desc,229)
   end
-  additions[#additions+1]=field("haul",
-    localise("haul-"..hazards.haul_class(route)),229)
-  additions[#additions+1]=field("composition",
-    localise("mix-"..report.mix),230)
+  if type(route.length)=="number" and route.length>75000 then
+    additions[#additions+1]=field("haul",
+      localise("haul-"..hazards.haul_class(route)),230)
+  end
   for _,extra in ipairs(additions) do fields[#fields+1]=extra end
   route.custom_tooltip_fields=fields
   return true
