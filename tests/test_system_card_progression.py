@@ -40,6 +40,17 @@ class SystemCardProgressionTests(unittest.TestCase):
         self.assertIn('science_pack:match("%-tech%-card$")',source)
         self.assertIn(':set_energy(card.craft_time or 10)',source)
 
+    def test_first_frontier_prices_preserve_parallel_entry(self):
+        gates=read("prototypes/technology/seven_system_gates.lua")
+        self.assertIn('calidus, 650)',gates)
+        for name in ("arig","hyarion"):
+            self.assertRegex(gates,r'planet-discovery-'+name+
+                             r'".*?calidus, 650\)')
+        self.assertIn('{"planet-discovery-arig", "planet-discovery-hyarion"}, calidus, 800)',gates)
+        self.assertIn('{"planet-discovery-tellus"}, calidus, 950)',gates)
+        self.assertIn('replace_requirements(name, {"nyxaris-discovery"}, calidus, 800)',gates)
+        self.assertIn('add_existing_prerequisites("panglia_planet_discovery_panglia"',gates)
+
     def test_no_razi_owned_lab_prototypes(self):
         source=read("prototypes/compat/system_card_laboratories.lua")
         for name in ("razi-frontier-lab","razi-constellation-lab",
