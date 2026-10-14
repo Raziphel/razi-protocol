@@ -68,7 +68,7 @@ Only native planetary science ingredients double for the two outer cards
 and Deep Space. Prerequisite **system cards always remain one per recipe**,
 so a late science recipe cannot recursively double the cost of every
 earlier card. No new factories, laboratories, planets or ingredients
-have been added. The five optional freight batch recipes use the final
+have been added. The seven optional freight batch recipes use the final
 ordinary recipes as their baseline.
 
 Four foundational industrial technologies and ten associated Razi
@@ -201,7 +201,7 @@ This prevents an ordinary Moshine, K2SO or Nexus lab from needing a
 material unlocked after itself. Source recipes, graphics, entities and
 building costs remain otherwise intact.
 
-The five optional bulk card recipes from 2.1.54 remain intact. Their
+The five original bulk card recipes from 2.1.54 remain intact. Their
 first-available ordinary card recipe is preserved.
 
 ## Revised Deep Space access (2.1.55)
