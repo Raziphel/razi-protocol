@@ -30,7 +30,6 @@ class TestSourceOwnership(unittest.TestCase):
             "+ celestial-weather-additions-updated >= 1.3.1",
             "+ Cold_biters >= 2.3.0",
             "+ science-tab >= 1.13.0",
-            "+ Nexus-Threat-Updated >= 1.1.0",
             "+ Big-Monsters >= 2.2.1",
         })
         # Only mods with a native 2.1 release and tested integrations
