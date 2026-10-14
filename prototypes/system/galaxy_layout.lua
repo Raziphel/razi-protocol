@@ -129,6 +129,24 @@ local function resolved(item)
   return kind,proto
 end
 
+-- The native Rabbasca moon is exceptionally tight around Gleba.
+-- Rotate it into the southwest gap without changing its parent or travel.
+-- The source's other selectable parent planets are left alone.
+local rabbasca_radius,rabbasca_turn=4.2,0.65
+local function position_rabbasca()
+  local moon=exists("planet","rabbasca")
+  local orbit=moon and moon.orbit
+  local parent=orbit and orbit.parent
+  if not (parent and parent.type=="planet" and parent.name=="gleba") then
+    return false
+  end
+  orbit.distance=rabbasca_radius
+  orbit.orientation=rabbasca_turn
+  moon.distance=rabbasca_radius
+  moon.orientation=rabbasca_turn
+  return true
+end
+
 local function source_orbit(item)
   local _,existing=resolved(item)
   local old=existing and existing.orbit
@@ -158,6 +176,8 @@ function M.data_updates()
     end
   end
   if #updates>0 then PlanetsLib:update(updates) end
+  -- Set the moon orbit before PlanetsLib bakes its decorative layers.
+  position_rabbasca()
   -- Some ports can expose both prototype types under the source ID. Move
   -- both before PlanetsLib bakes starmap art so no duplicate stays at home.
   if exists("planet","alchemy-planet") and exists("space-location","alchemy-planet") then
@@ -253,6 +273,9 @@ function M.data_final_fixes()
     end
   end
 
+  -- Reapply the visual moon turn after optional source-mod positioning.
+  position_rabbasca()
+
   -- Any source-owned orbit not explicitly in our layout must travel with its
   -- moved parent. Keep the source's relative native distance/orientation and
   -- custom orbit sprite intact. Multiple passes handle nested moon systems.
@@ -284,8 +307,8 @@ function M.data_final_fixes()
 
   -- Factorio draws labels relative to their location, and compact waypoints
   -- can otherwise overlap each other even when the icons are distinct.
-  -- Only Razi-owned hubs and rims get fixed orientations. Native planet,
-  -- moon and optional third-party label preferences remain source-owned.
+  -- Most labels retain source preferences. Gleba and its moons receive
+  -- separate directions to avoid overlap at galaxy zoom.
   local label_orientations={
     -- Separate the compact home-system labels without moving source moons.
     ["nauvis"]=0.25,["muluna"]=0.75,

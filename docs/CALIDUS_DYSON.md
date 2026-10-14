@@ -98,6 +98,17 @@ A true satellite-driven starmap phase also cannot be changed at runtime
 through data-stage `starmap_star` textures. That visual remains
 static; evolving research illustrations live in the GUI.
 
+### Why /razi-cheat doesn't change Calidus
+
+`/razi-cheat` grants eligible research to the force; it does not launch
+the SLP satellites or place the energy receivers. Researching
+`slp-dyson-sphere` unlocks the project, but cannot swap Calidus's native
+star texture during a save. For the research-stage illustrations and
+read-only receiver counts, open **Galactic Ops > Stellar Works**.
+Its small map badge follows researched technologies. It does not claim
+to measure physical Dyson Sphere completion. The testing command now
+prints this clarification on completion.
+
 The five GUI sprites reuse existing Razi artwork. No additional art
 files, periodic game-tick callbacks, source-mod runtime edits or
 source-state migrations are required.

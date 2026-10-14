@@ -13,6 +13,17 @@ local function say(index,message)
   end
 end
 
+-- This command grants research; SLP satellite construction is separate.
+local function explain_dyson(index,force)
+  local technologies=force and force.technologies
+  local project=technologies and technologies["slp-dyson-sphere"]
+  if project and project.researched then
+    say(index,"Dyson research unlocked, but satellites still need launching. "..
+      "Calidus's map star is static. See Galactic Ops > Stellar Works "..
+      "for research-stage art and placed receivers.")
+  end
+end
+
 local function eligible(tech)
   if not tech or tech.valid==false or tech.researched then return false end
   local proto=tech.prototype
@@ -95,6 +106,7 @@ function M.command(event)
   player.cheat_mode=true
   if #plan==0 then
     say(player.index,"All eligible technologies are already researched. Free crafting enabled.")
+    explain_dyson(player.index,force)
     return
   end
   if not jobs then
@@ -144,6 +156,7 @@ function M.tick()
         jobs[force_name]=nil
         say(job.player_index,("Staged research complete: %d granted, %d failed.")
           :format(job.completed,job.failed))
+        explain_dyson(job.player_index,force)
         log(("[Razi Protocol/cheat] Force %s: %d completed, %d failed.")
           :format(force_name,job.completed,job.failed))
       end
