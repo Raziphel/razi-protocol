@@ -231,7 +231,7 @@ end
 -- Only visit actively transmitting forces, once per second.
 function M.advance(tick)
  local waiting=storage and storage.razi_convergence_pending
- if not waiting then return nil end
+ if not waiting or not next(waiting) then return nil end
  local changed={}
  for index in pairs(waiting) do
   local saved=storage.razi_convergence and storage.razi_convergence[index]
@@ -354,8 +354,11 @@ function M.render(parent,player)
  local assembly=line(scroll,"convergence-assembly-heading",width)
  assembly.style.font="heading-2"
  line(scroll,"convergence-assembly-subtitle",width)
- local tiles=scroll.add{type="table",
-  column_count=width>=560 and 5 or (width>=380 and 3 or 2)}
+ -- Budget each card's real width, including padding and spacing,
+ -- rather than squeezing five 135px labels into a narrow panel.
+ local columns=width>=780 and 5 or (width>=480 and 3 or 2)
+ local cell_width=math.floor((width-24-(columns-1)*6)/columns)
+ local tiles=scroll.add{type="table",column_count=columns}
  tiles.style.horizontally_stretchable=true
  tiles.style.horizontal_spacing=6
  tiles.style.vertical_spacing=6
@@ -373,13 +376,11 @@ function M.render(parent,player)
   local caption=tile.add{type="label",caption=
    {"razi-ops.convergence-stage-"..rule.id}}
   caption.style.single_line=false
-  caption.style.maximal_width=135
+  caption.style.maximal_width=math.max(72,cell_width-20)
   caption.style.font="default-bold"
   caption.style.font_color=shade
   local fill=tile.add{type="progressbar",value=donated/rule.count}
-  fill.style.width=math.min(122,math.max(66,
-   math.floor((width-30)/(width>=560 and 5 or
-    (width>=380 and 3 or 2))-18)))
+  fill.style.width=math.max(58,cell_width-24)
   fill.style.height=7
   fill.style.color=shade
   local marker=tile.add{type="label",caption={
@@ -484,7 +485,7 @@ function M.render(parent,player)
     and (next_index<3 or sync.researched)
     and (next_index<5 or ignition.researched)
    local required=not researched and (not commission.researched
-     and commission or (next_index<5 and sync or ignition))
+     and commission or (not sync.researched and sync or ignition))
    if required then
     line(advice,"convergence-next-action-research",width,
      required.localised_name)
