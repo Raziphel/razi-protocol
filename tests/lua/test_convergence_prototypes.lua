@@ -36,9 +36,13 @@ local m=require("prototypes.technology.convergence")
 m.data_final_fixes()
 local commission=assert(technologies[m.commission])
 local ending=assert(technologies[m.authorization])
+local ignition=assert(technologies[m.ignition])
 check(ending.prerequisites[1]==m.commission,"final research needs opening")
-check(#commission.effects==2 and #ending.effects==1,
- "Deep Space recipe unlock must wait for Synchronization")
+check(#commission.effects==2 and #ending.effects==2
+ and #ignition.effects==1,
+ "Deep Space and Pulsar mandates require Synchronization; the final accord requires Ignition")
+check(ignition.prerequisites[1]==m.authorization,
+ "Ignition research must follow Synchronization")
 local function has(table_,val)
  for _,v in ipairs(table_) do if v==val then return true end end
 end
@@ -55,12 +59,14 @@ for _,r in ipairs(m.shipments) do
  end
 end
 m.data_final_fixes()
-check(#commission.effects==2 and #ending.effects==1,
- "No duplicate registration or early final mandate unlock")
+check(#commission.effects==2 and #ending.effects==2
+ and #ignition.effects==1,
+ "Idempotent research recipe unlock registration")
 -- Without Nexus Omega Lab the final authorization falls back to existing
 -- singularity labs, but the physical Deep Space cards stay mandatory.
 technologies[m.commission]=nil
 technologies[m.authorization]=nil
+technologies[m.ignition]=nil
 for _,rule in ipairs(m.shipments) do
  items[rule.item]=nil
  recipes[rule.item]=nil
@@ -68,9 +74,14 @@ end
 labs["omega-lab"]=nil
 m.data_final_fixes()
 local fallback=assert(technologies[m.authorization],
-  "No-Nexus pack lost its finale research")
+  "No-Nexus pack lost its Synchronization research")
+local last=assert(technologies[m.ignition],
+  "No-Nexus pack lost its final Ignition research")
 check(#fallback.unit.ingredients==2,
   "Nexus-free lab fallback should use two installed outer cards")
-check(#recipes[m.shipments[3].item].ingredients>=3,
-  "Nexus-free finale must still transport Deep Space cards")
+check(#recipes[m.shipments[3].item].ingredients>=3
+ and #recipes[m.shipments[5].item].ingredients>=10,
+  "Nexus-free finale must require real outer and seven-system freight")
+check(#last.unit.ingredients==2,
+ "Ignition must be researchable without a Nexus Omega Lab")
 print("Convergence prototypes: source goods, native labs, no-Nexus fallback passed")
