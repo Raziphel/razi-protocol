@@ -13,7 +13,8 @@ local members={
   ["sye-vespera"]="vespera",fulgora="vibrant",aquilo="vespera",
   ["asteroid-belt-inner-edge"]="mid-outer-belt",
   ["asteroid-belt-outer-edge"]="mid-outer-belt",
-  ["crucible-orbit"]="umbra",crucible="umbra"
+  ["crucible-orbit"]="umbra",crucible="umbra",
+  ["sye-umbra"]="umbra",tenebris="umbra"
 }
 local approved={}
 for _,two in ipairs({
@@ -54,12 +55,14 @@ package.loaded["prototypes.system.route_icons"]={
 }
 local planets={}
 for _,name in ipairs({"nauvis","muluna","vulcanus","castra",
-  "fulgora","aquilo","ferrum","child-moon","remote-nexus"}) do
+  "fulgora","aquilo","ferrum","tenebris","carna","arcanyx",
+  "child-moon","remote-nexus"}) do
   planets[name]={name=name}
 end
 planets["child-moon"].orbit={parent={type="planet",name="nauvis"}}
 local spaces={}
 for _,name in ipairs({"sye-calidus","sye-solaris","sye-vespera",
+  "sye-umbra",
   "asteroid-belt-inner-edge","asteroid-belt-outer-edge",
   "crucible-orbit","close-sun-orbit","sun-orbit"}) do
   spaces[name]={name=name}
@@ -144,6 +147,11 @@ check(roads["external-internal"]==internal,
   "Source-only special network was destroyed")
 check(roads["razi-curated-ferrum-fulgora"]~=nil,
   "Known optional Ferrum world is not linked to Razi's designated hub")
+for _,name in ipairs({"razi-curated-tenebris-carna",
+  "razi-curated-sye-umbra-arcanyx"}) do
+  check(roads[name] and roads[name].shape=="line",
+    "Optional Umbra neighbor loop missing: "..name)
+end
 local ferrumResource=false
 for _,entry in ipairs(roads["razi-curated-ferrum-fulgora"].asteroid_spawn_definitions) do
   if entry.asteroid=="ferrum-native-crystal" then ferrumResource=true end

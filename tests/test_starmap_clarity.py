@@ -197,8 +197,9 @@ class ConstellationTests(unittest.TestCase):
             frozenset((a,b)) for a,b in (
                 ("sye-solaris","vulcanus"),("sye-solaris","igrys"),
                 ("vulcanus","castra"),("castra","arig"),
-                ("arig","hyarion"),("hyarion","tellus"),
-                ("tellus","corrundum"),("corrundum","igrys"),
+                ("vulcanus","arig"),("arig","hyarion"),
+                ("hyarion","tellus"),("tellus","corrundum"),
+                ("hyarion","corrundum"),("corrundum","igrys"),
             )
         }
         self.assertEqual(actual,intended)
@@ -242,7 +243,7 @@ class ConstellationTests(unittest.TestCase):
                     math.dist(self.coords[name], self.coords[other]), 18,
                     f"Nyxaris labels overlap: {name} / {other}")
         edges = {frozenset((a, b)) for a, b, _, _ in self.routes}
-        self.assertNotIn(frozenset(("gleba", "apia-carnova-orbit")), edges)
+        self.assertIn(frozenset(("gleba", "apia-carnova-orbit")), edges)
         for world in ("gleba", "moshine"):
             self.assertIn(frozenset(("sye-nyxaris", world)), edges)
             self.assertGreaterEqual(
@@ -250,6 +251,30 @@ class ConstellationTests(unittest.TestCase):
                                   self.coords["sye-nyxaris"],
                                   self.coords[world]), 15,
                 f"Nyxaris departure to {world} clips the corona")
+
+    def test_neighbor_networks_have_alternate_paths(self):
+        edges={frozenset((a,b)) for a,b,_,_ in self.routes}
+        triangles={
+            "solaris": (("vulcanus","castra","arig"),
+                        ("hyarion","tellus","corrundum")),
+            "nyxaris": (("gleba","moshine","apia-carnova-orbit"),),
+            "vibrant": (("sye-vibrant","fulgora","ribbonia"),),
+            "vespera": (("sye-vespera","muria","aquilo"),),
+            "beetlejuice": (("cubium","linox-planet_linox","secretas"),),
+            "umbra": (("sye-umbra","tenebris","crucible-orbit"),),
+        }
+        for system,loops in triangles.items():
+            for a,b,c in loops:
+                for u,v in ((a,b),(b,c),(a,c)):
+                    self.assertIn(frozenset((u,v)),edges,
+                                  f"{system} should offer a nearby alternative")
+                    self.assertGreaterEqual(segment_clearance(
+                        self.coords[system],self.coords[u],self.coords[v]),15)
+        for a,b in (("sye-vibrant","paracelsin"),
+                    ("ribbonia","paracelsin"),("aquilo","rubia"),
+                    ("crucible-orbit","vesta")):
+            self.assertNotIn(frozenset((a,b)),edges,
+                             "Route shortcut bypassed an asteroid belt")
 
     def test_local_routes_have_no_geometric_crossovers(self):
         for star in STARS:
@@ -266,7 +291,7 @@ class ConstellationTests(unittest.TestCase):
                                      f"{star}: {a}-{b} crosses {c}-{d}")
 
     def test_vibrant_local_corridor_and_belt_art_alignment(self):
-        # One unbroken sequence, no extra gateway chord through Fulgora.
+        # A short local return chord, with the asteroid belt still required.
         edges = {frozenset((a,b)) for a,b,_,_ in self.routes}
         corridor = (
             ("sye-vibrant", "fulgora"),
@@ -279,7 +304,10 @@ class ConstellationTests(unittest.TestCase):
             self.assertGreaterEqual(
                 segment_clearance(self.coords["vibrant"],
                                   self.coords[a],self.coords[b]),15)
-        self.assertNotIn(frozenset(("sye-vibrant","ribbonia")),edges)
+        self.assertIn(frozenset(("sye-vibrant","ribbonia")),edges)
+        self.assertGreaterEqual(segment_clearance(
+            self.coords["fulgora"],self.coords["sye-vibrant"],
+            self.coords["ribbonia"]),8)
         for name in ("fulgora","ribbonia"):
             self.assertLess(math.dist(self.coords[name],
                                       self.coords["vibrant"]),31)
@@ -297,6 +325,10 @@ class ConstellationTests(unittest.TestCase):
     def test_neighbor_links_are_short_non_crossing_and_belt_safe(self):
         neighbors = (
             ("vulcanus","castra",17500),
+            ("vulcanus","arig",21000),
+            ("hyarion","corrundum",29500),
+            ("gleba","apia-carnova-orbit",26000),
+            ("sye-vibrant","ribbonia",23500),
             ("arig","hyarion",12000),
             ("hyarion","tellus",16500),
             ("tellus","corrundum",18000),

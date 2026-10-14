@@ -69,16 +69,20 @@ local route_specifications = {
   {"sye-solaris", "vulcanus", 18000, "industrial"},
   {"sye-solaris", "igrys", 26500, "industrial_deep"},
   {"vulcanus", "castra", 17500, "industrial"},
+  {"vulcanus", "arig", 21000, "industrial"},
   {"castra", "arig", 16000, "industrial"},
   {"arig", "hyarion", 12000, "industrial_deep"},
   {"hyarion", "tellus", 16500, "industrial_deep"},
   {"tellus", "corrundum", 18000, "industrial_deep"},
+  {"hyarion", "corrundum", 29500, "industrial_deep"},
   -- Northern outer arc closes the circuit without routing through the sun.
   {"corrundum", "igrys", 32000, "industrial_deep"},
 	-- Nyxaris connects its biological crescent without the redundant
 	-- Gleba-to-Apia chord through Moshine. Both hub departures stay available.
 	{"gleba", "moshine", 17000, "biological"},
 	{"moshine", "apia-carnova-orbit", 12000, "biological"},
+	-- A nearby freight option that does not force a stop at Moshine.
+	{"gleba", "apia-carnova-orbit", 26000, "biological_deep"},
 	-- Post-Moshine data expedition: direct route plus an Apia cargo leg.
 	{"moshine", "panglia", 25000, "biological_deep"},
 	{"apia-carnova-orbit", "panglia", 21000, "biological_deep"},
@@ -89,18 +93,20 @@ local route_specifications = {
 	-- Optional oceanic freight return once both local destinations are known.
 	{"panglia", "pelagos", 20000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
-	-- Vibrant follows a single readable supply chain to the metallic
-	-- divide. The former gateway-to-Ribbonia chord overlapped Fulgora's
-	-- marker and made a redundant triangular route on the chart.
+	-- Fulgora and Ribbonia form a local loop with the gateway.
+	-- Outer worlds still require the actual metallic belt crossing.
 	{"sye-vibrant", "fulgora", 17000, "electrical"},
 	{"fulgora", "ribbonia", 19500, "electrical"},
+	{"sye-vibrant", "ribbonia", 23500, "electrical"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
 	{"asteroid-belt-outer-edge", "paracelsin", 14000, "chemistry_deep"},
 	-- Vespera's extreme-environment strand.
+	-- Inner Vespera gets a second path, without an outer belt bypass.
 	{"sye-vespera", "muria", 19000, "cryogenic"},
 	{"muria", "aquilo", 22000, "cryogenic"},
+	{"sye-vespera", "aquilo", 28000, "cryogenic"},
 	{"aquilo", "razi-vespera-belt-inner", 10500, "belt_vespera_approach"},
 	{"razi-vespera-belt-inner", "razi-vespera-belt-outer", 6500, "belt_vespera_crossing"},
 	{"razi-vespera-belt-outer", "rubia", 10500, "belt_vespera_departure"},
