@@ -58,7 +58,8 @@ local function inspection(parent,player)
  end
  label(frame,L("dyson-source-telemetry-unknown"))
 end
-function M.render(parent,player)
+function M.render(parent,player,options)
+ options=options or {}
  local heading=parent.add{type="flow",direction="horizontal"}
  heading.style.horizontally_stretchable=true
  local title=label(heading,L("dyson-title"))
@@ -71,8 +72,9 @@ function M.render(parent,player)
  local art=hero.add{type="sprite",
    sprite="razi-dyson-works-stage-"..math.min(6,completed)}
  art.resize_to_sprite=false
- art.style.width=128
- art.style.height=128
+ local art_size=options.width and options.width<540 and 80 or 128
+ art.style.width=art_size
+ art.style.height=art_size
  local copy=hero.add{type="flow",direction="vertical"}
  copy.style.horizontally_stretchable=true
  local phase_title=label(copy,L("dyson-phase-"..phase))
@@ -89,10 +91,13 @@ function M.render(parent,player)
  inspection(parent,player)
  local research=label(parent,L("dyson-research-heading"))
  research.style.font="default-bold"
- local scroll=parent.add{type="scroll-pane",direction="vertical"}
- scroll.style.height=math.max(200,math.min(310,
-   math.floor(player.display_resolution.height/math.max(player.display_scale,1)*.30)))
- scroll.style.horizontally_stretchable=true
+ local scroll=options.embedded and parent
+   or parent.add{type="scroll-pane",direction="vertical"}
+ if not options.embedded then
+   scroll.style.height=math.max(200,math.min(310,
+     math.floor(player.display_resolution.height/math.max(player.display_scale,1)*.30)))
+   scroll.style.horizontally_stretchable=true
+ end
  for _,stage in ipairs(stages) do
    local frame=scroll.add{type="frame",direction="vertical",
      style="inside_shallow_frame"}

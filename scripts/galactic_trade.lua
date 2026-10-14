@@ -50,11 +50,11 @@ local function world_title(name)
   if proto then return proto.localised_name end
   return name:gsub("[_-]"," ")
 end
-local function layout(player)
+local function layout(player,limit)
   local scale=math.max(.5,player.display_scale or 1)
   local available=math.floor(player.display_resolution.width/scale)
   local height=math.floor(player.display_resolution.height/scale)
-  local width=math.max(220,math.min(920,available-110))
+  local width=math.max(220,math.min(920,available-110,limit or 920))
   local compact=width<790
   return {
     width=width,compact=compact,
@@ -338,9 +338,10 @@ local function signal_network(parent,player,width)
   codex_link(frame,name,L("trade-signal-codex"))
 end
 
-function M.render(parent,player,p)
+function M.render(parent,player,p,options)
   p=p or {}
-  local size=layout(player)
+  options=options or {}
+  local size=layout(player,options.width)
   local network=catalog.snapshot(player.force)
   local fleet=M.summary(player.force)
   local title=label(parent,L("trade-title"),"heading-2")
@@ -371,10 +372,13 @@ function M.render(parent,player,p)
 
   signal_network(parent,player,size.width)
 
-  local scroll=parent.add{type="scroll-pane",direction="vertical"}
-  scroll.style.horizontally_stretchable=true
-  scroll.horizontal_scroll_policy="never"
-  scroll.style.height=size.scroll
+  local scroll=options.embedded and parent
+    or parent.add{type="scroll-pane",direction="vertical"}
+  if not options.embedded then
+    scroll.style.horizontally_stretchable=true
+    scroll.horizontal_scroll_policy="never"
+    scroll.style.height=size.scroll
+  end
   heading(scroll,L("trade-components"),size.width-20)
   if #network.parts==0 then
     wrap(scroll,L("trade-no-components"),size.width-30)
