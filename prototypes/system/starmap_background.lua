@@ -9,9 +9,9 @@ local systems={
   {name="solaris",tint={r=1,g=.55,b=.37},strength=.45},
   {name="nyxaris",tint={r=.37,g=.82,b=.69},strength=.79},
   {name="vibrant",tint={r=.55,g=.56,b=.94},strength=.85},
-  {name="vespera",tint={r=.61,g=.78,b=.96},strength=.77},
+  {name="vespera",tint={r=.86,g=.88,b=.87},strength=.71},
   {name="beetlejuice",tint={r=.94,g=.43,b=.64},strength=.80},
-  {name="umbra",tint={r=.66,g=.35,b=.55},strength=.66},
+  {name="umbra",tint={r=.73,g=.48,b=.29},strength=.60},
   {name="deep-space",tint={r=.40,g=.57,b=.82},strength=.48}
 }
 -- Vibrant has its own Razi-authored ring in asteroid_belt_integration.
@@ -19,9 +19,9 @@ local systems={
 -- The other two belts use their existing hand-painted fragment artwork
 -- at restrained opacity over the same soft atlas-belt foundation.
 local belts={
-  {name="vespera",tint={r=.59,g=.78,b=.93},scale=3.05,
+  {name="vespera",tint={r=.79,g=.86,b=.93},scale=3.05,
     debris="debris-vespera.png",debris_scale=3.20,debris_alpha=.105},
-  {name="umbra",tint={r=.91,g=.57,b=.68},scale=3.12,
+  {name="umbra",tint={r=.90,g=.54,b=.37},scale=3.12,
     debris="debris-umbra.png",debris_scale=3.25,debris_alpha=.12}
 }
 local WHITE={r=1,g=1,b=1}
