@@ -3,6 +3,25 @@ import unittest
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 class GalacticOperationsTests(unittest.TestCase):
+    def test_native_deep_space_atlas_dossiers_are_read_only(self):
+        atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
+        gui=(ROOT/"scripts/galactic_operations.lua").read_text()
+        strings=(ROOT/"locale/en/galactic_operations.cfg").read_text()
+        for destination in ("solar-system-edge","shattered-planet",
+                            "nexus","razi-deep-space-edge",
+                            "black-hole-approach"):
+            self.assertIn('["'+destination+'"]',atlas)
+        self.assertIn("brief and convergence.available(player.force)",atlas)
+        self.assertIn('razi_ops_action="atlas-convergence"',atlas)
+        self.assertIn('if action=="atlas-convergence" then',gui)
+        self.assertIn("M.open_convergence(player)",gui)
+        self.assertNotIn("create_surface",atlas)
+        for key in ("atlas-convergence-heading","atlas-convergence-edge",
+                    "atlas-convergence-shattered","atlas-convergence-nexus",
+                    "atlas-convergence-frontier","atlas-convergence-approach",
+                    "atlas-convergence-open"):
+            self.assertIn(key+"=",strings)
+
     def test_gui_is_opt_in_and_event_based(self):
         control=(ROOT/"control.lua").read_text()
         ui=(ROOT/"scripts/galactic_operations.lua").read_text()
