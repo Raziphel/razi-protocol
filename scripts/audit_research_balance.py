@@ -27,6 +27,9 @@ MILESTONES = (
 # Native science should never appear on the path to its own planet.
 # Keep these IDs exact; unknown optional technologies remain advisory.
 WORLD_SCIENCE = (
+    ("planet-discovery-apia-carnova", "apicultural-science-pack"),
+    ("planet-discovery-muria", "muriatic-science-pack"),
+    ("planet-discovery-ribbonia", "ribbonia-alien-science-pack"),
     ("planet-discovery-moshine", "thermodynamic-science-pack"),
     ("planet-discovery-paracelsin", "electrochemical-science-pack"),
     ("planet-discovery-aquilo", "cryogenic-science-pack"),
