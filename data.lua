@@ -15,3 +15,7 @@ require "prototypes.technology.asteroid_belts"
 require("prototypes.ui.galactic_operations")
 require("prototypes.ui.dyson_stages")
 require("prototypes.ui.razi_journal")
+
+-- Register source-declared catapult link prototypes at the DATA stage.
+-- The source author reads these in final-fixes. The opt-in is OFF by default.
+require("prototypes.compat.orbital_catapult").data()

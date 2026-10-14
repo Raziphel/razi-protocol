@@ -38,6 +38,15 @@ data:extend({
   -- planetary science. Switch off for legacy/alternate start scenarios.
   startup_toggle("razi-distributed-technology",
     "ba[integration]-c[planetary-tech-distribution]"),
+  -- Only late source-owned trains and shield research; never change
+  -- cargo bay limits, source mod machinery or base rocket logistics.
+  startup_toggle("razi-companion-science-weave",
+    "ba[integration]-d[companion-industries]"),
+  -- Experimental upstream link format. Disabled by default so installs
+  -- cannot bypass the Vespera belt or introduce starmap order problems.
+  {type="bool-setting",name="razi-orbital-catapult-local-links",
+    setting_type="startup",default_value=false,
+    order="ba[integration]-e[catapult-links]"},
 
   -- HOME SYSTEM MEGAPROJECT
   startup_toggle("razi-dyson-milestone-weave",

@@ -1,11 +1,11 @@
 # Razi Protocol: Direct and transitive dependency audit (2.1.66)
 
-Reviewed 14 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
+Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
 | required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 9 | Enhancements without a Razi-enforced install |
+| recommended | 15 | Enhancements without a Razi-enforced install |
 | optional | 14 | Unfinished, experimental or alternate compatible integrations |
 | incompatible | 22 | Known conflicting forks, startup failures and competing starmaps |
 
@@ -41,7 +41,7 @@ The following entries are required by another already-required mod, **but their 
 
 Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-on explicitly requires `Big-Monsters >= 2.2.1`, `Nexus-Threat-Updated >= 1.1.0`, Toxic Biters, Arachnids and Electric Flying Enemies. Since Nexus Bosses declares `? razi-protocol` and is installed separately, Razi must not introduce a reverse dependency cycle. Big Monsters can remain recommended as an extra enemy addition when the addon is absent; when the addon is installed it will be loaded as a hard transitive dependency regardless of Razi's `+` declaration. [Official Nexus Bosses dependency list](https://mods.factorio.com/mod/nexus-bosses/dependencies).
 
-## All 93 direct dependency declarations
+## All 99 direct dependency declarations
 
 | Declaration | Direct category |
 | --- | --- |
@@ -100,7 +100,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **9 entries** |
+| **Recommended companions** | **15 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
@@ -110,6 +110,12 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ Imersite-Asteroids >= 1.3.0` | recommended |
 | `+ science-tab >= 1.13.0` | recommended |
 | `+ Big-Monsters >= 2.2.1` | recommended |
+| `+ Various_Cargo_Bays >= 1.1.0` | recommended |
+| `+ space-age-railway-expansion >= 0.0.18` | recommended |
+| `+ shield-generators >= 0.7.0` | recommended |
+| `+ CircuitLaunchableRockets >= 1.4.6` | recommended |
+| `+ CargoBayLimitResearch >= 1.1.2` | recommended |
+| `+ platform-logistics-overhaul >= 2.1.2` | recommended |
 | **Opt-in extras** | **14 entries** |
 | `? FluxWorks >= 0.2.12` | optional |
 | `? dea-dia-system` | optional |
@@ -148,6 +154,24 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `! PlanetAthos` | incompatible |
 | `! biological-machines-planet-wit` | incompatible |
 | `! shchierbin` | incompatible |
+
+### New companion group (15 October 2026)
+
+Six more non-mandatory companion mods support orbit storage and pod throughput,
+nuclear/fusion railway industry, shield defenses, circuit rocket automation,
+cargo bay progression and actual-pod same-orbit platform logistics. Their exact
+minimum versions were checked against the public Factorio Mod Portal.
+The seventh candidate, Orbital Catapult, **does not have a direct dependency**
+because its author explicitly requires the special `~` mode, which would
+force an install and disturb the curated map's final-fixes order. Razi
+supports experimental local catapult links through a default-off startup
+setting only when players install the source manually.
+
+Source dependencies are the source mod owners' responsibility, notably
+Shield Generators bringing its own migratus-orchestrus runtime and Orbital
+Catapult bringing powered-machine. None of the six recommended mods
+becomes a Razi hard requirement. Full recursive graph verification and
+installed Factorio load testing are still release gates.
 
 ## Automated, repeatable full-graph audit
 

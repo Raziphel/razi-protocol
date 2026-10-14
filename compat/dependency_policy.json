@@ -1,8 +1,8 @@
 {
   "schema": 1,
-  "review_date": "2026-10-14",
+  "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "Direct manifest audit, updated after checking required transitive dependency guarantees and version constraints. The Dyson fork remains guaranteed by K2 Dyson Sphere Rebalance >= 0.1.2; Nexus Threat remains guaranteed by Nexus-Updated >= 1.4.1. Re-run scripts/audit_mod_dependencies.py against the live Factorio Mod Portal to detect upstream dependency changes. Native engine and save compatibility are not proven.",
+  "notes": "Six new Factorio 2.1 companion mods are recommended without becoming hard requirements. Orbital Catapult is deliberately not declared as a dependency because its author requires load-order-independent (~) linking, which would force installation; guarded support remains manual and disabled by default. Recommended mods still need complete runtime/K2SO validation.",
   "dependencies": [
     {
       "mod": "base",
@@ -654,6 +654,48 @@
       "declaration": "+ Big-Monsters >= 2.2.1",
       "group": "recommended",
       "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "Various_Cargo_Bays",
+      "type": "recommended",
+      "declaration": "+ Various_Cargo_Bays >= 1.1.0",
+      "group": "recommended",
+      "reason": "Specialized cargo pod throughput and space-platform storage without replacing vanilla bays"
+    },
+    {
+      "mod": "space-age-railway-expansion",
+      "type": "recommended",
+      "declaration": "+ space-age-railway-expansion >= 0.0.18",
+      "group": "recommended",
+      "reason": "Optional nuclear and fusion train progression, rolling stock and rail engineering"
+    },
+    {
+      "mod": "shield-generators",
+      "type": "recommended",
+      "declaration": "+ shield-generators >= 0.7.0",
+      "group": "recommended",
+      "reason": "Optional source-owned defensive shield engineering for dangerous worlds"
+    },
+    {
+      "mod": "CircuitLaunchableRockets",
+      "type": "recommended",
+      "declaration": "+ CircuitLaunchableRockets >= 1.4.6",
+      "group": "recommended",
+      "reason": "Circuit-controlled rocket launches retaining physical interplanetary freight"
+    },
+    {
+      "mod": "CargoBayLimitResearch",
+      "type": "recommended",
+      "declaration": "+ CargoBayLimitResearch >= 1.1.2",
+      "group": "recommended",
+      "reason": "Configurable optional cargo bay growth through native research"
+    },
+    {
+      "mod": "platform-logistics-overhaul",
+      "type": "recommended",
+      "declaration": "+ platform-logistics-overhaul >= 2.1.2",
+      "group": "recommended",
+      "reason": "Optional same-orbit two-priority physical cargo-pod logistics"
     }
   ]
 }
