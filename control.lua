@@ -157,6 +157,14 @@ end)
 events:on_configuration_changed(function(event)
 	preserve_deep_space_campaign()
 	check_existing_transceivers()
+	-- Existing saves may have researched older Convergence stages before
+	-- their new manufacturing unlocks were introduced.
+	if event and event.mod_changes
+	  and event.mod_changes["razi-protocol"] then
+		for _,force in pairs(game.forces) do
+			convergence.repair_recipe_unlocks(force)
+		end
+	end
 	repair_nexus_technology_visibility(event)
   galactic_operations.sync_all_map_buttons()
   razi_journal.sync_all()
