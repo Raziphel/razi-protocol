@@ -14,7 +14,9 @@ Pay particular attention to newly added Beetlejuice (Secretas gold + Linox
 rare earths) and Umbra (Tenebris chitosan + Vesta supermagnets + Linox
 rare earths). Check the actual source recipe unlocks, factory ingredient
 slots, real interstellar transport, and machine surface requirements in
-Factorio. If source mod prototypes no longer match, fix or skip only the
+Factorio. Registration now skips an optional recipe when no existing
+crafting-category assembler can accept its ingredient count, and the
+post-load audit independently checks that machine capacity. If source mod prototypes no longer match, fix or skip only the
 optional recipe rather than forcing a substitute source mod.
 
 Compare first-frontier Razi-owned direct Calidus-card costs against the
