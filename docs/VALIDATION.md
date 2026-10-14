@@ -1,3 +1,41 @@
+## 2.1.72: Minimal-art starmap and clear-tech review
+
+In Subtle background mode, there should be exactly 36 original small-dot
+sky tiles, eight individually tuned system halos, two single-layer
+outer-belt images and eight distant dust accents when all options are
+enabled. The original Vibrant ring is managed separately. Cinematic may
+add two low-opacity outer debris layers. All existing orbit coordinates
+and route lengths remain untouched. Confirm quiet stars and clear hover
+targets at close, medium and full-map zoom.
+
+Open Galactic Operations -> Research & Campaign at normal, narrow,
+and high-DPI resolutions. Each installed system card should have a
+20px source item sprite, a small colored title and a thin completion bar
+based on *discovery technologies actually present*. No fictitious
+completed discovery should be shown for missing source mods.
+The five first-party technology groups reorder Razi-owned milestones
+only and must never rewrite a native world's `order` or prerequisites.
+
+Open a harmless source route and confirm the tooltip has no warning
+spam. Open Vespera and Umbra's physical belt crossings and confirm
+the biggest threat, critical warning and preparation line remain easy
+to find. Confirm modded unknown asteroids still warn rather than
+silently receiving a benign classification.
+
+Focused local fixtures:
+```bash
+lua5.2 tests/lua/test_starmap_background.lua
+lua5.2 tests/lua/test_tech_tree_visibility.lua
+lua5.2 tests/lua/test_route_intel.lua
+python3 -m unittest discover -s tests -p 'test_starmap_background.py'
+python3 -m unittest discover -s tests -p 'test_tech_tree_visibility.py'
+python3 -m unittest discover -s tests -p 'test_route_intel.py'
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+```
+Do not start GitHub Actions just to check these cosmetics. Full modpack
+startup, physical starmap render and old-save screenshots remain
+unverified until run in Factorio.
+
 ## 2.1.71: Space artwork render checks
 
 Test the full constellation at multiple zoom levels with Razi Protocol
