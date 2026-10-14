@@ -115,8 +115,10 @@ class StarmapBackgroundTests(unittest.TestCase):
         self.assertIn('allowed_values={"clean","balanced","full"}',settings)
         self.assertIn('razi-starmap-cartography',settings)
         self.assertIn('default_value=false',settings)
-        for name in ("atlas-halo.png","atlas-belt.png"):
+        for name in ("atlas-halo.png","belt-vespera.png","belt-umbra.png"):
             self.assertIn(name,module)
+        self.assertIn('if cinematic then',module)
+        self.assertNotIn('insert_asset(layers,"atlas-belt.png"',module)
         self.assertIn('"atlas-dust-"..',module)
         for legacy in ("filament-","galactic-current.png","sky-",
                        "rift-deep-space.png","dust-lane-2.png"):
