@@ -3,21 +3,33 @@ local function check(ok,msg) if not ok then error(msg,2) end end
 local mods=require("prototypes.technology.convergence")
 local m=require("scripts.razi_convergence")
 rawset(_G,"storage",{})
+rawset(_G,"prototypes",{item={
+ ["ds-energy-loader-mk1"]={place_result={name="test-dyson-receiver"}}
+},entity={["test-dyson-receiver"]={}}})
 local done=0
 rawset(_G,"defines",{controllers={remote=9}})
 rawset(_G,"game",{
  tick=42,finished=false,finished_but_continuing=false,
+ forces={},
  set_win_ending_info=function(data) check(data.title~=nil,"victory title") end,
  set_game_state=function(data) check(data.player_won and data.can_continue,
    "real Factorio victory state missing") done=done+1 end,
  print=function() end
 })
 local function fixture(index)
- local force={index=index,name="Test Force "..index,technologies={
+ local force={index=index,name="Test Force "..index,
+  receiver_count=0,transmissions={},technologies={
   [mods.commission]={researched=true},
   [mods.authorization]={researched=true},
   [mods.ignition]={researched=false}
  }}
+ function force.get_entity_count(name)
+  return name=="test-dyson-receiver" and force.receiver_count or 0
+ end
+ function force.print(message)
+  force.transmissions[#force.transmissions+1]=message
+ end
+ game.forces[index]=force
  local inventory={valid=true,items={}}
  function inventory.get_item_count(name)
   return inventory.items[name] or 0
@@ -85,14 +97,41 @@ check(message=="convergence-need-ignition" and done==0,
  "Final accord cannot skip Ignition research")
 force.technologies[mods.ignition].researched=true
 message,used=m.deliver(player,"ignition")
-check(message=="convergence-delivered" and used==1
- and m.completed(force,"victory") and done==1,
- "Final physical accord should trigger one victory")
+check(message=="convergence-need-receiver" and used==0
+ and inventory.items[m.stages[5].item]==1,
+ "A missing native Dyson receiver must not consume final cargo")
+force.receiver_count=1
+message,used=m.deliver(player,"ignition")
+check(message=="convergence-transmission-started" and used==1
+ and not m.completed(force,"victory") and done==0,
+ "Final physical accord must begin a saved transmission, not instant victory")
 local before=inventory.items[m.stages[5].item]
 message=m.deliver(player,"ignition")
-check(message=="convergence-wrong-stage" and done==1
+check(message=="convergence-wrong-stage" and done==0
  and inventory.items[m.stages[5].item]==before,
- "Double click cannot consume extra items or repeat victory")
+ "Double click during transmission cannot consume extra freight")
+check(m.record(force).transmission.beat==1,"First beat must be recorded")
+storage.razi_convergence_pending=nil
+m.restore_pending()
+check(storage.razi_convergence_pending[1],
+ "A reload must rediscover the active transmission")
+game.tick=222
+m.advance(game.tick)
+check(m.record(force).transmission.beat==2 and done==0,
+ "Dyson sequence should advance after three seconds")
+game.tick=402
+m.advance(game.tick)
+game.tick=582
+m.advance(game.tick)
+check(m.record(force).transmission.beat==4 and #force.transmissions==4
+ and done==0,"All four announcements must precede victory")
+game.tick=762
+m.advance(game.tick)
+check(m.completed(force,"victory") and done==1
+ and not storage.razi_convergence_pending[1],
+ "Native victory must fire once at the end of the saved sequence")
+m.advance(game.tick+60)
+check(done==1,"Completed transmissions must not replay the win")
 local new_force,new_player,other=fixture(2)
 check(not m.completed(new_force,"victory"),
  "Different forces must not inherit victory")
