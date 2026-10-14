@@ -15,7 +15,7 @@ class PlanetaryScienceWeaveTests(unittest.TestCase):
         rules=re.findall(
             r'\{"(razi-network-[^"]+)","([^"]+)","([^"]+)"(?:,true)?\}',
             self.script)
-        self.assertEqual(len(rules),18)
+        self.assertEqual(len(rules),30)
         allowed={
             "thermodynamic-science-pack",
             "electrochemical-science-pack",
@@ -25,6 +25,9 @@ class PlanetaryScienceWeaveTests(unittest.TestCase):
             "bioluminescent-science-pack",
             "gas-manipulation-science-pack",
             "planet-crucible-science-pack",
+            "apicultural-science-pack",
+            "muriatic-science-pack",
+            "ribbonia-alien-science-pack",
         }
         self.assertEqual({science for _,science,_ in rules},allowed)
         network=(ROOT/"prototypes/compat/network_components.lua").read_text()
@@ -33,7 +36,7 @@ class PlanetaryScienceWeaveTests(unittest.TestCase):
             self.assertTrue(owner.startswith("planet-discovery-")
                             or owner.startswith("linox-technology_"))
             self.assertNotEqual(target,owner)
-        self.assertEqual(self.script.count('",true}'),5)
+        self.assertEqual(self.script.count('",true}'),8)
 
     def test_existing_research_and_lab_paths_are_not_rewritten(self):
         s=self.script
@@ -43,6 +46,8 @@ class PlanetaryScienceWeaveTests(unittest.TestCase):
             "pack_exists(pack)",
             "source_surface(recipe,owner)",
             "inputs_exist(recipe)",
+            "add_variant(recipe.normal)",
+            "add_variant(recipe.expensive)",
             "not ancestor(source,target)",
             "accepted(tech.unit.ingredients,pack)",
             "tech.unit.ingredients[#tech.unit.ingredients+1]={pack,1}",
