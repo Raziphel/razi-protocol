@@ -140,8 +140,19 @@ function M.inspect(force,registry)
  else
   note("Native Dyson receiver entities: "..receivers)
  end
- local delivered,total,won=convergence.progress(force)
- note("Physical Convergence stages: "..delivered.."/"..total..
+ -- Intentionally do not call convergence.progress(): that method creates
+ -- first-use save records. An audit must be genuinely read-only.
+ local saved=storage and storage.razi_convergence
+  and storage.razi_convergence[force.index]
+ local won=saved and saved.victory==true or false
+ local delivered=0
+ for _,stage in ipairs(defs.shipments) do
+  if won or (saved and saved.delivered
+    and (saved.delivered[stage.id] or 0)>=stage.count) then
+   delivered=delivered+1
+  end
+ end
+ note("Physical Convergence stages: "..delivered.."/"..#defs.shipments..
    (won and " (victory saved)" or ""))
  note("Diagnostic does not prove optional planet access or entire craft chains")
  return result
