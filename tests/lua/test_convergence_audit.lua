@@ -42,8 +42,16 @@ for _,stage in ipairs(defs.shipments) do
  force.recipes[stage.item]={name=stage.item,enabled=true,
   categories={"crafting"},ingredients=ingredients}
 end
+for _,part in ipairs(defs.assemblies or {}) do
+ local ingredients={}
+ for _,entry in ipairs(part.ingredients) do
+  ingredients[#ingredients+1]={type="item",name=entry[1],amount=entry[2]}
+ end
+ force.recipes[part.item]={name=part.item,enabled=true,
+   categories={"crafting"},ingredients=ingredients}
+end
 local result=audit.inspect(force,registry)
-check(#result.errors==0 and result.stages==5 and result.labs==1,
+check(#result.errors==0 and result.stages==5 and result.components==3 and result.labs==1,
  "Correct native science and recipes should have zero blockers")
 check(storage.razi_convergence==nil,
  "Inspection must not allocate any persistent save data")
@@ -55,9 +63,14 @@ check(#no_lab.errors==3,
 registry.entity["existing-lab"].lab_inputs=previous
 registry.entity["existing-assembler"].ingredient_count=2
 local undersized=audit.inspect(force,registry)
-check(#undersized.errors==5,
+check(#undersized.errors==7,
  "A real recipe needs a native assembler with enough ingredient slots")
 registry.entity["existing-assembler"].ingredient_count=50
+local component=defs.assemblies[1].item
+force.recipes[component].enabled=false
+check(#audit.inspect(force,registry).errors==1,
+ "Researched but locked new component must be a hard audit blocker")
+force.recipes[component].enabled=true
 local last=defs.shipments[#defs.shipments].item
 force.recipes[last].enabled=false
 check(#audit.inspect(force,registry).errors==1,
