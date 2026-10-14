@@ -128,8 +128,9 @@ check(m.record(force).transmission.beat==4 and #force.transmissions==4
 game.tick=762
 m.advance(game.tick)
 check(m.completed(force,"victory") and done==1
- and not storage.razi_convergence_pending[1],
- "Native victory must fire once at the end of the saved sequence")
+ and not storage.razi_convergence_pending[1]
+ and m.record(force).completed_site=="solar-system-edge",
+ "Native victory must fire once and archive the original transmission site")
 m.advance(game.tick+60)
 check(done==1,"Completed transmissions must not replay the win")
 local new_force,new_player,other=fixture(2)
