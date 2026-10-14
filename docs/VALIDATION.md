@@ -1,3 +1,56 @@
+## 2.1.60 release gate: responsive finale and full research reachability
+
+**UI:** Compare Galactic Operations at 1024x768, 1280x720, 1600x900,
+1920x1080, and higher display scaling (especially 1.25 and 1.5).
+Five array sections must switch to three/two columns before tile
+labels or partial-progress meters create horizontal scrolling. Deliver
+3 of 8 Stellar Mandates and verify both the local and overall meters
+advance before the stage is complete. Confirm each module's color and
+native Mandate item icon displays without stretching.
+
+**Research and crafting:** From a new post-transceiver save, inspect
+Commission, Synchronization, and Ignition before and after research.
+The next-action panel must report the actual missing ForceTechnology
+prerequisite and actual `force.recipes` unlock status, never claim
+that researching a technology fabricated inventory or gave production.
+Verify that the real complete modpack has *at least one* native lab
+for each finale science recipe, a valid producer and legal recipe
+unlock for every required Mandate input, and no prerequisite loops.
+Inspect the data-raw dump with the existing campaign and supply-chain
+audit scripts. Read any advisory warnings, especially scripted source
+content that cannot be inferred from technology effects.
+
+**Codex:** While Stellar/Industrial/Deep Space/Pulsar/Final deliveries
+are active, the Expedition Priorities panel must label them as
+delivery objectives rather than newly researchable technologies.
+During the 12-second final transmission it must identify the pending
+signal instead of recommending the Ignition technology again. Other
+available star-frontier research remains selectable in parallel.
+
+**Deep Space Atlas:** On discovered Solar System Edge, Shattered Planet,
+Nexus, Deep Space Edge and Black-Hole Approach, inspect the briefings
+and their direct Finale console button. A locked or missing source
+destination must not reveal descriptions or fabricate an itinerary.
+Existing source routes, asteroid hazards, Nexus boss progression and
+space platform schedules must remain unchanged.
+
+**Save recovery and multiplayer:** Run a reload between partial
+shipments and a reload at each transmission beat. Merge two active
+forces with different recorded source platforms and contributors;
+the older accepted signal must win exactly once and retain the
+correct archive details. Test an older, already-won save separately.
+No background polling when the pending-transmission table is empty.
+
+Checks available in the repository (not executed automatically):
+```bash
+lua5.2 tests/lua/test_convergence_prototypes.lua
+lua5.2 tests/lua/test_convergence_runtime.lua
+lua5.2 tests/lua/test_razi_journal_guidance.lua
+python3 -m unittest discover -s tests -p 'test_convergence.py'
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+python3 -m unittest discover -s tests -p 'test_razi_journal.py'
+```
+
 ## The Convergence transmission, source Dyson and save safety (2.1.59)
 
 - With a recognisable native Dyson energy receiver item/entity installed,
