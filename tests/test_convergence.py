@@ -109,6 +109,24 @@ class ConvergenceTests(unittest.TestCase):
                     "convergence-archive-time"):
             self.assertIn(key+"=",locale)
 
+    def test_five_module_partial_progress_and_runtime_guidance(self):
+        source=read("scripts/razi_convergence.lua")
+        locale=read("locale/en/galactic_operations.cfg")
+        self.assertIn("function M.assembly_fraction(force)",source)
+        self.assertIn("credit/#M.stages",source)
+        self.assertIn("value=donated/rule.count",source)
+        self.assertIn("M.module_colors=",source)
+        self.assertIn("convergence-next-action-prereq",source)
+        self.assertIn("for _,prior in pairs(required.prerequisites or {})",source)
+        for name in ("convergence-assembly-percent",
+                     "convergence-next-action-title",
+                     "convergence-next-action-stage",
+                     "convergence-next-action-research",
+                     "convergence-next-action-prereq",
+                     "convergence-next-action-receiver",
+                     "convergence-next-action-freight"):
+            self.assertIn(name+"=",locale)
+
     def test_native_game_victory_waits_for_delivery(self):
         runtime=read("scripts/razi_convergence.lua")
         self.assertIn("function M.deliver(player,id)",runtime)
