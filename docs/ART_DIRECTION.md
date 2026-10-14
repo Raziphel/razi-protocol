@@ -1,3 +1,35 @@
+## 2.1.72: Restrained visual hierarchy
+
+The sun PNGs remain the original 1024px Razi textures. Calidus is warm
+yellow, Solaris orange, Nyxaris botanical teal, Vibrant electric indigo,
+Vespera neutral pearl, Beetlejuice rose, and Umbra dark copper. Each star
+gets exactly one tuned atlas halo with its own radius and opacity; no
+extra flares, lens effects or animated backgrounds are registered.
+
+Subtle mode draws a single hand-authored `belt-vespera.png` or
+`belt-umbra.png` per outer system, rather than generic ring plus debris
+duplicates. Cinematic mode optionally adds one faint matching fragment
+each. Vibrant retains its dedicated safe legacy art layers and never gains
+a second generic ring.
+
+Route warning presentation is reserved for big or huge threats.
+Harmless shuttles have short tooltips; optional custom species still
+raise uncertainty warnings. Each actual belt crossing has its own
+restrained existing navigation palette, and native connection geometry
+remains authoritative.
+
+The research experience likewise keeps the native science icons and
+technologies. Razi-owned milestones sort into five groups, First Frontier,
+Middle Frontier, Outer Frontier, Deep Space, Convergence, while the
+Campaign panel uses one 20px native card icon and a five-pixel
+progress indicator for each system. Nothing changes science recipes,
+lab capacities, travel risk, unlocks or research progress.
+
+**Art budget:** no new PNGs, no extra star atlas tiles, two fewer belt
+layers in Subtle mode, no new render tick loops. Any further image
+refinement should replace an existing asset rather than add another
+full-map decoration.
+
 # Razi Protocol Art Direction
 
 Razi Protocol's visual identity is anchored by the existing Solaris, Nyxaris,
