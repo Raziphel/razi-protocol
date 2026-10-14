@@ -21,6 +21,9 @@ ANCHOR = re.compile(
 ROUTE = re.compile(
     r'\{"([^"]+)", "([^"]+)", ([0-9]+), "([^"]+)"\}'
 )
+OPTIONAL = re.compile(
+    r'\\{name="([^"]+)",star="([^"]+)",radius=([0-9.]+),turn=([0-9.]+)\\}'
+)
 BELTS = {
     "razi-vespera-belt-inner", "razi-vespera-belt-outer",
     "razi-umbra-belt-inner", "razi-umbra-belt-outer",
@@ -36,6 +39,13 @@ def load(root: Path = ROOT):
              orientation=float(m[5]))
         for m in ANCHOR.finditer(layout)
     ]
+    # Optional locations use keyed Lua entries. Include them in geometry
+    # checks so their side routes cannot slip between the chart markers.
+    anchors.extend(
+        dict(kind="planet", name=m[1], parent=m[2], radius=float(m[3]),
+             orientation=float(m[4]))
+        for m in OPTIONAL.finditer(layout)
+    )
     edges = [
         dict(source=m[1], destination=m[2], distance=int(m[3]), profile=m[4])
         for m in ROUTE.finditer(routes)
