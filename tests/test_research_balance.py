@@ -38,6 +38,28 @@ def fixture():
 
 
 class ResearchBalanceTests(unittest.TestCase):
+    def test_distributed_science_report_is_optional_and_source_aware(self):
+        raw=fixture()
+        raw["technology"]["nuclear-power"]={"prerequisites":[
+            "planet-discovery-vulcanus","planet-discovery-gleba"],
+            "unit":{"count":450,"ingredients":[
+                ["calidus-tech-card",1],
+                ["metallurgic-science-pack",1],
+                ["agricultural-science-pack",1]]}}
+        raw["lab"]["advanced"]["inputs"].extend([
+            "metallurgic-science-pack","agricultural-science-pack"])
+        result=audit.examine(raw)
+        row=next(r for r in result["distributed_technology"]
+                 if r["technology"]=="nuclear-power")
+        self.assertEqual(row["status"],"distributed")
+        self.assertEqual(row["compatible_labs"],["advanced"])
+        raw["technology"]["nuclear-power"]["unit"]["ingredients"].pop()
+        result=audit.examine(raw)
+        row=next(r for r in result["distributed_technology"]
+                 if r["technology"]=="nuclear-power")
+        self.assertEqual(row["status"],"native-or-guarded-skip")
+        self.assertTrue(row["requires_full_pack_verification"])
+
     def test_parallel_systems_remain_equal_independent(self):
         report=audit.examine(fixture())
         self.assertEqual(len(report["paired_entries"]),3)
