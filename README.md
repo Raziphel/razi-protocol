@@ -1,8 +1,9 @@
 # Razi Protocol
 
-**Orbital infrastructure companion update (October 2026):**
+**2.1.74: Orbital infrastructure companions and Expedition Journal:**
 Six source-owned Factorio 2.1 mods are now recommended for advanced space
-freight, railway engineering, shields, and circuit automation. The optional
+freight, railway engineering, shields, and circuit automation. The Quest
+Journal now unifies major projects and has a more restrained folio layout. The optional
 technology weave adds source-guarded late science where lab compatibility
 allows and can be disabled. Orbital Catapult is a manual opt-in only:
 its author's required load-order strategy makes a conventional recommended
