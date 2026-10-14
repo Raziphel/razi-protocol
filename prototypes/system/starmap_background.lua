@@ -17,15 +17,15 @@ local systems={
   {name="umbra",tint={r=.75,g=.48,b=.30},strength=.51,radius=1.82},
   {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
 }
--- Vibrant has its own Razi-authored ring in asteroid_belt_integration.
--- Don't paint a second generic ring over its sun and orbital markers.
--- The other two belts use their existing hand-painted fragment artwork
--- at restrained opacity over the same soft atlas-belt foundation.
+-- Each region has ONE dedicated physical-ring texture in Subtle.
+-- Vibrant is painted separately in asteroid_belt_integration; the outer
+-- stars reuse existing original textures, not recolored generic loops.
+-- Cinematic may add one faint debris accent per outer belt.
 local belts={
-  {name="vespera",tint={r=.79,g=.86,b=.93},scale=3.05,
-    debris="debris-vespera.png",debris_scale=3.20,debris_alpha=.105},
-  {name="umbra",tint={r=.90,g=.54,b=.37},scale=3.12,
-    debris="debris-umbra.png",debris_scale=3.25,debris_alpha=.12}
+  {name="vespera",tint={r=.84,g=.87,b=.91},scale=3.03,
+    art="belt-vespera.png",debris="debris-vespera.png",debris_alpha=.085},
+  {name="umbra",tint={r=.91,g=.58,b=.40},scale=3.06,
+    art="belt-umbra.png",debris="debris-umbra.png",debris_alpha=.085}
 }
 local WHITE={r=1,g=1,b=1}
 -- Four individually seeded 1024px indexed PNG textures. Mostly single-pixel
@@ -104,10 +104,12 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     for _,belt in ipairs(belts) do
       local x,y=anchor(belt.name)
       if x and y then
-        insert_asset(layers,"atlas-belt.png",belt.scale,x,y,
-          belt.tint,cinematic and .21 or .115)
-        insert_asset(layers,belt.debris,belt.debris_scale,x,y,
-          belt.tint,belt.debris_alpha*(cinematic and 1.24 or 1))
+        insert_asset(layers,belt.art,belt.scale,x,y,
+          belt.tint,cinematic and .17 or .135)
+        if cinematic then
+          insert_asset(layers,belt.debris,belt.scale*1.04,x,y,
+            belt.tint,belt.debris_alpha)
+        end
       end
     end
   end
@@ -163,7 +165,8 @@ function M.data_final_fixes()
     if (type(layer.filename)=="string"
     and layer.filename:find(ASSET.."atlas-starfield-",1,true)==1)
     or layer.filename==ASSET.."atlas-halo.png"
-      or layer.filename==ASSET.."atlas-belt.png"
+      or layer.filename==ASSET.."belt-vespera.png"
+      or layer.filename==ASSET.."belt-umbra.png"
       or layer.filename==ASSET.."debris-vespera.png"
       or layer.filename==ASSET.."debris-umbra.png"
       or (type(layer.filename)=="string"
