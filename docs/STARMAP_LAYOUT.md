@@ -18,6 +18,18 @@ misleading giant rings. Khemia is now validated with a Vibrant-centered
 native origin in its final compatibility pass, including a duplicate
 prototype guard, rather than a Calidus-centered absolute orbit.
 
+## Vibrant outer-world spacing (October 2026)
+
+Paracelsin now orbits 48 chart units from Vibrant rather than 58, and
+Khemia 52 instead of 61. Their bearings shift slightly to 0.68 and
+0.625 turns respectively, retaining clear names and a short exterior
+route. Both remain outside the fixed 39-unit Outer Rim and the visible
+rocks. The sole Outer Rim / Inner Rim hazardous crossing, the separate
+Ferrum orbit, all route lengths, research and asteroid resources are
+unchanged. Khemia's early pre-render positioning reads the same orbit
+plan as its final fix, avoiding stale coordinates that previously
+placed its sprite in Calidus.
+
 ## Vibrant: western asteroid entrance (October 2026)
 
 The slipstream and both asteroid entry markers sit west of the star.

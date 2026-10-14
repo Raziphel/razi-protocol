@@ -44,11 +44,12 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  -- Inner electrical worlds sit inside the rock ring; the other planets
-  -- form a spaced exterior branch on its west side.
+  -- Inner electrical worlds remain inside the belt. Paracelsin and
+  -- optional Khemia sit nearer its exterior edge, with a clear road
+  -- between them and no extra crossing of the asteroid field.
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.685},
-  {"planet","paracelsin","vibrant",58,0.66},
+  {"planet","paracelsin","vibrant",48,0.68},
   -- Offset Muria from the parallel gateway-to-Aquilo cargo leg.
   {"planet","muria","vespera",20,0.49},
   {"planet","aquilo","vespera",40,0.497561},
@@ -76,7 +77,7 @@ local optional_orbits={
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
-  {name="alchemy-planet",star="vibrant",radius=61,turn=0.61},
+  {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
   {name="bm-balack",star="vespera",radius=41.637729,turn=0.816913}
 }
@@ -201,24 +202,25 @@ function M.data_updates()
       log("[Razi Protocol/Calidus] Repositioned duplicate Khemia space-location BEFORE sprite baking")
     end
   end
-  -- Place source-owned Khemia BEFORE PlanetsLib bakes its starmap icon.
-  -- It is not enough to reparent it in data-final-fixes after rendering.
+  -- Position source-owned Khemia before PlanetsLib bakes its map sprite.
+  -- Use the shared orbit plan, not a second hard-coded location.
   local vx,vy=anchor_position("vibrant")
-  if vx and vy then
+  local khemia=by_name["alchemy-planet"]
+  if vx and vy and khemia then
     for _,kind in ipairs({"planet","space-location"}) do
       local body=exists(kind,"alchemy-planet")
       if body then
         local orbit={
-          parent={type="space-location",name="vibrant"},
-          distance=61,orientation=0.61
+          parent={type="space-location",name=khemia[3]},
+          distance=khemia[4],orientation=khemia[5]
         }
         if body.orbit and body.orbit.sprite then
           orbit.sprite=body.orbit.sprite
         end
         body.orbit=orbit
         body.origin={x=vx,y=vy}
-        body.distance=61
-        body.orientation=0.61
+        body.distance=khemia[4]
+        body.orientation=khemia[5]
         if type(log)=="function" then
           log("[Razi Protocol/Calidus] PRE-RENDER forced Khemia to Vibrant: "..kind)
         end

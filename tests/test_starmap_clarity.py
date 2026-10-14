@@ -290,6 +290,24 @@ class ConstellationTests(unittest.TestCase):
                                            self.coords[c], self.coords[d]),
                                      f"{star}: {a}-{b} crosses {c}-{d}")
 
+    def test_vibrant_outer_planets_sit_near_the_belt(self):
+        star=self.coords["vibrant"]
+        paracelsin=self.coords["paracelsin"]
+        khemia=self.coords["alchemy-planet"]
+        outer=self.coords["asteroid-belt-outer-edge"]
+        self.assertAlmostEqual(math.dist(star,paracelsin),48,places=3)
+        self.assertAlmostEqual(math.dist(star,khemia),52,places=3)
+        self.assertGreaterEqual(math.dist(star,paracelsin)-39,9)
+        self.assertGreaterEqual(math.dist(star,khemia)-39,13)
+        self.assertGreater(math.dist(paracelsin,khemia),15)
+        self.assertLess(math.dist(paracelsin,khemia),20)
+        self.assertGreaterEqual(segment_clearance(
+            star,outer,paracelsin),38.999)
+        self.assertGreaterEqual(segment_clearance(
+            star,paracelsin,khemia),47.999)
+        source=(ROOT/"prototypes/system/community_expansions.lua").read_text()
+        self.assertIn("radius=52, orientation=0.625, km=21000",source)
+
     def test_vibrant_western_belt_is_the_only_rock_crossing(self):
         star=self.coords["vibrant"]
         slip="sye-vibrant"
