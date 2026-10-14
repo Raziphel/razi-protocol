@@ -1,3 +1,5 @@
+> **Historical guide (October 2026):** Galactic Operations is now integrated into the Expedition Journal's Projects tab. Its old floating starmap button and standalone window have been removed. Ctrl+Shift+G opens Journal Projects. Source-backed construction, logistics, and Convergence state remain intact, while native Remote View handles fleet/world navigation. The sections below document the prior implementation.
+
 # Galactic Operations
 
 Razi Protocol's independent, native Factorio 2.1 planet and space-platform dashboard, designed for campaigns with dozens of modded destinations and fleets. Inspired by the organisational needs identified by [Space Platform Organizer - Enhanced](https://mods.factorio.com/mod/SpacePlatformOrgUI-Enhanced), but independently implemented and not derived from its source code.

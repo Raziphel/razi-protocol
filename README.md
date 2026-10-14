@@ -683,6 +683,19 @@ readiness and the source mod's actual fleet configuration guidance.
 The new tech-graph audit works on an exported Factorio data-raw dump.
 See [Cargo & Research Integration](docs/CARGO_AND_RESEARCH.md).
 
+## Expedition Journal Projects (current interface)
+
+The Expedition Journal is now Razi Protocol's only player-facing dashboard.
+**Ctrl+Shift+J** opens Quests, Projects, and Journal in one window. The
+**Projects** page consolidates Dyson Sphere/Stellar Works, Cargo Network,
+Intergalactic Transceiver, and the interactive Convergence. **Ctrl+Shift+G**
+is retained as a direct Projects shortcut for existing key bindings.
+
+The standalone Galactic Operations window and floating map buttons are retired.
+Factorio Remote View still handles fleet and destination navigation. Research,
+receiver checks, cargo recipes, physical deliveries, and save-game progress
+remain owned by their original modules.
+
 ## Galactic Operations UI
 
 A first-party, seven-system-aware planet and space-platform dashboard is included. Open the **Galactic Ops** button in Remote View on the space map, or optionally press **Ctrl+Shift+G** while viewing the map. It never occupies the shortcut bar. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).

@@ -1,3 +1,5 @@
+> **Current UI (October 2026):** The Protocol Codex now has Quests, Projects, and Journal views. Open it with Ctrl+Shift+J. Projects contains Dyson Sphere, Cargo Network, Transceiver, and Convergence. Ctrl+Shift+G opens Projects directly. The separate Galactic Operations window and floating starmap button are retired. Older sections below describe the prior interface.
+
 ## 2.1.62: Building the last physical Mandate
 
 The five existing Convergence shipment objectives and saved
