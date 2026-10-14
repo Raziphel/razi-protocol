@@ -1,3 +1,17 @@
+## Loaded-technology verification (2.1.61)
+
+Administrators can now run `/razi-audit` to compare the three
+Convergence research packs with the installed native laboratories,
+check that the current force has all five Mandate recipes, detect
+missing/disabled recipe unlocks and flag direct cycles in the final
+research ancestry. It also lists actual source recipe producer
+visibility and real Dyson receiver counts when known.
+
+This is a live, read-only compatibility *screening*, not a complete
+proof that each source planet is reachable or that all supplied
+recipes can be manufactured in the correct order. Real modpack
+startup plus a full research/craft progression test remain essential.
+
 ## 2.1.60: Endgame research guidance, no source rewrite
 
 The updated Convergence console reads the installed `ForceTechnology`
