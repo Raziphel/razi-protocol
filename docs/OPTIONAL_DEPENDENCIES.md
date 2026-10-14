@@ -8,8 +8,8 @@ Every manifest entry is reviewed; the contract is checked by
 
 | Category | Current direct entries |
 | --- | ---: |
-| Required | 49 |
-| Recommended (`+`) | 10 |
+| Required | 50 |
+| Recommended (`+`) | 9 |
 | Optional (`?`) | 14 |
 | Incompatible (`!`) | 22 |
 
@@ -28,7 +28,6 @@ non-negotiable prerequisite chain:
 - Frost Biters 2.3.0+: cold-world enemies, guarded by source presence
 - Science Tab 1.13.0+: grouped science UI; Razi's cards fall back to
   Intermediate Products when it is absent
-- Nexus Threat Updated 1.1.0+: native Nexus threat/atmosphere
 - Big Monsters 2.2.1+: source-owned enemy encounters
 
 ## Deliberately optional
@@ -41,7 +40,8 @@ source-authored routes; they remain opt-in. Smaller content branches
 and the optional enemy compatibility families stay optional.
 
 Nexus-Updated itself stays **required by the curated campaign
-profile**. The standalone Nexus Bosses addon requires its own
+profile** and therefore Nexus-Threat-Updated remains required too,
+since the Nexus source mod depends on it. The standalone Nexus Bosses addon requires its own
 enemy-mod stack, including Nexus Threat and Big Monsters, when
 installed. It has an optional dependency on Razi, so directly
 depending on Nexus Bosses here would risk a circular graph.
