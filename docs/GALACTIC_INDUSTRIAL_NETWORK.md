@@ -1,3 +1,18 @@
+## 2.1.68: Return freight rewards for system-card factories
+
+Beetlejuice and Umbra now join Solaris, Nyxaris, Vibrant, Vespera and Deep
+Space in offering Razi-owned freight-assisted science-card production.
+Beetlejuice uses Gold from Secretas and rare earths from Linox; Umbra uses
+Tenebris chitosan, Vesta supermagnets and Linox rare earths. Every optional
+recipe requires the original science-card ingredients in full plus imports.
+
+These production alternatives are 4:5 material batches with a 25% gross
+output bonus and 15% extra time compared with four normal batches.
+Neither first-discovery science nor mandatory source cards change. The
+Campaign panel shows whether each alternative is actually installed and
+unlocked. The existing native production and logistics systems remain
+source-owned.
+
 ## 2.1.67: Supplier roles in Galactic Atlas
 
 Unlocked source planets now display their actual installed Cargo Network
