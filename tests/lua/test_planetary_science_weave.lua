@@ -158,6 +158,46 @@ matched_w.data_final_fixes()
 check(has_science(matching_world.technology["razi-network-precision-matrix"],
   "thermodynamic-science-pack"),
   "A compatible native science production surface should pass the guard")
+-- Recipe results with no valid manufacturing inputs are never science
+-- suppliers, even if their item exists in the data-stage registry.
+local no_ingredients,invalid_w=fixture("balanced")
+no_ingredients.recipe["thermodynamic-science-pack"].ingredients=nil
+invalid_w.data_final_fixes()
+check(not has_science(no_ingredients.technology["razi-network-precision-matrix"],
+  "thermodynamic-science-pack"),
+  "An uncraftable result-only native recipe must not become a science gate")
+
+-- Source mods may use variant-specific native recipe definitions.
+local variants,variant_w=fixture("balanced")
+variants.recipe["thermodynamic-science-pack"].ingredients=nil
+variants.recipe["thermodynamic-science-pack"].results=nil
+variants.recipe["thermodynamic-science-pack"].normal={
+  ingredients={{type="item",name="circuit",amount=1}},
+  results={{type="item",name="thermodynamic-science-pack",amount=1}}
+}
+variant_w.data_final_fixes()
+check(has_science(variants.technology["razi-network-precision-matrix"],
+  "thermodynamic-science-pack"),
+  "A complete native normal recipe variant should be a valid supplier")
+
+local muria,muria_w=fixture("balanced")
+muria.technology["planet-discovery-muria"]={prerequisites={}}
+muria.technology["razi-network-frame-aquilo-controllers"]={
+  prerequisites={"planet-discovery-muria"},
+  unit={count=1000,ingredients={{"umbra-tech-card",1}}}
+}
+muria.tool["muriatic-science-pack"]={}
+muria.lab.advanced.inputs[#muria.lab.advanced.inputs+1]="muriatic-science-pack"
+muria.recipe["muriatic-science-pack"]={
+  enabled=true,
+  ingredients={{type="item",name="iron-plate",amount=1}},
+  results={{type="item",name="muriatic-science-pack",amount=1}}
+}
+muria_w.data_final_fixes()
+check(has_science(muria.technology["razi-network-frame-aquilo-controllers"],
+  "muriatic-science-pack"),
+  "Post-arrival Aquilo controllers should reuse a real Muria science producer")
+
 local off,o=fixture("off")
 o.data_final_fixes()
 check(not has_science(off.technology["razi-network-precision-matrix"],
