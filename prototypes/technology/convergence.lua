@@ -207,7 +207,10 @@ function M.data_final_fixes()
   for k,v in pairs(icon) do recipe[k]=clone(v) end
   new[#new+1]=item
   new[#new+1]=recipe
-  begin.effects[#begin.effects+1]={type="unlock-recipe",
+  -- The final mandate is a genuine post-synchronization production tier,
+  -- not a recipe silently granted by the opening commission.
+  local unlock=rule.id=="deep-space" and ending or begin
+  unlock.effects[#unlock.effects+1]={type="unlock-recipe",
     recipe=rule.item}
  end
  data:extend(new)
