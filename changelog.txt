@@ -1,3 +1,12 @@
+Version: 2.1.64
+Date: 14. 10. 2026
+  Recommended optional companions:
+    - Use Factorio 2.1's + recommended dependency marker for AAI Signal Transmission 0.6.0+ and Imersite Asteroids 1.3.0+.
+    - Preserve their optional status and the existing source-owned research, asteroid mining, routes, items and runtime integration.
+    - Keep FluxWorks optional while its declared 0.2.12 minimum is not yet available on the public Mod Portal and its full integration is experimental.
+    - Keep 2.0-only Dea Dia / Pelagos and potentially conflicting Outer Rim / Secretas orbit choices optional instead of recommending incompatible installs.
+    - Add focused manifest regression coverage; no game-engine or GitHub Actions workflow automatically run.
+
 Version: 2.1.63
 Date: 14. 10. 2026
   Research tree and science economy:
