@@ -1,3 +1,42 @@
+## 2.1.68: Science-economy and freight balance release gate
+
+The seven system-card freight alternatives are **optional**, never first
+discovery requirements. Test all seven registered recipes when their source
+items exist. Verify that four ordinary card batches and their original
+ingredients are charged, imported inputs are additionally consumed, and
+five cards are produced. Confirm craft time equals 4 × ordinary recipe
+seconds × 1.15, with no productivity stacking or automatic recycling.
+When a supplier item or source discovery is absent, only its optional
+freight recipe should be suppressed. Existing save technologies, native
+one-card recipes and existing science labs must be preserved.
+
+Pay particular attention to newly added Beetlejuice (Secretas gold + Linox
+rare earths) and Umbra (Tenebris chitosan + Vesta supermagnets + Linox
+rare earths). Check the actual source recipe unlocks, factory ingredient
+slots, real interstellar transport, and machine surface requirements in
+Factorio. If source mod prototypes no longer match, fix or skip only the
+optional recipe rather than forcing a substitute source mod.
+
+Compare first-frontier Razi-owned direct Calidus-card costs against the
+mod's previous values. The audit excludes Panglia native data-cell work:
+a shorter Razi research total **does not** prove Nyxaris is faster in game.
+Open the Galactic Operations Campaign tab and confirm it only advertises
+installed multiplex recipes. Load a copied old save with normal and
+multiplex crafting in progress, and compare recipe behavior after updating.
+
+Run the existing manual local fixtures and the post-load data-raw audits:
+```bash
+lua5.2 tests/lua/test_system_card_manufacturing.lua
+lua5.2 tests/lua/test_galactic_operations.lua
+python3 -m unittest discover -s tests -p 'test_system_card_progression.py'
+python3 -m unittest discover -s tests -p 'test_research_balance.py'
+python3 -m unittest discover -s tests -p 'test_galactic_operations.py'
+python3 scripts/audit_research_balance.py script-output/data-raw-dump.json --strict
+```
+
+No GitHub Actions jobs have been requested for this pass. Full pack startup,
+live save compatibility, and actual UPS / logistics throughput remain untested.
+
 ## 2.1.67: Planetary supply roles and campaign evidence gate
 
 **Static source changes, not a completed in-game certification.** The Galactic
