@@ -164,23 +164,40 @@ function M.cap_sizes(location_or_route, maximum)
   location_or_route.asteroid_spawn_definitions = detached
 end
 
--- Belt edges are rich in collectible ore, but a parked ship won't be smashed
--- by big/huge asteroids. Native modded resource chunks are not replaced.
-function M.belt_edge_resources(intensity)
-  local result = {}
-  local resources = data and data.raw and data.raw["asteroid-chunk"] or {}
-  for _, family in ipairs({"metallic","carbonic","oxide"}) do
-    local name = family.."-asteroid-chunk"
+-- Razi's three belts specialize in real native Space Age resources.
+-- These are data-stage weights, not a new asteroid species or runtime spawner.
+-- Safe rims are strongest in their local material; the dangerous middle of
+-- the crossing contains a smaller, valuable seam of the same material.
+M.belt_resources={
+  vibrant={metallic=1.85,carbonic=0.70,oxide=0.90},
+  vespera={metallic=0.75,carbonic=0.90,oxide=1.95},
+  umbra={metallic=0.65,carbonic=1.90,oxide=1.20}
+}
+local belt_crossing_rates={
+  vibrant={metallic=0.028,carbonic=0.011,oxide=0.014},
+  vespera={metallic=0.012,carbonic=0.017,oxide=0.032},
+  umbra={metallic=0.014,carbonic=0.034,oxide=0.024}
+}
+local families={"metallic","carbonic","oxide"}
+-- Edge harvesting uses the location spawn format rather than route points.
+-- A paused space platform can collect ore without turret-heavy combat.
+function M.belt_edge_resources(intensity,system)
+  local result={}
+  local resources=data and data.raw and data.raw["asteroid-chunk"] or {}
+  local emphasis=M.belt_resources[system] or {}
+  for _,family in ipairs(families) do
+    local name=family.."-asteroid-chunk"
     if resources[name] then
-      result[#result+1] = {
-        type="asteroid-chunk", asteroid=name,
-        probability=0.06*intensity, speed=0.035,
-        angle_when_stopped=0.5
+      result[#result+1]={
+        type="asteroid-chunk",asteroid=name,
+        probability=math.min(.25,.06*(intensity or 1)*(emphasis[family] or 1)),
+        speed=.035,angle_when_stopped=.5
       }
     end
   end
   return result
 end
+
 
 local done = setmetatable({}, {__mode="k"})
 function M.is_vanilla(def)
@@ -238,6 +255,60 @@ local function sample(points,distance)
   end
   return ordered[#ordered].probability,ordered[#ordered].speed
 end
+-- Add an earned ore-rich MIDSECTION to the *original* route prototype.
+-- Native entries are copied before alteration; source-owned custom chunks
+-- and enemies retain their probability tables byte-for-byte.
+-- Reapplying the final pass must never multiply its first result.
+local enriched=setmetatable({}, {__mode="k"})
+function M.enrich_belt_crossing(route,system)
+  local rates=belt_crossing_rates[system]
+  if not route or not rates or enriched[route] then return false end
+  local resources=data and data.raw and data.raw["asteroid-chunk"] or {}
+  local definitions=route.asteroid_spawn_definitions
+  if type(definitions)~="table" then definitions={} end
+  local detached={}
+  local by_chunk={}
+  for i,def in ipairs(definitions) do
+    detached[i]=def
+    if def.type=="asteroid-chunk" then by_chunk[def.asteroid]=i end
+  end
+  local changed=false
+  for _,family in ipairs(families) do
+    local name=family.."-asteroid-chunk"
+    local rate=rates[family]
+    if resources[name] and rate then
+      local index=by_chunk[name]
+      local original=index and detached[index]
+      local existing=original and original.spawn_points or {}
+      local sampled_probability,sampled_speed
+      local curve={}
+      -- The high-value pocket is mostly in the most dangerous third.
+      for _,mark in ipairs({
+        {0.05,0.36},{0.25,0.58},{0.42,0.88},
+        {0.50,1.00},{0.58,0.88},{0.75,0.58},{0.95,0.36}
+      }) do
+        local baseline,speed=sample(existing,mark[1])
+        curve[#curve+1]={
+          distance=mark[1],
+          probability=math.max(baseline or 0,rate*mark[2]),
+          speed=speed and speed>0 and speed or .045
+        }
+      end
+      -- Native chunks only. Unknown/modded asteroid entries are not touched.
+      local entry=original and copy(original) or {
+        type="asteroid-chunk",asteroid=name
+      }
+      entry.spawn_points=curve
+      if index then detached[index]=entry
+      else detached[#detached+1]=entry end
+      changed=true
+    end
+  end
+  if changed then route.asteroid_spawn_definitions=detached end
+  enriched[route]=true
+  return changed
+end
+
 function M.apply_field(route,multiplier)
   if not route or field_done[route] then return end
   field_done[route]=true
