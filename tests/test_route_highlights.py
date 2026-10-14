@@ -59,7 +59,7 @@ class BuiltInOverlayTests(unittest.TestCase):
         self.assertNotIn("data:extend",source)
         # Comparisons such as route.shape=="line" are read-only.
         # Reject assignments without mistaking equality checks for edits.
-        self.assertNotRegex(source,r"route\\.(?:shape|length)\\s*=(?!=)")
+        self.assertNotRegex(source,r"route\.(?:shape|length)\s*=(?!=)")
         self.assertNotIn("script.on_event",source)
         self.assertNotIn("game.tick",source)
         self.assertNotIn('require("space-route-overlay")',source)
