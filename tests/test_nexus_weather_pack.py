@@ -12,11 +12,16 @@ class NexusWeatherIntegration(unittest.TestCase):
     def test_dependency_stack(self):
         info=json.loads(read("info.json"))
         deps=info["dependencies"]
-        required=("Nexus-Updated",
-                  "celestial-weather-updated","celestial-weather-additions-updated",
-                  "Nexus-Threat-Updated","Big-Monsters")
-        for mod in required:
-            self.assertTrue(any(d.startswith(mod+" >=") for d in deps),mod)
+        # Nexus is a curated world; its atmosphere, threat and monster
+        # companions are optional, and the upstream boss add-on installs
+        # its own full enemy dependency chain when enabled.
+        self.assertTrue(any(d.startswith("Nexus-Updated >=") for d in deps))
+        recommended=("celestial-weather-updated",
+                     "celestial-weather-additions-updated",
+                     "Nexus-Threat-Updated","Big-Monsters")
+        for mod in recommended:
+            self.assertTrue(any(d.startswith("+ "+mod+" >=")
+                                for d in deps),mod)
         # Both add-ons declare `? razi-protocol`, so listing either here would
         # create an impossible two-way load-order dependency. They are enabled
         # by the curated profile and deliberately load after Razi instead.
