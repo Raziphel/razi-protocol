@@ -54,6 +54,85 @@ INDUSTRY = (
 )
 
 
+SYSTEM_CARDS = (
+    "calidus-tech-card", "solaris-tech-card", "nyxaris-tech-card",
+    "vibrant-tech-card", "vespera-tech-card",
+    "beetlejuice-tech-card", "umbra-tech-card", "deep-space-tech-card",
+)
+
+
+def inspect_card_recipes(raw, issues):
+    """Audit actual loaded card inputs without changing source prototypes.
+
+    Card dependency cycles are definite errors. Resource availability and
+    the ability to research each recipe unlock still need separate audits.
+    """
+    recipes=raw.get("recipe") or {}
+    if not isinstance(recipes,dict):
+        return []
+    card_set=set(SYSTEM_CARDS)
+    rows=[]
+    edges={}
+    for card in SYSTEM_CARDS:
+        recipe=recipes.get(card)
+        if not isinstance(recipe,dict):
+            continue
+        inputs=[]
+        for entry in recipe.get("ingredients") or []:
+            if isinstance(entry,dict):
+                name,amount=entry.get("name"),entry.get("amount",1)
+                if entry.get("type")=="fluid":
+                    continue
+            elif isinstance(entry,list) and entry:
+                name,amount=entry[0],entry[1] if len(entry)>1 else 1
+            else:
+                continue
+            if isinstance(name,str):
+                inputs.append((name,amount))
+        parents=sorted({name for name,_ in inputs if name in card_set})
+        native=sorted({name for name,_ in inputs if name not in card_set})
+        edges[card]=parents
+        rows.append({
+            "card":card,
+            "required_cards":parents,
+            "other_inputs":native,
+            "craft_seconds":recipe.get("energy_required"),
+            "input_stacks":len(inputs),
+            "total_ingredient_items":sum(
+                amount for _,amount in inputs
+                if isinstance(amount,(int,float))),
+        })
+    visited=set()
+    stack=[]
+    reported=set()
+
+    def check_cycle(card):
+        if card in stack:
+            cycle=stack[stack.index(card):]
+            signature=tuple(sorted(cycle))
+            if signature not in reported:
+                reported.add(signature)
+                issues.append({
+                    "severity":"error", "code":"system-card-recipe-cycle",
+                    "targets":cycle,
+                    "detail":"System-card manufacturing recipes depend on one another in a cycle.",
+                })
+            return
+        if card in visited:
+            return
+        stack.append(card)
+        for parent in edges.get(card,[]):
+            if parent in edges:
+                check_cycle(parent)
+        stack.pop()
+        visited.add(card)
+
+    for card in SYSTEM_CARDS:
+        if card in edges:
+            check_cycle(card)
+    return rows
+
+
 def science_ingredients(node):
     unit = node.get("unit") or {}
     if not isinstance(unit, dict):
@@ -183,6 +262,7 @@ def examine(raw):
             issues.append({"severity":"error","code":"no-shared-science-lab",
                 "targets":[name],"packs":sorted(science),
                 "detail":"No installed laboratory accepts this complete science set."})
+    card_recipes=inspect_card_recipes(raw,issues)
     research_prices=[]
     science_reuse=Counter()
     for name in INDUSTRY:
@@ -210,6 +290,7 @@ def examine(raw):
                     "median":typical,
                     "detail":"Razi industrial research is unusually expensive."})
     return {"paired_entries":pairs,"stages":stages,
+            "system_card_manufacturing":card_recipes,
             "world_science_arrival_checks":world_science_checks,
             "native_arrival_errors":native_arrival_errors,
             "planetary_science_reuse":dict(sorted(science_reuse.items())),
