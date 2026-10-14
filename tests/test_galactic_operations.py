@@ -22,6 +22,17 @@ class GalacticOperationsTests(unittest.TestCase):
                     "atlas-convergence-open"):
             self.assertIn(key+"=",strings)
 
+    def test_atlas_industry_reverse_index_is_cached(self):
+        atlas=(ROOT/"scripts/galactic_atlas.lua").read_text()
+        code=(ROOT/"control.lua").read_text()
+        self.assertIn("local industry_by_parent",atlas)
+        self.assertIn("function M.related_industries(force,research)",atlas)
+        self.assertIn("for id,tech in pairs(prototypes.technology)",atlas)
+        self.assertIn("local industries=M.related_industries(",atlas)
+        self.assertNotIn("for _,tech in pairs(player.force.technologies or {})",atlas)
+        self.assertIn("technology and not technology.researched",code)
+        self.assertIn("force.get_entity_count(active_transceiver_name)>0",code)
+
     def test_gui_is_opt_in_and_event_based(self):
         control=(ROOT/"control.lua").read_text()
         ui=(ROOT/"scripts/galactic_operations.lua").read_text()
