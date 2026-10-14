@@ -301,7 +301,6 @@ local function section(parent,key,caption,width,theme)
   block.style.horizontally_stretchable=true
   block.style.vertical_spacing=5
   subtitle(block,key,width,theme)
-  if theme then accent_rule(block,theme,math.min(width,152),2) end
   if caption then wrap(block,caption,width) end
   return block
 end
@@ -563,18 +562,13 @@ local function render_details(parent,player,quest,p,context,size,view)
   tint(sequence,theme.soft)
   local status_label=label(eyebrow,L("status-"..status))
   status_label.style.font="default-bold"
-  local objective_bar=panel.add{type="progressbar",
-    value=status=="complete" and 1 or 0}
-  objective_bar.style.width=inner
-  objective_bar.style.height=8
-  objective_bar.style.color=theme.primary
-
-  local content_height=size.body-(size.compact and 253 or 292)
+  -- The completion status is already visible; give the reader that space.
+  local content_height=size.body-(size.compact and 225 or 248)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
   local text_width=inner-18
   local prose=scroll.add{type="flow",direction="vertical"}
   prose.style.width=text_width
-  prose.style.vertical_spacing=13
+  prose.style.vertical_spacing=11
   local objective=prose.add{type="frame",direction="vertical",
     style="inside_deep_frame"}
   objective.style.width=text_width
@@ -621,13 +615,10 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- Direct campaign handoffs share the force snapshot with the chapter rail.
   local next_steps=guidance.followups(quest.id,view and view.states,3)
   if #next_steps>0 then
-    local forecast=prose.add{type="frame",direction="vertical",
-      style="inside_shallow_frame_with_padding"}
+    local forecast=prose.add{type="flow",direction="vertical"}
     forecast.style.width=text_width
-    local heading=wrap(forecast,L("next-steps-heading"),text_width-26)
-    heading.style.font="default-bold"
-    heading.style.font_color=theme.primary
-    wrap(forecast,L("next-steps-note"),text_width-26)
+    forecast.style.vertical_spacing=4
+    subtitle(forecast,"next-steps-heading",text_width-26,theme)
     for _,step in ipairs(next_steps) do
       local line=forecast.add{type="flow",direction="horizontal"}
       line.style.horizontal_spacing=8
@@ -639,19 +630,19 @@ local function render_details(parent,player,quest,p,context,size,view)
         tags={razi_journal_action="guidance-select",id=step.quest.id}}
       link.style.single_line=false
       link.style.maximal_width=text_width-80
-      tint(wrap(note,L("next-step-"..step.state),text_width-80),theme.soft)
+      if step.state~="complete" then
+        tint(wrap(note,L("next-step-"..step.state),text_width-80),theme.soft)
+      end
     end
   end
   -- The link is informational and never turns a researched milestone
   -- into a claim that freight actually shipped or a factory is running.
   local cargo_id=cargo_catalog.chain_for_quest(quest.id)
   if cargo_id and cargo_catalog.is_installed(player.force,cargo_id) then
-    local bridge=prose.add{type="frame",direction="vertical",
-      style="inside_shallow_frame_with_padding"}
+    local bridge=prose.add{type="flow",direction="vertical"}
     bridge.style.width=text_width
-    local heading=wrap(bridge,L("cargo-bridge-heading"),text_width-26)
-    heading.style.font="default-bold"
-    heading.style.font_color=theme.primary
+    bridge.style.vertical_spacing=4
+    subtitle(bridge,"cargo-bridge-heading",text_width-26,theme)
     wrap(bridge,L("cargo-bridge-description"),text_width-26)
     local link=bridge.add{type="button",caption=L("cargo-bridge-open"),
       tags={razi_journal_action="open-cargo",id=quest.id}}
@@ -659,13 +650,17 @@ local function render_details(parent,player,quest,p,context,size,view)
   end
   if quest.convergence or quest.id=="convergence-commission"
     or quest.id=="convergence-synchronization" then
-    local bridge=prose.add{type="frame",direction="vertical",
-      style="inside_shallow_frame_with_padding"}
+    local bridge=prose.add{type="flow",direction="vertical"}
     bridge.style.width=text_width
+    bridge.style.vertical_spacing=4
     wrap(bridge,L("convergence-codex-description"),text_width-26)
     bridge.add{type="button",caption=L("convergence-codex-open"),
       tags={razi_journal_action="open-convergence",id=quest.id}}
   end
+  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
+  section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
+  section(prose,"chapter-context",
+    {"journal-chapter-story."..quest.chapter},text_width,theme)
   if native then
     draw_gallery(prose,"science-pack-heading",
       science_gallery(native),text_width,12,theme)
@@ -673,10 +668,6 @@ local function render_details(parent,player,quest,p,context,size,view)
       unlock_gallery(native),text_width,8,theme)
     recipe_gallery(prose,quest,native,text_width,theme)
   end
-  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
-  section(prose,"chapter-context",
-    {"journal-chapter-story."..quest.chapter},text_width,theme)
-  section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
   local forecast=weather.for_quest(quest)
   if forecast then
     local sky=section(prose,"weather-heading",
@@ -737,19 +728,18 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     inner,size.body-151)
   local column=scroll.add{type="flow",direction="vertical"}
   column.style.width=inner-13
-  column.style.vertical_spacing=7
+  column.style.vertical_spacing=5
   local selected_element
 
   plan=plan or M.guidance(player.force,context,view)
   local priority=column.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   priority.style.width=inner-16
-  priority.style.padding=11
+  priority.style.padding=8
   -- FrameStyle has no vertical_spacing; content uses native frame spacing.
   local heading=wrap(priority,L("guidance-heading"),inner-40)
   heading.style.font="default-bold"
   heading.style.font_color={r=1,g=.84,b=.60}
-  accent_rule(priority,themes.get("network"),math.min(inner-42,135),2)
   if not plan.primary then
     wrap(priority,L("guidance-none"),inner-38)
   else
@@ -817,7 +807,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       local card=column.add{type="frame",direction="vertical",
         style="inside_shallow_frame"}
       card.style.width=inner-16
-      card.style.padding=8
+      card.style.padding=6
       local head=card.add{type="flow",direction="horizontal"}
       head.style.horizontal_spacing=6
       icons.button(head,themes.icon(chapter.id),"chapter_button",
@@ -835,19 +825,17 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       heading.style.font_color=theme.primary
       heading.style.vertical_align="center"
       if open then
-        accent_rule(card,theme,inner-40,3)
-        local mood=wrap(card,{"journal-mood."..chapter.id},inner-40)
-        mood.style.font_color=theme.soft
+        accent_rule(card,theme,inner-40,2)
       end
       local counts=card.add{type="flow",direction="vertical"}
-      counts.style.vertical_spacing=4
+      counts.style.vertical_spacing=3
       local count=label(counts,
         L("chapter-progress-short",tostring(completed),tostring(total)))
       count.style.font_color=theme.soft
       local progress=counts.add{type="progressbar",
         value=total>0 and completed/total or 0}
       progress.style.width=math.max(95,inner-43)
-      progress.style.height=9
+      progress.style.height=6
       progress.style.color=theme.primary
       if open then
         for _,quest in ipairs(available) do
@@ -914,7 +902,7 @@ local function render_archive(parent,player,p,context,size)
     size.rail-35,size.body-61)
   local collection=left.add{type="flow",direction="vertical"}
   collection.style.width=size.rail-56
-  collection.style.vertical_spacing=12
+  collection.style.vertical_spacing=8
   local chosen,focus
   for _,record in ipairs(records) do
     local quest=defs.by_id[record.unlock]
@@ -999,19 +987,19 @@ local function draw(player,focus_search)
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
-  head.style.horizontal_spacing=16
+  head.style.horizontal_spacing=10
   icons.sprite(head,themes.icon(p.chapter or "calidus"),
     "window_emblem")
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
   local title=label(heading,L(size.compact and "window-compact" or "window"))
-  title.style.font=size.compact and "heading-2" or "heading-1"
+  title.style.font="heading-2"
   title.style.font_color=window_theme.primary
   local kicker=tint(label(heading,L("header-eyebrow")),window_theme.soft)
   kicker.style.font="default-bold"
   local drag=head.add{type="empty-widget",style="draggable_space"}
   drag.style.horizontally_stretchable=true
-  drag.style.height=35
+  drag.style.height=29
   drag.drag_target=frame
   local refresh=head.add{type="button",caption=L("refresh"),
     tags={razi_journal_action="refresh"}}
@@ -1039,38 +1027,38 @@ local function draw(player,focus_search)
   totals.style.vertical_align="center"
   -- FrameStyle does not expose horizontal_spacing. Use a child flow for
   -- custom column gaps instead of attempting to style the frame itself.
-  totals.style.padding=10
+  totals.style.padding=7
   local metrics_row=totals.add{type="flow",direction="horizontal"}
   metrics_row.style.horizontally_stretchable=true
   metrics_row.style.vertical_align="center"
-  metrics_row.style.horizontal_spacing=size.compact and 9 or 24
+  metrics_row.style.horizontal_spacing=size.compact and 8 or 18
   local metric=metrics_row.add{type="flow",direction="vertical"}
-  metric.style.vertical_spacing=4
-  metric.style.minimal_width=size.compact and 96 or 165
+  metric.style.vertical_spacing=2
+  metric.style.minimal_width=size.compact and 88 or 138
   subtitle(metric,"completion-heading")
   local completed=label(metric,L("completion-value",
     tostring(done),tostring(total)))
   completed.style.font="heading-2"
   completed.style.font_color={r=.51,g=.86,b=.73}
   local readiness=metrics_row.add{type="flow",direction="vertical"}
-  readiness.style.vertical_spacing=4
-  readiness.style.minimal_width=size.compact and 92 or 156
+  readiness.style.vertical_spacing=2
+  readiness.style.minimal_width=size.compact and 88 or 138
   subtitle(readiness,"ready-heading")
   local ready_label=label(readiness,L("ready-value",tostring(ready)))
   ready_label.style.font="heading-2"
   ready_label.style.font_color={r=1,g=.78,b=.45}
   local meter=metrics_row.add{type="flow",direction="vertical"}
   meter.style.horizontally_stretchable=true
-  meter.style.vertical_spacing=7
+  meter.style.vertical_spacing=4
   subtitle(meter,"campaign-progress-heading")
   local overall=meter.add{type="progressbar",
     value=total>0 and done/total or 0}
   overall.style.horizontally_stretchable=true
-  overall.style.height=14
+  overall.style.height=9
   overall.style.color=themes.get(p.chapter or "calidus").primary
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
-  toolbar.style.horizontal_spacing=12
+  toolbar.style.horizontal_spacing=8
   -- The Codex is a focused quest book with a separate story journal.
   -- Navigation and records stay together; operational tools remain outside.
   for _,view in ipairs({"quests","archive"}) do
@@ -1087,7 +1075,7 @@ local function draw(player,focus_search)
       tags={razi_journal_action="next"}}
   end
   local filterbar=frame.add{type="flow",direction="horizontal"}
-  filterbar.style.horizontal_spacing=9
+  filterbar.style.horizontal_spacing=6
   filterbar.style.vertical_align="center"
   if p.view=="archive" then
     local unlocked,all=M.unlocked_records(player.force,context)

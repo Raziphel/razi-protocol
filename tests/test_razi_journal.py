@@ -59,7 +59,8 @@ class ExpeditionJournalTests(unittest.TestCase):
         ui=read("scripts/razi_journal.lua")
         self.assertIn('themes.icon(chapter.id)',ui)
         self.assertIn('themes.icon(quest.chapter)',ui)
-        self.assertIn('objective_bar.style.color=theme.primary',ui)
+        self.assertNotIn('objective_bar=panel.add',ui)
+        self.assertIn('local content_height=size.body-(size.compact and 225 or 248)',ui)
         self.assertIn('progress.style.color=theme.primary',ui)
         self.assertIn('chapter_intro.style.font_color=theme.primary',ui)
         self.assertIn('accent_rule(panel,theme,inner,3)',ui)
@@ -155,7 +156,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('name="razi_journal_search"',ui)
         self.assertIn('science_gallery(native)',ui)
         self.assertIn('unlock_gallery(native)',ui)
-        self.assertIn('recipe_gallery(prose,quest,native,text_width)',ui)
+        self.assertIn('recipe_gallery(prose,quest,native,text_width,theme)',ui)
         self.assertIn('prototypes.recipe[quest.tech]',ui)
         self.assertIn('quest_art(player.force,quest,context)',ui)
         self.assertIn('column_count=size.reader<700 and 2 or 4',ui)
@@ -273,12 +274,29 @@ class ExpeditionJournalTests(unittest.TestCase):
 
     def test_codex_layout_polish_keeps_native_scroll_controls(self):
         source=read("scripts/razi_journal.lua")
-        self.assertIn('totals.style.horizontal_spacing=size.compact and 9 or 24',source)
-        self.assertIn('overall.style.height=14',source)
-        self.assertIn('priority.style.vertical_spacing=7',source)
-        self.assertIn('progress.style.height=9',source)
+        self.assertIn('metrics_row.style.horizontal_spacing=size.compact and 8 or 18',source)
+        self.assertIn('overall.style.height=9',source)
+        self.assertIn('priority.style.padding=8',source)
+        self.assertIn('progress.style.height=6',source)
         self.assertIn('horizontal_scroll_policy="never"',source)
         self.assertIn('local function wheel_pane(',source)
+
+    def test_journal_editorial_and_reading_order(self):
+        source=read("scripts/razi_journal.lua")
+        locale=read("locale/en/razi_journal.cfg")
+        ui=locale.split("[journal-ui]",1)[1].split("\n[",1)[0]
+        self.assertIn("window=RAZI PROTOCOL",ui)
+        self.assertIn("header-eyebrow=EXPEDITION JOURNAL",ui)
+        self.assertIn("next-steps-heading=RELATED MILESTONES",ui)
+        self.assertNotIn("real research",ui.lower())
+        self.assertNotIn("confirmed victory",ui.lower())
+        self.assertNotIn('wrap(forecast,L("next-steps-note")',source)
+        self.assertIn('if step.state~="complete" then',source)
+        self.assertNotIn('objective_bar=panel.add',source)
+        self.assertLess(source.index('section(prose,"tip-heading"'),
+                        source.index('draw_gallery(prose,"science-pack-heading"'))
+        self.assertIn('forecast.style.vertical_spacing=4',source)
+        self.assertIn('bridge.style.vertical_spacing=4',source)
 
     def test_frame_styles_do_not_use_flow_spacing(self):
         source=read("scripts/razi_journal.lua")
