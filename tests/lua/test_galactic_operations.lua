@@ -107,6 +107,11 @@ print("Galactic Operations selection and map visibility fixtures passed")
 local campaign=require("scripts.galactic_campaign")
 local trade=require("scripts.galactic_trade")
 check(#campaign.systems==8,"Seven-system campaign UI lost a chapter")
+check(campaign.multiplex_by_card["beetlejuice-tech-card"]==
+  "razi-beetlejuice-multiplex-cards"
+  and campaign.multiplex_by_card["umbra-tech-card"]==
+  "razi-umbra-multiplex-cards",
+  "Campaign must read all guarded science freight recipes from source rules")
 local first,second={name="x",researched=true},{name="y",researched=false}
 local finished,total,pending=campaign.progress({technologies={x=first,y=second}},
   {"x","y","not-installed"})
