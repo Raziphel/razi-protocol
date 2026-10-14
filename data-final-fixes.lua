@@ -198,3 +198,8 @@ require("prototypes.compat.system_card_laboratories").data_final_fixes()
 
 -- Post-transceiver endgame: build real freight with native assemblers and labs.
 require("prototypes.technology.convergence").data_final_fixes()
+
+-- Last technology pass: distribute selected base/modded unlocks across real
+-- planetary science, after all source science, labs and routes have settled.
+-- The pass skips incomplete or circular changes instead of forcing them.
+require("prototypes.technology.distributed_industry").data_final_fixes()
