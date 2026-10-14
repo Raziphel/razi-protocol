@@ -1,5 +1,12 @@
 # Razi Protocol
 
+**2.1.69: Easier mod-setting discovery.** English localization now displays
+`! Razi Protocol` as a best-effort early-sorting title in Factorio, without
+renaming the internal `razi-protocol` mod or changing settings and saves.
+Factorio decides the section order; this is not a guaranteed first-place
+setting. The mod portal's canonical title remains `Razi Protocol`.
+
+
 Razi Protocol started as my attempt to make an absurdly large Space Age planet pack feel like one game. It's built for Factorio 2.1 and Krastorio 2 Spaced Out.
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
