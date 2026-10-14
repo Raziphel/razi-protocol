@@ -96,6 +96,16 @@ jobs:
         run: python3 -m unittest tests/test_supply_chains.py -v
       - name: Audit progressive Razi route lengths and native orbital intent
         run: python3 -m unittest tests/test_route_distances.py -v
+      - name: Check actual loaded-modpack audit safety with mock native prototypes
+        run: lua5.2 tests/lua/test_convergence_audit.lua
+      - name: Check cached Galaxy Atlas industry links
+        run: lua5.2 tests/lua/test_atlas_industry_index.lua
+      - name: Check five-stage finale deliveries and save merges
+        run: lua5.2 tests/lua/test_convergence_runtime.lua
+      - name: Check five-stage manufacturing and native labs
+        run: lua5.2 tests/lua/test_convergence_prototypes.lua
+      - name: Check Codex physical-shipment guidance
+        run: lua5.2 tests/lua/test_razi_journal_guidance.lua
       - name: Test Factorio prototype auditor
         run: python3 -m unittest discover -s tests -p 'test_*.py' -v
       - name: Audit Razi-owned graphics and required icon declarations
