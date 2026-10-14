@@ -1,3 +1,30 @@
+## Runtime Atlas and audit optimizations (2.1.61)
+
+The Galaxy Atlas previously inspected every single force technology
+to locate Razi-owned technologies which referenced a discovered
+planet's technology. The new prototype-based reverse index builds
+those links once per runtime script session, sorts the link IDs and
+deduplicates multiple native discoveries. The Atlas still reads each
+force's actual research state and respects hidden technologies when
+the user opens a destination. No GUI update or background scan runs
+more frequently as a result.
+
+An administrator can execute `/razi-audit` to inspect the actual
+installed Convergence technologies, available native science labs and
+Mandate manufacturing recipes. This runs only when explicitly called.
+Its one-off product index records only the Mandate ingredients that
+matter, rather than allocating a map of every product in a very large
+modpack. The command never modifies research, recipes, or save state.
+
+The transceiver gate's periodic safety check now skips entities for
+forces that already have the gateway researched. `get_entity_count`
+is engine-maintained O(1) and this is primarily a reduction in
+unnecessary work, not a claimed large UPS increase.
+
+These optimizations have been reviewed at the source level only.
+Cold/warm startup and runtime FPS/UPS measurements require the actual
+Factorio installation, full modpack and representative save.
+
 # Faster startup for Razi Protocol and large Factorio 2.1 modpacks
 
 This is a **client-side performance guide** for players, not a new gameplay
