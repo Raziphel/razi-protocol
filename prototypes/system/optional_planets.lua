@@ -13,7 +13,7 @@ local additions = {
 	{"Igrys", "igrys", "solaris", "sye-solaris", "solaris-discovery",
 		36.810881, 0.881451, 17000},
 	{"foliax", "foliax", "nyxaris", "sye-nyxaris", "nyxaris-discovery",
-		36.376917, 0.169757, 18500},
+		38, 0.86, 18500},
 	{"obsidiax", "obsidiax", "vespera", "sye-vespera", "vespera-discovery",
 		41.323603, 0.312167, 21000},
 	{"carna", "carna", "umbra", "sye-umbra", "umbra-discovery",

@@ -21,7 +21,8 @@ local anchors = {
   {"space-location","sye-solaris","solaris",44,0.84},
   {"space-location","sye-vibrant","vibrant",28.017851,0.653265},
   {"space-location","sye-beetlejuice","beetlejuice",27,0.5},
-  {"space-location","sye-nyxaris","nyxaris",27,0},
+  -- Northern arrivals flank the corona instead of threading through it.
+  {"space-location","sye-nyxaris","nyxaris",41,0.04},
   {"space-location","sye-vespera","vespera",26,0.25},
   {"space-location","sye-umbra","umbra",27,0.5},
   -- Solaris's compact, asymmetric orbital sweep. Warm inner worlds sit
@@ -35,12 +36,13 @@ local anchors = {
   {"planet","castra","solaris",27,0.61},
   {"planet","tellus","solaris",29,0.26},
   {"planet","corrundum","solaris",33,0.13},
-  {"planet","gleba","nyxaris",32,0.091528},
-  {"planet","moshine","nyxaris",22,0.245823},
-  -- Apia/Carnova no longer shares an almost identical ring with Gleba.
-  {"space-location","apia-carnova-orbit","nyxaris",39,0.316108},
-  -- Dedicated orbital lane: visually distinct from Apia and Moshine.
-  {"planet","panglia","nyxaris",44,0.44},
+  -- Nyxaris forms an open biological crescent, with the Gleba moons well
+  -- away from the gateway and Foliax across the quieter western arc.
+  -- These are chart positions only; source production and climate are intact.
+  {"planet","gleba","nyxaris",32,0.17},
+  {"planet","moshine","nyxaris",22,0.29},
+  {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
+  {"planet","panglia","nyxaris",40,0.49},
   {"planet","fulgora","vibrant",22,0.558152},
   {"planet","ribbonia","vibrant",27,0.397307},
   {"planet","paracelsin","vibrant",49,0.238},
@@ -66,7 +68,7 @@ local anchors = {
 -- Only installed planets are touched; moon owners remain unchanged.
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
-  {name="foliax",star="nyxaris",radius=36.376917,turn=0.169757},
+  {name="foliax",star="nyxaris",radius=38,turn=0.86},
   {name="obsidiax",star="vespera",radius=41.323603,turn=0.312167},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
   {name="ferrum",star="vibrant",radius=51.444741,turn=0.545675},
@@ -291,7 +293,9 @@ function M.data_final_fixes()
     ["sye-calidus"]=0.25,
     ["apia-carnova-orbit"]=0.75,
     ["apia"]=0.25,["carnova"]=0.75,
-    ["rabbasca"]=0.75,["frozeta"]=0.25,
+    -- Fan Gleba and its two source-owned moon labels in three directions.
+    ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
+    ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
     ["obsidiax"]=0.25,["carna"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,

@@ -16,14 +16,14 @@ def parse_layout():
     pattern = r'\{"(?:planet|space-location)","([^"]+)","([^"]+)",([.\d]+),([.\d]+)\}'
     result = {n: (p, float(r), float(a))
               for n, p, r, a in re.findall(pattern, source)}
-    # Optional planets use the same source-of-truth orbit table with named
-    # keys. Igrys is required by the curated pack and belongs in this audit.
-    match = re.search(
-        r'\{name="igrys",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}',
-        source)
-    if match:
-        parent, radius, angle = match.groups()
-        result["igrys"] = (parent, float(radius), float(angle))
+    # Audit the distant Solaris anchor and Nyxaris's optional western world.
+    for name in ("igrys", "foliax"):
+        match = re.search(
+            rf'\{{name="{name}",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}}',
+            source)
+        if match:
+            parent, radius, angle = match.groups()
+            result[name] = (parent, float(radius), float(angle))
     belt_source = (ROOT / "prototypes/system/asteroid_belt_integration.lua").read_text()
     for name, distance, orientation in re.findall(
             r'\{"(asteroid-belt-(?:inner|outer)-edge)",([.\d]+),([.\d]+)\}',
@@ -231,6 +231,25 @@ class ConstellationTests(unittest.TestCase):
                     self.assertFalse(cross(gateway,endpoint,
                                            self.coords[a],self.coords[b]),
                         f"Solaris exit to {target} crosses local {a}-{b}")
+
+    def test_nyxaris_biological_crescent(self):
+        worlds = ("sye-nyxaris", "gleba", "moshine",
+                  "apia-carnova-orbit", "panglia", "foliax")
+        for i, name in enumerate(worlds):
+            self.assertEqual(self.anchors[name][0], "nyxaris")
+            for other in worlds[i + 1:]:
+                self.assertGreaterEqual(
+                    math.dist(self.coords[name], self.coords[other]), 18,
+                    f"Nyxaris labels overlap: {name} / {other}")
+        edges = {frozenset((a, b)) for a, b, _, _ in self.routes}
+        self.assertNotIn(frozenset(("gleba", "apia-carnova-orbit")), edges)
+        for world in ("gleba", "moshine"):
+            self.assertIn(frozenset(("sye-nyxaris", world)), edges)
+            self.assertGreaterEqual(
+                segment_clearance(self.coords["nyxaris"],
+                                  self.coords["sye-nyxaris"],
+                                  self.coords[world]), 15,
+                f"Nyxaris departure to {world} clips the corona")
 
     def test_local_routes_have_no_geometric_crossovers(self):
         for star in STARS:
