@@ -1,3 +1,16 @@
+## The Convergence: release blocking tests (2.1.57)
+
+**Phase gating and panel:** Convergence Commission must unlock ONLY Stellar
+and Industrial Mandates; Deep-Space Synchronization must unlock the
+Deep-Space Mandate crafting recipe. Check old saves with commission
+researched but synchronization pending, and old saves where the
+final mandates were already fabricated. Previously delivered cargo
+must survive unchanged. In Galactic Operations inspect a zero-cargo
+stage, partial and complete progress bars, active/pending status, and
+the cargo counter as items move in and out of the character inventory.
+The Submit button must never enable in Remote View or without cargo.
+Opening the panel must not initiate a repeated background scan.
+
 ## The Convergence: release blocking tests (2.1.56)
 
 **Factory/prototype:** Load the complete Factorio 2.1 pack and confirm
