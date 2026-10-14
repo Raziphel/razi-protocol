@@ -53,10 +53,13 @@ check(has(balanced.technology["razi-network-bond-linox-refining"],
 check(not has(balanced.technology["razi-network-umbra-pressure-frame"],
   "razi-network-extreme-lattice"),
   "Deep planetary coupling leaked into Balanced mode")
-check(balanced.technology["razi-network-matrix-cryo-controllers"].unit.count==800
-  and balanced.technology["razi-network-matrix-linox-refining"].unit.count==820
-  and balanced.technology["razi-network-lattice-vesta-foundations"].unit.count==1320,
+check(balanced.technology["razi-network-matrix-cryo-controllers"].unit.count==760
+  and balanced.technology["razi-network-matrix-linox-refining"].unit.count==780
+  and balanced.technology["razi-network-lattice-vesta-foundations"].unit.count==1250,
   "Factory upgrade science budgets not capped")
+check(balanced.technology["razi-network-precision-matrix"].unit.count==400
+  and balanced.technology["razi-network-extreme-lattice"].unit.count==650,
+  "Core manufacturing milestones must have reachable science budgets")
 check(balanced.technology["razi-network-panglia-optic-bond"].essential
   and balanced.technology["razi-network-extreme-lattice"].essential,
   "The four component technologies must be visible in essential research")
