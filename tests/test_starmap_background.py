@@ -35,16 +35,18 @@ class StarmapBackgroundTests(unittest.TestCase):
     def test_all_sprites_fit_without_giant_atlases(self):
         names=([f"sky-{i}.png" for i in range(1,5)] +
                [f"glow-{name}.png" for name in SYSTEMS] +
-               [f"belt-{name}.png" for name in BELTS] +
+               [f"belt-{name}.png" for name in BELTS if name!="vibrant"] +
+               ["belt-vibrant-core.png","belt-vibrant-scatter.png",
+                "belt-vibrant-dust.png"] +
                ["galactic-current.png","dust-lane-2.png",
                 "rift-deep-space.png","chart-constellation.png"] +
                [f"filament-{name}.png" for name in SYSTEMS] +
-               [f"debris-{name}.png" for name in BELTS] +
+               [f"debris-{name}.png" for name in BELTS if name!="vibrant"] +
                [f"cluster-{i}.png" for i in range(1,4)])
         names += ["atlas-halo.png","atlas-belt.png"]
         names += [f"atlas-dust-{i}.png" for i in range(1,4)]
         names += [f"atlas-starfield-{i}.png" for i in range(1,5)]
-        self.assertEqual(len(names),42)
+        self.assertEqual(len(names),43)
         self.assertEqual(
             {f.name for f in ASSET.glob("*.png")},
             set(names) | NON_BACKGROUND_ASSETS,
@@ -80,11 +82,12 @@ class StarmapBackgroundTests(unittest.TestCase):
             self.assertTrue(found,name)
 
     def test_vibrant_textures_are_faceted_rocks_not_a_luminous_disc(self):
-        # Count actual non-transparent pixels in the original-size PNGs.
-        # A filled soft ring would light nearly the whole circumference.
+        # Empty patches and smaller subdued rocks beat an unbroken wreath.
+        # Keep all three 512px textures sparse and their star centres clear.
         for name,low,high in (
-            ("belt-vibrant.png",14000,41000),
-            ("debris-vibrant.png",3000,12500)):
+            ("belt-vibrant-core.png",4000,11500),
+            ("belt-vibrant-scatter.png",350,3500),
+            ("belt-vibrant-dust.png",850,5500)):
             data=(ASSET/name).read_bytes()
             self.assertEqual(data[25],3)
             pieces=[]
@@ -103,7 +106,15 @@ class StarmapBackgroundTests(unittest.TestCase):
             self.assertLess(active,high)
             self.assertTrue(all(bitmap[y*512+x]==0 for y in range(220,290)
                                 for x in range(220,290)),
-                            "Belt texture covers Vibrant's central star")
+                            "Vibrant's central star must stay unobscured")
+            # The western entrance intentionally has a quieter debris
+            # patch for readable belt marker names at normal zoom.
+            if name=="belt-vibrant-core.png":
+                left=sum(bitmap[y*512+x]!=0
+                         for y in range(185,327) for x in range(34,100))
+                right=sum(bitmap[y*512+x]!=0
+                          for y in range(185,327) for x in range(412,478))
+                self.assertLess(left,right,"Western entry is too crowded")
 
     def test_quiet_sky_and_region_specific_belts(self):
         source=(ROOT/"prototypes/system/starmap_background.lua").read_text()

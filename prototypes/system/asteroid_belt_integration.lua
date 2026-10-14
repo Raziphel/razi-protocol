@@ -44,14 +44,17 @@ function M.data_final_fixes()
   local utility=(data.raw["utility-sprites"] or {}).default
   local star=utility and utility.starmap_star
   if not (star and type(star.layers)=="table") then return end
-  -- Faceted mineral fragments replace the old glowing annulus.
-  -- Their 512px painted radius aligns with the physical 31/39-unit rims.
-  -- No extra layers or runtime objects are needed.
+  -- One quiet rock band, irregular stray fragments and very faint dust.
+  -- The uneven distribution and open gaps are painted into three 512px
+  -- textures. Only the native Outer Rim / Inner Rim route crosses them.
+  -- These are static starmap layers: no particle loops or new entities.
   local sprites={
-    {name="belt-vibrant.png",scale=5.65,alpha=.84,
-      tint={r=.91,g=.91,b=.97}},
-    {name="debris-vibrant.png",scale=5.75,alpha=.61,
-      tint={r=.90,g=.84,b=.93}}
+    {name="belt-vibrant-core.png",scale=5.65,alpha=.77,
+      tint={r=.87,g=.89,b=.94}},
+    {name="belt-vibrant-scatter.png",scale=5.72,alpha=.44,
+      tint={r=.85,g=.86,b=.91}},
+    {name="belt-vibrant-dust.png",scale=5.78,alpha=.33,
+      tint={r=.88,g=.90,b=.95}}
   }
   local additions={}
   for _,sprite in ipairs(sprites) do
