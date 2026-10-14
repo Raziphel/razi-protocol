@@ -8,6 +8,11 @@ recipes, change a source mod's technology, or pretend crafting throughput
 has been measured. Compare the report with real factory output before
 adjusting the next balance tier.
 
+Galactic Operations now also displays direct pack totals for each pending
+system-entry technology using the installed force's research price and
+science ingredients. It shows up to four pack types per gate, and does not
+invent a science bill for native trigger-only research.
+
 `science_lab_coverage` lists the existing installed labs that accept the
 entire science combination for each tracked Razi technology; an empty list
 with a populated lab prototype table raises the existing hard lab-coverage
