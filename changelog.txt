@@ -1,3 +1,13 @@
+Version: 2.1.59
+Date: 14. 10. 2026
+  Convergence: Seven-Sun Array and transmission finale:
+    - Show five responsive construction modules with native item sprites, completion markers, overall build progress and a saved transmission timeline in Galactic Operations.
+    - Couple final ignition to a real, force-owned native Dyson energy receiver when the installed source exposes a placeable receiver prototype. Its entity count is maintained by the engine and is only checked on UI access and final submission; unavailable receiver prototypes gracefully defer to researched Dyson milestones.
+    - On the fifth physical cargo delivery, store a twelve-second four-beat transmission with Calidus grid, pulsar resonance and seven-system alignment messages. The native victory ending starts only after the transmission; no background platform or inventory scans.
+    - Preserve an active transmission through reloads, player disconnects and force merges; prevent double-submit and early victory. Refresh only open Convergence GUIs on transmission milestones.
+    - Existing winners retain their victory without a replay. Expand regression fixtures for receiver readiness, event timing, persistent stages and single native victory.
+    - Confirm Factorio API contracts at the source level. Full modpack startup and in-game new/old save tests remain necessary; no GitHub Actions runs requested.
+
 Version: 2.1.58
 Date: 14. 10. 2026
   The Convergence: Pulsar Resonance and Final Ignition:
