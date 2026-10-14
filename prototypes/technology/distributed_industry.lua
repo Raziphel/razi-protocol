@@ -85,15 +85,24 @@ local function is_produced(raw,item)
   end
   return false
 end
-local function has_lab(raw,needed)
-  for _,lab in pairs(raw.lab or {}) do
-    local inputs={}
-    for _,name in ipairs(lab.inputs or {}) do inputs[name]=true end
-    local accepts=true
-    for name in pairs(needed) do
-      if not inputs[name] then accepts=false;break end
+-- Lab tier is important too. An omega lab that exists only at the
+-- end of the campaign must never be counted as the sole way to research
+-- an early technology. All names are source-owned, no new labs are made.
+M.early_labs={
+  lab=true,biolab=true,["kr-advanced-lab"]=true,
+  ["thermodynamics-lab"]=true
+}
+function M.has_lab(raw,needed)
+  for id,lab in pairs(raw.lab or {}) do
+    if M.early_labs[id] then
+      local inputs={}
+      for _,name in ipairs(lab.inputs or {}) do inputs[name]=true end
+      local accepts=true
+      for name in pairs(needed) do
+        if not inputs[name] then accepts=false;break end
+      end
+      if accepts then return true end
     end
-    if accepts then return true end
   end
   return false
 end
@@ -122,7 +131,7 @@ function M.apply(raw,rule)
       return false,"prerequisite-unavailable-or-cycle"
     end
   end
-  if not has_lab(raw,needed) then return false,"no-compatible-native-lab" end
+  if not M.has_lab(raw,needed) then return false,"no-early-compatible-lab" end
   local existing={}
   for _,parent in ipairs(target.prerequisites or {}) do existing[parent]=true end
   target.prerequisites=target.prerequisites or {}
