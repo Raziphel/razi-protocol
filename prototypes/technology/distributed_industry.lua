@@ -39,7 +39,13 @@ M.core={
     packs={"agricultural-science-pack"}},
   {tech="logistic-system",stage="fulgora",
     parents={"planet-discovery-fulgora","electromagnetic-science-pack"},
-    packs={"electromagnetic-science-pack"}}
+    packs={"electromagnetic-science-pack"}},
+  -- Cerys has its own optional nuclear science in the curated pack.
+  -- Fuel reprocessing is a late efficiency reward, never needed to
+  -- operate reactors or make the first nuclear fuel cells.
+  {tech="nuclear-fuel-reprocessing",stage="cerys",
+    parents={"moon-discovery-cerys","nuclear-science-pack"},
+    packs={"nuclear-science-pack"}}
 }
 M.optional={
   {tech="interplanetary-trade-logistics",mod="planet-express",
