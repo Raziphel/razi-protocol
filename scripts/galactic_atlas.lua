@@ -226,7 +226,15 @@ function M.render(parent,player,id,p)
     local dossier=frame.add{type="frame",direction="vertical",
       style="inside_shallow_frame"}
     dossier.style.horizontally_stretchable=true
-    bold(dossier,L("atlas-convergence-heading"))
+    local heading=dossier.add{type="flow",direction="horizontal"}
+    if prototypes.item and
+      prototypes.item["razi-convergence-deep-space-mandate"] then
+      local icon=heading.add{type="sprite",
+        sprite="item/razi-convergence-deep-space-mandate"}
+      icon.style.width=30
+      icon.style.height=30
+    end
+    bold(heading,L("atlas-convergence-heading"))
     local description=label(dossier,L("atlas-convergence-"..brief))
     description.style.single_line=false
     description.style.horizontally_stretchable=true
