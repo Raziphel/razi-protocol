@@ -34,6 +34,11 @@ The in-game Codex catalogs 228 conditional research and exploration milestones a
 
 Each chapter has its own colours, art and atmosphere. Open it from the small top-row button or press **Ctrl + Shift + J**.
 
+The five Convergence Mandates now have their own original item
+artwork. The final Ignition Mandate uses three native-factory
+subassemblies connecting all eight system science disciplines,
+without adding another crafting machine or research laboratory.
+
 ## More to Explore
 
 - The native K2SO intergalactic transceiver opens Deep Space. The real ending is a five-stage, physically delivered Convergence megaproject tied to all seven systems, the Calidus Dyson works and deep-space industry. The last shipment starts a save-safe final transmission before the native victory screen.
