@@ -67,23 +67,9 @@ end
 local function result_name(entry)
   return entry.name or entry[1]
 end
-local function produces(variant,pack)
-  if not variant then return false end
-  if variant.result==pack then return true end
-  for _,entry in ipairs(variant.results or {}) do
-    if result_name(entry)==pack and entry.type~="fluid" then
-      return true
-    end
-  end
-  return false
-end
-local function recipe_produces(recipe,pack)
-  return produces(recipe,pack)
-    or produces(recipe.normal,pack)
-    or produces(recipe.expensive,pack)
-end
 local function inputs_exist(recipe)
-  for _,entry in ipairs(recipe.ingredients or {}) do
+  if not recipe or not recipe.ingredients then return false end
+  for _,entry in ipairs(recipe.ingredients) do
     local name=result_name(entry)
     if entry.type=="fluid" then
       if not raw("fluid",name) then return false end
@@ -103,20 +89,32 @@ local function sources()
   for _,rule in ipairs(M.rules) do wanted[rule[2]]=true end
   local makers,unlockers={},{}
   for name,recipe in pairs(data.raw.recipe or {}) do
-    if not recipe.hidden and inputs_exist(recipe) then
+    if not recipe.hidden then
       local recorded={}
       local function add_variant(variant)
         if not variant then return end
-        local function add_pack(pack)
-          if not pack or not wanted[pack] or recorded[pack] then return end
-          recorded[pack]=true
+        local found={}
+        local function mark(pack)
+          if pack and wanted[pack] and not recorded[pack] then
+            found[#found+1]=pack
+            recorded[pack]=true
+          end
+        end
+        mark(variant.result)
+        for _,entry in ipairs(variant.results or {}) do
+          if entry.type~="fluid" then mark(result_name(entry)) end
+        end
+        -- Do not treat a result icon or an expensive-only recipe with
+        -- missing ingredients as proof of native science production.
+        if #found==0 then return end
+        if not inputs_exist(variant) then
+          for _,pack in ipairs(found) do recorded[pack]=nil end
+          return
+        end
+        for _,pack in ipairs(found) do
           local bucket=makers[pack] or {}
           bucket[#bucket+1]=name
           makers[pack]=bucket
-        end
-        add_pack(variant.result)
-        for _,entry in ipairs(variant.results or {}) do
-          if entry.type~="fluid" then add_pack(result_name(entry)) end
         end
       end
       add_variant(recipe)
