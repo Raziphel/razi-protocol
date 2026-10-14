@@ -83,7 +83,8 @@ local optional_orbits={
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
-  -- Balack is Aquilo\u0027s optional southern spur, not a cross-star diagonal.\n  {name="bm-balack",star="vespera",radius=47,turn=0.42}
+  -- Balack is Aquilo's optional southern spur, not a cross-star diagonal.
+  {name="bm-balack",star="vespera",radius=47,turn=0.42}
 }
 for _,world in ipairs(optional_orbits) do
   anchors[#anchors+1]={"planet",world.name,world.star,world.radius,world.turn}
@@ -330,7 +331,8 @@ function M.data_final_fixes()
     ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
-    ["obsidiax"]=0.25,["carna"]=0.75,\n    ["aquilo"]=0.75,
+    ["obsidiax"]=0.25,["carna"]=0.75,
+    ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
