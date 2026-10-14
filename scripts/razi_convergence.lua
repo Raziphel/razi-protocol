@@ -239,6 +239,9 @@ function M.render(parent,player)
  line(scroll,ignition.researched and "convergence-ignition-complete"
   or "convergence-ignition-pending",width)
  local saved=M.record(force)
+ if won and (saved.delivered.resonance or 0)<M.stages[4].count then
+  line(scroll,"convergence-legacy-victory",width)
+ end
  local next_index=M.current(force)
  -- Read one player's carried freight when the panel opens or redraws.
  -- No background inventory scans, and a remote camera cannot deliver it.
