@@ -8,13 +8,14 @@ star-centred exterior arc and intermediate arrival asteroid surge are
 retired, since those routes no longer touch the belt.
 
 Fulgora and Ribbonia form an inner pair and are accessible only through
-the hazardous native belt connection. Paracelsin (58 units) and the
-optional Khemia (61) and Ferrum (62) routes occupy the outer west arc.
+the hazardous native belt connection. Paracelsin (48 units), optional Khemia (52) and Ferrum (62) occupy
+separate orbits outside the belt, with Paracelsin and Khemia closer
+to Vibrant while retaining clear exterior freight routes.
 The first belt survey still unlocks after `vibrant-discovery`, so
 players do not need Ribbonia science to enter. Existing crossing ID,
 Razi-owned asteroid curves and resource harvests remain unchanged.
 
-The faceted rock artwork uses the same two static 512px textures.
+The current broken-rock artwork uses three static 512px textures.
 Existing platform schedules using earlier direct Slip Stream-to-inner
 worlds must be updated; the rim IDs remain stable.
 

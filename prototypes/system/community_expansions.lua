@@ -20,7 +20,7 @@ local candidates = {
   -- the planet and its native Nauvis/Vulcanus routes in Calidus.
   {mod="alchemy-khemia", name="alchemy-planet", system="vibrant",
     gate="vibrant-discovery", hub="paracelsin",
-    radius=61, orientation=0.61, km=21000, profile="chemistry"},
+    radius=52, orientation=0.625, km=21000, profile="chemistry"},
   {mod="Arcanyx", name="arcanyx", system="umbra",
     gate="umbra-discovery", hub="tenebris",
     radius=39.469081, orientation=0.429241, km=25000, profile="outer_void"},
