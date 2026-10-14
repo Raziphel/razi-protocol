@@ -4,6 +4,17 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.65: Complete dependency audit.** All 95 direct dependencies
+now have a documented required/recommended/optional/incompatible
+classification. K2SO, its required compatibility patches, curated
+campaign planets and Nexus remain part of the intended galaxy.
+Weather, Planet Express, Rocket Turrets, Science Tab, Frost Biters,
+Nexus Threat and Big Monsters are now recommended rather than
+mandatory. Razi's science cards use Intermediate Products if Science
+Tab is absent. The registry and regression tests prevent undeclared
+category drift. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md).
+Full Factorio startup and installed-save tests remain outstanding.
+
 **2.1.64: Curated recommended companions.** Factorio 2.1's new
 recommended dependency marker now advertises AAI Signal Transmission
 and Imersite Asteroids without requiring either. FluxWorks and other
