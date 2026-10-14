@@ -1,3 +1,10 @@
+Version: 2.1.69
+Date: 14. 10. 2026
+  Mod settings discoverability:
+    - Add a leading punctuation prefix to the English in-game mod display title as a best-effort alphabetical sort hint.
+    - Preserve the internal razi-protocol mod ID, published title, setting prototype names, order, defaults and existing saves.
+    - Document the Factorio engine limitation: no supported per-mod sort-order override; confirm actual behavior in the settings screen.
+
 Version: 2.1.68
 Date: 14. 10. 2026
   Science production and early progression:
