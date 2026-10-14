@@ -40,4 +40,34 @@ check(#visible==1 and visible[1].name=="razi-omega",
  "Live force visibility must still override immutable prototype index")
 check(#atlas.related_industries(force,{{tech={name="unknown"}}})==0,
  "Unknown planets should never receive fabricated exchange links")
-print("Atlas: reverse industry index, deduplication, sorting and live visibility passed")
+-- The world-to-chain index reuses the same source identities as Cargo.
+-- It must not expose absent/hidden techs or claim cargo has moved.
+package.loaded["scripts.galactic_trade_catalog"]={
+  chains={
+    {id="razi-matrix",key="matrix",worlds={"moshine","fulgora"}},
+    {id="razi-bond",key="bond",worlds={"moshine","panglia"}},
+    {id="razi-hidden-component",key="frame",worlds={"moshine"}},
+  },
+  state=function(tech)
+    if not tech or tech.prototype.hidden then return {status="absent"} end
+    if tech.researched then return {status="researched"} end
+    return {status="ready"}
+  end,
+}
+force.technologies["razi-matrix"]={
+  name="razi-matrix",researched=false,prototype={hidden=false}}
+force.technologies["razi-bond"]={
+  name="razi-bond",researched=true,prototype={hidden=false}}
+force.technologies["razi-hidden-component"]={
+  name="razi-hidden-component",researched=false,prototype={hidden=true}}
+local links=atlas.planet_supply_links(force,"moshine")
+check(#links==2 and links[1].config.key=="matrix"
+ and links[2].state.status=="researched",
+ "Atlas must show existing source roles with live research state")
+check(#atlas.planet_supply_links(force,"panglia")==1
+ and #atlas.planet_supply_links(force,"unlisted-planet")==0,
+ "Atlas must not invent partnerships for unlisted worlds")
+force.technologies["razi-matrix"].researched=true
+check(atlas.planet_supply_links(force,"fulgora")[1].state.status=="researched",
+ "Cached world index must still show changes in live force research")
+print("Atlas: reverse industry index, deduplication, sorting and live visibility and supply roles passed")
