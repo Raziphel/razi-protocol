@@ -1,3 +1,36 @@
+## 2.1.62: Original icon, machine and migration checks
+
+Confirm five unique Convergence PNG icons render at normal and 150%
+GUI scale. The five saved shipment IDs, count requirements and
+old winners must remain unchanged.
+
+After Ignition research, build one Calidus Stellar Frame, one
+Outer-System Engineering Matrix and one Deep-Space Resonance Lens
+in existing installed assemblers. Together the ingredient recipes
+must consume all eight original system science cards. The final
+Mandate requires one of each part. Confirm that no included source
+ingredient exceeds the machine input-slot limit.
+
+Load a 2.1.61 save with Ignition already researched. All three
+component recipes should be unlocked after configuration changed
+without changing force research or consuming cargo. Test a previously
+won save separately, and verify the saved victory is not replayed.
+
+Use the administrator-only `/razi-audit` to inspect all five Mandate
+recipes, three component recipes, native labs and crafting-machine
+compatibility. This checks loaded prototypes, but does not prove
+the whole source-mod research graph is reachable.
+
+Source/mock regressions, included in the manual-only Check workflow:
+```bash
+lua5.2 tests/lua/test_convergence_prototypes.lua
+lua5.2 tests/lua/test_convergence_runtime.lua
+lua5.2 tests/lua/test_convergence_audit.lua
+python3 -m unittest discover -s tests -p 'test_convergence.py'
+```
+Full Factorio/modpack playtesting and performance benchmarks remain
+outstanding.
+
 ## 2.1.61: loaded-modpack checks and regression status
 
 **Available directly in Factorio:** With your full Factorio 2.1
