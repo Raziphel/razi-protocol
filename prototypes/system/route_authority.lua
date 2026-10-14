@@ -199,7 +199,7 @@ function M.data_final_fixes()
     -- Without two known same-system owners, a default arc would loop
     -- around Calidus rather than connect these actual relocated endpoints.
     local line=not (a and b) or a~=b or a=="calidus"
-      or a=="solaris" or a=="nyxaris" or a=="vibrant"
+      or a=="solaris" or a=="nyxaris" or a=="vibrant" or a=="vespera"
     local shape=line and "line" or "arc"
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
@@ -317,14 +317,17 @@ function M.data_final_fixes()
       route.origin=nil
     end
   end
-  -- Source-created Nyxaris/Vibrant arcs can still be centred on Calidus.
-  -- Keep their native route identities and asteroid loot, but make the
-  -- normal local legs direct. Parent-moon and belt transit stay untouched.
+  -- Normalize retained native routes, not just freshly added ones.
+  -- Vespera's two optional spurs also need straight lines; neither
+  -- should arc around the sun or cut through the asteroid survey.
   for _,route in pairs(routes) do
     local system=member[route.from]
-    if (system=="nyxaris" or system=="vibrant")
-      and member[route.to]==system
-      and not native_parent_link(route.from,route.to) then
+    local vespera_side=pair(route.from,route.to)==pair("obsidiax","sye-vespera")
+      or pair(route.from,route.to)==pair("bm-balack","aquilo")
+    if ((system=="nyxaris" or system=="vibrant" or system=="vespera")
+        and member[route.to]==system
+        and not native_parent_link(route.from,route.to))
+      or vespera_side then
       route.shape="line"
       route.origin=nil
     end

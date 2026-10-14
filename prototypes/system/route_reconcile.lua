@@ -362,8 +362,8 @@ function route_reconcile.data_final_fixes()
 				route.length = balanced_length(keep_name, route.length, length, from, to)
         local local_chord=membership[from]==membership[to]
           and (membership[from]=="solaris" or membership[from]=="nyxaris"
-            or membership[from]=="vibrant")
-        -- Solaris, Nyxaris and Vibrant use direct local chords.
+            or membership[from]=="vibrant" or membership[from]=="vespera")
+        -- These laid-out systems use direct local chords.
         -- Uncentred native arcs can wander across a nearby star.
         if local_chord then
           route.shape="line"
@@ -397,7 +397,8 @@ function route_reconcile.data_final_fixes()
                               or membership[from]=="calidus"
                               or membership[from]=="solaris"
                               or membership[from]=="nyxaris"
-                              or membership[from]=="vibrant")) and "line" or "arc",
+                              or membership[from]=="vibrant"
+                              or membership[from]=="vespera")) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)

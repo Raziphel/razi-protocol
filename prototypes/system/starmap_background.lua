@@ -12,7 +12,7 @@ local systems={
   {name="solaris",tint={r=1,g=.54,b=.35},strength=.44,radius=1.72},
   {name="nyxaris",tint={r=.46,g=.83,b=.69},strength=.72,radius=1.94},
   {name="vibrant",tint={r=.54,g=.60,b=.96},strength=.73,radius=1.90},
-  {name="vespera",tint={r=.88,g=.89,b=.84},strength=.61,radius=1.95},
+  {name="vespera",tint={r=.88,g=.89,b=.84},strength=.48,radius=1.75},
   {name="beetlejuice",tint={r=.92,g=.47,b=.64},strength=.72,radius=1.93},
   {name="umbra",tint={r=.75,g=.48,b=.30},strength=.51,radius=1.82},
   {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
@@ -105,7 +105,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(belt.name)
       if x and y then
         insert_asset(layers,belt.art,belt.scale,x,y,
-          belt.tint,cinematic and .17 or .135)
+          belt.tint,cinematic and .145 or .105)
         if cinematic then
           insert_asset(layers,belt.debris,belt.scale*1.04,x,y,
             belt.tint,belt.debris_alpha)
