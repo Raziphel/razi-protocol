@@ -7,7 +7,8 @@ The planets still have their own machines, recipes and quirks. What changes is h
 **2.1.61: Loaded-modpack audit and runtime performance.** Server
 administrators can use `/razi-audit` to inspect the actual installed
 Convergence laboratory compatibility, Mandate recipe unlocks, missing
-visible producers, research cycles and physical Dyson receiver status.
+visible producers, existing craft machine capacities, research cycles
+and physical Dyson receiver status.
 It is read-only, on demand, and creates no save records. The Galaxy
 Atlas now builds its reverse industry index once per script session
 instead of rescanning every technology whenever a destination is opened.
