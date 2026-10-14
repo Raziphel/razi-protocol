@@ -58,7 +58,6 @@ class DependencyPolicyTests(unittest.TestCase):
             "k2-dyson-sphere-rebalance",
             "nulls-k2so-tweaks","xy-k2so-enhancements-nulls-fork",
             "planet-muluna","panglia_planet","Nexus-Updated",
-            "Nexus-Threat-Updated",
             "razi_lib","PlanetsLib",
         ):
             self.assertTrue(any(s.startswith(name+" >=")
@@ -80,6 +79,8 @@ class DependencyPolicyTests(unittest.TestCase):
         for candidate in recommended:
             self.assertFalse(any(raw.startswith(candidate+" ")
                                  for raw in deps),candidate)
+        self.assertNotIn("Nexus-Threat-Updated >= 1.1.0",deps)
+        self.assertNotIn("slp-dyson-sphere-reworked-fork >= 1.0.5",deps)
         self.assertIn("? FluxWorks >= 0.2.12",deps)
         for name in ("dea-dia-system","pelagos","outer-rim"):
             self.assertTrue(any(raw=="? "+name for raw in deps),name)
