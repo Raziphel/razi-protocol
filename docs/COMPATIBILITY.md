@@ -51,15 +51,13 @@ load, save migration and practical exploration remain mandatory.
 
 ## Celestial weather
 
-The 2.1 forks `celestial-weather-updated` and
-`celestial-weather-additions-updated` can be installed independently, but Razi
-Protocol does not yet patch their prototypes or runtime behavior, so they are
-not declared as optional dependencies in `info.json`.
-Avoid duplicating their mechanics inside Razi. Audit the final enabled planet
-prototypes and weather settings before adding integrations, especially Muria,
-Rubia, Paracelsin, Vesta, Panglia and optional Pelagos. The next step is to
-evaluate their in-game severity and communicate weather requirements through
-the planet guide rather than introducing unverified hazards.
+The Factorio 2.1 forks `celestial-weather-updated` and
+`celestial-weather-additions-updated` are now **recommended**, not required,
+in `info.json`. The add-on declares a source-owned hard dependency on the
+base weather mod. Razi's Atmospheric Field Guide only inspects the installed
+mod settings; Razi does not duplicate weather effects or introduce its own
+periodic environment logic. Verify real-game atmosphere settings on Muria,
+Rubia, Paracelsin, Vesta, Panglia and any opt-in Pelagos configuration.
 
 ## Enemy integration
 
