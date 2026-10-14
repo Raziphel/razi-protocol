@@ -40,8 +40,18 @@ for i=1,2 do
 end
 check(layers[3].shift[1]==2 and layers[4].shift[1]==37,
   "Existing source art was modified or belt art drew above the native layers")
-check(layers[1].tint.a<.31 and layers[2].tint.a<.18,
-  "Vibrant haze is too strong for the native star and planet markers")
+-- At this texture's painted annulus radius, roughly six map units per
+-- sprite-scale unit, the rubble should lie between the actual 31/39 rims.
+for i=1,2 do
+  local visual_radius=layers[i].scale*6
+  check(visual_radius>31 and visual_radius<39,
+    "The visible Vibrant belt is offset from its native crossing rims")
+  check(layers[i].tint.a<=.27,
+    "Vibrant belt artwork overwhelms planet markers")
+end
+check(layers[2].tint.r>layers[2].tint.b and
+  layers[1].tint.b>layers[1].tint.r,
+  "Metallic debris needs a distinct neutral tint over violet belt haze")
 belt.data_final_fixes()
 check(#layers==4,"Repeated data-stage pass duplicated belt artwork")
 data.raw["space-location"][outer.name]=nil

@@ -1,3 +1,22 @@
+## Vibrant: visible metallic divide and clean freight lanes (October 2026)
+
+The existing two 512px Vibrant textures had a bright annulus centered
+around 24 starmap units, while the actual inner/outer asteroid gateways
+are at radii 31 and 39. The new texture scales place the painted belt
+around radius 34–35 without adding another PNG or a false route. Purple
+glow is dimmer and pale metallic rubble is stronger, so the belt reads
+as a field of debris rather than a soft neon ring. Artwork remains
+optional under the existing atmosphere and background settings.
+
+Fulgora and Ribbonia now have better separation inside the ring. Their
+two direct local links replace the old gateway/Fulgora/Ribbonia triangle;
+the route then proceeds through Ribbonia to the original 5,000 km
+inner-to-outer asteroid crossing, with Paracelsin and Beetlejuice
+accessible only on the far side. Source moon routes, asteroid spawns,
+research unlocks and physical travel lengths are unchanged. All
+curated Vibrant local connections use native straight chords so legacy
+unanchored arcs cannot curve across the centre of the system.
+
 ## 2.1.71: Quiet-star atlas and region-specific belts
 
 This is an **actual source change in Razi Protocol Dev**, using its existing

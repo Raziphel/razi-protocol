@@ -43,8 +43,10 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  {"planet","fulgora","vibrant",22,0.558152},
-  {"planet","ribbonia","vibrant",27,0.397307},
+  -- Separate the storm world from the Slip Stream and Ribbonia.
+  -- Both stay safely inside Vibrant's physical 31-unit belt entrance.
+  {"planet","fulgora","vibrant",21,0.52},
+  {"planet","ribbonia","vibrant",26,0.365},
   {"planet","paracelsin","vibrant",49,0.238},
   {"planet","muria","vespera",20,0.394284},
   {"planet","aquilo","vespera",40,0.497561},
