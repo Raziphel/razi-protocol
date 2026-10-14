@@ -5,8 +5,9 @@ modpack loaded, an administrator enters `/razi-audit`. The command
 reports Convergence registration, each of its three research science
 pack sets and whether at least one native laboratory accepts ALL of
 them, the five actual `force.recipes` unlock states, real producer
-recipe visibility, existing Dyson receiver count and direct research
-prerequisite cycles. Missing producer recipes are warnings rather
+recipe visibility, existing Dyson receiver count, native
+crafting-machine category and ingredient-slot compatibility, and
+direct research prerequisite cycles. Missing producer recipes are warnings rather
 than proven softlocks because source mods may mine or generate items
 scriptedly. It does not change unlocks or create storage rows.
 
