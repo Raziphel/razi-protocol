@@ -1,3 +1,15 @@
+## 2.1.62: Building the last physical Mandate
+
+The five existing Convergence shipment objectives and saved
+completion times remain unchanged. Behind the last one are
+three craftable subassemblies made in original native factories.
+The Galactic Operations console shows which components are
+unlocked and present in your inventory, rather than treating
+these as three new Codex delivery objectives.
+
+The existing force-owned deep-space submission, twelve-second
+transmission and final victory are unchanged.
+
 ## 2.1.60: Cleaner handoffs to Convergence
 
 The Protocol Codex now labels actual physical Mandate contributions
