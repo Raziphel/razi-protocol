@@ -74,6 +74,44 @@ SYSTEM_CARDS = (
 )
 
 
+# Optional data-stage redistribution of existing native/source technology.
+# This is an audit of the installed result, not an instruction to move every
+# research, and not an error when the user disables the startup option.
+DISTRIBUTED_TECH = {
+    "construction-robotics": ("agricultural-science-pack",),
+    "nuclear-power": ("metallurgic-science-pack",
+                      "agricultural-science-pack"),
+    "logistic-robotics": ("metallurgic-science-pack",
+                         "agricultural-science-pack"),
+    "personal-roboport-equipment": ("agricultural-science-pack",),
+    "logistic-system": ("electromagnetic-science-pack",),
+    "nuclear-fuel-reprocessing": ("nuclear-science-pack",),
+    "interplanetary-trade-logistics": ("metallurgic-science-pack",
+                                      "agricultural-science-pack"),
+    "aai-signal-transmission": ("electromagnetic-science-pack",),
+}
+
+
+def distributed_research_status(techs, labs):
+    rows = []
+    for name, expected in sorted(DISTRIBUTED_TECH.items()):
+        node=techs.get(name)
+        if not isinstance(node,dict):
+            continue
+        found=set(science_ingredients(node))
+        packs=sorted(found.intersection(expected))
+        complete=all(pack in found for pack in expected)
+        coverage=sorted(name for name,inputs in labs.items()
+                        if found.issubset(inputs)) if found else []
+        rows.append({"technology":name, "expected_regional_science":list(expected),
+                     "present_regional_science":packs,
+                     "status":"distributed" if complete else
+                              "native-or-guarded-skip",
+                     "compatible_labs":coverage,
+                     "requires_full_pack_verification":not complete})
+    return rows
+
+
 def inspect_card_recipes(raw, issues):
     """Audit actual loaded card inputs without changing source prototypes.
 
@@ -441,12 +479,14 @@ def examine(raw):
                     "targets":[row["name"]],"units":row["units"],
                     "median":typical,
                     "detail":"Razi industrial research is unusually expensive."})
+    distributed=distributed_research_status(techs,lab_inputs)
     return {"paired_entries":pairs,"stages":stages,
             "system_card_manufacturing":card_recipes,
             "multiplex_card_economy":multiplex,
             "stage_card_demand":stage_card_demand,
             "first_frontier_card_demand":branch_card_demand,
             "science_lab_coverage":lab_coverage,
+            "distributed_technology":distributed,
             "world_science_arrival_checks":world_science_checks,
             "native_arrival_errors":native_arrival_errors,
             "planetary_science_reuse":dict(sorted(science_reuse.items())),
@@ -495,6 +535,10 @@ def main(argv=None):
                 print(stage+" direct card demand:",
                       ", ".join(f"{name}={count:g}" for name,count in
                                 estimate["cards"].items()))
+        for tech in report["distributed_technology"]:
+            print("Distributed tech:",tech["technology"],tech["status"],
+                  ", ".join(tech["present_regional_science"]) or
+                  "source or compatibility skip")
         for entry in report["multiplex_card_economy"]:
             print(entry["recipe"],entry["status"],"bonus",
                   str(entry["gross_bonus_fraction"]))
