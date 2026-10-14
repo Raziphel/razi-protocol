@@ -327,21 +327,25 @@ local function line(parent,key,width,...)
  label.style.maximal_width=width
  return label
 end
-function M.render(parent,player)
- local layout_width=math.max(320,math.min(850,
+function M.render(parent,player,options)
+ options=options or {}
+ local layout_width=options.width or math.max(320,math.min(850,
   (player.display_resolution.width or 1280)/
    math.max(player.display_scale or 1,.5)-100))
- local width=math.floor(layout_width)-28
+ local width=math.max(250,math.floor(layout_width)-28)
  local heading=line(parent,"convergence-heading",width)
  heading.style.font="heading-1"
  heading.style.font_color={r=.88,g=.73,b=1}
  line(parent,"convergence-overview",width)
- local scroll=parent.add{type="scroll-pane",direction="vertical"}
- scroll.style.horizontally_stretchable=true
- scroll.horizontal_scroll_policy="never"
- scroll.style.height=math.min(560,math.max(230,
-  math.floor(player.display_resolution.height/
-   math.max(player.display_scale or 1,.5)*.59)))
+ local scroll=options.embedded and parent
+   or parent.add{type="scroll-pane",direction="vertical"}
+ if not options.embedded then
+   scroll.style.horizontally_stretchable=true
+   scroll.horizontal_scroll_policy="never"
+   scroll.style.height=math.min(560,math.max(230,
+     math.floor(player.display_resolution.height/
+       math.max(player.display_scale or 1,.5)*.59)))
+ end
  if not M.available(player.force) then
   line(scroll,"convergence-unavailable",width)
   return

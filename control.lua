@@ -1,6 +1,4 @@
-local galactic_operations = require("scripts.galactic_operations")
 local razi_journal = require("scripts.razi_journal")
-galactic_operations.bind_journal(razi_journal)
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
@@ -135,6 +133,16 @@ end
 -- K2SO's native transceiver may also declare victory when activated.
 -- Razi uses that same activation to unlock Deep Space instead. Suppress
 -- only the source victory, never its charge or entity-conversion logic.
+local function retire_operations(player)
+  if not (player and player.valid) then return end
+  for _,name in ipairs({"razi_galactic_operations","razi_ops_map_anchor"}) do
+    local old=player.gui.screen[name]
+    if old and old.valid then old.destroy() end
+  end
+end
+local function retire_connected_operations()
+  for _,player in pairs(game.connected_players or {}) do retire_operations(player) end
+end
 local function preserve_deep_space_campaign()
   if not (remote and remote.interfaces) then return end
   local api=remote.interfaces["kr-intergalactic-transceiver"]
@@ -156,7 +164,7 @@ events:on_init(function()
   convergence.restore_pending()
   preserve_deep_space_campaign()
   check_existing_transceivers()
-  galactic_operations.sync_all_map_buttons()
+  retire_connected_operations()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
@@ -172,7 +180,7 @@ events:on_configuration_changed(function(event)
 		end
 	end
 	repair_nexus_technology_visibility(event)
-  galactic_operations.sync_all_map_buttons()
+  retire_connected_operations()
   razi_journal.sync_all()
 end)
 -- An idle Convergence has no pending work. Active force transmissions
@@ -182,7 +190,7 @@ events:on_nth_tick(60,function(event)
   if changed then
     for _,index in ipairs(changed) do
       local force=game.forces[index]
-      if force then galactic_operations.refresh_convergence(force) end
+      if force then razi_journal.refresh_convergence(force) end
     end
   end
 end)
@@ -194,19 +202,13 @@ commands.add_command("razi-cheat",
 commands.add_command("razi-audit",
   {"razi-audit.help"},convergence_audit.command)
 events:on_nth_tick(6, razi_safe_cheat.tick)
-events:on_event(defines.events.on_string_translated,function(event)
-  galactic_operations.on_string_translated(event)
-end)
 events:on_nth_tick(600, function()
   check_existing_transceivers()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
   -- Nexus Bosses remains the only authority for all nine victories.
   razi_journal.refresh_nexus_visible()
 end)
--- The engine has no starmap-open event. Check only the small per-player
--- render/controller state twice per second; never enumerate planets here.
-events:on_nth_tick(30, function(event)
-  galactic_operations.sync_all_map_buttons(event)
+events:on_nth_tick(30, function()
   razi_journal.flush_research_refreshes()
 end)
 events:on_event({
@@ -226,8 +228,6 @@ events:on_event("razi-journal-toggle",function(event)
 end)
 events:on_event(defines.events.on_research_finished,function(event)
   razi_journal.on_research(event)
-  galactic_operations.on_dyson_research(event)
-  galactic_operations.on_convergence_research(event)
 end)
 events:on_event(defines.events.on_forces_merged,convergence.forces_merged)
 -- /cheat is a built-in command and cannot be replaced. This notification
@@ -236,51 +236,39 @@ events:on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)
 
 events:on_event("razi-galactic-operations-input",function(event)
   local player=game.get_player(event.player_index)
-  if player then galactic_operations.toggle(player) end
+  if player then razi_journal.open_project(player) end
 end)
-events:on_event(defines.events.on_player_controller_changed,
-  galactic_operations.map_context_changed)
 events:on_event(defines.events.on_player_joined_game,function(event)
-  galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
   if player then
+    retire_operations(player)
     razi_journal.sync(player)
     razi_safe_cheat.admin_tip(player)
   end
 end)
 events:on_event(defines.events.on_player_created,function(event)
-  galactic_operations.map_context_changed(event)
   local player=game.get_player(event.player_index)
-  if player then razi_journal.sync(player) end
+  if player then retire_operations(player);razi_journal.sync(player) end
 end)
 events:on_event(defines.events.on_gui_click,function(event)
-  galactic_operations.gui_click(event)
   razi_journal.gui_click(event)
 end)
 events:on_event(defines.events.on_gui_text_changed,function(event)
-  galactic_operations.text_changed(event)
   razi_journal.text_changed(event)
 end)
 events:on_event(defines.events.on_gui_selection_state_changed,function(event)
-  galactic_operations.selection_changed(event)
   razi_journal.selection_changed(event)
 end)
-events:on_event(defines.events.on_gui_checked_state_changed,
-  galactic_operations.checkbox_changed)
 events:on_event(defines.events.on_gui_closed,function(event)
-  galactic_operations.gui_closed(event)
   razi_journal.gui_closed(event)
 end)
 events:on_event(defines.events.on_player_display_resolution_changed,function(event)
-  galactic_operations.on_display_changed(event)
   razi_journal.on_display_changed(event)
 end)
 events:on_event(defines.events.on_player_display_scale_changed,function(event)
-  galactic_operations.on_display_changed(event)
   razi_journal.on_display_changed(event)
 end)
 events:on_event(defines.events.on_player_removed,function(event)
-  galactic_operations.on_removed(event)
   razi_journal.on_removed(event.player_index)
   razi_safe_cheat.on_player_removed(event.player_index)
 end)

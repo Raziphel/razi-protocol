@@ -7,7 +7,8 @@ local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
 local convergence=require("scripts.razi_convergence")
-local operations=require("scripts.galactic_operations")
+local projects=require("scripts.razi_journal_projects")
+local convergence=require("scripts.razi_convergence")
 local guidance=require("scripts.razi_journal_guidance")
 local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
@@ -32,7 +33,7 @@ for _,quest in ipairs(defs.quests) do
 end
 function M.research_affects_journal(research)
   if not research then return false end
-  if research_goals[research.name] then return true end
+  if research_goals[research.name] or projects.research_related(research.name) then return true end
   local proto=research.prototype
   for _,effect in pairs(proto and proto.effects or {}) do
     if effect.type=="unlock-space-location"
@@ -48,11 +49,12 @@ local function pref(index)
   local value=storage.razi_expedition_journal[index]
   if not value then
     value={selected=nil,pinned=nil,tracker=false,
-      chapter=nil,filter="all",view="quests",record=nil,query=""}
+      chapter=nil,filter="all",view="quests",project="dyson",record=nil,query=""}
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
-  value.view=value.view or "quests"
+  value.view=({quests=true,projects=true,archive=true})[value.view] and value.view or "quests"
+  value.project=projects.valid(value.project) and value.project or "dyson"
   value.query=value.query or ""
   return value
 end
@@ -1061,7 +1063,7 @@ local function draw(player,focus_search)
   toolbar.style.horizontal_spacing=8
   -- The Codex is a focused quest book with a separate story journal.
   -- Navigation and records stay together; operational tools remain outside.
-  for _,view in ipairs({"quests","archive"}) do
+  for _,view in ipairs({"quests","projects","archive"}) do
     local active=p.view==view
     local button=toolbar.add{type="button",
       caption=L("view-"..view),
@@ -1070,7 +1072,7 @@ local function draw(player,focus_search)
     button.style.font_color=active and window_theme.primary
       or {r=.90,g=.90,b=.90}
   end
-  if p.view~="archive" then
+  if p.view=="quests" then
     toolbar.add{type="button",caption=L("next-milestone"),
       tags={razi_journal_action="next"}}
   end
@@ -1081,6 +1083,8 @@ local function draw(player,focus_search)
     local unlocked,all=M.unlocked_records(player.force,context)
     tint(label(filterbar,L("archive-progress",
       tostring(unlocked),tostring(all))),themes.get("echoes").primary)
+  elseif p.view=="projects" then
+    tint(label(filterbar,L("projects-hint")),window_theme.soft)
   else
     subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
@@ -1100,6 +1104,8 @@ local function draw(player,focus_search)
   body.style.horizontal_spacing=12
   if p.view=="archive" then
     render_archive(body,player,p,context,size)
+  elseif p.view=="projects" then
+    projects.render(body,player,p,size)
   else
     local selected=select_quest(player.force,p,context,plan)
     local search=render_chapters(body,player,p,context,size,view,plan)
@@ -1132,6 +1138,23 @@ local function open(player)
   draw(player)
 end
 M.open=open
+function M.open_project(player,id,chain,target)
+  if not (player and player.valid) then return false end
+  if id and not projects.valid(id) then return false end
+  if chain and not projects.valid_cargo(player.force,chain,target) then
+    return false
+  end
+  local p=pref(player.index)
+  p.view="projects"
+  p.project=id or p.project
+  if chain then
+    p.project="cargo"
+    p.cargo_focus=chain
+    p.cargo_target=target
+  end
+  open(player)
+  return true
+end
 function M.open_quest(player,id)
   local quest=defs.by_id[id]
   if not (player and player.valid and quest
@@ -1240,6 +1263,15 @@ function M.flush_research_refreshes()
 end
 -- Refresh only visible boss objectives during the existing ten-second
 -- maintenance tick. No global entity scans or per-tick remote calls.
+function M.refresh_convergence(force)
+  if not force then return end
+  for _,player in pairs(force.connected_players or {}) do
+    local p=storage.razi_expedition_journal and storage.razi_expedition_journal[player.index]
+    local frame=player.gui.screen[FRAME]
+    if p and p.view=="projects" and p.project=="convergence"
+      and frame and frame.valid then draw(player) end
+  end
+end
 function M.refresh_nexus_visible()
   if not (remote and remote.interfaces and
     remote.interfaces["nexus-bosses"]) then return end
@@ -1264,10 +1296,37 @@ function M.gui_click(event)
   local element=event and event.element
   if not (element and element.valid) then return end
   local tags=element.tags
-  local action=tags and tags.razi_journal_action
-  if not action then return end
+  if not tags then return end
+  local action=tags.razi_journal_action
+  local native=tags.razi_ops_action
+  if not action and not native then return end
   local player=game.get_player(event.player_index)
   if not (player and player.valid) then return end
+  if native then
+    local p=pref(player.index)
+    if not (player.gui.screen[FRAME] and p.view=="projects") then return end
+    if native=="convergence-deliver" and p.project=="convergence" then
+      local known=false
+      for _,stage in ipairs(convergence.stages) do
+        if stage.id==tags.value then known=true;break end
+      end
+      if not known or not convergence.available(player.force) then return end
+      local message,amount=convergence.deliver(player,tags.value)
+      player.print({"razi-ops."..message,tostring(amount)})
+    elseif native=="cargo-focus" and p.project=="cargo" then
+      if not projects.valid_cargo(player.force,tags.value) then return end
+      p.cargo_focus=p.cargo_focus==tags.value and nil or tags.value
+      p.cargo_target=nil
+    elseif native=="cargo-codex" and p.project=="cargo" then
+      local chain=cargo_catalog.chain_for_technology(tags.value)
+      local quest_id=cargo_catalog.quest_for_technology(tags.value)
+      if not (quest_id and projects.valid_cargo(player.force,chain,tags.value)) then return end
+      M.open_quest(player,quest_id)
+      return
+    else return end
+    draw(player)
+    return
+  end
   if action=="toggle" then M.toggle(player);return end
   if action=="close" then close(player);return end
   if action=="nexus-codex" then
@@ -1279,8 +1338,8 @@ function M.gui_click(event)
   if action=="open-convergence" then
     local quest=defs.by_id[tags.id]
     if quest and M.available(player.force,quest)
-      and operations.open_convergence(player) then
-      close(player)
+      and convergence.available(player.force) then
+      M.open_project(player,"convergence")
     end
     return
   end
@@ -1291,9 +1350,7 @@ function M.gui_click(event)
     if not (chain and cargo_catalog.is_installed(player.force,chain)) then
       return
     end
-    if operations.open_cargo(player,chain,target) then
-      close(player)
-    end
+    M.open_project(player,"cargo",chain,target)
     return
   end
   if action=="tracker-open" then
@@ -1313,8 +1370,10 @@ function M.gui_click(event)
     p.reveal_selection=true
   elseif action=="chapter" then
     p.chapter=p.chapter==tags.id and false or tags.id
-  elseif action=="view" and (tags.id=="quests" or tags.id=="archive") then
+  elseif action=="view" and ({quests=true,projects=true,archive=true})[tags.id] then
     p.view=tags.id
+  elseif action=="project" and projects.valid(tags.id) then
+    p.project=tags.id
   elseif action=="record" then
     local context=M.context(player.force)
     for _,record in ipairs(records) do
@@ -1365,6 +1424,8 @@ function M.gui_click(event)
       p.pinned=tags.id;p.tracker=true
     end
     render_tracker(player)
+  elseif action=="refresh" and p.view=="projects" and p.project=="dyson" then
+    projects.refresh(player.force)
   elseif action~="refresh" then return end
   draw(player)
 end
