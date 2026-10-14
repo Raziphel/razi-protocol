@@ -4,6 +4,16 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.61: Loaded-modpack audit and runtime performance.** Server
+administrators can use `/razi-audit` to inspect the actual installed
+Convergence laboratory compatibility, Mandate recipe unlocks, missing
+visible producers, research cycles and physical Dyson receiver status.
+It is read-only, on demand, and creates no save records. The Galaxy
+Atlas now builds its reverse industry index once per script session
+instead of rescanning every technology whenever a destination is opened.
+The existing manual-only Check workflow includes mock regressions for
+the audit, Atlas cache, multiplayer merges and five-stage finale.
+
 **2.1.60: Finale readability and integration polish.** Convergence
 construction displays fractional partial deliveries, stage-specific
 colors, and immediate next-action guidance using the installed
