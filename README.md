@@ -4,8 +4,19 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.58: The ending now has five physical phases.** After the original
+Stellar, Industrial and Deep-Space shipments, engineers prepare four
+Pulsar Resonance Mandates, research Convergence Ignition Protocol and
+deliver one final Ignition Mandate containing all seven system cards.
+Native Dyson distribution technologies contribute to the final research
+when safely present. The native ending fires only after the last
+shipment, not when research finishes, and older Convergence victories
+remain recognized.
+
 The Convergence's Stellar and Industrial freight unlocks at the
-Commission; its Deep-Space freight unlocks separately at Synchronization.
+Commission; its Deep-Space and Pulsar Resonance freight unlock at
+Synchronization. The final Ignition freight unlocks with its own
+dedicated research.
 Galactic Operations shows each phase's delivered total, physical cargo
 in your inventory, and an active/locked/completed status. Victory still
 requires real delivery aboard a force-owned expedition platform.
