@@ -1,3 +1,24 @@
+## 2.1.73: Distributed native and modded technologies
+
+The default-on `razi-distributed-technology` startup option now
+uses real source science from Gleba, Vulcanus, Fulgora and Cerys for
+selected reactor/robotics/remote industry research. Missing packs,
+research producers, unlocked prerequisites, cycles or early compatible
+labs must cause an **individual safe skip**, not a startup failure or
+new machine registration. See [Distributed Technology](DISTRIBUTED_TECHNOLOGY.md)
+for the complete bootstrap, modded technology and old-save checklist.
+
+Confirm construction robotics does not require a technology whose
+recipe or manufacturing line itself requires construction robotics.
+Confirm first rockets, Calidus cards, both first star gateways,
+lab construction and basic asteroid platform supplies still work
+without bots or nuclear power. Nuclear power and logistic robotics
+need actual metallurgic and agricultural research units, not simply
+discovery prereqs. Test with/without Planet Express, AAI and Cerys.
+
+Run local fixtures and post-load audits with **manual invocation**
+only. No automatic GitHub Actions or mod release promotions.
+
 ## 2.1.72: Minimal-art starmap and clear-tech review
 
 In Subtle background mode, there should be exactly 36 original small-dot
