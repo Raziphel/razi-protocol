@@ -4,6 +4,16 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.60: Finale readability and integration polish.** Convergence
+construction displays fractional partial deliveries, stage-specific
+colors, and immediate next-action guidance using the installed
+technologies and real recipe unlocks. The Protocol Codex now clearly
+labels freight deliveries and live transmissions instead of treating
+them as technology research. Unlocked Deep Space locations in the
+Galactic Atlas include practical expedition dossiers and direct links
+to the finale console. None of these panels creates a route, laboratory,
+surface, recipe unlock or fake Dyson energy data.
+
 **2.1.59: The Seven-Sun Array is visible in Galactic Operations.**
 Its five construction modules light up as your force delivers physical freight.
 The final phase can require a placed Dyson energy receiver from the original
