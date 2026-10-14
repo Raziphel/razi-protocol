@@ -22,7 +22,7 @@ ROUTE = re.compile(
     r'\{"([^"]+)", "([^"]+)", ([0-9]+), "([^"]+)"\}'
 )
 OPTIONAL = re.compile(
-    r'\\{name="([^"]+)",star="([^"]+)",radius=([0-9.]+),turn=([0-9.]+)\\}'
+    r'\{name="([^"]+)",star="([^"]+)",radius=([0-9.]+),turn=([0-9.]+)\}'
 )
 BELTS = {
     "razi-vespera-belt-inner", "razi-vespera-belt-outer",
