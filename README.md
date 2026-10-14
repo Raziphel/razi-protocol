@@ -4,6 +4,16 @@ Razi Protocol started as my attempt to make an absurdly large Space Age planet p
 
 The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
 
+**2.1.66: Full upstream dependency cross-check.** We removed two
+duplicate hard requirements already satisfied by source mods:
+Nexus-Updated brings Nexus Threat >= 1.1.0 and K2 Dyson Sphere
+Rebalance brings the Dyson fork >= 1.0.5. K2SO and the curated
+campaign remain intact. Stronger version pins on Planetaris
+worlds, Moshine, Cubium and other source mods are deliberately
+preserved. The audit now records all 93 direct declarations,
+verified upstream chains, and a reusable Factorio Mod Portal
+graph auditor. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md).
+
 **2.1.65: Complete dependency audit.** All 95 direct dependencies
 now have a documented required/recommended/optional/incompatible
 classification. K2SO, its required compatibility patches, curated
