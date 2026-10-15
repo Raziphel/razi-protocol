@@ -723,8 +723,13 @@ class ConstellationTests(unittest.TestCase):
         self.assertIn('local function soften_pulsar_art()', source)
         self.assertIn('layer.planetslib_orbit_name=="pulsar"', source)
         self.assertIn('razi-starmap-soften-bellicos', source)
-        self.assertNotIn('layer.scale=', source)
-        self.assertNotIn('layer.shift=', source)
+        # The dimming pass must not move sprites. The separate, final
+        # PlanetsLib-tagged source-art reconciliation intentionally DOES
+        # adjust layer.shift to follow corrected Bellicos coordinates.
+        dimmer=source.split('local function soften_pulsar_art()',1)[1].split(
+            'function bellicos.data_final_fixes()',1)[0]
+        self.assertNotIn('layer.scale=', dimmer)
+        self.assertNotIn('layer.shift=', dimmer)
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
@@ -732,7 +737,11 @@ class ConstellationTests(unittest.TestCase):
         self.assertIn('62,0.035,true', source)
         self.assertIn('append(near,pulsar,virtual_pulsar,3,.25)', source)
         self.assertIn('function bellicos.reconcile_final_positions()',source)
-        self.assertEqual(source.count("position_expedition()"), 3)
+        self.assertEqual(source.count("position_expedition(true)"),2)
+        self.assertEqual(source.count("position_expedition(false)"),1)
+        # No post-render PlanetsLib:update after sprite-only parents vanish.
+        final=source.split('function bellicos.data_final_fixes()',1)[1]
+        self.assertNotIn("PlanetsLib:update(",final)
 
 
 if __name__ == "__main__":
