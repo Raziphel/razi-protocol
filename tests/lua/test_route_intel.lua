@@ -52,8 +52,10 @@ local function row(route,key)
     end
   end
 end
-check(#regional.custom_tooltip_fields==4,
-  "Harmless local routes should not bury native tooltips in warnings")
+check(#regional.custom_tooltip_fields==5,
+  "Harmless local routes should show only one modest quality escalation row")
+check(row(regional,"quality-hazard")~=nil,
+  "Regional research tooltip must surface the native 10-stage ladder")
 local sector=row(regional,"sector")
 check(sector and sector.value[1]=="razi-route-intel.inside-system",
   "Regional tooltip uses the wrong system identity")
@@ -76,8 +78,8 @@ intel.annotate(routes.unknown)
 check(row(routes.unknown,"unknown") and row(routes.unknown,"preparation"),
   "Modded contacts must retain an explicit uncertainty warning")
 check(not intel.annotate(regional),"Regional tooltip must not duplicate")
-check(#routes.external.custom_tooltip_fields==4,
-  "Quiet external route must preserve only its owned source row and facts")
+check(#routes.external.custom_tooltip_fields==5,
+  "Unassigned modded routes should preserve their original row and Razi quality range")
 check(routes.external.custom_tooltip_fields[1].order==12,
   "External tooltip ownership lost")
 check(routes.external.localised_description[1]=="other.description",
