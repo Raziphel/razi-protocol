@@ -13,14 +13,21 @@ class ExpeditionJournalTests(unittest.TestCase):
     def test_quest_catalog_and_locale(self):
         source=read("scripts/razi_journal_data.lua")
         expanded=read("scripts/razi_journal_expansion.lua")
+        frontier=read("scripts/razi_journal_frontier.lua")
         quests=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',source)
         extended=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",(?:tech|world)="([^"]+)"',expanded)
         industry=read("scripts/razi_journal_industry.lua")
         partnerships=re.findall(r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",tech="([^"]+)"',industry)
         self.assertEqual(len(partnerships),31)
-        quests+=extended+partnerships
-        self.assertEqual(len(quests),228)
-        self.assertEqual(len({item[0] for item in quests}),228)
+        primary_worlds=re.findall(
+            r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)",world="([^"]+)"',source)
+        frontier_quests=[
+            (id,chapter,"source-owned") for id,chapter in re.findall(
+            r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)"',
+            frontier,re.S)]
+        quests+=extended+partnerships+primary_worlds+frontier_quests
+        self.assertEqual(len(quests),234)
+        self.assertEqual(len({item[0] for item in quests}),234)
         chapter_sources=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',source)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',industry)
