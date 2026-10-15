@@ -14,23 +14,23 @@ local membership = {
 	fulgora = "vibrant", cerys = "vibrant",
 	-- Solaris and Nyxaris.
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris", igrys = "solaris",
-	hyarion = "solaris", tellus = "solaris", corrundum = "solaris",
+	hyarion = "solaris", tellus = "solaris", corrundum = "solaris", athos = "solaris",
 	["sye-nyxaris"] = "nyxaris", ["apia-carnova-orbit"] = "nyxaris",
 	moshine = "nyxaris", panglia = "nyxaris", pelagos = "nyxaris",
 	-- Vibrant, Vespera.
 	["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
-	paracelsin = "vibrant",
+	paracelsin = "vibrant", shchierbin = "vibrant",
 	["sye-vespera"] = "vespera", muria = "vespera", aquilo = "vespera",
 	rubia = "vespera", maraxsis = "vespera",
 	-- Beetlejuice and Umbra.
-	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
+	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice", ferrum = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
 	frozeta = "beetlejuice",
 	-- Razi's Vibrant metallic belt remains a science gate for both outer
 	-- discoveries. Its edge-to-edge crossing remains a physical part of the travel graph.
 	["asteroid-belt-inner-edge"] = "mid-outer-belt",
 	["asteroid-belt-outer-edge"] = "mid-outer-belt",
-	["sye-umbra"] = "umbra", tenebris = "umbra",
+	["sye-umbra"] = "umbra", tenebris = "umbra", obsidiax = "umbra",
 	["razi-umbra-belt-inner"] = "umbra",
 	["razi-umbra-belt-outer"] = "umbra",
 	["crucible-orbit"] = "umbra", crucible = "umbra", vesta = "umbra",
@@ -180,7 +180,7 @@ local vibrant_inner = {
   ["asteroid-belt-inner-edge"]=true
 }
 local vibrant_outer = {
-  ["sye-vibrant"]=true, paracelsin=true, ferrum=true,
+  ["sye-vibrant"]=true, paracelsin=true, shchierbin=true,
   ["alchemy-planet"]=true, ["asteroid-belt-outer-edge"]=true
 }
 -- Localized obstacle fields; the first Calidus routes remain untouched.
@@ -316,14 +316,17 @@ function route_reconcile.data_final_fixes()
 		local to_system = membership[connection.to]
     -- Retain only Ferrum's source link until final route authority can
     -- migrate its custom asteroids to the approved exterior connection.
-    local migrating_ferrum=key_for(connection.from,connection.to)
-      ==key_for("ferrum","fulgora")
-		if (bypasses_vibrant_belt(connection.from, connection.to)
-        and not migrating_ferrum)
-			or (from_system and to_system and from_system ~= to_system
-				and not allowed[key_for(connection.from, connection.to)]) then
-			routes[name] = nil
-		end
+    -- Keep obsolete native Ferrum links until the authoritative pass
+    -- migrates source-exclusive asteroid spawns to its new Beetlejuice spur.
+    local route_pair=key_for(connection.from,connection.to)
+    local migrating_ferrum=route_pair==key_for("ferrum","fulgora")
+      or route_pair==key_for("ferrum","vulcanus")
+    if not migrating_ferrum and (
+      bypasses_vibrant_belt(connection.from,connection.to)
+      or (from_system and to_system and from_system~=to_system
+        and not allowed[route_pair])) then
+      routes[name]=nil
+    end
 	end
 
 	-- Make a one-pass, final-stage route index after bypass removal instead
