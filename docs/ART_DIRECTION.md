@@ -1,47 +1,46 @@
-## Starmap navigation and route artwork: distinct orbital language (October 2026)
+## Starmap markers: silhouette-led, not repeated badges (October 2026)
 
-The 11 Razi-owned navigation waypoints and 4 route categories have new,
-separately composed transparent 64px artwork. Space Age's Solar System Edge
-icon is the visual reference: thin gunmetal ring, recessed near-black
-space, slanted amber ellipses, modest stellar cores, and no ornamental
-mechanical bezel. All icon silhouettes survive downscaling, with low-key
-accent colors instead of loud neon badges.
+The older set was too repetitive at the real game's starmap size: all
+waypoints became the same thin gray circle with miniature yellow orbits.
+A new icon family **drops the universal outer ring** entirely. Every
+Razi-owned location now reads by its primary silhouette instead of by
+small color or orbital-angle differences.
 
-**Slip Streams:** Calidus has a home orbit and visible satellite; Solaris
-has double hot arcs; Nyxaris has a second botanical orbit and paired moons;
-Vibrant has crossing electric orbits; Vespera has a wide pale double orbit;
-Beetlejuice has interlocking binary ellipses; Umbra has an eclipsed copper
-core and deliberately incomplete outer arc. They are variations on the same
-Factorio-inspired celestial language, not recolored copies.
+- **Calidus**: bright origin star, broad outbound orbit and small moon.
+- **Solaris**: three open, glowing thermal arcs around a hot core.
+- **Nyxaris**: two intersecting botanical orbits with green satellites.
+- **Vibrant**: a sharp electrical fork with paired magnetic fields.
+- **Vespera**: a broad pale moon and visibly tilted outer ring.
+- **Beetlejuice**: twin luminous stars on interlaced orbital paths.
+- **Umbra**: a large black eclipse with an exposed molten crescent.
+- **Vibrant's two rims**: pale metallic debris and an obvious right/left
+  crossing chevron.
+- **Umbra's two rims**: warmer, larger broken asteroids and opposite
+  crossing chevrons. These are **not miniature slipstream icons**.
+- **Planetary routes**: two real planets joined by a short orbital bend.
+- **Interstellar routes**: bright stars linked by a transfer vector.
+- **Asteroid routes**: a path crossing visibly separate rock fragments.
+- **Deep-space routes**: an outbound signal fading toward a void beacon.
 
-**Physical belt rims:** Vibrant uses cool metallic fragments and a strong
-inward/outward arrow, Umbra uses darker broken-rock fragments and a cracked
-copper accent. Its inner and outer stops point in opposite directions.
-Only Vibrant and Umbra have Razi belt stops; Vespera's removed belt is not
-reintroduced.
+The visual language retains the Solar System Edge reference's
+transparent black space, brushed-silver linework, muted brass/amber
+lighting, and narrow celestial accents. It does **not** copy that
+symbol into every Razi marker. Main pictograms occupy the available
+64px area, with recognizable forms at 32px.
 
-**Space connections:** Planetary is a short orbital transfer between
-two nearby planets, interstellar connects distant bright stars, asteroid
-routes pass an interrupted hazard field, and deep-space travel points to
-a far-off beacon. These designs are now siblings of the navigation set,
-rather than the old heavy octagonal instrument badges.
+All eleven navigation PNGs and four route PNG/SVG pairs are generated
+by `scripts/generate_navigation_markers.js`, which uses only Node's
+built-in `fs` and `path` modules. Run:
+`node scripts/generate_navigation_markers.js`.
+The route SVGs are editable exact-vector sources generated at the same
+time. No new graphics are added to the runtime atlas; existing files
+are replaced in place.
 
-Runtime assets:
-- `graphics/icons/navigation/*.png` (11 PNGs)
-- `graphics/icons/routes/*.png` and `graphics/icons/routes/*.svg` (4 pairs)
-
-Rebuild all 19 art files from the same deterministic authoring source with
-`node scripts/generate_navigation_markers.js`. PNG sprites use 64x64 RGBA;
-the four SVGs are editable representations of the identical geometry.
-The Razi navigation and route prototype assignments are unchanged:
-`prototypes/system/location_icons.lua` and
-`prototypes/system/route_icons.lua`. The redraw makes **no** changes to
-destination IDs, platform travel, research, hazardous spawn curves,
-route definitions, orbit positions, atlas layers, or runtime per-tick work.
-
-To check art, run `python3 -m unittest tests.test_starmap_icon_art` and
-`python3 -m unittest tests.test_location_icons`, then review at normal
-and zoomed-out Factorio map magnifications in a full modpack install.
+The existing prototype paths in `prototypes/system/location_icons.lua`
+and `prototypes/system/route_icons.lua` stay unchanged, preserving
+every destination, platform schedule, research unlock, orbital position,
+route hazard, and external-mod icon ownership. Visual acceptance still
+requires a Factorio starmap zoom check.
 
 ## Current Vespera design: no asteroid belt (October 2026)
 
