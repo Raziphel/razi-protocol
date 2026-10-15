@@ -1127,3 +1127,29 @@ unlocked, and that an installed lab accepts the whole combination.
 Expand Cargo Network components and jump to a downstream Codex
 milestone to verify the displayed science requirements match the
 native technology tree. Use the complete modpack, not source mocks.
+
+## 2.1.85: Planet Athos full-pack recursion resolution
+
+The 2.1.83 Linux engine log captured an actual crash at 91.620 seconds,
+not a long normal startup. Athos 1.1.3 dumped 1,757 technology nodes in
+its data-updates traversal. Offline graph analysis found two strongly
+connected cyclic components (19 Muluna/Space Science nodes and 18
+Nyxaris/Apia/Aquilo nodes). The 2.1.83 pre-update Athos guard correctly
+reported but did not repair those non-Athos cycles.
+
+The 2.1.85 guard is still **source-restricted by default**, with exactly two
+additional verified bootstrap rules applied ONLY if their named child,
+prerequisite and every required witness occur in the SAME detected cycle:
+
+- `space-platform-thruster -> space-science-pack`: remove this backwards
+  requirement so the ship can reach Muluna before Muluna produces the
+  technology required to research Space Science. Muluna's existing science
+  production prerequisite remains untouched.
+- `nyxaris-discovery -> lithium-processing`: remove the backwards Aquilo
+  science requirement so Nyxaris precedes Vibrant and Aquilo as designed.
+
+A separate test fixture simulates both cycles, verifies both cuts, confirms
+that space-science still depends on Muluna, checks no additional progress
+research gets removed, and proves unrelated cycles are not silently
+modified. Offline replay of the crash graph removes both strongly-connected
+cycles. Real Factorio startup and full-save testing remain required.

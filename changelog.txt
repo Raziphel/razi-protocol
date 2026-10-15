@@ -1,3 +1,13 @@
+Version: 2.1.85
+Date: 15. 10. 2026
+  Fix original 2.1.83 Planet Athos stack-overflow crash:
+    - Read the full Factorio log: 1,757 technologies, two research deadlocks, crash after 91.620 seconds.
+    - Repair the verified Muluna bootstrap loop by removing only the Space Science prerequisite from space-platform-thruster; keep Muluna's Space Science production milestone.
+    - Repair the verified Nyxaris/Aquilo bootstrap loop by removing only lithium-processing from nyxaris-discovery; keep the native lithium and other industry.
+    - Require all exact witnesses in a detected cycle before each limited removal; unrelated technology graphs remain untouched.
+    - Add local simulation fixtures and a crash-graph validation note; real full-pack Factorio startup verification remains outstanding.
+    - Keep original Athos, Nulla, journal milestones, save IDs, and manual-only CI.
+
 Version: 2.1.84
 Date: 15. 10. 2026
   Settings title cleanup:
