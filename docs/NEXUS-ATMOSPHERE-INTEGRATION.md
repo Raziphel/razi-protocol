@@ -58,7 +58,7 @@ Effects remain controlled by the upstream weather authors' existing startup sett
 
 The **Outer Rim 2.9.x** source coordinates Aquilo, Paracelsin, Carna, Secretas and Frozeta, with additional research, production and space connections. These worlds are spread across several different Razi systems. Its published changelog explicitly flags K2SO compatibility as potentially malfunctioning or crashing. Its native route rewrites and research redistribution could also bypass Razi's asteroid-belt crossings or create a science dependency on a later system.
 
-`? outer-rim` stays optional. No Outer Rim technology is required to reach Nexus, the outer frontiers, or the transceiver. It is not appropriate to promise integration without a verified complete data-stage load and controlled save testing.
+`(?) outer-rim` stays hidden optional because Outer Rim conflicts with the recommended Secretas orbit patch. No Outer Rim technology is required to reach Nexus, the outer frontiers, or the transceiver. It is not appropriate to promise integration without a verified complete data-stage load and controlled save testing.
 
 Suggested collaborative pass with the Outer Rim author: isolate world-local resource and recipe integrations behind a compatibility setting, leave Razi-owned interstellar routes untouched, then validate each affected science predecessor before enabling any shared research requirements.
 
