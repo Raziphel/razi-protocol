@@ -125,10 +125,16 @@ def discover_references(root: Path) -> list[Reference]:
             continue
         text = source.read_text(encoding="utf-8")
         for match in GRAPHICS_REFERENCE.finditer(text):
+            # Factorio builds some filenames as PREFIX..name..".png".
+            # A literal prefix is not a file, so verify only complete
+            # image names here; dynamic families are audited separately.
+            path = match.group("path")
+            if not path.lower().endswith((".png", ".jpg", ".jpeg", ".webp", ".svg")):
+                continue
             references.append(Reference(
                 source.relative_to(root),
                 text.count("\n", 0, match.start()) + 1,
-                match.group("path"),
+                path,
             ))
     return references
 
