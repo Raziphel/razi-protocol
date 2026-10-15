@@ -992,6 +992,17 @@ end
 function M.quest_by_id(id)
   return defs.by_id[id]
 end
+-- Factorio does not expose a scroll-pane's pixel offset to scripts.
+-- Remember which *source-owned* boss victories the open Codex last rendered
+-- so ten-second Nexus polls cannot destroy a player's scrolled reading pane.
+local function nexus_revision(snapshot)
+  if not snapshot then return "unavailable" end
+  local bits={}
+  for _,id in ipairs(trials.order) do
+    bits[#bits+1]=trials.defeated(snapshot,id) and "1" or "0"
+  end
+  return table.concat(bits)
+end
 local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
@@ -1030,6 +1041,7 @@ local function draw(player,focus_search)
   end
 
   local context=M.context(player.force)
+  p.nexus_revision=nexus_revision(context.nexus)
   local view=p.view=="quests" and M.view_status(player.force,context) or nil
   local plan=view and M.guidance(player.force,context,view)
   local done,total,ready
@@ -1285,15 +1297,26 @@ end
 function M.refresh_nexus_visible()
   if not (remote and remote.interfaces and
     remote.interfaces["nexus-bosses"]) then return end
+  -- One source snapshot per force, not one remote call per open reader.
+  local revisions={}
   for _,player in pairs(game.connected_players or {}) do
     local p=storage.razi_expedition_journal
       and storage.razi_expedition_journal[player.index]
     if p then
       local frame=player.gui.screen[FRAME]
-      if frame and frame.valid and (p.chapter=="deepworks"
-        or (p.selected and defs.by_id[p.selected]
-          and defs.by_id[p.selected].boss)) then
-        draw(player)
+      if p.view=="quests" and frame and frame.valid
+        and (p.chapter=="deepworks"
+          or (p.selected and defs.by_id[p.selected]
+            and defs.by_id[p.selected].boss)) then
+        local force=player.force
+        local revision=revisions[force.index]
+        if not revision then
+          revision=nexus_revision(trials.snapshot(force))
+          revisions[force.index]=revision
+        end
+        -- Preserve both scroll panes and search focus on ordinary polls.
+        -- Only a real boss-victory change warrants a full redraw.
+        if p.nexus_revision~=revision then draw(player) end
       end
       if p.tracker and p.pinned and defs.by_id[p.pinned]
         and defs.by_id[p.pinned].boss then
