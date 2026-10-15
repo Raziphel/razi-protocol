@@ -247,6 +247,16 @@ for _,name in ipairs({"shattered-planet","skewer_shattered_planet",
   check(node.draw_orbit==false,
     "Deep Space destination drew an oversized orbit: "..name)
 end
+local sx,sy=position("shattered-planet")
+local skx,sky=position("skewer_shattered_planet")
+local lostx,losty=position("skewer_lost_beyond")
+check(math.abs(skx-sx)<2 and sky>sy+18 and sky<sy+20,
+  "The 1,000 km Skewer planet must sit just SOUTH of its approach")
+check(lostx>skx+105 and losty<sky-85,
+  "Lost Beyond must branch away from the Oort/Sol label corridor")
+check(places["shattered-planet"].label_orientation==0.75
+  and planets["skewer_shattered_planet"].label_orientation==0.25,
+  "Shattered approach and true planet captions must face apart")
 check(planets["skewer_shattered_planet"].orbit.parent.name=="shattered-planet"
   and places["skewer_lost_beyond"].orbit.parent.type=="planet"
   and places["skewer_lost_beyond"].orbit.parent.name=="skewer_shattered_planet",

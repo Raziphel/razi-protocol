@@ -493,13 +493,29 @@ chapters advancing upward to Deep Space and Bellicos.
 
 ### Skewer Shattered expedition and final victory
 
-- The optional `skewer_shattered_planet` world follows the native
-  `shattered-planet` Approach waypoint 82 chart units outward. Its
-  `skewer_lost_beyond` child is 145 further visual units east. Native
-  research, platform route names, travel lengths and source mechanics
-  are untouched. Both source prototypes are optional.
-- Draw no giant synthetic orbit rings for these endpoints. Label captions
-  point east, while the source Approach caption points west.
+- Skewer's real `skewer_shattered_planet` now sits **19 chart units
+  almost directly SOUTH** of the original `shattered-planet` Approach.
+  Their source route is only **1,000 km**: the short map hop finally matches
+  the feel of the gameplay length. Its `skewer_lost_beyond` child remains
+  145 units from the planet but heads north-east, clear of Oort/Sol.
+  The source orbit parents, original routes and all gameplay kilometers
+  remain unchanged, and both Skewer prototypes are still optional.
+- Opposite Shattered caption directions stop the Approach/planet labels
+  colliding. The giant synthetic orbit rings stay disabled.
+
+### Bellicos caption and native-coordinate cleanup
+
+- The Bellicos near-orbit remains a short 3-unit hop from the remote pulsar.
+  The Aegis Inner Edge now sits above-right of near-orbit (29, .205);
+  Point Warden below-right (48, .285); Aegis Outer Edge farther down-right
+  (74, .33); and the Bellicos-side stargate lower-left (57, .43).
+  Every destination gets a separate vertical lane and alternating caption
+  direction. The route graph, original 250,000 km access route, and source
+  pulsar artwork do not change.
+- The layout writer now synchronizes **native origin, distance and
+  orientation** after PlanetsLib's orbit update in both data and
+  final-fixes. This prevents an old horizontal marker row from surviving
+  despite the intended new orbit metadata.
 - The Convergence physical transmission remains the only Razi-authored win
   call. A runtime guard reasserts the published Space Age/K2SO/legacy
   silo `set_no_victory` APIs without guessing at foreign scripts.
