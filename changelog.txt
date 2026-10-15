@@ -1,3 +1,10 @@
+Version: 2.1.118
+Date: 15. 10. 2026
+  Improve journal scrolling and Dyson dossier readability:
+    - Respect intentional quest reveal when restoring scroll state.
+    - Tighten Dyson hero artwork and source research timeline rows.
+    - Add clear completed/pending markers without inventing progress.
+
 Version: 2.1.117
 Date: 15. 10. 2026
   Expedition Journal readability:
