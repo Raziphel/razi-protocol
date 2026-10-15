@@ -1,13 +1,14 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.77)
+# Razi Protocol: Direct and transitive dependency audit (2.1.79)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
 | required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 23 | Compatible 2.1 companion suggestions, not required |
+| recommended | 24 | Compatible 2.1 companion suggestions, not required |
+| optional | 2 | Optional side planets: Eneas and Shchierbin |
 | hidden-optional | 1 | Unadvertised load-order compatibility links |
-| incompatible | 24 | Known conflicting forks, startup failures and competing starmaps |
+| incompatible | 22 | Known conflicting forks, startup failures and competing starmaps |
 
 ## Guaranteed indirectly, so removed from Razi's direct manifest
 
@@ -41,34 +42,19 @@ The following entries are required by another already-required mod, **but their 
 
 Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-on explicitly requires `Big-Monsters >= 2.2.1`, `Nexus-Threat-Updated >= 1.1.0`, Toxic Biters, Arachnids and Electric Flying Enemies. Since Nexus Bosses declares `? razi-protocol` and is installed separately, Razi must not introduce a reverse dependency cycle. Big Monsters can remain recommended as an extra enemy addition when the addon is absent; when the addon is installed it will be loaded as a hard transitive dependency regardless of Razi's `+` declaration. [Official Nexus Bosses dependency list](https://mods.factorio.com/mod/nexus-bosses/dependencies).
 
-## All 96 direct dependency declarations
+## All 97 direct dependency declarations
 
 | Declaration | Direct category |
 | --- | --- |
-| **Engine** | **2 entries** |
+| **Core, libraries, campaign and bridges** | **48 entries** |
 | `base >= 2.1.20` | required |
 | `space-age >= 2.1.20` | required |
-| **Direct libraries** | **2 entries** |
 | `razi_lib >= 1.1.0` | required |
 | `PlanetsLib >= 2.0.9` | required |
-| **K2SO core** | **2 entries** |
-| `Krastorio2-spaced-out >= 2.0.17` | required |
-| `Krastorio2Assets >= 2.1.0` | required |
-| **Dyson project** | **1 entries** |
-| `k2-dyson-sphere-rebalance >= 0.1.2` | required |
-| **Deep Space curated** | **2 entries** |
 | `bellicos-and-aegis >= 0.4.0` | required |
-| `Nexus-Updated >= 1.4.1` | required |
-| **K2SO compatibility** | **8 entries** |
-| `corrundum-krastorio-compatibility-plus >= 1.1.2` | required |
-| `castra-krastorio-compatibility-plus >= 1.1.0` | required |
-| `k2so-cubium-compatibility-fork >= 0.3.5` | required |
-| `nulls-k2so-tweaks >= 2.3.1` | required |
-| `xy-k2so-enhancements-nulls-fork >= 0.8.5` | required |
-| `rubia-krastorio-compatibility-plus >= 1.3.1` | required |
-| `tenebris-prime-made-in-hide >= 1.1.0` | required |
-| `paracelsin-krastorio-compatibility-plus >= 1.2.0` | required |
-| **Curated campaign planets** | **31 entries** |
+| `Krastorio2-spaced-out >= 2.0.17` | required |
+| `k2-dyson-sphere-rebalance >= 0.1.2` | required |
+| `Krastorio2Assets >= 2.1.0` | required |
 | `planet-muluna >= 2.7.25` | required |
 | `planetaris-unbounded >= 1.9.1` | required |
 | `planetaris-tellus >= 1.1.11` | required |
@@ -78,6 +64,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `linox >= 1.8.9` | required |
 | `Muria >= 1.8.6` | required |
 | `corrundum >= 1.0.49` | required |
+| `corrundum-krastorio-compatibility-plus >= 1.1.2` | required |
 | `apia >= 0.3.1` | required |
 | `Moshine >= 1.2.10` | required |
 | `panglia_planet >= 0.7.2` | required |
@@ -86,11 +73,19 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `maraxsis >= 1.39.1` | required |
 | `rubia >= 0.69.159` | required |
 | `cubium >= 1.0.31` | required |
+| `Nexus-Updated >= 1.4.1` | required |
 | `skewer_planet_vesta >= 2.1.27` | required |
 | `castra-prime >= 0.9.2` | required |
+| `castra-krastorio-compatibility-plus >= 1.1.0` | required |
 | `planet-crucible >= 1.1.27` | required |
 | `ribbonia >= 0.6.8` | required |
 | `Paracelsin >= 1.10.2` | required |
+| `k2so-cubium-compatibility-fork >= 0.3.5` | required |
+| `nulls-k2so-tweaks >= 2.3.1` | required |
+| `xy-k2so-enhancements-nulls-fork >= 0.8.5` | required |
+| `rubia-krastorio-compatibility-plus >= 1.3.1` | required |
+| `tenebris-prime-made-in-hide >= 1.1.0` | required |
+| `paracelsin-krastorio-compatibility-plus >= 1.2.0` | required |
 | `Igrys >= 1.5.40` | required |
 | `planet-rabbasca >= 0.22.2` | required |
 | `foliax >= 2.0.37` | required |
@@ -100,14 +95,24 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **23 entries** |
+| **Recommended companions** | **24 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
-| `+ celestial-weather-updated >= 1.5.1` | recommended |
+| `+ frozeta-nuclear-winter >= 1.12.1` | recommended |
+| `+ secretas-orbit-patch >= 1.1.3` | recommended |
+| `+ celestial-weather-additions-updated >= 1.6.0` | recommended |
+| `+ VoidProcessing-Updated` | recommended |
+| `+ ArmouredBiters21Compat` | recommended |
 | `+ Cold_biters >= 2.3.0` | recommended |
+| `+ Explosive_biters >= 2.4.0` | recommended |
 | `+ Imersite-Asteroids >= 1.3.0` | recommended |
 | `+ science-tab >= 1.13.0` | recommended |
+| `+ LithiumBattery >= 7.3.0` | recommended |
+| `+ rabbasca-underground >= 0.10.3` | recommended |
+| `+ skewer_shattered_planet >= 1.0.42` | recommended |
+| `+ Solar-Halo >= 1.2.0` | recommended |
+| `+ planet-ferrum >= 0.1.4` | recommended |
 | `+ Big-Monsters >= 2.2.1` | recommended |
 | `+ Various_Cargo_Bays >= 1.1.0` | recommended |
 | `+ space-age-railway-expansion >= 0.0.18` | recommended |
@@ -115,24 +120,16 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ CircuitLaunchableRockets >= 1.4.6` | recommended |
 | `+ CargoBayLimitResearch >= 1.1.2` | recommended |
 | `+ platform-logistics-overhaul >= 2.1.2` | recommended |
-| `+ secretas-orbit-patch >= 1.1.3` | recommended |
-| `+ VoidProcessing-Updated` | recommended |
-| `+ ArmouredBiters21Compat` | recommended |
-| `+ Explosive_biters >= 2.4.0` | recommended |
-| `+ LithiumBattery >= 7.3.0` | recommended |
-| `+ rabbasca-underground >= 0.10.3` | recommended |
-| `+ skewer_shattered_planet >= 1.0.42` | recommended |
-| `+ Solar-Halo >= 1.2.0` | recommended |
-| `+ planet-ferrum >= 0.1.4` | recommended |
-| **Hidden compatibility links** | **1 entry** |
+| **Optional side worlds** | **2 entries** |
+| `? moon-eneas >= 1.0.10` | optional |
+| `? shchierbin >= 0.3.19` | optional |
+| **Hidden integration ordering** | **1 entries** |
 | `(?) FluxWorks >= 0.2.12` | hidden-optional |
-| **Excluded conflicts** | **24 entries** |
+| **Excluded conflicts** | **22 entries** |
 | `! AsteroidBelt` | incompatible |
 | `! space-route-overlay` | incompatible |
 | `! kry-asteroid-belt` | incompatible |
 | `! outer-rim` | incompatible |
-| `! Hephaestus` | incompatible |
-| `! moon-eneas` | incompatible |
 | `! castra` | incompatible |
 | `! Redrawn-Space-Connections` | incompatible |
 | `! krastorio2_extended_endgame` | incompatible |
@@ -147,10 +144,10 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `! external-rocket-parts` | incompatible |
 | `! Wood_Gasification_updated` | incompatible |
 | `! factorioplus` | incompatible |
+| `! Hephaestus` | incompatible |
 | `! nulla` | incompatible |
 | `! PlanetAthos` | incompatible |
 | `! biological-machines-planet-wit` | incompatible |
-| `! shchierbin` | incompatible |
 
 ### New companion group (15 October 2026)
 
@@ -199,7 +196,7 @@ about all versions is appropriate.
 
 Factorio cannot automatically remove incompatible already-installed mods.
 Disable **Outer Rim**, **Better Asteroid Belt**, and **Celestial Weather
-Additions 1.6.0** in Mod Manager. The 23 remaining recommendations have
+Additions 1.6.0** in Mod Manager. The 24 remaining recommendations have
 not undergone an exhaustive Factorio-engine test together. Test high-impact
 content (Shattered Planet, Void Processing, Ferrum, Solar Halo)
 in a separate copied-save profile, retaining manual CI runs.
@@ -211,3 +208,20 @@ oversized H icon cluster and label obscure the star map, and Razi does not
 need its megastructure for campaign progression. Razi's special-location
 integration has been retired. An already enabled Hephaestus mod must still
 be disabled in Factorio's Mod Manager; Razi cannot uninstall it.
+
+## Staff collaboration decisions, 2.1.79
+
+- **Frozeta: Nuclear Winter 1.12.1+** is recommended as an independent
+  companion. Outer Rim requires Nuclear Winter, **not vice versa**; Razi
+  still excludes Outer Rim and Better Asteroid Belt.
+- **Celestial Weather Next 1.6.0** (`celestial-weather-additions-updated`)
+  replaces the old `celestial-weather-updated` recommendation because Next
+  combines weather and additions and expressly conflicts with the separate fork.
+- **Eneas 1.0.10+** and **Shchierbin 0.3.19+** are user-selected optional
+  worlds, with guarded routes but no required new science or core planets.
+  Eneas retains its author-owned Unit-05 and launch gantry; Shchierbin
+  receives an exterior Vibrant placement linked only to Paracelsin.
+- **Nulla 1.0.2** and **Planet Athos 1.1.3** remain blocked. Previous
+  full-pack runs exposed an unguarded electric-furnace lookup and a cyclic
+  research graph respectively. Versions or upstream code need repairs before
+  enabling them here. This review does not constitute an in-game smoke test.

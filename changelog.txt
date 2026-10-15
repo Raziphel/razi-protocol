@@ -1,3 +1,13 @@
+Version: 2.1.79
+Date: 15. 10. 2026
+  Staff dependency recommendations and optional world integration:
+    - Recommend Frozeta Nuclear Winter 1.12.1+ without Outer Rim.
+    - Replace the weather-core recommendation with combined Celestial Weather Next 1.6.0.
+    - Restore Eneas and Shchierbin as optional 2.1 worlds, preserving native gameplay and source technologies.
+    - Provide safe fallback Eneas/Nauvis and Shchierbin/Paracelsin side routes; keep Shchierbin outside Vibrant's physical belt.
+    - Retain exclusions for crashing Nulla and Planet Athos and all 48 required campaign modules.
+    - Update regression checks and documentation without automatic CI.
+
 Version: 2.1.78
 Date: 15. 10. 2026
   Star chart and route-art cleanup:

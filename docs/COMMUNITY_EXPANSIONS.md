@@ -25,6 +25,8 @@ factory. A successful static test does not prove that all mods load together.
 | `Solar-Halo` | Registered, native-only, discovery gate when present | Solar orbit and station | Keep the mod's `halo-solar-orbit` and `halo-solar-station` connection and flare asteroids; native Vulcanus entrance. |
 | `planet-ferrum` | Guarded side-world integration | Vibrant; native Fulgora/Vulcanus routes | Remote-view-only artificial planet. Preserve choice-driven tech and native rare-earth bridges with Linox/Moshine; no forced landing. |
 | `Velora` | Guarded moon integration | Gleba moon, Nyxaris | Original moon orbit, native enemy population, science and resource chain. Add a short connection only if missing. |
+| `moon-eneas` | **Optional** | Nauvis moon in Calidus | Original Unit-05/gantry and science unchanged; a native-safe Nauvis fallback route. |
+| `shchierbin` | **Optional** | Exterior Vibrant near Paracelsin | Original vanadium gameplay preserved, no asteroid-belt bypass. |
 | `nulla` | **Excluded** | Removed Aquilo moon | Nulla 1.0.2 assumes the vanilla electric-furnace prototype still exists and crashes in its radio-interference final-fixes pass when another overhaul removes it. |
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
 | `Arcanyx` | Guarded side-world integration | Umbra experimental branch | Voidcraft/Iridescent Industry and prism production untouched. Connect toward Tenebris only if no native local route exists. |

@@ -1,3 +1,11 @@
+**2.1.79: Staff compatibility recommendations.** Added standalone
+Frozeta Nuclear Winter and combined Celestial Weather Next as recommended
+companions. Restored Eneas and Shchierbin as opt-in side worlds with guarded
+connections, without expanding the mandatory science chain. Previously
+crashing Nulla and Planet Athos remain excluded; Outer Rim remains blocked.
+See [Dependency Audit](docs/DEPENDENCY_AUDIT.md). Full engine validation
+remains necessary.
+
 # Razi Protocol
 
 **2.1.74: Orbital infrastructure companions and Expedition Journal:**
@@ -202,15 +210,15 @@ requires real delivery aboard a force-owned expedition platform.
 
 ## Planet quality gate
 
-Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DNA, and simulation progression is source-owned; Razi connects it after Moshine and Apia/Carnova and supplies a small, optional two-way industry loop. Muluna remains mandatory; Planet Wit and Shchierbin are still excluded. Back up existing saves before changing planetary mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
+Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DNA, and simulation progression is source-owned; Razi connects it after Moshine and Apia/Carnova and supplies a small, optional two-way industry loop. Muluna remains mandatory; Planet Wit stays excluded while Shchierbin is optional. Back up existing saves before changing planetary mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
 
 ## Nexus and Celestial Weather (2.1)
 
 Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi now tracks all **nine individual boss victories** from the source mod's read-only per-force snapshot, as well as Whisper, Chorus, Convergence, bearings and Silence. Six preparation milestones follow photon electronics, storm prediction, shielding, and omega power. Both the Journal and Galactic Atlas can open the original Nexus Codex. No duplicate bosses, trophies or rewards are added. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
 
-Celestial Weather (Updated) and Celestial Weather Additions (2.1) provide configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. An **Atmospheric Field Guide** now appears in the Expedition Journal and planetary Atlas, showing each source setting and relevant environment notes. Razi does not add separate weather loops.
+Combined Celestial Weather Next 1.6.0 provides configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. An **Atmospheric Field Guide** now appears in the Expedition Journal and planetary Atlas, showing each source setting and relevant environment notes. Razi does not add separate weather loops.
 
-Outer Rim remains **optional and experimental**. Its 2.9.x update redraws routes and distributes research between worlds in different Razi systems, while its own author flags K2SO integration as unreliable. Do not make it a prerequisite for the seven-system campaign. See [Nexus and Atmosphere Integration](docs/NEXUS-ATMOSPHERE-INTEGRATION.md) for source-owned systems, quality gates and the testing plan.
+Outer Rim remains **explicitly incompatible** with the curated galaxy. Its 2.9.x update redraws routes and distributes research between worlds in different Razi systems, while its own author flags K2SO integration as unreliable. Do not make it a prerequisite for the seven-system campaign. See [Nexus and Atmosphere Integration](docs/NEXUS-ATMOSPHERE-INTEGRATION.md) for source-owned systems, quality gates and the testing plan.
 
 ## Muluna compatibility
 
@@ -430,8 +438,9 @@ prototype or research cost is introduced. Details are in
 ## Required planetary campaign and non-planet bridges
 
 Cerys and ten other formerly optional or recommended 2.1 worlds are now
-part of the required installation. Eneas is explicitly incompatible because
-its source mod forces unrelated Construction Drones and RPG System dependencies.
+part of the required installation. Eneas is an optional 2.1 side moon.
+Its upstream Construction Drones and RPG System dependencies are suggestions,
+not Razi-mandated prerequisites; Unit-05 and gantry behavior stay native.
 Existing destination technologies
 are woven into the **final** stable-singularity milestone where reachable
 without tech cycles. Native recipes and moon puzzles remain untouched.

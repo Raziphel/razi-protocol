@@ -1,4 +1,4 @@
-# Dependency categories and optional companions (2.1.77)
+# Dependency categories and optional companions (2.1.79)
 
 The full audit now includes direct dependencies plus the upstream required graph, version-pin evidence and a repeatable API auditor. The human-readable review lives in
 [Dependency Audit](DEPENDENCY_AUDIT.md) and the matching
@@ -9,9 +9,10 @@ Every manifest entry is reviewed; the contract is checked by
 | Category | Current direct entries |
 | --- | ---: |
 | Required | 48 |
-| Recommended (`+`) | 23 |
+| Recommended (`+`) | 24 |
+| Optional (`?`) | 2 |
 | Hidden optional (`(?)`) | 1 |
-| Incompatible (`!`) | 24 |
+| Incompatible (`!`) | 22 |
 
 ## Recommended companions
 
@@ -22,11 +23,12 @@ non-negotiable prerequisite chain:
 - Imersite Asteroids 1.3.0+: extra K2SO asteroid materials
 - Planet Express 2.1.9+: automated interplanetary shipments
 - Rocket Turrets Upgraded 2.1.1+: source-owned planetary turret tiers
-- Celestial Weather Updated 1.5.1+: atmospheric visual effects
+- Celestial Weather Next 1.6.0+: combined core weather and planetary additions
 - Frost Biters 2.3.0+: cold-world enemies, guarded by source presence
 - Science Tab 1.13.0+: grouped science UI; Razi's cards fall back to
   Intermediate Products when it is absent
 - Big Monsters 2.2.1+: source-owned enemy encounters
+- Frozeta: Nuclear Winter 1.12.1+: self-contained Frozeta progression and original hard-dependency stack; no Outer Rim required
 
 ## Orbital and industry companions (October 2026)
 
@@ -76,11 +78,22 @@ have no place in Razi's curated star map.
 Outer Rim recommends the forbidden Better Asteroid Belt and explicitly excludes
 the recommended Secretas orbit patch.
 
-**Temporarily not recommended:** Celestial Weather Additions. Installed
-version 1.6.0 reports a conflict with the recommended core weather fork,
-although portal metadata for 1.3.0 says it depends on that same fork. Leave
-that add-on disabled pending corrected upstream metadata and a real game load.
-Razi's weather journal gracefully hides add-on-only effects when absent.
+**Weather source:** Use `celestial-weather-additions-updated >= 1.6.0`
+(Celestial Weather Next) alone. It replaces the original two weather
+packages and declares `celestial-weather-updated` incompatible. Disable
+that previously recommended fork when updating your enabled mod profile.
+
+**Staff optional planets:** `? moon-eneas >= 1.0.10` and
+`? shchierbin >= 0.3.19`. Eneas retains the native Unit-05 gantry and
+moon gameplay; recommended Construction Drones/RPG packages from the Eneas
+author are not Razi hard requirements. Shchierbin stays on the outside of
+Vibrant's rocks and connects to Paracelsin if its native connection is
+missing. Neither becomes an expedition progression requirement.
+
+**Still excluded:** Nulla 1.0.2 crashed during its own final-fixes pass
+when electric-furnace was absent; Planet Athos 1.1.3 generated a circular
+technology dependency. Ask upstream authors to repair these before removal
+of the explicit exclusions. Do not enable on your only existing save.
 
 **Experimental manual install only:** `(?) FluxWorks >= 0.2.12`. The
 integration minimum must be released and validated before promotion.

@@ -18,7 +18,8 @@ def parse_layout():
               for n, p, r, a in re.findall(pattern, source)}
     # Include installed optional Vibrant worlds in belt-crossing clearance.
     for name in ("igrys", "foliax", "ferrum", "alchemy-planet",
-                 "obsidiax", "bm-balack", "carna", "arcanyx"):
+                 "obsidiax", "bm-balack", "carna", "arcanyx",
+                 "shchierbin"):
         match = re.search(
             rf'\{{name="{name}",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}}',
             source)
@@ -301,6 +302,12 @@ class ConstellationTests(unittest.TestCase):
         self.assertGreaterEqual(math.dist(star,khemia)-39,13)
         self.assertGreater(math.dist(paracelsin,khemia),15)
         self.assertLess(math.dist(paracelsin,khemia),20)
+        shchierbin=self.coords["shchierbin"]
+        self.assertGreater(math.dist(star,shchierbin),58)
+        self.assertGreater(math.dist(paracelsin,shchierbin),25)
+        self.assertGreaterEqual(segment_clearance(
+            star,paracelsin,shchierbin),39,
+            "Shchierbin must stay outside Vibrant's physical belt")
         self.assertGreaterEqual(segment_clearance(
             star,outer,paracelsin),38.999)
         self.assertGreaterEqual(segment_clearance(
