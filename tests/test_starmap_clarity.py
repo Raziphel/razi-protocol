@@ -737,6 +737,8 @@ class ConstellationTests(unittest.TestCase):
         self.assertIn('62,0.035,true', source)
         self.assertIn('append(near,pulsar,virtual_pulsar,3,.25)', source)
         self.assertIn('function bellicos.reconcile_final_positions()',source)
+        self.assertIn('atan2(dx,-dy)',source)
+        self.assertIn('local function native_point(name)',source)
         self.assertEqual(source.count("position_expedition(true)"),2)
         self.assertEqual(source.count("position_expedition(false)"),1)
         # No post-render PlanetsLib:update after sprite-only parents vanish.

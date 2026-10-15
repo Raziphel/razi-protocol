@@ -52,10 +52,14 @@ local function offset(x,y,r,turn)
   return x+r*math.sin(angle),y-r*math.cos(angle)
 end
 
+-- Factorio runs Lua 5.2. math.atan(y, x) silently ignores x there;
+-- only math.atan2(y, x) correctly handles the missing-pulsar fallback.
+-- In offline Lua >= 5.3 fixtures math.atan supports two arguments instead.
+local atan2=math.atan2 or math.atan
 local function parent_polar(x,y,parent)
   local dx,dy=x-parent.x,y-parent.y
   return math.sqrt(dx*dx+dy*dy),
-    (math.atan(dx,-dy)/(2*math.pi))%1
+    (atan2(dx,-dy)/(2*math.pi))%1
 end
 
 local function plan_expedition()
@@ -84,6 +88,9 @@ local function plan_expedition()
     if pulsar then
       append(near,pulsar,virtual_pulsar,3,.25)
     else
+      -- The sprite-only pulsar is gone; preserve the EXACT world position
+      -- by converting the virtual pulsar offset into the Edge's native
+      -- polar coordinates, using quadrant-aware atan2 (Lua 5.2).
       local r,t=parent_polar(nx,ny,edge)
       append(near,"solar-system-edge",edge,r,t)
     end
@@ -100,6 +107,9 @@ local function plan_expedition()
     append(bellicos_gate,pulsar,virtual_pulsar,57,.43,true)
   else
     local gx,gy=offset(sx,sy,57,.43)
+    -- Also used when the source supplies neither a persistent pulsar
+    -- prototype nor the Near Bellicos parent. Keep the gateway near the
+    -- missing pulsar rather than projecting it toward the central stars.
     local r,t=parent_polar(gx,gy,edge)
     append(bellicos_gate,"solar-system-edge",edge,r,t,true)
   end
@@ -208,13 +218,41 @@ local function reconcile_baked_art()
 end
 bellicos.reconcile_baked_art=reconcile_baked_art
 
+-- Validate the actual native absolute placement, not only the orbit parent
+-- names. A stale parent bearing previously passed the latter test while the
+-- entire Aegis system appeared next to Nexus and Secretas.
+local function native_point(name)
+  for _,kind in ipairs({"space-location","planet"}) do
+    local p=(data.raw[kind] or {})[name]
+    local o=p and p.origin
+    if p and o and type(p.distance)=="number"
+      and type(p.orientation)=="number" then
+      local x,y=o.x or o[1],o.y or o[2]
+      if type(x)=="number" and type(y)=="number" then
+        return offset(x,y,p.distance,p.orientation)
+      end
+    end
+  end
+end
+
 function bellicos.reconcile_final_positions()
   if not (mods and mods["bellicos-and-aegis"]) then return 0 end
   local n=position_expedition(false)
   local art=reconcile_baked_art()
+  local _,pulsar=plan_expedition()
+  local near=near_orbit()
+  local nx,ny=near and native_point(near)
+  local drift
+  if pulsar and nx then
+    drift=math.sqrt((nx-pulsar.x)^2+(ny-pulsar.y)^2)
+    if drift>5 and type(log)=="function" then
+      log(("[Razi Protocol/Bellicos] WARNING: Near orbit %.2f units from pulsar; expected <= 5"):format(drift))
+    end
+  end
   if type(log)=="function" then
     log("[Razi Protocol/Bellicos] Synchronized "..n..
-      " expedition targets and "..art.." original orbit sprites; no late PlanetsLib updates")
+      " expedition targets and "..art..
+      " original orbit sprites; near-pulsar offset "..tostring(drift or "unknown"))
   end
   return n,art
 end

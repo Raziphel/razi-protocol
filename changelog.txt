@@ -1,3 +1,18 @@
+Version: 2.1.101
+Date: 15. 10. 2026
+  Fix Bellicos/Nexus geometry split caused by Lua 5.2 atan:
+    - Replace unsupported two-argument math.atan with Factorio's
+      correct math.atan2 for missing sprite-only pulsar orbit fallbacks.
+    - Keep Near Bellicos Orbit within 3 chart units of the original pulsar
+      even when its prototype has already been removed by PlanetsLib.
+    - Verify Point Warden, both Aegis edges and Bellicos-side stargate
+      remain clustered around the pulsar, not Secretas or the Oort corridor.
+    - Add a Lua 5.2 single-argument atan regression simulation, cross-stage
+      idempotence checks and optional native-coordinate diagnostics.
+    - Preserve route kilometers, research progression, pulsar/debris sprites
+      and chapter setting IDs. No new runtime tick jobs.
+    - Full Factorio starmap re-render still required for visual verification.
+
 Version: 2.1.100
 Date: 15. 10. 2026
   Quality route overlay contrast and readability:

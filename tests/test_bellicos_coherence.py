@@ -9,6 +9,9 @@ class BellicosCoherence(unittest.TestCase):
     def test_native_and_source_layers_share_parent_geometry(self):
         source=(ROOT/"prototypes/system/bellicos.lua").read_text()
         self.assertIn('local function plan_expedition()',source)
+        self.assertIn('local atan2=math.atan2 or math.atan',source)
+        self.assertNotIn('(math.atan(dx,-dy)/(2*math.pi))%1',source)
+        self.assertIn('(atan2(dx,-dy)/(2*math.pi))%1',source)
         self.assertIn('local function position_expedition(pre_render)',source)
         self.assertIn('if pre_render and #updates>0',source)
         self.assertIn('local function reconcile_baked_art()',source)
@@ -37,6 +40,9 @@ class BellicosCoherence(unittest.TestCase):
         self.assertIn('dual_planets["point-warden"]',fixture)
         self.assertIn('dual_places.pulsar=nil',fixture)
         self.assertIn('Late PlanetsLib:update would displace',fixture)
+        self.assertIn('math.atan=function(value) return lua_atan(value) end',fixture)
+        self.assertIn('Missing pulsar sent Near Bellicos Orbit sideways',fixture)
+        self.assertIn('Aegis location outside its pulsar system',fixture)
 
 if __name__=="__main__":
     unittest.main()
