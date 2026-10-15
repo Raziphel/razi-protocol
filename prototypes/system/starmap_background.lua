@@ -79,6 +79,13 @@ local sky_exposure={
   {.97,.90,.95,.85,1.00,.87},
   {.89,1.00,.86,.96,.88,.98}
 }
+local function selected(name,default)
+  local item=settings and settings.startup and settings.startup[name]
+  return item and item.value or default
+end
+local function strength(name,levels)
+  return levels[selected(name,"standard")] or 1
+end
 local function add_starfield(layers,cinematic)
   local function tile(row,col,variant,exposure)
     local rgb=sky_colors[variant]
@@ -89,7 +96,8 @@ local function add_starfield(layers,cinematic)
       priority="extra-high-no-scale",flags={"gui-icon"},
       blend_mode="normal",
       tint={r=rgb[1],g=rgb[2],b=rgb[3],
-        a=(cinematic and .88 or .70)*exposure}
+        a=math.min(1,(cinematic and .88 or .70)*exposure*
+          strength("razi-map-star-intensity",{dim=.6,standard=1,bright=1.3}))}
     }
   end
   for row,variants in ipairs(sky_tiles) do
@@ -142,7 +150,8 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,system.art or "atlas-halo.png",system.radius,
-          x,y,system.tint,(cinematic and .30 or .185)*system.strength)
+          x,y,system.tint,(cinematic and .30 or .185)*system.strength*
+            strength("razi-map-halo-intensity",{faint=.5,standard=1,strong=1.45}))
       end
     end
   end
@@ -151,11 +160,13 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(belt.name)
       if x and y then
         insert_asset(layers,belt.art,belt.scale,x,y,
-          belt.tint,cinematic and (belt.cinematic_alpha or .145)
-            or (belt.subtle_alpha or .105))
+          belt.tint,(cinematic and (belt.cinematic_alpha or .145)
+            or (belt.subtle_alpha or .105))*
+            strength("razi-map-belt-intensity",{faint=.5,standard=1,strong=1.4}))
         if cinematic and belt.debris then
           insert_asset(layers,belt.debris,belt.scale*1.04,x,y,
-            belt.tint,belt.debris_alpha)
+            belt.tint,belt.debris_alpha*
+              strength("razi-map-belt-intensity",{faint=.5,standard=1,strong=1.4}))
         end
       end
     end
@@ -173,7 +184,8 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       }
       for _,p in ipairs(pockets) do
         insert_asset(layers,"atlas-dust-"..p[5]..".png",3.50,p[1],p[2],p[3],
-          (cinematic and .25 or .155)*(p[4] or 1))
+          (cinematic and .25 or .155)*(p[4] or 1)*
+            strength("razi-map-dust-intensity",{faint=.5,standard=1,strong=1.4}))
       end
     end
     if option("razi-starmap-micro-details",true) then
@@ -189,7 +201,8 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
           -- Keep these delicate fragments beyond inhabited orbital rings.
           insert_asset(layers,"atlas-dust-"..accent[4]..".png",
             1.85,x+accent[2],y+accent[3],WHITE,
-            cinematic and .13 or .075)
+            (cinematic and .13 or .075)*
+              strength("razi-map-dust-intensity",{faint=.5,standard=1,strong=1.4}))
         end
       end
     end

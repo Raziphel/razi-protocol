@@ -1,3 +1,13 @@
+Version: 2.1.113
+Date: 15. 10. 2026
+  Player choice and starmap customisation:
+    - Add 15 wired startup preferences: route length correction,
+      colored route intensity and smoothness, eight independent
+      navigational tooltip categories, and four background intensity
+      adjustments for stars, halos, belts and nebulae.
+    - Keep all previous defaults and gameplay progression unchanged.
+    - No new runtime event handlers or GitHub Actions workflows.
+
 Version: 2.1.112
 Date: 15. 10. 2026
   Polish Aegis crossing and shorten Skewer's approach hop:

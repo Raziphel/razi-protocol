@@ -6,6 +6,10 @@ local hz=require("prototypes.system.route_hazards")
 local SHEET="__razi-protocol__/graphics/route-highlights/route-ribbons.png"
 local OLD="__razi-protocol__/graphics/route-highlights/"
 local ANGLES,CELL,COLS=128,64,16
+local function selected(name,default)
+  local item=settings and settings.startup and settings.startup[name]
+  return item and item.value or default
+end
 local UNIT=50 -- authored line body in source pixels (extra joined end caps)
 local TARGET_SPAN=3.6 -- starmap chart units
 local ROUTE_LIMIT,LAYER_BUDGET=128,2400
@@ -47,8 +51,10 @@ local function candidate(owner,route,mode,scope)
   local covered=length-2*trim
   if covered<=0 then return nil end
   local cost=compact()
+  local detail=selected("razi-route-detail","standard")
+  local step=detail=="economy" and 6 or (detail=="smooth" and 2.6 or TARGET_SPAN)
   local pieces=math.max(1,math.min(
-    cost and 96 or ROUTE_LIMIT,ceil(covered/(cost and 6 or TARGET_SPAN))))
+    cost and 96 or ROUTE_LIMIT,ceil(covered/(cost and 6 or step))))
   return {route=route,sample=sample,length=length,trim=trim,
     covered=covered,pieces=pieces}
 end
@@ -77,7 +83,9 @@ local function render(owner,row,mode,n)
       -- The source ribbon has a crisp opaque core, with faint shoulders
       -- to separate the color from Factorio's grey native line at low zoom.
       -- Keep strong alpha; the PNG owns edge softness and avoids neon bloom.
-      local alpha=math.min(1,.96+.004*grade)
+      local visibility=selected("razi-route-visibility","standard")
+      local alpha=visibility=="soft" and .64 or
+        visibility=="bright" and 1 or math.min(1,.96+.004*grade)
       result[#result+1]={
         type="sprite",filename=SHEET,
         x=(index%COLS)*CELL,y=floor(index/COLS)*CELL,
@@ -120,7 +128,9 @@ function M.data_final_fixes(owner)
   local difficulty_mode=difficulty and difficulty.value
   local routes,total={},0
   local is_compact=compact()
-  local layer_budget=is_compact and 1200 or LAYER_BUDGET
+  local detail=selected("razi-route-detail","standard")
+  local layer_budget=is_compact and 1200 or
+    (detail=="economy" and 1600 or detail=="smooth" and 3000 or LAYER_BUDGET)
   for name,route in pairs(data.raw["space-connection"] or {}) do
     local row=candidate(owner,route,mode,scope)
     if row then
