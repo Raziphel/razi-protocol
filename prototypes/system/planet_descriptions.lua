@@ -6,10 +6,10 @@ local configured = setmetatable({}, {__mode = "k"})
 
 local destinations = {
   calidus = {"nauvis", "muluna", "sye-calidus"},
-  solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys", "athos", "solaris", "sye-solaris"},
+  solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys", "solaris", "sye-solaris"},
   nyxaris = {"gleba", "moshine", "panglia", "apia", "carnova", "foliax", "rabbasca", "velora", "pelagos", "lemures", "prosephina", "nyxaris", "sye-nyxaris", "apia-carnova-orbit", "star-dea-dia", "dea-dia-system-edge"},
   vibrant = {"fulgora", "ribbonia", "paracelsin", "cerys", "shchierbin", "alchemy-planet", "vibrant", "sye-vibrant"},
-  vespera = {"muria", "aquilo", "rubia", "maraxsis", "bm-balack", "vespera", "sye-vespera"},
+  vespera = {"muria", "aquilo", "nulla", "rubia", "maraxsis", "bm-balack", "athos", "vespera", "sye-vespera"},
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "ferrum", "beetlejuice", "sye-beetlejuice"},
   umbra = {"tenebris", "crucible", "vesta", "carna", "arcanyx", "obsidiax", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
   deep_space = {"nexus", "shattered-planet", "solar-system-edge", "pulsar", "calidus-bellicos-stargate-calidus", "calidus-bellicos-stargate-bellicos", "black-hole-approach", "black-hole", "oort-cloud", "sol"}

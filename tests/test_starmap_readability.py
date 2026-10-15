@@ -42,11 +42,11 @@ class StarmapReadabilityTests(unittest.TestCase):
     def test_vespera_crescent_has_no_crossing_or_obstructed_routes(self):
         # Include the optional worlds that final route authority attaches.
         names = ("sye-vespera", "muria", "aquilo",
-                 "rubia", "maraxsis", "obsidiax", "bm-balack")
+                 "rubia", "maraxsis", "athos", "bm-balack")
         points = geom.positions(self.anchors)
         local = [(r["source"], r["destination"]) for r in self.routes
                  if r["source"] in names and r["destination"] in names]
-        local.extend((("obsidiax", "sye-vespera"),
+        local.extend((("muria", "athos"),
                       ("bm-balack", "aquilo")))
         for i, (a, b) in enumerate(local):
             self.assertGreaterEqual(
@@ -66,27 +66,25 @@ class StarmapReadabilityTests(unittest.TestCase):
                         (a, b, c, d))
         anchors = {a["name"]: a for a in self.anchors}
         planets = ("muria", "aquilo", "rubia", "maraxsis",
-                   "obsidiax", "bm-balack")
+                   "athos", "bm-balack")
         for i, a in enumerate(planets):
             for b in planets[i + 1:]:
                 self.assertGreaterEqual(
                     abs(anchors[a]["radius"] - anchors[b]["radius"]), 3.5,
                     (a, b, "native orbit ring gap"))
-        # Nyxaris arrives from the southeast. The side destination should
-        # not sit directly on that long interstellar approach.
+        # The optional mineral spur must not thread the stellar core.
         self.assertGreaterEqual(
-            geom.chord_clearance(points["obsidiax"],
-                                 points["sye-vespera"],
-                                 points["sye-nyxaris"]), 10)
+            geom.chord_clearance(points["vespera"],
+                                 points["muria"],points["athos"]), 20)
 
     def test_umbra_singular_branches_and_true_orbit_clearance(self):
         points=geom.positions(self.anchors)
         nodes=("sye-umbra","tenebris","crucible-orbit",
                "razi-umbra-belt-inner","razi-umbra-belt-outer",
-               "vesta","carna","arcanyx")
+               "vesta","obsidiax","carna","arcanyx")
         local=[(r["source"],r["destination"]) for r in self.routes
                if r["source"] in nodes and r["destination"] in nodes]
-        local.extend((("carna","crucible-orbit"),("arcanyx","tenebris")))
+        local.extend((("carna","crucible-orbit"),("arcanyx","tenebris"),("obsidiax","vesta")))
         for i,(a,b) in enumerate(local):
             self.assertGreaterEqual(geom.chord_clearance(
                 points["umbra"],points[a],points[b]),15)
@@ -146,7 +144,7 @@ class StarmapReadabilityTests(unittest.TestCase):
         authority = (ROOT / "prototypes/system/route_authority.lua").read_text()
         self.assertIn('membership[from]=="vespera"', reconcile)
         self.assertIn('or a=="vespera"', authority)
-        self.assertIn('pair("obsidiax","sye-vespera")', authority)
+        self.assertIn('pair("athos","muria")', authority)
         self.assertIn('pair("bm-balack","aquilo")', authority)
         routes = {(r["source"], r["destination"]) for r in self.routes}
         self.assertIn(("muria","rubia"),routes)

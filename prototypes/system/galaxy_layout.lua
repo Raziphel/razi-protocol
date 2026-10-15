@@ -41,8 +41,6 @@ local anchors = {
   {"planet","castra","solaris",27,0.61},
   {"planet","tellus","solaris",29,0.26},
   {"planet","corrundum","solaris",33,0.13},
-  -- Athos is a quiet western spur near Vulcanus, not the old diagonal.
-  {"planet","athos","solaris",34,0.73},
   -- Nyxaris forms an open biological crescent, with the Gleba moons well
   -- away from the gateway and Foliax across the quieter western arc.
   -- These are chart positions only; source production and climate are intact.
@@ -59,6 +57,9 @@ local anchors = {
   -- Belt-free Vespera: Muria opens Rubia, then branches to greenhouse
   -- ocean Maraxsis and icy outer Aquilo. All planets are true destinations.
   {"planet","muria","vespera",21,0.43},
+  -- Athos's arid stone and diamond industry branches from Muria,
+  -- before the outer ocean and cryogenic frontier.
+  {"planet","athos","vespera",33,0.565},
   {"planet","aquilo","vespera",57,0.73},
   {"planet","rubia","vespera",42,0.70},
   {"planet","maraxsis","vespera",48,0.85},
@@ -83,14 +84,14 @@ local anchors = {
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
-  {name="obsidiax",star="umbra",radius=54,turn=0.18},
+  {name="obsidiax",star="umbra",radius=50,turn=0.245},
   -- Carna and Arcanyx remain on the INNER side; neither can be reached
   -- directly from the exterior gateway without its rock crossing.
   {name="carna",star="umbra",radius=29,turn=0.7},
   {name="ferrum",star="beetlejuice",radius=43,turn=0.68},
-  -- Opt-in Shchierbin stays outside the required 31/39-unit belt and
-  -- follows Paracelsin, not a shortcut from the inner electrical worlds.
-  {name="shchierbin",star="vibrant",radius=73,turn=0.64},
+  -- Shchierbin moves into the outer-world arc alongside Paracelsin.
+  -- Both remain well beyond the 31/39-unit asteroid field.
+  {name="shchierbin",star="vibrant",radius=65,turn=0.675},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=27,turn=0.3},
   -- Balack is an optional outer-ice spur beside Aquilo.

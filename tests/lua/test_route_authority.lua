@@ -11,6 +11,8 @@ local members={
   nauvis="calidus",muluna="calidus",["sye-calidus"]="calidus",
   ["sye-solaris"]="solaris",vulcanus="solaris",castra="solaris",
   ["sye-vespera"]="vespera",fulgora="vibrant",aquilo="vespera",
+  muria="vespera",athos="vespera",paracelsin="vibrant",
+  shchierbin="vibrant",vesta="umbra",obsidiax="umbra",
   ["sye-vibrant"]="vibrant",
   ["asteroid-belt-inner-edge"]="mid-outer-belt",
   ["asteroid-belt-outer-edge"]="mid-outer-belt",
@@ -57,6 +59,7 @@ package.loaded["prototypes.system.route_icons"]={
 local planets={}
 for _,name in ipairs({"nauvis","muluna","vulcanus","castra",
   "fulgora","aquilo","ferrum","tenebris","carna","arcanyx","vesta","obsidiax","athos",
+  "muria","paracelsin","shchierbin",
   "child-moon","remote-nexus"}) do
   planets[name]={name=name}
 end
@@ -99,6 +102,8 @@ local roads={
     {{asteroid="ferrum-native-crystal",probability=.26}}),
   ["ferrum-original-inner"]=route("ferrum-original-inner","ferrum","fulgora",14000,
     {{asteroid="ferrum-inner-debris",probability=.17}}),
+  ["athos-source-vulcanus"]=route("athos-source-vulcanus",
+    "athos","vulcanus",13000,{{asteroid="athos-source-diamond",probability=.19}}),
   ["nexus-solaris"]=route("nexus-solaris","sye-solaris","remote-nexus",25000),
   ["external-internal"]=internal
 }
@@ -124,7 +129,8 @@ local removed=manager.data_final_fixes()
 check(removed>=5,"Unmanaged routes and duplicates were not removed")
 for _,id in ipairs({"rogue-nauvis-vulcanus","rogue-solar-orbit-vulcanus",
   "rogue-close-orbit-vulcanus","rogue-solaris-castra",
-  "rogue-extra","razi-solaris","nexus-calidus","ferrum-old-source","ferrum-original-inner"}) do
+  "rogue-extra","razi-solaris","nexus-calidus","ferrum-old-source","ferrum-original-inner",
+  "athos-source-vulcanus"}) do
   check(roads[id]==nil,"Source shortcut survived final authority: "..id)
 end
 check(roads["native-solaris"]~=nil,
@@ -152,8 +158,15 @@ check(roads["razi-curated-ferrum-sye-beetlejuice"]~=nil,
   "Ferrum must have a Beetlejuice supply connection")
 check(roads["razi-curated-obsidiax-vesta"]~=nil,
   "Obsidiax needs its outer Umbra connection to Vesta")
-check(roads["razi-curated-athos-vulcanus"]~=nil,
-  "Athos needs its short Vulcanus connection")
+check(roads["razi-curated-athos-muria"]~=nil,
+  "Athos must be a side expedition from Muria in Vespera")
+check(roads["razi-curated-shchierbin-paracelsin"]~=nil,
+  "Shchierbin should use its compact outer Vibrant route")
+local athosOre=false
+for _,entry in ipairs(roads["razi-curated-athos-muria"].asteroid_spawn_definitions) do
+  if entry.asteroid=="athos-source-diamond" then athosOre=true end
+end
+check(athosOre,"Athos source asteroid resources were lost during relocation")
 check(not roads["razi-curated-ferrum-fulgora"] and
   not roads["razi-curated-ferrum-sye-vibrant"],
   "Ferrum should not bypass back into Vibrant")

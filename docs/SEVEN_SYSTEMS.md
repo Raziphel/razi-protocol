@@ -1,3 +1,13 @@
+## Vespera mineral expedition (October 2026)
+
+Athos now branches from Muria in Vespera, adding arid diamond/stone
+industry to its corrosive, industrial, oceanic and icy worlds.
+The former Vulcanus connection is removed, with native asteroid
+resources preserved on the relocated Muria route where present.
+Particulate Science and the source's machines remain unmodified.
+Shchierbin and Obsidiax received compact, obstacle-safe outer routes
+in Vibrant and Umbra respectively.
+
 ## Vespera update: belt removed (October 2026)
 
 Vespera's former artificial asteroid rim waypoints and survey no

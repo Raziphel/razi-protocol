@@ -19,7 +19,7 @@ for _,name in ipairs({
 for _,name in ipairs({
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
   "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
-  "muria","aquilo","rubia","maraxsis",
+  "muria","aquilo","rubia","maraxsis","athos",
   "cubium","linox-planet_linox","tenebris","vesta",
   "cerys","rabbasca","optional-source-world",
   "igrys","foliax","obsidiax","carna","ferrum","shchierbin",
@@ -148,6 +148,7 @@ layout.data_final_fixes()
 -- just orphaned PlanetsLib orbit metadata.
 for _,entry in ipairs({
   {"igrys","solaris"}, {"foliax","nyxaris"},
+  {"athos","vespera"},
   {"obsidiax","umbra"}, {"carna","umbra"},
   {"ferrum","beetlejuice"}, {"shchierbin","vibrant"},
   {"alchemy-planet","vibrant"},
@@ -232,7 +233,7 @@ check(math.abs(hx)<1 and math.abs(hy-20)<.01,
 local managed_planets={"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","igrys","gleba","moshine","panglia","foliax",
   "fulgora","ribbonia","paracelsin","muria","aquilo","rubia",
-  "maraxsis","obsidiax","shchierbin","cubium","linox-planet_linox",
+  "maraxsis","athos","obsidiax","shchierbin","cubium","linox-planet_linox",
   "tenebris","vesta","carna","ferrum","arcanyx","bm-balack"}
 for _,name in ipairs(managed_planets) do
   check(planets[name].draw_orbit==true,

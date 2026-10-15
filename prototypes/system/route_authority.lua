@@ -15,7 +15,7 @@ local allowed=reconcile.allowed_pairs
 -- The special worlds do NOT become prerequisites for required discoveries.
 local side_routes={
   {"foliax","sye-nyxaris",18500,"biological_deep"},
-  {"obsidiax","vesta",19000,"outer_void"},
+  {"obsidiax","vesta",18000,"outer_void"},
   {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
   {"ferrum","sye-beetlejuice",22500,"outer_industry"},
@@ -24,11 +24,11 @@ local side_routes={
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
   {"velora","gleba",14000,"biological"},
   -- Preserve remaining source-owned side-world connections.
-  -- Preserve an existing Athos-to-Vulcanus connection if the source adds
-  -- one; otherwise provide a single side-world lifeline, never a gate.
-  {"athos","vulcanus",13500,"industrial"},
+  -- Athos now belongs to Vespera. Its single dry-world spur leaves Muria,
+  -- with no Vulcanus/Nauvis shortcut or duplicate connection.
+  {"athos","muria",24000,"cryogenic"},
   -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
-  {"shchierbin","paracelsin",21000,"chemistry_deep"},
+  {"shchierbin","paracelsin",18000,"chemistry_deep"},
   -- Both optional Umbra worlds have one interior connection. A
   -- Carna-to-Slip-Stream line would bypass the real belt passage.
 }
@@ -329,7 +329,8 @@ function M.data_final_fixes()
   -- should arc around the sun or cut through the asteroid survey.
   for _,route in pairs(routes) do
     local system=member[route.from]
-    local curated_side=pair(route.from,route.to)==pair("obsidiax","vesta")
+    local curated_side=pair(route.from,route.to)==pair("athos","muria")
+      or pair(route.from,route.to)==pair("obsidiax","vesta")
       or pair(route.from,route.to)==pair("ferrum","sye-beetlejuice")
       or pair(route.from,route.to)==pair("bm-balack","aquilo")
     if ((system=="nyxaris" or system=="vibrant" or system=="vespera"

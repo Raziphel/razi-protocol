@@ -19,6 +19,7 @@ def parse_layout():
     # Include installed optional Vibrant worlds in belt-crossing clearance.
     for name in ("igrys", "foliax", "ferrum", "alchemy-planet",
                  "obsidiax", "bm-balack", "carna", "arcanyx",
+                 "athos",
                  "shchierbin"):
         match = re.search(
             rf'\{{name="{name}",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}}',
@@ -303,9 +304,10 @@ class ConstellationTests(unittest.TestCase):
         self.assertGreater(math.dist(paracelsin,khemia),15)
         self.assertLess(math.dist(paracelsin,khemia),20)
         shchierbin=self.coords["shchierbin"]
-        self.assertGreater(math.dist(star,shchierbin),58)
-        self.assertGreater(math.dist(paracelsin,shchierbin),27)
-        self.assertGreater(math.dist(self.coords["sye-vibrant"],shchierbin),35)
+        self.assertAlmostEqual(math.dist(star,shchierbin),65,delta=.05)
+        self.assertGreater(math.dist(paracelsin,shchierbin),16)
+        self.assertLess(math.dist(paracelsin,shchierbin),20)
+        self.assertGreater(math.dist(self.coords["sye-vibrant"],shchierbin),20)
         self.assertGreaterEqual(segment_clearance(
             star,paracelsin,shchierbin),39,
             "Shchierbin must stay outside Vibrant's physical belt")
@@ -315,6 +317,29 @@ class ConstellationTests(unittest.TestCase):
             star,paracelsin,khemia),47.999)
         source=(ROOT/"prototypes/system/community_expansions.lua").read_text()
         self.assertIn("radius=52, orientation=0.625, km=21000",source)
+
+    def test_relocated_athos_and_outer_umbra_are_never_shortcuts(self):
+        athos=self.coords["athos"]
+        muria=self.coords["muria"]
+        vespera=self.coords["vespera"]
+        self.assertEqual(self.anchors["athos"][0],"vespera")
+        self.assertAlmostEqual(math.dist(vespera,athos),33,delta=.05)
+        self.assertGreater(math.dist(muria,athos),20)
+        self.assertGreaterEqual(segment_clearance(vespera,muria,athos),20)
+        obs=self.coords["obsidiax"]
+        umbra=self.coords["umbra"]
+        self.assertAlmostEqual(math.dist(umbra,obs),50,delta=.05)
+        self.assertGreaterEqual(segment_clearance(umbra,obs,self.coords["vesta"]),49.9)
+        side=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        self.assertIn('{"athos","muria",24000,"cryogenic"}',side)
+        self.assertIn('{"obsidiax","vesta",18000,"outer_void"}',side)
+        self.assertNotIn('{"athos","vulcanus"',side)
+        discovery=(ROOT/"prototypes/technology/seven_system_gates.lua").read_text()
+        self.assertIn('local function rehome_athos_discovery()',discovery)
+        self.assertIn('source.prerequisites=retained',discovery)
+        self.assertIn('rehome_athos_discovery()',discovery)
+        journal=(ROOT/"scripts/razi_journal_data.lua").read_text()
+        self.assertIn('id="athos",chapter="vespera",world="athos",requires={"muria"}',journal)
 
     def test_vibrant_western_belt_is_the_only_rock_crossing(self):
         star=self.coords["vibrant"]
@@ -348,7 +373,7 @@ class ConstellationTests(unittest.TestCase):
         # must stay entirely on their respective side of the rocky annulus.
         optional_source=(ROOT/"prototypes/system/route_authority.lua").read_text()
         optional={
-            ("shchierbin","paracelsin"): '{"shchierbin","paracelsin",21000',
+            ("shchierbin","paracelsin"): '{"shchierbin","paracelsin",18000',
             ("alchemy-planet","paracelsin"):
                 '{"alchemy-planet","paracelsin",21000',
         }

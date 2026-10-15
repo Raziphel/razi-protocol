@@ -42,7 +42,6 @@ M.quests={
  {id="hyarion",chapter="solaris",tech="planet-discovery-hyarion",requires={"castra"}},
  {id="tellus",chapter="solaris",tech="planet-discovery-tellus",requires={"arig","hyarion"}},
  {id="corrundum",chapter="solaris",tech="planet-discovery-corrundum",requires={"tellus"}},
- {id="athos",chapter="solaris",world="athos",requires={"vulcanus"}},
  {id="gleba",chapter="nyxaris",tech="planet-discovery-gleba",requires={"nyxaris-gate"}},
  {id="moshine",chapter="nyxaris",tech="planet-discovery-moshine",requires={"nyxaris-gate"}},
  {id="apia",chapter="nyxaris",tech="planet-discovery-apia-carnova",requires={"gleba","moshine"}},
@@ -70,6 +69,7 @@ M.quests={
  {id="paracelsin",chapter="vibrant",tech="planet-discovery-paracelsin",requires={"asteroid-belt"}},
  {id="vespera-gate",chapter="vespera",tech="vespera-discovery",requires={"corrundum","apia"}},
  {id="muria",chapter="vespera",tech="planet-discovery-muria",requires={"vespera-gate"}},
+ {id="athos",chapter="vespera",world="athos",requires={"muria"}},
  -- Vespera's two outer choices now branch directly from Rubia.
  {id="rubia",chapter="vespera",tech="planet-discovery-rubia",requires={"muria"}},
  {id="aquilo",chapter="vespera",tech="planet-discovery-aquilo",requires={"rubia"}},
