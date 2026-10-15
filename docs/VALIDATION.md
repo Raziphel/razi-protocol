@@ -117,7 +117,7 @@ The full dump now checks safe-rim resource spawns, one actual route per
 belt and richer native ore at each route midpoint. Runtime compatibility,
 platform damage balance and UPS remain unverified until Factorio runs.
 
-## 2.1.69: Mod settings sort-position experiment
+## 2.1.69: Mod settings sort-position experiment (reverted 2.1.84)
 
 Factorio sorts option groups **by mod first**, then sorts the settings
 inside each group by each prototype's `order` and `name`. Its published
@@ -125,17 +125,14 @@ modding API does not expose a supported per-mod settings sort priority.
 Renaming `razi-protocol` would break mod identity, dependencies and
 `__razi-protocol__` asset paths; do not do that.
 
-As a reversible, cosmetic experiment, English `locale/en/settings.cfg`
-now contains `[mod-name] razi-protocol=! Razi Protocol`, while
-`info.json` keeps `name=razi-protocol` and `title=Razi Protocol`.
-In Factorio 2.1, start the curated full modpack and open
-**Settings > Mod settings > Startup**. Check whether Razi's section moves
-above the alphabetically listed mod titles. If the order is based on an
-internal identifier or dependency sort, the display hint will change its
-visible heading but **will not** move its section. In that case, do not add
-additional punctuation, rename the actual mod, or rewrite other mods'
-settings: revert the display hint and rely on settings search/filter.
-No unconditional "always first" behavior can be certified in this repo.
+The cosmetic experiment did not improve the settings group position.
+In 2.1.84, English `locale/en/settings.cfg` again contains
+`[mod-name] razi-protocol=Razi Protocol`, matching the canonical
+`info.json` title. Mod identifiers and setting names remain unchanged.
+Do not introduce special punctuation to game-facing names or modify
+dependency exclusions (the `! mod-name` syntax in `info.json` is
+meaningful and must remain). Use Factorio's settings search/filter
+instead of trying to force cross-mod sort order.
 
 Run the static identity check locally:
 ```bash
