@@ -210,6 +210,39 @@ check(journal.preferences(1).query=="automation",
 journal.preferences(1).query=""
 created={}
 journal.draw(player)
+-- A real chapter briefing must open in the same reader, keep two hidden
+-- wheel-scrolling panes, and let a player continue to source milestones.
+local cover_link
+for _,element in ipairs(created) do
+  if element.tags and element.tags.razi_journal_action=="chapter-dossier"
+    and element.tags.id=="calidus" then cover_link=element;break end
+end
+check(cover_link,"Chapter index is missing the briefing navigation")
+created={}
+journal.gui_click({player_index=1,element=cover_link})
+check(journal.preferences(1).chapter_cover==true,
+  "Opening a chapter briefing must be saved as a UI-only preference")
+check(assert_panes()==2,
+  "Chapter briefing should reuse one navigator and one scrollable reader")
+local chapter_reading,cover_title,open_milestone
+for _,element in ipairs(created) do
+  if element.name=="razi_journal_chapter_reading" then
+    chapter_reading=element
+  elseif type(element.caption)=="table"
+    and element.caption[1]=="journal-chapter.calidus" then
+    cover_title=element
+  end
+  if element.tags and element.tags.razi_journal_action=="chapter-continue" then
+    open_milestone=element
+  end
+end
+check(chapter_reading and cover_title and open_milestone,
+  "Chapter briefing needs the actual chapter, scrollable story and next entry")
+created={}
+journal.gui_click({player_index=1,element=open_milestone})
+check(not journal.preferences(1).chapter_cover
+  and journal.preferences(1).selected==open_milestone.tags.id,
+  "Continue must open an actual source-backed milestone dossier")
 -- The actionable ready count switches to Quests and the genuine Ready
 -- filter, rather than showing an inert cosmetic number.
 local ready_jump

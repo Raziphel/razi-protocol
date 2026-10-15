@@ -1,3 +1,20 @@
+## Outer-star breathing room expanded again (October 2026)
+
+Umbra and Beetlejuice are now 124 chart units from Calidus, rather
+than 112. Their bearings remain precisely 11/12 and 1/12, retaining
+a balanced northwestern/northeastern pair with more breathing room
+for their expanded optional worlds and native orbital rings.
+All descendant planets and slipstreams move with their parent.
+The route geometry check found no new interstellar crossings or
+solar intrusions; source-authored travel kilometers are unchanged.
+
+The supplied screenshot also exposed long locale descriptions
+mistaken for space-location names. The short map labels were fixed
+by the latest shared maintenance update; this pass preserves them
+and removes stale duplicate descriptions that contradicted the
+present-day exterior belt entry. Vespera's retired asteroid survey
+description was also corrected.
+
 ## Outer-star breathing room (2.1.78)
 
 Umbra and Beetlejuice now sit at 112 rather than 104 chart units from

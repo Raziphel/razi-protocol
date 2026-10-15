@@ -138,7 +138,7 @@ for name,bearing in pairs({
   solaris=5/12,nyxaris=7/12,vibrant=.25,
   vespera=.75,beetlejuice=1/12,umbra=11/12
 }) do
-  local radius=(name=="beetlejuice" or name=="umbra") and 112 or 104
+  local radius=(name=="beetlejuice" or name=="umbra") and 124 or 104
   check(math.abs(places[name].distance-radius)<.001 and
         math.abs(places[name].orientation-bearing)<.000002,
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
@@ -206,7 +206,7 @@ local bearings={
 for name,bearing in pairs(bearings) do
   local star=places[name]
   local radius=star.orbit.distance
-  local expected=(name=="beetlejuice" or name=="umbra") and 112 or 104
+  local expected=(name=="beetlejuice" or name=="umbra") and 124 or 104
   check(math.abs(radius-expected)<.001,
     "Star tier radius mismatch: "..name)
   check(math.abs(star.orbit.orientation-bearing)<.000002,

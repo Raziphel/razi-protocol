@@ -1,5 +1,25 @@
 > **Current UI (October 2026):** The Protocol Codex now has Quests, Projects, and Journal views. Open it with Ctrl+Shift+J. Projects contains Dyson Sphere, Cargo Network, Transceiver, and Convergence. Ctrl+Shift+G opens Projects directly. The separate Galactic Operations window and floating starmap button are retired. Older sections below describe the prior interface.
 
+## October 2026: Individual expedition chapter briefings
+
+Every installed Journal chapter now has a native, optional briefing
+frontispiece. Its chapter color and source sprite introduce a distinct
+mission atmosphere; the story and field dispatch are tailored to the
+system, technological discipline or expedition operation. Mission log
+entries reflect real researched/available/locked objectives, with a
+reliable Open Next Milestone action rather than fabricated quest awards.
+The existing chapter-index / quest reader remains accessible without
+a separate modal, second progress database or new tech prerequisites.
+The chapter picker opens the corresponding briefing page, while
+selecting a quest returns immediately to its detailed dossier.
+
+Briefings are lazy-built on navigation and contain at most eight
+milestones in the frontispiece; the full chapter index still lists
+everything. Both quest reader and chapter cover use one bounded native
+scroll pane, source textures and the existing theme palette. There is
+no per-tick redraw work. The Journal is still navigable at reduced
+resolutions and UI scales.
+
 ## October 2026: Expedition Codex dossier polish
 
 The Codex now uses chapter-tinted editorial dossier headings, a raised
