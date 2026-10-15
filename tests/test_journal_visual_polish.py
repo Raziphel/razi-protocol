@@ -50,6 +50,32 @@ class VisualPolishTests(unittest.TestCase):
                     "open-prerequisite","filter-ready-tooltip"):
             self.assertRegex(loc,rf"(?m)^{key}=")
 
+    def test_chapter_briefings_use_real_existing_milestones(self):
+        ui=read("scripts/razi_journal.lua")
+        locale=read("locale/en/razi_journal.cfg")
+        self.assertIn('local function render_chapter_cover(',ui)
+        self.assertIn('wheel_pane(panel,"razi_journal_chapter_reading"',ui)
+        self.assertIn('journal-chapter-dispatch."..p.chapter',ui)
+        self.assertIn('razi_journal_action="chapter-dossier"',ui)
+        self.assertIn('razi_journal_action="chapter-continue"',ui)
+        self.assertIn('chapter_cover=false',ui)
+        self.assertIn('p.chapter_cover=true',ui)
+        self.assertIn('if shown>=8 then break end',ui)
+        self.assertIn('if view.states[quest.id]=="active"',ui)
+        self.assertNotIn('rendering.draw',ui)
+        self.assertNotIn('on_tick',ui)
+        for key in ("chapter-cover-open","chapter-cover-eyebrow",
+                    "chapter-cover-dispatch","chapter-cover-entries",
+                    "chapter-cover-continue","chapter-cover-review"):
+            self.assertRegex(locale,rf"(?m)^{key}=")
+        chapters=read("scripts/razi_journal_themes.lua")
+        for name in ("calidus","solaris","nyxaris","vibrant","vespera",
+                     "beetlejuice","umbra","stellar","network","alliances",
+                     "finale","foundations","fleet","outposts",
+                     "sciences","defense","deepworks","echoes"):
+            self.assertRegex(locale,rf"(?m)^{name}=")
+        self.assertIn("[journal-chapter-dispatch]",locale)
+
     def test_megaproject_dossiers_use_real_status(self):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")

@@ -96,8 +96,8 @@ class ConstellationTests(unittest.TestCase):
             "solaris": (52, 104 * math.sqrt(3) / 2),
             "nyxaris": (-52, 104 * math.sqrt(3) / 2),
             "vibrant": (104, 0), "vespera": (-104, 0),
-            "beetlejuice": (56, -112 * math.sqrt(3) / 2),
-            "umbra": (-56, -112 * math.sqrt(3) / 2),
+            "beetlejuice": (62, -124 * math.sqrt(3) / 2),
+            "umbra": (-62, -124 * math.sqrt(3) / 2),
             "solar-system-edge": (0, -215),
         }
         for name, xy in centers.items():
@@ -110,12 +110,12 @@ class ConstellationTests(unittest.TestCase):
         }
         for name, bearing in expected_bearings.items():
             self.assertAlmostEqual(self.anchors[name][2], bearing, places=5)
-            expected_radius=112 if name in ("beetlejuice","umbra") else 104
+            expected_radius=124 if name in ("beetlejuice","umbra") else 104
             self.assertAlmostEqual(self.anchors[name][1], expected_radius, places=4)
         radii = [math.dist(self.coords[name], (0, 0)) for name in STARS]
-        self.assertAlmostEqual(max(radii)-min(radii),8,delta=.05,
-                               msg="The outermost pair should sit just outside the original ring")
-        self.assertTrue(all(100 < r < 113 for r in radii))
+        self.assertAlmostEqual(max(radii)-min(radii),20,delta=.05,
+                               msg="Both outer stars should allow larger optional-world orbits")
+        self.assertTrue(all(100 < r < 125 for r in radii))
         for a, b in PAIRS:
             self.assertAlmostEqual(self.coords[a][1], self.coords[b][1], delta=1)
         self.assertLess(self.coords["solar-system-edge"][1], -210,
@@ -134,7 +134,7 @@ class ConstellationTests(unittest.TestCase):
                 f"Stars {a} and {b} are too close for optional orbit art")
         self.assertLess(
             max(math.dist(self.coords[name], (0, 0)) for name in STARS),
-            113, "Galaxy no longer fits the gently expanded six-star outline")
+            125, "The outer systems are beyond their planned radial sectors")
 
     def test_long_campaign_routes_do_not_cross_each_other(self):
         major = [(a, b) for a, b, _, profile in self.routes

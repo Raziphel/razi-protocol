@@ -54,13 +54,14 @@ local function pref(index)
   local value=storage.razi_expedition_journal[index]
   if not value then
     value={selected=nil,pinned=nil,tracker=false,
-      chapter=nil,filter="all",view="quests",project="dyson",record=nil,query=""}
+      chapter=nil,chapter_cover=false,filter="all",view="quests",project="dyson",record=nil,query=""}
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
   value.view=({quests=true,projects=true,archive=true})[value.view] and value.view or "quests"
   value.project=projects.valid(value.project) and value.project or "dyson"
   value.query=value.query or ""
+  value.chapter_cover=value.chapter_cover==true
   return value
 end
 M.preferences=pref
@@ -579,6 +580,11 @@ local function render_details(parent,player,quest,p,context,size,view)
   folio_number.style.font="default-bold"
   local chapter_ink=label(identity,L("dossier-classification"))
   chapter_ink.style.font_color=theme.soft
+  local chapter_link=identity.add{type="label",style="clickable_label",
+    caption=L("chapter-cover-open"),
+    tags={razi_journal_action="chapter-dossier",id=quest.chapter},
+    tooltip=L("chapter-cover-tooltip")}
+  chapter_link.style.font_color=theme.primary
   local hero=panel.add{type="flow",direction="horizontal"}
   hero.style.horizontal_spacing=10
   icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
@@ -757,6 +763,127 @@ local function render_details(parent,player,quest,p,context,size,view)
     tags={razi_journal_action="next-in-chapter"}}
 end
 
+
+-- A source-backed frontispiece for each chapter. It is a *view* of the
+-- existing milestones, never a separate quest or a second progress store.
+-- Only the chosen page is built on demand. No tick work, custom textures,
+-- temporary render objects, or research mutations.
+local function render_chapter_cover(parent,player,p,context,size,view)
+  local chapter=p.chapter and view.chapters[p.chapter]
+  if not chapter then return false end
+  local theme=themes.get(p.chapter)
+  local width=size.reader
+  local inner=width-38
+  local panel=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  panel.style.width=width
+  panel.style.height=size.body
+  panel.style.padding=15
+  local labelline=panel.add{type="flow",direction="horizontal"}
+  labelline.style.horizontal_spacing=7
+  local over=label(labelline,L("chapter-cover-eyebrow",
+    string.format("%02d",chapter_index(p.chapter))))
+  over.style.font="default-bold"
+  over.style.font_color=theme.primary
+  local heading=panel.add{type="flow",direction="horizontal"}
+  heading.style.horizontal_spacing=10
+  heading.style.vertical_align="center"
+  icons.sprite(heading,themes.icon(p.chapter),"chapter_seal")
+  local cover_title=wrap(heading,{"journal-chapter."..p.chapter},inner-52)
+  cover_title.style.font="heading-1"
+  cover_title.style.font_color=COLOR.ink
+  accent_rule(panel,theme,math.min(170,inner),3)
+  local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
+  mood.style.font="default-bold"
+  mood.style.font_color=theme.soft
+  local line=panel.add{type="flow",direction="horizontal"}
+  line.style.horizontal_spacing=9
+  local count=label(line,L("chapter-progress-short",
+    tostring(chapter.completed),tostring(chapter.total)))
+  count.style.font="default-bold"
+  count.style.font_color=COLOR.muted
+  local measure=panel.add{type="progressbar",
+    value=chapter.total>0 and chapter.completed/chapter.total or 0}
+  measure.style.width=math.min(inner,420)
+  measure.style.height=7
+  measure.style.color=theme.primary
+
+  -- Limited-height outer folio, one scroll pane only. This lets even the
+  -- largest chapter keep its narrative and real milestones scrollable.
+  local scroll=wheel_pane(panel,"razi_journal_chapter_reading",
+    inner,size.body-(size.compact and 248 or 265))
+  local body=scroll.add{type="flow",direction="vertical"}
+  local text_width=inner-18
+  body.style.width=text_width
+  body.style.vertical_spacing=12
+  section(body,"chapter-cover-story",
+    {"journal-chapter-story."..p.chapter},text_width,theme)
+  section(body,"chapter-cover-dispatch",
+    {"journal-chapter-dispatch."..p.chapter},text_width,theme)
+  dossier_heading(body,"chapter-cover-entries",theme,text_width)
+
+  local next_entry
+  for _,quest in ipairs(chapter.quests) do
+    if view.states[quest.id]=="active" then next_entry=quest;break end
+  end
+  if not next_entry then
+    for _,quest in ipairs(chapter.quests) do
+      if view.states[quest.id]=="locked" then next_entry=quest;break end
+    end
+  end
+  if not next_entry then
+    for _,quest in ipairs(chapter.quests) do
+      if view.states[quest.id]=="complete" then next_entry=quest;break end
+    end
+  end
+
+  -- A real chapter navigation log; each entry jumps to its existing
+  -- quest dossier, with colours derived from actual force research.
+  local shown=0
+  for _,quest in ipairs(chapter.quests) do
+    if shown>=8 then break end
+    shown=shown+1
+    local state=view.states[quest.id]
+    local row=body.add{type="flow",direction="horizontal"}
+    row.style.horizontal_spacing=9
+    row.style.vertical_align="center"
+    icons.sprite(row,quest_art(player.force,quest,context),"quest_row")
+    local marker=label(row,state=="complete" and "✓"
+      or state=="active" and "●" or "○")
+    marker.style.font_color=state=="complete" and COLOR.green
+      or state=="active" and COLOR.amber or COLOR.quiet
+    local link=row.add{type="label",style="clickable_label",
+      caption={"journal-title."..quest.id},
+      tooltip=L("select-objective"),
+      tags={razi_journal_action="select",id=quest.id}}
+    link.style.single_line=false
+    link.style.maximal_width=text_width-85
+    link.style.font_color=quest==next_entry and COLOR.ink or COLOR.muted
+    if quest==next_entry then link.style.font="default-bold" end
+  end
+  if #chapter.quests>shown then
+    local extra=label(body,L("chapter-cover-more",
+      tostring(#chapter.quests-shown)))
+    extra.style.font_color=COLOR.quiet
+  end
+  if next_entry then
+    -- Small screens keep the next-entry control inside the scrollable
+    -- folio so it cannot force the whole reader beyond the display.
+    local footer_parent=size.body<420 and body or panel
+    local footer=footer_parent.add{type="flow",direction="horizontal"}
+    footer.style.horizontal_spacing=8
+    footer.style.vertical_align="center"
+    local call=footer.add{type="button",
+      caption=L(view.states[next_entry.id]=="complete"
+        and "chapter-cover-review" or "chapter-cover-continue"),
+      tags={razi_journal_action="chapter-continue",id=next_entry.id}}
+    call.tooltip={"journal-title."..next_entry.id}
+  else
+    wrap(panel,L("chapter-cover-unavailable"),inner)
+  end
+  return true
+end
+
 -- Wrapped, selectable labels replace the old too-wide chapter and quest
 -- buttons. One chapter jump selector covers distant chapters with no bars.
 local function render_chapters(parent,player,p,context,size,view,plan)
@@ -903,11 +1030,17 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       progress.style.height=6
       progress.style.color=theme.primary
       if open then
+        local open_cover=card.add{type="label",style="clickable_label",
+          caption=L(p.chapter_cover and p.chapter==chapter.id
+            and "chapter-cover-current" or "chapter-cover-open"),
+          tooltip=L("chapter-cover-tooltip"),
+          tags={razi_journal_action="chapter-dossier",id=chapter.id}}
+        open_cover.style.font_color=theme.soft
         for _,quest in ipairs(available) do
           local state=view.states[quest.id]
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
-          local chosen=quest.id==p.selected
+          local chosen=quest.id==p.selected and not p.chapter_cover
           local item=card.add{type=chosen and "frame" or "flow",
             direction="horizontal",
             style=chosen and "inside_shallow_frame" or nil}
@@ -1198,7 +1331,11 @@ local function draw(player,focus_search)
     local selected=select_quest(player.force,p,context,plan)
     local search=render_chapters(body,player,p,context,size,view,plan)
     if focus_search then pcall(function() search.focus() end) end
-    if selected then
+    if p.chapter_cover and render_chapter_cover(
+      body,player,p,context,size,view) then
+      -- A full chapter frontispiece replaces the quest reader until a
+      -- real quest entry is selected.
+    elseif selected then
       render_details(body,player,selected,p,context,size,view)
     else
       local empty=body.add{type="frame",
@@ -1253,6 +1390,7 @@ function M.open_quest(player,id)
   p.filter="all"
   p.query=""
   p.view="quests"
+  p.chapter_cover=false
   p.reveal_selection=true
   open(player)
   return true
@@ -1466,6 +1604,28 @@ function M.gui_click(event)
     p.filter="all"
     p.view="quests"
     p.query=""
+    p.chapter_cover=false
+    p.reveal_selection=true
+    p.chapter_cover=false
+  elseif action=="chapter-dossier" then
+    local known=false
+    for _,ch in ipairs(defs.chapters) do
+      if ch.id==tags.id then known=true;break end
+    end
+    if not known then return end
+    p.chapter=tags.id
+    p.chapter_cover=true
+    p.view="quests"
+    p.filter="all"
+    p.query=""
+  elseif action=="chapter-continue" then
+    local target=defs.by_id[tags.id]
+    if not (target and M.available(player.force,target)) then return end
+    p.selected=target.id
+    p.chapter=target.chapter
+    p.chapter_cover=false
+    p.filter="all"
+    p.query=""
     p.reveal_selection=true
   elseif action=="chapter" then
     p.chapter=p.chapter==tags.id and false or tags.id
@@ -1519,6 +1679,7 @@ function M.gui_click(event)
       p.view="quests"
       p.query=""
       p.reveal_selection=true
+      p.chapter_cover=false
     end
   elseif action=="next-in-chapter" or action=="previous-in-chapter" then
     local context=M.context(player.force)
@@ -1533,6 +1694,7 @@ function M.gui_click(event)
       if quest.id==p.selected then
         local offset=action=="previous-in-chapter" and -2 or 0
         p.selected=choices[(i+offset)%#choices+1].id
+        p.chapter_cover=false
         break
       end
     end
@@ -1568,6 +1730,7 @@ function M.text_changed(event)
         and matches_query(quest,query) then
         p.selected=quest.id
         p.chapter=quest.chapter
+        p.chapter_cover=false
         break
       end
     end
@@ -1586,6 +1749,7 @@ function M.selection_changed(event)
   p.filter="all"
   p.query=""
   p.reveal_selection=true
+  p.chapter_cover=true
   local context=M.context(player.force)
   for _,quest in ipairs(defs.quests) do
     if quest.chapter==chapter.id
