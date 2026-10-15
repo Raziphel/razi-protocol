@@ -4,17 +4,17 @@ local M={}
 local layout=require("prototypes.system.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local ATMOSPHERE_SIZE=512
--- One quiet halo per system. Individual radii follow the existing star
--- silhouettes instead of adding new rings or swapping the painted suns.
--- Strength is deliberately bounded below 0.8 for atlas legibility.
+-- One low-alpha halo per system, each using its existing dedicated
+-- texture instead of six identical copies of a generic atlas ring.
+-- Nyxaris is consistently sapphire/cyan, Vibrant stays violet.
 local systems={
   {name="calidus",tint={r=1,g=.87,b=.53},strength=.38,radius=1.50},
-  {name="solaris",tint={r=1,g=.54,b=.35},strength=.44,radius=1.72},
-  {name="nyxaris",tint={r=.46,g=.83,b=.69},strength=.72,radius=1.94},
-  {name="vibrant",tint={r=.54,g=.60,b=.96},strength=.73,radius=1.90},
-  {name="vespera",tint={r=.88,g=.89,b=.84},strength=.48,radius=1.75},
-  {name="beetlejuice",tint={r=.92,g=.47,b=.64},strength=.72,radius=1.93},
-  {name="umbra",tint={r=.75,g=.48,b=.30},strength=.51,radius=1.82},
+  {name="solaris",art="glow-solaris.png",tint={r=1,g=.58,b=.32},strength=.34,radius=1.55},
+  {name="nyxaris",art="glow-nyxaris.png",tint={r=.32,g=.63,b=1},strength=.45,radius=1.72},
+  {name="vibrant",art="glow-vibrant.png",tint={r=.64,g=.47,b=1},strength=.46,radius=1.85},
+  {name="vespera",art="glow-vespera.png",tint={r=.94,g=.91,b=.82},strength=.33,radius=1.55},
+  {name="beetlejuice",art="glow-beetlejuice.png",tint={r=1,g=.46,b=.61},strength=.45,radius=1.80},
+  {name="umbra",art="glow-umbra.png",tint={r=.74,g=.43,b=.27},strength=.34,radius=1.70},
   {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
 }
 -- Each region has ONE dedicated physical-ring texture in Subtle.
@@ -28,6 +28,30 @@ local belts={
     art="belt-umbra.png",debris="debris-umbra.png",debris_alpha=.085}
 }
 local WHITE={r=1,g=1,b=1}
+-- Gently correct the actual painted stars to agree with their glows.
+-- Match filenames exactly, preserving unrelated PlanetsLib orbit layers.
+-- A weak-key cache makes this safe if the renderer is invoked twice.
+local star_tints={
+  ["__razi-protocol__/graphics/icons/NyxarisStar.png"]={r=.85,g=.77,b=1},
+  ["__razi-protocol__/graphics/icons/VibrantStar.png"]={r=.94,g=.87,b=1},
+  ["__razi-protocol__/graphics/icons/VesperaStar.png"]={r=1,g=.98,b=.91}
+}
+local tinted=setmetatable({},{__mode="k"})
+function M.tint_star_art(layers)
+  for _,layer in ipairs(layers or {}) do
+    local desired=star_tints[layer.filename]
+    if desired and not tinted[layer] then
+      local original=layer.tint or WHITE
+      layer.tint={
+        r=(original.r or 1)*desired.r,
+        g=(original.g or 1)*desired.g,
+        b=(original.b or 1)*desired.b,
+        a=original.a or 1
+      }
+      tinted[layer]=true
+    end
+  end
+end
 -- Four individually seeded 1024px indexed PNG textures. Mostly single-pixel
 -- dots, rare three-pixel diffraction sparkles, no large blurred white blobs.
 -- Six tiles per axis give a seamless static atlas without runtime updates.
@@ -95,7 +119,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
     for _,system in ipairs(systems) do
       local x,y=anchor(system.name)
       if x and y then
-        insert_asset(layers,"atlas-halo.png",system.radius,
+        insert_asset(layers,system.art or "atlas-halo.png",system.radius,
           x,y,system.tint,(cinematic and .30 or .185)*system.strength)
       end
     end
@@ -160,11 +184,14 @@ function M.data_final_fixes()
   local utility=(data.raw["utility-sprites"] or {}).default
   local sprite=utility and utility.starmap_star
   if not (sprite and type(sprite.layers)=="table") then return end
+  M.tint_star_art(sprite.layers)
   -- An integration pass may be repeated: never stack duplicate art.
   for _,layer in ipairs(sprite.layers) do
     if (type(layer.filename)=="string"
     and layer.filename:find(ASSET.."atlas-starfield-",1,true)==1)
     or layer.filename==ASSET.."atlas-halo.png"
+      or (type(layer.filename)=="string"
+        and layer.filename:find(ASSET.."glow-",1,true)==1)
       or layer.filename==ASSET.."belt-vespera.png"
       or layer.filename==ASSET.."belt-umbra.png"
       or layer.filename==ASSET.."debris-vespera.png"
