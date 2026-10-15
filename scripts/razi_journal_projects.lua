@@ -105,30 +105,30 @@ local function project_entry(parent,player,p,id,width,index)
   local selected=p.project==id
   local card=parent.add{type="flow",direction="vertical"}
   card.style.width=width
-  card.style.vertical_spacing=5
+  card.style.vertical_spacing=6
   local head=card.add{type="flow",direction="horizontal"}
-  head.style.horizontal_spacing=9
+  head.style.horizontal_spacing=10
   head.style.vertical_align="center"
-  icons.sprite(head,art_for(id,player.force),"project_icon")
+  -- The emblem itself is the navigation target, not a separate grey arrow.
+  icons.button(head,art_for(id,player.force),"project_button",
+    {razi_journal_action="project",id=id},L("project-caption-"..id))
   local copy=head.add{type="flow",direction="vertical"}
-  copy.style.vertical_spacing=2
+  copy.style.vertical_spacing=3
   local over=copy.add{type="label",caption=L("project-number",index)}
-  over.style.font_color=HUES.quiet
+  over.style.font_color=selected and HUES.gold or HUES.quiet
   local name=copy.add{type="label",style="clickable_label",
-    caption=L("project-"..id),
-    tooltip=L("project-caption-"..id),
+    caption=L("project-"..id),tooltip=L("project-caption-"..id),
     tags={razi_journal_action="project",id=id}}
   name.style.font=selected and "default-bold" or "default"
-  name.style.font_color=selected and HUES.ink or HUES.quiet
+  name.style.font_color=selected and HUES.ink or {r=.73,g=.78,b=.81}
   name.style.single_line=false
-  name.style.maximal_width=width-75
-  local action=head.add{type="button",style="tool_button",
-    caption=selected and "◆" or "›",
-    tags={razi_journal_action="project",id=id},
-    tooltip=L("project-caption-"..id)}
-  action.style.width=25
-  action.style.height=27
-  action.style.font_color=selected and HUES.gold or HUES.quiet
+  name.style.maximal_width=math.max(100,width-73)
+  if selected then
+    local accent=card.add{type="progressbar",value=1}
+    accent.style.width=math.max(110,width-18)
+    accent.style.height=3
+    accent.style.color=HUES.gold
+  end
   local complete,total=status_for(player.force,id)
   local count=card.add{type="label",
     caption=total==0 and L("project-unavailable")
@@ -136,9 +136,9 @@ local function project_entry(parent,player,p,id,width,index)
   count.style.font_color=HUES.quiet
   local meter=card.add{type="progressbar",
     value=total>0 and complete/total or 0}
-  meter.style.width=math.max(110,width-14)
+  meter.style.width=math.max(110,width-18)
   meter.style.height=5
-  meter.style.color=selected and HUES.gold or HUES.unused
+  meter.style.color=selected and HUES.gold or {r=.48,g=.62,b=.69}
 end
 local function project_reader(parent,player,p,size,width,compact)
   local reader=parent.add{type="frame",direction="vertical",
@@ -151,14 +151,26 @@ local function project_reader(parent,player,p,size,width,compact)
   local folio=reader.add{type="label",caption=L("project-dossier")}
   folio.style.font="default-bold"
   folio.style.font_color=HUES.gold
-  local title=reader.add{type="label",caption=L("project-"..p.project)}
+  local header=reader.add{type="flow",direction="horizontal"}
+  header.style.horizontal_spacing=12
+  header.style.vertical_align="center"
+  icons.sprite(header,art_for(p.project,player.force),"project_hero")
+  local copy=header.add{type="flow",direction="vertical"}
+  copy.style.vertical_spacing=4
+  local title=copy.add{type="label",caption=L("project-"..p.project)}
   title.style.font="heading-1"
   title.style.font_color=HUES.ink
-  local description=reader.add{type="label",
+  title.style.single_line=false
+  title.style.maximal_width=math.max(125,width-112)
+  local description=copy.add{type="label",
     caption=L("project-caption-"..p.project)}
   description.style.single_line=false
-  description.style.maximal_width=width-40
+  description.style.maximal_width=math.max(125,width-112)
   description.style.font_color=HUES.quiet
+  local accent=reader.add{type="progressbar",value=1}
+  accent.style.width=math.max(130,width-38)
+  accent.style.height=3
+  accent.style.color=HUES.gold
   local scroll=reader.add{type="scroll-pane",direction="vertical",
     name="razi_journal_project_reader"}
   scroll.style.width=width-32
