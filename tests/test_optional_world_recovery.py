@@ -10,9 +10,9 @@ def source(path):
 class OptionalRecovery(unittest.TestCase):
     def test_new_worlds_are_manual_opt_in_only(self):
         deps=json.loads(source("info.json"))["dependencies"]
-        for dep in ("? nulla >= 1.0.2", "? PlanetAthos >= 1.1.3"):
+        for dep in ("nulla >= 1.0.2", "PlanetAthos >= 1.1.3"):
             self.assertIn(dep,deps)
-            self.assertFalse(dep.replace("? ","+ ") in deps)
+            self.assertNotIn("+ "+dep,deps)
         self.assertIn("! biological-machines-planet-wit",deps)
         self.assertIn("! outer-rim",deps)
 

@@ -19,8 +19,8 @@ class RequiredWorldTests(unittest.TestCase):
         for retired in ('biological-machines-planet-wit',):
             self.assertIn('! '+retired,deps)
             self.assertFalse(any(d.startswith(retired+' >=') for d in deps))
-        self.assertIn('? nulla >= 1.0.2',deps)
-        self.assertIn('? PlanetAthos >= 1.1.3',deps)
+        self.assertIn('nulla >= 1.0.2',deps)
+        self.assertIn('PlanetAthos >= 1.1.3',deps)
         self.assertIn('? moon-eneas >= 1.0.10',deps)
         self.assertIn('? shchierbin >= 0.3.19',deps)
         self.assertIn('planet-muluna >= 2.7.25',deps)
