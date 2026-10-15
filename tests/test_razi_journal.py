@@ -272,6 +272,27 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('razi_journal.open_project(player)', control)
         self.assertIn('journal_module.open_quest(player,quest_id)', operations)
 
+    def test_cargo_project_cards_use_fixed_icons_and_contained_milestones(self):
+        trade=read("scripts/galactic_trade.lua")
+        projects=read("scripts/razi_journal_projects.lua")
+        icons=read("scripts/razi_journal_icons.lua")
+        locale=read("locale/en/galactic_operations.cfg")
+        self.assertIn('local icons=require("scripts.razi_journal_icons")',trade)
+        self.assertIn('icons.sprite(parent,path,role)',trade)
+        self.assertNotIn('add{type="sprite",sprite=',trade)
+        self.assertIn('resize_to_sprite=false',icons)
+        for role in ("cargo_header","cargo_chain","cargo_research",
+                     "cargo_world","cargo_material","cargo_science",
+                     "project_button","project_hero"):
+            self.assertIn(role+"=",icons)
+        self.assertIn('type=inline and "label" or "button"',trade)
+        self.assertIn('codex_link(metadata,consumer.name',trade)
+        self.assertIn('if index<#row.upgrades then',trade)
+        self.assertIn('render_chain(grid,row,p,size.card,index)',trade)
+        self.assertIn('icons.button(head,art_for(id,player.force)',projects)
+        self.assertIn('icons.sprite(header,art_for(p.project,player.force)',projects)
+        self.assertIn("trade-chain-folio=PRODUCTION CHAIN __1__",locale)
+
     def test_codex_layout_polish_keeps_native_scroll_controls(self):
         source=read("scripts/razi_journal.lua")
         self.assertIn('metrics_row.style.horizontal_spacing=size.compact and 8 or 18',source)
