@@ -26,8 +26,8 @@ class ExpeditionJournalTests(unittest.TestCase):
             r'\{id="([a-z0-9-]+)",chapter="([a-z0-9-]+)"',
             frontier,re.S)]
         quests+=extended+partnerships+primary_worlds+frontier_quests
-        self.assertEqual(len(quests),234)
-        self.assertEqual(len({item[0] for item in quests}),234)
+        self.assertEqual(len(quests),233)
+        self.assertEqual(len({item[0] for item in quests}),233)
         chapter_sources=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',source)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',industry)
