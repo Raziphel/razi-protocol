@@ -14,6 +14,24 @@ Only the selected dossier gets a stronger accent and the large detail reader
 has one scroll pane. The Dyson art stays backed by its existing stage sprites.
 This redesign adds no texture files or periodic render workload.
 
+## October 2026: Vespera orbit and stellar identity
+
+Obsidiax is now the innermost Vespera destination at 17 map units.
+Muria sits at 21; frozen Aquilo moves to 29, **inside** the existing
+30/37-unit debris crossing; and Rubia (41) and Maraxsis (48) are beyond.
+No new routes, changed asteroid hazards, travel distances, research
+requirements, or climate simulation result from this visual layout.
+
+The systems now reuse their **existing distinct** 512px glow textures,
+one per star, rather than painting six identical atlas halos. Nyxaris
+is sapphire and cyan, matching its subtly cooled stellar core; Vibrant
+is violet, and Vespera is gentle champagne-pearl. Calidus and Deep Space
+retain their neutral atlas treatment. No new PNGs, extra background
+layers, runtime animations or per-tick work are introduced.
+
+Acceptance still requires an in-game overview and close-zoom pass with
+the full modpack, since the existing painted star sprites are retained.
+
 ## 2.1.72: Restrained visual hierarchy
 
 The sun PNGs remain the original 1024px Razi textures. Calidus is warm
