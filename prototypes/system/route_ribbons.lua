@@ -65,7 +65,10 @@ local function render(owner,row,mode,n)
       local grade=ladder.color_level(ladder.route_level(
         row.route,midpoint,setting and setting.value))
       local color=ladder.route_color(grade)
-      local alpha=.78+.014*grade
+      -- The source ribbon has a crisp opaque core, with faint shoulders
+      -- to separate the color from Factorio's grey native line at low zoom.
+      -- Keep strong alpha; the PNG owns edge softness and avoids neon bloom.
+      local alpha=math.min(1,.96+.004*grade)
       result[#result+1]={
         type="sprite",filename=SHEET,
         x=(index%COLS)*CELL,y=floor(index/COLS)*CELL,

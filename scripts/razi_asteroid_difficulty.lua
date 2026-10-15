@@ -131,23 +131,24 @@ M.quality_names={"normal","uncommon","rare","epic","legendary"}
 M.distributions=distributions
 -- Every difficulty level has one exact, shared starmap color:
 -- cool blue -> cyan -> teal -> green -> lime -> gold -> orange -> red.
--- These are rendered by Razi's sparse native-route marker overlay; Factorio
--- does not offer a prototype field for tinting native connection lines.
+-- Higher saturation is intentional: route ribbons overlap faint grey
+-- native connections and must survive the zoomed-out starmap. Tooltip
+-- HEX values correspond precisely to the Factorio RGB tints below.
 M.route_colors={
-  {r=.33,g=.52,b=.79}, -- 1   blue
-  {r=.28,g=.63,b=.79}, -- 2   sky blue
-  {r=.25,g=.70,b=.69}, -- 3   teal
-  {r=.29,g=.73,b=.53}, -- 4   emerald
-  {r=.44,g=.76,b=.40}, -- 5   green
-  {r=.66,g=.76,b=.36}, -- 6   lime
-  {r=.82,g=.73,b=.30}, -- 7   golden yellow
-  {r=.88,g=.59,b=.29}, -- 8   orange
-  {r=.84,g=.40,b=.29}, -- 9   vermilion
-  {r=.78,g=.22,b=.29}  -- 10  crimson
+  {r=0.29,g=0.58,b=0.96}, -- 1 blue
+  {r=0.17,g=0.68,b=1.00}, -- 2 sky blue
+  {r=0.12,g=0.80,b=0.85}, -- 3 teal
+  {r=0.17,g=0.88,b=0.55}, -- 4 emerald
+  {r=0.33,g=0.91,b=0.34}, -- 5 green
+  {r=0.64,g=0.90,b=0.26}, -- 6 lime
+  {r=0.96,g=0.84,b=0.23}, -- 7 golden yellow
+  {r=1.00,g=0.60,b=0.23}, -- 8 orange
+  {r=0.99,g=0.37,b=0.28}, -- 9 vermilion
+  {r=0.94,g=0.21,b=0.29} -- 10 crimson
 }
 M.route_color_hex={
-  "#5485C9","#47A1C9","#40B3B0","#4ABA87","#70C266",
-  "#A8C25C","#D1BA4D","#E0964A","#D6664A","#C7384A"
+  "#4A94F5","#2BADFF","#1FCCD9","#2BE08C","#54E857",
+  "#A3E642","#F5D63B","#FF993B","#FC5E47","#F0364A"
 }
 function M.color_level(level)
   return math.max(1,math.min(10,math.floor((type(level)=="number" and level or 1)+.5)))

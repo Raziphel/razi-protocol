@@ -1,3 +1,31 @@
+## 2.1.100: starmap line visibility pass
+
+The previous blue-to-red quality-route overlay was technically present,
+but looked washed out at overview zoom: the white tintable ribbon had a
+sub-pixel-width opaque core and nearly transparent edges. The native
+grey lines overpowered the colors.
+
+A new 128-bearing shared atlas keeps the original precise, centered
+route geometry but renders a **2.7-source-pixel opaque colored core**
+with controlled 2.4-to-3.5px antialiased shoulders. Every direction
+is generated deterministically with `node scripts/generate_route_ribbons.js`.
+This is still one thin aligned route line; there are no doubled tracks,
+parallel offsets, dots, particle emitters, or bloom effects.
+
+The ten hazard colors are now more saturated so blue, green and warm
+late-game orange/red remain legible on Factorio's black space map. The
+route sprite tint opacity is now 0.964-1.0; the texture alpha itself
+handles delicate feathering. Tooltips share exactly the same ten updated
+RGB/HEX colors. The existing 2,400-segment startup rendering cap is
+unchanged. Native route connections, the dynamic Level 1-10 danger
+mapping, sprite positions, platform paths and travel behavior are
+unmodified.
+
+The ribbon regression now measures centerline alpha, shoulder coverage,
+transparent atlas background and one-to-one agreement between Lua
+route tint colors and tooltip hex colors. Real Factorio screenshots
+at different zooms remain necessary for final visual acceptance.
+
 ## 2.1.99: every campaign route graded, per-segment progression
 
 The old implementation colored whole systems as one level and treated
