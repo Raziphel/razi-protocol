@@ -1,3 +1,15 @@
+# Settings philosophy and compatibility
+
+Razi Protocol's settings exist to let players control meaningful tradeoffs without obscuring the intended campaign. Defaults should deliver the curated experience; options that introduce heavy performance experiments or substantial gameplay alterations should explain their consequences and be safe to disable.
+
+**For contributors:** preserve existing setting IDs and startup semantics to avoid save/configuration breakage. Describe whether each setting changes research, map generation, route visuals, effects or only presentation. Document new defaults in tests and this guide.
+
+**Performance principle:** optimize routine code unconditionally where behavior is equivalent. Expose optional expensive or behavior-changing optimizations as clearly named settings, generally off unless verified safe. Avoid duplicating other mods' options and avoid blanket asteroid suppression that trivializes intended hazard progression.
+
+See [Developer Handbook](DEVELOPER_HANDBOOK.md), [Architecture](ARCHITECTURE.md), and [Validation](VALIDATION.md). The detailed setting tables below should be checked against current `settings.lua` before release.
+
+---
+
 # Razi Protocol settings
 
 The startup settings use the same visual approach as **FluxWorks**: compact
