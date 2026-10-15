@@ -76,6 +76,31 @@ class VisualPolishTests(unittest.TestCase):
             self.assertRegex(locale,rf"(?m)^{name}=")
         self.assertIn("[journal-chapter-dispatch]",locale)
 
+    def test_nauvis_acts_use_existing_research(self):
+        core=read("scripts/razi_journal_data.lua")
+        foundation=read("scripts/razi_journal_expansion.lua")
+        ui=read("scripts/razi_journal.lua")
+        locale=read("locale/en/razi_journal.cfg")
+        ids=("nauvis-power","nauvis-logistics","nauvis-electronics",
+             "nauvis-radar","nauvis-fast-inserters","nauvis-automation-2",
+             "nauvis-engines","nauvis-fluid-handling","nauvis-plastics",
+             "nauvis-advanced-electronics")
+        for quest in ids:
+            self.assertIn('id="'+quest+'",chapter="calidus"',core)
+            for section in ("journal-title","journal-story","journal-tip"):
+                entries=locale.split("["+section+"]",1)[1].split("\n[",1)[0]
+                self.assertIn("\n"+quest+"=",entries)
+        for legacy in ("green-science","steel","railways","oil",
+                       "chemical-science"):
+            self.assertIn('id="'+legacy+'",chapter="calidus"',core)
+            self.assertNotIn('id="'+legacy+'",chapter="foundations"',foundation)
+        for phase in ("machines","growth","chemistry","departure"):
+            self.assertIn('phase="'+phase+'"',core)
+            self.assertIn(phase+"=",locale)
+        self.assertIn('nauvis_phase(card,quest.phase,theme,inner-34)',ui)
+        self.assertIn('nauvis_phase(body,quest.phase,theme,text_width)',ui)
+        self.assertNotIn("data:extend(",core)
+
     def test_megaproject_dossiers_use_real_status(self):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")

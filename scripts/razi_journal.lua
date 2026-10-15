@@ -578,7 +578,9 @@ local function render_details(parent,player,quest,p,context,size,view)
   local folio_number=tint(label(identity,
     L("dossier-index",string.format("%02d",chapter_index(quest.chapter)))),COLOR.quiet)
   folio_number.style.font="default-bold"
-  local chapter_ink=label(identity,L("dossier-classification"))
+  local chapter_ink=label(identity,quest.chapter=="calidus"
+    and quest.phase and {"journal-nauvis-phase."..quest.phase}
+    or L("dossier-classification"))
   chapter_ink.style.font_color=theme.soft
   local chapter_link=identity.add{type="label",style="clickable_label",
     caption=L("chapter-cover-open"),
@@ -764,6 +766,20 @@ local function render_details(parent,player,quest,p,context,size,view)
 end
 
 
+-- Compact editorial act divider for Nauvis. The four acts are meaningful
+-- navigation, not new research gates, progress storage or a separate UI.
+local function nauvis_phase(parent,phase,theme,width)
+  if not phase then return end
+  local heading=parent.add{type="flow",direction="horizontal"}
+  heading.style.horizontal_spacing=8
+  heading.style.vertical_align="center"
+  accent_rule(heading,theme,50,2)
+  local name=label(heading,{"journal-nauvis-phase."..phase})
+  name.style.font="default-bold"
+  name.style.font_color=theme.soft
+  name.style.maximal_width=math.max(80,width-65)
+end
+
 -- A source-backed frontispiece for each chapter. It is a *view* of the
 -- existing milestones, never a separate quest or a second progress store.
 -- Only the chosen page is built on demand. No tick work, custom textures,
@@ -840,9 +856,15 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   -- A real chapter navigation log; each entry jumps to its existing
   -- quest dossier, with colours derived from actual force research.
   local shown=0
+  local last_phase=nil
   for _,quest in ipairs(chapter.quests) do
     if shown>=8 then break end
     shown=shown+1
+    if p.chapter=="calidus" and quest.phase
+      and quest.phase~=last_phase then
+      nauvis_phase(body,quest.phase,theme,text_width)
+    end
+    last_phase=quest.phase
     local state=view.states[quest.id]
     local row=body.add{type="flow",direction="horizontal"}
     row.style.horizontal_spacing=9
@@ -1036,7 +1058,13 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           tooltip=L("chapter-cover-tooltip"),
           tags={razi_journal_action="chapter-dossier",id=chapter.id}}
         open_cover.style.font_color=theme.soft
+        local last_phase=nil
         for _,quest in ipairs(available) do
+          if chapter.id=="calidus" and quest.phase
+            and quest.phase~=last_phase then
+            nauvis_phase(card,quest.phase,theme,inner-34)
+          end
+          last_phase=quest.phase
           local state=view.states[quest.id]
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
