@@ -1,3 +1,13 @@
+Version: 2.1.116
+Date: 15. 10. 2026
+  Expand asteroid belt risk/reward player choice:
+    - Add three Razi belt controls: ore richness (60/100/150%),
+      dangerous midsection salvage bonus, and peaceful rim harvesting.
+    - Apply modifiers only to Razi-authored extra belt resources; base
+      game planet and source-mod asteroid spawns remain unmodified.
+    - Preserve original resource and gameplay balance at all defaults.
+    - No dynamic runtime work; settings apply at mod loading.
+
 Version: 2.1.115
 Date: 15. 10. 2026
   Settings menu title and regression stability:
