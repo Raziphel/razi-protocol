@@ -17,7 +17,15 @@ local SIZES={
   gallery=28,
   archive_button=26,
   archive_cover=32,
-  project_icon=32
+  project_icon=32,
+  project_button=38,
+  project_hero=46,
+  cargo_header=28,
+  cargo_chain=32,
+  cargo_research=19,
+  cargo_world=18,
+  cargo_material=18,
+  cargo_science=18
 }
 M.SIZES=SIZES
 
