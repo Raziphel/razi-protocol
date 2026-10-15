@@ -1,17 +1,9 @@
 -- Route danger levels for the map legend and hover text.
 -- Uses the asteroid spawn definitions without changing them.
 local M = {}
--- Restrained severity palette based on actual hostile asteroid sizes.
--- Danger, tooltip and map line colors share this one authoritative table.
-local colors = {
-  {r=.41,g=.56,b=.63}, -- unknown/safe: desaturated blue-grey
-  {r=.36,g=.67,b=.76}, -- small: cool blue
-  {r=.39,g=.72,b=.49}, -- medium: clear green
-  {r=.91,g=.72,b=.32}, -- big: caution amber
-  {r=.89,g=.39,b=.32}  -- huge or dense big: muted signal red
-}
-local belt_color = colors[4]
-
+-- This module inspects physical asteroid sizes and resource chunks only.
+-- All Level 1-10 danger calculations and colors belong exclusively to
+-- scripts.razi_asteroid_difficulty. No second severity scale lives here.
 local function max_probability(def)
   local maximum = (type(def.probability)=="number" and def.probability) or 0
   for _,point in ipairs(def.spawn_points or {}) do
@@ -83,30 +75,14 @@ function M.inspect(route)
   for _,size in ipairs({"small","medium","big","huge"}) do
     if peaks[size]>0 then largest=size end
   end
-  local tier=1
-  if peaks.small>0 then tier=2 end
-  if peaks.medium>0 then tier=3 end
-  if peaks.big>0 then tier=4 end
-  if peaks.huge>0 or peaks.big>=0.05 then tier=5 end
-  if unknown then tier=math.max(tier,3) end
   local sizes=0
   for _,probability in pairs(peaks) do
     if probability>0 then sizes=sizes+1 end
   end
   local mix=(sizes>1 and "mixed") or (sizes==1 and "single") or "unlisted"
   if unknown then mix="unclassified" end
-  return {tier=tier,largest=largest,chunks=chunk_count,unknown=unknown,
+  return {largest=largest,chunks=chunk_count,unknown=unknown,
     size_count=sizes,mix=mix}
 end
 
-function M.color(route)
-  local tier=M.inspect(route).tier
-  -- A required physical belt crossing cannot visually claim to be a
-  -- harmless blue line when source mods omit a standard spawn category.
-  if M.is_belt_crossing(route) then tier=math.max(4,tier) end
-  return colors[tier]
-end
-
-M.colors=colors
-M.belt_color=belt_color
 return M

@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">
-  <!-- Pure white luminescent navigation pip, tinted to quality level 1-10. -->
-  <path d="M9 32L22 20H42L55 32L42 44H22Z" fill="#fff" opacity=".22"/>
-  <path d="M13 32L24 24H40L51 32L40 40H24Z" fill="#fff" opacity=".99"/>
-  <path d="M19 32L26 28H38L45 32L38 36H26Z" fill="#fff" opacity=".56"/>
-</svg>

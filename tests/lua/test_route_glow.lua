@@ -16,7 +16,8 @@ rawset(_G,"data",{raw=raw})
 rawset(_G,"mods",{})
 rawset(_G,"settings",{startup={
  ["razi-route-overlay-mode"]={value="danger"},
- ["razi-route-overlay-scope"]={value="all"}}})
+ ["razi-route-overlay-scope"]={value="all"},
+ ["razi-quality-asteroids"]={value=true}}})
 local m=require("prototypes.system.route_highlights")
 local safe={from="a",to="b",shape="line",asteroid_spawn_definitions={}}
 local medium={from="c",to="d",shape="line",
@@ -25,8 +26,8 @@ local huge={from="c",to="d",shape="line",
  asteroid_spawn_definitions={{asteroid="huge-metallic-asteroid",probability=.2}}}
 local belt={from="razi-umbra-belt-inner",to="razi-umbra-belt-outer",
  shape="line",asteroid_spawn_definitions={}}
-check(m.threat_tier(medium)==3 and m.threat_tier(huge)==5,
- "Threat rankings must not change")
+check(m.route_color_level(medium)>=1 and m.route_color_level(huge)>=1,
+ "Unified difficulty must be determined by campaign route, not asteroid sizes")
 check(#m.strokes_for_connection(safe,"danger","all")>10,
  "Safe straight route must have a continuous blue path, not one color pip")
 check(#m.strokes_for_connection(medium,"danger","all")>5,
@@ -44,11 +45,10 @@ check(first.filename==ribbon_module.sheet
   "Real starter line must use the 128-direction blue ribbon atlas")
 check(type(first.shift[1])=="number" and type(first.shift[2])=="number",
   "Generated ribbons require absolute native-map pixel coordinates")
-local marker=m.marker_for_connection(huge,"danger","all")
-check(marker.size[1]==64 and marker.scale<.4 and marker.tint.a<.7,
- "Badges are compact and translucent")
-check(#m.strokes_for_connection(safe,"chapter","all")==1,
- "Chapter setting may place a small noncontinuous marker")
+check(m.marker_for_connection==nil and m.threat_tier==nil,
+ "Retired dot badges and five-tier danger must not return")
+check(#m.strokes_for_connection(safe,"chapter","all")>10,
+ "Chapter view must preserve continuous ten-grade lines")
 local palette=require("scripts.razi_asteroid_difficulty")
 check(#palette.route_colors==10 and #palette.route_color_hex==10,
   "Ten independent quality colors are required")

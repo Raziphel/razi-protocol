@@ -8,40 +8,23 @@ local layout=require("prototypes.system.galaxy_layout")
 local reconcile=require("prototypes.system.route_reconcile")
 local quality=require("scripts.razi_asteroid_difficulty")
 
--- Neutral white signal pip renders all ten levels faithfully via tint.
--- Keep full route icons for the real connection prototypes; this is only
--- a compact overlay marker and never a second continuous line.
-local MARKER="__razi-protocol__/graphics/route-highlights/quality-risk-marker.png"
-local WARNING=MARKER
-local WAYPOINT=MARKER
-local OLD="__razi-protocol__/graphics/route-highlights/"
-local MARKER_LIMIT=36
 local PI=math.pi
 local TAU=2*PI
 local abs,sqrt,sin,cos=math.abs,math.sqrt,math.sin,math.cos
 
--- Exactly ten grade colors come from the *same* quality hazard ladder
--- used for real asteroid spawning. No duplicate, competing 5-color scale.
-local danger_colors=hazards.colors
--- Route progress is a campaign navigation scale independent of the
--- option to actually spawn quality enemies. Turning off quality asteroids
--- must NOT erase colored routes or silently revert them to 5-class hues.
+-- This is the only visible difficulty scale: Level 1-10.
 function M.route_color_level(route)
   local setting=settings and settings.startup
     and settings.startup["razi-asteroid-difficulty-scale"]
   local _,peak=quality.route_range(route,setting and setting.value)
   return peak
 end
--- Campaign mode remains supported, but cannot hide major hazards.
-local chapter_colors={
-  {r=.48,g=.59,b=.65}, {r=.45,g=.60,b=.62},
-  {r=.59,g=.59,b=.49}, {r=.58,g=.55,b=.64},
-  {r=.65,g=.59,b=.60}
-}
-local chapter_tiers={
-  calidus=1,solaris=2,nyxaris=2,vibrant=3,vespera=3,
-  beetlejuice=4,umbra=4,["solar-system-edge"]=5,["deep-space"]=5
-}
+function M.color_for_route(route)
+  return quality.route_color(M.route_color_level(route))
+end
+function M.color_for_guide(_,route)
+  return M.color_for_route(route)
+end
 
 local function finite(x)
   return type(x)=="number" and x==x and abs(x)<100000
@@ -91,53 +74,6 @@ local function position(name,seen)
   if x and y then return {x=x,y=y} end
 end
 M.position=position
-
-local function chapter(name,pos)
-  if name=="nauvis" or name=="muluna" or name=="sye-calidus" then return 1 end
-  local system=name:match("^sye%-(.+)") or name
-  if chapter_tiers[system] then return chapter_tiers[system] end
-  local closest,best=2,math.huge
-  for star,grade in pairs(chapter_tiers) do
-    local x,y=0,0
-    if star~="calidus" and star~="deep-space" then
-      x,y=layout.anchor_position(star)
-    end
-    if x and y then
-      local d=(pos.x-x)^2+(pos.y-y)^2
-      if d<best then best,closest=d,grade end
-    end
-  end
-  return closest
-end
-
--- Use actual hostile asteroid sizes/probabilities from the native route.
--- Belt crossings always have a caution floor, even if a late source mod
--- removes the standard asteroid spawn declarations from that corridor.
-function M.threat_tier(route)
-  local report=hazards.inspect(route)
-  local rank=report.tier
-  if hazards.is_belt_crossing(route) then rank=math.max(4,rank) end
-  return rank
-end
-
-function M.color_for_route(route,mode)
-  local grade=M.route_color_level(route)
-  if grade then return quality.route_color(grade) end
-  -- Legacy display when quality-asteroid escalation is disabled.
-  local rank=M.threat_tier(route)
-  if mode=="chapter" and rank<4 and not hazards.is_belt_crossing(route) then
-    local a,b=position(route.from),position(route.to)
-    if a and b then
-      return chapter_colors[math.max(chapter(route.from,a),
-        chapter(route.to,b))] or chapter_colors[5]
-    end
-  end
-  return danger_colors[rank]
-end
-function M.color_for_guide(_,route)
-  return M.color_for_route(route)
-end
-M.danger_colors=danger_colors
 
 -- The red dotted routes between Carna/Gleba/Velora must NOT return.
 -- "major" paints only Razi's verified main corridors and physical belts.
@@ -210,46 +146,8 @@ end
 M.route_path=route_path
 M.is_major=is_major
 
--- A single fixed-size warning beside genuinely hazardous roads. Never
--- stretch a sprite along a connection: that created the ugly green parallel
--- line, repeated square joints, and visual seams seen in 2.1.90.
-function M.marker_for_connection(route,mode,scope)
-  if not route or mode=="off"
-    or not M.is_navigation_highlight(route,scope) then return nil end
-  local a,b=position(route.from),position(route.to)
-  if not a or not b then return nil end
-  local span=magnitude(a,b)
-  if span<7 or span>480 then return nil end
-  local major=is_major(route,a,b)
-  if scope=="major" and not major then return nil end
-  local tier=M.threat_tier(route)
-  local grade=M.route_color_level(route)
-  -- Draw a single colored route indicator even for low difficulty ranks.
-  -- No full-length parallel route stripe, repeated dots, or tinted native line.
-  local hazardous=tier>=4 or (grade and grade>=8)
-  if not grade and not hazardous
-    and (mode~="chapter" or not major) then return nil end
-  local at,length=route_path(route,a,b)
-  if not at or length<7 then return nil end
-  local middle,previous,later=at(.5),at(.48),at(.52)
-  local dx,dy=later.x-previous.x,later.y-previous.y
-  local mag=sqrt(dx*dx+dy*dy)
-  if mag<.00001 then return nil end
-  local offset=hazardous and .85 or .72
-  local color=M.color_for_route(route,mode)
-  return {
-    type="sprite",filename=hazardous and WARNING or WAYPOINT,
-    size={64,64},scale=hazardous and .28 or .19,
-    shift={(middle.x-dy/mag*offset)*32,(middle.y+dx/mag*offset)*32},
-    priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
-    tint={r=color.r,g=color.g,b=color.b,
-      a=grade and math.min(.64,.24+.038*grade)
-        or (hazardous and (tier>=5 and .62 or .46) or .22)}
-  }
-end
-
--- Only the ribbon module draws actual paths. Historical single-dot warning
--- helpers above are kept for compatibility, but are no longer rendered.
+-- The ribbon renderer colors actual native route geometry; no duplicate
+-- route badges or competing hazard scales are drawn.
 function M.strokes_for_connection(route,mode,scope)
   return require("prototypes.system.route_ribbons").strokes_for_connection(
     M,route,mode,scope)
