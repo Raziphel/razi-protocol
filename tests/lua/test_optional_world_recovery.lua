@@ -1,4 +1,5 @@
 package.path="./?.lua;./?/init.lua;"..package.path
+dofile("tests/lua/razi_lib_bootstrap.lua")
 local function check(x,msg) if not x then error(msg,2) end end
 rawset(_G,"mods",{nulla="1.0.2",PlanetAthos="1.1.3"})
 local calls=0

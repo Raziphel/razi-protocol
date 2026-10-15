@@ -3,6 +3,7 @@
 -- premium recipe registration. Never rewrite native planet discovery techs.
 local M={}
 local mode=require("prototypes.compat.interdependence_mode")
+local Graph=require("__razi_lib__/lib/technology_graph")
 local function technology(name)
   return (data.raw.technology or {})[name]
 end
@@ -10,26 +11,15 @@ local function active(name)
   local node=technology(name)
   return node and node.enabled~=false and not node.hidden
 end
-local function reaches(start,target,seen)
-  if start==target then return true end
-  local node=technology(start)
-  if not node then return false end
-  seen=seen or {}
-  if seen[start] then return false end
-  seen[start]=true
-  for _,parent in ipairs(node.prerequisites or {}) do
-    if reaches(parent,target,seen) then return true end
-  end
-  return false
-end
 function M.safe_link(target,parent)
-  if not (active(target) and active(parent)) or target==parent
-    or reaches(parent,target) then return false end
-  local node=technology(target)
-  if reaches(target,parent) then return true end
-  node.prerequisites=node.prerequisites or {}
-  node.prerequisites[#node.prerequisites+1]=parent
-  return true
+  if not (active(target) and active(parent)) or target==parent then
+    return false
+  end
+  local techs=data.raw.technology or {}
+  if Graph.reaches(techs,parent,target) then return false end
+  -- A transitive prerequisite already enforces the same milestone.
+  if Graph.reaches(techs,target,parent) then return true end
+  return Graph.add_prerequisite(techs,target,parent)
 end
 
 -- All of these are optional AFTER-arrival industries. First discoveries,

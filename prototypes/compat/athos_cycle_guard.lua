@@ -7,38 +7,8 @@ local function owned(name)
     or n:find("particulate",1,true)~=nil
 end
 M.owned=owned
-local function find_cycle(techs)
-  local state,stack,at={},{},{}
-  local keys={}
-  for key in pairs(techs) do keys[#keys+1]=key end
-  table.sort(keys)
-  local function visit(name)
-    state[name]=1
-    stack[#stack+1]=name
-    at[name]=#stack
-    for _,parent in ipairs(techs[name].prerequisites or {}) do
-      if techs[parent] then
-        if state[parent]==1 then
-          local cycle={}
-          for i=at[parent],#stack do cycle[#cycle+1]=stack[i] end
-          return cycle
-        elseif not state[parent] then
-          local cycle=visit(parent)
-          if cycle then return cycle end
-        end
-      end
-    end
-    state[name]=2
-    at[name]=nil
-    stack[#stack]=nil
-  end
-  for _,name in ipairs(keys) do
-    if not state[name] then
-      local cycle=visit(name)
-      if cycle then return cycle end
-    end
-  end
-end
+local Graph=require("__razi_lib__/lib/technology_graph")
+local find_cycle=Graph.find_cycle
 M.find_cycle=find_cycle
 
 -- PlanetAthos 1.1.3 enumerates all descendants recursively in

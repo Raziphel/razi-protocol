@@ -1,4 +1,5 @@
 -- Run from repository root: lua tests/lua/test_fluxworks_research_clarity.lua
+dofile("tests/lua/razi_lib_bootstrap.lua")
 -- Proves transitive arrow cleanup changes no effective research dependencies.
 local function technology(name,prerequisites)
   return {name=name,prerequisites=prerequisites or {}}

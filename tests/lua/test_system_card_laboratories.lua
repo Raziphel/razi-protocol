@@ -1,4 +1,5 @@
 package.path="./?.lua;./?/init.lua;"..package.path
+dofile("tests/lua/razi_lib_bootstrap.lua")
 local function check(ok,why) if not ok then error(why,2) end end
 local labs={
  lab={inputs={"automation-science-pack","solaris-tech-card"}},

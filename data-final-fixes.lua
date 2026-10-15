@@ -53,13 +53,7 @@ end
 
 -- Duplicate lab science inputs are invalid in Factorio 2.1.
 for _, lab in pairs(data.raw.lab or {}) do
-	if lab.inputs then
-		local unique_inputs = {}
-		for _, input in ipairs(lab.inputs) do
-			Collections.append_unique(unique_inputs, input)
-		end
-		lab.inputs = unique_inputs
-	end
+	if lab.inputs then lab.inputs = Collections.unique(lab.inputs) end
 end
 
 require("prototypes.system.route_reconcile").data_final_fixes()

@@ -3,29 +3,14 @@
 -- extra arrow. Removing that arrow NEVER removes the requirement for A.
 -- Razi/Space Age/source technology IDs, research costs and unlocks are untouched.
 local M={}
+local Graph=require("__razi_lib__/lib/technology_graph")
 
 local function implies(technologies,start,target,memo)
   local key=start.."\0"..target
   if memo[key]~=nil then return memo[key] end
-  local visited={}
-  local pending={start}
-  while #pending>0 do
-    local current=pending[#pending]
-    pending[#pending]=nil
-    if current==target then
-      memo[key]=true
-      return true
-    end
-    if not visited[current] then
-      visited[current]=true
-      local tech=technologies[current]
-      for _,prior in ipairs(tech and tech.prerequisites or {}) do
-        if not visited[prior] then pending[#pending+1]=prior end
-      end
-    end
-  end
-  memo[key]=false
-  return false
+  local result=Graph.reaches(technologies,start,target)
+  memo[key]=result
+  return result
 end
 
 function M.data_final_fixes()

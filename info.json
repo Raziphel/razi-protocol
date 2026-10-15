@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.88",
+  "version": "2.1.89",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -9,7 +9,7 @@
   "dependencies": [
     "base >= 2.1.20",
     "space-age >= 2.1.20",
-    "razi_lib >= 1.1.0",
+    "razi_lib >= 1.2.0",
     "PlanetsLib >= 2.0.9",
     "! AsteroidBelt",
     "! space-route-overlay",
