@@ -14,6 +14,11 @@ local function belt_factor()
 end
 M.asteroid_factor=asteroid_factor
 M.belt_factor=belt_factor
+local function ore_factor()
+  local name=preference("razi-belt-resource-richness","standard")
+  return ({scarce=.6,standard=1,rich=1.5})[name] or 1
+end
+M.ore_factor=ore_factor
 local util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
 local presets = {
   starter={"nauvis_fulgora",0.82},
@@ -188,6 +193,7 @@ local families={"metallic","carbonic","oxide"}
 -- Edge harvesting uses the location spawn format rather than route points.
 -- A paused space platform can collect ore without turret-heavy combat.
 function M.belt_edge_resources(intensity,system)
+  if preference("razi-belt-edge-harvesting",true)==false then return {} end
   local result={}
   local resources=data and data.raw and data.raw["asteroid-chunk"] or {}
   local emphasis=M.belt_resources[system] or {}
@@ -196,7 +202,8 @@ function M.belt_edge_resources(intensity,system)
     if resources[name] then
       result[#result+1]={
         type="asteroid-chunk",asteroid=name,
-        probability=math.min(.25,.06*(intensity or 1)*(emphasis[family] or 1)),
+        probability=math.min(.25,.06*(intensity or 1)*
+          (emphasis[family] or 1)*ore_factor()),
         speed=.035,angle_when_stopped=.5
       }
     end
@@ -267,6 +274,7 @@ end
 -- Reapplying the final pass must never multiply its first result.
 local enriched=setmetatable({}, {__mode="k"})
 function M.enrich_belt_crossing(route,system)
+  if preference("razi-belt-midsection-salvage",true)==false then return false end
   local rates=belt_crossing_rates[system]
   if not route or not rates or enriched[route] then return false end
   local resources=data and data.raw and data.raw["asteroid-chunk"] or {}
@@ -296,7 +304,7 @@ function M.enrich_belt_crossing(route,system)
         local baseline,speed=sample(existing,mark[1])
         curve[#curve+1]={
           distance=mark[1],
-          probability=math.max(baseline or 0,rate*mark[2]),
+          probability=math.max(baseline or 0,rate*mark[2]*ore_factor()),
           speed=speed and speed>0 and speed or .045
         }
       end
