@@ -1,19 +1,25 @@
-## Unique native-scale space-navigation markers (October 2026)
+## Navigation markers: quiet orbital icons (October 2026)
 
-Seven Razi Slip Streams and the two surviving physical asteroid-belt
-crossings now have eleven **different** transparent 64px starmap icons.
-Slip Streams use distinct industrial gate cores keyed to their star palettes;
-Vibrant's metallic rims and Umbra's shattered rims have separate inward
-and outward arrow glyphs surrounded by small fractured rocks.
-Vespera has no asteroid belt and receives no rim locations or markers.
+The seven Slip Streams and both remaining asteroid-belt crossings use
+dedicated 64 x 64 transparent icons inspired by Space Age's original
+Solar System Edge locator. All share a thin grey circular rim, near-black
+interior, fine golden orbital ellipse and a tiny amber core. The slip
+streams differ subtly through a muted rim accent, orbit angle and a
+single satellite dot. The four Vibrant/Umbra rim markers use only a
+couple of small asteroid specks and a left/right ingress-egress
+chevron. There are no large gears, thick cast-metal octagons, crystals,
+decorative UI panels or neon glyphs. Vespera has **no** belt markers.
 
-`graphics/icons/navigation/` contains runtime PNG textures; the editable,
-deterministic source is `scripts/generate_navigation_markers.js` (run using
-`node scripts/generate_navigation_markers.js`). The last prototype pass,
-`prototypes/system/location_icons.lua`, changes only `icon`, `icon_size`,
-`starmap_icon` and `starmap_icon_size` on those exact Razi locations.
-There is no extra atlas layer, animation or per-tick work. Keep all route,
-asteroid and research properties unchanged. Inspect at game map zooms.
+These PNGs replace the previous busy industrial-badge designs in
+`graphics/icons/navigation/` without changing filenames or locator
+prototype IDs. The deterministic authoring source remains
+`scripts/generate_navigation_markers.js`, run with
+`node scripts/generate_navigation_markers.js`. The existing final
+pass `prototypes/system/location_icons.lua` sets both `icon` and
+`starmap_icon` for those 11 Razi locations only.
+
+No orbit, route, hazard, science, unlock, animation or starmap-atlas
+change is involved. Inspect Factorio at normal and distant map zoom.
 
 ## Current Vespera design: no asteroid belt (October 2026)
 
