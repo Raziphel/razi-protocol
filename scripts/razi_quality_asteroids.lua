@@ -9,7 +9,19 @@ local function mode()
     and settings.startup["razi-asteroid-difficulty-scale"]
   return s and s.value or "balanced"
 end
+-- Runtime prototypes expose the same final connection graph that was used
+-- for route art in data-final-fixes. Cache inference once on first trigger,
+-- so third-party far-end asteroids receive the same difficulty as the map.
+local prepared=false
+local function prepare_runtime_levels()
+  if prepared then return end
+  prepared=true
+  if prototypes and prototypes.space_connection then
+    engine.prepare_routes(prototypes.space_connection)
+  end
+end
 local function current_level(platform)
+  prepare_runtime_levels()
   if not platform then return 1 end
   local connection=platform.space_connection
   if connection then

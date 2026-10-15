@@ -32,11 +32,45 @@ for level=1,10 do
   ok(c and type(hex)=="string" and hex:sub(1,1)=="#",
     "Quality color or tooltip hex code missing")
 end
+-- Every main chapter and all late optional worlds have an explicit
+-- increasing danger level, not the old one-grade-per-system fallback.
+local expected={
+  nauvis=1,["sye-solaris"]=2,gleba=2,["sye-nyxaris"]=2,
+  vulcanus=2,moshine=3,tellus=4,["sye-vibrant"]=4,
+  ribbonia=5,muria=5,rubia=6,["asteroid-belt-outer-edge"]=6,
+  aquilo=7,athos=7,["sye-beetlejuice"]=7,
+  secretas=8,["sye-umbra"]=8,["crucible-orbit"]=9,vesta=9,
+  obsidiax=9,["solar-system-edge"]=10,
+  ["calidus-bellicos-stargate-calidus"]=9,
+  ["calidus-bellicos-stargate-bellicos"]=10,
+  ["aegis-inner-edge"]=10,["point-warden"]=10,
+  ["skewer_lost_beyond"]=10,["black-hole-approach"]=10
+}
+for name,level in pairs(expected) do
+  ok(difficulty.location_level(name)==level,
+    name.." should be level "..level.." not a low fallback")
+end
+local unknown={
+  a={from="sye-umbra",to="modded-late-moon"},
+  b={from="modded-late-moon",to="modded-final-outpost"},
+  c={from="modded-home-moon",to="nauvis"}
+}
+difficulty.prepare_routes(unknown)
+ok(difficulty.location_level("modded-late-moon")==8,
+  "Remote modded world should inherit Umbra's endgame danger")
+ok(difficulty.location_level("modded-final-outpost")==8,
+  "Second-generation late source moon should not reset to level 4")
+ok(difficulty.location_level("modded-home-moon")==1,
+  "Modded home moon should inherit Calidus safe tier")
+difficulty.prepare_routes({})
+ok(difficulty.location_level("modded-late-moon")==4,
+  "Rebuilding the live graph must clear stale inferred worlds")
+
 local route={from="nauvis",to="sye-vibrant",length=50000}
 local beginning=difficulty.route_level(route,0,"balanced")
 local center=difficulty.route_level(route,.5,"balanced")
 local ending=difficulty.route_level(route,1,"balanced")
-ok(beginning==1 and center>beginning and ending==5,
+ok(beginning==1 and center>beginning and ending==4,
   "Danger must ramp during travel and match destination")
 ok(difficulty.route_level({from="nauvis",to="muluna",length=8000},.5)==1,
   "Early shuttle cannot get forced higher quality")

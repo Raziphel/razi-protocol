@@ -3,15 +3,118 @@
 -- Level 10 is legendary for every eligible hostile asteroid.
 local M={}
 local members=require("scripts.galactic_catalog")
-local base={calidus=1,solaris=3,nyxaris=3,vibrant=5,vespera=5,
-  beetlejuice=7,umbra=8,["deep-space"]=10,unassigned=2}
+-- System floors only. Specific planets grow substantially *within* each
+-- chapter; one flat system tier left late worlds stuck around level 5.
+local base={calidus=1,solaris=2,nyxaris=2,vibrant=4,vespera=5,
+  beetlejuice=7,umbra=8,["deep-space"]=10,unassigned=4}
+-- All first-party campaign destinations, plus compatible optional
+-- sources and the last-stage Aegis/Bellicos annex. Unknown optional
+-- endpoints are inferred from their actual FINAL connection neighbours.
 local exceptional={
-  ["nauvis"]=1,["muluna"]=1,["shattered-planet"]=10,
-  ["solar-system-edge"]=10,["nexus"]=10,["oort-cloud"]=10,
-  ["black-hole"]=10,["black-hole-approach"]=10,
-  ["asteroid-belt-inner-edge"]=5,["asteroid-belt-outer-edge"]=6,
-  ["razi-umbra-belt-inner"]=8,["razi-umbra-belt-outer"]=9
+  ["nauvis"]=1,["muluna"]=1,["sye-calidus"]=1,
+  ["sye-solaris"]=2,["sye-nyxaris"]=2,
+  ["vulcanus"]=2,["castra"]=3,["arig"]=3,["hyarion"]=3,
+  ["tellus"]=4,["corrundum"]=4,["igrys"]=4,["igrys-orbit"]=4,
+  ["gleba"]=2,["rabbasca"]=3,["moshine"]=3,
+  ["apia"]=3,["carnova"]=3,["apia-carnova-orbit"]=3,
+  ["panglia"]=4,["pelagos"]=4,["foliax"]=4,["velora"]=4,
+  ["lemures"]=4,["prosephina"]=4,
+  ["dea-dia-system-edge"]=4,["razi-dea-dia-slip-stream"]=4,
+  ["sye-vibrant"]=4,["fulgora"]=4,["cerys"]=5,
+  ["ribbonia"]=5,["paracelsin"]=5,["alchemy-planet"]=6,
+  ["shchierbin"]=6,["asteroid-belt-inner-edge"]=5,
+  ["asteroid-belt-outer-edge"]=6,
+  ["sye-vespera"]=5,["muria"]=5,["rubia"]=6,
+  ["maraxsis"]=7,["aquilo"]=7,["nulla"]=7,
+  ["bm-balack"]=7,["athos"]=7,
+  ["sye-beetlejuice"]=7,["cubium"]=7,
+  ["linox-planet_linox"]=8,["secretas"]=8,
+  ["frozeta"]=8,["ferrum"]=8,["planet-ferrum"]=8,
+  ["sye-umbra"]=8,["tenebris"]=8,["carna"]=8,
+  ["arcanyx"]=9,["crucible"]=9,["crucible-orbit"]=9,
+  ["vesta"]=9,["obsidiax"]=9,["abacayba"]=9,
+  ["razi-umbra-belt-inner"]=8,["razi-umbra-belt-outer"]=9,
+  ["solar-system-edge"]=10,["razi-deep-space-edge"]=10,
+  ["shattered-planet"]=10,["nexus"]=10,
+  ["black-hole-approach"]=10,["black-hole"]=10,
+  ["oort-cloud"]=10,["sol"]=10,
+  -- The Aegis/Bellicos expedition is BEYOND Solar System Edge, not
+  -- a Calidus level-1 route despite the legacy gate's ID prefix.
+  ["calidus-bellicos-stargate-calidus"]=9,
+  ["calidus-bellicos-stargate-bellicos"]=10,
+  ["pulsar"]=10,["aegis-inner-edge"]=10,
+  ["aegis-outer-edge"]=10,["point-warden"]=10,
+  ["near-bellicos-orbit"]=10,["bellicos-near-orbit"]=10,
+  ["near_bellicos_orbit"]=10,
+  -- Source-owned fractured routes branching from Shattered Planet.
+  ["skewer_shattered_planet"]=10,
+  ["skewer_lost_beyond"]=10
 }
+M.explicit_levels=exceptional
+local inferred={}
+-- This data-stage pass handles optional source worlds whose IDs weren't
+-- known while designing the fixed campaign. The graph is connected to the
+-- *final retained routes*, never to speculative legacy shortcuts.
+function M.prepare_routes(routes)
+  inferred={}
+  local edges={}
+  for _,r in pairs(routes or {}) do
+    -- Data prototypes use string IDs, but runtime LuaSpaceConnectionPrototype
+    -- exposes LuaSpaceLocationPrototype objects. Support both identically.
+    if r then
+      local a=type(r.from)=="string" and r.from
+        or (r.from and r.from.name)
+      local b=type(r.to)=="string" and r.to
+        or (r.to and r.to.name)
+      if type(a)=="string" and type(b)=="string"
+        and a~=b and not r.hidden then
+        edges[#edges+1]={a,b}
+      end
+    end
+  end
+  -- A late unknown moon should inherit the stage of its nearest surviving
+  -- hub. Only unknowns are inferred, so early planets never drift upward.
+  local levels={}
+  for name,level in pairs(exceptional) do levels[name]=level end
+  table.sort(edges,function(a,b)
+    if a[1]==b[1] then return a[2]<b[2] end
+    return a[1]<b[1]
+  end)
+  -- Synchronous propagation is deterministic even when Factorio changes
+  -- prototype iteration order. Unknown late-side branches inherit the
+  -- strongest connected hub and never pull down explicit campaign worlds.
+  for _=1,12 do
+    local next_levels={}
+    for name,level in pairs(levels) do next_levels[name]=level end
+    local modified=false
+    for _,edge in ipairs(edges) do
+      local a,b=edge[1],edge[2]
+      if levels[a] and not exceptional[b] then
+        local stage=math.max(next_levels[b] or 0,levels[a])
+        if stage~=(next_levels[b] or 0) then
+          next_levels[b]=stage
+          modified=true
+        end
+      end
+      if levels[b] and not exceptional[a] then
+        local stage=math.max(next_levels[a] or 0,levels[b])
+        if stage~=(next_levels[a] or 0) then
+          next_levels[a]=stage
+          modified=true
+        end
+      end
+    end
+    levels=next_levels
+    if not modified then break end
+  end
+  for name,level in pairs(levels) do
+    if not exceptional[name] and members.system(name)=="unassigned" then
+      inferred[name]=level
+    end
+  end
+  return inferred
+end
+
 local distributions={
   {1,0,0,0,0},
   {.77,.20,.03,0,0},
@@ -62,7 +165,15 @@ local function value(n,fallback)
 end
 function M.location_level(name)
   if type(name)~="string" then return 1 end
-  return exceptional[name] or base[members.system(name)] or 2
+  local fixed=exceptional[name] or inferred[name]
+  if fixed then return fixed end
+  -- Dynamic Aegis/Bellicos descendants sometimes use version-specific
+  -- identifiers. Never default the far-edge expedition to Level 2.
+  local n=name:lower()
+  if n:find("bellicos",1,true) or n:find("aegis",1,true)
+    or n:find("pulsar",1,true) or n:find("skewer_",1,true)
+    or n:find("black-hole",1,true) then return 10 end
+  return base[members.system(name)] or 4
 end
 function M.is_belt(a,b)
   local names={["asteroid-belt-inner-edge"]="vibrant",
@@ -97,7 +208,7 @@ end
 function M.route_range(route,setting)
   local lo=math.floor(M.route_level(route,0,setting)+.5)
   local hi=lo
-  for _,t in ipairs({.25,.5,.75,1}) do
+  for _,t in ipairs({.125,.25,.375,.5,.625,.75,.875,1}) do
     local stage=math.floor(M.route_level(route,t,setting)+.5)
     lo=math.min(lo,stage)
     hi=math.max(hi,stage)

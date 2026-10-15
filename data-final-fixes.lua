@@ -167,6 +167,12 @@ require("prototypes.system.belt_expeditions").data_final_fixes()
 -- Calibrate severe source-native 1,000 km shortcuts after all map/route
 -- reconciliation, before hazard intelligence and quality escalation.
 require("prototypes.system.route_distance_balance").data_final_fixes()
+-- Resolve difficulty stages for ALL finalized connected worlds, including
+-- mod-provided outer expeditions with unknown location IDs. This is after
+-- authoritative route deletion but before hover tooltips and map artwork.
+require("scripts.razi_asteroid_difficulty").prepare_routes(
+  data.raw["space-connection"])
+
 
 require("prototypes.system.route_icons").data_final_fixes()
 

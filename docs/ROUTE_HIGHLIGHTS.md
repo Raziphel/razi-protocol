@@ -1,3 +1,38 @@
+## 2.1.99: every campaign route graded, per-segment progression
+
+The old implementation colored whole systems as one level and treated
+some remote destinations as unknown (level 2 or 5). The new authoritative
+danger ladder covers all 50 curated route specifications and 41 unique
+endpoints explicitly, including the Level 9–10 Umbra/Aegis finale.
+Connected optional worlds inherit a deterministic stage from their
+surviving route network, in both the data and runtime prototype graphs.
+
+The map displays the *actual difficulty at each section of a trip*
+instead of a single route-wide peak. A Calidus departure begins blue,
+midgame legs travel through teal/green, Beetlejuice turns yellow/orange,
+and the real Deep Space/Aegis ends are red. Tooltips retain the minimum
+and maximum forecast. Turning quality enemy spawning off leaves the
+navigation legend intact rather than resetting to the old five colors.
+
+### Native-shape compatibility
+
+Factorio 2.1 defaults an unspecified SpaceConnection shape to **arc**
+and its origin to `{0,0}`; a route is straight only when explicitly
+`shape="line"`. The overlay follows these native semantics, samples
+wide arcs instead of silently omitting them, and no longer rejects
+long routes merely because their endpoints are distant from Calidus.
+It uses the shared 128-angle antialiased route atlas, centered on the
+native connection with zero artificial lateral offset. One global
+2,400-layer budget distributes detail across all known real routes;
+we skip routes with missing endpoints rather than guessing planet
+positions. The old red dotted decorations are not restored.
+
+Reference: Space Route Overlay by valent125, which draws colored marks
+along *actual* connections and chooses colors from asteroid danger.
+Razi implements independent code, ten distinct danger grades, campaign
+progression and segment-by-segment escalation while preserving native
+route IDs, science gates, asteroid species and platform interactions.
+
 ## 2.1.98: Real colored routes, not colored midpoint pips
 
 Screenshots in 2.1.95 showed a completely grey starmap because the

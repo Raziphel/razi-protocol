@@ -48,19 +48,18 @@ function M.annotate(route)
   -- asteroid entities as new threats, and preserve source mod tooltips.
   local quality_enabled=settings and settings.startup
     and settings.startup["razi-quality-asteroids"]
-  if not quality_enabled or quality_enabled.value~=false then
-    local mode=settings and settings.startup
-      and settings.startup["razi-asteroid-difficulty-scale"]
-    local lo,hi=quality_levels.route_range(route,mode and mode.value)
-    -- One authoritative level and color for every route (including level 1).
-    -- Color the actual value, retaining the range and the source-owned fields.
-    local text=lo==hi and localise("quality-stage",tostring(hi))
-      or localise("quality-stages",tostring(lo),tostring(hi))
-    local hex=quality_levels.route_color_richtext(hi)
-    additions[#additions+1]=field("quality-hazard",
-      {"","[color="..hex.."]",text,"[/color]"},231)
-    if hi>=9 then additions[#additions+1]=field("quality-warning",
-      localise("quality-warning"),232) end
+  local enabled=not quality_enabled or quality_enabled.value~=false
+  local mode=settings and settings.startup
+    and settings.startup["razi-asteroid-difficulty-scale"]
+  local lo,hi=quality_levels.route_range(route,mode and mode.value)
+  local text=lo==hi and localise("quality-stage",tostring(hi))
+    or localise("quality-stages",tostring(lo),tostring(hi))
+  local hex=quality_levels.route_color_richtext(hi)
+  additions[#additions+1]=field("quality-hazard",
+    {"","[color="..hex.."]",text,"[/color]"},231)
+  if enabled and hi>=9 then
+    additions[#additions+1]=field("quality-warning",
+      localise("quality-warning"),232)
   end
   if report.tier>=3 then
     additions[#additions+1]=field("largest",

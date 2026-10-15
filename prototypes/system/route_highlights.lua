@@ -23,13 +23,10 @@ local abs,sqrt,sin,cos=math.abs,math.sqrt,math.sin,math.cos
 -- Exactly ten grade colors come from the *same* quality hazard ladder
 -- used for real asteroid spawning. No duplicate, competing 5-color scale.
 local danger_colors=hazards.colors
-local function quality_active()
-  local option=settings and settings.startup
-    and settings.startup["razi-quality-asteroids"]
-  return not option or option.value~=false
-end
+-- Route progress is a campaign navigation scale independent of the
+-- option to actually spawn quality enemies. Turning off quality asteroids
+-- must NOT erase colored routes or silently revert them to 5-class hues.
 function M.route_color_level(route)
-  if not quality_active() then return nil end
   local setting=settings and settings.startup
     and settings.startup["razi-asteroid-difficulty-scale"]
   local _,peak=quality.route_range(route,setting and setting.value)
@@ -174,26 +171,27 @@ end
 -- Factorio shape='arc' travels around the explicitly supplied origin.
 -- Do not guess distant arc centers or sweep across half a galaxy.
 local function route_path(route,a,b)
+  -- Factorio 2.1 defaults SpaceConnectionPrototype.shape to "arc".
+  -- Treat only explicit line routes as straight or we'd cut across
+  -- orbital belts and draw a false chord over the native curve.
   if route.shape=="line" then
     return function(t)
       return {x=lerp(a.x,b.x,t),y=lerp(a.y,b.y,t)}
     end,magnitude(a,b)
   end
   local cx,cy=xy(route.origin)
-  if not cx then
-    cx,cy=0,0
-    if sqrt(a.x*a.x+a.y*a.y)>55
-      or sqrt(b.x*b.x+b.y*b.y)>55 then return nil end
-  end
+  -- Factorio 2.1 defaults native arc origin to (0,0). Read the
+  -- prototype-defined origin if present, otherwise use the SAME default
+  -- rather than assuming it is a line or inventing a nearby star.
+  if not cx then cx,cy=0,0 end
   local dx,dy=a.x-cx,a.y-cy
   local ex,ey=b.x-cx,b.y-cy
   local ra,rb=sqrt(dx*dx+dy*dy),sqrt(ex*ex+ey*ey)
-  if ra<4 or rb<4 or abs(ra-rb)>math.min(ra,rb)*.28 then
-    return nil
-  end
+  if ra<1 or rb<1 then return nil end
   local first=atan2(dy,dx)
   local sweep=(atan2(ey,ex)-first+PI)%TAU-PI
-  if abs(sweep)>.95 then return nil end
+  -- Native arcs can span a large part of an orbit. Follow the shorter
+  -- signed arc consistently; segment budgeting will handle the length.
   local length=abs(sweep)*(ra+rb)/2+abs(ra-rb)
   if length<2 then return nil end
   return function(t)

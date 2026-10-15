@@ -1,3 +1,30 @@
+## 2.1.99: full campaign danger audit
+
+The old system-wide floors left remote worlds too easy: Aquilo, Maraxsis,
+Athos and several Vespera finales were only level 5, while source-owned
+Bellicos/Aegis gates and Shattered Planet branches could silently use the
+unassigned level-2 fallback. The campaign now uses explicit, progressive
+planet-level stages and dynamically infers optional worlds from their
+**final surviving** native connection network. Data and runtime inference
+use the same deterministic logic.
+
+Suggested chapter ranges: Calidus 1; Solaris/Nyxaris 2-4; Vibrant 4-6;
+Vespera 5-7; Beetlejuice 7-8; Umbra 8-9; Deep Space and Aegis 9-10.
+Solar System Edge, Oort, Sol, Nexus, Shattered and Black Hole reach 10.
+Both the starmap overlay and route tooltips obtain levels from this
+single source. Longer corridors now shift through route stages as the
+distance fraction progresses, rather than painting a destination's
+maximum danger onto the entire line. No new hostile asteroid species,
+technology gates, or route connections are introduced.
+
+The full route renderer follows Factorio 2.1 defaults: a missing
+`shape` means `arc`, and missing `origin` means `{0,0}`.
+No route is silently made straight merely because it wasn't explicitly
+marked, and longer native arcs aren't arbitrarily skipped at 0.95 rad.
+The 128-direction transparent line atlas remains, with density shared
+over a 2,400-sprite budget for real connections. No parallel offset,
+red dotted paths, or invented waypoints.
+
 # Razi Protocol: Ten-Level Quality Asteroid Escalation
 
 ## Why this implementation is different
