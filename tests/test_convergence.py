@@ -2,6 +2,7 @@
 import json
 import re
 import unittest
+from tools.journal_locale import load_journal_locale
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -236,7 +237,7 @@ class ConvergenceTests(unittest.TestCase):
                    "convergence-victory"):
             self.assertIn('id="'+id+'"',defs)
             for section in ("journal-title","journal-story","journal-tip"):
-                text=read("locale/en/razi_journal.cfg").split(
+                text=load_journal_locale(ROOT).split(
                     "["+section+"]",1)[1].split("\n[",1)[0]
                 self.assertRegex(text,rf"(?m)^{re.escape(id)}=")
         self.assertIn("self.assertEqual(len(quests),228)",
