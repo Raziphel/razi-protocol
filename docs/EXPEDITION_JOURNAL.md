@@ -1,3 +1,19 @@
+# Expedition Journal: contributor overview
+
+The Expedition Journal is Razi Protocol's **single, coherent player-facing narrative interface**: Quests, Projects and Journal records. Its purpose is to explain what to do, why each destination matters, and what the factory has actually achieved.
+
+**The key contract:** quest completion derives from real technology/discovery/boss events; Projects report their own genuine production, construction and delivery state; recovered transmissions are story unlocked by matching milestones. Never mark a delivery complete merely because its research was unlocked.
+
+The opening Calidus act introduces the factory. Later system chapters tie discoveries into science and interplanetary logistics. The additional thematic chapters organize fleet engineering, side worlds, laboratories, defense, collaborations and lore without pretending they are additional star systems.
+
+**For editors:** see [Localization](LOCALIZATION.md) for the six split `locale/en/razi_journal_*.cfg` files, [Developer Handbook](DEVELOPER_HANDBOOK.md) for voice and design intentions, and [Architecture](ARCHITECTURE.md) for implementation ownership. Preserve existing quest IDs and source research; adding prose must not introduce imaginary unlocks.
+
+**For UI contributors:** prioritize native Factorio readability, clear selected state, bounded scroll areas, stable viewport position when expanding chapters, lazy construction and no expensive per-tick scans. Check narrow resolutions and older saves.
+
+The historical implementation notes below are preserved for context, but may describe an earlier design.
+
+---
+
 > **Current UI (October 2026):** The Protocol Codex now has Quests, Projects, and Journal views. Open it with Ctrl+Shift+J. Projects contains Dyson Sphere, Cargo Network, Transceiver, and Convergence. Ctrl+Shift+G opens Projects directly. The separate Galactic Operations window and floating starmap button are retired. Older sections below describe the prior interface.
 
 ## October 2026: Nauvis is now a four-act expedition
