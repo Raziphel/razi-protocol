@@ -26,7 +26,7 @@ data:extend({
     icon="__space-age__/graphics/icons/solar-system-edge.png",
     icon_size=64, essential=true,
     order="ed[vespera]-b[belt]",
-    prerequisites={"planet-discovery-aquilo"},
+    prerequisites={"planet-discovery-muria"},
     unit={count=800,time=45,ingredients={{"solaris-tech-card",1},{"nyxaris-tech-card",1}}},
     effects={
       {type="unlock-space-location",space_location="razi-vespera-belt-inner"},

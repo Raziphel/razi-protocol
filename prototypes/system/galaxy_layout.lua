@@ -50,17 +50,16 @@ local anchors = {
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.685},
   {"planet","paracelsin","vibrant",48,0.68},
-  -- Deliberate inner-to-outer Vespera chart: hot-side Obsidiax (optional),
-  -- Muria and frozen Aquilo before the rocks; Rubia and oceanic Maraxsis
-  -- beyond the ONLY physical belt crossing. Aquilo belongs inside the
-  -- 30-unit inner debris rim, not amongst the rocks. These chart radii
-  -- are illustrative, not literal AU or a source-climate simulation.
+  -- Vespera climate order: boiling Muria, volcanic Obsidiax,
+  -- the only debris belt, windswept Rubia, greenhouse ocean Maraxsis,
+  -- and farthest of all, frozen Aquilo. The two exterior branches
+  -- both depart beyond the physical asteroid crossing.
   {"planet","muria","vespera",21,0.43},
-  {"planet","aquilo","vespera",29,0.52},
+  {"planet","aquilo","vespera",57,0.73},
   {"space-location","razi-vespera-belt-inner","vespera",30,0.61},
   {"space-location","razi-vespera-belt-outer","vespera",37,0.685},
-  {"planet","rubia","vespera",41,0.77},
-  {"planet","maraxsis","vespera",48,0.86},
+  {"planet","rubia","vespera",42,0.765},
+  {"planet","maraxsis","vespera",48,0.85},
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
   {"space-location","secretas","beetlejuice",40,0.048826},
@@ -78,13 +77,13 @@ local anchors = {
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
-  {name="obsidiax",star="vespera",radius=17,turn=0.13},
+  {name="obsidiax",star="vespera",radius=24,turn=0.12},
   {name="carna",star="umbra",radius=36.821891,turn=0.602458},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
-  -- Balack is Aquilo's optional southern spur, not a cross-star diagonal.
-  {name="bm-balack",star="vespera",radius=47,turn=0.42}
+  -- Balack is an optional outer-ice spur beside Aquilo.
+  {name="bm-balack",star="vespera",radius=63,turn=0.70}
 }
 for _,world in ipairs(optional_orbits) do
   anchors[#anchors+1]={"planet",world.name,world.star,world.radius,world.turn}
