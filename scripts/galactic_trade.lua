@@ -234,7 +234,7 @@ local function consumers(parent,row,width,p)
     local name=wrap(copy,consumer.technology.localised_name,
       math.max(105,width-56))
     name.style.font="default-bold"
-    name.style.tooltip=L("trade-upgrade-tooltip")
+    name.tooltip=L("trade-upgrade-tooltip")
     local metadata=copy.add{type="flow",
       direction=width<275 and "vertical" or "horizontal"}
     metadata.style.horizontal_spacing=12
