@@ -35,7 +35,7 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 
 ## Upgrading an existing save
 
-**Back up your save before enabling or disabling planet mods.** Reintroducing Panglia restores its surface and researches only after Factorio loads its source mod; factories and surfaces belonging to retired Athos, Wit, Shchierbin or Nulla may be lost when removed. Recover items and move characters out first, then validate on a copied save. Users of the Biological Machines Modpack should also disable that package if it requires Wit.
+**Back up your save before enabling or disabling planet mods.** Reintroducing Panglia restores its surface and researches only after Factorio loads its source mod; factories and surfaces belonging to optional Athos, Shchierbin or Nulla, or retired Wit, may be lost when their source mod is disabled. Recover items and move characters out first, then validate on a copied save. Users of the Biological Machines Modpack should also disable that package if it requires Wit.
 
 Panglia is still beta; its full data-stage load, source dependency compatibility, Moshine datacell bootstrap, long-running DNA acquisition and saved-game migration require a real Factorio 2.1 playtest. The normal game engine and final full-modpack tests are **not** available through the current GitHub connector. Run Factorio with the entire curated loadout, test a new and old save, and verify Calidus (Muluna), Nyxaris, the Vibrant asteroid belt, Vespera, Beetlejuice, Umbra, and transceiver research; test optional Pelagos, Dea Dia, and Nexus permutations separately. GitHub Actions remain manual-only.
 

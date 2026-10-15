@@ -221,10 +221,10 @@ be disabled in Factorio's Mod Manager; Razi cannot uninstall it.
   worlds, with guarded routes but no required new science or core planets.
   Eneas retains its author-owned Unit-05 and launch gantry; Shchierbin
   receives an exterior Vibrant placement linked only to Paracelsin.
-- **Nulla 1.0.2** and **Planet Athos 1.1.3** remain blocked. Previous
-  full-pack runs exposed an unguarded electric-furnace lookup and a cyclic
-  research graph respectively. Versions or upstream code need repairs before
-  enabling them here. This review does not constitute an in-game smoke test.
+- **Historical 2.1.79 decision:** Nulla 1.0.2 and Planet Athos 1.1.3
+  were blocked after their original full-pack failures. In 2.1.80 they moved
+  to experimental opt-in status with guarded code (documented below);
+  neither is certified by a real Factorio engine smoke test.
 
 ## 2.1.80: Experimental Nulla/Athos rescue
 

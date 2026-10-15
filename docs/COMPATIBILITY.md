@@ -126,4 +126,5 @@ Shchierbin is relocated to Vibrant's exterior, with a fallback connection
 to Paracelsin that does not cross the physical asteroid belt. Frozeta Nuclear
 Winter is recommended independently of Outer Rim, though its numerous
 required source companions warrant startup and migration testing. Nulla and
-Planet Athos remain excluded until their documented modpack crashes are fixed.
+Planet Athos are available only as experimental manual opt-ins in 2.1.80.
+Neither is guaranteed to load until we repeat full-modpack engine testing.
