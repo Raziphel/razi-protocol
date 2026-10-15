@@ -1,3 +1,19 @@
+Version: 2.1.103
+Date: 15. 10. 2026
+  Integrate source-owned custom asteroids into Razi's route network:
+    - Harvestable Imersite asteroid chunks appear in Fulgora traces,
+      Vibrant asteroid belt fields and Aquilo-bound routes.
+    - Rare Auric hostile and resource asteroids from Secretas also
+      inhabit nearby preserved routes toward Frozeta and Deep Space.
+      Huge Auric variants are strictly late-game, not starter hazards.
+    - Preserve all existing source spawn curves and no recipe rewrites.
+      Source prototypes are checked before injecting missing entries.
+    - Keep Foliax's manufactured charged Promethium chunks craft-only.
+    - Add startup auditing of custom asteroid families, source-aware
+      spawn placement and idempotence regression tests.
+    - Run after route authority and before Quality Asteroids conversion.
+    - Requires full Factorio playtest with both source mods installed.
+
 Version: 2.1.102
 Date: 15. 10. 2026
   Unify asteroid difficulty information across routes:
