@@ -4,11 +4,29 @@ local M={}
 local engine=require("scripts.razi_asteroid_difficulty")
 local PREFIX="razi-quality-asteroid-"
 local length=#PREFIX
+-- Startup options are immutable while a Factorio save runs.
+-- Resolve once instead of repeating setting and connection lookups for
+-- every generated asteroid on busy Deep Space platforms.
+local active_mode
 local function mode()
-  local s=settings and settings.startup
-    and settings.startup["razi-asteroid-difficulty-scale"]
-  return s and s.value or "balanced"
+  if not active_mode then
+    local s=settings and settings.startup
+      and settings.startup["razi-asteroid-difficulty-scale"]
+    active_mode=s and s.value or "balanced"
+  end
+  return active_mode
 end
+local connection_routes=setmetatable({},{__mode="k"})
+local function route_metadata(connection)
+  local cached=connection_routes[connection]
+  if cached then return cached end
+  local from,to=connection.from,connection.to
+  cached={from=from and from.name,to=to and to.name,
+    length=connection.length}
+  connection_routes[connection]=cached
+  return cached
+end
+M.route_metadata=route_metadata
 -- Runtime prototypes expose the same final connection graph that was used
 -- for route art in data-final-fixes. Cache inference once on first trigger,
 -- so third-party far-end asteroids receive the same difficulty as the map.
@@ -25,11 +43,8 @@ local function current_level(platform)
   if not platform then return 1 end
   local connection=platform.space_connection
   if connection then
-    local from=connection.from
-    local to=connection.to
-    local route={from=from and from.name,to=to and to.name,
-      length=connection.length}
-    return engine.route_level(route,platform.distance,mode())
+    return engine.route_level(route_metadata(connection),
+      platform.distance,mode())
   end
   local location=platform.space_location
     or platform.last_visited_space_location

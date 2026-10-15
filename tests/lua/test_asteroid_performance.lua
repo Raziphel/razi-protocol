@@ -128,4 +128,27 @@ expect(routes.endgame.asteroid_spawn_definitions[2]
 expect(routes.home.asteroid_spawn_definitions[1]
   .spawn_points[1].probability==.11,
   "Low-level home routes must remain unchanged")
+-- Explosion smoke mode must retain gameplay damage and ground effects.
+local damage={type="damage",damage={amount=100,type="explosion"}}
+local special={smoke_count=12,animations={},explosion_effect={
+  type="direct",action_delivery={type="instant",target_effects={
+    {type="create-particle",particle_name="dust"},damage
+  }}
+}}
+local ordinary={smoke_count=8,animations={},
+  explosion_effect={type="direct",action_delivery={type="instant",
+    target_effects=damage}}}
+data.raw.explosion={["asteroid-burst"]=special,
+  ["furnace-explosion"]=ordinary}
+settings.startup["razi-performance-outer-hostile-density"].value=false
+settings.startup["razi-performance-space-explosion-smoke"]={value=true}
+perf=reload()
+expect(perf.data_final_fixes()>0,"Space explosion smoke should be pruned")
+expect(special.smoke_count==0 and ordinary.smoke_count==8,
+  "Only space-combat explosion smoke may be reduced")
+expect(special.explosion_effect.action_delivery.target_effects[1].type
+  =="damage","Asteroid explosion damage must remain")
+expect(ordinary.explosion_effect.action_delivery.target_effects.type=="damage",
+  "Unrelated ground explosion damage must remain untouched")
+expect(perf.data_final_fixes()==0,"New pass must be idempotent")
 print("Razi asteroid performance opt-in regression passed")

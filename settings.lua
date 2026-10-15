@@ -42,6 +42,14 @@ data:extend({
     setting_type="startup",default_value=false,
     order="ad[asteroid-performance]-d[outer-hostiles]"},
 
+  {type="bool-setting",name="razi-performance-space-explosion-smoke",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-e[explosion-smoke]"},
+  -- Reduces precomputed map sprite layers, not active ship simulation.
+  {type="bool-setting",name="razi-performance-compact-route-overlays",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-f[route-art-budget]"},
+
   -- PRODUCTION INTEGRATION. The overarching mode controls optional cross-world
   -- discoveries and industry. The following toggles remain independent filters.
   {

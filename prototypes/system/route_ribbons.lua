@@ -9,6 +9,14 @@ local ANGLES,CELL,COLS=128,64,16
 local UNIT=50 -- authored line body in source pixels (extra joined end caps)
 local TARGET_SPAN=3.6 -- starmap chart units
 local ROUTE_LIMIT,LAYER_BUDGET=128,2400
+-- Optional render-only economy mode. It does not alter native connections,
+-- danger grades, travel logic or actual asteroid simulation.
+local function compact()
+  local setting=settings and settings.startup
+    and settings.startup["razi-performance-compact-route-overlays"]
+  return setting and setting.value==true or false
+end
+M.compact=compact
 local abs,sqrt,ceil,floor,cos,sin=math.abs,math.sqrt,math.ceil,math.floor,math.cos,math.sin
 local function angle(dy,dx)
   return (math.atan2 and math.atan2(dy,dx) or math.atan(dy,dx))%math.pi
@@ -37,7 +45,9 @@ local function candidate(owner,route,mode,scope)
   local trim=math.min(1.1,length*.10)
   local covered=length-2*trim
   if covered<=0 then return nil end
-  local pieces=math.max(1,math.min(ROUTE_LIMIT,ceil(covered/TARGET_SPAN)))
+  local cost=compact()
+  local pieces=math.max(1,math.min(
+    cost and 96 or ROUTE_LIMIT,ceil(covered/(cost and 6 or TARGET_SPAN))))
   return {route=route,sample=sample,length=length,trim=trim,
     covered=covered,pieces=pieces}
 end
@@ -107,6 +117,8 @@ function M.data_final_fixes(owner)
     if sprite.filename==SHEET then return 0 end
   end
   local routes,total={},0
+  local is_compact=compact()
+  local layer_budget=is_compact and 1200 or LAYER_BUDGET
   for name,route in pairs(data.raw["space-connection"] or {}) do
     local row=candidate(owner,route,mode,scope)
     if row then
@@ -125,15 +137,15 @@ function M.data_final_fixes(owner)
     if a.grade~=b.grade then return a.grade>b.grade end
     return a.name<b.name
   end)
-  local density=math.max(1,total/LAYER_BUDGET)
+  local density=math.max(1,total/layer_budget)
   local count,covered,skipped=0,0,0
   for _,row in ipairs(routes) do
-    if count>=LAYER_BUDGET then skipped=skipped+1
+    if count>=layer_budget then skipped=skipped+1
     else
-      local n=math.min(LAYER_BUDGET-count,
+      local n=math.min(layer_budget-count,
         math.max(1,floor(row.pieces/density)))
       -- Do not stretch narrow line artwork into thick, ugly map stripes.
-      if row.covered/n<=13.5 then
+      if row.covered/n<=(is_compact and 18.5 or 13.5) then
         local segments=render(owner,row,mode,n)
         for _,sprite in ipairs(segments) do
           atlas.layers[#atlas.layers+1]=sprite
@@ -146,7 +158,7 @@ function M.data_final_fixes(owner)
   if type(log)=="function" then
     log(("[Razi Protocol/routes] Colored %d/%d known routes with %d "..
       "contiguous 1-10 hazard ribbon segments (%d skipped; limit %d)"):format(
-      covered,#routes,count,skipped,LAYER_BUDGET))
+      covered,#routes,count,skipped,layer_budget))
   end
   return count
 end

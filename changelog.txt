@@ -1,3 +1,17 @@
+Version: 2.1.108
+Date: 15. 10. 2026
+  Extend optional performance controls and reduce mod runtime overhead:
+    - Add optional space-combat explosion smoke and particle trimming,
+      preserving native damage, animations, audio and quality triggers.
+    - Add optional compact colored-route rendering with up to 1,200
+      overlay sprite layers rather than the normal 2,400.
+    - Both settings are OFF by default alongside the original four.
+    - Automatically cache immutable space-connection metadata and the
+      startup difficulty mode for quality-asteroid spawn events.
+    - No new ticks, timers, scans or persistent save data.
+    - Add settings, effect preservation, geometry and runtime-cache tests.
+    - Performance improvements require in-game FPS/UPS benchmarking.
+
 Version: 2.1.107
 Date: 15. 10. 2026
   Two early-loading planet lava crashes (Rabbasca and Crucible):
