@@ -15,20 +15,19 @@ class BeltEcologyTests(unittest.TestCase):
         self.assertNotIn("AsteroidBelt >= 1.2.11",info["dependencies"])
         self.assertIn('require "prototypes.system.asteroid_belts"',read("data.lua"))
 
-    def test_two_outer_systems_and_legacy_vibrant_are_real(self):
+    def test_umbra_and_legacy_vibrant_belts_are_real(self):
         belts=read("prototypes/system/asteroid_belts.lua")
         tech=read("prototypes/technology/asteroid_belts.lua")
         reconcile=read("prototypes/system/route_reconcile.lua")
         final=read("prototypes/system/belt_expeditions.lua")
-        for system in ("vibrant","vespera","umbra"):
+        for system in ("vibrant","umbra"):
             self.assertIn('system="'+system+'"',belts)
             self.assertIn('system="'+system+'"',final)
-        for marker in ("razi-vespera-belt-inner",
-                       "razi-vespera-belt-outer",
-                       "razi-umbra-belt-inner",
+        for marker in ("razi-umbra-belt-inner",
                        "razi-umbra-belt-outer"):
             self.assertIn(marker,reconcile)
         self.assertIn('name="space-discovery-asteroid-belt"',tech)
+        self.assertNotIn('razi-vespera-belt',belts+tech+reconcile+final)
         self.assertIn('name="asteroid-belt-inner-edge-asteroid-belt-outer-edge"',belts)
         self.assertIn('profiles.enrich_belt_crossing(route,belt.system)',final)
 

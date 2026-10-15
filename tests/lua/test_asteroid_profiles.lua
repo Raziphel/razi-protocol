@@ -45,7 +45,6 @@ local progression = {
   {"industrial_deep", true, false, false},
   {"middle_crossing", true, true, false},
   {"belt_vibrant_crossing", true, true, false},
-  {"belt_vespera_crossing", true, true, false},
   {"outer_crossing", true, true, true},
   {"belt_umbra_crossing", true, true, true},
   {"deep_edge", true, true, true}
@@ -185,12 +184,7 @@ util.spawn_definitions = function()
   return {{type="asteroid-chunk",asteroid="metallic-asteroid-chunk",
     spawn_points={{distance=0.5,probability=0.1,speed=1}}}}
 end
-local v_belt = profiles.create("belt_vespera_crossing")
 local u_belt = profiles.create("belt_umbra_crossing")
-ok(probability(v_belt, "big-metallic-asteroid") > 0,
-   "Vespera belt lacks an intentional big asteroid challenge")
-ok(probability(v_belt, "huge-metallic-asteroid") == nil,
-   "Vespera belt introduced huge asteroids too soon")
 ok(probability(u_belt, "huge-metallic-asteroid") > 0,
    "Umbra belt lacks an intentional huge asteroid challenge")
 ok(probability(u_belt, "imersite-asteroid-chunk") == nil,

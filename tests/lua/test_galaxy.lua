@@ -28,7 +28,6 @@ local function test_routes()
 	local places = {
 		"sye-calidus", "sye-solaris", "sye-nyxaris", "sye-vibrant",
 		"sye-vespera", "sye-beetlejuice", "sye-umbra",
-		"razi-vespera-belt-inner","razi-vespera-belt-outer",
 		"razi-umbra-belt-inner","razi-umbra-belt-outer",
 		"asteroid-belt-inner-edge","asteroid-belt-outer-edge",
 		"solar-system-edge", "castra", "arig", "hyarion", "tellus",
@@ -185,15 +184,13 @@ local function test_routes()
     check(routes["old-inner-to-frozen"] == nil
       and routes["old-factory-belt-bypass"] == nil,
       "Native Vibrant belt can be bypassed by a same-system source route")
-    check(routes["old-direct-aquilo-rubia"] == nil,
-      "Vespera belt has a direct bypass")
+    check(routes["old-direct-aquilo-rubia"] ~= nil,
+      "Native Aquilo-Rubia route must survive removal of Vespera's belt")
     check(routes["old-direct-crucible-vesta"] == nil,
       "Umbra belt has a direct bypass")
     check(routes["old-interstar-vesta-secretas"] == nil,
       "Cheap cross-star Vesta/Secretas route bypassed the Umbra belt")
     for _, crossing in ipairs({
-      {"razi-razi-vespera-belt-inner-razi-vespera-belt-outer",
-       "obsidiax-asteroid-chunk", 0.11},
       {"razi-razi-umbra-belt-inner-razi-umbra-belt-outer",
        "carna-crystal-asteroid", 0.09}
     }) do
@@ -268,9 +265,8 @@ local function test_routes()
   check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
     "A direct route bypasses the native asteroid belt")
   check(routes["razi-sye-vibrant-asteroid-belt-outer-edge"]~=nil and
-    routes["razi-razi-vespera-belt-outer-aquilo"]~=nil
-    and routes["razi-muria-razi-vespera-belt-inner"]~=nil,
-    "Exterior Vespera ice route or survey approach is missing")
+    routes["razi-muria-rubia"]~=nil and routes["old-direct-aquilo-rubia"]~=nil,
+    "Vespera should use direct Muria/Rubia and native Aquilo roads")
   check(not routes["razi-sye-vibrant-fulgora"]
     and not routes["razi-sye-vibrant-ribbonia"],
     "Slip Stream-to-inner planet bypass must be removed")
@@ -303,7 +299,7 @@ local function test_routes()
         {"razi-hyarion-corrundum",29500},
         {"razi-gleba-apia-carnova-orbit",26000},
         {"razi-sye-vibrant-asteroid-belt-outer-edge",36000},
-        {"razi-razi-vespera-belt-outer-aquilo",28000},
+        {"razi-muria-rubia",24500},
         {"razi-fulgora-ribbonia",19500},
         {"razi-ribbonia-asteroid-belt-inner-edge",24000},
                 {"razi-vulcanus-castra",17500},
@@ -425,8 +421,6 @@ local function test_routes()
       check(link and link.length == spec[2],
         "Cross-system distance violates progressive star map: "..spec[1])
     end
-    check(routes["razi-razi-vespera-belt-inner-razi-vespera-belt-outer"].length == 6500,
-      "Vespera belt encounter was made longer than intended")
     check(routes["razi-razi-umbra-belt-inner-razi-umbra-belt-outer"].length == 8000,
       "Umbra belt encounter was made longer than intended")
 	local before = 0
@@ -498,7 +492,7 @@ local function test_research()
 		"planet-discovery-tenebris", "planet-discovery-crucible",
 		"planet-discovery-vesta", "linox-technology_planet-discovery-linox",
 		"promethium-science-pack",
-        "razi-vespera-belt-survey", "razi-umbra-belt-survey",
+        "razi-umbra-belt-survey",
 		"razi-singularity-theory", "razi-singularity-test-fire",
 		"razi-stable-intergalactic-singularity"
 	}
@@ -602,13 +596,9 @@ local function test_research()
     check(list_contains(technologies["razi-umbra-belt-survey"].prerequisites,
       "umbra-discovery"),"Umbra entry survey still requires inaccessible Crucible")
     check(list_contains(technologies["planet-discovery-rubia"].prerequisites,
-      "razi-vespera-belt-survey"), "Rubia bypasses its belt survey")
+      "planet-discovery-muria"),"Rubia should follow Muria")
     check(list_contains(technologies["planet-discovery-aquilo"].prerequisites,
-      "razi-vespera-belt-survey"), "Aquilo bypasses the debris survey")
-    check(list_contains(technologies["razi-vespera-belt-survey"].prerequisites,
-      "planet-discovery-muria"), "Vespera belt survey requires an exterior planet")
-    check(not list_contains(technologies["razi-vespera-belt-survey"].prerequisites,
-      "planet-discovery-aquilo"), "Vespera survey would deadlock at Aquilo")
+      "planet-discovery-rubia"),"Aquilo should follow Rubia")
     check(list_contains(technologies["planet-discovery-vesta"].prerequisites,
       "razi-umbra-belt-survey"), "Vesta bypasses its belt survey")
   check(list_contains(technologies["planet-discovery-paracelsin"].prerequisites,

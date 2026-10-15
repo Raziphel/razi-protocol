@@ -26,7 +26,7 @@ local raw={["asteroid-chunk"]={
 rawset(_G,"data",{raw=raw})
 local profiles=require("prototypes.system.asteroid_profiles")
 local all={}
-for _,system in ipairs({"vibrant","vespera","umbra"}) do
+for _,system in ipairs({"vibrant","umbra"}) do
  local rim=profiles.belt_edge_resources(1.3,system)
  check(#rim==3,"Each installed rim must expose three native ore types")
  for _,def in ipairs(rim) do
@@ -38,13 +38,11 @@ for _,system in ipairs({"vibrant","vespera","umbra"}) do
 end
 check(all.vibrant["metallic-asteroid-chunk"]>
  all.vibrant["carbonic-asteroid-chunk"],"Vibrant needs metallic enrichment")
-check(all.vespera["oxide-asteroid-chunk"]>
- all.vespera["metallic-asteroid-chunk"],"Vespera needs oxide enrichment")
 check(all.umbra["carbonic-asteroid-chunk"]>
  all.umbra["metallic-asteroid-chunk"],"Umbra needs carbonic enrichment")
 local missing=raw["asteroid-chunk"]["oxide-asteroid-chunk"]
 raw["asteroid-chunk"]["oxide-asteroid-chunk"]=nil
-check(#profiles.belt_edge_resources(1,"vespera")==2,
+check(#profiles.belt_edge_resources(1,"umbra")==2,
  "Optional missing chunk prototype must be skipped")
 raw["asteroid-chunk"]["oxide-asteroid-chunk"]=missing
 
@@ -63,8 +61,8 @@ local custom=shared[3]
 local original=shared[1].spawn_points
 local reference={asteroid_spawn_definitions=shared}
 local crossing={asteroid_spawn_definitions=shared}
-check(profiles.enrich_belt_crossing(crossing,"vespera"),
- "Existing Vespera crossing should be enriched")
+check(profiles.enrich_belt_crossing(crossing,"umbra"),
+ "Existing Umbra crossing should be enriched")
 check(crossing.asteroid_spawn_definitions~=shared and
  shared[1].spawn_points==original and
  lookup(reference,"metallic-asteroid-chunk").spawn_points==original,
@@ -72,14 +70,14 @@ check(crossing.asteroid_spawn_definitions~=shared and
 check(lookup(crossing,"modded-rare-asteroid-chunk")==custom and
  custom.spawn_points[1].probability==.18,
  "Custom asteroid source definition must remain byte-for-byte")
-local oxide=lookup(crossing,"oxide-asteroid-chunk")
-check(oxide and sample_at(oxide,.5)>sample_at(oxide,.05),
- "Dangerous mid-belt oxide seam should be richer than the approach")
+local carbonic=lookup(crossing,"carbonic-asteroid-chunk")
+check(carbonic and sample_at(carbonic,.5)>sample_at(carbonic,.05),
+ "Dangerous mid-belt carbonic seam should be richer than the approach")
 check(lookup(crossing,"metallic-asteroid-chunk").spawn_points~=original,
  "Existing vanilla chunk definition needs a detached midpoint curve")
-local old=oxide
-check(not profiles.enrich_belt_crossing(crossing,"vespera") and
- lookup(crossing,"oxide-asteroid-chunk")==old,
+local old=carbonic
+check(not profiles.enrich_belt_crossing(crossing,"umbra") and
+ lookup(crossing,"carbonic-asteroid-chunk")==old,
  "Reapplying belt logic may not stack resource probabilities")
 
 local function pair(a,b)
@@ -89,7 +87,6 @@ end
 package.loaded["prototypes.system.route_reconcile"]={pair_key=pair}
 local names={
  {"vibrant","asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
- {"vespera","razi-vespera-belt-inner","razi-vespera-belt-outer"},
  {"umbra","razi-umbra-belt-inner","razi-umbra-belt-outer"}
 }
 for _,entry in ipairs(names) do
@@ -106,21 +103,20 @@ for _,entry in ipairs(names) do
  check(status[entry[1]],"Missing final curated crossing for "..entry[1])
  local route=raw["space-connection"][entry[1]]
  local rich=lookup(route,entry[1]=="umbra" and
-  "carbonic-asteroid-chunk" or entry[1]=="vespera" and
-  "oxide-asteroid-chunk" or "metallic-asteroid-chunk")
+  "carbonic-asteroid-chunk" or "metallic-asteroid-chunk")
  check(rich and sample_at(rich,.5)>sample_at(rich,.05),
   "Distinct central harvesting field missing for "..entry[1])
  local threat=lookup(route,"medium-oxide-asteroid")
  check(threat and sample_at(threat,.5)>sample_at(threat,.3),
   "Mid-belt threat peak missing for "..entry[1])
 end
-local previous=lookup(raw["space-connection"]["vespera"],
- "oxide-asteroid-chunk").spawn_points
+local previous=lookup(raw["space-connection"]["umbra"],
+  "carbonic-asteroid-chunk").spawn_points
 finale.data_final_fixes()
-check(lookup(raw["space-connection"]["vespera"],
- "oxide-asteroid-chunk").spawn_points==previous,
+check(lookup(raw["space-connection"]["umbra"],
+  "carbonic-asteroid-chunk").spawn_points==previous,
  "Repeated post-load pass must not amplify native resource probability")
 raw["space-connection"]["umbra"]=nil
 check(finale.data_final_fixes().umbra==false,
  "Missing physical crossing must not fabricate another route")
-print("Three Razi native belt ecologies, route preservation and idempotence passed")
+print("Two Razi native belt ecologies, route preservation and idempotence passed")

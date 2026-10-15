@@ -1,3 +1,11 @@
+## Vespera update: belt removed (October 2026)
+
+Vespera's former artificial asteroid rim waypoints and survey no
+longer exist. Muria links directly to Rubia, then Rubia opens
+Maraxsis and Aquilo. The original Vibrant and Umbra asteroid
+crossings are preserved. Older Vespera Debris Divide descriptions
+below document superseded builds, not current progression.
+
 ## 2.1.60: A readable Deep Space frontier
 
 The real native routes are unchanged. Galactic Atlas now annotates
@@ -178,9 +186,8 @@ Local branches remain connected inside their own systems, including:
     Nyxaris: Gleba | Moshine -> Apia/Carnova -> Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
     Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> frozen Paracelsin (+ Cerys)
              Belt Outer -> Paracelsin is an extra post-crossing return link
-    Vespera: Muria -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
-                                                \-> frozen Aquilo (+ Balack)
-    Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
+    Vespera: Slip Stream -> Muria -> Rubia -> Maraxsis
+                                     \-> Aquilo (optional Balack)
     Umbra: Slip Stream -> Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta
            Carna from Slip Stream; Arcanyx from Tenebris (optional); Crucible landfall native
     Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos

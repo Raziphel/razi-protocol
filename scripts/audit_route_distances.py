@@ -109,8 +109,6 @@ def positions(raw):
 BELT_ECOLOGY = (
     ("vibrant", "asteroid-belt-inner-edge", "asteroid-belt-outer-edge",
      "metallic-asteroid-chunk"),
-    ("vespera", "razi-vespera-belt-inner", "razi-vespera-belt-outer",
-     "oxide-asteroid-chunk"),
     ("umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer",
      "carbonic-asteroid-chunk"),
 )

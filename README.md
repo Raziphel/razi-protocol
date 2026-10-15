@@ -16,6 +16,13 @@ remains necessary.
 
 # Razi Protocol
 
+**October 2026 Vespera update:** Removed the synthetic Vespera
+asteroid belt, its In/Out waypoints, survey and background ring.
+Vespera now runs Slip Stream → Muria → Rubia, branching to
+Maraxsis and Aquilo. Vibrant and Umbra retain their own asteroid
+belts. Earlier entries below describe past builds.
+
+
 **2.1.74: Orbital infrastructure companions and Expedition Journal:**
 Six source-owned Factorio 2.1 mods are now recommended for advanced space
 freight, railway engineering, shields, and circuit automation. The Quest

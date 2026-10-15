@@ -28,7 +28,7 @@ rawset(_G,"mods",{})
 local parts=bg.make_layers("subtle",true,true,true,false)
 ok(parts[1].tint.a>.65 and parts[1].tint.a<.8,
   "Pinpoint sky should use visible tiny dots instead of faded giant blobs")
-ok(#parts==54,"Subtle atlas uses 36 sky tiles, 8 halos, 2 unique belts, 8 dust pockets")
+ok(#parts==53,"Subtle atlas uses 36 sky tiles, 8 halos, 1 Umbra belt and 8 dust pockets")
 local counts={sky=0,halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
   local side=layer.filename:find("atlas%-starfield%-") and 1024 or 512
@@ -38,11 +38,10 @@ for _,layer in ipairs(parts) do
   if layer.filename:find("atlas%-starfield%-") then counts.sky=counts.sky+1 end
   if layer.filename:find("atlas%-halo") or
     layer.filename:find("glow%-") then counts.halo=counts.halo+1 end
-  if layer.filename:find("belt%-vespera") or layer.filename:find("debris%-vespera")
-    or layer.filename:find("debris%-umbra") or layer.filename:find("belt%-umbra") then counts.belt=counts.belt+1 end
+  if layer.filename:find("debris%-umbra") or layer.filename:find("belt%-umbra") then counts.belt=counts.belt+1 end
   if layer.filename:find("atlas%-dust") then counts.dust=counts.dust+1 end
 end
-ok(counts.sky==36 and counts.halo==8 and counts.belt==2 and counts.dust==8,
+ok(counts.sky==36 and counts.halo==8 and counts.belt==1 and counts.dust==8,
   "Expected restrained per-system artwork")
 local unique={}
 for _,layer in ipairs(parts) do
@@ -62,28 +61,26 @@ local first_tint=nyxaris_star.tint.g
 bg.tint_star_art({nyxaris_star})
 ok(nyxaris_star.tint.g==first_tint and nyxaris_star.tint.b==1,
   "Stellar art tint should not accumulate after repeated final fixes")
--- The dedicated Vibrant ring belongs to asteroid_belt_integration,
--- not this generic atlas. Only Vespera and Umbra receive the two new
--- distinct artwork layers, with no dependence on optional planets.
+-- Vibrant is drawn by its own module; Vespera has no debris ring.
 local belt_names={}
 for _,layer in ipairs(parts) do
-  if layer.filename:find("belt%-vespera") or layer.filename:find("belt%-umbra") or
-    layer.filename:find("debris%-vespera") or
-    layer.filename:find("debris%-umbra") then
+  if layer.filename:find("debris%-umbra") then
     belt_names[#belt_names+1]=layer.filename
-    ok(layer.tint.a<=.25,"Belt haze should not overpower the native star map")
+    ok(layer.tint.a<.70,"Keep Umbra's rocky ring restrained")
   end
+  ok(not layer.filename:find("belt%-vespera") and
+     not layer.filename:find("debris%-vespera"),
+     "Removed Vespera belt artwork should never render")
 end
-ok(#belt_names==2,"Subtle should use exactly one regional image per outer belt")
+ok(#belt_names==1,"Subtle should have Umbra's belt only")
 local extra=bg.make_layers("cinematic",true,true,true,false)
 local cin_fragments=0
 for _,layer in ipairs(extra) do
-  if layer.filename:find("debris%-vespera") or
-    layer.filename:find("debris%-umbra") then
+  if layer.filename:find("debris%-umbra") then
     cin_fragments=cin_fragments+1
   end
 end
-ok(cin_fragments==2,"Cinematic retains the Umbra rocks and a Vespera accent")
+ok(cin_fragments==1,"Cinematic preserves only the Umbra rocks")
 local umbra_smoke_count=0
 for _,layer in ipairs(extra) do
   if layer.filename:find("belt%-umbra") then
@@ -123,7 +120,7 @@ ok(#bg.make_layers("subtle",true,true,false,false)==46,
 ok(#bg.make_layers("subtle",true,true,true,true)==55,
   "Cartography adds only a single distant dust pocket")
 local cine=bg.make_layers("cinematic",true,true,true,false)
-ok(#cine==#parts+1 and cine[1].tint.a>parts[1].tint.a,
+ok(#cine==#parts and cine[1].tint.a>parts[1].tint.a,
   "Cinematic should be brighter without extra clutter")
 settings.startup["razi-starmap-galactic-ornaments"].value=false
 ok(#bg.make_layers("subtle",true,true,true,false)==50,

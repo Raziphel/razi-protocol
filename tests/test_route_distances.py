@@ -174,13 +174,13 @@ class RouteTests(unittest.TestCase):
                 "spawn_points":[{"distance":.05,"probability":.008,"speed":.04},
                                 {"distance":.5,"probability":.025,"speed":.04}]}]
         self.assertEqual(routes_audit.audit(raw),[])
-        raw["space-location"]["razi-vespera-belt-inner"][
+        raw["space-location"]["razi-umbra-belt-inner"][
             "asteroid_spawn_definitions"]=[]
         errors=routes_audit.audit(raw)
-        self.assertTrue(any("vespera rim lacks" in issue for issue in errors))
-        raw["space-location"]["razi-vespera-belt-inner"][
+        self.assertTrue(any("umbra rim lacks" in issue for issue in errors))
+        raw["space-location"]["razi-umbra-belt-inner"][
             "asteroid_spawn_definitions"]=[{
-                "type":"entity","asteroid":"big-oxide-asteroid",
+                "type":"entity","asteroid":"big-carbonic-asteroid",
                 "probability":.08}]
         self.assertTrue(any("Unsafe combat asteroid" in issue
                             for issue in routes_audit.audit(raw)))

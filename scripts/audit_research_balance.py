@@ -29,7 +29,7 @@ MILESTONES = (
     ("middle", ("vibrant-discovery", "vespera-discovery")),
     ("outer", ("beetlejuice-discovery", "umbra-discovery")),
     ("surveys", ("space-discovery-asteroid-belt",
-                 "razi-vespera-belt-survey", "razi-umbra-belt-survey")),
+                 "razi-umbra-belt-survey")),
     ("finale", ("razi-outer-frontier-mastery",
                 "razi-singularity-theory", "razi-singularity-test-fire",
                 "razi-stable-intergalactic-singularity")),

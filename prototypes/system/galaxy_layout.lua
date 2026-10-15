@@ -56,15 +56,11 @@ local anchors = {
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.685},
   {"planet","paracelsin","vibrant",48,0.68},
-  -- Vespera climate order: boiling Muria, volcanic Obsidiax,
-  -- the only debris belt, windswept Rubia, greenhouse ocean Maraxsis,
-  -- and farthest of all, frozen Aquilo. The two exterior branches
-  -- both depart beyond the physical asteroid crossing.
+  -- Belt-free Vespera: Muria opens Rubia, then branches to greenhouse
+  -- ocean Maraxsis and icy outer Aquilo. All planets are true destinations.
   {"planet","muria","vespera",21,0.43},
   {"planet","aquilo","vespera",57,0.73},
-  {"space-location","razi-vespera-belt-inner","vespera",30,0.61},
-  {"space-location","razi-vespera-belt-outer","vespera",37,0.685},
-  {"planet","rubia","vespera",42,0.76},
+  {"planet","rubia","vespera",42,0.70},
   {"planet","maraxsis","vespera",48,0.85},
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
@@ -358,8 +354,6 @@ function M.data_final_fixes()
     ["asteroid-belt-inner-edge"]=0.75,
     ["asteroid-belt-outer-edge"]=0.25,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.5,
-    ["razi-vespera-belt-inner"]=0.25,
-    ["razi-vespera-belt-outer"]=0.75,
     ["razi-umbra-belt-inner"]=0.25,
     ["razi-umbra-belt-outer"]=0.25
   }

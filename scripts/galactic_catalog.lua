@@ -14,7 +14,7 @@ local groups={
            "paracelsin","ferrum","planet-ferrum","alchemy-planet",
            "asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
   vespera={"sye-vespera","muria","aquilo","rubia","maraxsis",
-           "razi-vespera-belt-inner","razi-vespera-belt-outer","obsidiax",
+            "obsidiax",
            "bm-balack"},
   beetlejuice={"sye-beetlejuice","cubium","linox-planet_linox","secretas",
                "frozeta"},

@@ -233,12 +233,12 @@ function gates.data_final_fixes()
 	replace_requirements("planet-discovery-paracelsin",
 		{"planet-discovery-ribbonia", "space-discovery-asteroid-belt"}, frontier, 1000)
 
-	-- Vespera: Muria opens the survey, then two independent outer branches.
+	-- Vespera is belt-free; Rubia follows Muria then leads to both outer worlds.
 	replace_requirements("planet-discovery-muria", {"vespera-discovery"}, frontier, 900)
 	replace_requirements("planet-discovery-aquilo",
-		{"planet-discovery-muria", "razi-vespera-belt-survey"}, frontier, 950)
+    {"planet-discovery-rubia"}, frontier, 1050)
 	replace_requirements("planet-discovery-rubia",
-		{"planet-discovery-muria", "razi-vespera-belt-survey"}, frontier, 950)
+    {"planet-discovery-muria"}, frontier, 950)
 	replace_requirements("planet-discovery-maraxsis",
 		{"planet-discovery-rubia"}, frontier, 1100)
 

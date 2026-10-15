@@ -1,7 +1,5 @@
 -- Belt surveys appear when players can reach the preceding planet.
--- Both belt edges unlock together. Survey science must come from already
--- completed frontier chapters: each local system card includes science from
--- worlds beyond its own belt crossing (Rubia/Maraxsis and Vesta).
+-- Only Vibrant and Umbra keep mandatory asteroid-belt survey research.
 data:extend({
   {
     -- Reuse former AsteroidBelt research identifier for save continuity.
@@ -18,19 +16,6 @@ data:extend({
     effects={
       {type="unlock-space-location",space_location="asteroid-belt-inner-edge"},
       {type="unlock-space-location",space_location="asteroid-belt-outer-edge"}
-    }
-  },
-  {
-    type="technology", name="razi-vespera-belt-survey",
-    localised_name={"technology-name.razi-vespera-belt-survey"},
-    icon="__space-age__/graphics/icons/solar-system-edge.png",
-    icon_size=64, essential=true,
-    order="ed[vespera]-b[belt]",
-    prerequisites={"planet-discovery-muria"},
-    unit={count=800,time=45,ingredients={{"solaris-tech-card",1},{"nyxaris-tech-card",1}}},
-    effects={
-      {type="unlock-space-location",space_location="razi-vespera-belt-inner"},
-      {type="unlock-space-location",space_location="razi-vespera-belt-outer"}
     }
   },
   {
