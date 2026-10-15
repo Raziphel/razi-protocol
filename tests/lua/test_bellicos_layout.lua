@@ -189,6 +189,47 @@ no_longer_present.data_final_fixes()
 check(not late_routes[route_name],
   "Final-stage removed gateway left an invalid space connection")
 
+-- Factorio's Lua 5.2 math.atan(y,x) ignores the x argument. Simulate the
+-- old one-argument-only behavior in any standalone Lua test version so the
+-- missing-pulsar fallback cannot accidentally rely on two-arg math.atan.
+local lua_atan,lua_atan2=math.atan,math.atan2
+math.atan=function(value) return lua_atan(value) end
+math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end
+local no_pulsar,orbit_locations=run({near=true})
+local layout=require("prototypes.system.galaxy_layout")
+local edge_x,edge_y=layout.anchor_position("solar-system-edge")
+local p_x=edge_x+170*math.sin(2*math.pi*.055)
+local p_y=edge_y-170*math.cos(2*math.pi*.055)
+local function absolute(name)
+  local body=orbit_locations[name]
+  check(body and body.origin,"Expected native Aegis prototype: "..name)
+  local origin=body.origin
+  local theta=2*math.pi*body.orientation
+  return origin.x+body.distance*math.sin(theta),
+    origin.y-body.distance*math.cos(theta)
+end
+local near_px,near_py=absolute("near-bellicos-orbit")
+check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
+  "Missing pulsar sent Near Bellicos Orbit sideways toward Nexus")
+check(near_py<edge_y-155 and near_px>edge_x+45,
+  "Near Bellicos Orbit must be north-east of Deep Space, not due east")
+for _,name in ipairs({"aegis-inner-edge","point-warden",
+    "aegis-outer-edge",gate_b}) do
+  local cx,cy=absolute(name)
+  local distance=math.sqrt((cx-near_px)^2+(cy-near_py)^2)
+  check(distance<=75,"Aegis location outside its pulsar system: "..name)
+end
+local w_x,w_y=absolute("point-warden")
+check(math.sqrt((w_x-near_px)^2+(w_y-near_py)^2)>40
+  and math.sqrt((w_x-near_px)^2+(w_y-near_py)^2)<50,
+  "Point Warden must remain in its intended Aegis lane")
+-- Redo the final pass after the pulsar disappears; it must stay put.
+no_pulsar.reconcile_final_positions()
+local again_x,again_y=absolute("near-bellicos-orbit")
+check(math.abs(again_x-near_px)<.01 and math.abs(again_y-near_py)<.01,
+  "Repeated final pass moved the Aegis sector away from its pulsar")
+math.atan,math.atan2=lua_atan,lua_atan2
+
 -- Reproduce the player's screenshot: Warden was relocated to Beetlejuice
 -- even though the pulsar/asteroid field had already moved to Deep Space.
 -- The final pass must correct BOTH prototype types and leave sprite art
