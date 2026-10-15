@@ -1,3 +1,15 @@
+Version: 2.1.107
+Date: 15. 10. 2026
+  Two early-loading planet lava crashes (Rabbasca and Crucible):
+    - Add a separately distributable, early data-stage compatibility mod.
+      It exposes a legacy textures[2] alias of Factorio 2.1's
+      image_textures[1], preserving custom lava recolors during data.lua.
+    - Cleanup old compatibility keys before tile-effect validation.
+    - Declare the companion OPTIONAL until published on the mod portal.
+      Once released and validated, make it REQUIRED for every player.
+    - Keep all source planets and the intended science/endgame intact.
+    - Full Factorio startup validation still required.
+
 Version: 2.1.106
 Date: 15. 10. 2026
   Four independent asteroid-performance experiments, all OFF by default:

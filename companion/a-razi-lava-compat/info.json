@@ -1,0 +1,12 @@
+{
+  "name": "a-razi-lava-compat",
+  "version": "0.1.0",
+  "title": "Razi Early Lava Compatibility",
+  "author": "Raziphel",
+  "factorio_version": "2.1",
+  "description": "Early compatibility for legacy Factorio planet lava effects on Factorio 2.1; supports Razi Protocol.",
+  "dependencies": [
+    "base >= 2.1.20",
+    "space-age >= 2.1.20"
+  ]
+}
