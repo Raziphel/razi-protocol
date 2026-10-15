@@ -1,3 +1,15 @@
+# Lore-writing direction
+
+For the wider writing vision see [Developer Handbook](DEVELOPER_HANDBOOK.md), and for source ownership see [Architecture](ARCHITECTURE.md).
+
+**One expedition, many voices:** chapter stories set tone and theme; quest stories make discoveries memorable; field notes explain real next steps; recovered transmissions reveal history without manufacturing rewards. Give each system a recognizable character while keeping consistent terminology and chronology.
+
+**Translation first:** preserve section/key IDs and placeholders; write literal, translatable sentences rather than string concatenations, unexplained acronyms or overloaded rich-text markup. Keep stories distinct from gameplay hints so translators can preserve tone without distorting instructions.
+
+**Workflow:** authors change the relevant split locale file, then run `python tools/journal_locale.py` and relevant journal tests. Translators may submit partial language packs; document omissions, and never duplicate an existing key in another .cfg file.
+
+---
+
 # Expedition Journal: writing lore and translating
 
 Razi Protocol's journal strings are ordinary **Factorio locale** entries.
