@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.92",
+  "version": "2.1.91",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -13,6 +13,8 @@
     "PlanetsLib >= 2.0.9",
     "! AsteroidBelt",
     "! space-route-overlay",
+    "! quality-asteroids",
+    "! Quality-Asteroids-Expanded",
     "! kry-asteroid-belt",
     "bellicos-and-aegis >= 0.4.0",
     "Krastorio2-spaced-out >= 2.0.17",

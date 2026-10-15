@@ -238,3 +238,8 @@ require("prototypes.system.starmap_trail_cleanup").data_final_fixes()
 -- Dedicated Factorio-style Razi gateway and asteroid-rim markers only.
 -- Final cosmetic pass, after all other starmap atlas and route cleanup.
 require("prototypes.system.location_icons").data_final_fixes()
+
+-- Final asteroid pass: quality-carrier spawn definitions must be installed
+-- AFTER Razi route authority, risk tooltip inspection, and colored overlays.
+-- Existing native routes, chunks, and technology requirements stay intact.
+require("prototypes.system.quality_asteroids").data_final_fixes()

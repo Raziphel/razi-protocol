@@ -3,6 +3,7 @@
 local M={}
 local hazards=require("prototypes.system.route_hazards")
 local catalog=require("scripts.galactic_catalog")
+local quality_levels=require("scripts.razi_asteroid_difficulty")
 local prefix="razi-route-intel."
 
 local function localise(key,...)
@@ -41,6 +42,23 @@ function M.annotate(route)
   if report.tier>=4 then
     additions[#additions+1]=field("alert",
       localise("alert-"..report.tier),222)
+  end
+  -- Separate quality escalation from the native five-class size warning.
+  -- Show the actual Razi ladder without counting our temporary carrier
+  -- asteroid entities as new threats, and preserve source mod tooltips.
+  local quality_enabled=settings and settings.startup
+    and settings.startup["razi-quality-asteroids"]
+  if not quality_enabled or quality_enabled.value~=false then
+    local mode=settings and settings.startup
+      and settings.startup["razi-asteroid-difficulty-scale"]
+    local lo,hi=quality_levels.route_range(route,mode and mode.value)
+    if hi>=2 then
+      additions[#additions+1]=field("quality-hazard",
+        lo==hi and localise("quality-stage",tostring(hi))
+          or localise("quality-stages",tostring(lo),tostring(hi)),223.5)
+      if hi>=9 then additions[#additions+1]=field("quality-warning",
+        localise("quality-warning"),223.6) end
+    end
   end
   if report.tier>=3 then
     additions[#additions+1]=field("largest",

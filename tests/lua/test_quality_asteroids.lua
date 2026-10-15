@@ -1,0 +1,112 @@
+-- Standalone regression: run with lua5.2 tests/lua/test_quality_asteroids.lua
+package.path="./?.lua;./?/init.lua;"..package.path
+local function ok(condition,message) if not condition then error(message,2) end end
+package.loaded["scripts.galactic_catalog"]={
+  system=function(name)
+    if name=="nauvis" or name=="muluna" then return "calidus" end
+    if name=="sye-vibrant" then return "vibrant" end
+    if name=="sye-umbra" then return "umbra" end
+    if name=="solar-system-edge" or name=="nexus" then return "deep-space" end
+    return "unassigned"
+  end
+}
+local difficulty=require("scripts.razi_asteroid_difficulty")
+ok(difficulty.location_level("nauvis")==1,"Nauvis must remain level 1")
+ok(difficulty.location_level("solar-system-edge")==10,"Deep Space must be level 10")
+ok(difficulty.roll(1,.999)=="normal","Level 1 is always normal")
+ok(difficulty.roll(10,0)=="legendary","Level 10 low roll must be legendary")
+ok(difficulty.roll(10,.99999)=="legendary","Level 10 must be 100% legendary")
+for level,weights in ipairs(difficulty.distributions) do
+  local sum=0
+  for _,weight in ipairs(weights) do
+    ok(weight>=0 and weight<=1,"Out-of-bounds quality probability")
+    sum=sum+weight
+  end
+  ok(math.abs(sum-1)<.00001,"Quality level "..level.." must sum to 1")
+end
+local route={from="nauvis",to="sye-vibrant",length=50000}
+local beginning=difficulty.route_level(route,0,"balanced")
+local center=difficulty.route_level(route,.5,"balanced")
+local ending=difficulty.route_level(route,1,"balanced")
+ok(beginning==1 and center>beginning and ending==5,
+  "Danger must ramp during travel and match destination")
+ok(difficulty.route_level({from="nauvis",to="muluna",length=8000},.5)==1,
+  "Early shuttle cannot get forced higher quality")
+local umbra={from="razi-umbra-belt-inner",to="razi-umbra-belt-outer",length=5000}
+ok(difficulty.route_level(umbra,.5,"balanced")>9,
+  "Umbra inner belt must exceed level 9 at its midpoint")
+local deep={from="solar-system-edge",to="nexus",length=2000000}
+ok(difficulty.route_level(deep,.5,"balanced")==10,
+  "Deep Space route must reach level 10")
+ok(difficulty.route_level(route,.5,"relentless")>center,
+  "Optional challenge setting should work")
+for _,t in ipairs({0,.01,.2,.5,.9,1}) do
+  ok(difficulty.roll(10,t)=="legendary",
+    "Legendary guarantee must hold at all roll endpoints")
+end
+
+local definitions={
+  {type="entity",asteroid="big-metallic-asteroid",
+    spawn_points={{distance=.1,probability=.2,speed=.015},
+      {distance=.5,probability=.3,speed=.025}}},
+  {type="asteroid-chunk",asteroid="metallic-asteroid-chunk",
+    spawn_points={{distance=.5,probability=.12,speed=.035}}}
+}
+local chunk=definitions[2]
+local raw={asteroid={
+  ["big-metallic-asteroid"]={type="asteroid",name="big-metallic-asteroid",
+    icon="__space-age__/test.png",icon_size=64},
+},["space-connection"]={frontier={
+  from="solar-system-edge",to="nexus",length=250000,hidden=false,
+  asteroid_spawn_definitions=definitions
+}},planet={nauvis={asteroid_spawn_definitions={
+  {type="entity",asteroid="big-metallic-asteroid",probability=.04}
+}}}}
+rawset(_G,"data",{raw=raw,extend=function(self,items)
+  for _,item in ipairs(items) do self.raw[item.type][item.name]=item end
+end})
+rawset(_G,"settings",{startup={
+  ["razi-quality-asteroids"]={value=true},
+  ["razi-asteroid-difficulty-scale"]={value="balanced"}
+}})
+rawset(_G,"mods",{})
+local conversion=require("prototypes.system.quality_asteroids")
+ok(conversion.data_final_fixes()==1,"Only Deep Space hostile spawn is rewritten")
+local adjusted=raw["space-connection"].frontier.asteroid_spawn_definitions
+ok(adjusted[1].asteroid=="razi-quality-asteroid-big-metallic-asteroid",
+  "Native hostile must use trigger carrier")
+ok(adjusted[2]==chunk,"Resource chunk must remain untouched")
+ok(definitions[1].asteroid=="big-metallic-asteroid",
+  "Original shared spawn table must not be modified")
+ok(raw.planet.nauvis.asteroid_spawn_definitions[1].asteroid=="big-metallic-asteroid",
+  "Calidus location must be untouched")
+ok(raw.asteroid[adjusted[1].asteroid].created_effect.action_delivery
+  .target_effects.effect_id==adjusted[1].asteroid,
+  "Carrier must invoke exactly its own effect id")
+ok(conversion.data_final_fixes()==0,"Conversion must be idempotent")
+
+local called,removed=nil,false
+local platform={space_connection={
+  from={name="solar-system-edge"},to={name="nexus"},length=250000},distance=.5}
+local surface={platform=platform}
+surface.create_entity=function(options)
+  called=options
+  return {valid=true}
+end
+local source={name="razi-quality-asteroid-big-metallic-asteroid",
+  valid=true,position={x=10,y=20},direction=3,force="neutral",surface=surface}
+source.destroy=function() removed=true;source.valid=false end
+rawset(_G,"prototypes",{quality={
+  normal={},uncommon={},rare={},epic={},legendary={}
+}})
+local runtime=require("scripts.razi_quality_asteroids")
+runtime.on_script_trigger_effect({effect_id="other-mod-script",
+  source_entity=source})
+ok(called==nil,"Unrelated scripted events must not be intercepted")
+runtime.on_script_trigger_effect({effect_id=source.name,source_entity=source})
+ok(called and called.name=="big-metallic-asteroid"
+  and called.quality=="legendary" and removed,
+  "Deep Space carrier must become one genuine legendary asteroid")
+ok(called.position.x==10 and called.direction==3,
+  "Replacement must preserve trajectory and origin")
+print("Razi quality-asteroid ten-level ladder passed")
