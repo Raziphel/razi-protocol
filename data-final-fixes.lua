@@ -222,6 +222,11 @@ require("prototypes.compat.frontier_recovery").data_final_fixes()
 require("prototypes.compat.prototype_sanity").restore_secretas_science_bootstrap()
 require("prototypes.compat.athos_cycle_guard").repair("after-all-razi-technology")
 
+-- Last research compatibility repair: Heat Inserter can inherit a hidden
+-- bulk-heat-inserter prerequisite on visible Linox neodymium variants.
+-- Restore the accessible native tier without bypassing Linox progression.
+require("prototypes.compat.heat_inserter_research").data_final_fixes()
+
 -- Late source mods may leave spawner autoplace tables with no required
 -- probability expression. Repair only known optional enemy nests, keeping
 -- their existing units and spawn recipes rather than breaking mod startup.
