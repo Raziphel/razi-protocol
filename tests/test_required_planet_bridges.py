@@ -21,7 +21,7 @@ class RequiredWorldTests(unittest.TestCase):
             self.assertFalse(any(d.startswith(retired+' >=') for d in deps))
         self.assertIn('nulla >= 1.0.2',deps)
         self.assertIn('PlanetAthos >= 1.1.3',deps)
-        self.assertIn('? moon-eneas >= 1.0.10',deps)
+        self.assertFalse(any("moon-eneas" in d for d in deps))
         self.assertIn('? shchierbin >= 0.3.19',deps)
         self.assertIn('planet-muluna >= 2.7.25',deps)
         self.assertIn('panglia_planet >= 0.7.2',deps)

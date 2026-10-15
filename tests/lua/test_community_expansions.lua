@@ -17,7 +17,6 @@ local configs={
   {"alchemy-khemia","alchemy-planet"},
   {"Arcanyx","arcanyx"},
   {"biological-machines-planet-balack","bm-balack"},
-  {"Solar-Halo","halo-solar-orbit"},
   {"skewer_shattered_planet","shattered-planet"},
   {"rabbasca-underground","rabbasca-underground"}
 }
@@ -28,7 +27,7 @@ local function run(options)
   local native={}
   for _,pair in ipairs(configs) do
     local mod,name=pair[1],pair[2]
-    if mod~="Solar-Halo" and mod~="skewer_shattered_planet" then
+    if mod~="skewer_shattered_planet" then
       planets[name]={name=name,orbit={parent={type="planet",name="original-parent"},
         distance=4}}
     else
@@ -85,12 +84,6 @@ local function run(options)
   native.balack={name="aquilo-balack",from="aquilo",to="bm-balack",
     length=40000,asteroid_spawn_definitions={{asteroid="native-huge"}}}
   routes[native.balack.name]=native.balack
-  native.halo={name="vulcanus-solar",from="vulcanus",to="halo-solar-orbit",
-    length=30000,asteroid_spawn_definitions={{asteroid="halo-flare"}}}
-  routes[native.halo.name]=native.halo
-  native.halo_station={name="solar-station",from="halo-solar-orbit",
-    to="halo-solar-station",length=1}
-  routes[native.halo_station.name]=native.halo_station
   native.hidden={name="rabbasca-warp-field",from="rabbasca-underground",
     to="anomalous-depth",length=1}
   routes[native.hidden.name]=native.hidden
@@ -156,8 +149,7 @@ for _,name in ipairs({"velora",
   check(not moved[name] and raw.planet[name].orbit.parent.name=="original-parent",
     "A moon or hidden underground world was reparented: "..name)
 end
-for _,key in ipairs({"ferrum","ferrum_vulcanus","balack","halo",
-  "halo_station","hidden"}) do
+for _,key in ipairs({"ferrum","ferrum_vulcanus","balack","hidden"}) do
   check(raw["space-connection"][native[key].name]==native[key],
     "Native source route was lost: "..key)
 end
@@ -176,8 +168,7 @@ for _,pair in ipairs({
   {"alchemy-planet","vibrant-discovery"},
   {"arcanyx","umbra-discovery"},
   {"velora","planet-discovery-gleba"},
-  {"bm-balack","planet-discovery-aquilo"},
-  {"halo-solar-orbit","solaris-discovery"}
+  {"bm-balack","planet-discovery-aquilo"}
 }) do
   local tech=raw.technology["unlock-"..pair[1]]
   local found=false
