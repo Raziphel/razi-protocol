@@ -1,3 +1,29 @@
+## October 2026: Vesta, Abacayba, and the outer Obsidiax branch
+
+Install Abacayba 0.0.42+ only when testing the optional alpha endgame
+overhaul, including its own UMR/UFP/Ultimate Core dependencies. Confirm
+Abacayba's orbit has **planet Vesta** as its parent, not Nauvis/Aquilo.
+At multiple zoom levels confirm a short Vesta-Abacayba moon route and a
+clear diagonal Vesta-Obsidiax connection with no route through the
+Shattered Divide or ghost Nauvis/Aquilo links.
+
+Verify the source-owned discovery has planet-discovery-vesta as a
+prerequisite but keeps its other required science, recipes and research
+effects. Check game startup, the full native Abacayba enemies and
+Itaverax mechanics, and native Ominous Science availability.
+Check both with and without Abacayba and test an old copied save
+with the original source route (platform schedules may require
+manual replacement after removing source connection IDs).
+
+The checks are manual/opt-in and require no automatic GitHub Actions:
+
+```bash
+lua5.2 tests/lua/test_abacayba_integration.lua
+lua5.2 tests/lua/test_route_authority.lua
+lua5.2 tests/lua/test_razi_journal.lua
+python3 -m unittest tests/test_starmap_clarity.py tests/test_optional_planets.py
+```
+
 ## 2.1.73: Distributed native and modded technologies
 
 The default-on `razi-distributed-technology` startup option now

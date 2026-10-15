@@ -1,3 +1,25 @@
+## October 2026: Vesta's optional infestation moon and an outer Obsidiax arc
+
+Obsidiax moves from radius 50 / turn 0.245 to radius 68 / turn 0.25,
+above-right of Vesta's orbit (radius 56 / turn 0.30). The 21,000 km
+Vesta-Obsidiax connection is an elegant diagonal outer spur with no
+second Shattered Divide crossing or observed static segment intersection.
+The optional Obsidiax discovery still requires Vesta.
+
+**Abacayba 0.0.42+**, when enabled, remains source-owned, but is
+reparented to planet Vesta as a real moon, distance 9.5 and turn 0.85.
+Its only curated travel connection is Vesta-Abacayba (10,000 km).
+Obsolete native links to Nauvis/Aquilo are removed after their custom
+asteroid resources are transferred to the new corridor. The real
+source discovery is gated by planet-discovery-vesta without replacing
+science costs, research effects, enemies, surface generation, Itaverax
+recipes, or UMR/UFP machinery.
+
+Abacayba is recommended, not mandatory, because it remains alpha and
+pulls in the substantial Ultimate Core/UMR/UFP mod family. It is not a
+requirement of the seven-system campaign or the finale. Live Factorio
+startup and rendered moon-orbit validation are still needed.
+
 ## October 2026: Vespera mineral world and outer-orbit cleanup
 
 - Athos has moved from Solaris into Vespera at radius 33 / turn

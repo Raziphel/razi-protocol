@@ -75,6 +75,7 @@ require("prototypes.technology.campaign_weave").data_final_fixes()
 
 require("prototypes.system.optional_planets").data_final_fixes()
 require("prototypes.system.community_expansions").data_final_fixes()
+require("prototypes.system.abacayba_integration").data_final_fixes()
 
 require("prototypes.system.asteroid_belt_integration").data_final_fixes()
 
@@ -156,6 +157,8 @@ require("prototypes.compat.calidus_dyson").connect_calidus()
 -- Recheck after later research weaving; only Athos-owned cyclic arrows
 -- can be removed, leaving unrelated technology prerequisites untouched.
 require("prototypes.compat.athos_cycle_guard").repair()
+-- Recheck after late source research weaving; no cycles are introduced.
+require("prototypes.system.abacayba_integration").gate()
 
 -- One authoritative seven-system graph, after *all* planet modules have run.
 -- Native moon links, original belt crossing and special source subsystems

@@ -4,7 +4,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
 check(#defs.chapters==18,"Eighteen Protocol Codex chapters expected")
-check(#defs.quests==243,"Protocol Codex must include expanded Nauvis research and recovery science")
+check(#defs.quests==244,"Protocol Codex must include expanded Nauvis research and recovery science")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true

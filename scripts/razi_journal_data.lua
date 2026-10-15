@@ -89,6 +89,9 @@ M.quests={
  {id="tenebris",chapter="umbra",tech="planet-discovery-tenebris",requires={"umbra-belt"}},
  {id="crucible",chapter="umbra",tech="planet-discovery-crucible",requires={"tenebris"}},
  {id="vesta",chapter="umbra",tech="planet-discovery-vesta",requires={"crucible","umbra-belt"}},
+ -- Source-owned optional moon: it appears only with the installed planet
+ -- and reuses the author's actual unlock-space-location discovery.
+ {id="abacayba",chapter="umbra",world="abacayba",requires={"vesta"}},
  {id="solar-orbit",chapter="stellar",tech="planet-discovery-sunorbit",requires={"fulgora"}},
  {id="inner-orbit",chapter="stellar",tech="slp-solar-system-sun2",requires={"solar-orbit"}},
  {id="dyson-build",chapter="stellar",tech="slp-dyson-sphere",requires={"inner-orbit"}},

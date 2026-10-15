@@ -21,8 +21,9 @@ copied artwork, control scripts, music, or surface generation from their authors
 | Igrys | `Igrys` | Solaris | Glass, mineral science, magic-fluid industry | 2.1 candidate, guarded routes |
 | Rabbasca | `planet-rabbasca` | Nyxaris (Gleba moon) | Vault hacking, energy restrictions, bunnyhop equipment | 2.1 candidate, preserve native moon |
 | Foliax | `foliax` | Nyxaris | Botany, arcane processing and improved biolabs | 2.1 candidate, guarded routes |
-| Obsidiax | `obsidiax` | Vespera | No mining, fire-and-ice industry, cultivated rocks | 2.1 candidate, guarded routes |
+| Obsidiax | `obsidiax` | Outer Umbra after Vesta | No mining, fire-and-ice industry, cultivated rocks | 2.1 candidate, guarded routes |
 | Carna | `carna` | Umbra | Frozen factories, salvage, mechanoids and plasma | 2.1 candidate, guarded routes |
+| Abacayba | `Abacayba_Moon_of_Nauvis` | Vesta moon, Umbra | Infestation, Itaverax, Ominous Science, high-powered endgame industry | Recommended alpha, guarded moon integration |
 
 ### Design choices
 

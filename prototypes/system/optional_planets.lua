@@ -15,7 +15,7 @@ local additions = {
 	{"foliax", "foliax", "nyxaris", "sye-nyxaris", "nyxaris-discovery",
 		38, 0.86, 18500},
 	{"obsidiax", "obsidiax", "umbra", "vesta", "planet-discovery-vesta",
-		50, 0.245, 18000},
+		68, 0.25, 21000},
 	{"carna", "carna", "umbra", "sye-umbra", "umbra-discovery",
 		36.821891, 0.602458, 20500},
 	{"planet-rabbasca", "rabbasca", "nyxaris", "gleba",

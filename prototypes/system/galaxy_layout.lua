@@ -84,7 +84,7 @@ local anchors = {
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
-  {name="obsidiax",star="umbra",radius=50,turn=0.245},
+  {name="obsidiax",star="umbra",radius=68,turn=0.25},
   -- Carna and Arcanyx remain on the INNER side; neither can be reached
   -- directly from the exterior gateway without its rock crossing.
   {name="carna",star="umbra",radius=29,turn=0.7},
@@ -389,7 +389,7 @@ function M.data_final_fixes()
     ["tenebris"]=0.75,["arcanyx"]=0.0,
     ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
-    ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.25,
+    ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.75,["abacayba"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,

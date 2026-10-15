@@ -59,11 +59,13 @@ package.loaded["prototypes.system.route_icons"]={
 local planets={}
 for _,name in ipairs({"nauvis","muluna","vulcanus","castra",
   "fulgora","aquilo","ferrum","tenebris","carna","arcanyx","vesta","obsidiax","athos",
-  "muria","paracelsin","shchierbin",
+  "muria","paracelsin","shchierbin","abacayba",
   "child-moon","remote-nexus"}) do
   planets[name]={name=name}
 end
 planets["child-moon"].orbit={parent={type="planet",name="nauvis"}}
+planets.abacayba.orbit={parent={type="planet",name="vesta"},
+  distance=9.5,orientation=0.85}
 local spaces={}
 for _,name in ipairs({"sye-calidus","sye-solaris","sye-vespera",
   "sye-umbra","sye-vibrant","sye-beetlejuice",
@@ -102,6 +104,11 @@ local roads={
     {{asteroid="ferrum-native-crystal",probability=.26}}),
   ["ferrum-original-inner"]=route("ferrum-original-inner","ferrum","fulgora",14000,
     {{asteroid="ferrum-inner-debris",probability=.17}}),
+  ["abacayba-source-aquilo"]=route("abacayba-source-aquilo",
+    "abacayba","aquilo",14500,
+    {{asteroid="source-itaverax",probability=.18}}),
+  ["abacayba-source-nauvis"]=route("abacayba-source-nauvis",
+    "abacayba","nauvis",10000),
   ["athos-source-vulcanus"]=route("athos-source-vulcanus",
     "athos","vulcanus",13000,{{asteroid="athos-source-diamond",probability=.19}}),
   ["nexus-solaris"]=route("nexus-solaris","sye-solaris","remote-nexus",25000),
@@ -121,6 +128,7 @@ rawset(_G,"data",{raw={
     self.raw[p.type][p.name]=p
   end
 end})
+rawset(_G,"mods",{Abacayba_Moon_of_Nauvis="0.0.42"})
 rawset(_G,"settings",{startup={
   ["razi-curated-space-routes"]={value=true}
 }})
@@ -130,7 +138,8 @@ check(removed>=5,"Unmanaged routes and duplicates were not removed")
 for _,id in ipairs({"rogue-nauvis-vulcanus","rogue-solar-orbit-vulcanus",
   "rogue-close-orbit-vulcanus","rogue-solaris-castra",
   "rogue-extra","razi-solaris","nexus-calidus","ferrum-old-source","ferrum-original-inner",
-  "athos-source-vulcanus"}) do
+  "athos-source-vulcanus","abacayba-source-aquilo",
+  "abacayba-source-nauvis"}) do
   check(roads[id]==nil,"Source shortcut survived final authority: "..id)
 end
 check(roads["native-solaris"]~=nil,
@@ -156,6 +165,17 @@ check(roads["external-internal"]==internal,
   "Source-only special network was destroyed")
 check(roads["razi-curated-ferrum-sye-beetlejuice"]~=nil,
   "Ferrum must have a Beetlejuice supply connection")
+check(roads["razi-curated-abacayba-vesta"]~=nil
+  and roads["razi-curated-abacayba-vesta"].shape=="line",
+  "Abacayba needs one Vesta moon connection")
+local moonCustom=false
+for _,entry in ipairs(roads["razi-curated-abacayba-vesta"].asteroid_spawn_definitions) do
+  if entry.asteroid=="source-itaverax" then moonCustom=true end
+end
+check(moonCustom,"Source-specific Abacayba asteroids were lost")
+check(roads["abacayba-source-aquilo"]==nil
+  and roads["abacayba-source-nauvis"]==nil,
+  "Abacayba cannot reconnect to Aquilo or Nauvis")
 check(roads["razi-curated-obsidiax-vesta"]~=nil,
   "Obsidiax needs its outer Umbra connection to Vesta")
 check(roads["razi-curated-athos-muria"]~=nil,

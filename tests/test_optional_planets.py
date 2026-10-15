@@ -35,6 +35,15 @@ class OptionalPlanetTests(unittest.TestCase):
         self.assertIn("PlanetAthos >= 1.1.3", dependencies)
         self.assertNotIn("? PlanetAthos >= 1.1.3", dependencies)
 
+    def test_abacayba_remains_recommended_not_required(self):
+        deps=json.loads((ROOT/"info.json").read_text())["dependencies"]
+        self.assertIn("+ Abacayba_Moon_of_Nauvis >= 0.0.42",deps)
+        policy=json.loads((ROOT/"compat/dependency_policy.json").read_text())
+        match=[x for x in policy["dependencies"]
+               if x["mod"]=="Abacayba_Moon_of_Nauvis"]
+        self.assertEqual(len(match),1)
+        self.assertEqual(match[0]["type"],"recommended")
+
     def test_optional_science_is_not_required_for_milestones(self):
         gates = (ROOT / "prototypes/technology/seven_system_gates.lua").read_text()
         cards = (ROOT / "prototypes/compat/lab_cards.lua").read_text()
