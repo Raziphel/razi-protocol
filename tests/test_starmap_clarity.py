@@ -730,7 +730,8 @@ class ConstellationTests(unittest.TestCase):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
         self.assertIn('170,0.055', source)
         self.assertIn('62,0.035,true', source)
-        self.assertIn('place(near,pulsar,3,0.25)', source)
+        self.assertIn('append(near,pulsar,virtual_pulsar,3,.25)', source)
+        self.assertIn('function bellicos.reconcile_final_positions()',source)
         self.assertEqual(source.count("position_expedition()"), 3)
 
 

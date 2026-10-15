@@ -174,8 +174,9 @@ end
 -- Re-anchor tagged Bellicos layers to the same parent coordinates as native
 -- destinations, without deleting, tinting or redrawing the source artwork.
 local function reconcile_baked_art()
-  local plan=plan_expedition()
+  local plan,virtual_pulsar=plan_expedition()
   if not plan then return 0 end
+  local near=near_orbit()
   local by_name={}
   for _,target in ipairs(plan) do by_name[target.name]=target end
   local ui=(data.raw["utility-sprites"] or {}).default
@@ -188,9 +189,17 @@ local function reconcile_baked_art()
     local delta=layer and layer.planetslib_orbit_shift
     if target and type(delta)=="table"
       and type(delta[1])=="number" and type(delta[2])=="number" then
+      -- When PlanetsLib deletes the sprite-only pulsar, Near Bellicos
+      -- gets a native parent fallback to Solar System Edge. Its orbit
+      -- artwork was ALREADY BAKED around the pulsar, however. Keep that
+      -- original art anchor instead of snapping the Aegis belt back to
+      -- Deep Space whenever final reconciliation runs a second time.
+      local origin=target.parent_position
+      if target.name==near and target.parent=="solar-system-edge"
+        and virtual_pulsar then origin=virtual_pulsar end
       layer.shift={
-        delta[1]+target.parent_position.x*32,
-        delta[2]+target.parent_position.y*32
+        delta[1]+origin.x*32,
+        delta[2]+origin.y*32
       }
       count=count+1
     end
