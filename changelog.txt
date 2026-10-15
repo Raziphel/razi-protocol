@@ -1,3 +1,16 @@
+Version: 2.1.109
+Date: 15. 10. 2026
+  Fix startup crash in Bellicos final position diagnostics:
+    - Explicitly capture both (x,y) returns from native_point instead of
+      discarding y via a Lua boolean 'and' expression. Prevents
+      'arithmetic on local ny (a nil value)' when Bellicos is enabled.
+    - Guard the optional pulsar-drift calculation against missing or
+      malformed coordinates. Diagnostic failures must never stop mod loading.
+    - Run the real near-orbit final-fixes fixture through pcall and assert
+      successful startup, while keeping Bellicos/Aegis geometry unchanged.
+    - Preserve existing saved destinations, orbit artwork, travel routes,
+      distances and tech. Factorio full-pack startup still needs testing.
+
 Version: 2.1.108
 Date: 15. 10. 2026
   Extend optional performance controls and reduce mod runtime overhead:

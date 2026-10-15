@@ -113,7 +113,12 @@ check(missing[gate_b].orbit.distance>120
   "Missing pulsar fallback must stay within the same Deep Space annex")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
-local _, near_locations=run({near=true})
+-- Exercise the REAL data-final-fixes path, including the near/pulsar drift
+-- diagnostic. An 'and native_point(near)' expression discarded the Y return,
+-- making this fixture crash with 'arithmetic on local ny (a nil value)'.
+local ok, near_mod_or_error, near_locations=pcall(run,{near=true})
+check(ok, "Bellicos near-orbit must load without nil-Y crash: "..
+  tostring(near_mod_or_error))
 check(near_locations["near-bellicos-orbit"].orbit.sprite
   and near_locations["near-bellicos-orbit"].orbit.sprite.filename=="__aegis_graphics__/belt-visual.png",
   "Bellicos relocation erased source asteroid-belt art")

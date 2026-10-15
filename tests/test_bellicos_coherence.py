@@ -10,6 +10,9 @@ class BellicosCoherence(unittest.TestCase):
         source=(ROOT/"prototypes/system/bellicos.lua").read_text()
         self.assertIn('local function plan_expedition()',source)
         self.assertIn('local atan2=math.atan2 or math.atan',source)
+        self.assertNotIn('local nx,ny=near and native_point(near)',source)
+        self.assertIn('nx,ny=native_point(near)',source)
+        self.assertIn('and type(nx)=="number" and type(ny)=="number"',source)
         self.assertNotIn('(math.atan(dx,-dy)/(2*math.pi))%1',source)
         self.assertIn('(atan2(dx,-dy)/(2*math.pi))%1',source)
         self.assertIn('local function position_expedition(pre_render)',source)
@@ -42,6 +45,7 @@ class BellicosCoherence(unittest.TestCase):
         self.assertIn('Late PlanetsLib:update would displace',fixture)
         self.assertIn('math.atan=function(value) return lua_atan(value) end',fixture)
         self.assertIn('Missing pulsar sent Near Bellicos Orbit sideways',fixture)
+        self.assertIn('local ok, near_mod_or_error, near_locations=pcall(run,{near=true})',fixture)
         self.assertIn('Aegis location outside its pulsar system',fixture)
 
 if __name__=="__main__":
