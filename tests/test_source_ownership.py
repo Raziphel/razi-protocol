@@ -20,10 +20,11 @@ class TestSourceOwnership(unittest.TestCase):
         import json
         deps=json.loads((ROOT / "info.json").read_text(encoding="utf-8"))["dependencies"]
         recommended={d.split()[1] for d in deps if d.startswith("+ ")}
-        self.assertEqual(len(recommended),23)
+        self.assertEqual(len(recommended),24)
         self.assertTrue({"Big-Monsters","secretas-orbit-patch","planet-ferrum",
                          "VoidProcessing-Updated","Solar-Halo"}.issubset(recommended))
-        self.assertFalse(any(d.startswith("? ") for d in deps))
+        self.assertEqual({d for d in deps if d.startswith("? ")},
+                         {"? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19"})
         self.assertIn("(?) FluxWorks >= 0.2.12",deps)
         self.assertIn("! outer-rim",deps)
         self.assertIn("! Hephaestus",deps)
@@ -52,7 +53,7 @@ class TestSourceOwnership(unittest.TestCase):
             "biological-machines-planet-balack",
         }
         names = {dep.split()[1] for dep in info["dependencies"]
-                 if dep.startswith(("+ ", "(?) "))}
+                 if dep.startswith(("+ ", "? ", "(?) "))}
         self.assertTrue({"planet-ferrum", "Solar-Halo"}.issubset(names))
         self.assertNotIn("Hephaestus",names)
         self.assertNotIn("dea-dia-system", names)
@@ -61,8 +62,10 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertIn("! PlanetAthos", info["dependencies"])
         self.assertIn("! nulla", info["dependencies"])
         self.assertIn("! biological-machines-planet-wit", info["dependencies"])
-        self.assertIn("! moon-eneas", info["dependencies"])
-        self.assertNotIn("moon-eneas", names)
+        self.assertIn("? moon-eneas >= 1.0.10", info["dependencies"])
+        self.assertIn("? shchierbin >= 0.3.19", info["dependencies"])
+        self.assertIn("moon-eneas", names)
+        self.assertIn("shchierbin", names)
         self.assertFalse((ROOT / "prototypes/system/eneas.lua").exists())
         self.assertNotIn("prototypes.system.eneas", (
             ROOT / "data.lua").read_text(encoding="utf-8"))
@@ -77,6 +80,9 @@ class TestSourceOwnership(unittest.TestCase):
             "biological-machines-planet-balack"
         }:
             self.assertIn(f'mod="{mod_id}"', module)
+        routes = (ROOT / "prototypes/system/route_authority.lua").read_text(encoding="utf-8")
+        self.assertIn('{"eneas","nauvis",9000,"starter"}',routes)
+        self.assertIn('{"shchierbin","paracelsin",21000,"chemistry_deep"}',routes)
         fixes = (ROOT / "data-final-fixes.lua").read_text(encoding="utf-8")
         self.assertIn(
             'require("prototypes.system.community_expansions").data_final_fixes()',

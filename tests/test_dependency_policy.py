@@ -72,7 +72,7 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertEqual(recommended,{
             "aai-signal-transmission","Imersite-Asteroids",
             "planet-express","upgraded-rocket-turrets",
-            "celestial-weather-updated",
+            "celestial-weather-additions-updated","frozeta-nuclear-winter",
             "Cold_biters","science-tab","Big-Monsters",
             "Various_Cargo_Bays","space-age-railway-expansion",
             "shield-generators","CircuitLaunchableRockets",
@@ -93,9 +93,14 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertFalse(any(raw.startswith("+ Hephaestus")
                              for raw in deps))
         self.assertIn("! kry-asteroid-belt",deps)
-        self.assertFalse(any("celestial-weather-additions-updated" in raw
-                             for raw in deps))
-        self.assertFalse(any(raw.startswith("? ") for raw in deps))
+        self.assertIn("+ celestial-weather-additions-updated >= 1.6.0",deps)
+        self.assertIn("+ frozeta-nuclear-winter >= 1.12.1",deps)
+        self.assertFalse(any(raw.startswith("+ celestial-weather-updated") for raw in deps))
+        self.assertEqual({d for d in deps if d.startswith("? ")},{
+            "? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19"
+        })
+        self.assertIn("! PlanetAthos",deps)
+        self.assertIn("! nulla",deps)
         for name in ("dea-dia-system","pelagos"):
             self.assertFalse(any(parse(raw)[0]==name for raw in deps),name)
         self.assertIn("+ secretas-orbit-patch >= 1.1.3",deps)
