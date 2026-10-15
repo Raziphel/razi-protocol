@@ -42,6 +42,7 @@ class BuiltInOverlayTests(unittest.TestCase):
         self.assertIn('trim=math.min(2.2/distance,.16)',source)
         self.assertIn('table.sort(names)',source)
         self.assertIn('M.is_navigation_highlight(route)',source)
+        self.assertIn('{"carna","gleba","velora"}',source)
         self.assertIn('reconcile.allowed_pairs[',source)
         self.assertIn('name:match("^sye%-")',source)
         self.assertIn('hazards.is_belt_crossing(route)',source)

@@ -47,7 +47,7 @@ local function run(options)
     locations[name]=locations[name] or {name=name}
   end
   for _,name in ipairs({"solaris-discovery","nyxaris-discovery",
-    "vibrant-discovery","umbra-discovery","planet-discovery-gleba",
+    "vibrant-discovery","beetlejuice-discovery","umbra-discovery","planet-discovery-gleba",
     "planet-discovery-aquilo"}) do
     technologies[name]={name=name,prerequisites={}}
   end
@@ -125,10 +125,10 @@ local module,raw,native,moved=run()
 for _,name in ipairs({"ferrum","alchemy-planet","arcanyx","bm-balack"}) do
   check(moved[name],"A new optional world was not positioned: "..name)
 end
-check(raw.planet.ferrum.orbit.parent.name=="vibrant",
-  "Ferrum must join electrical Vibrant while retaining source routes")
-check(native.ferrum_vulcanus.length==115000,
-  "Ferrum's Vulcanus cross-star distance is still a 10k shortcut")
+check(raw.planet.ferrum.orbit.parent.name=="beetlejuice",
+  "Ferrum now belongs to the western Beetlejuice industrial sector")
+check(native.ferrum_vulcanus.length==10000,
+  "The original native route is retained for asteroid migration only")
 check(native.ferrum_vulcanus.asteroid_spawn_definitions[1].asteroid
   =="native-metallic","Ferrum's native cross-star asteroids were replaced")
 check(native.ferrum.length==10000,
@@ -153,8 +153,8 @@ for _,key in ipairs({"ferrum","ferrum_vulcanus","balack","hidden"}) do
   check(raw["space-connection"][native[key].name]==native[key],
     "Native source route was lost: "..key)
 end
-check(not raw["space-connection"]["razi-expansion-ferrum-fulgora"],
-  "Ferrum should use the native Fulgora route")
+check(raw["space-connection"]["razi-expansion-ferrum-sye-beetlejuice"],
+  "Ferrum requires a new local Beetlejuice branch")
 check(not raw["space-connection"]["razi-expansion-bm-balack-aquilo"],
   "Balack should use its native extreme route")
 check(raw["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
@@ -164,7 +164,7 @@ check(raw["space-connection"]["razi-expansion-arcanyx-tenebris"],
 check(raw["space-connection"]["razi-expansion-velora-gleba"],
   "Missing native moon route should be restored for Velora")
 for _,pair in ipairs({
-  {"ferrum","vibrant-discovery"},
+  {"ferrum","beetlejuice-discovery"},
   {"alchemy-planet","vibrant-discovery"},
   {"arcanyx","umbra-discovery"},
   {"velora","planet-discovery-gleba"},

@@ -304,7 +304,8 @@ class ConstellationTests(unittest.TestCase):
         self.assertLess(math.dist(paracelsin,khemia),20)
         shchierbin=self.coords["shchierbin"]
         self.assertGreater(math.dist(star,shchierbin),58)
-        self.assertGreater(math.dist(paracelsin,shchierbin),25)
+        self.assertGreater(math.dist(paracelsin,shchierbin),27)
+        self.assertGreater(math.dist(self.coords["sye-vibrant"],shchierbin),35)
         self.assertGreaterEqual(segment_clearance(
             star,paracelsin,shchierbin),39,
             "Shchierbin must stay outside Vibrant's physical belt")
@@ -347,7 +348,7 @@ class ConstellationTests(unittest.TestCase):
         # must stay entirely on their respective side of the rocky annulus.
         optional_source=(ROOT/"prototypes/system/route_authority.lua").read_text()
         optional={
-            ("ferrum",slip): '{"ferrum","sye-vibrant",19500',
+            ("shchierbin","paracelsin"): '{"shchierbin","paracelsin",21000',
             ("alchemy-planet","paracelsin"):
                 '{"alchemy-planet","paracelsin",21000',
         }
@@ -357,7 +358,7 @@ class ConstellationTests(unittest.TestCase):
 
         exterior=(( "sye-solaris",slip),(slip,outer),
                   (outer,"sye-beetlejuice"),(outer,"paracelsin"),
-                  ("ferrum",slip),("alchemy-planet","paracelsin"))
+                  ("shchierbin","paracelsin"),("alchemy-planet","paracelsin"))
         interior=((inner,"ribbonia"),("ribbonia","fulgora"))
         for a,b in exterior:
             self.assertGreaterEqual(segment_clearance(
@@ -391,7 +392,7 @@ class ConstellationTests(unittest.TestCase):
         # Marker labels should not sit on another lane.
         for a,b in actual:
             for name in (slip,inner,outer,"ribbonia","fulgora",
-                         "paracelsin","ferrum","alchemy-planet"):
+                         "paracelsin","shchierbin","alchemy-planet"):
                 if name not in (a,b):
                     self.assertGreaterEqual(segment_clearance(
                         self.coords[name],self.coords[a],self.coords[b]),
@@ -541,9 +542,9 @@ class ConstellationTests(unittest.TestCase):
 
     def test_vespera_has_no_astroid_belt_waypoints(self):
         radius=lambda name:self.anchors[name][1]
-        self.assertEqual(sorted(("muria","obsidiax","rubia",
+        self.assertEqual(sorted(("muria","rubia",
                                  "maraxsis","aquilo"),key=radius),
-                         ["muria","obsidiax","rubia","maraxsis","aquilo"])
+                         ["muria","rubia","maraxsis","aquilo"])
         self.assertAlmostEqual(self.anchors["rubia"][2],.70)
         self.assertEqual(radius("aquilo"),57)
         self.assertFalse(any("razi-vespera-belt" in n for n in self.coords))
