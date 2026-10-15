@@ -2,6 +2,7 @@
 from pathlib import Path
 import re
 import unittest
+from tools.journal_locale import load_journal_locale
 
 ROOT = Path(__file__).resolve().parents[1]
 def read(path):
@@ -37,7 +38,7 @@ class FirstFrontierIndustryTests(unittest.TestCase):
 
     def test_locales_and_milestones_cover_every_factory(self):
         prod = read("locale/en/production.cfg")
-        journal = read("locale/en/razi_journal.cfg")
+        journal = load_journal_locale(ROOT)
         entries = read("scripts/razi_journal_industry.lua")
         for name, quest in zip(NAMES, QUESTS):
             self.assertEqual(prod.count(name + "="), 4, name)
