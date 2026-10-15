@@ -80,7 +80,7 @@ class DependencyPolicyTests(unittest.TestCase):
             "secretas-orbit-patch","VoidProcessing-Updated",
             "ArmouredBiters21Compat","Explosive_biters",
             "LithiumBattery","rabbasca-underground","skewer_shattered_planet",
-            "Solar-Halo","planet-ferrum",
+            "planet-ferrum",
         })
         for candidate in recommended:
             self.assertFalse(any(raw.startswith(candidate+" ")
@@ -97,8 +97,9 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertIn("+ frozeta-nuclear-winter >= 1.12.1",deps)
         self.assertFalse(any(raw.startswith("+ celestial-weather-updated") for raw in deps))
         self.assertEqual({d for d in deps if d.startswith("? ")},{
-            "? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19",
+            "? shchierbin >= 0.3.19",
                     })
+        self.assertFalse(any("moon-eneas" in d or "Solar-Halo" in d for d in deps))
         self.assertIn("PlanetAthos >= 1.1.3",deps)
         self.assertIn("nulla >= 1.0.2",deps)
         for name in ("dea-dia-system","pelagos"):

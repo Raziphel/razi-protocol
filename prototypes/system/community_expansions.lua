@@ -35,11 +35,8 @@ local candidates = {
 -- Nonstandard content is recommended for 2.1 when compatible, but must
 -- keep its original routes/surface lifecycle:
 -- rabbasca-underground: hidden, moving subsurface; no platform arrivals.
--- Solar-Halo: unusual twin solar orbit/station and harmful halo-flare routes.
 -- skewer_shattered_planet: plays in the existing endgame Shattered zone.
 local special = {
-  {mod="Solar-Halo", location="halo-solar-orbit",
-    gate="solaris-discovery"},
   {mod="skewer_shattered_planet", location="shattered-planet",
     gate=nil},
   {mod="rabbasca-underground", location="rabbasca-underground",
@@ -204,7 +201,7 @@ function M.data_final_fixes()
     if mods[config.mod] and location(config.location)
       and not config.hidden then
       -- Only gate the native space-location unlock. Keep every native
-      -- route and asteroid entry on Solar Halo's flares and Shattered.
+      -- route and asteroid entry on Shattered.
       gate_unlock(config.location,config.gate)
     end
   end

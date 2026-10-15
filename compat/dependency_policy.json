@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "2.1.81 required Athos and Nulla research partnership: real source robotic and particulate science supply a late-game charter in the expedition journal. Actual full K2SO engine test still required; 50 required, 24 recommended, 2 optional, 1 hidden, 20 incompatible.",
+  "notes": "2.1.82: Eneas and Solar-Halo retired completely, including dependencies and source routes. Razi-authored star artwork and Dyson Sphere remain. 50 required, 23 recommended, 1 optional, 1 hidden optional, 20 incompatible. Disable these external mods in Factorio manually; removal of a dependency does not uninstall it.",
   "dependencies": [
     {
       "mod": "base",
@@ -150,13 +150,6 @@
       "declaration": "Cerys-Moon-of-Fulgora >= 4.24.17",
       "group": "planet",
       "reason": "Curated planet or planetary expansion in the seven-system campaign"
-    },
-    {
-      "mod": "moon-eneas",
-      "type": "optional",
-      "declaration": "? moon-eneas >= 1.0.10",
-      "group": "optional",
-      "reason": "2.1 native Eneas moon, Nauvis lifeline only when source lacks one; Unit-05 gantry and separate science remain source-owned; no new hard companion mods"
     },
     {
       "mod": "linox",
@@ -554,13 +547,6 @@
       "mod": "skewer_shattered_planet",
       "type": "recommended",
       "declaration": "+ skewer_shattered_planet >= 1.0.42",
-      "group": "recommended",
-      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
-    },
-    {
-      "mod": "Solar-Halo",
-      "type": "recommended",
-      "declaration": "+ Solar-Halo >= 1.2.0",
       "group": "recommended",
       "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
