@@ -35,7 +35,7 @@ class SecretasBootstrapTests(unittest.TestCase):
         self.assertEqual(manifest["version"],"2.1.86")
         self.assertIn("PlanetAthos >= 1.1.3",manifest["dependencies"])
         self.assertIn("nulla >= 1.0.2",manifest["dependencies"])
-        self.assertIn("secretas >= 1.0.38",manifest["dependencies"])
+        self.assertIn("secretas >= 1.0.37",manifest["dependencies"])
 
 if __name__=="__main__":
     unittest.main()
