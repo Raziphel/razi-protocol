@@ -58,7 +58,7 @@ local anchors = {
   {"planet","aquilo","vespera",57,0.73},
   {"space-location","razi-vespera-belt-inner","vespera",30,0.61},
   {"space-location","razi-vespera-belt-outer","vespera",37,0.685},
-  {"planet","rubia","vespera",42,0.765},
+  {"planet","rubia","vespera",42,0.76},
   {"planet","maraxsis","vespera",48,0.85},
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
