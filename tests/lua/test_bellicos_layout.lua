@@ -163,11 +163,12 @@ for _,name in ipairs({"aegis-inner-edge","point-warden",
   check(type(orbit)=="table" and orbit.parent.name=="near-bellicos-orbit",
     "Aegis still has the wrong navigation parent: "..name)
 end
-check(math.abs(near_locations["aegis-inner-edge"].distance-29)<.001
-  and math.abs(near_locations["point-warden"].distance-48)<.001
-  and math.abs(near_locations["aegis-outer-edge"].distance-74)<.001
-  and math.abs(near_locations[gate_b].distance-57)<.001,
-  "Aegis sector distances drifted")
+-- Local radii are stored in orbit metadata; native fields are absolute.
+check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
+  and math.abs(near_locations["point-warden"].orbit.distance-48)<.001
+  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-74)<.001
+  and math.abs(near_locations[gate_b].orbit.distance-57)<.001,
+  "Aegis sector local radii drifted")
 
 
 local _, alt_locations, alt_planets = run({pulsar="planet"})
