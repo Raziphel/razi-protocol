@@ -32,7 +32,7 @@ class OptionalRecovery(unittest.TestCase):
         self.assertIn('if owned(name) then',module)
         self.assertIn('if in_cycle[parent] then',module)
         self.assertIn('Unrelated cycle left unchanged:',module)
-        self.assertIn('function M.find_cycle',module.replace('M.find_cycle=find_cycle','function M.find_cycle() end'))
+        self.assertIn('M.find_cycle=find_cycle',module)
         self.assertIn('{"athos","vulcanus",18000,"starter"}',source("prototypes/system/route_authority.lua"))
         self.assertIn('{"planet","athos","solaris",39,0.79}',source("prototypes/system/galaxy_layout.lua"))
 
