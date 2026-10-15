@@ -2,6 +2,7 @@
 from pathlib import Path
 import struct
 import unittest
+import hashlib
 ROOT=Path(__file__).resolve().parents[1]
 NAMES=["calidus-gate","solaris-gate","nyxaris-gate","vibrant-gate","vespera-gate","beetlejuice-gate","umbra-gate","vibrant-rim-inner","vibrant-rim-outer","umbra-rim-inner","umbra-rim-outer"]
 class LocationIcons(unittest.TestCase):
@@ -12,6 +13,19 @@ class LocationIcons(unittest.TestCase):
                 self.assertEqual(h[:8],b"\x89PNG\r\n\x1a\n")
                 self.assertEqual(struct.unpack(">II",h[16:24]),(64,64))
                 self.assertEqual(h[25],6)
+    def test_icons_are_distinct_and_minimal(self):
+        # Regression guard: don't silently return to one generic icon or
+        # ship an unexpectedly large decorative marker texture.
+        digests=[]
+        for stem in NAMES:
+            asset=(ROOT/"graphics/icons/navigation"/(stem+".png")).read_bytes()
+            self.assertLess(len(asset),40000,stem)
+            digests.append(hashlib.sha256(asset).digest())
+        self.assertEqual(len(set(digests)),len(NAMES))
+        generator=(ROOT/"scripts/generate_navigation_markers.js").read_text()
+        self.assertIn('const S=3',generator)
+        self.assertIn('orbitPoint',generator)
+        self.assertNotIn('function oct(',generator)
     def test_final_pass(self):
         source=(ROOT/"data-final-fixes.lua").read_text()
         a='require("prototypes.system.starmap_trail_cleanup").data_final_fixes()'
