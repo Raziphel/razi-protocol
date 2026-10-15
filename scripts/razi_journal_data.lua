@@ -52,9 +52,11 @@ M.quests={
  {id="paracelsin",chapter="vibrant",tech="planet-discovery-paracelsin",requires={"asteroid-belt"}},
  {id="vespera-gate",chapter="vespera",tech="vespera-discovery",requires={"corrundum","apia"}},
  {id="muria",chapter="vespera",tech="planet-discovery-muria",requires={"vespera-gate"}},
- {id="aquilo",chapter="vespera",tech="planet-discovery-aquilo",requires={"vespera-belt"}},
  {id="vespera-belt",chapter="vespera",tech="razi-vespera-belt-survey",requires={"muria"}},
+ -- Rubia and Aquilo are parallel discoveries beyond the same survey;
+ -- Maraxsis continues Rubia's greenhouse-warmed outer-ocean branch.
  {id="rubia",chapter="vespera",tech="planet-discovery-rubia",requires={"vespera-belt"}},
+ {id="aquilo",chapter="vespera",tech="planet-discovery-aquilo",requires={"vespera-belt"}},
  {id="maraxsis",chapter="vespera",tech="planet-discovery-maraxsis",requires={"rubia"}},
  {id="seadragon",chapter="vespera",tech="maraxsis-project-seadragon",requires={"maraxsis"}},
  {id="beetlejuice-gate",chapter="beetlejuice",tech="beetlejuice-discovery",requires={"paracelsin","maraxsis"}},
