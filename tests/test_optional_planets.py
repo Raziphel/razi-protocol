@@ -32,7 +32,7 @@ class OptionalPlanetTests(unittest.TestCase):
         for mod in ("Igrys", "planet-rabbasca", "foliax", "obsidiax", "carna"):
             self.assertIn(mod, by_name)
             self.assertFalse(by_name[mod].startswith(("? ", "+ ")))
-        self.assertIn("! PlanetAthos", dependencies)
+        self.assertIn("? PlanetAthos >= 1.1.3", dependencies)
 
     def test_optional_science_is_not_required_for_milestones(self):
         gates = (ROOT / "prototypes/technology/seven_system_gates.lua").read_text()

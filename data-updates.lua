@@ -5,6 +5,9 @@ require("prototypes.compat.cold_biters")
 require("prototypes.compat.electric_flying_enemies")
 require("prototypes.compat.explosive_biters")
 require("prototypes.compat.toxic_biters")
+-- Run source shims before optional mods' data-final-fixes scripts.
+require("prototypes.compat.nulla_guard").data_updates()
+require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.compat.science_tab").data_updates()
 require("prototypes.compat.k2so_tweaks").data_updates()
 

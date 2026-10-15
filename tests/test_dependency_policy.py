@@ -97,10 +97,11 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertIn("+ frozeta-nuclear-winter >= 1.12.1",deps)
         self.assertFalse(any(raw.startswith("+ celestial-weather-updated") for raw in deps))
         self.assertEqual({d for d in deps if d.startswith("? ")},{
-            "? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19"
+            "? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19",
+            "? nulla >= 1.0.2","? PlanetAthos >= 1.1.3"
         })
-        self.assertIn("! PlanetAthos",deps)
-        self.assertIn("! nulla",deps)
+        self.assertIn("? PlanetAthos >= 1.1.3",deps)
+        self.assertIn("? nulla >= 1.0.2",deps)
         for name in ("dea-dia-system","pelagos"):
             self.assertFalse(any(parse(raw)[0]==name for raw in deps),name)
         self.assertIn("+ secretas-orbit-patch >= 1.1.3",deps)

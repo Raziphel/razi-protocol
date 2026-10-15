@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "2.1.79 staff collaboration: replace older core weather fork with standalone combined Celestial Weather Next 1.6.0; recommend Frozeta Nuclear Winter without Outer Rim; restore Eneas and Shchierbin as source-guarded opt-in 2.1 side content. Athos and Nulla retain explicit blocks for documented full-pack data-stage crashes pending upstream fixes. Counts: 48 required, 24 recommended, 2 optional, 1 hidden optional, 22 incompatible. Engine startup and migrations unverified.",
+  "notes": "Experimental 2.1.80: Nulla and Planet Athos changed to manual optional, with early nil-safe source-helper guard and narrowly scoped Athos research-cycle guard. Full Factorio 2.1/K2SO engine startup and saves have not been validated. 48 required, 24 recommended, 4 optional, 1 hidden optional, 20 incompatible.",
   "dependencies": [
     {
       "mod": "base",
@@ -608,17 +608,17 @@
     },
     {
       "mod": "nulla",
-      "type": "incompatible",
-      "declaration": "! nulla",
-      "group": "conflict",
-      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+      "type": "optional",
+      "declaration": "? nulla >= 1.0.2",
+      "group": "optional",
+      "reason": "Experimental opt-in: guard the author's radio-interference helper against a missing vanilla electric-furnace prototype during the early data stage. No replacement furnace is created; upstream runtime validation pending."
     },
     {
       "mod": "PlanetAthos",
-      "type": "incompatible",
-      "declaration": "! PlanetAthos",
-      "group": "conflict",
-      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+      "type": "optional",
+      "declaration": "? PlanetAthos >= 1.1.3",
+      "group": "optional",
+      "reason": "Experimental opt-in: detect technology cycles and remove only a cycle-participating Athos/particulate-owned research prerequisite. Leave other mods' technology graphs intact. Crushing Industry and in-game checks pending."
     },
     {
       "mod": "biological-machines-planet-wit",
