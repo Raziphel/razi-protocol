@@ -1,3 +1,20 @@
+## Unique native-scale space-navigation markers (October 2026)
+
+Seven Razi Slip Streams and the two surviving physical asteroid-belt
+crossings now have eleven **different** transparent 64px starmap icons.
+Slip Streams use distinct industrial gate cores keyed to their star palettes;
+Vibrant's metallic rims and Umbra's shattered rims have separate inward
+and outward arrow glyphs surrounded by small fractured rocks.
+Vespera has no asteroid belt and receives no rim locations or markers.
+
+`graphics/icons/navigation/` contains runtime PNG textures; the editable,
+deterministic source is `scripts/generate_navigation_markers.js` (run using
+`node scripts/generate_navigation_markers.js`). The last prototype pass,
+`prototypes/system/location_icons.lua`, changes only `icon`, `icon_size`,
+`starmap_icon` and `starmap_icon_size` on those exact Razi locations.
+There is no extra atlas layer, animation or per-tick work. Keep all route,
+asteroid and research properties unchanged. Inspect at game map zooms.
+
 ## Current Vespera design: no asteroid belt (October 2026)
 
 Vespera's two In/Out space locations, the artificial grey belt and
