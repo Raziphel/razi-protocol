@@ -16,12 +16,12 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 | Solaris | Athos | **Required.** Native stone/diamond crushing, Particulate Science and a late frontier recovery partnership. Real K2SO startup pending. |
 | Nyxaris | Gleba, Moshine, Apia/Carnova, Foliax, Rabbasca, Velora; Pelagos/Dea Dia when installed | Retain contrasting biological/computational/optional expeditions. |
 | Nyxaris | Panglia | **Restore, required (0.7.2+)**. Timewarp-powered industry, DNA sampling, cloning, and simulation create a substantial post-Moshine industrial puzzle; keep its native tech costs and test beta stability. |
-| Vibrant | Fulgora, Ribbonia, Paracelsin, Ferrum and Khemia where installed | Retain their electrical/ringworld/cryogenic and specialty industries. |
+| Vibrant | Fulgora, Ribbonia, Paracelsin and Khemia where installed | Retain their electrical/ringworld/cryogenic and specialty industries. |
 | Vibrant | Shchierbin | **Optional.** Staff-supported vanadium side branch after Paracelsin, beyond the asteroid belt, with native source science. |
-| Vespera | Muria, Aquilo, Rubia, Maraxsis, Obsidiax, Balack | Retain the cold, corrosive, submerged and high-risk challenges. Balack does not require Wit. |
+| Vespera | Muria, Aquilo, Rubia, Maraxsis, Balack | Retain the cold, corrosive, submerged and high-risk challenges. Balack does not require Wit. |
 | Vespera | Nulla | **Required.** Aquilo's drone salvage moon and Robotic Science complete the recovery charter. Native orbit preserved; engine startup pending. |
-| Beetlejuice | Cubium, Linox, Secretas, Frozeta | Retain specialized constrained factories and salvage. |
-| Umbra | Tenebris, Crucible, Vesta, Carna, Arcanyx | Retain darkness, extreme pressure, gas-giant and outer industry. |
+| Beetlejuice | Cubium, Linox, Secretas, Frozeta, Ferrum | Retain specialized constrained factories and salvage. |
+| Umbra | Tenebris, Crucible, Vesta, Carna, Arcanyx, Obsidiax | Retain darkness, extreme pressure, gas-giant and outer industry. |
 | Deep Space | Aegis/Bellicos, optional Nexus and Void Processing | Retain as the transceiver and postgame frontier. |
 
 ## Integration implemented

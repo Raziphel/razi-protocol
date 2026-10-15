@@ -1174,3 +1174,15 @@ Secretas discoveries, technologies, recipe unlocks and triggers remain intact.
 
 Repeat on a copied save with a real Factorio 2.1.21+ executable. The source
 and static assertions are not a substitute for a complete full-modpack load.
+
+## 2.1.87: Outer star map visual release checks
+
+After loading the entire modpack, open the fully zoomed-out starmap and
+verify: Ferrum is on Beetlejuice's west with only its Slip Stream spur;
+Obsidiax is on Umbra's Vesta-side exterior without a second crossing;
+Shchierbin is clearly separate from Vibrant's entrance and remains beyond
+the physical belt; Athos is near Vulcanus with no diagonal through the
+Solaris gateway. Confirm no residual red dotted tails beside Carna or
+Velora, and no long prose appears as a waypoint name. Route identities
+are selectively preserved for schedules; players with preexisting
+Ferrum/Obsidiax routes should check existing schedules on a copied save.

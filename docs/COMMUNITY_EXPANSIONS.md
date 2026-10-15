@@ -19,10 +19,10 @@ factory. A successful static test does not prove that all mods load together.
 | `Igrys` | Already integrated, required install | Solaris | Native magical/glass industry, Razi local route and discovery. |
 | `planet-rabbasca` | Already integrated, required install | Gleba moon, Nyxaris | Preserves unique energy field, native orbit, hop limits, and research. |
 | `foliax` | Already integrated, required install | Nyxaris | Botany/arcane production stays source-authored. |
-| `obsidiax` | Already integrated, required install | Vespera | Frozen lava world retains rock growing and thermal mechanics. |
+| `obsidiax` | Already integrated, required install | Exterior Umbra beside Vesta | Frozen lava world retains rock growing and thermal mechanics. |
 | `rabbasca-underground` | Registered, native-only | Hidden Rabbasca stabilizer | A *non-space-accessible* traveling underground environment. Never add a launch corridor or reveal on the starmap. |
 | `skewer_shattered_planet` | Registered, native-only | Original Shattered Planet endgame | Do not duplicate the Shattered Planet location, isotopes, or native science gates. Combined endgame requires live validation. |
-| `planet-ferrum` | Guarded side-world integration | Vibrant; native Fulgora/Vulcanus routes | Remote-view-only artificial planet. Preserve choice-driven tech and native rare-earth bridges with Linox/Moshine; no forced landing. |
+| `planet-ferrum` | Guarded side-world integration | Western Beetlejuice, Slip Stream spur | Remote-view-only artificial planet. Preserve choice-driven tech and native rare-earth bridges with Linox/Moshine; no forced landing. |
 | `Velora` | Guarded moon integration | Gleba moon, Nyxaris | Original moon orbit, native enemy population, science and resource chain. Add a short connection only if missing. |
 | `shchierbin` | **Optional** | Exterior Vibrant near Paracelsin | Original vanadium gameplay preserved, no asteroid-belt bypass. |
 | `nulla` | **Required** | Aquilo moon in Vespera | Source-owned Robotic Science, radioactive scrapyards and combat drones now feed shared recovery research. |
@@ -55,13 +55,13 @@ to the **original unlock-space-location technology**, not a fabricated
 replacement technology; preexisting/indirect prerequisites and cycles are
 respected. A non-existent prototype is never instantiated.
 
-Ferrum keeps its native Fulgora and Vulcanus connections and their
-asteroid distributions. The Fulgora link stays at its native 10,000 km,
-while the Vulcanus-to-Ferrum link is calibrated to 115,000 km now that
-it crosses from Solaris to Vibrant; this closes a 10,000 km interstellar
-shortcut without discarding native resource asteroids.
-Its discovery technology may be chapter-gated but its
-dynamic research choices are untouched. The moon Velora keeps its
+Ferrum's native Fulgora and Vulcanus source routes are no longer part
+of the public network. The route authority migrates their unique native
+asteroid spawns to the new Ferrum–Beetlejuice Slip Stream connection
+before pruning the two obsolete cross-system shortcuts. Ferrum's remote
+industrial mechanics, research choices and original rare-earth science
+remain source-owned; its discovery now follows Beetlejuice instead of
+Vibrant. The moon Velora keeps its
 original orbital relationship. Balack keeps its original, hard
 Aquilo-side hazardous path. Special worlds (Rabbasca Underground and
 Shattered) retain their native mechanics and routes.
@@ -157,3 +157,11 @@ Solar Halo and Eneas no longer receive dependencies, chart integration,
 scientific shortcuts, or Razi-authored routes. Factorio users who previously
 enabled them should disable the external mods themselves and protect old
 saves before removing their orbital surfaces.
+
+### 2.1.87 system balance
+
+Ferrum now makes Beetlejuice's fifth industrial destination while Obsidiax
+joins Umbra as a sixth planet when the curated roster is installed.
+Shchierbin, if opted in, stays a remote outer-Vibrant vanadium spur and
+Athos occupies a clean western Solaris lane. No extra planet mods are
+required merely to balance the two outer star systems.

@@ -143,10 +143,10 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 * **Calidus:** Nauvis, Muluna, Calidus Drift orbital salvage stop
 * **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys
 * **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
-* **Vibrant:** Fulgora, Ribbonia, Paracelsin; optional Cerys (Fulgora moon)
-* **Vespera:** Muria, Aquilo, Rubia, Maraxsis; recommended Obsidiax
-* **Beetlejuice:** Cubium, Linox, Secretas, Frozeta
-* **Umbra:** Tenebris, Crucible and its orbit, Vesta; recommended Carna
+* **Vibrant:** Fulgora, Ribbonia, Paracelsin, optional Shchierbin and Cerys
+* **Vespera:** Muria, Aquilo, Rubia, Maraxsis, Balack
+* **Beetlejuice:** Cubium, Linox, Secretas, Frozeta, Ferrum
+* **Umbra:** Tenebris, Crucible and its orbit, Vesta, Carna, Arcanyx, Obsidiax
 
 ### Physical routes
 
@@ -309,8 +309,8 @@ the canonical Razi route manifest and final starmap anchors as fixtures.
 ## October 2026 optional community destinations
 
 New guarded late-addition paths use native moon, special surface and
-solar-station handling. Ferrum and Khemia join Vibrant's electrically and
-chemically focused worlds; Arcanyx joins Umbra's experimental side branches;
+solar-station handling. Ferrum joins Beetlejuice's industrial west, while Shchierbin and Khemia
+remain beyond Vibrant's metallic belt. Arcanyx and Obsidiax extend Umbra;
 Velora stays Gleba's moon. Balack remains a
 dangerous post-Aquilo destination inside Vespera. Muluna remains Nauvis's required moon.
 Rabbasca Underground retains its hidden source-owned layout.
@@ -320,10 +320,10 @@ Native authors' unusual worlds are not flattened into Razi's standard
 asteroid patterns. For the exact list, safety checks and unresolved
 full-modpack tests see [Community Expansions](COMMUNITY_EXPANSIONS.md).
 
-Ferrum's source route from Vulcanus was a local 10,000 km trip. As
-Vulcanus is in Solaris and Ferrum joins Vibrant, Razi scales just that
-cross-star path to **115,000 km**, leaving its original asteroid
-definitions and short local Fulgora connection untouched.
+In 2.1.87 Ferrum's native Fulgora/Vulcanus corridors are retired
+after their exclusive asteroid resources have been transferred onto a
+short local Beetlejuice Slip Stream spur. Cross-system 10,000 km shortcuts
+are not kept as extra navigation lines.
 
 The 2026-10 starmap uses a 104-unit six-star radius (previously 124)
 so most systems fit on screen with substantially less panning. Deep Space

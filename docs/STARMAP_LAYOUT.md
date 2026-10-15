@@ -1,3 +1,36 @@
+## 2.1.87: Outer-systems route and label refinement
+
+**Beetlejuice:** Ferrum's remote-controlled metal industry now occupies a
+43-unit western orbit with a single local Slip Stream spur (22,500 km).
+The obsolete Ferrum–Fulgora and Ferrum–Vulcanus source routes are removed
+only after their rare custom asteroid definitions are transferred onto the
+approved local connection. Cubium, Linox, Secretas and Frozeta are unchanged.
+
+**Umbra:** Obsidiax joins Vesta beyond the physical Shattered Divide
+(radius 54, turn 0.18; 19,000 km exterior route to Vesta). Carna, Arcanyx,
+Crucible and Tenebris remain **inside** the mandatory surveyed crossing.
+The external Slip Stream is not connected directly to inner planets.
+
+**Vibrant:** Shchierbin moves to radius 73/turn 0.64, well away from the
+Slip Stream and remaining connected to Paracelsin by a short 21,000 km
+outside-belt side route. Ferrum no longer adds congestion around the rock
+crossing.
+
+**Solaris:** Athos has a 34-unit western orbit at turn 0.73 and a 13,500 km
+spur from nearby Vulcanus; this avoids the long diagonal next to the
+gateway. No old arrival, science ID or planet prototype was replaced.
+
+**Map readability:** Umbra and its two rim locations now have short map
+names. Navigational briefings and warnings remain in location descriptions
+and technology tooltips. Decorative Carna/Velora orbit sprites and Razi
+dotted highlights for their small-world connections are suppressed;
+their original planet icons, parents and travel routes remain intact.
+
+The four planned new connections were checked geometrically against
+known curated route endpoints: no line intersections, solar-corona incursions
+or new crossings of either asteroid annulus were detected. Confirm the
+actual PlanetsLib-rendered appearance on a live 2.1.87 Factorio starmap.
+
 ## Outer-star breathing room expanded again (October 2026)
 
 Umbra and Beetlejuice are now 124 chart units from Calidus, rather
@@ -40,7 +73,7 @@ optional decorative ring, or their resource profiles. A clean direct
 planet network is used instead: Slip Stream → Muria → Rubia; Rubia
 branches to Maraxsis (greenhouse ocean) and Aquilo (distant ice).
 Rubia now sits at turn 0.70 to preserve minimum clearance from the
-stellar disc. Obsidiax remains an optional Slip Stream branch and Balack
+stellar disc. Obsidiax was subsequently relocated to Umbra in 2.1.87; Balack
 remains connected to Aquilo. The original Vibrant and Umbra physical
 belts are untouched. Existing platform schedules that include the
 removed waypoint IDs should be updated before loading a long-running

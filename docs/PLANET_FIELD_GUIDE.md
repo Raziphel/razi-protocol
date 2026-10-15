@@ -11,14 +11,14 @@
 | Nyxaris | Gleba, Moshine, Apia/Carnova, Panglia | Data science, twin-world biology, timewarp experimentation, DNA collection and cloning | Source Panglia Moshine data-cell chain and original Apia/Carnova subsystem |
 | Vibrant | Fulgora, Ribbonia, Paracelsin | Electromagnetics, alien chemistry, galvanization and specialist processing | Preserve source surface requirements |
 | Vespera | Muria, Aquilo, Rubia, Maraxsis | Harsh environments, cooling, fluid and materials engineering | Muria entrance; native Aquilo/Maraxsis content |
-| Beetlejuice | Cubium, Linox, Secretas, Frozeta | Outer-rim production and resource specialization | Secretas to Frozeta; Linox fork |
-| Umbra | Tenebris, Crucible, Vesta | Late experimental engineering, high-risk planet sciences | Crucible Orbit and Vesta routes |
+| Beetlejuice | Cubium, Linox, Secretas, Frozeta, Ferrum | Outer-rim production and resource specialization | Secretas to Frozeta; Linox fork |
+| Umbra | Tenebris, Crucible, Vesta, Obsidiax | Late experimental engineering, high-risk planet sciences | Crucible Orbit and Vesta routes |
 | Deep Space | Solar System Edge, Aegis, Bellicos, Shattered Planet | Pulsar research, Promethium, stable singularity and transceiver | Aegis/Bellicos required; Nexus/Void optional |
 
 ## Additional expeditions
 
 The additional planet adventures are Igrys (Solaris), Rabbasca (Gleba's
-moon), Foliax (Nyxaris), Obsidiax (Vespera), and Carna (Umbra). All retain
+moon), Foliax (Nyxaris), Obsidiax (Umbra), and Carna (Umbra). All retain
 native discovery and science, and are excluded from mandatory chapter mastery.
 
 See [Optional Planet Expeditions](OPTIONAL_PLANETS.md) for installation notes

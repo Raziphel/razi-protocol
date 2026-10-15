@@ -1,3 +1,16 @@
+Version: 2.1.87
+Date: 15. 10. 2026
+  Outer-system visual and connectivity pass:
+    - Reposition Ferrum to Beetlejuice's western industrial orbit and replace its obsolete Vibrant/Vulcanus shortcuts with a 22,500 km Beetlejuice gateway spur.
+    - Preserve native Ferrum-exclusive asteroid resources on the retained route.
+    - Move Obsidiax into Umbra's outer sector adjacent to Vesta; preserve the one required shattered-belt crossing.
+    - Move optional Shchierbin farther from the Vibrant Slip Stream, with its Paracelsin connection wholly outside the metallic belt.
+    - Shorten the Athos-to-Vulcanus spur and move Athos away from Solaris's arrival corridor.
+    - Fix long Umbra, Slip Stream and rim waypoint labels; put long briefings in descriptions.
+    - Suppress decorative red dotted Carna/Velora atlas tails and reject Razi colored overlays for their ordinary links.
+    - Synchronize native research gates, Journal, Atlas, singularity grouping, and route safety fixtures.
+    - No additional planet dependencies or extra mandatory belts. Full in-game graphics validation still needed.
+
 Version: 2.1.86
 Date: 15. 10. 2026
   Secretas Golden Science / steam recycler prerequisite cycle:
