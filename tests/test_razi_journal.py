@@ -2,6 +2,7 @@
 from pathlib import Path
 import re
 import unittest
+from tools.journal_locale import load_journal_locale
 
 ROOT=Path(__file__).resolve().parents[1]
 def read(path):
@@ -32,7 +33,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',expanded)
         chapter_sources+=re.findall(r'\{id="([a-z0-9-]+)",title="journal-chapter',industry)
         self.assertEqual(len(chapter_sources),18)
-        language=read("locale/en/razi_journal.cfg")
+        language=load_journal_locale(ROOT)
         sections={}
         for block in re.split(r'(?m)^\[([^\]]+)\]\s*',language)[1:][::2]:
             self.assertTrue(block)
@@ -72,7 +73,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('chapter_intro.style.font_color=theme.primary',ui)
         self.assertIn('accent_rule(panel,theme,math.min(148,inner),3)',ui)
         self.assertIn('style="inside_shallow_frame"',ui)
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         mood=locale.split("[journal-mood]",1)[1].split("\n[",1)[0]
         for chapter in chapter_ids:
             self.assertRegex(mood,rf"(?m)^{chapter}=")
@@ -82,7 +83,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         all_records=re.findall(r'\{id="([^"]+)",unlock="([^"]+)"',records)
         self.assertEqual(len(all_records),15)
         self.assertEqual(len(set(x[0] for x in all_records)),15)
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         sections={}
         parsed=re.split(r'(?m)^\[([^\]]+)\]\s*',locale)
         for i in range(1,len(parsed),2):
@@ -131,7 +132,7 @@ class ExpeditionJournalTests(unittest.TestCase):
     def test_codex_icon_sizes_are_fixed_and_keep_story_navigation(self):
         ui=read("scripts/razi_journal.lua")
         size=read("scripts/razi_journal_icons.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         self.assertIn('resize_to_sprite=false',size)
         self.assertIn('element.style.stretch_image_to_widget_size=true',size)
         self.assertIn('element.style.size=edge',size)
@@ -149,7 +150,7 @@ class ExpeditionJournalTests(unittest.TestCase):
     def test_responsive_reader_without_horizontal_scrollbars(self):
         ui=read("scripts/razi_journal.lua")
         control=read("control.lua")
-        loc=read("locale/en/razi_journal.cfg")
+        loc=load_journal_locale(ROOT)
         self.assertIn('function M.layout(resolution,scale)',ui)
         self.assertIn('horizontal_scroll_policy="never"',ui)
         self.assertIn('vertical_scroll_policy="dont-show-but-allow-scrolling"',ui)
@@ -192,7 +193,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         ui=read("scripts/razi_journal.lua")
         planner=read("scripts/razi_journal_guidance.lua")
         fixture=read("tests/lua/test_razi_journal_guidance.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         self.assertIn('function M.guidance(force,context,view)',ui)
         self.assertIn('local plan=view and M.guidance(player.force,context,view)',ui)
         self.assertIn('plan=plan or M.guidance(player.force,context,view)',ui)
@@ -240,7 +241,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         journal=read("scripts/razi_journal.lua")
         catalog=read("scripts/galactic_trade_catalog.lua")
         operations=read("scripts/galactic_operations.lua")
-        ui=read("locale/en/razi_journal.cfg")
+        ui=load_journal_locale(ROOT)
         self.assertIn('local cargo_catalog=require("scripts.galactic_trade_catalog")',
                       journal)
         self.assertIn('cargo_catalog.chain_for_quest(quest.id)',journal)
@@ -311,7 +312,7 @@ class ExpeditionJournalTests(unittest.TestCase):
 
     def test_journal_editorial_and_reading_order(self):
         source=read("scripts/razi_journal.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         ui=locale.split("[journal-ui]",1)[1].split("\n[",1)[0]
         self.assertIn("window=RAZI PROTOCOL",ui)
         self.assertIn("header-eyebrow=EXPEDITION JOURNAL",ui)
