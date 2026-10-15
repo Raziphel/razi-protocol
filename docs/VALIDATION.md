@@ -1,3 +1,28 @@
+# Validation strategy and release expectations
+
+Use the [Developer Handbook](DEVELOPER_HANDBOOK.md) for design invariants and [Architecture](ARCHITECTURE.md) for ownership boundaries.
+
+**Validation has four layers:** (1) static/source tests for stable IDs and guarded lookups; (2) technology graph and recipe/laboratory reachability; (3) Factorio startup/new-game/old-save checks; (4) visual map and journal interaction checks. Passing one layer is not evidence of passing all four.
+
+For a progression or route change, confirm research prerequisites, science production, lab access, platform accessibility, optional-mod fallbacks, real finalized routes and old-save schedules. For journal changes, confirm existing save IDs, English locale completeness, translated placeholders, truthful project states, scrolling and smaller UIs.
+
+### Contributor commands
+
+```bash
+python tools/journal_locale.py
+python -m unittest discover -s tests -p 'test_*.py'
+```
+
+Other Lua fixtures and in-game steps are listed below. Run focused tests during development; execute the wider suite before release where available. Do not invent a green result when a runtime or modpack could not be loaded. Documentation-only edits should not trigger redundant build CI.
+
+### Acceptance record
+
+Each pull request should document *tests executed*, *manual checks*, *untested environments*, and *save/compatibility consequences*. Distinguish source-level checks from actual Factorio visual/gameplay verification.
+
+The dated sections below are historic test plans that may cover older route layouts. Prefer final prototype state and current source when they disagree.
+
+---
+
 ## October 2026: Vesta, Abacayba, and the outer Obsidiax branch
 
 Install Abacayba 0.0.42+ only when testing the optional alpha endgame
