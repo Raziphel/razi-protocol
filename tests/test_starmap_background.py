@@ -116,13 +116,45 @@ class StarmapBackgroundTests(unittest.TestCase):
                           for y in range(185,327) for x in range(412,478))
                 self.assertLess(left,right,"Western entry is too crowded")
 
+    def test_umbra_asteroids_are_separate_rocks_in_real_annulus(self):
+        # Prevent future glowing fog/wreath texture regressions.
+        content=(ASSET/"debris-umbra.png").read_bytes()
+        pieces=[]
+        cursor=8
+        while cursor<len(content):
+            length=int.from_bytes(content[cursor:cursor+4],"big")
+            tag=content[cursor+4:cursor+8]
+            if tag==b"IDAT":
+                pieces.append(content[cursor+8:cursor+8+length])
+            cursor+=length+12
+        raw=zlib.decompress(b"".join(pieces))
+        pixels=b"".join(raw[y*513+1:(y+1)*513] for y in range(512))
+        active=outside=0
+        for y in range(512):
+            for x in range(512):
+                if pixels[y*512+x]:
+                    active+=1
+                    r=((x-256)**2+(y-256)**2)**.5
+                    if r<172 or r>228:
+                        outside+=1
+        self.assertGreater(active,10000)
+        self.assertLess(active,30000,
+                        "The belt must be gravel, not an opaque disc")
+        self.assertLess(outside,active*.03,
+                        "Rocks should follow the 31-39 chart-unit rim")
+        self.assertTrue(all(pixels[y*512+x]==0
+                            for y in range(195,317) for x in range(195,317)),
+                        "Keep the central sun and inner planets clear")
+
     def test_quiet_sky_and_region_specific_belts(self):
         source=(ROOT/"prototypes/system/starmap_background.lua").read_text()
         vibrant=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
         self.assertIn("local sky_exposure={",source)
         self.assertIn("sky_exposure[row][col]",source)
         self.assertIn('debris="debris-vespera.png"',source)
-        self.assertIn('art="debris-umbra.png",debris="belt-umbra.png"',source)
+        self.assertIn('art="debris-umbra.png",subtle_alpha=.53',source)
+        self.assertNotIn('debris="belt-umbra.png"',source)
+        self.assertIn('if cinematic and belt.debris then',source)
         self.assertIn("scale=5.62",source)
         self.assertNotIn('{name="vibrant",tint={r=.75',source)
         self.assertIn('name="vespera",art="glow-vespera.png"',source)

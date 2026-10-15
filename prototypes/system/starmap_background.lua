@@ -24,12 +24,11 @@ local systems={
 local belts={
   {name="vespera",tint={r=.84,g=.87,b=.91},scale=3.03,
     art="belt-vespera.png",debris="debris-vespera.png",debris_alpha=.085},
-  -- The continuous blurry band was painted at half the physical rim.
-  -- Default to sparse native debris exactly around the 31–39-unit divide.
-  -- Cinematic alone retains an exceptionally faint smoke accent.
-  {name="umbra",tint={r=.71,g=.56,b=.49},scale=5.62,
-    art="debris-umbra.png",debris="belt-umbra.png",debris_alpha=.028,
-    subtle_alpha=.082,cinematic_alpha=.105}
+  -- Real separately shaded asteroid fragments replace the cloudy ring.
+  -- The same single 512px indexed texture follows the physical belt in
+  -- Subtle and Cinematic. The old smoke layer is never displayed.
+  {name="umbra",tint={r=.86,g=.81,b=.79},scale=5.62,
+    art="debris-umbra.png",subtle_alpha=.53,cinematic_alpha=.67}
 }
 local WHITE={r=1,g=1,b=1}
 -- Gently correct the actual painted stars to agree with their glows.
@@ -135,7 +134,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         insert_asset(layers,belt.art,belt.scale,x,y,
           belt.tint,cinematic and (belt.cinematic_alpha or .145)
             or (belt.subtle_alpha or .105))
-        if cinematic then
+        if cinematic and belt.debris then
           insert_asset(layers,belt.debris,belt.scale*1.04,x,y,
             belt.tint,belt.debris_alpha)
         end

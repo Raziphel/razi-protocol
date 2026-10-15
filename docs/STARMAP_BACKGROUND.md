@@ -39,10 +39,11 @@ hand-authored graphics rather than substituting a wallpaper image.
 - Vibrant's earlier two-texture ring was later replaced by the three-layer
   broken-rock field described above. The redundant generic atlas ring
   remains disabled, keeping only one physical belt in the starmap.
-- Vespera and Umbra now combine a faint common `atlas-belt.png` layer
-  with their individual existing `debris-vespera.png` and
-  `debris-umbra.png` sprites. Their colors match their star identities,
-  rather than covering the whole system with a neon orbit circle.
+- Vespera uses its existing `belt-vespera.png` with optional subtle
+  debris in Cinematic. Umbra now uses a newly redrawn
+  `debris-umbra.png` made of separate dark rocky fragments aligned
+  with the real 31–39-unit orbital debris band. Neither mode draws
+  the former hazy Umbra ring. No fake neon orbit circle remains.
 - The four remote dust pockets are smaller and softer; the four
   micro-accents are shifted beyond main planet orbits, with lower
   intensity. No false navigation rings, new starmap destinations or
@@ -174,6 +175,15 @@ as their authentic gray Factorio curves until their exact path can be
 validated. The default-colored strokes are also dimmer and capped at 600
 static segments instead of 1,800, to avoid visual spaghetti.
 
+
+## Umbra stone field and deep-space layout (October 2026)
+
+The 512px indexed Umbra sprite now has distinctly angular,
+shaded slate/copper pebbles and small particulate rubble. Its only
+occupied pixels form a scattered 31–39 chart-unit ring, with the
+old painted soft ring unreferenced in both rendering modes.
+The Solar System Edge moves north as one parent anchor, keeping
+all existing linked deep-space satellites in relative position.
 
 ## High-resolution deep-space atlas (2.1.40)
 

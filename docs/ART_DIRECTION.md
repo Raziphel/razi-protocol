@@ -14,6 +14,18 @@ Only the selected dossier gets a stronger accent and the large detail reader
 has one scroll pane. The Dyson art stays backed by its existing stage sprites.
 This redesign adds no texture files or periodic render workload.
 
+## October 2026: Umbra rocks and farther Deep Space
+
+The fuzzy copper wreath wasn't convincing as a shattered asteroid
+field. A purpose-made 512px static transparent rock texture
+replaces it without introducing another sprite layer or periodic
+render cost. Sparse irregular rocks, not atmospheric fog, match
+the real 31–39-unit crossing. Vesta has more exterior space at
+radius 56, and the Deep Space parent anchor at 215 pulls its
+Nexus, Shattered, black-hole and Aegis/Pulsar branches outward.
+Asteroid spawn profiles and tech progression are preserved.
+The resulting artwork needs a Factorio zoom-level review.
+
 ## October 2026: Umbra orbital and belt clarity
 
 The earlier Umbra 'In/Out' markers were almost on the same circular
