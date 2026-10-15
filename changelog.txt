@@ -1,3 +1,19 @@
+Version: 2.1.111
+Date: 15. 10. 2026
+  Repair detached Point Warden and incoherent Bellicos map:
+    - Remove all recursive PlanetsLib:update calls from Razi Bellicos.
+      This avoids early-stage global-polar/relative-origin corruption.
+    - Apply deterministic absolute native Factorio chart coordinates for
+      the entire Aegis expedition at final-fixes, independent of its
+      deleted sprite-only pulsar parent and source orbit metadata.
+    - Find Warden source-name variants from real prototypes and route
+      endpoints, including both native prototype kinds when present.
+    - Retain original pulsar / asteroid ring sprites and tagged offsets.
+    - Reconcile after all other Razi prototype passes and log actual
+      rendered native Warden coordinates when available.
+    - Preserve original routes, kilometre lengths, asteroid spawns, tech,
+      source icons, IDs and save data. Full in-game test remains required.
+
 Version: 2.1.110
 Date: 15. 10. 2026
   Performance refinement and seventh opt-in switch:
