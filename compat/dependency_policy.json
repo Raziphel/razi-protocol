@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "Factorio 2.1 curated stack: 48 required; 24 recommended; one hidden experimental FluxWorks link; 23 incompatible. Outer Rim 2.9 is excluded because it conflicts with Secretas Orbit Patch and recommends the forbidden Better Asteroid Belt. The user's Celestial Weather Additions 1.6.0 conflicts with the core weather fork, so we do not recommend it until upstream metadata is corrected. A static audit does not certify full in-game compatibility.",
+  "notes": "Factorio 2.1 curated stack: 48 required; 24 recommended; one hidden experimental FluxWorks link; 23 incompatible. Outer Rim 2.9 is excluded because it conflicts with Secretas Orbit Patch and recommends the forbidden Better Asteroid Belt. The user's Celestial Weather Additions 1.6.0 conflicts with the core weather fork, so we do not recommend it until upstream metadata is corrected. A static audit does not certify full in-game compatibility. Hephaestus is deliberately excluded and its Razi source-location integration retired.",
   "dependencies": [
     {
       "mod": "base",
@@ -573,10 +573,10 @@
     },
     {
       "mod": "Hephaestus",
-      "type": "recommended",
-      "declaration": "+ Hephaestus >= 0.3.7",
-      "group": "recommended",
-      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+      "type": "incompatible",
+      "declaration": "! Hephaestus",
+      "group": "conflict",
+      "reason": "Removed from curated Razi campaign: the source mod's enormous H icons, route markers and labels obscure the starmap. No gameplay or tech dependency requires it."
     },
     {
       "mod": "alchemy-khemia",

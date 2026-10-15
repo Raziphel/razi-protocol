@@ -37,15 +37,13 @@ local candidates = {
 -- rabbasca-underground: hidden, moving subsurface; no platform arrivals.
 -- Solar-Halo: unusual twin solar orbit/station and harmful halo-flare routes.
 -- skewer_shattered_planet: plays in the existing endgame Shattered zone.
--- Hephaestus: runtime-built mega-structure with source warp routes.
 local special = {
   {mod="Solar-Halo", location="halo-solar-orbit",
     gate="solaris-discovery"},
   {mod="skewer_shattered_planet", location="shattered-planet",
     gate=nil},
   {mod="rabbasca-underground", location="rabbasca-underground",
-    hidden=true},
-  {mod="Hephaestus", location="hephaestus", gate=nil}
+    hidden=true}
 }
 
 local home = {

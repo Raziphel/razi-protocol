@@ -20,12 +20,13 @@ class TestSourceOwnership(unittest.TestCase):
         import json
         deps=json.loads((ROOT / "info.json").read_text(encoding="utf-8"))["dependencies"]
         recommended={d.split()[1] for d in deps if d.startswith("+ ")}
-        self.assertEqual(len(recommended),24)
+        self.assertEqual(len(recommended),23)
         self.assertTrue({"Big-Monsters","secretas-orbit-patch","planet-ferrum",
                          "VoidProcessing-Updated","Solar-Halo"}.issubset(recommended))
         self.assertFalse(any(d.startswith("? ") for d in deps))
         self.assertIn("(?) FluxWorks >= 0.2.12",deps)
         self.assertIn("! outer-rim",deps)
+        self.assertIn("! Hephaestus",deps)
         normalised=[]
         for dep in deps:
             words=dep.split()
@@ -47,12 +48,13 @@ class TestSourceOwnership(unittest.TestCase):
             # retain their source mod's surface, station or warp machinery.
             "rabbasca-underground", "skewer_shattered_planet",
             "Solar-Halo", "planet-ferrum", "Velora",
-            "Hephaestus", "alchemy-khemia", "Arcanyx",
+            "alchemy-khemia", "Arcanyx",
             "biological-machines-planet-balack",
         }
         names = {dep.split()[1] for dep in info["dependencies"]
                  if dep.startswith(("+ ", "(?) "))}
-        self.assertTrue({"planet-ferrum", "Solar-Halo", "Hephaestus"}.issubset(names))
+        self.assertTrue({"planet-ferrum", "Solar-Halo"}.issubset(names))
+        self.assertNotIn("Hephaestus",names)
         self.assertNotIn("dea-dia-system", names)
         self.assertNotIn("pelagos", names)
         self.assertNotIn("biological-machines-planet-wit", names)
@@ -71,7 +73,7 @@ class TestSourceOwnership(unittest.TestCase):
         for mod_id in {
             "rabbasca-underground", "skewer_shattered_planet",
             "Solar-Halo", "planet-ferrum", "Velora",
-            "Hephaestus", "alchemy-khemia", "Arcanyx",
+            "alchemy-khemia", "Arcanyx",
             "biological-machines-planet-balack"
         }:
             self.assertIn(f'mod="{mod_id}"', module)

@@ -1,4 +1,4 @@
-# Dependency categories and optional companions (2.1.75)
+# Dependency categories and optional companions (2.1.77)
 
 The full audit now includes direct dependencies plus the upstream required graph, version-pin evidence and a repeatable API auditor. The human-readable review lives in
 [Dependency Audit](DEPENDENCY_AUDIT.md) and the matching
@@ -9,9 +9,9 @@ Every manifest entry is reviewed; the contract is checked by
 | Category | Current direct entries |
 | --- | ---: |
 | Required | 48 |
-| Recommended (`+`) | 24 |
+| Recommended (`+`) | 23 |
 | Hidden optional (`(?)`) | 1 |
-| Incompatible (`!`) | 23 |
+| Incompatible (`!`) | 24 |
 
 ## Recommended companions
 
@@ -70,7 +70,9 @@ The supported companions use `+` recommendation declarations, but players
 should not enable every installed third-party mod without checking conflicts.
 
 **Always off for the curated Razi route graph:** `! outer-rim`,
-`! kry-asteroid-belt`, `! AsteroidBelt`, and other declared starmap conflicts.
+`! kry-asteroid-belt`, `! AsteroidBelt`, `! Hephaestus` and other declared
+starmap conflicts. Hephaestus's oversized native H labels and repeated markers
+have no place in Razi's curated star map.
 Outer Rim recommends the forbidden Better Asteroid Belt and explicitly excludes
 the recommended Secretas orbit patch.
 
