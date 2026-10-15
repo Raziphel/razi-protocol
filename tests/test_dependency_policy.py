@@ -78,15 +78,22 @@ class DependencyPolicyTests(unittest.TestCase):
             "Various_Cargo_Bays","space-age-railway-expansion",
             "shield-generators","CircuitLaunchableRockets",
             "CargoBayLimitResearch","platform-logistics-overhaul",
+            "secretas-orbit-patch","VoidProcessing-Updated",
+            "ArmouredBiters21Compat","Explosive_biters",
+            "LithiumBattery","rabbasca-underground","skewer_shattered_planet",
+            "Solar-Halo","planet-ferrum","Hephaestus",
         })
         for candidate in recommended:
             self.assertFalse(any(raw.startswith(candidate+" ")
                                  for raw in deps),candidate)
         self.assertNotIn("Nexus-Threat-Updated >= 1.1.0",deps)
         self.assertNotIn("slp-dyson-sphere-reworked-fork >= 1.0.5",deps)
-        self.assertIn("? FluxWorks >= 0.2.12",deps)
-        for name in ("dea-dia-system","pelagos","outer-rim"):
-            self.assertTrue(any(raw=="? "+name for raw in deps),name)
+        self.assertIn("(?) FluxWorks >= 0.2.12",deps)
+        self.assertIn("(?) outer-rim",deps)
+        self.assertFalse(any(raw.startswith("? ") for raw in deps))
+        for name in ("dea-dia-system","pelagos"):
+            self.assertFalse(any(parse(raw)[0]==name for raw in deps),name)
+        self.assertIn("+ secretas-orbit-patch >= 1.1.3",deps)
 
     def test_science_tab_absence_is_safe_for_razi_owned_cards(self):
         cards=(ROOT/"prototypes/compat/lab_cards.lua").read_text(

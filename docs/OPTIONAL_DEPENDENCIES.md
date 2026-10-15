@@ -1,4 +1,4 @@
-# Dependency categories and optional companions (2.1.66)
+# Dependency categories and optional companions (2.1.74)
 
 The full audit now includes direct dependencies plus the upstream required graph, version-pin evidence and a repeatable API auditor. The human-readable review lives in
 [Dependency Audit](DEPENDENCY_AUDIT.md) and the matching
@@ -9,8 +9,8 @@ Every manifest entry is reviewed; the contract is checked by
 | Category | Current direct entries |
 | --- | ---: |
 | Required | 48 |
-| Recommended (`+`) | 15 |
-| Optional (`?`) | 14 |
+| Recommended (`+`) | 25 |
+| Hidden optional (`(?)`) | 2 |
 | Incompatible (`!`) | 22 |
 
 ## Recommended companions
@@ -66,14 +66,21 @@ Overhaul and Space Age Railway Expansion are recent and should be evaluated
 on disposable saves first. These are portal recommendations, not blanket
 compatibility certifications.
 
-## Deliberately optional
+## Supported recommendations and hidden exceptions
 
-FluxWorks remains at `? FluxWorks >= 0.2.12` until that
-minimum is publicly available and its companion integration is
-tested. Dea Dia and Pelagos remain opt-in due to absent native 2.1
-releases. Outer Rim and Secretas orbit patches can compete over
-source-authored routes; they remain opt-in. Smaller content branches
-and the optional enemy compatibility families stay optional.
+The compatible companion entries now use Factorio 2.1's `+` recommended
+dependency marker, not plain optional `?`. Recommendations still allow players
+to skip the mods and do not certify full-modpack save compatibility.
+
+Pelagos and Dea Dia are omitted until official Factorio 2.1 releases exist.
+Their source-guarded integrations are retained for later ports.
+
+FluxWorks remains `(?) FluxWorks >= 0.2.12` because the integrated minimum
+is not yet publicly released. Outer Rim remains `(?) outer-rim` because it
+conflicts with the recommended Secretas orbit patch, has an incompatible
+asteroid-belt recommendation, and brings Orbital Catapult via a special required
+load-order declaration. Both preserve source ordering when deliberately enabled,
+but are not advertised as recommended choices.
 
 Nexus-Updated stays **required by the curated campaign profile**. It directly requires Nexus-Threat-Updated, so Razi no longer duplicates the exact same hard dependency. Similarly, K2 Dyson Sphere Rebalance requires the correct Dyson Sphere fork; Razi does not need to list it again. The standalone Nexus Bosses addon requires its own
 enemy-mod stack, including Nexus Threat and Big Monsters, when
