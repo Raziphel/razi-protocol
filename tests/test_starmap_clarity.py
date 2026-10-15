@@ -124,6 +124,23 @@ class ConstellationTests(unittest.TestCase):
         self.assertGreater(self.coords["solar-system-edge"][1], -271,
                            "Deep Space drifted too far outside the starmap")
 
+    def test_skewer_shattered_destinations_have_room_for_labels(self):
+        approach=self.coords["shattered-planet"]
+        world=self.coords["skewer_shattered_planet"]
+        beyond=self.coords["skewer_lost_beyond"]
+        self.assertEqual(self.anchors["skewer_shattered_planet"][0],
+                         "shattered-planet")
+        self.assertEqual(self.anchors["skewer_lost_beyond"][0],
+                         "skewer_shattered_planet")
+        self.assertGreater(world[0]-approach[0], 75)
+        self.assertGreater(beyond[0]-world[0], 135)
+        self.assertGreater(math.dist(world,beyond), 140)
+        self.assertGreater(math.dist(approach,beyond), 220)
+        # Source route lengths and source discovery are intentionally not
+        # edited by a cosmetic layout adjustment.
+        source=(ROOT/"prototypes/system/galaxy_layout.lua").read_text()
+        self.assertIn('"skewer_lost_beyond","skewer_shattered_planet",145',source)
+
     def test_deep_space_has_distinct_navigation_sectors(self):
         edge = self.coords["solar-system-edge"]
         nexus, oort, sol = (self.coords[name] for name in
@@ -698,8 +715,8 @@ class ConstellationTests(unittest.TestCase):
 
     def test_bellicos_annex_tracks_actual_visible_orbit(self):
         source = (ROOT / "prototypes/system/bellicos.lua").read_text()
-        self.assertIn('110,0.12', source)
-        self.assertIn('28,0.10,true', source)
+        self.assertIn('170,0.055', source)
+        self.assertIn('62,0.035,true', source)
         self.assertIn('place(near,pulsar,3,0.25)', source)
         self.assertEqual(source.count("position_expedition()"), 3)
 

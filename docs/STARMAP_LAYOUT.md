@@ -491,6 +491,20 @@ chapters advancing upward to Deep Space and Bellicos.
   around Vibrant, and both distinct outer branches to Deep Space. Avoid
   additional Calidus spokes and unnecessary neighboring-star loops.
 
+### Skewer Shattered expedition and final victory
+
+- The optional `skewer_shattered_planet` world follows the native
+  `shattered-planet` Approach waypoint 82 chart units outward. Its
+  `skewer_lost_beyond` child is 145 further visual units east. Native
+  research, platform route names, travel lengths and source mechanics
+  are untouched. Both source prototypes are optional.
+- Draw no giant synthetic orbit rings for these endpoints. Label captions
+  point east, while the source Approach caption points west.
+- The Convergence physical transmission remains the only Razi-authored win
+  call. A runtime guard reasserts the published Space Age/K2SO/legacy
+  silo `set_no_victory` APIs without guessing at foreign scripts.
+  Unsupported independently scripted wins still require source integration.
+
 ## Verification
 
 - `tests/test_starmap_clarity.py` verifies compact ring radius, exact
