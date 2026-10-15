@@ -27,6 +27,21 @@ data:extend({
     order="aa[worlds]-c[asteroid-difficulty]"},
 
 
+  -- PERFORMANCE EXPERIMENTS. All deliberately OFF: Factorio 2.1
+  -- already optimizes many collectors, and some options change resources.
+  {type="bool-setting",name="razi-performance-asteroid-particles",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-a[debris-effects]"},
+  {type="bool-setting",name="razi-performance-weapon-particles",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-b[weapon-effects]"},
+  {type="bool-setting",name="razi-performance-reduced-fragments",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-c[fragment-count]"},
+  {type="bool-setting",name="razi-performance-outer-hostile-density",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-d[outer-hostiles]"},
+
   -- PRODUCTION INTEGRATION. The overarching mode controls optional cross-world
   -- discoveries and industry. The following toggles remain independent filters.
   {

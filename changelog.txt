@@ -1,3 +1,20 @@
+Version: 2.1.106
+Date: 15. 10. 2026
+  Four independent asteroid-performance experiments, all OFF by default:
+    - Optionally trim purely visual asteroid/chunk destruction particles.
+    - Optionally trim purely visual weapon projectile impact particles.
+    - Optionally halve vanilla Big/Huge asteroid fragment creation
+      (explicit tradeoff: fewer fragments AND less harvested material).
+    - Optionally reduce hostile asteroid spawn rates by 28 percent on
+      Level 8-10 routes and orbits without reducing source resource chunks
+      or changing quality probabilities.
+    - Preserve custom Auric fragmentation, Imersite collection, Factorio
+      quality carriers, source recipes and the 10-stage hazard progression.
+    - Run once at the absolute end of data-final-fixes, no polling,
+      per-tick overhead, or bundled external mods.
+    - Add opt-in regression tests and a compatibility/performance guide.
+    - Needs in-game Factorio 2.1 testing and real UPS/FPS benchmarks.
+
 Version: 2.1.105
 Date: 15. 10. 2026
   Tune source-owned asteroid encounters near Vibrant and Secretas:
