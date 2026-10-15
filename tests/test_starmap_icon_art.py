@@ -60,7 +60,7 @@ class StarmapArtTests(unittest.TestCase):
                 self.assertGreater(sum(a > 40 for a in alpha), 700)
                 self.assertLess(sum(a > 40 for a in alpha), 3400)
                 images[stem] = pixels
-        self.assertEqual(len(set(map(hashlib.sha256, images.values()))), 15)
+        self.assertEqual(len({hashlib.sha256(pixels).digest() for pixels in images.values()}), 15)
         # Detect recolors/tiny one-pixel differences by checking the alpha
         # and RGB channels across each complete image at native resolution.
         keys = list(images)
