@@ -34,7 +34,7 @@ class SecretasBootstrapTests(unittest.TestCase):
 
     def test_required_worlds_unchanged(self):
         manifest=json.loads(source("info.json"))
-        self.assertEqual(manifest["version"],"2.1.86")
+        self.assertGreaterEqual(tuple(map(int,manifest["version"].split("."))),(2,1,86))
         self.assertIn("PlanetAthos >= 1.1.3",manifest["dependencies"])
         self.assertIn("nulla >= 1.0.2",manifest["dependencies"])
         self.assertIn("secretas >= 1.0.37",manifest["dependencies"])

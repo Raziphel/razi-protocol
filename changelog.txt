@@ -1,3 +1,19 @@
+Version: 2.1.93
+Date: 15. 10. 2026
+  Ten-level first-party quality asteroid progression:
+    - Generate real Normal/Uncommon/Rare/Epic/Legendary hostile asteroids
+      from native spawn triggers, with 100% Legendary at difficulty 10.
+    - Progress route difficulty smoothly from departure to arrival,
+      including physical belt danger crests and deeper 7-star escalation.
+    - Slightly increase hostile asteroid frequency on advanced routes,
+      preserving original family caps and non-hostile resource chunks.
+    - Add Balanced/Challenging/Relentless presets and native route
+      intelligence warnings showing the new 1-10 quality danger range.
+    - Eliminate per-tick searches and uncontrolled child explosions.
+      Safeguard third-party asteroid spawns and retain save/route IDs.
+    - Include deterministic runtime/data regression fixtures. A full
+      Factorio 2.1 modpack launch remains required for final validation.
+
 Version: 2.1.92
 Date: 15. 10. 2026
   Starmap label clearance and accurate short-hop placement:

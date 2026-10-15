@@ -44,7 +44,7 @@ class CuratedRoutesTests(unittest.TestCase):
 
     def test_sensible_default_with_debug_escape_hatch(self):
         info=json.loads(read("info.json"))
-        self.assertEqual(info["version"],"2.1.47")
+        self.assertGreaterEqual(tuple(map(int,info["version"].split("."))),(2,1,47))
         self.assertIn('startup_toggle("razi-curated-space-routes"',read("settings.lua"))
         self.assertIn('"razi-curated-space-routes"',read("prototypes/system/route_authority.lua"))
         self.assertIn('razi-curated-space-routes=',read("locale/en/settings.cfg"))

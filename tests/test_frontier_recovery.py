@@ -11,7 +11,7 @@ class FrontierRecoveryTests(unittest.TestCase):
     def test_both_worlds_are_required_in_exact_manifest(self):
         info=json.loads(read("info.json"))
         deps=info["dependencies"]
-        self.assertEqual(info["version"],"2.1.81")
+        self.assertGreaterEqual(tuple(map(int,info["version"].split("."))),(2,1,81))
         for name,minimum in (("nulla","1.0.2"),("PlanetAthos","1.1.3")):
             self.assertIn(f"{name} >= {minimum}",deps)
             self.assertFalse(any(d.startswith(("? "+name,"+ "+name,"! "+name))
