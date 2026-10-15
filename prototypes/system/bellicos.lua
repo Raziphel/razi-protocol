@@ -242,8 +242,8 @@ function bellicos.reconcile_final_positions()
   local _,pulsar=plan_expedition()
   local near=near_orbit()
   -- A Lua 'and' expression returns ONE value even when native_point()
-  -- returns x,y. 'local nx,ny=near and native_point(near)' always leaves
-  -- ny nil and crashes the Factorio data stage when Bellicos is present.
+  -- returns x,y. Assigning through boolean short-circuit discarded the
+  -- second value, crashing the Factorio data stage on every near-orbit load.
   local nx,ny
   if near then
     nx,ny=native_point(near)
