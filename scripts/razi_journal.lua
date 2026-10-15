@@ -1226,6 +1226,18 @@ local function nexus_revision(snapshot)
   end
   return table.concat(bits)
 end
+-- Preserve the chapter index's viewport when a click redraws the journal.
+-- Factorio destroys the scroll pane on frame.clear(), so capture its
+-- scroll offset first. Do not persist GUI coordinates in save storage.
+local function find_navigation_scroll(element)
+  if not (element and element.valid) then return nil end
+  if element.name=="razi_journal_navigation" then return element end
+  for _,child in pairs(element.children) do
+    local found=find_navigation_scroll(child)
+    if found then return found end
+  end
+end
+
 local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
@@ -1233,6 +1245,8 @@ local function draw(player,focus_search)
   local size=M.layout(player.display_resolution,player.display_scale)
   local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
   local window_theme=themes.get(chapter_theme)
+  local previous_navigation=find_navigation_scroll(frame)
+  local previous_scroll=previous_navigation and previous_navigation.vertical_scroll_position
   frame.clear()
   frame.style.width=size.width
   frame.style.padding=16
@@ -1357,7 +1371,15 @@ local function draw(player,focus_search)
     projects.render(body,player,p,size)
   else
     local selected=select_quest(player.force,p,context,plan)
+    local intentional_reveal=p.reveal_selection
     local search=render_chapters(body,player,p,context,size,view,plan)
+    -- Normal chapter expand/collapse and dossier clicks retain the user's
+    -- location in the list. Explicit quest navigation may deliberately
+    -- reveal its selection, so that takes precedence over this restore.
+    if previous_scroll and not intentional_reveal then
+      local navigation=find_navigation_scroll(body)
+      if navigation then navigation.vertical_scroll_position=previous_scroll end
+    end
     if focus_search then pcall(function() search.focus() end) end
     if p.chapter_cover and render_chapter_cover(
       body,player,p,context,size,view) then
