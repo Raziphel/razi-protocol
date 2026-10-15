@@ -3,7 +3,7 @@
 // Tint at data stage via scripts/razi_asteroid_difficulty.lua's 10 colors.
 const fs=require("node:fs"),path=require("node:path");
 function pngEncode(pixels) {
- const B=[137,80,78,71,13,10],u32=n=>[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255];
+ const B=[137,80,78,71,13,10,26,10],u32=n=>[(n>>>24)&255,(n>>>16)&255,(n>>>8)&255,n&255];
  function crc(v){let x=0xffffffff;for(const b of v){x^=b;for(let i=0;i<8;i++)x=(x>>>1)^((x&1)?0xedb88320:0)}return(x^0xffffffff)>>>0}
  function chunk(t,v){const body=[...t].map(x=>x.charCodeAt(0)).concat(v);B.push(...u32(v.length));for(const q of body)B.push(q);B.push(...u32(crc(body)))}
  const raw=[];for(let y=0;y<64;y++){raw.push(0);for(let x=0;x<256;x++)raw.push(pixels[y*256+x])}
