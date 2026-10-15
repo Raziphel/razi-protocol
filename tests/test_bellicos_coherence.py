@@ -52,6 +52,8 @@ class BellicosCoherence(unittest.TestCase):
         self.assertIn('Missing pulsar sent Near Bellicos Orbit sideways',fixture)
         self.assertIn('local ok, near_mod_or_error, near_locations=pcall(run,{near=true})',fixture)
         self.assertIn('Aegis location outside its pulsar system',fixture)
+        self.assertIn('alias_warden=true',fixture)
+        self.assertIn('Alternate Warden still renders outside Bellicos',fixture)
 
 if __name__=="__main__":
     unittest.main()
