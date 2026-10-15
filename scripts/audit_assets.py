@@ -21,6 +21,14 @@ GRAPHICS_REFERENCE = re.compile(
 )
 SOURCE_SUFFIXES = {".lua", ".json", ".cfg"}
 
+# This is a historical layer-removal key, not an image opened by Factorio.
+# The old texture is intentionally absent, but the cleanup pass must
+# recognize and discard a stale reference injected by earlier mods.
+MATCH_ONLY_GRAPHICS = {
+    "graphics/route-highlights/directional-strokes.png",
+}
+
+
 REQUIRED_DIMENSIONS = {
     "graphics/icons/CalidusStar.png": (1024, 1024),
     "graphics/icons/SolarisStar.png": (1024, 1024),
@@ -180,6 +188,8 @@ def audit_repository(root: Path) -> list[str]:
     seen = set()
     for reference in references:
         relative = reference.mod_path[len(MOD_PREFIX):]
+        if relative in MATCH_ONLY_GRAPHICS:
+            continue
         asset = root / relative
         location = f"{reference.source}:{reference.line}"
         if not asset.is_file():
