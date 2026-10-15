@@ -1,3 +1,30 @@
+## Convergence mandates: engineered hardware, not glowing artifacts (October 2026)
+
+All five Convergence stage illustrations have been replaced in place as
+transparent 64px PNG icons, with editable matching SVG designs generated
+by `scripts/generate_convergence_icons.js` (`node scripts/generate_convergence_icons.js`).
+
+- **Stellar** is an armored solar collector with cast steel coupling arms
+  and a small brass/amber stellar cell.
+- **Industry** is a visible manufacturing press, a moving ram, three
+  copper-toned forged billets and an actual conveyor.
+- **Deep Space** is a long receiver mast with a directional dish and
+  small instrument light, not a glowing portal.
+- **Resonance** is a triple electromagnetic coil bank with physical
+  winding, ferrite housings and restrained violet current.
+- **Ignition** is a rocket thruster and heat-shield nozzle with an
+  orange/ivory exhaust plume, not a golden energy sphere.
+
+Art uses controlled, hand-authored silhouettes, solid materials and
+subtle face bevels; no mandala effects, painterly nebulae, heavy bloom,
+ornate octagonal badges or shared magical ring compositions. Design
+for recognition at 32 to 64 pixels in Factorio inventory/research views.
+
+No technology, recipe, ingredient, route, item ID, unlock, icon reference
+or prototype change is needed: the existing five image paths stay
+unchanged. The companion test `tests/test_convergence_art.py` checks PNG
+integrity, alpha silhouettes and all editable source files.
+
 ## Starmap markers: silhouette-led, not repeated badges (October 2026)
 
 The older set was too repetitive at the real game's starmap size: all
