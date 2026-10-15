@@ -5,6 +5,13 @@ local hazards=require("prototypes.system.route_hazards")
 local catalog=require("scripts.galactic_catalog")
 local quality_levels=require("scripts.razi_asteroid_difficulty")
 local prefix="razi-route-intel."
+local function selected(name,default)
+  local item=settings and settings.startup and settings.startup[name]
+  return item and item.value or default
+end
+local function show(name)
+  return selected("razi-route-show-"..name,true)~=false
+end
 
 local function localise(key,...)
   return {prefix..key,...}
@@ -40,16 +47,16 @@ function M.annotate(route)
   local level_text=lo==hi and localise("quality-stage",tostring(hi))
     or localise("quality-stages",tostring(lo),tostring(hi))
   local hex=quality_levels.route_color_richtext(hi)
-  local additions={
-    field("route",localise("kind-"..kind),220),
-    field("danger",
+  local additions={field("route",localise("kind-"..kind),220)}
+  if show("danger") then
+    additions[#additions+1]=field("danger",
       {"","[color="..hex.."]",level_text,"[/color]"},221)
-  }
-  if report.largest~="none" then
+  end
+  if show("sizes") and report.largest~="none" then
     additions[#additions+1]=field("largest",
       localise("size-"..report.largest),223)
   end
-  if report.chunks>0 then
+  if show("salvage") and report.chunks>0 then
     additions[#additions+1]=field("salvage",
       localise("chunks-present",tostring(report.chunks)),224)
   end
@@ -57,28 +64,28 @@ function M.annotate(route)
   -- second number which may reflect a different mod's freight override.
   -- One actionable advisory at the top danger grades, not two repeated
   -- "Critical" and "Legendary" warnings from competing tier systems.
-  if hi>=7 then
+  if show("advice") and hi>=7 then
     local advice=hi>=10 and "prepare-legendary"
       or hi>=9 and "prepare-extreme" or "prepare-advanced"
     additions[#additions+1]=field("preparation",localise(advice),226)
   end
-  if report.unknown then
+  if show("unknown") and report.unknown then
     additions[#additions+1]=field("unknown",localise("unknown-warning"),227)
   end
-  if hazards.is_belt_crossing(route) then
+  if show("belts") and hazards.is_belt_crossing(route) then
     additions[#additions+1]=field("progress",localise("required-belt"),228)
   end
   -- Only describe routes with two explicitly catalogued system endpoints.
   -- Unknown third-party planets must never be assigned a guessed sector.
   local from,to=catalog.system(route.from),catalog.system(route.to)
-  if from~="unassigned" and to~="unassigned" then
+  if show("sectors") and from~="unassigned" and to~="unassigned" then
     local desc=from==to
       and localise("inside-system",localise("system-"..from))
       or localise("across-systems",
         localise("system-"..from),localise("system-"..to))
     additions[#additions+1]=field("sector",desc,229)
   end
-  if type(route.length)=="number" and route.length>75000 then
+  if show("haul") and type(route.length)=="number" and route.length>75000 then
     additions[#additions+1]=field("haul",
       localise("haul-"..hazards.haul_class(route)),230)
   end

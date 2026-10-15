@@ -112,6 +112,18 @@ data:extend({
     "ca[quality-of-life]-c3[curated-route-authority]"),
   startup_toggle("razi-route-intelligence",
     "ca[quality-of-life]-d[route-intelligence]"),
+  -- EXPEDITION PRESENTATION AND PREFERENCES
+  {type="bool-setting",name="razi-route-distance-repair",setting_type="startup",default_value=true,order="ba[integration]-z[distance-repair]"},
+  {type="string-setting",name="razi-route-visibility",setting_type="startup",default_value="standard",allowed_values={"soft","standard","bright"},order="ca[quality-of-life]-e[route-visibility]"},
+  {type="string-setting",name="razi-route-detail",setting_type="startup",default_value="standard",allowed_values={"economy","standard","smooth"},order="ca[quality-of-life]-f[route-detail]"},
+  {type="bool-setting",name="razi-route-show-danger",setting_type="startup",default_value=true,order="ca[quality-of-life]-g[danger]"},
+  {type="bool-setting",name="razi-route-show-sizes",setting_type="startup",default_value=true,order="ca[quality-of-life]-h[sizes]"},
+  {type="bool-setting",name="razi-route-show-salvage",setting_type="startup",default_value=true,order="ca[quality-of-life]-i[salvage]"},
+  {type="bool-setting",name="razi-route-show-advice",setting_type="startup",default_value=true,order="ca[quality-of-life]-j[advice]"},
+  {type="bool-setting",name="razi-route-show-unknown",setting_type="startup",default_value=true,order="ca[quality-of-life]-k[unknown]"},
+  {type="bool-setting",name="razi-route-show-belts",setting_type="startup",default_value=true,order="ca[quality-of-life]-l[belts]"},
+  {type="bool-setting",name="razi-route-show-sectors",setting_type="startup",default_value=true,order="ca[quality-of-life]-m[sectors]"},
+  {type="bool-setting",name="razi-route-show-haul",setting_type="startup",default_value=true,order="ca[quality-of-life]-n[haul]"},
   -- GALAXY VISUALS
   {
     type="string-setting",
@@ -143,5 +155,9 @@ data:extend({
     setting_type="startup",
     default_value=false,
     order="cb[starmap]-e[chart]"
-  }
+  },
+  {type="string-setting",name="razi-map-star-intensity",setting_type="startup",default_value="standard",allowed_values={"dim","standard","bright"},order="cb[starmap]-f[stars]"},
+  {type="string-setting",name="razi-map-halo-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-g[halos]"},
+  {type="string-setting",name="razi-map-belt-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-h[belt]"},
+  {type="string-setting",name="razi-map-dust-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-i[dust]"}
 })

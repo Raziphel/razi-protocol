@@ -84,6 +84,8 @@ function M.correct(route)
   return true,before,minimum,span
 end
 function M.data_final_fixes()
+  local opt=settings and settings.startup and settings.startup["razi-route-distance-repair"]
+  if opt and opt.value==false then return 0 end
   local raw=data and data.raw or {}
   local routes=raw["space-connection"] or {}
   local names={}
