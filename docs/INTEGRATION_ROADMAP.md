@@ -102,14 +102,14 @@ pass in-engine testing.
 - [x] Retain the four compatible already-supported worlds (Rabbasca, Igrys, Foliax, Obsidiax)
 - [x] Register eleven newly requested mods as optional 2.1-compatible dependencies
 - [x] Attach selected ordinary planets to appropriate stars without creating research bypasses
-- [x] Preserve Solar Halo flares, Ferrum's remote operations, Balack's huge asteroid routes, and native moons
+- [x] Preserve Ferrum's remote operations, Balack's huge asteroid routes, and remaining native moons
 - [x] Keep Rabbasca's invisible underground warp stabilizer off the ordinary space map
 - [x] Add fixtures for absent mods, native-route preservation, gated discoveries and technology cycles
 - [ ] Verify actual prototype IDs for Velora, Khemia, Arcanyx and Hephaestus using full post-load Factorio data
 - [ ] Verify Ferrum choice-driven research alongside Razi system cards and K2SO
 - [ ] Resolve Balack/Wit changes to promethium science and early space science in the full modpack
 - [ ] Confirm no Hephaestus mass relay bypasses a locked star discovery
-- [ ] Validate Solar Halo's flare asteroid curves and Shattered Planet endgame mod together
+- [ ] Validate the remaining Shattered Planet endgame integration
 - [ ] Integrate native items, science and specialty machines only after their exact recipes are verified in-game
 - [ ] Benchmarked gameplay run with all 16 requested modules installed at once
 

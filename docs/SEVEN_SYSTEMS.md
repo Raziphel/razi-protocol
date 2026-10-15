@@ -313,7 +313,8 @@ solar-station handling. Ferrum and Khemia join Vibrant's electrically and
 chemically focused worlds; Arcanyx joins Umbra's experimental side branches;
 Velora stays Gleba's moon. Balack remains a
 dangerous post-Aquilo destination inside Vespera. Muluna remains Nauvis's required moon.
-Solar Halo and Rabbasca Underground retain their source-owned layouts.
+Rabbasca Underground retains its hidden source-owned layout.
+The external Solar Halo mod was retired from the curated list in 2.1.82.
 
 Native authors' unusual worlds are not flattened into Razi's standard
 asteroid patterns. For the exact list, safety checks and unresolved

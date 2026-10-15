@@ -22,10 +22,8 @@ factory. A successful static test does not prove that all mods load together.
 | `obsidiax` | Already integrated, required install | Vespera | Frozen lava world retains rock growing and thermal mechanics. |
 | `rabbasca-underground` | Registered, native-only | Hidden Rabbasca stabilizer | A *non-space-accessible* traveling underground environment. Never add a launch corridor or reveal on the starmap. |
 | `skewer_shattered_planet` | Registered, native-only | Original Shattered Planet endgame | Do not duplicate the Shattered Planet location, isotopes, or native science gates. Combined endgame requires live validation. |
-| `Solar-Halo` | Registered, native-only, discovery gate when present | Solar orbit and station | Keep the mod's `halo-solar-orbit` and `halo-solar-station` connection and flare asteroids; native Vulcanus entrance. |
 | `planet-ferrum` | Guarded side-world integration | Vibrant; native Fulgora/Vulcanus routes | Remote-view-only artificial planet. Preserve choice-driven tech and native rare-earth bridges with Linox/Moshine; no forced landing. |
 | `Velora` | Guarded moon integration | Gleba moon, Nyxaris | Original moon orbit, native enemy population, science and resource chain. Add a short connection only if missing. |
-| `moon-eneas` | **Optional** | Nauvis moon in Calidus | Original Unit-05/gantry and science unchanged; a native-safe Nauvis fallback route. |
 | `shchierbin` | **Optional** | Exterior Vibrant near Paracelsin | Original vanadium gameplay preserved, no asteroid-belt bypass. |
 | `nulla` | **Required** | Aquilo moon in Vespera | Source-owned Robotic Science, radioactive scrapyards and combat drones now feed shared recovery research. |
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
@@ -67,7 +65,6 @@ dynamic research choices are untouched. The moon Velora keeps its
 original orbital relationship. Balack keeps its original, hard
 Aquilo-side hazardous path. Special worlds (Rabbasca Underground and
 Shattered) retain their native mechanics and routes.
-Solar Halo's unique flare route and solar station are never overwritten.
 
 Late research naturally remains late: source original tech may require
 promethium, an Aquilo visit or its own local production chain. Razi
@@ -82,8 +79,6 @@ pack requires items from these optional worlds.
 2. **Ferrum:** Its recipe unlock order depends on in-game choices; avoid
    injecting generic science or rewriting those choice rules. It already
    integrates with Linox and Moshine.
-3. **Solar Halo:** Its sun orbit has dedicated flare asteroids. Do not
-   apply an ordinary Razi asteroid profile to those native routes.
 4. **Rabbasca Underground:** Underground warp surfaces cannot receive
    platforms. No orbital route is created.
 5. **Arcanyx:** Voidcraft, Iridescent Industry and associated assets
@@ -96,7 +91,7 @@ pack requires items from these optional worlds.
 ### Validation before an all-modpack release
 
 Run Factorio 2.1 with just the required pack, then with each optional
-world, then all eleven new options together. Export `data.raw`, run
+world, then the remaining supported options together. Export `data.raw`, run
 `scripts/audit_prototypes.py`,
 `scripts/audit_supply_chains.py`, and
 `scripts/audit_route_distances.py`; confirm tech unlock names, visually
@@ -111,7 +106,6 @@ The requested mod pages and their original source links are at
 `https://mods.factorio.com/mod/<mod-ID>`. Confirmed upstream source
 repositories include:
 - `benlaflen/planet-ferrum`
-- `ackeri/Solar-Halo`
 - `PizzaPlanner/rabbasca-underground`
 - `bradythehuman/Biological-Machines`
 
@@ -156,3 +150,10 @@ native resource costs, bonuses, original recipe preservation, late
 research unlocks, optional mod absence, missing supplier materials,
 source machine fluid ports and the existing mod-settings toggle.
 Factorio 2.1 full-modpack validation remains necessary.
+
+### Retired in 2.1.82
+
+Solar Halo and Eneas no longer receive dependencies, chart integration,
+scientific shortcuts, or Razi-authored routes. Factorio users who previously
+enabled them should disable the external mods themselves and protect old
+saves before removing their orbital surfaces.

@@ -1,4 +1,4 @@
-# Dependency categories and optional companions (2.1.81)
+# Dependency categories and optional companions (2.1.82)
 
 The full audit now includes direct dependencies plus the upstream required graph, version-pin evidence and a repeatable API auditor. The human-readable review lives in
 [Dependency Audit](DEPENDENCY_AUDIT.md) and the matching
@@ -9,8 +9,8 @@ Every manifest entry is reviewed; the contract is checked by
 | Category | Current direct entries |
 | --- | ---: |
 | Required | 50 |
-| Recommended (`+`) | 24 |
-| Optional (`?`) | 2 |
+| Recommended (`+`) | 23 |
+| Optional (`?`) | 1 |
 | Hidden optional (`(?)`) | 1 |
 | Incompatible (`!`) | 20 |
 
@@ -83,12 +83,10 @@ the recommended Secretas orbit patch.
 packages and declares `celestial-weather-updated` incompatible. Disable
 that previously recommended fork when updating your enabled mod profile.
 
-**Staff optional planets:** `? moon-eneas >= 1.0.10` and
-`? shchierbin >= 0.3.19`. Eneas retains the native Unit-05 gantry and
-moon gameplay; recommended Construction Drones/RPG packages from the Eneas
-author are not Razi hard requirements. Shchierbin stays on the outside of
-Vibrant's rocks and connects to Paracelsin if its native connection is
-missing. Neither becomes an expedition progression requirement.
+**Staff optional planet:** `? shchierbin >= 0.3.19` remains available
+for the outer Vibrant vanadium detour. Its Paracelsin branch is source-safe
+and it never blocks the main research campaign. Eneas and Solar Halo were
+retired in 2.1.82 and are neither recommended nor optional dependencies.
 
 **Required campaign additions:** `nulla >= 1.0.2` and
 `PlanetAthos >= 1.1.3` are no longer optional. Their real science and

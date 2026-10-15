@@ -1,3 +1,10 @@
+**2.1.82: Eneas and Solar Halo removed.** Neither source mod is now
+optional, recommended, or required. Their Razi-authored integration routes,
+discovery hooks, and obsolete regression fixtures were removed. The Calidus
+star graphics and Dyson Sphere project are entirely Razi-owned or sourced
+from independent required mods and remain unchanged. Disable any already
+installed external mod copies manually; back up affected saves first.
+
 **2.1.81: Required Athos and Nulla research worlds.** Athos now joins
 Solaris with native Particulate Science, diamonds and Crushing Industry;
 Nulla joins Vespera as Aquilo's drone salvage moon with Robotic Science.
@@ -17,7 +24,7 @@ next fix. No compulsory science or planet dependencies were added.
 
 **2.1.79: Staff compatibility recommendations.** Added standalone
 Frozeta Nuclear Winter and combined Celestial Weather Next as recommended
-companions. Restored Eneas and Shchierbin as opt-in side worlds with guarded
+companions. Shchierbin was retained as an opt-in side world with guarded
 connections, without expanding the mandatory science chain. Previously
 crashing Nulla and Planet Athos are now experimental manual opt-ins; Outer Rim remains blocked.
 See [Dependency Audit](docs/DEPENDENCY_AUDIT.md). Full engine validation
@@ -380,7 +387,7 @@ Vespera and Umbra currently tint existing icon assets, rather than introducing u
 
 ## Expanded Community Planet Compatibility
 
-The October 2026 modpack expansion recognises Ferrum, Velora, Khemia, Arcanyx, Balack, Solar Halo, Rabbasca Underground, and Shattered Planet where installed. Nulla and Athos are experimental opt-ins with guarded compatibility patches; enable them one at a time and validate a real Factorio load.
+The October 2026 modpack expansion recognises Ferrum, Velora, Khemia, Arcanyx, Balack, Rabbasca Underground, and Shattered Planet where installed. Nulla and Athos are experimental opt-ins with guarded compatibility patches; enable them one at a time and validate a real Factorio load.
 
 The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
 
@@ -462,7 +469,7 @@ prototype or research cost is introduced. Details are in
 ## Required planetary campaign and non-planet bridges
 
 Cerys and ten other formerly optional or recommended 2.1 worlds are now
-part of the required installation. Eneas is an optional 2.1 side moon.
+part of the required installation. Eneas has since been removed from the curated pack.
 Its upstream Construction Drones and RPG System dependencies are suggestions,
 not Razi-mandated prerequisites; Unit-05 and gantry behavior stay native.
 Existing destination technologies

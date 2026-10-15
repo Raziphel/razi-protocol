@@ -1,12 +1,12 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.81)
+# Razi Protocol: Direct and transitive dependency audit (2.1.82)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
 | required | 50 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 24 | Compatible 2.1 companion suggestions, not required |
-| optional | 2 | Experimental and staff-approved manually installed planets |
+| recommended | 23 | Compatible 2.1 companion suggestions, not required |
+| optional | 1 | Experimental and staff-approved manually installed planets |
 | hidden-optional | 1 | Unadvertised load-order compatibility links |
 | incompatible | 20 | Known conflicts and unsupported combinations |
 
@@ -42,7 +42,7 @@ The following entries are required by another already-required mod, **but their 
 
 Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-on explicitly requires `Big-Monsters >= 2.2.1`, `Nexus-Threat-Updated >= 1.1.0`, Toxic Biters, Arachnids and Electric Flying Enemies. Since Nexus Bosses declares `? razi-protocol` and is installed separately, Razi must not introduce a reverse dependency cycle. Big Monsters can remain recommended as an extra enemy addition when the addon is absent; when the addon is installed it will be loaded as a hard transitive dependency regardless of Razi's `+` declaration. [Official Nexus Bosses dependency list](https://mods.factorio.com/mod/nexus-bosses/dependencies).
 
-## All 97 direct dependency declarations
+## All 95 direct dependency declarations
 
 | Declaration | Direct category |
 | --- | --- |
@@ -56,8 +56,6 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `k2-dyson-sphere-rebalance >= 0.1.2` | required |
 | `Krastorio2Assets >= 2.1.0` | required |
 | `planet-muluna >= 2.7.25` | required |
-| `nulla >= 1.0.2` | required |
-| `PlanetAthos >= 1.1.3` | required |
 | `planetaris-unbounded >= 1.9.1` | required |
 | `planetaris-tellus >= 1.1.11` | required |
 | `planetaris-hyarion >= 1.3.23` | required |
@@ -97,7 +95,9 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **24 entries** |
+| `nulla >= 1.0.2` | required |
+| `PlanetAthos >= 1.1.3` | required |
+| **Recommended companions** | **23 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
@@ -113,7 +113,6 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ LithiumBattery >= 7.3.0` | recommended |
 | `+ rabbasca-underground >= 0.10.3` | recommended |
 | `+ skewer_shattered_planet >= 1.0.42` | recommended |
-| `+ Solar-Halo >= 1.2.0` | recommended |
 | `+ planet-ferrum >= 0.1.4` | recommended |
 | `+ Big-Monsters >= 2.2.1` | recommended |
 | `+ Various_Cargo_Bays >= 1.1.0` | recommended |
@@ -122,8 +121,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ CircuitLaunchableRockets >= 1.4.6` | recommended |
 | `+ CargoBayLimitResearch >= 1.1.2` | recommended |
 | `+ platform-logistics-overhaul >= 2.1.2` | recommended |
-| **Optional side worlds** | **2 entries** |
-| `? moon-eneas >= 1.0.10` | optional |
+| **Optional side worlds** | **1 entries** |
 | `? shchierbin >= 0.3.19` | optional |
 | **Hidden integration ordering** | **1 entries** |
 | `(?) FluxWorks >= 0.2.12` | hidden-optional |
@@ -149,7 +147,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `! Hephaestus` | incompatible |
 | `! biological-machines-planet-wit` | incompatible |
 
-### New companion group (15 October 2026)
+## New companion group (15 October 2026)
 
 Six more non-mandatory companion mods support orbit storage and pod throughput,
 nuclear/fusion railway industry, shield defenses, circuit rocket automation,
@@ -196,9 +194,9 @@ about all versions is appropriate.
 
 Factorio cannot automatically remove incompatible already-installed mods.
 Disable **Outer Rim**, **Better Asteroid Belt**, and **Celestial Weather
-Additions 1.6.0** in Mod Manager. The 24 remaining recommendations have
+Additions 1.6.0** in Mod Manager. The 23 remaining recommendations have
 not undergone an exhaustive Factorio-engine test together. Test high-impact
-content (Shattered Planet, Void Processing, Ferrum, Solar Halo)
+content (Shattered Planet, Void Processing and Ferrum)
 in a separate copied-save profile, retaining manual CI runs.
 
 ## Hephaestus exclusion (15 October 2026)
@@ -217,10 +215,9 @@ be disabled in Factorio's Mod Manager; Razi cannot uninstall it.
 - **Celestial Weather Next 1.6.0** (`celestial-weather-additions-updated`)
   replaces the old `celestial-weather-updated` recommendation because Next
   combines weather and additions and expressly conflicts with the separate fork.
-- **Eneas 1.0.10+** and **Shchierbin 0.3.19+** are user-selected optional
-  worlds, with guarded routes but no required new science or core planets.
-  Eneas retains its author-owned Unit-05 and launch gantry; Shchierbin
-  receives an exterior Vibrant placement linked only to Paracelsin.
+- **Historical 2.1.79 decision:** Shchierbin and Eneas were once both
+  optional. Eneas was subsequently removed in 2.1.82. Only Shchierbin
+  remains available as a manually selected side world.
 - **Historical 2.1.79 decision:** Nulla 1.0.2 and Planet Athos 1.1.3
   were blocked after their original full-pack failures. In 2.1.80 they moved
   to experimental opt-in status with guarded code (documented below);
@@ -257,3 +254,14 @@ and logs the missing source ID rather than inserting an impossible gate.
 This release still requires a **complete Factorio 2.1/K2SO engine startup and
 copied-save validation**. Earlier versions of both required mods produced
 source-stage failures, and Razi's guards have not been proven by a full load.
+
+## 2.1.82: Retired community content
+
+Eneas (`moon-eneas`) and Solar Halo (`Solar-Halo`) are **no longer
+listed anywhere in the dependency manifest**. Their Razi-owned route
+and source-discovery integration rules and test fixtures were removed.
+Existing installed mod copies are **not uninstalled** by removing a dependency;
+disable both separately in Factorio's mod manager. Before opening an older
+save, make a backup, since removed planet/orbit locations and their factories
+may no longer exist. Razi's own stars, orbit renderings and Dyson Sphere
+stages are independent artwork and remain enabled.
