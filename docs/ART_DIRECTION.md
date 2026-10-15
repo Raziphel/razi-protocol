@@ -1,3 +1,19 @@
+# Art direction: purposeful sci-fi restraint
+
+Razi Protocol should feel like an authored expedition atlas, not a busy constellation of decorative sprites. The visuals must reveal structure: which sun a world belongs to, where the player goes next, what route is dangerous, and why a region has its own identity.
+
+**Map priorities:** clear system composition, meaningful orbit spacing, concise names, coherent links and *one deliberately legible crossing* at authored asteroid divides. Never hide destinations behind graphics or draw a decorative path that looks like a real connection.
+
+**Hazard palette:** colors must reflect finalized route/asteroid information. Dangerous crossings should be unambiguously cautionary without overwhelming the screen. Preserve contrast under different zoom and UI-scale settings. Favor fewer, stronger visual cues over multiple overlapping line systems.
+
+**Journal UI:** look like a field dossier with a strong information hierarchy. Restrain chapter accents, use credible game art and preserve reading/scroll context. Do not add new dashboards when Quests, Projects and Journal already cover the function.
+
+**Implementation:** respect source artwork rights, render the route overlay from finalized prototypes at data stage, and avoid per-tick decorations. See [Developer Handbook](DEVELOPER_HANDBOOK.md), [Architecture](ARCHITECTURE.md), and [Validation](VALIDATION.md).
+
+The detailed implementation log below is historical and should be checked against current source before using it as a requirement.
+
+---
+
 ## Starmap overlay: continuous, subdued hazard corridors (October 2026)
 
 Inspired by the documented behavior and screenshots of valent125's
