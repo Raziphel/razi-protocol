@@ -16,9 +16,8 @@ local function remove_stock_entry_routes()
 	deleteRoutesBetween("sye-calidus", entry_gate)
 end
 
--- Keep the source pulsar artwork and Aegis belt in an optional NORTH-EAST
--- annex beyond the northern Deep Space edge, without excessive map panning. Preserve route names and
--- guard missing/retyped source prototypes (especially missing pulsar).
+-- Preserve the source pulsar artwork in a distinct northern annex,
+-- beyond Nexus/Oort/Sol. Guard missing or retyped source prototypes.
 local function endpoint_type(name)
 	if data.raw["space-location"] and data.raw["space-location"][name] then
 		return "space-location"
@@ -54,19 +53,19 @@ local function position_expedition()
   end
   local near=near_orbit()
   local pulsar=endpoint_type("pulsar") and "pulsar" or nil
-  if pulsar then place(pulsar,"solar-system-edge",110,0.12) end
+  if pulsar then place(pulsar,"solar-system-edge",170,0.055) end
   if near then
     if pulsar then place(near,pulsar,3,0.25)
-    else place(near,"solar-system-edge",110,0.12) end
+    else place(near,"solar-system-edge",170,0.055) end
   end
-  place(entry_gate,"solar-system-edge",28,0.10,true)
+  place(entry_gate,"solar-system-edge",62,0.035,true)
   if near then
     place(bellicos_gate,near,42,0.32,true)
     place("aegis-outer-edge",near,52,0.25)
     place("aegis-inner-edge",near,31,0.25)
     place("point-warden",near,45,0.36)
   elseif pulsar then place(bellicos_gate,pulsar,42,0.32,true)
-  else place(bellicos_gate,"solar-system-edge",110,0.12,true) end
+  else place(bellicos_gate,"solar-system-edge",170,0.055,true) end
   if #updates>0 then PlanetsLib:update(updates) end
 end
 

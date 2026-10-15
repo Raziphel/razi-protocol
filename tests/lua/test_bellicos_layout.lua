@@ -75,12 +75,15 @@ local function run(options)
 end
 
 local _, present, _, connected = run({pulsar="space-location"})
-check(present.pulsar.orbit.parent.name == "solar-system-edge",
+check(present.pulsar.orbit.parent.name == "solar-system-edge"
+  and present.pulsar.orbit.distance==170,
   "Present native pulsar did not join deep-space annex")
 check(present[gate_b].orbit.parent.name == "pulsar",
   "Present pulsar gateway not attached to pulsar")
-check(present[gate_a].orbit.parent.name == "solar-system-edge",
-  "Entry gateway not attached to deep-space edge")
+check(present[gate_a].orbit.parent.name == "solar-system-edge"
+  and present[gate_a].orbit.distance==62
+  and present[gate_a].orbit.orientation==0.035,
+  "Aegis entry must have a separate northern lane")
 check(connected[route_name] and connected[route_name].length==250000,
   "Original expedition route gameplay length changed")
 check(connected[route_name].from=="solar-system-edge" and
@@ -90,14 +93,14 @@ check(connected[route_name].from=="solar-system-edge" and
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="solar-system-edge",
   "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance==110,
+check(missing[gate_b].orbit.distance==170,
   "Missing pulsar fallback must stay in the nearer Deep Space annex")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
 local _, near_locations=run({near=true})
 check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
   "Visible Bellicos orbit should be detached from the central galaxy")
-check(near_locations["near-bellicos-orbit"].orbit.distance==110,
+check(near_locations["near-bellicos-orbit"].orbit.distance==170,
   "Visible Bellicos orbit was not moved north of Deep Space")
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
