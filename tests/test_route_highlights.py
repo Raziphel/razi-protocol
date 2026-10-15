@@ -8,19 +8,24 @@ def source(path):
     return (ROOT/path).read_text(encoding="utf-8")
 
 class RouteArtTests(unittest.TestCase):
-    def test_single_native_route_and_no_stretched_repeats(self):
-        s=source("prototypes/system/route_highlights.lua")
-        self.assertIn("function M.marker_for_connection(route,mode,scope)",s)
-        self.assertIn("local MARKER_LIMIT=36",s)
-        self.assertIn("if n>=MARKER_LIMIT then break end",s)
-        self.assertIn("hazards.is_belt_crossing(connection)",s)
-        self.assertIn("local at,length=route_path(route,a,b)",s)
-        self.assertIn("obsolete(atlas.layers[i])",s)
-        self.assertNotIn("filename=SHEET",s)
-        self.assertNotIn("rendered_span",s)
-        self.assertNotIn("MAX_SEGMENTS",s)
-        self.assertNotIn("data:extend",s)
-        self.assertNotIn("script.on_event",s)
+    def test_real_route_geometry_ribbons_and_no_legacy_duplicate_paths(self):
+        source_lua=source("prototypes/system/route_highlights.lua")
+        ribbons=source("prototypes/system/route_ribbons.lua")
+        self.assertIn("M.route_path=route_path",source_lua)
+        self.assertIn("M.is_major=is_major",source_lua)
+        self.assertIn("route_ribbons",source_lua)
+        self.assertIn("function M.strokes_for_connection(owner,route,mode,scope)",ribbons)
+        self.assertIn("local TARGET_SPAN=3.6",ribbons)
+        self.assertIn("local ANGLES,CELL,COLS=128,64,16",ribbons)
+        self.assertIn("shift={(a.x+b.x)*16,(a.y+b.y)*16}",ribbons)
+        self.assertIn("scale=d*32/UNIT",ribbons)
+        self.assertIn("local ROUTE_LIMIT,LAYER_BUDGET=96,1600",ribbons)
+        self.assertIn("if sprite.filename==SHEET then return 0 end",ribbons)
+        self.assertIn("function M.data_final_fixes(owner)",ribbons)
+        self.assertNotIn("rendered_span",ribbons)
+        self.assertNotIn("directional-strokes.png\"}",ribbons)
+        self.assertNotIn("script.on_event",ribbons)
+
 
     def test_route_markers_use_ten_stage_quality_colors(self):
         overlay=source("prototypes/system/route_highlights.lua")
@@ -29,7 +34,8 @@ class RouteArtTests(unittest.TestCase):
         self.assertIn("quality.route_color(grade)",overlay)
         self.assertIn("function M.route_color_level(route)",overlay)
         self.assertIn("local grade=M.route_color_level(route)",overlay)
-        self.assertIn('a=grade and math.min(.64,.24+.038*grade)',overlay)
+        self.assertIn("local grade=M.route_color_level(route)",overlay)
+        self.assertIn("local level=owner.route_color_level(row.route)",source("prototypes/system/route_ribbons.lua"))
         self.assertIn("M.route_colors={",ladder)
         self.assertIn("M.route_color_hex={",ladder)
         self.assertIn("quality_levels.route_color_richtext(hi)",tooltip)
@@ -44,14 +50,13 @@ class RouteArtTests(unittest.TestCase):
         self.assertTrue((ROOT/"graphics/icons/routes/asteroid-route.png").exists())
         self.assertTrue((ROOT/"graphics/route-highlights/quality-risk-marker.png").exists())
         self.assertTrue((ROOT/"graphics/route-highlights/quality-risk-marker.svg").exists())
-        self.assertIn('local WARNING=MARKER',
-                      source("prototypes/system/route_highlights.lua"))
-        self.assertIn('local WAYPOINT=MARKER',
-                      source("prototypes/system/route_highlights.lua"))
+        self.assertTrue((ROOT/"graphics/route-highlights/route-ribbons.png").exists())
+        self.assertTrue((ROOT/"scripts/generate_route_ribbons.js").exists())
         settings=source("settings.lua")
         for key in ("razi-route-overlay-mode","razi-route-overlay-scope"):
             self.assertIn(key,settings)
         self.assertIn('default_value="danger"',settings)
+        self.assertIn('default_value="all",allowed_values={"major","all"}',settings)
 
 if __name__=="__main__":
     unittest.main()

@@ -27,14 +27,23 @@ local belt={from="razi-umbra-belt-inner",to="razi-umbra-belt-outer",
  shape="line",asteroid_spawn_definitions={}}
 check(m.threat_tier(medium)==3 and m.threat_tier(huge)==5,
  "Threat rankings must not change")
-check(#m.strokes_for_connection(safe,"danger","all")==1,
- "Level 1-2 connections need one color marker, not a second route line")
-check(#m.strokes_for_connection(medium,"danger","all")==1,
- "Medium asteroid route must use one color marker without a stripe")
-check(#m.strokes_for_connection(huge,"danger","all")==1,
- "Severe hazard must have one warning")
-check(#m.strokes_for_connection(belt,"danger","major")==1,
- "Belt crossing gets one warning")
+check(#m.strokes_for_connection(safe,"danger","all")>10,
+ "Safe straight route must have a continuous blue path, not one color pip")
+check(#m.strokes_for_connection(medium,"danger","all")>5,
+ "Medium route needs real teal/green connected ribbon segments")
+check(#m.strokes_for_connection(huge,"danger","all")>5,
+ "Severe route must have real colored geometry")
+check(#m.strokes_for_connection(belt,"danger","major")>=2,
+ "Belt crossing must visibly be a colored line through its own field")
+local ribbons=m.strokes_for_connection(safe,"danger","all")
+local first=ribbons[1]
+local ribbon_module=require("prototypes.system.route_ribbons")
+check(first.filename==ribbon_module.sheet
+  and first.size[1]==64 and first.x<1024 and first.y<512
+  and first.tint.b>first.tint.r,
+  "Real starter line must use the 128-direction blue ribbon atlas")
+check(type(first.shift[1])=="number" and type(first.shift[2])=="number",
+  "Generated ribbons require absolute native-map pixel coordinates")
 local marker=m.marker_for_connection(huge,"danger","all")
 check(marker.size[1]==64 and marker.scale<.4 and marker.tint.a<.7,
  "Badges are compact and translucent")
@@ -68,7 +77,10 @@ check(#m.strokes_for_connection(arc,"danger","all")==0,
  "Do not guess distant arc shapes")
 raw["space-connection"]={safe=safe,medium=medium,huge=huge,belt=belt}
 local layers=raw["utility-sprites"].default.starmap_star.layers
-check(m.data_final_fixes()==3,"Quality markers stay sparse and de-duplicate identical route positions")
+check(m.data_final_fixes()>20,
+ "Map renderer must emit enough connected colored strokes to cover routes")
+check(#layers>1,
+  "Ribbon atlas was not added to the starmap image layers")
 local total=#layers
 check(m.data_final_fixes()==0 and #layers==total,
  "Do not duplicate warning sprites on another data pass")

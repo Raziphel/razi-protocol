@@ -68,8 +68,8 @@ data:extend({
     "ca[quality-of-life]-a[redundant-assemblers]"),
   startup_toggle("razi-enable-expedition-briefings",
     "ca[quality-of-life]-b[expedition-briefings]"),
-  -- Factorio alone paints continuous route lines. Razi adds only tiny
-  -- warnings beside genuinely dangerous paths; IDs are save-compatible.
+  -- Razi draws thin color on top of verified native route geometry,
+  -- while the underlying Factorio connection remains clickable.
   {
     type="string-setting",name="razi-route-overlay-mode",setting_type="startup",
     default_value="danger",allowed_values={"off","danger","chapter"},
@@ -77,7 +77,7 @@ data:extend({
   },
   {
     type="string-setting",name="razi-route-overlay-scope",setting_type="startup",
-    default_value="major",allowed_values={"major","all"},
+    default_value="all",allowed_values={"major","all"},
     order="ca[quality-of-life]-c2[route-overlay-scope]"
   },
   startup_toggle("razi-curated-space-routes",
