@@ -1,14 +1,16 @@
 -- Route danger levels for the map legend and hover text.
 -- Uses the asteroid spawn definitions without changing them.
 local M = {}
+-- Shared low-saturation hazard palette for the starmap legend, route
+-- tooltips and static connected line artwork. Mirrors real asteroid sizes.
 local colors = {
-  {r=0.31,g=0.74,b=0.98}, -- no recorded hostile spawns: blue
-  {r=0.31,g=0.85,b=0.61}, -- small asteroids: green
-  {r=0.98,g=0.79,b=0.28}, -- medium / unidentified: amber
-  {r=1.00,g=0.47,b=0.25}, -- big: orange
-  {r=1.00,g=0.27,b=0.36}  -- huge or very dense big: red
+  {r=.42,g=.64,b=.77}, -- none / no recorded hostile spawns: slate blue
+  {r=.38,g=.70,b=.68}, -- small: sea glass
+  {r=.48,g=.76,b=.54}, -- medium: sage
+  {r=.94,g=.73,b=.38}, -- big: brass
+  {r=.92,g=.43,b=.36}  -- huge or dense big: vermilion
 }
-local belt_color = {r=0.72,g=0.48,b=1.00}
+local belt_color = colors[4]
 
 local function max_probability(def)
   local maximum = (type(def.probability)=="number" and def.probability) or 0
@@ -98,8 +100,11 @@ function M.inspect(route)
 end
 
 function M.color(route)
-  if M.is_belt_crossing(route) then return belt_color end
-  return colors[M.inspect(route).tier]
+  local tier=M.inspect(route).tier
+  -- A required physical belt crossing cannot visually claim to be a
+  -- harmless blue line when source mods omit a standard spawn category.
+  if M.is_belt_crossing(route) then tier=math.max(4,tier) end
+  return colors[tier]
 end
 
 M.colors=colors

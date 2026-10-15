@@ -1,96 +1,118 @@
--- Geometry, ownership and duplication fixtures for Razi's native route colors.
+-- End-to-end fixtures for Razi's continuous data-stage route overlay.
 package.path="./?.lua;./?/init.lua;"..package.path
-
-local function check(ok,why)
-  if not ok then error(why,2) end
+local function check(ok,reason)
+ if not ok then error(reason,2) end
 end
-local data_raw={
-  planet={
-    nauvis={distance=12,orientation=.25},
-    vulcanus={origin={x=52,y=90},distance=18,orientation=.67},
-    castra={origin={x=52,y=90},distance=37,orientation=.61},
-    ["distant-one"]={origin={x=104,y=0},distance=31,orientation=.6},
-    ["distant-two"]={origin={x=104,y=0},distance=31,orientation=.75},
-    ["odd-world"]={origin={x=0,y=0},distance=300,orientation=.75}
-  },
-  ["space-location"]={
-    ["sye-calidus"]={distance=20,orientation=.5},
-    ["sye-solaris"]={origin={x=52,y=90},distance=34,orientation=.75},
-    ["other"]={origin={x=145,y=70},distance=29,orientation=.5}
-  },
-  ["space-connection"]={},
-  ["utility-sprites"]={default={starmap_star={layers={
-    {filename="__base__/graphics/native-sun.png"}
-  }}}}
+local raw={
+ planet={
+  nauvis={distance=12,orientation=.25},
+  vulcanus={origin={x=52,y=90},distance=18,orientation=.67},
+  castra={origin={x=52,y=90},distance=37,orientation=.61},
+  ["distant-one"]={origin={x=104,y=0},distance=31,orientation=.6},
+  ["distant-two"]={origin={x=104,y=0},distance=31,orientation=.75},
+  ["odd-world"]={origin={x=0,y=0},distance=300,orientation=.75}
+ },
+ ["space-location"]={
+  ["sye-calidus"]={distance=20,orientation=.5},
+  ["sye-solaris"]={origin={x=52,y=90},distance=34,orientation=.75},
+  ["razi-umbra-belt-inner"]={origin={x=25,y=25},distance=12,orientation=.25},
+  ["razi-umbra-belt-outer"]={origin={x=25,y=25},distance=24,orientation=.25}
+ },
+ ["space-connection"]={},
+ ["utility-sprites"]={default={starmap_star={layers={
+  {filename="__base__/graphics/native-sun.png"}
+ }}}}
 }
-rawset(_G,"data",{raw=data_raw})
+rawset(_G,"data",{raw=raw})
 rawset(_G,"mods",{})
 rawset(_G,"settings",{startup={
-  ["razi-route-overlay-mode"]={value="danger"},
-  ["razi-route-overlay-scope"]={value="all"}
+ ["razi-route-overlay-mode"]={value="danger"},
+ ["razi-route-overlay-scope"]={value="all"}
 }})
-local overlay=require("prototypes.system.route_highlights")
+local M=require("prototypes.system.route_highlights")
 local safe={from="sye-calidus",to="sye-solaris",shape="line",
-  asteroid_spawn_definitions={}}
-local danger={from="vulcanus",to="castra",shape="line",
-  asteroid_spawn_definitions={
-    {type="entity",asteroid="huge-metallic-asteroid",probability=.08}
-  }}
-local colorsafe=overlay.color_for_route(safe)
-local colordanger=overlay.color_for_route(danger)
-check(colorsafe.b>colorsafe.r,"Safe routes should be blue")
-check(colordanger.r>colordanger.g,"Huge asteroid route should be red")
-local straight=overlay.strokes_for_connection(safe,"danger","all")
-check(#straight>1 and #straight<=18,"Interstellar route should be subdivided")
-for _,layer in ipairs(straight) do
-  check(layer.x>=0 and layer.y>=0 and layer.size[1]==256,
-    "Directional source tiles must fit the 2048px atlas")
-  check(layer.scale>0 and layer.scale<1.25,
-    "Thin strokes should never use the old stretched sprite scaling")
-  check(layer.tint.a<=.42 and layer.tint.a>.05,
-    "Overlay brightness must remain restrained")
+ asteroid_spawn_definitions={}}
+local medium={from="vulcanus",to="castra",shape="line",
+ asteroid_spawn_definitions={{asteroid="medium-metallic-asteroid",probability=.2}}}
+local huge={from="vulcanus",to="castra",shape="line",
+ asteroid_spawn_definitions={{asteroid="huge-metallic-asteroid",probability=.1}}}
+local belt={from="razi-umbra-belt-inner",to="razi-umbra-belt-outer",
+ shape="line",asteroid_spawn_definitions={}}
+check(M.threat_tier(safe)==1,"Empty asteroid spawns must remain low risk")
+check(M.threat_tier(medium)==3,"Medium asteroids should be sage green")
+check(M.threat_tier(huge)==5,"Huge asteroids should be muted red")
+check(M.threat_tier(belt)==4,"Physical belt crossings need minimum caution")
+local blue=M.color_for_route(safe)
+local sage=M.color_for_route(medium)
+local red=M.color_for_route(huge)
+local amber=M.color_for_route(belt)
+check(blue.b>blue.r and sage.g>sage.r and red.r>red.g
+ and amber.r>amber.b,"Hazard palette must match actual asteroid sizes")
+check(M.color_for_route(huge,"chapter")==red,
+ "Optional chapter colors must never conceal huge asteroids")
+local sheet="__razi-protocol__/graphics/route-highlights/continuous-strokes.png"
+local line=M.strokes_for_connection(safe,"danger","all")
+check(#line>5 and #line<=64,"Safe interstellar path must be joined and sampled")
+for _,s in ipairs(line) do
+ check(s.filename==sheet and s.size[1]==128,
+  "Stroke must use new compact 64-bearing atlas")
+ check(s.x>=0 and s.y>=0 and s.x<=896 and s.y<=896,
+  "Atlas tile should fit 1024x1024 texture")
+ check(s.scale>0 and s.scale<3 and s.tint.a<=.35,
+  "Stroke must stay narrow and subdued")
+ check(s.shift[1]==s.shift[1] and s.shift[2]==s.shift[2],
+  "No invalid coordinates")
 end
-local local_route=overlay.strokes_for_connection(danger,"danger","all")
-check(#local_route>0,"Verified local route should be colorable in All")
-check(#overlay.strokes_for_connection(danger,"danger","major")==0,
-  "Major mode must not paint a dense local route web")
-local region={from="distant-one",to="distant-two",shape="arc",
-  origin={x=104,y=0},asteroid_spawn_definitions={}}
-check(#overlay.strokes_for_connection(region,"danger","all")>0,
-  "Confirmed native regional arc must have color")
-local guessed={from="distant-one",to="distant-two",shape="arc",
-  asteroid_spawn_definitions={}}
-check(#overlay.strokes_for_connection(guessed,"danger","all")==0,
-  "Never draw a guessed arc across star systems")
-local runaway={from="nauvis",to="odd-world",shape="arc",
-  origin={x=0,y=0},asteroid_spawn_definitions={}}
-check(#overlay.strokes_for_connection(runaway,"danger","all")==0,
-  "Runaway galactic arc must be skipped")
-check(overlay.is_navigation_highlight(safe),
-  "Core interstellar corridors must keep their hazard strokes")
-check(not overlay.is_navigation_highlight(danger),
-  "Decorative local routes must not receive doubled hazard strokes")
-for _,world in ipairs({"carna","velora"}) do
-  check(not overlay.is_navigation_highlight({
-    from=world,to="sye-umbra",shape="line"}),
-    "Optional world "..world.." must not draw a dangling red half-line")
+local lower=M.strokes_for_connection(medium,"danger","all")
+check(#lower>0,"All scope should color valid nearby planetary connections")
+check(#M.strokes_for_connection(medium,"danger","major")==0,
+ "Major scope must not cover local routes")
+local explicit_arc={from="distant-one",to="distant-two",
+ shape="arc",origin={x=104,y=0},asteroid_spawn_definitions={}}
+local guessed_arc={from="distant-one",to="distant-two",shape="arc",
+ asteroid_spawn_definitions={}}
+check(#M.strokes_for_connection(explicit_arc,"danger","all")>0,
+ "Explicit regional arc must interpolate safely")
+check(#M.strokes_for_connection(guessed_arc,"danger","all")==0,
+ "Never invent a cross-star arc origin")
+local long={from="nauvis",to="odd-world",shape="line",
+ asteroid_spawn_definitions={}}
+check(#M.strokes_for_connection(long,"danger","all")==0,
+ "Long native line must be omitted instead of rendered as dotted leftovers")
+check(M.is_navigation_highlight(safe) and
+ not M.is_navigation_highlight(medium),
+ "Major navigation scope must respect curated corridors")
+check(M.is_navigation_highlight(medium,"all"),
+ "All scope can display safe real source-owned routes")
+for _,name in ipairs({"carna","gleba","velora"}) do
+ check(not M.is_navigation_highlight({from=name,to="sye-umbra"},"all"),
+  "Old Carna/Gleba/Velora red tail must never return: "..name)
 end
-check(not overlay.is_navigation_highlight(region),
-  "Arbitrary source-mod regional arcs must remain native-only")
-check(overlay.is_navigation_highlight({
-  from="razi-umbra-belt-inner",to="razi-umbra-belt-outer"}),
-  "The physical Umbra asteroid crossing must retain its overlay")
-data_raw["space-connection"].major=safe
-data_raw["space-connection"].regional=region
-local sprite=data_raw["utility-sprites"].default.starmap_star.layers
-local painted=overlay.data_final_fixes()
-check(painted==1 and #sprite>2,
-  "Renderer must paint interstellar corridors without unrelated local arcs")
-local count=#sprite
-check(overlay.data_final_fixes()==0 and #sprite==count,
-  "Second run must not duplicate any route strokes")
+check(M.is_navigation_highlight(belt),
+ "Real Umbra asteroid corridor remains visible")
+raw["space-connection"].major=safe
+raw["space-connection"].near=medium
+raw["space-connection"].arc=explicit_arc
+raw["space-connection"].belt=belt
+raw["space-connection"].long=long
+local atlas=raw["utility-sprites"].default.starmap_star.layers
+check(M.data_final_fixes()==4,
+ "All scope should paint all four valid real native paths")
+check(atlas[2].tint.a>=.32,"Belt hazard should get priority")
+local count=#atlas
+check(M.data_final_fixes()==0 and #atlas==count,
+ "Multiple data passes cannot stack duplicate overlays")
+settings.startup["razi-route-overlay-scope"].value="major"
+raw["utility-sprites"].default.starmap_star.layers={
+ {filename="__base__/graphics/native-sun.png"}}
+check(M.data_final_fixes()==2,
+ "Major scope should paint only the Razi interstellar and belt corridors")
 settings.startup["razi-route-overlay-mode"].value="off"
-sprite[2]=nil
-check(#overlay.strokes_for_connection(safe,"off","all")==0,
-  "Off mode must keep the original native routes")
-print("Razi built-in route overlay geometry fixtures passed")
+raw["utility-sprites"].default.starmap_star.layers={
+ {filename="__base__/graphics/native-sun.png"}}
+check(M.data_final_fixes()==0,"Off must leave vanilla connections untouched")
+settings.startup["razi-route-overlay-mode"].value="danger"
+mods["space-route-overlay"]=true
+check(M.data_final_fixes()==0,
+ "Never double-paint if external overlay is forcibly installed")
+print("Razi joined hazard route overlay: all geometry fixtures passed")

@@ -37,7 +37,11 @@ check(hz.inspect(routes.unknown).unknown,"Modded unknowns must be reported")
 check(hz.inspect(routes.unknown).tier>=3,"Unknown hazards should not look safe")
 check(hz.kind(routes.huge)=="belt-crossing","Belt class lost")
 check(hz.kind(routes.medium)=="interstellar","Interstellar class lost")
-check(hz.color(routes.huge)==hz.belt_color,"Belt art must remain identifiable")
+check(hz.color(routes.huge)==hz.colors[5],
+ "Huge-asteroid belt route must appear red instead of misleading purple")
+check(hz.color({from="razi-umbra-belt-inner",
+ to="razi-umbra-belt-outer",asteroid_spawn_definitions={}})==hz.belt_color,
+ "Undocumented physical belt still needs amber caution color")
 check(intel.annotate(routes.external),"External route should be annotated")
 local regional={from="vulcanus",to="arig",length=19500,shape="arc"}
 check(intel.annotate(regional),"Known regional route should be annotated")
