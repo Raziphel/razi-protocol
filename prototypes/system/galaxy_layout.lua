@@ -284,8 +284,33 @@ end
 -- Runs AFTER PlanetsLib deletes all sprite_only stars. Update the remaining
 -- Factorio-native geometry directly rather than attempting to reparent through
 -- missing star prototypes. Preserve source children, e.g. Frozeta's moon orbit.
+local function remove_baked_source_trails()
+  -- PlanetsLib may have already baked an old orbit.sprite into the shared
+  -- star atlas on another mod's stage. These layers are orbit decorations,
+  -- not the clickable planet icon or the actual space-connection.
+  local ui=exists("utility-sprites","default")
+  local layers=ui and ui.starmap_star and ui.starmap_star.layers
+  if not layers then return 0 end
+  local removed=0
+  for index=#layers,1,-1 do
+    local layer=layers[index]
+    if layer and layer.planetslib_orbit_shift
+      and (layer.planetslib_orbit_name=="carna"
+        or layer.planetslib_orbit_name=="velora") then
+      table.remove(layers,index)
+      removed=removed+1
+    end
+  end
+  return removed
+end
+
 function M.data_final_fixes()
   clear_source_trails()
+  local removed_trails=remove_baked_source_trails()
+  if removed_trails>0 and type(log)=="function" then
+    log("[Razi Protocol/starmap] Removed "..removed_trails..
+      " obsolete Carna/Velora decorative orbit layers")
+  end
   local relocated={}
   local count=0
   for name in pairs(stars) do
