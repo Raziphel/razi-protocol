@@ -34,9 +34,9 @@ class VisualPolishTests(unittest.TestCase):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")
         locale=read("locale/en/razi_journal.cfg")
-        self.assertIn('local ids={"dyson","cargo","transceiver","convergence"}',
+        self.assertIn('local ids={"dyson","cargo","recovery","transceiver","convergence"}',
                       projects)
-        self.assertIn('icons.sprite(head,art_for(id,player.force),"project_icon")',
+        self.assertIn('icons.button(head,art_for(id,player.force),"project_button"',
                       projects)
         self.assertIn('project_icon=32',icons)
         self.assertIn('local meter=card.add{type="progressbar"',projects)
@@ -49,7 +49,8 @@ class VisualPolishTests(unittest.TestCase):
         self.assertNotIn('create_surface(',projects)
         for key in ("projects-heading","project-dossier","project-progress",
                     "project-caption-dyson","project-caption-cargo",
-                    "project-caption-transceiver","project-caption-convergence"):
+                    "project-caption-recovery","project-caption-transceiver",
+                    "project-caption-convergence"):
             self.assertRegex(locale,rf"(?m)^{key}=")
 if __name__=="__main__":
     unittest.main()

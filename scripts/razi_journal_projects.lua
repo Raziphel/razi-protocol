@@ -8,7 +8,7 @@ local catalog=require("scripts.galactic_trade_catalog")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
 local L=function(k,...) return {"journal-ui."..k,...} end
-local ids={"dyson","cargo","transceiver","convergence"}
+local ids={"dyson","cargo","recovery","transceiver","convergence"}
 function M.valid(id)
   for _,value in ipairs(ids) do if value==id then return true end end
   return false
@@ -24,6 +24,7 @@ function M.valid_cargo(force,chain,target)
 end
 function M.research_related(name)
   if name=="razi-intergalactic-transceiver-signal"
+    or name=="razi-frontier-recovery-charter"
     or name=="razi-convergence-commission"
     or name=="razi-convergence-synchronization"
     or name=="razi-convergence-ignition" then return true end
@@ -57,7 +58,7 @@ local function transceiver(parent,player,width)
   note.style.single_line=false
   note.style.maximal_width=width
 end
--- Four curated project dossiers. All completion values come from the
+-- Five curated project dossiers. All completion values come from the
 -- original mods: there is no fabricated megaproject percentage.
 local HUES={
   ink={r=.94,g=.93,b=.89},
@@ -68,6 +69,7 @@ local HUES={
 local PROJECT_ART={
   dyson="razi-dyson-works-stage-",
   cargo="technology/interplanetary-trade-logistics",
+  recovery="technology/razi-frontier-recovery-charter",
   transceiver="technology/razi-intergalactic-transceiver-signal",
   convergence="technology/razi-convergence-commission"
 }
@@ -76,6 +78,9 @@ local function art_for(id,force)
     local finished=dyson.status(force)
     return PROJECT_ART.dyson..math.min(6,finished)
   end
+  if id=="recovery" and not force.technologies["razi-frontier-recovery-charter"] then
+    return "razi-journal-book-icon"
+  end
   local path=PROJECT_ART[id]
   if helpers and helpers.is_valid_sprite_path
     and not helpers.is_valid_sprite_path(path) then
@@ -83,10 +88,81 @@ local function art_for(id,force)
   end
   return path
 end
+-- All six stages are actual force research or space-location unlocks.
+-- Never synthesize percentage from platform or inventory counters.
+local recovery_stages={
+  {"athos",world="athos"},
+  {"athos-particulate",tech="particulate-science-pack"},
+  {"nulla",world="nulla"},
+  {"nulla-electromagnetic",tech="electromagnetic-robotics"},
+  {"nulla-robotic-science",tech="robotic-science-pack"},
+  {"frontier-recovery-charter",tech="razi-frontier-recovery-charter"}
+}
+local function recovery_done(force,stage)
+  if stage.world then
+    for _,tech in pairs(force.technologies or {}) do
+      for _,effect in pairs(tech.prototype and tech.prototype.effects or {}) do
+        if effect.type=="unlock-space-location" and
+          effect.space_location==stage.world and tech.researched then
+          return true
+        end
+      end
+    end
+    return false
+  end
+  local name=stage.tech
+  if stage[1]=="athos-particulate" then
+    name=require("scripts.razi_journal_frontier").unlocking(
+      "particulate-science-pack") or name
+  end
+  local tech=force.technologies and force.technologies[name]
+  return tech~=nil and tech.researched==true
+end
+local function recovery_status(force)
+  local done=0
+  for _,stage in ipairs(recovery_stages) do
+    if recovery_done(force,stage) then done=done+1 end
+  end
+  return done,#recovery_stages
+end
+local function recovery_reader(parent,player,width)
+  local intro=parent.add{type="label",caption=L("project-recovery-description")}
+  intro.style.single_line=false
+  intro.style.maximal_width=width
+  local done,total=recovery_status(player.force)
+  local state=parent.add{type="label",
+    caption=L("project-progress",tostring(done),tostring(total))}
+  state.style.font="default-bold"
+  state.style.font_color=HUES.gold
+  for _,stage in ipairs(recovery_stages) do
+    local line=parent.add{type="flow",direction="horizontal"}
+    line.style.vertical_align="center"
+    line.style.horizontal_spacing=9
+    local completed=recovery_done(player.force,stage)
+    local progress=line.add{type="label",
+      caption=L(completed and "project-recovery-done"
+        or "project-recovery-pending")}
+    progress.style.font_color=completed and
+      {r=.49,g=.83,b=.67} or HUES.quiet
+    local link=line.add{type="label",style="clickable_label",
+      caption=L("project-recovery-"..stage[1]),
+      tags={razi_journal_action="select",id=stage[1]}}
+    link.style.font=completed and "default" or "default-bold"
+    link.style.font_color=completed and HUES.quiet or HUES.ink
+    link.style.single_line=false
+    link.style.maximal_width=math.max(120,width-74)
+  end
+  local note=parent.add{type="label",caption=L("project-recovery-native")}
+  note.style.single_line=false
+  note.style.maximal_width=width
+  note.style.font_color=HUES.quiet
+end
 local function status_for(force,id)
   if id=="dyson" then
     local done,total=dyson.status(force)
     return done,total
+  elseif id=="recovery" then
+    return recovery_status(force)
   elseif id=="cargo" then
     local network=catalog.snapshot(force)
     return network.researched,network.available
@@ -186,6 +262,8 @@ local function project_reader(parent,player,p,size,width,compact)
     dyson.render(content,player,options)
   elseif p.project=="cargo" then
     trade.render(content,player,p,options)
+  elseif p.project=="recovery" then
+    recovery_reader(content,player,width-68)
   elseif p.project=="convergence" then
     convergence.render(content,player,options)
   else
