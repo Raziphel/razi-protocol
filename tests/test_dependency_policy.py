@@ -58,7 +58,7 @@ class DependencyPolicyTests(unittest.TestCase):
             "k2-dyson-sphere-rebalance",
             "nulls-k2so-tweaks","xy-k2so-enhancements-nulls-fork",
             "planet-muluna","panglia_planet","Nexus-Updated",
-            "razi_lib","PlanetsLib",
+            "razi_lib","PlanetsLib","nulla","PlanetAthos",
         ):
             self.assertTrue(any(s.startswith(name+" >=")
                                 for s in dependencies),name)
@@ -98,10 +98,9 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertFalse(any(raw.startswith("+ celestial-weather-updated") for raw in deps))
         self.assertEqual({d for d in deps if d.startswith("? ")},{
             "? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19",
-            "? nulla >= 1.0.2","? PlanetAthos >= 1.1.3"
-        })
-        self.assertIn("? PlanetAthos >= 1.1.3",deps)
-        self.assertIn("? nulla >= 1.0.2",deps)
+                    })
+        self.assertIn("PlanetAthos >= 1.1.3",deps)
+        self.assertIn("nulla >= 1.0.2",deps)
         for name in ("dea-dia-system","pelagos"):
             self.assertFalse(any(parse(raw)[0]==name for raw in deps),name)
         self.assertIn("+ secretas-orbit-patch >= 1.1.3",deps)
