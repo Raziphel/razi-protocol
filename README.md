@@ -1,3 +1,12 @@
+**2.1.87: Outer-system starmap polish.** Ferrum now connects west of
+Beetlejuice's Slip Stream, Obsidiax joins Vesta beyond Umbra's shattered
+belt, Shchierbin takes a spacious Paracelsin-side orbit beyond Vibrant's
+rocks, and Athos gains a close Vulcanus spur. The overlong Umbra waypoint
+names are replaced with compact labels and proper descriptions. The
+Carna/Velora dotted visual tails are suppressed without changing their
+travel routes. Science and Atlas memberships follow the new locations.
+Full live-game visual verification is still pending.
+
 **2.1.84: Restore Razi Protocol's normal displayed name.** The old
 `!` prefix did not sort the mod settings first, so the in-game mod title
 now simply reads **Razi Protocol**. Mod ID, option keys, defaults,
