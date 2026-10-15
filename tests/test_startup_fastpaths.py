@@ -12,7 +12,7 @@ class DataStageFastPaths(unittest.TestCase):
         text=source("prototypes/compat/planet_production_exchanges.lua")
         self.assertIn("local indexed_technologies, unlockers_by_recipe",text)
         self.assertIn("native_unlockers()[recipe_name]",text)
-        self.assertIn("table.sort(matches)",text)
+        self.assertIn("Graph.unlock_index(techs)",text)
         self.assertIn("depends_on(name, gate)",text)
         self.assertIn("for _, supplied in ipairs(rule.supplier_recipes",text)
 

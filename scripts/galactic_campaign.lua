@@ -1,6 +1,8 @@
 -- On-demand research overview for the large Razi planet pack.
 -- No periodic scans, automatic queue modification or hidden world unlocks.
 local M={}
+-- Preload the immutable source registry before GUI events begin.
+local galactic_catalog=require("scripts.galactic_catalog")
 local function L(key,...) return {"razi-ops."..key,...} end
 local systems={
   {"calidus","space-science-pack","calidus-tech-card",
@@ -97,7 +99,7 @@ end
 -- refresh, so supported moons/side worlds appear without maintaining a
 -- fragile per-mod list of guessed technology identifiers.
 function M.discovery_index(force)
-  local catalog=require("scripts.galactic_catalog")
+  local catalog=galactic_catalog
   local by_group={}
   local seen={}
   for _,tech in pairs(force.technologies or {}) do

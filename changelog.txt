@@ -3,6 +3,8 @@ Date: 15. 10. 2026
   Projects-tab crash, Shattered expedition labels and victory ownership:
     - Resolve Frontier Recovery Journal module at control load, never via
       require() inside on_gui_click; preserve all recovery quest statuses.
+    - Resolve Galactic Atlas cargo and Campaign location registries at
+      control load to avoid the same late require error in older GUI paths.
     - Spread Skewer Shattered Planet and Lost Beyond into separate chart
       positions after the native approach; retain native travel links,
       discovery research and save identifiers.

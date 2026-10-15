@@ -4,6 +4,8 @@ local M={}
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local convergence=require("scripts.razi_convergence")
+-- Factorio forbids require after control-script parsing, including Atlas clicks.
+local trade_catalog=require("scripts.galactic_trade_catalog")
 -- Known, installed native endpoints only. This annotates the Atlas without
 -- drawing fake paths, changing source location prototypes or leaking secrets.
 M.expedition_briefs={
@@ -80,7 +82,7 @@ end
 local supply_by_world
 local function supply_index()
   if supply_by_world then return supply_by_world end
-  local catalog=require("scripts.galactic_trade_catalog")
+  local catalog=trade_catalog
   local result={}
   for _,entry in ipairs(catalog.chains) do
     for _,world in ipairs(entry.worlds) do
@@ -92,7 +94,7 @@ local function supply_index()
   return result
 end
 function M.planet_supply_links(force,id)
-  local catalog=require("scripts.galactic_trade_catalog")
+  local catalog=trade_catalog
   local technologies=force and force.technologies or {}
   local results={}
   for _,entry in ipairs(supply_index()[id] or {}) do
