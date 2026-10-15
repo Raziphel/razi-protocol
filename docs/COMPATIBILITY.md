@@ -101,3 +101,20 @@ for ownership and in-engine validation requirements.
 ## K2SO integration for every enabled planet
 
 Razi's final K2SO pass reconciles known K2SO material aliases on all installed planet recipes without rewriting Null's intentionally visible common fluids. Its existing system cards also import native K2SO planetary research data from accessible earlier regions. See [K2SO Planet Integration](K2SO_PLANET_INTEGRATION.md) for the science matrix, guards and remaining engine tests.
+
+## Armoured Biters 2.1 fork compatibility (2.1.76)
+
+An installed ArmouredBiters21Compat 2.0.6 stack failed prototype validation
+with a missing `armoured-biter-spawner.autoplace.probability_expression`.
+Razi 2.1.75 was manufacturing an empty `autoplace={}` for the source-owned
+nest, then other mod integrations encountered that incomplete definition.
+
+Razi 2.1.76 never synthesizes a partial enemy-autoplace prototype. If the
+source pack supplies a valid probability expression, the dedicated nest can
+populate Hyarion, Nexus and Crucible. Otherwise, source armoured units
+remain in the original biter-spawner's `result_units` and Razi skips the
+invalid dedicated placement instead of suppressing vanilla fauna. The final
+prototype pass strips malformed placement rules on known optional spawners
+without deleting their entities or scripted spawning support. Electric and
+Arachnid routing also checks source placement validity. This is guarded by
+the Lua enemy fixture and still requires an actual Factorio modpack launch.

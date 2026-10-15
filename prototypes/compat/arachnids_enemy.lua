@@ -63,10 +63,13 @@ local function add_arachnids_to_planet(planet_name)
 	map_gen_settings.autoplace_settings.entity.settings["arachnid-spawner-unitspawner"] = {}
 end
 
-if arachnid_spawner and arachnid_spawner.autoplace then
+if enemy_autoplace.has_valid_autoplace(arachnid_spawner) then
 	arachnid_spawner.autoplace.tile_restriction = arachnid_tiles
 end
 
-add_arachnids_to_planet("arig")
-add_arachnids_to_planet("nexus")
-add_arachnids_to_planet("crucible")
+-- A source-owned scripted nest must not suppress vanilla spawn points.
+if enemy_autoplace.has_valid_autoplace(arachnid_spawner) then
+	add_arachnids_to_planet("arig")
+	add_arachnids_to_planet("nexus")
+	add_arachnids_to_planet("crucible")
+end
