@@ -1,3 +1,24 @@
+## October 2026 graphics retirement
+
+The active starmap now ships only the four pinpoint starfield atlas tiles,
+six per-system glow sheets (Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice,
+Umbra), the fallback halo, three atlas dust accents, three physical Vibrant
+belt textures and Umbra's `debris-umbra.png`. The Calidus Dyson stage
+texture remains independently used by the Dyson prototype.
+
+Legacy sky sheets, drifting filament glows, older giant sky/cloud textures,
+duplicate Calidus/Deep Space glow sheets, generic atlas belt and obsolete
+Umbra smoke sheet have been deleted. The last edition of route guides and
+the superseded five Convergence placeholder assets are gone as well.
+The current native route-stroke atlas and all inventory/convergence
+64px icons remain. All 42 removed PNGs are restorable through Git history.
+
+The graphics auditor now explicitly checks dynamic starmap names and
+in-use icon paths, and rejects these retired files if accidentally
+reintroduced. Validation: `python3 scripts/audit_assets.py` and
+`python3 -m unittest tests.test_starmap_background tests.test_graphics_cleanup`.
+No space-location, route, technology or existing save identifiers were changed.
+
 ## Vibrant's quiet, broken asteroid field (October 2026)
 
 The earlier bright white boulder ring was too thick and regular at the

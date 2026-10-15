@@ -1,14 +1,22 @@
-"""Validate all original PNG layers and their safety constraints."""
+"""Validate active starmap layers and their safety constraints."""
 import pathlib
 import struct
 import unittest
 import zlib
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 ASSET=ROOT/"graphics/starmap/razi"
+# Only active artwork is shipped. Archived sky sheets, generic belts,
+# alternate glowing filaments and route ornaments were retired.
 NON_BACKGROUND_ASSETS={"calidus-dyson-stages.png"}
-SYSTEMS=("calidus","solaris","nyxaris","vibrant","vespera",
-         "beetlejuice","umbra","deep-space")
+SYSTEM_GLOWS=("solaris","nyxaris","vibrant","vespera","beetlejuice","umbra")
 BELTS=("vibrant","umbra")
+ACTIVE_STARMAP=(
+    [f"atlas-starfield-{i}.png" for i in range(1,5)]
+    + [f"glow-{system}.png" for system in SYSTEM_GLOWS]
+    + ["atlas-halo.png","debris-umbra.png"]
+    + [f"atlas-dust-{i}.png" for i in range(1,4)]
+    + ["belt-vibrant-core.png","belt-vibrant-scatter.png","belt-vibrant-dust.png"]
+)
 
 def inspect_png(path):
     buf=path.read_bytes()
@@ -33,20 +41,8 @@ def inspect_png(path):
 
 class StarmapBackgroundTests(unittest.TestCase):
     def test_all_sprites_fit_without_giant_atlases(self):
-        names=([f"sky-{i}.png" for i in range(1,5)] +
-               [f"glow-{name}.png" for name in SYSTEMS] +
-               [f"belt-{name}.png" for name in BELTS if name!="vibrant"] +
-               ["belt-vibrant-core.png","belt-vibrant-scatter.png",
-                "belt-vibrant-dust.png"] +
-               ["galactic-current.png","dust-lane-2.png",
-                "rift-deep-space.png","chart-constellation.png"] +
-               [f"filament-{name}.png" for name in SYSTEMS] +
-               [f"debris-{name}.png" for name in BELTS if name!="vibrant"] +
-               [f"cluster-{i}.png" for i in range(1,4)])
-        names += ["atlas-halo.png","atlas-belt.png"]
-        names += [f"atlas-dust-{i}.png" for i in range(1,4)]
-        names += [f"atlas-starfield-{i}.png" for i in range(1,5)]
-        self.assertEqual(len(names),41)
+        names=ACTIVE_STARMAP
+        self.assertEqual(len(names),18)
         self.assertEqual(
             {f.name for f in ASSET.glob("*.png")},
             set(names) | NON_BACKGROUND_ASSETS,
@@ -60,7 +56,7 @@ class StarmapBackgroundTests(unittest.TestCase):
             self.assertLess(size,350000)
             if name.startswith("atlas-starfield-"):
                 self.assertEqual((w,h,depth,colour),(1024,1024,8,3))
-            if name in ("atlas-halo.png","atlas-belt.png"):
+            if name=="atlas-halo.png":
                 self.assertEqual((w,h,depth,colour),(512,512,8,3))
             if name.startswith("atlas-dust-"):
                 self.assertEqual((w,h,depth,colour),(512,512,8,4))
@@ -68,7 +64,7 @@ class StarmapBackgroundTests(unittest.TestCase):
         # Earlier 25-step alpha ramps produced blocky contour bands at
         # large starmap zoom. The indexed halo and belt keep full ramps;
         # dust uses direct 8-bit alpha and is covered by the format contract.
-        for name in ("atlas-halo.png","atlas-belt.png"):
+        for name in ("atlas-halo.png",):
             png=(ASSET/name).read_bytes()
             offset=8
             found=False
@@ -151,7 +147,7 @@ class StarmapBackgroundTests(unittest.TestCase):
         vibrant=(ROOT/"prototypes/system/asteroid_belt_integration.lua").read_text()
         self.assertIn("local sky_exposure={",source)
         self.assertIn("sky_exposure[row][col]",source)
-        self.assertIn('debris="debris-vespera.png"',source)
+        self.assertNotIn('debris="debris-vespera.png"',source)
         self.assertIn('art="debris-umbra.png",subtle_alpha=.53',source)
         self.assertNotIn('debris="belt-umbra.png"',source)
         self.assertIn('if cinematic and belt.debris then',source)
@@ -187,9 +183,9 @@ class StarmapBackgroundTests(unittest.TestCase):
         self.assertIn('allowed_values={"clean","balanced","full"}',settings)
         self.assertIn('razi-starmap-cartography',settings)
         self.assertIn('default_value=false',settings)
-        for name in ("atlas-halo.png","belt-vespera.png","belt-umbra.png"):
+        for name in ("atlas-halo.png","debris-umbra.png","glow-vespera.png"):
             self.assertIn(name,module)
-        self.assertIn('if cinematic then',module)
+        self.assertIn('if cinematic and belt.debris then',module)
         self.assertNotIn('insert_asset(layers,"atlas-belt.png"',module)
         self.assertIn('"atlas-dust-"..',module)
         for legacy in ("filament-","galactic-current.png","sky-",
