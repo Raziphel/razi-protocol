@@ -22,6 +22,8 @@ class LavaBridgeTests(unittest.TestCase):
  def test_late_cleanup(self):
   c=src(HELP/"prototypes"/"cleanup.lua")
   self.assertIn("water.textures=nil",c)
+  self.assertIn("image.filename=legacy.filename",c)
+  self.assertIn('legacy.filename~=image.filename',c)
   self.assertIn('water.shader_variation=="lava"',c)
   self.assertIn('cleaner.clean()',src(HELP/"data-final-fixes.lua"))
   self.assertEqual(src(ROOT/"data-final-fixes.lua").strip().splitlines()[-1],
