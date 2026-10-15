@@ -140,6 +140,18 @@ check(sprites["item/automation-science-pack"],"Native science art is missing")
 check(sprites["entity/assembling-machine-1"],"Native building art is missing")
 check(sprites[themes.icon("calidus")],
   "Navigator must show the chapter insignia")
+local nauvis_acts={}
+for _,entry in ipairs(created) do
+  if type(entry.caption)=="table" and
+    type(entry.caption[1])=="string" and
+    entry.caption[1]:find("^journal%-nauvis%-phase%.") then
+    nauvis_acts[entry.caption[1]]=true
+  end
+end
+for _,phase in ipairs({"machines","growth","chemistry","departure"}) do
+  check(nauvis_acts["journal-nauvis-phase."..phase],
+    "The Nauvis chapter rail lost its act divider: "..phase)
+end
 -- Native sprite art can be larger than the requested GUI box. All Codex
 -- widgets must ignore intrinsic dimensions, even on heavily modded packs.
 local roles=require("scripts.razi_journal_icons")

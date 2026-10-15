@@ -1,5 +1,27 @@
 > **Current UI (October 2026):** The Protocol Codex now has Quests, Projects, and Journal views. Open it with Ctrl+Shift+J. Projects contains Dyson Sphere, Cargo Network, Transceiver, and Convergence. Ctrl+Shift+G opens Projects directly. The separate Galactic Operations window and floating starmap button are retired. Older sections below describe the prior interface.
 
+## October 2026: Nauvis is now a four-act expedition
+
+Calidus now holds twenty source-backed research milestones in four
+chapters of its opening act: First Machines (electricity, logistics,
+automation, electronics and radar); The Growing Factory (green
+science, steel, inserters, Automation 2, trains and engines); The
+Chemical Age (oil, fluids, plastic, advanced circuits and chemical
+science); and Into the Sky (space science, Muluna and two parallel
+star-system discoveries). The chapter rail, cover and detailed quest
+dossier all identify the correct Nauvis act.
+
+Ten new quests track existing research prototypes. Five old stable
+quest IDs (green science, steel, railways, oil and chemical science)
+move from the supplemental Foundations index into Calidus rather than
+being duplicated. Existing saves automatically register completed
+technologies, missing K2 research remains safely skipped, and actual
+gameplay technology prerequisites are unchanged. The later Foundations
+index still contains solar, production and utility research.
+
+No additional prototypes, item rewards, achievement flags, research
+gates, inventory scans or per-tick GUI work are introduced.
+
 ## October 2026: Individual expedition chapter briefings
 
 Every installed Journal chapter now has a native, optional briefing

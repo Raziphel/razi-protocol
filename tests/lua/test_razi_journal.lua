@@ -4,7 +4,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
 check(#defs.chapters==18,"Eighteen Protocol Codex chapters expected")
-check(#defs.quests==233,"Protocol Codex must include both core worlds and their recovery science")
+check(#defs.quests==243,"Protocol Codex must include expanded Nauvis research and recovery science")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -61,7 +61,31 @@ end
 local start=M.summary(force)
 local complete,total,active=M.summary(force)
 check(start==0 and total>0 and active>=1,
-  "At least both initial factory/opening branches must be listed")
+  "A real Nauvis factory objective must be ready on a new save")
+check(M.state(force,defs.by_id["first-signal"])=="active",
+  "The opening Automation quest must be ready on a new save")
+check(M.state(force,defs.by_id["green-science"])=="locked",
+  "Green science must have meaningful early Journal prerequisites")
+-- Older and variant modpacks can omit K2 Electricity/Electronics:
+-- such missing research must never become an invisible campaign wall.
+local electricity=force.technologies.electricity
+force.technologies.electricity=nil
+check(M.state(force,defs.by_id["nauvis-power"])=="unavailable"
+  and M.state(force,defs.by_id["nauvis-electronics"])=="active",
+  "Missing K2 electricity must not strand Nauvis electronics")
+force.technologies.electricity=electricity
+force.technologies.automation.researched=true
+force.technologies.logistics.researched=true
+check(M.state(force,defs.by_id["green-science"])=="active",
+  "Nauvis green science must follow already researched early machines")
+force.technologies.automation.researched=false
+force.technologies.logistics.researched=false
+-- Legacy save research auto-completes moved milestones; no migration or
+-- parallel objective completion flags should be introduced.
+force.technologies["steel-processing"].researched=true
+check(M.complete(force,defs.by_id["steel"]),
+  "Moving Steel to Calidus must preserve historic researched state")
+force.technologies["steel-processing"].researched=false
 -- One campaign pass should calculate each quest exactly once while still
 -- matching the public summary and the individual mission states.
 local original_state=M.state

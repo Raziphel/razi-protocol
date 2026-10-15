@@ -11,11 +11,6 @@ return {
   {id="echoes",title="journal-chapter.echoes",intro="journal-chapter-story.echoes"},
  },
  quests={
-  {id="green-science",chapter="foundations",tech="logistic-science-pack",requires={"first-signal"}},
-  {id="railways",chapter="foundations",tech="railway",requires={"green-science"}},
-  {id="steel",chapter="foundations",tech="steel-processing",requires={"green-science"}},
-  {id="oil",chapter="foundations",tech="oil-processing",requires={"steel"}},
-  {id="chemical-science",chapter="foundations",tech="chemical-science-pack",requires={"oil"}},
   {id="production-science",chapter="foundations",tech="production-science-pack",requires={"chemical-science"}},
   {id="utility-science",chapter="foundations",tech="utility-science-pack",requires={"production-science"}},
   {id="nuclear-power",chapter="sciences",tech="nuclear-power",requires={"metallurgic","agricultural"}},
