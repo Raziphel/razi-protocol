@@ -1,5 +1,8 @@
 # Distributed Technology: planetary industry research
 
+> **Design intent:** Move meaningful research toward the worlds that justify it, without creating deadlocks or forcing optional planets. Consult [Developer Handbook](DEVELOPER_HANDBOOK.md) and [Validation](VALIDATION.md) before changing the graph. Source technology IDs, lab availability, offworld science production, cycle prevention and old-save compatibility take priority over thematic preference.
+
+
 ## Why
 
 Nauvis is Razi Protocol's launch foundation, not a place where every
