@@ -28,7 +28,7 @@ local anchors = {
   -- Northern arrivals flank the corona instead of threading through it.
   {"space-location","sye-nyxaris","nyxaris",41,0.04},
   {"space-location","sye-vespera","vespera",27,0.25},
-  {"space-location","sye-umbra","umbra",30,0.45},
+  {"space-location","sye-umbra","umbra",54,0.42},
   -- Solaris's compact, asymmetric orbital sweep. Warm inner worlds sit
   -- close to the star; Tellus and the denser industrial worlds are
   -- progressively farther out. Distances are visual, not physical AU.
@@ -66,14 +66,15 @@ local anchors = {
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
   {"space-location","secretas","beetlejuice",40,0.048826},
-  -- Umbra's one true debris divide occupies 31–39 chart units;
-  -- Vesta is now well beyond its outer edge, not crowding the rocks.
-  -- Preserve Crucible's native landfall and all source planet climates.
-  {"planet","tenebris","umbra",24,0.68},
-  {"space-location","crucible-orbit","umbra",20,0.79},
-  {"space-location","razi-umbra-belt-inner","umbra",31,0.81},
-  {"space-location","razi-umbra-belt-outer","umbra",39,0.82},
-  {"planet","vesta","umbra",56,0.955},
+  -- Umbra enters from OUTSIDE its 31–39-unit shattered belt, like
+  -- Vibrant. The only permitted passage to inner Tenebris/Crucible
+  -- is the true Outer Rim -> Inner Rim crossing. Distant Vesta remains
+  -- a separate outer branch. Crucible's native landing is unchanged.
+  {"planet","tenebris","umbra",24,0.54},
+  {"space-location","crucible-orbit","umbra",20,0.63},
+  {"space-location","razi-umbra-belt-inner","umbra",31,0.47},
+  {"space-location","razi-umbra-belt-outer","umbra",39,0.42},
+  {"planet","vesta","umbra",56,0.3},
 }
 
 -- The optional worlds were previously repositioned in data-final-fixes
@@ -84,15 +85,15 @@ local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
   {name="obsidiax",star="vespera",radius=25,turn=0.12},
-  -- Optional worlds stay inside the physical belt; their single local
-  -- approaches never serve as a bypass to Vesta.
-  {name="carna",star="umbra",radius=29,turn=0.55},
+  -- Carna and Arcanyx remain on the INNER side; neither can be reached
+  -- directly from the exterior gateway without its rock crossing.
+  {name="carna",star="umbra",radius=29,turn=0.7},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
   -- Opt-in Shchierbin stays outside the required 31/39-unit belt and
   -- follows Paracelsin, not a shortcut from the inner electrical worlds.
   {name="shchierbin",star="vibrant",radius=59,turn=0.77},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
-  {name="arcanyx",star="umbra",radius=27,turn=0.39},
+  {name="arcanyx",star="umbra",radius=27,turn=0.3},
   -- Balack is an optional outer-ice spur beside Aquilo.
   {name="bm-balack",star="vespera",radius=63,turn=0.70}
 }
@@ -357,7 +358,7 @@ function M.data_final_fixes()
     ["razi-vespera-belt-inner"]=0.25,
     ["razi-vespera-belt-outer"]=0.75,
     ["razi-umbra-belt-inner"]=0.25,
-    ["razi-umbra-belt-outer"]=0.75
+    ["razi-umbra-belt-outer"]=0.25
   }
   for name,direction in pairs(label_orientations) do
     local marker=exists("space-location",name) or exists("planet",name)

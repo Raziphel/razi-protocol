@@ -405,7 +405,7 @@ local function test_routes()
         "razi-sye-solaris-sye-nyxaris",
         "razi-sye-beetlejuice-sye-umbra",
         "razi-sye-vespera-muria",
-        "razi-sye-umbra-tenebris",
+        "razi-sye-umbra-razi-umbra-belt-outer",
         "razi-secretas-solar-system-edge",
         "razi-vesta-solar-system-edge"
 	}) do
@@ -435,6 +435,28 @@ local function test_routes()
 	local after = 0
 	for _ in pairs(routes) do after = after + 1 end
 	check(before == after, "Route reconciliation is not idempotent")
+  -- In Factorio 2.1.20+ the two carefully chosen orbit-following local
+  -- routes use actual engine arcs centered on Umbra, not Calidus.
+  local old_mods=mods
+  mods={base="2.1.20"}
+  reconciliation.data_final_fixes()
+  local inner_curve=routes["razi-tenebris-crucible-orbit"]
+  local outer_curve=routes["razi-razi-umbra-belt-outer-vesta"]
+  check(inner_curve and inner_curve.shape=="arc"
+    and inner_curve.origin and outer_curve
+    and outer_curve.shape=="arc" and outer_curve.origin,
+    "2.1.20 should use native Umbra-centered local curves")
+  local umb_x,umb_y=require("prototypes.system.galaxy_layout").anchor_position("umbra")
+  check(math.abs(inner_curve.origin.x-umb_x)<.01 and
+    math.abs(inner_curve.origin.y-umb_y)<.01 and
+    math.abs(outer_curve.origin.x-umb_x)<.01 and
+    math.abs(outer_curve.origin.y-umb_y)<.01,
+    "Curved routes have the wrong stellar origin")
+  check(routes["razi-razi-umbra-belt-inner-razi-umbra-belt-outer"].shape=="line"
+      and routes["razi-razi-umbra-belt-inner-razi-umbra-belt-outer"].origin==nil,
+    "The one hazardous belt crossing must remain a straight native route")
+  mods=old_mods
+  reconciliation.data_final_fixes()
   -- Source moon connections vary between mod versions. If absent, the
   -- 14,000 km Razi fallback must restore a safe way home.
   routes["native-nauvis-muluna"]=nil
@@ -575,6 +597,10 @@ local function test_research()
 		"Muria lacks Vespera entry gate")
 	check(list_contains(technologies["planet-discovery-tenebris"].prerequisites, "umbra-discovery"),
 		"Tenebris lacks Umbra entry gate")
+    check(list_contains(technologies["planet-discovery-tenebris"].prerequisites,
+      "razi-umbra-belt-survey"),"Tenebris bypasses the entry asteroid divide")
+    check(list_contains(technologies["razi-umbra-belt-survey"].prerequisites,
+      "umbra-discovery"),"Umbra entry survey still requires inaccessible Crucible")
     check(list_contains(technologies["planet-discovery-rubia"].prerequisites,
       "razi-vespera-belt-survey"), "Rubia bypasses its belt survey")
     check(list_contains(technologies["planet-discovery-aquilo"].prerequisites,

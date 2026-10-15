@@ -120,10 +120,13 @@ local route_specifications = {
 	{"linox-planet_linox", "secretas", 22000, "outer_industry_deep"},
 	-- Umbra's extreme sciences. Crucible's native orbital link stays intact.
 	-- Keep the critical inner-rim / outer-rim transit untouched.
-	{"sye-umbra", "tenebris", 18000, "outer_void"},
-	{"tenebris", "crucible-orbit", 20000, "outer_void"},
-	{"crucible-orbit", "razi-umbra-belt-inner", 10000, "belt_umbra_approach"},
+  -- The Umbra Slip Stream is exterior; only the intentional physical
+  -- rim connection cuts through the debris band. The two small native
+  -- orbit-following curves are selected separately below.
+	{"sye-umbra", "razi-umbra-belt-outer", 18000, "belt_umbra_departure"},
 	{"razi-umbra-belt-inner", "razi-umbra-belt-outer", 8000, "belt_umbra_crossing"},
+	{"razi-umbra-belt-inner", "tenebris", 10000, "belt_umbra_approach"},
+	{"tenebris", "crucible-orbit", 20000, "outer_void"},
 	{"razi-umbra-belt-outer", "vesta", 11000, "belt_umbra_departure"},
 	-- The outer branches converge at the conventional Deep Space edge.
 	{"secretas", "solar-system-edge", 155000, "deep_edge"},
@@ -241,6 +244,19 @@ local function supports_regional_arcs()
   a,b,c=tonumber(a),tonumber(b),tonumber(c)
   return a and (a>2 or a==2 and (b>1 or b==1 and c>=20)) or false
 end
+-- Only these two same-system routes follow Umbra's true orbital center.
+-- Factorio 2.1.20+ draws their real connection shape, not painted art.
+-- The physical belt crossing and all interstellar paths stay straight.
+local selected_umbra_curves={
+  [key_for("tenebris","crucible-orbit")]=true,
+  [key_for("razi-umbra-belt-outer","vesta")]=true
+}
+local function selected_curve(from,to)
+  return supports_regional_arcs()
+    and selected_umbra_curves[key_for(from,to)]==true
+end
+route_reconcile.selected_curve=selected_curve
+
 local function regional_origin(from,to,shape)
   if shape~="arc" or not supports_regional_arcs() then return nil end
   local system=membership[from]
@@ -362,11 +378,10 @@ function route_reconcile.data_final_fixes()
           and (membership[from]=="solaris" or membership[from]=="nyxaris"
             or membership[from]=="vibrant" or membership[from]=="vespera"
             or membership[from]=="umbra")
-        -- These laid-out systems use direct local chords.
-        -- Uncentred native arcs can wander across a nearby star.
+        -- Only the two whitelisted Umbra links get centered arcs.
         if local_chord then
-          route.shape="line"
-          route.origin=nil
+          route.shape=selected_curve(from,to) and "arc" or "line"
+          route.origin=regional_origin(from,to,route.shape)
         elseif membership[from] and membership[to]
           and membership[from]~=membership[to] then
           route.shape="line"
@@ -379,7 +394,7 @@ function route_reconcile.data_final_fixes()
 					route.shape="line"
 					route.origin=nil
         elseif local_chord then
-          route.origin=nil
+          route.origin=regional_origin(from,to,route.shape)
 				elseif route.origin==nil then
 					route.origin=regional_origin(from,to,route.shape)
 				end
@@ -391,14 +406,15 @@ function route_reconcile.data_final_fixes()
 						from = from,
 						to = to,
 						length = length,
-						shape = (membership[from] and membership[to]
+            shape = selected_curve(from,to) and "arc" or
+              ((membership[from] and membership[to]
                             and (membership[from] ~= membership[to]
                               or membership[from]=="calidus"
                               or membership[from]=="solaris"
                               or membership[from]=="nyxaris"
                               or membership[from]=="vibrant"
                               or membership[from]=="vespera"
-                              or membership[from]=="umbra")) and "line" or "arc",
+                              or membership[from]=="umbra")) and "line" or "arc"),
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)

@@ -92,7 +92,7 @@ class StarmapReadabilityTests(unittest.TestCase):
                "vesta","carna","arcanyx")
         local=[(r["source"],r["destination"]) for r in self.routes
                if r["source"] in nodes and r["destination"] in nodes]
-        local.extend((("carna","sye-umbra"),("arcanyx","tenebris")))
+        local.extend((("carna","crucible-orbit"),("arcanyx","tenebris")))
         for i,(a,b) in enumerate(local):
             self.assertGreaterEqual(geom.chord_clearance(
                 points["umbra"],points[a],points[b]),15)
@@ -115,6 +115,37 @@ class StarmapReadabilityTests(unittest.TestCase):
             points["umbra"],points["razi-umbra-belt-outer"],
             points["vesta"]),38.999)
         self.assertNotIn(("sye-umbra","crucible-orbit"),local)
+        self.assertNotIn(("sye-umbra","tenebris"),local)
+        self.assertIn(("sye-umbra","razi-umbra-belt-outer"),local)
+        self.assertGreaterEqual(geom.chord_clearance(
+            points["umbra"],points["sye-beetlejuice"],
+            points["sye-umbra"]),39)
+        # Check both of Factorio's real star-centered arc candidates as
+        # sampled circular paths, without permitting a second belt crossing.
+        import math
+        def arc(a,b,t):
+            star=points["umbra"]
+            ax,ay=(points[a][0]-star[0],points[a][1]-star[1])
+            bx,by=(points[b][0]-star[0],points[b][1]-star[1])
+            alpha,beta=math.atan2(ay,ax),math.atan2(by,bx)
+            sweep=(beta-alpha+math.pi)%(2*math.pi)-math.pi
+            r=math.hypot(ax,ay)*(1-t)+math.hypot(bx,by)*t
+            angle=alpha+sweep*t
+            return (star[0]+r*math.cos(angle),
+                    star[1]+r*math.sin(angle))
+        for a,b,min_radius in (
+                ("tenebris","crucible-orbit",20),
+                ("razi-umbra-belt-outer","vesta",39)):
+            for k in range(41):
+                location=arc(a,b,k/40)
+                self.assertGreaterEqual(
+                    geom.distance(location,points["umbra"]),
+                    min_radius-.001)
+                for other in nodes:
+                    if other not in (a,b):
+                        self.assertGreaterEqual(
+                            geom.distance(location,points[other]),7,
+                            (a,b,other,"native curve overlaps a marker"))
 
     def test_vespera_local_routes_use_straight_rendering(self):
         reconcile = (ROOT / "prototypes/system/route_reconcile.lua").read_text()

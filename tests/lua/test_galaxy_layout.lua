@@ -164,9 +164,10 @@ for _,entry in ipairs({
 end
 for key,orientation in pairs({
   ["razi-vespera-belt-inner"]=.25,["razi-vespera-belt-outer"]=.75,
-  ["razi-umbra-belt-inner"]=.25,["razi-umbra-belt-outer"]=.75,
+  ["razi-umbra-belt-inner"]=.25,["razi-umbra-belt-outer"]=.25,
   ["sye-solaris"]=.75,["sye-nyxaris"]=.75,
-  ["apia-carnova-orbit"]=.75,["crucible-orbit"]=.75
+  ["apia-carnova-orbit"]=.75,["crucible-orbit"]=.75,
+  ["sye-umbra"]=.5
 }) do
   check(places[key].label_orientation==orientation,
     "Starmap waypoint labels overlap: "..key)
