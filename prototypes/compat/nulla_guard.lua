@@ -24,7 +24,7 @@ function M.data_updates()
       installed=protect(value) or installed
     end
   end
-  local ok,source=pcall(require,"__nulla__.lib")
+  local ok,source=pcall(require,"__nulla__/lib")
   if ok then installed=protect(source) or installed end
   if type(log)=="function" then
     log("[Razi Protocol/Nulla] Nil-prototype shim "..
