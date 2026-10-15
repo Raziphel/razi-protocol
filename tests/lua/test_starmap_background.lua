@@ -36,13 +36,32 @@ for _,layer in ipairs(parts) do
   ok(layer.filename:find("graphics/starmap/razi/",1,true),"Foreign sprite")
   ok(layer.tint.a<=.94,"Atlas alpha too bright")
   if layer.filename:find("atlas%-starfield%-") then counts.sky=counts.sky+1 end
-  if layer.filename:find("atlas%-halo") then counts.halo=counts.halo+1 end
+  if layer.filename:find("atlas%-halo") or
+    layer.filename:find("glow%-") then counts.halo=counts.halo+1 end
   if layer.filename:find("belt%-vespera") or layer.filename:find("debris%-vespera")
     or layer.filename:find("debris%-umbra") or layer.filename:find("belt%-umbra") then counts.belt=counts.belt+1 end
   if layer.filename:find("atlas%-dust") then counts.dust=counts.dust+1 end
 end
 ok(counts.sky==36 and counts.halo==8 and counts.belt==2 and counts.dust==8,
   "Expected restrained per-system artwork")
+local unique={}
+for _,layer in ipairs(parts) do
+  local name=layer.filename:match("glow%-(%a+)%.png$")
+  if name then unique[name]=layer end
+end
+ok(unique.nyxaris and unique.vibrant and unique.vespera,
+  "Use dedicated system glows instead of identical atlas halos")
+ok(unique.nyxaris.tint.b>unique.nyxaris.tint.g and
+  unique.nyxaris.tint.g>unique.nyxaris.tint.r,
+  "Nyxaris blue must carry into its halo")
+ok(unique.vibrant.tint.r>unique.vibrant.tint.g,
+  "Vibrant should be purple, not another cyan star")
+local nyxaris_star={filename="__razi-protocol__/graphics/icons/NyxarisStar.png"}
+bg.tint_star_art({nyxaris_star})
+local first_tint=nyxaris_star.tint.g
+bg.tint_star_art({nyxaris_star})
+ok(nyxaris_star.tint.g==first_tint and nyxaris_star.tint.b==1,
+  "Stellar art tint should not accumulate after repeated final fixes")
 -- The dedicated Vibrant ring belongs to asteroid_belt_integration,
 -- not this generic atlas. Only Vespera and Umbra receive the two new
 -- distinct artwork layers, with no dependence on optional planets.
