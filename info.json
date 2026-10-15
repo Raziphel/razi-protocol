@@ -16,7 +16,6 @@
     "! kry-asteroid-belt",
     "bellicos-and-aegis >= 0.4.0",
     "Krastorio2-spaced-out >= 2.0.17",
-    "(?) FluxWorks >= 0.2.12",
     "+ aai-signal-transmission >= 0.6.0",
     "k2-dyson-sphere-rebalance >= 0.1.2",
     "+ planet-express >= 2.1.9",
