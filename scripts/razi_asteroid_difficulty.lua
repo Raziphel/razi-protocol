@@ -26,6 +26,36 @@ local distributions={
 }
 M.quality_names={"normal","uncommon","rare","epic","legendary"}
 M.distributions=distributions
+-- Every difficulty level has one exact, shared starmap color:
+-- cool blue -> cyan -> teal -> green -> lime -> gold -> orange -> red.
+-- These are rendered by Razi's sparse native-route marker overlay; Factorio
+-- does not offer a prototype field for tinting native connection lines.
+M.route_colors={
+  {r=.33,g=.52,b=.79}, -- 1   blue
+  {r=.28,g=.63,b=.79}, -- 2   sky blue
+  {r=.25,g=.70,b=.69}, -- 3   teal
+  {r=.29,g=.73,b=.53}, -- 4   emerald
+  {r=.44,g=.76,b=.40}, -- 5   green
+  {r=.66,g=.76,b=.36}, -- 6   lime
+  {r=.82,g=.73,b=.30}, -- 7   golden yellow
+  {r=.88,g=.59,b=.29}, -- 8   orange
+  {r=.84,g=.40,b=.29}, -- 9   vermilion
+  {r=.78,g=.22,b=.29}  -- 10  crimson
+}
+M.route_color_hex={
+  "#5485C9","#47A1C9","#40B3B0","#4ABA87","#70C266",
+  "#A8C25C","#D1BA4D","#E0964A","#D6664A","#C7384A"
+}
+function M.color_level(level)
+  return math.max(1,math.min(10,math.floor((type(level)=="number" and level or 1)+.5)))
+end
+function M.route_color(level)
+  return M.route_colors[M.color_level(level)]
+end
+function M.route_color_richtext(level)
+  return M.route_color_hex[M.color_level(level)]
+end
+
 local function clamp(x,low,high) return math.max(low,math.min(high,x)) end
 local function value(n,fallback)
   return type(n)=="number" and n==n and n or fallback

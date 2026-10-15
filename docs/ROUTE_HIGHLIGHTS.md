@@ -1,3 +1,41 @@
+## 2.1.94: 10 distinct quality-danger colors (blue to red)
+
+Razi now uses the first-party 10-level asteroid quality curve as its
+single map color key, rather than the older 5-level size-only palette.
+The **highest encountered quality-difficulty level** along each native
+route determines its marker's color. This warns about middle-of-route
+danger spikes as well as the destination. Each level has a separate
+static color:
+
+| Level | Route marker | Meaning |
+|:--|:--|:--|
+| 1 | #5485C9, steel blue | starter |
+| 2 | #47A1C9, sky blue | low |
+| 3 | #40B3B0, teal | early |
+| 4 | #4ABA87, emerald | developing |
+| 5 | #70C266, green | moderate |
+| 6 | #A8C25C, lime | difficult |
+| 7 | #D1BA4D, yellow | advanced |
+| 8 | #E0964A, orange | severe |
+| 9 | #D6664A, vermilion | extreme |
+| 10 | #C7384A, crimson red | guaranteed legendary hostile asteroids |
+
+Color is derived from `scripts/razi_asteroid_difficulty.lua` and also
+applies to the value inside native route tooltips. Danger and Chapter
+modes honor the same scale while quality asteroids are enabled.
+Every qualifying corridor, even level 1, receives at most **one small
+tinted marker**, with stronger warnings on levels 8-10. The existing
+major/all scope, 36-marker budget, no-overlap policy, native clickable
+lines, real orbit geometry, and historical red-dotted-trail cleanup
+remain intact. Marker colors are static for a route's *peak* level;
+they do not update per-tick or color entire routes. Factorio 2.1's
+SpaceConnectionPrototype does not expose a native line tint, so Razi
+does not reintroduce the notorious second parallel route line.
+
+If Razi's quality-asteroid feature is disabled, the original 5-class
+asteroid-size coloring remains as a compatibility fallback. No spawn
+probabilities, route geometry, technology, or save ID is changed.
+
 ## October 2026 old route-guide removal
 
 The retired hand-positioned guide-01 through guide-14 sprite files and

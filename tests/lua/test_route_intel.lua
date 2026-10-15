@@ -56,6 +56,12 @@ check(#regional.custom_tooltip_fields==5,
   "Harmless local routes should show only one modest quality escalation row")
 check(row(regional,"quality-hazard")~=nil,
   "Regional research tooltip must surface the native 10-stage ladder")
+local quality=require("scripts.razi_asteroid_difficulty")
+local _,regional_stage=quality.route_range(regional)
+local quality_field=row(regional,"quality-hazard")
+check(quality_field and quality_field.value[2]
+  =="[color="..quality.route_color_richtext(regional_stage).."]",
+  "Route tooltip color must match the exact starmap quality level")
 local sector=row(regional,"sector")
 check(sector and sector.value[1]=="razi-route-intel.inside-system",
   "Regional tooltip uses the wrong system identity")
@@ -93,4 +99,9 @@ check(routes.calm.custom_tooltip_fields==nil,"Disabled setting should preserve r
 settings.startup["razi-route-intelligence"].value=true
 intel.data_final_fixes()
 check(routes.calm.custom_tooltip_fields~=nil,"Enabled setting should add fields")
+check(row(routes.calm,"quality-hazard")~=nil,
+  "Starter routes need a blue Level 1 tooltip value")
+check(row(routes.calm,"quality-hazard").value[2]
+  =="[color="..quality.route_color_richtext(1).."]",
+  "Level 1 tooltip must use the same blue as its starmap marker")
 print("Razi route tooltip and hazard fixtures passed")

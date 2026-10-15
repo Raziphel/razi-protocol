@@ -54,6 +54,17 @@ definitions gain relatively more weight; **no previously disabled size
 is resurrected**. Modded asteroid materials and all collectible chunks
 keep their source values. Size, quality, and spawn density are separate.
 
+## Route colors follow the quality scale
+
+The same ten-level threat grades are used for route-map markers and route
+tooltips, progressing blue (level 1), cyan and green through yellow and
+orange to crimson (level 10). Colors are chosen by the route's *highest*
+predicted danger stage, so a difficult belt midpoint does not appear safe.
+A level 10 marker indicates 100% legendary hostile asteroid quality.
+Existing Factorio native lines remain unaltered; coloring is indicated
+by a single modest map marker per qualifying route. No per-tick drawing
+or additional overlays are added.
+
 ## Settings and compatibility
 
 - **Quality asteroid encounters:** On by default, can be disabled.

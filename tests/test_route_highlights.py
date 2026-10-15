@@ -22,6 +22,20 @@ class RouteArtTests(unittest.TestCase):
         self.assertNotIn("data:extend",s)
         self.assertNotIn("script.on_event",s)
 
+    def test_route_markers_use_ten_stage_quality_colors(self):
+        overlay=source("prototypes/system/route_highlights.lua")
+        ladder=source("scripts/razi_asteroid_difficulty.lua")
+        tooltip=source("prototypes/system/route_intel.lua")
+        self.assertIn("quality.route_color(grade)",overlay)
+        self.assertIn("function M.route_color_level(route)",overlay)
+        self.assertIn("local grade=M.route_color_level(route)",overlay)
+        self.assertIn('a=grade and math.min(.64,.24+.038*grade)',overlay)
+        self.assertIn("M.route_colors={",ladder)
+        self.assertIn("M.route_color_hex={",ladder)
+        self.assertIn("quality_levels.route_color_richtext(hi)",tooltip)
+        self.assertIn('field("quality-hazard"',tooltip)
+        self.assertNotIn("filename=SHEET",overlay)
+
     def test_keep_native_icons_and_hover_data(self):
         self.assertIn("custom_tooltip_fields",
                       source("prototypes/system/route_intel.lua"))

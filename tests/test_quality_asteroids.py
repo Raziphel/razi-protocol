@@ -48,6 +48,17 @@ class QualityAsteroidContracts(unittest.TestCase):
         self.assertIn('if not route.hidden',prototype)
         self.assertNotIn("dying_trigger_effect",prototype)
 
+    def test_unique_ten_color_palette_is_shared_by_markers_and_tooltips(self):
+        ladder=read("scripts/razi_asteroid_difficulty.lua")
+        marker=read("prototypes/system/route_highlights.lua")
+        intel=read("prototypes/system/route_intel.lua")
+        self.assertIn("M.route_colors={",ladder)
+        self.assertIn("M.route_color_hex={",ladder)
+        self.assertIn("function M.route_color(level)",ladder)
+        self.assertIn("function M.route_color_richtext(level)",ladder)
+        self.assertIn("quality.route_color(grade)",marker)
+        self.assertIn("quality_levels.route_color_richtext(hi)",intel)
+
     def test_settings_and_tooltips(self):
         settings=read("settings.lua")
         self.assertIn('name="razi-quality-asteroids"',settings)
