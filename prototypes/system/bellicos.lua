@@ -44,75 +44,177 @@ local function near_orbit()
   end
 end
 
-local function position_expedition()
-  if not endpoint_type("solar-system-edge") then return end
-  -- Anchor to Razi's canonical star-chart origin rather than relying on an
-  -- upstream location that may still carry stale absolute coordinates.
+-- The pulsar is a PlanetsLib sprite-only parent. It exists while star art is
+-- baked, then disappears from data.raw before Razi's last native positioning.
+-- Construct a FIXED virtual coordinate for it even after that deletion.
+local function offset(x,y,r,turn)
+  local angle=2*math.pi*turn
+  return x+r*math.sin(angle),y-r*math.cos(angle)
+end
+
+local function parent_polar(x,y,parent)
+  local dx,dy=x-parent.x,y-parent.y
+  return math.sqrt(dx*dx+dy*dy),
+    (math.atan(dx,-dy)/(2*math.pi))%1
+end
+
+local function plan_expedition()
+  if not endpoint_type("solar-system-edge") then return nil end
   local layout=require("prototypes.system.galaxy_layout")
-  local edge_x,edge_y=layout.anchor_position("solar-system-edge")
-  if not edge_x then return end
-  local positions={["solar-system-edge"]={x=edge_x,y=edge_y}}
-  local updates,planned={},{}
-  local function place(n,parent,r,t,gate)
-    local kind,pk=endpoint_type(n),endpoint_type(parent)
-    local origin=positions[parent]
-    if not (kind and pk and origin) then return end
-    local body=(data.raw[kind] or {})[n]
-    -- Preserve source-authored orbit.sprite / sprite scale / artwork flags.
-    -- Rebuilding an orbit with only parent/distance/orientation erased the
-    -- original pulsar and Aegis graphics BEFORE PlanetsLib baked its atlas.
-    local orbit={}
-    for field,value in pairs(body and body.orbit or {}) do
-      orbit[field]=value
-    end
-    orbit.parent={type=pk,name=parent}
-    orbit.distance=r
-    orbit.orientation=t
-    updates[#updates+1]={type=kind,name=n,orbit=orbit,
-      draw_orbit=false,redrawn_connections_exclude=gate or nil}
-    planned[#planned+1]={kind=kind,name=n,origin=origin,r=r,t=t}
-    local angle=t*2*math.pi
-    positions[n]={x=origin.x+r*math.sin(angle),
-      y=origin.y-r*math.cos(angle)}
-  end
-  local near=near_orbit()
+  local ex,ey=layout.anchor_position("solar-system-edge")
+  if not ex then return nil end
+  local edge={x=ex,y=ey}
+  local sx,sy=offset(ex,ey,170,.055)
+  local virtual_pulsar={x=sx,y=sy}
+  local nx,ny=offset(sx,sy,3,.25)
+  local virtual_near={x=nx,y=ny}
   local pulsar=endpoint_type("pulsar") and "pulsar" or nil
-  if pulsar then place(pulsar,"solar-system-edge",170,0.055) end
-  if near then
-    if pulsar then place(near,pulsar,3,0.25)
-    else place(near,"solar-system-edge",170,0.055) end
+  local near=near_orbit()
+  local entries={}
+  local function append(name,parent,parent_position,r,turn,gate)
+    if not endpoint_type(name) then return end
+    local x,y=offset(parent_position.x,parent_position.y,r,turn)
+    entries[#entries+1]={
+      name=name,parent=parent,parent_position=parent_position,
+      radius=r,turn=turn,x=x,y=y,gate=gate
+    }
   end
-  place(entry_gate,"solar-system-edge",62,0.035,true)
+  if pulsar then append(pulsar,"solar-system-edge",edge,170,.055) end
   if near then
-    -- Distinct bearings for each visible Aegis destination. The short
-    -- inner/warden corridor is no longer horizontal, and the outer rim
-    -- and return stargate form a readable downward arc.
-    place("aegis-inner-edge",near,29,0.205)
-    place("point-warden",near,48,0.285)
-    place("aegis-outer-edge",near,74,0.33)
-    place(bellicos_gate,near,57,0.43,true)
-  elseif pulsar then place(bellicos_gate,pulsar,57,0.43,true)
-  else place(bellicos_gate,"solar-system-edge",170,0.055,true) end
-  if #updates>0 then PlanetsLib:update(updates) end
-  -- PlanetsLib:update updates orbit data, but some source versions leave the
-  -- Factorio-native absolute fields unchanged. Reconcile them on BOTH
-  -- data.lua and final-fixes so art/labels do not snap back to a flat row.
-  for _,item in ipairs(planned) do
-    local location=(data.raw[item.kind] or {})[item.name]
-    if location then
-      location.origin={x=item.origin.x,y=item.origin.y}
-      location.distance=item.r
-      location.orientation=item.t
-      location.draw_orbit=false
+    if pulsar then
+      append(near,pulsar,virtual_pulsar,3,.25)
+    else
+      local r,t=parent_polar(nx,ny,edge)
+      append(near,"solar-system-edge",edge,r,t)
     end
   end
+  append(entry_gate,"solar-system-edge",edge,62,.035,true)
+  if near then
+    -- Each node has its own lane. Point Warden stays between the Aegis
+    -- inner and outer edges, NEVER beside Secretas in Beetlejuice.
+    append("aegis-inner-edge",near,virtual_near,29,.205)
+    append("point-warden",near,virtual_near,48,.285)
+    append("aegis-outer-edge",near,virtual_near,74,.33)
+    append(bellicos_gate,near,virtual_near,57,.43,true)
+  elseif pulsar then
+    append(bellicos_gate,pulsar,virtual_pulsar,57,.43,true)
+  else
+    local gx,gy=offset(sx,sy,57,.43)
+    local r,t=parent_polar(gx,gy,edge)
+    append(bellicos_gate,"solar-system-edge",edge,r,t,true)
+  end
+  return entries,virtual_pulsar
+end
+bellicos.plan_expedition=plan_expedition
+
+-- The same single plan drives (1) pre-render PlanetsLib orbit placement and
+-- (2) the post-render native coordinates. Never call PlanetsLib:update in the
+-- post-render stage: that utility can recursively reposition CHILDREN and
+-- pull Warden back into another solar system after baked sprites have moved.
+local function position_expedition(pre_render)
+  local plan,pulsar_center=plan_expedition()
+  if not plan then return 0 end
+  local updates={}
+  for _,target in ipairs(plan) do
+    local parent_kind=endpoint_type(target.parent)
+    for _,kind in ipairs({"space-location","planet"}) do
+      local body=(data.raw[kind] or {})[target.name]
+      if body then
+        -- Source graphics are owned by Bellicos/Aegis, not Razi.
+        local orbit={}
+        for key,value in pairs(body.orbit or {}) do orbit[key]=value end
+        if parent_kind then
+          orbit.parent={type=parent_kind,name=target.parent}
+        end
+        orbit.distance=target.radius
+        orbit.orientation=target.turn
+        if pre_render and parent_kind and
+          kind==endpoint_type(target.name) then
+          updates[#updates+1]={
+            type=kind,name=target.name,orbit=orbit,
+            draw_orbit=false,
+            redrawn_connections_exclude=target.gate or nil
+          }
+        end
+        body.orbit=orbit
+        -- Always set BOTH prototype types, if source mods registered two.
+        -- A duplicated Warden prototype cannot remain in Beetlejuice.
+        body.origin={
+          x=target.parent_position.x,y=target.parent_position.y
+        }
+        body.distance=target.radius
+        body.orientation=target.turn
+        body.draw_orbit=false
+      end
+    end
+  end
+  if pre_render and #updates>0 and PlanetsLib
+    and type(PlanetsLib.update)=="function" then
+    -- Parents are still present here, before sprite-only cleanup.
+    PlanetsLib:update(updates)
+    -- Restore absolute coordinates after source updater transforms any
+    -- linked child. The plan, not source load order, has final authority.
+    for _,target in ipairs(plan) do
+      for _,kind in ipairs({"space-location","planet"}) do
+        local body=(data.raw[kind] or {})[target.name]
+        if body then
+          body.origin={
+            x=target.parent_position.x,y=target.parent_position.y
+          }
+          body.distance=target.radius
+          body.orientation=target.turn
+        end
+      end
+    end
+  end
+  return #plan
+end
+
+-- PlanetsLib tags custom orbit sprites with their ORIGINAL local shift.
+-- Re-anchor tagged Bellicos layers to the same parent coordinates as native
+-- destinations, without deleting, tinting or redrawing the source artwork.
+local function reconcile_baked_art()
+  local plan=plan_expedition()
+  if not plan then return 0 end
+  local by_name={}
+  for _,target in ipairs(plan) do by_name[target.name]=target end
+  local ui=(data.raw["utility-sprites"] or {}).default
+  local layers=ui and ui.starmap_star and ui.starmap_star.layers
+  if type(layers)~="table" then return 0 end
+  local count=0
+  for _,layer in ipairs(layers) do
+    local target=type(layer)=="table"
+      and by_name[layer.planetslib_orbit_name]
+    local delta=layer and layer.planetslib_orbit_shift
+    if target and type(delta)=="table"
+      and type(delta[1])=="number" and type(delta[2])=="number" then
+      layer.shift={
+        delta[1]+target.parent_position.x*32,
+        delta[2]+target.parent_position.y*32
+      }
+      count=count+1
+    end
+  end
+  return count
+end
+bellicos.reconcile_baked_art=reconcile_baked_art
+
+function bellicos.reconcile_final_positions()
+  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
+  local n=position_expedition(false)
+  local art=reconcile_baked_art()
+  if type(log)=="function" then
+    log("[Razi Protocol/Bellicos] Synchronized "..n..
+      " expedition targets and "..art.." original orbit sprites; no late PlanetsLib updates")
+  end
+  return n,art
 end
 
 function bellicos.data_updates()
   -- Source mods can revise their system artwork in data-updates.
   -- Reapply placement WITH source sprites intact, before PlanetsLib bakes
   -- and removes sprite-only parent stars during data-final-fixes.
-  if mods and mods["bellicos-and-aegis"] then position_expedition() end
+  if mods and mods["bellicos-and-aegis"] then position_expedition(true) end
 end
 
 function bellicos.data()
@@ -120,7 +222,7 @@ function bellicos.data()
 		return
 	end
 
-	position_expedition()
+	position_expedition(true)
 	remove_stock_entry_routes()
 	deleteRoute(deep_space_entry_route)
 
@@ -172,9 +274,9 @@ function bellicos.data_final_fixes()
 	-- Other route compatibility passes can run after the source mod. Keep only
 	-- Razi Protocol's deep-space entrance while preserving every route inside Aegis.
 	remove_stock_entry_routes()
-	-- Source data-final-fixes may reparent its giant pulsar after data.lua.
-	-- Reaffirm only existing Razi-managed anchors at the final stage.
-	position_expedition()
+	-- After PlanetsLib has baked the source artwork, change native fields
+	-- and tagged-layer shifts only. Never re-enter PlanetsLib:update here.
+	bellicos.reconcile_final_positions()
 	local glare=settings and settings.startup
 	  and settings.startup["razi-starmap-soften-bellicos"]
 	if not glare or glare.value~=false then soften_pulsar_art() end
