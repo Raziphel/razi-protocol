@@ -314,7 +314,7 @@ local function test_routes()
         {"razi-apia-carnova-orbit-panglia",21000},
         {"razi-asteroid-belt-outer-edge-paracelsin",14000},
         {"razi-linox-planet_linox-secretas",22000},
-        {"razi-sye-umbra-crucible-orbit",17000}
+        {"razi-tenebris-crucible-orbit",20000}
     }) do
         local connection=routes[local_link[1]]
         check(connection and connection.length==local_link[2],

@@ -152,8 +152,8 @@ check(roads["razi-curated-ferrum-sye-vibrant"]~=nil,
   "Ferrum must stay outside Vibrant's asteroid crossing")
 check(not roads["razi-curated-ferrum-fulgora"],
   "Ferrum still offers a bypass into Fulgora")
-for _,name in ipairs({"razi-curated-tenebris-carna",
-  "razi-curated-sye-umbra-arcanyx"}) do
+for _,name in ipairs({"razi-curated-carna-sye-umbra",
+  "razi-curated-arcanyx-tenebris"}) do
   check(roads[name] and roads[name].shape=="line",
     "Optional Umbra neighbor loop missing: "..name)
 end

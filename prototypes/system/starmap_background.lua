@@ -14,7 +14,7 @@ local systems={
   {name="vibrant",art="glow-vibrant.png",tint={r=.64,g=.47,b=1},strength=.46,radius=1.85},
   {name="vespera",art="glow-vespera.png",tint={r=.94,g=.91,b=.82},strength=.33,radius=1.55},
   {name="beetlejuice",art="glow-beetlejuice.png",tint={r=1,g=.46,b=.61},strength=.45,radius=1.80},
-  {name="umbra",art="glow-umbra.png",tint={r=.74,g=.43,b=.27},strength=.34,radius=1.70},
+  {name="umbra",art="glow-umbra.png",tint={r=.74,g=.43,b=.27},strength=.25,radius=1.48},
   {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
 }
 -- Each region has ONE dedicated physical-ring texture in Subtle.
@@ -24,8 +24,12 @@ local systems={
 local belts={
   {name="vespera",tint={r=.84,g=.87,b=.91},scale=3.03,
     art="belt-vespera.png",debris="debris-vespera.png",debris_alpha=.085},
-  {name="umbra",tint={r=.91,g=.58,b=.40},scale=3.06,
-    art="belt-umbra.png",debris="debris-umbra.png",debris_alpha=.085}
+  -- The continuous blurry band was painted at half the physical rim.
+  -- Default to sparse native debris exactly around the 31–39-unit divide.
+  -- Cinematic alone retains an exceptionally faint smoke accent.
+  {name="umbra",tint={r=.71,g=.56,b=.49},scale=5.62,
+    art="debris-umbra.png",debris="belt-umbra.png",debris_alpha=.028,
+    subtle_alpha=.082,cinematic_alpha=.105}
 }
 local WHITE={r=1,g=1,b=1}
 -- Gently correct the actual painted stars to agree with their glows.
@@ -129,7 +133,8 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(belt.name)
       if x and y then
         insert_asset(layers,belt.art,belt.scale,x,y,
-          belt.tint,cinematic and .145 or .105)
+          belt.tint,cinematic and (belt.cinematic_alpha or .145)
+            or (belt.subtle_alpha or .105))
         if cinematic then
           insert_asset(layers,belt.debris,belt.scale*1.04,x,y,
             belt.tint,belt.debris_alpha)

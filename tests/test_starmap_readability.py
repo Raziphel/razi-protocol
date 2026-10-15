@@ -85,6 +85,37 @@ class StarmapReadabilityTests(unittest.TestCase):
                                  points["sye-vespera"],
                                  points["sye-nyxaris"]), 10)
 
+    def test_umbra_singular_branches_and_true_orbit_clearance(self):
+        points=geom.positions(self.anchors)
+        nodes=("sye-umbra","tenebris","crucible-orbit",
+               "razi-umbra-belt-inner","razi-umbra-belt-outer",
+               "vesta","carna","arcanyx")
+        local=[(r["source"],r["destination"]) for r in self.routes
+               if r["source"] in nodes and r["destination"] in nodes]
+        local.extend((("carna","sye-umbra"),("arcanyx","tenebris")))
+        for i,(a,b) in enumerate(local):
+            self.assertGreaterEqual(geom.chord_clearance(
+                points["umbra"],points[a],points[b]),15)
+            for other in nodes:
+                if other not in (a,b):
+                    self.assertGreaterEqual(geom.chord_clearance(
+                        points[other],points[a],points[b]),7,
+                        (a,b,other,"planet icon obscured by route"))
+            for c,d in local[i+1:]:
+                if len({a,b,c,d})==4:
+                    self.assertFalse(geom.segments_cross(
+                        points[a],points[b],points[c],points[d]),
+                        (a,b,c,d))
+        anchors={x["name"]:x for x in self.anchors}
+        self.assertLess(anchors["razi-umbra-belt-inner"]["radius"],
+                        anchors["razi-umbra-belt-outer"]["radius"])
+        self.assertLess(anchors["razi-umbra-belt-outer"]["radius"],
+                        anchors["vesta"]["radius"])
+        self.assertGreaterEqual(geom.chord_clearance(
+            points["umbra"],points["razi-umbra-belt-outer"],
+            points["vesta"]),38.999)
+        self.assertNotIn(("sye-umbra","crucible-orbit"),local)
+
     def test_vespera_local_routes_use_straight_rendering(self):
         reconcile = (ROOT / "prototypes/system/route_reconcile.lua").read_text()
         authority = (ROOT / "prototypes/system/route_authority.lua").read_text()

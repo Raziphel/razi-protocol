@@ -84,6 +84,15 @@ for _,layer in ipairs(extra) do
   end
 end
 ok(cin_fragments==2,"Cinematic should add only two faint fragments")
+local umbra_debris,umbra_smoke
+for _,layer in ipairs(parts) do
+  if layer.filename:find("debris%-umbra") then umbra_debris=layer end
+  if layer.filename:find("belt%-umbra") then umbra_smoke=layer end
+end
+ok(umbra_debris and not umbra_smoke and umbra_debris.scale>5,
+  "Subtle Umbra must use a correctly scaled sparse debris field")
+ok(umbra_debris.tint.a<.10,
+  "Umbra's asteroid field must not be a blurred bright ring")
 local original=bg.make_layers("subtle",true,true,true,false)
 local repeats={}
 for i,layer in ipairs(original) do
