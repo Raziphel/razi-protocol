@@ -18,31 +18,18 @@ class TestSourceOwnership(unittest.TestCase):
 
     def test_recommended_mods_are_curated_and_nonmandatory(self):
         import json
-        info = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
-        deps=info["dependencies"]
-        recommended=[dep for dep in deps if dep.startswith("+ ")]
-        self.assertEqual(set(recommended), {
-            "+ aai-signal-transmission >= 0.6.0",
-            "+ Imersite-Asteroids >= 1.3.0",
-            "+ planet-express >= 2.1.9",
-            "+ upgraded-rocket-turrets >= 2.1.1",
-            "+ celestial-weather-updated >= 1.5.1",
-            "+ celestial-weather-additions-updated >= 1.3.1",
-            "+ Cold_biters >= 2.3.0",
-            "+ science-tab >= 1.13.0",
-            "+ Big-Monsters >= 2.2.1",
-        })
-        # Only mods with a native 2.1 release and tested integrations
-        # should be promoted. Do not recommend unfinished or
-        # version-incompatible optional content.
-        for blocked in ("FluxWorks", "dea-dia-system", "pelagos",
-                        "secretas-orbit-patch", "outer-rim"):
-            self.assertFalse(any(dep.startswith("+ "+blocked) for dep in deps))
+        deps=json.loads((ROOT / "info.json").read_text(encoding="utf-8"))["dependencies"]
+        recommended={d.split()[1] for d in deps if d.startswith("+ ")}
+        self.assertEqual(len(recommended),25)
+        self.assertTrue({"Big-Monsters","secretas-orbit-patch","planet-ferrum",
+                         "VoidProcessing-Updated","Solar-Halo"}.issubset(recommended))
+        self.assertFalse(any(d.startswith("? ") for d in deps))
+        self.assertIn("(?) FluxWorks >= 0.2.12",deps)
+        self.assertIn("(?) outer-rim",deps)
         normalised=[]
         for dep in deps:
             words=dep.split()
-            name=words[1] if words[0] in (
-                "+", "?", "(?)", "~", "!") else words[0]
+            name=words[1] if words[0] in ("+", "?", "(?)", "~", "!") else words[0]
             normalised.append(name)
         self.assertEqual(len(normalised),len(set(normalised)),
                          "A mod may only have one dependency declaration")
@@ -64,9 +51,10 @@ class TestSourceOwnership(unittest.TestCase):
             "biological-machines-planet-balack",
         }
         names = {dep.split()[1] for dep in info["dependencies"]
-                 if dep.startswith("? ")}
-        self.assertTrue({"dea-dia-system", "pelagos", "planet-ferrum",
-                         "Solar-Halo", "Hephaestus"}.issubset(names))
+                 if dep.startswith(("+ ", "(?) "))}
+        self.assertTrue({"planet-ferrum", "Solar-Halo", "Hephaestus"}.issubset(names))
+        self.assertNotIn("dea-dia-system", names)
+        self.assertNotIn("pelagos", names)
         self.assertNotIn("biological-machines-planet-wit", names)
         self.assertIn("! PlanetAthos", info["dependencies"])
         self.assertIn("! nulla", info["dependencies"])

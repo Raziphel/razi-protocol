@@ -1,12 +1,12 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.66)
+# Razi Protocol: Direct and transitive dependency audit (2.1.74)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
 | required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 15 | Enhancements without a Razi-enforced install |
-| optional | 14 | Unfinished, experimental or alternate compatible integrations |
+| recommended | 25 | Compatible 2.1 companion suggestions, not required |
+| hidden-optional | 2 | Unadvertised load-order compatibility links |
 | incompatible | 22 | Known conflicting forks, startup failures and competing starmaps |
 
 ## Guaranteed indirectly, so removed from Razi's direct manifest
@@ -41,7 +41,7 @@ The following entries are required by another already-required mod, **but their 
 
 Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-on explicitly requires `Big-Monsters >= 2.2.1`, `Nexus-Threat-Updated >= 1.1.0`, Toxic Biters, Arachnids and Electric Flying Enemies. Since Nexus Bosses declares `? razi-protocol` and is installed separately, Razi must not introduce a reverse dependency cycle. Big Monsters can remain recommended as an extra enemy addition when the addon is absent; when the addon is installed it will be loaded as a hard transitive dependency regardless of Razi's `+` declaration. [Official Nexus Bosses dependency list](https://mods.factorio.com/mod/nexus-bosses/dependencies).
 
-## All 99 direct dependency declarations
+## All 97 direct dependency declarations
 
 | Declaration | Direct category |
 | --- | --- |
@@ -100,7 +100,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **15 entries** |
+| **Recommended companions** | **25 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
@@ -116,21 +116,19 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ CircuitLaunchableRockets >= 1.4.6` | recommended |
 | `+ CargoBayLimitResearch >= 1.1.2` | recommended |
 | `+ platform-logistics-overhaul >= 2.1.2` | recommended |
-| **Opt-in extras** | **14 entries** |
-| `? FluxWorks >= 0.2.12` | optional |
-| `? dea-dia-system` | optional |
-| `? pelagos` | optional |
-| `? secretas-orbit-patch >= 1.1.3` | optional |
-| `? outer-rim` | optional |
-| `? VoidProcessing-Updated` | optional |
-| `? ArmouredBiters21Compat` | optional |
-| `? Explosive_biters >= 2.4.0` | optional |
-| `? LithiumBattery >= 7.3.0` | optional |
-| `? rabbasca-underground >= 0.10.3` | optional |
-| `? skewer_shattered_planet >= 1.0.42` | optional |
-| `? Solar-Halo >= 1.2.0` | optional |
-| `? planet-ferrum >= 0.1.4` | optional |
-| `? Hephaestus >= 0.3.7` | optional |
+| `+ secretas-orbit-patch >= 1.1.3` | recommended |
+| `+ VoidProcessing-Updated` | recommended |
+| `+ ArmouredBiters21Compat` | recommended |
+| `+ Explosive_biters >= 2.4.0` | recommended |
+| `+ LithiumBattery >= 7.3.0` | recommended |
+| `+ rabbasca-underground >= 0.10.3` | recommended |
+| `+ skewer_shattered_planet >= 1.0.42` | recommended |
+| `+ Solar-Halo >= 1.2.0` | recommended |
+| `+ planet-ferrum >= 0.1.4` | recommended |
+| `+ Hephaestus >= 0.3.7` | recommended |
+| **Hidden compatibility links** | **2 entries** |
+| `(?) FluxWorks >= 0.2.12` | hidden-optional |
+| `(?) outer-rim` | hidden-optional |
 | **Excluded conflicts** | **22 entries** |
 | `! AsteroidBelt` | incompatible |
 | `! space-route-overlay` | incompatible |

@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "Six new Factorio 2.1 companion mods are recommended without becoming hard requirements. Orbital Catapult is deliberately not declared as a dependency because its author requires load-order-independent (~) linking, which would force installation; guarded support remains manual and disabled by default. Recommended mods still need complete runtime/K2SO validation.",
+  "notes": "Factorio 2.1: supported non-core companions are recommended (+), not required. Pelagos and Dea Dia are excluded until official 2.1 ports. FluxWorks and Outer Rim remain hidden optional ((?)) for guarded data-stage ordering because FluxWorks 0.2.12 is not published and Outer Rim conflicts with the recommended Secretas orbit patch. Full in-game combinations still require testing.",
   "dependencies": [
     {
       "mod": "base",
@@ -69,10 +69,10 @@
     },
     {
       "mod": "FluxWorks",
-      "type": "optional",
-      "declaration": "? FluxWorks >= 0.2.12",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "hidden-optional",
+      "declaration": "(?) FluxWorks >= 0.2.12",
+      "group": "hidden-optional",
+      "reason": "Hidden until the compatible 0.2.12 release is publicly available and tested"
     },
     {
       "mod": "aai-signal-transmission",
@@ -173,13 +173,6 @@
       "reason": "Curated planet or planetary expansion in the seven-system campaign"
     },
     {
-      "mod": "dea-dia-system",
-      "type": "optional",
-      "declaration": "? dea-dia-system",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
-    },
-    {
       "mod": "corrundum",
       "type": "required",
       "declaration": "corrundum >= 1.0.49",
@@ -215,13 +208,6 @@
       "reason": "Curated planet or planetary expansion in the seven-system campaign"
     },
     {
-      "mod": "pelagos",
-      "type": "optional",
-      "declaration": "? pelagos",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
-    },
-    {
       "mod": "tenebris-prime",
       "type": "required",
       "declaration": "tenebris-prime >= 1.3.12",
@@ -237,10 +223,10 @@
     },
     {
       "mod": "secretas-orbit-patch",
-      "type": "optional",
-      "declaration": "? secretas-orbit-patch >= 1.1.3",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ secretas-orbit-patch >= 1.1.3",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "maraxsis",
@@ -286,17 +272,17 @@
     },
     {
       "mod": "outer-rim",
-      "type": "optional",
-      "declaration": "? outer-rim",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "hidden-optional",
+      "declaration": "(?) outer-rim",
+      "group": "hidden-optional",
+      "reason": "Hidden to avoid incompatible Secretas orbit patch and source asteroid belt / Orbital Catapult dependencies"
     },
     {
       "mod": "VoidProcessing-Updated",
-      "type": "optional",
-      "declaration": "? VoidProcessing-Updated",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ VoidProcessing-Updated",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "skewer_planet_vesta",
@@ -342,10 +328,10 @@
     },
     {
       "mod": "ArmouredBiters21Compat",
-      "type": "optional",
-      "declaration": "? ArmouredBiters21Compat",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ ArmouredBiters21Compat",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "Cold_biters",
@@ -356,10 +342,10 @@
     },
     {
       "mod": "Explosive_biters",
-      "type": "optional",
-      "declaration": "? Explosive_biters >= 2.4.0",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ Explosive_biters >= 2.4.0",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "k2so-cubium-compatibility-fork",
@@ -419,10 +405,10 @@
     },
     {
       "mod": "LithiumBattery",
-      "type": "optional",
-      "declaration": "? LithiumBattery >= 7.3.0",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ LithiumBattery >= 7.3.0",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "castra",
@@ -559,31 +545,31 @@
     },
     {
       "mod": "rabbasca-underground",
-      "type": "optional",
-      "declaration": "? rabbasca-underground >= 0.10.3",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ rabbasca-underground >= 0.10.3",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "skewer_shattered_planet",
-      "type": "optional",
-      "declaration": "? skewer_shattered_planet >= 1.0.42",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ skewer_shattered_planet >= 1.0.42",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "Solar-Halo",
-      "type": "optional",
-      "declaration": "? Solar-Halo >= 1.2.0",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ Solar-Halo >= 1.2.0",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "planet-ferrum",
-      "type": "optional",
-      "declaration": "? planet-ferrum >= 0.1.4",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ planet-ferrum >= 0.1.4",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "Velora",
@@ -594,10 +580,10 @@
     },
     {
       "mod": "Hephaestus",
-      "type": "optional",
-      "declaration": "? Hephaestus >= 0.3.7",
-      "group": "optional",
-      "reason": "Opt-in content, experimental or version-sensitive branch; not part of the required core"
+      "type": "recommended",
+      "declaration": "+ Hephaestus >= 0.3.7",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
     },
     {
       "mod": "alchemy-khemia",

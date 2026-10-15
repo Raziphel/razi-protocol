@@ -21,10 +21,11 @@ class RequiredWorldTests(unittest.TestCase):
             self.assertFalse(any(d.startswith(retired+' >=') for d in deps))
         self.assertIn('planet-muluna >= 2.7.25',deps)
         self.assertIn('panglia_planet >= 0.7.2',deps)
-    def test_unsupported_planet_ports_not_forced(self):
+    def test_unsupported_planet_ports_not_advertised(self):
         deps=json.loads(contents("info.json"))["dependencies"]
-        for name in ("dea-dia-system","pelagos","planet-ferrum"):
-            self.assertTrue(any(d.startswith("? "+name) for d in deps))
+        for name in ("dea-dia-system","pelagos"):
+            self.assertFalse(any(d==name or d.startswith(("+ "+name,"? "+name,"(?) "+name)) for d in deps))
+        self.assertIn("+ planet-ferrum >= 0.1.4",deps)
     def test_safe_staged_unification(self):
         code=contents("prototypes/technology/planetary_unification.lua")
         self.assertIn('razi-stable-intergalactic-singularity',code)
