@@ -1,3 +1,18 @@
+Version: 2.1.96
+Date: 15. 10. 2026
+  Expedition Journal stability and Bellicos/Beetlejuice starmap repair:
+    - Fix Cargo project HorizontalFlow style crash by applying spacing
+      only to valid Factorio GUI style types (including action rows).
+    - Preserve source pulsar and Aegis orbit.sprite artwork through
+      pre-render orbit reparenting; reapply in data-updates if sources reset it.
+    - Never delete unique Bellicos/Aegis baked PlanetsLib graphics while
+      hiding generic native rings for other deep-space locations.
+    - Extend the tiny-star sky atlas six recycled tiles northward to cover
+      the now-distant pulsar and Aegis system without dense background fog.
+    - Match Beetlejuice's star with green rather than pink/red halo art.
+    - Add fixture coverage and retain route positions, source asteroids,
+      technologies and progression. Full Factorio startup still required.
+
 Version: 2.1.95
 Date: 15. 10. 2026
   Ten-color quality asteroid route navigation:

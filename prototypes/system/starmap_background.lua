@@ -13,9 +13,13 @@ local systems={
   {name="nyxaris",art="glow-nyxaris.png",tint={r=.32,g=.63,b=1},strength=.45,radius=1.72},
   {name="vibrant",art="glow-vibrant.png",tint={r=.64,g=.47,b=1},strength=.46,radius=1.85},
   {name="vespera",art="glow-vespera.png",tint={r=.94,g=.91,b=.82},strength=.33,radius=1.55},
-  {name="beetlejuice",art="glow-beetlejuice.png",tint={r=1,g=.46,b=.61},strength=.45,radius=1.80},
+  -- Beetlejuice's stellar disc is electric GREEN, not magenta. Tint the
+  -- dedicated soft halo to match the actual source star artwork.
+  {name="beetlejuice",art="glow-beetlejuice.png",tint={r=.18,g=1,b=.28},strength=.45,radius=1.80},
   {name="umbra",art="glow-umbra.png",tint={r=.74,g=.43,b=.27},strength=.25,radius=1.48},
-  {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
+  {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88},
+  -- Quiet local ambience behind Bellicos source sprites, never a fake star.
+  {name="bellicos",tint={r=.48,g=.69,b=.91},strength=.34,radius=1.45}
 }
 -- Vibrant renders its real belt separately; only Umbra has belt art here.
 local belts={
@@ -52,7 +56,9 @@ function M.tint_star_art(layers)
 end
 -- Four individually seeded 1024px indexed PNG textures. Mostly single-pixel
 -- dots, rare three-pixel diffraction sparkles, no large blurred white blobs.
--- Six tiles per axis give a seamless static atlas without runtime updates.
+-- Six tiles per axis plus one NORTHERN fringe row cover the relocated
+-- Bellicos pulsar at roughly y=-427 chart units. The earlier 6x6 sky ended
+-- at y=-384 and left the entire Aegis annex unnaturally pitch-black.
 local sky_tiles={
   {1,3,2,4,1,2},
   {4,2,3,1,4,3},
@@ -74,19 +80,28 @@ local sky_exposure={
   {.89,1.00,.86,.96,.88,.98}
 }
 local function add_starfield(layers,cinematic)
+  local function tile(row,col,variant,exposure)
+    local rgb=sky_colors[variant]
+    layers[#layers+1]={
+      type="sprite",filename=ASSET.."atlas-starfield-"..variant..".png",
+      size={1024,1024},scale=4,
+      shift={(col-3.5)*4096,(row-3.5)*4096},
+      priority="extra-high-no-scale",flags={"gui-icon"},
+      blend_mode="normal",
+      tint={r=rgb[1],g=rgb[2],b=rgb[3],
+        a=(cinematic and .88 or .70)*exposure}
+    }
+  end
   for row,variants in ipairs(sky_tiles) do
     for col,variant in ipairs(variants) do
-      local rgb=sky_colors[variant]
-      layers[#layers+1]={
-        type="sprite",filename=ASSET.."atlas-starfield-"..variant..".png",
-        size={1024,1024},scale=4,
-        shift={(col-3.5)*4096,(row-3.5)*4096},
-        priority="extra-high-no-scale",flags={"gui-icon"},
-        blend_mode="normal",
-        tint={r=rgb[1],g=rgb[2],b=rgb[3],
-          a=(cinematic and .88 or .70)*sky_exposure[row][col]}
-      }
+      tile(row,col,variant,sky_exposure[row][col])
     end
+  end
+  -- One additional row only, on the northern expedition side. Reuse the
+  -- existing four tiny-star PNGs, with a varied tile/exposure pattern;
+  -- no extra assets or engine-time effects.
+  for col,variant in ipairs({3,1,4,2,3,1}) do
+    tile(0,col,variant,sky_exposure[6][col]*.94)
   end
 end
 local function option(name,default)
@@ -96,6 +111,15 @@ local function option(name,default)
 end
 local function anchor(name)
   if name=="calidus" then return 0,0 end
+  if name=="bellicos" then
+    if not (mods and mods["bellicos-and-aegis"]) then return nil end
+    local x,y=layout.anchor_position("solar-system-edge")
+    if not x then return nil end
+    -- The native pulsar is sprite-only and removed by PlanetsLib. Follow
+    -- its real Razi pre-render orbit, not a stale source-world coordinate.
+    return x+170*math.sin(2*math.pi*.055),
+      y-170*math.cos(2*math.pi*.055)
+  end
   return layout.anchor_position(name=="deep-space"
     and "solar-system-edge" or name)
 end

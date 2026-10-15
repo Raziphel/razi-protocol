@@ -235,10 +235,16 @@ local function consumers(parent,row,width,p)
       math.max(105,width-56))
     name.style.font="default-bold"
     name.tooltip=L("trade-upgrade-tooltip")
+    local narrow=width<275
     local metadata=copy.add{type="flow",
-      direction=width<275 and "vertical" or "horizontal"}
-    metadata.style.horizontal_spacing=12
-    metadata.style.vertical_spacing=3
+      direction=narrow and "vertical" or "horizontal"}
+    -- Factorio exposes distinct HorizontalFlow/VerticalFlow GuiStyle types.
+    -- Writing vertical_spacing to a HorizontalFlow crashes on_gui_click.
+    if narrow then
+      metadata.style.vertical_spacing=3
+    else
+      metadata.style.horizontal_spacing=12
+    end
     local state=label(metadata,L("trade-state-short-"..consumer.state.status))
     state.style.font_color=consumer.state.status=="researched"
       and {r=.51,g=.88,b=.69} or {r=1,g=.75,b=.49}
@@ -300,10 +306,14 @@ local function render_chain(parent,row,p,width,index)
     blockers(card,row.state,inner)
   end
   consumers(card,row,inner,p)
+  local narrow=inner<275
   local actions=card.add{type="flow",
-    direction=inner<275 and "vertical" or "horizontal"}
-  actions.style.horizontal_spacing=12
-  actions.style.vertical_spacing=4
+    direction=narrow and "vertical" or "horizontal"}
+  if narrow then
+    actions.style.vertical_spacing=4
+  else
+    actions.style.horizontal_spacing=12
+  end
   local action=actions.add{type="button",
     caption=L(p.cargo_focus==entry.id and "trade-hide-details"
       or "trade-details"),tags={razi_ops_action="cargo-focus",value=entry.id}}

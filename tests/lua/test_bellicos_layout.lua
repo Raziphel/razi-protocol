@@ -24,13 +24,14 @@ local function run(options)
   }
   local planets = {}
   if options.pulsar == "space-location" then
-    places.pulsar = {name="pulsar"}
+    places.pulsar = {name="pulsar",orbit={sprite={filename="__aegis_graphics__/pulsar-atlas.png"}}}
   elseif options.pulsar == "planet" then
-    planets.pulsar = {name="pulsar"}
+    planets.pulsar = {name="pulsar",orbit={sprite={filename="__aegis_graphics__/pulsar-atlas.png"}}}
   end
   if options.no_entry_gate then places[gate_a] = nil end
   if options.near then
-    places["near-bellicos-orbit"]={name="near-bellicos-orbit"}
+    places["near-bellicos-orbit"]={name="near-bellicos-orbit",
+      orbit={sprite={filename="__aegis_graphics__/belt-visual.png"}}}
     places["aegis-inner-edge"]={name="aegis-inner-edge"}
     places["aegis-outer-edge"]={name="aegis-outer-edge"}
     places["point-warden"]={name="point-warden"}
@@ -75,6 +76,9 @@ local function run(options)
 end
 
 local _, present, _, connected = run({pulsar="space-location"})
+check(present.pulsar.orbit.sprite
+  and present.pulsar.orbit.sprite.filename=="__aegis_graphics__/pulsar-atlas.png",
+  "Bellicos relocation erased the source pulsar image")
 check(present.pulsar.orbit.parent.name == "solar-system-edge"
   and present.pulsar.orbit.distance==170,
   "Present native pulsar did not join deep-space annex")
@@ -98,6 +102,9 @@ check(missing[gate_b].orbit.distance==170,
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
 local _, near_locations=run({near=true})
+check(near_locations["near-bellicos-orbit"].orbit.sprite
+  and near_locations["near-bellicos-orbit"].orbit.sprite.filename=="__aegis_graphics__/belt-visual.png",
+  "Bellicos relocation erased source asteroid-belt art")
 check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
   "Visible Bellicos orbit should be detached from the central galaxy")
 check(near_locations["near-bellicos-orbit"].orbit.distance==170,

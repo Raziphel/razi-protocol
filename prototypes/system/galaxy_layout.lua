@@ -339,13 +339,19 @@ local function remove_baked_source_trails()
     local layer=layers[index]
     local name=layer and layer.planetslib_orbit_name
     local asset=layer and layer.filename
-    -- Keep unique pulsar artwork, stripping only generic PlanetsLib orbit
-    -- decorations. Do not touch actual travel paths or destination icons.
-    local pulsar_art=name=="pulsar" and type(asset)=="string"
-      and asset:lower():find("pulsar",1,true)
+    -- Aegis art is source-authored: its pulsar and debris sprites need
+    -- not include "pulsar" in the filename (0.4.x external graphics pack).
+    -- Never strip these baked PlanetsLib layers. Native orbit circles are
+    -- hidden separately via draw_orbit=false, without deleting source art.
+    local bellicos_art=name=="pulsar"
+      or name=="near-bellicos-orbit" or name=="bellicos-near-orbit"
+      or name=="near_bellicos_orbit" or name=="aegis-inner-edge"
+      or name=="aegis-outer-edge" or name=="point-warden"
+      or name=="calidus-bellicos-stargate-bellicos"
+      or name=="calidus-bellicos-stargate-calidus"
     if layer and layer.planetslib_orbit_shift
       and (name=="carna" or name=="velora"
-        or (deep_space_no_rings[name] and not pulsar_art)) then
+        or (deep_space_no_rings[name] and not bellicos_art)) then
       table.remove(layers,index)
       removed=removed+1
     end
