@@ -267,3 +267,8 @@ require("prototypes.system.quality_asteroids").data_final_fixes()
 -- carriers and custom-asteroid distribution, preserving source recipes,
 -- chunks, routes and 1-10 difficulty grades.
 require("prototypes.system.asteroid_performance").data_final_fixes()
+
+-- Last compatibility cleanup: remove temporary old lava fields after
+-- early-loaded planet mods have used them; no invalid prototype fields
+-- may reach the Factorio graphics validator.
+require("prototypes.compat.legacy_lava_cleanup").data_final_fixes()
