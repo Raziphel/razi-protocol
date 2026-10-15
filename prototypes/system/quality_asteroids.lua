@@ -108,6 +108,8 @@ function M.data_final_fixes()
     -- These mods use their own creation triggers. Never double-convert.
     return 0
   end
+  -- Use the same fully reconciled stage map as the route tooltip and art.
+  engine.prepare_routes(data.raw["space-connection"])
   local entities=data.raw.asteroid or {}
   local count,all=0,0
   local mode=settings_value("razi-asteroid-difficulty-scale","balanced")

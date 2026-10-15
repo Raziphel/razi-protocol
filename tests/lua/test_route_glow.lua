@@ -73,8 +73,8 @@ check(m.color_for_route(belt,"chapter")==palette.route_color(m.route_color_level
   "Chapter mode must not hide the chosen danger grade")
 local arc={from="c",to="d",shape="arc",
  asteroid_spawn_definitions={{asteroid="huge-metallic-asteroid",probability=.2}}}
-check(#m.strokes_for_connection(arc,"danger","all")==0,
- "Do not guess distant arc shapes")
+check(#m.strokes_for_connection(arc,"danger","all")>0,
+ "Default Factorio arc geometry must be rendered, not silently omitted")
 raw["space-connection"]={safe=safe,medium=medium,huge=huge,belt=belt}
 local layers=raw["utility-sprites"].default.starmap_star.layers
 check(m.data_final_fixes()>20,
@@ -89,8 +89,9 @@ layers[1]={filename="__razi-protocol__/graphics/route-highlights/continuous-stro
 check(m.data_final_fixes()==0 and #layers==total-1,
  "Old stretched route sprites must be removed even in Off mode")
 settings.startup["razi-quality-asteroids"].value=false
-check(m.route_color_level(huge)==nil
-  and m.color_for_route(huge,"danger")==m.danger_colors[5],
-  "Disabled quality system should keep the original five-size palette")
+check(m.route_color_level(huge)~=nil
+  and m.color_for_route(huge,"danger")==
+    palette.route_color(m.route_color_level(huge)),
+  "Map danger colors remain 1-10 even if quality enemies are disabled")
 settings.startup["razi-quality-asteroids"].value=true
 print("Route sprite doubling and severe hazard regression passed")

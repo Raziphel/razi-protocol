@@ -8,7 +8,7 @@ local OLD="__razi-protocol__/graphics/route-highlights/"
 local ANGLES,CELL,COLS=128,64,16
 local UNIT=50 -- authored line body in source pixels (extra joined end caps)
 local TARGET_SPAN=3.6 -- starmap chart units
-local ROUTE_LIMIT,LAYER_BUDGET=96,1600
+local ROUTE_LIMIT,LAYER_BUDGET=128,2400
 local abs,sqrt,ceil,floor,cos,sin=math.abs,math.sqrt,math.ceil,math.floor,math.cos,math.sin
 local function angle(dy,dx)
   return (math.atan2 and math.atan2(dy,dx) or math.atan(dy,dx))%math.pi
@@ -30,7 +30,7 @@ local function candidate(owner,route,mode,scope)
   local a,b=owner.position(route.from),owner.position(route.to)
   if not a or not b then return nil end
   local span=sqrt((a.x-b.x)^2+(a.y-b.y)^2)
-  if span<2.5 or span>480 then return nil end
+  if span<2.5 or span>1800 then return nil end
   if scope=="major" and not owner.is_major(route,a,b) then return nil end
   local sample,length=owner.route_path(route,a,b)
   if not sample or length<2.5 then return nil end
@@ -44,9 +44,9 @@ end
 M.candidate=candidate
 
 local function render(owner,row,mode,n)
-  local color=owner.color_for_route(row.route,mode)
-  local level=owner.route_color_level(row.route)
-  local alpha=level and (.77+.014*level) or .76
+  local ladder=require("scripts.razi_asteroid_difficulty")
+  local setting=settings and settings.startup
+    and settings.startup["razi-asteroid-difficulty-scale"]
   local result={}
   for j=1,n do
     local start=(row.trim+row.covered*(j-1)/n)/row.length
@@ -57,6 +57,15 @@ local function render(owner,row,mode,n)
     if d>.01 then
       -- Quantization error stays below ~1px for short route chords.
       local index=floor(angle(dy,dx)/math.pi*ANGLES+.5)%ANGLES
+      -- Sample quality danger at this actual point of the journey,
+      -- instead of tinting the entire 150,000 km crossing by one
+      -- arbitrary endpoint. Long routes transition naturally through
+      -- blue, green, yellow, orange and finally the red endgame.
+      local midpoint=(start+finish)/2
+      local grade=ladder.color_level(ladder.route_level(
+        row.route,midpoint,setting and setting.value))
+      local color=ladder.route_color(grade)
+      local alpha=.78+.014*grade
       result[#result+1]={
         type="sprite",filename=SHEET,
         x=(index%COLS)*CELL,y=floor(index/COLS)*CELL,
@@ -121,7 +130,7 @@ function M.data_final_fixes(owner)
       local n=math.min(LAYER_BUDGET-count,
         math.max(1,floor(row.pieces/density)))
       -- Do not stretch narrow line artwork into thick, ugly map stripes.
-      if row.covered/n<=12 then
+      if row.covered/n<=13.5 then
         local segments=render(owner,row,mode,n)
         for _,sprite in ipairs(segments) do
           atlas.layers[#atlas.layers+1]=sprite

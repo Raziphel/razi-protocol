@@ -1,3 +1,25 @@
+Version: 2.1.99
+Date: 15. 10. 2026
+  Full ten-level route difficulty and colored overlay correction:
+    - Give all 50 curated routes and 41 known endpoints explicit
+      progressive Level 1-10 assignments, eliminating stale
+      Level 5 late-game hazards.
+    - Escalate Vibrant, Vespera, Beetlejuice, Umbra, and the complete
+      Deep Space / Aegis / Bellicos and Shattered branches to correct
+      late-campaign tiers. Level 10 remains guaranteed Legendary.
+    - Infer optional modded destinations from their surviving connections
+      consistently at data and runtime, not a Level 2 fallback.
+    - Tint real connection-aligned route segments by the difficulty
+      encountered along each individual journey (blue to crimson).
+    - Follow Factorio 2.1's native default arc and origin correctly,
+      including more distant arcs and previously uncolored long routes.
+    - Expand the balanced atlas budget to 2,400 layers without any tick
+      handlers; leave the native travel network untouched.
+    - Preserve map colors when enemy quality encounters are disabled,
+      and add full-network route progression regression fixtures.
+    - Real Factorio modpack inspection is required to validate the
+      final layout, sprite alignment, and cross-mod startup.
+
 Version: 2.1.98
 Date: 15. 10. 2026
   Restore visible colored paths to the galaxy starmap:

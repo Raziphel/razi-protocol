@@ -56,17 +56,19 @@ class RouteRibbonTests(unittest.TestCase):
         module=(ROOT/"prototypes/system/route_ribbons.lua").read_text()
         owner=(ROOT/"prototypes/system/route_highlights.lua").read_text()
         for frag in ("local ANGLES,CELL,COLS=128,64,16",
-            "local ROUTE_LIMIT,LAYER_BUDGET=96,1600",
+            "local ROUTE_LIMIT,LAYER_BUDGET=128,2400",
             "local TARGET_SPAN=3.6",
             "shift={(a.x+b.x)*16,(a.y+b.y)*16}",
             "scale=d*32/UNIT",
             "owner.route_path(route,a,b)",
-            "owner.color_for_route(row.route,mode)",
+            "ladder.route_level(",
             "if sprite.filename==SHEET then return 0 end"):
             self.assertIn(frag,module)
         self.assertIn("M.route_path=route_path",owner)
         self.assertIn("M.is_major=is_major",owner)
         self.assertIn("route_ribbons",owner)
+        self.assertIn('if route.shape=="line" then',owner)
+        self.assertIn("if not cx then cx,cy=0,0 end",owner)
         self.assertNotIn("script.on_event",module)
         self.assertNotIn("data:extend",module)
 
