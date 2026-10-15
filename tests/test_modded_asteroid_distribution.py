@@ -16,7 +16,7 @@ class ModdedAsteroidDistributionTests(unittest.TestCase):
         self.assertIn('has_definition(source,name)',source)
         self.assertIn('local result={}',source)
         self.assertIn('done[route]=true',source)
-        self.assertIn('if has_enemy(name) then add(name,"entity",rate) end',source)
+        self.assertIn('if has_enemy(name) then add(name,"entity",rate,"auric") end',source)
         self.assertNotIn('data:extend(',source)
         self.assertNotIn('script.on_event',source)
 
@@ -33,6 +33,22 @@ class ModdedAsteroidDistributionTests(unittest.TestCase):
         self.assertIn('add_orbit_chunk("fulgora",imersite,.0010)',source)
         self.assertNotIn('add_orbit_chunk("nauvis"',source)
         self.assertNotIn('add("foliax-charged-promethium',source)
+
+    def test_auric_gradient_tracks_secretas_not_middle_of_space(self):
+        source=text("prototypes/system/modded_asteroid_distribution.lua")
+        self.assertIn('local toward=route.to=="secretas"',source)
+        self.assertIn('local near_moon=',source)
+        self.assertIn('local weights={1.00,.94,.72,.37,.14,.06}',source)
+        self.assertIn('local weight=weights[toward and (7-index) or index]',source)
+        self.assertIn('source=="auric"',source)
+        self.assertIn('math.max(weight,.52)',source)
+
+    def test_aquilo_priority_over_fulgora_trace(self):
+        source=text("prototypes/system/modded_asteroid_distribution.lua")
+        self.assertLess(
+            source.index('if has_endpoint(route,"aquilo") then return .008'),
+            source.index('if has_endpoint(route,"fulgora") then return .0010'))
+        self.assertIn('Modified routes:',source)
 
     def test_installed_prototype_audit_without_random_spawning(self):
         source=text("prototypes/system/modded_asteroid_distribution.lua")

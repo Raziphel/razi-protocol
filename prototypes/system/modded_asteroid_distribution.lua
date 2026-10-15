@@ -38,15 +38,26 @@ local function chunk_curve(rate)
     {distance=.92,probability=rate*.18,speed=.035}
   }
 end
-local function enemy_curve(rate)
-  return {
-    {distance=.10,probability=rate*.24,speed=.018},
-    {distance=.35,probability=rate*.70,speed=.018},
-    {distance=.50,probability=rate,speed=.018},
-    {distance=.65,probability=rate*.70,speed=.018},
-    {distance=.90,probability=rate*.24,speed=.018}
-  }
+-- A belt has a symmetric center field. Secretas is different: the
+-- original author places its golden/auric rocks primarily near the gas
+-- giant. Use the route's actual from/to direction to retain that geography.
+local function auric_curve(rate,route,kind)
+  local toward=route.to=="secretas"
+  local near_moon=(route.from=="frozeta" or route.to=="frozeta")
+  local positions={.05,.20,.38,.57,.76,.94}
+  local weights={1.00,.94,.72,.37,.14,.06}
+  local result={}
+  for index,position in ipairs(positions) do
+    local weight=weights[toward and (7-index) or index]
+    if near_moon then weight=math.max(weight,.52) end
+    result[#result+1]={
+      distance=position,probability=rate*weight,
+      speed=kind=="asteroid-chunk" and .035 or .018
+    }
+  end
+  return result
 end
+M.auric_curve=auric_curve
 local function route_pair(route,a,b)
   return route.from==a and route.to==b
     or route.from==b and route.to==a
@@ -61,8 +72,10 @@ local function imersite_rate(route)
       "asteroid-belt-outer-edge") then return .013 end
   if has_endpoint(route,"asteroid-belt-inner-edge")
     or has_endpoint(route,"asteroid-belt-outer-edge") then return .0055 end
-  if has_endpoint(route,"fulgora") then return .0010 end
+  -- Direct Fulgora->Aquilo links must not be downgraded to "trace"
+  -- simply because they touch Fulgora; this is pre-Aquilo progression.
   if has_endpoint(route,"aquilo") then return .008 end
+  if has_endpoint(route,"fulgora") then return .0010 end
   if has_endpoint(route,"razi-umbra-belt-inner")
     or has_endpoint(route,"razi-umbra-belt-outer") then return .0025 end
   if has_endpoint(route,"paracelsin") or has_endpoint(route,"ribbonia")
@@ -92,14 +105,14 @@ local function auric_rates(route)
 end
 M.imersite_rate=imersite_rate
 M.auric_rates=auric_rates
-local function add_route_entry(definitions,name,kind,rate)
+local function add_route_entry(definitions,name,kind,rate,route,source)
   if not name or rate<=0 or has_definition(definitions,name) then
     return false
   end
   definitions[#definitions+1]={
     type=kind,asteroid=name,
-    spawn_points=kind=="asteroid-chunk"
-      and chunk_curve(rate) or enemy_curve(rate)
+    spawn_points=source=="auric"
+      and auric_curve(rate,route,kind) or chunk_curve(rate)
   }
   return true
 end
@@ -113,9 +126,11 @@ local function integrate_route(route,imersite)
   local extra={}
   local count=0
   -- Check BOTH original and queued entries; never duplicate definitions.
-  local function add(name,kind,rate)
+  local function add(name,kind,rate,family)
     if has_definition(source,name) then return end
-    if add_route_entry(extra,name,kind,rate) then count=count+1 end
+    if add_route_entry(extra,name,kind,rate,route,family) then
+      count=count+1
+    end
   end
   if imersite then
     local rate=imersite_rate(route)
@@ -124,7 +139,7 @@ local function integrate_route(route,imersite)
   if installed.auric then
     local rates=auric_rates(route)
     if rates then
-      add("auric-asteroid-chunk","asteroid-chunk",rates.chunk)
+      add("auric-asteroid-chunk","asteroid-chunk",rates.chunk,"auric")
       local stage=math.max(levels.location_level(route.from),
         levels.location_level(route.to))
       for _,size in ipairs({"small","medium","big","huge"}) do
@@ -134,7 +149,7 @@ local function integrate_route(route,imersite)
             (size=="big" and stage>=8) or
             (size=="huge" and stage>=10)) then
           local name=size.."-auric-asteroid"
-          if has_enemy(name) then add(name,"entity",rate) end
+          if has_enemy(name) then add(name,"entity",rate,"auric") end
         end
       end
     end
@@ -193,13 +208,18 @@ function M.data_final_fixes()
   -- Read finalized route geometry and membership, not the original
   -- source-mod starmap (Razi has deliberately removed its shortcuts).
   local number,changed=0,0
+  local route_changes={}
   local routes=data.raw["space-connection"] or {}
   local names={}
   for name in pairs(routes) do names[#names+1]=name end
   table.sort(names)
   for _,name in ipairs(names) do
     local count=integrate_route(routes[name],imersite)
-    if count>0 then number=number+1;changed=changed+count end
+    if count>0 then
+      number=number+1
+      changed=changed+count
+      route_changes[#route_changes+1]=name..":"..count
+    end
   end
   if imersite then
     changed=changed+add_orbit_chunk("fulgora",imersite,.0010)
@@ -219,6 +239,10 @@ function M.data_final_fixes()
       "Added %d missing entries to %d preserved routes; "..
       "no external asteroid recipes altered."):format(
         table.concat(families,", "),changed,number))
+    -- Diagnostic detail is restricted to modified routes, in stable
+    -- lexical order; useful when players report a barren asteroid belt.
+    log("[Razi Protocol/custom-asteroids] Modified routes: "..
+      (#route_changes>0 and table.concat(route_changes,", ") or "none"))
   end
   return changed
 end
