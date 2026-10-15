@@ -1,5 +1,19 @@
 -- Asteroid spawn profiles for Razi's routes and belt crossings.
 local M = {}
+local function preference(name,default)
+  local item=settings and settings.startup and settings.startup[name]
+  return item and item.value or default
+end
+local function asteroid_factor()
+  local name=preference("razi-asteroid-population","standard")
+  return ({sparse=.65,standard=1,dense=1.3,swarm=1.6})[name] or 1
+end
+local function belt_factor()
+  local name=preference("razi-belt-threats","standard")
+  return ({relaxed=.5,standard=1,severe=1.5})[name] or 1
+end
+M.asteroid_factor=asteroid_factor
+M.belt_factor=belt_factor
 local util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
 local presets = {
   starter={"nauvis_fulgora",0.82},
@@ -97,7 +111,8 @@ local function adjust(definitions, settings, profile_name)
       for _, point in ipairs(def.spawn_points or {}) do
         if type(point.probability) == "number" then
           point.probability = math.max(0,
-            point.probability * settings[2] * family_boost * size_boost)
+            point.probability * settings[2] * asteroid_factor()
+            * family_boost * size_boost)
         end
       end
     end
@@ -118,7 +133,7 @@ local function add_belt_size_encounters(definitions, profile)
   for _, family in ipairs({"metallic","carbonic","oxide"}) do
     for _, size in ipairs({"big","huge"}) do
       local name = size.."-"..family.."-asteroid"
-      local chance = wanted[size]
+      local chance = wanted[size] and wanted[size]*belt_factor()
       if chance and asteroid_entities[name] and not found[name] then
         definitions[#definitions+1] = {
           type="entity", asteroid=name,
