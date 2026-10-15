@@ -138,7 +138,8 @@ for name,bearing in pairs({
   solaris=5/12,nyxaris=7/12,vibrant=.25,
   vespera=.75,beetlejuice=1/12,umbra=11/12
 }) do
-  check(math.abs(places[name].distance-104)<.001 and
+  local radius=(name=="beetlejuice" or name=="umbra") and 112 or 104
+  check(math.abs(places[name].distance-radius)<.001 and
         math.abs(places[name].orientation-bearing)<.000002,
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
@@ -204,12 +205,13 @@ local bearings={
 for name,bearing in pairs(bearings) do
   local star=places[name]
   local radius=star.orbit.distance
-  check(math.abs(radius-104)<.001,
-    "Stars are not positioned on the same circular radius: "..name)
+  local expected=(name=="beetlejuice" or name=="umbra") and 112 or 104
+  check(math.abs(radius-expected)<.001,
+    "Star tier radius mismatch: "..name)
   check(math.abs(star.orbit.orientation-bearing)<.000002,
     "Wrong clockwise compass bearing for "..name)
   local x,y=position(name)
-  local ex,ey=cartesian(104,bearing)
+  local ex,ey=cartesian(expected,bearing)
   check(math.abs(x-ex)<.01 and math.abs(y-ey)<.01,
     "Star position does not match Factorio polar orientation: "..name)
   local hx,hy=position("sye-"..name)

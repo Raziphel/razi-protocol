@@ -1,3 +1,20 @@
+## Outer-star breathing room (2.1.78)
+
+Umbra and Beetlejuice now sit at 112 rather than 104 chart units from
+Calidus. Their relative bearings (11/12 and 1/12) stay the same. This
+gives the deepest systems slightly more breathing room without moving
+their individual planet orbits, breaking the six-system travel graph,
+or changing physical route kilometers, science unlocks or native artwork.
+The two star anchor sprites move in the pre-render PlanetsLib pass and
+their descendants receive matching Factorio-native origins in final-fixes.
+
+The red dotted half-tails near Carna and Velora are consistent with the
+old decorative route-highlight renderer painting arbitrary third-party
+connections as short sprite sections. Colored atlas strokes are now
+restricted to approved interstellar waypoints and real physical belt
+crossings; native planet links stay visible as normal gray Factorio
+lines. This does not delete a space-connection or disable travel.
+
 ## Native orbital rings for all positioned planets (October 2026)
 
 PlanetsLib 2.0 and Factorio 2.1.20+ use native orbital rings based

@@ -1,3 +1,11 @@
+Version: 2.1.78
+Date: 15. 10. 2026
+  Star chart and route-art cleanup:
+    - Remove the half-finished red dotted decorative trails caused by the overbroad route-highlight compositor around smaller worlds.
+    - Only add hazard-colored sprite strokes to approved hub-to-hub corridors and physical asteroid-belt crossings; all real Factorio travel routes remain unchanged.
+    - Move Beetlejuice and Umbra modestly outward from radius 104 to 112 while preserving orbital directions, moon placements and star-system progression.
+    - Update Lua/Python regressions for the exterior star tier and forbidden floating decorations; manual-only CI.
+
 Version: 2.1.77
 Date: 15. 10. 2026
   Curated modpack visual cleanup:
