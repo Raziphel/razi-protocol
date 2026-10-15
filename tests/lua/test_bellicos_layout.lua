@@ -79,6 +79,14 @@ local _, present, _, connected = run({pulsar="space-location"})
 check(present.pulsar.orbit.sprite
   and present.pulsar.orbit.sprite.filename=="__aegis_graphics__/pulsar-atlas.png",
   "Bellicos relocation erased the source pulsar image")
+local pulsar_image=present.pulsar.orbit.sprite
+local good_pulsar=present.pulsar
+-- Verify the dedicated data-updates recovery does not clear artwork if
+-- another mod's data-updates temporarily touched the pulsar placement.
+local check_module=require("prototypes.system.bellicos")
+check_module.data_updates()
+check(good_pulsar.orbit.sprite==pulsar_image,
+  "Bellicos pre-render reparenting removed its preserved source sprite")
 check(present.pulsar.orbit.parent.name == "solar-system-edge"
   and present.pulsar.orbit.distance==170,
   "Present native pulsar did not join deep-space annex")

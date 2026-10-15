@@ -40,7 +40,18 @@ planets["optional-source-world"].orbit=optional_orbit
 planets["optional-source-world"].draw_orbit=false
 planets.castra.draw_orbit=false
 places["sye-solaris"].draw_orbit=false
-rawset(_G,"data",{raw={planet=planets,["space-location"]=places}})
+-- The source graphics pack may use file names WITHOUT "pulsar"; these
+-- PlanetsLib-baked tiles must survive Razi's generic orbit cleanup.
+local pulsar_sprite={filename="__bellicos_graphics__/stellar-burst.png",
+  planetslib_orbit_name="pulsar",planetslib_orbit_shift={0,0}}
+local aegis_sprite={filename="__bellicos_graphics__/asteroid-haze.png",
+  planetslib_orbit_name="near-bellicos-orbit",
+  planetslib_orbit_shift={0,0}}
+local retired_sprite={filename="__source__/retired-dash.png",
+  planetslib_orbit_name="carna",planetslib_orbit_shift={0,0}}
+local atlas={layers={pulsar_sprite,aegis_sprite,retired_sprite}}
+rawset(_G,"data",{raw={planet=planets,["space-location"]=places,
+  ["utility-sprites"]={default={starmap_star=atlas}}}})
 rawset(_G,"settings",{startup={["razi-starmap-orbit-density"]={value="full"}}})
 rawset(_G,"PlanetsLib",{update=function(_,values)
   for _,item in ipairs(values) do
@@ -147,6 +158,9 @@ for name,bearing in pairs({
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
 end
 layout.data_final_fixes()
+check(#atlas.layers==2 and atlas.layers[1]==pulsar_sprite
+  and atlas.layers[2]==aegis_sprite,
+  "Bellicos graphics were destroyed during unrelated orbit cleanup")
 -- The optional outer planets must receive actual native positions, not
 -- just orphaned PlanetsLib orbit metadata.
 for _,entry in ipairs({
