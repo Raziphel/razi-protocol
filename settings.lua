@@ -17,6 +17,15 @@ end
 data:extend({
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
+  -- Native ten-stage quality asteroid escalation. No separate quality mod.
+  {type="bool-setting",name="razi-quality-asteroids",
+    setting_type="startup",default_value=true,
+    order="aa[worlds]-b[quality-asteroids]"},
+  {type="string-setting",name="razi-asteroid-difficulty-scale",
+    setting_type="startup",default_value="balanced",
+    allowed_values={"balanced","challenging","relentless"},
+    order="aa[worlds]-c[asteroid-difficulty]"},
+
 
   -- PRODUCTION INTEGRATION. The overarching mode controls optional cross-world
   -- discoveries and industry. The following toggles remain independent filters.

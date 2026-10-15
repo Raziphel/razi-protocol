@@ -4,6 +4,7 @@ local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
 local Events = require("__razi_lib__/runtime/events")
 local victory_guard = require("scripts.razi_victory_guard")
+local quality_asteroids = require("scripts.razi_quality_asteroids")
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
@@ -223,6 +224,9 @@ events:on_event(defines.events.on_research_finished,function(event)
   razi_journal.on_research(event)
 end)
 events:on_event(defines.events.on_forces_merged,convergence.forces_merged)
+-- Only carrier asteroid creation events do work; no per-tick asteroid scan.
+events:on_event(defines.events.on_script_trigger_effect,
+  quality_asteroids.on_script_trigger_effect)
 -- /cheat is a built-in command and cannot be replaced. This notification
 -- runs only if the engine gets far enough to emit its console event.
 events:on_event(defines.events.on_console_command,razi_safe_cheat.warn_builtin)
