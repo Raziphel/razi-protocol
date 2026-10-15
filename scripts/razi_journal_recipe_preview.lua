@@ -29,4 +29,17 @@ function M.quantity(entry)
   return result
 end
 
+-- Avoid unresolved dynamic journal-workshop localisation keys.
+-- Display the actual source location when known, otherwise neutral text.
+function M.workshop_fallback(quest,available)
+  if quest and quest.world then
+    local locations=available and available.space_location or {}
+    local world=locations[quest.world]
+    if world and world.localised_name then return world.localised_name end
+    return quest.world:gsub("[-_]"," ")
+  end
+  if quest and quest.site then return quest.site:gsub("[-_]"," ") end
+  return "Expedition-dependent"
+end
+
 return M

@@ -389,11 +389,11 @@ local function draw_gallery(parent,key,entries,width,max_items,theme)
   local block=parent.add{type="flow",direction="vertical"}
   block.style.vertical_spacing=5
   subtitle(block,key,width,theme)
-  local columns=math.max(1,math.min(5,math.floor(width/116)))
-  local card_width=math.max(68,math.floor((width-(columns-1)*8)/columns)-3)
+  local columns=math.max(1,math.min(7,math.floor(width/155)))
+  local card_width=math.max(112,math.floor((width-(columns-1)*7)/columns)-3)
   local grid=block.add{type="table",column_count=columns}
-  grid.style.horizontal_spacing=8
-  grid.style.vertical_spacing=9
+  grid.style.horizontal_spacing=7
+  grid.style.vertical_spacing=7
   for i=1,math.min(max_items,#entries) do
     local entry=entries[i]
     local card=grid.add{type="frame",direction="vertical",
@@ -487,7 +487,7 @@ local function recipe_gallery(parent,quest,native,width,theme)
   panel.style.padding=10
   subtitle(panel,"factory-diagram",width-26,theme)
   if theme then accent_rule(panel,theme,math.min(width-26,168),3) end
-  wrap(panel,L("site-advisory",{"journal-workshop."..quest.id}),width-26)
+  wrap(panel,L("site-advisory",preview.workshop_fallback(quest,prototypes)),width-26)
   -- Existing machines and the original planet can be inspected before
   -- researching the optional production alternative.
   if quest.machine and prototypes.item and prototypes.item[quest.machine] then
@@ -607,6 +607,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- The completion status is already visible; give the reader that space.
   local content_height=size.body-(size.compact and 225 or 248)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
+  scroll.tags={razi_scroll_context=quest.id}
   local text_width=inner-18
   local prose=scroll.add{type="flow",direction="vertical"}
   prose.style.width=text_width
@@ -1205,6 +1206,7 @@ local function render_archive(parent,player,p,context,size)
   paper.add{type="line",direction="horizontal"}
   local reading=wheel_pane(paper,"razi_journal_archive_reading",
     size.reader-38,size.body-179)
+  reading.tags={razi_scroll_context=chosen.id}
   local page=reading.add{type="flow",direction="vertical"}
   page.style.width=size.reader-67
   page.style.vertical_spacing=18
@@ -1226,18 +1228,40 @@ local function nexus_revision(snapshot)
   end
   return table.concat(bits)
 end
--- Preserve the chapter index's viewport when a click redraws the journal.
--- Factorio destroys the scroll pane on frame.clear(), so capture its
--- scroll offset first. Do not persist GUI coordinates in save storage.
-local function find_navigation_scroll(element)
-  if not (element and element.valid) then return nil end
-  if element.name=="razi_journal_navigation" then return element end
+-- Preserve all independently scrollable readers when frame.clear()
+-- rebuilds their GUI trees. Entry-specific tags prevent scroll bleed
+-- between different milestones/projects/archive records.
+local scroll_names={
+  razi_journal_navigation=true,razi_journal_reading=true,
+  razi_journal_chapter_reading=true,razi_journal_archive_reading=true,
+  razi_journal_project_reader=true
+}
+local function scroll_key(element)
+  local tags=element.tags
+  return element.name.."|"..tostring(tags and tags.razi_scroll_context or "")
+end
+local function collect_scrolls(element,snapshot)
+  if not (element and element.valid) then return end
+  if scroll_names[element.name] then
+    snapshot[scroll_key(element)]=element.vertical_scroll_position
+  end
   for _,child in pairs(element.children) do
-    local found=find_navigation_scroll(child)
-    if found then return found end
+    collect_scrolls(child,snapshot)
   end
 end
-
+local function restore_scrolls(element,snapshot,skip_navigation)
+  if not (element and element.valid) then return end
+  if scroll_names[element.name]
+    and not (skip_navigation and element.name=="razi_journal_navigation") then
+    local pos=snapshot[scroll_key(element)]
+    if type(pos)=="number" and pos>=0 then
+      pcall(function() element.vertical_scroll_position=pos end)
+    end
+  end
+  for _,child in pairs(element.children) do
+    restore_scrolls(child,snapshot,skip_navigation)
+  end
+end
 local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
@@ -1245,8 +1269,8 @@ local function draw(player,focus_search)
   local size=M.layout(player.display_resolution,player.display_scale)
   local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
   local window_theme=themes.get(chapter_theme)
-  local previous_navigation=find_navigation_scroll(frame)
-  local previous_scroll=previous_navigation and previous_navigation.vertical_scroll_position
+  local saved_scrolls={}
+  collect_scrolls(frame,saved_scrolls)
   frame.clear()
   frame.style.width=size.width
   frame.style.padding=16
@@ -1376,10 +1400,7 @@ local function draw(player,focus_search)
     -- Normal chapter expand/collapse and dossier clicks retain the user's
     -- location in the list. Explicit quest navigation may deliberately
     -- reveal its selection, so that takes precedence over this restore.
-    if previous_scroll and not intentional_reveal then
-      local navigation=find_navigation_scroll(body)
-      if navigation then navigation.vertical_scroll_position=previous_scroll end
-    end
+    -- Restore all scroll readers once the complete GUI tree exists.
     if focus_search then pcall(function() search.focus() end) end
     if p.chapter_cover and render_chapter_cover(
       body,player,p,context,size,view) then
@@ -1394,6 +1415,7 @@ local function draw(player,focus_search)
       wrap(empty,L("missing-quest"),size.reader-40)
     end
   end
+  restore_scrolls(frame,saved_scrolls,p.reveal_selection==true)
   local foot=wrap(frame,L("footer-hint"),size.width-38)
   foot.style.font_color=COLOR.quiet
 end

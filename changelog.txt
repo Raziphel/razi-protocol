@@ -1,3 +1,16 @@
+Version: 2.1.117
+Date: 15. 10. 2026
+  Expedition Journal readability:
+    - Preserve scroll independently in navigation, milestone reading,
+      chapter briefings, project dossiers and archive records.
+    - Key retained positions by the actual selected quest/project/record,
+      with intentional selection reveal taking precedence.
+    - Compact native ingredient and unlock tiles into denser grids.
+    - Tighten dossier padding and improve spacing between project sections.
+    - Replace dynamic missing journal-workshop locale keys with grounded
+      manufacturing world labels, without changing gameplay or research.
+    - Add regression checks for scroll, labels and item-card density.
+
 Version: 2.1.116
 Date: 15. 10. 2026
   Expand asteroid belt risk/reward player choice:
