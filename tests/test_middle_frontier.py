@@ -1,6 +1,7 @@
 """Guard middle-frontier manufacturing integration and research gates."""
 import re
 import unittest
+from tools.journal_locale import load_journal_locale
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -34,7 +35,7 @@ class MiddleFrontierTests(unittest.TestCase):
         workshop=read("prototypes/compat/middle_frontier_industry.lua")
         codex=read("scripts/razi_journal_industry.lua")
         prod=read("locale/en/production.cfg")
-        lore=read("locale/en/razi_journal.cfg")
+        lore=load_journal_locale(ROOT)
         for id,quest in (
             ("razi-middle-fulgora-resilient-capacitors","alliance-middle-fulgora"),
             ("razi-middle-aquilo-capacitor-controls","alliance-middle-aquilo"),
