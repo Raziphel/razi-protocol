@@ -2,6 +2,7 @@
 import json
 import re
 import unittest
+from tools.journal_locale import load_journal_locale
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -73,7 +74,7 @@ class SystemCardProgressionTests(unittest.TestCase):
             self.assertTrue(all(target=="lab"
                 for old,target in migration[kind]))
         self.assertNotIn('lab-frontier=',
-            read("locale/en/razi_journal.cfg"))
+            load_journal_locale(ROOT))
         self.assertIn('self.assertEqual(len(quests),219)',
                       read("tests/test_razi_journal.py"))
 
