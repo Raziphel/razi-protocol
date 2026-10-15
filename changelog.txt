@@ -1,3 +1,13 @@
+Version: 2.1.83
+Date: 15. 10. 2026
+  Planet Athos startup recursion repair:
+    - Move the first Athos prerequisite-cycle guard into the END of Razi's data.lua, before all mods enter data-updates.lua.
+    - This corrects the actual load-order gap: PlanetAthos's recursive GetAllDescendants runs before Razi's former data-updates fix.
+    - Preserve early and final research graph passes for later-modified prerequisites, and log repaired/remaining cycles by stage.
+    - Prune only proven Athos/particulate-owned cyclic edges, never arbitrary K2SO research requirements.
+    - Add source-phase regression coverage and fixture for Athos-owned cycles. Full Factorio 2.1 engine verification still required.
+    - Keep Athos and Nulla required, the established five Project dossiers, and CI manual-only.
+
 Version: 2.1.82
 Date: 15. 10. 2026
   Curated galaxy cleanup:

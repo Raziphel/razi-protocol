@@ -29,13 +29,15 @@ rawset(_G,"data",{raw={technology={
 package.loaded["prototypes.compat.athos_cycle_guard"]=nil
 local athos=require("prototypes.compat.athos_cycle_guard")
 check(athos.find_cycle(data.raw.technology)~=nil,"Fixture cycle not found")
-check(athos.repair()==1,"Only the Athos-owned cycle may be corrected")
+check(athos.repair("before-athos-data-updates")==1,
+  "The data-stage pass must repair Athos cycles before its data-updates traversal")
 check(#data.raw.technology["athos-particulate"].prerequisites==0,
   "Cyclic source edge not removed")
 check(#data.raw.technology["other-a"].prerequisites==1 and
   #data.raw.technology["other-b"].prerequisites==1,
   "Unrelated dependency cycles must not be silently rewritten")
 data.raw.technology["other-b"].prerequisites={}
-check(athos.repair()==0 and athos.find_cycle(data.raw.technology)==nil,
+check(athos.repair("later-stage")==0
+  and athos.find_cycle(data.raw.technology)==nil,
   "Acyclic technology graphs must remain unchanged")
 print("Optional world compatibility fixtures passed")

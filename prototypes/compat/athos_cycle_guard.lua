@@ -40,12 +40,16 @@ local function find_cycle(techs)
   end
 end
 M.find_cycle=find_cycle
-function M.repair()
+function M.repair(stage)
   if not (mods and mods["PlanetAthos"]) then return 0 end
+  stage=stage or "late"
   local techs=(data.raw or {}).technology or {}
   local fixed=0
+  local examined=0
+  local blocked
   for _=1,64 do
     local cycle=find_cycle(techs)
+    if cycle then examined=examined+1 end
     if not cycle then break end
     local in_cycle={}
     for _,name in ipairs(cycle) do in_cycle[name]=true end
@@ -63,18 +67,25 @@ function M.repair()
       if chosen then break end
     end
     if not chosen then
+      blocked=table.concat(cycle," -> ")
       if type(log)=="function" then
-        log("[Razi Protocol/Athos] Unrelated cycle left unchanged: "..
-          table.concat(cycle," -> "))
+        log("[Razi Protocol/Athos]["..stage..
+          "] Unrelated cycle left unchanged: "..blocked)
       end
       break
     end
     table.remove(techs[chosen[1]].prerequisites,index)
     fixed=fixed+1
     if type(log)=="function" then
-      log("[Razi Protocol/Athos] Pruned cyclic source prerequisite "..
+      log("[Razi Protocol/Athos]["..stage..
+        "] Pruned cyclic source prerequisite "..
         chosen[1].." -> "..chosen[2])
     end
+  end
+  if type(log)=="function" then
+    log("[Razi Protocol/Athos]["..stage.."] Research cycles inspected="..
+      examined.." repaired="..fixed..
+      (blocked and " unresolved="..blocked or " remaining=none"))
   end
   return fixed
 end
