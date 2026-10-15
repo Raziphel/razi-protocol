@@ -27,6 +27,9 @@ local side_routes={
   -- fallback if a supported source planet is installed without its link.
   -- Preserve Eneas's native Nauvis moon, Unit-05 and launch gantry.
   {"eneas","nauvis",9000,"starter"},
+  -- Preserve an existing Athos-to-Vulcanus connection if the source adds
+  -- one; otherwise provide a single side-world lifeline, never a gate.
+  {"athos","vulcanus",18000,"starter"},
   -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
   {"shchierbin","paracelsin",21000,"chemistry_deep"},
   -- Both optional Umbra worlds have one interior connection. A

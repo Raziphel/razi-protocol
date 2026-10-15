@@ -24,7 +24,8 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertTrue({"Big-Monsters","secretas-orbit-patch","planet-ferrum",
                          "VoidProcessing-Updated","Solar-Halo"}.issubset(recommended))
         self.assertEqual({d for d in deps if d.startswith("? ")},
-                         {"? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19"})
+                         {"? moon-eneas >= 1.0.10","? shchierbin >= 0.3.19",
+                          "? nulla >= 1.0.2","? PlanetAthos >= 1.1.3"})
         self.assertIn("(?) FluxWorks >= 0.2.12",deps)
         self.assertIn("! outer-rim",deps)
         self.assertIn("! Hephaestus",deps)
@@ -59,8 +60,8 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertNotIn("dea-dia-system", names)
         self.assertNotIn("pelagos", names)
         self.assertNotIn("biological-machines-planet-wit", names)
-        self.assertIn("! PlanetAthos", info["dependencies"])
-        self.assertIn("! nulla", info["dependencies"])
+        self.assertIn("? PlanetAthos >= 1.1.3", info["dependencies"])
+        self.assertIn("? nulla >= 1.0.2", info["dependencies"])
         self.assertIn("! biological-machines-planet-wit", info["dependencies"])
         self.assertIn("? moon-eneas >= 1.0.10", info["dependencies"])
         self.assertIn("? shchierbin >= 0.3.19", info["dependencies"])

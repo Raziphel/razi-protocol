@@ -153,6 +153,10 @@ require("prototypes.technology.planetary_science_weave").data_final_fixes()
 -- Razi's final authority replace the remaining ordinary source routes.
 require("prototypes.compat.calidus_dyson").connect_calidus()
 
+-- Recheck after later research weaving; only Athos-owned cyclic arrows
+-- can be removed, leaving unrelated technology prerequisites untouched.
+require("prototypes.compat.athos_cycle_guard").repair()
+
 -- One authoritative seven-system graph, after *all* planet modules have run.
 -- Native moon links, original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.

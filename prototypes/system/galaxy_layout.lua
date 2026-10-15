@@ -40,6 +40,9 @@ local anchors = {
   {"planet","castra","solaris",27,0.61},
   {"planet","tellus","solaris",29,0.26},
   {"planet","corrundum","solaris",33,0.13},
+  -- Experimental Athos world keeps its author's stone/diamond production;
+  -- only its optional chart orbit is positioned in a quiet Solaris pocket.
+  {"planet","athos","solaris",39,0.79},
   -- Nyxaris forms an open biological crescent, with the Gleba moons well
   -- away from the gateway and Foliax across the quieter western arc.
   -- These are chart positions only; source production and climate are intact.
