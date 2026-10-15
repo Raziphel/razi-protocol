@@ -1,3 +1,11 @@
+**2.1.80: Experimental Nulla and Planet Athos recovery.** Both former
+conflicts may now be manually enabled as optional worlds, one at a time on
+a copied save. Razi attempts to guard Nulla's missing electric-furnace
+reference before upstream final-fixes and detects/prunes only proven
+Athos-owned technology cycles. This is not yet an engine-validated release;
+if either source still crashes, its exact Factorio log will identify the
+next fix. No compulsory science or planet dependencies were added.
+
 **2.1.79: Staff compatibility recommendations.** Added standalone
 Frozeta Nuclear Winter and combined Celestial Weather Next as recommended
 companions. Restored Eneas and Shchierbin as opt-in side worlds with guarded

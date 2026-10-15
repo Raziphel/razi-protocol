@@ -7,7 +7,7 @@ local source={add_radio_interference_energy=function(proto,value)
   proto.energy_source.emissions_per_minute.radio_interference=value
 end}
 package.loaded["lib"]=source
-package.preload["__nulla__.lib"]=function() return source end
+package.preload["__nulla__/lib"]=function() return source end
 package.loaded["prototypes.compat.nulla_guard"]=nil
 local nulla=require("prototypes.compat.nulla_guard")
 check(nulla.data_updates(),"Nulla source helper was not guarded")

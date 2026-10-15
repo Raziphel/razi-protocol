@@ -7,7 +7,7 @@
 > The historical details below document the earlier integration pass.
 
 
-This document reviews community planets and their integrations. Wit was retired because it conflicts with required Muluna; Athos was retired after its technology graph prevented the full pack from loading; Nulla was retired after its unguarded final-fixes compatibility code crashed in the curated pack.
+This document reviews community planets and their integrations. Wit remains excluded because it conflicts with required Muluna. Athos and Nulla have now returned as guarded optional compatibility experiments after their previous full-pack data-stage failures.
 The active integrations are side-content and optional sources of unique materials and gameplay.
 **No optional planet is required for any of the eight Razi system tech cards,
 the seven-system campaign, or the base endgame.** None is allowed to replace
@@ -27,11 +27,11 @@ factory. A successful static test does not prove that all mods load together.
 | `Velora` | Guarded moon integration | Gleba moon, Nyxaris | Original moon orbit, native enemy population, science and resource chain. Add a short connection only if missing. |
 | `moon-eneas` | **Optional** | Nauvis moon in Calidus | Original Unit-05/gantry and science unchanged; a native-safe Nauvis fallback route. |
 | `shchierbin` | **Optional** | Exterior Vibrant near Paracelsin | Original vanadium gameplay preserved, no asteroid-belt bypass. |
-| `nulla` | **Excluded** | Removed Aquilo moon | Nulla 1.0.2 assumes the vanilla electric-furnace prototype still exists and crashes in its radio-interference final-fixes pass when another overhaul removes it. |
+| `nulla` | **Experimental optional** | Original Aquilo moon | Guarded radio-interference helper handles absent vanilla furnaces; native drones, pollution and moon orbit remain untouched. |
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
 | `Arcanyx` | Guarded side-world integration | Umbra experimental branch | Voidcraft/Iridescent Industry and prism production untouched. Connect toward Tenebris only if no native local route exists. |
 | `Hephaestus` | **Excluded** | Removed from the curated galaxy | Giant H markers and labels obscure the Razi starmap; no integration remains. |
-| `PlanetAthos` | **Excluded** | Removed Solaris side world | Planet Athos 1.1.3 creates a cyclic technology graph in the full pack and fails during its recursive data-stage traversal. |
+| `PlanetAthos` | **Experimental optional** | Solaris stone/diamond world | Conservative source-owned technology-cycle guard, quiet outer orbit and native Crushing Industry progression. |
 | `biological-machines-planet-wit` | **Excluded** | Competing Nauvis moon | Conflicts with required Muluna; no route or science integration remains. |
 | `biological-machines-planet-balack` | Guarded high-risk side-world integration | Vespera after Aquilo | Preserve original enormous asteroid traffic, promethium technology, fabrication and dangerous enemies. |
 

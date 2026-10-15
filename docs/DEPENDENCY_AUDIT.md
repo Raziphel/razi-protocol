@@ -1,4 +1,4 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.79)
+# Razi Protocol: Direct and transitive dependency audit (2.1.80)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
@@ -6,9 +6,9 @@ Reviewed 15 October 2026. The complete direct manifest is registered in [`compat
 | --- | ---: | --- |
 | required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
 | recommended | 24 | Compatible 2.1 companion suggestions, not required |
-| optional | 2 | Optional side planets: Eneas and Shchierbin |
+| optional | 4 | Experimental and staff-approved manually installed planets |
 | hidden-optional | 1 | Unadvertised load-order compatibility links |
-| incompatible | 22 | Known conflicting forks, startup failures and competing starmaps |
+| incompatible | 20 | Known conflicts and unsupported combinations |
 
 ## Guaranteed indirectly, so removed from Razi's direct manifest
 
@@ -120,12 +120,14 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ CircuitLaunchableRockets >= 1.4.6` | recommended |
 | `+ CargoBayLimitResearch >= 1.1.2` | recommended |
 | `+ platform-logistics-overhaul >= 2.1.2` | recommended |
-| **Optional side worlds** | **2 entries** |
+| **Optional side worlds** | **4 entries** |
 | `? moon-eneas >= 1.0.10` | optional |
 | `? shchierbin >= 0.3.19` | optional |
+| `? nulla >= 1.0.2` | optional |
+| `? PlanetAthos >= 1.1.3` | optional |
 | **Hidden integration ordering** | **1 entries** |
 | `(?) FluxWorks >= 0.2.12` | hidden-optional |
-| **Excluded conflicts** | **22 entries** |
+| **Excluded conflicts** | **20 entries** |
 | `! AsteroidBelt` | incompatible |
 | `! space-route-overlay` | incompatible |
 | `! kry-asteroid-belt` | incompatible |
@@ -145,8 +147,6 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `! Wood_Gasification_updated` | incompatible |
 | `! factorioplus` | incompatible |
 | `! Hephaestus` | incompatible |
-| `! nulla` | incompatible |
-| `! PlanetAthos` | incompatible |
 | `! biological-machines-planet-wit` | incompatible |
 
 ### New companion group (15 October 2026)
@@ -225,3 +225,17 @@ be disabled in Factorio's Mod Manager; Razi cannot uninstall it.
   full-pack runs exposed an unguarded electric-furnace lookup and a cyclic
   research graph respectively. Versions or upstream code need repairs before
   enabling them here. This review does not constitute an in-game smoke test.
+
+## 2.1.80: Experimental Nulla/Athos rescue
+
+Both new worlds are now **manual opt-ins**: `? nulla >= 1.0.2` and
+`? PlanetAthos >= 1.1.3`. They are not recommended or required.
+Nulla's upstream radio-interference pass calls an energy helper with a missing
+`electric-furnace` prototype; Razi attempts to make its cached source helper
+nil-safe in `data-updates`, ahead of Nulla's `data-final-fixes`. It never
+creates a dummy furnace or changes the author's radioactive environment.
+Athos uses an early and late technology-cycle guard, which removes only an
+Athos/particulate-owned arrow proven to be on a loop. Unrelated K2SO research
+is untouched and logged if a conflict remains. If a source mod throws inside
+its own earlier final-fixes traversal, we will need a corrected source release
+or a separate earlier-loading patch. In-game testing is still outstanding.
