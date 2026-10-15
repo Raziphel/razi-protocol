@@ -8,6 +8,21 @@ by the current Razi route overlay. The current
 the sole route-overlay texture, with final native coordinates and actual
 asteroid risk values governing color. No routes or danger data were deleted.
 
+## 2.1.91: Single native line, sparse safety warnings
+
+Screenshots proved Razi's continuous-strokes tile atlas produced a
+green parallel line with repeated square joins on top of Factorio's
+native route. All multi-sprite route coloring is retired. The native
+connection draws the only full-length line and remains clickable.
+The risk inspector and detailed route hover text are unchanged.
+
+Danger mode now emits only one small offset badge on serious asteroid
+danger or genuine belt crossings; medium and safe routes have no extra
+art. Chapter mode can add single small accents at major waypoints.
+Symbols are capped at 36, checked against nearby glyph positions and
+never generated from unknown distant arcs. Retired first-party route
+strips are removed. No route, research, travel, or save changes.
+
 ## October 2026 route color refinement
 
 Reference: Space Route Overlay 0.2.7 uses actual asteroid spawn sizes

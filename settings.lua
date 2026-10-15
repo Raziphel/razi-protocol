@@ -59,8 +59,8 @@ data:extend({
     "ca[quality-of-life]-a[redundant-assemblers]"),
   startup_toggle("razi-enable-expedition-briefings",
     "ca[quality-of-life]-b[expedition-briefings]"),
-  -- Route colors are generated from final native space-connection prototypes.
-  -- Razi owns this map layer; the external overlay is incompatible.
+  -- Factorio alone paints continuous route lines. Razi adds only tiny
+  -- warnings beside genuinely dangerous paths; IDs are save-compatible.
   {
     type="string-setting",name="razi-route-overlay-mode",setting_type="startup",
     default_value="danger",allowed_values={"off","danger","chapter"},

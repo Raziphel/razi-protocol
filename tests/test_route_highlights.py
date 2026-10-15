@@ -1,109 +1,37 @@
-"""Razi data-stage route colors: native risk categories and continuous strokes."""
+"""The native Factorio route is the only continuous rendered path."""
 import json
-from pathlib import Path
-import struct
 import unittest
-import zlib
+from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-
-def read(path):
+def source(path):
     return (ROOT/path).read_text(encoding="utf-8")
 
+class RouteArtTests(unittest.TestCase):
+    def test_single_native_route_and_no_stretched_repeats(self):
+        s=source("prototypes/system/route_highlights.lua")
+        self.assertIn("function M.marker_for_connection(route,mode,scope)",s)
+        self.assertIn("local MARKER_LIMIT=36",s)
+        self.assertIn("if n>=MARKER_LIMIT then break end",s)
+        self.assertIn("hazards.is_belt_crossing(connection)",s)
+        self.assertIn("local at,length=route_path(route,a,b)",s)
+        self.assertIn("obsolete(atlas.layers[i])",s)
+        self.assertNotIn("filename=SHEET",s)
+        self.assertNotIn("rendered_span",s)
+        self.assertNotIn("MAX_SEGMENTS",s)
+        self.assertNotIn("data:extend",s)
+        self.assertNotIn("script.on_event",s)
 
-class BuiltInOverlayTests(unittest.TestCase):
-    def test_external_overlay_is_not_a_dependency(self):
-        info=json.loads(read("info.json"))
-        self.assertEqual(info["factorio_version"], "2.1")
-        self.assertIn("! space-route-overlay",info["dependencies"])
-        self.assertNotIn("~ space-route-overlay >= 0.2.7",info["dependencies"])
-
-    def test_native_geometry_and_data_stage_order(self):
-        source=read("data-final-fixes.lua")
-        layout='require("prototypes.system.galaxy_layout").confirm_critical_positions()'
-        overlay='require("prototypes.system.route_highlights").data_final_fixes()'
-        tooltips='require("prototypes.system.route_intel").data_final_fixes()'
-        self.assertLess(source.index(tooltips),source.index(overlay))
-        self.assertLess(source.index(layout),source.index(overlay))
-        overlay_src=read("prototypes/system/route_highlights.lua")
-        for fragment in ('if route.shape=="line" then',
-                         "if not cx then", "if abs(sweep)>.95 then return nil end",
-                         'table.sort(candidates,function(a,b)',
-                         "if layers+#entry.sprites<=LAYER_BUDGET then",
-                         "local rendered_span=span+.18",
-                         'M.is_navigation_highlight(route,scope)',
-                         'reconcile.allowed_pairs[',
-                         'unsafe_endpoint={carna=true,gleba=true,velora=true}'):
-            self.assertIn(fragment,overlay_src)
-        self.assertNotIn("data:extend",overlay_src)
-        self.assertNotIn("script.on_event",overlay_src)
-        self.assertNotIn("game.tick",overlay_src)
-        self.assertNotIn('require("space-route-overlay")',overlay_src)
-
-    def test_hazard_palette_has_one_source_of_truth(self):
-        hazard=read("prototypes/system/route_hazards.lua")
-        renderer=read("prototypes/system/route_highlights.lua")
-        self.assertIn("local danger_colors=hazards.colors",renderer)
-        self.assertIn("local rank=M.threat_tier(route)",renderer)
-        self.assertIn("if mode==\"chapter\" and rank<4",renderer)
-        self.assertIn("if M.is_belt_crossing(route) then tier=math.max(4,tier) end",hazard)
-        for tone in ('r=.41,g=.56,b=.63','r=.36,g=.67,b=.76',
-                     'r=.39,g=.72,b=.49','r=.91,g=.72,b=.32',
-                     'r=.89,g=.39,b=.32'):
-            self.assertIn(tone,hazard)
-        options=read("settings.lua")
-        self.assertIn('name="razi-route-overlay-mode"',options)
-        self.assertIn('default_value="danger"',options)
-        self.assertIn('name="razi-route-overlay-scope"',options)
-        self.assertIn('default_value="major"',options)
-
-    def test_anti_aliased_directional_atlas(self):
-        asset=ROOT/"graphics/route-highlights/continuous-strokes.png"
-        image=asset.read_bytes()
-        self.assertLess(asset.stat().st_size,600000)
-        self.assertEqual(image[:8],b"\x89PNG\r\n\x1a\n")
-        self.assertEqual(struct.unpack(">II",image[16:24]),(1024,1024))
-        self.assertEqual(image[24:26],bytes([4,3]))
-        compressed=[]
-        transparent=False
-        palette=False
-        off=8
-        while off<len(image):
-            size=struct.unpack(">I",image[off:off+4])[0]
-            kind=image[off+4:off+8]
-            chunk=image[off+8:off+8+size]
-            checksum=struct.unpack(">I",image[off+8+size:off+12+size])[0]
-            self.assertEqual(zlib.crc32(kind+chunk),checksum)
-            if kind==b"PLTE":
-                palette=len(chunk)==48
-            elif kind==b"tRNS":
-                transparent=len(chunk)==16 and chunk[0]==0 and chunk[-1]==255
-            elif kind==b"IDAT":
-                compressed.append(chunk)
-            off+=size+12
-        self.assertTrue(palette and transparent)
-        self.assertEqual(off,len(image))
-        raw=zlib.decompress(b"".join(compressed))
-        self.assertEqual(len(raw),1024*513)
-        def palette_index(x,y):
-            row=y*513
-            self.assertEqual(raw[row],0)
-            packed=raw[row+1+x//2]
-            return packed>>4 if x%2==0 else packed&15
-        # Horizontal bearing #0 is one connected undashed beam.
-        self.assertTrue(all(palette_index(x,64)>0 for x in range(17,110)))
-        self.assertEqual(palette_index(0,64),0)
-        # A quarter-turn creates a continuous vertical beam (#32).
-        self.assertTrue(all(palette_index(64,y)>0 for y in range(4*128+17,4*128+110)))
-        src=read("prototypes/system/route_highlights.lua")
-        self.assertIn('graphics/route-highlights/continuous-strokes.png',src)
-        self.assertIn("local CELL=128",src)
-        self.assertIn("local PIXELS=110",src)
-        self.assertIn("local MAX_SEGMENTS=88",src)
-        generator=read("scripts/generate_route_stroke_atlas.js")
-        self.assertIn("const CELL=128,COLUMNS=8,BEARINGS=64,LENGTH=110;",generator)
-        self.assertIn("chunk(\"tRNS\"",generator)
-
+    def test_keep_native_icons_and_hover_data(self):
+        self.assertIn("custom_tooltip_fields",
+                      source("prototypes/system/route_intel.lua"))
+        self.assertIn("! space-route-overlay",
+                      json.loads(source("info.json"))["dependencies"])
+        self.assertTrue((ROOT/"graphics/icons/routes/asteroid-route.png").exists())
+        settings=source("settings.lua")
+        for key in ("razi-route-overlay-mode","razi-route-overlay-scope"):
+            self.assertIn(key,settings)
+        self.assertIn('default_value="danger"',settings)
 
 if __name__=="__main__":
     unittest.main()

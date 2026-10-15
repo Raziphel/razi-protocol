@@ -7,13 +7,11 @@ local hazards=require("prototypes.system.route_hazards")
 local layout=require("prototypes.system.galaxy_layout")
 local reconcile=require("prototypes.system.route_reconcile")
 
-local SHEET="__razi-protocol__/graphics/route-highlights/continuous-strokes.png"
-local CELL=128            -- eight columns / eight rows, 64 bearings
-local PIXELS=110          -- continuous anti-aliased line in each 128px cell
-local SEGMENT=3.5        -- target distance between joined line segments
-local MAX_SEGMENTS=88     -- very long / anomalous connections remain native
-local MAX_SPAN=7.25       -- do not magnify sprites into thick dotted tails
-local LAYER_BUDGET=720    -- static sprite budget, no runtime or tick cost
+-- Retire repeated direction sprites; Factorio owns the single native line.
+local WARNING="__razi-protocol__/graphics/icons/routes/asteroid-route.png"
+local WAYPOINT="__razi-protocol__/graphics/icons/routes/interstellar-route.png"
+local OLD="__razi-protocol__/graphics/route-highlights/"
+local MARKER_LIMIT=36
 local PI=math.pi
 local TAU=2*PI
 local abs,sqrt,sin,cos=math.abs,math.sqrt,math.sin,math.cos
@@ -187,56 +185,51 @@ local function is_major(route,a,b)
     or (route.shape=="line" and magnitude(a,b)>=38)
 end
 
-function M.strokes_for_connection(route,mode,scope)
-  if not route or not route.from or not route.to
-    or route.hidden or mode=="off" then return {} end
+-- A single fixed-size warning beside genuinely hazardous roads. Never
+-- stretch a sprite along a connection: that created the ugly green parallel
+-- line, repeated square joints, and visual seams seen in 2.1.90.
+function M.marker_for_connection(route,mode,scope)
+  if not route or mode=="off"
+    or not M.is_navigation_highlight(route,scope) then return nil end
   local a,b=position(route.from),position(route.to)
-  if not a or not b or magnitude(a,b)<2 then return {} end
+  if not a or not b then return nil end
+  local span=magnitude(a,b)
+  if span<7 or span>480 then return nil end
   local major=is_major(route,a,b)
-  if scope=="major" and not major then return {} end
+  if scope=="major" and not major then return nil end
+  local tier=M.threat_tier(route)
+  local hazardous=tier>=4
+  if not hazardous and (mode~="chapter" or not major) then return nil end
   local at,length=route_path(route,a,b)
-  if not at or length<2 then return {} end
-  -- Trim near each map icon but never discard the important belt corridor.
-  local trim=math.min(1.65/length,.13)
-  local usable=length*(1-2*trim)
-  if usable<1.25 then return {} end
-  local count=math.max(1,math.ceil(usable/SEGMENT))
-  if count>MAX_SEGMENTS or usable/count>MAX_SPAN then return {} end
-
-  local rank=M.threat_tier(route)
+  if not at or length<7 then return nil end
+  local middle,previous,later=at(.5),at(.48),at(.52)
+  local dx,dy=later.x-previous.x,later.y-previous.y
+  local mag=sqrt(dx*dx+dy*dy)
+  if mag<.00001 then return nil end
+  local offset=hazardous and .85 or .72
   local color=M.color_for_route(route,mode)
-  -- The overlay is an annotation *beside* Factorio's native route,
-  -- never a competing rainbow path. Keep ordinary corridors quiet.
-  -- Only heavy hostile asteroids merit brighter emphasis.
-  local opacity=({.105,.14,.19,.25,.30})[rank]
-  if scope=="all" and not major then opacity=opacity*.66 end
-  if mode=="chapter" and rank<4 then opacity=opacity*.80 end
-  if hazards.is_belt_crossing(route) then opacity=math.max(opacity,.26) end
+  return {
+    type="sprite",filename=hazardous and WARNING or WAYPOINT,
+    size={64,64},scale=hazardous and .32 or .21,
+    shift={(middle.x-dy/mag*offset)*32,(middle.y+dx/mag*offset)*32},
+    priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
+    tint={r=color.r,g=color.g,b=color.b,
+      a=hazardous and (tier>=5 and .62 or .46) or .22}
+  }
+end
 
-  local sprites={}
-  for i=0,count-1 do
-    local t0=trim+(1-2*trim)*i/count
-    local t1=trim+(1-2*trim)*(i+1)/count
-    local p,q=at(t0),at(t1)
-    local span=magnitude(p,q)
-    if span>.2 then
-      local bearing=atan2(q.y-p.y,q.x-p.x)%PI
-      local tile=math.floor(bearing/PI*64+.5)%64
-      -- Overlap by ~.30 map units. The line texture has tapered ends,
-      -- so this closes pixel seams without creating bright join dots.
-      local rendered_span=span+.18
-      sprites[#sprites+1]={
-        type="sprite",filename=SHEET,
-        x=(tile%8)*CELL,y=math.floor(tile/8)*CELL,
-        size={CELL,CELL},scale=rendered_span*32/PIXELS,
-        shift={(p.x+q.x)*16,(p.y+q.y)*16},
-        priority="extra-high-no-scale",flags={"gui-icon"},
-        blend_mode="normal",
-        tint={r=color.r,g=color.g,b=color.b,a=opacity}
-      }
-    end
-  end
-  return sprites
+-- Compatibility name: now returns zero or one badge, never a run of sprites.
+function M.strokes_for_connection(route,mode,scope)
+  local badge=M.marker_for_connection(route,mode,scope)
+  return badge and {badge} or {}
+end
+
+local function obsolete(layer)
+  local f=layer and layer.filename
+  return type(f)=="string" and f:sub(1,#OLD)==OLD and
+    (f:find("continuous-strokes.png",1,true)
+      or f:find("directional-strokes.png",1,true)
+      or f:match("/guide%-%d+%.png$"))~=nil
 end
 
 function M.data_final_fixes()
@@ -245,50 +238,49 @@ function M.data_final_fixes()
     and startup["razi-route-overlay-mode"].value or "danger"
   local scope=startup["razi-route-overlay-scope"]
     and startup["razi-route-overlay-scope"].value or "major"
-  if mode=="off" then return 0 end
-  -- Never draw two independent route systems over the same native line.
-  if mods and mods["space-route-overlay"] then return 0 end
   local ui=(data.raw["utility-sprites"] or {}).default
   local atlas=ui and ui.starmap_star
   if not (atlas and type(atlas.layers)=="table") then return 0 end
-  for _,layer in ipairs(atlas.layers) do
-    if layer.filename==SHEET then return 0 end
+  for i=#atlas.layers,1,-1 do
+    if obsolete(atlas.layers[i]) then table.remove(atlas.layers,i) end
   end
-
-  local routes=data.raw["space-connection"] or {}
+  if mode=="off" or (mods and mods["space-route-overlay"]) then return 0 end
+  for _,sprite in ipairs(atlas.layers) do
+    if sprite.filename==WARNING or sprite.filename==WAYPOINT then return 0 end
+  end
   local candidates={}
-  for name,route in pairs(routes) do
-    if M.is_navigation_highlight(route,scope) then
-      local sprites=M.strokes_for_connection(route,mode,scope)
-      if #sprites>0 then
-        candidates[#candidates+1]={
-          name=name,route=route,sprites=sprites,
-          priority=(hazards.is_belt_crossing(route) and 100 or 0)
-            +M.threat_tier(route)*10}
-      end
+  for name,connection in pairs(data.raw["space-connection"] or {}) do
+    local sprite=M.marker_for_connection(connection,mode,scope)
+    if sprite then
+      candidates[#candidates+1]={
+        name=name,sprite=sprite,
+        priority=(hazards.is_belt_crossing(connection) and 1000 or 0)
+          +M.threat_tier(connection)*100
+      }
     end
   end
-  -- Risk-first when the map is crowded. Stable tie order makes results
-  -- deterministic regardless of Lua table iteration order.
   table.sort(candidates,function(a,b)
     if a.priority==b.priority then return a.name<b.name end
     return a.priority>b.priority
   end)
-  local painted,layers=0,0
-  for _,entry in ipairs(candidates) do
-    if layers+#entry.sprites<=LAYER_BUDGET then
-      for _,sprite in ipairs(entry.sprites) do
-        atlas.layers[#atlas.layers+1]=sprite
-      end
-      painted=painted+1
-      layers=layers+#entry.sprites
+  local used,n={},0
+  for _,row in ipairs(candidates) do
+    if n>=MARKER_LIMIT then break end
+    local x,y=row.sprite.shift[1]/32,row.sprite.shift[2]/32
+    local clear=true
+    for _,pos in ipairs(used) do
+      if (pos[1]-x)^2+(pos[2]-y)^2<16 then clear=false break end
+    end
+    if clear then
+      atlas.layers[#atlas.layers+1]=row.sprite
+      used[#used+1]={x,y}
+      n=n+1
     end
   end
   if type(log)=="function" then
-    log(string.format(
-      "[Razi Protocol/routes] %d native corridors, %d joined danger-aware sprites (%s/%s). Skipped ambiguous geometry and exceeded-budget paths without painting dotted trails",
-      painted,layers,mode,scope))
+    log("[Razi Protocol/routes] "..n..
+      " subtle navigation warnings; one native line per connection")
   end
-  return painted
+  return n
 end
 return M
