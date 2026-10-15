@@ -46,6 +46,7 @@
     "! outer-rim",
     "+ VoidProcessing-Updated",
     "skewer_planet_vesta >= 2.1.27",
+    "+ Abacayba_Moon_of_Nauvis >= 0.0.42",
     "castra-prime >= 0.9.2",
     "castra-krastorio-compatibility-plus >= 1.1.0",
     "planet-crucible >= 1.1.27",

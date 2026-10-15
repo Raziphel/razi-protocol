@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "2.1.82: Eneas and Solar-Halo retired completely, including dependencies and source routes. Razi-authored star artwork and Dyson Sphere remain. 50 required, 23 recommended, 1 optional, 1 hidden optional, 20 incompatible. Disable these external mods in Factorio manually; removal of a dependency does not uninstall it.",
+  "notes": "2.1.82: Eneas and Solar-Halo retired completely, including dependencies and source routes. Razi-authored star artwork and Dyson Sphere remain. 50 required, 24 recommended, 1 optional, 1 hidden optional, 20 incompatible. Disable these external mods in Factorio manually; removal of a dependency does not uninstall it.",
   "dependencies": [
     {
       "mod": "base",
@@ -283,6 +283,13 @@
       "declaration": "skewer_planet_vesta >= 2.1.27",
       "group": "planet",
       "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Abacayba_Moon_of_Nauvis",
+      "type": "recommended",
+      "declaration": "+ Abacayba_Moon_of_Nauvis >= 0.0.42",
+      "group": "recommended",
+      "reason": "Optional alpha infestation and endgame giga-industry, relocated to Vesta. Required UMR/UFP/Ultimate Core family only when installed."
     },
     {
       "mod": "castra-prime",

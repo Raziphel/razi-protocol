@@ -30,7 +30,7 @@ local membership = {
 	-- discoveries. Its edge-to-edge crossing remains a physical part of the travel graph.
 	["asteroid-belt-inner-edge"] = "mid-outer-belt",
 	["asteroid-belt-outer-edge"] = "mid-outer-belt",
-	["sye-umbra"] = "umbra", tenebris = "umbra", obsidiax = "umbra",
+	["sye-umbra"] = "umbra", tenebris = "umbra", obsidiax = "umbra", abacayba = "umbra",
 	["razi-umbra-belt-inner"] = "umbra",
 	["razi-umbra-belt-outer"] = "umbra",
 	["crucible-orbit"] = "umbra", crucible = "umbra", vesta = "umbra",
@@ -325,7 +325,12 @@ function route_reconcile.data_final_fixes()
     -- rescue its original custom asteroid resources onto the Muria spur.
     local migrating_athos=route_pair==key_for("athos","vulcanus")
       or route_pair==key_for("athos","nauvis")
-    if not migrating_ferrum and not migrating_athos and (
+    -- Rescue Abacayba's original custom asteroid drops during final route
+    -- authority; these old Nauvis/Aquilo links are not kept playable.
+    local migrating_abacayba=connection.from=="abacayba"
+      or connection.to=="abacayba"
+    if not migrating_ferrum and not migrating_athos
+      and not migrating_abacayba and (
       bypasses_vibrant_belt(connection.from,connection.to)
       or (from_system and to_system and from_system~=to_system
         and not allowed[route_pair])) then

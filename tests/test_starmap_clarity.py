@@ -328,11 +328,11 @@ class ConstellationTests(unittest.TestCase):
         self.assertGreaterEqual(segment_clearance(vespera,muria,athos),20)
         obs=self.coords["obsidiax"]
         umbra=self.coords["umbra"]
-        self.assertAlmostEqual(math.dist(umbra,obs),50,delta=.05)
-        self.assertGreaterEqual(segment_clearance(umbra,obs,self.coords["vesta"]),49.9)
+        self.assertAlmostEqual(math.dist(umbra,obs),68,delta=.05)
+        self.assertGreaterEqual(segment_clearance(umbra,obs,self.coords["vesta"]),55.9)
         side=(ROOT/"prototypes/system/route_authority.lua").read_text()
         self.assertIn('{"athos","muria",24000,"cryogenic"}',side)
-        self.assertIn('{"obsidiax","vesta",18000,"outer_void"}',side)
+        self.assertIn('{"obsidiax","vesta",21000,"outer_void"}',side)
         self.assertNotIn('{"athos","vulcanus"',side)
         discovery=(ROOT/"prototypes/technology/seven_system_gates.lua").read_text()
         self.assertIn('local function rehome_athos_discovery()',discovery)
@@ -340,6 +340,22 @@ class ConstellationTests(unittest.TestCase):
         self.assertIn('rehome_athos_discovery()',discovery)
         journal=(ROOT/"scripts/razi_journal_data.lua").read_text()
         self.assertIn('id="athos",chapter="vespera",world="athos",requires={"muria"}',journal)
+
+    def test_obsidiax_and_vesta_moon_have_clean_separate_corridors(self):
+        vesta=self.coords["vesta"]
+        obs=self.coords["obsidiax"]
+        umbra=self.coords["umbra"]
+        self.assertGreater(obs[0]-vesta[0],12)
+        self.assertLess(obs[1]-vesta[1],-12)
+        self.assertGreaterEqual(segment_clearance(umbra,vesta,obs),55.9)
+        source=(ROOT/"prototypes/system/abacayba_integration.lua").read_text()
+        self.assertIn('moon.orbit.parent={type="planet",name="vesta"}',source)
+        self.assertIn('local MOON_RADIUS=9.5',source)
+        self.assertIn('local MOON_TURN=0.85',source)
+        self.assertIn('prerequisite~="planet-discovery-aquilo"',source)
+        self.assertIn('requirements[#requirements+1]="planet-discovery-vesta"',source)
+        route=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        self.assertIn('{moon_id,"vesta",10000,"outer_void"}',route)
 
     def test_vibrant_western_belt_is_the_only_rock_crossing(self):
         star=self.coords["vibrant"]

@@ -15,7 +15,7 @@ local allowed=reconcile.allowed_pairs
 -- The special worlds do NOT become prerequisites for required discoveries.
 local side_routes={
   {"foliax","sye-nyxaris",18500,"biological_deep"},
-  {"obsidiax","vesta",18000,"outer_void"},
+  {"obsidiax","vesta",21000,"outer_void"},
   {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
   {"ferrum","sye-beetlejuice",22500,"outer_industry"},
@@ -32,6 +32,13 @@ local side_routes={
   -- Both optional Umbra worlds have one interior connection. A
   -- Carna-to-Slip-Stream line would bypass the real belt passage.
 }
+-- Source-owned Vesta satellite. Only installed Abacayba gets a route.
+local abacayba=require("prototypes.system.abacayba_integration")
+local moon_id=abacayba.planet_name()
+if moon_id and (data.raw.planet or {}).vesta then
+  member[moon_id]="umbra"
+  side_routes[#side_routes+1]={moon_id,"vesta",10000,"outer_void"}
+end
 -- Source-authored orbital links, not speculative Razi shortcuts.
 local native_pairs={
   {"nauvis","muluna"},
@@ -329,7 +336,8 @@ function M.data_final_fixes()
   -- should arc around the sun or cut through the asteroid survey.
   for _,route in pairs(routes) do
     local system=member[route.from]
-    local curated_side=pair(route.from,route.to)==pair("athos","muria")
+    local curated_side=(moon_id and pair(route.from,route.to)==pair(moon_id,"vesta"))
+      or pair(route.from,route.to)==pair("athos","muria")
       or pair(route.from,route.to)==pair("obsidiax","vesta")
       or pair(route.from,route.to)==pair("ferrum","sye-beetlejuice")
       or pair(route.from,route.to)==pair("bm-balack","aquilo")

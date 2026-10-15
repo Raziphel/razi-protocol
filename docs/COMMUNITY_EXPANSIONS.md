@@ -9,6 +9,10 @@
 
 This document reviews community planets and their integrations. Wit remains excluded because it conflicts with required Muluna. Athos and Nulla are now required and linked through a post-arrival Frontier Recovery Charter. Their former data-stage crashes still require real Factorio validation.
 The active integrations are side-content and optional sources of unique materials and gameplay.
+Abacayba remains a recommended **alpha** addition, not a requirement:
+its latest source mod also requires UMR, UFP and multiple Ultimate Core
+packages. The code rehomes the existing world but does not vend those
+packages, import graphics or duplicate the infestation planet.
 **No optional planet is required for any of the eight Razi system tech cards,
 the seven-system campaign, or the base endgame.** None is allowed to replace
 another mod's native science, enemy control, landing mechanic or specialized

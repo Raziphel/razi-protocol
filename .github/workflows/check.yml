@@ -62,6 +62,8 @@ jobs:
         run: lua5.2 tests/lua/test_community_expansions.lua
       - name: Check optional planet integrations
         run: lua5.2 tests/lua/test_optional_planets.lua
+      - name: Validate Vesta moon relocation and native Abacayba technology
+        run: lua5.2 tests/lua/test_abacayba_integration.lua
       - name: Test escalating asteroid profiles
         run: lua5.2 tests/lua/test_asteroid_profiles.lua
       - name: Check the starmap geometry

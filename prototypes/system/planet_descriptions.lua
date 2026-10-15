@@ -11,7 +11,7 @@ local destinations = {
   vibrant = {"fulgora", "ribbonia", "paracelsin", "cerys", "shchierbin", "alchemy-planet", "vibrant", "sye-vibrant"},
   vespera = {"muria", "aquilo", "nulla", "rubia", "maraxsis", "bm-balack", "athos", "vespera", "sye-vespera"},
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "ferrum", "beetlejuice", "sye-beetlejuice"},
-  umbra = {"tenebris", "crucible", "vesta", "carna", "arcanyx", "obsidiax", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
+  umbra = {"tenebris", "crucible", "vesta", "abacayba", "carna", "arcanyx", "obsidiax", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
   deep_space = {"nexus", "shattered-planet", "solar-system-edge", "pulsar", "calidus-bellicos-stargate-calidus", "calidus-bellicos-stargate-bellicos", "black-hole-approach", "black-hole", "oort-cloud", "sol"}
 }
 

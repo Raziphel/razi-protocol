@@ -19,7 +19,7 @@ local groups={
                "frozeta","ferrum","planet-ferrum"},
   umbra={"sye-umbra","tenebris","crucible","crucible-orbit","vesta",
          "razi-umbra-belt-inner","razi-umbra-belt-outer",
-         "carna","arcanyx","obsidiax"},
+         "carna","arcanyx","obsidiax","abacayba"},
   ["deep-space"]={"solar-system-edge","razi-deep-space-edge","shattered-planet",
                   "nexus","black-hole","oort-cloud"}
 }
