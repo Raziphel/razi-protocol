@@ -43,6 +43,36 @@ REQUIRED_DIMENSIONS = {
     "graphics/icons/routes/deep-space-route.png": (64, 64),
 }
 
+ 
+# Dynamic paths are assembled from Lua at startup, so filename-only grep is
+# insufficient to prove these runtime textures are unused.
+ACTIVE_STARMAP = {
+    *(f"atlas-starfield-{i}.png" for i in range(1, 5)),
+    *(f"atlas-dust-{i}.png" for i in range(1, 4)),
+    *(f"glow-{star}.png" for star in
+      ("solaris", "nyxaris", "vibrant", "vespera", "beetlejuice", "umbra")),
+    "atlas-halo.png", "debris-umbra.png",
+    "belt-vibrant-core.png", "belt-vibrant-scatter.png",
+    "belt-vibrant-dust.png", "calidus-dyson-stages.png",
+}
+RUNTIME_ICON_GROUPS = {
+    "navigation": (
+        "beetlejuice-gate", "calidus-gate", "nyxaris-gate",
+        "solaris-gate", "umbra-gate", "umbra-rim-inner",
+        "umbra-rim-outer", "vespera-gate", "vibrant-gate",
+        "vibrant-rim-inner", "vibrant-rim-outer",
+    ),
+    "convergence": (
+        "razi-convergence-deep-space", "razi-convergence-ignition",
+        "razi-convergence-industry", "razi-convergence-resonance",
+        "razi-convergence-stellar",
+    ),
+    "routes": (
+        "asteroid-route", "deep-space-route", "interstellar-route",
+        "planetary-route",
+    ),
+}
+
 
 class Reference(NamedTuple):
     source: Path
@@ -101,8 +131,9 @@ def _source_contracts(root: Path) -> list[str]:
     final_call = 'require("prototypes.system.route_icons").data_final_fixes()'
     if final_call not in final_fixes:
         errors.append("data-final-fixes.lua: missing final route icon repair pass")
-    elif final_fixes.rstrip().splitlines()[-1].strip() != final_call:
-        errors.append("data-final-fixes.lua: route icon repair must remain the final pass")
+    elif final_fixes.index(final_call) > final_fixes.index(
+            'require("prototypes.system.route_highlights").data_final_fixes()'):
+        errors.append("data-final-fixes.lua: route icons must precede route rendering")
 
     for relative in (
         "prototypes/system/route_reconcile.lua",
@@ -173,6 +204,34 @@ def audit_repository(root: Path) -> list[str]:
     for relative, expected in REQUIRED_DIMENSIONS.items():
         if relative not in seen:
             errors.append(f"unreferenced required asset: {relative}")
+
+    # Catch accidental return of retired graphical clutter. The PNG set is
+    # explicit because starmap and icon names are constructed dynamically.
+    starmap = root / "graphics/starmap/razi"
+    actual = {path.name for path in starmap.glob("*.png")}
+    for missing in sorted(ACTIVE_STARMAP - actual):
+        errors.append(f"missing dynamic starmap asset: {missing}")
+    for stale in sorted(actual - ACTIVE_STARMAP):
+        errors.append(f"obsolete or unaudited starmap asset: {stale}")
+    for group, names in RUNTIME_ICON_GROUPS.items():
+        directory = root / "graphics/icons" / group
+        for name in names:
+            file = directory / f"{name}.png"
+            if not file.is_file():
+                errors.append(f"missing generated icon: {file.relative_to(root)}")
+                continue
+            try:
+                size, height, has_alpha = png_info(file)
+                if (size, height) != (64, 64) or not has_alpha:
+                    errors.append(f"invalid 64px alpha icon: {file.relative_to(root)}")
+            except (OSError, ValueError) as exc:
+                errors.append(f"invalid generated icon {file.relative_to(root)}: {exc}")
+    for old in sorted((root / "graphics/route-highlights").glob("guide-*.png")):
+        errors.append(f"obsolete route guide: {old.relative_to(root)}")
+    for file in (root / "graphics/convergence").glob("*.png"):
+        errors.append(f"obsolete convergence graphic: {file.relative_to(root)}")
+    if (root / "prototypes/system/route_highlight_manifest.lua").exists():
+        errors.append("obsolete guide-only route_highlight_manifest.lua still shipped")
 
     return sorted(set(errors))
 

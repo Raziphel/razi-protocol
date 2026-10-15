@@ -1,3 +1,13 @@
+## October 2026 old route-guide removal
+
+The retired hand-positioned guide-01 through guide-14 sprite files and
+`route_highlight_manifest.lua` have been deleted. They described
+hardcoded positions from the previous six-star map and are not imported
+by the current Razi route overlay. The current
+`graphics/route-highlights/continuous-strokes.png` sprite sheet remains
+the sole route-overlay texture, with final native coordinates and actual
+asteroid risk values governing color. No routes or danger data were deleted.
+
 ## October 2026 route color refinement
 
 Reference: Space Route Overlay 0.2.7 uses actual asteroid spawn sizes
