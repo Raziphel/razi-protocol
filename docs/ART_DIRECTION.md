@@ -14,23 +14,24 @@ Only the selected dossier gets a stronger accent and the large detail reader
 has one scroll pane. The Dyson art stays backed by its existing stage sprites.
 This redesign adds no texture files or periodic render workload.
 
-## October 2026: Vespera orbit and stellar identity
+## October 2026: Source-grounded Vespera orbits
 
-Obsidiax is now the innermost Vespera destination at 17 map units.
-Muria sits at 21; frozen Aquilo moves to 29, **inside** the existing
-30/37-unit debris crossing; and Rubia (41) and Maraxsis (48) are beyond.
-No new routes, changed asteroid hazards, travel distances, research
-requirements, or climate simulation result from this visual layout.
+Vespera's hot inner Muria is 21 map units out, with lava-heated but
+cold Obsidiax at 25. The original debris ring stays at radii 30–37,
+separating the inner worlds from Rubia (42), distant greenhouse-ocean
+Maraxsis (48) and the truly icy outermost Aquilo (57). Optional Balack
+(63) shares Aquilo's outer orbital region.
 
-The systems now reuse their **existing distinct** 512px glow textures,
-one per star, rather than painting six identical atlas halos. Nyxaris
-is sapphire and cyan, matching its subtly cooled stellar core; Vibrant
-is violet, and Vespera is gentle champagne-pearl. Calidus and Deep Space
-retain their neutral atlas treatment. No new PNGs, extra background
-layers, runtime animations or per-tick work are introduced.
+A single researched physical belt passage feeds two **independent**
+branches: outer rim -> Rubia -> Maraxsis, and outer rim -> Aquilo.
+To prevent research and travel deadlock, the belt survey follows Muria
+instead of requiring Aquilo first. Both outer world technologies
+now independently require the survey. Rubia still leads to Maraxsis.
+Existing source planetary environments and native asteroid hazards
+remain unchanged. The previous star-specific glow artwork remains.
 
-Acceptance still requires an in-game overview and close-zoom pass with
-the full modpack, since the existing painted star sprites are retained.
+Confirm map labels, star clearance, optional side paths and real
+Factorio 2.1 loading at near and full galaxy zoom.
 
 ## 2.1.72: Restrained visual hierarchy
 

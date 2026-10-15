@@ -178,7 +178,8 @@ Local branches remain connected inside their own systems, including:
     Nyxaris: Gleba | Moshine -> Apia/Carnova -> Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
     Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> frozen Paracelsin (+ Cerys)
              Belt Outer -> Paracelsin is an extra post-crossing return link
-    Vespera: Muria -> Aquilo -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
+    Vespera: Muria -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
+                                                \-> frozen Aquilo (+ Balack)
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
     Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)
     Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos
@@ -234,7 +235,8 @@ source-mod asteroid resource species and curves. See the
 ## The two asteroid belts
 
 Vespera's Debris Divide and Umbra's Shattered Divide are separate locations
-and researched travel passages. Rubia requires the Vespera belt survey;
+and researched travel passages. Rubia and Aquilo both require the Vespera
+belt survey, researched after Muria;
 Vesta requires the Umbra belt survey. Source-mod custom asteroid resources
 from retired direct paths are retained on the new dangerous crossings.
 See [Asteroid Routes](ASTEROID_ROUTES.md).
