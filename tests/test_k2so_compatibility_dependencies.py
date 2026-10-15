@@ -28,9 +28,10 @@ class K2SOCompatibilityDependencies(unittest.TestCase):
         self.assertIn("corrundum-krastorio-compatibility-plus >= 1.1.2", self.deps)
         self.assertIn("rubia-krastorio-compatibility-plus >= 1.3.1", self.deps)
 
-    def test_orbit_patch_optional_for_outer_rim(self):
-        self.assertIn("? secretas-orbit-patch >= 1.1.3", self.deps)
-        self.assertIn("? outer-rim", self.deps)
+    def test_secretas_patch_is_recommended_outer_rim_is_excluded(self):
+        self.assertIn("+ secretas-orbit-patch >= 1.1.3", self.deps)
+        self.assertIn("! outer-rim", self.deps)
+        self.assertIn("! kry-asteroid-belt", self.deps)
 
     def test_no_20_only_secretas_krastorio_dependency(self):
         self.assertEqual(self.info["factorio_version"], "2.1")

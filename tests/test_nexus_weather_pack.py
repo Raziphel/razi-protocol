@@ -18,9 +18,7 @@ class NexusWeatherIntegration(unittest.TestCase):
         self.assertTrue(any(d.startswith("Nexus-Updated >=") for d in deps))
         # Nexus itself requires Nexus Threat, so declaring it here is redundant.
         self.assertNotIn("Nexus-Threat-Updated >= 1.1.0",deps)
-        recommended=("celestial-weather-updated",
-                     "celestial-weather-additions-updated",
-                     "Big-Monsters")
+        recommended=("celestial-weather-updated","Big-Monsters")
         for mod in recommended:
             self.assertTrue(any(d.startswith("+ "+mod+" >=")
                                 for d in deps),mod)
@@ -30,7 +28,9 @@ class NexusWeatherIntegration(unittest.TestCase):
         for profile_mod in ("nexus-rebalanced","nexus-bosses"):
             self.assertFalse(any(d.lstrip("?+~ ").split(" >=")[0] == profile_mod
                                  for d in deps),profile_mod)
-        self.assertIn("? outer-rim",deps)
+        self.assertIn("! outer-rim",deps)
+        self.assertFalse(any("celestial-weather-additions-updated" in d
+                             for d in deps))
         self.assertIn("planet-muluna >= 2.7.25",deps)
         self.assertIn("! biological-machines-planet-wit",deps)
         self.assertIn("! shchierbin",deps)

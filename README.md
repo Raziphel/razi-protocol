@@ -103,6 +103,13 @@ preserved. The audit now records all 93 direct declarations,
 verified upstream chains, and a reusable Factorio Mod Portal
 graph auditor. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md).
 
+**2.1.75: Conflict-safe modpack recommendations.** Removed broken Weather
+Additions 1.6.0 from the recommended list while retaining the source-owned
+core Weather mod. Blocked Outer Rim 2.9, which conflicts with Secretas Orbit
+Patch and recommends Better Asteroid Belt, while keeping Razi's own belt
+crossings. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md) for the curated
+starter profile, exceptions and in-game validation limits.
+
 **2.1.65: Complete dependency audit.** All 95 direct dependencies
 now have a documented required/recommended/optional/incompatible
 classification. K2SO, its required compatibility patches, curated
@@ -117,9 +124,9 @@ Full Factorio startup and installed-save tests remain outstanding.
 **2.1.64: Curated recommended companions.** Factorio 2.1's new
 recommended dependency marker now advertises AAI Signal Transmission
 and Imersite Asteroids without requiring either. All eligible Factorio 2.1 companion integrations are now recommended,
-not plain optional. FluxWorks and Outer Rim stay hidden for incompatible or
-unpublished integration constraints. Pelagos and Dea Dia are omitted until
-their official 2.1 ports ship. See
+not plain optional. FluxWorks remains hidden pending integration tests;
+Outer Rim is excluded for conflicting with Secretas Orbit Patch and Razi's
+own asteroid belts. Dea Dia and Pelagos remain unported. See
 [Optional Dependencies](docs/OPTIONAL_DEPENDENCIES.md) for the policy.
 
 **2.1.63: Science and research progression overhaul.** The main

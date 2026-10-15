@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "Factorio 2.1: supported non-core companions are recommended (+), not required. Pelagos and Dea Dia are excluded until official 2.1 ports. FluxWorks and Outer Rim remain hidden optional ((?)) for guarded data-stage ordering because FluxWorks 0.2.12 is not published and Outer Rim conflicts with the recommended Secretas orbit patch. Full in-game combinations still require testing.",
+  "notes": "Factorio 2.1 curated stack: 48 required; 24 recommended; one hidden experimental FluxWorks link; 23 incompatible. Outer Rim 2.9 is excluded because it conflicts with Secretas Orbit Patch and recommends the forbidden Better Asteroid Belt. The user's Celestial Weather Additions 1.6.0 conflicts with the core weather fork, so we do not recommend it until upstream metadata is corrected. A static audit does not certify full in-game compatibility.",
   "dependencies": [
     {
       "mod": "base",
@@ -264,18 +264,11 @@
       "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
     },
     {
-      "mod": "celestial-weather-additions-updated",
-      "type": "recommended",
-      "declaration": "+ celestial-weather-additions-updated >= 1.3.1",
-      "group": "recommended",
-      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
-    },
-    {
       "mod": "outer-rim",
-      "type": "hidden-optional",
-      "declaration": "(?) outer-rim",
-      "group": "hidden-optional",
-      "reason": "Hidden to avoid incompatible Secretas orbit patch and source asteroid belt / Orbital Catapult dependencies"
+      "type": "incompatible",
+      "declaration": "! outer-rim",
+      "group": "conflict",
+      "reason": "Outer Rim conflicts with Secretas Orbit Patch and recommends kry-asteroid-belt, which overrides Razi's custom belt routes"
     },
     {
       "mod": "VoidProcessing-Updated",

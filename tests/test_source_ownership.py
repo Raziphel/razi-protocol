@@ -20,12 +20,12 @@ class TestSourceOwnership(unittest.TestCase):
         import json
         deps=json.loads((ROOT / "info.json").read_text(encoding="utf-8"))["dependencies"]
         recommended={d.split()[1] for d in deps if d.startswith("+ ")}
-        self.assertEqual(len(recommended),25)
+        self.assertEqual(len(recommended),24)
         self.assertTrue({"Big-Monsters","secretas-orbit-patch","planet-ferrum",
                          "VoidProcessing-Updated","Solar-Halo"}.issubset(recommended))
         self.assertFalse(any(d.startswith("? ") for d in deps))
         self.assertIn("(?) FluxWorks >= 0.2.12",deps)
-        self.assertIn("(?) outer-rim",deps)
+        self.assertIn("! outer-rim",deps)
         normalised=[]
         for dep in deps:
             words=dep.split()

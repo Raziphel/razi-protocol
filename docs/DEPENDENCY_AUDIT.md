@@ -1,13 +1,13 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.74)
+# Razi Protocol: Direct and transitive dependency audit (2.1.75)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
 | required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 25 | Compatible 2.1 companion suggestions, not required |
-| hidden-optional | 2 | Unadvertised load-order compatibility links |
-| incompatible | 22 | Known conflicting forks, startup failures and competing starmaps |
+| recommended | 24 | Compatible 2.1 companion suggestions, not required |
+| hidden-optional | 1 | Unadvertised load-order compatibility links |
+| incompatible | 23 | Known conflicting forks, startup failures and competing starmaps |
 
 ## Guaranteed indirectly, so removed from Razi's direct manifest
 
@@ -41,7 +41,7 @@ The following entries are required by another already-required mod, **but their 
 
 Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-on explicitly requires `Big-Monsters >= 2.2.1`, `Nexus-Threat-Updated >= 1.1.0`, Toxic Biters, Arachnids and Electric Flying Enemies. Since Nexus Bosses declares `? razi-protocol` and is installed separately, Razi must not introduce a reverse dependency cycle. Big Monsters can remain recommended as an extra enemy addition when the addon is absent; when the addon is installed it will be loaded as a hard transitive dependency regardless of Razi's `+` declaration. [Official Nexus Bosses dependency list](https://mods.factorio.com/mod/nexus-bosses/dependencies).
 
-## All 97 direct dependency declarations
+## All 96 direct dependency declarations
 
 | Declaration | Direct category |
 | --- | --- |
@@ -100,12 +100,11 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **25 entries** |
+| **Recommended companions** | **24 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
 | `+ celestial-weather-updated >= 1.5.1` | recommended |
-| `+ celestial-weather-additions-updated >= 1.3.1` | recommended |
 | `+ Cold_biters >= 2.3.0` | recommended |
 | `+ Imersite-Asteroids >= 1.3.0` | recommended |
 | `+ science-tab >= 1.13.0` | recommended |
@@ -126,13 +125,13 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ Solar-Halo >= 1.2.0` | recommended |
 | `+ planet-ferrum >= 0.1.4` | recommended |
 | `+ Hephaestus >= 0.3.7` | recommended |
-| **Hidden compatibility links** | **2 entries** |
+| **Hidden compatibility links** | **1 entry** |
 | `(?) FluxWorks >= 0.2.12` | hidden-optional |
-| `(?) outer-rim` | hidden-optional |
-| **Excluded conflicts** | **22 entries** |
+| **Excluded conflicts** | **23 entries** |
 | `! AsteroidBelt` | incompatible |
 | `! space-route-overlay` | incompatible |
 | `! kry-asteroid-belt` | incompatible |
+| `! outer-rim` | incompatible |
 | `! moon-eneas` | incompatible |
 | `! castra` | incompatible |
 | `! Redrawn-Space-Connections` | incompatible |
@@ -183,3 +182,24 @@ python3 -m unittest discover -s tests -p 'test_dependency_policy.py'
 ```
 
 **Validation boundary:** The curated hard guarantees and source dependency pages above have been inspected, and manifest/policy consistency is checked statically. The *complete recursive Mod Portal API traversal has not been executed in this workspace*. A live API run, full Factorio 2.1 load with both baseline and recommended profiles, and old-save verification remain required before a stable release. Preserve manual-only GitHub Actions and back up save files before enabling or removing planet mods.
+
+## October 15, 2026: Real startup conflict follow-up
+
+The reported 2.1.74 enabled-mod profile would not load: Celestial Weather
+Additions **1.6.0** conflicts with Celestial Weather Updated; Outer Rim 2.9
+conflicts with the Secretas Orbit Patch and recommends Better Asteroid Belt
+(`kry-asteroid-belt`), conflicting with Razi's own asteroid crossings.
+
+The curated 2.1.75 profile excludes Outer Rim (`!`), retains its own two
+asteroid belts, and stops recommending the weather add-on until upstream
+releases are reconciled. The base weather fork remains recommended. The
+upstream dependency listing of Weather Additions 1.3.0 states it requires
+Weather Updated, unlike the user's installed 1.6.0, so no blanket claim
+about all versions is appropriate.
+
+Factorio cannot automatically remove incompatible already-installed mods.
+Disable **Outer Rim**, **Better Asteroid Belt**, and **Celestial Weather
+Additions 1.6.0** in Mod Manager. The 24 remaining recommendations have
+not undergone an exhaustive Factorio-engine test together. Test high-impact
+content (Shattered Planet, Void Processing, Ferrum, Hephaestus, Solar Halo)
+in a separate copied-save profile, retaining manual CI runs.
