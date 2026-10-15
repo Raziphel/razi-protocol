@@ -1,3 +1,17 @@
+Version: 2.1.94
+Date: 15. 10. 2026
+  Route-distance coherence across the revised seven-system starmap:
+    - Improve local route lengths for Cubium/Secretas, Umbra Rim/Vesta
+      and Foliax/Nyxaris, based on their final visual separation.
+    - Catch extreme underpriced native connections left behind when source
+      planets are rehomed, using the REAL final native map coordinates.
+    - Keep true short moon hops, original Skewer 1,000 km approach,
+      source belt crossings and intentional wormholes/stargates untouched.
+    - Preserve route identifiers, asteroid resources, progression and map
+      coordinates. No per-tick processing or new CI runs.
+    - Add Lua and offline source/prototype-audit regression coverage.
+    - Full Factorio startup and travel-time gameplay test still needed.
+
 Version: 2.1.93
 Date: 15. 10. 2026
   Ten-level first-party quality asteroid progression:

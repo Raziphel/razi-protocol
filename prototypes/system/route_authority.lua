@@ -14,7 +14,7 @@ local allowed=reconcile.allowed_pairs
 -- the specified hub even if a source mod added a competing connection first.
 -- The special worlds do NOT become prerequisites for required discoveries.
 local side_routes={
-  {"foliax","sye-nyxaris",18500,"biological_deep"},
+  {"foliax","sye-nyxaris",24000,"biological_deep"},
   {"obsidiax","vesta",21000,"outer_void"},
   {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},

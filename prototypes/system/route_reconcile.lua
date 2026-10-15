@@ -108,7 +108,7 @@ local route_specifications = {
 	-- Beetlejuice's remote industrial strand.
 	{"sye-beetlejuice", "cubium", 18000, "outer_industry"},
 	{"cubium", "linox-planet_linox", 17000, "outer_industry"},
-	{"cubium", "secretas", 23000, "outer_industry_deep"},
+	{"cubium", "secretas", 32000, "outer_industry_deep"},
 	{"secretas", "frozeta", 10500, "outer_industry_deep"},
 	-- Linox and Secretas are neighbors in the same researched outer tier.
 	-- Their return shuttle avoids another trip back through Cubium.
@@ -122,7 +122,7 @@ local route_specifications = {
 	{"razi-umbra-belt-inner", "razi-umbra-belt-outer", 8000, "belt_umbra_crossing"},
 	{"razi-umbra-belt-inner", "tenebris", 10000, "belt_umbra_approach"},
 	{"tenebris", "crucible-orbit", 20000, "outer_void"},
-	{"razi-umbra-belt-outer", "vesta", 11000, "belt_umbra_departure"},
+	{"razi-umbra-belt-outer", "vesta", 19000, "belt_umbra_departure"},
 	-- The outer branches converge at the conventional Deep Space edge.
 	{"secretas", "solar-system-edge", 155000, "deep_edge"},
 	{"vesta", "solar-system-edge", 185000, "deep_edge"}

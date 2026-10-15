@@ -162,6 +162,9 @@ require("prototypes.system.route_authority").data_final_fixes()
 -- Harvest-rich native asteroid belts get final source-safe spawn curves only
 -- after the approved crossings and route IDs have been reconciled.
 require("prototypes.system.belt_expeditions").data_final_fixes()
+-- Calibrate severe source-native 1,000 km shortcuts after all map/route
+-- reconciliation, before hazard intelligence and quality escalation.
+require("prototypes.system.route_distance_balance").data_final_fixes()
 
 require("prototypes.system.route_icons").data_final_fixes()
 
