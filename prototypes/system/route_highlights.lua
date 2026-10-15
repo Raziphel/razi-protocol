@@ -5,6 +5,7 @@
 local M={}
 local hazards=require("prototypes.system.route_hazards")
 local layout=require("prototypes.system.galaxy_layout")
+local reconcile=require("prototypes.system.route_reconcile")
 
 local SHEET="__razi-protocol__/graphics/route-highlights/directional-strokes.png"
 local CELL=256
@@ -128,6 +129,28 @@ function M.color_for_guide(_,route)
   return M.color_for_route(route)
 end
 
+-- Rendered atlas sprites have no native Factorio connection ownership.
+-- Coloring every modded route can draw bright, floating, double-dotted
+-- tails from small worlds (Carna, Velora) to distant/offscreen endpoints.
+-- Restrict the ART to Razi's verified hub-to-hub corridors and the
+-- intentionally traversable asteroid-belt crossings. Native Factorio
+-- grey routes remain available and completely unchanged.
+local function major_waypoint(name)
+  return type(name)=="string" and (
+    name:match("^sye%-") ~= nil
+    or name=="asteroid-belt-outer-edge"
+    or name=="solar-system-edge")
+end
+function M.is_navigation_highlight(route)
+  if not route or not route.from or not route.to then return false end
+  if hazards.is_belt_crossing(route) then return true end
+  if not (major_waypoint(route.from) and major_waypoint(route.to)) then
+    return false
+  end
+  return reconcile.allowed_pairs[
+    reconcile.pair_key(route.from,route.to)]==true
+end
+
 -- Factorio 2.1 connection.shape="arc" uses connection.origin as the
 -- polar center, defaulting to (0,0). Arc interpolation must not be guessed
 -- across different stars or for enormous/ambiguous sweeps. Keep those native.
@@ -237,7 +260,10 @@ function M.data_final_fixes()
   local painted,layers=0,0
   local routes=data.raw["space-connection"] or {}
   for _,name in ipairs(names) do
-    local sprites=M.strokes_for_connection(routes[name],mode,scope)
+    local route=routes[name]
+    -- Never paint partial red dash trails around optional planets.
+    local sprites=M.is_navigation_highlight(route)
+      and M.strokes_for_connection(route,mode,scope) or {}
     if #sprites>0 and layers+#sprites<=LAYER_BUDGET then
       for _,sprite in ipairs(sprites) do
         atlas.layers[#atlas.layers+1]=sprite

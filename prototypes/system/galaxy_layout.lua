@@ -2,7 +2,8 @@
 -- The local planet/moon relationships need to survive every map pass.
 local M = {}
 
--- Star positions follow the three expedition tiers.
+-- The two deepest stars sit eight map units beyond the earlier systems,
+-- adding breathing room while preserving their matched upper/lower sectors.
 -- Factorio's north points toward negative Y.
 -- Hot worlds stay closer to their sun, colder worlds farther out.
 -- These are visual orbit distances only; gameplay climates remain source-owned.
@@ -11,8 +12,8 @@ local anchors = {
   {"space-location","nyxaris","star",104,0.583333},
   {"space-location","vibrant","star",104,0.25},
   {"space-location","vespera","star",104,0.75},
-  {"space-location","beetlejuice","star",104,0.083333},
-  {"space-location","umbra","star",104,0.916667},
+  {"space-location","beetlejuice","star",112,0.083333},
+  {"space-location","umbra","star",112,0.916667},
   {"space-location","solar-system-edge","star",190,0},
   {"space-location","sye-calidus","star",20,0.5},
   -- Clear west-northwest external gateway, just beyond the orbital rim.

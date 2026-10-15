@@ -41,6 +41,11 @@ class BuiltInOverlayTests(unittest.TestCase):
         self.assertIn("if abs(sweep)>.95 then return nil end",source)
         self.assertIn('trim=math.min(2.2/distance,.16)',source)
         self.assertIn('table.sort(names)',source)
+        self.assertIn('M.is_navigation_highlight(route)',source)
+        self.assertIn('reconcile.allowed_pairs[',source)
+        self.assertIn('name:match("^sye%-")',source)
+        self.assertIn('hazards.is_belt_crossing(route)',source)
+        self.assertIn('or {}',source)
         self.assertIn("if layer.filename==SHEET then return 0 end",source)
 
     def test_belt_navigational_palettes_are_specific_and_subtle(self):

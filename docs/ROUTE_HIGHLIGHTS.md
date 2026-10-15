@@ -70,3 +70,15 @@ is not a substitute for these in-game checks.
 
 This implementation is original to Razi. No third-party source code or
 artwork was copied.
+
+## 2.1.78 decorative half-line cleanup
+
+Screenshots showed thin red dotted pairs ending partway across the chart
+near Carna and Velora. The old renderer could decorate arbitrary source
+connections, which may point outside a system after repositioning worlds.
+The visual overlay now paints only canonical Razi interstellar hub corridors
+and native belt crossings; smaller planet/world links remain native Factorio
+space connections and are not erased. This is deliberately a visual-only
+change; unknown source sub-networks, modded travel and asteroid spawning
+remain unchanged. The danger/Chapter options still color primary corridors;
+All no longer adds doubled route strokes to ordinary planet links.

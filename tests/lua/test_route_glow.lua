@@ -66,12 +66,26 @@ local runaway={from="nauvis",to="odd-world",shape="arc",
   origin={x=0,y=0},asteroid_spawn_definitions={}}
 check(#overlay.strokes_for_connection(runaway,"danger","all")==0,
   "Runaway galactic arc must be skipped")
+check(overlay.is_navigation_highlight(safe),
+  "Core interstellar corridors must keep their hazard strokes")
+check(not overlay.is_navigation_highlight(danger),
+  "Decorative local routes must not receive doubled hazard strokes")
+for _,world in ipairs({"carna","velora"}) do
+  check(not overlay.is_navigation_highlight({
+    from=world,to="sye-umbra",shape="line"}),
+    "Optional world "..world.." must not draw a dangling red half-line")
+end
+check(not overlay.is_navigation_highlight(region),
+  "Arbitrary source-mod regional arcs must remain native-only")
+check(overlay.is_navigation_highlight({
+  from="razi-umbra-belt-inner",to="razi-umbra-belt-outer"}),
+  "The physical Umbra asteroid crossing must retain its overlay")
 data_raw["space-connection"].major=safe
 data_raw["space-connection"].regional=region
 local sprite=data_raw["utility-sprites"].default.starmap_star.layers
 local painted=overlay.data_final_fixes()
-check(painted==2 and #sprite>2,
-  "Renderer must paint known native straight and regional connections")
+check(painted==1 and #sprite>2,
+  "Renderer must paint interstellar corridors without unrelated local arcs")
 local count=#sprite
 check(overlay.data_final_fixes()==0 and #sprite==count,
   "Second run must not duplicate any route strokes")
