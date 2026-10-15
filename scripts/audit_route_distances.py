@@ -75,6 +75,34 @@ MIN_LENGTHS = {
     key("asteroid-belt-outer-edge", "sye-beetlejuice"): 65000,
 }
 
+# Match the guarded Factorio data-stage calibration. Chart units are NOT
+# literal light-years, and all small moon hops remain native.
+def visual_minimum(span):
+    if span >= 125:
+        amount = max(90000, span * 700)
+    elif span >= 80:
+        amount = max(60000, span * 650)
+    elif span >= 55:
+        amount = max(35000, span * 600)
+    elif span >= 40:
+        amount = span * 450
+    else:
+        return 0
+    return math.floor(amount / 500 + 0.5) * 500
+
+
+def exempt_native(route):
+    a, b = route.get("from") or "", route.get("to") or ""
+    if a == b or {a, b} == {"nauvis", "muluna"}:
+        return True
+    if "belt" in a and "belt" in b:
+        return True
+    return any(word in part.lower()
+               for part in (a, b, route.get("name") or "")
+               for word in ("stargate", "wormhole", "teleport",
+                            "portal", "dyson"))
+
+
 def positions(raw):
     locations = {**obj(raw.get("space-location")),
                  **obj(raw.get("planet"))}
@@ -88,15 +116,23 @@ def positions(raw):
         place = obj(locations.get(name))
         orbit = obj(place.get("orbit"))
         parent = obj(orbit.get("parent")).get("name")
-        distance, direction = orbit.get("distance"), orbit.get("orientation")
-        if not parent or not isinstance(distance, (int, float)) or not isinstance(
-                direction, (int, float)):
-            return None
-        visiting.add(name)
-        start = locate(parent)
-        visiting.remove(name)
-        if start is None:
-            return None
+        distance, direction = place.get("distance"), place.get("orientation")
+        origin = obj(place.get("origin"))
+        ox, oy = origin.get("x"), origin.get("y")
+        if isinstance(ox, (int, float)) and isinstance(oy, (int, float)) and (
+                isinstance(distance, (int, float)) and isinstance(
+                    direction, (int, float))):
+            start = (ox, oy)
+        else:
+            distance, direction = orbit.get("distance"), orbit.get("orientation")
+            if not parent or not isinstance(distance, (int, float)) or not isinstance(
+                    direction, (int, float)):
+                return None
+            visiting.add(name)
+            start = locate(parent)
+            visiting.remove(name)
+            if start is None:
+                return None
         angle = direction * math.tau
         cache[name] = (start[0] + distance * math.sin(angle),
                        start[1] - distance * math.cos(angle))
@@ -173,6 +209,24 @@ def audit(raw):
         if isinstance(route, dict) and route.get("from") and route.get("to"):
             links[key(route["from"], route["to"])].append((name, route))
     issues = belt_ecology_issues(raw, links)
+    # This also audits final installed source-mod routes, not just Razi's
+    # authored seven-system manifest. Unknown/unpositioned worlds are skipped.
+    known = set(obj(raw.get("planet"))) | set(obj(raw.get("space-location")))
+    for name, route in routes.items():
+        if not isinstance(route, dict) or exempt_native(route):
+            continue
+        a, b = route.get("from"), route.get("to")
+        if a not in known or b not in known or a not in coords or b not in coords:
+            continue
+        km = route.get("length")
+        if not isinstance(km, (int, float)) or km <= 0:
+            continue
+        span = math.dist(coords[a], coords[b])
+        minimum = visual_minimum(span)
+        if minimum and km < minimum:
+            issues.add(f"Visual distance mismatch: {a} <-> {b}, "
+                       f"{km:,.0f} km for {span:.0f} chart units "
+                       f"(recommended minimum {minimum:,.0f} km)")
     for a, b in BELT_BYPASSES:
         if key(a, b) in links:
             issues.add(f"Unsafe belt bypass remains: {a} -> {b}")
