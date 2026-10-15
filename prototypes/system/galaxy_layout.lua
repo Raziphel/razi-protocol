@@ -14,7 +14,9 @@ local anchors = {
   {"space-location","vespera","star",104,0.75},
   {"space-location","beetlejuice","star",112,0.083333},
   {"space-location","umbra","star",112,0.916667},
-  {"space-location","solar-system-edge","star",190,0},
+  -- Move the Deep Space parent anchor north: all its source-owned child
+  -- worlds, gates and Aegis/Pulsar outposts keep their original parents.
+  {"space-location","solar-system-edge","star",215,0},
   {"space-location","sye-calidus","star",20,0.5},
   -- Clear west-northwest external gateway, just beyond the orbital rim.
   -- Three interstellar departures fan outward, while the northern arc
@@ -64,13 +66,14 @@ local anchors = {
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
   {"space-location","secretas","beetlejuice",40,0.048826},
-  -- Umbra now has a true 31/39-unit debris divide, with Vesta outside.
+  -- Umbra's one true debris divide occupies 31–39 chart units;
+  -- Vesta is now well beyond its outer edge, not crowding the rocks.
   -- Preserve Crucible's native landfall and all source planet climates.
   {"planet","tenebris","umbra",24,0.68},
   {"space-location","crucible-orbit","umbra",20,0.79},
   {"space-location","razi-umbra-belt-inner","umbra",31,0.81},
   {"space-location","razi-umbra-belt-outer","umbra",39,0.82},
-  {"planet","vesta","umbra",48,0.955},
+  {"planet","vesta","umbra",56,0.955},
 }
 
 -- The optional worlds were previously repositioned in data-final-fixes

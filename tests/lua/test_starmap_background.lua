@@ -83,16 +83,23 @@ for _,layer in ipairs(extra) do
     cin_fragments=cin_fragments+1
   end
 end
-ok(cin_fragments==2,"Cinematic should add only two faint fragments")
+ok(cin_fragments==2,"Cinematic retains the Umbra rocks and a Vespera accent")
+local umbra_smoke_count=0
+for _,layer in ipairs(extra) do
+  if layer.filename:find("belt%-umbra") then
+    umbra_smoke_count=umbra_smoke_count+1
+  end
+end
+ok(umbra_smoke_count==0,"Umbra's old smoke must not render even in Cinematic")
 local umbra_debris,umbra_smoke
 for _,layer in ipairs(parts) do
   if layer.filename:find("debris%-umbra") then umbra_debris=layer end
   if layer.filename:find("belt%-umbra") then umbra_smoke=layer end
 end
 ok(umbra_debris and not umbra_smoke and umbra_debris.scale>5,
-  "Subtle Umbra must use a correctly scaled sparse debris field")
-ok(umbra_debris.tint.a<.10,
-  "Umbra's asteroid field must not be a blurred bright ring")
+  "Subtle Umbra must use the real scaled rocky belt only")
+ok(umbra_debris.tint.a>.4 and umbra_debris.tint.a<.6,
+  "Sparse rocks need enough alpha to be visible without fake glowing fog")
 local original=bg.make_layers("subtle",true,true,true,false)
 local repeats={}
 for i,layer in ipairs(original) do
@@ -116,7 +123,7 @@ ok(#bg.make_layers("subtle",true,true,false,false)==46,
 ok(#bg.make_layers("subtle",true,true,true,true)==55,
   "Cartography adds only a single distant dust pocket")
 local cine=bg.make_layers("cinematic",true,true,true,false)
-ok(#cine==#parts+2 and cine[1].tint.a>parts[1].tint.a,
+ok(#cine==#parts+1 and cine[1].tint.a>parts[1].tint.a,
   "Cinematic should be brighter without extra clutter")
 settings.startup["razi-starmap-galactic-ornaments"].value=false
 ok(#bg.make_layers("subtle",true,true,true,false)==50,

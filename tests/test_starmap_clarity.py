@@ -97,7 +97,7 @@ class ConstellationTests(unittest.TestCase):
             "vibrant": (104, 0), "vespera": (-104, 0),
             "beetlejuice": (56, -112 * math.sqrt(3) / 2),
             "umbra": (-56, -112 * math.sqrt(3) / 2),
-            "solar-system-edge": (0, -190),
+            "solar-system-edge": (0, -215),
         }
         for name, xy in centers.items():
             self.assertLess(math.dist(self.coords[name], xy), 1.0,
@@ -117,10 +117,10 @@ class ConstellationTests(unittest.TestCase):
         self.assertTrue(all(100 < r < 113 for r in radii))
         for a, b in PAIRS:
             self.assertAlmostEqual(self.coords[a][1], self.coords[b][1], delta=1)
-        self.assertLess(self.coords["solar-system-edge"][1], -185,
-                        "Deep Space must be north, not south of the galaxy")
-        self.assertGreater(self.coords["solar-system-edge"][1], -200,
-                           "Deep Space drifted too far outside compact view")
+        self.assertLess(self.coords["solar-system-edge"][1], -210,
+                        "Deep Space must sit beyond the outer stars")
+        self.assertGreater(self.coords["solar-system-edge"][1], -220,
+                           "Deep Space drifted too far outside the starmap")
 
     def test_compact_ring_respects_large_optional_orbits(self):
         # Even with exterior Vibrant worlds, neighboring star art needs a gap.
@@ -581,7 +581,7 @@ class ConstellationTests(unittest.TestCase):
         radius=lambda name:self.anchors[name][1]
         self.assertEqual(radius("razi-umbra-belt-inner"),31)
         self.assertEqual(radius("razi-umbra-belt-outer"),39)
-        self.assertEqual(radius("vesta"),48)
+        self.assertEqual(radius("vesta"),56)
         for name in ("tenebris","crucible-orbit","carna","arcanyx",
                      "sye-umbra"):
             self.assertLess(radius(name),31)
@@ -602,6 +602,7 @@ class ConstellationTests(unittest.TestCase):
         self.assertGreaterEqual(segment_clearance(
             self.coords["umbra"],self.coords["razi-umbra-belt-outer"],
             self.coords["vesta"]),38.999)
+        self.assertGreater(radius("vesta")-radius("razi-umbra-belt-outer"),16)
 
     def test_hot_cold_orbits_and_native_belt_divide(self):
         radius = lambda n: self.anchors[n][1]

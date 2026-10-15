@@ -15,6 +15,21 @@ restricted to approved interstellar waypoints and real physical belt
 crossings; native planet links stay visible as normal gray Factorio
 lines. This does not delete a space-connection or disable travel.
 
+## Umbra gravel field and farther Deep Space (October 2026)
+
+Umbra's former glowing broken wreath is replaced with one static
+512px indexed texture of separate shadowed rocks and smaller grit
+at the true 31–39-unit asteroid annulus. Both Subtle and Cinematic
+modes omit the old smoky ring. The native belt crossing and its
+hazards remain fully active and clickable.
+
+Vesta now sits 56 rather than 48 chart units from Umbra.
+The Solar System Edge is moved north from 190 to 215 chart units.
+Its original dependent Nexus, Shattered, Black Hole, Oort/Sol and
+Pulsar/Aegis locations follow the parent coordinate automatically.
+Gameplay route lengths, science gates and source orbital ownership
+remain unchanged. Review saved platform schedules after updating.
+
 ## Native orbital rings for all positioned planets (October 2026)
 
 PlanetsLib 2.0 and Factorio 2.1.20+ use native orbital rings based
@@ -261,7 +276,7 @@ chapters advancing upward to Deep Space and Bellicos.
 | Umbra | -52 | -90.07 |
 | Required Asteroid Belt inner edge | Vibrant + 31 at 0.17 turns | Inner side |
 | Required Asteroid Belt outer edge | Vibrant + 39 at 0.17 turns | Outer side |
-| Deep Space / solar-system-edge | 0 | -190 |
+| Deep Space / solar-system-edge | 0 | -215 |
 
 ## Design rules
 
@@ -329,7 +344,8 @@ chapters advancing upward to Deep Space and Bellicos.
 - Never copy old PlanetsLib orbit sprites into `PlanetsLib:update` calls.
   Preserve *source-owned* special sprites and moon orbits rather than globally
   deleting other mods' artwork.
-- Deep Space sits north at **(0, -190)** instead of (0, -248).
+- Deep Space now sits north at **(0, -215)** after shifting outward
+  from its earlier (0, -190) compact-map placement.
   Shattered Planet remains source-owned with its local orbit.
 - Bellicos/Aegis remains a **separate northeastern expedition**, but its
   pulsar/near-orbit anchor now lies only 110 units from Deep Space rather

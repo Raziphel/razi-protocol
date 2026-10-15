@@ -413,7 +413,7 @@ check(planets["optional-source-world"].draw_orbit==false and
   planets["optional-source-world"].orbit.sprite==orbit_art_before,
   "Unique source orbit art should not be doubled by native circles")
 local dzx,dzy=fixed_position("solar-system-edge")
-check(math.abs(dzx)<.01 and math.abs(dzy+190)<.01,
+check(math.abs(dzx)<.01 and math.abs(dzy+215)<.01,
   "Native Deep Space was no longer directly north")
 -- Astral sprite positions were already fixed by the pre-final stage.
 for name,expect in pairs(original_positions) do
