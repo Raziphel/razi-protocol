@@ -40,9 +40,8 @@ local anchors = {
   {"planet","castra","solaris",27,0.61},
   {"planet","tellus","solaris",29,0.26},
   {"planet","corrundum","solaris",33,0.13},
-  -- Experimental Athos world keeps its author's stone/diamond production;
-  -- only its optional chart orbit is positioned in a quiet Solaris pocket.
-  {"planet","athos","solaris",39,0.79},
+  -- Athos is a quiet western spur near Vulcanus, not the old diagonal.
+  {"planet","athos","solaris",34,0.73},
   -- Nyxaris forms an open biological crescent, with the Gleba moons well
   -- away from the gateway and Foliax across the quieter western arc.
   -- These are chart positions only; source production and climate are intact.
@@ -83,14 +82,14 @@ local anchors = {
 local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
-  {name="obsidiax",star="vespera",radius=25,turn=0.12},
+  {name="obsidiax",star="umbra",radius=54,turn=0.18},
   -- Carna and Arcanyx remain on the INNER side; neither can be reached
   -- directly from the exterior gateway without its rock crossing.
   {name="carna",star="umbra",radius=29,turn=0.7},
-  {name="ferrum",star="vibrant",radius=62,turn=0.83},
+  {name="ferrum",star="beetlejuice",radius=43,turn=0.68},
   -- Opt-in Shchierbin stays outside the required 31/39-unit belt and
   -- follows Paracelsin, not a shortcut from the inner electrical worlds.
-  {name="shchierbin",star="vibrant",radius=59,turn=0.77},
+  {name="shchierbin",star="vibrant",radius=73,turn=0.64},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=27,turn=0.3},
   -- Balack is an optional outer-ice spur beside Aquilo.
@@ -170,18 +169,32 @@ end
 local function source_orbit(item)
   local _,existing=resolved(item)
   local old=existing and existing.orbit
-  -- Preserve source-owned dashed/custom orbit artwork.
+  -- Preserve most source orbit art, except stray dotted trails on Carna.
   local orbit={
     parent={type="space-location",name=item[3]},
     distance=item[4],orientation=item[5]
   }
-  if old and old.sprite then orbit.sprite=old.sprite end
+  if old and old.sprite and item[2]~="carna" then
+    orbit.sprite=old.sprite
+  end
   return orbit
 end
 
 -- MUST run in data-updates, while PlanetsLib still has sprite_only anchors.
 -- This moves their graphical layers when PlanetsLib renders the starmap.
+local function clear_source_trails()
+  -- Strip only decorative orbit textures, not planet icons, moon parents or
+  -- actual travel routes. These tails appear as disconnected red dotted bars.
+  for _,name in ipairs({"carna","velora"}) do
+    for _,kind in ipairs({"planet","space-location"}) do
+      local proto=exists(kind,name)
+      if proto and proto.orbit then proto.orbit.sprite=nil end
+    end
+  end
+end
+
 function M.data_updates()
+  clear_source_trails()
   for name in pairs(stars) do
     assert(exists("space-location",name),
       "Razi starmap: required sprite-only star missing before PlanetsLib cleanup: "..name)
@@ -271,6 +284,7 @@ end
 -- Factorio-native geometry directly rather than attempting to reparent through
 -- missing star prototypes. Preserve source children, e.g. Frozeta's moon orbit.
 function M.data_final_fixes()
+  clear_source_trails()
   local relocated={}
   local count=0
   for name in pairs(stars) do
@@ -348,6 +362,7 @@ function M.data_final_fixes()
     ["tenebris"]=0.75,["arcanyx"]=0.0,
     ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
+    ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,

@@ -139,6 +139,11 @@ local function major_waypoint(name)
 end
 function M.is_navigation_highlight(route)
   if not route or not route.from or not route.to then return false end
+  -- Never draw artificial dotted route dashes next to these smaller source
+  -- planets. Their native Factorio navigation connections remain visible.
+  for _,name in ipairs({"carna","gleba","velora"}) do
+    if route.from==name or route.to==name then return false end
+  end
   if hazards.is_belt_crossing(route) then return true end
   if not (major_waypoint(route.from) and major_waypoint(route.to)) then
     return false

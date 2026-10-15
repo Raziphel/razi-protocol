@@ -15,10 +15,10 @@ local allowed=reconcile.allowed_pairs
 -- The special worlds do NOT become prerequisites for required discoveries.
 local side_routes={
   {"foliax","sye-nyxaris",18500,"biological_deep"},
-  {"obsidiax","sye-vespera",21000,"cryogenic_deep"},
+  {"obsidiax","vesta",19000,"outer_void"},
   {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
-  {"ferrum","sye-vibrant",19500,"electrical"},
+  {"ferrum","sye-beetlejuice",22500,"outer_industry"},
   {"alchemy-planet","paracelsin",21000,"chemistry_deep"},
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
@@ -26,7 +26,7 @@ local side_routes={
   -- Preserve remaining source-owned side-world connections.
   -- Preserve an existing Athos-to-Vulcanus connection if the source adds
   -- one; otherwise provide a single side-world lifeline, never a gate.
-  {"athos","vulcanus",18000,"starter"},
+  {"athos","vulcanus",13500,"industrial"},
   -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
   {"shchierbin","paracelsin",21000,"chemistry_deep"},
   -- Both optional Umbra worlds have one interior connection. A
@@ -205,7 +205,7 @@ function M.data_final_fixes()
     -- around Calidus rather than connect these actual relocated endpoints.
     local line=not (a and b) or a~=b or a=="calidus"
       or a=="solaris" or a=="nyxaris" or a=="vibrant" or a=="vespera"
-      or a=="umbra"
+      or a=="umbra" or a=="beetlejuice"
     local selected=reconcile.selected_curve and reconcile.selected_curve(from,to)
     local shape=selected and "arc" or (line and "line" or "arc")
     local origin=not line and reconcile.regional_origin
@@ -329,13 +329,14 @@ function M.data_final_fixes()
   -- should arc around the sun or cut through the asteroid survey.
   for _,route in pairs(routes) do
     local system=member[route.from]
-    local vespera_side=pair(route.from,route.to)==pair("obsidiax","sye-vespera")
+    local curated_side=pair(route.from,route.to)==pair("obsidiax","vesta")
+      or pair(route.from,route.to)==pair("ferrum","sye-beetlejuice")
       or pair(route.from,route.to)==pair("bm-balack","aquilo")
     if ((system=="nyxaris" or system=="vibrant" or system=="vespera"
-          or system=="umbra")
+          or system=="umbra" or system=="beetlejuice")
         and member[route.to]==system
         and not native_parent_link(route.from,route.to))
-      or vespera_side then
+      or curated_side then
       if reconcile.selected_curve and
         reconcile.selected_curve(route.from,route.to) then
         route.shape="arc"

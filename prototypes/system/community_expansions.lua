@@ -8,9 +8,9 @@ local route_icons = require("prototypes.system.route_icons")
 -- Native orbital moons and event-driven surfaces must not be reparented.
 -- A side branch never contributes science to required seven-system milestones.
 local candidates = {
-  {mod="planet-ferrum", name="ferrum", system="vibrant",
-    gate="vibrant-discovery", hub="sye-vibrant",
-    radius=62, orientation=0.83, km=19500, profile="electrical",
+  {mod="planet-ferrum", name="ferrum", system="beetlejuice",
+    gate="beetlejuice-discovery", hub="sye-beetlejuice",
+    radius=43, orientation=0.68, km=22500, profile="outer_industry",
     preserve_routes=true},
   {mod="Velora", name="velora", system="nyxaris",
     gate="planet-discovery-gleba", hub="gleba",
@@ -50,7 +50,8 @@ local home = {
   fulgora="vibrant", aquilo="vespera", paracelsin="vibrant",
   tenebris="umbra", ["sye-vibrant"]="vibrant",
   ["sye-nyxaris"]="nyxaris", ["sye-vespera"]="vespera",
-  ["sye-umbra"]="umbra", ["solar-system-edge"]="deep-space"
+  ["sye-umbra"]="umbra", ["sye-beetlejuice"]="beetlejuice",
+  ["solar-system-edge"]="deep-space"
 }
 
 local function location(name)
@@ -155,21 +156,6 @@ local function attach(config)
   data:extend({connection})
 end
 
-local function calibrate_ferrum_star_link()
-  local routes = data.raw["space-connection"] or {}
-  for _, connection in pairs(routes) do
-    if (connection.from == "vulcanus" and connection.to == "ferrum")
-      or (connection.from == "ferrum" and connection.to == "vulcanus") then
-      -- This is now a Solaris-to-Vibrant journey, not a 10,000 km local
-      -- hop. Preserve the original connection identity and its custom
-      -- asteroid encounter definitions; update only the physical length.
-      if connection.length and connection.length < 95000 then
-        connection.length = 115000
-      end
-    end
-  end
-end
-
 local function integrate(config)
   if not mods[config.mod] or not (data.raw.planet or {})[config.name] then
     return
@@ -188,7 +174,6 @@ local function integrate(config)
     }})
   end
   gate_unlock(config.name,config.gate)
-  if config.name == "ferrum" then calibrate_ferrum_star_link() end
   if not config.moon and not config.preserve_routes then
     prune_known_bypass(config.name,config.system)
   end
