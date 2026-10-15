@@ -1186,3 +1186,20 @@ Solaris gateway. Confirm no residual red dotted tails beside Carna or
 Velora, and no long prose appears as a waypoint name. Route identities
 are selectively preserved for schedules; players with preexisting
 Ferrum/Obsidiax routes should check existing schedules on a copied save.
+
+## 2.1.88 red dotted trail source remediation
+
+User's 2.1.83 full-pack Factorio log confirms `orbital-cannon 0.15.0` is
+enabled. Orbital Catapult explicitly generates its own space-map graphics,
+independent of Razi's earlier route-highlight and PlanetsLib orbit renderers.
+Version 2.1.88 removes Catapult-owned sprite atlas layers at the very end of
+Razi's `data-final-fixes.lua`, removes untagged old Carna/Velora orbit
+art, and trims nearby vivid-red Razi overlay strokes defensively. It does
+not remove `orbital-cannon-link` prototypes, native `space-connection`
+routes, orbit metadata, planet graphics, or transport gameplay.
+
+Check Factorio's log for `Final red-trail cleanup: removed ...` then
+view Carna and Velora at both close and distant zoom. If any red trails
+remain, capture the **new Factorio log** as the actual late renderer may
+be drawing from another mod namespace. Do not indiscriminately remove
+planet art or disable the transport mod.

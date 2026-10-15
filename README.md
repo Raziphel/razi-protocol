@@ -1,3 +1,9 @@
+**2.1.88: Red dotted starmap trails removed at the source.** A final
+atlas pass removes Orbital Catapult's independent starmap ribbon sprites,
+lingering Carna/Velora orbit decorations, and stray red Razi highlights
+near those planets. It does not remove actual space routes or disable
+Catapult transport. Restart Factorio to rebuild the sprite atlas.
+
 **2.1.87: Outer-system starmap polish.** Ferrum now connects west of
 Beetlejuice's Slip Stream, Obsidiax joins Vesta beyond Umbra's shattered
 belt, Shchierbin takes a spacious Paracelsin-side orbit beyond Vibrant's
