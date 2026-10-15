@@ -42,6 +42,12 @@ class RouteArtTests(unittest.TestCase):
         self.assertIn("! space-route-overlay",
                       json.loads(source("info.json"))["dependencies"])
         self.assertTrue((ROOT/"graphics/icons/routes/asteroid-route.png").exists())
+        self.assertTrue((ROOT/"graphics/route-highlights/quality-risk-marker.png").exists())
+        self.assertTrue((ROOT/"graphics/route-highlights/quality-risk-marker.svg").exists())
+        self.assertIn('local WARNING=MARKER',
+                      source("prototypes/system/route_highlights.lua"))
+        self.assertIn('local WAYPOINT=MARKER',
+                      source("prototypes/system/route_highlights.lua"))
         settings=source("settings.lua")
         for key in ("razi-route-overlay-mode","razi-route-overlay-scope"):
             self.assertIn(key,settings)

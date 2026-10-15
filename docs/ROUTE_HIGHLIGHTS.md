@@ -20,6 +20,13 @@ static color:
 | 9 | #D6664A, vermilion | extreme |
 | 10 | #C7384A, crimson red | guaranteed legendary hostile asteroids |
 
+The overlay uses a dedicated tiny white signal-pip icon,
+`graphics/route-highlights/quality-risk-marker.png`. White pixels
+accept the exact difficulty tint instead of muddling blue and green
+with the older gold/bronze route icon artwork. Its editable SVG and
+deterministic generator are retained for future polish. Source-owned
+connection icons in `graphics/icons/routes/` remain completely intact.
+
 Color is derived from `scripts/razi_asteroid_difficulty.lua` and also
 applies to the value inside native route tooltips. Danger and Chapter
 modes honor the same scale while quality asteroids are enabled.

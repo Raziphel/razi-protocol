@@ -8,9 +8,12 @@ local layout=require("prototypes.system.galaxy_layout")
 local reconcile=require("prototypes.system.route_reconcile")
 local quality=require("scripts.razi_asteroid_difficulty")
 
--- Retire repeated direction sprites; Factorio owns the single native line.
-local WARNING="__razi-protocol__/graphics/icons/routes/asteroid-route.png"
-local WAYPOINT="__razi-protocol__/graphics/icons/routes/interstellar-route.png"
+-- Neutral white signal pip renders all ten levels faithfully via tint.
+-- Keep full route icons for the real connection prototypes; this is only
+-- a compact overlay marker and never a second continuous line.
+local MARKER="__razi-protocol__/graphics/route-highlights/quality-risk-marker.png"
+local WARNING=MARKER
+local WAYPOINT=MARKER
 local OLD="__razi-protocol__/graphics/route-highlights/"
 local MARKER_LIMIT=36
 local PI=math.pi
