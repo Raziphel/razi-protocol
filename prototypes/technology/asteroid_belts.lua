@@ -39,7 +39,9 @@ data:extend({
     icon="__space-age__/graphics/icons/solar-system-edge.png",
     icon_size=64, essential=true,
     order="ef[umbra]-b[belt]",
-    prerequisites={"planet-discovery-crucible"},
+    -- Exterior gateway: survey the rock divide before Tenebris.
+    -- Waiting for Crucible would deadlock the first arrival.
+    prerequisites={"umbra-discovery"},
     unit={count=1100,time=60,ingredients={{"vibrant-tech-card",1},{"vespera-tech-card",1}}},
     effects={
       {type="unlock-space-location",space_location="razi-umbra-belt-inner"},

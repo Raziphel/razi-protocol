@@ -16,7 +16,7 @@ local allowed=reconcile.allowed_pairs
 local side_routes={
   {"foliax","sye-nyxaris",18500,"biological_deep"},
   {"obsidiax","sye-vespera",21000,"cryogenic_deep"},
-  {"carna","sye-umbra",20500,"outer_void"},
+  {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
   {"ferrum","sye-vibrant",19500,"electrical"},
   {"alchemy-planet","paracelsin",21000,"chemistry_deep"},
@@ -29,8 +29,8 @@ local side_routes={
   {"eneas","nauvis",9000,"starter"},
   -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
   {"shchierbin","paracelsin",21000,"chemistry_deep"},
-  -- Extra optional loops were redundant and visually cluttered the chart.
-  -- Carna already has the Slip Stream; Arcanyx already has Tenebris.
+  -- Both optional Umbra worlds have one interior connection. A
+  -- Carna-to-Slip-Stream line would bypass the real belt passage.
 }
 -- Source-authored orbital links, not speculative Razi shortcuts.
 local native_pairs={
@@ -206,7 +206,8 @@ function M.data_final_fixes()
     local line=not (a and b) or a~=b or a=="calidus"
       or a=="solaris" or a=="nyxaris" or a=="vibrant" or a=="vespera"
       or a=="umbra"
-    local shape=line and "line" or "arc"
+    local selected=reconcile.selected_curve and reconcile.selected_curve(from,to)
+    local shape=selected and "arc" or (line and "line" or "arc")
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
     data:extend({icons.assign({
@@ -335,8 +336,15 @@ function M.data_final_fixes()
         and member[route.to]==system
         and not native_parent_link(route.from,route.to))
       or vespera_side then
-      route.shape="line"
-      route.origin=nil
+      if reconcile.selected_curve and
+        reconcile.selected_curve(route.from,route.to) then
+        route.shape="arc"
+        route.origin=reconcile.regional_origin and
+          reconcile.regional_origin(route.from,route.to,"arc") or nil
+      else
+        route.shape="line"
+        route.origin=nil
+      end
     end
   end
   if type(log)=="function" then

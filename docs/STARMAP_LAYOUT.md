@@ -15,6 +15,31 @@ restricted to approved interstellar waypoints and real physical belt
 crossings; native planet links stay visible as normal gray Factorio
 lines. This does not delete a space-connection or disable travel.
 
+## Umbra outer gateway and restrained native curves (October 2026)
+
+The previous Slip Stream was at radius 30, intersecting the
+31–39-unit debris field and forcing two incoming external routes
+through the rocks. It now sits at radius 54, southeast of Umbra.
+Both interstellar arrivals approach it wholly outside the belt.
+A clean line from the gateway to Outer Rim leads into ONE physical
+belt crossing (Outer Rim 39 → Inner Rim 31). Only then do routes
+reach Tenebris, Crucible, and two optional inner worlds.
+
+The outer Rim→Vesta leg takes a subtle Factorio-native arc around
+the star rather than dipping into the rocks. The Tenebris→Crucible
+leg also curves gently along its inner orbit. These use native
+`shape="arc"` with Umbra's real `origin` on Factorio 2.1.20+.
+Unsupported builds retain straight chords, with no rendered
+fake overlay or extra game tick work. Planet native orbit rings
+remain available in Full/Balanced/Clean/Off chart settings.
+
+To avoid stranding new players outside the belt, the existing
+`razi-umbra-belt-survey` now requires `umbra-discovery` rather
+than Crucible. Tenebris requires that survey, Crucible still follows
+Tenebris and Vesta still requires Crucible and the survey.
+No travel kilometers, asteroid resources, or source-owned moon
+connections were changed.
+
 ## Umbra gravel field and farther Deep Space (October 2026)
 
 Umbra's former glowing broken wreath is replaced with one static
@@ -90,9 +115,15 @@ single mandatory chain:
   The sole physical belt crossing divides its inner and outer regions.
 - Beetlejuice already has a Cubium/Linox/Secretas alternative circuit
   and needs no extra crossed line at its gateway.
-- Umbra now follows gateway → Tenebris → Crucible approach → single
-  asteroid crossing → distant Vesta. Carna and Arcanyx get exactly one
-  optional spur each, with straight native chords rather than extra loops.
+- Umbra now starts beyond its rocks, just like Vibrant. The southeast
+  Slip Stream (54) and outer rim (39) share a safe arrival corridor;
+  the sole hazardous Outer Rim → Inner Rim (31) route enters the inner
+  Tenebris → Crucible region. Carna reaches the native Crucible approach
+  and Arcanyx branches from Tenebris, so optional worlds do not
+  introduce a second rock crossing. Vesta (56) is on an outer northeast
+  spur. Only Tenebris → Crucible Approach and Outer Rim → Vesta use
+  centered native Factorio 2.1.20+ curves; every belt and external
+  connection remains a straight, physically safe chord.
 
 The original three asteroid belt crossings, source-owned moons,
 research-gated destinations and interstellar hub connections are

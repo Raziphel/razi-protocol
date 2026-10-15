@@ -589,27 +589,51 @@ class ConstellationTests(unittest.TestCase):
         self.assertEqual(radius("razi-umbra-belt-inner"),31)
         self.assertEqual(radius("razi-umbra-belt-outer"),39)
         self.assertEqual(radius("vesta"),56)
-        for name in ("tenebris","crucible-orbit","carna","arcanyx",
-                     "sye-umbra"):
+        for name in ("tenebris","crucible-orbit","carna","arcanyx"):
             self.assertLess(radius(name),31)
+        self.assertEqual(radius("sye-umbra"),54)
+        self.assertGreater(radius("sye-umbra"),radius("razi-umbra-belt-outer"))
         self.assertGreaterEqual(math.dist(
             self.coords["razi-umbra-belt-inner"],
             self.coords["razi-umbra-belt-outer"]),8)
         edges={frozenset((a,b)) for a,b,_,_ in self.routes}
-        for a,b in (("sye-umbra","tenebris"),
+        for a,b in (("sye-umbra","razi-umbra-belt-outer"),
+                    ("razi-umbra-belt-outer","razi-umbra-belt-inner"),
+                    ("razi-umbra-belt-inner","tenebris"),
                     ("tenebris","crucible-orbit"),
-                    ("crucible-orbit","razi-umbra-belt-inner"),
-                    ("razi-umbra-belt-inner","razi-umbra-belt-outer"),
                     ("razi-umbra-belt-outer","vesta")):
             self.assertIn(frozenset((a,b)),edges)
             self.assertGreaterEqual(segment_clearance(
                 self.coords["umbra"],self.coords[a],self.coords[b]),15)
-        self.assertNotIn(
-            frozenset(("sye-umbra","crucible-orbit")),edges)
+        for a,b in (("sye-umbra","crucible-orbit"),
+                    ("sye-umbra","tenebris"),
+                    ("crucible-orbit","razi-umbra-belt-inner")):
+            self.assertNotIn(frozenset((a,b)),edges)
         self.assertGreaterEqual(segment_clearance(
             self.coords["umbra"],self.coords["razi-umbra-belt-outer"],
             self.coords["vesta"]),38.999)
         self.assertGreater(radius("vesta")-radius("razi-umbra-belt-outer"),16)
+        # Both external arrivals stay outside the rocks; a user can reach
+        # the Outer Rim without taking another accidental belt route.
+        star=self.coords["umbra"]
+        for a,b in (("sye-vespera","sye-umbra"),
+                    ("sye-beetlejuice","sye-umbra"),
+                    ("sye-umbra","razi-umbra-belt-outer")):
+            self.assertGreaterEqual(segment_clearance(
+                star,self.coords[a],self.coords[b]),38.999)
+        self.assertGreaterEqual(math.dist(
+            self.coords["razi-umbra-belt-outer"],
+            self.coords["razi-umbra-belt-inner"]),10)
+        source=(ROOT/"prototypes/system/route_reconcile.lua").read_text()
+        self.assertIn('local selected_umbra_curves={',source)
+        self.assertIn('selected_curve(from,to) and "arc"',source)
+        self.assertIn('route_reconcile.selected_curve=selected_curve',source)
+        authority=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        self.assertIn('reconcile.selected_curve(route.from,route.to)',authority)
+        survey=(ROOT/"prototypes/technology/asteroid_belts.lua").read_text()
+        self.assertIn('prerequisites={"umbra-discovery"}',survey)
+        gates=(ROOT/"prototypes/technology/seven_system_gates.lua").read_text()
+        self.assertIn('{"umbra-discovery", "razi-umbra-belt-survey"}',gates)
 
     def test_hot_cold_orbits_and_native_belt_divide(self):
         radius = lambda n: self.anchors[n][1]

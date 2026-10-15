@@ -262,7 +262,9 @@ function gates.data_final_fixes()
 	add_existing_prerequisites("linox-technology_planet-discovery-linox",
 		{"planet-discovery-cubium"})
 
-	replace_requirements("planet-discovery-tenebris", {"umbra-discovery"}, outer, 1100)
+  -- The one physical Umbra belt crossing is now the researched entry.
+	replace_requirements("planet-discovery-tenebris",
+    {"umbra-discovery", "razi-umbra-belt-survey"}, outer, 1100)
 	replace_requirements("planet-discovery-crucible",
 		{"planet-discovery-tenebris"}, outer, 1200)
 	replace_requirements("planet-discovery-vesta",

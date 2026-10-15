@@ -14,6 +14,21 @@ Only the selected dossier gets a stronger accent and the large detail reader
 has one scroll pane. The Dyson art stays backed by its existing stage sprites.
 This redesign adds no texture files or periodic render workload.
 
+## October 2026: Umbra's shaped orbital routes
+
+Umbra's Slip Stream is relocated past its ring instead of inside it,
+and both incoming lanes now stay free of rocks. The southeastern
+rim markers give the only authored hazardous belt crossing;
+inner Tenebris and native Crucible form a compact western crescent.
+Carna and Arcanyx are reachable through internal spurs, and outer
+Vesta has its own northeastern opening, not a diagonal through
+the star or the asteroid ring. Two centered Factorio-native arcs
+bring controlled orbital flow instead of arbitrary long sweeping
+lines: Tenebris→Crucible and Outer Rim→Vesta. All other Umbra
+routes remain deliberately straight, especially the crossing.
+The survey is now researched before the inner worlds to avoid
+a progression deadlock. Live Factorio zoom checks are still needed.
+
 ## October 2026: Umbra rocks and farther Deep Space
 
 The fuzzy copper wreath wasn't convincing as a shattered asteroid
