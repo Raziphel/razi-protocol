@@ -49,7 +49,7 @@ class FrontierRecoveryTests(unittest.TestCase):
                 block=locale.split(f"[{section}]",1)[1].split("\n[",1)[0]
                 self.assertIn(f"\n{id}=",block)
         self.assertIn('id="athos-particulate"',native)
-        self.assertIn('type="clickable_label"',projects)
+        self.assertIn('style="clickable_label"',projects)
         self.assertIn('local ids={"dyson","cargo","recovery"',projects)
         self.assertIn('razi_journal_action="select"',projects)
         self.assertIn('return done,#recovery_stages',projects)
