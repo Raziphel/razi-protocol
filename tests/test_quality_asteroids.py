@@ -56,7 +56,7 @@ class QualityAsteroidContracts(unittest.TestCase):
         self.assertIn("M.route_color_hex={",ladder)
         self.assertIn("function M.route_color(level)",ladder)
         self.assertIn("function M.route_color_richtext(level)",ladder)
-        self.assertIn("quality.route_color(grade)",marker)
+        self.assertIn("quality.route_color(M.route_color_level(route))",marker)
         self.assertIn("quality_levels.route_color_richtext(hi)",intel)
 
     def test_settings_and_tooltips(self):
@@ -66,8 +66,9 @@ class QualityAsteroidContracts(unittest.TestCase):
         self.assertIn('allowed_values={"balanced","challenging","relentless"}',settings)
         route=read("prototypes/system/route_intel.lua")
         self.assertIn("quality_levels.route_range",route)
-        self.assertIn('field("quality-hazard"',route)
-        for key in ("quality-hazard=","quality-stages=","quality-stage="):
+        self.assertIn('field("danger"',route)
+        self.assertNotIn('field("quality-hazard"',route)
+        for key in ("danger=","quality-stages=","quality-stage="):
             self.assertIn(key,read("locale/en/routes.cfg"))
         for key in ("razi-quality-asteroids=","razi-asteroid-difficulty-scale="):
             self.assertIn(key,read("locale/en/settings.cfg"))

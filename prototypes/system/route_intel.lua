@@ -31,37 +31,21 @@ function M.annotate(route)
   if has_razi_fields(fields) then return false end
   local report=hazards.inspect(route)
   local kind=hazards.kind(route)
-  -- Append only: route authors own their names, description and existing fields.
-  -- The old tooltip included up to ten rows, even for a harmless local
-  -- shuttle. Show known facts only; important combat warnings are always
-  -- near the top while routine contacts stay quiet.
-  local additions={
-    field("route",localise("kind-"..kind),220),
-    field("danger",localise("tier-"..report.tier),221)
-  }
-  if report.tier>=4 then
-    additions[#additions+1]=field("alert",
-      localise("alert-"..report.tier),222)
-  end
-  -- Separate quality escalation from the native five-class size warning.
-  -- Show the actual Razi ladder without counting our temporary carrier
-  -- asteroid entities as new threats, and preserve source mod tooltips.
-  local quality_enabled=settings and settings.startup
-    and settings.startup["razi-quality-asteroids"]
-  local enabled=not quality_enabled or quality_enabled.value~=false
+  -- Only one difficulty exists: the campaign's ten-level quality/route
+  -- ladder. Physical asteroid sizes are separate descriptive facts.
+  -- Preserve source-provided tooltip fields, names, and descriptions.
   local mode=settings and settings.startup
     and settings.startup["razi-asteroid-difficulty-scale"]
   local lo,hi=quality_levels.route_range(route,mode and mode.value)
-  local text=lo==hi and localise("quality-stage",tostring(hi))
+  local level_text=lo==hi and localise("quality-stage",tostring(hi))
     or localise("quality-stages",tostring(lo),tostring(hi))
   local hex=quality_levels.route_color_richtext(hi)
-  additions[#additions+1]=field("quality-hazard",
-    {"","[color="..hex.."]",text,"[/color]"},231)
-  if enabled and hi>=9 then
-    additions[#additions+1]=field("quality-warning",
-      localise("quality-warning"),232)
-  end
-  if report.tier>=3 then
+  local additions={
+    field("route",localise("kind-"..kind),220),
+    field("danger",
+      {"","[color="..hex.."]",level_text,"[/color]"},221)
+  }
+  if report.largest~="none" then
     additions[#additions+1]=field("largest",
       localise("size-"..report.largest),223)
   end
@@ -69,13 +53,14 @@ function M.annotate(route)
     additions[#additions+1]=field("salvage",
       localise("chunks-present",tostring(report.chunks)),224)
   end
-  if type(route.length)=="number" and route.length>0 then
-    additions[#additions+1]=field("distance",
-      localise("kilometers",tostring(route.length)),225)
-  end
-  if report.tier>=3 then
-    additions[#additions+1]=field("preparation",
-      localise("prepare-"..report.tier),226)
+  -- Factorio already renders the native Length row. Do not add a
+  -- second number which may reflect a different mod's freight override.
+  -- One actionable advisory at the top danger grades, not two repeated
+  -- "Critical" and "Legendary" warnings from competing tier systems.
+  if hi>=7 then
+    local advice=hi>=10 and "prepare-legendary"
+      or hi>=9 and "prepare-extreme" or "prepare-advanced"
+    additions[#additions+1]=field("preparation",localise(advice),226)
   end
   if report.unknown then
     additions[#additions+1]=field("unknown",localise("unknown-warning"),227)

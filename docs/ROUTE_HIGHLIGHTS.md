@@ -1,3 +1,38 @@
+## 2.1.101: one asteroid difficulty scale, not two
+
+**Only the 10-level quality/danger ladder is a difficulty rating.**
+Route tooltips previously showed an unrelated historical "Asteroid risk:
+5 / Critical" from the size-only inspector, followed by "Predicted route
+difficulty: Level 10 / 10". A duplicated Legendary warning appeared
+because the warning's name and value contained the same full sentence.
+
+The old five-grade rating, its color table, tier-1..5 locale keys,
+critical/heavy warnings, legacy single-dot marker renderer and old
+quality-risk-marker generator are retired. The surviving size inspector
+only reports the physical **largest asteroid**, collectible chunks,
+unclassified modded contacts and route type. None of these facts is
+another difficulty score.
+
+Native tooltip layout:
+- Route class
+- **Asteroid difficulty: Level N / 10** or **Levels N–M / 10**
+  (colored with the shared 10-grade blue-to-red route scale)
+- Largest recorded asteroid size, when known
+- Collectible chunk varieties, if any
+- One preparation recommendation on Level 7+ corridors, with a
+  Legendary-specific advisory at Level 10
+- Optional uncertainty/belt information, system and freight category
+
+The game's own Length display is authoritative; Razi no longer appends
+a potentially conflicting second "Travel distance" number. The
+third-party tooltip fields and native space-connection prototype are
+preserved. All calculations, real asteroid quality spawning and
+route overlay gradients still use `scripts/razi_asteroid_difficulty.lua`.
+
+Regression checks cover the Level 10 Edge-to-Nexus example, preservation
+of original mod fields, size/chunk facts and absence of duplicate hazard,
+warning and distance rows. In-game inspection is still necessary.
+
 ## 2.1.100: starmap line visibility pass
 
 The previous blue-to-red quality-route overlay was technically present,

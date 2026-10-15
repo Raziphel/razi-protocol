@@ -111,7 +111,7 @@ function M.data_final_fixes(owner)
     local row=candidate(owner,route,mode,scope)
     if row then
       row.name=name
-      row.grade=owner.route_color_level(route) or owner.threat_tier(route)
+      row.grade=owner.route_color_level(route)
       row.belt=hz.is_belt_crossing(route) and true or false
       routes[#routes+1]=row
       total=total+row.pieces

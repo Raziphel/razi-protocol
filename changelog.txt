@@ -1,3 +1,20 @@
+Version: 2.1.102
+Date: 15. 10. 2026
+  Unify asteroid difficulty information across routes:
+    - Retire the old size-derived Asteroid risk 1-5 rating and show only
+      the shared Level 1-10 quality/route difficulty scale.
+    - Use the identical ten-grade palette in starmap lines and the
+      single Asteroid difficulty row in route tooltips.
+    - Replace repeated Critical and Legendary navigation warnings
+      with one actionable preparation recommendation at Level 7+.
+    - Preserve largest asteroid size, resource chunks, unknown modded
+      contacts, native route names and source-owned tooltip fields.
+    - Remove a redundant Travel distance row conflicting with the
+      built-in Factorio route Length display.
+    - Remove five-tier localization and obsolete midpoint icon assets.
+      No route IDs, asteroid spawns or physics were changed.
+    - Add a Level 10 Deep Space tooltip regression and one-scale tests.
+
 Version: 2.1.101
 Date: 15. 10. 2026
   Fix Bellicos/Nexus geometry split caused by Lua 5.2 atan:
