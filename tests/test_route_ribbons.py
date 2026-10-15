@@ -52,6 +52,57 @@ class RouteRibbonTests(unittest.TestCase):
         self.assertIn("ss=3",source)
         self.assertIn("renderAtlas()",source)
 
+    def test_visible_core_with_fine_soft_edges(self):
+        """At zoomed-out starmap scale the previous faint hairline vanished."""
+        raw=PNG.read_bytes()
+        chunks=[]
+        pos=8
+        while pos<len(raw):
+            size=struct.unpack(">I",raw[pos:pos+4])[0]
+            kind=raw[pos+4:pos+8]
+            if kind==b"IDAT":
+                chunks.append(raw[pos+8:pos+8+size])
+            pos+=size+12
+        rgba=zlib.decompress(b"".join(chunks))
+        stride=1024*4+1
+        def alpha(bearing,x,y):
+            xx=bearing%16*64+x
+            yy=bearing//16*64+y
+            return rgba[yy*stride+1+xx*4+3]
+        for angle in (0,16,32,48,64,80,96,112,127):
+            with self.subTest(angle=angle):
+                self.assertGreaterEqual(alpha(angle,32,32),235)
+        self.assertGreaterEqual(alpha(0,32,30),180)
+        self.assertGreaterEqual(alpha(0,32,29),65)
+        self.assertEqual(alpha(0,32,22),0)
+        # Thickening affects just the centered color ribbon; not the
+        # starmap sprite's empty transparent areas or neighboring bearings.
+        self.assertEqual(alpha(0,2,2),0)
+
+    def test_vivid_palette_matches_route_tooltips(self):
+        import re
+        ladder=(ROOT/"scripts/razi_asteroid_difficulty.lua").read_text()
+        block=ladder.split("M.route_colors={",1)[1].split("M.route_color_hex={",1)[0]
+        triples=[
+            tuple(float(channel) for channel in match)
+            for match in re.findall(
+                r"\\{r=(\\d+\\.\\d+),g=(\\d+\\.\\d+),b=(\\d+\\.\\d+)\\}",
+                block)
+        ]
+        hexblock=ladder.split("M.route_color_hex={",1)[1].split(
+            "function M.color_level",1)[0]
+        hexes=re.findall(r'"(#[A-F0-9]{6})"',hexblock)
+        self.assertEqual(len(triples),10)
+        self.assertEqual(len(set(hexes)),10)
+        self.assertEqual(
+            ["#" + "".join(f"{round(v*255):02X}" for v in triplet)
+             for triplet in triples],
+            hexes)
+        self.assertTrue(all(max(t)-min(t)>=.45 for t in triples))
+        renderer=(ROOT/"prototypes/system/route_ribbons.lua").read_text()
+        self.assertIn("math.min(1,.96+.004*grade)",renderer)
+        self.assertIn("shift={(a.x+b.x)*16,(a.y+b.y)*16}",renderer)
+
     def test_native_geometry_and_budget(self):
         module=(ROOT/"prototypes/system/route_ribbons.lua").read_text()
         owner=(ROOT/"prototypes/system/route_highlights.lua").read_text()

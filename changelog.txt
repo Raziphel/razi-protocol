@@ -1,3 +1,18 @@
+Version: 2.1.100
+Date: 15. 10. 2026
+  Quality route overlay contrast and readability:
+    - Make all ten route colors brighter and more saturated, with the
+      same exact colors in map overlays and native route tooltips.
+    - Replace faint sub-pixel route hairlines with a clean 2.7-pixel
+      solid white sprite core and subtle anti-aliased colored edge,
+      staying centered on Factorio's real travel connections.
+    - Increase route sprite opacity to 96.4-100 percent while retaining
+      the original 128-bearing geometry, 2,400-sprite rendering cap,
+      and Level 1-10 distance-dependent threat gradients.
+    - Add visual alpha-profile and RGB/HEX palette regression tests.
+    - Leave all route IDs, planetary positions, enemy spawning and
+      platform travel logic unchanged.
+
 Version: 2.1.99
 Date: 15. 10. 2026
   Full ten-level route difficulty and colored overlay correction:
