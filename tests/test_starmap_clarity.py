@@ -94,12 +94,12 @@ class ConstellationTests(unittest.TestCase):
 
     def test_calidus_centered_radial_gallery(self):
         centers = {
-            "solaris": (52, 104 * math.sqrt(3) / 2),
-            "nyxaris": (-52, 104 * math.sqrt(3) / 2),
-            "vibrant": (104, 0), "vespera": (-104, 0),
-            "beetlejuice": (62, -124 * math.sqrt(3) / 2),
-            "umbra": (-62, -124 * math.sqrt(3) / 2),
-            "solar-system-edge": (0, -215),
+            "solaris": (59, 118 * math.sqrt(3) / 2),
+            "nyxaris": (-59, 118 * math.sqrt(3) / 2),
+            "vibrant": (118, 0), "vespera": (-118, 0),
+            "beetlejuice": (71.5, -143 * math.sqrt(3) / 2),
+            "umbra": (-71.5, -143 * math.sqrt(3) / 2),
+            "solar-system-edge": (0, -268),
         }
         for name, xy in centers.items():
             self.assertLess(math.dist(self.coords[name], xy), 1.0,
@@ -111,18 +111,36 @@ class ConstellationTests(unittest.TestCase):
         }
         for name, bearing in expected_bearings.items():
             self.assertAlmostEqual(self.anchors[name][2], bearing, places=5)
-            expected_radius=124 if name in ("beetlejuice","umbra") else 104
+            expected_radius=143 if name in ("beetlejuice","umbra") else 118
             self.assertAlmostEqual(self.anchors[name][1], expected_radius, places=4)
         radii = [math.dist(self.coords[name], (0, 0)) for name in STARS]
-        self.assertAlmostEqual(max(radii)-min(radii),20,delta=.05,
+        self.assertAlmostEqual(max(radii)-min(radii),25,delta=.05,
                                msg="Both outer stars should allow larger optional-world orbits")
-        self.assertTrue(all(100 < r < 125 for r in radii))
+        self.assertTrue(all(115 < r < 145 for r in radii))
         for a, b in PAIRS:
             self.assertAlmostEqual(self.coords[a][1], self.coords[b][1], delta=1)
-        self.assertLess(self.coords["solar-system-edge"][1], -210,
+        self.assertLess(self.coords["solar-system-edge"][1], -265,
                         "Deep Space must sit beyond the outer stars")
-        self.assertGreater(self.coords["solar-system-edge"][1], -220,
+        self.assertGreater(self.coords["solar-system-edge"][1], -271,
                            "Deep Space drifted too far outside the starmap")
+
+    def test_deep_space_has_distinct_navigation_sectors(self):
+        edge = self.coords["solar-system-edge"]
+        nexus, oort, sol = (self.coords[name] for name in
+                            ("nexus", "oort-cloud", "sol"))
+        shattered = self.coords["shattered-planet"]
+        black_approach = self.coords["black-hole-approach"]
+        black_hole = self.coords["black-hole"]
+        self.assertGreater(nexus[0]-edge[0], 75)
+        self.assertGreater(oort[0]-edge[0], 160)
+        self.assertGreater(sol[0]-edge[0], 250)
+        self.assertGreater(shattered[0]-edge[0], 110)
+        self.assertGreater(shattered[1]-edge[1], 60)
+        self.assertLess(black_approach[0]-edge[0], -100)
+        self.assertLess(black_hole[0]-black_approach[0], -20)
+        for a, b in ((nexus, shattered), (nexus, black_approach),
+                     (shattered, black_approach), (sol, black_hole)):
+            self.assertGreater(math.dist(a,b), 65)
 
     def test_compact_ring_respects_large_optional_orbits(self):
         # Even with exterior Vibrant worlds, neighboring star art needs a gap.
@@ -135,7 +153,7 @@ class ConstellationTests(unittest.TestCase):
                 f"Stars {a} and {b} are too close for optional orbit art")
         self.assertLess(
             max(math.dist(self.coords[name], (0, 0)) for name in STARS),
-            125, "The outer systems are beyond their planned radial sectors")
+            145, "The outer systems are beyond their planned radial sectors")
 
     def test_long_campaign_routes_do_not_cross_each_other(self):
         major = [(a, b) for a, b, _, profile in self.routes

@@ -10,113 +10,24 @@ local function route_endpoint_exists(name)
 	return planet_exists(name) or space_location_exists(name)
 end
 
-local deep_space_updates = {}
-
-if space_location_exists("shattered-planet") and space_location_exists("solar-system-edge") then
-	table.insert(deep_space_updates, {
-		type = "space-location",
-		name = "shattered-planet",
-		distance = nil,
-		orientation = nil,
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "solar-system-edge",
-			},
-			distance = 39,
-			orientation = 0.30,
-		},
-	})
+-- The data-stage atlas and final native positions share one source of truth.
+-- Missing upstream locations or parent types are skipped safely.
+local layout=require("prototypes.system.galaxy_layout")
+local deep_space_updates={}
+for _,entry in ipairs(layout.deep_space_orbits) do
+  local kind,name,parent,radius,turn=
+    entry[1],entry[2],entry[3],entry[4],entry[5]
+  local parent_kind=planet_exists(parent) and "planet"
+    or space_location_exists(parent) and "space-location"
+  if (data.raw[kind] or {})[name] and parent_kind then
+    deep_space_updates[#deep_space_updates+1]={
+      type=kind,name=name,distance=nil,orientation=nil,draw_orbit=false,
+      orbit={parent={type=parent_kind,name=parent},
+        distance=radius,orientation=turn}
+    }
+  end
 end
-
-if planet_exists("nexus") and space_location_exists("solar-system-edge") then
-	table.insert(deep_space_updates, {
-		type = "planet",
-		name = "nexus",
-		distance = nil,
-		orientation = nil,
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "solar-system-edge",
-			},
-			distance = 50,
-			orientation = 0.12,
-		},
-	})
-end
-
-if space_location_exists("black-hole-approach") and space_location_exists("solar-system-edge") then
-	table.insert(deep_space_updates, {
-		type = "space-location",
-		name = "black-hole-approach",
-		distance = nil,
-		orientation = nil,
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "solar-system-edge",
-			},
-			distance = 50,
-			orientation = 0.9,
-		},
-	})
-end
-
-if space_location_exists("black-hole") and space_location_exists("black-hole-approach") then
-	table.insert(deep_space_updates, {
-		type = "space-location",
-		name = "black-hole",
-		distance = nil,
-		orientation = nil,
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "black-hole-approach",
-			},
-			distance = 4.5,
-			orientation = 0.75,
-		},
-	})
-end
-
-if space_location_exists("oort-cloud") and planet_exists("nexus") then
-	table.insert(deep_space_updates, {
-		type = "space-location",
-		name = "oort-cloud",
-		distance = nil,
-		orientation = nil,
-		orbit = {
-			parent = {
-				type = "planet",
-				name = "nexus",
-			},
-			distance = 22,
-			orientation = 0.28,
-		},
-	})
-end
-
-if space_location_exists("sol") and space_location_exists("oort-cloud") then
-	table.insert(deep_space_updates, {
-		type = "space-location",
-		name = "sol",
-		distance = nil,
-		orientation = nil,
-		orbit = {
-			parent = {
-				type = "space-location",
-				name = "oort-cloud",
-			},
-			distance = 25,
-			orientation = 0.18,
-		},
-	})
-end
-
-if #deep_space_updates > 0 then
-	PlanetsLib:update(deep_space_updates)
-end
+if #deep_space_updates>0 then PlanetsLib:update(deep_space_updates) end
 
 require("util")
 local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")

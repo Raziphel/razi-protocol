@@ -9,7 +9,8 @@ local planets = {}
 local places = {star={name="star"}}
 for _,name in ipairs({
   "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-  "solar-system-edge","sye-calidus",
+  "solar-system-edge","shattered-planet","black-hole-approach",
+  "black-hole","oort-cloud","sol","sye-calidus",
   "sye-solaris","sye-nyxaris","sye-vibrant","sye-vespera",
   "sye-beetlejuice","sye-umbra","apia-carnova-orbit",
   "crucible-orbit","secretas",
@@ -20,7 +21,7 @@ for _,name in ipairs({
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
   "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
   "muria","aquilo","rubia","maraxsis","athos",
-  "cubium","linox-planet_linox","tenebris","vesta",
+  "cubium","linox-planet_linox","tenebris","vesta","nexus",
   "cerys","rabbasca","optional-source-world",
   "igrys","foliax","obsidiax","carna","ferrum","shchierbin",
   "alchemy-planet","arcanyx","bm-balack"
@@ -138,7 +139,7 @@ for name,bearing in pairs({
   solaris=5/12,nyxaris=7/12,vibrant=.25,
   vespera=.75,beetlejuice=1/12,umbra=11/12
 }) do
-  local radius=(name=="beetlejuice" or name=="umbra") and 124 or 104
+  local radius=(name=="beetlejuice" or name=="umbra") and 143 or 118
   check(math.abs(places[name].distance-radius)<.001 and
         math.abs(places[name].orientation-bearing)<.000002,
     "Sprite-only star was not moved before PlanetsLib rendered it: "..name)
@@ -207,7 +208,7 @@ local bearings={
 for name,bearing in pairs(bearings) do
   local star=places[name]
   local radius=star.orbit.distance
-  local expected=(name=="beetlejuice" or name=="umbra") and 124 or 104
+  local expected=(name=="beetlejuice" or name=="umbra") and 143 or 118
   check(math.abs(radius-expected)<.001,
     "Star tier radius mismatch: "..name)
   check(math.abs(star.orbit.orientation-bearing)<.000002,
@@ -222,12 +223,30 @@ for name,bearing in pairs(bearings) do
   check(star.draw_orbit==false,"Giant orbital ring survived")
 end
 local dx,dy=position("solar-system-edge")
-check(math.abs(dx)<1 and dy < -185 and dy > -195,
+check(math.abs(dx)<1 and math.abs(dy+268)<.01,
   "Deep Space must be a northern outer frontier")
 local hx,hy=position("sye-calidus")
 check(math.abs(hx)<1 and math.abs(hy-20)<.01,
   "Calidus departure must remain near the central star")
 
+-- Deep Space locations must match the same geometry before and after
+-- PlanetsLib sprite baking, including the Nexus planet-parent relationship.
+for _,name in ipairs({"shattered-planet","nexus","black-hole-approach",
+  "black-hole","oort-cloud","sol"}) do
+  local node=places[name] or planets[name]
+  local ex,ey=layout.anchor_position(name)
+  local origin=node.origin or {}
+  local a=2*math.pi*node.orientation
+  local x=(origin.x or 0)+node.distance*math.sin(a)
+  local y=(origin.y or 0)-node.distance*math.cos(a)
+  check(math.abs(x-ex)<.01 and math.abs(y-ey)<.01,
+    "Deep Space native position did not follow its new sector: "..name)
+  check(node.draw_orbit==false,
+    "Deep Space destination drew an oversized orbit: "..name)
+end
+check(places["oort-cloud"].orbit.parent.type=="planet"
+  and places["oort-cloud"].orbit.parent.name=="nexus",
+  "Oort Cloud must remain attached to the true Nexus planet")
 -- Full draws a native orbit for every positioned Razi star planet.
 -- Reuse this list below so Off is tested against the same complete set.
 local managed_planets={"vulcanus","castra","arig","hyarion","tellus",
@@ -387,8 +406,8 @@ local function fixed_position(name)
     (origin.y or 0)-r*math.cos(o*math.pi*2)
 end
 layout.data_final_fixes()
-local ex=-52
-local ey=104*math.sqrt(3)/2
+local ex=-59
+local ey=118*math.sqrt(3)/2
 check(math.abs(planets.gleba.origin.x-ex)<.05 and
       math.abs(planets.gleba.origin.y-ey)<.05,
   "Final native layout did not recover a planet after its star was deleted")
@@ -415,11 +434,12 @@ check(planets["optional-source-world"].draw_orbit==false and
   planets["optional-source-world"].orbit.sprite==orbit_art_before,
   "Unique source orbit art should not be doubled by native circles")
 local dzx,dzy=fixed_position("solar-system-edge")
-check(math.abs(dzx)<.01 and math.abs(dzy+215)<.01,
+check(math.abs(dzx)<.01 and math.abs(dzy+268)<.01,
   "Native Deep Space was no longer directly north")
 -- Astral sprite positions were already fixed by the pre-final stage.
 for name,expect in pairs(original_positions) do
-  check(math.abs(expect.distance-104)<.001,
+  local planned=(name=="beetlejuice" or name=="umbra") and 143 or 118
+  check(math.abs(expect.distance-planned)<.001,
     "Pre-render parent star radius was wrong: "..name)
 end
 

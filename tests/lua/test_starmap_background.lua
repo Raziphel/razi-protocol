@@ -4,9 +4,9 @@ local function ok(v,msg) if not v then error(msg,2) end end
 package.loaded["prototypes.system.galaxy_layout"]={
   anchor_position=function(name)
     local points={
-      solaris={52,90},nyxaris={-52,90},vibrant={104,0},
-      vespera={-104,0},beetlejuice={52,-90},umbra={-52,-90},
-      ["solar-system-edge"]={0,-190},
+      solaris={59,102.19},nyxaris={-59,102.19},vibrant={118,0},
+      vespera={-118,0},beetlejuice={71.5,-123.84},umbra={-71.5,-123.84},
+      ["solar-system-edge"]={0,-268},
     }
     local p=points[name];if p then return p[1],p[2] end
   end

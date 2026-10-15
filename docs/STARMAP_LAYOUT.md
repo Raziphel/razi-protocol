@@ -405,25 +405,23 @@ chapters advancing upward to Deep Space and Bellicos.
 | Anchor | X | Y |
 | --- | ---: | ---: |
 | Calidus / Nauvis | 0 | 0 |
-| Solaris | 52 | 90.07 |
-| Nyxaris | -52 | 90.07 |
-| Vibrant | 104 | 0 |
-| Vespera | -104 | 0 |
-| Beetlejuice | 52 | -90.07 |
-| Umbra | -52 | -90.07 |
+| Solaris | 59 | 102.19 |
+| Nyxaris | -59 | 102.19 |
+| Vibrant | 118 | 0 |
+| Vespera | -118 | 0 |
+| Beetlejuice | 71.5 | -123.84 |
+| Umbra | -71.5 | -123.84 |
 | Required Asteroid Belt inner edge | Vibrant + 31 at 0.17 turns | Inner side |
 | Required Asteroid Belt outer edge | Vibrant + 39 at 0.17 turns | Outer side |
-| Deep Space / solar-system-edge | 0 | -215 |
+| Deep Space / solar-system-edge | 0 | -268 |
 
 ## Design rules
 
-- All six star centers share a **104-unit radius**, down from 124
-  (~16% closer to Nauvis). The layout is still a symmetric clockwise-turn
-  hexagon. The absolute starmap width is reduced without scaling planetary
-  orbits, chopping off their labels, or crowding larger optional planets.
+- Solaris, Nyxaris, Vibrant and Vespera now sit at **118 chart units** from
+  Nauvis (formerly 104). Outer Beetlejuice and Umbra sit at **143 units**
+  (formerly 124). Planetary orbits remain unchanged.
 - The widest optional planet rings reach about 51 map units from their stars.
-  A 104-unit adjacent-star separation is intentionally chosen instead of a
-  tighter 90-unit circle, which would overlap the optional orbital rings.
+  A wider stellar separation clears the neighboring optional orbital rings.
 - Planet climates guide visual orbital distances: hot Vulcanus (18),
   Hyarion (19), Arig (27), Muria (20), Moshine (22) and Crucible orbit
   (19) move inward. Remote/icy Paracelsin (49), Aquilo (40),
@@ -436,7 +434,7 @@ chapters advancing upward to Deep Space and Bellicos.
   crosslinks Solaris↔Nyxaris and Beetlejuice↔Umbra.
 - The Calidus departure slipstream is 20 units due south of home
   (previously 25), clear of Nauvis and Muluna but closer to the center.
-  Planet orbits, the six-star radius (104) and all star textures stay put.
+  Planet orbits and star textures stay put; only interstellar spacing changes.
 - Neighboring planets now have short return routes: Vulcanus↔Castra,
   Arig↔Hyarion, Gleba↔Moshine, Moshine↔Apia-Carnova Orbit,
   outer AsteroidBelt edge↔Paracelsin, Linox↔Secretas,
@@ -481,13 +479,14 @@ chapters advancing upward to Deep Space and Bellicos.
 - Never copy old PlanetsLib orbit sprites into `PlanetsLib:update` calls.
   Preserve *source-owned* special sprites and moon orbits rather than globally
   deleting other mods' artwork.
-- Deep Space now sits north at **(0, -215)** after shifting outward
-  from its earlier (0, -190) compact-map placement.
-  Shattered Planet remains source-owned with its local orbit.
-- Bellicos/Aegis remains a **separate northeastern expedition**, but its
-  pulsar/near-orbit anchor now lies only 110 units from Deep Space rather
-  than 145. The entry stargate is 28 units away rather than 35. Keep source
-  art, gate names, travel distance and every native Aegis connection.
+- Deep Space now sits north at **(0, -268)**. Its pre-render and final
+  native positions use the same orbit manifest. Nexus, the Oort Cloud and Sol
+  spread east; Shattered Planet lies southeast; the Black Hole approach lies
+  west. Synthetic giant orbit circles are hidden, not functional routes.
+- Bellicos/Aegis has a separate northern annex, 170 visual units from
+  Deep Space (formerly 110). Its entry stargate is 62 visual units away
+  (formerly 28). Preserve the pulsar artwork, native internal connection
+  network and the original 250,000 km entry-route gameplay distance.
 - Keep the two short same-tier crosslinks, the required asteroid expedition
   around Vibrant, and both distinct outer branches to Deep Space. Avoid
   additional Calidus spokes and unnecessary neighboring-star loops.

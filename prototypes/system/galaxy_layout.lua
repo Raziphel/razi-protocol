@@ -2,22 +2,31 @@
 -- The local planet/moon relationships need to survive every map pass.
 local M = {}
 
--- Umbra and Beetlejuice now sit twenty chart units beyond the
--- original stellar ring. This keeps their huge optional-world orbits
--- clear, with matching northern sectors and all descendants intact.
+-- Four first/middle systems sit modestly farther from Nauvis; the two outer
+-- systems have a wider ring to clear their large optional planet orbits.
+-- Deep Space has its own spacious, directional expedition sectors.
 -- Factorio's north points toward negative Y.
 -- Hot worlds stay closer to their sun, colder worlds farther out.
 -- These are visual orbit distances only; gameplay climates remain source-owned.
 local anchors = {
-  {"space-location","solaris","star",104,0.416667},
-  {"space-location","nyxaris","star",104,0.583333},
-  {"space-location","vibrant","star",104,0.25},
-  {"space-location","vespera","star",104,0.75},
-  {"space-location","beetlejuice","star",124,0.083333},
-  {"space-location","umbra","star",124,0.916667},
+  {"space-location","solaris","star",118,0.416667},
+  {"space-location","nyxaris","star",118,0.583333},
+  {"space-location","vibrant","star",118,0.25},
+  {"space-location","vespera","star",118,0.75},
+  {"space-location","beetlejuice","star",143,0.083333},
+  {"space-location","umbra","star",143,0.916667},
   -- Move the Deep Space parent anchor north: all its source-owned child
   -- worlds, gates and Aegis/Pulsar outposts keep their original parents.
-  {"space-location","solar-system-edge","star",215,0},
+  {"space-location","solar-system-edge","star",268,0},
+  -- Four spacious directions: Aegis north, Nexus/Oort/Sol east,
+  -- Shattered Planet southeast and the Black Hole west.
+  -- These are visual positions only, not route lengths or travel unlocks.
+  {"space-location","shattered-planet","solar-system-edge",140,0.33},
+  {"planet","nexus","solar-system-edge",94,0.18},
+  {"space-location","black-hole-approach","solar-system-edge",112,0.70},
+  {"space-location","black-hole","black-hole-approach",22,0.72},
+  {"space-location","oort-cloud","nexus",90,0.25},
+  {"space-location","sol","oort-cloud",106,0.15},
   {"space-location","sye-calidus","star",20,0.5},
   -- Clear west-northwest external gateway, just beyond the orbital rim.
   -- Three interstellar departures fan outward, while the northern arc
@@ -101,6 +110,29 @@ for _,world in ipairs(optional_orbits) do
   anchors[#anchors+1]={"planet",world.name,world.star,world.radius,world.turn}
 end
 
+-- Share one authoritative coordinate manifest with data-stage rendering.
+local deep_space_names={
+  ["shattered-planet"]=true,nexus=true,["black-hole-approach"]=true,
+  ["black-hole"]=true,["oort-cloud"]=true,sol=true
+}
+M.deep_space_orbits={}
+for _,item in ipairs(anchors) do
+  if deep_space_names[item[2]] then
+    M.deep_space_orbits[#M.deep_space_orbits+1]=item
+  end
+end
+
+-- Source art is preserved, but not giant synthetic destination orbit circles.
+local deep_space_no_rings={
+  ["solar-system-edge"]=true,["shattered-planet"]=true,nexus=true,
+  ["black-hole-approach"]=true,["black-hole"]=true,
+  ["oort-cloud"]=true,sol=true,pulsar=true,
+  ["near-bellicos-orbit"]=true,
+  ["calidus-bellicos-stargate-calidus"]=true,
+  ["calidus-bellicos-stargate-bellicos"]=true,
+  ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true
+}
+
 local stars = {
   solaris=true, nyxaris=true, vibrant=true, vespera=true,
   beetlejuice=true, umbra=true
@@ -172,11 +204,13 @@ local function source_orbit(item)
   local _,existing=resolved(item)
   local old=existing and existing.orbit
   -- Preserve most source orbit art, except stray dotted trails on Carna.
+  local parent_type=exists("planet",item[3]) and "planet" or "space-location"
   local orbit={
-    parent={type="space-location",name=item[3]},
+    parent={type=parent_type,name=item[3]},
     distance=item[4],orientation=item[5]
   }
-  if old and old.sprite and item[2]~="carna" then
+  if old and old.sprite and item[2]~="carna"
+    and not deep_space_no_rings[item[2]] then
     orbit.sprite=old.sprite
   end
   return orbit
@@ -204,7 +238,7 @@ function M.data_updates()
   local updates={}
   for _,item in ipairs(anchors) do
     local kind,proto=resolved(item)
-    if proto and exists("space-location",item[3]) then
+    if proto and (exists("space-location",item[3]) or exists("planet",item[3])) then
       updates[#updates+1]={
         type=kind,name=item[2],orbit=source_orbit(item)
       }
@@ -295,9 +329,15 @@ local function remove_baked_source_trails()
   local removed=0
   for index=#layers,1,-1 do
     local layer=layers[index]
+    local name=layer and layer.planetslib_orbit_name
+    local asset=layer and layer.filename
+    -- Keep unique pulsar artwork, stripping only generic PlanetsLib orbit
+    -- decorations. Do not touch actual travel paths or destination icons.
+    local pulsar_art=name=="pulsar" and type(asset)=="string"
+      and asset:lower():find("pulsar",1,true)
     if layer and layer.planetslib_orbit_shift
-      and (layer.planetslib_orbit_name=="carna"
-        or layer.planetslib_orbit_name=="velora") then
+      and (name=="carna" or name=="velora"
+        or (deep_space_no_rings[name] and not pulsar_art)) then
       table.remove(layers,index)
       removed=removed+1
     end
@@ -310,7 +350,7 @@ function M.data_final_fixes()
   local removed_trails=remove_baked_source_trails()
   if removed_trails>0 and type(log)=="function" then
     log("[Razi Protocol/starmap] Removed "..removed_trails..
-      " obsolete Carna/Velora decorative orbit layers")
+      " obsolete source and Deep Space decorative orbit layers")
   end
   local relocated={}
   local count=0
@@ -322,7 +362,9 @@ function M.data_final_fixes()
   for _,item in ipairs(anchors) do
     local _,location=resolved(item)
     local px,py=anchor_position(item[3])
-    if location and px and py then
+    local parent_ok=stars[item[3]] or item[3]=="star"
+      or exists("space-location",item[3]) or exists("planet",item[3])
+    if location and px and py and parent_ok then
       local orbit=source_orbit(item)
       location.orbit=orbit
       location.origin={x=px,y=py}
@@ -397,7 +439,12 @@ function M.data_final_fixes()
     ["asteroid-belt-outer-edge"]=0.25,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.5,
     ["razi-umbra-belt-inner"]=0.25,
-    ["razi-umbra-belt-outer"]=0.25
+    ["razi-umbra-belt-outer"]=0.25,
+    ["solar-system-edge"]=0.75,["nexus"]=0.25,
+    ["oort-cloud"]=0.75,["sol"]=0.25,
+    ["shattered-planet"]=0.75,["black-hole-approach"]=0.25,
+    ["black-hole"]=0.75,
+    ["calidus-bellicos-stargate-calidus"]=0.25
   }
   for name,direction in pairs(label_orientations) do
     local marker=exists("space-location",name) or exists("planet",name)
@@ -437,12 +484,21 @@ function M.data_final_fixes()
 
   for _,name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-    "solar-system-edge","sye-calidus",
+    "solar-system-edge","shattered-planet","nexus",
+    "black-hole-approach","black-hole","oort-cloud","sol",
+    "pulsar","near-bellicos-orbit",
+    "calidus-bellicos-stargate-calidus","calidus-bellicos-stargate-bellicos",
+    "aegis-inner-edge","aegis-outer-edge","sye-calidus",
     "sye-solaris","sye-nyxaris",
     "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"
   }) do
     local location=exists("space-location",name)
     if location then location.draw_orbit=false end
+  end
+  -- Nexus is a planet, not a space-location: hide its extra ring too.
+  for name in pairs(deep_space_no_rings) do
+    local planet=exists("planet",name)
+    if planet then planet.draw_orbit=false end
   end
 
   if type(log)=="function" then
