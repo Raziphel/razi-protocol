@@ -21,6 +21,15 @@ class OptionalRecovery(unittest.TestCase):
         hook='require("prototypes.compat.nulla_guard").data_updates()'
         self.assertIn(hook,updates)
         self.assertIn('require("prototypes.compat.athos_cycle_guard").repair()',updates)
+        early=source("data.lua")
+        self.assertIn('require("prototypes.compat.athos_cycle_guard").repair("before-athos-data-updates")',early)
+        # Every mod's data.lua precedes PlanetAthos's data-updates.lua.
+        self.assertGreater(early.index('repair("before-athos-data-updates")'),
+                           early.index('require "prototypes.technology.asteroid_belts"'))
+        self.assertTrue(early.rstrip().endswith(
+            'require("prototypes.compat.athos_cycle_guard").repair("before-athos-data-updates")'))
+        self.assertIn('stage=stage or "late"',
+                      source("prototypes/compat/athos_cycle_guard.lua"))
         self.assertNotIn('["electric-furnace"]=',source("prototypes/compat/nulla_guard.lua"))
         self.assertIn('pcall(require,"__nulla__/lib")',source("prototypes/compat/nulla_guard.lua"))
         self.assertIn('if type(prototype)~="table" then return end',source("prototypes/compat/nulla_guard.lua"))
