@@ -212,6 +212,10 @@ require("prototypes.technology.distributed_industry").data_final_fixes()
 -- research are finalized. Guarded skips avoid unreachable planet science.
 require("prototypes.compat.frontier_companions").data_final_fixes()
 
+-- Require real Nulla and Athos science for the joint post-arrival
+-- recovery charter. No additional laboratory or substitute science pack.
+require("prototypes.compat.frontier_recovery").data_final_fixes()
+
 -- Late source mods may leave spawner autoplace tables with no required
 -- probability expression. Repair only known optional enemy nests, keeping
 -- their existing units and spawn recipes rather than breaking mod startup.
