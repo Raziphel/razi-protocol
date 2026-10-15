@@ -27,6 +27,15 @@ data:extend({
     order="aa[worlds]-c[asteroid-difficulty]"},
 
 
+  -- GAMEPLAY CHALLENGE: Standard keeps the original asteroid spawn rates.
+  {type="string-setting",name="razi-asteroid-population",
+    setting_type="startup",default_value="standard",
+    allowed_values={"sparse","standard","dense","swarm"},
+    order="aa[worlds]-d[asteroid-population]"},
+  {type="string-setting",name="razi-belt-threats",
+    setting_type="startup",default_value="standard",
+    allowed_values={"relaxed","standard","severe"},
+    order="aa[worlds]-e[belt-threats]"},
   -- PERFORMANCE EXPERIMENTS. All deliberately OFF: Factorio 2.1
   -- already optimizes many collectors, and some options change resources.
   {type="bool-setting",name="razi-performance-asteroid-particles",

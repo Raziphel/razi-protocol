@@ -1,3 +1,15 @@
+Version: 2.1.114
+Date: 15. 10. 2026
+  Gameplay choice and settings discovery:
+    - Add Sparse, Standard, Dense, and Swarm asteroid population presets
+      for Razi-authored vanilla hostile asteroid probabilities.
+    - Add Relaxed, Standard, and Severe extra belt combat encounter presets.
+    - Default 100% levels retain original encounters, native species and
+      source-owned custom asteroid hazards.
+    - Change the displayed mod title to 🌐 ! Razi Protocol as a best-effort
+      settings sort experiment. Internal 'razi-protocol' ID stays unchanged.
+    - Requires restarting the game for startup settings to take effect.
+
 Version: 2.1.113
 Date: 15. 10. 2026
   Player choice and starmap customisation:
