@@ -9,7 +9,7 @@ class LocationIcons(unittest.TestCase):
         for stem in NAMES:
             with self.subTest(stem=stem):
                 h=(ROOT/"graphics/icons/navigation"/(stem+".png")).read_bytes()[:26]
-                self.assertEqual(h[:8],b"\\x89PNG\\r\\n\\x1a\\n")
+                self.assertEqual(h[:8],b"\x89PNG\r\n\x1a\n")
                 self.assertEqual(struct.unpack(">II",h[16:24]),(64,64))
                 self.assertEqual(h[25],6)
     def test_final_pass(self):
