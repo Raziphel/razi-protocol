@@ -55,9 +55,9 @@ function M.annotate(route)
     if hi>=2 then
       additions[#additions+1]=field("quality-hazard",
         lo==hi and localise("quality-stage",tostring(hi))
-          or localise("quality-stages",tostring(lo),tostring(hi)),223.5)
+          or localise("quality-stages",tostring(lo),tostring(hi)),231)
       if hi>=9 then additions[#additions+1]=field("quality-warning",
-        localise("quality-warning"),223.6) end
+        localise("quality-warning"),232) end
     end
   end
   if report.tier>=3 then
