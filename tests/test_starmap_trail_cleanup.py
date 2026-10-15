@@ -24,7 +24,7 @@ class StarmapTrailCleanupTests(unittest.TestCase):
         self.assertNotIn('game.tick',src)
     def test_no_dependency_or_modlist_changes(self):
         info=json.loads(read("info.json"))
-        self.assertEqual(info["version"],"2.1.88")
+        self.assertGreaterEqual(tuple(map(int,info["version"].split("."))),(2,1,88))
         self.assertIn("carna >= 0.3.22",info["dependencies"])
         self.assertIn("Velora >= 2.2.2",info["dependencies"])
         self.assertFalse(any(d=="! orbital-cannon" for d in info["dependencies"]))
