@@ -1,6 +1,7 @@
 """The journal should read as a field dossier, without UI-only milestones."""
 from pathlib import Path
 import unittest
+from tools.journal_locale import load_journal_locale
 
 ROOT=Path(__file__).resolve().parents[1]
 def read(path):
@@ -32,7 +33,7 @@ class VisualPolishTests(unittest.TestCase):
 
     def test_editorial_quest_dossier_and_actual_readiness(self):
         journal=read("scripts/razi_journal.lua")
-        loc=read("locale/en/razi_journal.cfg")
+        loc=load_journal_locale(ROOT)
         self.assertIn('local function dossier_heading(parent,key,theme,width)',journal)
         self.assertIn('dossier_heading(readiness,"dossier-readiness",theme,text_width)',journal)
         self.assertIn('if prior and M.available(player.force,prior,context)',journal)
@@ -52,7 +53,7 @@ class VisualPolishTests(unittest.TestCase):
 
     def test_chapter_briefings_use_real_existing_milestones(self):
         ui=read("scripts/razi_journal.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         self.assertIn('local function render_chapter_cover(',ui)
         self.assertIn('wheel_pane(panel,"razi_journal_chapter_reading"',ui)
         self.assertIn('journal-chapter-dispatch."..p.chapter',ui)
@@ -80,7 +81,7 @@ class VisualPolishTests(unittest.TestCase):
         core=read("scripts/razi_journal_data.lua")
         foundation=read("scripts/razi_journal_expansion.lua")
         ui=read("scripts/razi_journal.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         ids=("nauvis-power","nauvis-logistics","nauvis-electronics",
              "nauvis-radar","nauvis-fast-inserters","nauvis-automation-2",
              "nauvis-engines","nauvis-fluid-handling","nauvis-plastics",
@@ -104,7 +105,7 @@ class VisualPolishTests(unittest.TestCase):
     def test_megaproject_dossiers_use_real_status(self):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         self.assertIn('local ids={"dyson","cargo","recovery","transceiver","convergence"}',
                       projects)
         self.assertIn('icons.button(head,art_for(id,player.force),"project_button"',
