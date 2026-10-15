@@ -49,14 +49,13 @@ The audit does **not** prove the Factorio engine can load the modpack, or
 that every planet's mining and resource chain is playable. A complete game
 load, save migration and practical exploration remain mandatory.
 
-## Celestial weather
+## Celestial weather (2.1.79)
 
-`celestial-weather-updated` remains recommended. The installed
-`celestial-weather-additions-updated` 1.6.0 reports a direct conflict with
-the base fork even though public 1.3.0 metadata declares it required.
-The add-on is withdrawn from Razi's recommendation list until upstream
-correction and a controlled Factorio test. Razi's weather guide detects
-installed source settings and never simulates effects itself.
+Razi now recommends combined **Celestial Weather Next 1.6.0** under the
+mod ID `celestial-weather-additions-updated`. It already includes the
+core and add-on visuals, and explicitly conflicts with the obsolete
+`celestial-weather-updated` fork. Disable the older fork in your enabled
+profile. Razi's read-only journal tracks the Next edition's source settings.
 
 ## Enemy integration
 
@@ -118,3 +117,13 @@ prototype pass strips malformed placement rules on known optional spawners
 without deleting their entities or scripted spawning support. Electric and
 Arachnid routing also checks source placement validity. This is guarded by
 the Lua enemy fixture and still requires an actual Factorio modpack launch.
+
+## Staff side-world and Frozeta notes (2.1.79)
+
+The optional Eneas moon keeps source-owned Unit-05, independent science
+and launch gantry; Razi adds only a fallback connection to Nauvis.
+Shchierbin is relocated to Vibrant's exterior, with a fallback connection
+to Paracelsin that does not cross the physical asteroid belt. Frozeta Nuclear
+Winter is recommended independently of Outer Rim, though its numerous
+required source companions warrant startup and migration testing. Nulla and
+Planet Athos remain excluded until their documented modpack crashes are fixed.

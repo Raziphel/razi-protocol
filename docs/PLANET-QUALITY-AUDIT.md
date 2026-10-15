@@ -1,6 +1,6 @@
-# Planet Quality Gate (reviewed 2026-10-14)
+# Planet Quality Gate (reviewed 2026-10-15)
 
-**Current curated dev version:** Razi Protocol 2.1.67.
+**Current curated dev version:** Razi Protocol 2.1.79.
 
 This is a source-code, campaign integration, and publicly described mod-mechanics review. It is **not** proof that the entire Factorio 2.1 + K2SO stack has loaded or that every saved-game path is completable.
 
@@ -17,7 +17,7 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 | Nyxaris | Gleba, Moshine, Apia/Carnova, Foliax, Rabbasca, Velora; Pelagos/Dea Dia when installed | Retain contrasting biological/computational/optional expeditions. |
 | Nyxaris | Panglia | **Restore, required (0.7.2+)**. Timewarp-powered industry, DNA sampling, cloning, and simulation create a substantial post-Moshine industrial puzzle; keep its native tech costs and test beta stability. |
 | Vibrant | Fulgora, Ribbonia, Paracelsin, Ferrum and Khemia where installed | Retain their electrical/ringworld/cryogenic and specialty industries. |
-| Vibrant | Shchierbin | **Exclude.** Comparatively limited vanadium detour; preserve the larger asteroid belt's gameplay by connecting its outer side directly to Paracelsin. |
+| Vibrant | Shchierbin | **Optional.** Staff-supported vanadium side branch after Paracelsin, beyond the asteroid belt, with native source science. |
 | Vespera | Muria, Aquilo, Rubia, Maraxsis, Obsidiax, Balack | Retain the cold, corrosive, submerged and high-risk challenges. Balack does not require Wit. |
 | Vespera | Nulla | **Exclude.** Nulla 1.0.2 dereferences a missing vanilla electric-furnace prototype in its radio-interference final-fixes pass and prevents the curated full pack from loading. |
 | Beetlejuice | Cubium, Linox, Secretas, Frozeta | Retain specialized constrained factories and salvage. |
@@ -26,10 +26,10 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 
 ## Integration implemented
 
-- The required `info.json` now includes `panglia_planet >= 0.7.2`; `nulla`, `PlanetAthos`, `biological-machines-planet-wit` and `shchierbin` are explicitly incompatible. Muluna stays required.
+- The required `info.json` now includes `panglia_planet >= 0.7.2`; `nulla`, `PlanetAthos`, and `biological-machines-planet-wit` are incompatible; Eneas and Shchierbin are now optional. Muluna stays required.
 - Muluna remains mandatory; Wit-specific discoveries, routes, production exchanges, atlas catalog entries and quests are removed. Balack's independent integration remains.
 - Nyxaris's late chapter now requires Panglia discovery after Moshine and Apia-Carnova, preserving the native datacell/foundry costs. Panglia has cargo routes to Moshine and Apia-Carnova; optional Pelagos remains accessible from Moshine and receives an additional Panglia cargo link.
-- Vibrant's native AsteroidBelt retains its hazardous source-owned inner/outer crossing. The outer waypoint now routes to Paracelsin, which still requires belt research. Shchierbin science, route, dossiers, quests and prerequisite gates are gone.
+- Vibrant's native AsteroidBelt retains its hazardous source-owned inner/outer crossing. The outer waypoint now routes to Paracelsin, which still requires belt research. Required Shchierbin research gates remain removed; its optional Paracelsin side route is restored without forcing its science.
 - Campaign pair gateways and later Beetlejuice/Umbra access use their remaining actual predecessor worlds. New system and technology names are preserved to avoid unnecessary save migration.
 - Affected regression fixtures, locale labels, science cards, production validation and route-distance expectations are updated.
 
