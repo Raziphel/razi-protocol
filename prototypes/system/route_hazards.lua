@@ -1,14 +1,14 @@
 -- Route danger levels for the map legend and hover text.
 -- Uses the asteroid spawn definitions without changing them.
 local M = {}
--- Shared low-saturation hazard palette for the starmap legend, route
--- tooltips and static connected line artwork. Mirrors real asteroid sizes.
+-- Restrained severity palette based on actual hostile asteroid sizes.
+-- Danger, tooltip and map line colors share this one authoritative table.
 local colors = {
-  {r=.42,g=.64,b=.77}, -- none / no recorded hostile spawns: slate blue
-  {r=.38,g=.70,b=.68}, -- small: sea glass
-  {r=.48,g=.76,b=.54}, -- medium: sage
-  {r=.94,g=.73,b=.38}, -- big: brass
-  {r=.92,g=.43,b=.36}  -- huge or dense big: vermilion
+  {r=.41,g=.56,b=.63}, -- unknown/safe: desaturated blue-grey
+  {r=.36,g=.67,b=.76}, -- small: cool blue
+  {r=.39,g=.72,b=.49}, -- medium: clear green
+  {r=.91,g=.72,b=.32}, -- big: caution amber
+  {r=.89,g=.39,b=.32}  -- huge or dense big: muted signal red
 }
 local belt_color = colors[4]
 

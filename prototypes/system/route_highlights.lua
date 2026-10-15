@@ -10,22 +10,22 @@ local reconcile=require("prototypes.system.route_reconcile")
 local SHEET="__razi-protocol__/graphics/route-highlights/continuous-strokes.png"
 local CELL=128            -- eight columns / eight rows, 64 bearings
 local PIXELS=110          -- continuous anti-aliased line in each 128px cell
-local SEGMENT=4.75        -- target distance between joined line segments
-local MAX_SEGMENTS=64     -- very long / anomalous connections remain native
+local SEGMENT=3.5        -- target distance between joined line segments
+local MAX_SEGMENTS=88     -- very long / anomalous connections remain native
 local MAX_SPAN=7.25       -- do not magnify sprites into thick dotted tails
-local LAYER_BUDGET=800    -- static sprite budget, no runtime or tick cost
+local LAYER_BUDGET=720    -- static sprite budget, no runtime or tick cost
 local PI=math.pi
 local TAU=2*PI
 local abs,sqrt,sin,cos=math.abs,math.sqrt,math.sin,math.cos
 
--- Five evidence-based risk colors: slate-blue, sea-glass, sage, brass,
--- and weathered vermilion. Avoid high-saturation neon and chapter rainbows.
+-- Risk classification inspired by Space Route Overlay's asteroid-based
+-- colors. Our own geometry and atlas remain entirely Razi-owned.
 local danger_colors=hazards.colors
 -- Campaign mode remains supported, but cannot hide major hazards.
 local chapter_colors={
-  {r=.55,g=.69,b=.77}, {r=.54,g=.73,b=.69},
-  {r=.75,g=.69,b=.54}, {r=.70,g=.63,b=.75},
-  {r=.76,g=.66,b=.69}
+  {r=.48,g=.59,b=.65}, {r=.45,g=.60,b=.62},
+  {r=.59,g=.59,b=.49}, {r=.58,g=.55,b=.64},
+  {r=.65,g=.59,b=.60}
 }
 local chapter_tiers={
   calidus=1,solaris=2,nyxaris=2,vibrant=3,vespera=3,
@@ -205,10 +205,13 @@ function M.strokes_for_connection(route,mode,scope)
 
   local rank=M.threat_tier(route)
   local color=M.color_for_route(route,mode)
-  local opacity=({.19,.20,.23,.29,.34})[rank]
-  if scope=="all" and not major then opacity=opacity*.69 end
-  if mode=="chapter" and rank<4 then opacity=opacity*.76 end
-  if hazards.is_belt_crossing(route) then opacity=math.max(opacity,.32) end
+  -- The overlay is an annotation *beside* Factorio's native route,
+  -- never a competing rainbow path. Keep ordinary corridors quiet.
+  -- Only heavy hostile asteroids merit brighter emphasis.
+  local opacity=({.105,.14,.19,.25,.30})[rank]
+  if scope=="all" and not major then opacity=opacity*.66 end
+  if mode=="chapter" and rank<4 then opacity=opacity*.80 end
+  if hazards.is_belt_crossing(route) then opacity=math.max(opacity,.26) end
 
   local sprites={}
   for i=0,count-1 do
@@ -221,7 +224,7 @@ function M.strokes_for_connection(route,mode,scope)
       local tile=math.floor(bearing/PI*64+.5)%64
       -- Overlap by ~.30 map units. The line texture has tapered ends,
       -- so this closes pixel seams without creating bright join dots.
-      local rendered_span=span+.30
+      local rendered_span=span+.18
       sprites[#sprites+1]={
         type="sprite",filename=SHEET,
         x=(tile%8)*CELL,y=math.floor(tile/8)*CELL,

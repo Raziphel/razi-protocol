@@ -52,13 +52,13 @@ check(M.color_for_route(huge,"chapter")==red,
  "Optional chapter colors must never conceal huge asteroids")
 local sheet="__razi-protocol__/graphics/route-highlights/continuous-strokes.png"
 local line=M.strokes_for_connection(safe,"danger","all")
-check(#line>5 and #line<=64,"Safe interstellar path must be joined and sampled")
+check(#line>5 and #line<=88,"Safe interstellar path must be joined and sampled")
 for _,s in ipairs(line) do
  check(s.filename==sheet and s.size[1]==128,
   "Stroke must use new compact 64-bearing atlas")
  check(s.x>=0 and s.y>=0 and s.x<=896 and s.y<=896,
   "Atlas tile should fit 1024x1024 texture")
- check(s.scale>0 and s.scale<3 and s.tint.a<=.35,
+ check(s.scale>0 and s.scale<3 and s.tint.a<=.30,
   "Stroke must stay narrow and subdued")
  check(s.shift[1]==s.shift[1] and s.shift[2]==s.shift[2],
   "No invalid coordinates")
@@ -98,7 +98,7 @@ raw["space-connection"].long=long
 local atlas=raw["utility-sprites"].default.starmap_star.layers
 check(M.data_final_fixes()==4,
  "All scope should paint all four valid real native paths")
-check(atlas[2].tint.a>=.32,"Belt hazard should get priority")
+check(atlas[2].tint.a>=.26,"Belt hazard should get priority")
 local count=#atlas
 check(M.data_final_fixes()==0 and #atlas==count,
  "Multiple data passes cannot stack duplicate overlays")
