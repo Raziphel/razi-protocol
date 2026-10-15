@@ -216,6 +216,12 @@ require("prototypes.compat.frontier_companions").data_final_fixes()
 -- recovery charter. No additional laboratory or substitute science pack.
 require("prototypes.compat.frontier_recovery").data_final_fixes()
 
+-- All Razi technology passes have now run. Repeat the narrow Secretas
+-- bootstrap repair so a later weave cannot reintroduce the golden/recycler
+-- feedback loop; report any remaining independently authored tech cycles.
+require("prototypes.compat.prototype_sanity").restore_secretas_science_bootstrap()
+require("prototypes.compat.athos_cycle_guard").repair("after-all-razi-technology")
+
 -- Late source mods may leave spawner autoplace tables with no required
 -- probability expression. Repair only known optional enemy nests, keeping
 -- their existing units and spawn recipes rather than breaking mod startup.

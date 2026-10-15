@@ -1,3 +1,13 @@
+Version: 2.1.86
+Date: 15. 10. 2026
+  Secretas Golden Science / steam recycler prerequisite cycle:
+    - Prevent the golden-science-pack <-> steam-recycler research cycle detected by Factorio after the Athos recursion fixes.
+    - Respect Secretas's native progression: mine spaceship scrap to research the steam recycler and unlock gold plates, then craft 20 gold plates to unlock Golden Science.
+    - Remove only the reversed golden-science-pack prerequisite from steam-recycler when the source's authentic mining/crafting triggers and gold plate recipe unlock are present.
+    - If a longer reverse dependency remains, omit Razi's extra gate rather than create another loop.
+    - Recheck at the final research stage and add source-aware regression fixtures; preserve Athos, Nulla and all native science content.
+    - Local fixture tests and full in-game startup are still required; CI stays manual only.
+
 Version: 2.1.85
 Date: 15. 10. 2026
   Fix original 2.1.83 Planet Athos stack-overflow crash:

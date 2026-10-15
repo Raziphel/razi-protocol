@@ -1153,3 +1153,24 @@ that space-science still depends on Muluna, checks no additional progress
 research gets removed, and proves unrelated cycles are not silently
 modified. Offline replay of the crash graph removes both strongly-connected
 cycles. Real Factorio startup and full-save testing remain required.
+
+## 2.1.86: Secretas Golden Science bootstrap cycle
+
+The 2.1.85 engine startup passed Athos's recursive technology dump and reached
+the game engine's own cycle validator, which rejected
+`golden-science-pack -> steam-recycler -> golden-science-pack`.
+Razi's `prototype_sanity.lua` caused one direction by unconditionally
+appending `steam-recycler` to Golden Science's prerequisites.
+
+Secretas's original technologies have the reverse **production** relationship:
+mining spaceship scrap triggers Steam Recycler, which unlocks the gold plate
+recipe; crafting 20 gold plates triggers Golden Science. To preserve that
+original source behavior, Razi 2.1.86 first removes an externally injected
+`golden-science-pack` prerequisite from `steam-recycler`, verifies source
+triggers and the gold plate unlock, then safely keeps the forward
+`golden-science-pack -> steam-recycler` requirement. If a longer reverse
+research path survives, it omits the Razi gate instead. All unrelated native
+Secretas discoveries, technologies, recipe unlocks and triggers remain intact.
+
+Repeat on a copied save with a real Factorio 2.1.21+ executable. The source
+and static assertions are not a substitute for a complete full-modpack load.
