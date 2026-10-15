@@ -241,9 +241,19 @@ function bellicos.reconcile_final_positions()
   local art=reconcile_baked_art()
   local _,pulsar=plan_expedition()
   local near=near_orbit()
-  local nx,ny=near and native_point(near)
+  -- A Lua 'and' expression returns ONE value even when native_point()
+  -- returns x,y. 'local nx,ny=near and native_point(near)' always leaves
+  -- ny nil and crashes the Factorio data stage when Bellicos is present.
+  local nx,ny
+  if near then
+    nx,ny=native_point(near)
+  end
   local drift
-  if pulsar and nx then
+  -- This is diagnostics only. Optional/retyped source prototypes must
+  -- never be allowed to abort the entire modpack during loading.
+  if type(pulsar)=="table"
+    and type(pulsar.x)=="number" and type(pulsar.y)=="number"
+    and type(nx)=="number" and type(ny)=="number" then
     drift=math.sqrt((nx-pulsar.x)^2+(ny-pulsar.y)^2)
     if drift>5 and type(log)=="function" then
       log(("[Razi Protocol/Bellicos] WARNING: Near orbit %.2f units from pulsar; expected <= 5"):format(drift))
