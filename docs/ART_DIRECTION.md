@@ -1,3 +1,51 @@
+## Starmap overlay: continuous, subdued hazard corridors (October 2026)
+
+Inspired by the documented behavior and screenshots of valent125's
+[Space Route Overlay](https://mods.factorio.com/mod/space-route-overlay),
+not its code or source textures: assign route colors from actual final
+`space-connection.asteroid_spawn_definitions`, then overlay the real
+line/arc geometry. Razi owns its implementation. Keep the external overlay
+incompatible to prevent duplicate line sets.
+
+Razi's **danger** palette matches physical travel conditions:
+
+| Largest active asteroid exposure | Route accent |
+| --- | --- |
+| No hostile asteroids | Dusty slate blue |
+| Small | Muted sea-glass teal |
+| Medium | Sage green |
+| Big | Weathered brass amber |
+| Huge or dense big | Restrained vermilion |
+
+Belt crossings have a **minimum amber caution** even when other mods do
+not publish spawn definitions; confirmed huge asteroids still render red.
+A chapter setting exists for players who prefer expedition colors, but
+high-risk routes never get recolored as safe. The same five danger colors
+are shared with the native route tooltip hazard catalog.
+
+The rendering source is `prototypes/system/route_highlights.lua`.
+It reads **final** prototype positions and never changes space
+connections, hazards or platform rules. All sprite output is generated
+once during data-final-fixes; there is no per-tick script rendering.
+A replacement 64-angle sprite atlas now lives at
+`graphics/route-highlights/continuous-strokes.png`, generated using
+`node scripts/generate_route_stroke_atlas.js`. Each tapered stroke
+overlaps its neighbor slightly, avoiding hard segment gaps and dotted
+tails. Transparency is antialiased; texture uses indexed alpha to keep
+the bundled mod small.
+
+The default **Major** scope draws verified Razi hub corridors and actual
+belt crossings; optional **All** adds color to valid source-owned
+routes at reduced opacity. We never paint decorative trails on
+Carna, Gleba or Velora; ambiguous polar arcs and impossible long
+connections remain untouched native lines rather than guessed or dotted.
+A static layer limit prioritizes belts and severe hazards when crowded.
+
+Both the original native route and its tooltips remain clickable. Verify
+map positioning and hover interactions at zoomed-in/out scales using the
+installed Factorio 2.1 modpack; static tests cannot validate the actual
+in-game renderer.
+
 ## Convergence mandates: engineered hardware, not glowing artifacts (October 2026)
 
 All five Convergence stage illustrations have been replaced in place as
