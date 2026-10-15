@@ -1,5 +1,8 @@
 # FluxWorks: Seven-System Industrial Atlas
 
+> **Design intent:** FluxWorks rewards specialized factories and cross-system cooperation without replacing Razi Protocol's authored campaign gates or the source mod's actual machines and recipes. See [Developer Handbook](DEVELOPER_HANDBOOK.md), [Architecture](ARCHITECTURE.md) and [Localization](LOCALIZATION.md). Its workshop journal entries are descriptions of research, not proof of completed production.
+
+
 FluxWorks is an optional industrial companion to Razi Protocol. The Protocol controls exploration, the star map, mandatory research gates, science progression, and victory. FluxWorks contributes unique machines, Flux production, advanced components, and industrial rewards.
 
 This pass gives players a useful, **optional factory specialization in each of the seven primary star systems**. These are not new world unlocks and none are prerequisites of native research or Razi's story.
