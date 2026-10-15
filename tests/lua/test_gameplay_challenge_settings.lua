@@ -1,7 +1,10 @@
 -- Tests of the new challenge presets. They must preserve safe defaults
 -- and never let higher settings change custom asteroid species.
-local calls={}
+package.path="./?.lua;./?/init.lua;"..package.path
 local original_settings=rawget(_G,"settings")
+local fake={nauvis_fulgora={},spawn_definitions=function() return {} end}
+package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]=fake
+package.loaded["prototypes.system.asteroid_profiles"]=nil
 local function resolve(pop,belt)
   rawset(_G,"settings",{startup={
     ["razi-asteroid-population"]={value=pop},

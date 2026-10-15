@@ -1,3 +1,11 @@
+Version: 2.1.115
+Date: 15. 10. 2026
+  Settings menu title and regression stability:
+    - Localize the native settings header as 🌐 ! Razi Protocol.
+    - Make the offline asteroid options test self-contained with a mock
+      of Factorio's engine-owned asteroid spawn module.
+    - Internal mod ID stays unchanged; engine sorting is not guaranteed.
+
 Version: 2.1.114
 Date: 15. 10. 2026
   Gameplay choice and settings discovery:
