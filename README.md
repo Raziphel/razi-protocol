@@ -1,3 +1,37 @@
+# Razi Protocol
+
+**A curated seven-system Factorio 2.1 Space Age expedition.** Razi Protocol weaves source-owned planets and machines into a cohesive campaign: meaningful planetary research, challenging interstellar logistics, readable space routes, a unified Expedition Journal and a construction-driven deep-space finale.
+
+**For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
+
+## What we are building
+
+- **Progression with purpose:** Seven primary systems, valuable side worlds and genuine research dependencies that reward industrial specialization rather than pointless complexity.
+- **Exploration that makes geographical sense:** coherent interstellar branches, deliberate dangerous crossings and artwork that communicates real route conditions.
+- **Story attached to gameplay:** the Expedition Journal's Quests, Projects and recovered records reflect real technologies, player milestones and physical megaprojects.
+- **A long-form finale:** advanced science and coordinated remote factories culminate in Deep Space and the Convergence Mandates; research alone is not an invented victory.
+- **Performance and compatibility by design:** source-mod authority, guarded optional integrations, stable saves, configurable features and minimal runtime overhead.
+
+## Developer documentation
+
+| Guide | Read it for |
+| --- | --- |
+| [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) | Design intentions, player journey, principles and decision checklist |
+| [Contributing](CONTRIBUTING.md) | Change process, writing, translating and pull requests |
+| [Architecture](docs/ARCHITECTURE.md) | Module boundaries, source ownership and safe integration |
+| [Expedition Journal](docs/EXPEDITION_JOURNAL.md) | Quest/project/transmission behavior and UX |
+| [Localization](docs/LOCALIZATION.md) | Writing lore and translations in the split locale files |
+| [Art Direction](docs/ART_DIRECTION.md) | Starmap, route overlays and deliberate visual hierarchy |
+| [Distributed Technology](docs/DISTRIBUTED_TECHNOLOGY.md) | Moving technology gates without circular progression |
+| [Settings](docs/SETTINGS.md) | Supported toggles, defaults and performance choices |
+| [Validation](docs/VALIDATION.md) | Regression tests and manual game checks |
+
+**Status note:** This README also contains chronological implementation records below. They document past changes, not an always-current guarantee about the loaded modpack. Confirm current behavior from source and live Factorio testing.
+
+---
+
+## Historical development notes
+
 **2.1.88: Red dotted starmap trails removed at the source.** A final
 atlas pass removes Orbital Catapult's independent starmap ribbon sprites,
 lingering Carna/Velora orbit decorations, and stray red Razi highlights
