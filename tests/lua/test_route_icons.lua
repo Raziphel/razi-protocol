@@ -10,7 +10,7 @@ local external_layers = {{icon = "__external__/graphics/layer.png", icon_size = 
 rawset(_G, "data", {raw = {['space-connection'] = {
 	planetary = {from = "nauvis", to = "vulcanus", length = 15000},
 	interstellar = {from = "sye-solaris", to = "sye-nyxaris", shape = "line"},
-	asteroid = {from = "razi-vespera-belt-inner", to = "razi-vespera-belt-outer"},
+	asteroid = {from = "razi-umbra-belt-inner", to = "razi-umbra-belt-outer"},
 	deep = {from = "secretas", to = "solar-system-edge", length = 155000},
 	external = {icon = external_icon, icon_size = 128},
 	layered = {icons = external_layers}

@@ -7,7 +7,7 @@ local M={}
 M.chapter_groups={
   {key="a[first-frontier]",techs={"solaris-discovery","nyxaris-discovery"}},
   {key="b[middle-frontier]",techs={"vibrant-discovery","vespera-discovery",
-    "space-discovery-asteroid-belt","razi-vespera-belt-survey"}},
+    "space-discovery-asteroid-belt"}},
   {key="c[outer-frontier]",techs={"beetlejuice-discovery","umbra-discovery",
     "razi-umbra-belt-survey","razi-outer-frontier-mastery"}},
   {key="d[deep-space]",techs={"razi-singularity-theory",

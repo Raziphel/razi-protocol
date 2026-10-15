@@ -25,7 +25,6 @@ OPTIONAL = re.compile(
     r'\{name="([^"]+)",star="([^"]+)",radius=([0-9.]+),turn=([0-9.]+)\}'
 )
 BELTS = {
-    "razi-vespera-belt-inner", "razi-vespera-belt-outer",
     "razi-umbra-belt-inner", "razi-umbra-belt-outer",
 }
 SYSTEMS = ("solaris", "nyxaris", "vibrant", "vespera", "beetlejuice", "umbra")
@@ -155,7 +154,7 @@ def report(anchors, routes):
         )
     output["belt_separation"] = {
         name: round(distance(coords[name + "-inner"], coords[name + "-outer"]), 1)
-        for name in ("razi-vespera-belt", "razi-umbra-belt")
+        for name in ("razi-umbra-belt",)
     }
     output["note"] = (
         "Chord warnings are approximate: Factorio draws curved local "

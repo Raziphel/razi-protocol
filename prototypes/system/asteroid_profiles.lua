@@ -25,9 +25,6 @@ local presets = {
   outer_void_deep={"gleba_aquilo",1.42,"fulgora_aquilo","carbonic"},
   deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"},
   belt_vibrant_crossing={"gleba_aquilo",1.32,"fulgora_aquilo","metallic"},
-  belt_vespera_approach={"gleba_aquilo",1.20,"fulgora_aquilo","oxide"},
-  belt_vespera_crossing={"gleba_aquilo",1.48,"fulgora_aquilo","oxide"},
-  belt_vespera_departure={"gleba_aquilo",1.19,"fulgora_aquilo","oxide"},
   belt_umbra_approach={"aquilo_solar_system_edge",1.42,"fulgora_aquilo","carbonic"},
   belt_umbra_crossing={"aquilo_solar_system_edge",1.72,"fulgora_aquilo","carbonic"},
   belt_umbra_departure={"aquilo_solar_system_edge",1.40,"fulgora_aquilo","carbonic"}
@@ -48,9 +45,6 @@ local size_tiers = {
   outer_industry_deep="outer_deep", outer_void_deep="outer_deep",
   deep_edge="edge",
   belt_vibrant_crossing="belt_middle",
-  belt_vespera_approach="middle_deep",
-  belt_vespera_crossing="belt_middle",
-  belt_vespera_departure="middle_deep",
   belt_umbra_approach="outer_deep",
   belt_umbra_crossing="belt_outer",
   belt_umbra_departure="outer_deep"
@@ -113,7 +107,6 @@ end
 -- designated belt crossings, guarded by the actual installed prototypes.
 local belt_escalations = {
   belt_vibrant_crossing={big=0.0035},
-  belt_vespera_crossing={big=0.007},
   belt_umbra_crossing={big=0.010, huge=0.0008}
 }
 local function add_belt_size_encounters(definitions, profile)
@@ -164,18 +157,16 @@ function M.cap_sizes(location_or_route, maximum)
   location_or_route.asteroid_spawn_definitions = detached
 end
 
--- Razi's three belts specialize in real native Space Age resources.
+-- Razi's two belts specialize in real native Space Age resources.
 -- These are data-stage weights, not a new asteroid species or runtime spawner.
 -- Safe rims are strongest in their local material; the dangerous middle of
 -- the crossing contains a smaller, valuable seam of the same material.
 M.belt_resources={
   vibrant={metallic=1.85,carbonic=0.70,oxide=0.90},
-  vespera={metallic=0.75,carbonic=0.90,oxide=1.95},
   umbra={metallic=0.65,carbonic=1.90,oxide=1.20}
 }
 local belt_crossing_rates={
   vibrant={metallic=0.028,carbonic=0.011,oxide=0.014},
-  vespera={metallic=0.012,carbonic=0.017,oxide=0.032},
   umbra={metallic=0.014,carbonic=0.034,oxide=0.024}
 }
 local families={"metallic","carbonic","oxide"}

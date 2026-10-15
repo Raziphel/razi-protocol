@@ -163,7 +163,6 @@ for _,entry in ipairs({
     "Optional planet native origin not relocated: "..name)
 end
 for key,orientation in pairs({
-  ["razi-vespera-belt-inner"]=.25,["razi-vespera-belt-outer"]=.75,
   ["razi-umbra-belt-inner"]=.25,["razi-umbra-belt-outer"]=.25,
   ["sye-solaris"]=.75,["sye-nyxaris"]=.75,
   ["apia-carnova-orbit"]=.75,["crucible-orbit"]=.75,

@@ -1,10 +1,9 @@
--- Belt entrances and hazards for Vibrant, Vespera and Umbra.
+-- Physical asteroid belts for Vibrant and Umbra only.
 -- Keep the old Vibrant IDs so existing saves still find their waypoints.
 local hazards=require("prototypes.system.asteroid_profiles")
 local icon="__space-age__/graphics/icons/solar-system-edge.png"
 local belts={
   {system="vibrant",solar=35,intensity=1.18,legacy=true},
-  {system="vespera",solar=23,intensity=1.40},
   {system="umbra",solar=17,intensity=1.85}
 }
 local locations={}
@@ -18,8 +17,8 @@ for _,belt in ipairs(belts) do
       radius=edge=="inner" and 31 or 39
       turn=edge=="inner" and 0.77 or 0.775
     else
-      local distance=belt.system=="vespera" and 22.0 or 22.3
-      local bearing=belt.system=="vespera" and 0.32 or 0.21
+      local distance=22.3
+      local bearing=0.21
       local offset=edge=="inner" and -1 or 1
       radius=distance+offset*1.1
       turn=bearing+offset*0.015

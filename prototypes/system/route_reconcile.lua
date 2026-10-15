@@ -21,8 +21,6 @@ local membership = {
 	["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
 	paracelsin = "vibrant",
 	["sye-vespera"] = "vespera", muria = "vespera", aquilo = "vespera",
-	["razi-vespera-belt-inner"] = "vespera",
-	["razi-vespera-belt-outer"] = "vespera",
 	rubia = "vespera", maraxsis = "vespera",
 	-- Beetlejuice and Umbra.
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice",
@@ -102,14 +100,11 @@ local route_specifications = {
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
 	{"asteroid-belt-outer-edge", "paracelsin", 14000, "chemistry_deep"},
-  -- The survey-gated debris crossing opens two separate outer routes:
-  -- Rubia then greenhouse-warmed Maraxsis, and directly frozen Aquilo.
+  -- Direct inhabited-world network without artificial belt waypoints.
   {"sye-vespera", "muria", 19000, "cryogenic"},
-  {"muria", "razi-vespera-belt-inner", 15500, "belt_vespera_approach"},
-  {"razi-vespera-belt-inner", "razi-vespera-belt-outer", 6500, "belt_vespera_crossing"},
-  {"razi-vespera-belt-outer", "rubia", 10500, "belt_vespera_departure"},
-  {"razi-vespera-belt-outer", "aquilo", 28000, "cryogenic_deep"},
+  {"muria", "rubia", 24500, "cryogenic_deep"},
   {"rubia", "maraxsis", 24000, "cryogenic_deep"},
+  {"rubia", "aquilo", 26000, "cryogenic_deep"},
 	-- Beetlejuice's remote industrial strand.
 	{"sye-beetlejuice", "cubium", 18000, "outer_industry"},
 	{"cubium", "linox-planet_linox", 17000, "outer_industry"},
@@ -133,10 +128,8 @@ local route_specifications = {
 	{"vesta", "solar-system-edge", 185000, "deep_edge"}
 }
 
--- Paths replaced by physical belt detours. Retain original modded
--- asteroid-resource entries on the new dangerous central crossing.
+-- Only Umbra keeps a retired inner-to-outer shortcut and its physical crossing.
 local retired_belts = {
-  {"aquilo", "rubia", "razi-vespera-belt-inner", "razi-vespera-belt-outer"},
   {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
 }
 

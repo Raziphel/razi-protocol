@@ -8,7 +8,7 @@ ASSET=ROOT/"graphics/starmap/razi"
 NON_BACKGROUND_ASSETS={"calidus-dyson-stages.png"}
 SYSTEMS=("calidus","solaris","nyxaris","vibrant","vespera",
          "beetlejuice","umbra","deep-space")
-BELTS=("vibrant","vespera","umbra")
+BELTS=("vibrant","umbra")
 
 def inspect_png(path):
     buf=path.read_bytes()
@@ -46,7 +46,7 @@ class StarmapBackgroundTests(unittest.TestCase):
         names += ["atlas-halo.png","atlas-belt.png"]
         names += [f"atlas-dust-{i}.png" for i in range(1,4)]
         names += [f"atlas-starfield-{i}.png" for i in range(1,5)]
-        self.assertEqual(len(names),43)
+        self.assertEqual(len(names),41)
         self.assertEqual(
             {f.name for f in ASSET.glob("*.png")},
             set(names) | NON_BACKGROUND_ASSETS,

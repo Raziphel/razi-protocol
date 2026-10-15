@@ -29,22 +29,19 @@ class StarmapReadabilityTests(unittest.TestCase):
         self.assertTrue(any(r["source"] == "vulcanus" and
                             r["destination"] == "hyarion" for r in self.routes))
 
-    def test_belt_entrances_keep_visual_and_real_gates(self):
-        gaps = self.report["belt_separation"]
-        self.assertGreater(gaps["razi-vespera-belt"], 8)
-        self.assertGreater(gaps["razi-umbra-belt"], 8)
-        routes = {(r["source"], r["destination"]) for r in self.routes}
-        for system in ("vespera", "umbra"):
-            self.assertIn((f"razi-{system}-belt-inner",
-                           f"razi-{system}-belt-outer"), routes)
-        layout = (ROOT / "prototypes/system/galaxy_layout.lua").read_text()
-        self.assertIn('["razi-vespera-belt-inner"]=0.25', layout)
-        self.assertIn('["razi-vespera-belt-outer"]=0.75', layout)
+    def test_only_umbra_retains_an_outer_debris_crossing(self):
+        gaps=self.report["belt_separation"]
+        self.assertNotIn("razi-vespera-belt",gaps)
+        self.assertGreater(gaps["razi-umbra-belt"],8)
+        roads={(r["source"],r["destination"]) for r in self.routes}
+        self.assertIn(("razi-umbra-belt-inner","razi-umbra-belt-outer"),roads)
+        for road in (("muria","rubia"),("rubia","maraxsis"),
+                     ("rubia","aquilo")):
+            self.assertIn(road,roads)
 
     def test_vespera_crescent_has_no_crossing_or_obstructed_routes(self):
         # Include the optional worlds that final route authority attaches.
         names = ("sye-vespera", "muria", "aquilo",
-                 "razi-vespera-belt-inner", "razi-vespera-belt-outer",
                  "rubia", "maraxsis", "obsidiax", "bm-balack")
         points = geom.positions(self.anchors)
         local = [(r["source"], r["destination"]) for r in self.routes
@@ -75,9 +72,6 @@ class StarmapReadabilityTests(unittest.TestCase):
                 self.assertGreaterEqual(
                     abs(anchors[a]["radius"] - anchors[b]["radius"]), 3.5,
                     (a, b, "native orbit ring gap"))
-        self.assertGreater(
-            geom.distance(points["razi-vespera-belt-inner"],
-                          points["razi-vespera-belt-outer"]), 14)
         # Nyxaris arrives from the southeast. The side destination should
         # not sit directly on that long interstellar approach.
         self.assertGreaterEqual(
@@ -155,9 +149,9 @@ class StarmapReadabilityTests(unittest.TestCase):
         self.assertIn('pair("obsidiax","sye-vespera")', authority)
         self.assertIn('pair("bm-balack","aquilo")', authority)
         routes = {(r["source"], r["destination"]) for r in self.routes}
-        self.assertIn(("razi-vespera-belt-inner",
-                       "razi-vespera-belt-outer"), routes)
-        self.assertNotIn(("aquilo", "rubia"), routes)
+        self.assertIn(("muria","rubia"),routes)
+        self.assertIn(("rubia","aquilo"),routes)
+        self.assertIn(("rubia","maraxsis"),routes)
 
     def test_no_save_game_or_tick_work(self):
         for name in ("scripts/audit_starmap_readability.py",

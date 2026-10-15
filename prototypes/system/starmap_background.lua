@@ -17,13 +17,8 @@ local systems={
   {name="umbra",art="glow-umbra.png",tint={r=.74,g=.43,b=.27},strength=.25,radius=1.48},
   {name="deep-space",tint={r=.41,g=.58,b=.81},strength=.39,radius=1.88}
 }
--- Each region has ONE dedicated physical-ring texture in Subtle.
--- Vibrant is painted separately in asteroid_belt_integration; the outer
--- stars reuse existing original textures, not recolored generic loops.
--- Cinematic may add one faint debris accent per outer belt.
+-- Vibrant renders its real belt separately; only Umbra has belt art here.
 local belts={
-  {name="vespera",tint={r=.84,g=.87,b=.91},scale=3.03,
-    art="belt-vespera.png",debris="debris-vespera.png",debris_alpha=.085},
   -- Real separately shaded asteroid fragments replace the cloudy ring.
   -- The same single 512px indexed texture follows the physical belt in
   -- Subtle and Cinematic. The old smoke layer is never displayed.
@@ -196,9 +191,7 @@ function M.data_final_fixes()
     or layer.filename==ASSET.."atlas-halo.png"
       or (type(layer.filename)=="string"
         and layer.filename:find(ASSET.."glow-",1,true)==1)
-      or layer.filename==ASSET.."belt-vespera.png"
       or layer.filename==ASSET.."belt-umbra.png"
-      or layer.filename==ASSET.."debris-vespera.png"
       or layer.filename==ASSET.."debris-umbra.png"
       or (type(layer.filename)=="string"
         and layer.filename:find(ASSET.."atlas-dust-",1,true)==1) then return end

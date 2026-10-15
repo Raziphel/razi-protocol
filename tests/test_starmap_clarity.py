@@ -539,48 +539,27 @@ class ConstellationTests(unittest.TestCase):
         self.assertAlmostEqual(y, 20, places=2)
         self.assertGreater(math.dist((x, y), (0, 0)), 15)
 
-    def test_vespera_climate_orbits_and_single_safe_belt(self):
-        # The original ocean world's greenhouse effect permits liquid water
-        # far out, but frozen Aquilo must still be the farthest planet.
+    def test_vespera_has_no_astroid_belt_waypoints(self):
         radius=lambda name:self.anchors[name][1]
-        order=("muria","obsidiax","razi-vespera-belt-inner",
-               "razi-vespera-belt-outer","rubia","maraxsis","aquilo")
-        self.assertEqual(sorted(order,key=radius),list(order))
-        self.assertEqual(radius("obsidiax"),25)
+        self.assertEqual(sorted(("muria","obsidiax","rubia",
+                                 "maraxsis","aquilo"),key=radius),
+                         ["muria","obsidiax","rubia","maraxsis","aquilo"])
+        self.assertAlmostEqual(self.anchors["rubia"][2],.70)
         self.assertEqual(radius("aquilo"),57)
-        self.assertGreater(radius("aquilo"),radius("maraxsis"))
-        nodes=("sye-vespera","muria","aquilo","rubia","maraxsis",
-               "razi-vespera-belt-inner","razi-vespera-belt-outer",
-               "obsidiax","bm-balack")
-        for i,a in enumerate(nodes):
-            for b in nodes[i+1:]:
-                self.assertGreaterEqual(math.dist(self.coords[a],
-                                                  self.coords[b]),10)
+        self.assertFalse(any("razi-vespera-belt" in n for n in self.coords))
         edges={frozenset((a,b)) for a,b,_,_ in self.routes}
-        expected=(("sye-vespera","muria"),
-                  ("muria","razi-vespera-belt-inner"),
-                  ("razi-vespera-belt-inner","razi-vespera-belt-outer"),
-                  ("razi-vespera-belt-outer","rubia"),
-                  ("razi-vespera-belt-outer","aquilo"),
-                  ("rubia","maraxsis"))
-        for a,b in expected:
+        for a,b in (("sye-vespera","muria"),("muria","rubia"),
+                    ("rubia","maraxsis"),("rubia","aquilo")):
             self.assertIn(frozenset((a,b)),edges)
             self.assertGreaterEqual(segment_clearance(
                 self.coords["vespera"],self.coords[a],self.coords[b]),15)
-        for a,b in (("razi-vespera-belt-outer","rubia"),
-                    ("razi-vespera-belt-outer","aquilo"),
-                    ("rubia","maraxsis")):
-            self.assertGreaterEqual(segment_clearance(
-                self.coords["vespera"],self.coords[a],self.coords[b]),
-                36.999, f"{a}-{b} dips into the physical debris ring")
-        for a,b in (("sye-vespera","aquilo"),("muria","aquilo"),
-                    ("aquilo","razi-vespera-belt-inner"),
-                    ("aquilo","rubia")):
-            self.assertNotIn(frozenset((a,b)),edges)
-        survey=(ROOT/"prototypes/technology/asteroid_belts.lua").read_text()
-        self.assertIn('prerequisites={"planet-discovery-muria"}',survey)
+        self.assertNotIn("razi-vespera-belt",
+            (ROOT/"prototypes/system/asteroid_belts.lua").read_text())
+        self.assertNotIn("razi-vespera-belt-survey",
+            (ROOT/"prototypes/technology/asteroid_belts.lua").read_text())
         gates=(ROOT/"prototypes/technology/seven_system_gates.lua").read_text()
-        self.assertIn('{"planet-discovery-muria", "razi-vespera-belt-survey"}',gates)
+        self.assertIn('{"planet-discovery-muria"}',gates)
+        self.assertIn('{"planet-discovery-rubia"}',gates)
 
     def test_umbra_belt_is_real_and_outer_world_is_outside(self):
         # This catches both reversed rim radii and the old overlapping

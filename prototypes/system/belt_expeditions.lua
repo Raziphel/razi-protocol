@@ -8,8 +8,6 @@ local reconcile=require("prototypes.system.route_reconcile")
 M.crossings={
   {system="vibrant",inner="asteroid-belt-inner-edge",
    outer="asteroid-belt-outer-edge",length=5000,pressure=1.25},
-  {system="vespera",inner="razi-vespera-belt-inner",
-   outer="razi-vespera-belt-outer",length=6500,pressure=1.50},
   {system="umbra",inner="razi-umbra-belt-inner",
    outer="razi-umbra-belt-outer",length=8000,pressure=1.70}
 }
@@ -19,7 +17,7 @@ local function exists(id)
 end
 function M.data_final_fixes()
  local routes=data.raw["space-connection"] or {}
- local result={vibrant=false,vespera=false,umbra=false}
+ local result={vibrant=false,umbra=false}
  for _,belt in ipairs(M.crossings) do
   if exists(belt.inner) and exists(belt.outer) then
    local key=reconcile.pair_key(belt.inner,belt.outer)
@@ -38,8 +36,7 @@ function M.data_final_fixes()
  end
  if type(log)=="function" then
   log("[Razi Protocol/belts] Native crossing harvest: Vibrant="..
-    tostring(result.vibrant)..", Vespera="..tostring(result.vespera)..
-    ", Umbra="..tostring(result.umbra))
+    tostring(result.vibrant)..", Umbra="..tostring(result.umbra))
  end
  return result
 end

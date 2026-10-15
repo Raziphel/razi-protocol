@@ -39,8 +39,8 @@ hand-authored graphics rather than substituting a wallpaper image.
 - Vibrant's earlier two-texture ring was later replaced by the three-layer
   broken-rock field described above. The redundant generic atlas ring
   remains disabled, keeping only one physical belt in the starmap.
-- Vespera uses its existing `belt-vespera.png` with optional subtle
-  debris in Cinematic. Umbra now uses a newly redrawn
+- Vespera is belt-free, with no extra decorative smoke or ring layers.
+  Umbra uses a newly redrawn
   `debris-umbra.png` made of separate dark rocky fragments aligned
   with the real 31–39-unit orbital debris band. Neither mode draws
   the former hazy Umbra ring. No fake neon orbit circle remains.

@@ -15,6 +15,20 @@ restricted to approved interstellar waypoints and real physical belt
 crossings; native planet links stay visible as normal gray Factorio
 lines. This does not delete a space-connection or disable travel.
 
+## Vespera without the Debris Divide (October 2026)
+
+Vespera no longer registers the synthetic inner and outer asteroid-belt
+waypoints, their single-purpose technology, its old belt crossing, the
+optional decorative ring, or their resource profiles. A clean direct
+planet network is used instead: Slip Stream → Muria → Rubia; Rubia
+branches to Maraxsis (greenhouse ocean) and Aquilo (distant ice).
+Rubia now sits at turn 0.70 to preserve minimum clearance from the
+stellar disc. Obsidiax remains an optional Slip Stream branch and Balack
+remains connected to Aquilo. The original Vibrant and Umbra physical
+belts are untouched. Existing platform schedules that include the
+removed waypoint IDs should be updated before loading a long-running
+save.
+
 ## Umbra outer gateway and restrained native curves (October 2026)
 
 The previous Slip Stream was at radius 30, intersecting the

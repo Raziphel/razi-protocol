@@ -105,15 +105,11 @@ end
 -- and outer locations are still native, clickable Factorio route endpoints.
 local belt_strokes={
   vibrant={r=.76,g=.59,b=.95}, -- metallic / violet
-  vespera={r=.72,g=.84,b=.96}, -- frost / pearlescent
   umbra={r=.97,g=.54,b=.41}    -- shattered / copper-ember
 }
 function M.color_for_route(route,mode)
   if hazards.is_belt_crossing(route) then
     local a,b=route.from or "",route.to or ""
-    if a:find("razi%-vespera%-belt") or b:find("razi%-vespera%-belt") then
-      return belt_strokes.vespera
-    end
     if a:find("razi%-umbra%-belt") or b:find("razi%-umbra%-belt") then
       return belt_strokes.umbra
     end

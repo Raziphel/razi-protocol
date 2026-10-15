@@ -1,3 +1,12 @@
+## Current Vespera design: no asteroid belt (October 2026)
+
+Vespera's two In/Out space locations, the artificial grey belt and
+its 6,500 km crossing were removed. It now uses direct planetary
+connections: Slip Stream → Muria → Rubia, with Rubia branching toward
+oceanic Maraxsis and icy Aquilo. This decision supersedes all older
+Vespera belt experiments documented below. Vibrant's and Umbra's
+physical asteroid fields are unaffected.
+
 ## Expedition Journal: field dossier, not a command dashboard
 
 Use three quiet folios for Quests, Projects, and recovered Journal entries.

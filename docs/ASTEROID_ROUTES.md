@@ -1,3 +1,11 @@
+## October 2026: Vespera belt retired
+
+The 6,500 km Vespera Debris Divide is no longer generated. It has
+no rim destinations, survey or extra route hazards. Rubia connects
+directly to Muria; Maraxsis and Aquilo branch from Rubia. The
+source Vibrant crossing and Umbra Shattered Divide stay intact.
+Historical belt tables later in this document refer to older builds.
+
 ## Vibrant: one crossing through the rocks (October 2026)
 
 Both native 31/39-unit rim markers are now on the **west side**, near
