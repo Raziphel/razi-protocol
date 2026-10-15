@@ -1,3 +1,26 @@
+## October 2026 route color refinement
+
+Reference: Space Route Overlay 0.2.7 uses actual asteroid spawn sizes
+to derive route colors (small/blue, medium/green, big/yellow,
+huge/red), with special categories for extreme/warp corridors.
+Razi retains its independent route geometry, native real-connection
+tracking, and its single authoritative hazard inspector.
+
+The refreshed palette uses muted blue-grey for routes without recorded
+hostile spawns, blue for small asteroids, green for medium, warm amber
+for big, and restrained red for huge or dense big asteroids. Chapter
+mode stays available but uses quieter neutrals and never suppresses
+high-threat colors. The alpha ladder is now 0.105/0.14/0.19/0.25/0.30,
+so simple travel no longer paints a second loud line across the map.
+Physical asteroid belts have a caution floor of 0.26 opacity.
+
+Strokes are shorter and joined with smaller overlap, reducing the
+noticeable step between directions. The total atlas-layer budget is
+slightly lower. No route connection, entity, asteroid spawn, discovery,
+or travel geometry is modified. The external overlay remains
+incompatible, preventing duplicate decoration. Validate native
+Factorio chart zoom before making further visibility adjustments.
+
 ## Native route freight intelligence (2.1.50)
 
 Native space-connection tooltips now give a **haul distance band** using

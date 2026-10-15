@@ -30,7 +30,7 @@ class BuiltInOverlayTests(unittest.TestCase):
                          "if not cx then", "if abs(sweep)>.95 then return nil end",
                          'table.sort(candidates,function(a,b)',
                          "if layers+#entry.sprites<=LAYER_BUDGET then",
-                         "local rendered_span=span+.30",
+                         "local rendered_span=span+.18",
                          'M.is_navigation_highlight(route,scope)',
                          'reconcile.allowed_pairs[',
                          'unsafe_endpoint={carna=true,gleba=true,velora=true}'):
@@ -47,9 +47,9 @@ class BuiltInOverlayTests(unittest.TestCase):
         self.assertIn("local rank=M.threat_tier(route)",renderer)
         self.assertIn("if mode==\"chapter\" and rank<4",renderer)
         self.assertIn("if M.is_belt_crossing(route) then tier=math.max(4,tier) end",hazard)
-        for tone in ('r=.42,g=.64,b=.77','r=.38,g=.70,b=.68',
-                     'r=.48,g=.76,b=.54','r=.94,g=.73,b=.38',
-                     'r=.92,g=.43,b=.36'):
+        for tone in ('r=.41,g=.56,b=.63','r=.36,g=.67,b=.76',
+                     'r=.39,g=.72,b=.49','r=.91,g=.72,b=.32',
+                     'r=.89,g=.39,b=.32'):
             self.assertIn(tone,hazard)
         options=read("settings.lua")
         self.assertIn('name="razi-route-overlay-mode"',options)
@@ -99,7 +99,7 @@ class BuiltInOverlayTests(unittest.TestCase):
         self.assertIn('graphics/route-highlights/continuous-strokes.png',src)
         self.assertIn("local CELL=128",src)
         self.assertIn("local PIXELS=110",src)
-        self.assertIn("local MAX_SEGMENTS=64",src)
+        self.assertIn("local MAX_SEGMENTS=88",src)
         generator=read("scripts/generate_route_stroke_atlas.js")
         self.assertIn("const CELL=128,COLUMNS=8,BEARINGS=64,LENGTH=110;",generator)
         self.assertIn("chunk(\"tRNS\"",generator)
