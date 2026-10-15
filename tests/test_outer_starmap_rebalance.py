@@ -44,10 +44,10 @@ class OuterMap(unittest.TestCase):
     def test_four_worlds_have_real_system_parents_and_clear_routes(self):
         anchors,point=geometry()
         worlds={
-            "athos":("solaris","vulcanus",15),
+            "athos":("vespera","muria",20),
             "ferrum":("beetlejuice","sye-beetlejuice",20),
-            "obsidiax":("umbra","vesta",39),
-            "shchierbin":("vibrant","paracelsin",39)
+            "obsidiax":("umbra","vesta",49),
+            "shchierbin":("vibrant","paracelsin",47)
         }
         reconciliation=read("prototypes/system/route_reconcile.lua")
         approved=read("prototypes/system/route_authority.lua")
@@ -96,13 +96,17 @@ class OuterMap(unittest.TestCase):
         self.assertIn('"frozeta","ferrum","planet-ferrum"',atlas)
         self.assertIn('"carna","arcanyx","obsidiax"',atlas)
         self.assertIn('{"ferrum","sye-beetlejuice",22500',authority)
-        self.assertIn('{"obsidiax","vesta",19000',authority)
+        self.assertIn('{"obsidiax","vesta",18000',authority)
         self.assertIn('gate="beetlejuice-discovery", hub="sye-beetlejuice"',community)
-        self.assertIn('"obsidiax", "obsidiax", "umbra", "vesta", "umbra-discovery"',optional)
+        self.assertIn('"obsidiax", "obsidiax", "umbra", "vesta", "planet-discovery-vesta"',optional)
         self.assertIn('world="ferrum",requires={"beetlejuice-gate"}',journal)
-        self.assertIn('world="obsidiax",requires={"umbra-gate"}',journal)
+        self.assertIn('world="obsidiax",requires={"vesta"}',journal)
         self.assertNotIn('worlds={"cerys","obsidiax"}',bridge)
         self.assertIn("migrating_ferrum",read("prototypes/system/route_reconcile.lua"))
+        self.assertIn("migrating_athos",read("prototypes/system/route_reconcile.lua"))
+        self.assertIn('{"athos","muria",24000',authority)
+        catalog=read("scripts/galactic_catalog.lua")
+        self.assertIn('vespera={"sye-vespera","muria","athos"',catalog)
         self.assertIn("profiles.preserve_custom(target,route)",authority)
 
 if __name__=="__main__":

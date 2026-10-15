@@ -1,3 +1,23 @@
+## October 2026: Vespera mineral world and outer-orbit cleanup
+
+- Athos has moved from Solaris into Vespera at radius 33 / turn
+  0.565. It is an optional 24,000 km side route off Muria; the main
+  Muria–Rubia–Maraxsis/Aquilo spine remains intact. The source's
+  original Nauvis/Vulcanus connections are retired only after their
+  original custom asteroid resource definitions are preserved on the
+  new approved route. The existing discovery unlock and Particulate
+  Science content remain native; only the obsolete Solaris/Vulcanus
+  discovery prerequisite is replaced by Muria when safe.
+- Shchierbin now follows Paracelsin closely at radius 65 / turn
+  0.675 with an 18,000 km exterior route. Its route stays outside
+  the Vibrant belt and retains its original vanadium gameplay.
+- Obsidiax is now at radius 50 / turn 0.245 in outer Umbra, directly
+  adjacent to Vesta by an 18,000 km exterior connection. No interior
+  asteroid-belt shortcut was added. Both its optional-world integration
+  and the primary star layout now use exactly the same coordinates.
+- Source planet surfaces, native technology IDs, moon orbits, factories,
+  minerals and atmosphere effects are not rewritten.
+
 ## 2.1.87: Outer-systems route and label refinement
 
 **Beetlejuice:** Ferrum's remote-controlled metal industry now occupies a

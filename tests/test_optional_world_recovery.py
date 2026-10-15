@@ -47,8 +47,8 @@ class OptionalRecovery(unittest.TestCase):
         self.assertIn('if not in_cycle[witness]',module)
         self.assertIn('M.bootstrap_repairs=bootstrap_repairs',module)
         self.assertIn('M.find_cycle=find_cycle',module)
-        self.assertIn('{"athos","vulcanus",18000,"starter"}',source("prototypes/system/route_authority.lua"))
-        self.assertIn('{"planet","athos","solaris",39,0.79}',source("prototypes/system/galaxy_layout.lua"))
+        self.assertIn('{"athos","muria",24000,"cryogenic"}',source("prototypes/system/route_authority.lua"))
+        self.assertIn('{"planet","athos","vespera",33,0.565}',source("prototypes/system/galaxy_layout.lua"))
 
 if __name__=="__main__":
     unittest.main()

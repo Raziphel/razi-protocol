@@ -14,14 +14,14 @@ local membership = {
 	fulgora = "vibrant", cerys = "vibrant",
 	-- Solaris and Nyxaris.
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris", igrys = "solaris",
-	hyarion = "solaris", tellus = "solaris", corrundum = "solaris", athos = "solaris",
+	hyarion = "solaris", tellus = "solaris", corrundum = "solaris",
 	["sye-nyxaris"] = "nyxaris", ["apia-carnova-orbit"] = "nyxaris",
 	moshine = "nyxaris", panglia = "nyxaris", pelagos = "nyxaris",
 	-- Vibrant, Vespera.
 	["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
 	paracelsin = "vibrant", shchierbin = "vibrant",
 	["sye-vespera"] = "vespera", muria = "vespera", aquilo = "vespera",
-	rubia = "vespera", maraxsis = "vespera",
+	rubia = "vespera", maraxsis = "vespera", athos = "vespera",
 	-- Beetlejuice and Umbra.
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice", ferrum = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
@@ -321,7 +321,11 @@ function route_reconcile.data_final_fixes()
     local route_pair=key_for(connection.from,connection.to)
     local migrating_ferrum=route_pair==key_for("ferrum","fulgora")
       or route_pair==key_for("ferrum","vulcanus")
-    if not migrating_ferrum and (
+    -- Keep old Athos traffic just long enough for route_authority to
+    -- rescue its original custom asteroid resources onto the Muria spur.
+    local migrating_athos=route_pair==key_for("athos","vulcanus")
+      or route_pair==key_for("athos","nauvis")
+    if not migrating_ferrum and not migrating_athos and (
       bypasses_vibrant_belt(connection.from,connection.to)
       or (from_system and to_system and from_system~=to_system
         and not allowed[route_pair])) then

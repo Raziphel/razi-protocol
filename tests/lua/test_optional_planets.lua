@@ -33,6 +33,7 @@ local function run_fixture(enabled, cycle)
 		["nyxaris-discovery"] = {prerequisites = {}},
 		["vespera-discovery"] = {prerequisites = {}},
 		["umbra-discovery"] = {prerequisites = {}},
+        ["planet-discovery-vesta"] = {prerequisites = {}},
 		["planet-discovery-gleba"] = {prerequisites = {}}
 	}
 	for _, name in ipairs(planet_names) do
@@ -106,7 +107,7 @@ check(not routes["gleba-to-igrys"],
 for _, pair in ipairs({
 	{"igrys", "sye-solaris", "solaris-discovery"},
 	{"foliax", "sye-nyxaris", "nyxaris-discovery"},
-	{"obsidiax", "vesta", "umbra-discovery"},
+	{"obsidiax", "vesta", "planet-discovery-vesta"},
 	{"carna", "sye-umbra", "umbra-discovery"}
 }) do
 	local name, hub, gate = pair[1], pair[2], pair[3]

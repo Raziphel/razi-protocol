@@ -79,6 +79,41 @@ local function replace_requirements(name, prerequisites, science_packs, count)
 end
 
 
+
+-- Planet Athos remains source-owned, but its discovery is now a
+-- Vespera expedition. Resolve the actual unlock effect instead of
+-- guessing the source technology name. Preserve science cost, trigger,
+-- recipes, Athos's particulate technologies and unrelated prerequisites.
+local function rehome_athos_discovery()
+  if not (mods and mods["PlanetAthos"]) or not tech("planet-discovery-muria") then return end
+  for name,source in pairs(data.raw.technology or {}) do
+    local unlocks=false
+    for _,effect in ipairs(source.effects or {}) do
+      if effect.type=="unlock-space-location" and
+        effect.space_location=="athos" then unlocks=true;break end
+    end
+    if unlocks then
+      local retained,seen={},{}
+      for _,prerequisite in ipairs(source.prerequisites or {}) do
+        -- Athos was previously Solaris-adjacent, so its old Vulcanus
+        -- transit gate must not dictate its new Vespera progression.
+        if prerequisite~="planet-discovery-vulcanus"
+          and prerequisite~="solaris-discovery" and not seen[prerequisite] then
+          retained[#retained+1]=prerequisite
+          seen[prerequisite]=true
+        end
+      end
+      if not seen["planet-discovery-muria"] and
+        not reaches("planet-discovery-muria",name) then
+        retained[#retained+1]="planet-discovery-muria"
+      end
+      source.prerequisites=retained
+      return true
+    end
+  end
+  return false
+end
+
 -- Singularity technology prototypes are created in data.lua, before Razi's
 -- card prototypes exist. Add the cards now, once lab_cards has created them.
 local function ensure_transceiver_cards(technology_name, multiplier)
@@ -241,6 +276,9 @@ function gates.data_final_fixes()
     {"planet-discovery-muria"}, frontier, 950)
 	replace_requirements("planet-discovery-maraxsis",
 		{"planet-discovery-rubia"}, frontier, 1100)
+  -- Follow Muria to the source-owned arid Athos branch without demanding
+  -- Solaris travel or changing its native science requirements.
+  rehome_athos_discovery()
 
 	-- The next parallel pair demands both second-tier branches.
 	-- The Razi-owned Vibrant asteroid field is the shared middle-to-outer

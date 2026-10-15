@@ -15,7 +15,7 @@ function M.unlocking(recipe)
   return names[1]
 end
 M.quests={
-  {id="athos-particulate",chapter="solaris",
+  {id="athos-particulate",chapter="vespera",
    tech=M.unlocking("particulate-science-pack") or "particulate-science-pack",
    requires={"athos"}},
   {id="frontier-recovery-charter",chapter="network",

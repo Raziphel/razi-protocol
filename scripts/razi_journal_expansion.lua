@@ -34,7 +34,7 @@ return {
   {id="velora",chapter="outposts",world="velora",requires={"nyxaris-gate"}},
   {id="khemia",chapter="outposts",world="alchemy-planet",weather_world="khemia",requires={"vibrant-gate"}},
   {id="ferrum",chapter="outposts",world="ferrum",requires={"beetlejuice-gate"}},
-  {id="obsidiax",chapter="outposts",world="obsidiax",requires={"umbra-gate"}},
+  {id="obsidiax",chapter="outposts",world="obsidiax",requires={"vesta"}},
   {id="balack",chapter="outposts",world="bm-balack",requires={"vespera-gate"}},
   {id="carna",chapter="outposts",world="carna",requires={"umbra-gate"}},
   {id="arcanyx",chapter="outposts",world="arcanyx",requires={"umbra-gate"}},
