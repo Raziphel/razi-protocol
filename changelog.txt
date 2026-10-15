@@ -1,3 +1,19 @@
+Version: 2.1.92
+Date: 15. 10. 2026
+  Starmap label clearance and accurate short-hop placement:
+    - Place the real Skewer Shattered Planet only 19 chart units almost
+      directly south of its Approach, matching the original 1,000 km journey
+      instead of an 82-unit horizontal gap.
+    - Point Lost Beyond toward the outer north-east and keep it separate
+      from the neighboring Nexus/Oort/Sol corridor.
+    - Fan Aegis Inner Edge, Point Warden, Aegis Outer Edge and Bellicos-side
+      stargate into distinct vertical lanes with alternating label bearings.
+    - Synchronize Bellicos native origin/distance/orientation after
+      PlanetsLib orbit updates, preventing the old flat row from returning.
+    - Add layout and native-position regressions. Preserve route topology,
+      real travel kilometers, source pulsar artwork and existing saves.
+    - No CI runs; actual Factorio zoom validation remains recommended.
+
 Version: 2.1.91
 Date: 15. 10. 2026
   Route map clarity and rectangular green-artifact repair:

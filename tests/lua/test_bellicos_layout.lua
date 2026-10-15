@@ -107,6 +107,41 @@ check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit
   "Native Aegis belt nodes were left behind")
 check(near_locations[gate_b].orbit.parent.name=="near-bellicos-orbit",
   "Remote Bellicos stargate is detached from its destination")
+-- Prevent a regression to the flat row of "Aegis Point Warden" labels.
+-- The native fields must agree with the PlanetsLib source orbit angles.
+local function actual_position(name)
+  local body=near_locations[name]
+  local center=body.origin
+  local angle=body.orientation*2*math.pi
+  return center.x+body.distance*math.sin(angle),
+    center.y-body.distance*math.cos(angle)
+end
+local near_x,near_y=actual_position("near-bellicos-orbit")
+local inner_x,inner_y=actual_position("aegis-inner-edge")
+local point_x,point_y=actual_position("point-warden")
+local outer_x,outer_y=actual_position("aegis-outer-edge")
+local gate_x,gate_y=actual_position(gate_b)
+check(inner_y<near_y-7 and point_y>near_y+9
+  and outer_y>point_y+20 and gate_y>outer_y+14,
+  "Bellicos labels collapsed back onto a horizontal route")
+check(inner_x<point_x and point_x<outer_x and gate_x<outer_x,
+  "Aegis ring/warden/gateway lost their separated lanes")
+for _,name in ipairs({"aegis-inner-edge","point-warden",
+   "aegis-outer-edge",gate_b}) do
+  local body=near_locations[name]
+  local orbit=body.orbit
+  check(body.distance==orbit.distance
+    and body.orientation==orbit.orientation,
+    "PlanetsLib orbit and native coordinate disagree: "..name)
+  check(body.origin.x==near_x and body.origin.y==near_y,
+    "Bellicos child still renders at the original source origin: "..name)
+end
+check(math.abs(near_locations["aegis-inner-edge"].distance-29)<.001
+  and math.abs(near_locations["point-warden"].distance-48)<.001
+  and math.abs(near_locations["aegis-outer-edge"].distance-74)<.001
+  and math.abs(near_locations[gate_b].distance-57)<.001,
+  "Aegis sector distances drifted")
+
 
 local _, alt_locations, alt_planets = run({pulsar="planet"})
 check(alt_planets.pulsar.orbit.parent.name=="solar-system-edge",

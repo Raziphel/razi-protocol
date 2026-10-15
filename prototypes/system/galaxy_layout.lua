@@ -22,12 +22,12 @@ local anchors = {
   -- Shattered Planet southeast and the Black Hole west.
   -- These are visual positions only, not route lengths or travel unlocks.
   {"space-location","shattered-planet","solar-system-edge",140,0.33},
-  -- Skewer's *real* planet and Lost Beyond are a separate source-owned
-  -- journey after the original Shattered Planet Approach. Keep the route
-  -- chain but give its long map captions room to breathe at galaxy zoom.
-  -- No new worlds, unlocks or journey-length edits when Skewer is absent.
-  {"planet","skewer_shattered_planet","shattered-planet",82,0.29},
-  {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.27},
+  -- Skewer's 1,000 km approach-to-planet hop should LOOK short. Rotate
+  -- the actual planet almost due south, rather than 82 chart units east.
+  -- Lost Beyond remains a far-flung north-east expedition, with a distinct
+  -- lane away from the Nexus / Oort / Sol corridor. Route km are unchanged.
+  {"planet","skewer_shattered_planet","shattered-planet",19,0.485},
+  {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.14},
   {"planet","nexus","solar-system-edge",94,0.18},
   {"space-location","black-hole-approach","solar-system-edge",112,0.70},
   {"space-location","black-hole","black-hole-approach",22,0.72},
@@ -450,10 +450,19 @@ function M.data_final_fixes()
     ["razi-umbra-belt-outer"]=0.25,
     ["solar-system-edge"]=0.75,["nexus"]=0.25,
     ["oort-cloud"]=0.75,["sol"]=0.25,
+    -- Opposing labels and a vertical approach keep the two different
+    -- Shattered destinations legible at native Factorio chart zoom.
     ["shattered-planet"]=0.75,["skewer_shattered_planet"]=0.25,
     ["skewer_lost_beyond"]=0.25,["black-hole-approach"]=0.25,
     ["black-hole"]=0.75,
-    ["calidus-bellicos-stargate-calidus"]=0.25
+    ["calidus-bellicos-stargate-calidus"]=0.75,
+    -- The Bellicos locations are staggered in two dimensions. Opposing
+    -- captions prevent Warden and the Aegis belt from sharing one baseline.
+    ["near-bellicos-orbit"]=0.25,
+    ["aegis-inner-edge"]=0.75,
+    ["point-warden"]=0.25,
+    ["aegis-outer-edge"]=0.25,
+    ["calidus-bellicos-stargate-bellicos"]=0.75
   }
   for name,direction in pairs(label_orientations) do
     local marker=exists("space-location",name) or exists("planet",name)

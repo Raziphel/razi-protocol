@@ -132,14 +132,27 @@ class ConstellationTests(unittest.TestCase):
                          "shattered-planet")
         self.assertEqual(self.anchors["skewer_lost_beyond"][0],
                          "skewer_shattered_planet")
-        self.assertGreater(world[0]-approach[0], 75)
-        self.assertGreater(beyond[0]-world[0], 135)
+        # 1,000 km is a very short voyage: do not draw an 82-unit
+        # horizontal line and collide with the Approach's long label.
+        self.assertLess(abs(world[0]-approach[0]), 2)
+        self.assertGreater(world[1]-approach[1], 18)
+        self.assertLess(world[1]-approach[1], 20)
+        self.assertGreater(beyond[0]-world[0], 105)
+        self.assertLess(beyond[1]-world[1], -85)
         self.assertGreater(math.dist(world,beyond), 140)
-        self.assertGreater(math.dist(approach,beyond), 220)
+        self.assertLess(math.dist(approach,world), 20)
+        # Lost Beyond must not sit on the Oort/Sol native corridor.
+        oort=self.coords["oort-cloud"]
+        sol=self.coords["sol"]
+        self.assertGreater(segment_clearance(
+            oort,world,beyond),35)
+        self.assertGreater(segment_clearance(
+            sol,world,beyond),35)
         # Source route lengths and source discovery are intentionally not
         # edited by a cosmetic layout adjustment.
         source=(ROOT/"prototypes/system/galaxy_layout.lua").read_text()
-        self.assertIn('"skewer_lost_beyond","skewer_shattered_planet",145',source)
+        self.assertIn('"skewer_shattered_planet","shattered-planet",19,0.485',source)
+        self.assertIn('"skewer_lost_beyond","skewer_shattered_planet",145,0.14',source)
 
     def test_deep_space_has_distinct_navigation_sectors(self):
         edge = self.coords["solar-system-edge"]

@@ -18,6 +18,9 @@ end
 
 -- Preserve the source pulsar artwork in a distinct northern annex,
 -- beyond Nexus/Oort/Sol. Guard missing or retyped source prototypes.
+-- Set real Factorio origin/distance/orientation in addition to orbit
+-- metadata: PlanetsLib's sprite-baking and prototype cleanup stages can
+-- otherwise leave old horizontal native marker positions behind.
 local function endpoint_type(name)
 	if data.raw["space-location"] and data.raw["space-location"][name] then
 		return "space-location"
@@ -43,13 +46,25 @@ end
 
 local function position_expedition()
   if not endpoint_type("solar-system-edge") then return end
-  local updates={}
+  -- Anchor to Razi's canonical star-chart origin rather than relying on an
+  -- upstream location that may still carry stale absolute coordinates.
+  local layout=require("prototypes.system.galaxy_layout")
+  local edge_x,edge_y=layout.anchor_position("solar-system-edge")
+  if not edge_x then return end
+  local positions={["solar-system-edge"]={x=edge_x,y=edge_y}}
+  local updates,planned={},{}
   local function place(n,parent,r,t,gate)
     local kind,pk=endpoint_type(n),endpoint_type(parent)
-    if not (kind and pk) then return end
-    updates[#updates+1]={type=kind,name=n,
-      orbit={parent={type=pk,name=parent},distance=r,orientation=t},
+    local origin=positions[parent]
+    if not (kind and pk and origin) then return end
+    local orbit={parent={type=pk,name=parent},
+      distance=r,orientation=t}
+    updates[#updates+1]={type=kind,name=n,orbit=orbit,
       draw_orbit=false,redrawn_connections_exclude=gate or nil}
+    planned[#planned+1]={kind=kind,name=n,origin=origin,r=r,t=t}
+    local angle=t*2*math.pi
+    positions[n]={x=origin.x+r*math.sin(angle),
+      y=origin.y-r*math.cos(angle)}
   end
   local near=near_orbit()
   local pulsar=endpoint_type("pulsar") and "pulsar" or nil
@@ -60,13 +75,28 @@ local function position_expedition()
   end
   place(entry_gate,"solar-system-edge",62,0.035,true)
   if near then
-    place(bellicos_gate,near,42,0.32,true)
-    place("aegis-outer-edge",near,52,0.25)
-    place("aegis-inner-edge",near,31,0.25)
-    place("point-warden",near,45,0.36)
-  elseif pulsar then place(bellicos_gate,pulsar,42,0.32,true)
+    -- Distinct bearings for each visible Aegis destination. The short
+    -- inner/warden corridor is no longer horizontal, and the outer rim
+    -- and return stargate form a readable downward arc.
+    place("aegis-inner-edge",near,29,0.205)
+    place("point-warden",near,48,0.285)
+    place("aegis-outer-edge",near,74,0.33)
+    place(bellicos_gate,near,57,0.43,true)
+  elseif pulsar then place(bellicos_gate,pulsar,57,0.43,true)
   else place(bellicos_gate,"solar-system-edge",170,0.055,true) end
   if #updates>0 then PlanetsLib:update(updates) end
+  -- PlanetsLib:update updates orbit data, but some source versions leave the
+  -- Factorio-native absolute fields unchanged. Reconcile them on BOTH
+  -- data.lua and final-fixes so art/labels do not snap back to a flat row.
+  for _,item in ipairs(planned) do
+    local location=(data.raw[item.kind] or {})[item.name]
+    if location then
+      location.origin={x=item.origin.x,y=item.origin.y}
+      location.distance=item.r
+      location.orientation=item.t
+      location.draw_orbit=false
+    end
+  end
 end
 
 function bellicos.data()
