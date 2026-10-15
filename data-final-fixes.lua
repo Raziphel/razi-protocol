@@ -237,3 +237,7 @@ require("prototypes.compat.enemy_autoplace").repair_optional_enemy_autoplace()
 -- Carna/Velora trail sprites after all of Razi's renderers have finished.
 -- This NEVER deletes platform routes, catapult transport, or orbit metadata.
 require("prototypes.system.starmap_trail_cleanup").data_final_fixes()
+
+-- Dedicated Factorio-style Razi gateway and asteroid-rim markers only.
+-- Final cosmetic pass, after all other starmap atlas and route cleanup.
+require("prototypes.system.location_icons").data_final_fixes()
