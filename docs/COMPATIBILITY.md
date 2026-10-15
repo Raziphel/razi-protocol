@@ -51,13 +51,12 @@ load, save migration and practical exploration remain mandatory.
 
 ## Celestial weather
 
-The Factorio 2.1 forks `celestial-weather-updated` and
-`celestial-weather-additions-updated` are now **recommended**, not required,
-in `info.json`. The add-on declares a source-owned hard dependency on the
-base weather mod. Razi's Atmospheric Field Guide only inspects the installed
-mod settings; Razi does not duplicate weather effects or introduce its own
-periodic environment logic. Verify real-game atmosphere settings on Muria,
-Rubia, Paracelsin, Vesta, Panglia and any opt-in Pelagos configuration.
+`celestial-weather-updated` remains recommended. The installed
+`celestial-weather-additions-updated` 1.6.0 reports a direct conflict with
+the base fork even though public 1.3.0 metadata declares it required.
+The add-on is withdrawn from Razi's recommendation list until upstream
+correction and a controlled Factorio test. Razi's weather guide detects
+installed source settings and never simulates effects itself.
 
 ## Enemy integration
 
@@ -93,8 +92,9 @@ Corrundum electrochemical science pack.
 
 `secretas-krastorio-compatibility-plus` currently has a Factorio 2.0
 release and must not enter the required Factorio 2.1 stack. The distinct
-`secretas-orbit-patch >= 1.1.3` is optional because Outer Rim expressly
-excludes it; Razi also preserves Secretas/Frozeta source moon orbits.
+`+ secretas-orbit-patch >= 1.1.3` is recommended for native moon orbits;
+`! outer-rim` blocks the incompatible competing space-map ruleset.
+Razi retains its own asteroid-belt corridors.
 See [K2SO integration](K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership)
 for ownership and in-engine validation requirements.
 

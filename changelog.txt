@@ -1,3 +1,11 @@
+Version: 2.1.75
+Date: 15. 10. 2026
+  Dependency and modpack conflict repair:
+    - Keep 48 required mods, 24 recommended companions, one hidden FluxWorks integration, and 23 explicit incompatibilities.
+    - Exclude Outer Rim 2.9, which conflicts with Secretas Orbit Patch and recommends the custom-belt-breaking kry asteroid belt.
+    - Withdraw the weather additions recommendation after installed 1.6.0 reports incompatibility with Celestial Weather Updated; preserve the core weather recommendation and guarded guide.
+    - Keep source progression and all save records unchanged; improve policy and regression tests. No automatic GitHub Actions.
+
 Version: 2.1.74
 Date: 15. 10. 2026
   Expedition Journal and orbital companion integration:

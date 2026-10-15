@@ -58,13 +58,13 @@ Effects remain controlled by the upstream weather authors' existing startup sett
 
 The **Outer Rim 2.9.x** source coordinates Aquilo, Paracelsin, Carna, Secretas and Frozeta, with additional research, production and space connections. These worlds are spread across several different Razi systems. Its published changelog explicitly flags K2SO compatibility as potentially malfunctioning or crashing. Its native route rewrites and research redistribution could also bypass Razi's asteroid-belt crossings or create a science dependency on a later system.
 
-`(?) outer-rim` stays hidden optional because Outer Rim conflicts with the recommended Secretas orbit patch. No Outer Rim technology is required to reach Nexus, the outer frontiers, or the transceiver. It is not appropriate to promise integration without a verified complete data-stage load and controlled save testing.
+`! outer-rim` now explicitly excludes Outer Rim from Razi's curated 2.1.75 galaxy because it conflicts with the Secretas orbit patch and the custom asteroid-belt route strategy. No Outer Rim technology is required to reach Nexus, the outer frontiers, or the transceiver. It is not appropriate to promise integration without a verified complete data-stage load and controlled save testing.
 
 Suggested collaborative pass with the Outer Rim author: isolate world-local resource and recipe integrations behind a compatibility setting, leave Razi-owned interstellar routes untouched, then validate each affected science predecessor before enabling any shared research requirements.
 
 ## Manual validation checklist
 
-1. Start the full Factorio 2.1/K2SO pack with Nexus Updated, Rebalanced, Nexus Bosses, Nexus Threat, both weather forks and their required enemy mods. Verify a clean data stage and real in-game load.
+1. Start the full Factorio 2.1/K2SO pack with Nexus Updated, Rebalanced, Nexus Bosses, Nexus Threat, the core 2.1 weather fork and their required enemy mods. Leave Weather Additions 1.6.0 disabled pending an upstream dependency fix. Verify a clean data stage and real in-game load.
 2. On a copied existing save and a new save, research the native Nexus scan, omega power, shields and storm prediction. Confirm Razi's six preparation quests appear without granting technology or science.
 3. Defeat a single Whisper boss. Verify **exactly one** Journal boss objective completes, the source trophy drops once, other two remain incomplete, and the Codex is unchanged.
 4. Complete the first three, the second three, and the last three. Verify the source stage technologies, Signal bearings, weather/storm-shard interactions, lair rewards, native warp key, Silence and Oort/Sol routes remain controlled solely by the source.
