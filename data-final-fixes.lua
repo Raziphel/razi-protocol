@@ -261,3 +261,9 @@ require("prototypes.system.location_icons").data_final_fixes()
 -- AFTER Razi route authority, risk tooltip inspection, and colored overlays.
 -- Existing native routes, chunks, and technology requirements stay intact.
 require("prototypes.system.quality_asteroids").data_final_fixes()
+
+-- LAST gameplay-prototype pass: opt-in asteroid/weapon UPS experiments.
+-- All four are disabled by default, and deliberately occur AFTER quality
+-- carriers and custom-asteroid distribution, preserving source recipes,
+-- chunks, routes and 1-10 difficulty grades.
+require("prototypes.system.asteroid_performance").data_final_fixes()
