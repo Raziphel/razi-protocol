@@ -1,25 +1,47 @@
-## Navigation markers: quiet orbital icons (October 2026)
+## Starmap navigation and route artwork: distinct orbital language (October 2026)
 
-The seven Slip Streams and both remaining asteroid-belt crossings use
-dedicated 64 x 64 transparent icons inspired by Space Age's original
-Solar System Edge locator. All share a thin grey circular rim, near-black
-interior, fine golden orbital ellipse and a tiny amber core. The slip
-streams differ subtly through a muted rim accent, orbit angle and a
-single satellite dot. The four Vibrant/Umbra rim markers use only a
-couple of small asteroid specks and a left/right ingress-egress
-chevron. There are no large gears, thick cast-metal octagons, crystals,
-decorative UI panels or neon glyphs. Vespera has **no** belt markers.
+The 11 Razi-owned navigation waypoints and 4 route categories have new,
+separately composed transparent 64px artwork. Space Age's Solar System Edge
+icon is the visual reference: thin gunmetal ring, recessed near-black
+space, slanted amber ellipses, modest stellar cores, and no ornamental
+mechanical bezel. All icon silhouettes survive downscaling, with low-key
+accent colors instead of loud neon badges.
 
-These PNGs replace the previous busy industrial-badge designs in
-`graphics/icons/navigation/` without changing filenames or locator
-prototype IDs. The deterministic authoring source remains
-`scripts/generate_navigation_markers.js`, run with
-`node scripts/generate_navigation_markers.js`. The existing final
-pass `prototypes/system/location_icons.lua` sets both `icon` and
-`starmap_icon` for those 11 Razi locations only.
+**Slip Streams:** Calidus has a home orbit and visible satellite; Solaris
+has double hot arcs; Nyxaris has a second botanical orbit and paired moons;
+Vibrant has crossing electric orbits; Vespera has a wide pale double orbit;
+Beetlejuice has interlocking binary ellipses; Umbra has an eclipsed copper
+core and deliberately incomplete outer arc. They are variations on the same
+Factorio-inspired celestial language, not recolored copies.
 
-No orbit, route, hazard, science, unlock, animation or starmap-atlas
-change is involved. Inspect Factorio at normal and distant map zoom.
+**Physical belt rims:** Vibrant uses cool metallic fragments and a strong
+inward/outward arrow, Umbra uses darker broken-rock fragments and a cracked
+copper accent. Its inner and outer stops point in opposite directions.
+Only Vibrant and Umbra have Razi belt stops; Vespera's removed belt is not
+reintroduced.
+
+**Space connections:** Planetary is a short orbital transfer between
+two nearby planets, interstellar connects distant bright stars, asteroid
+routes pass an interrupted hazard field, and deep-space travel points to
+a far-off beacon. These designs are now siblings of the navigation set,
+rather than the old heavy octagonal instrument badges.
+
+Runtime assets:
+- `graphics/icons/navigation/*.png` (11 PNGs)
+- `graphics/icons/routes/*.png` and `graphics/icons/routes/*.svg` (4 pairs)
+
+Rebuild all 19 art files from the same deterministic authoring source with
+`node scripts/generate_navigation_markers.js`. PNG sprites use 64x64 RGBA;
+the four SVGs are editable representations of the identical geometry.
+The Razi navigation and route prototype assignments are unchanged:
+`prototypes/system/location_icons.lua` and
+`prototypes/system/route_icons.lua`. The redraw makes **no** changes to
+destination IDs, platform travel, research, hazardous spawn curves,
+route definitions, orbit positions, atlas layers, or runtime per-tick work.
+
+To check art, run `python3 -m unittest tests.test_starmap_icon_art` and
+`python3 -m unittest tests.test_location_icons`, then review at normal
+and zoomed-out Factorio map magnifications in a full modpack install.
 
 ## Current Vespera design: no asteroid belt (October 2026)
 
@@ -180,20 +202,12 @@ New assets should extend that collection rather than reinterpret it.
 
 ## Route icons
 
-The four 64 x 64 icons in `graphics/icons/routes/` form one compact family:
-
-- `planetary-route`: ordinary local planetary travel.
-- `interstellar-route`: travel between stellar systems.
-- `asteroid-route`: hazardous asteroid-belt crossings.
-- `deep-space-route`: extreme-distance and late-game routes.
-
-Their editable SVG sources are kept beside the PNGs. All use a worn octagonal
-navigation-instrument housing, recessed fasteners, a dark gridded display,
-high-contrast route marks, restrained emissive color, and clean alpha. The
-silhouette and main route symbol must remain legible at 32--64 pixels; avoid
-glossy circular badges, flat neon nodes, or UI treatments that read as generic
-mobile-app icons. Add a category only when it communicates a genuinely
-different route.
+The four 64px PNG icons and their editable SVG sources in
+`graphics/icons/routes/` are rendered by the shared navigation generator.
+They use thin orbital lines and a dark round starmap silhouette, never
+the retired chunky octagonal instrument housing. Planetary, interstellar,
+asteroid and deep-space travel must remain unmistakable at 24-64px.
+Classification and external mod icon ownership stay unchanged.
 
 ## Ownership and validation
 
