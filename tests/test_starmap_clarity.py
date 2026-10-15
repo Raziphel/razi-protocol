@@ -532,6 +532,34 @@ class ConstellationTests(unittest.TestCase):
         self.assertAlmostEqual(y, 20, places=2)
         self.assertGreater(math.dist((x, y), (0, 0)), 15)
 
+    def test_vespera_inner_outer_order_and_clear_routes(self):
+        # Obsidiax is the inner hot world; Aquilo must stay inside
+        # the physical 30-to-37 belt, which Rubia and Maraxsis follow.
+        radius=lambda name:self.anchors[name][1]
+        order=("obsidiax","muria","aquilo",
+               "razi-vespera-belt-inner","razi-vespera-belt-outer",
+               "rubia","maraxsis")
+        self.assertEqual(sorted(order,key=radius),list(order))
+        self.assertEqual(radius("obsidiax"),17)
+        self.assertEqual(radius("aquilo"),29)
+        nodes=("sye-vespera","muria","aquilo",
+               "razi-vespera-belt-inner","razi-vespera-belt-outer",
+               "rubia","maraxsis","obsidiax")
+        for i,a in enumerate(nodes):
+            for b in nodes[i+1:]:
+                self.assertGreaterEqual(
+                    math.dist(self.coords[a],self.coords[b]),10,
+                    f"Vespera map labels crowd: {a}, {b}")
+        for a,b in (("sye-vespera","muria"),("sye-vespera","aquilo"),
+                    ("muria","aquilo"),("aquilo","razi-vespera-belt-inner"),
+                    ("razi-vespera-belt-outer","rubia"),("rubia","maraxsis")):
+            self.assertGreaterEqual(segment_clearance(
+                self.coords["vespera"],self.coords[a],self.coords[b]),15)
+        edges={frozenset((a,b)) for a,b,_,_ in self.routes}
+        self.assertNotIn(frozenset(("aquilo","rubia")),edges)
+        self.assertIn(frozenset(("razi-vespera-belt-inner",
+                                "razi-vespera-belt-outer")),edges)
+
     def test_hot_cold_orbits_and_native_belt_divide(self):
         radius = lambda n: self.anchors[n][1]
         for hot, cooler in (
