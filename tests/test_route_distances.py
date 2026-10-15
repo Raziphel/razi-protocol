@@ -92,6 +92,46 @@ class RouteTests(unittest.TestCase):
         raw = world()
         self.assertEqual(routes_audit.audit(raw), [])
 
+    def test_severely_underpriced_source_routes_flagged(self):
+        raw=world()
+        raw["space-connection"]["lost-1000"]={
+            "name":"lost-1000","from":"skewer_shattered_planet",
+            "to":"skewer_lost_beyond","length":1000}
+        issues=routes_audit.audit(raw)
+        self.assertTrue(any("Visual distance mismatch" in issue
+                            and "skewer_lost_beyond" in issue
+                            for issue in issues))
+        del raw["space-connection"]["lost-1000"]
+        raw["space-connection"]["short-approach"]={
+            "name":"short-approach","from":"shattered-planet",
+            "to":"skewer_shattered_planet","length":1000}
+        self.assertEqual(routes_audit.audit(raw),[])
+        raw["space-connection"]["special-gate"]={
+            "name":"special-wormhole","from":"vesta",
+            "to":"solar-system-edge","length":1000}
+        self.assertEqual(routes_audit.audit(raw),[])
+        raw["space-connection"]["bad-native"]={
+            "name":"bad-native","from":"vesta",
+            "to":"solar-system-edge","length":1000}
+        self.assertTrue(any("Visual distance mismatch" in issue
+                            for issue in routes_audit.audit(raw)))
+
+    def test_calibrator_runs_before_route_tooltips_and_quality(self):
+        s=(ROOT/"data-final-fixes.lua").read_text()
+        hook='require("prototypes.system.route_distance_balance").data_final_fixes()'
+        self.assertLess(s.index('route_authority").data_final_fixes()'),
+                        s.index(hook))
+        self.assertLess(s.index(hook),s.index(
+            'require("prototypes.system.route_intel").data_final_fixes()'))
+        self.assertLess(s.index(hook),s.index(
+            'require("prototypes.system.quality_asteroids").data_final_fixes()'))
+        route_spec={(a,b):n for a,b,n,_ in route_manifest()}
+        self.assertEqual(route_spec["cubium","secretas"],32000)
+        self.assertEqual(route_spec["razi-umbra-belt-outer","vesta"],19000)
+        authority=(ROOT/"prototypes/system/route_authority.lua").read_text()
+        self.assertIn('{"foliax","sye-nyxaris",24000,"biological_deep"}',
+                      authority)
+
     def test_underpriced_chapter_routes_are_detected(self):
         raw = world()
         for pair, too_short in (
