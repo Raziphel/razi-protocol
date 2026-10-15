@@ -1,0 +1,229 @@
+---@diagnostic disable: missing-fields, need-check-nil, assign-type-mismatch
+package.path = "./?.lua;./?/init.lua;" .. package.path
+
+local function check(cond, why)
+  if not cond then error(why,2) end
+end
+
+package.loaded["prototypes.system.asteroid_profiles"]={
+  create=function(name)
+    return {{asteroid="test-" .. name, probability=.001}}
+  end
+}
+
+local configs={
+  {"planet-ferrum","ferrum"},
+  {"Velora","velora"},
+  {"alchemy-khemia","alchemy-planet"},
+  {"Arcanyx","arcanyx"},
+  {"biological-machines-planet-balack","bm-balack"},
+  {"skewer_shattered_planet","shattered-planet"},
+  {"rabbasca-underground","rabbasca-underground"}
+}
+
+local function run(options)
+  options=options or {}
+  local planets,locations,technologies,routes,mods_table={},{},{},{},{}
+  local native={}
+  for _,pair in ipairs(configs) do
+    local mod,name=pair[1],pair[2]
+    if mod~="skewer_shattered_planet" then
+      planets[name]={name=name,orbit={parent={type="planet",name="original-parent"},
+        distance=4}}
+    else
+      locations[name]={name=name}
+    end
+    mods_table[mod]="1"
+    if name~="rabbasca-underground" then
+      technologies["unlock-"..name]={name="unlock-"..name,
+        prerequisites={"source-author-research"},
+        effects={{type="unlock-space-location",space_location=name},
+          {type="unlock-recipe",recipe=name.."-native-science"}}}
+    end
+  end
+  for _,name in ipairs({"calidus","solaris","nyxaris","vibrant","vespera",
+    "beetlejuice","umbra","fulgora","gleba","nauvis","aquilo","tenebris",
+    "paracelsin","solar-system-edge"}) do
+    locations[name]=locations[name] or {name=name}
+  end
+  for _,name in ipairs({"solaris-discovery","nyxaris-discovery",
+    "vibrant-discovery","beetlejuice-discovery","umbra-discovery","planet-discovery-gleba",
+    "planet-discovery-aquilo"}) do
+    technologies[name]={name=name,prerequisites={}}
+  end
+  planets.fulgora={}
+  -- Khemia's source can add direct solar routes, which are no longer
+  -- appropriate when it joins Vibrant.
+  locations["slp-solar-orbit-outer"]={name="slp-solar-orbit-outer"}
+  locations["slp-solar-orbit-inner"]={name="slp-solar-orbit-inner"}
+  technologies["planet-discovery-sunorbit"]={
+    effects={{type="unlock-space-location",
+      space_location="slp-solar-orbit-outer"}}}
+  technologies["slp-solar-system-sun2"]={
+    effects={{type="unlock-space-location",
+      space_location="slp-solar-orbit-inner"}}}
+  for _,edge in ipairs({
+    {name="alchemy-planet-nauvis",from="alchemy-planet",to="nauvis"},
+    {name="native-khemia-inner-sun",from="alchemy-planet",
+      to="slp-solar-orbit-inner"},
+    {name="native-khemia-outer-sun",from="alchemy-planet",
+      to="slp-solar-orbit-outer"}
+  }) do routes[edge.name]=edge end
+  planets.nauvis={}
+  planets.gleba={}
+  planets.aquilo={}
+  planets.paracelsin={}
+  planets.tenebris={}
+
+  native.ferrum={name="fulgora-ferrum",from="fulgora",to="ferrum",
+    length=10000,asteroid_spawn_definitions={{asteroid="native-ferrum"}}}
+  routes[native.ferrum.name]=native.ferrum
+  native.ferrum_vulcanus={name="vulcanus-ferrum",from="vulcanus",to="ferrum",
+    length=10000,asteroid_spawn_definitions={{asteroid="native-metallic"}}}
+  routes[native.ferrum_vulcanus.name]=native.ferrum_vulcanus
+  native.balack={name="aquilo-balack",from="aquilo",to="bm-balack",
+    length=40000,asteroid_spawn_definitions={{asteroid="native-huge"}}}
+  routes[native.balack.name]=native.balack
+  native.hidden={name="rabbasca-warp-field",from="rabbasca-underground",
+    to="anomalous-depth",length=1}
+  routes[native.hidden.name]=native.hidden
+
+  if options.no_mod then mods_table[options.no_mod]=nil end
+  if options.no_planet then planets[options.no_planet]=nil end
+  if options.cycle then
+    technologies["vibrant-discovery"].prerequisites={"unlock-alchemy-planet"}
+  end
+  if options.no_gate then technologies[options.no_gate]=nil end
+  if options.no_native_ferrum then
+    routes["fulgora-ferrum"]=nil
+  end
+  local raw={planet=planets,["space-location"]=locations,
+    ["space-connection"]=routes,technology=technologies}
+  rawset(_G,"data",{raw=raw,extend=function(self,entries)
+    for _,entry in ipairs(entries) do
+      local group=self.raw[entry.type]
+      check(not group[entry.name],"Duplicate optional route created")
+      group[entry.name]=entry
+    end
+  end})
+  rawset(_G,"mods",mods_table)
+  local moved={}
+  rawset(_G,"PlanetsLib",{update=function(_,entries)
+    for _,entry in ipairs(entries) do
+      check(planets[entry.name],"Missing planet orbital update")
+      rawset(planets[entry.name], "orbit", entry.orbit)
+      moved[entry.name]=true
+    end
+  end})
+  package.loaded["prototypes.system.community_expansions"]=nil
+  local module=require("prototypes.system.community_expansions")
+  module.data_final_fixes()
+  return module,raw,native,moved
+end
+
+local module,raw,native,moved=run()
+for _,name in ipairs({"ferrum","alchemy-planet","arcanyx","bm-balack"}) do
+  check(moved[name],"A new optional world was not positioned: "..name)
+end
+check(raw.planet.ferrum.orbit.parent.name=="beetlejuice",
+  "Ferrum now belongs to the western Beetlejuice industrial sector")
+check(native.ferrum_vulcanus.length==10000,
+  "The original native route is retained for asteroid migration only")
+check(native.ferrum_vulcanus.asteroid_spawn_definitions[1].asteroid
+  =="native-metallic","Ferrum's native cross-star asteroids were replaced")
+check(native.ferrum.length==10000,
+  "Ferrum's local Fulgora route must keep its native distance")
+check(raw.planet["alchemy-planet"].orbit.parent.name=="vibrant",
+  "Khemia did not join chemistry frontier")
+for _,name in ipairs({"alchemy-planet-nauvis",
+  "native-khemia-inner-sun","native-khemia-outer-sun"}) do
+  check(not raw["space-connection"][name],
+    "A source Khemia connection is still pulling routes through Calidus: "..name)
+end
+check(raw.planet.arcanyx.orbit.parent.name=="umbra",
+  "Arcanyx did not join the optional dark frontier")
+check(raw.planet["bm-balack"].orbit.parent.name=="vespera",
+  "Balack did not join Vespera's post-Aquilo region")
+for _,name in ipairs({"velora",
+  "rabbasca-underground"}) do
+  check(not moved[name] and raw.planet[name].orbit.parent.name=="original-parent",
+    "A moon or hidden underground world was reparented: "..name)
+end
+for _,key in ipairs({"ferrum","ferrum_vulcanus","balack","hidden"}) do
+  check(raw["space-connection"][native[key].name]==native[key],
+    "Native source route was lost: "..key)
+end
+check(raw["space-connection"]["razi-expansion-ferrum-sye-beetlejuice"],
+  "Ferrum requires a new local Beetlejuice branch")
+check(not raw["space-connection"]["razi-expansion-bm-balack-aquilo"],
+  "Balack should use its native extreme route")
+check(raw["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
+  "Khemia optional chemical branch is disconnected")
+check(raw["space-connection"]["razi-expansion-arcanyx-tenebris"],
+  "Arcanyx optional Umbra branch is disconnected")
+check(raw["space-connection"]["razi-expansion-velora-gleba"],
+  "Missing native moon route should be restored for Velora")
+for _,pair in ipairs({
+  {"ferrum","beetlejuice-discovery"},
+  {"alchemy-planet","vibrant-discovery"},
+  {"arcanyx","umbra-discovery"},
+  {"velora","planet-discovery-gleba"},
+  {"bm-balack","planet-discovery-aquilo"}
+}) do
+  local tech=raw.technology["unlock-"..pair[1]]
+  local found=false
+  for _,prerequisite in ipairs(rawget(tech,"prerequisites") or {}) do
+    if prerequisite==pair[2] then found=true end
+  end
+  check(found,"Native discovery not chapter-gated: "..pair[1])
+  local effects=rawget(tech,"effects") or {}
+  local native_science=effects[2] or {}
+  check(rawget(native_science,"recipe")==pair[1].."-native-science",
+    "A mod's native science unlock was damaged")
+end
+check(#raw.technology["unlock-shattered-planet"].prerequisites==1,
+  "Shattered and promethium tech must retain native research gates")
+check(raw.planet["rabbasca-underground"].hidden==nil
+  and not raw["space-connection"]["razi-expansion-rabbasca-underground-nauvis"],
+  "Rabbasca underground cannot be accessible from a space platform")
+local before=0
+for _ in pairs(raw["space-connection"]) do before=before+1 end
+module.data_final_fixes()
+local after=0
+for _ in pairs(raw["space-connection"]) do after=after+1 end
+check(after==before,"Repeated data-final-fixes creates duplicate routes")
+
+local _,off=run({no_mod="alchemy-khemia"})
+check(not off["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
+  "Missing optional mod still added a new route")
+check(#off.technology["unlock-alchemy-planet"].prerequisites==1,
+  "Absent mod incorrectly changed its own technology")
+
+local _,cyclic=run({cycle=true})
+check(#cyclic.technology["unlock-alchemy-planet"].prerequisites==1,
+  "An optional discovery cycle was introduced")
+
+local _,missing=run({no_gate="vibrant-discovery"})
+check(not missing["space-connection"]["razi-expansion-alchemy-planet-paracelsin"],
+  "Missing star technology must not attach a midgame route")
+check(#missing.technology["unlock-alchemy-planet"].prerequisites==1,
+  "Missing prerequisite technology must leave native research alone")
+
+local _,absent=run({no_planet="arcanyx"})
+check(not absent["space-connection"]["razi-expansion-arcanyx-tenebris"],
+  "Prototype-absent planet still received route")
+
+-- Verify the actual data-final-fixes entry point executes the integration
+-- after the Razi route reconciler and before final orbit layout.
+local f=assert(io.open("data-final-fixes.lua","r"))
+local source=f:read("*a")
+f:close()
+local route=assert(source:find(
+  'require("prototypes.system.route_reconcile").data_final_fixes()',1,true))
+local expansion=assert(source:find(
+  'require("prototypes.system.community_expansions").data_final_fixes()',1,true))
+local layout=assert(source:find(
+  'require("prototypes.system.galaxy_layout").data_final_fixes()',1,true))
+check(route<expansion and expansion<layout,
+  "Optional integrations must follow route reconciliation and precede layout")
+print("Community expansion routes, science safeguards and special surfaces passed")

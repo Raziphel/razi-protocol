@@ -2,11 +2,14 @@ name: Check
 
 # Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API and the changelog.txt format, with the settings in
 # .luacheckrc and .emmyrc.json: https://github.com/GreenTech-Solutions/factorio-mod-tools
+# Checks are intentionally opt-in to avoid automatic GitHub Actions usage.
+# To run, open Actions > Check > Run workflow.
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: razi-protocol-dev-check-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -15,8 +18,104 @@ jobs:
   check:
     name: check
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LUA_INIT: "@tests/lua/razi_lib_bootstrap.lua"
+      RAZI_LIB_PATH: RaziLib
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Checkout RaziLib
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: Raziphel/RaziLib
+          path: RaziLib
       - name: Check the mod
+        id: factorio_check
+        continue-on-error: true
         uses: GreenTech-Solutions/factorio-mod-tools@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
+
+      # All regression fixtures share this runner with the Factorio tool check.
+      - name: Install Lua 5.2
+        run: sudo apt-get update -qq && sudo apt-get install -y lua5.2
+      - name: Check colored and localized mod settings
+        run: lua5.2 tests/lua/test_settings_presentation.lua
+      - name: Check Lua compatibility guards
+        run: lua5.2 tests/lua/test_compat.lua
+      - name: Check Expedition Journal progress and scripted-research safety
+        run: lua5.2 tests/lua/test_razi_journal.lua
+      - name: Check Journal layout without rendering Factorio
+        run: lua5.2 tests/lua/test_razi_journal_layout.lua
+      - name: Verify Journal translations and responsive UI contract
+        run: python -m unittest tests/test_razi_journal.py
+      - name: Check seven-system galaxy and research fixtures
+        run: lua5.2 tests/lua/test_galaxy.lua
+      - name: Check required route icons and external icon preservation
+        run: lua5.2 tests/lua/test_route_icons.lua
+      - name: Test optional enemy placement safety
+        run: lua5.2 tests/lua/test_enemy_safety.lua
+      - name: Test research trigger migrations
+        run: lua5.2 tests/lua/test_trigger_compat.lua
+      - name: Check interwoven planet science progression
+        run: lua5.2 tests/lua/test_campaign_weave.lua
+      - name: Check 2026 optional modpack expansion and special surfaces
+        run: lua5.2 tests/lua/test_community_expansions.lua
+      - name: Check optional planet integrations
+        run: lua5.2 tests/lua/test_optional_planets.lua
+      - name: Validate Vesta moon relocation and native Abacayba technology
+        run: lua5.2 tests/lua/test_abacayba_integration.lua
+      - name: Test escalating asteroid profiles
+        run: lua5.2 tests/lua/test_asteroid_profiles.lua
+      - name: Check the starmap geometry
+        run: lua5.2 tests/lua/test_galaxy_layout.lua
+      - name: Test required native Asteroid Belt placement and source asset preservation
+        run: lua5.2 tests/lua/test_asteroid_belt_integration.lua
+      - name: Test Bellicos optional pulsar and gateway compatibility
+        run: lua5.2 tests/lua/test_bellicos_layout.lua
+      - name: Test Razi asteroid belts and surveys
+        run: lua5.2 tests/lua/test_asteroid_belts.lua
+      - name: Test native planet descriptions and Razi expedition context
+        run: lua5.2 tests/lua/test_planet_descriptions.lua
+      - name: Check K2SO integration across planet mods
+        run: lua5.2 tests/lua/test_k2so_planets.lua
+      - name: Check cross-planet K2SO production exchange safety
+        run: lua5.2 tests/lua/test_planet_production_exchanges.lua
+      - name: Check outer-world multi-planet production exchanges
+        run: lua5.2 tests/lua/test_outer_production_exchanges.lua
+      - name: Test native modded-planet industry bridges
+        run: lua5.2 tests/lua/test_modded_planet_exchanges.lua
+      - name: Test Ferrum and Balack manufacturing integration
+        run: lua5.2 tests/lua/test_community_industry_exchanges.lua
+      - name: Test Panglia source progress and reciprocal factories
+        run: lua5.2 tests/lua/test_panglia_integration.lua
+      - name: Check K2SO machine parity and planetary tech gates
+        run: lua5.2 tests/lua/test_k2so_machines.lua
+      - name: Check Linox hard-mode pre-arrival science
+        run: lua5.2 tests/lua/test_linox_science_guard.lua
+      - name: Guard late Crucible and Vesta science bootstrap
+        run: lua5.2 tests/lua/test_outer_science_arrival_guard.lua
+      - name: Test Aquilo Linox Crucible Vesta supply chain tracing
+        run: python3 -m unittest tests/test_supply_chains.py -v
+      - name: Audit progressive Razi route lengths and native orbital intent
+        run: python3 -m unittest tests/test_route_distances.py -v
+      - name: Check actual loaded-modpack audit safety with mock native prototypes
+        run: lua5.2 tests/lua/test_convergence_audit.lua
+      - name: Check cached Galaxy Atlas industry links
+        run: lua5.2 tests/lua/test_atlas_industry_index.lua
+      - name: Check five-stage finale deliveries and save merges
+        run: lua5.2 tests/lua/test_convergence_runtime.lua
+      - name: Check five-stage manufacturing and native labs
+        run: lua5.2 tests/lua/test_convergence_prototypes.lua
+      - name: Check project dossiers and zero-scan receiver telemetry
+        run: lua5.2 tests/lua/test_project_dossiers.lua
+      - name: Check Codex physical-shipment guidance
+        run: lua5.2 tests/lua/test_razi_journal_guidance.lua
+      - name: Test Factorio prototype auditor
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Audit Razi-owned graphics and required icon declarations
+        run: python3 scripts/audit_assets.py
+      - name: Enforce Factorio mod-tools result
+        if: ${{ always() && steps.factorio_check.outcome == 'failure' }}
+        run: |
+          echo '::error::Factorio mod-tools checks failed.'
+          exit 1

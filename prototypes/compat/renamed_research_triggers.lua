@@ -8,25 +8,32 @@ local renamed_research_triggers = {}
 -- ske_ammonia_vesta makes kr-ammonia, which blocks s1_electrolysis,
 -- ske_heating_conductor and everything after them. K2SO pull request #144
 -- renames the triggers too; until it is released, do the same here.
---
--- moon-eneas researches upgrade-uranium-ammo by crafting
--- uranium-rounds-magazine, which Krastorio 2 replaces by
--- kr-uranium-rifle-magazine. The trigger takes the K2 magazine, as K2SO does
--- for the rifle ammo of the base game.
 local renamed = {}
 for _, name in ipairs({"oxygen", "hydrogen", "chlorine", "sand", "glass", "silicon", "lithium", "ammonia"}) do
 	renamed[name] = "kr-" .. name
 end
-renamed["uranium-rounds-magazine"] = "kr-uranium-rifle-magazine"
 
 local function made_by_a_recipe()
 	local made = {}
-	for _, recipe in pairs(data.raw.recipe or {}) do
+	local function add_products(recipe)
+		if recipe.result then
+			made[recipe.result] = true
+		end
 		for _, product in pairs(recipe.results or {}) do
-			if product.name then
-				made[product.name] = true
+			local name = product.name or product[1]
+			if name then
+				made[name] = true
 			end
 		end
+	end
+
+	for _, recipe in pairs(data.raw.recipe or {}) do
+		add_products(recipe)
+		-- Compatibility with forks still using pre-2.0 recipe variants.
+		local normal = rawget(recipe, "normal")
+		if normal then add_products(normal) end
+		local expensive = rawget(recipe, "expensive")
+		if expensive then add_products(expensive) end
 	end
 
 	return made

@@ -10,7 +10,6 @@ local science_tiers = {
 		"metallurgic-science-pack",
 		"electromagnetic-science-pack",
 		"agricultural-science-pack",
-		"lithium-science-pack",
 		"tungsten-science-pack"
 	},
 	inner_system = {
@@ -95,7 +94,9 @@ local system_tech_cards = {
 	"solaris-tech-card",
 	"nyxaris-tech-card",
 	"vibrant-tech-card",
-	"beetlejuice-tech-card"
+	"vespera-tech-card",
+	"beetlejuice-tech-card",
+	"umbra-tech-card"
 }
 
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -219,18 +220,6 @@ set_science_after("beetlejuice-discovery", "vibrant")
 -- Base/inner-system planet discoveries.
 set_science_through("planet-discovery-muluna", "base")
 set_science_through("moon-discovery-cerys", "base")
-set_many_science_through({
-	"moon-discovery-eneas",
-	"planet-discovery-eneas"
-}, "base")
-add_first_existing_prerequisite("moon-discovery-eneas", {
-	"planet-discovery-muluna",
-	"moon-discovery-cerys"
-})
-add_first_existing_prerequisite("planet-discovery-eneas", {
-	"planet-discovery-muluna",
-	"moon-discovery-cerys"
-})
 add_existing_prerequisites("solaris-discovery", {
 	"planet-discovery-muluna"
 })
@@ -284,24 +273,26 @@ add_existing_prerequisites("vibrant-discovery", {
 -- Nyxaris branch.
 set_prerequisites_if_exists("planet-discovery-apia-carnova", {"nyxaris-discovery"})
 set_prerequisites_if_exists("planet-discovery-moshine", {"nyxaris-discovery"})
-set_prerequisites_if_exists("panglia_planet_discovery_panglia", {"nyxaris-discovery"})
+-- No generic science-cost overwrite for Panglia. Its real Moshine data
+-- cells, source foundry dependency and DNA progression must stay intact.
+add_existing_prerequisites("panglia_planet_discovery_panglia", {
+	"nyxaris-discovery", "planet-discovery-moshine",
+	"planet-discovery-apia-carnova"
+})
 -- Prefer the Dea Dia branch when both optional integrations are installed,
--- otherwise let standalone Pelagos enter through Panglia and Nyxaris.
+-- otherwise let standalone Pelagos enter directly through Nyxaris.
 set_first_existing_prerequisite("planet-discovery-pelagos", {
 	"system-discovery-dea-dia",
-	"panglia_planet_discovery_panglia",
 	"nyxaris-discovery"
 })
 set_many_science_after({
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
-	"panglia_planet_discovery_panglia",
 	"planet-discovery-pelagos"
 }, "solaris")
 add_existing_prerequisites("vibrant-discovery", {
 	"planet-discovery-apia-carnova",
 	"planet-discovery-moshine",
-	"panglia_planet_discovery_panglia",
 	"planet-discovery-pelagos"
 })
 
@@ -310,18 +301,12 @@ if technology_exists("planet-discovery-muria") then
 	set_prerequisites_if_exists("planet-discovery-muria", {"vibrant-discovery"})
 end
 
-if technology_exists("planet-discovery-shchierbin") then
-	set_prerequisites_if_exists("planet-discovery-shchierbin", {"planet-discovery-paracelsin"})
-end
-
 set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
 set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
 set_prerequisites_if_exists("muriatic-science-pack", {"planet-discovery-muria"})
-set_prerequisites_if_exists("vanadium-science-pack", {"planet-discovery-shchierbin"})
 set_many_science_after({
 	"muriatic-science-pack",
-	"vanadium-science-pack"
 }, "vibrant")
 set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
 set_first_existing_prerequisite("planet-discovery-maraxsis", {

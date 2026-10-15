@@ -23,7 +23,6 @@ These mods provide many of the worlds, science packs, mechanics, and progression
 - planetaris-hyarion
 - planetaris-arig
 - Cerys-Moon-of-Fulgora
-- moon-eneas
 - linox
 - shchierbin
 - Muria

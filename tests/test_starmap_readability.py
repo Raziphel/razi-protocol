@@ -1,0 +1,162 @@
+"""Static six-system geometry rules, no full Factorio runtime necessary."""
+import importlib.util
+from pathlib import Path
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+SPEC = importlib.util.spec_from_file_location(
+    "starmap_geom", ROOT / "scripts/audit_starmap_readability.py")
+geom = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(geom)
+
+class StarmapReadabilityTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.anchors, cls.routes = geom.load()
+        cls.report = geom.report(cls.anchors, cls.routes)
+
+    def test_distinct_orbits(self):
+        lookup = {entry["name"]: entry for entry in self.anchors}
+        self.assertGreaterEqual(abs(lookup["vulcanus"]["radius"] -
+                                    lookup["hyarion"]["radius"]), 4)
+        self.assertGreaterEqual(abs(lookup["gleba"]["radius"] -
+                                    lookup["apia-carnova-orbit"]["radius"]), 6)
+
+    def test_no_new_solaris_chord_crossing(self):
+        self.assertEqual(self.report["solaris"]["crossing_chords"], [])
+        self.assertFalse(any(r["source"] == "vulcanus" and
+                             r["destination"] == "arig" for r in self.routes))
+        self.assertTrue(any(r["source"] == "vulcanus" and
+                            r["destination"] == "hyarion" for r in self.routes))
+
+    def test_only_umbra_retains_an_outer_debris_crossing(self):
+        gaps=self.report["belt_separation"]
+        self.assertNotIn("razi-vespera-belt",gaps)
+        self.assertGreater(gaps["razi-umbra-belt"],8)
+        roads={(r["source"],r["destination"]) for r in self.routes}
+        self.assertIn(("razi-umbra-belt-inner","razi-umbra-belt-outer"),roads)
+        for road in (("muria","rubia"),("rubia","maraxsis"),
+                     ("rubia","aquilo")):
+            self.assertIn(road,roads)
+
+    def test_vespera_crescent_has_no_crossing_or_obstructed_routes(self):
+        # Include the optional worlds that final route authority attaches.
+        names = ("sye-vespera", "muria", "aquilo",
+                 "rubia", "maraxsis", "athos", "bm-balack")
+        points = geom.positions(self.anchors)
+        local = [(r["source"], r["destination"]) for r in self.routes
+                 if r["source"] in names and r["destination"] in names]
+        local.extend((("muria", "athos"),
+                      ("bm-balack", "aquilo")))
+        for i, (a, b) in enumerate(local):
+            self.assertGreaterEqual(
+                geom.chord_clearance((points["vespera"][0], points["vespera"][1]),
+                                     points[a], points[b]), 15,
+                (a, b, "star clearance"))
+            for other in names:
+                if other not in (a, b):
+                    self.assertGreaterEqual(
+                        geom.chord_clearance(points[other],
+                                             points[a], points[b]), 7,
+                        (a, b, other, "marker clearance"))
+            for c, d in local[i + 1:]:
+                if len({a, b, c, d}) == 4:
+                    self.assertFalse(geom.segments_cross(
+                        points[a], points[b], points[c], points[d]),
+                        (a, b, c, d))
+        anchors = {a["name"]: a for a in self.anchors}
+        planets = ("muria", "aquilo", "rubia", "maraxsis",
+                   "athos", "bm-balack")
+        for i, a in enumerate(planets):
+            for b in planets[i + 1:]:
+                self.assertGreaterEqual(
+                    abs(anchors[a]["radius"] - anchors[b]["radius"]), 3.5,
+                    (a, b, "native orbit ring gap"))
+        # The optional mineral spur must not thread the stellar core.
+        self.assertGreaterEqual(
+            geom.chord_clearance(points["vespera"],
+                                 points["muria"],points["athos"]), 20)
+
+    def test_umbra_singular_branches_and_true_orbit_clearance(self):
+        points=geom.positions(self.anchors)
+        nodes=("sye-umbra","tenebris","crucible-orbit",
+               "razi-umbra-belt-inner","razi-umbra-belt-outer",
+               "vesta","obsidiax","carna","arcanyx")
+        local=[(r["source"],r["destination"]) for r in self.routes
+               if r["source"] in nodes and r["destination"] in nodes]
+        local.extend((("carna","crucible-orbit"),("arcanyx","tenebris"),("obsidiax","vesta")))
+        for i,(a,b) in enumerate(local):
+            self.assertGreaterEqual(geom.chord_clearance(
+                points["umbra"],points[a],points[b]),15)
+            for other in nodes:
+                if other not in (a,b):
+                    self.assertGreaterEqual(geom.chord_clearance(
+                        points[other],points[a],points[b]),7,
+                        (a,b,other,"planet icon obscured by route"))
+            for c,d in local[i+1:]:
+                if len({a,b,c,d})==4:
+                    self.assertFalse(geom.segments_cross(
+                        points[a],points[b],points[c],points[d]),
+                        (a,b,c,d))
+        anchors={x["name"]:x for x in self.anchors}
+        self.assertLess(anchors["razi-umbra-belt-inner"]["radius"],
+                        anchors["razi-umbra-belt-outer"]["radius"])
+        self.assertLess(anchors["razi-umbra-belt-outer"]["radius"],
+                        anchors["vesta"]["radius"])
+        self.assertGreaterEqual(geom.chord_clearance(
+            points["umbra"],points["razi-umbra-belt-outer"],
+            points["vesta"]),38.999)
+        self.assertNotIn(("sye-umbra","crucible-orbit"),local)
+        self.assertNotIn(("sye-umbra","tenebris"),local)
+        self.assertIn(("sye-umbra","razi-umbra-belt-outer"),local)
+        self.assertGreaterEqual(geom.chord_clearance(
+            points["umbra"],points["sye-beetlejuice"],
+            points["sye-umbra"]),39)
+        # Check both of Factorio's real star-centered arc candidates as
+        # sampled circular paths, without permitting a second belt crossing.
+        import math
+        def arc(a,b,t):
+            star=points["umbra"]
+            ax,ay=(points[a][0]-star[0],points[a][1]-star[1])
+            bx,by=(points[b][0]-star[0],points[b][1]-star[1])
+            alpha,beta=math.atan2(ay,ax),math.atan2(by,bx)
+            sweep=(beta-alpha+math.pi)%(2*math.pi)-math.pi
+            r=math.hypot(ax,ay)*(1-t)+math.hypot(bx,by)*t
+            angle=alpha+sweep*t
+            return (star[0]+r*math.cos(angle),
+                    star[1]+r*math.sin(angle))
+        for a,b,min_radius in (
+                ("tenebris","crucible-orbit",20),
+                ("razi-umbra-belt-outer","vesta",39)):
+            for k in range(41):
+                location=arc(a,b,k/40)
+                self.assertGreaterEqual(
+                    geom.distance(location,points["umbra"]),
+                    min_radius-.001)
+                for other in nodes:
+                    if other not in (a,b):
+                        self.assertGreaterEqual(
+                            geom.distance(location,points[other]),7,
+                            (a,b,other,"native curve overlaps a marker"))
+
+    def test_vespera_local_routes_use_straight_rendering(self):
+        reconcile = (ROOT / "prototypes/system/route_reconcile.lua").read_text()
+        authority = (ROOT / "prototypes/system/route_authority.lua").read_text()
+        self.assertIn('membership[from]=="vespera"', reconcile)
+        self.assertIn('or a=="vespera"', authority)
+        self.assertIn('pair("athos","muria")', authority)
+        self.assertIn('pair("bm-balack","aquilo")', authority)
+        routes = {(r["source"], r["destination"]) for r in self.routes}
+        self.assertIn(("muria","rubia"),routes)
+        self.assertIn(("rubia","aquilo"),routes)
+        self.assertIn(("rubia","maraxsis"),routes)
+
+    def test_no_save_game_or_tick_work(self):
+        for name in ("scripts/audit_starmap_readability.py",
+                     "prototypes/system/galaxy_layout.lua"):
+            source = (ROOT / name).read_text()
+            self.assertNotIn("on_nth_tick", source)
+            self.assertNotIn("create_surface(", source)
+
+if __name__ == "__main__":
+    unittest.main()

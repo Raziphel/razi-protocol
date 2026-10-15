@@ -1,12 +1,12 @@
 require("util")
 
 require("prototypes.technology.systems")
+require("prototypes.technology.seven_systems")
 require("prototypes.technology.planetaris")
 require("prototypes.technology.corrundum")
 require("prototypes.technology.deadia")
 require("prototypes.technology.apia")
 require("prototypes.technology.moshine")
-require("prototypes.technology.timeshift")
 require("prototypes.technology.pelagos")
 require("prototypes.technology.tenebris")
 require("prototypes.technology.paracelsin")

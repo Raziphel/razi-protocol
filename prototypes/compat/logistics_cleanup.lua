@@ -131,14 +131,14 @@ local function move_tiles_and_floors()
 	for item_name, item in pairs(data.raw.item or {}) do
 		if item.place_as_tile
 			or name_matches_any(item_name, {
-				"floor",
-				"tile",
-				"concrete",
-				"landfill",
-				"foundation",
-				"platform%-foundation",
-				"scaffolding",
-				"pavement"
+				-- "tile" also matches "projectile"; require name components.
+				"^floor$", "^floor%-", "%-floor$", "%-floor%-",
+				"^tile$", "^tile%-", "%-tile$", "%-tile%-",
+				"^concrete$", "^concrete%-", "%-concrete$", "%-concrete%-",
+				"^landfill$", "^landfill%-", "%-landfill$", "%-landfill%-",
+				"^foundation$", "^foundation%-", "%-foundation$", "%-foundation%-",
+				"^scaffolding$", "^scaffolding%-", "%-scaffolding$", "%-scaffolding%-",
+				"^pavement$", "^pavement%-", "%-pavement$", "%-pavement%-"
 			}) then
 			move_item_and_recipe(item_name, "razi-infrastructure-surfaces")
 		end
@@ -162,15 +162,12 @@ local function move_infrastructure()
 	}, "razi-infrastructure-power")
 
 	move_by_name_patterns({
-		"rail",
-		"train%-stop",
-		"rail%-signal",
-		"rail%-chain%-signal",
-		"rail%-ramp",
-		"rail%-support",
-		"locomotive",
-		"cargo%-wagon",
-		"fluid%-wagon"
+		-- Match complete rail name components; "rail" also matches railgun.
+		"^rail$", "^rail%-", "%-rail$", "%-rail%-",
+		"^train%-stop", "%-train%-stop$",
+		"^locomotive$", "%-locomotive$",
+		"^cargo%-wagon$", "%-cargo%-wagon$",
+		"^fluid%-wagon$", "%-fluid%-wagon$"
 	}, "razi-infrastructure-rail")
 
 	move_by_name_patterns({

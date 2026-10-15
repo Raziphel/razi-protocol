@@ -1,0 +1,1849 @@
+-- The Protocol Codex reads research progress from each force.
+-- Player storage is just UI preferences, so an older save can reopen it.
+local M={}
+local defs=require("scripts.razi_journal_data")
+local records=require("scripts.razi_journal_records")
+local trials=require("scripts.razi_nexus_trials")
+local weather=require("scripts.razi_weather_guide")
+local cargo_catalog=require("scripts.galactic_trade_catalog")
+local convergence=require("scripts.razi_convergence")
+local projects=require("scripts.razi_journal_projects")
+local guidance=require("scripts.razi_journal_guidance")
+local preview=require("scripts.razi_journal_recipe_preview")
+local FRAME="razi_expedition_journal"
+local TOP="razi_expedition_journal_button"
+local TRACKER="razi_expedition_objective_tracker"
+local L=function(key,...) return {"journal-ui."..key,...} end
+local themes=require("scripts.razi_journal_themes")
+local icons=require("scripts.razi_journal_icons")
+-- A field-manual palette: chapter hues are restrained accents, not the ink.
+local COLOR={
+  ink={r=.94,g=.93,b=.89}, muted={r=.69,g=.73,b=.76},
+  quiet={r=.52,g=.58,b=.63}, green={r=.61,g=.82,b=.69},
+  amber={r=.91,g=.75,b=.52}
+}
+M.chapter_theme=themes.get
+M.chapter_icon=themes.icon
+
+M.FRAME=FRAME
+M.TOP=TOP
+M.TRACKER=TRACKER
+
+-- The research-all cheat can fire thousands of events. We only need to
+-- redraw for Codex milestones and world discovery unlocks.
+local research_goals,world_goals={},{}
+for _,quest in ipairs(defs.quests) do
+  if quest.tech then research_goals[quest.tech]=true end
+  if quest.world then world_goals[quest.world]=true end
+end
+function M.research_affects_journal(research)
+  if not research then return false end
+  if research_goals[research.name] or projects.research_related(research.name) then return true end
+  local proto=research.prototype
+  for _,effect in pairs(proto and proto.effects or {}) do
+    if effect.type=="unlock-space-location"
+      and world_goals[effect.space_location] then
+      return true
+    end
+  end
+  return false
+end
+
+local function pref(index)
+  storage.razi_expedition_journal=storage.razi_expedition_journal or {}
+  local value=storage.razi_expedition_journal[index]
+  if not value then
+    value={selected=nil,pinned=nil,tracker=false,
+      chapter=nil,chapter_cover=false,filter="all",view="quests",project="dyson",record=nil,query=""}
+    storage.razi_expedition_journal[index]=value
+  end
+  value.filter=value.filter or "all"
+  value.view=({quests=true,projects=true,archive=true})[value.view] and value.view or "quests"
+  value.project=projects.valid(value.project) and value.project or "dyson"
+  value.query=value.query or ""
+  value.chapter_cover=value.chapter_cover==true
+  return value
+end
+M.preferences=pref
+
+-- Find actual native world-discovery research via source mod effect data.
+-- One pass per journal view, rather than guessing 19 third-party tech IDs
+-- or rescanning thousands of technologies for each side-world quest.
+-- Prototype effects never change during a game. Keep their names in a
+-- runtime-only index, then look up the current force's research as needed.
+-- Test fixtures without prototypes.technology still use the original scan.
+local unlock_techs
+local function world_unlocks()
+  if unlock_techs then return unlock_techs end
+  local catalog={}
+  local registered=prototypes and prototypes.technology
+  if not registered then return nil end
+  for name,proto in pairs(registered) do
+    if not proto.hidden then
+      for _,effect in pairs(proto.effects or {}) do
+        if effect.type=="unlock-space-location" and effect.space_location then
+          local entries=catalog[effect.space_location]
+          if not entries then
+            entries={}
+            catalog[effect.space_location]=entries
+          end
+          entries[#entries+1]=name
+        end
+      end
+    end
+  end
+  unlock_techs=catalog
+  return catalog
+end
+function M.discovery_index(force)
+  local indexed={}
+  local technologies=force and force.technologies or {}
+  local catalog=world_unlocks()
+  if catalog then
+    for world,names in pairs(catalog) do
+      for _,name in ipairs(names) do
+        local tech=technologies[name]
+        if tech and tech.prototype and not tech.prototype.hidden then
+          local previous=indexed[world]
+          if not previous or (tech.researched and not previous.researched) then
+            indexed[world]=tech
+          end
+        end
+      end
+    end
+  else
+    for _,tech in pairs(technologies) do
+      local proto=tech.prototype
+      if proto and not proto.hidden then
+        for _,effect in pairs(proto.effects or {}) do
+          if effect.type=="unlock-space-location" and effect.space_location then
+            local previous=indexed[effect.space_location]
+            if not previous or (tech.researched and not previous.researched) then
+              indexed[effect.space_location]=tech
+            end
+          end
+        end
+      end
+    end
+  end
+  return indexed
+end
+function M.context(force)
+  return {discoveries=M.discovery_index(force),nexus=trials.snapshot(force)}
+end
+local function technology(force,quest,context)
+  local t
+  if quest.world then
+    local index=context and context.discoveries or M.discovery_index(force)
+    t=index[quest.world]
+  else
+    t=force and force.technologies and force.technologies[quest.tech]
+  end
+  if not t then return nil end
+  local proto=t.prototype
+  if proto and proto.hidden and not t.researched then return nil end
+  return t
+end
+function M.available(force,quest,context)
+  if not technology(force,quest,context) then return false end
+  if quest.boss then
+    return (context or M.context(force)).nexus~=nil
+  end
+  return true
+end
+function M.complete(force,quest,context)
+  -- A 2.1.57 victory must keep the new retrospective research objective
+  -- complete, even though that technology did not exist when it won.
+  if quest.id=="convergence-ignition-research"
+    and convergence.completed(force,"victory") then return true end
+  if quest.convergence then
+    return convergence.completed(force,quest.convergence)
+  end
+  if quest.boss then
+    local snapshot=(context or M.context(force)).nexus
+    return M.available(force,quest,context)
+      and trials.defeated(snapshot,quest.boss)
+  end
+  local t=technology(force,quest,context)
+  return t~=nil and t.researched==true
+end
+function M.state(force,quest,context)
+  if not M.available(force,quest,context) then return "unavailable" end
+  if M.complete(force,quest,context) then return "complete" end
+  for _,required in ipairs(quest.requires or {}) do
+    local prior=defs.by_id[required]
+    -- Source content not present in this modpack is not a phantom
+    -- blocker. Its own technology controls actual research prerequisites.
+    if prior and M.available(force,prior,context)
+      and not M.complete(force,prior,context) then return "locked" end
+  end
+  return "active"
+end
+function M.summary(force,context)
+  local completed,total,active=0,0,0
+  context=context or M.context(force)
+  for _,q in ipairs(defs.quests) do
+    local state=M.state(force,q,context)
+    if state~="unavailable" and not q.optional then
+      total=total+1
+      if state=="complete" then completed=completed+1
+      elseif state=="active" then active=active+1 end
+    end
+  end
+  return completed,total,active
+end
+function M.next_quest(force,context)
+  context=context or M.context(force)
+  local suggested=M.guidance(force,context)
+  if suggested.primary then return suggested.primary.quest end
+  -- A blocked objective can still be inspected, but is not called ready.
+  for _,q in ipairs(defs.quests) do
+    if M.state(force,q,context)=="active" then return q end
+  end
+  for _,q in ipairs(defs.quests) do
+    if M.state(force,q,context)~="unavailable" then return q end
+  end
+end
+local function state_matches_filter(state,filter)
+  if state=="unavailable" then return false end
+  if filter=="ready" then return state=="active" end
+  if filter=="unfinished" then return state~="complete" end
+  if filter=="done" then return state=="complete" end
+  return true
+end
+function M.show_in_filter(force,quest,filter,context)
+  return state_matches_filter(M.state(force,quest,context),filter)
+end
+
+-- Calculate the visible campaign once per redraw. The navigator used to
+-- walk all quests for every chapter and repeat most of these state checks.
+local quests_by_chapter={}
+for _,chapter in ipairs(defs.chapters) do quests_by_chapter[chapter.id]={} end
+for _,quest in ipairs(defs.quests) do
+  local list=quests_by_chapter[quest.chapter]
+  if list then list[#list+1]=quest end
+end
+function M.view_status(force,context)
+  context=context or M.context(force)
+  local view={states={},chapters={},done=0,total=0,ready=0}
+  for _,chapter in ipairs(defs.chapters) do
+    local result={quests={},completed=0,total=0}
+    for _,quest in ipairs(quests_by_chapter[chapter.id] or {}) do
+      local state=M.state(force,quest,context)
+      view.states[quest.id]=state
+      if state~="unavailable" then
+        result.quests[#result.quests+1]=quest
+        result.total=result.total+1
+        if not quest.optional then view.total=view.total+1 end
+        if state=="complete" then
+          result.completed=result.completed+1
+          if not quest.optional then view.done=view.done+1 end
+        elseif state=="active" and not quest.optional then
+          view.ready=view.ready+1
+        end
+      end
+    end
+    view.chapters[chapter.id]=result
+  end
+  return view
+end
+-- Reuse the view already calculated for rendering. This reads live
+-- ForceTechnology prerequisites without storing a second progression state.
+function M.guidance(force,context,view)
+  context=context or M.context(force)
+  view=view or M.view_status(force,context)
+  return guidance.plan(view.states,function(quest)
+    return technology(force,quest,context)
+  end)
+end
+
+-- Dimensions are in Factorio GUI units, after the player's UI scale.
+-- Explicitly budget both columns to prevent the horizontal scroll bars
+-- caused by oversized localized labels and autosizing buttons.
+function M.layout(resolution,scale)
+  scale=math.max(0.5,scale or 1)
+  local screen_w=math.floor((resolution and resolution.width or 1600)/scale)
+  local screen_h=math.floor((resolution and resolution.height or 900)/scale)
+  local width=math.min(1370,math.max(420,screen_w-52))
+  local height=math.min(930,math.max(390,screen_h-64))
+  local compact=width<1020 or height<660
+  local rail=math.min(compact and 295 or 326,
+    math.max(235,math.floor(width*(compact and .31 or .265))))
+  local reader=width-rail-43
+  return {width=width,height=height,rail=rail,reader=reader,
+    body=math.max(200,height-(compact and 215 or 250)),
+    compact=compact}
+end
+local function label(parent,caption)
+  return parent.add{type="label",caption=caption}
+end
+local function wrap(parent,caption,width)
+  local element=label(parent,caption)
+  element.style.single_line=false
+  element.style.horizontally_stretchable=true
+  if width then element.style.maximal_width=width end
+  return element
+end
+local function tint(element,color)
+  element.style.font_color=color
+  return element
+end
+local function subtitle(parent,key,width,theme)
+  local item=label(parent,L(key))
+  item.style.font="default-bold"
+  item.style.font_color=theme and theme.soft or COLOR.muted
+  if width then item.style.maximal_width=width end
+  return item
+end
+-- A fine, chapter-colored rule that uses Factorio's built-in progressbar
+-- texture. This needs no texture atlas or custom rendering on each tick.
+local function accent_rule(parent,theme,width,thickness)
+  local rule=parent.add{type="progressbar",value=1}
+  rule.style.width=math.max(50,width)
+  rule.style.height=thickness or 3
+  rule.style.color=theme.primary
+  return rule
+end
+-- Dense but legible folio section heads: a small number of native GUI
+-- strokes make the chapter distinct without new atlases or paint events.
+local function dossier_heading(parent,key,theme,width)
+  local heading=parent.add{type="flow",direction="horizontal"}
+  heading.style.horizontal_spacing=9
+  heading.style.vertical_align="center"
+  accent_rule(heading,theme,50,2)
+  local title=subtitle(heading,key,width-65)
+  title.style.font_color=COLOR.muted
+  return heading
+end
+local function section(parent,key,caption,width,theme)
+  local block=parent.add{type="flow",direction="vertical"}
+  block.style.horizontally_stretchable=true
+  block.style.vertical_spacing=5
+  dossier_heading(block,key,theme,width)
+  if caption then
+    local copy=wrap(block,caption,width)
+    copy.style.font_color=COLOR.ink
+  end
+  return block
+end
+local function wheel_pane(parent,name,width,height)
+  local pane=parent.add{type="scroll-pane",name=name,
+    horizontal_scroll_policy="never",
+    vertical_scroll_policy="dont-show-but-allow-scrolling"}
+  pane.style.width=width
+  pane.style.height=math.max(120,height)
+  pane.style.horizontally_squashable=true
+  pane.style.vertically_squashable=true
+  return pane
+end
+local function chapter_index(id)
+  for i,chapter in ipairs(defs.chapters) do
+    if chapter.id==id then return i end
+  end
+  return 1
+end
+local function select_quest(force,p,context,plan)
+  local selected=p.selected and defs.by_id[p.selected]
+  if selected and M.available(force,selected,context) then
+    if p.chapter==nil then p.chapter=selected.chapter end
+    return selected
+  end
+  selected=plan and plan.primary and plan.primary.quest
+    or M.next_quest(force,context)
+  p.selected=selected and selected.id or nil
+  p.chapter=selected and selected.chapter or false
+  return selected
+end
+
+-- All icons are resolved from the installed Factorio prototypes, not guessed
+-- mod-specific assets. Keep work confined to visible GUI construction.
+local function sprite_if_valid(path)
+  if not path then return nil end
+  if helpers and helpers.is_valid_sprite_path and
+    not helpers.is_valid_sprite_path(path) then return nil end
+  return path
+end
+local function quest_art(force,quest,context)
+  if quest.world then
+    local image=sprite_if_valid("space-location/"..quest.world)
+    if image then return image end
+  end
+  local tech=technology(force,quest,context)
+  return tech and sprite_if_valid("technology/"..tech.name)
+    or "razi-journal-book-icon"
+end
+local function matches_query(quest,query)
+  if not query or query=="" then return true end
+  local corpus=(quest.id.." "..quest.chapter.." "..(quest.tech or "")
+    .." "..(quest.world or "").." "..(quest.site or "")
+    .." "..(quest.recipe or "").." "..(quest.machine or "")):lower():gsub("[-_]"," ")
+  for word in query:lower():gsub("[-_]"," "):gmatch("%S+") do
+    if not corpus:find(word,1,true) then return false end
+  end
+  return true
+end
+M.matches_query=matches_query
+
+local function draw_gallery(parent,key,entries,width,max_items,theme)
+  if #entries==0 then return end
+  local block=parent.add{type="flow",direction="vertical"}
+  block.style.vertical_spacing=5
+  subtitle(block,key,width,theme)
+  local columns=math.max(1,math.min(7,math.floor(width/155)))
+  local card_width=math.max(112,math.floor((width-(columns-1)*7)/columns)-3)
+  local grid=block.add{type="table",column_count=columns}
+  grid.style.horizontal_spacing=7
+  grid.style.vertical_spacing=7
+  for i=1,math.min(max_items,#entries) do
+    local entry=entries[i]
+    local card=grid.add{type="frame",direction="vertical",
+      style="inside_shallow_frame"}
+    card.style.width=card_width
+    card.style.padding=4
+    icons.sprite(card,entry.sprite,"gallery",entry.tooltip or entry.name)
+    local caption=wrap(card,entry.name,card_width-10)
+    caption.style.font_color=theme and theme.soft
+      or {r=.86,g=.9,b=.94}
+  end
+  if #entries>max_items then
+    wrap(block,L("more-unlocks",tostring(#entries-max_items)),width)
+  end
+end
+local function science_gallery(native)
+  local result={}
+  for _,ingredient in ipairs(native and native.research_unit_ingredients or {}) do
+    local path=sprite_if_valid("item/"..ingredient.name)
+    local item=prototypes and prototypes.item
+      and prototypes.item[ingredient.name]
+    if path then result[#result+1]={
+      sprite=path,name=item and item.localised_name or ingredient.name,
+      tooltip=L("science-per-unit",tostring(ingredient.amount or 1))} end
+  end
+  return result
+end
+local function unlock_gallery(native)
+  local result,seen={},{}
+  for _,effect in ipairs(native and native.prototype
+    and native.prototype.effects or {}) do
+    if effect.type=="unlock-recipe" and effect.recipe and
+      not seen[effect.recipe] then
+      seen[effect.recipe]=true
+      local recipe=prototypes and prototypes.recipe
+        and prototypes.recipe[effect.recipe]
+      if recipe and not recipe.hidden then
+        local output=recipe.main_product or
+          (recipe.products and recipe.products[1])
+        local item=output and output.type~="fluid"
+          and prototypes and prototypes.item and prototypes.item[output.name]
+        local building=item and item.place_result
+        local sprite=building and sprite_if_valid("entity/"..building.name)
+          or output and sprite_if_valid(
+            (output.type=="fluid" and "fluid/" or "item/")..output.name)
+          or sprite_if_valid("recipe/"..effect.recipe)
+        if sprite then result[#result+1]={
+          sprite=sprite,
+          name=(building and building.localised_name)
+            or (item and item.localised_name) or recipe.localised_name,
+          tooltip=recipe.localised_name,building=building and true or false} end
+      end
+    end
+  end
+  table.sort(result,function(a,b)
+    if a.building~=b.building then return a.building end
+    return false
+  end)
+  return result
+end
+
+
+-- Exact recipe illustration for Razi's source-proven alternate processes.
+-- Reads one recipe by ID only while its quest is viewed: no global scans.
+local function recipe_gallery(parent,quest,native,width,theme)
+  if not (quest.site and native and prototypes
+      and prototypes.recipe) then return end
+  local recipe=preview.recipe(quest,native,prototypes.recipe)
+  if not recipe then return end
+  local function cards(entries)
+    local output={}
+    for _,entry in ipairs(entries or {}) do
+      local name=entry.name
+      local kind=entry.type=="fluid" and "fluid" or "item"
+      local proto=prototypes[kind] and prototypes[kind][name]
+      local path=name and sprite_if_valid(kind.."/"..name)
+      if proto and path then
+        local caption={"",proto.localised_name,preview.quantity(entry)}
+        output[#output+1]={sprite=path,name=caption,
+          tooltip=caption}
+      end
+    end
+    return output
+  end
+  local materials=cards(recipe.ingredients)
+  local products=cards(recipe.products)
+  if #materials==0 or #products==0 then return end
+  local panel=parent.add{type="frame",direction="vertical",
+    style="inside_deep_frame"}
+  panel.style.width=width
+  panel.style.padding=10
+  subtitle(panel,"factory-diagram",width-26,theme)
+  if theme then accent_rule(panel,theme,math.min(width-26,168),3) end
+  wrap(panel,L("site-advisory",preview.workshop_fallback(quest,prototypes)),width-26)
+  -- Existing machines and the original planet can be inspected before
+  -- researching the optional production alternative.
+  if quest.machine and prototypes.item and prototypes.item[quest.machine] then
+    local machine=prototypes.item[quest.machine]
+    local art=sprite_if_valid("item/"..quest.machine)
+    if art then
+      draw_gallery(panel,"factory-equipment",{
+        {sprite=art,name=machine.localised_name,tooltip=machine.localised_name}
+      },width-26,1,theme)
+    end
+  end
+  draw_gallery(panel,"factory-imports",materials,width-26,10,theme)
+  draw_gallery(panel,"factory-outputs",products,width-26,5,theme)
+  wrap(panel,L(quest.optional and "factory-optional-note"
+    or "factory-source-owned"),width-26)
+end
+
+local function render_tracker(player)
+  local area=player.gui.left
+  local old=area[TRACKER]
+  if old and old.valid then old.destroy() end
+  local p=pref(player.index)
+  if not p.tracker then return end
+  local context=M.context(player.force)
+  local quest=p.pinned and defs.by_id[p.pinned]
+  if not quest or not M.available(player.force,quest,context) then
+    quest=M.next_quest(player.force,context)
+    p.pinned=quest and quest.id or nil
+  end
+  if not quest then return end
+  local theme=themes.get(quest.chapter)
+  local frame=area.add{type="frame",name=TRACKER,direction="vertical",
+    caption=L("tracker-title")}
+  frame.style.maximal_width=286
+  frame.style.padding=9
+  local chapter=frame.add{type="flow",direction="horizontal"}
+  chapter.style.horizontal_spacing=7
+  icons.sprite(chapter,themes.icon(quest.chapter),"tracker_chapter")
+  local chapter_text=wrap(chapter,{"journal-chapter."..quest.chapter},225)
+  chapter_text.style.font="default-bold"
+  chapter_text.style.font_color=theme.primary
+  accent_rule(frame,theme,108,2)
+  local line=frame.add{type="flow",direction="horizontal"}
+  line.style.horizontal_spacing=7
+  icons.sprite(line,quest_art(player.force,quest,context),"tracker_quest")
+  local heading=line.add{type="label",style="clickable_label",
+    caption={"journal-title."..quest.id},
+    tags={razi_journal_action="tracker-open"}}
+  heading.style.single_line=false
+  heading.style.maximal_width=195
+  heading.style.font="default-bold"
+  local done=M.complete(player.force,quest,context)
+  local signal=wrap(frame,L(quest.boss
+    and (done and "tracker-boss-done" or "tracker-boss-pending")
+    or (done and "tracker-done" or "tracker-pending")),245)
+  signal.style.font_color=done and COLOR.green or COLOR.muted
+end
+M.render_tracker=render_tracker
+local function render_details(parent,player,quest,p,context,size,view)
+  local panel=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  panel.style.width=size.reader
+  panel.style.height=size.body
+  panel.style.padding=15
+  local inner=size.reader-38
+  local status=M.state(player.force,quest,context)
+  local theme=themes.get(quest.chapter)
+  local banner=panel.add{type="flow",direction="horizontal"}
+  banner.style.horizontal_spacing=10
+  banner.style.vertical_align="center"
+  icons.sprite(banner,themes.icon(quest.chapter),"chapter_seal",
+    {"journal-chapter."..quest.chapter})
+  local identification=banner.add{type="flow",direction="vertical"}
+  identification.style.vertical_spacing=2
+  local chapter_intro=label(identification,{"journal-chapter."..quest.chapter})
+  chapter_intro.style.font="default-bold"
+  chapter_intro.style.font_color=theme.primary
+  if not size.compact then
+    local atmosphere=label(identification,{"journal-mood."..quest.chapter})
+    atmosphere.style.font_color=theme.soft
+  end
+  accent_rule(panel,theme,math.min(148,inner),3)
+  -- A quiet editorial identity for the selected dossier. All three values
+  -- are read from the real force snapshot, never invented progress.
+  local identity=panel.add{type="flow",direction="horizontal"}
+  identity.style.vertical_align="center"
+  identity.style.horizontal_spacing=9
+  local folio_number=tint(label(identity,
+    L("dossier-index",string.format("%02d",chapter_index(quest.chapter)))),COLOR.quiet)
+  folio_number.style.font="default-bold"
+  local chapter_ink=label(identity,quest.chapter=="calidus"
+    and quest.phase and {"journal-nauvis-phase."..quest.phase}
+    or L("dossier-classification"))
+  chapter_ink.style.font_color=theme.soft
+  local chapter_link=identity.add{type="label",style="clickable_label",
+    caption=L("chapter-cover-open"),
+    tags={razi_journal_action="chapter-dossier",id=quest.chapter},
+    tooltip=L("chapter-cover-tooltip")}
+  chapter_link.style.font_color=theme.primary
+  local hero=panel.add{type="flow",direction="horizontal"}
+  hero.style.horizontal_spacing=10
+  icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
+  local hero_text=hero.add{type="flow",direction="vertical"}
+  hero_text.style.vertical_spacing=2
+  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-57)
+  hero_title.style.font="heading-1"
+  hero_title.style.font_color=COLOR.ink
+
+  local eyebrow=panel.add{type="flow",direction="horizontal"}
+  eyebrow.style.horizontally_stretchable=true
+  -- Status first: players should recognize whether they can act before
+  -- reading the full narrative. Avoid repeating the same chapter number.
+  local status_label=label(eyebrow,L("status-"..status))
+  status_label.style.font="default-bold"
+  status_label.style.font_color=status=="complete" and COLOR.green
+    or status=="active" and COLOR.amber or COLOR.muted
+  -- The completion status is already visible; give the reader that space.
+  local content_height=size.body-(size.compact and 225 or 248)
+  local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
+  scroll.tags={razi_scroll_context=quest.id}
+  local text_width=inner-18
+  local prose=scroll.add{type="flow",direction="vertical"}
+  prose.style.width=text_width
+  prose.style.vertical_spacing=11
+  local objective=prose.add{type="frame",direction="vertical",
+    style="inside_deep_frame"}
+  objective.style.width=text_width
+  objective.style.padding=13
+  subtitle(objective,"objective-heading",text_width-26,theme)
+  accent_rule(objective,theme,math.min(text_width-26,96),2)
+  local native=technology(player.force,quest,context)
+  if quest.boss then
+    wrap(objective,{"",L("objective-boss")," ",
+      {"nexus-bosses.boss-"..quest.boss}},text_width-26)
+    local record=context.nexus
+    if record then
+      tint(label(objective,L("nexus-victories",
+        tostring(record.count),tostring(record.total))),
+        {r=.55,g=.87,b=.75})
+    end
+  else
+    wrap(objective,{"",L(quest.world and "objective-discovery"
+      or "objective-research",
+      native and native.localised_name or quest.world or quest.tech)},
+      text_width-26)
+  end
+  if native and not native.researched then
+    local blockers={}
+    for _,prior in pairs(native.prerequisites or {}) do
+      if not prior.researched then blockers[#blockers+1]=prior end
+    end
+    table.sort(blockers,function(a,b) return a.name<b.name end)
+    for i=1,math.min(4,#blockers) do
+      wrap(objective,{"",L("native-prerequisite")," ",
+        blockers[i].localised_name},text_width-26)
+    end
+  end
+  -- Prerequisite links lead to the actual Codex entry, rather than
+  -- trapping players at a noninteractive list of dependencies.
+  local met,required_total=0,0
+  for _,required in ipairs(quest.requires or {}) do
+    local prior=defs.by_id[required]
+    if prior and M.available(player.force,prior,context) then
+      required_total=required_total+1
+      if M.complete(player.force,prior,context) then
+        met=met+1
+      elseif status~="complete" then
+        local needs=objective.add{type="flow",direction="horizontal"}
+        needs.style.horizontal_spacing=7
+        local mark=label(needs,"○")
+        mark.style.font_color=theme.soft
+        local jump=needs.add{type="label",style="clickable_label",
+          caption={"",L("requires-heading")," ",
+            {"journal-title."..prior.id}},
+          tags={razi_journal_action="guidance-select",id=prior.id},
+          tooltip=L("open-prerequisite")}
+        jump.style.single_line=false
+        jump.style.maximal_width=text_width-57
+      end
+    end
+  end
+  if required_total>0 then
+    local readiness=prose.add{type="flow",direction="vertical"}
+    readiness.style.width=text_width
+    readiness.style.vertical_spacing=5
+    dossier_heading(readiness,"dossier-readiness",theme,text_width)
+    local count=label(readiness,L("dossier-prerequisites",
+      tostring(met),tostring(required_total)))
+    count.style.font_color=met==required_total and COLOR.green or COLOR.muted
+    local bar=readiness.add{type="progressbar",value=met/required_total}
+    bar.style.width=math.min(240,text_width-18)
+    bar.style.height=5
+    bar.style.color=theme.primary
+  end
+  -- Direct campaign handoffs share the force snapshot with the chapter rail.
+  local next_steps=guidance.followups(quest.id,view and view.states,3)
+  if #next_steps>0 then
+    local forecast=prose.add{type="flow",direction="vertical"}
+    forecast.style.width=text_width
+    forecast.style.vertical_spacing=4
+    dossier_heading(forecast,"next-steps-heading",theme,text_width)
+    for _,step in ipairs(next_steps) do
+      local line=forecast.add{type="flow",direction="horizontal"}
+      line.style.horizontal_spacing=8
+      icons.sprite(line,quest_art(player.force,step.quest,context),"quest_row")
+      local note=line.add{type="flow",direction="vertical"}
+      note.style.vertical_spacing=1
+      local link=note.add{type="label",style="clickable_label",
+        caption={"journal-title."..step.quest.id},
+        tags={razi_journal_action="guidance-select",id=step.quest.id}}
+      link.style.single_line=false
+      link.style.maximal_width=text_width-80
+      if step.state~="complete" then
+        tint(wrap(note,L("next-step-"..step.state),text_width-80),theme.soft)
+      end
+    end
+  end
+  -- The link is informational and never turns a researched milestone
+  -- into a claim that freight actually shipped or a factory is running.
+  local cargo_id=cargo_catalog.chain_for_quest(quest.id)
+  if cargo_id and cargo_catalog.is_installed(player.force,cargo_id) then
+    local bridge=prose.add{type="flow",direction="vertical"}
+    bridge.style.width=text_width
+    bridge.style.vertical_spacing=4
+    subtitle(bridge,"cargo-bridge-heading",text_width-26,theme)
+    wrap(bridge,L("cargo-bridge-description"),text_width-26)
+    local link=bridge.add{type="button",caption=L("cargo-bridge-open"),
+      tags={razi_journal_action="open-cargo",id=quest.id}}
+    link.tooltip=L("cargo-bridge-tooltip")
+  end
+  if quest.convergence or quest.id=="convergence-commission"
+    or quest.id=="convergence-synchronization" then
+    local bridge=prose.add{type="flow",direction="vertical"}
+    bridge.style.width=text_width
+    bridge.style.vertical_spacing=4
+    wrap(bridge,L("convergence-codex-description"),text_width-26)
+    bridge.add{type="button",caption=L("convergence-codex-open"),
+      tags={razi_journal_action="open-convergence",id=quest.id}}
+  end
+  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
+  section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
+  section(prose,"chapter-context",
+    {"journal-chapter-story."..quest.chapter},text_width,theme)
+  if native then
+    draw_gallery(prose,"science-pack-heading",
+      science_gallery(native),text_width,12,theme)
+    draw_gallery(prose,"recipe-unlock-heading",
+      unlock_gallery(native),text_width,8,theme)
+    recipe_gallery(prose,quest,native,text_width,theme)
+  end
+  local forecast=weather.for_quest(quest)
+  if forecast then
+    local sky=section(prose,"weather-heading",
+      {"journal-weather."..forecast.world},text_width,theme)
+    tint(wrap(sky,L(forecast.enabled and "weather-active"
+      or "weather-inactive"),text_width),
+      forecast.enabled and {r=.54,g=.85,b=.75} or {r=.72,g=.74,b=.79})
+  end
+
+  -- Never let the long Nexus and pin actions overflow narrow readers.
+  local actions=panel.add{type="table",
+    column_count=size.reader<700 and 2 or 4}
+  actions.style.horizontal_spacing=8
+  actions.style.vertical_spacing=6
+  if quest.boss then
+    actions.add{type="button",caption=L("nexus-open-codex"),
+      tags={razi_journal_action="nexus-codex",id=quest.boss}}
+  end
+  local pinned=p.tracker and p.pinned==quest.id
+  actions.add{type="button",caption=L(pinned
+    and "tracker-hide" or "tracker-show"),
+    tags={razi_journal_action="pin",id=quest.id}}
+  actions.add{type="button",caption=L("previous-in-chapter"),
+    tags={razi_journal_action="previous-in-chapter"}}
+  actions.add{type="button",caption=L("next-in-chapter"),
+    tags={razi_journal_action="next-in-chapter"}}
+end
+
+
+-- Compact editorial act divider for Nauvis. The four acts are meaningful
+-- navigation, not new research gates, progress storage or a separate UI.
+local function nauvis_phase(parent,phase,theme,width)
+  if not phase then return end
+  local heading=parent.add{type="flow",direction="horizontal"}
+  heading.style.horizontal_spacing=8
+  heading.style.vertical_align="center"
+  accent_rule(heading,theme,50,2)
+  local name=label(heading,{"journal-nauvis-phase."..phase})
+  name.style.font="default-bold"
+  name.style.font_color=theme.soft
+  name.style.maximal_width=math.max(80,width-65)
+end
+
+-- A source-backed frontispiece for each chapter. It is a *view* of the
+-- existing milestones, never a separate quest or a second progress store.
+-- Only the chosen page is built on demand. No tick work, custom textures,
+-- temporary render objects, or research mutations.
+local function render_chapter_cover(parent,player,p,context,size,view)
+  local chapter=p.chapter and view.chapters[p.chapter]
+  if not chapter then return false end
+  local theme=themes.get(p.chapter)
+  local width=size.reader
+  local inner=width-38
+  local panel=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  panel.style.width=width
+  panel.style.height=size.body
+  panel.style.padding=15
+  local labelline=panel.add{type="flow",direction="horizontal"}
+  labelline.style.horizontal_spacing=7
+  local over=label(labelline,L("chapter-cover-eyebrow",
+    string.format("%02d",chapter_index(p.chapter))))
+  over.style.font="default-bold"
+  over.style.font_color=theme.primary
+  local heading=panel.add{type="flow",direction="horizontal"}
+  heading.style.horizontal_spacing=10
+  heading.style.vertical_align="center"
+  icons.sprite(heading,themes.icon(p.chapter),"chapter_seal")
+  local cover_title=wrap(heading,{"journal-chapter."..p.chapter},inner-52)
+  cover_title.style.font="heading-1"
+  cover_title.style.font_color=COLOR.ink
+  accent_rule(panel,theme,math.min(170,inner),3)
+  local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
+  mood.style.font="default-bold"
+  mood.style.font_color=theme.soft
+  local line=panel.add{type="flow",direction="horizontal"}
+  line.style.horizontal_spacing=9
+  local count=label(line,L("chapter-progress-short",
+    tostring(chapter.completed),tostring(chapter.total)))
+  count.style.font="default-bold"
+  count.style.font_color=COLOR.muted
+  local measure=panel.add{type="progressbar",
+    value=chapter.total>0 and chapter.completed/chapter.total or 0}
+  measure.style.width=math.min(inner,420)
+  measure.style.height=7
+  measure.style.color=theme.primary
+
+  -- Limited-height outer folio, one scroll pane only. This lets even the
+  -- largest chapter keep its narrative and real milestones scrollable.
+  local scroll=wheel_pane(panel,"razi_journal_chapter_reading",
+    inner,size.body-(size.compact and 248 or 265))
+  local body=scroll.add{type="flow",direction="vertical"}
+  local text_width=inner-18
+  body.style.width=text_width
+  body.style.vertical_spacing=12
+  section(body,"chapter-cover-story",
+    {"journal-chapter-story."..p.chapter},text_width,theme)
+  section(body,"chapter-cover-dispatch",
+    {"journal-chapter-dispatch."..p.chapter},text_width,theme)
+  dossier_heading(body,"chapter-cover-entries",theme,text_width)
+
+  local next_entry
+  for _,quest in ipairs(chapter.quests) do
+    if view.states[quest.id]=="active" then next_entry=quest;break end
+  end
+  if not next_entry then
+    for _,quest in ipairs(chapter.quests) do
+      if view.states[quest.id]=="locked" then next_entry=quest;break end
+    end
+  end
+  if not next_entry then
+    for _,quest in ipairs(chapter.quests) do
+      if view.states[quest.id]=="complete" then next_entry=quest;break end
+    end
+  end
+
+  -- A real chapter navigation log; each entry jumps to its existing
+  -- quest dossier, with colours derived from actual force research.
+  local shown=0
+  local last_phase=nil
+  for _,quest in ipairs(chapter.quests) do
+    if shown>=8 then break end
+    shown=shown+1
+    if p.chapter=="calidus" and quest.phase
+      and quest.phase~=last_phase then
+      nauvis_phase(body,quest.phase,theme,text_width)
+    end
+    last_phase=quest.phase
+    local state=view.states[quest.id]
+    local row=body.add{type="flow",direction="horizontal"}
+    row.style.horizontal_spacing=9
+    row.style.vertical_align="center"
+    icons.sprite(row,quest_art(player.force,quest,context),"quest_row")
+    local marker=label(row,state=="complete" and "✓"
+      or state=="active" and "●" or "○")
+    marker.style.font_color=state=="complete" and COLOR.green
+      or state=="active" and COLOR.amber or COLOR.quiet
+    local link=row.add{type="label",style="clickable_label",
+      caption={"journal-title."..quest.id},
+      tooltip=L("select-objective"),
+      tags={razi_journal_action="select",id=quest.id}}
+    link.style.single_line=false
+    link.style.maximal_width=text_width-85
+    link.style.font_color=quest==next_entry and COLOR.ink or COLOR.muted
+    if quest==next_entry then link.style.font="default-bold" end
+  end
+  if #chapter.quests>shown then
+    local extra=label(body,L("chapter-cover-more",
+      tostring(#chapter.quests-shown)))
+    extra.style.font_color=COLOR.quiet
+  end
+  if next_entry then
+    -- Small screens keep the next-entry control inside the scrollable
+    -- folio so it cannot force the whole reader beyond the display.
+    local footer_parent=size.body<420 and body or panel
+    local footer=footer_parent.add{type="flow",direction="horizontal"}
+    footer.style.horizontal_spacing=8
+    footer.style.vertical_align="center"
+    local call=footer.add{type="button",
+      caption=L(view.states[next_entry.id]=="complete"
+        and "chapter-cover-review" or "chapter-cover-continue"),
+      tags={razi_journal_action="chapter-continue",id=next_entry.id}}
+    call.tooltip={"journal-title."..next_entry.id}
+  else
+    wrap(panel,L("chapter-cover-unavailable"),inner)
+  end
+  return true
+end
+
+-- Wrapped, selectable labels replace the old too-wide chapter and quest
+-- buttons. One chapter jump selector covers distant chapters with no bars.
+local function render_chapters(parent,player,p,context,size,view,plan)
+  local frame=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  frame.style.width=size.rail
+  frame.style.height=size.body
+  frame.style.padding=12
+  local inner=size.rail-35
+  subtitle(frame,"navigator-title",inner)
+  accent_rule(frame,themes.get(p.chapter or "calidus"),68,2)
+  local names={}
+  for _,ch in ipairs(defs.chapters) do
+    names[#names+1]={"journal-chapter."..ch.id}
+  end
+  local dropdown=frame.add{type="drop-down",
+    name="razi_journal_chapter_picker",items=names,
+    selected_index=chapter_index(p.chapter)}
+  dropdown.style.width=inner
+  subtitle(frame,"search-heading",inner)
+  local find_row=frame.add{type="flow",direction="horizontal"}
+  find_row.style.horizontal_spacing=5
+  local search=find_row.add{type="textfield",name="razi_journal_search",
+    text=p.query or "",tooltip=L("search-tooltip")}
+  search.style.width=inner-44
+  local clear=find_row.add{type="button",style="tool_button",
+    caption="×",tooltip=L("clear-search"),
+    tags={razi_journal_action="clear-search"}}
+  clear.style.width=32
+  clear.style.height=32
+  local scroll=wheel_pane(frame,"razi_journal_navigation",
+    inner,size.body-151)
+  local column=scroll.add{type="flow",direction="vertical"}
+  column.style.width=inner-13
+  column.style.vertical_spacing=7
+  local selected_element
+
+  plan=plan or M.guidance(player.force,context,view)
+  local priority=column.add{type="frame",direction="vertical",
+    style="inside_deep_frame"}
+  priority.style.width=inner-16
+  priority.style.padding=8
+  -- FrameStyle has no vertical_spacing; content uses native frame spacing.
+  local heading=wrap(priority,L("guidance-heading"),inner-40)
+  heading.style.font="default-bold"
+  heading.style.font_color=COLOR.amber
+  if not plan.primary then
+    wrap(priority,L("guidance-none"),inner-38)
+  else
+    for i,entry in ipairs(plan.selected) do
+      local chapter_theme=themes.get(entry.chapter)
+      local row=priority.add{type="flow",direction="horizontal"}
+      row.style.horizontal_spacing=6
+      icons.sprite(row,quest_art(player.force,entry.quest,context),
+        "priority")
+      local prefix
+      if entry.kind=="delivery-ready" then
+        prefix=i==1 and "guidance-main-delivery"
+          or "guidance-parallel-delivery"
+      elseif entry.kind=="transmission-pending" then
+        prefix="guidance-transmission"
+      else
+        prefix=i==1 and "guidance-main" or "guidance-parallel"
+      end
+      local item=row.add{type="label",style="clickable_label",
+        caption={"",L(prefix)," ",{"journal-title."..entry.quest.id}},
+        tags={razi_journal_action="guidance-select",id=entry.quest.id},
+        tooltip={"journal-chapter."..entry.chapter}}
+      item.style.single_line=false
+      item.style.maximal_width=inner-79
+      item.style.font_color=i==1 and COLOR.ink or COLOR.muted
+      if i==1 then item.style.font="default-bold" end
+    end
+  end
+  if plan.blocker then
+    local blocked=plan.blocker
+    local warning=wrap(priority,L("guidance-blocker-heading"),inner-38)
+    warning.style.font="default-bold"
+    warning.style.font_color=COLOR.amber
+    local link=priority.add{type="label",style="clickable_label",
+      caption={"journal-title."..blocked.quest.id},
+      tags={razi_journal_action="guidance-select",id=blocked.quest.id}}
+    link.style.single_line=false
+    link.style.maximal_width=inner-38
+    if blocked.disabled then
+      wrap(priority,L("guidance-disabled"),inner-38)
+    elseif blocked.tech_blockers and #blocked.tech_blockers>0 then
+      wrap(priority,L("guidance-tech-needs",
+        blocked.tech_blockers[1].localised_name),inner-38)
+    elseif blocked.quest_blockers and #blocked.quest_blockers>0 then
+      wrap(priority,L("guidance-quest-needs",
+        {"journal-title."..blocked.quest_blockers[1]}),inner-38)
+    end
+  end
+  local found=false
+
+  for index,chapter in ipairs(defs.chapters) do
+    local theme=themes.get(chapter.id)
+    local data=view.chapters[chapter.id]
+    local completed,total=data.completed,data.total
+    local available={}
+    for _,quest in ipairs(data.quests) do
+      if state_matches_filter(view.states[quest.id],p.filter)
+        and matches_query(quest,p.query) then
+        available[#available+1]=quest
+      end
+    end
+    if #available>0 then
+      found=true
+      local open=p.query~="" or p.chapter==chapter.id
+      -- Only the expanded chapter gets a surfaced panel. Collapsed
+      -- chapters read like a quiet table of contents.
+      local card=column.add{type=open and "frame" or "flow",
+        direction="vertical",style=open and "inside_shallow_frame" or nil}
+      card.style.width=inner-16
+      card.style.padding=open and 8 or 3
+      local head=card.add{type="flow",direction="horizontal"}
+      head.style.horizontal_spacing=6
+      icons.button(head,themes.icon(chapter.id),"chapter_button",
+        {razi_journal_action="chapter",id=chapter.id},
+        {"journal-chapter."..chapter.id})
+      local toggle=head.add{type="button",style="tool_button",
+        caption=open and "▾" or "▸",
+        tags={razi_journal_action="chapter",id=chapter.id},
+        tooltip={"journal-chapter."..chapter.id}}
+      toggle.style.width=22
+      toggle.style.height=26
+      toggle.style.font_color=open and theme.primary or COLOR.quiet
+      local heading=wrap(head,{"journal-chapter."..chapter.id},inner-112)
+      heading.style.font="default-bold"
+      heading.style.font_color=open and COLOR.ink or COLOR.muted
+      heading.style.vertical_align="center"
+      if open then
+        accent_rule(card,theme,math.min(82,inner-40),2)
+      end
+      local counts=card.add{type="flow",direction="vertical"}
+      counts.style.vertical_spacing=3
+      local count=label(counts,
+        L("chapter-progress-short",tostring(completed),tostring(total)))
+      count.style.font_color=COLOR.quiet
+      local progress=counts.add{type="progressbar",
+        value=total>0 and completed/total or 0}
+      progress.style.width=math.max(95,inner-43)
+      progress.style.height=6
+      progress.style.color=theme.primary
+      if open then
+        local open_cover=card.add{type="label",style="clickable_label",
+          caption=L(p.chapter_cover and p.chapter==chapter.id
+            and "chapter-cover-current" or "chapter-cover-open"),
+          tooltip=L("chapter-cover-tooltip"),
+          tags={razi_journal_action="chapter-dossier",id=chapter.id}}
+        open_cover.style.font_color=theme.soft
+        local last_phase=nil
+        for _,quest in ipairs(available) do
+          if chapter.id=="calidus" and quest.phase
+            and quest.phase~=last_phase then
+            nauvis_phase(card,quest.phase,theme,inner-34)
+          end
+          last_phase=quest.phase
+          local state=view.states[quest.id]
+          -- A selected entry is a single subtly raised row, not another
+          -- full-width button. The native technology image stays bounded.
+          local chosen=quest.id==p.selected and not p.chapter_cover
+          local item=card.add{type=chosen and "frame" or "flow",
+            direction="horizontal",
+            style=chosen and "inside_shallow_frame" or nil}
+          item.style.width=inner-34
+          item.style.padding=chosen and 4 or 1
+          if not chosen then item.style.horizontal_spacing=7 end
+          icons.sprite(item,quest_art(player.force,quest,context),
+            "quest_row")
+          local control=item.add{type="button",style="tool_button",
+            caption=state=="complete" and "✓"
+              or state=="active" and "●" or "○",
+            tags={razi_journal_action="select",id=quest.id},
+            tooltip={"journal-title."..quest.id}}
+          control.style.width=27
+          control.style.height=27
+          local color=state=="complete" and {r=.48,g=.85,b=.67}
+            or state=="active" and {r=.98,g=.79,b=.46}
+            or {r=.58,g=.61,b=.68}
+          control.style.font_color=color
+          local choice=item.add{type="label",style="clickable_label",
+            caption={"journal-title."..quest.id},
+            tags={razi_journal_action="select",id=quest.id},
+            tooltip=L("select-objective")}
+          choice.style.single_line=false
+          choice.style.maximal_width=inner-108
+          choice.style.font_color=chosen
+            and COLOR.ink or COLOR.muted
+          if chosen then
+            control.style.font_color=theme.primary
+            choice.style.font="default-bold"
+            selected_element=choice
+          end
+        end
+      end
+    end
+  end
+  if not found then wrap(column,L("nothing-found"),inner-28) end
+  -- Search results should not jump while the player is still typing.
+  if selected_element and p.reveal_selection and p.query=="" then
+    pcall(function() scroll.scroll_to_element(selected_element) end)
+  end
+  p.reveal_selection=nil
+  return search
+end
+-- The archive is not another quest chain. Each story entry opens only
+-- when its source-backed research milestone is actually completed.
+function M.unlocked_records(force,context)
+  context=context or M.context(force)
+  local unlocked=0
+  for _,record in ipairs(records) do
+    local q=defs.by_id[record.unlock]
+    if q and M.complete(force,q,context) then unlocked=unlocked+1 end
+  end
+  return unlocked,#records
+end
+local function render_archive(parent,player,p,context,size)
+  local rail=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  rail.style.width=size.rail
+  rail.style.height=size.body
+  subtitle(rail,"archive-navigator",size.rail-38,themes.get("echoes"))
+  local left=wheel_pane(rail,"razi_journal_archive_navigation",
+    size.rail-35,size.body-61)
+  local collection=left.add{type="flow",direction="vertical"}
+  collection.style.width=size.rail-56
+  collection.style.vertical_spacing=8
+  local chosen,focus
+  for _,record in ipairs(records) do
+    local quest=defs.by_id[record.unlock]
+    local opened=quest and M.complete(player.force,quest,context)
+    if opened and (not chosen or record.id==p.record) then chosen=record end
+    local highlighted=opened and record.id==p.record
+      or opened and not p.record and chosen==record
+    local row=collection.add{type=highlighted and "frame" or "flow",
+      direction="horizontal",
+      style=highlighted and "inside_shallow_frame" or nil}
+    row.style.padding=highlighted and 5 or 1
+    if not highlighted then row.style.horizontal_spacing=8 end
+    local mark
+    if opened then
+      mark=icons.button(row,quest_art(player.force,quest,context),
+        "archive_button",{razi_journal_action="record",id=record.id},
+        {"journal-record-title."..record.id})
+    else
+      mark=row.add{type="button",style="tool_button",
+        caption="◇",enabled=false,
+        tooltip={"journal-record-title."..record.id}}
+      mark.style.font_color={r=.59,g=.62,b=.68}
+    end
+    mark.style.width=icons.size("archive_button")
+    mark.style.height=icons.size("archive_button")
+    local choice=row.add{type="label",
+      style=opened and "clickable_label" or nil,
+      caption={"journal-record-title."..record.id},
+      tags=opened and {razi_journal_action="record",id=record.id} or nil}
+    choice.style.single_line=false
+    choice.style.maximal_width=size.rail-105
+    choice.style.font_color=opened and {r=.95,g=.95,b=.95}
+      or {r=.58,g=.60,b=.65}
+    if opened and record.id==p.record then
+      choice.style.font="default-bold"
+      focus=choice
+    end
+  end
+  if focus then pcall(function() left.scroll_to_element(focus) end) end
+
+  local paper=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame_with_padding"}
+  paper.style.width=size.reader
+  paper.style.height=size.body
+  paper.style.padding=16
+  if not chosen then
+    subtitle(paper,"archive-sealed-heading",size.reader-48)
+    wrap(paper,L("archive-sealed"),size.reader-48)
+    return
+  end
+  p.record=chosen.id
+  local chosen_quest=defs.by_id[chosen.unlock]
+  local archive_theme=themes.get(chosen_quest and chosen_quest.chapter or "echoes")
+  subtitle(paper,"archive-entry-label",size.reader-48,archive_theme)
+  accent_rule(paper,archive_theme,math.min(142,size.reader-42),3)
+  local cover=paper.add{type="flow",direction="horizontal"}
+  cover.style.horizontal_spacing=10
+  local entry_quest=defs.by_id[chosen.unlock]
+  if entry_quest then
+    icons.sprite(cover,quest_art(player.force,entry_quest,context),
+      "archive_cover")
+  end
+  local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-94)
+  title.style.font="heading-1"
+  title.style.font_color=COLOR.ink
+  local origin=label(paper,{"journal-record-origin."..chosen.id})
+  origin.style.font_color=COLOR.muted
+  paper.add{type="line",direction="horizontal"}
+  local reading=wheel_pane(paper,"razi_journal_archive_reading",
+    size.reader-38,size.body-179)
+  reading.tags={razi_scroll_context=chosen.id}
+  local page=reading.add{type="flow",direction="vertical"}
+  page.style.width=size.reader-67
+  page.style.vertical_spacing=18
+  wrap(page,{"journal-record-body."..chosen.id},size.reader-67)
+  wrap(paper,L("archive-disclaimer"),size.reader-48)
+end
+
+function M.quest_by_id(id)
+  return defs.by_id[id]
+end
+-- Factorio does not expose a scroll-pane's pixel offset to scripts.
+-- Remember which *source-owned* boss victories the open Codex last rendered
+-- so ten-second Nexus polls cannot destroy a player's scrolled reading pane.
+local function nexus_revision(snapshot)
+  if not snapshot then return "unavailable" end
+  local bits={}
+  for _,id in ipairs(trials.order) do
+    bits[#bits+1]=trials.defeated(snapshot,id) and "1" or "0"
+  end
+  return table.concat(bits)
+end
+-- Preserve all independently scrollable readers when frame.clear()
+-- rebuilds their GUI trees. Entry-specific tags prevent scroll bleed
+-- between different milestones/projects/archive records.
+local scroll_names={
+  razi_journal_navigation=true,razi_journal_reading=true,
+  razi_journal_chapter_reading=true,razi_journal_archive_reading=true,
+  razi_journal_project_reader=true
+}
+local function scroll_key(element)
+  local tags=element.tags
+  return element.name.."|"..tostring(tags and tags.razi_scroll_context or "")
+end
+local function collect_scrolls(element,snapshot)
+  if not (element and element.valid) then return end
+  if scroll_names[element.name] then
+    snapshot[scroll_key(element)]=element.vertical_scroll_position
+  end
+  for _,child in pairs(element.children) do
+    collect_scrolls(child,snapshot)
+  end
+end
+local function restore_scrolls(element,snapshot,skip_navigation)
+  if not (element and element.valid) then return end
+  if scroll_names[element.name]
+    and not (skip_navigation and element.name=="razi_journal_navigation") then
+    local pos=snapshot[scroll_key(element)]
+    if type(pos)=="number" and pos>=0 then
+      pcall(function() element.vertical_scroll_position=pos end)
+    end
+  end
+  for _,child in pairs(element.children) do
+    restore_scrolls(child,snapshot,skip_navigation)
+  end
+end
+local function draw(player,focus_search)
+  local frame=player.gui.screen[FRAME]
+  if not (frame and frame.valid) then return end
+  local p=pref(player.index)
+  local size=M.layout(player.display_resolution,player.display_scale)
+  local reveal_on_redraw=p.reveal_selection==true
+  local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
+  local window_theme=themes.get(chapter_theme)
+  local saved_scrolls={}
+  collect_scrolls(frame,saved_scrolls)
+  frame.clear()
+  frame.style.width=size.width
+  frame.style.padding=16
+  local head=frame.add{type="flow",direction="horizontal"}
+  head.style.horizontally_stretchable=true
+  head.style.vertical_align="center"
+  head.style.horizontal_spacing=10
+  icons.sprite(head,themes.icon(chapter_theme),"window_emblem")
+  local heading=head.add{type="flow",direction="vertical"}
+  heading.style.vertical_spacing=1
+  local title=label(heading,L(size.compact and "window-compact" or "window"))
+  title.style.font="heading-1"
+  title.style.font_color=COLOR.ink
+  local kicker=tint(label(heading,L("header-eyebrow")),COLOR.muted)
+  kicker.style.font="default-bold"
+  local drag=head.add{type="empty-widget",style="draggable_space"}
+  drag.style.horizontally_stretchable=true
+  drag.style.height=29
+  drag.drag_target=frame
+  local refresh=head.add{type="button",caption=L("refresh"),
+    tags={razi_journal_action="refresh"}}
+  refresh.style.minimal_width=size.compact and 66 or 94
+  local dismiss=head.add{type="button",caption=L("close"),
+    tags={razi_journal_action="close"}}
+  dismiss.style.minimal_width=size.compact and 66 or 94
+  if not size.compact then
+    local description=wrap(frame,L("subtitle-short"),size.width-42)
+    description.style.font_color=COLOR.quiet
+  end
+
+  local context=M.context(player.force)
+  p.nexus_revision=nexus_revision(context.nexus)
+  local view=p.view=="quests" and M.view_status(player.force,context) or nil
+  local plan=view and M.guidance(player.force,context,view)
+  local done,total,ready
+  if view then
+    done,total,ready=view.done,view.total,view.ready
+  else
+    done,total,ready=M.summary(player.force,context)
+  end
+  -- Editorial status strip: honest progress, no generic dashboard tiles.
+  local totals=frame.add{type="flow",direction="vertical"}
+  totals.style.horizontally_stretchable=true
+  totals.style.vertical_spacing=4
+  local metrics_row=totals.add{type="flow",direction="horizontal"}
+  metrics_row.style.horizontally_stretchable=true
+  metrics_row.style.vertical_align="center"
+  metrics_row.style.horizontal_spacing=size.compact and 8 or 18
+  local metric=metrics_row.add{type="flow",direction="horizontal"}
+  metric.style.horizontal_spacing=5
+  subtitle(metric,"completion-heading")
+  local completed=label(metric,L("completion-value",tostring(done),tostring(total)))
+  completed.tooltip=L("progress-tooltip")
+  completed.style.font="default-bold"
+  completed.style.font_color=COLOR.ink
+  local readiness=metrics_row.add{type="flow",direction="horizontal"}
+  readiness.style.horizontal_spacing=5
+  subtitle(readiness,"ready-heading")
+  local ready_label=readiness.add{type="label",style="clickable_label",
+    caption=L("ready-value",tostring(ready)),
+    tooltip=L("filter-ready-tooltip"),
+    tags={razi_journal_action="filter-ready"}}
+  ready_label.style.font="default-bold"
+  ready_label.style.font_color=COLOR.amber
+  local meter=totals.add{type="flow",direction="vertical"}
+  meter.style.horizontally_stretchable=true
+  meter.style.vertical_spacing=2
+  local overall=meter.add{type="progressbar",
+    value=total>0 and done/total or 0}
+  overall.style.horizontally_stretchable=true
+  overall.style.height=9
+  overall.style.color=window_theme.primary
+
+  local toolbar=frame.add{type="flow",direction="horizontal"}
+  toolbar.style.horizontal_spacing=20
+  toolbar.style.vertical_align="bottom"
+  -- The three folios use typographic navigation and a slender active rule.
+  for _,view in ipairs({"quests","projects","archive"}) do
+    local active=p.view==view
+    local folio=toolbar.add{type="flow",direction="vertical"}
+    folio.style.vertical_spacing=4
+    local button=folio.add{type="label",style="clickable_label",
+      caption=L("view-"..view),tags={razi_journal_action="view",id=view}}
+    button.style.font=active and "default-bold" or "default"
+    button.style.font_color=active and COLOR.ink or COLOR.muted
+    if active then accent_rule(folio,window_theme,76,2) end
+  end
+  if p.view=="quests" then
+    local spacer=toolbar.add{type="empty-widget"}
+    spacer.style.horizontally_stretchable=true
+    toolbar.add{type="button",caption=L("next-milestone"),
+      tags={razi_journal_action="next"}}
+  end
+  local filterbar=frame.add{type="flow",direction="horizontal"}
+  filterbar.style.horizontal_spacing=6
+  filterbar.style.vertical_align="center"
+  if p.view=="archive" then
+    local unlocked,all=M.unlocked_records(player.force,context)
+    tint(label(filterbar,L("archive-progress",
+      tostring(unlocked),tostring(all))),themes.get("echoes").primary)
+  elseif p.view=="projects" then
+    tint(label(filterbar,L("projects-hint")),window_theme.soft)
+  else
+    subtitle(filterbar,"filter-heading")
+    for _,filter in ipairs({"all","ready","unfinished","done"}) do
+      local active=p.filter==filter
+      local button=filterbar.add{type="label",style="clickable_label",
+        caption=L("filter-"..filter),
+        tags={razi_journal_action="filter",id=filter}}
+      button.style.font=active and "default-bold" or "default"
+      button.style.font_color=active and COLOR.ink or COLOR.quiet
+    end
+  end
+
+  local body=frame.add{type="flow",direction="horizontal"}
+  body.style.width=size.width-33
+  body.style.height=size.body
+  body.style.horizontal_spacing=10
+  if p.view=="archive" then
+    render_archive(body,player,p,context,size)
+  elseif p.view=="projects" then
+    projects.render(body,player,p,size)
+  else
+    local selected=select_quest(player.force,p,context,plan)
+    local search=render_chapters(body,player,p,context,size,view,plan)
+    -- Normal chapter expand/collapse and dossier clicks retain the user's
+    -- location in the list. Explicit quest navigation may deliberately
+    -- reveal its selection, so that takes precedence over this restore.
+    -- Restore all scroll readers once the complete GUI tree exists.
+    if focus_search then pcall(function() search.focus() end) end
+    if p.chapter_cover and render_chapter_cover(
+      body,player,p,context,size,view) then
+      -- A full chapter frontispiece replaces the quest reader until a
+      -- real quest entry is selected.
+    elseif selected then
+      render_details(body,player,selected,p,context,size,view)
+    else
+      local empty=body.add{type="frame",
+        style="inside_shallow_frame_with_padding"}
+      empty.style.width=size.reader
+      wrap(empty,L("missing-quest"),size.reader-40)
+    end
+  end
+  restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
+  local foot=wrap(frame,L("footer-hint"),size.width-38)
+  foot.style.font_color=COLOR.quiet
+end
+M.draw=draw
+local function open(player)
+  local frame=player.gui.screen[FRAME]
+  if frame and frame.valid then draw(player);return end
+  local size=M.layout(player.display_resolution,player.display_scale)
+  local scale=math.max(.5,player.display_scale or 1)
+  frame=player.gui.screen.add{type="frame",name=FRAME,direction="vertical"}
+  frame.style.width=size.width
+  frame.location={
+    x=math.max(8,math.floor((player.display_resolution.width/scale-size.width)/2)),
+    y=math.max(10,math.floor((player.display_resolution.height/scale-size.height)/2))
+  }
+  player.opened=frame
+  draw(player)
+end
+M.open=open
+function M.open_project(player,id,chain,target)
+  if not (player and player.valid) then return false end
+  if id and not projects.valid(id) then return false end
+  if chain and not projects.valid_cargo(player.force,chain,target) then
+    return false
+  end
+  local p=pref(player.index)
+  p.view="projects"
+  p.project=id or p.project
+  if chain then
+    p.project="cargo"
+    p.cargo_focus=chain
+    p.cargo_target=target
+  end
+  open(player)
+  return true
+end
+function M.open_quest(player,id)
+  local quest=defs.by_id[id]
+  if not (player and player.valid and quest
+    and M.available(player.force,quest)) then return false end
+  local p=pref(player.index)
+  p.selected=quest.id
+  p.chapter=quest.chapter
+  p.filter="all"
+  p.query=""
+  p.view="quests"
+  p.chapter_cover=false
+  p.reveal_selection=true
+  open(player)
+  return true
+end
+local function close(player)
+  local frame=player.gui.screen[FRAME]
+  if frame and frame.valid then frame.destroy() end
+end
+M.close=close
+function M.toggle(player)
+  if player.gui.screen[FRAME] then close(player) else open(player) end
+end
+function M.sync(player)
+  if not (player and player.valid) then return end
+  local top=player.gui.top[TOP]
+  if not (top and top.valid) then
+    top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",
+      {razi_journal_action="toggle"},L("button-tooltip"),TOP)
+  end
+  render_tracker(player)
+end
+function M.sync_all()
+  for _,player in pairs(game.connected_players or {}) do M.sync(player) end
+end
+function M.on_removed(index)
+  if storage.razi_expedition_journal then
+    storage.razi_expedition_journal[index]=nil
+  end
+end
+local function refresh_force(force)
+  if not force then return end
+  for _,player in pairs(game.connected_players or {}) do
+    if player.force==force then
+      local frame=player.gui.screen[FRAME]
+      if frame and frame.valid then draw(player) end
+      local existing=storage.razi_expedition_journal
+        and storage.razi_expedition_journal[player.index]
+      if existing and existing.tracker then render_tracker(player) end
+    end
+  end
+end
+-- The cheat command can finish hundreds of Codex technologies in a
+-- single burst. A normal unlock redraws on the next 30-tick maintenance
+-- callback, but a bulk unlock gets one redraw after the events settle.
+local RESEARCH_BURST_LIMIT=12
+local RESEARCH_BURST_WINDOW=120
+local RESEARCH_BURST_QUIET=180
+-- Staged debug research changes technology flags directly. Keep the Codex
+-- parked until the final unlock settles, without relying on research events.
+function M.defer_research_refresh(force)
+  if not (force and force.name) then return end
+  local pending=storage.razi_journal_pending_forces
+  if not pending then
+    pending={}
+    storage.razi_journal_pending_forces=pending
+  end
+  local tick=game and game.tick or 0
+  pending[force.name]={count=RESEARCH_BURST_LIMIT,
+    first_tick=tick,last_tick=tick}
+end
+function M.on_research(event)
+  local research=event and event.research
+  local force=research and research.force
+  if not (force and M.research_affects_journal(research)) then return end
+  local tick=game and game.tick or 0
+  local pending=storage.razi_journal_pending_forces
+  if not pending then
+    pending={}
+    storage.razi_journal_pending_forces=pending
+  end
+  local state=pending[force.name]
+  if type(state)~="table" then
+    state={count=0,first_tick=tick}
+    pending[force.name]=state
+  elseif tick-(state.first_tick or tick)>RESEARCH_BURST_WINDOW then
+    state.count=0
+    state.first_tick=tick
+  end
+  state.count=math.min(RESEARCH_BURST_LIMIT,(state.count or 0)+1)
+  state.last_tick=tick
+end
+function M.flush_research_refreshes()
+  local pending=storage.razi_journal_pending_forces
+  if not pending then return end
+  local tick=game and game.tick or 0
+  for force_name,state in pairs(pending) do
+    -- A boolean may still exist in an old save's deferred work table.
+    local burst=type(state)=="table" and
+      (state.count or 0)>=RESEARCH_BURST_LIMIT
+    if not burst or tick-(state.last_tick or 0)>=RESEARCH_BURST_QUIET then
+      pending[force_name]=nil
+      refresh_force(game.forces[force_name])
+    end
+  end
+  if not next(pending) then storage.razi_journal_pending_forces=nil end
+end
+-- Refresh only visible boss objectives during the existing ten-second
+-- maintenance tick. No global entity scans or per-tick remote calls.
+function M.refresh_convergence(force)
+  if not force then return end
+  for _,player in pairs(force.connected_players or {}) do
+    local p=storage.razi_expedition_journal and storage.razi_expedition_journal[player.index]
+    local frame=player.gui.screen[FRAME]
+    if p and p.view=="projects" and p.project=="convergence"
+      and frame and frame.valid then draw(player) end
+  end
+end
+function M.refresh_nexus_visible()
+  if not (remote and remote.interfaces and
+    remote.interfaces["nexus-bosses"]) then return end
+  -- One source snapshot per force, not one remote call per open reader.
+  local revisions={}
+  for _,player in pairs(game.connected_players or {}) do
+    local p=storage.razi_expedition_journal
+      and storage.razi_expedition_journal[player.index]
+    if p then
+      local frame=player.gui.screen[FRAME]
+      if p.view=="quests" and frame and frame.valid
+        and (p.chapter=="deepworks"
+          or (p.selected and defs.by_id[p.selected]
+            and defs.by_id[p.selected].boss)) then
+        local force=player.force
+        local revision=revisions[force.index]
+        if not revision then
+          revision=nexus_revision(trials.snapshot(force))
+          revisions[force.index]=revision
+        end
+        -- Preserve both scroll panes and search focus on ordinary polls.
+        -- Only a real boss-victory change warrants a full redraw.
+        if p.nexus_revision~=revision then draw(player) end
+      end
+      if p.tracker and p.pinned and defs.by_id[p.pinned]
+        and defs.by_id[p.pinned].boss then
+        render_tracker(player)
+      end
+    end
+  end
+end
+function M.gui_click(event)
+  local element=event and event.element
+  if not (element and element.valid) then return end
+  local tags=element.tags
+  if not tags then return end
+  local action=tags.razi_journal_action
+  local native=tags.razi_ops_action
+  if not action and not native then return end
+  local player=game.get_player(event.player_index)
+  if not (player and player.valid) then return end
+  if native then
+    local p=pref(player.index)
+    if not (player.gui.screen[FRAME] and p.view=="projects") then return end
+    if native=="convergence-deliver" and p.project=="convergence" then
+      local known=false
+      for _,stage in ipairs(convergence.stages) do
+        if stage.id==tags.value then known=true;break end
+      end
+      if not known or not convergence.available(player.force) then return end
+      local message,amount=convergence.deliver(player,tags.value)
+      player.print({"razi-ops."..message,tostring(amount)})
+    elseif native=="cargo-focus" and p.project=="cargo" then
+      if not projects.valid_cargo(player.force,tags.value) then return end
+      p.cargo_focus=p.cargo_focus==tags.value and nil or tags.value
+      p.cargo_target=nil
+    elseif native=="cargo-codex" and p.project=="cargo" then
+      local chain=cargo_catalog.chain_for_technology(tags.value)
+      local quest_id=cargo_catalog.quest_for_technology(tags.value)
+      if not (quest_id and projects.valid_cargo(player.force,chain,tags.value)) then return end
+      M.open_quest(player,quest_id)
+      return
+    else return end
+    draw(player)
+    return
+  end
+  if action=="toggle" then M.toggle(player);return end
+  if action=="close" then close(player);return end
+  if action=="nexus-codex" then
+    if not trials.open_codex(player,tags.id) then
+      player.print(L("nexus-codex-unavailable"))
+    end
+    return
+  end
+  if action=="open-convergence" then
+    local quest=defs.by_id[tags.id]
+    if quest and M.available(player.force,quest)
+      and convergence.available(player.force) then
+      M.open_project(player,"convergence")
+    end
+    return
+  end
+  if action=="open-cargo" then
+    local quest=defs.by_id[tags.id]
+    if not (quest and M.available(player.force,quest)) then return end
+    local chain,target=cargo_catalog.chain_for_quest(quest.id)
+    if not (chain and cargo_catalog.is_installed(player.force,chain)) then
+      return
+    end
+    M.open_project(player,"cargo",chain,target)
+    return
+  end
+  if action=="tracker-open" then
+    local p=pref(player.index)
+    p.selected=p.pinned
+    open(player)
+    return
+  end
+  local p=pref(player.index)
+  if (action=="select" or action=="guidance-select") and
+    defs.by_id[tags.id] and M.available(player.force,defs.by_id[tags.id]) then
+    p.selected=tags.id
+    p.chapter=defs.by_id[tags.id].chapter
+    p.filter="all"
+    p.view="quests"
+    p.query=""
+    p.chapter_cover=false
+    p.reveal_selection=true
+    p.chapter_cover=false
+  elseif action=="chapter-dossier" then
+    local known=false
+    for _,ch in ipairs(defs.chapters) do
+      if ch.id==tags.id then known=true;break end
+    end
+    if not known then return end
+    p.chapter=tags.id
+    p.chapter_cover=true
+    p.view="quests"
+    p.filter="all"
+    p.query=""
+  elseif action=="chapter-continue" then
+    local target=defs.by_id[tags.id]
+    if not (target and M.available(player.force,target)) then return end
+    p.selected=target.id
+    p.chapter=target.chapter
+    p.chapter_cover=false
+    p.filter="all"
+    p.query=""
+    p.reveal_selection=true
+  elseif action=="chapter" then
+    p.chapter=p.chapter==tags.id and false or tags.id
+  elseif action=="view" and ({quests=true,projects=true,archive=true})[tags.id] then
+    p.view=tags.id
+  elseif action=="project" and projects.valid(tags.id) then
+    p.project=tags.id
+  elseif action=="record" then
+    local context=M.context(player.force)
+    for _,record in ipairs(records) do
+      if record.id==tags.id then
+        local quest=defs.by_id[record.unlock]
+        if quest and M.complete(player.force,quest,context) then
+          p.record=record.id
+          p.view="archive"
+        end
+        break
+      end
+    end
+  elseif action=="filter-ready" then
+    p.view="quests"
+    p.filter="ready"
+    p.query=""
+    -- The counter is an actual navigation shortcut: open a ready entry
+    -- rather than keeping a stale selection from another chapter.
+    local context=M.context(player.force)
+    local target=M.next_quest(player.force,context)
+    if not (target and M.state(player.force,target,context)=="active") then
+      target=nil
+      for _,candidate in ipairs(defs.quests) do
+        if M.state(player.force,candidate,context)=="active" then
+          target=candidate
+          break
+        end
+      end
+    end
+    if target then
+      p.selected=target.id
+      p.chapter=target.chapter
+      p.reveal_selection=true
+    end
+  elseif action=="filter" and ({all=true,ready=true,unfinished=true,
+      done=true})[tags.id] then
+    p.filter=tags.id
+  elseif action=="next" then
+    local next=M.next_quest(player.force)
+    if next then
+      p.selected=next.id
+      p.chapter=next.chapter
+      p.filter="all"
+      p.view="quests"
+      p.query=""
+      p.reveal_selection=true
+      p.chapter_cover=false
+    end
+  elseif action=="next-in-chapter" or action=="previous-in-chapter" then
+    local context=M.context(player.force)
+    local choices={}
+    for _,quest in ipairs(defs.quests) do
+      if quest.chapter==p.chapter and M.available(player.force,quest,context)
+        and M.show_in_filter(player.force,quest,p.filter,context) then
+        choices[#choices+1]=quest
+      end
+    end
+    for i,quest in ipairs(choices) do
+      if quest.id==p.selected then
+        local offset=action=="previous-in-chapter" and -2 or 0
+        p.selected=choices[(i+offset)%#choices+1].id
+        p.chapter_cover=false
+        break
+      end
+    end
+  elseif action=="clear-search" then
+    p.query=""
+  elseif action=="pin" and defs.by_id[tags.id] then
+    if p.tracker and p.pinned==tags.id then
+      p.tracker=false
+    else
+      p.pinned=tags.id;p.tracker=true
+    end
+    render_tracker(player)
+  elseif action=="refresh" and p.view=="projects" and p.project=="dyson" then
+    projects.refresh(player.force)
+  elseif action~="refresh" then return end
+  draw(player)
+end
+function M.text_changed(event)
+  local element=event and event.element
+  if not (element and element.valid
+    and element.name=="razi_journal_search") then return end
+  local player=game.get_player(event.player_index)
+  if not (player and player.valid) then return end
+  local p=pref(player.index)
+  local query=(element.text or ""):sub(1,80)
+  if p.query==query then return end
+  p.query=query
+  -- Select the first matching visible milestone so the reader follows search.
+  if query~="" then
+    local context=M.context(player.force)
+    for _,quest in ipairs(defs.quests) do
+      if M.show_in_filter(player.force,quest,p.filter,context)
+        and matches_query(quest,query) then
+        p.selected=quest.id
+        p.chapter=quest.chapter
+        p.chapter_cover=false
+        break
+      end
+    end
+  end
+  draw(player,true)
+end
+function M.selection_changed(event)
+  local element=event and event.element
+  if not (element and element.valid
+    and element.name=="razi_journal_chapter_picker") then return end
+  local chapter=defs.chapters[element.selected_index]
+  local player=game.get_player(event.player_index)
+  if not (chapter and player and player.valid) then return end
+  local p=pref(player.index)
+  p.chapter=chapter.id
+  p.filter="all"
+  p.query=""
+  p.reveal_selection=true
+  p.chapter_cover=true
+  local context=M.context(player.force)
+  for _,quest in ipairs(defs.quests) do
+    if quest.chapter==chapter.id
+      and M.available(player.force,quest,context) then
+      p.selected=quest.id
+      break
+    end
+  end
+  draw(player)
+end
+function M.gui_closed(event)
+  if event.element and event.element.valid and event.element.name==FRAME then
+    local player=game.get_player(event.player_index)
+    if player then close(player) end
+  end
+end
+function M.on_display_changed(event)
+  local player=game.get_player(event.player_index)
+  if not player then return end
+  if player.gui.screen[FRAME] then
+    close(player)
+    open(player)
+  end
+end
+return M

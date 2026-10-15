@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "policy": "Small guarded patches only. Audit final Factorio prototypes and upstream releases before modifying dependent mods.",
+  "patches": [
+    {
+      "id": "armoured-biter-placement",
+      "module": "prototypes/compat/armoured_biters.lua",
+      "upstream_mods": [
+        "ArmouredBiters21Compat"
+      ],
+      "purpose": "Spawn fork-compatible armoured enemies on thematic planets; preserve vanilla spawning when enemy prototypes are absent.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_enemy_safety.lua"
+    },
+    {
+      "id": "research-trigger-k2so-rename",
+      "module": "prototypes/compat/renamed_research_triggers.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Repair stale craft-item/fluid research triggers after K2SO recipe-product renames.",
+      "upstream_status": "reported-upstream-unknown-release",
+      "fixture": "tests/lua/test_trigger_compat.lua"
+    },
+    {
+      "id": "water-productivity-loop",
+      "module": "prototypes/compat/water_loop.lua",
+      "upstream_mods": [
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Cap productivity on Vesta's reciprocal water/hydrogen/oxygen recipes to prevent K2SO machine base bonuses creating a positive resource loop.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "research-data-surfaces",
+      "module": "prototypes/compat/research_data_surfaces.lua",
+      "upstream_mods": [
+        "Paracelsin",
+        "rubia"
+      ],
+      "purpose": "Retain pressure and surface conditions for research data after science rewrite.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "extra-assembler-cleanup",
+      "module": "prototypes/compat/redundant_progression.lua",
+      "upstream_mods": [
+        "LithiumBattery",
+        "planetaris-hyarion"
+      ],
+      "purpose": "Optionally hide genuinely redundant assembler tiers without hiding unrelated technology.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_compat.lua"
+    },
+    {
+      "id": "entity-recycling-sanity",
+      "module": "prototypes/compat/prototype_sanity.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Repair missing recipes, materials and obsolete result prototypes when the real data dump proves incompatibility.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "maraxsis-wind-restriction",
+      "module": "prototypes/compat/maraxsis_trench_wind.lua",
+      "upstream_mods": [
+        "maraxsis",
+        "rubia"
+      ],
+      "purpose": "Prevent wind turbines using surface-property defaults in the Maraxsis trench.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/test_audit_compatibility.py"
+    },
+    {
+      "id": "k2so-planet-research-data-and-materials",
+      "module": "prototypes/compat/k2so_planet_integration.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out",
+        "nulls-k2so-tweaks"
+      ],
+      "purpose": "Integrate K2SO planetary research data into Razi system cards and reconcile only hidden legacy K2SO material names across final planet recipes and mining outputs.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_k2so_planets.lua"
+    },
+    {
+      "id": "k2so-machine-planet-continuity",
+      "module": "prototypes/compat/k2so_planet_machines.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Preserve ordinary machine category parity after planet mods change recipes, and anchor late K2SO machine research to source-world discoveries without cycles.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_k2so_machines.lua"
+    },
+    {
+      "id": "linox-hard-mode-early-science",
+      "module": "prototypes/compat/linox_science_guard.lua",
+      "upstream_mods": [
+        "linox",
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Prevent late Linox hard-mode science from being required by the research chain that unlocks Linox itself.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_linox_science_guard.lua"
+    },
+    {
+      "id": "outer-world-native-science-bootstrap",
+      "module": "prototypes/compat/outer_science_arrival_guard.lua",
+      "upstream_mods": [
+        "planet-crucible",
+        "skewer_planet_vesta",
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Protect research needed to reach late-moved Crucible/Vesta from requiring exclusive science produced only after arrival, without weakening post-arrival tech.",
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_outer_science_arrival_guard.lua"
+    },
+    {
+      "id": "k2so-cross-planet-industrial-exchanges",
+      "module": "prototypes/compat/planet_production_exchanges.lua",
+      "upstream_mods": [
+        "Krastorio2-spaced-out",
+        "tenebris-prime",
+        "linox",
+        "secretas",
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Seven nonmandatory cross-planet production variants preserving K2SO and native Tenebris, Linox, Secretas and Vesta recipes, original unlocks, source planet conditions and machinery constraints.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_planet_production_exchanges.lua"
+    },
+    {
+      "id": "outer-world-production-exchange-guards",
+      "module": "prototypes/compat/planet_production_exchanges.lua",
+      "upstream_mods": [
+        "linox",
+        "tenebris-prime",
+        "secretas",
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Guard four outer-world K2SO-enabled optional industrial exchanges against missing origin planets, incompatible source recipes, native research and surface conditions.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_outer_production_exchanges.lua"
+    },
+    {
+      "id": "modded-world-industrial-bridges",
+      "module": "prototypes/compat/modded_planet_exchanges.lua",
+      "upstream_mods": [
+        "rubia",
+        "Paracelsin",
+        "Moshine",
+        "linox",
+        "tenebris-prime",
+        "skewer_planet_vesta"
+      ],
+      "purpose": "Seven optional alternate manufacturing recipes driven by modded-planet source ingredients and their actual original recipe unlocks. Preserves author-specific production mechanics, native outputs and surface conditions.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_modded_planet_exchanges.lua"
+    },
+    {
+      "id": "community-world-specialty-industry",
+      "module": "prototypes/compat/community_industry_exchanges.lua",
+      "upstream_mods": [
+        "planet-ferrum",
+        "biological-machines-planet-balack",
+        "linox",
+        "Moshine",
+        "rubia",
+        "tenebris-prime"
+      ],
+      "purpose": "Two optional manufacturing variants joining Ferrum/Linox/Moshine rare earth materials and Balack/Rubia/Tenebris radiation materials. Wit is excluded because it conflicts with required Muluna.",
+      "upstream_status": "local-only",
+      "fixture": "tests/lua/test_community_industry_exchanges.lua"
+    },
+    {
+      "id": "panglia-biooptic-exchanges",
+      "module": "prototypes/compat/panglia_industry.lua",
+      "upstream_mods": [
+        "panglia_planet",
+        "Moshine",
+        "apia",
+        "Krastorio2-spaced-out"
+      ],
+      "purpose": "Reciprocal, source-guarded Panglite glass and Moshine optical-cable bonus recipes using Gleba bioflux. Native surface pressure, data-cell unlocks, manufacturer checks and productivity caps are respected.",
+      "upstream_status": "source-audited; engine-validation-pending",
+      "fixture": "tests/lua/test_panglia_integration.lua"
+    }
+  ]
+}

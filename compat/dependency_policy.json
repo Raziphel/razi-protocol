@@ -1,0 +1,680 @@
+{
+  "schema": 1,
+  "review_date": "2026-10-15",
+  "factorio_version": "2.1",
+  "notes": "2.1.104: 49 required, 24 recommended, 2 optional, 1 hidden optional, 20 incompatible. Temporarily optional Rabbasca 0.22.4 can be disabled with its Underground dependent to recover from the source-mod data.lua lava shader crash. When an upstream-fixed source is installed, its guarded Razi integrations remain.",
+  "dependencies": [
+    {
+      "mod": "base",
+      "type": "required",
+      "declaration": "base >= 2.1.20",
+      "group": "runtime",
+      "reason": "Factorio engine and Space Age expansion"
+    },
+    {
+      "mod": "space-age",
+      "type": "required",
+      "declaration": "space-age >= 2.1.20",
+      "group": "runtime",
+      "reason": "Factorio engine and Space Age expansion"
+    },
+    {
+      "mod": "razi_lib",
+      "type": "required",
+      "declaration": "razi_lib >= 1.2.0",
+      "group": "library",
+      "reason": "Shared technology graph, recipe inspection, event registry and prototype helpers"
+    },
+    {
+      "mod": "PlanetsLib",
+      "type": "required",
+      "declaration": "PlanetsLib >= 2.0.9",
+      "group": "library",
+      "reason": "Direct Razi API, starmap and prototype library"
+    },
+    {
+      "mod": "AsteroidBelt",
+      "type": "incompatible",
+      "declaration": "! AsteroidBelt",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "space-route-overlay",
+      "type": "incompatible",
+      "declaration": "! space-route-overlay",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "kry-asteroid-belt",
+      "type": "incompatible",
+      "declaration": "! kry-asteroid-belt",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "bellicos-and-aegis",
+      "type": "required",
+      "declaration": "bellicos-and-aegis >= 0.4.0",
+      "group": "deep",
+      "reason": "Curated Deep Space expedition and native endgame content"
+    },
+    {
+      "mod": "Krastorio2-spaced-out",
+      "type": "required",
+      "declaration": "Krastorio2-spaced-out >= 2.0.17",
+      "group": "k2so",
+      "reason": "Core K2SO science, native assets, laboratory and transceiver progression"
+    },
+    {
+      "mod": "FluxWorks",
+      "type": "hidden-optional",
+      "declaration": "(?) FluxWorks >= 0.2.12",
+      "group": "hidden-optional",
+      "reason": "Hidden until the compatible 0.2.12 release is publicly available and tested"
+    },
+    {
+      "mod": "aai-signal-transmission",
+      "type": "recommended",
+      "declaration": "+ aai-signal-transmission >= 0.6.0",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "k2-dyson-sphere-rebalance",
+      "type": "required",
+      "declaration": "k2-dyson-sphere-rebalance >= 0.1.2",
+      "group": "dyson",
+      "reason": "Curated Calidus Dyson project and K2SO compatibility"
+    },
+    {
+      "mod": "planet-express",
+      "type": "recommended",
+      "declaration": "+ planet-express >= 2.1.9",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "upgraded-rocket-turrets",
+      "type": "recommended",
+      "declaration": "+ upgraded-rocket-turrets >= 2.1.1",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "Krastorio2Assets",
+      "type": "required",
+      "declaration": "Krastorio2Assets >= 2.1.0",
+      "group": "k2so",
+      "reason": "Core K2SO science, native assets, laboratory and transceiver progression"
+    },
+    {
+      "mod": "planet-muluna",
+      "type": "required",
+      "declaration": "planet-muluna >= 2.7.25",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "planetaris-unbounded",
+      "type": "required",
+      "declaration": "planetaris-unbounded >= 1.9.1",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "planetaris-tellus",
+      "type": "required",
+      "declaration": "planetaris-tellus >= 1.1.11",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "planetaris-hyarion",
+      "type": "required",
+      "declaration": "planetaris-hyarion >= 1.3.23",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "planetaris-arig",
+      "type": "required",
+      "declaration": "planetaris-arig >= 1.1.44",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Cerys-Moon-of-Fulgora",
+      "type": "required",
+      "declaration": "Cerys-Moon-of-Fulgora >= 4.24.17",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "linox",
+      "type": "required",
+      "declaration": "linox >= 1.8.9",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Muria",
+      "type": "required",
+      "declaration": "Muria >= 1.8.6",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "corrundum",
+      "type": "required",
+      "declaration": "corrundum >= 1.0.49",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "corrundum-krastorio-compatibility-plus",
+      "type": "required",
+      "declaration": "corrundum-krastorio-compatibility-plus >= 1.1.2",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "apia",
+      "type": "required",
+      "declaration": "apia >= 0.3.1",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Moshine",
+      "type": "required",
+      "declaration": "Moshine >= 1.2.10",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "panglia_planet",
+      "type": "required",
+      "declaration": "panglia_planet >= 0.7.2",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "tenebris-prime",
+      "type": "required",
+      "declaration": "tenebris-prime >= 1.3.12",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "secretas",
+      "type": "required",
+      "declaration": "secretas >= 1.0.37",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "frozeta-nuclear-winter",
+      "declaration": "+ frozeta-nuclear-winter >= 1.12.1",
+      "type": "recommended",
+      "group": "recommended",
+      "reason": "Optional Frozeta nuclear progression expansion with native source production; independent of Outer Rim (which requires Frozeta, not the reverse); test its 15 transitive dependencies in Factorio"
+    },
+    {
+      "mod": "secretas-orbit-patch",
+      "type": "recommended",
+      "declaration": "+ secretas-orbit-patch >= 1.1.3",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "maraxsis",
+      "type": "required",
+      "declaration": "maraxsis >= 1.39.1",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "rubia",
+      "type": "required",
+      "declaration": "rubia >= 0.69.159",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "cubium",
+      "type": "required",
+      "declaration": "cubium >= 1.0.31",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Nexus-Updated",
+      "type": "required",
+      "declaration": "Nexus-Updated >= 1.4.1",
+      "group": "deep",
+      "reason": "Curated Deep Space expedition and native endgame content"
+    },
+    {
+      "mod": "celestial-weather-additions-updated",
+      "type": "recommended",
+      "declaration": "+ celestial-weather-additions-updated >= 1.6.0",
+      "group": "recommended",
+      "reason": "Recommended combined 2.1 weather+additions release; replaces and conflicts with the separate core weather fork; native source settings preserved"
+    },
+    {
+      "mod": "outer-rim",
+      "type": "incompatible",
+      "declaration": "! outer-rim",
+      "group": "conflict",
+      "reason": "Outer Rim conflicts with Secretas Orbit Patch and recommends kry-asteroid-belt, which overrides Razi's custom belt routes"
+    },
+    {
+      "mod": "VoidProcessing-Updated",
+      "type": "recommended",
+      "declaration": "+ VoidProcessing-Updated",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "skewer_planet_vesta",
+      "type": "required",
+      "declaration": "skewer_planet_vesta >= 2.1.27",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Abacayba_Moon_of_Nauvis",
+      "type": "recommended",
+      "declaration": "+ Abacayba_Moon_of_Nauvis >= 0.0.42",
+      "group": "recommended",
+      "reason": "Optional alpha infestation and endgame giga-industry, relocated to Vesta. Required UMR/UFP/Ultimate Core family only when installed."
+    },
+    {
+      "mod": "castra-prime",
+      "type": "required",
+      "declaration": "castra-prime >= 0.9.2",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "castra-krastorio-compatibility-plus",
+      "type": "required",
+      "declaration": "castra-krastorio-compatibility-plus >= 1.1.0",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "planet-crucible",
+      "type": "required",
+      "declaration": "planet-crucible >= 1.1.27",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "ribbonia",
+      "type": "required",
+      "declaration": "ribbonia >= 0.6.8",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Paracelsin",
+      "type": "required",
+      "declaration": "Paracelsin >= 1.10.2",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "ArmouredBiters21Compat",
+      "type": "recommended",
+      "declaration": "+ ArmouredBiters21Compat",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "Cold_biters",
+      "type": "recommended",
+      "declaration": "+ Cold_biters >= 2.3.0",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "Explosive_biters",
+      "type": "recommended",
+      "declaration": "+ Explosive_biters >= 2.4.0",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "k2so-cubium-compatibility-fork",
+      "type": "required",
+      "declaration": "k2so-cubium-compatibility-fork >= 0.3.5",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "Imersite-Asteroids",
+      "type": "recommended",
+      "declaration": "+ Imersite-Asteroids >= 1.3.0",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "nulls-k2so-tweaks",
+      "type": "required",
+      "declaration": "nulls-k2so-tweaks >= 2.3.1",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "xy-k2so-enhancements-nulls-fork",
+      "type": "required",
+      "declaration": "xy-k2so-enhancements-nulls-fork >= 0.8.5",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "science-tab",
+      "type": "recommended",
+      "declaration": "+ science-tab >= 1.13.0",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "rubia-krastorio-compatibility-plus",
+      "type": "required",
+      "declaration": "rubia-krastorio-compatibility-plus >= 1.3.1",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "tenebris-prime-made-in-hide",
+      "type": "required",
+      "declaration": "tenebris-prime-made-in-hide >= 1.1.0",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "paracelsin-krastorio-compatibility-plus",
+      "type": "required",
+      "declaration": "paracelsin-krastorio-compatibility-plus >= 1.2.0",
+      "group": "k2-bridge",
+      "reason": "Pinned K2SO/planet compatibility required by the curated full profile"
+    },
+    {
+      "mod": "LithiumBattery",
+      "type": "recommended",
+      "declaration": "+ LithiumBattery >= 7.3.0",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "castra",
+      "type": "incompatible",
+      "declaration": "! castra",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "Redrawn-Space-Connections",
+      "type": "incompatible",
+      "declaration": "! Redrawn-Space-Connections",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "krastorio2_extended_endgame",
+      "type": "incompatible",
+      "declaration": "! krastorio2_extended_endgame",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "K2_spaced_out_extended_endgame",
+      "type": "incompatible",
+      "declaration": "! K2_spaced_out_extended_endgame",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "xy-k2so-enhancements",
+      "type": "incompatible",
+      "declaration": "! xy-k2so-enhancements",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "maraxis-k2so-collision-mask-fix-fix",
+      "type": "incompatible",
+      "declaration": "! maraxis-k2so-collision-mask-fix-fix",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "lignumis",
+      "type": "incompatible",
+      "declaration": "! lignumis",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "lignumis-cf",
+      "type": "incompatible",
+      "declaration": "! lignumis-cf",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "tile-upgrade-planner",
+      "type": "incompatible",
+      "declaration": "! tile-upgrade-planner",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "quality-rocket-parts",
+      "type": "incompatible",
+      "declaration": "! quality-rocket-parts",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "MT-lib",
+      "type": "incompatible",
+      "declaration": "! MT-lib",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "external-rocket-parts",
+      "type": "incompatible",
+      "declaration": "! external-rocket-parts",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "Wood_Gasification_updated",
+      "type": "incompatible",
+      "declaration": "! Wood_Gasification_updated",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "factorioplus",
+      "type": "incompatible",
+      "declaration": "! factorioplus",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "Igrys",
+      "type": "required",
+      "declaration": "Igrys >= 1.5.40",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "planet-rabbasca",
+      "type": "optional",
+      "declaration": "? planet-rabbasca >= 0.22.2",
+      "group": "planet",
+      "reason": "Temporary startup recovery: Rabbasca 0.22.4 reads missing tile-effect lava.water.textures in its own data.lua before any Razi compatibility pass can run; optional integration is retained for fixed installations."
+    },
+    {
+      "mod": "foliax",
+      "type": "required",
+      "declaration": "foliax >= 2.0.37",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "obsidiax",
+      "type": "required",
+      "declaration": "obsidiax >= 1.0.29",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "carna",
+      "type": "required",
+      "declaration": "carna >= 0.3.22",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "rabbasca-underground",
+      "type": "recommended",
+      "declaration": "+ rabbasca-underground >= 0.10.3",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "skewer_shattered_planet",
+      "type": "recommended",
+      "declaration": "+ skewer_shattered_planet >= 1.0.42",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "planet-ferrum",
+      "type": "recommended",
+      "declaration": "+ planet-ferrum >= 0.1.4",
+      "group": "recommended",
+      "reason": "Supported Factorio 2.1 companion; recommended, never a hard requirement; guard source behavior if absent"
+    },
+    {
+      "mod": "Velora",
+      "type": "required",
+      "declaration": "Velora >= 2.2.2",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Hephaestus",
+      "type": "incompatible",
+      "declaration": "! Hephaestus",
+      "group": "conflict",
+      "reason": "Removed from curated Razi campaign: the source mod's enormous H icons, route markers and labels obscure the starmap. No gameplay or tech dependency requires it."
+    },
+    {
+      "mod": "alchemy-khemia",
+      "type": "required",
+      "declaration": "alchemy-khemia >= 0.3.6",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "Arcanyx",
+      "type": "required",
+      "declaration": "Arcanyx >= 1.1.5",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "biological-machines-planet-balack",
+      "type": "required",
+      "declaration": "biological-machines-planet-balack >= 1.1.2",
+      "group": "planet",
+      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+    },
+    {
+      "mod": "nulla",
+      "type": "required",
+      "declaration": "nulla >= 1.0.2",
+      "group": "campaign",
+      "reason": "Required Vespera/Aquilo robotic recovery moon; native Robotic Science, scrap and military factories; retain native orbit and radio-interference guards."
+    },
+    {
+      "mod": "PlanetAthos",
+      "type": "required",
+      "declaration": "PlanetAthos >= 1.1.3",
+      "group": "campaign",
+      "reason": "Required Solaris stone, diamond and Particulate Science industry; native Crushing Industry and guarded technology cycle integration."
+    },
+    {
+      "mod": "biological-machines-planet-wit",
+      "type": "incompatible",
+      "declaration": "! biological-machines-planet-wit",
+      "group": "conflict",
+      "reason": "Known graph, identity, upgrade, route or startup conflict in the curated modpack"
+    },
+    {
+      "mod": "shchierbin",
+      "type": "optional",
+      "declaration": "? shchierbin >= 0.3.19",
+      "group": "optional",
+      "reason": "2.1 vanadium side world, repositioned beyond the Vibrant rocks, Paracelsin branch without becoming mandatory"
+    },
+    {
+      "mod": "Big-Monsters",
+      "type": "recommended",
+      "declaration": "+ Big-Monsters >= 2.2.1",
+      "group": "recommended",
+      "reason": "Value-added industrial, logistics, graphics, combat or science interface companion; omission supported or source-guarded"
+    },
+    {
+      "mod": "Various_Cargo_Bays",
+      "type": "recommended",
+      "declaration": "+ Various_Cargo_Bays >= 1.1.0",
+      "group": "recommended",
+      "reason": "Specialized cargo pod throughput and space-platform storage without replacing vanilla bays"
+    },
+    {
+      "mod": "space-age-railway-expansion",
+      "type": "recommended",
+      "declaration": "+ space-age-railway-expansion >= 0.0.18",
+      "group": "recommended",
+      "reason": "Optional nuclear and fusion train progression, rolling stock and rail engineering"
+    },
+    {
+      "mod": "shield-generators",
+      "type": "recommended",
+      "declaration": "+ shield-generators >= 0.7.0",
+      "group": "recommended",
+      "reason": "Optional source-owned defensive shield engineering for dangerous worlds"
+    },
+    {
+      "mod": "CircuitLaunchableRockets",
+      "type": "recommended",
+      "declaration": "+ CircuitLaunchableRockets >= 1.4.6",
+      "group": "recommended",
+      "reason": "Circuit-controlled rocket launches retaining physical interplanetary freight"
+    },
+    {
+      "mod": "CargoBayLimitResearch",
+      "type": "recommended",
+      "declaration": "+ CargoBayLimitResearch >= 1.1.2",
+      "group": "recommended",
+      "reason": "Configurable optional cargo bay growth through native research"
+    },
+    {
+      "mod": "platform-logistics-overhaul",
+      "type": "recommended",
+      "declaration": "+ platform-logistics-overhaul >= 2.1.2",
+      "group": "recommended",
+      "reason": "Optional same-orbit two-priority physical cargo-pod logistics"
+    }
+  ]
+}

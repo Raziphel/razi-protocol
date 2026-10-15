@@ -70,6 +70,53 @@ function enemy_autoplace.entity_exists(entity_type, entity_name)
 	return data.raw[entity_type] and data.raw[entity_type][entity_name]
 end
 
+-- Factorio 2.1 requires a probability expression whenever an entity has
+-- an autoplace table. Some enemy packs use ordinary nests to spawn their
+-- units, and deliberately do not define natural placement for new nests.
+function enemy_autoplace.has_valid_autoplace(entity)
+	local autoplace = entity and entity.autoplace
+	return type(autoplace) == "table"
+		and autoplace.probability_expression ~= nil
+end
+
+-- This check runs after the last Razi prototype pass too. If an older
+-- third-party fork leaves a partial autoplace behind, drop *only* the
+-- malformed placement definition and its planet map-gen references.
+-- Never delete the spawner prototype or its result_units.
+function enemy_autoplace.remove_invalid_autoplace(entity_type, entity_name)
+	local entity = enemy_autoplace.entity_exists(entity_type, entity_name)
+	if not entity or enemy_autoplace.has_valid_autoplace(entity) then
+		return false
+	end
+	entity.autoplace = nil
+	for _, planet in pairs(data.raw.planet or {}) do
+		local place = planet.map_gen_settings
+			and planet.map_gen_settings.autoplace_settings
+		local entries = place and place.entity and place.entity.settings
+		if entries then
+			entries[entity_name] = nil
+		end
+	end
+	return true
+end
+
+function enemy_autoplace.repair_optional_enemy_autoplace()
+	if mods and (mods["ArmouredBiters21Compat"] or mods["ArmouredBiters"]) then
+		enemy_autoplace.remove_invalid_autoplace("unit-spawner", "armoured-biter-spawner")
+	end
+	if mods and mods["Electric_flying_enemies"] then
+		for _, entity_name in ipairs({
+			"flying-electric-unit-spawner", "walker-electric-unit-spawner",
+			"fulgoran-enemy-spawner", "fulgoran-replicator",
+			"fulgoran-unit-replicator", "electric-flying-enemy-spawner",
+			"electric-flying-enemies-spawner", "electric-enemy-spawner",
+			"unit-replicator"
+		}) do
+			enemy_autoplace.remove_invalid_autoplace("unit-spawner", entity_name)
+		end
+	end
+end
+
 function enemy_autoplace.enemy_entity_exists(entity_name)
 	return
 		(data.raw["unit-spawner"] and data.raw["unit-spawner"][entity_name]) or
@@ -144,16 +191,31 @@ function enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 end
 
 function enemy_autoplace.add_entities_to_planet(planet_name, entity_names, control_name, entity_exists)
+	if not enemy_autoplace.enabled() then
+		return
+	end
+
+	-- Never suppress vanilla enemies unless at least one custom enemy really
+	-- exists. Some optional packs change prototype names between releases.
+	entity_exists = entity_exists or enemy_autoplace.enemy_entity_exists
+	local available = {}
+	for _, entity_name in pairs(entity_names or {}) do
+		-- A prototype's mere existence does not make it naturally
+		-- placeable; an incomplete autoplace will crash data loading.
+		if enemy_autoplace.has_valid_autoplace(entity_exists(entity_name)) then
+			available[#available + 1] = entity_name
+		end
+	end
+	if #available == 0 then
+		return
+	end
+
 	local entity_settings = enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 	if not entity_settings then
 		return
 	end
-
-	entity_exists = entity_exists or enemy_autoplace.enemy_entity_exists
-	for _, entity_name in pairs(entity_names or {}) do
-		if entity_exists(entity_name) then
-			entity_settings[entity_name] = {}
-		end
+	for _, entity_name in ipairs(available) do
+		entity_settings[entity_name] = {}
 	end
 end
 

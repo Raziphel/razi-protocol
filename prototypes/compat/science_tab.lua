@@ -61,12 +61,13 @@ function science_tab.data_final_fixes()
 		"solaris-tech-card",
 		"nyxaris-tech-card",
 		"vibrant-tech-card",
+		"vespera-tech-card",
 		"beetlejuice-tech-card",
+		"umbra-tech-card",
 		"deep-space-tech-card"
 	}
 
 	local planet_science_packs = {
-		"ambition-science-pack",
 		"space-logistic-science-pack",
 		"pulsar-science-pack",
 		"bioluminescent-science-pack",
@@ -74,7 +75,6 @@ function science_tab.data_final_fixes()
 		"biorecycling-science-pack",
 		"muriatic-science-pack",
 		"rubia-biofusion-science-pack",
-		"vanadium-science-pack",
 		"planet-crucible-science-pack",
 		"battlefield-science-pack",
 		"cryogenic-science-pack",

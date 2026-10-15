@@ -1,10 +1,315 @@
 # Razi Protocol
 
-Razi Protocol is a large progression, compatibility, and starmap overhaul for *Factorio: Space Age* built around a huge Krastorio 2 Spaced Out modpack. Its goal is simple: turn a massive pile of excellent planet mods into one coherent campaign.
+**A curated seven-system Factorio 2.1 Space Age expedition.** Razi Protocol weaves source-owned planets and machines into a cohesive campaign: meaningful planetary research, challenging interstellar logistics, readable space routes, a unified Expedition Journal and a construction-driven deep-space finale.
 
-Instead of leaving every planet on its own island, Razi Protocol rebuilds the run into a chaptered, multi-system expedition with cleaner discovery flow, system milestone cards, routed enemy themes, better map structure, and a longer late-game path into the intergalactic transceiver finale. When Nexus is installed, its black-hole and Sol content becomes an additional Deep Space branch.
+**For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
-## Why It Exists
+## What we are building
+
+- **Progression with purpose:** Seven primary systems, valuable side worlds and genuine research dependencies that reward industrial specialization rather than pointless complexity.
+- **Exploration that makes geographical sense:** coherent interstellar branches, deliberate dangerous crossings and artwork that communicates real route conditions.
+- **Story attached to gameplay:** the Expedition Journal's Quests, Projects and recovered records reflect real technologies, player milestones and physical megaprojects.
+- **A long-form finale:** advanced science and coordinated remote factories culminate in Deep Space and the Convergence Mandates; research alone is not an invented victory.
+- **Performance and compatibility by design:** source-mod authority, guarded optional integrations, stable saves, configurable features and minimal runtime overhead.
+
+## Developer documentation
+
+| Guide | Read it for |
+| --- | --- |
+| [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) | Design intentions, player journey, principles and decision checklist |
+| [Contributing](CONTRIBUTING.md) | Change process, writing, translating and pull requests |
+| [Architecture](docs/ARCHITECTURE.md) | Module boundaries, source ownership and safe integration |
+| [Expedition Journal](docs/EXPEDITION_JOURNAL.md) | Quest/project/transmission behavior and UX |
+| [Localization](docs/LOCALIZATION.md) | Writing lore and translations in the split locale files |
+| [Art Direction](docs/ART_DIRECTION.md) | Starmap, route overlays and deliberate visual hierarchy |
+| [Distributed Technology](docs/DISTRIBUTED_TECHNOLOGY.md) | Moving technology gates without circular progression |
+| [Settings](docs/SETTINGS.md) | Supported toggles, defaults and performance choices |
+| [Validation](docs/VALIDATION.md) | Regression tests and manual game checks |
+
+**Status note:** This README also contains chronological implementation records below. They document past changes, not an always-current guarantee about the loaded modpack. Confirm current behavior from source and live Factorio testing.
+
+---
+
+## Historical development notes
+
+**2.1.88: Red dotted starmap trails removed at the source.** A final
+atlas pass removes Orbital Catapult's independent starmap ribbon sprites,
+lingering Carna/Velora orbit decorations, and stray red Razi highlights
+near those planets. It does not remove actual space routes or disable
+Catapult transport. Restart Factorio to rebuild the sprite atlas.
+
+**2.1.87: Outer-system starmap polish.** Ferrum now connects west of
+Beetlejuice's Slip Stream, Obsidiax joins Vesta beyond Umbra's shattered
+belt, Shchierbin takes a spacious Paracelsin-side orbit beyond Vibrant's
+rocks, and Athos gains a close Vulcanus spur. The overlong Umbra waypoint
+names are replaced with compact labels and proper descriptions. The
+Carna/Velora dotted visual tails are suppressed without changing their
+travel routes. Science and Atlas memberships follow the new locations.
+Full live-game visual verification is still pending.
+
+**2.1.84: Restore Razi Protocol's normal displayed name.** The old
+`!` prefix did not sort the mod settings first, so the in-game mod title
+now simply reads **Razi Protocol**. Mod ID, option keys, defaults,
+dependency incompatibility markers, and saved settings do not change.
+
+**2.1.82: Eneas and Solar Halo removed.** Neither source mod is now
+optional, recommended, or required. Their Razi-authored integration routes,
+discovery hooks, and obsolete regression fixtures were removed. The Calidus
+star graphics and Dyson Sphere project are entirely Razi-owned or sourced
+from independent required mods and remain unchanged. Disable any already
+installed external mod copies manually; back up affected saves first.
+
+**2.1.81: Required Athos and Nulla research worlds.** Athos now joins
+Solaris with native Particulate Science, diamonds and Crushing Industry;
+Nulla joins Vespera as Aquilo's drone salvage moon with Robotic Science.
+Both receive dedicated journal milestones and feed the new **Frontier
+Recovery Charter**: a late native-science technology tied to outer mastery,
+using an existing advanced lab. Their original mechanics, discovery techs
+and source recipes remain intact. Complete Factorio/K2SO startup and
+save-migration testing are still necessary before public release.
+
+**2.1.80: Experimental Nulla and Planet Athos recovery.** Both former
+conflicts may now be manually enabled as optional worlds, one at a time on
+a copied save. Razi attempts to guard Nulla's missing electric-furnace
+reference before upstream final-fixes and detects/prunes only proven
+Athos-owned technology cycles. This is not yet an engine-validated release;
+if either source still crashes, its exact Factorio log will identify the
+next fix. No compulsory science or planet dependencies were added.
+
+**2.1.79: Staff compatibility recommendations.** Added standalone
+Frozeta Nuclear Winter and combined Celestial Weather Next as recommended
+companions. Shchierbin was retained as an opt-in side world with guarded
+connections, without expanding the mandatory science chain. Previously
+crashing Nulla and Planet Athos are now experimental manual opt-ins; Outer Rim remains blocked.
+See [Dependency Audit](docs/DEPENDENCY_AUDIT.md). Full engine validation
+remains necessary.
+
+# Razi Protocol
+
+**October 2026 Vespera update:** Removed the synthetic Vespera
+asteroid belt, its In/Out waypoints, survey and background ring.
+Vespera now runs Slip Stream → Muria → Rubia, branching to
+Maraxsis and Aquilo. Vibrant and Umbra retain their own asteroid
+belts. Earlier entries below describe past builds.
+
+
+**2.1.74: Orbital infrastructure companions and Expedition Journal:**
+Six source-owned Factorio 2.1 mods are now recommended for advanced space
+freight, railway engineering, shields, and circuit automation. The Quest
+Journal now unifies major projects and has a more restrained folio layout. The optional
+technology weave adds source-guarded late science where lab compatibility
+allows and can be disabled. Orbital Catapult is a manual opt-in only:
+its author's required load-order strategy makes a conventional recommended
+dependency unsafe. No source planet routes, cargo schedules, existing
+research IDs, or physical freight are replaced. This requires a live
+full-pack validation; see the [integration and smoke-test guide](docs/FRONTIER_COMPANIONS.md).
+
+
+**2.1.73: Distribute technologies across planets.** The
+original nuclear, construction-robot and logistic-robot research
+now has carefully guarded off-world science requirements:
+Gleba biology for construction, Vulcanus metallurgy plus Gleba
+agriculture for reactors and logistic robots, Fulgora
+electromagnetism for advanced logistics, and Cerys nuclear science
+for fuel reprocessing when installed. Planet Express and AAI
+source technologies are included conditionally. Early rocket
+construction, native science producers and labs stay available,
+with compatibility skips and a default-on startup rollback
+switch. The Codex and research auditor recognize the new
+planetary journey. See `docs/DISTRIBUTED_TECHNOLOGY.md`.
+In-game startup and old-save testing are still outstanding.
+
+**2.1.72: Quiet Galaxy visual and research pass.** Kept every source
+stellar PNG but fitted each of the eight ambient halos to its identity
+without extra sprites. Vespera and Umbra now show one hand-authored
+belt image in Subtle mode, with optional faint extra debris only in
+Cinematic. Asteroid navigation warnings are prominent for true danger
+and absent from calm routes. Campaign chapters gain compact, native
+science-card markers and completion bars; Razi-owned technology
+milestones sort into five readable frontier groups without affecting
+native research mechanics. No added labs, orbit edits, costly animations
+or extra background textures.
+
+**2.1.71: Starmap artwork refinement.** Polished the actual in-mod
+starfield, system coronas and asteroid-belt drawing. Existing Razi PNG
+assets now render with quieter repeat-free tile exposure, smaller stellar
+halos, muted dust pockets, one clean Vibrant ring and distinct cool
+Vespera/warm Umbra debris treatments. Belt route strokes inherit the same
+regional colors. Art settings apply consistently; native planets, routes,
+save identifiers and asteroid hazards are unchanged. In-game screenshot
+validation is still needed.
+
+**2.1.70: Native Razi asteroid belts.** The existing Vibrant, Vespera
+and Umbra asteroid belt crossings now have distinct regional resource
+identities: metallic, oxide and carbonic. Physical inner/outer rims
+remain safe harvest stations, while 5,000, 6,500 and 8,000 km crossings
+develop native resource seams and smooth, escalating combat-asteroid
+pressure near their midpoints. We studied MrLumme's external AsteroidBelt
+source for its resource-rim/crossing idea, but continue using Razi's
+curated seven-system route authority, original saved research/route
+identifiers, and native Space Age asteroid prototypes. No source artwork,
+runtime spawning, external belt dependency or extra travel lanes.
+Full-pack and old-save testing is still required.
+
+
+**2.1.69: Historic mod-setting sort experiment (reverted in 2.1.84).**
+Factorio owns mod-group ordering, so the attempted `!` display-name prefix
+did not push Razi's settings above other mods. The visible name is once
+again `Razi Protocol`, matching the canonical mod portal title. The
+internal ID `razi-protocol`, setting keys, and existing saves remain intact.
+
+
+Razi Protocol started as my attempt to make an absurdly large Space Age planet pack feel like one game. It's built for Factorio 2.1 and Krastorio 2 Spaced Out.
+
+The planets still have their own machines, recipes and quirks. What changes is how you get between them, what you research along the way and why those separate factories are worth connecting. The transceiver now opens the journey into Deep Space, while The Convergence is the real ending that gives those connected factories a reason to exist. Nexus retains its native late-game branch.
+
+**2.1.68: Seven-system science economy.** Freight-assisted card recipes
+now convert four native batches plus regional imports into five cards, with
+15% additional processing time versus four normal batches. New optional
+Beetlejuice and Umbra recipes reuse Secretas, Linox, Tenebris and Vesta
+manufacturing. First-frontier research has gentler costs on late Solaris
+and Moshine/Apia discoveries, without changing the paired entries,
+native Panglia data-cell progression or old technology IDs. The Campaign
+UI shows installed bonus recipes and the auditor checks bonus ceilings,
+craft time and mandatory first-frontier card spending. A full Factorio
+runtime and old-save playtest are still required.
+
+**2.1.67: Science, economy and planetary identity pass.** Discovered
+worlds now show their real shared production-chain roles in the Atlas,
+with a direct link to the existing Cargo Network card. Research audits
+report native laboratory coverage and the number of system cards needed
+per campaign research stage. Galactic Operations also shows the direct
+science-pack totals for each pending system gateway. The full campaign audit produces a
+planet-by-planet priority queue for blocked, uncertain or disconnected
+discoveries, without rewriting source mod recipes or research. The
+source-only regressions were expanded; the full Factorio 2.1 modpack,
+save migration and measured UPS playtests are still required. See
+[Validation](docs/VALIDATION.md).
+
+**2.1.66: Full upstream dependency cross-check.** We removed two
+duplicate hard requirements already satisfied by source mods:
+Nexus-Updated brings Nexus Threat >= 1.1.0 and K2 Dyson Sphere
+Rebalance brings the Dyson fork >= 1.0.5. K2SO and the curated
+campaign remain intact. Stronger version pins on Planetaris
+worlds, Moshine, Cubium and other source mods are deliberately
+preserved. The audit now records all 93 direct declarations,
+verified upstream chains, and a reusable Factorio Mod Portal
+graph auditor. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md).
+
+**2.1.75: Conflict-safe modpack recommendations.** Removed broken Weather
+Additions 1.6.0 from the recommended list while retaining the source-owned
+core Weather mod. Blocked Outer Rim 2.9, which conflicts with Secretas Orbit
+Patch and recommends Better Asteroid Belt, while keeping Razi's own belt
+crossings. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md) for the curated
+starter profile, exceptions and in-game validation limits.
+
+**2.1.65: Complete dependency audit.** All 95 direct dependencies
+now have a documented required/recommended/optional/incompatible
+classification. K2SO, its required compatibility patches, curated
+campaign planets and Nexus remain part of the intended galaxy.
+Weather, Planet Express, Rocket Turrets, Science Tab, Frost Biters,
+Big Monsters are now recommended rather than mandatory.
+Nexus Threat stays required because Nexus-Updated depends on it. Razi's science cards use Intermediate Products if Science
+Tab is absent. The registry and regression tests prevent undeclared
+category drift. See [Dependency Audit](docs/DEPENDENCY_AUDIT.md).
+Full Factorio startup and installed-save tests remain outstanding.
+
+**2.1.64: Curated recommended companions.** Factorio 2.1's new
+recommended dependency marker now advertises AAI Signal Transmission
+and Imersite Asteroids without requiring either. All eligible Factorio 2.1 companion integrations are now recommended,
+not plain optional. FluxWorks remains hidden pending integration tests;
+Outer Rim is excluded for conflicting with Secretas Orbit Patch and Razi's
+own asteroid belts. Dea Dia and Pelagos remain unported. See
+[Optional Dependencies](docs/OPTIONAL_DEPENDENCIES.md) for the policy.
+
+**2.1.63: Science and research progression overhaul.** The main
+star gateways now cost 650/1,200/1,600 system-card research units
+per paired tier, with Outer Frontier Mastery at 1,900. Ordinary
+system-card manufacturing scales from 10 to 28 seconds, with extra
+native planetary science at the outer/deep-space frontier but no
+recursive multiplication of predecessor cards. Fourteen Razi factory
+research prices are rebalanced; the optional post-arrival native
+science integration expands to 30 guarded candidates. The science
+auditor reports actual card recipe inputs and detects cyclic card
+manufacturing dependencies. Existing source laboratories, independent
+paired-star routes, technology identities and old Convergence shipment
+records are preserved. A full in-engine modpack and save-migration
+validation pass remains outstanding; GitHub CI is still manual-only.
+
+**2.1.62: Original final-act art and manufacturing.** The five Mandates
+now use individual 64px icons. The last Ignition Mandate is built from
+three factory-made components consuming all eight mandatory system
+science cards, without needing new machines or labs. Mandates and
+components occupy neighboring subgroups in Intermediate Products.
+The finale GUI shows their crafting states, existing-save Ignition
+unlocks migrate safely, and the read-only /razi-audit checks all
+eight recipes.
+
+**2.1.61: Loaded-modpack audit and runtime performance.** Server
+administrators can use `/razi-audit` to inspect the actual installed
+Convergence laboratory compatibility, Mandate recipe unlocks, missing
+visible producers, existing craft machine capacities, research cycles
+and physical Dyson receiver status.
+It is read-only, on demand, and creates no save records. The Galaxy
+Atlas now builds its reverse industry index once per script session
+instead of rescanning every technology whenever a destination is opened.
+The existing manual-only Check workflow includes mock regressions for
+the audit, Atlas cache, multiplayer merges and five-stage finale.
+
+**2.1.60: Finale readability and integration polish.** Convergence
+construction displays fractional partial deliveries, stage-specific
+colors, and immediate next-action guidance using the installed
+technologies and real recipe unlocks. The Protocol Codex now clearly
+labels freight deliveries and live transmissions instead of treating
+them as technology research. Unlocked Deep Space locations in the
+Galactic Atlas include practical expedition dossiers and direct links
+to the finale console. None of these panels creates a route, laboratory,
+surface, recipe unlock or fake Dyson energy data.
+
+**2.1.59: The Seven-Sun Array is visible in Galactic Operations.**
+Its five construction modules light up as your force delivers physical freight.
+The final phase can require a placed Dyson energy receiver from the original
+Dyson Sphere mod, if a compatible receiver entity is exposed. This is a
+real placed entity, not an invented satellite or energy-production statistic.
+Once the final accord reaches the expedition platform, the transmission
+unfolds in four force-wide updates over twelve seconds, ending with
+Factorio's native victory screen. The sequence survives save/reload and
+previous winners remain victorious.
+
+**2.1.58: The ending now has five physical phases.** After the original
+Stellar, Industrial and Deep-Space shipments, engineers prepare four
+Pulsar Resonance Mandates, research Convergence Ignition Protocol and
+deliver one final Ignition Mandate containing all seven system cards.
+Native Dyson distribution technologies contribute to the final research
+when safely present. The native ending fires only after the last
+shipment, not when research finishes, and older Convergence victories
+remain recognized.
+
+The Convergence's Stellar and Industrial freight unlocks at the
+Commission; its Deep-Space and Pulsar Resonance freight unlock at
+Synchronization. The final Ignition freight unlocks with its own
+dedicated research.
+Galactic Operations shows each phase's delivered total, physical cargo
+in your inventory, and an active/locked/completed status. Victory still
+requires real delivery aboard a force-owned expedition platform.
+
+## Planet quality gate
+
+Panglia is back as a **required** late Nyxaris planet (0.7.2+). Its timewarp, DNA, and simulation progression is source-owned; Razi connects it after Moshine and Apia/Carnova and supplies a small, optional two-way industry loop. Muluna remains mandatory; Planet Wit stays excluded while Shchierbin is optional. Back up existing saves before changing planetary mods. See [Planet Quality Audit](docs/PLANET-QUALITY-AUDIT.md).
+
+## Nexus and Celestial Weather (2.1)
+
+Nexus-Updated, Nexus Rebalanced and Nexus Bosses are now part of the curated endgame, with the Nexus Threat fork and its original boss-enemy dependencies. **Nexus Bosses owns all nine battles, trophies, the native warp key, Silence and its route unlocks.** Razi now tracks all **nine individual boss victories** from the source mod's read-only per-force snapshot, as well as Whisper, Chorus, Convergence, bearings and Silence. Six preparation milestones follow photon electronics, storm prediction, shielding, and omega power. Both the Journal and Galactic Atlas can open the original Nexus Codex. No duplicate bosses, trophies or rewards are added. Rebalanced keeps its authored omega-lab, production costs, quality and Oort/Sol warp-drive protections.
+
+Combined Celestial Weather Next 1.6.0 provides configurable visuals on the supported planets, including Panglia, Rubia, Vesta, Muria and Paracelsin. The Paracelsin permanent winter stays **off by default** in the upstream add-on. An **Atmospheric Field Guide** now appears in the Expedition Journal and planetary Atlas, showing each source setting and relevant environment notes. Razi does not add separate weather loops.
+
+Outer Rim remains **explicitly incompatible** with the curated galaxy. Its 2.9.x update redraws routes and distributes research between worlds in different Razi systems, while its own author flags K2SO integration as unreliable. Do not make it a prerequisite for the seven-system campaign. See [Nexus and Atmosphere Integration](docs/NEXUS-ATMOSPHERE-INTEGRATION.md) for source-owned systems, quality gates and the testing plan.
+
+## Muluna compatibility
+
+**Muluna remains the required Nauvis moon.** The independent Biological Machines planet **Wit** is incompatible with Muluna and is explicitly excluded (`! biological-machines-planet-wit`). Razi Protocol does not require or integrate Wit; keep Muluna enabled and disable Wit in Factorio's mod manager. Do not enable the complete Biological Machines Modpack because it requires Wit. **Balack remains supported independently** and does not depend on Wit.
+
+## Why I Made It
 
 Big Space Age planet packs are fun, but they also tend to suffer from the same problems:
 
@@ -14,106 +319,325 @@ Big Space Age planet packs are fun, but they also tend to suffer from the same p
 - Too many endgame add-ons fighting over the same progression space.
 - Too many optional enemy and compatibility mods that do not naturally land where they make thematic sense.
 
-Razi Protocol is the layer that turns that chaos into an intentional galaxy route.
+I wanted a galaxy you can actually navigate, with different ways through it and reasons to revisit earlier factories.
 
-## What It Changes
+## What's Different
 
-- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
+- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice, Umbra, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
-- Integrates optional Eneas support plus Linox, Muria, and Shchierbin directly into the intended campaign flow.
+- Integrates Linox and Muria into the campaign without retaining redundant or unfinished planets.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
-- Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
+- Uses K2SO's real intergalactic transceiver as the **gateway into Deep Space**. The solar-system edge, Aegis/Bellicos, Shattered Planet, Nexus and other late expeditions remain for the proper final act.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
+## FluxWorks industrial companion (experimental)
+
+FluxWorks 0.2.12+ is an optional expansion to Razi's manufacturing. Its four Flux spectra, specialized machines, phase logistics, and K2SO production are now compatible with Razi's seven-system campaign. FluxWorks does **not** replace the Shattered Planet space location, victory, global planet resources, or chapter research in companion mode.
+
+The four FluxWorks science packs remain optional mastery research instead of mandatory costs for ordinary industrial technologies. Four additional production recipes are attached to the Solaris, Nyxaris, Vibrant, and Vespera chapters. Rift Exchange transfers require Outer Frontier Mastery so the logistics system cannot skip the main campaign.
+
+See [FluxWorks Integration](docs/FLUXWORKS_INTEGRATION.md) for the exact responsibilities, test matrix and important existing-save warnings. This is still experimental until tested in the actual Factorio engine.
+
+### Seven-System Industrial Atlas
+
+With FluxWorks installed, seven **optional regional industry technologies** offer specialized production for Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra. The Codex adds a matching violet **FluxWorks | Industrial Atlas** chapter with seven engineering missions, suggested factory worlds and short narrative briefings. Nothing becomes a travel requirement.
+
+See [FluxWorks Industrial Atlas](docs/FLUXWORKS_INDUSTRY_ATLAS.md) for details and validation notes.
+
+### Linked FluxWorks factory networks
+
+Five optional industry exchanges connect pairs of FluxWorks system workshops, from Calidus–Solaris aerospace framing to Nyxaris–Umbra living phase technology. The FluxWorks Codex chapter has twelve research-tracked objectives, and duplicate FluxWorks technology arrows are simplified without lifting research requirements. Source-mod recipes and the campaign gates stay intact.
+
+See [FluxWorks Industrial Exchanges](docs/FLUXWORKS_INDUSTRIAL_EXCHANGES.md).
+
+### FluxWorks machine progression and Codex previews
+
+When FluxWorks is enabled, the Industrial Atlas now shows each specialization's actual factory recipe, ingredient and output quantities, recommended machine, and suggested production world. Its twelve optional research goals have their own chapter progress and no longer inflate the main campaign's completion totals or distract from higher-priority story research.
+
+Selected FluxWorks engineering technologies also have lighter research costs in **Razi companion mode only**. All requirements and rewards remain intact; standalone FluxWorks is unchanged.
+
+See [FluxWorks Progression and Usability Audit](docs/FLUXWORKS_PROGRESSION_AUDIT.md) for the exact changes and playtest checklist.
+
+## Mod Settings
+
+Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
+
+The optional K2SO and modded-planet production exchanges can be controlled independently. Their normal defaults leave the existing Razi experience unchanged, and disabling them never removes the native recipes supplied by planet mods.
+
+## Faster Loading for Large Modpacks
+
+Razi Protocol depends on many planet mods. For players with long startup times,
+Factorio already offers optional **prototype-data** and **sprite-atlas**
+disk caches. These must be enabled **on each player's computer**, rather than
+through Razi's mod settings. The first startup builds the caches; subsequent
+unchanged launches may be much faster. See our
+[Faster Startup & Troubleshooting Guide](docs/STARTUP_PERFORMANCE.md) for
+setup steps, trade-offs, and how to identify the slow phase from Factorio logs.
+
 ## Campaign Structure
 
-Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bucket of planets.
+Seven solar systems are arranged as three outward pairs after the Calidus home system. Unlock both systems in a pair, choose which planet chains to tackle first, then master **both** to move to the next frontier.
 
-### Calidus
+| Tier | System | Planets | Identity |
+| --- | --- | --- | --- |
+| Home | **Calidus** | Nauvis, Muluna, Calidus Slip Stream departure corridor | Familiar Space Age industry, the first system card |
+| Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys | Military and advanced industrial science |
+| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
+| Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |
+| Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
+| Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
+| Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta; Carna | Unusual and dangerous late-game experimentation |
+| Gateway → Deep Space | **Solar System Edge** | Transceiver activation opens the Aegis/Bellicos and Shattered Planet expeditions, with Nexus/black-hole branches | Seven system cards, native K2SO transceiver; Deep Space science afterward |
 
-Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and optional Eneas support. This is where the pack establishes the first milestone card: Calidus Tech Card.
+### The interstellar routes
 
-### Aegis and Bellicos
+    Calidus
+      |---- Solaris ----|
+      |                 |---- Vibrant ----|
+      |---- Nyxaris ----|                 |---- Beetlejuice --|
+            \           |---- Vespera ----|                   |---- Deep Space
+             \---- (local system crosslinks) ---- Umbra -------|
 
-The Aegis expedition no longer crowds the inner campaign map. Its precursor stargate sits beyond the solar-system edge, and the enormous Bellicos pulsar occupies a remote, otherwise unused deep-space bearing. The complete Aegis route remains intact, while Lightweight and Pulsar Science now contribute to Deep Space mastery.
+This sketch represents **choices**, not all physical connections. Full interstellar route and local-spoke details are in [Seven-System Design](docs/SEVEN_SYSTEMS.md) and [Asteroid Hazard Guide](docs/ASTEROID_ROUTES.md).
 
-### Solaris
+Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, while Fulgora anchors Vibrant. Solaris and Nyxaris are independent first-frontier entry choices. Vibrant and Vespera require mastery of both first-frontier systems; Beetlejuice and Umbra likewise require mastery of both second-frontier systems. An outer-frontier mastery technology gates the final edge journey.
 
-Solaris is the first major custom-system branch. It brings Castra Prime, Arig, Hyarion, Tellus, and Corrundum into a single connected route. This is where the campaign stops feeling like vanilla Space Age and starts feeling like a true multi-system pack.
+### Optional regions
 
-### Nyxaris
+- **Cerys** follows Fulgora to Vibrant and **Rabbasca** follows Gleba to Nyxaris.
+- **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
+- **Panglia** has direct Moshine and Apia/Carnova freight routes, a distinct Nyxaris orbit, new Chronicle research objectives, and guarded Moshine optical-cable / Panglite-glass production exchanges. Neither bonus recipe replaces native manufacturing.
+- **Nexus and Void-related endgame branches** remain beyond the transceiver gateway, not required for the seven-star arrival sequence.
+- Aegis/Bellicos is **required** by the current pack and retains its own internal pulsar and stargate routes.
 
-Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia and Pelagos progression when either is installed.
+### Progression principles
 
-### Vibrant
+Different planets in the same system should provide genuine early travel choices, while the system's research prerequisites determine when advancing to the next frontier makes sense. Science ingredients are compressed into chapter cards, which can be automated and transported between systems without making every lab universal.
 
-Vibrant is the exotic science chapter. It holds Ribbonia, Paracelsin, Muria, Aquilo, Rubia, Maraxsis, and Shchierbin. It is the point where the campaign starts leaning into stranger science packs, more specialized planets, and stronger thematic enemy placements.
-
-### Beetlejuice
-
-Beetlejuice is the harsh outer-system chapter. It includes Cubium, Tenebris, Crucible, Vesta, Secretas, Frozeta, and the route toward the solar-system edge. Linox also lives here now as a later side branch, instead of remaining attached to Vulcanus or Solaris.
-
-### Deep Space
-
-Deep Space is the final chapter. Its required route culminates in the intergalactic transceiver chain. Optional Nexus expands that chapter through the black-hole approach, black hole, Oort Cloud, and Sol, while optional Void Processing can add another late branch.
+Changes to existing discovery technology effects, route placement and science cards are intended to preserve prototype IDs for old saves. This revamp is not yet validated against a full Factorio runtime load; test a copy of your save before upgrading.
 
 ## System Cards
 
-System cards are the backbone of the technology cleanup.
+Eight cards now connect the scientific ladder:
 
-Without Razi Protocol, late-game research in a giant planet pack often becomes unreadable because every technology demands huge walls of planet-specific science packs. Razi Protocol compresses earlier system mastery into milestone cards:
+1. Calidus Tech Card
+2. Solaris Tech Card
+3. Nyxaris Tech Card
+4. Vibrant Tech Card
+5. Vespera Tech Card
+6. Beetlejuice Tech Card
+7. Umbra Tech Card
+8. Deep Space Tech Card
 
-- Calidus Tech Card
-- Solaris Tech Card
-- Nyxaris Tech Card
-- Vibrant Tech Card
-- Beetlejuice Tech Card
-- Deep Space Tech Card
+The first pair of frontiers uses Calidus science. The second pair consumes Solaris and Nyxaris cards. The third pair uses Vibrant and Vespera cards. **Beetlejuice and Umbra** cards converge at Outer Frontier Mastery, enabling the transceiver expedition gateway rather than ending the game.
 
-That keeps the tree readable while still preserving the feeling that every chapter matters. You still have to conquer the system. You just do not have to stare at fifteen separate science icons every time you open the tech screen.
+Vespera and Umbra currently tint existing icon assets, rather than introducing unsupported or unapproved new artwork. Dedicated star and card art are a separate polish pass. The card recipes contain only science expected from their required core planets, rather than injecting science from optional integrations.
+
+## Expanded Community Planet Compatibility
+
+The October 2026 modpack expansion recognises Ferrum, Velora, Khemia, Arcanyx, Balack, Rabbasca Underground, and Shattered Planet where installed. Nulla and Athos are experimental opt-ins with guarded compatibility patches; enable them one at a time and validate a real Factorio load.
+
+The current scope protects original moon orbits, underground-only surfaces, specialized travel hazards, native recipe progression, and the original discovery technologies. See [Community Expansion Compatibility](docs/COMMUNITY_EXPANSIONS.md) for the complete sixteen-mod audit and the important full-pack validation requirements.
+
+## The Protocol Codex
+
+A built-in **210-milestone Protocol Codex across eighteen original story
+chapters** guides the full seven-system K2SO campaign. Open it during
+normal gameplay using the small top-row book button or **Ctrl+Shift+J**;
+pin a goal to a compact optional tracker. Every milestone has original
+narrative and practical engineering notes, plus fifteen recovered
+story transmissions, collapsible chapters, filters and a next-milestone
+navigator. Progress uses native
+force research, supports existing saves and parallel worlds, and skips
+unavailable mod technologies. It introduces no rewards, extra research
+gates or dependency on the unrelated Quest Book mod.
+
+The large-format Journal has a dedicated chapter navigator, an expanded story reader, warm chapter color accents, a research-objective card, and **no horizontal scrollbars**. Use the chapter dropdown to jump instantly or the mouse wheel to browse without visible vertical scrollbar clutter. The window scales to your Factorio UI size and keeps all original quests and research logic.
+
+See [Expedition Journal](docs/EXPEDITION_JOURNAL.md).
+
+## Calidus Dyson Sphere megaproject
+
+Razi includes the maintained Factorio 2.1
+[SLP Dyson Sphere Reworked port](https://mods.factorio.com/mod/slp-dyson-sphere-reworked-fork)
+and [K2 Dyson Rebalance](https://mods.factorio.com/mod/k2-dyson-sphere-rebalance).
+Solar-orbit destinations become a distinct Calidus home-system
+construction project. Razi ties its six native research technologies to
+existing planet-industry milestones, while preserving source-owned plasma,
+satellite launches, receiver power caps and planetary repeaters.
+
+Galactic Operations now has a read-only **Stellar Works** page.
+See [Calidus Stellar Engineering](docs/CALIDUS_DYSON.md) for progression,
+configuration, remaining source-limitations and save compatibility.
+
+## Shared interplanetary factory components
+
+Razi now adds **two craftable shared engineering components** based on
+proven source materials rather than another batch of science requirements:
+
+- **Precision Control Matrix**: Moshine optical cable, Paracelsin zinc,
+  Fulgoran holmium and Vulcanus K2SO rare metals. Consumed by
+  manufacturing alternatives on Aquilo, Rubia and Linox.
+- **Extreme-Environment Lattice**: a precision matrix with Rubia
+  craptonite, Tenebris chitosan, Linox rare earths and stable Gleba
+  carbon fiber. Supports high-end Vesta factories and Deep Balack.
+
+They are optional, unlock after the native suppliers, require shipping,
+and never enter compulsory science cards or the original source recipes.
+The Galactic Operations Cargo Network page shows their research status.
+
+See [Shared Factory Components](docs/SHARED_FACTORY_COMPONENTS.md).
+
+## Multi-world industrial partnerships
+
+The optional Galactic Industrial Network adds **14 extra recipes** joining
+three to five existing planetary industries. Ten become available in
+Balanced mode; four more are Deep-only. Each requires the participating
+worlds, their genuine supplier recipes and original research. The native
+manufacturing recipe remains available with no new science requirements.
+Modern bonuses are capped at 25% output, generally at 10–20% longer crafting time,
+with additional imported ingredients and no productivity/recycling bonus.
+See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
+
+## Connected research across every frontier
+
+Razi's focused tech-tree pass now guards science prerequisites against
+late-only supply recipes, preserves the asteroid-belt-to-Paracelsin science handoff, and
+adds five cross-system research links. It uses native Igrys and Foliax
+research to connect the first frontier to the middle systems, and native
+Cerys and Obsidiax research to connect the middle to the outer systems,
+only where verified cycle-safe in the installed technology graph.
+
+The compact **Show only essential technologies** view now includes
+installed Razi planets' original discovery research, not only the
+main star-system milestones. No new mandatory science pack, technology
+prototype or research cost is introduced. Details are in
+[Focused Tech Tree Rework](docs/FOCUSED_TECH_TREE_REWORK.md).
+
+## Required planetary campaign and non-planet bridges
+
+Cerys and ten other formerly optional or recommended 2.1 worlds are now
+part of the required installation. Eneas has since been removed from the curated pack.
+Its upstream Construction Drones and RPG System dependencies are suggestions,
+not Razi-mandated prerequisites; Unit-05 and gantry behavior stay native.
+Existing destination technologies
+are woven into the **final** stable-singularity milestone where reachable
+without tech cycles. Native recipes and moon puzzles remain untouched.
+
+Dea Dia and Pelagos currently have only Factorio 2.0 portal releases, and
+Ferrum's documented 2.1 build has a version-floor mismatch. Those three
+remain guarded optional worlds until compatible releases can be validated.
+No new non-planet mod is installed merely for its ideas.
+
+See [Required Worlds & Bridge Roadmap](docs/PLANETARY_BRIDGES_AND_MASTERY.md).
 
 ## Planet Integrations
 
-Several planets are not just "supported"; they are deliberately placed into the campaign.
+Some world relationships need particular care:
 
-- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign beyond the solar-system edge. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
+- **Muria** now serves as the entry point to Vespera: Muria -> Aquilo -> Rubia -> Maraxsis. It is no longer entered through Vibrant.
+- **Ribbonia -> Asteroid Belt -> Paracelsin** is Vibrant's core science chain.
+- **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
+- **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
+- **Moshine and Apia/Carnova** feed into **Panglia**, whose original Moshine data cells, DNA analysis, timewarp research and cloning remain essential. Pelagos and Dea Dia remain optional.
+- **Aegis and Bellicos** keep their complete internal pulsar/stargate expedition beyond the solar-system edge.
 
-- Eneas stays an optional early Calidus moon branch when installed.
-- Muria is integrated into the Vibrant chapter ahead of Aquilo.
-- Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
-- Linox is moved into Beetlejuice as a later Cubium-side branch.
-
-These are not cosmetic placements only. Razi Protocol also adjusts their route assumptions, discovery placement, and nearby progression gates so the starmap and tech tree tell the same story.
+The last data-stage route pass removes unintended cross-chapter shortcuts among the systems Razi owns, without deleting internal source-mod networks.
 
 ## Endgame Philosophy
 
-Razi Protocol intentionally provides its own late-game structure.
+The first seven star systems are the **preparation**, not the ending.
 
-When Nexus is installed, Razi Protocol hides its omega-science clutter from normal play and swaps its role into a cleaner Deep Space card-driven progression. Without Nexus, the solar-system edge still leads into the transceiver singularity sequence without leaving a missing prerequisite.
+Outer Frontier Mastery requires real Beetlejuice and Umbra research. It
+leads to Intergalactic Singularity Theory, Test Fire and Stable
+Singularity, then the original K2SO transceiver must be constructed,
+charged and activated. Razi observes that real activated machine to
+research **Intergalactic Signal Lock**. When the native technology chain
+is safe, that research is required to unlock the Solar System Edge.
 
-That singularity sequence is a major part of the pack identity:
+All seven system tech cards now feed this gateway. Promethium and
+Deep Space cards remain **after** arrival rather than circular
+ingredients needed to reach the edge. The source transceiver's
+activation remains unchanged; its independent victory condition is
+suppressed through K2SO's supported remote interface when available.
 
-- Intergalactic Singularity Theory
-- Intergalactic Singularity Test Fire
-- Stable Intergalactic Singularity
-- Intergalactic Signal Lock
+**The Convergence** is now the playable post-transceiver ending. After
+reaching the Solar System Edge and undertaking the native late-game
+expeditions, research the Convergence Commission. Three physical
+factory-built manifests then turn prior research and materials into
+something the galaxy can ship together:
 
-The result is a longer, cleaner, and more intentional endgame than simply unlocking the vanilla K2SO transceiver as soon as it appears.
+- **Stellar Mandate:** 8 Calidus/Solaris/Nyxaris research payloads and
+  orbital electronics. Native Dyson Sphere research is a prerequisite
+  when installed and compatible.
+- **Industrial Mandate:** 10 Vibrant/Vespera payloads with rare metals,
+  Gleba bioflux and suitable existing supplier-world components.
+- **Deep-Space Mandate:** 6 Beetlejuice/Umbra/Deep Space payloads,
+  incorporating genuine native post-edge science materials where present.
 
-Optional Void Processing is still supported, but it is treated as a late Deep Space branch rather than mandatory core pack content.
+Manufacture the manifests in original assembling machines. Carry them
+physically onto a platform owned by your force, parked at the Solar
+System Edge or a supported deeper destination. Open **The Convergence**
+from Galactic Operations or from its linked Codex objective; submit
+real items from your character inventory. Team contributions persist
+by force, including partial shipments and force merges. The final
+submission requires Deep-Space Synchronization research and displays
+Factorio's genuine victory screen, with Continue enabled. Razi also
+suppresses the source K2SO transceiver and vanilla Space Age
+Solar System Edge victory triggers where their supported
+`set_no_victory` interfaces are available.
+
+This ending **does not** add a new planet, laboratory, artificial cargo
+teleportation, replacement transceiver, or boss. It works with optional
+source content when that content exists, but never pretends to have
+shipped cargo merely because research was completed.
+
+**Laboratory tiers** reuse the installed native machines instead of
+adding custom Razi labs. Existing 2.1.54 custom lab items and entities
+migrate back to ordinary vanilla Labs when upgrading saves.
+
+## Compatibility and Modpack Quality
+
+This development branch includes a cross-mod compatibility registry, focused
+engine-free regression tests, and two complementary audits for final prototype
+dumps. These tools help us integrate community fixes without rewriting other
+authors' mods or making unverified assumptions about their mechanics.
+
+- [Compatibility policy and upstream patch registry](docs/COMPATIBILITY.md)
+- [Planet Field Guide](docs/PLANET_FIELD_GUIDE.md)
+- [Six new planet expeditions](docs/OPTIONAL_PLANETS.md)
+- [Seven-System Galaxy Design](docs/SEVEN_SYSTEMS.md)
+- [Factorio prototype validation guide](docs/VALIDATION.md)
+- [Next-pass implementation checklist](docs/INTEGRATION_ROADMAP.md)
+
+After loading the real required modpack with Factorio 2.1 and exporting a
+`--dump-data-raw` snapshot, run:
+
+```bash
+python3 scripts/audit_prototypes.py /path/to/data-raw-dump.json
+python3 scripts/audit_compatibility.py /path/to/data-raw-dump.json
+```
+
+The second command reports hard errors and review-only warnings for
+system-card ingredients, incompatible research triggers, recycling,
+surface conditions, and the known water-loop issue.
+
+**Development status:** automated GitHub checks do not launch Factorio or
+verify the full dependency pack. Do not publish or migrate a long-running
+save until the real engine and all optional combinations have been tested.
 
 ## Enemy Routing
 
 Razi Protocol supports several optional enemy packs and places them where they fit best.
 
 - Arachnids: Arig, Nexus, Crucible
-- Armoured biters: Panglia, Hyarion, Nexus, Crucible
+- Armoured biters: Hyarion, Nexus, Crucible
 - Cold biters: Aquilo, Paracelsin, Frozeta, optional Cerys, Nexus
 - Electric flying enemies: Corrundum, Ribbonia, Nexus, plus their native Fulgora theme
 - Explosive biters: Moshine, Nexus
@@ -133,6 +657,50 @@ Razi Protocol keeps Logistics focused on the normal logistic core, then adds a d
 - Floors, landfill, scaffolding, foundations, and platform pieces
 
 It also includes a few narrow balance passes for overlapping unlocks where two planets solve a similar problem in nearly the same way.
+
+## Factorio 2.1 K2SO planetary compatibility
+
+Corrundum Compatibility+ 1.1.2+ joins the required K2SO integrations with
+Castra, Rubia, Paracelsin, Cubium, Null's Tweaks and xyrc's Null Fork. Corrundum
+owns its electrochemical research-data and tech-card conversion; Razi already
+consumes the native electrochemical science in the Solaris system card and must
+not create duplicate conversion recipes.
+
+Secretas/Frozeta Krastorio Compatibility+ currently targets Factorio 2.0,
+so it cannot be required in our Factorio 2.1 pack. The separate 2.1
+Secretas/Frozeta Orbit Patch is optional because Outer Rim excludes it.
+See [the source ownership matrix](docs/K2SO_PLANET_INTEGRATION.md#community-k2so-compatibility-ownership).
+
+## Razi-owned space route network
+
+Starting with 2.1.47, Razi enforces **one authoritative travel catalog**
+across all seven systems. Native planet mods no longer add conflicting
+local shortcuts or duplicate links between Razi-managed worlds. Native
+moons, the original belt crossing, Dyson infrastructure and special
+external dimensions stay connected through explicit exceptions. The
+cleanup is on by default; a startup setting can temporarily disable it
+for diagnosis. More in [route authority documentation](docs/ASTEROID_ROUTES.md#authoritative-route-catalog-2147).
+
+## Solaris system readability
+
+Version 2.1.46 pulls Solaris's planetary chart in from a 54-unit outer
+orbit to a compact 35-unit extent. Seven purposeful local routes replace
+the old ring: a southern/eastern industrial journey and a separate
+Igrys expedition directly from the Slip Stream. The central Solaris
+corona and busy first-frontier background dust are softer, and Balanced
+orbit settings retain a single reference ring. Original discoveries and
+source planet behavior remain unchanged.
+
+## Space route coloring
+
+Razi Protocol Dev includes its **own native-route hazard overlay** from
+2.1.45. It colors actual Factorio 2.1 paths using the existing asteroid
+threat calculations without altering connections or the research tree.
+Two startup settings choose threat or chapter colors and whether to show
+major/belt routes only or every verified local route. The previous
+disconnected color strips have been replaced with short, consistent-width
+segments. No extra mod is required; Space Route Overlay is incompatible to
+avoid drawing the same route twice.
 
 ## Compatibility Focus
 
@@ -164,13 +732,11 @@ Core content in the intended experience includes:
 - PlanetsLib
 - Muluna
 - Linox
-- Shchierbin
 - Muria
 - Dea Dia (optional)
 - Corrundum
 - Apia
 - Moshine
-- Panglia
 - Pelagos (optional)
 - Tenebris Prime
 - Secretas
@@ -184,7 +750,7 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
 ## Modpack Guidance
 
@@ -212,3 +778,69 @@ If you enjoy the mod and want to support future updates:
 Razi Protocol exists because of the wider Factorio modding community. The planets, enemies, mechanics, art, sounds, and icons used by the pack belong to their respective authors and contributors.
 
 Please see [Credits.txt](Credits.txt) for the full acknowledgement list. If you are a mod author and want credit wording adjusted or content removed, contact Raziphel on Discord.
+
+
+## Interstellar cargo and defense integration
+
+Two required non-planet mods extend the factory network without adding any
+new planet: [Planet Express](https://mods.factorio.com/mod/planet-express)
+(v2.1.9+) dispatches actual cargo platforms using real rockets, and
+[Rocket Turrets Upgraded](https://mods.factorio.com/mod/upgraded-rocket-turrets)
+(v2.1.1+) adds a four-tier defense manufacturing ladder across Vulcanus,
+Fulgora, Aquilo and space platforms. Razi safely anchors their source-owned
+technologies to matching planet research where valid. It never overwrites
+Planet Express schedules or turret damage/recipes.
+
+The Galactic Operations map-window gains **Research & Campaign** and
+**Cargo Network** pages, including technology prerequisites, card-unlock
+readiness and the source mod's actual fleet configuration guidance.
+The new tech-graph audit works on an exported Factorio data-raw dump.
+See [Cargo & Research Integration](docs/CARGO_AND_RESEARCH.md).
+
+## Expedition Journal Projects (current interface)
+
+The Expedition Journal is now Razi Protocol's only player-facing dashboard.
+**Ctrl+Shift+J** opens Quests, Projects, and Journal in one window. The
+**Projects** page consolidates Dyson Sphere/Stellar Works, Cargo Network,
+Intergalactic Transceiver, and the interactive Convergence. **Ctrl+Shift+G**
+is retained as a direct Projects shortcut for existing key bindings.
+
+The standalone Galactic Operations window and floating map buttons are retired.
+Factorio Remote View still handles fleet and destination navigation. Research,
+receiver checks, cargo recipes, physical deliveries, and save-game progress
+remain owned by their original modules.
+
+## Galactic Operations UI
+
+A first-party, seven-system-aware planet and space-platform dashboard is included. Open the **Galactic Ops** button in Remote View on the space map, or optionally press **Ctrl+Shift+G** while viewing the map. It never occupies the shortcut bar. Search, filter, favourite, review platform status, and jump safely into Remote View without generating surfaces or replacing the vanilla selector. See [Galactic Operations guide](docs/GALACTIC_OPERATIONS.md).
+
+
+## Razi Universe Background
+
+The original, static seven-system starmap now has a galaxy-wide starfield, distinct coloured nebulae for each system and Deep Space, a connecting dust current, and three subtle asteroid-belt halos. Change the **Custom universe background** setting between Off, Subtle (default) and Cinematic, and independently toggle nebulae or belt atmosphere. Assets are 1024px or smaller and keep all native route and planet artwork. See [background notes](docs/STARMAP_BACKGROUND.md).
+
+
+### Expanded Galactic Scenery
+
+The star map also includes finer spiral nebula filaments, additional dust currents, scattered distant star clusters, atmospheric debris around all three belts, and Deep Space lensing. **Detailed galactic scenery** is on by default; disable it for the earlier minimalist backdrop. For a navigational-astronomy look, the optional **Observatory constellation ring** starts off so it will never be mistaken for a travel route. All sprites remain 1024px or smaller.
+
+### Calidus Stellar Works: live infrastructure and galaxy presentation
+
+Stellar Works now reports native placed Dyson receiver entities where the
+source mod exposes placeable receiver prototypes, plus the receiving
+surfaces and real research prerequisites. True satellite and MW telemetry
+are intentionally shown as unavailable until a source API exists.
+Its five research-phase portraits do **not** impersonate physical
+satellite construction progress. The space map gets ten quiet nebula
+and star accents using already bundled art. Both changes have safe
+startup controls and no recurring game scans.
+
+### Razi Asteroid Frontier (2.1.14)
+
+Razi now owns the physical Vibrant, Vespera and Umbra asteroid belts rather
+than depending on the original AsteroidBelt mod. Four existing long-distance
+corridors include concentrated midroute asteroid fields, with corresponding
+faint starmap details. The legacy Vibrant rim names and survey technology are
+retained for save migration. **Back up older saves and disable AsteroidBelt**
+before upgrading. See [Asteroid Routes](docs/ASTEROID_ROUTES.md).
+
