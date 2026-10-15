@@ -1,3 +1,16 @@
+Version: 2.1.91
+Date: 15. 10. 2026
+  Route map clarity and rectangular green-artifact repair:
+    - Eliminate all stretched colored path sprites that were drawn twice,
+      parallel to native Factorio routes, with visible rectangular joins.
+    - Keep one native clickable line per route. Mark serious asteroid hazards
+      and the physical belt crossings with at most one quiet offset symbol.
+    - Chapter mode may annotate main corridors without new parallel lines.
+    - Remove old Razi stroke sprites; cap new symbols at 36 and avoid overlap.
+    - Keep route names, distances, science, source art, asteroid ecology and
+      existing setting IDs unchanged. No added tick work or automatic CI.
+    - Static regressions updated; requires in-game zoom validation.
+
 Version: 2.1.90
 Date: 15. 10. 2026
   Projects-tab crash, Shattered expedition labels and victory ownership:
