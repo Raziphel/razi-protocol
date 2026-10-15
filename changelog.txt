@@ -1,3 +1,11 @@
+Version: 2.1.84
+Date: 15. 10. 2026
+  Settings title cleanup:
+    - Remove the ineffective leading exclamation mark from the English Razi Protocol mod display name.
+    - Keep the canonical mod ID, all settings keys, visual setting categories, dependency exclusion syntax and saved values unchanged.
+    - Update the display-name regression test and record the reverted sort-order experiment.
+    - No automatic CI runs.
+
 Version: 2.1.83
 Date: 15. 10. 2026
   Planet Athos startup recursion repair:

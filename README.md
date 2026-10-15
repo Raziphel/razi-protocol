@@ -1,3 +1,8 @@
+**2.1.84: Restore Razi Protocol's normal displayed name.** The old
+`!` prefix did not sort the mod settings first, so the in-game mod title
+now simply reads **Razi Protocol**. Mod ID, option keys, defaults,
+dependency incompatibility markers, and saved settings do not change.
+
 **2.1.82: Eneas and Solar Halo removed.** Neither source mod is now
 optional, recommended, or required. Their Razi-authored integration routes,
 discovery hooks, and obsolete regression fixtures were removed. The Calidus
@@ -98,11 +103,11 @@ runtime spawning, external belt dependency or extra travel lanes.
 Full-pack and old-save testing is still required.
 
 
-**2.1.69: Easier mod-setting discovery.** English localization now displays
-`! Razi Protocol` as a best-effort early-sorting title in Factorio, without
-renaming the internal `razi-protocol` mod or changing settings and saves.
-Factorio decides the section order; this is not a guaranteed first-place
-setting. The mod portal's canonical title remains `Razi Protocol`.
+**2.1.69: Historic mod-setting sort experiment (reverted in 2.1.84).**
+Factorio owns mod-group ordering, so the attempted `!` display-name prefix
+did not push Razi's settings above other mods. The visible name is once
+again `Razi Protocol`, matching the canonical mod portal title. The
+internal ID `razi-protocol`, setting keys, and existing saves remain intact.
 
 
 Razi Protocol started as my attempt to make an absurdly large Space Age planet pack feel like one game. It's built for Factorio 2.1 and Krastorio 2 Spaced Out.
