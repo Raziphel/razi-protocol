@@ -140,4 +140,27 @@ settings.startup["razi-starmap-background-style"].value="subtle"
 mods["Better_Starmap_Background"]=true
 bg.data_final_fixes()
 ok(#sprites.layers==1,"External artwork conflict")
+mods["Better_Starmap_Background"]=nil
+-- Pulsar now lives far north of Deep Space. Cover the entire system with
+-- reuse-only starfield tiles, without drawing a fake replacement star.
+mods["bellicos-and-aegis"]="0.4.2"
+local with_bellicos=bg.make_layers("subtle",true,true,true,false)
+ok(#with_bellicos==60,"Bellicos needs one understated local halo")
+local bx,by=0+170*math.sin(2*math.pi*.055),
+  -268-170*math.cos(2*math.pi*.055)
+local sky_at_pulsar=false
+local halo_at_pulsar=false
+for _,layer in ipairs(with_bellicos) do
+  local x,y=layer.shift[1],layer.shift[2]
+  if layer.filename:find("atlas%-starfield%-") and
+    math.abs(x-bx*32)<=2048 and math.abs(y-by*32)<=2048 then
+    sky_at_pulsar=true
+  elseif layer.filename:find("atlas%-halo") and
+    math.abs(x-bx*32)<1 and math.abs(y-by*32)<1 then
+    halo_at_pulsar=true
+  end
+end
+ok(sky_at_pulsar and halo_at_pulsar,
+  "Distant Bellicos has neither starfield coverage nor local ambience")
+mods["bellicos-and-aegis"]=nil
 print("Seam-free Razi star atlas fixtures passed")
