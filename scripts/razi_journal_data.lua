@@ -25,6 +25,7 @@ M.quests={
  {id="hyarion",chapter="solaris",tech="planet-discovery-hyarion",requires={"castra"}},
  {id="tellus",chapter="solaris",tech="planet-discovery-tellus",requires={"arig","hyarion"}},
  {id="corrundum",chapter="solaris",tech="planet-discovery-corrundum",requires={"tellus"}},
+ {id="athos",chapter="solaris",world="athos",requires={"vulcanus"}},
  {id="gleba",chapter="nyxaris",tech="planet-discovery-gleba",requires={"nyxaris-gate"}},
  {id="moshine",chapter="nyxaris",tech="planet-discovery-moshine",requires={"nyxaris-gate"}},
  {id="apia",chapter="nyxaris",tech="planet-discovery-apia-carnova",requires={"gleba","moshine"}},
@@ -57,6 +58,9 @@ M.quests={
  -- Maraxsis continues Rubia's greenhouse-warmed outer-ocean branch.
  {id="rubia",chapter="vespera",tech="planet-discovery-rubia",requires={"vespera-belt"}},
  {id="aquilo",chapter="vespera",tech="planet-discovery-aquilo",requires={"vespera-belt"}},
+ {id="nulla",chapter="vespera",world="nulla",requires={"aquilo"}},
+ {id="nulla-electromagnetic",chapter="vespera",tech="electromagnetic-robotics",requires={"nulla"}},
+ {id="nulla-robotic-science",chapter="vespera",tech="robotic-science-pack",requires={"nulla-electromagnetic"}},
  {id="maraxsis",chapter="vespera",tech="planet-discovery-maraxsis",requires={"rubia"}},
  {id="seadragon",chapter="vespera",tech="maraxsis-project-seadragon",requires={"maraxsis"}},
  {id="beetlejuice-gate",chapter="beetlejuice",tech="beetlejuice-discovery",requires={"paracelsin","maraxsis"}},
@@ -81,7 +85,7 @@ M.quests={
  {id="first-frontier-relay",chapter="network",tech="razi-first-frontier-relay-components",site="nauvis",requires={"vulcanus","gleba","moshine"},optional=true},
  {id="precision-matrix",chapter="network",tech="razi-network-precision-matrix",requires={"fulgora","moshine"}},
  {id="extreme-lattice",chapter="network",tech="razi-network-extreme-lattice",requires={"precision-matrix","rubia","tenebris"}},
- {id="outer-mastery",chapter="finale",tech="razi-outer-frontier-mastery",requires={"frozeta","vesta","linox"}},
+ {id="outer-mastery",chapter="finale",tech="razi-outer-frontier-mastery",requires={"frozeta","vesta","linox","frontier-recovery-charter"}},
  {id="edge",chapter="finale",tech="stellar-discovery-solar-system-edge",requires={"outer-mastery","stable-singularity"}},
  {id="aegis",chapter="finale",tech="discovery-aegis-outer",requires={"edge"}},
  {id="singularity-theory",chapter="finale",tech="razi-singularity-theory",requires={"outer-mastery"}},
@@ -97,6 +101,8 @@ M.quests={
  {id="convergence-ignition",chapter="finale",tech="razi-convergence-ignition",convergence="ignition",requires={"convergence-ignition-research"}},
  {id="convergence-victory",chapter="finale",tech="razi-convergence-ignition",convergence="victory",requires={"convergence-ignition"}},
 }
+local frontier=require("scripts.razi_journal_frontier")
+for _,quest in ipairs(frontier.quests) do M.quests[#M.quests+1]=quest end
 local extended=require("scripts.razi_journal_expansion")
 for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end
 for _,quest in ipairs(extended.quests) do M.quests[#M.quests+1]=quest end
