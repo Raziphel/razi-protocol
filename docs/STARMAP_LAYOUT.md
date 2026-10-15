@@ -58,8 +58,9 @@ single mandatory chain:
   The sole physical belt crossing divides its inner and outer regions.
 - Beetlejuice already has a Cubium/Linox/Secretas alternative circuit
   and needs no extra crossed line at its gateway.
-- Umbra retains the gateway/Tenebris/Crucible triangle; Tenebris–Carna
-  and gateway–Arcanyx add optional nearby paths when installed.
+- Umbra now follows gateway → Tenebris → Crucible approach → single
+  asteroid crossing → distant Vesta. Carna and Arcanyx get exactly one
+  optional spur each, with straight native chords rather than extra loops.
 
 The original three asteroid belt crossings, source-owned moons,
 research-gated destinations and interstellar hub connections are

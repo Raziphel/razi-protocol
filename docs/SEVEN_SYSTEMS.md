@@ -181,7 +181,8 @@ Local branches remain connected inside their own systems, including:
     Vespera: Muria -> Belt Inner -> Belt Outer -> Rubia -> Maraxsis
                                                 \-> frozen Aquilo (+ Balack)
     Beetlejuice: Cubium -> Linox; Cubium -> Secretas -> Frozeta
-    Umbra: Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta; Crucible Orbit -> Crucible (native)
+    Umbra: Slip Stream -> Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta
+           Carna from Slip Stream; Arcanyx from Tenebris (optional); Crucible landfall native
     Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos
 
 The only extra cross-system connections are Solaris ↔ Nyxaris and

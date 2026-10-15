@@ -25,7 +25,7 @@ local anchors = {
   -- Northern arrivals flank the corona instead of threading through it.
   {"space-location","sye-nyxaris","nyxaris",41,0.04},
   {"space-location","sye-vespera","vespera",27,0.25},
-  {"space-location","sye-umbra","umbra",27,0.5},
+  {"space-location","sye-umbra","umbra",30,0.45},
   -- Solaris's compact, asymmetric orbital sweep. Warm inner worlds sit
   -- close to the star; Tellus and the denser industrial worlds are
   -- progressively farther out. Distances are visual, not physical AU.
@@ -63,11 +63,13 @@ local anchors = {
   {"planet","cubium","beetlejuice",25.283353,0.355716},
   {"planet","linox-planet_linox","beetlejuice",32.133562,0.244042},
   {"space-location","secretas","beetlejuice",40,0.048826},
-  {"planet","tenebris","umbra",25.283353,0.644284},
-  {"space-location","crucible-orbit","umbra",19,0.753257},
-  {"space-location","razi-umbra-belt-inner","umbra",30.694865,0.832453},
-  {"space-location","razi-umbra-belt-outer","umbra",29.792826,0.895144},
-  {"planet","vesta","umbra",29.600886,0.004323},
+  -- Umbra now has a true 31/39-unit debris divide, with Vesta outside.
+  -- Preserve Crucible's native landfall and all source planet climates.
+  {"planet","tenebris","umbra",24,0.68},
+  {"space-location","crucible-orbit","umbra",20,0.79},
+  {"space-location","razi-umbra-belt-inner","umbra",31,0.81},
+  {"space-location","razi-umbra-belt-outer","umbra",39,0.82},
+  {"planet","vesta","umbra",48,0.955},
 }
 
 -- The optional worlds were previously repositioned in data-final-fixes
@@ -78,10 +80,12 @@ local optional_orbits={
   {name="igrys",star="solaris",radius=35,turn=0.905},
   {name="foliax",star="nyxaris",radius=38,turn=0.86},
   {name="obsidiax",star="vespera",radius=25,turn=0.12},
-  {name="carna",star="umbra",radius=36.821891,turn=0.602458},
+  -- Optional worlds stay inside the physical belt; their single local
+  -- approaches never serve as a bypass to Vesta.
+  {name="carna",star="umbra",radius=29,turn=0.55},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
-  {name="arcanyx",star="umbra",radius=39.469081,turn=0.429241},
+  {name="arcanyx",star="umbra",radius=27,turn=0.39},
   -- Balack is an optional outer-ice spur beside Aquilo.
   {name="bm-balack",star="vespera",radius=63,turn=0.70}
 }
@@ -331,6 +335,10 @@ function M.data_final_fixes()
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
     ["obsidiax"]=0.25,["carna"]=0.75,
+    -- Two source-owned Crucible destinations occupy nearly the same
+    -- chart point; split their captions in opposite directions.
+    ["crucible-orbit"]=0.75,["crucible"]=0.25,
+    ["tenebris"]=0.75,["arcanyx"]=0.0,
     ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
@@ -338,11 +346,11 @@ function M.data_final_fixes()
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
     ["asteroid-belt-inner-edge"]=0.75,
     ["asteroid-belt-outer-edge"]=0.25,
-    ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.25,
+    ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.5,
     ["razi-vespera-belt-inner"]=0.25,
     ["razi-vespera-belt-outer"]=0.75,
-    ["razi-umbra-belt-inner"]=0.75,
-    ["razi-umbra-belt-outer"]=0.25
+    ["razi-umbra-belt-inner"]=0.25,
+    ["razi-umbra-belt-outer"]=0.75
   }
   for name,direction in pairs(label_orientations) do
     local marker=exists("space-location",name) or exists("planet",name)

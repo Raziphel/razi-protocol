@@ -23,9 +23,8 @@ local side_routes={
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
   {"velora","gleba",14000,"biological"},
-  -- Optional inner Umbra planets gain nearby choices, not belt shortcuts.
-  {"tenebris","carna",16000,"outer_void"},
-  {"sye-umbra","arcanyx",18000,"outer_void"}
+  -- Extra optional loops were redundant and visually cluttered the chart.
+  -- Carna already has the Slip Stream; Arcanyx already has Tenebris.
 }
 -- Source-authored orbital links, not speculative Razi shortcuts.
 local native_pairs={
@@ -200,6 +199,7 @@ function M.data_final_fixes()
     -- around Calidus rather than connect these actual relocated endpoints.
     local line=not (a and b) or a~=b or a=="calidus"
       or a=="solaris" or a=="nyxaris" or a=="vibrant" or a=="vespera"
+      or a=="umbra"
     local shape=line and "line" or "arc"
     local origin=not line and reconcile.regional_origin
       and reconcile.regional_origin(from,to,shape) or nil
@@ -324,7 +324,8 @@ function M.data_final_fixes()
     local system=member[route.from]
     local vespera_side=pair(route.from,route.to)==pair("obsidiax","sye-vespera")
       or pair(route.from,route.to)==pair("bm-balack","aquilo")
-    if ((system=="nyxaris" or system=="vibrant" or system=="vespera")
+    if ((system=="nyxaris" or system=="vibrant" or system=="vespera"
+          or system=="umbra")
         and member[route.to]==system
         and not native_parent_link(route.from,route.to))
       or vespera_side then

@@ -14,6 +14,27 @@ Only the selected dossier gets a stronger accent and the large detail reader
 has one scroll pane. The Dyson art stays backed by its existing stage sprites.
 This redesign adds no texture files or periodic render workload.
 
+## October 2026: Umbra orbital and belt clarity
+
+The earlier Umbra 'In/Out' markers were almost on the same circular
+orbit; the outer marker was actually slightly *closer* to the star.
+They now sit at 31 and 39 map units and the far-side Vesta at 48.
+Tenebris (24), Crucible's native approach (20), and optional Carna
+(29)/Arcanyx (27) have spread bearings within the belt.
+
+The Slip Stream no longer links to Crucible redundantly: reach the
+source-owned Crucible landing route through Tenebris. Existing
+Carna/Arcanyx gateways stay accessible without the additional four-way
+network of duplicate routes. Native Umbra connections use the same
+safe straight-line presentation as other Razi systems. Crucible and
+its approach get opposing labels; parent-child prototypes are retained.
+
+The static Subtle sky now uses the existing sparse Umbra debris texture
+at the real ring's scale instead of the undersized, continuous blurry
+brown ring. Cinematic retains a barely visible optional smoke accent.
+No new graphics, per-tick effects or changes to asteroid hazard science
+were introduced. Manual inspection at normal Factorio zoom is required.
+
 ## October 2026: Source-grounded Vespera orbits
 
 Vespera's hot inner Muria is 21 map units out, with lava-heated but

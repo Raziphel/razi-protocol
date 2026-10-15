@@ -17,7 +17,8 @@ def parse_layout():
     result = {n: (p, float(r), float(a))
               for n, p, r, a in re.findall(pattern, source)}
     # Include installed optional Vibrant worlds in belt-crossing clearance.
-    for name in ("igrys", "foliax", "ferrum", "alchemy-planet"):
+    for name in ("igrys", "foliax", "ferrum", "alchemy-planet",
+                 "obsidiax", "bm-balack", "carna", "arcanyx"):
         match = re.search(
             rf'\{{name="{name}",star="([^"]+)",radius=([\d.]+),turn=([\d.]+)\}}',
             source)
@@ -260,7 +261,6 @@ class ConstellationTests(unittest.TestCase):
                         ("hyarion","tellus","corrundum")),
             "nyxaris": (("gleba","moshine","apia-carnova-orbit"),),
             "beetlejuice": (("cubium","linox-planet_linox","secretas"),),
-            "umbra": (("sye-umbra","tenebris","crucible-orbit"),),
         }
         for system,loops in triangles.items():
             for a,b,c in loops:
@@ -431,7 +431,7 @@ class ConstellationTests(unittest.TestCase):
             ("apia-carnova-orbit","panglia",21000),
             ("asteroid-belt-outer-edge","paracelsin",14000),
             ("linox-planet_linox","secretas",22000),
-            ("sye-umbra","crucible-orbit",17000),
+            ("tenebris","crucible-orbit",20000),
         )
         routes = {(frozenset((a,b))):(km,kind)
                   for a,b,km,kind in self.routes}
@@ -573,6 +573,34 @@ class ConstellationTests(unittest.TestCase):
         self.assertIn('prerequisites={"planet-discovery-muria"}',survey)
         gates=(ROOT/"prototypes/technology/seven_system_gates.lua").read_text()
         self.assertIn('{"planet-discovery-muria", "razi-vespera-belt-survey"}',gates)
+
+    def test_umbra_belt_is_real_and_outer_world_is_outside(self):
+        # This catches both reversed rim radii and the old overlapping
+        # 'In/Out' markers seen in the player's October screenshot.
+        radius=lambda name:self.anchors[name][1]
+        self.assertEqual(radius("razi-umbra-belt-inner"),31)
+        self.assertEqual(radius("razi-umbra-belt-outer"),39)
+        self.assertEqual(radius("vesta"),48)
+        for name in ("tenebris","crucible-orbit","carna","arcanyx",
+                     "sye-umbra"):
+            self.assertLess(radius(name),31)
+        self.assertGreaterEqual(math.dist(
+            self.coords["razi-umbra-belt-inner"],
+            self.coords["razi-umbra-belt-outer"]),8)
+        edges={frozenset((a,b)) for a,b,_,_ in self.routes}
+        for a,b in (("sye-umbra","tenebris"),
+                    ("tenebris","crucible-orbit"),
+                    ("crucible-orbit","razi-umbra-belt-inner"),
+                    ("razi-umbra-belt-inner","razi-umbra-belt-outer"),
+                    ("razi-umbra-belt-outer","vesta")):
+            self.assertIn(frozenset((a,b)),edges)
+            self.assertGreaterEqual(segment_clearance(
+                self.coords["umbra"],self.coords[a],self.coords[b]),15)
+        self.assertNotIn(
+            frozenset(("sye-umbra","crucible-orbit")),edges)
+        self.assertGreaterEqual(segment_clearance(
+            self.coords["umbra"],self.coords["razi-umbra-belt-outer"],
+            self.coords["vesta"]),38.999)
 
     def test_hot_cold_orbits_and_native_belt_divide(self):
         radius = lambda n: self.anchors[n][1]

@@ -120,7 +120,6 @@ local route_specifications = {
 	{"linox-planet_linox", "secretas", 22000, "outer_industry_deep"},
 	-- Umbra's extreme sciences. Crucible's native orbital link stays intact.
 	-- Keep the critical inner-rim / outer-rim transit untouched.
-	{"sye-umbra", "crucible-orbit", 17000, "outer_void"},
 	{"sye-umbra", "tenebris", 18000, "outer_void"},
 	{"tenebris", "crucible-orbit", 20000, "outer_void"},
 	{"crucible-orbit", "razi-umbra-belt-inner", 10000, "belt_umbra_approach"},
@@ -361,7 +360,8 @@ function route_reconcile.data_final_fixes()
 				route.length = balanced_length(keep_name, route.length, length, from, to)
         local local_chord=membership[from]==membership[to]
           and (membership[from]=="solaris" or membership[from]=="nyxaris"
-            or membership[from]=="vibrant" or membership[from]=="vespera")
+            or membership[from]=="vibrant" or membership[from]=="vespera"
+            or membership[from]=="umbra")
         -- These laid-out systems use direct local chords.
         -- Uncentred native arcs can wander across a nearby star.
         if local_chord then
@@ -397,7 +397,8 @@ function route_reconcile.data_final_fixes()
                               or membership[from]=="solaris"
                               or membership[from]=="nyxaris"
                               or membership[from]=="vibrant"
-                              or membership[from]=="vespera")) and "line" or "arc",
+                              or membership[from]=="vespera"
+                              or membership[from]=="umbra")) and "line" or "arc",
                         asteroid_spawn_definitions = hazard_profiles.create(hazard)
 					}, hazard)
 				local strength=field_strength(from,to)
