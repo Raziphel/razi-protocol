@@ -102,15 +102,14 @@ local route_specifications = {
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
 	{"asteroid-belt-outer-edge", "paracelsin", 14000, "chemistry_deep"},
-	-- Vespera's extreme-environment strand.
-	-- Inner Vespera gets a second path, without an outer belt bypass.
-	{"sye-vespera", "muria", 19000, "cryogenic"},
-	{"muria", "aquilo", 22000, "cryogenic"},
-	{"sye-vespera", "aquilo", 28000, "cryogenic"},
-	{"aquilo", "razi-vespera-belt-inner", 10500, "belt_vespera_approach"},
-	{"razi-vespera-belt-inner", "razi-vespera-belt-outer", 6500, "belt_vespera_crossing"},
-	{"razi-vespera-belt-outer", "rubia", 10500, "belt_vespera_departure"},
-	{"rubia", "maraxsis", 24000, "cryogenic_deep"},
+  -- The survey-gated debris crossing opens two separate outer routes:
+  -- Rubia then greenhouse-warmed Maraxsis, and directly frozen Aquilo.
+  {"sye-vespera", "muria", 19000, "cryogenic"},
+  {"muria", "razi-vespera-belt-inner", 15500, "belt_vespera_approach"},
+  {"razi-vespera-belt-inner", "razi-vespera-belt-outer", 6500, "belt_vespera_crossing"},
+  {"razi-vespera-belt-outer", "rubia", 10500, "belt_vespera_departure"},
+  {"razi-vespera-belt-outer", "aquilo", 28000, "cryogenic_deep"},
+  {"rubia", "maraxsis", 24000, "cryogenic_deep"},
 	-- Beetlejuice's remote industrial strand.
 	{"sye-beetlejuice", "cubium", 18000, "outer_industry"},
 	{"cubium", "linox-planet_linox", 17000, "outer_industry"},

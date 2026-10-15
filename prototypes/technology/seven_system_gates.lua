@@ -233,12 +233,12 @@ function gates.data_final_fixes()
 	replace_requirements("planet-discovery-paracelsin",
 		{"planet-discovery-ribbonia", "space-discovery-asteroid-belt"}, frontier, 1000)
 
-	-- Vespera: Muria is the beginning of the Aquilo/Rubia/Maraxsis branch.
+	-- Vespera: Muria opens the survey, then two independent outer branches.
 	replace_requirements("planet-discovery-muria", {"vespera-discovery"}, frontier, 900)
 	replace_requirements("planet-discovery-aquilo",
-		{"planet-discovery-muria"}, frontier, 950)
+		{"planet-discovery-muria", "razi-vespera-belt-survey"}, frontier, 950)
 	replace_requirements("planet-discovery-rubia",
-		{"planet-discovery-aquilo", "razi-vespera-belt-survey"}, frontier, 950)
+		{"planet-discovery-muria", "razi-vespera-belt-survey"}, frontier, 950)
 	replace_requirements("planet-discovery-maraxsis",
 		{"planet-discovery-rubia"}, frontier, 1100)
 
