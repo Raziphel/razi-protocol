@@ -9,7 +9,7 @@ MODS = {
     "Igrys": "solaris",
     "planet-rabbasca": "calidus",
     "foliax": "nyxaris",
-    "obsidiax": "vespera",
+    "obsidiax": "umbra",
     "carna": "umbra",
 }
 

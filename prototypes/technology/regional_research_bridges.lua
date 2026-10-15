@@ -13,8 +13,10 @@ M.phases={
   -- planet discoveries are candidates for the next paired frontier.
   {gates={"vibrant-discovery","vespera-discovery"},
    worlds={"igrys","foliax"}},
+  -- Obsidiax now opens AFTER Umbra; using it to unlock either parallel
+  -- outer system would create a research cycle / permanent chapter softlock.
   {gates={"beetlejuice-discovery","umbra-discovery"},
-   worlds={"cerys","obsidiax"}}
+   worlds={"cerys"}}
 }
 local function tech(name) return (data.raw.technology or {})[name] end
 local function present(name)
