@@ -1,3 +1,18 @@
+Version: 2.1.95
+Date: 15. 10. 2026
+  Ten-color quality asteroid route navigation:
+    - Give each of the ten asteroid difficulty stages its own distinct
+      blue-to-green-to-yellow-to-red route marker color.
+    - Color every qualifying corridor's single compact marker, including
+      safer level-1 routes, without restoring parallel colored lines.
+    - Use the exact same color for native route tooltip level/range text.
+    - Rank high-level belts and distant expeditions by maximum route
+      quality threat rather than the five old size-only categories.
+    - Preserve native routes and quality spawn rates, scope/opacity
+      controls, source icons and the existing 36-marker rendering budget.
+    - Update color, safety and regression fixtures. Visual verification
+      in the full Factorio 2.1 modpack remains recommended.
+
 Version: 2.1.94
 Date: 15. 10. 2026
   Route-distance coherence across the revised seven-system starmap:

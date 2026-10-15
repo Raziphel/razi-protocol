@@ -24,6 +24,14 @@ for level,weights in ipairs(difficulty.distributions) do
   end
   ok(math.abs(sum-1)<.00001,"Quality level "..level.." must sum to 1")
 end
+ok(#difficulty.route_colors==10 and #difficulty.route_color_hex==10,
+  "Every asteroid danger level needs a unique route color")
+for level=1,10 do
+  local c=difficulty.route_color(level)
+  local hex=difficulty.route_color_richtext(level)
+  ok(c and type(hex)=="string" and hex:sub(1,1)=="#",
+    "Quality color or tooltip hex code missing")
+end
 local route={from="nauvis",to="sye-vibrant",length=50000}
 local beginning=difficulty.route_level(route,0,"balanced")
 local center=difficulty.route_level(route,.5,"balanced")

@@ -6,6 +6,7 @@ local M={}
 local hazards=require("prototypes.system.route_hazards")
 local layout=require("prototypes.system.galaxy_layout")
 local reconcile=require("prototypes.system.route_reconcile")
+local quality=require("scripts.razi_asteroid_difficulty")
 
 -- Retire repeated direction sprites; Factorio owns the single native line.
 local WARNING="__razi-protocol__/graphics/icons/routes/asteroid-route.png"
@@ -16,9 +17,21 @@ local PI=math.pi
 local TAU=2*PI
 local abs,sqrt,sin,cos=math.abs,math.sqrt,math.sin,math.cos
 
--- Risk classification inspired by Space Route Overlay's asteroid-based
--- colors. Our own geometry and atlas remain entirely Razi-owned.
+-- Exactly ten grade colors come from the *same* quality hazard ladder
+-- used for real asteroid spawning. No duplicate, competing 5-color scale.
 local danger_colors=hazards.colors
+local function quality_active()
+  local option=settings and settings.startup
+    and settings.startup["razi-quality-asteroids"]
+  return not option or option.value~=false
+end
+function M.route_color_level(route)
+  if not quality_active() then return nil end
+  local setting=settings and settings.startup
+    and settings.startup["razi-asteroid-difficulty-scale"]
+  local _,peak=quality.route_range(route,setting and setting.value)
+  return peak
+end
 -- Campaign mode remains supported, but cannot hide major hazards.
 local chapter_colors={
   {r=.48,g=.59,b=.65}, {r=.45,g=.60,b=.62},
@@ -108,6 +121,9 @@ function M.threat_tier(route)
 end
 
 function M.color_for_route(route,mode)
+  local grade=M.route_color_level(route)
+  if grade then return quality.route_color(grade) end
+  -- Legacy display when quality-asteroid escalation is disabled.
   local rank=M.threat_tier(route)
   if mode=="chapter" and rank<4 and not hazards.is_belt_crossing(route) then
     local a,b=position(route.from),position(route.to)
@@ -198,8 +214,12 @@ function M.marker_for_connection(route,mode,scope)
   local major=is_major(route,a,b)
   if scope=="major" and not major then return nil end
   local tier=M.threat_tier(route)
-  local hazardous=tier>=4
-  if not hazardous and (mode~="chapter" or not major) then return nil end
+  local grade=M.route_color_level(route)
+  -- Draw a single colored route indicator even for low difficulty ranks.
+  -- No full-length parallel route stripe, repeated dots, or tinted native line.
+  local hazardous=tier>=4 or (grade and grade>=8)
+  if not grade and not hazardous
+    and (mode~="chapter" or not major) then return nil end
   local at,length=route_path(route,a,b)
   if not at or length<7 then return nil end
   local middle,previous,later=at(.5),at(.48),at(.52)
@@ -210,11 +230,12 @@ function M.marker_for_connection(route,mode,scope)
   local color=M.color_for_route(route,mode)
   return {
     type="sprite",filename=hazardous and WARNING or WAYPOINT,
-    size={64,64},scale=hazardous and .32 or .21,
+    size={64,64},scale=hazardous and .28 or .19,
     shift={(middle.x-dy/mag*offset)*32,(middle.y+dx/mag*offset)*32},
     priority="extra-high-no-scale",flags={"gui-icon"},blend_mode="normal",
     tint={r=color.r,g=color.g,b=color.b,
-      a=hazardous and (tier>=5 and .62 or .46) or .22}
+      a=grade and math.min(.64,.24+.038*grade)
+        or (hazardous and (tier>=5 and .62 or .46) or .22)}
   }
 end
 
@@ -255,7 +276,8 @@ function M.data_final_fixes()
       candidates[#candidates+1]={
         name=name,sprite=sprite,
         priority=(hazards.is_belt_crossing(connection) and 1000 or 0)
-          +M.threat_tier(connection)*100
+          +(M.route_color_level(connection)
+            or M.threat_tier(connection))*100
       }
     end
   end
@@ -279,7 +301,7 @@ function M.data_final_fixes()
   end
   if type(log)=="function" then
     log("[Razi Protocol/routes] "..n..
-      " subtle navigation warnings; one native line per connection")
+      " individually graded color markers; one native line per connection")
   end
   return n
 end
