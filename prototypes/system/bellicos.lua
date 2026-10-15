@@ -124,18 +124,22 @@ local function plan_expedition()
   end
   append(entry_gate,"solar-system-edge",edge,62,.035,true)
   if near then
-    -- Each node has its own lane. Point Warden stays between the Aegis
-    -- inner and outer edges, NEVER beside Secretas in Beetlejuice.
+    -- Fan the Warden spur apart from the Inner -> Outer belt crossing.
+    -- The older bearings drew two nearly parallel routes across Aegis.
+    -- Keep all SOURCE connections and asteroid encounters unchanged;
+    -- only the visual native destination positions are reshaped.
     append("aegis-inner-edge",near,virtual_near,29,.205)
     for _,name in ipairs(find_wardens()) do
-      append(name,near,virtual_near,48,.285)
+      append(name,near,virtual_near,48,.255)
     end
-    append("aegis-outer-edge",near,virtual_near,74,.33)
-    append(bellicos_gate,near,virtual_near,57,.43,true)
+    -- Outer Edge turns southeast, then the Bellicos-side stargate follows
+    -- on a short almost-vertical exit instead of doubling back to the west.
+    append("aegis-outer-edge",near,virtual_near,66,.345)
+    append(bellicos_gate,near,virtual_near,81,.37,true)
   elseif pulsar then
-    append(bellicos_gate,pulsar,virtual_pulsar,57,.43,true)
+    append(bellicos_gate,pulsar,virtual_pulsar,81,.37,true)
   else
-    local gx,gy=offset(sx,sy,57,.43)
+    local gx,gy=offset(sx,sy,81,.37)
     -- Also used when the source supplies neither a persistent pulsar
     -- prototype nor the Near Bellicos parent. Keep the gateway near the
     -- missing pulsar rather than projecting it toward the central stars.

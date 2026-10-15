@@ -1,3 +1,18 @@
+Version: 2.1.112
+Date: 15. 10. 2026
+  Polish Aegis crossing and shorten Skewer's approach hop:
+    - Fan Point Warden farther from the Inner -> Outer route bearing;
+      the two source routes no longer run nearly parallel on the map.
+    - Bring the Outer Edge inward and follow it with Bellicos Stargate
+      on a short clear southeast departure instead of the westward hook.
+    - Preserve Aegis native prototype names, original pulsar/asteroid
+      sprites, all source route connections and custom asteroid hazards.
+    - Move the real Shattered Planet 11.5 chart units south of its
+      Approach (previously 19), still keeping their labels separated.
+    - Preserve its 1,000 km gameplay route and Lost Beyond parent chain.
+    - Add route-angle, gate-proximity and Skewer-offset regression checks.
+    - No new data-stage libraries, runtime timers or CI workflows.
+
 Version: 2.1.111
 Date: 15. 10. 2026
   Repair detached Point Warden and incoherent Bellicos map:

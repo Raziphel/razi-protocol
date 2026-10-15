@@ -22,11 +22,11 @@ local anchors = {
   -- Shattered Planet southeast and the Black Hole west.
   -- These are visual positions only, not route lengths or travel unlocks.
   {"space-location","shattered-planet","solar-system-edge",140,0.33},
-  -- Skewer's 1,000 km approach-to-planet hop should LOOK short. Rotate
-  -- the actual planet almost due south, rather than 82 chart units east.
+  -- The 1,000 km Shattered Planet hop is deliberately compact on the
+  -- starmap; keep it below the Approach to separate their captions.
   -- Lost Beyond remains a far-flung north-east expedition, with a distinct
   -- lane away from the Nexus / Oort / Sol corridor. Route km are unchanged.
-  {"planet","skewer_shattered_planet","shattered-planet",19,0.485},
+  {"planet","skewer_shattered_planet","shattered-planet",11.5,0.485},
   {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.14},
   {"planet","nexus","solar-system-edge",94,0.18},
   {"space-location","black-hole-approach","solar-system-edge",112,0.70},
