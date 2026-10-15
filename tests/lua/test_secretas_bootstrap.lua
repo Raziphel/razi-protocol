@@ -55,12 +55,22 @@ check(#data.raw.technology["golden-science-pack"].prerequisites==1,
 check(data.raw.technology["steam-recycler"].prerequisites[1]=="gold-precursor",
   "Do not alter the unrelated indirect prerequisite")
 
--- If the source research triggers are changed, do not rewrite arbitrary
--- similarly named technology prototypes.
+-- If a fork changes the source triggers but still introduces precisely the
+-- reported reciprocal research edges, repair that exact engine-stopping loop.
 fixture()
 data.raw.technology["steam-recycler"].research_trigger={type="craft-item",item="unrelated"}
+check(module.restore_secretas_science_bootstrap(),
+  "Exact reciprocal cycle must still be repaired after a trigger rewrite")
+check(athos.find_cycle(data.raw.technology)==nil,
+  "Native tech-ID reciprocal loop must not survive compatibility forks")
+
+-- Do not modify arbitrary reworked science branches lacking an exact cycle.
+fixture()
+data.raw.technology["steam-recycler"].research_trigger={type="craft-item",item="unrelated"}
+data.raw.technology["golden-science-pack"].prerequisites={"planet-discovery-secretas"}
+data.raw.technology["steam-recycler"].prerequisites={"planet-discovery-secretas"}
 check(not module.restore_secretas_science_bootstrap(),
-  "Unknown source revision should skip speculative changes")
-check(athos.find_cycle(data.raw.technology)~=nil,
-  "Unknown source revision must remain unmodified for diagnosis")
+  "Forks without the exact cycle must not have new prerequisites forced in")
+check(#data.raw.technology["golden-science-pack"].prerequisites==1,
+  "Do not add speculative links to unrelated forked science")
 print("Secretas golden science/bootstrap regressions passed")

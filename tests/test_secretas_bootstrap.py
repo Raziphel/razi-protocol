@@ -16,6 +16,8 @@ class SecretasBootstrapTests(unittest.TestCase):
         self.assertIn('recycler.prerequisites[i]=="golden-science-pack"',code)
         self.assertIn('table.remove(recycler.prerequisites,i)',code)
         self.assertIn('depends_on_technology("steam-recycler","golden-science-pack")',code)
+        self.assertIn('and technology_has_prerequisite("golden-science-pack","steam-recycler")',code)
+        self.assertIn('if not exact_cycle then',code)
         self.assertIn('add_technology_prerequisite_if_present("golden-science-pack","steam-recycler")',code)
         self.assertNotIn('add_technology_prerequisite_if_present("golden-science-pack", "steam-recycler")',code)
         self.assertIn('restore_secretas_science_bootstrap()',code)
