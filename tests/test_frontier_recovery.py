@@ -2,6 +2,7 @@
 from pathlib import Path
 import json
 import unittest
+from tools.journal_locale import load_journal_locale
 
 ROOT=Path(__file__).resolve().parents[1]
 def read(p):
@@ -41,7 +42,7 @@ class FrontierRecoveryTests(unittest.TestCase):
         main=read("scripts/razi_journal_data.lua")
         native=read("scripts/razi_journal_frontier.lua")
         projects=read("scripts/razi_journal_projects.lua")
-        locale=read("locale/en/razi_journal.cfg")
+        locale=load_journal_locale(ROOT)
         for id in ("athos","nulla","nulla-electromagnetic",
                    "nulla-robotic-science","frontier-recovery-charter"):
             self.assertIn(f'id="{id}"',main+native)
