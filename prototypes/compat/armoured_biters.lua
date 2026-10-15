@@ -76,7 +76,7 @@ local function remove_armoured_units_from_spawner(spawner)
 
 	local result_units = {}
 	for _, result_unit in pairs(spawner.result_units) do
-		if not armoured_biter_units[result_unit[1]] then
+		if not armoured_biter_units[result_unit.unit or result_unit[1]] then
 			table.insert(result_units, result_unit)
 		end
 	end
@@ -90,11 +90,14 @@ end
 
 local armoured_spawner = enemy_autoplace.entity_exists("unit-spawner", "armoured-biter-spawner")
 
-remove_armoured_units_from_spawner(enemy_autoplace.entity_exists("unit-spawner", "biter-spawner"))
-
-if armoured_spawner then
-	armoured_spawner.autoplace = armoured_spawner.autoplace or {}
-	armoured_spawner.autoplace.tile_restriction = enemy_autoplace.existing_tiles(armoured_biter_tiles)
+-- Only separate armoured units from normal nests when the fork really
+-- defines a naturally placeable dedicated nest. Otherwise they continue
+-- to appear via the original biter-spawner result_units. Creating
+-- autoplace={} on the dedicated nest breaks Factorio 2.1 validation.
+if enemy_autoplace.has_valid_autoplace(armoured_spawner) then
+	remove_armoured_units_from_spawner(enemy_autoplace.entity_exists("unit-spawner", "biter-spawner"))
+	armoured_spawner.autoplace.tile_restriction =
+		enemy_autoplace.existing_tiles(armoured_biter_tiles)
 
 	for _, planet_name in pairs(armoured_planets) do
 		enemy_autoplace.add_entities_to_planet(planet_name, armoured_enemy_entities, "enemy-base", armoured_spawner_exists)

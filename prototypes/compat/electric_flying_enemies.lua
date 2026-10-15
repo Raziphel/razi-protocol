@@ -108,7 +108,8 @@ local function add_unique(values, value)
 end
 
 local function extend_tile_restriction(spawner)
-	spawner.autoplace = spawner.autoplace or {}
+	-- Preserve scripted nests without inventing invalid placement rules.
+	if not enemy_autoplace.has_valid_autoplace(spawner) then return end
 	spawner.autoplace.tile_restriction = spawner.autoplace.tile_restriction or {}
 
 	for _, tile_name in pairs(enemy_autoplace.existing_tiles(electric_enemy_tiles)) do
@@ -121,13 +122,14 @@ local function collect_electric_spawners()
 
 	for _, entity_name in pairs(explicit_electric_spawners) do
 		local spawner = entity_exists(entity_name)
-		if spawner then
+		if enemy_autoplace.has_valid_autoplace(spawner) then
 			spawners[entity_name] = spawner
 		end
 	end
 
 	for entity_name, spawner in pairs(data.raw["unit-spawner"] or {}) do
-		if name_matches_electric_enemy(entity_name) and spawner.autoplace then
+		if name_matches_electric_enemy(entity_name)
+			and enemy_autoplace.has_valid_autoplace(spawner) then
 			spawners[entity_name] = spawner
 		end
 	end

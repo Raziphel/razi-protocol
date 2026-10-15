@@ -1,3 +1,11 @@
+Version: 2.1.76
+Date: 15. 10. 2026
+  Armoured Biters and optional enemy spawn repair:
+    - Do not invent an incomplete autoplace table for ArmouredBiters21Compat's dedicated spawner.
+    - Preserve armoured units in source vanilla nests unless a valid dedicated spawn definition exists; avoid accidentally suppressing all wildlife on specialist planets.
+    - Refuse incomplete natural spawning rules for other optional enemy packs and repair known malformed late-stage spawners before Factorio prototype validation.
+    - Keep all 2.1.75 dependency conflict corrections and existing save data untouched. Add Lua regression cases for malformed and valid source spawners, with no automatic CI.
+
 Version: 2.1.75
 Date: 15. 10. 2026
   Dependency and modpack conflict repair:
