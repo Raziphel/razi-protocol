@@ -1,3 +1,12 @@
+Version: 2.1.77
+Date: 15. 10. 2026
+  Curated modpack visual cleanup:
+    - Exclude Hephaestus from the recommended profile and declare it incompatible with the curated Razi galaxy.
+    - Remove the Razi community integration for its native megastructure space location and matching test fixture.
+    - Keep 48 required mods and 23 remaining recommended companions with no changes to player save data or core star systems.
+    - An existing Hephaestus installation must still be disabled from Factorio's mod manager.
+    - Preserve manual-only CI.
+
 Version: 2.1.76
 Date: 15. 10. 2026
   Armoured Biters and optional enemy spawn repair:

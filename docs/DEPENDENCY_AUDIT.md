@@ -1,13 +1,13 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.75)
+# Razi Protocol: Direct and transitive dependency audit (2.1.77)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
 | required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 24 | Compatible 2.1 companion suggestions, not required |
+| recommended | 23 | Compatible 2.1 companion suggestions, not required |
 | hidden-optional | 1 | Unadvertised load-order compatibility links |
-| incompatible | 23 | Known conflicting forks, startup failures and competing starmaps |
+| incompatible | 24 | Known conflicting forks, startup failures and competing starmaps |
 
 ## Guaranteed indirectly, so removed from Razi's direct manifest
 
@@ -100,7 +100,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `alchemy-khemia >= 0.3.6` | required |
 | `Arcanyx >= 1.1.5` | required |
 | `biological-machines-planet-balack >= 1.1.2` | required |
-| **Recommended companions** | **24 entries** |
+| **Recommended companions** | **23 entries** |
 | `+ aai-signal-transmission >= 0.6.0` | recommended |
 | `+ planet-express >= 2.1.9` | recommended |
 | `+ upgraded-rocket-turrets >= 2.1.1` | recommended |
@@ -124,14 +124,14 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ skewer_shattered_planet >= 1.0.42` | recommended |
 | `+ Solar-Halo >= 1.2.0` | recommended |
 | `+ planet-ferrum >= 0.1.4` | recommended |
-| `+ Hephaestus >= 0.3.7` | recommended |
 | **Hidden compatibility links** | **1 entry** |
 | `(?) FluxWorks >= 0.2.12` | hidden-optional |
-| **Excluded conflicts** | **23 entries** |
+| **Excluded conflicts** | **24 entries** |
 | `! AsteroidBelt` | incompatible |
 | `! space-route-overlay` | incompatible |
 | `! kry-asteroid-belt` | incompatible |
 | `! outer-rim` | incompatible |
+| `! Hephaestus` | incompatible |
 | `! moon-eneas` | incompatible |
 | `! castra` | incompatible |
 | `! Redrawn-Space-Connections` | incompatible |
@@ -199,7 +199,15 @@ about all versions is appropriate.
 
 Factorio cannot automatically remove incompatible already-installed mods.
 Disable **Outer Rim**, **Better Asteroid Belt**, and **Celestial Weather
-Additions 1.6.0** in Mod Manager. The 24 remaining recommendations have
+Additions 1.6.0** in Mod Manager. The 23 remaining recommendations have
 not undergone an exhaustive Factorio-engine test together. Test high-impact
-content (Shattered Planet, Void Processing, Ferrum, Hephaestus, Solar Halo)
+content (Shattered Planet, Void Processing, Ferrum, Solar Halo)
 in a separate copied-save profile, retaining manual CI runs.
+
+## Hephaestus exclusion (15 October 2026)
+
+Hephaestus is now `! Hephaestus` instead of recommended. The source mod's
+oversized H icon cluster and label obscure the star map, and Razi does not
+need its megastructure for campaign progression. Razi's special-location
+integration has been retired. An already enabled Hephaestus mod must still
+be disabled in Factorio's Mod Manager; Razi cannot uninstall it.

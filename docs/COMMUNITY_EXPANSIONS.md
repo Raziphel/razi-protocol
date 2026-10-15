@@ -28,7 +28,7 @@ factory. A successful static test does not prove that all mods load together.
 | `nulla` | **Excluded** | Removed Aquilo moon | Nulla 1.0.2 assumes the vanilla electric-furnace prototype still exists and crashes in its radio-interference final-fixes pass when another overhaul removes it. |
 | `alchemy-khemia` | Guarded side-world integration | Vibrant chemistry branch | Source-authored glyphs, chemistry, brine tanks and crate logistics. Optional link to Paracelsin when no native in-system route exists. |
 | `Arcanyx` | Guarded side-world integration | Umbra experimental branch | Voidcraft/Iridescent Industry and prism production untouched. Connect toward Tenebris only if no native local route exists. |
-| `Hephaestus` | Registered, native-only | Original megastructure and warp routes | This mod is not a conventional planet. Avoid rewriting runtime surfaces and mass-relay routes without inspecting real output. |
+| `Hephaestus` | **Excluded** | Removed from the curated galaxy | Giant H markers and labels obscure the Razi starmap; no integration remains. |
 | `PlanetAthos` | **Excluded** | Removed Solaris side world | Planet Athos 1.1.3 creates a cyclic technology graph in the full pack and fails during its recursive data-stage traversal. |
 | `biological-machines-planet-wit` | **Excluded** | Competing Nauvis moon | Conflicts with required Muluna; no route or science integration remains. |
 | `biological-machines-planet-balack` | Guarded high-risk side-world integration | Vespera after Aquilo | Preserve original enormous asteroid traffic, promethium technology, fabrication and dangerous enemies. |
@@ -63,8 +63,8 @@ shortcut without discarding native resource asteroids.
 Its discovery technology may be chapter-gated but its
 dynamic research choices are untouched. The moon Velora keeps its
 original orbital relationship. Balack keeps its original, hard
-Aquilo-side hazardous path. Special worlds (Rabbasca Underground,
-Hephaestus, Shattered) retain all native mechanisms and paths.
+Aquilo-side hazardous path. Special worlds (Rabbasca Underground and
+Shattered) retain their native mechanics and routes.
 Solar Halo's unique flare route and solar station are never overwritten.
 
 Late research naturally remains late: source original tech may require
@@ -84,13 +84,10 @@ pack requires items from these optional worlds.
    apply an ordinary Razi asteroid profile to those native routes.
 4. **Rabbasca Underground:** Underground warp surfaces cannot receive
    platforms. No orbital route is created.
-5. **Hephaestus:** The author's shortcuts are controlled by its own
-   technologies; audit their reachable star systems to rule out a
-   premature interstellar bypass.
-6. **Arcanyx:** Voidcraft, Iridescent Industry and associated assets
+5. **Arcanyx:** Voidcraft, Iridescent Industry and associated assets
    are substantial. Treat it as optional until K2SO recipe collision
    tests pass.
-7. **Shattered Planet extension:** It expands the existing endgame
+6. **Shattered Planet extension:** It expands the existing endgame
    surface; do not duplicate it or assume its high-tier resources
    are compatible with Razi's singularity victory.
 

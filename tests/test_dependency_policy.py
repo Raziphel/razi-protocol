@@ -80,7 +80,7 @@ class DependencyPolicyTests(unittest.TestCase):
             "secretas-orbit-patch","VoidProcessing-Updated",
             "ArmouredBiters21Compat","Explosive_biters",
             "LithiumBattery","rabbasca-underground","skewer_shattered_planet",
-            "Solar-Halo","planet-ferrum","Hephaestus",
+            "Solar-Halo","planet-ferrum",
         })
         for candidate in recommended:
             self.assertFalse(any(raw.startswith(candidate+" ")
@@ -89,6 +89,9 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertNotIn("slp-dyson-sphere-reworked-fork >= 1.0.5",deps)
         self.assertIn("(?) FluxWorks >= 0.2.12",deps)
         self.assertIn("! outer-rim",deps)
+        self.assertIn("! Hephaestus",deps)
+        self.assertFalse(any(raw.startswith("+ Hephaestus")
+                             for raw in deps))
         self.assertIn("! kry-asteroid-belt",deps)
         self.assertFalse(any("celestial-weather-additions-updated" in raw
                              for raw in deps))

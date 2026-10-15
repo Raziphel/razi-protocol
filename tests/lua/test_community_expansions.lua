@@ -19,8 +19,7 @@ local configs={
   {"biological-machines-planet-balack","bm-balack"},
   {"Solar-Halo","halo-solar-orbit"},
   {"skewer_shattered_planet","shattered-planet"},
-  {"rabbasca-underground","rabbasca-underground"},
-  {"Hephaestus","hephaestus"}
+  {"rabbasca-underground","rabbasca-underground"}
 }
 
 local function run(options)
@@ -29,8 +28,7 @@ local function run(options)
   local native={}
   for _,pair in ipairs(configs) do
     local mod,name=pair[1],pair[2]
-    if mod~="Solar-Halo" and mod~="skewer_shattered_planet"
-      and mod~="Hephaestus" then
+    if mod~="Solar-Halo" and mod~="skewer_shattered_planet" then
       planets[name]={name=name,orbit={parent={type="planet",name="original-parent"},
         distance=4}}
     else
@@ -96,9 +94,6 @@ local function run(options)
   native.hidden={name="rabbasca-warp-field",from="rabbasca-underground",
     to="anomalous-depth",length=1}
   routes[native.hidden.name]=native.hidden
-  native.special={name="hephaestus-relay",from="hephaestus",
-    to="unknown-stargate",length=500}
-  routes[native.special.name]=native.special
 
   if options.no_mod then mods_table[options.no_mod]=nil end
   if options.no_planet then planets[options.no_planet]=nil end
@@ -162,7 +157,7 @@ for _,name in ipairs({"velora",
     "A moon or hidden underground world was reparented: "..name)
 end
 for _,key in ipairs({"ferrum","ferrum_vulcanus","balack","halo",
-  "halo_station","hidden","special"}) do
+  "halo_station","hidden"}) do
   check(raw["space-connection"][native[key].name]==native[key],
     "Native source route was lost: "..key)
 end
