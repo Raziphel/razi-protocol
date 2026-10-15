@@ -37,7 +37,11 @@ local function run(options)
       orbit={sprite={filename="__aegis_graphics__/belt-visual.png"}}}
     places["aegis-inner-edge"]={name="aegis-inner-edge"}
     places["aegis-outer-edge"]={name="aegis-outer-edge"}
-    places["point-warden"]={name="point-warden"}
+    if options.alias_warden then
+      places["aegis-point-warden"]={name="aegis-point-warden"}
+    else
+      places["point-warden"]={name="point-warden"}
+    end
   end
   local routes = {}
   rawset(_G, "data", {
@@ -237,6 +241,30 @@ local again_x,again_y=absolute("near-bellicos-orbit")
 check(math.abs(again_x-near_px)<.01 and math.abs(again_y-near_py)<.01,
   "Repeated final pass moved the Aegis sector away from its pulsar")
 math.atan,math.atan2=lua_atan,lua_atan2
+
+-- Source releases can rename Warden without changing the UI label.
+-- Check the discovered native prototype and not only the old literal ID.
+local alt,alternate=run({near=true,alias_warden=true})
+local extra=alternate["aegis-point-warden"]
+check(extra and extra.origin and extra.origin.x==0 and extra.origin.y==0,
+  "Alternate source Warden ID remained marooned near Secretas")
+check(extra.orbit.parent.name=="near-bellicos-orbit"
+  and math.abs(extra.orbit.distance-48)<.001,
+  "Alternate Warden source orbit was not retained")
+local alt_near=alternate["near-bellicos-orbit"]
+local function pos2(body)
+  local x,y=body.origin.x,body.origin.y
+  local a=body.orientation*2*math.pi
+  return x+body.distance*math.sin(a),y-body.distance*math.cos(a)
+end
+local ax,ay=pos2(extra)
+local nx,ny=pos2(alt_near)
+check(math.abs(math.sqrt((ax-nx)^2+(ay-ny)^2)-48)<.01,
+  "Alternate Warden still renders outside Bellicos")
+alt.reconcile_final_positions()
+local repeat_x,repeat_y=pos2(extra)
+check(math.abs(repeat_x-ax)<.001 and math.abs(repeat_y-ay)<.001,
+  "Reconciliation must remain stable for a renamed Warden")
 
 -- Reproduce the player's screenshot: Warden was relocated to Beetlejuice
 -- even though the pulsar/asteroid field had already moved to Deep Space.
