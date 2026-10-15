@@ -7,7 +7,7 @@ local worlds={
   "muluna",
   -- Solaris
   "vulcanus","castra","arig","hyarion","tellus","corrundum",
-  "igrys",
+  "igrys","athos",
   -- Nyxaris
   "gleba","moshine","apia-carnova-orbit","panglia",
   "foliax","rabbasca","velora",
@@ -15,7 +15,7 @@ local worlds={
   "fulgora","cerys","ribbonia","paracelsin",
   "alchemy-planet","ferrum",
   -- Vespera
-  "muria","aquilo","rubia","maraxsis","obsidiax",
+  "muria","aquilo","nulla","rubia","maraxsis","obsidiax",
   "bm-balack",
   -- Beetlejuice
   "cubium","linox-planet_linox","secretas","frozeta",
