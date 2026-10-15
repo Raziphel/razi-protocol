@@ -196,6 +196,24 @@ local function space_explosion_smoke()
   end
   return affected
 end
+-- Optional creation dust reduction, separate from damage/death effects.
+-- The quality-carrier's created_effect SCRIPT is not cosmetic and must
+-- never be touched, or legendary asteroid spawning silently stops.
+local function asteroid_creation_dust()
+  local removed=0
+  for _,group in ipairs({"asteroid","asteroid-chunk"}) do
+    for _,proto in pairs(data.raw[group] or {}) do
+      if type(proto.created_effect)=="table" then
+        -- Apply the recursive cosmetic filter. It removes only particles
+        -- and trivial smoke, leaving every script/damage/spawn effect.
+        removed=removed+select(1,modify_field(
+          proto,"created_effect",true,false))
+      end
+    end
+  end
+  return removed
+end
+M.asteroid_creation_dust=asteroid_creation_dust
 M.space_explosion_smoke=space_explosion_smoke
 M.trim_fragments=trim_fragments
 M.visual_asteroids=visual_asteroids
@@ -209,25 +227,27 @@ function M.data_final_fixes()
   local fragments=enabled("reduced-fragments")
   local density=enabled("outer-hostile-density")
   local smoke=enabled("space-explosion-smoke")
-  if not (debris or weapon or fragments or density or smoke) then return 0 end
+  local arrival=enabled("asteroid-creation-dust")
+  if not (debris or weapon or fragments or density or smoke or arrival) then return 0 end
   already=true
   local results={
     asteroid_visuals=debris and visual_asteroids() or 0,
     weapon_visuals=weapon and weapon_particles() or 0,
     native_fragments=fragments and trim_fragments() or 0,
     hostile_spawns=density and reduce_outer_hostiles() or 0,
-    explosion_smoke=smoke and space_explosion_smoke() or 0
+    explosion_smoke=smoke and space_explosion_smoke() or 0,
+    creation_dust=arrival and asteroid_creation_dust() or 0
   }
   if type(log)=="function" then
     log(("[Razi Protocol/performance] Optional asteroid passes: "..
       "visuals=%d; weapon-particles=%d; fragment-triggers=%d; "..
-      "late-hostile-spawns=%d; explosion-smoke=%d"):format(
+      "late-hostile-spawns=%d; explosion-smoke=%d; spawn-dust=%d"):format(
         results.asteroid_visuals,results.weapon_visuals,
         results.native_fragments,results.hostile_spawns,
-        results.explosion_smoke))
+        results.explosion_smoke,results.creation_dust))
   end
   return results.asteroid_visuals+results.weapon_visuals+
     results.native_fragments+results.hostile_spawns+
-    results.explosion_smoke
+    results.explosion_smoke+results.creation_dust
 end
 return M

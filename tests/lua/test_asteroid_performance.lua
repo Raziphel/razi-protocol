@@ -151,4 +151,19 @@ expect(special.explosion_effect.action_delivery.target_effects[1].type
 expect(ordinary.explosion_effect.action_delivery.target_effects.type=="damage",
   "Unrelated ground explosion damage must remain untouched")
 expect(perf.data_final_fixes()==0,"New pass must be idempotent")
+-- A quality carrier may use a script trigger plus purely visual dust.
+local script_trigger={type="script",effect_id="razi-quality-asteroid-small-metallic-asteroid"}
+local carrier={created_effect={type="direct",action_delivery={
+  type="instant",target_effects={
+    {type="create-particle",particle_name="dust"},script_trigger}}}}
+data.raw.asteroid["razi-test-carrier"]=carrier
+settings.startup["razi-performance-space-explosion-smoke"].value=false
+settings.startup["razi-performance-asteroid-creation-dust"]={value=true}
+perf=reload()
+expect(perf.data_final_fixes()>0,"Creation dust mode should affect mixed effects")
+expect(carrier.created_effect.action_delivery.target_effects[1].type=="script",
+  "Quality spawn scripted trigger must not be stripped with dust")
+expect(carrier.created_effect.action_delivery.target_effects[1].effect_id
+  ==script_trigger.effect_id,"Script event identity must be preserved")
+settings.startup["razi-performance-asteroid-creation-dust"].value=false
 print("Razi asteroid performance opt-in regression passed")

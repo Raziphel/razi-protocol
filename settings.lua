@@ -45,6 +45,11 @@ data:extend({
   {type="bool-setting",name="razi-performance-space-explosion-smoke",
     setting_type="startup",default_value=false,
     order="ad[asteroid-performance]-e[explosion-smoke]"},
+  -- Separate opt-in removal of cosmetic asteroid creation dust.
+  -- Scripted quality-asteroid spawn events remain untouched.
+  {type="bool-setting",name="razi-performance-asteroid-creation-dust",
+    setting_type="startup",default_value=false,
+    order="ad[asteroid-performance]-e2[creation-dust]"},
   -- Reduces precomputed map sprite layers, not active ship simulation.
   {type="bool-setting",name="razi-performance-compact-route-overlays",
     setting_type="startup",default_value=false,
