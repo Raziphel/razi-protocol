@@ -1,5 +1,7 @@
 -- Curate Razi system cards in the EXISTING Factorio/K2SO/planet labs.
 -- This module deliberately defines no entities, items, recipes or labs.
+local Graph=require("__razi_lib__/lib/technology_graph")
+local Recipe=require("__razi_lib__/lib/recipe")
 local M={}
 local cards={
  "calidus-tech-card","solaris-tech-card","nyxaris-tech-card",
@@ -50,43 +52,13 @@ local function accepts(lab,science)
  end
  return true
 end
-local function ancestor(start,wanted,techs,visited)
- if start==wanted then return true end
- local tech=techs[start]
- if not tech then return false end
- visited=visited or {}
- if visited[start] then return false end
- visited[start]=true
- for _,parent in ipairs(tech.prerequisites or {}) do
-  if ancestor(parent,wanted,techs,visited) then return true end
- end
- return false
-end
-local function unlock_index(techs)
- local index={}
- for name,tech in pairs(techs) do
-  for _,effect in ipairs(tech.effects or {}) do
-   if effect.type=="unlock-recipe" and effect.recipe then
-    local list=index[effect.recipe] or {}
-    list[#list+1]=name
-    index[effect.recipe]=list
-   end
-  end
- end
- for _,list in pairs(index) do table.sort(list) end
- return index
-end
 local function product(recipe,id)
- if recipe.result==id then return true end
- for _,entry in ipairs(recipe.results or {}) do
-  if (entry.name or entry[1])==id then return true end
- end
- return false
+ return Recipe.produces(recipe,id)
 end
 local function safe_upgrades()
  local recipes=data.raw.recipe or {}
  local techs=data.raw.technology or {}
- local indexed=unlock_index(techs)
+ local indexed=Graph.unlock_index(techs)
  for _,rule in ipairs(M.recipe_upgrades) do
   local recipe=recipes[rule.lab]
   -- Only modify native locked crafting recipes, and only if the native
@@ -112,7 +84,7 @@ local function safe_upgrades()
     if source.enabled==false then
      local proven=false
      for _,source_unlock in ipairs(indexed[supply.recipe] or {}) do
-      if ancestor(unlock,source_unlock,techs) then
+      if Graph.reaches(techs,unlock,source_unlock) then
        proven=true break
       end
      end

@@ -21,9 +21,9 @@
     {
       "mod": "razi_lib",
       "type": "required",
-      "declaration": "razi_lib >= 1.1.0",
+      "declaration": "razi_lib >= 1.2.0",
       "group": "library",
-      "reason": "Direct Razi API, starmap and prototype library"
+      "reason": "Shared technology graph, recipe inspection, event registry and prototype helpers"
     },
     {
       "mod": "PlanetsLib",

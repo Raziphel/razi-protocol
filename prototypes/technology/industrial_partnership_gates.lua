@@ -2,6 +2,7 @@
 -- future destinations. Do not force every bonus recipe on a player.
 local M={}
 local mode=require("prototypes.compat.interdependence_mode")
+local Graph=require("__razi_lib__/lib/technology_graph")
 M.phases={
   -- One earlier cross-system workshop is enough to reach the middle stars.
   {gates={"vibrant-discovery","vespera-discovery"},count=1,
@@ -25,17 +26,8 @@ local function active(name)
   local node=tech(name)
   return node and node.hidden~=true and node.enabled~=false
 end
-local function depends_on(name,ancestor,visited)
-  if name==ancestor then return true end
-  local node=tech(name)
-  if not node then return false end
-  visited=visited or {}
-  if visited[name] then return false end
-  visited[name]=true
-  for _,parent in ipairs(node.prerequisites or {}) do
-    if depends_on(parent,ancestor,visited) then return true end
-  end
-  return false
+local function depends_on(name,ancestor)
+  return Graph.reaches(data.raw.technology or {},name,ancestor)
 end
 local function eligible(candidate,phase)
   local node=tech(candidate)
@@ -68,11 +60,7 @@ function M.data_final_fixes()
         end
         if safe then
           for _,gate in ipairs(phase.gates) do
-            if not depends_on(gate,candidate) then
-              local node=tech(gate)
-              node.prerequisites=node.prerequisites or {}
-              node.prerequisites[#node.prerequisites+1]=candidate
-            end
+            Graph.add_prerequisite(data.raw.technology or {},gate,candidate)
           end
           count=count+1
         end

@@ -1,32 +1,12 @@
 -- Frontier Recovery Charter, a joint Razi milestone using the ORIGINAL
 -- robotic and particulate science of our two required planets.
 -- Never change Athos/Nulla arrival costs or invent replacement products.
+local Graph=require("__razi_lib__/lib/technology_graph")
+local Recipe=require("__razi_lib__/lib/recipe")
 local M={}
 local function raw(kind,name) return (data.raw[kind] or {})[name] end
-local function reaches(start,target,seen)
-  if start==target then return true end
-  local t=raw("technology",start)
-  if not t then return false end
-  seen=seen or {}
-  if seen[start] then return false end
-  seen[start]=true
-  for _,p in ipairs(t.prerequisites or {}) do
-    if reaches(p,target,seen) then return true end
-  end
-  return false
-end
 local function unlock(recipe)
-  local names={}
-  for name,tech in pairs(data.raw.technology or {}) do
-    for _,effect in ipairs(tech.effects or {}) do
-      if effect.type=="unlock-recipe" and effect.recipe==recipe
-        and tech.enabled~=false and not tech.hidden then
-        names[#names+1]=name break
-      end
-    end
-  end
-  table.sort(names)
-  return names[1]
+  return Graph.first_unlock(data.raw.technology or {},recipe,true)
 end
 M.unlock=unlock
 local function discovery(world)
@@ -47,10 +27,7 @@ local function source_science(pack)
   local candidates={}
   for name,recipe in pairs(data.raw.recipe or {}) do
     if not recipe.hidden then
-      local produces=recipe.result==pack
-      for _,result in ipairs(recipe.results or {}) do
-        if (result.name or result[1])==pack then produces=true end
-      end
+      local produces=Recipe.produces(recipe,pack)
       if produces then candidates[#candidates+1]=name end
     end
   end
@@ -115,15 +92,8 @@ function M.data_final_fixes()
   end
   -- Append to the pre-existing outer research: no bootstrap demand is added
   -- to either world's discovery, rocket silo or original science production.
-  if not reaches(id,"razi-outer-frontier-mastery")
-    and not reaches("razi-outer-frontier-mastery",id) then
-    local exists=false
-    mastery.prerequisites=mastery.prerequisites or {}
-    for _,p in ipairs(mastery.prerequisites) do
-      if p==id then exists=true break end
-    end
-    if not exists then mastery.prerequisites[#mastery.prerequisites+1]=id end
-  end
+  Graph.add_prerequisite(data.raw.technology or {},
+    "razi-outer-frontier-mastery",id)
   return true
 end
 return M

@@ -169,6 +169,8 @@ local exchanges = {
   }
 }
 
+local Graph=require("__razi_lib__/lib/technology_graph")
+local Recipe=require("__razi_lib__/lib/recipe")
 local function raw(kind, name)
   return data.raw[kind] and data.raw[kind][name]
 end
@@ -200,17 +202,8 @@ local function technologies()
   return data.raw.technology or {}
 end
 
-local function depends_on(start, sought, seen)
-  if start == sought then return true end
-  local t = technologies()[start]
-  if not t then return false end
-  seen = seen or {}
-  if seen[start] then return false end
-  seen[start] = true
-  for _, parent in ipairs(t.prerequisites or {}) do
-    if depends_on(parent, sought, seen) then return true end
-  end
-  return false
+local function depends_on(start,sought)
+  return Graph.reaches(technologies(),start,sought)
 end
 
 -- Building an index once beats rescanning every technology for every
@@ -224,20 +217,7 @@ local function native_unlockers()
   if indexed_technologies == techs and unlockers_by_recipe then
     return unlockers_by_recipe
   end
-  local index = {}
-  for name, tech in pairs(techs) do
-    local counted = {}
-    for _, effect in ipairs(tech.effects or {}) do
-      local target = effect.type == "unlock-recipe" and effect.recipe
-      if target and not counted[target] then
-        counted[target] = true
-        local matches = index[target]
-        if not matches then matches = {}; index[target] = matches end
-        matches[#matches + 1] = name
-      end
-    end
-  end
-  for _, matches in pairs(index) do table.sort(matches) end
+  local index=Graph.unlock_index(techs)
   indexed_technologies, unlockers_by_recipe = techs, index
   return index
 end
@@ -408,14 +388,7 @@ local function safe_template(base, output)
   return true
 end
 
-local function recipe_produces(base, target)
-  if not base then return false end
-  if base.result == target then return true end
-  for _, output in ipairs(base.results or {}) do
-    if name_of(output) == target then return true end
-  end
-  return false
-end
+local recipe_produces=Recipe.produces
 
 local function source_supports_category(base, category)
   if not base then return false end

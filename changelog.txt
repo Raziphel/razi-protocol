@@ -1,3 +1,14 @@
+Version: 2.1.89
+Date: 15. 10. 2026
+  Move reusable foundations to Razi Lib 1.2.0:
+    - Centralize technology ancestry, deterministic cycle detection, safe research links and recipe unlock indexing.
+    - Share recipe output inspection and stable laboratory input deduplication.
+    - Replace deeply recursive research walkers used by Athos, FluxWorks, industrial research and native labs.
+    - Preserve every planet-specific rule, native source ID, route, tech requirement and existing save record.
+    - Require razi_lib >= 1.2.0. Publish/install the matching library before loading this build.
+    - Only offline structural validation performed; full Factorio startup and test fixtures remain to be run.
+    - GitHub Actions remains manual only.
+
 Version: 2.1.88
 Date: 15. 10. 2026
   Eradicate red dotted starmap trails:
