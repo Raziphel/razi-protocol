@@ -1,3 +1,13 @@
+Version: 2.1.88
+Date: 15. 10. 2026
+  Eradicate red dotted starmap trails:
+    - Identified that the installed Orbital Catapult 0.15.0 draws its own starmap route artwork outside Razi's native renderer and planet orbit sprites.
+    - At the absolute end of Razi's data-final-fixes, strip Catapult-owned graphical atlas layers, including sprite stripe/file variants.
+    - Repeat removal of any lingering Carna/Velora PlanetsLib orbit layers regardless of the old orbit-shift metadata.
+    - Remove stray vivid-red Razi directional strokes only in tiny Carna/Velora neighborhoods while preserving native and belt routes.
+    - Preserve all real space connections, Catapult link data, planet icons and gameplay; add targeted regression fixtures.
+    - Source verification only; full in-game visual test still required.
+
 Version: 2.1.87
 Date: 15. 10. 2026
   Outer-system visual and connectivity pass:

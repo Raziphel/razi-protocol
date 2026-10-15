@@ -226,3 +226,9 @@ require("prototypes.compat.athos_cycle_guard").repair("after-all-razi-technology
 -- probability expression. Repair only known optional enemy nests, keeping
 -- their existing units and spawn recipes rather than breaking mod startup.
 require("prototypes.compat.enemy_autoplace").repair_optional_enemy_autoplace()
+
+-- ABSOLUTE LAST ART PASS: Orbital Catapult draws independent red dotted
+-- routes into the same starmap atlas. Remove those visuals and leftover
+-- Carna/Velora trail sprites after all of Razi's renderers have finished.
+-- This NEVER deletes platform routes, catapult transport, or orbit metadata.
+require("prototypes.system.starmap_trail_cleanup").data_final_fixes()
