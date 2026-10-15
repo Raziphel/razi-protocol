@@ -1,12 +1,12 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.80)
+# Razi Protocol: Direct and transitive dependency audit (2.1.81)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
-| required | 48 | Core K2SO, seven-system worlds, libraries and curated campaign |
+| required | 50 | Core K2SO, seven-system worlds, libraries and curated campaign |
 | recommended | 24 | Compatible 2.1 companion suggestions, not required |
-| optional | 4 | Experimental and staff-approved manually installed planets |
+| optional | 2 | Experimental and staff-approved manually installed planets |
 | hidden-optional | 1 | Unadvertised load-order compatibility links |
 | incompatible | 20 | Known conflicts and unsupported combinations |
 
@@ -46,7 +46,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 
 | Declaration | Direct category |
 | --- | --- |
-| **Core, libraries, campaign and bridges** | **48 entries** |
+| **Core, libraries, campaign and bridges** | **50 entries** |
 | `base >= 2.1.20` | required |
 | `space-age >= 2.1.20` | required |
 | `razi_lib >= 1.1.0` | required |
@@ -56,6 +56,8 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `k2-dyson-sphere-rebalance >= 0.1.2` | required |
 | `Krastorio2Assets >= 2.1.0` | required |
 | `planet-muluna >= 2.7.25` | required |
+| `nulla >= 1.0.2` | required |
+| `PlanetAthos >= 1.1.3` | required |
 | `planetaris-unbounded >= 1.9.1` | required |
 | `planetaris-tellus >= 1.1.11` | required |
 | `planetaris-hyarion >= 1.3.23` | required |
@@ -120,11 +122,9 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ CircuitLaunchableRockets >= 1.4.6` | recommended |
 | `+ CargoBayLimitResearch >= 1.1.2` | recommended |
 | `+ platform-logistics-overhaul >= 2.1.2` | recommended |
-| **Optional side worlds** | **4 entries** |
+| **Optional side worlds** | **2 entries** |
 | `? moon-eneas >= 1.0.10` | optional |
 | `? shchierbin >= 0.3.19` | optional |
-| `? nulla >= 1.0.2` | optional |
-| `? PlanetAthos >= 1.1.3` | optional |
 | **Hidden integration ordering** | **1 entries** |
 | `(?) FluxWorks >= 0.2.12` | hidden-optional |
 | **Excluded conflicts** | **20 entries** |
@@ -239,3 +239,21 @@ Athos/particulate-owned arrow proven to be on a loop. Unrelated K2SO research
 is untouched and logged if a conflict remains. If a source mod throws inside
 its own earlier final-fixes traversal, we will need a corrected source release
 or a separate earlier-loading patch. In-game testing is still outstanding.
+
+## 2.1.81: Core Athos and Nulla science worlds
+
+Athos and Nulla are now **required** campaign planets. Athos preserves its
+original Crushing Industry, earthquakes, diamond/carbon economy and native
+Particulate Science. Nulla preserves Aquilo's satellite orbit, radioactive
+radio-interference ecology, hostile drones, scrap and native Robotic Science.
+
+The new **Frontier Recovery Charter** discovers real Athos/Nulla science
+unlock technologies and requires both science packs at an existing late-tier
+lab before the outer-frontier mastery. Their native discovery recipes and
+research are not replaced with Razi-owned science. If the author's science
+technology is missing or renamed beyond recognition, the bridge is omitted
+and logs the missing source ID rather than inserting an impossible gate.
+
+This release still requires a **complete Factorio 2.1/K2SO engine startup and
+copied-save validation**. Earlier versions of both required mods produced
+source-stage failures, and Razi's guards have not been proven by a full load.

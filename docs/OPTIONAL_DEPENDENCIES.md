@@ -1,4 +1,4 @@
-# Dependency categories and optional companions (2.1.80)
+# Dependency categories and optional companions (2.1.81)
 
 The full audit now includes direct dependencies plus the upstream required graph, version-pin evidence and a repeatable API auditor. The human-readable review lives in
 [Dependency Audit](DEPENDENCY_AUDIT.md) and the matching
@@ -8,9 +8,9 @@ Every manifest entry is reviewed; the contract is checked by
 
 | Category | Current direct entries |
 | --- | ---: |
-| Required | 48 |
+| Required | 50 |
 | Recommended (`+`) | 24 |
-| Optional (`?`) | 4 |
+| Optional (`?`) | 2 |
 | Hidden optional (`(?)`) | 1 |
 | Incompatible (`!`) | 20 |
 
@@ -90,12 +90,11 @@ author are not Razi hard requirements. Shchierbin stays on the outside of
 Vibrant's rocks and connects to Paracelsin if its native connection is
 missing. Neither becomes an expedition progression requirement.
 
-**New experimental, manually enabled planets:** Nulla 1.0.2 and Planet
-Athos 1.1.3. A narrow, source-aware Razi compatibility pass attempts to
-survive Nulla's missing vanilla electric-furnace prototype and repair a
-confirmed Athos-owned technology loop. Do not treat either one as validated
-or turn both on simultaneously for your first smoke test. They introduce
-no mandatory science requirements to the campaign.
+**Required campaign additions:** `nulla >= 1.0.2` and
+`PlanetAthos >= 1.1.3` are no longer optional. Their real science and
+production contribute to the late Frontier Recovery Charter. Both keep
+their author's native mechanics and Razi's source-stage compatibility
+guards; a full engine startup is needed before public release.
 
 **Experimental manual install only:** `(?) FluxWorks >= 0.2.12`. The
 integration minimum must be released and validated before promotion.

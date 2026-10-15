@@ -1,3 +1,12 @@
+**2.1.81: Required Athos and Nulla research worlds.** Athos now joins
+Solaris with native Particulate Science, diamonds and Crushing Industry;
+Nulla joins Vespera as Aquilo's drone salvage moon with Robotic Science.
+Both receive dedicated journal milestones and feed the new **Frontier
+Recovery Charter**: a late native-science technology tied to outer mastery,
+using an existing advanced lab. Their original mechanics, discovery techs
+and source recipes remain intact. Complete Factorio/K2SO startup and
+save-migration testing are still necessary before public release.
+
 **2.1.80: Experimental Nulla and Planet Athos recovery.** Both former
 conflicts may now be manually enabled as optional worlds, one at a time on
 a copied save. Razi attempts to guard Nulla's missing electric-furnace

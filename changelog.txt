@@ -1,3 +1,13 @@
+Version: 2.1.81
+Date: 15. 10. 2026
+  Full core-world science and Journal integration:
+    - Make Planet Athos 1.1.3 and Nulla 1.0.2 required in the Solaris/Vespera progression.
+    - Record native discoveries, robot remnant research and original Particulate Science in the Expedition Journal.
+    - Add a late Frontier Recovery Charter requiring the two worlds' real science packs in a native advanced laboratory.
+    - Integrate the charter into Razi outer mastery without changing source landing or science-recipe unlocks.
+    - Preserve source compatibility guards and existing-save tech IDs; complete Factorio smoke tests remain mandatory.
+    - Keep CI manual-only.
+
 Version: 2.1.80
 Date: 15. 10. 2026
   Experimental planet-compatibility rescue:

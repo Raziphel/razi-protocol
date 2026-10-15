@@ -419,3 +419,16 @@ flow inside its native framed summary so the spacing remains adjustable;
 the navigation priorities retain their native frame spacing. A stricter Lua
 GUI mock now rejects invalid frame-style spacing and the Python suite checks
 both problem locations. The quest catalog and saved progress are unaffected.
+
+## New core expedition chapters: Athos and Nulla (2.1.81)
+
+The Solaris chapter now records discovery of Athos and its original
+Particulate Science research, resolving the native technology through the
+recipe's actual unlock effect. The Vespera chapter records Nulla, its
+remnant-powered electromagnetic robotics and Robotic Science. A new
+Frontier Recovery Charter chapter entry in Supply Web tracks their joint
+research milestone. Journal details reuse the installed technology's real
+science costs, icons, recipe unlocks and blockers.
+
+No new standalone GUI, duplicate science items or fake completion criteria
+were introduced. Saved journal selection and chapter IDs remain stable.
