@@ -21,7 +21,7 @@ local function run_fixture(enabled, cycle)
 	local planet_names = {
 		"igrys", "rabbasca", "foliax", "obsidiax", "carna"
 	}
-	local planets = {gleba = {}}
+	local planets = {gleba = {},vesta={}}
 	for _, name in ipairs(planet_names) do planets[name] = {name = name} end
 	local hubs = {
 		["sye-solaris"] = {}, ["sye-nyxaris"] = {},
@@ -93,7 +93,7 @@ local integration, planets, routes, techs, moved, moon, native_moon, special =
 
 check(planets.igrys.orbit.parent.name == "solaris", "Igrys didn't join Solaris")
 check(planets.foliax.orbit.parent.name == "nyxaris", "Foliax didn't join Nyxaris")
-check(planets.obsidiax.orbit.parent.name == "vespera", "Obsidiax didn't join Vespera")
+check(planets.obsidiax.orbit.parent.name == "umbra", "Obsidiax didn't join Umbra")
 check(planets.carna.orbit.parent.name == "umbra", "Carna didn't join Umbra")
 check(not moved.rabbasca and planets.rabbasca == moon, "Rabbasca lost native moon orbit")
 check(routes["gleba-rabbasca"] == native_moon, "Rabbasca native connection removed")
@@ -106,7 +106,7 @@ check(not routes["gleba-to-igrys"],
 for _, pair in ipairs({
 	{"igrys", "sye-solaris", "solaris-discovery"},
 	{"foliax", "sye-nyxaris", "nyxaris-discovery"},
-	{"obsidiax", "sye-vespera", "vespera-discovery"},
+	{"obsidiax", "vesta", "umbra-discovery"},
 	{"carna", "sye-umbra", "umbra-discovery"}
 }) do
 	local name, hub, gate = pair[1], pair[2], pair[3]

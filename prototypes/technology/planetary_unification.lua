@@ -13,14 +13,14 @@ local worlds={
   "foliax","rabbasca","velora",
   -- Vibrant
   "fulgora","cerys","ribbonia","paracelsin",
-  "alchemy-planet","ferrum",
+  "alchemy-planet","shchierbin",
   -- Vespera
-  "muria","aquilo","nulla","rubia","maraxsis","obsidiax",
+  "muria","aquilo","nulla","rubia","maraxsis",
   "bm-balack",
   -- Beetlejuice
-  "cubium","linox-planet_linox","secretas","frozeta",
+  "cubium","linox-planet_linox","secretas","frozeta","ferrum",
   -- Umbra
-  "tenebris","crucible","vesta","carna","arcanyx"
+  "tenebris","crucible","vesta","carna","arcanyx","obsidiax"
 }
 M.worlds=worlds
 

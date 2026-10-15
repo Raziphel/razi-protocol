@@ -24,7 +24,7 @@ local techs={
  ["research-igrys"]=unlock("igrys",{"solaris-discovery"}),
  ["research-foliax"]=unlock("foliax",{"nyxaris-discovery"}),
  ["research-cerys"]=unlock("cerys",{"vibrant-discovery"}),
- ["research-obsidiax"]=unlock("obsidiax",{"vespera-discovery"})
+ ["research-obsidiax"]=unlock("obsidiax",{"umbra-discovery"})
 }
 rawset(_G,"data",{raw={technology=techs,
  planet={igrys={},foliax={},cerys={},obsidiax={}},["space-location"]={}}})
@@ -58,7 +58,8 @@ for _,gate in ipairs({"vibrant-discovery","vespera-discovery"}) do
 end
 for _,gate in ipairs({"beetlejuice-discovery","umbra-discovery"}) do
  assertok(parent(gate,"research-cerys")
-  and parent(gate,"research-obsidiax"),"Missing midgame world mastery")
+  and not parent(gate,"research-obsidiax"),
+  "Outer discovery must not require its own Obsidiax side world")
 end
 module.data_final_fixes()
 assertok(#techs["vibrant-discovery"].prerequisites==4,
