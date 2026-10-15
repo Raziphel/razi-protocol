@@ -7,6 +7,8 @@ local convergence=require("scripts.razi_convergence")
 local catalog=require("scripts.galactic_trade_catalog")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
+-- Factorio prohibits require() inside GUI events; resolve this at control load.
+local frontier=require("scripts.razi_journal_frontier")
 local L=function(k,...) return {"journal-ui."..k,...} end
 local ids={"dyson","cargo","recovery","transceiver","convergence"}
 function M.valid(id)
@@ -112,7 +114,7 @@ local function recovery_done(force,stage)
   end
   local name=stage.tech
   if stage[1]=="athos-particulate" then
-    name=require("scripts.razi_journal_frontier").unlocking(
+    name=frontier.unlocking(
       "particulate-science-pack") or name
   end
   local tech=force.technologies and force.technologies[name]
@@ -125,6 +127,7 @@ local function recovery_status(force)
   end
   return done,#recovery_stages
 end
+M.recovery_status=recovery_status -- Read-only fixture target, no GUI needed.
 local function recovery_reader(parent,player,width)
   local intro=parent.add{type="label",caption=L("project-recovery-description")}
   intro.style.single_line=false

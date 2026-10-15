@@ -97,9 +97,10 @@ class SystemCardProgressionTests(unittest.TestCase):
     def test_original_transceiver_victory_is_not_the_finale(self):
         control=read("control.lua")
         self.assertIn("preserve_deep_space_campaign()",control)
-        self.assertIn('api["set_no_victory"]',control)
-        self.assertIn('remote.call("kr-intergalactic-transceiver",',control)
-        self.assertIn('"set_no_victory",true)',control)
+        guard=read("scripts/razi_victory_guard.lua")
+        self.assertIn('api.set_no_victory',guard)
+        self.assertIn('"kr-intergalactic-transceiver"',guard)
+        self.assertIn('pcall(remote.call,interface,"set_no_victory",true)',guard)
         self.assertNotIn('set_game_state(',control)
 
     def test_settings_limit_and_version(self):

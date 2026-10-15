@@ -214,8 +214,13 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn('local convergence = require("scripts.razi_convergence")',control)
         self.assertIn("convergence.forces_merged",control)
         self.assertIn("convergence.repair_recipe_unlocks(force)",control)
-        self.assertIn('remote.interfaces["space_finish_script"]',control)
-        self.assertIn('remote.call("space_finish_script","set_no_victory",true)',control)
+        guard=read("scripts/razi_victory_guard.lua")
+        self.assertIn('require("scripts.razi_victory_guard")',control)
+        self.assertIn('preserve_deep_space_campaign()',control)
+        for source in ("space_finish_script","kr-intergalactic-transceiver",
+                       "silo_script"):
+            self.assertIn('"'+source+'"',guard)
+        self.assertIn('pcall(remote.call,interface,"set_no_victory",true)',guard)
         ops=read("scripts/galactic_operations.lua")
         self.assertIn('if p.tab=="convergence" then convergence.render(body,player)',ops)
         self.assertIn('function M.open_convergence(player)',ops)

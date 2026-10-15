@@ -3,6 +3,7 @@ local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
 local Events = require("__razi_lib__/runtime/events")
+local victory_guard = require("scripts.razi_victory_guard")
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
@@ -144,18 +145,7 @@ local function retire_connected_operations()
   for _,player in pairs(game.connected_players or {}) do retire_operations(player) end
 end
 local function preserve_deep_space_campaign()
-  if not (remote and remote.interfaces) then return end
-  local api=remote.interfaces["kr-intergalactic-transceiver"]
-  if api and api["set_no_victory"] then
-    remote.call("kr-intergalactic-transceiver","set_no_victory",true)
-  end
-  -- Space Age otherwise awards its own victory as soon as a platform
-  -- reaches Solar System Edge. That location is now the START of the
-  -- Convergence campaign, not the ending.
-  local space_finish=remote.interfaces["space_finish_script"]
-  if space_finish and space_finish["set_no_victory"] then
-    remote.call("space_finish_script","set_no_victory",true)
-  end
+  return victory_guard.enforce()
 end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
@@ -203,6 +193,9 @@ commands.add_command("razi-audit",
   {"razi-audit.help"},convergence_audit.command)
 events:on_nth_tick(6, razi_safe_cheat.tick)
 events:on_nth_tick(600, function()
+  -- Other mods may restore their win triggers during a save migration.
+  -- Three small optional remote checks every ten seconds, no world scans.
+  preserve_deep_space_campaign()
   check_existing_transceivers()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
   -- Nexus Bosses remains the only authority for all nine victories.

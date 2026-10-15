@@ -9,7 +9,8 @@ local planets = {}
 local places = {star={name="star"}}
 for _,name in ipairs({
   "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
-  "solar-system-edge","shattered-planet","black-hole-approach",
+  "solar-system-edge","shattered-planet","skewer_lost_beyond",
+  "black-hole-approach",
   "black-hole","oort-cloud","sol","sye-calidus",
   "sye-solaris","sye-nyxaris","sye-vibrant","sye-vespera",
   "sye-beetlejuice","sye-umbra","apia-carnova-orbit",
@@ -22,6 +23,7 @@ for _,name in ipairs({
   "gleba","moshine","panglia","fulgora","ribbonia","paracelsin",
   "muria","aquilo","rubia","maraxsis","athos",
   "cubium","linox-planet_linox","tenebris","vesta","nexus",
+  "skewer_shattered_planet",
   "cerys","rabbasca","optional-source-world",
   "igrys","foliax","obsidiax","carna","ferrum","shchierbin",
   "alchemy-planet","arcanyx","bm-balack"
@@ -231,7 +233,8 @@ check(math.abs(hx)<1 and math.abs(hy-20)<.01,
 
 -- Deep Space locations must match the same geometry before and after
 -- PlanetsLib sprite baking, including the Nexus planet-parent relationship.
-for _,name in ipairs({"shattered-planet","nexus","black-hole-approach",
+for _,name in ipairs({"shattered-planet","skewer_shattered_planet",
+  "skewer_lost_beyond","nexus","black-hole-approach",
   "black-hole","oort-cloud","sol"}) do
   local node=places[name] or planets[name]
   local ex,ey=layout.anchor_position(name)
@@ -244,6 +247,10 @@ for _,name in ipairs({"shattered-planet","nexus","black-hole-approach",
   check(node.draw_orbit==false,
     "Deep Space destination drew an oversized orbit: "..name)
 end
+check(planets["skewer_shattered_planet"].orbit.parent.name=="shattered-planet"
+  and places["skewer_lost_beyond"].orbit.parent.type=="planet"
+  and places["skewer_lost_beyond"].orbit.parent.name=="skewer_shattered_planet",
+  "Skewer expedition must retain its source-author parent chain")
 check(places["oort-cloud"].orbit.parent.type=="planet"
   and places["oort-cloud"].orbit.parent.name=="nexus",
   "Oort Cloud must remain attached to the true Nexus planet")

@@ -1,3 +1,18 @@
+Version: 2.1.90
+Date: 15. 10. 2026
+  Projects-tab crash, Shattered expedition labels and victory ownership:
+    - Resolve Frontier Recovery Journal module at control load, never via
+      require() inside on_gui_click; preserve all recovery quest statuses.
+    - Spread Skewer Shattered Planet and Lost Beyond into separate chart
+      positions after the native approach; retain native travel links,
+      discovery research and save identifiers.
+    - Match source PlanetsLib pre-rendering to final native map coordinates.
+    - Make Convergence the sole Razi-owned win; suppress supported Space Age,
+      K2SO and legacy silo win triggers on init/migration and a 600-tick guard.
+    - Do not interfere with boss milestones, source item production, or
+      Convergence's existing five physical delivery stages.
+    - Add read-only fixtures; real full-pack in-game validation remains needed.
+
 Version: 2.1.89
 Date: 15. 10. 2026
   Move reusable foundations to Razi Lib 1.2.0:

@@ -22,6 +22,12 @@ local anchors = {
   -- Shattered Planet southeast and the Black Hole west.
   -- These are visual positions only, not route lengths or travel unlocks.
   {"space-location","shattered-planet","solar-system-edge",140,0.33},
+  -- Skewer's *real* planet and Lost Beyond are a separate source-owned
+  -- journey after the original Shattered Planet Approach. Keep the route
+  -- chain but give its long map captions room to breathe at galaxy zoom.
+  -- No new worlds, unlocks or journey-length edits when Skewer is absent.
+  {"planet","skewer_shattered_planet","shattered-planet",82,0.29},
+  {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.27},
   {"planet","nexus","solar-system-edge",94,0.18},
   {"space-location","black-hole-approach","solar-system-edge",112,0.70},
   {"space-location","black-hole","black-hole-approach",22,0.72},
@@ -112,7 +118,8 @@ end
 
 -- Share one authoritative coordinate manifest with data-stage rendering.
 local deep_space_names={
-  ["shattered-planet"]=true,nexus=true,["black-hole-approach"]=true,
+  ["shattered-planet"]=true,["skewer_shattered_planet"]=true,
+  ["skewer_lost_beyond"]=true,nexus=true,["black-hole-approach"]=true,
   ["black-hole"]=true,["oort-cloud"]=true,sol=true
 }
 M.deep_space_orbits={}
@@ -125,6 +132,7 @@ end
 -- Source art is preserved, but not giant synthetic destination orbit circles.
 local deep_space_no_rings={
   ["solar-system-edge"]=true,["shattered-planet"]=true,nexus=true,
+  ["skewer_shattered_planet"]=true,["skewer_lost_beyond"]=true,
   ["black-hole-approach"]=true,["black-hole"]=true,
   ["oort-cloud"]=true,sol=true,pulsar=true,
   ["near-bellicos-orbit"]=true,
@@ -442,7 +450,8 @@ function M.data_final_fixes()
     ["razi-umbra-belt-outer"]=0.25,
     ["solar-system-edge"]=0.75,["nexus"]=0.25,
     ["oort-cloud"]=0.75,["sol"]=0.25,
-    ["shattered-planet"]=0.75,["black-hole-approach"]=0.25,
+    ["shattered-planet"]=0.75,["skewer_shattered_planet"]=0.25,
+    ["skewer_lost_beyond"]=0.25,["black-hole-approach"]=0.25,
     ["black-hole"]=0.75,
     ["calidus-bellicos-stargate-calidus"]=0.25
   }
@@ -485,6 +494,7 @@ function M.data_final_fixes()
   for _,name in ipairs({
     "solaris","nyxaris","vibrant","vespera","beetlejuice","umbra",
     "solar-system-edge","shattered-planet","nexus",
+    "skewer_shattered_planet","skewer_lost_beyond",
     "black-hole-approach","black-hole","oort-cloud","sol",
     "pulsar","near-bellicos-orbit",
     "calidus-bellicos-stargate-calidus","calidus-bellicos-stargate-bellicos",
