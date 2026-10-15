@@ -1,3 +1,16 @@
+Version: 2.1.110
+Date: 15. 10. 2026
+  Performance refinement and seventh opt-in switch:
+    - Add separately disabled asteroid creation-dust cleanup for
+      cosmetic spawn particles and trivial smoke only.
+    - Never remove the scripted carrier effect required for Razi's
+      Level 1-10 quality asteroid replacement.
+    - Cache route color/difficulty inputs once per starmap pass,
+      instead of re-reading settings and modules per ribbon segment.
+    - Preserve source-owned drop probabilities and all native routes.
+    - Add quality-trigger safety and cached-render regression coverage.
+    - No new runtime timers or gameplay-changing default behavior.
+
 Version: 2.1.109
 Date: 15. 10. 2026
   Fix startup crash in Bellicos final position diagnostics:

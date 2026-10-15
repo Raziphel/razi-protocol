@@ -13,11 +13,12 @@ OPTIONS=(
     "razi-performance-reduced-fragments",
     "razi-performance-outer-hostile-density",
     "razi-performance-space-explosion-smoke",
-    "razi-performance-compact-route-overlays"
+    "razi-performance-compact-route-overlays",
+    "razi-performance-asteroid-creation-dust"
 )
 
 class AsteroidPerformanceContracts(unittest.TestCase):
-    def test_all_six_independently_off_by_default(self):
+    def test_all_seven_independently_off_by_default(self):
         settings=get("settings.lua")
         import re
         for option in OPTIONS:
@@ -35,7 +36,7 @@ class AsteroidPerformanceContracts(unittest.TestCase):
 
     def test_no_tick_handlers_and_performance_guards(self):
         src=get("prototypes/system/asteroid_performance.lua")
-        self.assertIn('if not (debris or weapon or fragments or density or smoke) then return 0 end',src)
+        self.assertIn('if not (debris or weapon or fragments or density or smoke or arrival) then return 0 end',src)
         self.assertIn('if already then return 0 end',src)
         self.assertIn('for _,group in ipairs({"asteroid","asteroid-chunk"})',src)
         self.assertIn('create-trivial-smoke',src)
@@ -49,7 +50,7 @@ class AsteroidPerformanceContracts(unittest.TestCase):
     def test_effects_are_preserved_when_opted_out(self):
         src=get("prototypes/system/asteroid_performance.lua")
         self.assertIn('return item~=nil and item.value==true',src)
-        self.assertIn('if not (debris or weapon or fragments or density or smoke) then return 0 end',src)
+        self.assertIn('if not (debris or weapon or fragments or density or smoke or arrival) then return 0 end',src)
         self.assertIn('return changed and rebuilt or node,removed,halved',src)
         self.assertIn('if r>0 or f>0 then proto[key]=altered end',src)
 
@@ -73,6 +74,19 @@ class AsteroidPerformanceContracts(unittest.TestCase):
         self.assertIn('ladder.route_level(',src)
         self.assertIn('shift={(a.x+b.x)*16,(a.y+b.y)*16}',src)
         self.assertNotIn("script.on_event",src)
+
+    def test_creation_particle_mode_preserves_quality_script_triggers(self):
+        src=get("prototypes/system/asteroid_performance.lua")
+        self.assertIn('local function asteroid_creation_dust()',src)
+        self.assertIn('proto,"created_effect",true,false',src)
+        self.assertIn('creation_dust=arrival and asteroid_creation_dust() or 0',src)
+        self.assertIn('results.explosion_smoke+results.creation_dust',src)
+
+    def test_route_renderer_caches_module_and_difficulty_mode(self):
+        src=get("prototypes/system/route_ribbons.lua")
+        self.assertIn('local ladder=require("scripts.razi_asteroid_difficulty")',src)
+        self.assertIn('row.difficulty_mode=difficulty_mode',src)
+        self.assertIn('row.route,midpoint,mode',src)
 
     def test_native_fragments_and_chunks_do_not_cross(self):
         src=get("prototypes/system/asteroid_performance.lua")

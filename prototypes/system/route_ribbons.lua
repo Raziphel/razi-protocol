@@ -17,7 +17,8 @@ local function compact()
   return setting and setting.value==true or false
 end
 M.compact=compact
-local abs,sqrt,ceil,floor,cos,sin=math.abs,math.sqrt,math.ceil,math.floor,math.cos,math.sin
+local abs,sqrt,ceil,floor=math.abs,math.sqrt,math.ceil,math.floor
+local ladder=require("scripts.razi_asteroid_difficulty")
 local function angle(dy,dx)
   return (math.atan2 and math.atan2(dy,dx) or math.atan(dy,dx))%math.pi
 end
@@ -54,10 +55,8 @@ end
 M.candidate=candidate
 
 local function render(owner,row,mode,n)
-  local ladder=require("scripts.razi_asteroid_difficulty")
-  local setting=settings and settings.startup
-    and settings.startup["razi-asteroid-difficulty-scale"]
   local result={}
+  local mode=row.difficulty_mode
   for j=1,n do
     local start=(row.trim+row.covered*(j-1)/n)/row.length
     local finish=(row.trim+row.covered*j/n)/row.length
@@ -73,7 +72,7 @@ local function render(owner,row,mode,n)
       -- blue, green, yellow, orange and finally the red endgame.
       local midpoint=(start+finish)/2
       local grade=ladder.color_level(ladder.route_level(
-        row.route,midpoint,setting and setting.value))
+        row.route,midpoint,mode))
       local color=ladder.route_color(grade)
       -- The source ribbon has a crisp opaque core, with faint shoulders
       -- to separate the color from Factorio's grey native line at low zoom.
@@ -116,6 +115,9 @@ function M.data_final_fixes(owner)
   for _,sprite in ipairs(atlas.layers) do
     if sprite.filename==SHEET then return 0 end
   end
+  local difficulty=settings and settings.startup
+    and settings.startup["razi-asteroid-difficulty-scale"]
+  local difficulty_mode=difficulty and difficulty.value
   local routes,total={},0
   local is_compact=compact()
   local layer_budget=is_compact and 1200 or LAYER_BUDGET
@@ -123,6 +125,7 @@ function M.data_final_fixes(owner)
     local row=candidate(owner,route,mode,scope)
     if row then
       row.name=name
+      row.difficulty_mode=difficulty_mode
       row.grade=owner.route_color_level(route)
       row.belt=hz.is_belt_crossing(route) and true or false
       routes[#routes+1]=row
