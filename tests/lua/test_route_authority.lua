@@ -56,14 +56,14 @@ package.loaded["prototypes.system.route_icons"]={
 }
 local planets={}
 for _,name in ipairs({"nauvis","muluna","vulcanus","castra",
-  "fulgora","aquilo","ferrum","tenebris","carna","arcanyx",
+  "fulgora","aquilo","ferrum","tenebris","carna","arcanyx","vesta","obsidiax","athos",
   "child-moon","remote-nexus"}) do
   planets[name]={name=name}
 end
 planets["child-moon"].orbit={parent={type="planet",name="nauvis"}}
 local spaces={}
 for _,name in ipairs({"sye-calidus","sye-solaris","sye-vespera",
-  "sye-umbra","sye-vibrant",
+  "sye-umbra","sye-vibrant","sye-beetlejuice",
   "asteroid-belt-inner-edge","asteroid-belt-outer-edge",
   "crucible-orbit","close-sun-orbit","sun-orbit"}) do
   spaces[name]={name=name}
@@ -148,10 +148,15 @@ check(roads["native-crucible"]~=nil,"Crucible access was lost")
 check(roads["nexus-solaris"]~=nil,"External boss world lost its lifeline")
 check(roads["external-internal"]==internal,
   "Source-only special network was destroyed")
-check(roads["razi-curated-ferrum-sye-vibrant"]~=nil,
-  "Ferrum must stay outside Vibrant's asteroid crossing")
-check(not roads["razi-curated-ferrum-fulgora"],
-  "Ferrum still offers a bypass into Fulgora")
+check(roads["razi-curated-ferrum-sye-beetlejuice"]~=nil,
+  "Ferrum must have a Beetlejuice supply connection")
+check(roads["razi-curated-obsidiax-vesta"]~=nil,
+  "Obsidiax needs its outer Umbra connection to Vesta")
+check(roads["razi-curated-athos-vulcanus"]~=nil,
+  "Athos needs its short Vulcanus connection")
+check(not roads["razi-curated-ferrum-fulgora"] and
+  not roads["razi-curated-ferrum-sye-vibrant"],
+  "Ferrum should not bypass back into Vibrant")
 for _,name in ipairs({"razi-curated-carna-crucible-orbit",
   "razi-curated-arcanyx-tenebris"}) do
   check(roads[name] and roads[name].shape=="line",
@@ -159,7 +164,7 @@ for _,name in ipairs({"razi-curated-carna-crucible-orbit",
 end
 local ferrumResource=false
 local ferrumDebris=false
-for _,entry in ipairs(roads["razi-curated-ferrum-sye-vibrant"].asteroid_spawn_definitions) do
+for _,entry in ipairs(roads["razi-curated-ferrum-sye-beetlejuice"].asteroid_spawn_definitions) do
   if entry.asteroid=="ferrum-native-crystal" then ferrumResource=true end
   if entry.asteroid=="ferrum-inner-debris" then ferrumDebris=true end
 end

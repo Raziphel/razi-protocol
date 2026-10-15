@@ -148,8 +148,8 @@ layout.data_final_fixes()
 -- just orphaned PlanetsLib orbit metadata.
 for _,entry in ipairs({
   {"igrys","solaris"}, {"foliax","nyxaris"},
-  {"obsidiax","vespera"}, {"carna","umbra"},
-  {"ferrum","vibrant"}, {"shchierbin","vibrant"},
+  {"obsidiax","umbra"}, {"carna","umbra"},
+  {"ferrum","beetlejuice"}, {"shchierbin","vibrant"},
   {"alchemy-planet","vibrant"},
   {"arcanyx","umbra"}, {"bm-balack","vespera"}
 }) do
