@@ -8,7 +8,6 @@ local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
 local convergence=require("scripts.razi_convergence")
 local projects=require("scripts.razi_journal_projects")
-local convergence=require("scripts.razi_convergence")
 local guidance=require("scripts.razi_journal_guidance")
 local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
@@ -304,12 +303,26 @@ local function accent_rule(parent,theme,width,thickness)
   rule.style.color=theme.primary
   return rule
 end
+-- Dense but legible folio section heads: a small number of native GUI
+-- strokes make the chapter distinct without new atlases or paint events.
+local function dossier_heading(parent,key,theme,width)
+  local heading=parent.add{type="flow",direction="horizontal"}
+  heading.style.horizontal_spacing=9
+  heading.style.vertical_align="center"
+  accent_rule(heading,theme,50,2)
+  local title=subtitle(heading,key,width-65)
+  title.style.font_color=COLOR.muted
+  return heading
+end
 local function section(parent,key,caption,width,theme)
   local block=parent.add{type="flow",direction="vertical"}
   block.style.horizontally_stretchable=true
   block.style.vertical_spacing=5
-  subtitle(block,key,width,theme)
-  if caption then wrap(block,caption,width) end
+  dossier_heading(block,key,theme,width)
+  if caption then
+    local copy=wrap(block,caption,width)
+    copy.style.font_color=COLOR.ink
+  end
   return block
 end
 local function wheel_pane(parent,name,width,height)
@@ -556,6 +569,16 @@ local function render_details(parent,player,quest,p,context,size,view)
     atmosphere.style.font_color=theme.soft
   end
   accent_rule(panel,theme,math.min(148,inner),3)
+  -- A quiet editorial identity for the selected dossier. All three values
+  -- are read from the real force snapshot, never invented progress.
+  local identity=panel.add{type="flow",direction="horizontal"}
+  identity.style.vertical_align="center"
+  identity.style.horizontal_spacing=9
+  local folio_number=tint(label(identity,
+    L("dossier-index",string.format("%02d",chapter_index(quest.chapter)))),COLOR.quiet)
+  folio_number.style.font="default-bold"
+  local chapter_ink=label(identity,L("dossier-classification"))
+  chapter_ink.style.font_color=theme.soft
   local hero=panel.add{type="flow",direction="horizontal"}
   hero.style.horizontal_spacing=10
   icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
@@ -567,9 +590,8 @@ local function render_details(parent,player,quest,p,context,size,view)
 
   local eyebrow=panel.add{type="flow",direction="horizontal"}
   eyebrow.style.horizontally_stretchable=true
-  local sequence=label(eyebrow,L("entry-number",tostring(chapter_index(quest.chapter))))
-  sequence.style.font="default-bold"
-  tint(sequence,COLOR.quiet)
+  -- Status first: players should recognize whether they can act before
+  -- reading the full narrative. Avoid repeating the same chapter number.
   local status_label=label(eyebrow,L("status-"..status))
   status_label.style.font="default-bold"
   status_label.style.font_color=status=="complete" and COLOR.green
@@ -614,15 +636,42 @@ local function render_details(parent,player,quest,p,context,size,view)
         blockers[i].localised_name},text_width-26)
     end
   end
-  if status~="complete" then
-    for _,required in ipairs(quest.requires or {}) do
-      local prior=defs.by_id[required]
-      if prior and M.available(player.force,prior,context)
-        and not M.complete(player.force,prior,context) then
-        wrap(objective,{"",L("requires-heading")," ",
-          {"journal-title."..prior.id}},text_width-26)
+  -- Prerequisite links lead to the actual Codex entry, rather than
+  -- trapping players at a noninteractive list of dependencies.
+  local met,required_total=0,0
+  for _,required in ipairs(quest.requires or {}) do
+    local prior=defs.by_id[required]
+    if prior and M.available(player.force,prior,context) then
+      required_total=required_total+1
+      if M.complete(player.force,prior,context) then
+        met=met+1
+      elseif status~="complete" then
+        local needs=objective.add{type="flow",direction="horizontal"}
+        needs.style.horizontal_spacing=7
+        local mark=label(needs,"○")
+        mark.style.font_color=theme.soft
+        local jump=needs.add{type="label",style="clickable_label",
+          caption={"",L("requires-heading")," ",
+            {"journal-title."..prior.id}},
+          tags={razi_journal_action="guidance-select",id=prior.id},
+          tooltip=L("open-prerequisite")}
+        jump.style.single_line=false
+        jump.style.maximal_width=text_width-57
       end
     end
+  end
+  if required_total>0 then
+    local readiness=prose.add{type="flow",direction="vertical"}
+    readiness.style.width=text_width
+    readiness.style.vertical_spacing=5
+    dossier_heading(readiness,"dossier-readiness",theme,text_width)
+    local count=label(readiness,L("dossier-prerequisites",
+      tostring(met),tostring(required_total)))
+    count.style.font_color=met==required_total and COLOR.green or COLOR.muted
+    local bar=readiness.add{type="progressbar",value=met/required_total}
+    bar.style.width=math.min(240,text_width-18)
+    bar.style.height=5
+    bar.style.color=theme.primary
   end
   -- Direct campaign handoffs share the force snapshot with the chapter rail.
   local next_steps=guidance.followups(quest.id,view and view.states,3)
@@ -630,7 +679,7 @@ local function render_details(parent,player,quest,p,context,size,view)
     local forecast=prose.add{type="flow",direction="vertical"}
     forecast.style.width=text_width
     forecast.style.vertical_spacing=4
-    subtitle(forecast,"next-steps-heading",text_width-26,theme)
+    dossier_heading(forecast,"next-steps-heading",theme,text_width)
     for _,step in ipairs(next_steps) do
       local line=forecast.add{type="flow",direction="horizontal"}
       line.style.horizontal_spacing=8
@@ -718,6 +767,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   frame.style.padding=12
   local inner=size.rail-35
   subtitle(frame,"navigator-title",inner)
+  accent_rule(frame,themes.get(p.chapter or "calidus"),68,2)
   local names={}
   for _,ch in ipairs(defs.chapters) do
     names[#names+1]={"journal-chapter."..ch.id}
@@ -855,9 +905,15 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       if open then
         for _,quest in ipairs(available) do
           local state=view.states[quest.id]
-          local item=card.add{type="flow",direction="horizontal"}
+          -- A selected entry is a single subtly raised row, not another
+          -- full-width button. The native technology image stays bounded.
+          local chosen=quest.id==p.selected
+          local item=card.add{type=chosen and "frame" or "flow",
+            direction="horizontal",
+            style=chosen and "inside_shallow_frame" or nil}
           item.style.width=inner-34
-          item.style.horizontal_spacing=7
+          item.style.padding=chosen and 4 or 1
+          if not chosen then item.style.horizontal_spacing=7 end
           icons.sprite(item,quest_art(player.force,quest,context),
             "quest_row")
           local control=item.add{type="button",style="tool_button",
@@ -877,9 +933,9 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             tooltip=L("select-objective")}
           choice.style.single_line=false
           choice.style.maximal_width=inner-108
-          choice.style.font_color=quest.id==p.selected
+          choice.style.font_color=chosen
             and COLOR.ink or COLOR.muted
-          if quest.id==p.selected then
+          if chosen then
             control.style.font_color=theme.primary
             choice.style.font="default-bold"
             selected_element=choice
@@ -923,8 +979,13 @@ local function render_archive(parent,player,p,context,size)
     local quest=defs.by_id[record.unlock]
     local opened=quest and M.complete(player.force,quest,context)
     if opened and (not chosen or record.id==p.record) then chosen=record end
-    local row=collection.add{type="flow",direction="horizontal"}
-    row.style.horizontal_spacing=8
+    local highlighted=opened and record.id==p.record
+      or opened and not p.record and chosen==record
+    local row=collection.add{type=highlighted and "frame" or "flow",
+      direction="horizontal",
+      style=highlighted and "inside_shallow_frame" or nil}
+    row.style.padding=highlighted and 5 or 1
+    if not highlighted then row.style.horizontal_spacing=8 end
     local mark
     if opened then
       mark=icons.button(row,quest_art(player.force,quest,context),
@@ -938,9 +999,10 @@ local function render_archive(parent,player,p,context,size)
     end
     mark.style.width=icons.size("archive_button")
     mark.style.height=icons.size("archive_button")
-    local choice=row.add{type="label",style="clickable_label",
+    local choice=row.add{type="label",
+      style=opened and "clickable_label" or nil,
       caption={"journal-record-title."..record.id},
-      tags={razi_journal_action="record",id=record.id}}
+      tags=opened and {razi_journal_action="record",id=record.id} or nil}
     choice.style.single_line=false
     choice.style.maximal_width=size.rail-105
     choice.style.font_color=opened and {r=.95,g=.95,b=.95}
@@ -1062,12 +1124,16 @@ local function draw(player,focus_search)
   metric.style.horizontal_spacing=5
   subtitle(metric,"completion-heading")
   local completed=label(metric,L("completion-value",tostring(done),tostring(total)))
+  completed.tooltip=L("progress-tooltip")
   completed.style.font="default-bold"
   completed.style.font_color=COLOR.ink
   local readiness=metrics_row.add{type="flow",direction="horizontal"}
   readiness.style.horizontal_spacing=5
   subtitle(readiness,"ready-heading")
-  local ready_label=label(readiness,L("ready-value",tostring(ready)))
+  local ready_label=readiness.add{type="label",style="clickable_label",
+    caption=L("ready-value",tostring(ready)),
+    tooltip=L("filter-ready-tooltip"),
+    tags={razi_journal_action="filter-ready"}}
   ready_label.style.font="default-bold"
   ready_label.style.font_color=COLOR.amber
   local meter=totals.add{type="flow",direction="vertical"}
@@ -1418,6 +1484,28 @@ function M.gui_click(event)
         end
         break
       end
+    end
+  elseif action=="filter-ready" then
+    p.view="quests"
+    p.filter="ready"
+    p.query=""
+    -- The counter is an actual navigation shortcut: open a ready entry
+    -- rather than keeping a stale selection from another chapter.
+    local context=M.context(player.force)
+    local target=M.next_quest(player.force,context)
+    if not (target and M.state(player.force,target,context)=="active") then
+      target=nil
+      for _,candidate in ipairs(defs.quests) do
+        if M.state(player.force,candidate,context)=="active" then
+          target=candidate
+          break
+        end
+      end
+    end
+    if target then
+      p.selected=target.id
+      p.chapter=target.chapter
+      p.reveal_selection=true
     end
   elseif action=="filter" and ({all=true,ready=true,unfinished=true,
       done=true})[tags.id] then

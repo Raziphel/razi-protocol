@@ -175,6 +175,18 @@ for _,entry in ipairs(created) do
 end
 check(top_priority>=1,
   "Navigator must show at least one genuine research-ready priority")
+local selected_quest_paper,readiness_bar=0,0
+for _,entry in ipairs(created) do
+  if entry.type=="frame" and entry.style.padding==4
+    and entry.style.width and entry.style.width<400 then
+    selected_quest_paper=selected_quest_paper+1
+  end
+  if entry.type=="progressbar" and entry.style.height==5 then
+    readiness_bar=readiness_bar+1
+  end
+end
+check(selected_quest_paper>0,
+  "The chosen quest should have a subtle selected dossier row")
 local tinted=0
 for _,entry in ipairs(created) do
   if entry.type=="progressbar" and entry.style.color then
@@ -198,6 +210,23 @@ check(journal.preferences(1).query=="automation",
 journal.preferences(1).query=""
 created={}
 journal.draw(player)
+-- The actionable ready count switches to Quests and the genuine Ready
+-- filter, rather than showing an inert cosmetic number.
+local ready_jump
+for _,element in ipairs(created) do
+  if element.tags and element.tags.razi_journal_action=="filter-ready" then
+    ready_jump=element;break
+  end
+end
+check(ready_jump~=nil,"Ready progress should be directly actionable")
+journal.preferences(1).view="projects"
+journal.gui_click({player_index=1,element=ready_jump})
+check(journal.preferences(1).view=="quests"
+  and journal.preferences(1).filter=="ready"
+  and journal.preferences(1).selected
+  and journal.state(force,defs.by_id[journal.preferences(1).selected])=="active",
+  "Header Ready count must open a real ready quest")
+journal.preferences(1).filter="all"
 journal.preferences(1).selected="alliance-bio-metals"
 journal.preferences(1).chapter="alliances"
 created={}
@@ -294,6 +323,20 @@ for _,entry in ipairs(created) do
 end
 check(bridge and bridge.tags.id=="precision-matrix",
   "Industry quest must offer the real cargo chain navigation")
+local linked,readiness=0,false
+for _,entry in ipairs(created) do
+  if entry.tags and entry.tags.razi_journal_action=="guidance-select"
+    and (entry.tags.id=="fulgora" or entry.tags.id=="moshine")
+    and entry.tooltip and entry.tooltip[1]=="journal-ui.open-prerequisite" then
+    linked=linked+1
+  end
+  if entry.caption and type(entry.caption)=="table"
+    and entry.caption[1]=="journal-ui.dossier-prerequisites" then
+    readiness=(entry.caption[2]=="0" and entry.caption[3]=="2")
+  end
+end
+check(linked==2 and readiness,
+  "Quest dossier must show real, clickable unfinished prerequisites")
 local original_open_project=journal.open_project
 local called
 journal.open_project=function(_,kind,chain,technology_name)

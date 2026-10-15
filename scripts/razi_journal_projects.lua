@@ -177,11 +177,15 @@ local function status_for(force,id)
     and force.get_entity_count("kr-activated-intergalactic-transceiver")>0
   return (tech.researched or active) and 1 or 0,1
 end
-local function project_entry(parent,player,p,id,width,index)
+local function project_entry(parent,player,p,id,width,index,statuses)
   local selected=p.project==id
-  local card=parent.add{type="flow",direction="vertical"}
+  -- Selected projects get the same gentle raised-paper treatment as
+  -- selected quests. Unselected projects remain quiet index entries.
+  local card=parent.add{type=selected and "frame" or "flow",
+    direction="vertical",style=selected and "inside_shallow_frame" or nil}
   card.style.width=width
-  card.style.vertical_spacing=6
+  card.style.padding=selected and 8 or 2
+  if not selected then card.style.vertical_spacing=6 end
   local head=card.add{type="flow",direction="horizontal"}
   head.style.horizontal_spacing=10
   head.style.vertical_align="center"
@@ -205,18 +209,19 @@ local function project_entry(parent,player,p,id,width,index)
     accent.style.height=3
     accent.style.color=HUES.gold
   end
-  local complete,total=status_for(player.force,id)
+  local snapshot=statuses[id]
+  local complete,total=snapshot[1],snapshot[2]
   local count=card.add{type="label",
     caption=total==0 and L("project-unavailable")
       or L("project-progress",tostring(complete),tostring(total))}
   count.style.font_color=HUES.quiet
   local meter=card.add{type="progressbar",
     value=total>0 and complete/total or 0}
-  meter.style.width=math.max(110,width-18)
+  meter.style.width=math.max(95,width-(selected and 32 or 18))
   meter.style.height=5
   meter.style.color=selected and HUES.gold or {r=.48,g=.62,b=.69}
 end
-local function project_reader(parent,player,p,size,width,compact)
+local function project_reader(parent,player,p,size,width,compact,statuses)
   local reader=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   reader.style.width=width
@@ -247,10 +252,28 @@ local function project_reader(parent,player,p,size,width,compact)
   accent.style.width=math.max(130,width-38)
   accent.style.height=3
   accent.style.color=HUES.gold
+  -- Real stage totals provide a compact project cover summary; the
+  -- substantial source-owned construction detail remains in the reader.
+  local current=statuses[p.project]
+  local done,total=current[1],current[2]
+  local digest=reader.add{type="flow",direction="horizontal"}
+  digest.style.vertical_align="center"
+  digest.style.horizontal_spacing=9
+  local count=digest.add{type="label",caption=total==0
+    and L("project-unavailable")
+    or L("project-progress",tostring(done),tostring(total))}
+  count.style.font="default-bold"
+  count.style.font_color=total>0 and done==total
+    and HUES.gold or HUES.quiet
+  local gauge=reader.add{type="progressbar",
+    value=total>0 and done/total or 0}
+  gauge.style.width=math.max(130,width-38)
+  gauge.style.height=6
+  gauge.style.color=HUES.gold
   local scroll=reader.add{type="scroll-pane",direction="vertical",
     name="razi_journal_project_reader"}
   scroll.style.width=width-32
-  scroll.style.height=math.max(80,reader_height-(compact and 110 or 132))
+  scroll.style.height=math.max(80,reader_height-(compact and 185 or 202))
   scroll.horizontal_scroll_policy="never"
   scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
   scroll.style.horizontally_squashable=true
@@ -272,6 +295,12 @@ local function project_reader(parent,player,p,size,width,compact)
 end
 function M.render(parent,player,p,size)
   p.project=M.valid(p.project) and p.project or "dyson"
+  -- Each expensive source-owned project snapshot is evaluated once per
+  -- redraw, even though the chosen project is drawn in two separate panes.
+  local statuses={}
+  for _,id in ipairs(ids) do
+    statuses[id]={status_for(player.force,id)}
+  end
   local compact=size.width<900
   if compact then
     local stack=parent.add{type="flow",direction="vertical"}
@@ -286,9 +315,9 @@ function M.render(parent,player,p,size)
     local cell=math.max(170,math.floor((size.width-55)/2))
     for index,id in ipairs(ids) do
       project_entry(grid,player,p,id,cell,
-        string.format("%02d",index))
+        string.format("%02d",index),statuses)
     end
-    project_reader(stack,player,p,size,size.width-43,true)
+    project_reader(stack,player,p,size,size.width-43,true,statuses)
   else
     local rail=parent.add{type="frame",direction="vertical",
       style="inside_shallow_frame_with_padding"}
@@ -305,9 +334,9 @@ function M.render(parent,player,p,size)
     for index,id in ipairs(ids) do
       if index>1 then rail.add{type="line",direction="horizontal"} end
       project_entry(rail,player,p,id,size.rail-41,
-        string.format("%02d",index))
+        string.format("%02d",index),statuses)
     end
-    project_reader(parent,player,p,size,size.reader,false)
+    project_reader(parent,player,p,size,size.reader,false,statuses)
   end
 end
 function M.refresh(force) dyson_runtime.invalidate(force) end

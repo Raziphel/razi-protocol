@@ -30,6 +30,26 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('razi_journal_action="guidance-select"',journal)
         self.assertIn('razi_journal_action="select"',journal)
 
+    def test_editorial_quest_dossier_and_actual_readiness(self):
+        journal=read("scripts/razi_journal.lua")
+        loc=read("locale/en/razi_journal.cfg")
+        self.assertIn('local function dossier_heading(parent,key,theme,width)',journal)
+        self.assertIn('dossier_heading(readiness,"dossier-readiness",theme,text_width)',journal)
+        self.assertIn('if prior and M.available(player.force,prior,context)',journal)
+        self.assertIn('if M.complete(player.force,prior,context) then',journal)
+        self.assertIn('value=met/required_total',journal)
+        self.assertIn('tags={razi_journal_action="guidance-select",id=prior.id}',journal)
+        self.assertIn('style=chosen and "inside_shallow_frame" or nil',journal)
+        self.assertIn('razi_journal_action="filter-ready"',journal)
+        self.assertIn('elseif action=="filter-ready" then',journal)
+        self.assertNotIn('local convergence=require("scripts.razi_convergence")\n'
+                         'local projects=require("scripts.razi_journal_projects")\n'
+                         'local convergence=require("scripts.razi_convergence")',journal)
+        for key in ("dossier-index","dossier-classification",
+                    "dossier-readiness","dossier-prerequisites",
+                    "open-prerequisite","filter-ready-tooltip"):
+            self.assertRegex(loc,rf"(?m)^{key}=")
+
     def test_megaproject_dossiers_use_real_status(self):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")
@@ -40,6 +60,9 @@ class VisualPolishTests(unittest.TestCase):
                       projects)
         self.assertIn('project_icon=32',icons)
         self.assertIn('local meter=card.add{type="progressbar"',projects)
+        self.assertIn('statuses[id]={status_for(player.force,id)}',projects)
+        self.assertIn('style=selected and "inside_shallow_frame" or nil',projects)
+        self.assertIn('local current=statuses[p.project]',projects)
         self.assertIn('convergence.progress(force)',projects)
         self.assertIn('catalog.snapshot(force)',projects)
         self.assertIn('dyson.status(force)',projects)
