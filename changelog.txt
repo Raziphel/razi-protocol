@@ -11,8 +11,11 @@ Date: 15. 10. 2026
       original local sprite offsets; never recolor or delete source debris.
     - Run Bellicos reconciliation after generic galaxy layout and the
       final critical-location assertion, not ahead of other positioning.
-    - Preserve all cargo, travel, science, source texture and route logic;
-      offline regressions added. In-game checks remain necessary.
+    - Preserve all cargo, travel, science, source texture and route logic.
+    - Extra Warden regression simulates an orphaned duplicate near Secretas
+      after sprite-only pulsar removal, and verifies both native prototypes
+      plus Aegis artwork across repeated final passes.
+    - In-game screenshots and full modpack verification still necessary.
 
 Version: 2.1.96
 Date: 15. 10. 2026

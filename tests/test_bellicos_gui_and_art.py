@@ -17,8 +17,11 @@ class ExpeditionRegressionTests(unittest.TestCase):
 
     def test_source_art_survives_before_planetslib_sprite_baking(self):
         lua=read("prototypes/system/bellicos.lua")
-        self.assertIn("for field,value in pairs(body and body.orbit or {}) do",lua)
-        self.assertIn("orbit[field]=value",lua)
+        self.assertIn("for key,value in pairs(body.orbit or {}) do",lua)
+        self.assertIn("orbit[key]=value",lua)
+        self.assertIn("for _,kind in ipairs",lua)
+        self.assertIn("local function reconcile_baked_art()",lua)
+        self.assertIn("local origin=target.parent_position",lua)
         self.assertIn("function bellicos.data_updates()",lua)
         self.assertIn('require("prototypes.system.bellicos").data_updates()',read("data-updates.lua"))
         cleanup=read("prototypes/system/galaxy_layout.lua")

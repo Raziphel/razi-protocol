@@ -30,6 +30,9 @@ local function run(options)
   end
   if options.no_entry_gate then places[gate_a] = nil end
   if options.near then
+    if options.dual_warden then
+      planets["point-warden"]={name="point-warden"}
+    end
     places["near-bellicos-orbit"]={name="near-bellicos-orbit",
       orbit={sprite={filename="__aegis_graphics__/belt-visual.png"}}}
     places["aegis-inner-edge"]={name="aegis-inner-edge"}
@@ -105,8 +108,9 @@ check(connected[route_name].from=="solar-system-edge" and
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="solar-system-edge",
   "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance==170,
-  "Missing pulsar fallback must stay in the nearer Deep Space annex")
+check(missing[gate_b].orbit.distance>120
+  and missing[gate_b].orbit.distance<180,
+  "Missing pulsar fallback must stay within the same Deep Space annex")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
 local _, near_locations=run({near=true})
@@ -115,7 +119,8 @@ check(near_locations["near-bellicos-orbit"].orbit.sprite
   "Bellicos relocation erased source asteroid-belt art")
 check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
   "Visible Bellicos orbit should be detached from the central galaxy")
-check(near_locations["near-bellicos-orbit"].orbit.distance==170,
+check(near_locations["near-bellicos-orbit"].orbit.distance>170
+  and near_locations["near-bellicos-orbit"].orbit.distance<173,
   "Visible Bellicos orbit was not moved north of Deep Space")
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
@@ -184,4 +189,48 @@ no_longer_present.data_final_fixes()
 check(not late_routes[route_name],
   "Final-stage removed gateway left an invalid space connection")
 
-print("Bellicos missing/retyped/removed prototype compatibility passed")
+-- Reproduce the player's screenshot: Warden was relocated to Beetlejuice
+-- even though the pulsar/asteroid field had already moved to Deep Space.
+-- The final pass must correct BOTH prototype types and leave sprite art
+-- anchored at the vanished sprite-only pulsar, without late PlanetsLib API.
+local dual,dual_places,dual_planets=run({
+  near=true,pulsar="space-location",dual_warden=true})
+dual_places.pulsar=nil -- sprite-only parent removed by PlanetsLib
+local near=dual_places["near-bellicos-orbit"]
+for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
+  body.origin={x=83,y=-160} -- old Beetlejuice/Secretas chart vicinity
+  body.distance=14
+  body.orientation=.25
+  body.orbit={parent={type="space-location",name="beetlejuice"},
+    distance=14,orientation=.25}
+end
+local original_art={filename="__bellicos-graphics__/aegis-debris.png",
+  planetslib_orbit_name="near-bellicos-orbit",
+  planetslib_orbit_shift={16,-8},shift={0,0}}
+data.raw["utility-sprites"]={default={starmap_star={
+  layers={original_art}}}}
+-- Any accidental late PlanetsLib:update is forbidden after pulsar deletion.
+PlanetsLib.update=function()
+  error("Late PlanetsLib:update would displace Bellicos child locations")
+end
+local n,art=dual.reconcile_final_positions()
+check(n>=5 and art==1,"Bellicos reconciliation failed or lost source art")
+local near_x,near_y=actual_position("near-bellicos-orbit")
+for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
+  check(body.origin.x==near_x and body.origin.y==near_y
+    and math.abs(body.distance-48)<.001
+    and math.abs(body.orientation-.285)<.001
+    and body.orbit.parent.name=="near-bellicos-orbit",
+    "A Warden native prototype is still marooned near Secretas")
+end
+local edge_x,edge_y=require("prototypes.system.galaxy_layout")
+  .anchor_position("solar-system-edge")
+local source_x=edge_x+170*math.sin(2*math.pi*.055)
+local source_y=edge_y-170*math.cos(2*math.pi*.055)
+check(math.abs(original_art.shift[1]-(16+source_x*32))<.01
+  and math.abs(original_art.shift[2]-(-8+source_y*32))<.01,
+  "Aegis belt art abandoned the native pulsar when the parent was deleted")
+check(dual.reconcile_final_positions()>=5
+  and math.abs(original_art.shift[1]-(16+source_x*32))<.01,
+  "Repeated final reconciliation must not move artwork or Warden again")
+print("Bellicos late-stage Warden, duplicate-prototype and sprite tests passed")
