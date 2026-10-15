@@ -16,12 +16,11 @@ the original mods publish compatible versions.
 `planet-ferrum >= 0.1.4` is now advertised as **recommended**, not
 required. Its source-owned unusual planet mechanics remain intact.
 Nexus and Void Processing are separate, substantial endgame branches;
-Hephaestus, Solar Halo and Rabbasca Underground have specialized nonplanet
-location mechanics. None of those are silently made ordinary planets.
+Rabbasca Underground retains its specialized nonplanet location mechanics.
+Hephaestus and Solar Halo are no longer curated installations.
 
 Cerys is a genuine moon. Preserve its native mechanics, discovery, and orbital
-connections. Eneas is excluded because its source mod requires unrelated
-Construction Drones and RPG System mods. Rabbasca and Velora likewise
+connections. Eneas is retired from Razi. Rabbasca and Velora
 retain their native parent worlds. Do not move the unique Cerys nuclear
 puzzle behind a manufactured Razi science bottleneck.
 

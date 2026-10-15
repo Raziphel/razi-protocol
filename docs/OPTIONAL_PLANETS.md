@@ -2,7 +2,7 @@
 
 > **October 2026 update:** Razi now requires supported Factorio 2.1
 > conventional worlds from this earlier optional list; Cerys is mandatory.
-> Eneas is excluded because its source mod forces unrelated helper mods.
+> Eneas was retired entirely in 2.1.82. It is not an optional dependency.
 > See [Required Worlds & Bridge Roadmap](PLANETARY_BRIDGES_AND_MASTERY.md)
 > for current dependency policy and the three unresolved compatibility blockers.
 > The historical details below document the earlier integration pass.

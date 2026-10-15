@@ -1,3 +1,13 @@
+Version: 2.1.82
+Date: 15. 10. 2026
+  Curated galaxy cleanup:
+    - Remove Eneas (moon-eneas) and Solar Halo (Solar-Halo) completely from all direct dependency declarations.
+    - Remove Eneas/Nauvis Razi fallback route and Solar Halo special-orbit unlock integration.
+    - Remove obsolete Solar Halo test worlds/routes and update dependency regression expectations.
+    - Preserve Razi's custom stars, independent Dyson Sphere and all other planet routes.
+    - 50 required, 23 recommended, 1 optional, 1 hidden optional, 20 incompatible dependencies. Manual-only CI remains.
+    - Older saves may reference now-absent source worlds. Back up and disable externally installed retired mods separately.
+
 Version: 2.1.81
 Date: 15. 10. 2026
   Full core-world science and Journal integration:

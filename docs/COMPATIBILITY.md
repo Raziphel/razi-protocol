@@ -120,11 +120,16 @@ the Lua enemy fixture and still requires an actual Factorio modpack launch.
 
 ## Staff side-world and Frozeta notes (2.1.79)
 
-The optional Eneas moon keeps source-owned Unit-05, independent science
-and launch gantry; Razi adds only a fallback connection to Nauvis.
 Shchierbin is relocated to Vibrant's exterior, with a fallback connection
 to Paracelsin that does not cross the physical asteroid belt. Frozeta Nuclear
 Winter is recommended independently of Outer Rim, though its numerous
 required source companions warrant startup and migration testing. Nulla and
 Planet Athos are available only as experimental manual opt-ins in 2.1.80.
 Neither is guaranteed to load until we repeat full-modpack engine testing.
+
+## 2.1.82 curated exclusions
+
+Eneas and Solar Halo are retired from the dependency graph and all Razi
+source-specific routes. The independent Calidus star art and native Dyson
+Sphere routes remain. Disable any already-installed external copies through
+Factorio's mod manager; the dependency edit itself cannot remove files.

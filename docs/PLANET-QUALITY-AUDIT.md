@@ -26,7 +26,7 @@ A mandatory planet must offer a distinctive factory puzzle, an environment or lo
 
 ## Integration implemented
 
-- The required `info.json` now includes `panglia_planet >= 0.7.2`; `biological-machines-planet-wit` remains incompatible; Nulla and Athos are required, Eneas and Shchierbin remain optional. Muluna stays required.
+- The required `info.json` now includes `panglia_planet >= 0.7.2`; `biological-machines-planet-wit` remains incompatible; Nulla and Athos are required, Shchierbin remains optional, and Eneas and Solar Halo have been removed. Muluna stays required.
 - Muluna remains mandatory; Wit-specific discoveries, routes, production exchanges, atlas catalog entries and quests are removed. Balack's independent integration remains.
 - Nyxaris's late chapter now requires Panglia discovery after Moshine and Apia-Carnova, preserving the native datacell/foundry costs. Panglia has cargo routes to Moshine and Apia-Carnova; optional Pelagos remains accessible from Moshine and receives an additional Panglia cargo link.
 - Vibrant's native AsteroidBelt retains its hazardous source-owned inner/outer crossing. The outer waypoint now routes to Paracelsin, which still requires belt research. Required Shchierbin research gates remain removed; its optional Paracelsin side route is restored without forcing its science.
