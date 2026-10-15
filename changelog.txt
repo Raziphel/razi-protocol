@@ -1,3 +1,17 @@
+Version: 2.1.105
+Date: 15. 10. 2026
+  Tune source-owned asteroid encounters near Vibrant and Secretas:
+    - Place Razi-added Auric hazards near Secretas in both connection
+      directions, instead of a false peak halfway through empty space.
+    - Keep broad Auric debris coverage on Secretas-Frozeta transit.
+    - Correct Imersite classification on Fulgora-to-Aquilo links,
+      preserving the intended Aquilo-bound resource reward.
+    - Log all asteroid-enriched route names and entry counts at startup.
+    - Test source precedence, reverse curves, field ratios, missing
+      optional mods and absence of duplicate spawns.
+    - Preserve native route geometry, source mining recipes and the
+      ten-level quality difficulty system; in-game testing pending.
+
 Version: 2.1.104
 Date: 15. 10. 2026
   Startup recovery for Rabbasca's upstream lava shader error:

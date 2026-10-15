@@ -24,6 +24,11 @@ local routes={
     original_vanilla}},
   fulgora={from="fulgora",to="ribbonia",asteroid_spawn_definitions={
     original_vanilla}},
+  -- A direct future source-owned shortcut must still count as Aquilo-bound.
+  direct={from="fulgora",to="aquilo",asteroid_spawn_definitions={
+    original_vanilla}},
+  reverse={from="secretas",to="cubium",
+    asteroid_spawn_definitions={original_vanilla}},
   belt={from="asteroid-belt-inner-edge",to="asteroid-belt-outer-edge",
     asteroid_spawn_definitions={original_vanilla}},
   aquilo={from="rubia",to="aquilo",asteroid_spawn_definitions={
@@ -79,6 +84,9 @@ check(def(routes.aquilo,"imersite-asteroid-chunk"),
 check(def(routes.belt,"imersite-asteroid-chunk").spawn_points[3].probability
   >def(routes.fulgora,"imersite-asteroid-chunk").spawn_points[3].probability,
   "Belt crossing has to reward players more than trace Fulgora")
+check(def(routes.direct,"imersite-asteroid-chunk").spawn_points[3].probability
+  ==def(routes.aquilo,"imersite-asteroid-chunk").spawn_points[3].probability,
+  "Fulgora-Aquilo must get Aquilo's harvesting rate, not Fulgora traces")
 check(not def(routes.deep,"auric-asteroid-chunk"),
   "Auric debris cannot scatter across unrelated Deep Space routes")
 check(def(routes.inner,"auric-asteroid-chunk")==original_custom,
@@ -87,11 +95,22 @@ check(def(routes.inner,"big-auric-asteroid"),
   "Secretas approach should introduce serious Auric enemies")
 check(not def(routes.inner,"huge-auric-asteroid"),
   "Huge Auric enemies only belong in terminal Secretas expedition")
+local approach=def(routes.inner,"small-auric-asteroid").spawn_points
+check(approach[1].probability<approach[#approach].probability,
+  "Auric hazards should increase towards Secretas at route end")
+local return_leg=def(routes.reverse,"small-auric-asteroid").spawn_points
+check(return_leg[1].probability>return_leg[#return_leg].probability,
+  "Reversed Secretas corridor must mirror the hazard gradient")
 check(def(routes.outer,"huge-auric-asteroid"),
   "Deep Space gate route should support rare huge Auric enemies")
+local huge_field=def(routes.outer,"huge-auric-asteroid").spawn_points
+check(huge_field[1].probability>huge_field[#huge_field].probability,
+  "Huge Auric field should stay near Secretas, not peak in empty space")
 check(def(routes.moon,"auric-asteroid-chunk")
   and def(routes.moon,"big-auric-asteroid"),
   "Frozeta supply crossing should contain richer Auric asteroids")
+check(def(routes.moon,"auric-asteroid-chunk").spawn_points[6].probability
+  >=.008*.52,"Frozeta's end of its supply route should not be depleted")
 check(routes.inner.asteroid_spawn_definitions~=original_shared,
   "Adding Auric to one connection cannot mutate the source shared table")
 check(original_shared[1]==original_custom and
