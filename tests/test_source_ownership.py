@@ -24,7 +24,7 @@ class TestSourceOwnership(unittest.TestCase):
         self.assertTrue({"Big-Monsters","secretas-orbit-patch","planet-ferrum",
                          "VoidProcessing-Updated"}.issubset(recommended))
         self.assertEqual({d for d in deps if d.startswith("? ")},
-                         {"? shchierbin >= 0.3.19"})
+                         {"? shchierbin >= 0.3.19", "? planet-rabbasca >= 0.22.2"})
         self.assertIn("(?) FluxWorks >= 0.2.12",deps)
         self.assertIn("! outer-rim",deps)
         self.assertIn("! Hephaestus",deps)

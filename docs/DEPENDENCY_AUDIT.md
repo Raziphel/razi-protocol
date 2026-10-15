@@ -1,14 +1,33 @@
-# Razi Protocol: Direct and transitive dependency audit (2.1.82)
+# Razi Protocol: Direct and transitive dependency audit (2.1.104)
 
 Reviewed 15 October 2026. The complete direct manifest is registered in [`compat/dependency_policy.json`](../compat/dependency_policy.json). Verified upstream hard-dependency evidence and deliberate version floors are tracked in [`compat/dependency_transitive.json`](../compat/dependency_transitive.json).
 
 | Direct declaration type | Count | Meaning |
 | --- | ---: | --- |
-| required | 50 | Core K2SO, seven-system worlds, libraries and curated campaign |
-| recommended | 23 | Compatible 2.1 companion suggestions, not required |
-| optional | 1 | Experimental and staff-approved manually installed planets |
+| required | 49 | Core K2SO, seven-system worlds, libraries and curated campaign |
+| recommended | 24 | Compatible 2.1 companion suggestions, not required |
+| optional | 2 | Shchierbin and temporarily recoverable Rabbasca |
 | hidden-optional | 1 | Unadvertised load-order compatibility links |
 | incompatible | 20 | Known conflicts and unsupported combinations |
+
+## Rabbasca 0.22.4 startup recovery
+
+Rabbasca accesses `lava_effect.water.textures[2]` in its own `data.lua`.
+Factorio 2.1 now defines lava artwork as `water.image_textures[1]`.
+Because Rabbasca loads before Razi Protocol, adding a late
+`prototypes.compat` Lua fix **cannot** stop that crash.
+
+The 2.1.104 Razi manifest temporarily treats the source as optional.
+To start without it, disable **planet-rabbasca** and dependent
+**rabbasca-underground** in Factorio's Mods screen. Updating Razi alone
+does **not** disable the already-installed source or repair its ZIP.
+
+To keep playing with Rabbasca, use a corrected upstream version when one
+is available or explicitly run `tools/fix_rabbasca_startup.py` against
+the installed source archive. The improved fix preserves the intended
+lava recolor with `image_textures[1]` and a legacy fallback; a ZIP
+backup is created. Razi's Gleba moon integration remains source-guarded
+and returns when Rabbasca is re-enabled.
 
 ## Guaranteed indirectly, so removed from Razi's direct manifest
 
@@ -87,7 +106,7 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `tenebris-prime-made-in-hide >= 1.1.0` | required |
 | `paracelsin-krastorio-compatibility-plus >= 1.2.0` | required |
 | `Igrys >= 1.5.40` | required |
-| `planet-rabbasca >= 0.22.2` | required |
+| `? planet-rabbasca >= 0.22.2` | optional (temporary startup recovery) |
 | `foliax >= 2.0.37` | required |
 | `obsidiax >= 1.0.29` | required |
 | `carna >= 0.3.22` | required |
