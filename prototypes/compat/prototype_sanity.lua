@@ -416,10 +416,23 @@ local function restore_secretas_science_bootstrap()
     and golden.research_trigger.type=="craft-item"
     and golden.research_trigger.item=="gold-plate"
   if not (native_recycler and native_golden and gold_plate_unlock) then
-    if type(log)=="function" then
-      log("[Razi Protocol/Secretas] Unexpected source science triggers; no tech prerequisites changed")
+    -- Some compatibility overhauls replace Secretas's native triggers.
+    -- An exact two-node prerequisite cycle is still an engine-stopping
+    -- error: restore the known steam-first direction even in that case.
+    -- Without an exact reciprocal edge, never speculate about modified
+    -- third-party technologies.
+    local exact_cycle=
+      technology_has_prerequisite("steam-recycler","golden-science-pack")
+      and technology_has_prerequisite("golden-science-pack","steam-recycler")
+    if not exact_cycle then
+      if type(log)=="function" then
+        log("[Razi Protocol/Secretas] Non-native source triggers without the exact reciprocal cycle; no changes made")
+      end
+      return false
     end
-    return false
+    if type(log)=="function" then
+      log("[Razi Protocol/Secretas] Source triggers changed, repairing confirmed reciprocal Golden Science/Steam Recycler prerequisites")
+    end
   end
 
   -- This is the reversed edge introduced by another compatibility pass.
