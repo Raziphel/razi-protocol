@@ -29,9 +29,10 @@ class OptionalPlanetTests(unittest.TestCase):
         dependencies = json.loads((ROOT / "info.json").read_text())["dependencies"]
         by_name = {dep.lstrip("?+ ").split(" >= ")[0]: dep for dep in dependencies
                    if not dep.startswith("!")}
-        for mod in ("Igrys", "planet-rabbasca", "foliax", "obsidiax", "carna"):
+        for mod in ("Igrys", "foliax", "obsidiax", "carna"):
             self.assertIn(mod, by_name)
             self.assertFalse(by_name[mod].startswith(("? ", "+ ")))
+        self.assertEqual(by_name["planet-rabbasca"], "? planet-rabbasca >= 0.22.2")
         self.assertIn("PlanetAthos >= 1.1.3", dependencies)
         self.assertNotIn("? PlanetAthos >= 1.1.3", dependencies)
 

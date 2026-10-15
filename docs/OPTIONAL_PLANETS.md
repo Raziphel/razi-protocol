@@ -1,7 +1,8 @@
 # Optional Planet Expeditions
 
-> **October 2026 update:** Razi now requires supported Factorio 2.1
-> conventional worlds from this earlier optional list; Cerys is mandatory.
+> **October 2026 update:** Razi still requires most conventional
+> Factorio 2.1 worlds; Cerys is mandatory. In 2.1.104 Rabbasca is
+> temporarily optional after its own 0.22.4 lava shader data.lua crash.
 > Eneas was retired entirely in 2.1.82. It is not an optional dependency.
 > See [Required Worlds & Bridge Roadmap](PLANETARY_BRIDGES_AND_MASTERY.md)
 > for current dependency policy and the three unresolved compatibility blockers.
@@ -9,8 +10,9 @@
 
 
 Five new planet mods are supported as **non-mandatory** campaign destinations.
-They are required installation dependencies of the current full pack, but
-their worlds do not become progression gates. Installing them
+Four are required installation dependencies; Rabbasca is temporarily
+optional until its upstream startup bug is resolved. Their worlds
+do not become progression gates when missing. Installing them
 does not alter the required seven-system mastery cards or transceiver victory.
 
 These are external, separately downloadable mods. Razi Protocol contains no
@@ -61,6 +63,11 @@ space connections can affect existing space-platform routes.
 Carna has substantial environment simulation and needs in-game performance and
 K2SO checks before it can be considered a mature default choice.
 
-**Note on game-version dependencies:** Rabbasca requires a modern Factorio
-2.1.20 build; other planets may require their own assets and libraries. Let
+**Note on game-version dependencies:** Rabbasca 0.22.4 accesses the
+obsolete `water.textures[2]` field while modern lava uses
+`water.image_textures[1]`. To recover without editing external source,
+disable Rabbasca and its Underground dependent in Factorio. To retain
+both, update or explicitly patch Rabbasca with
+[`tools/fix_rabbasca_startup.py`](../tools/fix_rabbasca_startup.py).
+Other planets may require their own assets and libraries. Let
 the Factorio mod manager resolve those requirements before playing.

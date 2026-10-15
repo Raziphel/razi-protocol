@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.103",
+  "version": "2.1.104",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -81,7 +81,7 @@
     "! Wood_Gasification_updated",
     "! factorioplus",
     "Igrys >= 1.5.40",
-    "planet-rabbasca >= 0.22.2",
+    "? planet-rabbasca >= 0.22.2",
     "foliax >= 2.0.37",
     "obsidiax >= 1.0.29",
     "carna >= 0.3.22",

@@ -2,7 +2,7 @@
   "schema": 1,
   "review_date": "2026-10-15",
   "factorio_version": "2.1",
-  "notes": "2.1.82: Eneas and Solar-Halo retired completely, including dependencies and source routes. Razi-authored star artwork and Dyson Sphere remain. 50 required, 24 recommended, 1 optional, 1 hidden optional, 20 incompatible. Disable these external mods in Factorio manually; removal of a dependency does not uninstall it.",
+  "notes": "2.1.104: 49 required, 24 recommended, 2 optional, 1 hidden optional, 20 incompatible. Temporarily optional Rabbasca 0.22.4 can be disabled with its Underground dependent to recover from the source-mod data.lua lava shader crash. When an upstream-fixed source is installed, its guarded Razi integrations remain.",
   "dependencies": [
     {
       "mod": "base",
@@ -517,10 +517,10 @@
     },
     {
       "mod": "planet-rabbasca",
-      "type": "required",
-      "declaration": "planet-rabbasca >= 0.22.2",
+      "type": "optional",
+      "declaration": "? planet-rabbasca >= 0.22.2",
       "group": "planet",
-      "reason": "Curated planet or planetary expansion in the seven-system campaign"
+      "reason": "Temporary startup recovery: Rabbasca 0.22.4 reads missing tile-effect lava.water.textures in its own data.lua before any Razi compatibility pass can run; optional integration is retained for fixed installations."
     },
     {
       "mod": "foliax",

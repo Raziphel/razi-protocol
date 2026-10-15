@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Fix Rabbasca's nil lava textures crash before Factorio can load the mod."""
+"""Repair Rabbasca lava shader mismatch in its own installed ZIP/folder.
+
+Razi data.lua executes too late to prevent this source-mod startup crash.
+This is an explicit, backed-up local repair; it never runs on game ticks.
+"""
 import argparse
 import os
 import re
@@ -10,21 +14,37 @@ import zipfile
 from pathlib import Path
 
 OLD = 'lava_effect.water.textures[2].filename = "__rabbasca-assets__/graphics/recolor/textures/lava.png"'
-NEW = (
+LEGACY = (
     'if lava_effect.water and type(lava_effect.water.textures) == "table"\n'
     '    and type(lava_effect.water.textures[2]) == "table" then\n'
     '  ' + OLD + '\nend'
 )
-MARK = 'if lava_effect.water and type(lava_effect.water.textures) == "table"'
-
+# Current Space Age 2.1 lava effect uses image_textures[1], but older
+# shader layouts used textures[2]. Preserve Rabbasca's recolor in both.
+NEW = (
+    'local rabbasca_lava_water = lava_effect.water\n'
+    'local rabbasca_lava_image = rabbasca_lava_water\n'
+    '  and rabbasca_lava_water.image_textures\n'
+    '  and rabbasca_lava_water.image_textures[1]\n'
+    'if not rabbasca_lava_image and rabbasca_lava_water\n'
+    '    and rabbasca_lava_water.textures then\n'
+    '  rabbasca_lava_image = rabbasca_lava_water.textures[2]\n'
+    'end\n'
+    'if rabbasca_lava_image then\n'
+    '  rabbasca_lava_image.filename = "__rabbasca-assets__/graphics/recolor/textures/lava.png"\n'
+    'end'
+)
+MARK = 'local rabbasca_lava_water = lava_effect.water'
 
 def patch(text):
     if MARK in text:
         return text, False
-    if text.count(OLD) != 1:
+    newline = "\r\n" if "\r\n" in text else "\n"
+    legacy = LEGACY.replace("\n", newline)
+    target = legacy if text.count(legacy) == 1 else OLD
+    if text.count(target) != 1:
         raise ValueError("Unknown Rabbasca tiles.lua: exact crash line not found")
-    endline = "\r\n" if "\r\n" in text else "\n"
-    return text.replace(OLD, NEW.replace("\n", endline)), True
+    return text.replace(target, NEW.replace("\n", newline)), True
 
 
 def backup(path):

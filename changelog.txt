@@ -1,3 +1,17 @@
+Version: 2.1.104
+Date: 15. 10. 2026
+  Startup recovery for Rabbasca's upstream lava shader error:
+    - Temporarily make planet-rabbasca optional, letting Factorio run
+      the remaining required pack when the broken source is disabled.
+    - All Rabbasca planet, route, quest and endgame integrations remain
+      guarded and activate automatically when the repaired source loads.
+    - Upgrade Rabbasca's opt-in source repair script to support Factorio
+      2.1 water.image_textures[1] with legacy textures[2] fallback.
+    - Recognize already guard-patched source builds and keep ZIP backups.
+    - Document necessary removal of Rabbasca Underground if required,
+      and that Razi data.lua cannot fix an earlier source data.lua crash.
+    - No background modifications to installed mods or extra CI runs.
+
 Version: 2.1.103
 Date: 15. 10. 2026
   Integrate source-owned custom asteroids into Razi's route network:

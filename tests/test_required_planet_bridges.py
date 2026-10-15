@@ -11,11 +11,12 @@ class RequiredWorldTests(unittest.TestCase):
         deps=json.loads(contents("info.json"))["dependencies"]
         by_name={d.lstrip("?+ ").split(" >= ")[0]:d for d in deps
                  if d.strip() and not d.startswith("!")}
-        names=["Cerys-Moon-of-Fulgora","Igrys","planet-rabbasca","foliax","obsidiax","carna","Velora","alchemy-khemia","Arcanyx","biological-machines-planet-balack","panglia_planet"]
+        names=["Cerys-Moon-of-Fulgora","Igrys","foliax","obsidiax","carna","Velora","alchemy-khemia","Arcanyx","biological-machines-planet-balack","panglia_planet"]
         for name in names:
             self.assertIn(name,by_name)
             self.assertFalse(by_name[name].startswith(("? ","+ ")),name)
-        self.assertEqual(len(names),11)
+        self.assertEqual(len(names),10)
+        self.assertIn("? planet-rabbasca >= 0.22.2", deps)
         for retired in ('biological-machines-planet-wit',):
             self.assertIn('! '+retired,deps)
             self.assertFalse(any(d.startswith(retired+' >=') for d in deps))

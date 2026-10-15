@@ -16,9 +16,24 @@ class RabbascaRepairTests(unittest.TestCase):
     def test_safe_guard_and_repeated_application(self):
         first, changed = fixer.patch("local test = 1\n" + fixer.OLD + "\n")
         self.assertTrue(changed)
-        self.assertIn('type(lava_effect.water.textures) == "table"', first)
-        self.assertIn('type(lava_effect.water.textures[2]) == "table"', first)
+        self.assertIn("rabbasca_lava_water.image_textures[1]", first)
+        self.assertIn("rabbasca_lava_water.textures[2]", first)
+        self.assertIn("rabbasca_lava_image.filename", first)
         self.assertFalse(fixer.patch(first)[1])
+
+    def test_repair_previously_guarded_builds(self):
+        fixed, changed = fixer.patch(fixer.LEGACY + "\n")
+        self.assertTrue(changed)
+        self.assertIn("rabbasca_lava_water.image_textures[1]", fixed)
+        self.assertNotIn("if lava_effect.water and type(", fixed)
+        self.assertFalse(fixer.patch(fixed)[1])
+
+    def test_crlf_and_original_recolor_path(self):
+        fixed, changed = fixer.patch(fixer.OLD + "\r\n")
+        self.assertTrue(changed)
+        self.assertIn("\r\n", fixed)
+        self.assertNotIn("\n", fixed.replace("\r\n", ""))
+        self.assertIn('__rabbasca-assets__/graphics/recolor/textures/lava.png', fixed)
 
     def test_unknown_source_not_modified(self):
         with self.assertRaisesRegex(ValueError, "Unknown Rabbasca"):
