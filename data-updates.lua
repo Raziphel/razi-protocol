@@ -94,3 +94,6 @@ clear_invalid_bioluminescent_next_upgrade(data.raw["transport-belt"])
 require("prototypes.system.calidus_sun").data_updates()
 require("prototypes.system.abacayba_integration").data_updates()
 require("prototypes.system.galaxy_layout").data_updates()
+-- Source starfields must be positioned BEFORE PlanetsLib's irreversible
+-- sprite-only star cleanup; retain Aegis/pulsar orbit.sprite artwork.
+require("prototypes.system.bellicos").data_updates()

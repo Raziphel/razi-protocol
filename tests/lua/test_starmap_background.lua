@@ -28,7 +28,7 @@ rawset(_G,"mods",{})
 local parts=bg.make_layers("subtle",true,true,true,false)
 ok(parts[1].tint.a>.65 and parts[1].tint.a<.8,
   "Pinpoint sky should use visible tiny dots instead of faded giant blobs")
-ok(#parts==53,"Subtle atlas uses 36 sky tiles, 8 halos, 1 Umbra belt and 8 dust pockets")
+ok(#parts==59,"Subtle atlas uses 42 sky tiles, 8 halos, 1 Umbra belt and 8 dust pockets")
 local counts={sky=0,halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
   local side=layer.filename:find("atlas%-starfield%-") and 1024 or 512
@@ -41,7 +41,7 @@ for _,layer in ipairs(parts) do
   if layer.filename:find("debris%-umbra") or layer.filename:find("belt%-umbra") then counts.belt=counts.belt+1 end
   if layer.filename:find("atlas%-dust") then counts.dust=counts.dust+1 end
 end
-ok(counts.sky==36 and counts.halo==8 and counts.belt==1 and counts.dust==8,
+ok(counts.sky==42 and counts.halo==8 and counts.belt==1 and counts.dust==8,
   "Expected restrained per-system artwork")
 local unique={}
 for _,layer in ipairs(parts) do
@@ -55,6 +55,9 @@ ok(unique.nyxaris.tint.b>unique.nyxaris.tint.g and
   "Nyxaris blue must carry into its halo")
 ok(unique.vibrant.tint.r>unique.vibrant.tint.g,
   "Vibrant should be purple, not another cyan star")
+-- Source art stays electric green, so its supporting glow must not redden it.
+ok(unique.beetlejuice and unique.beetlejuice.tint.g>unique.beetlejuice.tint.r*3,
+  "Beetlejuice halo reverted to red/pink")
 local nyxaris_star={filename="__razi-protocol__/graphics/icons/NyxarisStar.png"}
 bg.tint_star_art({nyxaris_star})
 local first_tint=nyxaris_star.tint.g
@@ -107,27 +110,27 @@ end
 ok(repeats[1]~=repeats[2] and repeats[1]~=repeats[7],
   "Repeated sky tiles need restrained per-cell exposure variation")
 bg.data_final_fixes()
-ok(#sprites.layers==55,"Clean atlas was not attached")
+ok(#sprites.layers==61,"Clean atlas was not attached")
 ok(sprites.layers[1].filename:find("atlas%-starfield%-"),"Atlas not behind native art")
 ok(sprites.layers[#sprites.layers]==native,"Source star art changed")
 bg.data_final_fixes()
-ok(#sprites.layers==55,"Duplicate background layer registration")
+ok(#sprites.layers==61,"Duplicate background layer registration")
 ok(#bg.make_layers("off",true,true,true,false)==0,"Off mode still draws")
-ok(#bg.make_layers("subtle",false,false,false,false)==36,
+ok(#bg.make_layers("subtle",false,false,false,false)==42,
   "Turning off optional layers must leave native map alone")
-ok(#bg.make_layers("subtle",true,true,false,false)==46,
+ok(#bg.make_layers("subtle",true,true,false,false)==52,
   "Disabling detail pockets should leave 8 halos and 2 belt layers")
-ok(#bg.make_layers("subtle",true,true,true,true)==55,
+ok(#bg.make_layers("subtle",true,true,true,true)==61,
   "Cartography adds only a single distant dust pocket")
 local cine=bg.make_layers("cinematic",true,true,true,false)
 ok(#cine==#parts and cine[1].tint.a>parts[1].tint.a,
   "Cinematic should be brighter without extra clutter")
 settings.startup["razi-starmap-galactic-ornaments"].value=false
-ok(#bg.make_layers("subtle",true,true,true,false)==50,
+ok(#bg.make_layers("subtle",true,true,true,false)==56,
   "Turning off ornaments removes four star pockets")
 settings.startup["razi-starmap-galactic-ornaments"].value=true
 settings.startup["razi-starmap-micro-details"].value=false
-ok(#bg.make_layers("subtle",true,true,true,false)==52,
+ok(#bg.make_layers("subtle",true,true,true,false)==58,
   "Turning off micro-details removes four star pockets")
 sprites.layers={native}
 settings.startup["razi-starmap-background-style"].value="off"

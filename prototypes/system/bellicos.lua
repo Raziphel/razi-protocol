@@ -57,8 +57,17 @@ local function position_expedition()
     local kind,pk=endpoint_type(n),endpoint_type(parent)
     local origin=positions[parent]
     if not (kind and pk and origin) then return end
-    local orbit={parent={type=pk,name=parent},
-      distance=r,orientation=t}
+    local body=(data.raw[kind] or {})[n]
+    -- Preserve source-authored orbit.sprite / sprite scale / artwork flags.
+    -- Rebuilding an orbit with only parent/distance/orientation erased the
+    -- original pulsar and Aegis graphics BEFORE PlanetsLib baked its atlas.
+    local orbit={}
+    for field,value in pairs(body and body.orbit or {}) do
+      orbit[field]=value
+    end
+    orbit.parent={type=pk,name=parent}
+    orbit.distance=r
+    orbit.orientation=t
     updates[#updates+1]={type=kind,name=n,orbit=orbit,
       draw_orbit=false,redrawn_connections_exclude=gate or nil}
     planned[#planned+1]={kind=kind,name=n,origin=origin,r=r,t=t}
@@ -97,6 +106,13 @@ local function position_expedition()
       location.draw_orbit=false
     end
   end
+end
+
+function bellicos.data_updates()
+  -- Source mods can revise their system artwork in data-updates.
+  -- Reapply placement WITH source sprites intact, before PlanetsLib bakes
+  -- and removes sprite-only parent stars during data-final-fixes.
+  if mods and mods["bellicos-and-aegis"] then position_expedition() end
 end
 
 function bellicos.data()
@@ -139,7 +155,7 @@ local function soften_pulsar_art()
     if tagged or source_file then
       local tint=layer.tint or {r=1,g=1,b=1,a=1}
       layer.tint={r=tint.r or 1,g=tint.g or 1,b=tint.b or 1,
-        a=math.min(tint.a or 1,.54)}
+        a=math.min(tint.a or 1,.82)}
       touched=touched+1
     end
   end
