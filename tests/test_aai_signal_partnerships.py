@@ -1,6 +1,7 @@
 """Guard native AAI logistics integration without copying its transport."""
 from pathlib import Path
 import unittest
+from tools.journal_locale import load_journal_locale
 
 ROOT=Path(__file__).resolve().parents[1]
 def text(path):
@@ -38,7 +39,7 @@ class AAIIntegrationTests(unittest.TestCase):
         self.assertIn("trade-signal-heading=",locale)
         journal=text("scripts/razi_journal_data.lua")
         self.assertIn('id="signal-network"',journal)
-        story=text("locale/en/razi_journal.cfg")
+        story=load_journal_locale(ROOT)
         for section in ("journal-title","journal-story","journal-tip"):
             block=story.split("["+section+"]",1)[1].split("\n[",1)[0]
             self.assertIn("signal-network=",block)
