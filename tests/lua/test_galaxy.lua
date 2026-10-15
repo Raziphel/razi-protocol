@@ -268,8 +268,9 @@ local function test_routes()
   check(routes["razi-sye-vibrant-sye-beetlejuice"]==nil,
     "A direct route bypasses the native asteroid belt")
   check(routes["razi-sye-vibrant-asteroid-belt-outer-edge"]~=nil and
-    routes["razi-sye-vespera-aquilo"]~=nil,
-    "Exterior supply corridor or Vespera alternative is missing")
+    routes["razi-razi-vespera-belt-outer-aquilo"]~=nil
+    and routes["razi-muria-razi-vespera-belt-inner"]~=nil,
+    "Exterior Vespera ice route or survey approach is missing")
   check(not routes["razi-sye-vibrant-fulgora"]
     and not routes["razi-sye-vibrant-ribbonia"],
     "Slip Stream-to-inner planet bypass must be removed")
@@ -302,7 +303,7 @@ local function test_routes()
         {"razi-hyarion-corrundum",29500},
         {"razi-gleba-apia-carnova-orbit",26000},
         {"razi-sye-vibrant-asteroid-belt-outer-edge",36000},
-        {"razi-sye-vespera-aquilo",28000},
+        {"razi-razi-vespera-belt-outer-aquilo",28000},
         {"razi-fulgora-ribbonia",19500},
         {"razi-ribbonia-asteroid-belt-inner-edge",24000},
                 {"razi-vulcanus-castra",17500},
@@ -576,6 +577,12 @@ local function test_research()
 		"Tenebris lacks Umbra entry gate")
     check(list_contains(technologies["planet-discovery-rubia"].prerequisites,
       "razi-vespera-belt-survey"), "Rubia bypasses its belt survey")
+    check(list_contains(technologies["planet-discovery-aquilo"].prerequisites,
+      "razi-vespera-belt-survey"), "Aquilo bypasses the debris survey")
+    check(list_contains(technologies["razi-vespera-belt-survey"].prerequisites,
+      "planet-discovery-muria"), "Vespera belt survey requires an exterior planet")
+    check(not list_contains(technologies["razi-vespera-belt-survey"].prerequisites,
+      "planet-discovery-aquilo"), "Vespera survey would deadlock at Aquilo")
     check(list_contains(technologies["planet-discovery-vesta"].prerequisites,
       "razi-umbra-belt-survey"), "Vesta bypasses its belt survey")
   check(list_contains(technologies["planet-discovery-paracelsin"].prerequisites,
