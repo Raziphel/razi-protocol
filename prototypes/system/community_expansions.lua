@@ -32,7 +32,7 @@ local candidates = {
     preserve_routes=true}
 }
 
--- Nonstandard content is registered via optional dependencies, but must
+-- Nonstandard content is recommended for 2.1 when compatible, but must
 -- keep its original routes/surface lifecycle:
 -- rabbasca-underground: hidden, moving subsurface; no platform arrivals.
 -- Solar-Halo: unusual twin solar orbit/station and harmful halo-flare routes.

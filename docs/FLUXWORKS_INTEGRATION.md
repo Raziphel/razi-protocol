@@ -1,6 +1,6 @@
 # FluxWorks industrial companion (experimental)
 
-FluxWorks 0.2.12+ is an **optional** industrial expansion for Razi Protocol. It is not another galaxy or science overhaul. Install FluxWorks plus FluxWorksAssets and its own required dependencies to play the additional factories, machines, materials and Flux-processing chains.
+FluxWorks 0.2.12+ is a **manually installed, hidden optional** industrial expansion for Razi Protocol. It is not another galaxy or science overhaul. Install FluxWorks plus FluxWorksAssets and its own required dependencies to play the additional factories, machines, materials and Flux-processing chains.
 
 ## Who owns what
 
@@ -8,7 +8,7 @@ FluxWorks 0.2.12+ is an **optional** industrial expansion for Razi Protocol. It 
 - **FluxWorks:** machines, processing recipes, industrial components, four Flux spectra, specialist mastery projects, and phase/rift devices.
 - **K2SO:** source-defined materials and its native research paths.
 
-FluxWorks detects Razi automatically. Razi's dependency `? FluxWorks >= 0.2.12` establishes data-stage ordering: FluxWorks establishes its items, Razi adds the final campaign bridges. Do not make FluxWorks depend on Razi as well.
+FluxWorks detects Razi automatically. Razi's hidden optional dependency `(?) FluxWorks >= 0.2.12` establishes data-stage ordering: FluxWorks establishes its items, Razi adds the final campaign bridges. Do not make FluxWorks depend on Razi as well.
 
 ## Changes when both are installed
 

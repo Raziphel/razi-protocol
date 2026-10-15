@@ -8,15 +8,13 @@ Igrys, Rabbasca, Foliax, Obsidiax, Carna, Velora, Khemia, Arcanyx and Balack.
 This brings those worlds into the same
 installed campaign as the existing core Planetaris/K2SO planets.
 
-**Three conventional worlds cannot safely be promoted yet:**
+**Two conventional worlds remain unported:** `dea-dia-system` and
+`pelagos` have no official Factorio 2.1 release, so neither appears in
+the 2.1 dependency manifest. Their guarded code can be re-enabled after
+the original mods publish compatible versions.
 
-- `dea-dia-system`: current official portal release targets Factorio 2.0.
-- `pelagos`: current official portal release targets Factorio 2.0.
-- `planet-ferrum`: Razi's optional minimum (0.1.4) currently exceeds the
-  discoverable Factorio 2.1 release (0.1.3); confirm a compatible version
-  before making it required.
-
-The above three remain optional, with guarded Razi integrations.
+`planet-ferrum >= 0.1.4` is now advertised as **recommended**, not
+required. Its source-owned unusual planet mechanics remain intact.
 Nexus and Void Processing are separate, substantial endgame branches;
 Hephaestus, Solar Halo and Rabbasca Underground have specialized nonplanet
 location mechanics. None of those are silently made ordinary planets.
@@ -28,7 +26,7 @@ retain their native parent worlds. Do not move the unique Cerys nuclear
 puzzle behind a manufactured Razi science bottleneck.
 
 The base and Space Age engine minimum is 2.1.20, as required by recent
-Cerys builds. Installed optional world version floors for Foliax and
+Cerys builds. Pinned companion version floors for Foliax and
 Rabbasca were lowered to public 2.1 releases documented by the portal;
 source API and whole-pack load still need validation.
 

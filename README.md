@@ -116,9 +116,10 @@ Full Factorio startup and installed-save tests remain outstanding.
 
 **2.1.64: Curated recommended companions.** Factorio 2.1's new
 recommended dependency marker now advertises AAI Signal Transmission
-and Imersite Asteroids without requiring either. FluxWorks and other
-larger or incompatible optional integrations remain opt-in while their
-minimum releases and full-game compatibility are verified. See
+and Imersite Asteroids without requiring either. All eligible Factorio 2.1 companion integrations are now recommended,
+not plain optional. FluxWorks and Outer Rim stay hidden for incompatible or
+unpublished integration constraints. Pelagos and Dea Dia are omitted until
+their official 2.1 ports ship. See
 [Optional Dependencies](docs/OPTIONAL_DEPENDENCIES.md) for the policy.
 
 **2.1.63: Science and research progression overhaul.** The main
