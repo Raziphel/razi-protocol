@@ -1,3 +1,19 @@
+Version: 2.1.97
+Date: 15. 10. 2026
+  Repair detached Bellicos Point Warden and inconsistent pulsar artwork:
+    - Use one deterministic Bellicos/Aegis coordinate plan for pre-render
+      stellar art and finalized native positions.
+    - Stop calling PlanetsLib:update after sprite-only star cleanup;
+      that recursively moves source children into inconsistent positions.
+    - Reconcile both native prototype types when source compatibility mods
+      register duplicates of the same Aegis waypoint.
+    - Preserve and reposition tagged source artwork using PlanetsLib's
+      original local sprite offsets; never recolor or delete source debris.
+    - Run Bellicos reconciliation after generic galaxy layout and the
+      final critical-location assertion, not ahead of other positioning.
+    - Preserve all cargo, travel, science, source texture and route logic;
+      offline regressions added. In-game checks remain necessary.
+
 Version: 2.1.96
 Date: 15. 10. 2026
   Expedition Journal stability and Bellicos/Beetlejuice starmap repair:

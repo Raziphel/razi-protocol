@@ -21,7 +21,8 @@ require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compat.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
-require("prototypes.system.bellicos").data_final_fixes()
+-- Delay Bellicos native reconciliation until AFTER Razi's general galaxy
+-- relocation pass. Otherwise source Warden can be moved twice.
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 
 -- Old interstellar shortcuts cut across the revised map.
@@ -75,6 +76,7 @@ require("prototypes.system.asteroid_belt_integration").data_final_fixes()
 
 -- Position the map after optional planets register their orbits.
 require("prototypes.system.galaxy_layout").data_final_fixes()
+require("prototypes.system.bellicos").data_final_fixes()
 
 require("prototypes.system.planet_descriptions").data_final_fixes()
 
@@ -188,6 +190,9 @@ require("prototypes.compat.fluxworks_machine_pacing").data_final_fixes()
 -- Final positions, then Razi's own path-aware visual overlay. All
 -- connections are registered before this pass; it never changes travel data.
 require("prototypes.system.galaxy_layout").confirm_critical_positions()
+-- Last strict Bellicos coordinate pass also corrects late source-type
+-- duplicates and matches any PlanetsLib-tagged Aegis art to the positions.
+require("prototypes.system.bellicos").reconcile_final_positions()
 require("prototypes.system.route_highlights").data_final_fixes()
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
