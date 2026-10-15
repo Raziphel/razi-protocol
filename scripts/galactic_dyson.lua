@@ -70,12 +70,12 @@ function M.render(parent,player,options)
  local phase=M.research_phase(completed)
  local hero=parent.add{type="frame",direction="horizontal",
    style="inside_deep_frame"}
- hero.style.padding=12
+ hero.style.padding=10
  hero.style.horizontally_stretchable=true
  local art=hero.add{type="sprite",
    sprite="razi-dyson-works-stage-"..math.min(6,completed)}
  art.resize_to_sprite=false
- local art_size=options.width and options.width<540 and 80 or 128
+ local art_size=options.width and options.width<540 and 72 or 96
  art.style.width=art_size
  art.style.height=art_size
  art.style.stretch_image_to_widget_size=true
@@ -109,12 +109,19 @@ function M.render(parent,player,options)
    -- Timeline entries read as engineering milestones, not repeated tiles.
    local frame=scroll.add{type="flow",direction="vertical"}
    frame.style.horizontally_stretchable=true
-   frame.style.vertical_spacing=4
+   frame.style.vertical_spacing=3
    local h=frame.add{type="flow",direction="horizontal"}
+   h.style.horizontal_spacing=8
+   h.style.vertical_align="center"
+   local marker=label(h,stage.tech.researched and "✓" or "○")
+   marker.style.font_color=stage.tech.researched
+      and {r=.55,g=.83,b=.68} or {r=.85,g=.70,b=.46}
    local caption=label(h,L(stage.heading))
    caption.style.font="default-bold"
-   label(h,stage.tech.researched and L("dyson-completed")
+   local state=label(h,stage.tech.researched and L("dyson-completed")
       or L("dyson-pending"))
+   state.style.font_color=stage.tech.researched
+      and {r=.55,g=.83,b=.68} or {r=.85,g=.70,b=.46}
    if not stage.tech.researched then
      local missing={}
      for _,prereq in pairs(stage.tech.prerequisites or {}) do

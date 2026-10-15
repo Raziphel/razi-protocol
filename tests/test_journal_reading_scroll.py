@@ -9,7 +9,8 @@ class JournalPolish(unittest.TestCase):
         for name in ("navigation","reading","chapter_reading","archive_reading","project_reader"):
             self.assertIn("razi_journal_"+name+"=true",x)
         self.assertIn("collect_scrolls(frame,saved_scrolls)",x)
-        self.assertIn("restore_scrolls(frame,saved_scrolls",x)
+        self.assertIn("restore_scrolls(frame,saved_scrolls,reveal_on_redraw)",x)
+        self.assertIn("local reveal_on_redraw=p.reveal_selection==true",x)
         self.assertIn("scroll.tags={razi_scroll_context=quest.id}",x)
         self.assertIn("reading.tags={razi_scroll_context=chosen.id}",x)
         self.assertIn("scroll.tags={razi_scroll_context=p.project}",read("scripts/razi_journal_projects.lua"))

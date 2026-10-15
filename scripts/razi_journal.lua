@@ -1267,6 +1267,7 @@ local function draw(player,focus_search)
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
   local size=M.layout(player.display_resolution,player.display_scale)
+  local reveal_on_redraw=p.reveal_selection==true
   local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
   local window_theme=themes.get(chapter_theme)
   local saved_scrolls={}
@@ -1395,7 +1396,6 @@ local function draw(player,focus_search)
     projects.render(body,player,p,size)
   else
     local selected=select_quest(player.force,p,context,plan)
-    local intentional_reveal=p.reveal_selection
     local search=render_chapters(body,player,p,context,size,view,plan)
     -- Normal chapter expand/collapse and dossier clicks retain the user's
     -- location in the list. Explicit quest navigation may deliberately
@@ -1415,7 +1415,7 @@ local function draw(player,focus_search)
       wrap(empty,L("missing-quest"),size.reader-40)
     end
   end
-  restore_scrolls(frame,saved_scrolls,p.reveal_selection==true)
+  restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
   local foot=wrap(frame,L("footer-hint"),size.width-38)
   foot.style.font_color=COLOR.quiet
 end
