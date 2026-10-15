@@ -493,7 +493,7 @@ chapters advancing upward to Deep Space and Bellicos.
 
 ### Skewer Shattered expedition and final victory
 
-- Skewer's real `skewer_shattered_planet` now sits **19 chart units
+- Skewer's real `skewer_shattered_planet` now sits **11.5 chart units
   almost directly SOUTH** of the original `shattered-planet` Approach.
   Their source route is only **1,000 km**: the short map hop finally matches
   the feel of the gameplay length. Its `skewer_lost_beyond` child remains
@@ -507,11 +507,12 @@ chapters advancing upward to Deep Space and Bellicos.
 
 - The Bellicos near-orbit remains a short 3-unit hop from the remote pulsar.
   The Aegis Inner Edge now sits above-right of near-orbit (29, .205);
-  Point Warden below-right (48, .285); Aegis Outer Edge farther down-right
-  (74, .33); and the Bellicos-side stargate lower-left (57, .43).
-  Every destination gets a separate vertical lane and alternating caption
-  direction. The route graph, original 250,000 km access route, and source
-  pulsar artwork do not change.
+  Point Warden east in its own branch (48, .255); Aegis Outer Edge
+  turns south-east (66, .345); and the Bellicos-side stargate continues
+  just beyond it (81, .37), without the old western detour.
+  Distinct departure bearings from Inner Edge prevent doubled-looking
+  ribbons. Source routes, asteroid hazards, the original 250,000 km
+  access journey, and the pulsar artwork are unchanged.
 - The layout writer now synchronizes **native origin, distance and
   orientation** after PlanetsLib's orbit update in both data and
   final-fixes. This prevents an old horizontal marker row from surviving

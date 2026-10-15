@@ -32,6 +32,33 @@ class BellicosCoherence(unittest.TestCase):
         self.assertNotIn('PlanetsLib:update(',final)
         self.assertIn('bellicos.reconcile_final_positions()',final)
 
+    def test_aegis_waypoints_have_distinct_route_bearings(self):
+        """The inner crossing must not look like overlapping red tracks."""
+        import math
+        import re
+        source=(ROOT/"prototypes/system/bellicos.lua").read_text()
+        def placement(name):
+            match=re.search(
+                rf'append\({re.escape(name)},near,virtual_near,([\d.]+),([\d.]+)',
+                source)
+            self.assertIsNotNone(match,name)
+            radius,turn=(float(v) for v in match.groups())
+            return (radius*math.sin(2*math.pi*turn),
+                    -radius*math.cos(2*math.pi*turn))
+        inner=placement('"aegis-inner-edge"')
+        warden=placement('name')
+        outer=placement('"aegis-outer-edge"')
+        gate=placement('bellicos_gate')
+        departure1=(warden[0]-inner[0],warden[1]-inner[1])
+        departure2=(outer[0]-inner[0],outer[1]-inner[1])
+        cross=abs(departure1[0]*departure2[1]-departure1[1]*departure2[0])
+        spread=cross/(math.hypot(*departure1)*math.hypot(*departure2))
+        self.assertGreater(spread,.45,"Nearly parallel Aegis departures")
+        self.assertGreater(gate[0],outer[0],"Gate should follow Outer Edge")
+        self.assertGreater(gate[1],outer[1],"Gate should continue south")
+        self.assertLess(math.dist(gate,outer),25,"Gate is too remote")
+        self.assertNotIn('deleteRoutesBetween("aegis-inner-edge"',source)
+
     def test_native_repair_runs_after_general_galaxy_layout(self):
         final=(ROOT/"data-final-fixes.lua").read_text()
         first=final.index('require("prototypes.system.galaxy_layout").data_final_fixes()')

@@ -150,11 +150,23 @@ local inner_x,inner_y=actual_position("aegis-inner-edge")
 local point_x,point_y=actual_position("point-warden")
 local outer_x,outer_y=actual_position("aegis-outer-edge")
 local gate_x,gate_y=actual_position(gate_b)
-check(inner_y<near_y-7 and point_y>near_y+9
-  and outer_y>point_y+20 and gate_y>outer_y+14,
-  "Bellicos labels collapsed back onto a horizontal route")
-check(inner_x<point_x and point_x<outer_x and gate_x<outer_x,
-  "Aegis ring/warden/gateway lost their separated lanes")
+check(inner_y<near_y-7 and point_y>near_y
+  and point_y<near_y+5 and outer_y>point_y+25
+  and gate_y>outer_y+14,
+  "Bellicos labels or Warden branch collapsed back onto a shared line")
+check(inner_x<point_x and point_x<outer_x
+  and gate_x>outer_x and gate_x<outer_x+10,
+  "Bellicos stargate doubles back away from the Outer Edge")
+-- Two long nearly coincident Inner-Edge departures looked like a doubled
+-- route. Require distinct bearings WITHOUT removing any source game route.
+local wx,wy=point_x-inner_x,point_y-inner_y
+local ox,oy=outer_x-inner_x,outer_y-inner_y
+local spread=math.abs(wx*oy-wy*ox)/
+  (math.sqrt(wx*wx+wy*wy)*math.sqrt(ox*ox+oy*oy))
+check(spread>0.45,"Aegis Inner Edge routes became nearly parallel again")
+local gate_dx,gate_dy=gate_x-outer_x,gate_y-outer_y
+check(math.sqrt(gate_dx*gate_dx+gate_dy*gate_dy)<25,
+  "Bellicos stargate is too far from the Outer Edge")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
    "aegis-outer-edge",gate_b}) do
   local body=near_locations[name]
@@ -170,8 +182,8 @@ end
 -- Local radii are stored in orbit metadata; native fields are absolute.
 check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
   and math.abs(near_locations["point-warden"].orbit.distance-48)<.001
-  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-74)<.001
-  and math.abs(near_locations[gate_b].orbit.distance-57)<.001,
+  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-66)<.001
+  and math.abs(near_locations[gate_b].orbit.distance-81)<.001,
   "Aegis sector local radii drifted")
 
 
@@ -229,7 +241,7 @@ for _,name in ipairs({"aegis-inner-edge","point-warden",
     "aegis-outer-edge",gate_b}) do
   local cx,cy=absolute(name)
   local distance=math.sqrt((cx-near_px)^2+(cy-near_py)^2)
-  check(distance<=75,"Aegis location outside its pulsar system: "..name)
+  check(distance<=82,"Aegis location outside its pulsar system: "..name)
 end
 local w_x,w_y=absolute("point-warden")
 check(math.sqrt((w_x-near_px)^2+(w_y-near_py)^2)>40
@@ -296,7 +308,7 @@ local near_x,near_y=actual_position("near-bellicos-orbit")
 for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
   check(body.origin.x==0 and body.origin.y==0
     and math.abs(body.orbit.distance-48)<.001
-    and math.abs(body.orbit.orientation-.285)<.001
+    and math.abs(body.orbit.orientation-.255)<.001
     and body.orbit.parent.name=="near-bellicos-orbit",
     "A Warden native prototype is still marooned near Secretas")
 end
