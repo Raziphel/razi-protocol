@@ -231,7 +231,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local reader_height=compact
     and math.max(175,size.body-175) or size.body
   reader.style.height=reader_height
-  reader.style.padding=13
+  reader.style.padding=11
   local folio=reader.add{type="label",caption=L("project-dossier")}
   folio.style.font="default-bold"
   folio.style.font_color=HUES.gold
@@ -277,12 +277,13 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
     name="razi_journal_project_reader"}
   scroll.style.width=width-32
   scroll.style.height=math.max(80,reader_height-(compact and 185 or 202))
+  scroll.tags={razi_scroll_context=p.project}
   scroll.horizontal_scroll_policy="never"
   scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
   scroll.style.horizontally_squashable=true
   local content=scroll.add{type="flow",direction="vertical"}
   content.style.width=width-54
-  content.style.vertical_spacing=10
+  content.style.vertical_spacing=14
   local options={embedded=true,width=width-68}
   if p.project=="dyson" then
     dyson.render(content,player,options)
