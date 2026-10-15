@@ -1,10 +1,46 @@
-# Optional Asteroid Performance Profiles (Razi Protocol Dev 2.1.106)
+# Optional Asteroid Performance Profiles (Razi Protocol Dev 2.1.108)
 
-All four performance settings are **OFF by default** and are independent
+All six performance settings are **OFF by default** and are independent
 startup options in **Performance Experiments**. Nothing is installed from
 another mod or enabled without player consent. Every pass runs once at
 data-final-fixes, after the source asteroid integrations and Razi's
 Level 1–10 quality-carrier setup. Zero event handlers or timers are added.
+
+## 2.1.108: additional performance experiments and runtime cleanup
+
+Two extra startup controls are independently **OFF by default**:
+
+| Option | Changes | Preserved |
+| --- | --- | --- |
+| Reduce space-combat explosion smoke | Removes smoke and cosmetic particle effects from named asteroid/rocket/railgun/artillery/flak/missile explosions | Damage, animations, sounds, scripted effects and recipes |
+| Compact starmap route overlays | Reduces the overlay's sprite budget from 2,400 to 1,200 and increases chord spacing | Native routes, ten difficulty colors, travel, hostile density and UPS |
+
+Compact mode targets starmap sprite count and rendering overhead, **not
+simulation UPS**. It's disabled for users who prefer smooth curved lines.
+
+An always-on, gameplay-neutral cache reuses immutable connection
+descriptors and the selected startup difficulty mode during asteroid
+spawn replacement. The quality sampler still reads each platform's
+**exact 0–1 progress** for every spawn and makes a fresh quality roll.
+The cache uses weak keys and has no added polling, events or saved data.
+
+Other ideas were rejected as unsafe or redundant: rewritten asteroid
+collectors, removing all chunks, simplifying combat damage, and silently
+deleting starmap art. Existing sky/orbit/halo settings already cover
+other visual compromises without introducing duplicate switches.
+
+### How to benchmark
+
+Use the same save and fast platform on the same level 9–10 corridor.
+Compare all six settings OFF against one option at a time after each
+restart. Check both FPS and UPS with Factorio's debug performance
+timings for one or more minutes of equivalent combat. Attribute gains
+from fewer hostile spawns to the reduced combat workload, not to a
+rendering optimization. Keep only improvements that prove helpful.
+
+Related APIs:
+https://lua-api.factorio.com/latest/prototypes/ExplosionPrototype.html
+https://lua-api.factorio.com/latest/classes/LuaSpacePlatform.html
 
 ## Research and decisions
 
@@ -20,7 +56,7 @@ of, external Factorio mods.
 | Safer Asteroids and Disable All Asteroids (Kryzeth) | Changes asteroid spawn size/frequency | Reduce hostile density only on Level 8–10 areas, optional | Does not remove ALL asteroids or downgrade the challenge scale: those would break Razi's progression/harvest loops. |
 | UPS Friendly Pulse Collectors (deprecated) | Replaces engine collectors with scripted ones | NOT transplanted | The mod author reports native collectors became competitive in Factorio 2.0.26; script-based replacement is especially risky in 2.1. |
 
-### Four settings
+### Six settings
 
 1. **Reduce asteroid destruction particles**: removes cosmetic
    `create-particle` and `create-trivial-smoke` effects from hostile
@@ -42,6 +78,12 @@ of, external Factorio mods.
    or the per-enemy quality grade, and does not lower the campaign's
    ten-level danger labels. It does change the number of enemies
    attacking and therefore makes some late-game routes easier.
+
+5. **Reduce space-combat explosion smoke**: suppresses noninteractive
+   smoke and visual particle effects for targeted space-combat
+   explosion prototypes. Real explosion damage, animation and sound remain.
+6. **Compact starmap route overlays**: maintains the same 10 colors
+   and route geometry with up to 1,200 instead of 2,400 sprite layers.
 
 Unlike the 2.0 fragment mods, Razi does **not** modify chunk mining
 items, source crusher recipes, quality tiers, chest behavior, or

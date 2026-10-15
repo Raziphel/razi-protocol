@@ -142,6 +142,10 @@ rawset(_G,"prototypes",{quality={
   normal={},uncommon={},rare={},epic={},legendary={}
 }})
 local runtime=require("scripts.razi_quality_asteroids")
+local info=runtime.route_metadata(platform.space_connection)
+ok(info.from=="solar-system-edge" and info.to=="nexus"
+  and runtime.route_metadata(platform.space_connection)==info,
+  "Asteroid hot path should reuse identical route descriptors")
 runtime.on_script_trigger_effect({effect_id="other-mod-script",
   source_entity=source})
 ok(called==nil,"Unrelated scripted events must not be intercepted")

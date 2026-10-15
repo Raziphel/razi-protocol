@@ -11,11 +11,13 @@ OPTIONS=(
     "razi-performance-asteroid-particles",
     "razi-performance-weapon-particles",
     "razi-performance-reduced-fragments",
-    "razi-performance-outer-hostile-density"
+    "razi-performance-outer-hostile-density",
+    "razi-performance-space-explosion-smoke",
+    "razi-performance-compact-route-overlays"
 )
 
 class AsteroidPerformanceContracts(unittest.TestCase):
-    def test_all_four_independently_off_by_default(self):
+    def test_all_six_independently_off_by_default(self):
         settings=get("settings.lua")
         import re
         for option in OPTIONS:
@@ -33,7 +35,7 @@ class AsteroidPerformanceContracts(unittest.TestCase):
 
     def test_no_tick_handlers_and_performance_guards(self):
         src=get("prototypes/system/asteroid_performance.lua")
-        self.assertIn('if not (debris or weapon or fragments or density) then return 0 end',src)
+        self.assertIn('if not (debris or weapon or fragments or density or smoke) then return 0 end',src)
         self.assertIn('if already then return 0 end',src)
         self.assertIn('for _,group in ipairs({"asteroid","asteroid-chunk"})',src)
         self.assertIn('create-trivial-smoke',src)
@@ -47,9 +49,30 @@ class AsteroidPerformanceContracts(unittest.TestCase):
     def test_effects_are_preserved_when_opted_out(self):
         src=get("prototypes/system/asteroid_performance.lua")
         self.assertIn('return item~=nil and item.value==true',src)
-        self.assertIn('if not (debris or weapon or fragments or density) then return 0 end',src)
+        self.assertIn('if not (debris or weapon or fragments or density or smoke) then return 0 end',src)
         self.assertIn('return changed and rebuilt or node,removed,halved',src)
         self.assertIn('if r>0 or f>0 then proto[key]=altered end',src)
+
+    def test_space_explosion_effects_and_quality_route_cache(self):
+        perf=get("prototypes/system/asteroid_performance.lua")
+        self.assertIn('local function space_explosion_smoke()',perf)
+        self.assertIn('proto.smoke_count=0',perf)
+        self.assertIn('modify_field(proto,"explosion_effect",true,false)',perf)
+        self.assertIn('explosion_smoke=smoke and space_explosion_smoke() or 0',perf)
+        handler=get("scripts/razi_quality_asteroids.lua")
+        self.assertIn('local connection_routes=setmetatable({},{__mode="k"})',handler)
+        self.assertIn('route_metadata(connection)',handler)
+        self.assertIn('platform.distance,mode()',handler)
+        self.assertNotIn("on_tick",handler)
+
+    def test_compact_route_atlas_keeps_native_lines_and_danger_colors(self):
+        src=get("prototypes/system/route_ribbons.lua")
+        self.assertIn('function compact()',src)
+        self.assertIn('is_compact and 1200 or LAYER_BUDGET',src)
+        self.assertIn('cost and 96 or ROUTE_LIMIT',src)
+        self.assertIn('ladder.route_level(',src)
+        self.assertIn('shift={(a.x+b.x)*16,(a.y+b.y)*16}',src)
+        self.assertNotIn("script.on_event",src)
 
     def test_native_fragments_and_chunks_do_not_cross(self):
         src=get("prototypes/system/asteroid_performance.lua")
