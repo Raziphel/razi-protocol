@@ -53,8 +53,9 @@ single mandatory chain:
   established Moshine junction.
 - Vibrant routes arriving traffic through the sole western asteroid
   crossing before the interior Ribbonia/Fulgora connection.
-- Vespera links the Slip Stream to Aquilo directly and rotates Muria
-  slightly to keep the triangular inner routes readable.
+- Vespera places boiling Muria before the debris divide, then branches
+  toward Rubia/greenhouse-ocean Maraxsis or the farther frozen Aquilo.
+  The sole physical belt crossing divides its inner and outer regions.
 - Beetlejuice already has a Cubium/Linox/Secretas alternative circuit
   and needs no extra crossed line at its gateway.
 - Umbra retains the gateway/Tenebris/Crucible triangle; Tenebris–Carna
@@ -62,7 +63,9 @@ single mandatory chain:
 
 The original three asteroid belt crossings, source-owned moons,
 research-gated destinations and interstellar hub connections are
-unchanged. Only available destinations receive their matching links.
+preserved. Vespera now surveys its debris crossing after Muria instead
+of Aquilo to prevent an inaccessible outer-world research prerequisite.
+Only available destinations receive their matching links.
 Test older platform schedules on a backed-up save after updating.
 
 ## Solaris closed orbital circuit (2.1.48)

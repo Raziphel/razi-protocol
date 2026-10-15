@@ -184,9 +184,11 @@ The Vibrant rim names `asteroid-belt-inner-edge` and
 This is a Razi-authored replacement, not a copy of the former mod.
 
 The Vibrant detour still gates travel toward Paracelsin and Beetlejuice.
-Vespera's Aquilo→Rubia shortcut and Umbra's Crucible→Vesta shortcut remain
-replaced by mandatory physical crossings, preserving custom asteroid species
-from the retired routes.
+Vespera's retired Aquilo→Rubia shortcut remains suppressed, with its
+custom asteroid species preserved on the physical crossing. Muria now
+unlocks the survey, which precedes the independent Aquilo and Rubia
+outer routes. Umbra's Crucible→Vesta shortcut also remains replaced
+by its mandatory physical crossing.
 
 ## In-transit asteroid fields
 
