@@ -155,11 +155,13 @@ for _,name in ipairs({"aegis-inner-edge","point-warden",
    "aegis-outer-edge",gate_b}) do
   local body=near_locations[name]
   local orbit=body.orbit
-  check(body.distance==orbit.distance
-    and body.orientation==orbit.orientation,
-    "PlanetsLib orbit and native coordinate disagree: "..name)
-  check(body.origin.x==near_x and body.origin.y==near_y,
-    "Bellicos child still renders at the original source origin: "..name)
+  check(type(body.distance)=="number"
+    and type(body.orientation)=="number",
+    "Missing absolute native coordinate: "..name)
+  check(body.origin.x==0 and body.origin.y==0,
+    "Late Factorio coordinates must be independent of relative source origin: "..name)
+  check(type(orbit)=="table" and orbit.parent.name=="near-bellicos-orbit",
+    "Aegis still has the wrong navigation parent: "..name)
 end
 check(math.abs(near_locations["aegis-inner-edge"].distance-29)<.001
   and math.abs(near_locations["point-warden"].distance-48)<.001
@@ -263,9 +265,9 @@ local n,art=dual.reconcile_final_positions()
 check(n>=5 and art==1,"Bellicos reconciliation failed or lost source art")
 local near_x,near_y=actual_position("near-bellicos-orbit")
 for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
-  check(body.origin.x==near_x and body.origin.y==near_y
-    and math.abs(body.distance-48)<.001
-    and math.abs(body.orientation-.285)<.001
+  check(body.origin.x==0 and body.origin.y==0
+    and math.abs(body.orbit.distance-48)<.001
+    and math.abs(body.orbit.orientation-.285)<.001
     and body.orbit.parent.name=="near-bellicos-orbit",
     "A Warden native prototype is still marooned near Secretas")
 end

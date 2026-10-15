@@ -272,3 +272,7 @@ require("prototypes.system.asteroid_performance").data_final_fixes()
 -- early-loaded planet mods have used them; no invalid prototype fields
 -- may reach the Factorio graphics validator.
 require("prototypes.compat.legacy_lava_cleanup").data_final_fixes()
+
+-- Absolute last coordinate pass. Nothing may reposition Aegis nodes after
+-- this point, including legacy source-map or visualization modules.
+require("prototypes.system.bellicos").reconcile_final_positions()
