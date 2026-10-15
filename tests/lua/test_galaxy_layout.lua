@@ -22,7 +22,7 @@ for _,name in ipairs({
   "muria","aquilo","rubia","maraxsis",
   "cubium","linox-planet_linox","tenebris","vesta",
   "cerys","rabbasca","optional-source-world",
-  "igrys","foliax","obsidiax","carna","ferrum",
+  "igrys","foliax","obsidiax","carna","ferrum","shchierbin",
   "alchemy-planet","arcanyx","bm-balack"
 }) do planets[name]={name=name} end
 
@@ -149,7 +149,8 @@ layout.data_final_fixes()
 for _,entry in ipairs({
   {"igrys","solaris"}, {"foliax","nyxaris"},
   {"obsidiax","vespera"}, {"carna","umbra"},
-  {"ferrum","vibrant"}, {"alchemy-planet","vibrant"},
+  {"ferrum","vibrant"}, {"shchierbin","vibrant"},
+  {"alchemy-planet","vibrant"},
   {"arcanyx","umbra"}, {"bm-balack","vespera"}
 }) do
   local name,parent=entry[1],entry[2]
@@ -231,7 +232,7 @@ check(math.abs(hx)<1 and math.abs(hy-20)<.01,
 local managed_planets={"vulcanus","castra","arig","hyarion","tellus",
   "corrundum","igrys","gleba","moshine","panglia","foliax",
   "fulgora","ribbonia","paracelsin","muria","aquilo","rubia",
-  "maraxsis","obsidiax","cubium","linox-planet_linox",
+  "maraxsis","obsidiax","shchierbin","cubium","linox-planet_linox",
   "tenebris","vesta","carna","ferrum","arcanyx","bm-balack"}
 for _,name in ipairs(managed_planets) do
   check(planets[name].draw_orbit==true,

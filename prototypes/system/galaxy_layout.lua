@@ -88,6 +88,9 @@ local optional_orbits={
   -- approaches never serve as a bypass to Vesta.
   {name="carna",star="umbra",radius=29,turn=0.55},
   {name="ferrum",star="vibrant",radius=62,turn=0.83},
+  -- Opt-in Shchierbin stays outside the required 31/39-unit belt and
+  -- follows Paracelsin, not a shortcut from the inner electrical worlds.
+  {name="shchierbin",star="vibrant",radius=59,turn=0.77},
   {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
   {name="arcanyx",star="umbra",radius=27,turn=0.39},
   -- Balack is an optional outer-ice spur beside Aquilo.

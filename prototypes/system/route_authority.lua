@@ -23,6 +23,12 @@ local side_routes={
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
   {"velora","gleba",14000,"biological"},
+  -- Optional staff side-worlds. Native routes and recipes win: add only a
+  -- fallback if a supported source planet is installed without its link.
+  -- Preserve Eneas's native Nauvis moon, Unit-05 and launch gantry.
+  {"eneas","nauvis",9000,"starter"},
+  -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
+  {"shchierbin","paracelsin",21000,"chemistry_deep"},
   -- Extra optional loops were redundant and visually cluttered the chart.
   -- Carna already has the Slip Stream; Arcanyx already has Tenebris.
 }

@@ -16,9 +16,11 @@ class RequiredWorldTests(unittest.TestCase):
             self.assertIn(name,by_name)
             self.assertFalse(by_name[name].startswith(("? ","+ ")),name)
         self.assertEqual(len(names),11)
-        for retired in ('nulla','PlanetAthos','biological-machines-planet-wit','shchierbin','moon-eneas'):
+        for retired in ('nulla','PlanetAthos','biological-machines-planet-wit'):
             self.assertIn('! '+retired,deps)
             self.assertFalse(any(d.startswith(retired+' >=') for d in deps))
+        self.assertIn('? moon-eneas >= 1.0.10',deps)
+        self.assertIn('? shchierbin >= 0.3.19',deps)
         self.assertIn('planet-muluna >= 2.7.25',deps)
         self.assertIn('panglia_planet >= 0.7.2',deps)
     def test_unsupported_planet_ports_not_advertised(self):
