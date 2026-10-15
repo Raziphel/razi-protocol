@@ -3,6 +3,7 @@
 local M={}
 local catalog=require("scripts.galactic_trade_catalog")
 local signals=require("prototypes.compat.aai_signal_partnerships")
+local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
 local function label(parent,caption,style)
   local obj=parent.add{type="label",caption=caption}
@@ -28,6 +29,10 @@ end
 local function sprite_for(kind,name)
   local path=kind.."/"..name
   return valid_sprite(path) and path or nil
+end
+local function fixed_sprite(parent,kind,name,role)
+  local path=sprite_for(kind,name)
+  if path then return icons.sprite(parent,path,role) end
 end
 local function item_proto(name,kind)
   if not prototypes then return nil end
@@ -108,11 +113,7 @@ local function source_worlds(parent,entry,width)
     line.style.vertical_align="center"
     local icon=sprite_for("planet",name)
       or sprite_for("space-location",name)
-    if icon then
-      local art=line.add{type="sprite",sprite=icon}
-      art.style.width=20
-      art.style.height=20
-    end
+    if icon then icons.sprite(line,icon,"cargo_world") end
     wrap(line,world_title(name),math.max(80,math.floor((width-43)/2)))
   end
 end
@@ -139,12 +140,7 @@ local function supplier_recipe(parent,part,width)
       local proto=item_proto(name,kind)
       local line=grid.add{type="flow",direction="horizontal"}
       line.style.vertical_align="center"
-      local sprite=sprite_for(kind,name)
-      if sprite then
-        local art=line.add{type="sprite",sprite=sprite}
-        art.style.width=20
-        art.style.height=20
-      end
+      fixed_sprite(line,kind,name,"cargo_material")
       local amount=input.amount or input[2] or 1
       wrap(line,{"",tostring(amount)," × ",
         proto and proto.localised_name or name},
@@ -172,12 +168,7 @@ local function science_requirements(parent,tech,width)
     if name then
       local line=grid.add{type="flow",direction="horizontal"}
       line.style.vertical_align="center"
-      local image=sprite_for("item",name)
-      if image then
-        local sprite=line.add{type="sprite",sprite=image}
-        sprite.style.width=18
-        sprite.style.height=18
-      end
+      fixed_sprite(line,"item",name,"cargo_science")
       local item=item_proto(name,"item")
       local amount=input.amount or input[2] or 1
       wrap(line,{"",tostring(amount)," × ",
@@ -203,12 +194,14 @@ local function blockers(parent,state,width)
   end
 end
 
-local function codex_link(parent,technology_name,caption)
+local function codex_link(parent,technology_name,caption,inline)
   local id=catalog.quest_for_technology(technology_name)
   if not id then return false end
-  parent.add{type="button",caption=caption,
+  local control=parent.add{type=inline and "label" or "button",
+    style=inline and "clickable_label" or nil,caption=caption,
     tooltip=L("trade-open-codex-tooltip"),
     tags={razi_ops_action="cargo-codex",value=technology_name}}
+  if inline then control.style.font_color={r=.60,g=.80,b=.97} end
   return true
 end
 
@@ -221,85 +214,101 @@ local function consumers(parent,row,width,p)
     tostring(#row.upgrades)),width)
   local bar=parent.add{type="progressbar",
     value=row.researched_upgrades/#row.upgrades}
-  bar.style.width=math.max(140,width-25)
-  bar.style.height=7
+  bar.style.width=math.max(110,width-10)
+  bar.style.height=6
   bar.style.color={r=.47,g=.80,b=.67}
-  for _,consumer in ipairs(row.upgrades) do
-    local line=parent.add{type="flow",
-      direction=width<350 and "vertical" or "horizontal"}
-    line.style.vertical_align="center"
-    if p.cargo_target==consumer.name then
-      local selected=wrap(line,L("trade-linked-target"),width-30)
-      selected.style.font_color={r=.68,g=.82,b=.98}
-    end
-    local image=sprite_for("technology",consumer.name)
-    if image then
-      local icon=line.add{type="sprite",sprite=image}
-      icon.style.width=22
-      icon.style.height=22
-    end
-    local entry=wrap(line,consumer.technology.localised_name,
-      math.max(115,width-105))
-    entry.tooltip=L("trade-upgrade-tooltip")
-    local mark=label(line,L("trade-state-short-"..consumer.state.status))
-    mark.style.font_color=consumer.state.status=="researched"
+  local list=parent.add{type="flow",direction="vertical"}
+  list.style.vertical_spacing=8
+  for index,consumer in ipairs(row.upgrades) do
+    -- Keep all details of a research milestone in one contained row. Native
+    -- tech sprites can be huge; each is now a fixed 19px Codex emblem.
+    local entry=list.add{type="flow",direction="vertical"}
+    entry.style.width=width
+    entry.style.vertical_spacing=3
+    local line=entry.add{type="flow",direction="horizontal"}
+    line.style.horizontal_spacing=8
+    line.style.vertical_align="top"
+    fixed_sprite(line,"technology",consumer.name,"cargo_research")
+    local copy=line.add{type="flow",direction="vertical"}
+    copy.style.vertical_spacing=3
+    local name=wrap(copy,consumer.technology.localised_name,
+      math.max(105,width-56))
+    name.style.font="default-bold"
+    name.style.tooltip=L("trade-upgrade-tooltip")
+    local metadata=copy.add{type="flow",
+      direction=width<275 and "vertical" or "horizontal"}
+    metadata.style.horizontal_spacing=12
+    metadata.style.vertical_spacing=3
+    local state=label(metadata,L("trade-state-short-"..consumer.state.status))
+    state.style.font_color=consumer.state.status=="researched"
       and {r=.51,g=.88,b=.69} or {r=1,g=.75,b=.49}
-    if catalog.quest_for_technology(consumer.name) then
-      codex_link(parent,consumer.name,L("trade-open-codex-short"))
+    codex_link(metadata,consumer.name,L("trade-open-codex-short"),true)
+    if p.cargo_target==consumer.name then
+      local selected=wrap(entry,L("trade-linked-target"),width-12)
+      selected.style.font_color={r=.68,g=.82,b=.98}
     end
     if p.cargo_focus==row.config.id and
       p.cargo_target==consumer.name then
-      science_requirements(parent,consumer.technology,width)
-      blockers(parent,consumer.state,width)
+      science_requirements(entry,consumer.technology,width)
+      blockers(entry,consumer.state,width)
+    end
+    if index<#row.upgrades then
+      local separator=entry.add{type="line",direction="horizontal"}
+      separator.style.horizontally_stretchable=true
     end
   end
 end
 
-local function render_chain(parent,row,p,width)
+local function render_chain(parent,row,p,width,index)
   local entry=row.config
   local card=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   card.style.width=width
-  card.style.padding=10
+  card.style.padding=12
+  local inner=width-32
+  local folio=label(card,L("trade-chain-folio",string.format("%02d",index)))
+  folio.style.font="default-bold"
+  folio.style.font_color=p.cargo_focus==entry.id
+    and {r=.91,g=.75,b=.52} or {r=.58,g=.71,b=.79}
   local header=card.add{type="flow",direction="horizontal"}
+  header.style.horizontal_spacing=10
   header.style.vertical_align="center"
   local icon=sprite_for("item",entry.id)
     or sprite_for("technology",entry.id)
-  if icon then
-    local art=header.add{type="sprite",sprite=icon}
-    art.style.width=36
-    art.style.height=36
-  end
+  if icon then icons.sprite(header,icon,"cargo_chain") end
   local top=header.add{type="flow",direction="vertical"}
-  top.style.vertical_spacing=2
-  local name=wrap(top,row.technology.localised_name,width-77)
+  top.style.vertical_spacing=4
+  local name=wrap(top,row.technology.localised_name,
+    math.max(105,inner-56))
   name.style.font="heading-2"
-  status(top,row.state,width-77)
+  status(top,row.state,math.max(105,inner-56))
+  local description=wrap(card,L("trade-chain-"..entry.key),inner)
+  description.style.font_color={r=.80,g=.83,b=.85}
   if entry.deep then
-    local deep=wrap(card,L("trade-deep-only"),width-20)
+    local deep=wrap(card,L("trade-deep-only"),inner)
     deep.style.font_color={r=.86,g=.67,b=.97}
   end
-  wrap(card,L("trade-chain-"..entry.key),width-20)
   if p.cargo_target==entry.id then
-    local selected=wrap(card,L("trade-linked-target"),width-20)
+    local selected=wrap(card,L("trade-linked-target"),inner)
     selected.style.font_color={r=.67,g=.84,b=.98}
   end
   if p.cargo_focus==entry.id then
-    source_worlds(card,entry,width-20)
-    heading(card,L("trade-ingredients"),width-20)
-    supplier_recipe(card,entry,width-20)
-    science_requirements(card,row.technology,width-20)
-    blockers(card,row.state,width-20)
+    source_worlds(card,entry,inner)
+    heading(card,L("trade-ingredients"),inner)
+    supplier_recipe(card,entry,inner)
+    science_requirements(card,row.technology,inner)
+    blockers(card,row.state,inner)
   end
-  consumers(card,row,width-20,p)
+  consumers(card,row,inner,p)
   local actions=card.add{type="flow",
-    direction=width<350 and "vertical" or "horizontal"}
-  actions.style.horizontal_spacing=8
+    direction=inner<275 and "vertical" or "horizontal"}
+  actions.style.horizontal_spacing=12
+  actions.style.vertical_spacing=4
   local action=actions.add{type="button",
     caption=L(p.cargo_focus==entry.id and "trade-hide-details"
       or "trade-details"),tags={razi_ops_action="cargo-focus",value=entry.id}}
   action.style.font="default-bold"
-  codex_link(actions,entry.id,L("trade-open-codex"))
+  codex_link(actions,entry.id,L("trade-open-codex-short"),true)
 end
 
 -- Read-only communication research and operator guide. AAI owns the
@@ -333,7 +342,11 @@ function M.render(parent,player,p,options)
   local size=layout(player,options.width)
   local network=catalog.snapshot(player.force)
   local fleet=M.summary(player.force)
-  local title=label(parent,L("trade-title"),"heading-2")
+  local masthead=parent.add{type="flow",direction="horizontal"}
+  masthead.style.horizontal_spacing=9
+  masthead.style.vertical_align="center"
+  fixed_sprite(masthead,"technology","interplanetary-trade-logistics","cargo_header")
+  local title=label(masthead,L("trade-title"),"heading-2")
   title.style.font_color={r=.58,g=.80,b=.98}
   wrap(parent,L("trade-intro"),size.width)
   -- A single logistics ledger replaces four generic dashboard tiles.
@@ -412,8 +425,8 @@ function M.render(parent,player,p,options)
       column_count=size.compact and 1 or 2}
     grid.style.horizontal_spacing=8
     grid.style.vertical_spacing=8
-    for _,row in ipairs(network.parts) do
-      render_chain(grid,row,p,size.card)
+    for index,row in ipairs(network.parts) do
+      render_chain(grid,row,p,size.card,index)
     end
     wrap(scroll,L("trade-research-not-production"),size.width-30)
   end
