@@ -157,7 +157,11 @@ function M.is_navigation_highlight(route,scope)
   if type(route)~="table" or type(route.from)~="string"
     or type(route.to)~="string" or route.hidden
     or route.from==route.to then return false end
-  if unsafe_endpoint[route.from] or unsafe_endpoint[route.to] then
+  -- Only explicitly known native connection geometry is rendered. The old
+  -- Carna/Gleba dotted artifacts came from unrelated decorative sprites,
+  -- not from these actual connection paths. All may use real geometry.
+  if scope~="all" and
+    (unsafe_endpoint[route.from] or unsafe_endpoint[route.to]) then
     return false
   end
   if hazards.is_belt_crossing(route) then return true end
@@ -204,6 +208,10 @@ local function is_major(route,a,b)
     or (route.shape=="line" and magnitude(a,b)>=38)
 end
 
+-- Keep geometry available for the isolated, antialiased ribbon renderer.
+M.route_path=route_path
+M.is_major=is_major
+
 -- A single fixed-size warning beside genuinely hazardous roads. Never
 -- stretch a sprite along a connection: that created the ugly green parallel
 -- line, repeated square joints, and visual seams seen in 2.1.90.
@@ -242,70 +250,13 @@ function M.marker_for_connection(route,mode,scope)
   }
 end
 
--- Compatibility name: now returns zero or one badge, never a run of sprites.
+-- Only the ribbon module draws actual paths. Historical single-dot warning
+-- helpers above are kept for compatibility, but are no longer rendered.
 function M.strokes_for_connection(route,mode,scope)
-  local badge=M.marker_for_connection(route,mode,scope)
-  return badge and {badge} or {}
+  return require("prototypes.system.route_ribbons").strokes_for_connection(
+    M,route,mode,scope)
 end
-
-local function obsolete(layer)
-  local f=layer and layer.filename
-  return type(f)=="string" and f:sub(1,#OLD)==OLD and
-    (f:find("continuous-strokes.png",1,true)
-      or f:find("directional-strokes.png",1,true)
-      or f:match("/guide%-%d+%.png$"))~=nil
-end
-
 function M.data_final_fixes()
-  local startup=settings and settings.startup or {}
-  local mode=startup["razi-route-overlay-mode"]
-    and startup["razi-route-overlay-mode"].value or "danger"
-  local scope=startup["razi-route-overlay-scope"]
-    and startup["razi-route-overlay-scope"].value or "major"
-  local ui=(data.raw["utility-sprites"] or {}).default
-  local atlas=ui and ui.starmap_star
-  if not (atlas and type(atlas.layers)=="table") then return 0 end
-  for i=#atlas.layers,1,-1 do
-    if obsolete(atlas.layers[i]) then table.remove(atlas.layers,i) end
-  end
-  if mode=="off" or (mods and mods["space-route-overlay"]) then return 0 end
-  for _,sprite in ipairs(atlas.layers) do
-    if sprite.filename==WARNING or sprite.filename==WAYPOINT then return 0 end
-  end
-  local candidates={}
-  for name,connection in pairs(data.raw["space-connection"] or {}) do
-    local sprite=M.marker_for_connection(connection,mode,scope)
-    if sprite then
-      candidates[#candidates+1]={
-        name=name,sprite=sprite,
-        priority=(hazards.is_belt_crossing(connection) and 1000 or 0)
-          +(M.route_color_level(connection)
-            or M.threat_tier(connection))*100
-      }
-    end
-  end
-  table.sort(candidates,function(a,b)
-    if a.priority==b.priority then return a.name<b.name end
-    return a.priority>b.priority
-  end)
-  local used,n={},0
-  for _,row in ipairs(candidates) do
-    if n>=MARKER_LIMIT then break end
-    local x,y=row.sprite.shift[1]/32,row.sprite.shift[2]/32
-    local clear=true
-    for _,pos in ipairs(used) do
-      if (pos[1]-x)^2+(pos[2]-y)^2<16 then clear=false break end
-    end
-    if clear then
-      atlas.layers[#atlas.layers+1]=row.sprite
-      used[#used+1]={x,y}
-      n=n+1
-    end
-  end
-  if type(log)=="function" then
-    log("[Razi Protocol/routes] "..n..
-      " individually graded color markers; one native line per connection")
-  end
-  return n
+  return require("prototypes.system.route_ribbons").data_final_fixes(M)
 end
 return M

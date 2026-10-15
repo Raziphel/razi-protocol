@@ -1,3 +1,37 @@
+## 2.1.98: Real colored routes, not colored midpoint pips
+
+Screenshots in 2.1.95 showed a completely grey starmap because the
+ten-stage palette only tinted small, low-visibility single-point markers,
+and the Major route scope excluded most real connections. Those markers
+were never the requested full-length colored routes.
+
+Razi now renders solid, antialiased *colored paths* exactly over verified
+native Factorio connections, while leaving the original travel and hover
+graph alone. A shared 1024x512 sprite atlas contains 128 directions,
+selected for short segments (target 3.6 chart units). Each connection
+is sampled along its real native line or validated arc origin, with
+precise world-coordinate shifts, extra join coverage and no parallel
+offset. The sprite lines are tinted to the same blue-to-red levels 1-10
+used by Quality Asteroids. No dots, square-block seams, invented route
+geometry, or fixed precomputed planet coordinates.
+
+The default scope is now **All**. Old saves with the saved Major
+setting can change the setting to All under Startup Settings to get
+local lines too. Off still suppresses overlays. An adaptive allocation
+caps draw-layer count to 1,600 and shares the budget among known
+connections. In rare very crowded maps, geometry that cannot safely
+be verified is left native-grey, rather than drawing a fake route or
+causing a startup crash. PlanetsLib orbits and all native routes remain
+intact. The old carna/gleba/velora dotted aesthetic is not reintroduced
+because the new atlas is solid and uses actual route geometry.
+
+Asset: `graphics/route-highlights/route-ribbons.png` (shared texture).
+Generator: `node scripts/generate_route_ribbons.js`.
+Renderer: `prototypes/system/route_ribbons.lua`.
+This adds no tick handlers or savegame entities; startup render only.
+Visual alignment, sprite loading and route hover/click behavior still
+require verification in Factorio itself.
+
 ## 2.1.94: 10 distinct quality-danger colors (blue to red)
 
 Razi now uses the first-party 10-level asteroid quality curve as its

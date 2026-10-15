@@ -1,3 +1,19 @@
+Version: 2.1.98
+Date: 15. 10. 2026
+  Restore visible colored paths to the galaxy starmap:
+    - Render true route-aligned continuous blue-to-red difficulty paths,
+      replacing the near-invisible midpoint pips from Dev 2.1.95.
+    - Add an antialiased 128-bearing line atlas, short joined pieces,
+      conservative native-arc checks, and 1,600-layer global budget.
+    - Default the Razi route overlay to All; existing Major selections
+      can be changed in startup settings for local route coverage.
+    - Remove legacy route marker layers without restoring dotted paths,
+      offset square seams, or duplicate native connection entities.
+    - Preserve routing, Space Age interaction, asteroid difficulty,
+      and all source-authored planet/starmap positions.
+    - Add generated image, geometric coverage and settings regression
+      fixtures. Full Factorio starmap playtesting is still needed.
+
 Version: 2.1.97
 Date: 15. 10. 2026
   Repair detached Bellicos Point Warden and inconsistent pulsar artwork:

@@ -22,7 +22,8 @@ class GraphicsCleanupTests(unittest.TestCase):
         self.assertTrue((GRAPHICS / "route-highlights/continuous-strokes.png").exists())
         self.assertIn(
             "continuous-strokes.png",
-            (ROOT / "prototypes/system/route_highlights.lua").read_text())
+            (ROOT / "prototypes/system/route_ribbons.lua").read_text())
+        self.assertTrue((GRAPHICS / "route-highlights/route-ribbons.png").exists())
 
     def test_no_obsolete_convergence_placeholder_images(self):
         self.assertFalse(any((GRAPHICS / "convergence").glob("*.png")))

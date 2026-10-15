@@ -84,7 +84,10 @@ class OuterMap(unittest.TestCase):
         self.assertIn('layer.planetslib_orbit_name=="carna"',layout)
         self.assertIn('layer.planetslib_orbit_name=="velora"',layout)
         highlights=read("prototypes/system/route_highlights.lua")
-        self.assertIn('{"carna","gleba","velora"}',highlights)
+        # Keep source-art removal while allowing *validated native* Carna
+        # and Gleba connections in the All quality-colored route scope.
+        self.assertIn('scope~="all"',highlights)
+        self.assertIn("unsafe_endpoint",highlights)
 
     def test_system_ownership_and_native_science_keep_their_order(self):
         atlas=read("scripts/galactic_catalog.lua")
