@@ -52,6 +52,8 @@ deleteRoutesBetween("linox-planet_linox", "rubia")
 deleteRoute("sye-vibrant-shchierbin")
 deleteRoutesBetween("sye-vibrant", "shchierbin")
 
+require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()
+
 local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
 if ribbonia then
 	ribbonia.starmap_icon = "__ribbonia__/graphics/starmap/ribbonia2048.png"
