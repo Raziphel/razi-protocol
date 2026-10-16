@@ -90,8 +90,15 @@ local function check_existing_transceivers()
 	end
 end
 
-local function repair_nexus_technology_visibility()
-	-- Nexus-Updated is the 2.1 fork of Nexus with the same prototype names.
+local function repair_nexus_technology_visibility(event)
+	-- Repair the legacy Nexus migration only when Nexus itself changes.
+	-- A normal Razi update or another mod's configuration change must not
+	-- override technology gates deliberately disabled by another mod.
+	local changes = event and event.mod_changes
+	if not (changes and (changes["Nexus"] or changes["Nexus-Updated"])) then
+		return
+	end
+
 	if not (script.active_mods["Nexus"] or script.active_mods["Nexus-Updated"]) then
 		return
 	end
@@ -99,7 +106,10 @@ local function repair_nexus_technology_visibility()
 	for _, force in pairs(game.forces) do
 		for _, technology_name in ipairs(nexus_visibility_technologies) do
 			local technology = force.technologies[technology_name]
-			if technology and not technology.researched and not technology.enabled then
+			local prototype = technology and technology.prototype
+			-- Respect disable/hidden flags from the final loaded prototypes.
+			if technology and not technology.researched and not technology.enabled
+				and prototype and prototype.enabled and not prototype.hidden then
 				technology.enabled = true
 			end
 		end
@@ -113,9 +123,9 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 script.on_init(check_existing_transceivers)
-script.on_configuration_changed(function()
+script.on_configuration_changed(function(event)
 	check_existing_transceivers()
-	repair_nexus_technology_visibility()
+	repair_nexus_technology_visibility(event)
 end)
 script.on_nth_tick(600, check_existing_transceivers)
 script.on_event({
