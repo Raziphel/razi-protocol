@@ -191,7 +191,7 @@ Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather a
 For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
-- Install RAZI Library 1.0.0 or newer; it is now a required shared foundation used directly by Razi Protocol's data-stage compatibility code.
+- Install RAZI Library 1.2.0 or newer; it is now a required shared foundation used directly by Razi Protocol's data-stage compatibility code.
 - Factorio 2.1 migration status and optional third-party compatibility gaps are tracked in [FACTORIO-2.1-COMPATIBILITY.md](FACTORIO-2.1-COMPATIBILITY.md). The required dependency path now consists entirely of native Factorio 2.1 releases.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
@@ -207,6 +207,8 @@ Releases are made by CI from `main` ([.github/workflows/release.yml](.github/wor
 - Do not edit the version in `info.json` or `changelog.txt` by hand, and do not upload zips to the portal: CI does both.
 - Files that stay out of the zip are marked `export-ignore` in [.gitattributes](.gitattributes).
 - The portal page (title, summary, description, tags) comes from [tools/portal/](tools/portal/): edit it there and run `gh workflow run portal.yml`.
+
+How to work on the mod: [contributing.md](contributing.md).
 
 ## Support
 
