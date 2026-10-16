@@ -30,7 +30,7 @@ local function ingredient_amount(ingredient)
 end
 
 local function add_unique_science_pack(ingredients, science_pack, amount)
-	if not (data.raw.tool and data.raw.tool[science_pack]) then
+	if not ((data.raw.tool and data.raw.tool[science_pack]) or (data.raw.item and data.raw.item[science_pack])) then
 		return
 	end
 
