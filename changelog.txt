@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.6
+Date: 2026-10-16
+  Compatibility:
+    - The game loads with Corrundum Krastorio Compatibility+: the omega lab no longer lists XY's removed electrochemical research data
+  Bugfixes:
+    - Moon Eneas' volatile nutrients and spoilage stay in their own crafting tab instead of Razi's surfaces tab
+    - Muria's acidworking science pack sits with the other planet science packs in Science Tab
+    - Updating any other mod no longer re-enables Nexus technologies that were switched off on purpose
+    - With Armoured Biters' nest setting off, armoured biters still come out of the vanilla biter nests
+---------------------------------------------------------------------------------------------------
 Version: 2.1.5
 Date: 2026-10-16
   Compatibility:
