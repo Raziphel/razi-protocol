@@ -1,62 +1,67 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.4
+Date: 2026-10-16
+  Compatibility:
+    - Imersite-Asteroids' inner imersite belt is on the routes to Aquilo again, now that Razi Protocol replaces the Gleba and Fulgora routes it was placed on
+    - Nexus' fusion generator MK2 takes the crystalization limit of the fusion generator, so it can no longer be built on Hyarion
+    - The game loads on Factorio 2.1.22: until Krastorio2-spaced-out, Corrundum, Linox, Panglia, Hyarion, Tellus, Cubium and Vesta are updated, their fluid box temperature limits move to the machines and their water effects take the new texture fields
+    - The game loads with Moon Eneas and LTN together again: the Eneas gantry no longer inherits LTN's upgrade of the train stop
+    - The K2SO cooling recipes of the tech cards make fresh agricultural science packs, and the cooling recipes that no machine can run on any surface are hidden instead of showing in the menus
+    - The logistic and construction mode copies of the Krastorio 2 roboports and Tellus' roboports take the surface conditions of their base roboport, so they no longer stand where Arig's dust or Cerys' pressure keeps the base out
+  Bugfixes:
+    - Agricultural towers without their own seed list no longer plant Moshine's data cells, which belong to the processing grid
+    - Hiding the redundant assembler tiers no longer hides unrelated technologies without effects, such as Nexus storm prediction, the Lurker, Friend and Supply technologies and Rubia's unknown technologies
+    - Muluna's nanofoamed polymers research costs 1000 of the vanilla and planetary science packs again: science packs that Factorio 2.1 defines as items are no longer skipped
+    - The Muluna space telescope keeps the vanilla science packs and the K2 tech cards, which Factorio 2.1 defines as items, instead of only the packs defined as tools
+    - The singularity theory, test fire and stable singularity technologies cost the system tech cards, K2 tech cards and promethium science again instead of nothing
+---------------------------------------------------------------------------------------------------
 Version: 2.1.3
 Date: 08. 10. 2026
   Compatibility:
     - Require PlanetsLib 2.0.0 or newer for native starmap orbit rendering.
-
   Graphics:
     - Removed legacy orbit sprite overrides throughout Razi Protocol's systems so the base game and PlanetsLib draw standard orbit rings.
     - Preserve third-party custom orbit styles, including special dashed orbits, instead of replacing them with Razi Protocol's standard ring textures.
-
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.2
 Date: 07. 10. 2026
   Compatibility:
     - Added support for ArmouredBiters21Compat so the Factorio 2.1 fork receives the intended enemy autoplace and Hyarion pollution handling.
-
   Bugfixes:
     - Gated the Auric Tech Card behind steam recycler research so it is no longer offered at the start of the game when K2SO Enhancements removes its original prerequisite.
     - Adjusted black hole discovery costs when Nexus is absent so the technology no longer requires a Deep Space Tech Card that no available lab can accept.
-
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.1
 Date: 05. 10. 2026
   Compatibility:
     - Added optional support for VoidProcessing-Updated, the maintained Factorio 2.1 fork of Void Processing.
-
   Bugfixes:
     - Corrected the duplicate 1.3.0 changelog heading so the historical 1.3.1 release is displayed with its proper version and date.
-
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
 Date: 03. 10. 2026
   Features:
     - Added full Russian localization for Razi Protocol's system names, technology names, compatibility labels, and startup settings.
     - Made Razi Protocol's previously hardcoded English prototype names fully localizable while preserving their existing English text.
-
   Compatibility:
     - Added pollution absorption to Arig and Hyarion terrain so pollution now dissipates normally on the enemy planets instead of spreading indefinitely across their surfaces.
     - Added the Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space Tech Cards to the Omega Lab so it can research the endgame technologies that consume them.
     - Updated Planetaris compression and agricultural-tower research triggers to recognize Krastorio's `kr-glass` item.
     - Kept the K2SO molten and cast rare-metals recipes on the Foundry unlock, preventing them from appearing before a compatible crafting machine is available.
-
   Bugfixes:
     - Corrected the Void Processing and Nexus-Threat recipe identifiers used by progression gating, preventing their late-game recipes from being craftable at the start of the game.
     - Added the missing English name and description for the redundant assembler tier startup setting.
     - Repaired changelog formatting so Factorio can parse and display the complete in-game changelog.
-
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
 Date: 30. 09. 2026
   Bugfixes:
     - Improved the active transceiver gate check for existing saves and configuration changes. It now uses Factorio's per-force entity count instead of searching every surface, preserving the existing unlock behavior with less periodic work.
-
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.1
 Date: 27. 09. 2026
   Bugfixes:
     - Restored system and chapter Tech Card requirements across the progression tree by applying progression after the Tech Card prototypes are created. This fixes upgraded and new Factorio 2.1 games where only Vibrant-linked discoveries retained their intended system cards.
-
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
 Date: 21. 09. 2026
@@ -68,7 +73,6 @@ Date: 21. 09. 2026
     - Converted Dea Dia, Pelagos, Nexus, Celestial Weather, and Celestial Weather Additions into optional integrations so their 2.0-only releases no longer block the native 2.1 pack.
     - Removed duplicate dependency and incompatibility declarations from the mod metadata.
     - Added Bellicos and Aegis 0.4.0 as a required Factorio 2.1 expedition, including its verified asset, turret, asteroid-fix, and PlanetsLib dependency closure.
-
   Compatibility:
     - Replaced Razi Protocol's duplicated technology, prototype lookup, recipe mutation, and unique-list operations with the corresponding RAZI Library APIs while preserving the existing progression and starmap behavior.
     - Rehomed the Aegis expedition beyond the solar-system edge, removed its direct Nauvis/Fulgora and former Calidus bypasses, and preserved the complete Aegis, Warden, and Bellicos internal route.
@@ -82,43 +86,36 @@ Date: 21. 09. 2026
     - Ensured the normal system tech cards remain accepted by regular labs when Nexus is absent.
     - Audited the complete required dependency closure against the official Factorio Mod Portal; every portal-hosted mod on the required path now has a native Factorio 2.1 release.
     - Validated the complete required-only mod set with Factorio 2.1.19 through all data stages and final prototype validation.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.13
 Date: 07. 09. 2026
   Bugfixes:
     - Removed Cerys from Cold Biters' enemy routing and tile restrictions, so its compact moon surface no longer receives frost-biter generation or the related pollution mechanics.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.12
 Date: 06. 09. 2026
   Bugfixes:
     - Fixed the Nexus technology visibility upgrade repair crashing on Factorio 2.0 saves. The repair now reads Factorio's active-mod table from the runtime script interface.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.11
 Date: 06. 09. 2026
   Bugfixes:
     - Stopped adding every science pack to Nexus's Omega Lab. The K2 Singularity Lab now accepts only the Promethium-882, Antimatter, and Deep Space science packs needed for the late-game route.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.10
 Date: 06. 09. 2026
   Bugfixes:
     - Restore every Nexus 1.3.4 technology node that may remain disabled after an upgrade. Existing research is preserved and prerequisites still gate each node; this only lets the normal Nexus research tree become visible and researchable again.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.9
 Date: 06. 09. 2026
   Bugfixes:
     - Restore the disabled `rare-metal-refining`, `nexus-sand-processing`, and `promethium-882-research` technologies when upgrading with Nexus installed, so existing saves show their normal unresearched technology nodes again without unlocking research early.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.8
 Date: 02. 09. 2026
   Bugfixes:
     - Made the Atomizer, Atomic Separator, and Photon Enrichment Chamber recipes portable so players can build and ship the Nexus bootstrap machines before travelling there, while keeping later Nexus material processing planet-bound.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.7
 Date: 09. 07. 2026
@@ -142,33 +139,28 @@ Date: 09. 07. 2026
     - Added a guarded `metallurgic-science-pack` prerequisite for `access-to-suns-orbit` / `access-to-sun-orbit` if that technology ID is present.
     - Added a guarded `electromagnetic-science-pack` prerequisite for `aircraft-energy-shields` / `lex-aircraft-energy-shields` if that technology ID is present.
     - Reordered the most confusing reported research band so crusher/sand/glass, electricity/electronics/logistics/fast inserters, the Nexus reveal chain, Cubium jelly progression, and black-hole discovery now sort more closely to the intended route in the technology menu.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.5
 Date: 30. 06. 2026
   Bugfixes:
     - Kept Cerys support wired into the Calidus chapter without letting it become the preferred unlock gate for `calidus-tech-card`, so Muluna remains the main progression entry and Cerys can stay a temporary optional side path.
     - Removed `cerysian-science-pack` from the Calidus tech-card recipe compression, so enabling Cerys no longer turns that optional branch into a mandatory craft cost for the rest of the chapter.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.4
 Date: 29. 06. 2026
   Changes:
     - Returned `moon-eneas` to an optional dependency in `info.json` so Eneas stays a supported Calidus side branch instead of a mandatory content gate for the whole pack.
     - Updated the pack overview copy to describe Eneas as optional support again, keeping the README and mod description aligned with the actual guarded route/progression integration.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.3
 Date: 26. 06. 2026
   Bugfixes:
     - Rolled back K2SO dependency!  Now requires older version.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.1
 Date: 26. 06. 2026
   Bugfixes:
     - Guarded the deep-space orbit and route rewrites so Razi Protocol only updates `black-hole-approach`, `black-hole`, `oort-cloud`, `sol`, and their connections when those space-location prototypes actually exist, preventing startup crashes from `PlanetsLib:update() - space-location not found: black-hole-approach` in current public modpack builds.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.6.0
 Date: 24. 06. 2026
@@ -181,30 +173,25 @@ Date: 24. 06. 2026
     - Rebranched Shchierbin from Paracelsin instead of the Vibrant slipstream, and moved its discovery prerequisite to the Paracelsin branch so the map route and tech tree match.
     - Nudged Linox farther north in the Beetlejuice system so its orbit placement reads more cleanly on the starmap after the system move.
     - Returned `VoidProcessing` to an optional dependency in `info.json` instead of forcing it as a required content mod for the main pack.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.5.4
 Date: 23. 06. 2026
   Changes:
     - Added optional support for Linox, Shchierbin, and Muria, and listed those planets in the pack metadata and overview docs.
     - Slotted Linox into the Solaris chapter as an optional side branch while routing Muria and Shchierbin into the Vibrant chapter instead of leaving them on disconnected vanilla-style routes.
-
   Bugfixes:
     - Added guarded route rewrites for `linox-planet_linox`, `muria`, and `shchierbin`, so their starmap positions and travel links now fit the Razi Protocol layout when those mods are present.
     - Added Science Tab grouping for `muriatic-science-pack`, `vanadium-science-pack`, and Linox's data cards, so those planets no longer leave their science surfaces scattered across default subgroups.
     - Made Muria optionally gate Aquilo when installed and forced Muria/Shchierbin discovery technologies onto the same Vibrant chapter card pattern as the rest of that branch.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.5.3
 Date: 23. 06. 2026
   Changes:
     - Added optional Eneas modpack support, including recommended companion dependencies for `moon-eneas` and its required support mods.
     - Slotted Eneas into the Calidus chapter as an optional side moon instead of turning Solaris or later system progression into an Eneas gate.
-
   Bugfixes:
     - Added a guarded Eneas starmap normalization pass that re-anchors the `eneas` moon onto Nauvis when the planet exists, so it fits the Calidus layout more cleanly.
     - Added Science Tab subgroup handling for `ambition-science-pack`, so Eneas science stays grouped with the other planet packs when both mods are loaded.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.5.2
 Date: 22. 06. 2026
@@ -213,61 +200,51 @@ Date: 22. 06. 2026
     - Forced the late K2 antimatter chain back onto `promethium-science-pack` if another compat pass injects `deep-space-tech-card`, preventing the Deep Space card route from looping back through `kr-antimatter-reactor`.
     - Added an explicit `planet-crucible-science-pack` prerequisite to technologies that consume Crucible/high-pressure science aliases, so high-pressure branches no longer appear in the tree before their actual science gate.
     - Added explicit `planet-crucible-science-pack` prerequisites to reported late-tech outliers such as `kr-matter-processing`, the Dyson Sphere branch, `foundation`, `captive-biter-spawner`, `planet-crucible-lithium-hydride`, `muluna-fertilized-greenhouses-vulcanus`, and `maraxsis-nuclear-submarine`, so they stop appearing researchable long before the Crucible gate in this progression pack.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.5.1
 Date: 15. 06. 2026
   Bugfixes:
     - Added `kr-ai-core` back to `kr-automation` as an explicit prerequisite, so advanced assembling machines no longer unlock before the AI-core research their recipe depends on.
     - Stripped non-tool research ingredients from `muluna-space-telescope` in final fixes, preventing placeholder items like `qw-debug-cone_inverted-empty` from crashing the mod stack during menu load.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.9
 Date: 13. 06. 2026
   Bugfixes:
     - Hardened the K2 sand compatibility seam against `nulls-k2so-tweaks` renaming `kr-sand` to `sand`, so the forced crusher recipe now follows the surviving sand prototype and mirrors old `kr-sand` tech unlocks onto the renamed recipe instead of leaving progression or accepted-input checks behind.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.3
 Date: 12. 06. 2026
   Bugfixes:
     - Cleared invalid hidden `next_upgrade` targets after redundant-tier cleanup, so Mini/Micro Machines no longer crash when copied assembler upgrade chains point at hidden tier-4 machines from Lithium Battery or similar optional mods.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.2
 Date: 6. 06. 2026
   Bugfixes:
     - Made `paracelsin-krastorio-compatibility-plus` a required dependency instead of leaving it on the incompatible list, so the intended Paracelsin + Krastorio 2 Spaced Out compat layer now loads with the pack.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.1
 Date: 6. 06. 2026
   Bugfixes:
     - Added a new `razi-hide-redundant-assembler-tiers` startup setting, enabled by default.
     - Hid the redundant Hyarion and Lithium Battery assembly-machine-4 tiers so Krastorio 2's earlier advanced assembler no longer leaves those later sidegrades cluttering progression and Factoriopedia.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.4.0
 Date: 2. 06. 2026
   Changes:
     - Replaced the old required `castra` dependency with `castra-prime` and added `castra-krastorio-compatibility-plus`.
     - Made Cerys optional while keeping Calidus Tech Card unlocks available through Muluna/space-science fallback progression.
-
   Bugfixes:
     - Added detected Cerys science packs/tech cards to Biolab inputs without re-adding them to every generic lab.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.9
 Date: 2. 06. 2026
   Bugfixes:
     - Removed the Cerys science/card requirement from `solaris-discovery` again, so Cerys can stay an optional side path while Solaris unlocks from the base inner-system progression.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.8
 Date: 2. 06. 2026
   Bugfixes:
     - Removed additional unwanted Ribbonia routes in final fixes by deleting `moshine-ribbonia` and `igrys-orbit-ribbonia`.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.7
 Date: 1. 06. 2026
@@ -275,7 +252,6 @@ Date: 1. 06. 2026
     - Removed the extra Crucible-to-Ribbonia orbit route by deleting `crucible-orbit-ribbonia` in final fixes.
     - Reverted the generic-lab Cerys science input injection, so Cerys science packs/tech cards are no longer globally added to non-Cerys research labs.
     - Reverted the Solaris Cerys-path simplification by requiring `moon-discovery-cerys` for `solaris-discovery` again and restoring Solaris discovery to the pre-1.3.4 inner-system science tier.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.6
 Date: 27. 05. 2026
@@ -284,7 +260,6 @@ Date: 27. 05. 2026
       `planetaris-compression` now unlocks after crafting 50 `glass`,
       `planetaris-raw-diamond-production` now unlocks after crafting 50 `kr-quartz`,
       and `condensing-agricultural-tower` now unlocks after crafting 25 `glass`.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.5
 Date: 22. 05. 2026
@@ -292,40 +267,34 @@ Date: 22. 05. 2026
     - Removed the legacy `prototypes/technology/system_cards.lua` path so system tech-card handling now lives in the compat flow without duplicate definitions.
     - Updated Solaris and Castra progression wiring so both use the intended post-base card-driven science routing.
     - Narrowed Calidus unlock candidate injection in lab-card compat to avoid forcing older Castra/Muluna unlock wiring.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.4
 Date: 21. 05. 2026
   Bugfixes:
     - Fixed Cerys science packs/tech cards not being accepted by non-Cerys research labs by adding detected Cerys science inputs to generic lab inputs in final fixes.
     - Removed the Cerys path from Solaris discovery by dropping `moon-discovery-cerys` as a prerequisite and restoring Solaris discovery science to the base tier.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.1
 Date: 18. 05. 2026
   Bugfixes:
     - Added Paracelsin to the required mod list.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.3.0
 Date: 15. 05. 2026
   Bugfixes:
     - Cery's science packs/tech cards can no properly leave Cerys to be used for research on any planet!
     - Added more mods to the incompatible list to prevent crashes from missing content when optional dependencies are not present, including a new incompatibility for Redrawn Space Connections to prevent crashes from its removed space connection entities.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.6
 Date: 12. 05. 2026
   Bugfixes:
     - Fixed circular dependency in Castra planet discovery so it now requires base science packs instead of inner-system science packs, allowing players to unlock it sooner after discovering Solaris.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.5
 Date: 6. 05. 2026
   Changes:
     - Made `Imersite-Asteroids` an optional dependency instead of a required one.
     - Restored modded science packs and custom system tech cards to vanilla science-pack weight so they match the default packs again.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.4
 Date: 4. 05. 2026
@@ -333,13 +302,11 @@ Date: 4. 05. 2026
     - Fixed labs and biolabs so the system tech cards and required K2 tech cards are accepted properly.
     - Fixed the Vibrant branch planet discoveries so Ribbonia, Paracelsin, Aquilo, Rubia, and Maraxsis all use the same compact Calidus/Solaris/Nyxaris card requirement pattern as the other system planet discoveries.
     - Removed the stray Vulcanus to Ribbonia route again by deleting the connection by endpoints instead of only one route id spelling.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.3
 Date: 3. 05. 2026
   Bugfixes:
     - Fixed the stupid labs not showing the right science packs, oh my god...
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.1
 Date: 22. 04. 2026
@@ -352,7 +319,6 @@ Date: 22. 04. 2026
     - Restored distinct Vibrant-branch discovery science so Aquilo and the other moved planets no longer get flattened onto the same post-Nyxaris pack set.
     - Removed the weird route from Vulcanus to Ribbonia that was added an update.
     - Added some new dependencies for Tenebris to make it a whole lot better all around and hide bloat.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.5
 Date: 20. 04. 2026
@@ -365,7 +331,6 @@ Date: 20. 04. 2026
     - Moved Secretas' golden science into the Beetlejuice tech card tier so system cards match the new layout.
     - Removed Razi's item, recipe, entity, and technology title/description overrides from the planet unlock polish pass.
     - Updated the deep-space gate so Nexus, promethium, and the transceiver route follow Frozeta's new late-game position.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.4
 Date: 18. 04. 2026
@@ -373,7 +338,6 @@ Date: 18. 04. 2026
     - Replaced the original xy-k2so-enhancements dependency with xy-k2so-enhancements-nulls-fork.
     - Marked the original xy-k2so-enhancements mod as incompatible so both forks are not loaded together.
     - Updated the XY/K2SO compatibility patches so they detect the Nulls fork.
-
 ---------------------------------------------------------------------------------------------------
 Version: 1.1.3
 Date: 17. 04. 2026
@@ -385,7 +349,6 @@ Date: 17. 04. 2026
     - Adjusted Moshine and Rubia long inserter behavior so the two unlock lines feel less identical.
     - Made Cubium dream belt recipes slower conversion routes with quality support.
     - Adjusted tiny solar panels to behave as compact but fragile layout pieces.
-
   Changes:
     - Removed the K2SO Singularity Tech Card ingredient from the Deep Space Tech Card recipe so singularity science stays in the final transceiver chain instead of appearing too early.
     - Reworked Muluna green plastic research so it still requires several Space Age planets, but no longer pulls in confusing unrelated modded planet requirements.
@@ -393,7 +356,6 @@ Date: 17. 04. 2026
     - Added Imersite asteroid spawns to late Beetlejuice and Deep Space routes so Imersite is no longer effectively locked around Fulgora.
     - Kept Terra Palus as a required content mod while leaving its route alone, since it is handled as a moon of Gleba by its source mod.
     - Split Beetlejuice progression into clearer branches, keeping Cubium/Vesta progression separate from the Tenebris/Crucible side route.
-
   Bugfixes:
     - Integrated the Maraxsis/K2SO collision-mask drill compatibility behavior directly into Razi Protocol and marked the standalone fix-fix mod as incompatible.
     - Fixed late-game Deep Space card recipe clutter caused by the Singularity Tech Card appearing before the intended finale.
@@ -401,6 +363,5 @@ Date: 17. 04. 2026
     - Fixed K2SO 1.6 Matter research data being hard-locked to Aquilo pressure only, which stranded the matter tech card in Razi's moved progression.
     - Fixed Beetlejuice routes so Vesta sits between Cubium and Aquilo, with Tenebris and Crucible on their own side route.
     - Added final-fixes guards around several optional prototype polish changes so missing optional content does not crash data stage.
-
   Info:
     - Updated README and mod page description to document the new crafting tab, prototype polish, Imersite asteroid route changes, and current compatibility notes.
