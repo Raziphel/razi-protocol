@@ -36,7 +36,7 @@ The minimum versions below are now recorded in `info.json`.
 - `apia >= 0.3.1`
 - `Moshine >= 1.2.10`
 - `panglia_planet >= 0.6.1`
-- `tenebris-prime >= 1.3.12`
+- `tenebris-prime >= 1.3.15`
 - `secretas >= 1.0.37`
 - `maraxsis >= 1.39.1`
 - `rubia >= 0.69.159`
@@ -53,7 +53,6 @@ The minimum versions below are now recorded in `info.json`.
 - `xy-k2so-enhancements-nulls-fork >= 0.8.5`
 - `science-tab >= 1.13.0`
 - `rubia-krastorio-compatibility-plus >= 1.3.0`
-- `tenebris-prime-made-in-hide >= 1.1.0`
 - `paracelsin-krastorio-compatibility-plus >= 1.2.0`
 
 ### Optional
