@@ -67,6 +67,9 @@ if arachnid_spawner and arachnid_spawner.autoplace then
 	arachnid_spawner.autoplace.tile_restriction = arachnid_tiles
 end
 
-add_arachnids_to_planet("arig")
-add_arachnids_to_planet("nexus")
-add_arachnids_to_planet("crucible")
+-- Without a naturally placeable nest, keep the planets' vanilla enemies.
+if enemy_autoplace.has_valid_autoplace(arachnid_spawner) then
+	add_arachnids_to_planet("arig")
+	add_arachnids_to_planet("nexus")
+	add_arachnids_to_planet("crucible")
+end
