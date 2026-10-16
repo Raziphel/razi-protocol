@@ -7,9 +7,11 @@ require("prototypes.compat.moshine_datacells").data_final_fixes()
 require("prototypes.technology.progression")
 require("prototypes.compat.transceiver_endgame").data_final_fixes()
 require("prototypes.compat.nexus_endgame").data_final_fixes()
+require("prototypes.compat.nexus_hyarion_conditions").data_final_fixes()
 require("prototypes.compat.science_tab").data_final_fixes()
 require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 require("prototypes.compat.k2so_tweaks").data_final_fixes()
+require("prototypes.compat.k2so_tech_card_cooling").data_final_fixes()
 require("prototypes.compat.maraxsis_k2so_collision").data_final_fixes()
 require("prototypes.compat.maraxsis_trench_wind").data_final_fixes()
 require("prototypes.compat.progression_polish").data_final_fixes()
@@ -24,6 +26,7 @@ require("prototypes.compat.logistics_cleanup").data_final_fixes()
 require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
+require("prototypes.compat.variant_surface_conditions").data_final_fixes()
 
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
@@ -51,6 +54,8 @@ deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")
 deleteRoute("sye-vibrant-shchierbin")
 deleteRoutesBetween("sye-vibrant", "shchierbin")
+
+require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()
 
 local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
 if ribbonia then
@@ -82,3 +87,6 @@ for _, lab in pairs(data.raw.lab or {}) do
 		lab.inputs = unique_inputs
 	end
 end
+
+-- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
+require("prototypes.compat.factorio_2_1_22").data_final_fixes()

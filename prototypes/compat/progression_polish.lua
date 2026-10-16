@@ -12,8 +12,9 @@ local function recipe_exists(name)
 	return recipe(name) ~= nil
 end
 
+-- Factorio 2.1 science packs can be plain items (the vanilla packs are).
 local function science_pack_exists(name)
-	return data.raw.tool and data.raw.tool[name] ~= nil
+	return (data.raw.tool and data.raw.tool[name] ~= nil) or (data.raw.item and data.raw.item[name] ~= nil)
 end
 
 local function technology_exists(name)
