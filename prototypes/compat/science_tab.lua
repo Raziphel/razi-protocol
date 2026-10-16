@@ -72,7 +72,7 @@ function science_tab.data_final_fixes()
 		"bioluminescent-science-pack",
 		"hydraulic-science-pack",
 		"biorecycling-science-pack",
-		"muriatic-science-pack",
+		"acidworking-science-pack",
 		"rubia-biofusion-science-pack",
 		"vanadium-science-pack",
 		"planet-crucible-science-pack",
