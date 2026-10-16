@@ -1,0 +1,48 @@
+name: Release
+
+# Check and release through GreenTech-Solutions/factorio-mod-tools: the check (Lua 5.2 syntax, luacheck, emmylua_check
+# against the Factorio API, the changelog.txt format, with the settings in .luacheckrc and .emmyrc.json) runs on every
+# push and pull request; the release (version, changelog.txt, info.json, mod portal, GitHub release) runs on a push to
+# main that has releasable commits since the last tag. See "Releases" in README.md.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check the mod
+        uses: GreenTech-Solutions/factorio-mod-tools@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
+
+  release:
+    name: release
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Release
+        uses: GreenTech-Solutions/factorio-mod-tools/release@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          factorio-token: ${{ secrets.FACTORIO_TOKEN }}

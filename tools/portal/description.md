@@ -1,0 +1,114 @@
+# DESCRIPTION UPDATE COMING SOON.
+
+# Razi Protocol
+
+Razi Protocol is a progression and starmap overhaul for giant *Factorio: Space Age* + Krastorio 2 Spaced Out planet packs. It is built to turn a huge stack of planets, science packs, enemy mods, and endgame add-ons into one clean multi-system campaign.
+
+Instead of leaving every mod on its own disconnected branch, Razi Protocol:
+
+- Rebuilds the galaxy into progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space.
+- Adds system discovery technologies and system milestone cards.
+- Rehomes many planets so the starmap and tech tree follow one readable route.
+- Integrates Eneas, Linox, Muria, and Shchierbin into that route instead of leaving them as awkward side content.
+- Replaces Nexus omega-science clutter with a cleaner Deep Space card-driven endgame.
+- Pushes the Krastorio intergalactic transceiver into a longer singularity-based finale.
+- Routes optional custom enemy factions onto planets that actually fit their theme.
+- Cleans up Science Tab groupings, overloaded crafting tabs, and several late compatibility seams.
+
+## Chapter Flow
+
+### Calidus
+
+The early inner-system foundation. This is where Muluna, optional Cerys, and Eneas sit, and where the campaign starts building toward Calidus Tech Card.
+
+### Solaris
+
+The first major custom-system chapter. It connects Castra Prime, Arig, Hyarion, Tellus, and Corrundum into a single structured progression region.
+
+### Nyxaris
+
+The mid-tier science chapter that also absorbs Dea Dia-style progression. Apia Carnova, Moshine, Panglia, and Pelagos all feed into this stage.
+
+### Vibrant
+
+The exotic science chapter. Ribbonia, Paracelsin, Muria, Aquilo, Rubia, Maraxsis, and Shchierbin all live here. Muria and Shchierbin are integrated directly into this route instead of being left on vanilla-style offshoots.
+
+### Beetlejuice
+
+The harsh outer-system chapter. Cubium, Tenebris, Crucible, Vesta, Secretas, Frozeta, and the road to the solar-system edge live here. Linox now also sits in this later chapter as a Cubium-side branch.
+
+### Deep Space
+
+The final chapter. Nexus, the black-hole chain, Oort Cloud, Sol, optional Void Processing, antimatter, promethium, and the transceiver finale all converge here.
+
+## System Cards
+
+Razi Protocol uses system cards to keep late research readable.
+
+Instead of requiring giant walls of individual science packs on every late technology, the mod compresses chapter mastery into:
+
+- Calidus Tech Card
+- Solaris Tech Card
+- Nyxaris Tech Card
+- Vibrant Tech Card
+- Beetlejuice Tech Card
+- Deep Space Tech Card
+
+That preserves the scale of the pack without turning the technology screen into a mess.
+
+## Planet Integrations
+
+Several supported planets are deliberately placed inside the campaign structure:
+
+- Eneas stays in the early Calidus phase.
+- Muria becomes part of the Vibrant route ahead of Aquilo.
+- Shchierbin now branches from Paracelsin.
+- Linox is moved into Beetlejuice instead of hanging off Vulcanus or Solaris.
+
+These placements are reflected in both the starmap and the related discovery progression.
+
+## Endgame
+
+Razi Protocol provides its own late-game shape.
+
+Nexus omega sciences are hidden behind a cleaner Deep Space card route. The solar-system edge becomes the bridge into the final chapter. The transceiver is moved later and wrapped in a singularity research chain:
+
+- Intergalactic Singularity Theory
+- Intergalactic Singularity Test Fire
+- Stable Intergalactic Singularity
+- Intergalactic Signal Lock
+
+Optional Void Processing is supported as a Deep Space branch rather than forced as mandatory core progression.
+
+## Enemy Routing
+
+Supported optional enemy mods can be reassigned to planets that fit their identity, with vanilla biter/worm autoplace suppressed where needed so the custom faction actually defines the planet.
+
+The `razi-enable-enemy-routing` startup setting can disable this behavior if you want the source mods' original enemy placement instead.
+
+## Crafting and UI Cleanup
+
+Razi Protocol also includes quality-of-life cleanup for large modpacks:
+
+- A `Vehicles & Infrastructure` crafting tab
+- Science Tab grouping for system cards and planet research items
+- Narrow balance cleanup for overlapping unlocks
+- Compatibility fixes for K2SO tweak/enhancement layers and several prototype edge cases
+
+## Dependency Philosophy
+
+Razi Protocol is designed for a large dependency stack and expects a big campaign-style setup. Some content is core to the intended route, while other branches remain optional and are treated that way in `info.json`.
+
+If you want the intended experience, use the dependency list in `info.json` as the source of truth and be careful with additional collision-layer-heavy mods.
+
+## Support
+
+- Discord: https://discord.gg/fTEtu64whV
+- Patreon: https://www.patreon.com/cw/Raziphel
+- Foundry community: https://discord.gg/Dn5p7GZpKu
+
+## Credits
+
+Razi Protocol depends on the wider Factorio modding community. Planet content, enemies, mechanics, art, and audio remain the work of their original authors and contributors.
+
+Please see `Credits.txt` for the full acknowledgement list.

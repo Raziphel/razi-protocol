@@ -199,6 +199,15 @@ For the best results:
 
 This is especially true for large combat, terrain, water, vehicle, and planet expansions that can collectively push Factorio near its collision-layer cap.
 
+## Releases
+
+Releases are made by CI from `main` ([.github/workflows/release.yml](.github/workflows/release.yml), through [factorio-mod-tools](https://github.com/GreenTech-Solutions/factorio-mod-tools)): a push to `main` with releasable commits since the last tag bumps `info.json`, writes the `changelog.txt` section, uploads the zip to the mod portal and makes a GitHub release.
+
+- Commit messages, and pull request titles when squash merging, are [conventional commits](https://www.conventionalcommits.org/); the subject becomes the changelog line as it is written. `feat:` is a minor release; `fix:`, `balance:`, `compat:`, `gui:`, `graphics:`, `sound:`, `locale:`, `perf:` and `control:` are patch releases; a breaking change is a major one. `ci:`, `docs:`, `chore:`, `test:` and `refactor:` release nothing.
+- Do not edit the version in `info.json` or `changelog.txt` by hand, and do not upload zips to the portal: CI does both.
+- Files that stay out of the zip are marked `export-ignore` in [.gitattributes](.gitattributes).
+- The portal page (title, summary, description, tags) comes from [tools/portal/](tools/portal/): edit it there and run `gh workflow run portal.yml`.
+
 ## Support
 
 If you enjoy the mod and want to support future updates:
