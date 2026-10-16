@@ -1,6 +1,7 @@
 .codex
 secrets.txt
-tools/
+tools/*
+!tools/portal/
 /.agents
 __pycache__/*
 *.pyc

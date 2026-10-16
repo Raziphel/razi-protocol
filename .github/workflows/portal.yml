@@ -1,0 +1,20 @@
+name: Portal details
+
+# Sets the mod portal page from tools/portal/: gh workflow run portal.yml
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portal:
+    name: portal
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set the portal details
+        run: tools/portal/details.sh
+        env:
+          FACTORIO_TOKEN: ${{ secrets.FACTORIO_TOKEN }}

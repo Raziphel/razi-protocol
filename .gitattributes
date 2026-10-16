@@ -1,0 +1,19 @@
+# line endings stay as they are (no text=auto); binary files are never converted
+*.png binary
+*.jpg binary
+*.ogg binary
+*.wav binary
+
+# files that should not get included in a release zip (the release packs the mod with git archive)
+.github export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+.vscode export-ignore
+# check settings and portal tooling, not part of the mod
+.luacheckrc export-ignore
+.emmyrc.json export-ignore
+tools export-ignore
+# repository documents
+README.md export-ignore
+FACTORIO-2.1-COMPATIBILITY.md export-ignore
+mod_desc.txt export-ignore
