@@ -137,16 +137,20 @@ end
 local function strip_recipe_unlock(recipe_name)
 	for _, technology in pairs(data.raw.technology or {}) do
 		local effects = technology.effects
+		local removed_unlock = false
 		if effects then
 			for index = #effects, 1, -1 do
 				local effect = effects[index]
 				if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
 					table.remove(effects, index)
+					removed_unlock = true
 				end
 			end
 		end
 
-		if effects and #effects == 0 and not technology_has_dependents(technology.name) then
+		-- Never hide an unrelated, already-empty technology. This cleanup
+		-- only owns technologies whose last unlock we actually removed.
+		if removed_unlock and #effects == 0 and not technology_has_dependents(technology.name) then
 			set_hidden_flags(technology)
 		end
 	end
