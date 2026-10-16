@@ -167,7 +167,22 @@ local function replace_technology_ingredient_if_present(technology_name, ingredi
 	end
 end
 
-local function strip_non_tool_technology_ingredients(technology_name)
+local function lab_accepts(input_name)
+	for _, lab in pairs(data.raw.lab or {}) do
+		for _, lab_input in ipairs(lab.inputs or {}) do
+			if lab_input == input_name then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+-- Factorio 2.1 science packs can be plain items (the vanilla packs and the
+-- K2 tech cards are), so a research ingredient is valid when it is an item
+-- of any type that some lab accepts, not only when it is a tool.
+local function strip_non_lab_technology_ingredients(technology_name)
 	local target_technology = technology(technology_name)
 	if not target_technology or not target_technology.unit or not target_technology.unit.ingredients then
 		return
@@ -176,7 +191,7 @@ local function strip_non_tool_technology_ingredients(technology_name)
 	for index = #target_technology.unit.ingredients, 1, -1 do
 		local current_ingredient = target_technology.unit.ingredients[index]
 		local current_name = ingredient_name(current_ingredient)
-		if current_name and not (data.raw.tool and data.raw.tool[current_name]) then
+		if current_name and not (item_exists(current_name) and lab_accepts(current_name)) then
 			table.remove(target_technology.unit.ingredients, index)
 		end
 	end
@@ -431,7 +446,7 @@ function prototype_sanity.data_final_fixes()
 	-- Muluna copies the current vanilla-lab science list onto this technology in
 	-- its own final-fixes pass. In larger mod stacks that can include non-tool
 	-- placeholder items, which Factorio rejects for research units.
-	strip_non_tool_technology_ingredients("muluna-space-telescope")
+	strip_non_lab_technology_ingredients("muluna-space-telescope")
 	break_antimatter_deep_space_loop()
 	enforce_crucible_science_prerequisite()
 	gate_reported_late_technologies_behind_crucible()
