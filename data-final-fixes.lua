@@ -89,5 +89,9 @@ for _, lab in pairs(data.raw.lab or {}) do
 	end
 end
 
+-- Corrundum Compatibility+ removes an obsolete XY research item after some
+-- endgame labs have already registered it as an input.
+require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
+
 -- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()

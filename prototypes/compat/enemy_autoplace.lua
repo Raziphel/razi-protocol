@@ -70,6 +70,15 @@ function enemy_autoplace.entity_exists(entity_type, entity_name)
 	return data.raw[entity_type] and data.raw[entity_type][entity_name]
 end
 
+-- Factorio 2.1 requires a probability expression whenever an entity has
+-- an autoplace table. Some enemy packs use ordinary nests to spawn their
+-- units, and deliberately do not define natural placement for new nests.
+function enemy_autoplace.has_valid_autoplace(entity)
+	local autoplace = entity and entity.autoplace
+	return type(autoplace) == "table"
+		and autoplace.probability_expression ~= nil
+end
+
 function enemy_autoplace.enemy_entity_exists(entity_name)
 	return
 		(data.raw["unit-spawner"] and data.raw["unit-spawner"][entity_name]) or
@@ -144,16 +153,25 @@ function enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 end
 
 function enemy_autoplace.add_entities_to_planet(planet_name, entity_names, control_name, entity_exists)
+	-- Never suppress vanilla enemies unless at least one custom enemy is
+	-- naturally placeable: a prototype's mere existence is not enough.
+	entity_exists = entity_exists or enemy_autoplace.enemy_entity_exists
+	local available = {}
+	for _, entity_name in pairs(entity_names or {}) do
+		if enemy_autoplace.has_valid_autoplace(entity_exists(entity_name)) then
+			available[#available + 1] = entity_name
+		end
+	end
+	if #available == 0 then
+		return
+	end
+
 	local entity_settings = enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 	if not entity_settings then
 		return
 	end
-
-	entity_exists = entity_exists or enemy_autoplace.enemy_entity_exists
-	for _, entity_name in pairs(entity_names or {}) do
-		if entity_exists(entity_name) then
-			entity_settings[entity_name] = {}
-		end
+	for _, entity_name in ipairs(available) do
+		entity_settings[entity_name] = {}
 	end
 end
 
