@@ -29,8 +29,10 @@ if mods["00-razi-protocol-settings"] then return end
         parent = json.loads((ROOT / "info.json").read_text(encoding="utf-8"))
         shim = json.loads((DIR / "info.json").read_text(encoding="utf-8"))
         self.assertEqual(shim["name"], NAME)
+        self.assertEqual(shim["title"], "○  Razi Protocol")
         self.assertEqual(shim["dependencies"], ["base >= 2.1.0"])
         self.assertEqual(parent["name"], "razi-protocol")
+        self.assertEqual(parent["title"], "Razi Protocol")
         self.assertIn("? "+NAME+" >= "+shim["version"], parent["dependencies"])
 
     def test_companion_locale_is_in_sync(self):
@@ -38,7 +40,7 @@ if mods["00-razi-protocol-settings"] then return end
             original = (ROOT / "locale" / lang / "settings.cfg").read_text(encoding="utf-8")
             mirror = (DIR / "locale" / lang / "settings.cfg").read_text(encoding="utf-8")
             self.assertEqual(
-                re.sub(r"(?m)^razi-protocol=.*$", NAME+"=Razi Protocol", original, count=1),
+                re.sub(r"(?m)^razi-protocol=.*$", NAME+"=○  Razi Protocol", original, count=1),
                 mirror,
             )
 

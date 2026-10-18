@@ -7,11 +7,13 @@ It intentionally has only the base-game dependency so it loads *before* Razi Pro
 
 1. Download [00-razi-protocol-settings_1.0.0.zip](../dist/00-razi-protocol-settings_1.0.0.zip) from `companion/dist/` (use GitHub's **Download raw file** action).
 2. Copy the ZIP **without extracting it** into Factorio's `mods` directory, alongside Razi Protocol.
-3. Restart Factorio and open **Settings → Mod settings → Startup**.
+3. Enable the companion in the mod manager, restart Factorio, then open **Settings → Mod settings → Startup**.
+
+**Important:** The companion is a separate mod ZIP. It is not auto-installed merely because Razi Protocol lists it as optional. Without it, settings still work but remain in Razi Protocol's normal alphabetical section.
 
 Razi Protocol still works **without** this companion: its original `settings.lua` registers the settings when the companion is absent. When both are present, Razi Protocol skips its copies and the companion registers *the same* settings IDs, types and defaults once. This avoids duplicate prototypes and keeps existing setting values identified by their original keys.
 
-The companion does not change Razi Protocol's internal mod name, planets, dependencies, technologies or gameplay. The group is displayed as **Razi Protocol**. Its position is based on Factorio's mod ordering; we cannot guarantee it comes before every installed mod without checking the actual game UI.
+The companion does not change Razi Protocol's internal mod name, planets, dependencies, technologies or gameplay. The group is displayed as **○  Razi Protocol** (circle followed by two spaces). The internal `00-` ID encourages early ordering where Factorio sorts by mod identity; the extra subtle space is intended to place it before the common `○ Aegis`, `○ Castra` names where the GUI sorts by displayed title. Factorio owns the final sort algorithm, so verify the result in-game. No setting IDs are changed.
 
 ## Development
 

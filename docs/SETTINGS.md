@@ -4,6 +4,10 @@ Choose **Settings → Mod settings**. Most gameplay and starmap options are **St
 
 The defaults are designed for the main expedition. Optional performance experiments start **off**. Fragment and enemy reductions also change balance, not just visuals.
 
+## Find Razi settings first
+
+Install the optional [early-loading settings companion](../companion/00-razi-protocol-settings/README.md) as a separate enabled mod. It registers the same settings under `○  Razi Protocol` while preserving their IDs, types, defaults, and behavior. Without it, Razi Protocol registers settings normally in its own section. Installing the companion is required to test the early group position: Factorio controls final cross-mod ordering.
+
 ## Quick recommendations
 
 - **First playthrough:** Keep the standard settings, especially curated routes, interdependence = Balanced and ten-level asteroid difficulty = Balanced.

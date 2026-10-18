@@ -28,7 +28,7 @@ for lang in ("en", "ru"):
     original = (ROOT / "locale" / lang / "settings.cfg").read_text(encoding="utf-8")
     replaced, count = re.subn(
         r"(?m)^razi-protocol=.*$",
-        NAME + "=Razi Protocol",
+        NAME + "=○  Razi Protocol",
         original,
         count=1,
     )
