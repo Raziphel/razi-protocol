@@ -248,16 +248,17 @@ without restarting and preserves completed discoveries.
   until their true research or shipment milestone is complete.
   The Projects reader similarly conceals later megaprojects, including
   the Convergence, until their real prerequisite technology is reachable.
-- **Research screen:** Only **Razi-owned technologies** whose real
+- **Research screen:** Future **Razi-owned technologies**, plus future research from other mods when its separate setting is enabled, whose real
   technology prerequisites are still incomplete are temporarily
   disabled and hidden from Factorio's research GUI. Once their
   prerequisites are researched they become available automatically.
   Original enabled and `visible_when_disabled` values are tracked
   for safe restoration.
-- **Third-party mod technologies remain untouched.** No source-mod
-  research graph or prototype is rewritten merely to conceal a title.
-  This is a deliberate compatibility boundary, not complete fog
-  over all externally installed technology.
+- **Third-party prototypes and research graphs remain intact.** The
+  expanded spoiler option temporarily conceals unresearchable external
+  technology rows and restores their previous enabled/visibility state
+  when turned off. If a source mod has dynamic unlocks, disable the
+  expanded fog without disabling Journal protection.
 - **Off:** The Journal reveals its future quests and locked Archive
   titles again; technologies hidden by Razi's fog are restored.
   The setting is global to a multiplayer map because technology
@@ -274,3 +275,17 @@ Lua regression, `tests/test_razi_spoilers.py`, and the existing
 manual-only GitHub Check workflow. Perform a live new-save and
 old-save test, including the ON/OFF setting and native research screen,
 before treating this as fully validated.
+
+## Spoiler control and the first-contact welcome
+
+Do not reveal the Convergence finale in startup notices. The new
+welcome provides only the scale of the expedition, Journal shortcut,
+website, wiki and Discord. Spoiler concealment is default ON for
+the Journal and technology tree, with an independent switch for future
+research from other planet mods. This changes visibility only where
+research is not yet reachable by legitimate prerequisites.
+
+A new map's optional one-time console cleanup is intentionally
+per-player and can remove important third-party warnings. Never attempt
+to intercept or rewrite individual other-mod chat messages.
+

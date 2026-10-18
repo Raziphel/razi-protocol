@@ -3,6 +3,7 @@
 -- changes one research at a time and can be cancelled without a reset.
 local M={}
 local journal=require("scripts.razi_journal")
+local spoiler_fog=require("scripts.razi_spoiler_fog")
 
 local function say(index,message)
   local player=index and game.get_player(index)
@@ -135,6 +136,9 @@ function M.tick()
           local ok,err=pcall(function() tech.researched=true end)
           if ok then
             job.completed=job.completed+1
+            -- Direct scripted research may not fire on_research_finished.
+            -- Release exactly the now-reachable successors in spoiler mode.
+            spoiler_fog.on_research{research=tech}
           else
             job.failed=job.failed+1
             if job.failed<=5 then

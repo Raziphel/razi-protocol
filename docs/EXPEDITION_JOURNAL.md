@@ -552,9 +552,10 @@ controls the shared spoiler mode. A full mod restart is not required.
 - This setting is independent of personal **Dispatches: ON/MUTED**
   controls; discovered lore remains readable even when notifications
   are muted.
-- To keep research integrity, only Razi-owned future technologies
-  are hidden from Factorio's native technology GUI. We never disable
-  third-party planets or technology prototypes.
+- The basic research fog hides Razi-owned future technologies. Its
+  separate expanded option may also conceal unresearchable technologies
+  from other mods without changing their research prototypes. Turn the
+  expanded option OFF if a planet mod uses unusual scripted unlocks.
 - A force's real research achievements remain authoritative. The
   option does not reset objectives, Convergence shipments, scroll
   state or campaign completion.
@@ -562,3 +563,30 @@ controls the shared spoiler mode. A full mod restart is not required.
 The whole spoiler mode is reversible using runtime settings. The
 native research-tree path must still be smoke-tested with the entire
 modpack and older saves before public release.
+
+## Additional research fog and onboarding controls
+
+The Map-tab `razi-hide-spoilers` setting still controls Journal,
+Archives and Razi research fog. A new independent
+`razi-hide-other-tech-spoilers` runtime-global subsetting defaults ON
+and hides future research owned by other mods while the main setting is
+enabled, including techs otherwise rendered in red as locked.
+
+Every technology with satisfied real prerequisites, and every researched
+technology, remains visible and researchable; disabling research that
+players can currently use would make progression impossible. Ownership
+flags in save storage preserve the enabled/visible state for restoration.
+The second toggle can be disabled without revealing Journal spoilers.
+
+On a brand-new map the welcome is queued briefly while other mods print
+their splash messages. Personal `razi-clean-startup-chat` (ON by
+default) optionally calls `LuaPlayer.clear_console()` once before
+printing our localized welcome. **It clears the entire console**, not
+only messages from Nexus or Muluna, and therefore may remove important
+warnings. Old saves and normal later chat are never cleared.
+
+`razi-show-welcome` (ON by default) controls the personal welcome
+message. Players can use `/razi-welcome` to replay its site/wiki/Discord,
+Journal shortcut and admin-only testing tip. The welcome does not reveal
+the ending or change research progression.
+

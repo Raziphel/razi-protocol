@@ -21,6 +21,18 @@ data:extend({
   {type="bool-setting",name="razi-hide-spoilers",
     setting_type="runtime-global",default_value=true,
     order="a0[quality-of-life]-a[hide-spoilers]"},
+  -- Advanced opt-in scope. Main spoiler mode must be enabled to apply.
+  -- Actual science/research already available is always kept visible.
+  {type="bool-setting",name="razi-hide-other-tech-spoilers",
+    setting_type="runtime-global",default_value=true,
+    order="a0[quality-of-life]-b[other-mod-technologies]"},
+  -- Personal onboarding settings, only applied to first-time arrival.
+  {type="bool-setting",name="razi-clean-startup-chat",
+    setting_type="runtime-per-user",default_value=true,
+    order="a1[welcome]-a[compact-console]"},
+  {type="bool-setting",name="razi-show-welcome",
+    setting_type="runtime-per-user",default_value=true,
+    order="a1[welcome]-b[welcome-message]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.

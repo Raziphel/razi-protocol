@@ -68,4 +68,49 @@ check(foreign.enabled and not intentionally_disabled.enabled,
   "Disabling fog must never modify other mods' progression")
 check(not storage.razi_spoiler_technologies[3],
   "Restore must clear only our fog ownership table")
+-- Broader future-research concealment is independently reversible.
+-- Keep every currently researchable technology and every completed science.
+local foreign_parent={name="foreign-parent",researched=false,
+  enabled=true,visible_when_disabled=true,prerequisites={},successors={}}
+local distant={name="red-science-future",enabled=true,researched=false,
+  visible_when_disabled=true,prerequisites={parent=foreign_parent},
+  successors={}}
+local externally_disabled={name="foreign-disabled-visible",enabled=false,
+  researched=false,visible_when_disabled=true,
+  prerequisites={parent=foreign_parent},successors={}}
+local available={name="foreign-available",enabled=true,researched=false,
+  visible_when_disabled=true,prerequisites={},successors={}}
+foreign_parent.successors={distant,externally_disabled}
+force.technologies[foreign_parent.name]=foreign_parent
+force.technologies[distant.name]=distant
+force.technologies[externally_disabled.name]=externally_disabled
+force.technologies[available.name]=available
+setup.global["razi-hide-spoilers"].value=true
+setup.global["razi-hide-other-tech-spoilers"]={value=true}
+fog.sync_force(force)
+check(not distant.enabled and not distant.visible_when_disabled,
+  "Extended research setting must hide future third-party technology")
+check(not externally_disabled.enabled and not externally_disabled.visible_when_disabled,
+  "Disabled but visible red technology must be concealed")
+check(available.enabled and available.visible_when_disabled,
+  "Currently researchable science must never be hidden")
+setup.global["razi-hide-other-tech-spoilers"].value=false
+fog.sync_force(force)
+check(distant.enabled and distant.visible_when_disabled,
+  "Turning off broader fog must restore original external technology")
+check(not externally_disabled.enabled and externally_disabled.visible_when_disabled,
+  "Reversal must not accidentally enable a disabled third-party technology")
+setup.global["razi-hide-other-tech-spoilers"].value=true
+fog.sync_force(force)
+foreign_parent.researched=true
+foreign_parent.force=force
+fog.on_research{research=foreign_parent}
+check(distant.enabled and distant.visible_when_disabled,
+  "Completed prerequisite must immediately reveal future external technology")
+check(not externally_disabled.enabled and externally_disabled.visible_when_disabled,
+  "Source-mod disabled technology must stay disabled after prerequisites")
+setup.global["razi-hide-spoilers"].value=false
+fog.sync_force(force)
+check(stage.enabled and post.enabled and not intentionally_disabled.enabled,
+  "Global switch restores Razi research without breaking intentionally disabled tech")
 print("Razi-owned technology spoiler fog and safe restoration passed")

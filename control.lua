@@ -2,6 +2,7 @@ local razi_journal = require("scripts.razi_journal")
 local story_dispatch = require("scripts.razi_story_dispatch")
 local spoiler_fog = require("scripts.razi_spoiler_fog")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
+local welcome = require("scripts.razi_welcome")
 local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
 local Events = require("__razi_lib__/runtime/events")
@@ -193,6 +194,8 @@ end)
 commands.add_command("razi-cheat",
   {"razi-cheat.help"},
   razi_safe_cheat.command)
+commands.add_command("razi-welcome",
+  {"razi-welcome.command-help"},welcome.command)
 -- Explicit diagnostic only. Never scans recipes, labs or source mods on ticks.
 commands.add_command("razi-audit",
   {"razi-audit.help"},convergence_audit.command)
@@ -209,6 +212,7 @@ end)
 events:on_nth_tick(30, function()
   razi_journal.flush_research_refreshes()
   story_dispatch.flush()
+  welcome.flush()
 end)
 events:on_event({
 	defines.events.on_built_entity,
@@ -241,9 +245,12 @@ events:on_event(defines.events.on_force_created,function(event)
   if event and event.force then spoiler_fog.sync_force(event.force) end
 end)
 events:on_event(defines.events.on_runtime_mod_setting_changed,function(event)
-  if event and event.setting=="razi-hide-spoilers" then
+  if event and (event.setting=="razi-hide-spoilers"
+    or event.setting=="razi-hide-other-tech-spoilers") then
     spoiler_fog.sync_all()
-    razi_journal.refresh_open()
+    if event.setting=="razi-hide-spoilers" then
+      razi_journal.refresh_open()
+    end
   end
 end)
 -- Only carrier asteroid creation events do work; no per-tick asteroid scan.
@@ -262,12 +269,16 @@ events:on_event(defines.events.on_player_joined_game,function(event)
   if player then
     retire_operations(player)
     razi_journal.sync(player)
-    razi_safe_cheat.admin_tip(player)
+    welcome.on_player_joined(player)
   end
 end)
 events:on_event(defines.events.on_player_created,function(event)
   local player=game.get_player(event.player_index)
-  if player then retire_operations(player);razi_journal.sync(player) end
+  if player then
+    retire_operations(player)
+    razi_journal.sync(player)
+    welcome.on_player_created(player)
+  end
 end)
 events:on_event(defines.events.on_gui_click,function(event)
   razi_journal.gui_click(event)
@@ -290,6 +301,7 @@ end)
 events:on_event(defines.events.on_player_removed,function(event)
   razi_journal.on_removed(event.player_index)
   razi_safe_cheat.on_player_removed(event.player_index)
+  welcome.on_player_removed(event.player_index)
 end)
 
 events:install()

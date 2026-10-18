@@ -1428,10 +1428,11 @@ Additional live Factorio checks:
 - Unreached quest/chapter/archive titles are not leaked through
   browsing, searching, opening an old pinned quest, or selecting
   the chapter drop-down. Completed pages remain readable.
-- Native research screen conceals only Razi-owned technologies with
-  unfinished prerequisites. Research the prerequisite, confirm the
-  successor becomes available immediately and still costs its
-  original science. Ensure no third-party research becomes disabled.
+- Native research screen conceals Razi-owned future technologies and,
+  when the expanded switch is ON, unresearchable external technologies.
+  Research a prerequisite and confirm its successors become available.
+  Disable the expanded switch and verify every source-owned technology
+  restores its prior enabled/visibility state.
 - Turn Hide Spoilers **OFF** and verify all Razi-managed technologies
   restore original enabled/visibility settings, including old saves.
   Toggle **ON** again and verify consistent research gating.
@@ -1444,6 +1445,43 @@ Additional live Factorio checks:
 
 **Scope:** Factorio Lua can hide disabled research by setting
 `visible_when_disabled=false`. The safe implementation restricts
-runtime fog to Razi-owned technologies and their **real** prerequisite
-chain. Third-party enabled technologies are not forcibly disabled
-or hidden. Full-modpack validation is still pending until executed.
+runtime fog to the technologies' real prerequisite chains. The optional
+expanded switch also conceals future external technologies, restoring
+prior per-force states when disabled. Full-modpack validation is still
+pending until executed.
+
+## Startup, global research spoilers and complete settings styling
+
+```sh
+python -m unittest tests.test_razi_spoilers tests.test_razi_settings_welcome
+lua5.2 tests/lua/test_razi_spoiler_fog.lua
+lua5.2 tests/lua/test_razi_welcome.lua
+lua5.2 tests/lua/test_razi_journal.lua
+python -m unittest discover -s tests -p 'test_*.py'
+```
+
+Check all 59 Razi setting names in English and the existing Russian
+localization. Every setting label has a restrained category heading
+or colored continuation marker; all settings have descriptions.
+
+Research test: load required Factorio 2.1/K2SO and representative
+optional planets. With Hide Spoilers and expanded research spoilers ON,
+locked future Razi and external technologies disappear from the native
+research UI. Already researchable technologies, even red science or a
+source-mod's first research, must remain accessible. Research their
+prerequisites and verify successors appear immediately. Switch off the
+external control without turning off Journal protection and confirm
+that all external enabled/visible states restore. Switch off the main
+control and verify all Razi-managed states restore. Test scripted
+`/razi-cheat` research, disabled-by-source technologies, technology
+cycles, multiplayer force merges and old saved games.
+
+Startup test: a **new map** temporarily prints source-mod notices, then
+optionally clears each player's console once and shows a compact localized
+welcome. Factorio's `clear_console` API cannot delete specific mod
+messages, so a warning such as Muluna's fluidbox advisory may also be
+removed. Test `razi-clean-startup-chat=false`, normal player chat,
+returning players and mature saves. No delayed clearing may occur after
+the startup window. Test `/razi-welcome` replay and personal welcome mute.
+The combined Check workflow remains manual-only.
+

@@ -42,8 +42,9 @@ setting conceals unreached Journal chapters and future dossiers,
 masks sealed Archive titles and future project dossiers, and hides
 unfinished Razi-owned research
 technologies until their native prerequisites are met. Switching it
-off reveals them again without restarting. Third-party technologies
-remain untouched for compatibility. See
+off reveals them again without restarting. The separate expanded fog
+option also hides unresearchable third-party research by default and
+can be disabled independently for compatibility. See
 [Expedition Journal](docs/EXPEDITION_JOURNAL.md) and
 [Validation](docs/VALIDATION.md).
 
@@ -889,4 +890,24 @@ corridors include concentrated midroute asteroid fields, with corresponding
 faint starmap details. The legacy Vibrant rim names and survey technology are
 retained for save migration. **Back up older saves and disable AsteroidBelt**
 before upgrading. See [Asteroid Routes](docs/ASTEROID_ROUTES.md).
+
+**Startup and spoiler UI:** New saves show a compact Razi Protocol welcome
+with the Journal hotkey, official site, wiki and Discord, plus a testing
+hint for admins. Players can opt out of the welcome or the new-map-only
+chat cleanup separately. The cleanup is a one-time console clear, not
+selective interception of other mods' messages; it can remove legitimate
+startup warnings. Old saves are never cleared.
+
+**Research spoilers:** Hide Spoilers remains ON by default. The new
+**Hide future technologies from other mods** subsetting is also ON by
+default when Hide Spoilers is active. It conceals technologies whose real
+prerequisites are incomplete, including enabled-but-unreachable modded
+science and disabled-but-visible future research. Researchable and
+completed technologies remain visible; both settings are reversible.
+Disable the broader option if a source mod dynamically controls its
+technology visibility.
+
+The settings menu has consistent category styling and descriptions in
+English and the existing Russian locale. Release main remains separate
+until Factorio and save-compatibility validation.
 
