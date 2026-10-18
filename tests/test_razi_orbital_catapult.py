@@ -18,17 +18,20 @@ class OrbitalCatapultTests(unittest.TestCase):
         self.assertFalse(any("! orbital-cannon" in x for x in meta["dependencies"]))
         self.assertIn("PlanetsLib >= 2.0.9",meta["dependencies"])
 
-    def test_all_three_bidirectional_neighbor_corridors(self):
+    def test_six_curated_bidirectional_neighbor_corridors(self):
         code=content("prototypes/compat/orbital_catapult.lua")
         records=re.findall(
             r'\{"(razi-[a-z-]+-catapult)","([a-z-]+)","([a-z-]+)"\}',
             code)
-        self.assertEqual(len(records),6)
-        self.assertEqual(len(set(item[0] for item in records)),6)
+        self.assertEqual(len(records),12)
+        self.assertEqual(len(set(item[0] for item in records)),12)
         edges={(a,b) for _,a,b in records}
         expected={("muria","aquilo"),("aquilo","muria"),
                   ("muria","rubia"),("rubia","muria"),
-                  ("rubia","aquilo"),("aquilo","rubia")}
+                  ("rubia","aquilo"),("aquilo","rubia"),
+                  ("vulcanus","castra"),("castra","vulcanus"),
+                  ("gleba","moshine"),("moshine","gleba"),
+                  ("rubia","maraxsis"),("maraxsis","rubia")}
         self.assertEqual(edges,expected)
         for a,b in edges:
             self.assertIn((b,a),edges)
@@ -61,7 +64,7 @@ class OrbitalCatapultTests(unittest.TestCase):
 
     def test_journal_routes_tied_to_existing_quests(self):
         report=inspect(ROOT)
-        self.assertEqual(report["brief_count"],13)
+        self.assertEqual(report["brief_count"],15)
         for key in ("briefs_without_quests","links_without_briefs",
                     "related_quest_targets_missing","locale_errors"):
             self.assertEqual(report[key],[],key)

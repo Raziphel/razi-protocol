@@ -945,3 +945,14 @@ handles physical transport, and no source technology or cargo
 inventory is modified. With Hide Spoilers ON, destinations remain
 unnamed until both endpoint discoveries are researched. See
 [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
+
+**Orbital Catapult more widely integrated (3.0):** Three new two-way
+regional freight connections now complement Vespera's original three:
+Vulcanus ⇄ Castra in Solaris, Gleba ⇄ Moshine in Nyxaris, and Rubia ⇄
+Maraxsis in Vespera. The new
+`razi-orbital-catapult-regional-links` startup setting defaults ON,
+is independent of the original Vespera switch, and uses the required
+Orbital Catapult mod's native powered transport machinery. The Cargo
+Network and planetary Journal dossiers now group and explain these
+regional industries without claiming completed shipments or changing
+native research. [Details](docs/GALACTIC_INDUSTRIAL_NETWORK.md).

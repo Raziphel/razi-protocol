@@ -15,7 +15,7 @@ def locale_keys(path,section):
 class RegionalFreightTests(unittest.TestCase):
     def test_ui_uses_real_source_manifest_without_made_up_deliveries(self):
         report=read("scripts/razi_catapult_network.lua")
-        self.assertIn('require("prototypes.compat.orbital_catapult").links',report)
+        self.assertIn('require("prototypes.compat.orbital_catapult")',report)
         self.assertIn('planet-discovery-muria',report)
         self.assertIn('planet-discovery-rubia',report)
         self.assertIn('planet-discovery-aquilo',report)
@@ -70,7 +70,7 @@ class RegionalFreightTests(unittest.TestCase):
         self.assertIn('"razi-muria-aquilo-catapult"',api)
         self.assertIn('"razi-aquilo-muria-catapult"',api)
         ids=re.findall(r'\{"(razi-[a-z-]+-catapult)"',api)
-        self.assertEqual(len(ids),6)
+        self.assertEqual(len(ids),12)
         self.assertEqual(len(set(ids)),6)
 
     def test_manual_regression_suite_includes_route_dossier(self):

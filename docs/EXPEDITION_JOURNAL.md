@@ -637,3 +637,24 @@ is not named until both endpoints' real planet-discovery technologies
 have been researched. When spoiler hiding is disabled the dossier can
 preview future routes while identifying incomplete discovery research.
 This introduces no separate saved completion flags or new scroll state.
+
+## Regional Orbital Catapult expansion
+
+The Cargo Network now groups Orbital Catapult lanes by **Solaris,
+Nyxaris and Vespera** rather than only Vespera. With both startup
+corridor toggles enabled, six regional pairs are listed after their
+native world discoveries. The existing three Vespera pairs are
+supplemented by Vulcanus–Castra, Gleba–Moshine and Rubia–Maraxsis.
+
+The industrial dossier automatically shows discovered corridor partners
+for Vulcanus, Castra, Gleba, Moshine, Muria, Rubia, Aquilo and Maraxsis.
+New industry notes introduce Vulcanus's foundry logistics and
+Maraxsis's underwater supply requirements. There is no new research
+task, invented delivery contract or hidden progress counter.
+Individual transport operation stays within the required source mod.
+
+The two separate startup switches are
+`razi-orbital-catapult-local-links` (legacy Vespera) and
+`razi-orbital-catapult-regional-links` (new regional additions);
+both default ON. Hide Spoilers continues to gate presentation of
+undiscovered neighbors, not the underlying native researches.

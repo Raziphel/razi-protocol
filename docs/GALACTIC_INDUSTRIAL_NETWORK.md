@@ -346,3 +346,46 @@ not every game tick. Missing optional planets remove only their affected
 entries, and the old links keep their original names. New testing lives in
 `tests/lua/test_razi_catapult_network.lua` and
 `tests/test_razi_catapult_network.py`.
+
+## Orbital Catapult, regional deployment expansion
+
+The second freight layer now adds six more directional link prototypes
+(three reversible local corridors), controlled by the new startup setting
+`razi-orbital-catapult-regional-links`, ON by default and independent
+of the original `razi-orbital-catapult-local-links` switch.
+
+| System | Bidirectional transport link | Suggested industrial use |
+|---|---|---|
+| Solaris | Vulcanus ⇄ Castra | Local foundry output and salvage resupply |
+| Nyxaris | Gleba ⇄ Moshine | Short-haul biological manufacturing and analytical machinery |
+| Vespera | Rubia ⇄ Maraxsis | Industrial supplies for native underwater development |
+
+When both settings are on, **six corridors / twelve directed catapult
+links** are exported through the source mod's documented
+`orbital-cannon-link` interface. Turning off the new regional option
+restores the previous three Vespera corridors; turning off the original
+option leaves only the three new ones. Neither setting removes the
+required Orbital Catapult mod.
+
+This is **actual transport network integration**, not merely a Journal
+guide. The original mod still supplies its real powered launchers, item
+and player transportation, logistics mechanics, costs and restrictions.
+Nothing here auto-places a machine, creates free freight, bypasses
+native planet research, rewrites crafting or routes across a star.
+Catapults still require working endpoint infrastructure.
+
+The Cargo Network now groups researched corridors under Solaris,
+Nyxaris and Vespera, with their intended practical role. Existing
+Journal dossiers for Vulcanus, Castra, Gleba, Moshine, Muria, Rubia,
+Aquilo and Maraxsis contain relevant local freight guidance.
+With Hide Spoilers ON, the UI does not name a lane until both native
+destination-discovery research milestones are complete; the underlying
+Factorio link prototypes are not a substitute for the native source's
+transport accessibility checks.
+
+**Pre-release gate:** test a loaded Factorio 2.1 world with all source
+planets installed, including Maraxsis's actual launch environment,
+surface restrictions, power, return links, item/player arrival and
+rocket/platform parity. Test existing saves with both toggles ON/OFF.
+The upstream source mod does not provide general freight telemetry to
+this integration. We must not report live shipments until measured.

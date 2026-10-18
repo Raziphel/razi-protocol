@@ -1,12 +1,14 @@
 -- Non-mechanical, native-milestone-linked industrial dossier references.
 -- These are suggested *relationships*, not mandatory routing or quest gates.
 local briefs={
+  vulcanus="vulcanus",
   castra="castra",
   moshine="moshine",
   gleba="gleba",
   fulgora="fulgora",
   paracelsin="paracelsin",
   muria="muria",
+  maraxsis="maraxsis",
   aquilo="aquilo",
   rubia="rubia",
   panglia="panglia",
@@ -18,14 +20,16 @@ local briefs={
 -- Never assume a suggested world is installed or unlocked.
 -- Journal filters links through M.available() at the time of viewing.
 local connections={
-  castra={"arig","hyarion"},
-  moshine={"panglia","paracelsin"},
+  vulcanus={"castra"},
+  castra={"vulcanus","arig","hyarion"},
+  moshine={"gleba","panglia","paracelsin"},
   gleba={"moshine","rubia"},
   fulgora={"paracelsin","aquilo"},
   paracelsin={"rubia","moshine"},
   muria={"rubia","aquilo"},
+  maraxsis={"rubia","aquilo"},
   aquilo={"muria","rubia","nulla"},
-  rubia={"muria","aquilo","tenebris","vesta"},
+  rubia={"muria","aquilo","maraxsis","tenebris","vesta"},
   panglia={"moshine","gleba"},
   athos={"nulla","outer-mastery"},
   nulla={"athos","outer-mastery"},

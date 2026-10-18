@@ -92,6 +92,10 @@ jobs:
         run: lua5.2 tests/lua/test_outer_production_exchanges.lua
       - name: Check Vespera Orbital Catapult corridors
         run: lua5.2 tests/lua/test_orbital_catapult.lua
+      - name: Check expanded regional catapult corridor registration
+        run: lua5.2 tests/lua/test_razi_catapult_expansion.lua
+      - name: Check extended freight research and spoiler UX
+        run: lua5.2 tests/lua/test_razi_catapult_regional.lua
       - name: Check read-only and spoiler-aware Vespera freight dossier
         run: lua5.2 tests/lua/test_razi_catapult_network.lua
       - name: Check source-backed factory comparison and safe optional sourcing

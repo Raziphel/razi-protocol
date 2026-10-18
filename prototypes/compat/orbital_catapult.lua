@@ -1,9 +1,6 @@
--- Razi's short-haul Vespera freight lanes for Orbital Catapult >=0.15.
--- Orbital Catapult registers its custom link type during data stage and
--- consumes these records in data-final-fixes, AFTER Razi remaps the planets.
--- Keep the two original Muria/Aquilo identifiers stable for old saves.
--- A corridor needs TWO directional source-owned link prototypes.
--- No technology, launch recipe, platform route or destination is unlocked.
+-- Orbital Catapult 0.15+ supplies powered transport. Razi only declares
+-- directed, nearby corridors; native science, power and freight are source-owned.
+-- Preserve original Vespera IDs for saves and external integrations.
 local M={}
 M.links={
   {"razi-muria-aquilo-catapult","muria","aquilo"},
@@ -13,13 +10,35 @@ M.links={
   {"razi-rubia-aquilo-catapult","rubia","aquilo"},
   {"razi-aquilo-rubia-catapult","aquilo","rubia"}
 }
-function M.definitions(raw,loaded,enabled)
-  if not (loaded and enabled) then return {} end
+-- Second, independently switchable freight layer on real local planet
+-- corridors. No asteroid belt, cross-star lane, or new location prototype.
+M.regional_links={
+  {"razi-vulcanus-castra-catapult","vulcanus","castra"},
+  {"razi-castra-vulcanus-catapult","castra","vulcanus"},
+  {"razi-gleba-moshine-catapult","gleba","moshine"},
+  {"razi-moshine-gleba-catapult","moshine","gleba"},
+  {"razi-rubia-maraxsis-catapult","rubia","maraxsis"},
+  {"razi-maraxsis-rubia-catapult","maraxsis","rubia"}
+}
+function M.active_links(local_enabled,regional_enabled)
+  local result={}
+  if local_enabled then
+    for _,spec in ipairs(M.links) do result[#result+1]=spec end
+  end
+  if regional_enabled then
+    for _,spec in ipairs(M.regional_links) do result[#result+1]=spec end
+  end
+  return result
+end
+-- Fourth argument defaults to OFF for older callers/tests that inspect only
+-- the original three Vespera corridors.
+function M.definitions(raw,loaded,enabled,regional_enabled)
+  if not loaded then return {} end
   local planets=raw and raw.planet or {}
   local occupied=raw and raw["orbital-cannon-link"] or {}
   local links={}
   local seen={}
-  for _,spec in ipairs(M.links) do
+  for _,spec in ipairs(M.active_links(enabled,regional_enabled)) do
     local name,source,target=spec[1],spec[2],spec[3]
     if not seen[name] and not (occupied and occupied[name])
       and source~=target and planets[source] and planets[target] then
@@ -33,13 +52,13 @@ function M.definitions(raw,loaded,enabled)
   return links
 end
 function M.data()
-  -- The mod is REQUIRED in info.json, but this guard makes the link
-  -- exporter testable and avoids adding unknown custom prototypes.
   local loaded=mods and mods["orbital-cannon"]
-  local switch=settings and settings.startup
+  local primary=settings and settings.startup
     and settings.startup["razi-orbital-catapult-local-links"]
-  local enabled=switch and switch.value==true
-  local links=M.definitions(data.raw,loaded,enabled)
+  local regional=settings and settings.startup
+    and settings.startup["razi-orbital-catapult-regional-links"]
+  local links=M.definitions(data.raw,loaded,
+    primary and primary.value==true,regional and regional.value==true)
   if #links>0 then data:extend(links) end
 end
 return M

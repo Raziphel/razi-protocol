@@ -470,7 +470,13 @@ local function catapult_dossier(parent,player,width)
     wrap(card,L(state.concealed>0
       and "catapult-network-unrevealed" or "catapult-network-none"),width-44)
   end
+  local current_region=nil
   for _,entry in ipairs(state.entries) do
+    if entry.region and entry.region~=current_region then
+      current_region=entry.region
+      heading(card,L("catapult-network-region",
+        world_title(entry.region)),width-44)
+    end
     local line=card.add{type="flow",direction="vertical"}
     line.style.vertical_spacing=3
     local names=wrap(line,L("catapult-network-pair",

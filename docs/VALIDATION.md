@@ -1573,3 +1573,39 @@ both catapult endpoints and test target selectors, electricity, cargo,
 item filters/circuits, player transport, native arrival conditions and
 normal space-platform behavior. Neither the dossier nor source checks
 prove the actual transport operates.
+
+## Orbital Catapult: cross-system local network expansion
+
+```sh
+lua5.2 tests/lua/test_orbital_catapult.lua
+lua5.2 tests/lua/test_razi_catapult_expansion.lua
+lua5.2 tests/lua/test_razi_catapult_network.lua
+lua5.2 tests/lua/test_razi_catapult_regional.lua
+python3 -m unittest tests.test_razi_orbital_catapult tests.test_razi_catapult_network tests.test_razi_catapult_expansion -v
+python3 scripts/audit_campaign_consistency.py
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+Source checks cover six two-way corridors, the first six old link
+IDs, three new locally adjacent regions, missing prototype guards,
+the independently reversible `razi-orbital-catapult-regional-links`
+startup setting,
+original and new startup settings independently, and no unwanted
+space connection, technology or recipe changes.
+
+In-game Factorio checks are still required for all six pairs:
+Vulcanus–Castra, Gleba–Moshine, Muria–Aquilo, Muria–Rubia,
+Rubia–Aquilo and Rubia–Maraxsis. Test that physical catapults on both
+ends actually launch/receive cargo and players with source energy
+requirements, do not bypass intended planet-discovery gates, respect
+native transport restrictions and coexist with normal platform routes.
+Pay special attention to Maraxsis's possible surface limitations.
+
+Test old saves, new saves, spoiler ON/OFF, both startup switches in
+all four combinations, absent optional worlds and multiplayer.
+The Razi Journal should list available local routes under their
+correct star systems while concealing undiscovered neighbors.
+
+**No full-modpack Factorio startup or old-save migration is claimed**
+merely from static source checks or committed test fixtures. The
+GitHub Check workflow remains manual-only.

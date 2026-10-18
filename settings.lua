@@ -124,6 +124,11 @@ data:extend({
   {type="bool-setting",name="razi-orbital-catapult-local-links",
     setting_type="startup",default_value=true,
     order="ba[integration]-e[catapult-links]"},
+  -- Optional second network layer: short local links on Solaris,
+  -- Nyxaris and the Maraxsis spur. No star/belt crossings.
+  {type="bool-setting",name="razi-orbital-catapult-regional-links",
+    setting_type="startup",default_value=true,
+    order="ba[integration]-e2[regional-catapult-links]"},
 
   -- HOME SYSTEM MEGAPROJECT
   startup_toggle("razi-dyson-milestone-weave",

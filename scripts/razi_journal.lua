@@ -769,7 +769,10 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- Existing Vespera dossiers can discuss actually configured neighboring
   -- lanes. The shared snapshot hides undiscovered neighbors when spoiler
   -- protection is ON; no invented shipment or catapult-building state.
-  if quest.id=="muria" or quest.id=="rubia" or quest.id=="aquilo" then
+  if quest.id=="muria" or quest.id=="rubia" or quest.id=="aquilo"
+    or quest.id=="vulcanus" or quest.id=="castra"
+    or quest.id=="gleba" or quest.id=="moshine"
+    or quest.id=="maraxsis" then
     local network=catapults.snapshot(player.force)
     if network.installed and network.enabled then
       local local_lanes=catapults.for_world(network,quest.id)
