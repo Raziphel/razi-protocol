@@ -156,6 +156,7 @@ end
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(function()
   spoiler_fog.sync_all()
+  spoiler_fog.defer_all()
   convergence.restore_pending()
   preserve_deep_space_campaign()
   check_existing_transceivers()
@@ -164,6 +165,7 @@ events:on_init(function()
 end)
 events:on_configuration_changed(function(event)
   spoiler_fog.sync_all()
+  spoiler_fog.defer_all()
 	convergence.restore_pending()
 	preserve_deep_space_campaign()
 	check_existing_transceivers()
@@ -213,6 +215,7 @@ events:on_nth_tick(30, function()
   razi_journal.flush_research_refreshes()
   story_dispatch.flush()
   welcome.flush()
+  spoiler_fog.flush()
 end)
 events:on_event({
 	defines.events.on_built_entity,
@@ -234,6 +237,15 @@ events:on_event(defines.events.on_research_finished,function(event)
   razi_journal.on_research(event)
   story_dispatch.on_research(event)
 end)
+events:on_event(defines.events.on_research_reversed,function(event)
+  spoiler_fog.sync_force(event.research.force)
+  spoiler_fog.defer(event.research.force)
+end)
+events:on_event(defines.events.on_technology_effects_reset,function()
+  -- Rubia may reset its own placeholder technologies in this event,
+  -- sometimes one tick later; recheck only those on the existing timer.
+  spoiler_fog.defer_all()
+end)
 events:on_event(defines.events.on_forces_merged,function(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
@@ -248,6 +260,7 @@ events:on_event(defines.events.on_runtime_mod_setting_changed,function(event)
   if event and (event.setting=="razi-hide-spoilers"
     or event.setting=="razi-hide-other-tech-spoilers") then
     spoiler_fog.sync_all()
+    spoiler_fog.defer_all()
     if event.setting=="razi-hide-spoilers" then
       razi_journal.refresh_open()
     end

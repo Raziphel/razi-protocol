@@ -1485,3 +1485,31 @@ returning players and mature saves. No delayed clearing may occur after
 the startup window. Test `/razi-welcome` replay and personal welcome mute.
 The combined Check workflow remains manual-only.
 
+## Rubia research placeholders and welcome verification
+
+```sh
+lua5.2 tests/lua/test_razi_rubia_spoilers.lua
+lua5.2 tests/lua/test_razi_spoiler_fog.lua
+lua5.2 tests/lua/test_razi_welcome.lua
+python -m unittest tests.test_razi_spoilers -v
+```
+
+A fresh or migrated Factorio 2.1 save with Rubia installed must be
+tested after a real mod reload. Under Settings > Mod settings > Map
+leave **Hide Spoilers** and **Also hide future technologies from other
+mods** both ON. The `rubia-unknown-technology-*` question-mark
+placeholders should not appear in the research grid while their real
+counterparts remain unavailable. Research or reverse Rubia stages and
+verify legitimate successor science is still visible. Repeat after
+mod migration, `on_technology_effects_reset`, and toggling the
+expanded option OFF and ON.
+
+The welcome code is only in `feat/razi-3.0`, not the published release
+branch. Installing the GitHub commit alone does NOT change the mod that
+Factorio has already loaded. After installing the updated 3.0 build,
+fully reload the game. `/razi-welcome` prints the new welcome;
+`/razi-welcome clear` explicitly erases all of the requesting player's
+current console messages and prints the new welcome. It is destructive,
+not a selective filter for Rubia, Nexus or Muluna messages. Their
+independent startup notices may still appear again if their own mods
+print them later.

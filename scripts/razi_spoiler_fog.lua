@@ -21,6 +21,18 @@ local function held()
     storage.razi_spoiler_technologies or {}
   return storage.razi_spoiler_technologies
 end
+local RUBIA_PLACEHOLDER="rubia-unknown-technology-"
+local function is_rubia_placeholder(technology)
+  return technology and type(technology.name)=="string"
+    and technology.name:sub(1,#RUBIA_PLACEHOLDER)==RUBIA_PLACEHOLDER
+end
+M.is_rubia_placeholder=is_rubia_placeholder
+local function rubia_source(technology)
+  if not is_rubia_placeholder(technology) then return nil end
+  local name=technology.name:sub(#RUBIA_PLACEHOLDER+1)
+  return technology.force and technology.force.technologies
+    and technology.force.technologies[name]
+end
 local function belongs_to_razi(technology)
   return type(technology.name)=="string"
     and technology.name:sub(1,5)=="razi-"
@@ -42,9 +54,15 @@ local function restore(technology,managed,name)
   local previous=managed[name]
   if not previous then return end
   if technology and technology.valid~=false then
-    -- Restore only values previously changed by Razi. Source mods may have
-    -- enabled a technology in the meantime, so never set enabled=false here.
-    if previous.enabled==true and technology.enabled==false then
+    local original=rubia_source(technology)
+    -- Rubia owns each placeholder's researched/available state. If its
+    -- corresponding real tech is now available, do not revive an obsolete
+    -- ? marker while restoring Razi's own earlier visibility change.
+    local rubia_revealed=original and
+      (original.researched or original.enabled)
+    if rubia_revealed then
+      technology.enabled=false
+    elseif previous.enabled==true and technology.enabled==false then
       technology.enabled=true
     end
     if type(previous.visible)=="boolean" then
@@ -58,14 +76,25 @@ local function apply_one(technology,managed)
   if not covered(technology) then return end
   local name=technology.name
   local tracked=managed[name]
-  if technology.researched or ready(technology) then
+  local placeholder=is_rubia_placeholder(technology)
+  local source=placeholder and rubia_source(technology)
+  -- Rubia's ? placeholders deliberately have no real prerequisites.
+  -- Their underlying original technology determines whether the disguise
+  -- is obsolete. Treat them as display-only while hiding spoilers.
+  if technology.researched or (placeholder and source and
+    (source.researched or source.enabled)) or
+    (not placeholder and ready(technology)) then
     if tracked then restore(technology,managed,name) end
     return
   end
   if tracked then
-    -- Explicit enablement from another mod overrides our earlier hide.
-    -- This is not a license to force it disabled again.
-    if technology.enabled then
+    if placeholder then
+      -- Rubia enables its own ? markers after a research or migration
+      -- synchronization. Re-hide ONLY this presentation placeholder.
+      technology.visible_when_disabled=false
+      technology.enabled=false
+    elseif technology.enabled then
+      -- Other mods' explicit enablement wins for non-Rubia technologies.
       restore(technology,managed,name)
     end
     return
@@ -98,8 +127,12 @@ function M.sync_force(force)
     local tech=force.technologies[name]
     local scope=previous.scope or
       (name:sub(1,5)=="razi-" and "razi" or "external")
+    local placeholder=tech and is_rubia_placeholder(tech)
+    local source=placeholder and rubia_source(tech)
+    local obsolete=source and (source.researched or source.enabled)
     if not main or (scope=="external" and not other) or
-       not tech or tech.researched or ready(tech) then
+       not tech or tech.researched or obsolete or
+       (not placeholder and ready(tech)) then
       restore(tech,managed,name)
     end
   end
@@ -115,6 +148,41 @@ function M.sync_all()
   for _,force in pairs(game.forces or {}) do M.sync_force(force) end
 end
 
+-- Rubia performs its own delayed synchronization after world/research
+-- changes. Use the Journal's existing 30-tick callback to reassert only
+-- Rubia's non-researchable ? markers, once per relevant event, after Rubia
+-- has finished. No permanent technology polling.
+function M.defer(force)
+  if not (force and force.index and M.external_enabled()) then return end
+  local pending=storage.razi_rubia_spoiler_pending or {}
+  pending[force.index]=(game and game.tick or 0)+2
+  storage.razi_rubia_spoiler_pending=pending
+end
+function M.defer_all()
+  if not (game and M.external_enabled()) then return end
+  for _,force in pairs(game.forces or {}) do M.defer(force) end
+end
+function M.flush()
+  local pending=storage.razi_rubia_spoiler_pending
+  if not pending then return end
+  local tick=game and game.tick or 0
+  for index,due in pairs(pending) do
+    if tick>=due then
+      local force=game and game.forces and game.forces[index]
+      if force and M.external_enabled() then
+        local groups=held()
+        local managed=groups[index] or {}
+        groups[index]=managed
+        for _,tech in pairs(force.technologies or {}) do
+          if is_rubia_placeholder(tech) then apply_one(tech,managed) end
+        end
+        if not next(managed) then groups[index]=nil end
+      end
+      pending[index]=nil
+    end
+  end
+  if not next(pending) then storage.razi_rubia_spoiler_pending=nil end
+end
 function M.on_research(event)
   local tech=event and event.research
   local force=tech and tech.force
@@ -130,6 +198,7 @@ function M.on_research(event)
   for _,successor in pairs(tech.successors or {}) do
     apply_one(successor,managed)
   end
+  M.defer(force)
   if not next(managed) then groups[force.index]=nil end
 end
 
@@ -146,6 +215,10 @@ function M.on_forces_merged(event)
   end
   if source then groups[source]=nil end
   if next(combined) then groups[destination.index]=combined end
+  if source and storage.razi_rubia_spoiler_pending then
+    storage.razi_rubia_spoiler_pending[source]=nil
+  end
   M.sync_force(destination)
+  M.defer(destination)
 end
 return M

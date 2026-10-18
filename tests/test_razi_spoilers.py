@@ -35,6 +35,25 @@ class SpoilerSettingsTests(unittest.TestCase):
         self.assertNotIn("research_recursive",code)
         self.assertNotIn("technology.researched=true",code)
 
+    def test_rubia_unknown_placeholder_is_special_cased(self):
+        code=file("scripts/razi_spoiler_fog.lua")
+        for token in (
+            'RUBIA_PLACEHOLDER="rubia-unknown-technology-"',
+            "local function rubia_source(technology)",
+            "local placeholder=is_rubia_placeholder(technology)",
+            "if tracked then",
+            "function M.defer_all()",
+            "function M.flush()",
+        ):
+            self.assertIn(token,code)
+        controls=file("control.lua")
+        self.assertIn("spoiler_fog.defer_all()",controls)
+        self.assertIn("spoiler_fog.flush()",controls)
+        self.assertIn("defines.events.on_technology_effects_reset",controls)
+        self.assertIn("defines.events.on_research_reversed",controls)
+        self.assertIn("test_razi_rubia_spoilers.lua",
+                      file(".github/workflows/check.yml"))
+
     def test_journal_filters_navigation_and_archive_titles(self):
         source=file("scripts/razi_journal.lua")
         for term in ('function M.journal_visible(force,quest,context,known_state)',

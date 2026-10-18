@@ -73,6 +73,13 @@ function M.command(event)
   if not (event and event.player_index) then return end
   local player=game.get_player(event.player_index)
   if not (player and player.valid) then return end
+  -- Explicit opt-in for existing saves: the automatic startup-only cleanup
+  -- can never be replayed after the first ten seconds. Players may clear
+  -- their own current chat by typing /razi-welcome clear.
+  local parameter=(event.parameter or ""):match("^%s*(.-)%s*$"):lower()
+  if parameter=="clear" and player.clear_console then
+    player.clear_console()
+  end
   player.print({"razi-welcome.header"})
   player.print({"razi-welcome.intro"})
   player.print({"razi-welcome.journal"})

@@ -35,6 +35,9 @@ check(cleared==1 and #received==5,
 module.command{player_index=1}
 check(#received==10 and cleared==1,
  "/razi-welcome should be repeatable without clearing chat")
+module.command{player_index=1,parameter="clear"}
+check(#received==15 and cleared==2,
+ "/razi-welcome clear must only erase chat on explicit request")
 module.on_player_removed(1)
 settings_map["razi-clean-startup-chat"].value=false
 received={}
@@ -42,7 +45,7 @@ game.tick=2
 module.on_player_created(player)
 game.tick=200
 module.flush()
-check(cleared==1 and #received==5,
+check(cleared==2 and #received==5,
  "Opt-out must preserve all chat lines while keeping welcome enabled")
 module.on_player_removed(1)
 settings_map["razi-show-welcome"].value=false
@@ -51,7 +54,7 @@ game.tick=3
 module.on_player_created(player)
 game.tick=200
 module.flush()
-check(cleared==1 and #received==0,
+check(cleared==2 and #received==0,
  "Welcome opt-out must not print chat or re-clear the console")
 module.on_player_removed(1)
 settings_map["razi-show-welcome"].value=true
@@ -59,6 +62,6 @@ settings_map["razi-clean-startup-chat"].value=true
 received={}
 game.tick=3500
 module.on_player_joined(player)
-check(#received==5 and cleared==1,
+check(#received==5 and cleared==2,
  "Old saves should get the welcome once without deleting prior messages")
 print("Razi startup welcome, options, replay and existing-save safety passed")

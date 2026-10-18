@@ -46,6 +46,8 @@ jobs:
         run: lua5.2 tests/lua/test_razi_journal.lua
       - name: Check default-on and reversible Razi technology spoiler fog
         run: lua5.2 tests/lua/test_razi_spoiler_fog.lua
+      - name: Check Rubia's unknown technology placeholders stay hidden after source sync
+        run: lua5.2 tests/lua/test_razi_rubia_spoilers.lua
       - name: Check clean startup, welcome controls and safe old-save behavior
         run: lua5.2 tests/lua/test_razi_welcome.lua
       - name: Check future Journal projects remain concealed until discovered

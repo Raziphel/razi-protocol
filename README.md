@@ -911,3 +911,18 @@ The settings menu has consistent category styling and descriptions in
 English and the existing Russian locale. Release main remains separate
 until Factorio and save-compatibility validation.
 
+**Rubia placeholder compatibility:** Future unknown Rubia technologies
+are special: they have deliberately empty prerequisites and Rubia may
+re-enable their question-mark stand-ins during game startup and research.
+The expanded spoiler control now detects their
+`rubia-unknown-technology-*` names, checks the real corresponding
+research and re-hides only these placeholders once after relevant source
+sync events. Actual researchable technologies remain available.
+
+**Updated welcome verification:** Install the latest
+`feat/razi-3.0` mod build and restart Factorio to see code changes;
+merely updating GitHub does not update an installed mod. For an
+existing save, `/razi-welcome` reprints the new introduction.
+`/razi-welcome clear` additionally wipes that player's existing chat
+history on explicit request. The latter cannot selectively suppress
+Nexus or Muluna's own warnings; they may be repeated by those mods.

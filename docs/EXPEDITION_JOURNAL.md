@@ -590,3 +590,31 @@ message. Players can use `/razi-welcome` to replay its site/wiki/Discord,
 Journal shortcut and admin-only testing tip. The welcome does not reveal
 the ending or change research progression.
 
+## Rubia unknown-technology compatibility
+
+Rubia's own source creates temporary `rubia-unknown-technology-*`
+placeholders with intentionally empty research prerequisites and an
+uncraftable trigger. Rubia enables them while the real source technology
+is unavailable, and it may synchronize their status again after Razi's
+regular settings/research event. A generic "all prerequisites researched"
+visibility rule therefore does not protect their names or the technology
+list from dozens of question-mark icons.
+
+With the expanded **Hide future technologies from other mods** option ON,
+Razi explicitly treats those Rubia placeholders as presentation-only:
+it hides the placeholder when its real Rubia technology is not yet
+available, while **never hiding a legitimately reachable original
+technology**. After a Rubia research, migration or
+`on_technology_effects_reset` event, a one-shot deferred check uses
+the Journal's existing 30-tick callback to reapply the placeholder
+visibility filter. There is no continuous tech-tree scan.
+
+Turning the expanded option OFF releases the Razi-managed visibility
+flags, without unlocking Rubia's real research. Rubia still owns its
+native per-planet scientific progression and research sync. Test new
+maps, older saves, real Rubia research and setting toggles before release.
+
+If another mod still shows Rubia placeholders after switching to this
+feature-branch build, check for a third-party discovery-tree controller
+that is also rewriting the same technology flags. Never modify Rubia's
+source or delete its technologies as a workaround.
