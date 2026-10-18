@@ -73,3 +73,11 @@ stargates, and optional Dea Dia/Nexus destinations. Unknown third-party planets
 are not changed. Descriptions do not imply that optional expeditions are
 required for victory. Validate a full game load to confirm source text and rich
 text formatting display correctly across the installed mod combinations.
+
+## RAZI field notes and corridor dispatches (3.0)
+
+All 82 known locations, including optional and source-owned worlds, have concise English and Russian RAZI notes. Existing descriptions from planet authors are preserved before the appended note; the first-party text is survey context, not an override of native lore. Real asteroid-belt rims, optional orbital hubs and other previously unannotated locations are now covered using existence guards.
+
+The 61 selected physical space connections have one optional narrative freight field in the **existing native route tooltip**, beneath the real ten-level hazard, salvage and preparation data. Notes describe why a passage matters, not an extra hidden difficulty scale or a fictional shortcut. The field is matched by its two endpoint IDs, so a missing route or unrecognized third-party connection receives no invented annotation. Source tooltip fields, route length, physics, order and technology gates remain unchanged.
+
+Important narrative guardrails: the chart never solves native planet mysteries; optional worlds are not prerequisites; the Continuity Engine failure and Convergence conclusion remain in unlock-gated Journal records, not visible in a pre-discovery travel note. No runtime polling, GUI duplication, route prototype creation or duplicate danger warnings are added. See [Story Bible](STORY_BIBLE.md).

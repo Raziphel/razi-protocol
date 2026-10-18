@@ -407,3 +407,9 @@ field directive. The spoiler-cover status is read from the current
 map setting rather than promising that spoilers are hidden even
 when the player has switched the option OFF. The welcome remains
 once per user on a save; replay is explicit via `/razi-welcome`.
+
+## In-world starmap copy and spoiler boundaries
+
+The in-game planet and corridor notes are the field-facing voice of RAZI's old freight network. On planets, use one vivid environmental detail and one actual logistics or research purpose; on curated routes, use a short freight dispatch explaining what the connection enables. Avoid declaring native source-mod secrets to be RAZI inventions.
+
+Keep this copy less revealing than Archive records: old ledgers, abandoned infrastructure, material shortages and lost decision-makers may be mentioned, but not the Continuity Engine's final resolution, the physical Convergence shipments or the ending. These notes are append-only to source planet descriptions, route-only on verified endpoint pairs, and available in English and Russian.

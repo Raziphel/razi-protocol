@@ -3,6 +3,7 @@
 local M={}
 local hazards=require("prototypes.system.route_hazards")
 local catalog=require("scripts.galactic_catalog")
+local dossiers=require("prototypes.system.route_dossiers")
 local quality_levels=require("scripts.razi_asteroid_difficulty")
 local prefix="razi-route-intel."
 local function selected(name,default)
@@ -88,6 +89,12 @@ function M.annotate(route)
   if show("haul") and type(route.length)=="number" and route.length>75000 then
     additions[#additions+1]=field("haul",
       localise("haul-"..hazards.haul_class(route)),230)
+  end
+  -- A single concise, route-specific field note. No claim of ownership
+  -- over source mod descriptions and no guessed notes on unknown routes.
+  local dossier=dossiers.note_for(route)
+  if dossier then
+    additions[#additions+1]=field("dispatch",localise("dispatch-"..dossier),231)
   end
   for _,extra in ipairs(additions) do fields[#fields+1]=extra end
   route.custom_tooltip_fields=fields
