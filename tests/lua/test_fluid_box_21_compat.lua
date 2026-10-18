@@ -39,7 +39,7 @@ local raw = {
   ["assembling-machine"] = {["test-assembler"] = assembler},
   pipe = {["test-pipe"] = standard_pipe},
 }
-check(run(raw) == 8, "Repair every obsolete fluid box once")
+check(run(raw) == 9, "Repair every obsolete fluid box once")
 check(red.minimum_input_temperature == 165 and
   red.maximum_input_temperature == 500,
   "Restore red steam engine temperature limits and clamp to fluid maximum")
