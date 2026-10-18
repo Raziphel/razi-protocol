@@ -94,7 +94,7 @@ function M.render(parent,player,options)
  local progress=copy.add{type="progressbar",
    value=total>0 and completed/total or 0}
  progress.style.horizontally_stretchable=true
- label(copy,L("dyson-phase-disclaimer"))
+ if not options.embedded then label(copy,L("dyson-phase-disclaimer")) end
  inspection(parent,player)
  local research=label(parent,L("dyson-research-heading"))
  research.style.font="default-bold"

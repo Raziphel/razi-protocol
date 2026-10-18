@@ -1963,6 +1963,11 @@ function M.gui_click(event)
     p.view=tags.id
   elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
+  elseif action=="project-cycle" and p.view=="projects"
+    and projects.visible(player.force,tags.id)
+    and (projects.adjacent(player.force,p.project,-1)==tags.id
+      or projects.adjacent(player.force,p.project,1)==tags.id) then
+    p.project=tags.id
   elseif action=="project-next" and p.view=="projects" then
     local quest_id=projects.next_quest(player.force,p.project)
     if not quest_id or not M.open_quest(player,quest_id) then return end

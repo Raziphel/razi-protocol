@@ -45,6 +45,16 @@ function M.valid(id)
   for _,value in ipairs(ids) do if value==id then return true end end
   return false
 end
+function M.adjacent(force,id,step)
+  local visible={}
+  for _,project in ipairs(ids) do
+    if M.visible(force,project) then visible[#visible+1]=project end
+  end
+  for index,project in ipairs(visible) do
+    if project==id then return visible[index+step] end
+  end
+  return nil
+end
 function M.valid_cargo(force,chain,target)
   if not chain or not catalog.is_installed(force,chain) then return false end
   for _,entry in ipairs(catalog.chains) do
@@ -405,9 +415,24 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
     and math.max(175,size.body-175) or size.body
   reader.style.height=reader_height
   reader.style.padding=11
-  local folio=reader.add{type="label",caption=L("project-dossier")}
+  local controls=reader.add{type="flow",direction="horizontal"}
+  controls.style.horizontally_stretchable=true
+  controls.style.horizontal_spacing=7
+  controls.style.vertical_align="center"
+  local folio=controls.add{type="label",caption=L("project-dossier")}
   folio.style.font="default-bold"
   folio.style.font_color=HUES.gold
+  local spacer=controls.add{type="empty-widget"}
+  spacer.style.horizontally_stretchable=true
+  for _,step in ipairs({-1,1}) do
+    local target=M.adjacent(player.force,p.project,step)
+    if target then
+      controls.add{type="button",style="tool_button",
+        caption=L(step<0 and "project-previous" or "project-next"),
+        tooltip=L("project-"..target),
+        tags={razi_journal_action="project-cycle",id=target}}
+    end
+  end
   local header=reader.add{type="flow",direction="horizontal"}
   header.style.horizontal_spacing=12
   header.style.vertical_align="center"

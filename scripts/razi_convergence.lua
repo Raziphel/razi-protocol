@@ -341,9 +341,11 @@ function M.render(parent,player,options)
   (player.display_resolution.width or 1280)/
    math.max(player.display_scale or 1,.5)-100))
  local width=math.max(250,math.floor(layout_width)-28)
- local heading=line(parent,"convergence-heading",width)
- heading.style.font="heading-1"
- heading.style.font_color={r=.88,g=.73,b=1}
+ if not options.embedded then
+  local heading=line(parent,"convergence-heading",width)
+  heading.style.font="heading-1"
+  heading.style.font_color={r=.88,g=.73,b=1}
+ end
  line(parent,"convergence-overview",width)
  local scroll=options.embedded and parent
    or parent.add{type="scroll-pane",direction="vertical"}
