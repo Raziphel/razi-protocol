@@ -4,6 +4,8 @@
 local M={}
 local definitions=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_corporate")
+local by_id={}
+for _,record in ipairs(records) do by_id[record.id]=record end
 local by_research={}
 local by_world={}
 local physical={
@@ -63,7 +65,15 @@ local function announce(force,ids)
     end
     if enabled and player.print then
       if #new==1 then
-        player.print({"razi-story.record-unlocked",
+        local record=by_id[new[1]]
+        local key="record-unlocked"
+        if record and record.series=="field" then
+          key="field-unlocked"
+        elseif new[1]:sub(1,14)=="corp-shipment-"
+          or new[1]=="corp-epilogue" then
+          key="mandate-unlocked"
+        end
+        player.print({"razi-story."..key,
           {"journal-record-title."..new[1]}})
       else
         player.print({"razi-story.records-unlocked",tostring(#new)})

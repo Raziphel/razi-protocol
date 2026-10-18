@@ -17,6 +17,44 @@ local function option(player,name)
   local value=per and per[name]
   return value and value.value~=false or not value
 end
+-- The briefing never previews a future system. Every status line is
+-- derived from research that the player's force has already completed.
+local function researched(player,name)
+  local force=player and player.force
+  local tech=force and force.technologies and force.technologies[name]
+  return tech and tech.researched==true or false
+end
+function M.signal(player)
+  if researched(player,"razi-convergence-commission") then
+    return "status-commission"
+  elseif researched(player,"interplanetary-trade-logistics") then
+    return "status-network"
+  elseif researched(player,"space-platform") then
+    return "status-flight"
+  elseif researched(player,"automation") then
+    return "status-local"
+  end
+  return "status-initial"
+end
+local function unread_count(index)
+  local state=storage.razi_expedition_journal
+    and storage.razi_expedition_journal[index]
+  local count=0
+  for _ in pairs(state and state.story_unread or {}) do
+    count=count+1
+  end
+  return count
+end
+local function briefing(player)
+  player.print({"razi-welcome.header"})
+  player.print({"razi-welcome.identification"})
+  player.print({"razi-welcome."..M.signal(player)})
+  player.print({"razi-welcome.intro"})
+  player.print({"razi-welcome.journal",
+    tostring(unread_count(player.index))})
+  player.print({"razi-welcome.links"})
+  if player.admin then player.print({"razi-welcome.admin"}) end
+end
 function M.deliver(player,early)
   if not (player and player.valid) then return end
   local s=state()
@@ -31,11 +69,7 @@ function M.deliver(player,early)
     player.clear_console()
   end
   if not option(player,"razi-show-welcome") then return end
-  player.print({"razi-welcome.header"})
-  player.print({"razi-welcome.intro"})
-  player.print({"razi-welcome.journal"})
-  player.print({"razi-welcome.links"})
-  if player.admin then player.print({"razi-welcome.admin"}) end
+  briefing(player)
 end
 local function greet(player)
   if not (player and player.valid) then return end
@@ -80,10 +114,6 @@ function M.command(event)
   if parameter=="clear" and player.clear_console then
     player.clear_console()
   end
-  player.print({"razi-welcome.header"})
-  player.print({"razi-welcome.intro"})
-  player.print({"razi-welcome.journal"})
-  player.print({"razi-welcome.links"})
-  if player.admin then player.print({"razi-welcome.admin"}) end
+  briefing(player)
 end
 return M

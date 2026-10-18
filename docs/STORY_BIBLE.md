@@ -184,7 +184,7 @@ Projects Convergence panel and Archive. No new competing screen.
 
 **Archive:** 15 legacy recovered transmissions retain their original
 IDs and prose. The 25 RAZI corporate files have a separately labeled
-section. All 40 records are gated by existing quest completions. The
+section. All 58 records are gated by existing quest completions. The
 first 19 corporate files are research/world-discovery records. The last
 six depend on physical Convergence progress or real victory.
 
@@ -289,3 +289,75 @@ A new map's optional one-time console cleanup is intentionally
 per-player and can remove important third-party warnings. Never attempt
 to intercept or rewrite individual other-mod chat messages.
 
+## 3.0 Field Accounts: the people behind the reports
+
+The original 25 corporate case files remain stable, with the same
+research/physical-shipment gates and unchanged final epilogue.
+**Eighteen additional FIELD accounts** are interleaved among the
+older cases rather than placed after the ending. This brings the
+RAZI Industries collection to 43 files, and the entire Archive to
+58 when counting 15 legacy transmissions.
+
+These are **fictional RAZI Industries annotations**, not retcons of
+Rubia, Nexuses, planetary mods' own canon or new simulated NPCs.
+Every account belongs to an existing research milestone or actually
+discovered planet; optional worlds can be explored in any order.
+
+Three human signatures provide quiet continuity:
+
+- **Rhea Calder** appears in the chemical night-shift report,
+  prioritizing a shelter over quarterly production, and later in
+  the rescue charter's marginal notes. The system logs both decisions
+  as exceptions. They are, in fact, continuity.
+- **Noor Halden** reserves a seat for an absent apprentice during
+  the first orbital departure. Years of records later the same
+  dispatch signature changes a transceiver test's reply destination
+  to **ALL RECEIVERS** instead of corporate headquarters. Her final
+  act does not take authority; it asks who is there.
+- **Sera Ilyan** reroutes mail to people on Muria rather than
+  corporate departments. An abbreviated signature on a voluntary
+  industrial exchange appears elsewhere. Local commerce is no longer
+  measured only by invoices.
+
+Field reports from Vulcanus, Rabbasca, Foliax, Cerys, Khemia,
+Maraxsis and Athos add other everyday moments: ignored safety
+reports, aid to neighbors, unofficial family records, a beacon
+left operating for an unknown ship, and maintenance that kept
+workers safe. The robots, alliance industries and frontier
+charter reveal how those acts could become distributed operational
+resilience. The optional Nexus addendum carefully preserves
+uncertainty rather than overwriting source-mod mythology.
+
+**Narrative rule:** Each discovered file must stand on its own. A
+repeat signature rewards attentive reading but cannot become a
+hard prerequisite for understanding the Protocol or the ending.
+The original Convergence Commission is permission to build,
+not victory; the five real freight mandates plus timed signal
+still exclusively control the final epilogue.
+
+## How the expanded Archive works
+
+The Archive now separates **FIELD ACCOUNT / PERSONAL
+CORRESPONDENCE** from formal internal records through a small
+document classification on each reader page. In spoiler mode,
+unopened titles never appear and sealed records collapse into a
+single neutral count instead of dozens of blank rows. With
+spoiler hiding OFF, locked titles can still be previewed.
+
+On a real research discovery, a field account emits one concise
+**RAZI / FIELD CORRESPONDENCE** notification. Ordinary case files
+and physical Convergence transmissions retain their distinct
+archive/mandate notices. Bursts stay batched; personal mutes and
+unread markers still work. Each completed milestone with an associated FIELD account now also shows a direct **Recovered Correspondence** link in its quest dossier. The link resolves only to a genuinely unlocked archive record, never a locked future file. The **Read next unread** button moves
+the player through completed, unread records and never opens one
+whose real quest is incomplete.
+
+The new welcome is an **Expedition Terminal** message, not a
+story spoiler: it shows only the operation level supported by
+this force's *researched* automation, platforms, logistics or
+Convergence Commission. It reports the current player's unread
+Archive count, the verified Journal shortcut, website, wiki
+and Discord, plus an optional admin testing line. Existing
+per-player welcome/console-clear settings and replay command
+remain intact; Factorio still cannot selectively suppress the
+source mods' startup warnings.

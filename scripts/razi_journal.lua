@@ -800,6 +800,24 @@ local function render_details(parent,player,quest,p,context,size,view)
   section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
   section(prose,"chapter-context",
     {"journal-chapter-story."..quest.chapter},text_width,theme)
+  -- The human accounts are useful where their actual milestone was
+  -- completed, not just buried in the Archive's growing collection.
+  -- No link or future title is shown before source quest completion.
+  if M.complete(player.force,quest,context) then
+    for _,record in ipairs(records) do
+      if record.series=="field" and record.unlock==quest.id then
+        local letter=prose.add{type="flow",direction="vertical"}
+        letter.style.vertical_spacing=5
+        subtitle(letter,"field-citation-heading",text_width-26,theme)
+        local button=letter.add{type="button",
+          caption={"journal-record-title."..record.id},
+          tooltip=L("field-citation-tooltip"),
+          tags={razi_journal_action="record",id=record.id}}
+        button.style.minimal_width=math.min(210,text_width-26)
+        break
+      end
+    end
+  end
   if native then
     draw_gallery(prose,"science-pack-heading",
       science_gallery(native),text_width,12,theme)
@@ -1211,16 +1229,21 @@ local function render_archive(parent,player,p,context,size)
   collection.style.width=size.rail-56
   collection.style.vertical_spacing=8
   local chosen,focus
+  local sealed=0
   local corporate_heading=false
   for _,record in ipairs(records) do
+    local quest=defs.by_id[record.unlock]
+    local opened=quest and M.complete(player.force,quest,context)
+    if not opened then sealed=sealed+1 end
+    -- Hide sealed pages entirely in spoiler mode. A counter replaces
+    -- dozens of identical encrypted rows, without leaking future titles.
+    if opened or not M.hide_spoilers() then
     if not corporate_heading and record.id:sub(1,5)=="corp-" then
       corporate_heading=true
       local heading=subtitle(collection,"archive-corporate-heading",
         size.rail-64,themes.get("network"))
       heading.style.top_margin=10
     end
-    local quest=defs.by_id[record.unlock]
-    local opened=quest and M.complete(player.force,quest,context)
     local concealed=M.hide_spoilers() and not opened
     if opened and (not chosen or record.id==p.record) then chosen=record end
     local highlighted=opened and record.id==p.record
@@ -1258,6 +1281,12 @@ local function render_archive(parent,player,p,context,size)
       choice.style.font="default-bold"
       focus=choice
     end
+    end
+  end
+  if M.hide_spoilers() and sealed>0 then
+    local note=wrap(collection,L("archive-sealed-count",
+      tostring(sealed)),size.rail-64)
+    note.style.font_color=COLOR.quiet
   end
   if focus then pcall(function() left.scroll_to_element(focus) end) end
 
@@ -1274,7 +1303,9 @@ local function render_archive(parent,player,p,context,size)
   p.record=chosen.id
   local chosen_quest=defs.by_id[chosen.unlock]
   local archive_theme=themes.get(chosen_quest and chosen_quest.chapter or "echoes")
-  subtitle(paper,"archive-entry-label",size.reader-48,archive_theme)
+  subtitle(paper,chosen.series=="field" and
+    "archive-field-heading" or "archive-entry-label",
+    size.reader-48,archive_theme)
   accent_rule(paper,archive_theme,math.min(142,size.reader-42),3)
   local cover=paper.add{type="flow",direction="horizontal"}
   cover.style.horizontal_spacing=10
@@ -1477,10 +1508,19 @@ local function draw(player,focus_search)
     tint(label(filterbar,L("archive-progress",
       tostring(unlocked),tostring(all))),themes.get("echoes").primary)
     local unread=0
-    for _ in pairs(p.story_unread or {}) do unread=unread+1 end
+    for _,record in ipairs(records) do
+      local q=defs.by_id[record.unlock]
+      if p.story_unread and p.story_unread[record.id]
+        and q and M.complete(player.force,q,context) then
+        unread=unread+1
+      end
+    end
     if unread>0 then
       local news=label(filterbar,L("archive-unread",tostring(unread)))
       news.style.font_color=COLOR.amber
+      filterbar.add{type="button",
+        caption=L("archive-read-next"),
+        tags={razi_journal_action="record-next-unread"}}
     end
     local spacer=filterbar.add{type="empty-widget"}
     spacer.style.horizontally_stretchable=true
@@ -1867,6 +1907,20 @@ function M.gui_click(event)
     p.project=tags.id
   elseif action=="story-alerts" and p.view=="archive" then
     p.story_alerts=not p.story_alerts
+  elseif action=="record-next-unread" and p.view=="archive" then
+    local context=M.context(player.force)
+    local found=false
+    for _,record in ipairs(records) do
+      local quest=defs.by_id[record.unlock]
+      if p.story_unread and p.story_unread[record.id]
+        and quest and M.complete(player.force,quest,context) then
+        p.record=record.id
+        p.story_unread[record.id]=nil
+        found=true
+        break
+      end
+    end
+    if not found then return end
   elseif action=="record" then
     local context=M.context(player.force)
     for _,record in ipairs(records) do

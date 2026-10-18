@@ -417,3 +417,21 @@ ledger, delivery status or victory gate is associated with the lanes.
 
 See [Galactic Industrial Network](GALACTIC_INDUSTRIAL_NETWORK.md)
 and [Validation](VALIDATION.md) for directions, scope and testing.
+
+## The people of RAZI Industries: 3.0 follow-through
+
+The corporate Archive now has **43** cases: 25 original records plus
+18 new field documents. All 15 legacy recovered transmissions remain.
+Personnel and community records help explain what was lost when the
+Continuity Engine started measuring assets instead of survival.
+Rhea Calder's shelter decision, Noor Halden's open relay address,
+and Sera Ilyan's person-first mail routing weave through
+nonlinear source-milestone discoveries.
+
+The ending's authority stays grounded in the same five real
+Convergence deliveries and final completed transmission. The
+Journal includes direct field-document links in completed quest dossiers, a spoiler-safe Archive index, **Read next unread**
+navigation, a human-correspondence heading and quieter classified
+story notices. No new quest flags or invented delivery metrics.
+See [Story Bible](STORY_BIBLE.md) for the characters and
+[Validation](VALIDATION.md) for release checks.

@@ -1638,3 +1638,41 @@ entire modpack and old-save GUI layout before public release.
 The manual-only GitHub Check workflow now includes
 `tests/lua/test_razi_freight_orders.lua`; its execution and full
 Factorio startup are not implicitly confirmed by a GitHub commit.
+
+## 3.0 expanded field stories and in-world welcome
+
+```sh
+python3 scripts/audit_campaign_consistency.py
+python3 tools/journal_locale.py
+python3 -m unittest tests.test_razi_3_0_story_pass tests.test_razi_3_0_first_pass tests.test_razi_settings_welcome -v
+lua5.2 tests/lua/test_razi_story_dispatch.lua
+lua5.2 tests/lua/test_razi_welcome.lua
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+Validate **58 unique Archive IDs**, with 43 corporate files (18
+FIELD accounts plus the existing 25) and all corresponding localized
+title/origin/body text. All new unlock quests must preexist, including
+optional planetary discovery records. The five physically delivered
+Convergence mandates and actual, timed victory epilogue must remain
+unchanged. No quest IDs, research recipes, rewards or technologies
+are introduced merely for narrative delivery.
+
+With Hide Spoilers ON, the Archive index should show *only*
+completed files plus a neutral sealed count. With spoilers OFF,
+locked titles may be previewed again. A completed quest with field correspondence should link directly to its truly unlocked file; no incomplete objective may reveal a title. Read next unread must
+open only a truly completed record and clear only that record's
+unread marker. Test personal dispatch mute, a burst of research,
+multi-player force merges and save restoration.
+
+On the new-game welcome, verify the terminal formatting, unread
+count, six standard lines (seven for an admin), replay via
+`/razi-welcome` and explicit destructive clear via
+`/razi-welcome clear`. Operations status can advance only after
+automation, space platform, freight logistics or actual Commission
+research. It must never reveal the unreached ending. Test small
+displays, Russian locale fallback and Factorio rich text.
+
+**Runtime tests and full modpack startup remain pending until run.**
+Committing static code or a manual-only Check workflow does not
+prove in-game behavior.

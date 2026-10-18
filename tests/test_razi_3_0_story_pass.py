@@ -19,14 +19,36 @@ def section(text,title):
 class NarrativePassTests(unittest.TestCase):
     def test_quest_gating_preserves_all_existing_ids(self):
         analysis=inspect(ROOT)
-        self.assertEqual(analysis["record_count"],40)
+        self.assertEqual(analysis["record_count"],58)
         self.assertEqual(analysis["duplicate_record_ids"],[])
         self.assertEqual(analysis["record_unlocks_without_quests"],[])
         self.assertEqual(analysis["locale_errors"],[])
         records=read("scripts/razi_journal_corporate.lua")
         names=re.findall(r'\{id="(corp-[a-z0-9-]+)",unlock="([a-z0-9-]+)"',records)
-        self.assertEqual(len(names),25)
-        self.assertEqual(len(set(a for a,b in names)),25)
+        self.assertEqual(len(names),43)
+        self.assertEqual(len(set(a for a,b in names)),43)
+
+    def test_personal_field_files_preserve_the_original_finale(self):
+        source=read("scripts/razi_journal_corporate.lua")
+        fields=re.findall(r'\{id="(corp-[a-z0-9-]+)",unlock="([a-z0-9-]+)",series="field"\}',source)
+        self.assertEqual(len(fields),18)
+        self.assertEqual(len(set(name for name,quest in fields)),18)
+        self.assertLess(source.index('id="corp-transceiver-reply"'),
+                        source.index('id="corp-epilogue"'))
+        self.assertNotIn("series=\"field\"",source.split('id="corp-epilogue"')[1])
+        journal=read("scripts/razi_journal.lua")
+        for identifier in ("archive-read-next","archive-sealed-count",
+                           "archive-field-heading","record-next-unread"):
+            self.assertIn(identifier,journal)
+        self.assertIn("if opened or not M.hide_spoilers() then",journal)
+        self.assertIn('record.series=="field" and record.unlock==quest.id',
+                      journal)
+        self.assertIn('subtitle(letter,"field-citation-heading"',journal)
+        self.assertIn('tooltip=L("field-citation-tooltip")',journal)
+        interface=section(read("locale/en/razi_journal_interface.cfg"),
+                          "journal-ui")
+        self.assertTrue(interface["field-citation-heading"])
+        self.assertTrue(interface["field-citation-tooltip"])
 
     def test_five_physical_shipments_plus_true_victory_epilogue(self):
         content=read("scripts/razi_journal_corporate.lua")
@@ -54,7 +76,7 @@ class NarrativePassTests(unittest.TestCase):
                       "journal-record-body"):
             keys=section(src,title)
             self.assertTrue(all(record in keys for record in ids))
-            self.assertEqual(len([k for k in keys if k.startswith("corp-")]),25)
+            self.assertEqual(len([k for k in keys if k.startswith("corp-")]),43)
             self.assertTrue(all(keys[k].strip() for k in ids))
         count,issues=validate(ROOT)
         self.assertGreater(count,0)

@@ -30,7 +30,7 @@ class WelcomeAndSettingsTests(unittest.TestCase):
             self.assertTrue(ids.issubset(description),
                             f"{language}: missing descriptions {ids-set(description)}")
             self.assertEqual(section(locale,"mod-name").get("razi-protocol"),
-                             "○ Razi Protocol")
+                             "○ ! Razi Protocol")
             for name in ids:
                 self.assertTrue(labels[name].startswith("[color=#"),
                                 f"{language}: unstyled {name}")
@@ -72,6 +72,14 @@ class WelcomeAndSettingsTests(unittest.TestCase):
         self.assertIn("https://wiki.razisrealm.com",locale["links"])
         self.assertIn("https://razisrealm.com/discord",locale["links"])
         self.assertIn("Ctrl+Shift+J",locale["journal"])
+        for key in ("identification","status-initial","status-local",
+                    "status-flight","status-network","status-commission"):
+            self.assertTrue(locale.get(key),key)
+        self.assertIn("__1__",locale["journal"])
+        self.assertIn("function M.signal(player)",
+                      contents("scripts/razi_welcome.lua"))
+        self.assertIn("unread_count(player.index)",
+                      contents("scripts/razi_welcome.lua"))
 
     def test_manual_ci_keeps_expanded_regression_suite(self):
         workflow=contents(".github/workflows/check.yml")

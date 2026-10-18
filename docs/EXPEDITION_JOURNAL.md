@@ -517,7 +517,7 @@ were introduced. Saved journal selection and chapter IDs remain stable.
 ## Complete 3.0 RAZI Industries story and archive dispatches
 
 The Journal now contains a **25-entry corporate narrative** plus 15 legacy
-recovered transmissions (40 records total). Entries open using real research,
+recovered transmissions (58 records total). Entries open using real research,
 discovery, physical Convergence stage progress or final victory. No separate
 story completion flags or invented science unlocks exist.
 
@@ -682,3 +682,32 @@ its saved order reappears when the route is valid again.
 The usual Journal refresh control updates the player's inventory
 comparison; research unlocks use existing refresh handling. Packets
 or physical cargo are **never** inferred from checklist completion.
+
+## 3.0: Field correspondence, archive reading and terminal welcome
+
+The recovered Archive now holds **58 files** (15 legacy
+transmissions, 25 original formal corporate files and 18 new
+personal field accounts). The personal accounts carry recurring
+human signatures across unrelated factories, letters and manifests;
+their unlocks rely exclusively on existing gameplay milestones.
+
+With **Hide Spoilers ON**, sealed entries are summarized with a
+count and do not clutter the Archive with repetitive hidden titles.
+Turning spoiler mode OFF restores previews. Opened field accounts
+carry a FIELD ACCOUNT classification in the reading pane. Completed quests that recovered a field account provide a **Recovered Correspondence** button for that specific unlocked file. When
+unread records exist, **Read next unread** lets a player open
+the next recovered document and clears only that page's unread mark.
+Personal notification muting still does not prevent recovering lore.
+
+Research-driven dispatches distinguish new human correspondence
+from ordinary recovered corporate archives and real Convergence
+transmissions, without spamming repeated unlocks. The genuine
+victory-only epilogue remains the last story record.
+
+The startup welcome is an in-world RAZI Industries operations
+terminal. It reports only previously **researched** operational
+readiness (new local industry, space platforms, interplanetary
+logistics or the Commission), and the number of *that player's*
+unread transmissions. It never names hidden future systems. The
+Journal shortcut is Ctrl+Shift+J. Razi's website, wiki, Discord
+and the two explicit welcome commands are still available.

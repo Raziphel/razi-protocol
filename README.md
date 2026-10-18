@@ -964,3 +964,17 @@ inventory stacks and how many items you personally carry, and keep
 a per-player packing checklist across saves. No invented deliveries
 or source-machine behavior: the real powered catapults handle
 transport. Read [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
+
+**3.0 narrative and Journal expansion:** 18 new personal field
+accounts now deepen the RAZI Industries mystery through workers'
+letters, safety reports, manifests and rescue decisions, bringing
+the recovered Archive to **58 real-milestone-gated documents**.
+Recurring signatures tell an optional human story without changing
+the true Convergence ending. The Journal now collapses sealed
+records when spoilers are hidden and offers **Read next unread**;
+field accounts have distinct notices and classification. The
+startup chat introduction is a stronger RAZI Industries
+Expedition Terminal briefing with only researched progress and
+the player's actual unread count. See
+[Story Bible](docs/STORY_BIBLE.md) and
+[Expedition Journal](docs/EXPEDITION_JOURNAL.md).
