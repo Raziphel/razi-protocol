@@ -2,6 +2,14 @@
 
 > **Purpose:** Explain *why* this mod exists and the standards used when changing it. For the current implementation, inspect code, `info.json`, and tests. Historical changelogs and older design documents can describe superseded behavior.
 
+## Story and authoring authority
+
+The complete 3.0 story, continuity mandate, independent-planet writing
+rules and real Convergence ending are specified in the
+[Story Bible](STORY_BIBLE.md). Add narrative only through existing
+research/world/physical milestones and localized Archive/Journals;
+do not make new optional planet gates or reset a factory at victory.
+
 ## North star
 
 Razi Protocol is a curated, multi-system **Factorio 2.1 Space Age campaign** built around the Krastorio 2 Spaced Out ecosystem and a large collection of authored planet mods. It should feel like a long expedition with memorable systems, distinct destinations, discoveries that change the factory, and a real ending.

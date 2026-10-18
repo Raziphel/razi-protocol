@@ -3,6 +3,7 @@
 local M={}
 local defs=require("prototypes.technology.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
+local story_dispatch=require("scripts.razi_story_dispatch")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.
 M.transmission_beats={
@@ -148,6 +149,9 @@ local function finish(force,player)
  saved.completed_by=player.name
  saved.completed_site=saved.transmission and saved.transmission.site
   or saved.completed_site
+ -- The epilogue is earned only by the actual victory state, never
+ -- by researching Ignition or loading a previously completed save.
+ story_dispatch.shipment(force,"victory")
  if game.print then
   game.print({"razi-ops.convergence-broadcast",force.name})
  end
@@ -201,6 +205,10 @@ function M.deliver(player,id)
  if removed<=0 then return "convergence-no-cargo",0 end
  saved.delivered[id]=math.min(rule.count,
   (saved.delivered[id] or 0)+removed)
+ if saved.delivered[id]>=rule.count then
+  -- Explicitly accepted physical freight, not a research notification.
+  story_dispatch.shipment(force,id)
+ end
  if index==#M.stages and M.current(force)>#M.stages then
   -- Consumed cargo has been accepted. Keep the finale in save storage,
   -- surviving reloads and disconnects without spending the item twice.

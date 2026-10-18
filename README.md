@@ -30,6 +30,13 @@ The optional GitHub Check workflow now includes the newer Lua tests,
 without enabling automatic Actions usage. See
 [RAZI Industries](docs/RAZI_INDUSTRIES.md).
 
+**Complete story in 3.0 development:** RAZI Industries' 25-part
+continuity story now runs from Nauvis to a real Convergence victory,
+with quiet, optional Archive notifications and a victory-only
+epilogue. See the [Story Bible](docs/STORY_BIBLE.md) for canon,
+ending, authoring and test requirements. The release branch is
+unchanged until engine and save compatibility have been validated.
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

@@ -1,4 +1,5 @@
 local razi_journal = require("scripts.razi_journal")
+local story_dispatch = require("scripts.razi_story_dispatch")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
@@ -204,6 +205,7 @@ events:on_nth_tick(600, function()
 end)
 events:on_nth_tick(30, function()
   razi_journal.flush_research_refreshes()
+  story_dispatch.flush()
 end)
 events:on_event({
 	defines.events.on_built_entity,
@@ -222,8 +224,12 @@ events:on_event("razi-journal-toggle",function(event)
 end)
 events:on_event(defines.events.on_research_finished,function(event)
   razi_journal.on_research(event)
+  story_dispatch.on_research(event)
 end)
-events:on_event(defines.events.on_forces_merged,convergence.forces_merged)
+events:on_event(defines.events.on_forces_merged,function(event)
+  convergence.forces_merged(event)
+  story_dispatch.forces_merged(event)
+end)
 -- Only carrier asteroid creation events do work; no per-tick asteroid scan.
 events:on_event(defines.events.on_script_trigger_effect,
   quality_asteroids.on_script_trigger_effect)

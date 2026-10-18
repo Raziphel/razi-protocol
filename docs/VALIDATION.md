@@ -1381,3 +1381,33 @@ Within Factorio, verify paired Fulgora/Aquilo and Paracelsin/Rubia
 optional recipes against actual production, physical freight needs and
 an existing save. The Cargo Network's original recipe label must be
 truthful, and its journal links must not lose scroll position.
+
+## Razi 3.0 complete story, archive and ending regression
+
+The 25 corporate cases are gated by the real Expedition Journal quest
+completion state; the original 15 transmission IDs are unchanged.
+The five Convergence shipment files unlock only with accepted physical
+cargo. The epilogue is reserved for actual winning state, not ignition
+research or arrival at the edge.
+
+```sh
+python scripts/audit_campaign_consistency.py
+python tools/journal_locale.py
+python -m unittest tests.test_razi_3_0_story_pass tests.test_razi_3_0_first_pass
+python -m unittest discover -s tests -p 'test_*.py'
+lua5.2 tests/lua/test_razi_story_dispatch.lua
+lua5.2 tests/lua/test_convergence_runtime.lua
+lua5.2 tests/lua/test_razi_journal.lua
+```
+
+Test both fresh saves and saves with research already completed. A save
+reload must not send retrospective notifications. A 20+ research
+burst should result in one digest, not repeated messages. Test
+separate/muted clients on the same force, disconnected players, optional
+world research with unlock-space-location effects, merged forces and
+delivered stages. The force's genuine winning screen must show the
+ending while Factorio still allows continuing the game.
+
+**Do not ship on static validation alone.** The full Lua/Python suites,
+actual modpack load, GUI layout, multiplayer and old-save verification
+remain required unless explicitly logged as completed.

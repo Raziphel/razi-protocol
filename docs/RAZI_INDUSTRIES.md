@@ -1,7 +1,10 @@
-# RAZI Industries: first 3.0 integration pass
+# RAZI Industries: 3.0 campaign identity and integration
 
-**Status:** pilot narrative direction for the development branch, not finalized
-canon. The visual language is restrained corporate engineering: safety-orange
+**Status:** the complete 3.0 narrative arc and ending are now authored on
+the development branch. They still require full Factorio testing before release.
+The canonical timeline, character voice, actual shipment-gated finale and
+notification contract are documented in [Story Bible](STORY_BIBLE.md).
+The visual language remains restrained corporate engineering: safety-orange
 accents, charcoal machinery, precise typography and useful status labels.
 
 ## The experience we are building
@@ -371,3 +374,25 @@ Do not schedule redundant automatic CI just to obtain a green badge.
 **Still unverified:** Complete Factorio startup, production logistics,
 and save migrations. Static source validation is not a substitute for
 these checks, and the workflow has not been dispatched by this pass.
+
+## Story completion and notifications (3.0 narrative pass)
+
+The corporate archive is now a **25-part complete story** embedded in the
+existing Expedition Journal, alongside the original 15 recovered
+transmissions. It follows the Continuity Engine's loss of human oversight,
+the colonies that resisted its failed economic logic, the recovered
+distributed Protocol and five actual Convergence mandates.
+
+The fifth mandate starts the persistent transmission. **Only real victory**
+unlocks `corp-epilogue` and retires the obsolete central order. Research
+authorization, partial cargo or reopening an old save cannot fake this.
+
+Milestone announcements are localized and queued on real research events,
+with quiet-time batching to protect against cheat or bulk research spam.
+Physical stage completions and victory notify once per force. Archive
+unread dots and a per-player mute toggle allow atmospheric feedback without
+interrupting production. Force merges keep the sent history.
+
+See [Story Bible](STORY_BIBLE.md) and
+[Expedition Journal](EXPEDITION_JOURNAL.md) for authoring and GUI details.
+The old source-owned planet lore and stable quest IDs remain intact.

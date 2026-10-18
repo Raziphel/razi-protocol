@@ -62,6 +62,8 @@ local function pref(index)
   value.view=({quests=true,projects=true,archive=true})[value.view] and value.view or "quests"
   value.project=projects.valid(value.project) and value.project or "dyson"
   value.query=value.query or ""
+  value.story_unread=value.story_unread or {}
+  value.story_alerts=value.story_alerts~=false
   value.chapter_cover=value.chapter_cover==true
   return value
 end
@@ -1177,7 +1179,8 @@ local function render_archive(parent,player,p,context,size)
     mark.style.height=icons.size("archive_button")
     local choice=row.add{type="label",
       style=opened and "clickable_label" or nil,
-      caption={"journal-record-title."..record.id},
+      caption={"",opened and p.story_unread and p.story_unread[record.id]
+        and "● " or "",{"journal-record-title."..record.id}},
       tags=opened and {razi_journal_action="record",id=record.id} or nil}
     choice.style.single_line=false
     choice.style.maximal_width=size.rail-105
@@ -1386,6 +1389,18 @@ local function draw(player,focus_search)
     local unlocked,all=M.unlocked_records(player.force,context)
     tint(label(filterbar,L("archive-progress",
       tostring(unlocked),tostring(all))),themes.get("echoes").primary)
+    local unread=0
+    for _ in pairs(p.story_unread or {}) do unread=unread+1 end
+    if unread>0 then
+      local news=label(filterbar,L("archive-unread",tostring(unread)))
+      news.style.font_color=COLOR.amber
+    end
+    local spacer=filterbar.add{type="empty-widget"}
+    spacer.style.horizontally_stretchable=true
+    filterbar.add{type="label",style="clickable_label",
+      caption=L(p.story_alerts and "archive-alerts-on" or "archive-alerts-off"),
+      tooltip=L("archive-alerts-tooltip"),
+      tags={razi_journal_action="story-alerts"}}
   elseif p.view=="projects" then
     tint(label(filterbar,L("projects-hint")),window_theme.soft)
   else
@@ -1719,6 +1734,8 @@ function M.gui_click(event)
     p.view=tags.id
   elseif action=="project" and projects.valid(tags.id) then
     p.project=tags.id
+  elseif action=="story-alerts" and p.view=="archive" then
+    p.story_alerts=not p.story_alerts
   elseif action=="record" then
     local context=M.context(player.force)
     for _,record in ipairs(records) do
@@ -1727,6 +1744,7 @@ function M.gui_click(event)
         if quest and M.complete(player.force,quest,context) then
           p.record=record.id
           p.view="archive"
+          if p.story_unread then p.story_unread[record.id]=nil end
         end
         break
       end

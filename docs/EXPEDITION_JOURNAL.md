@@ -513,3 +513,25 @@ science costs, icons, recipe unlocks and blockers.
 
 No new standalone GUI, duplicate science items or fake completion criteria
 were introduced. Saved journal selection and chapter IDs remain stable.
+
+## Complete 3.0 RAZI Industries story and archive dispatches
+
+The Journal now contains a **25-entry corporate narrative** plus 15 legacy
+recovered transmissions (40 records total). Entries open using real research,
+discovery, physical Convergence stage progress or final victory. No separate
+story completion flags or invented science unlocks exist.
+
+Research and actual physical delivery events release short localized Archive
+notices. Multiple records from a burst of research are summarized after
+two seconds of quiet. New notices show an unread dot by the matching
+Archive entry; clicking the entry clears the dot. The Archive's
+**Dispatches: ON/MUTED** label is a per-player preference and does not
+change access to records.
+
+The final case, **The Right to Continue**, unlocks only when the game's
+actual Convergence victory is registered. The five physical cargo stages
+retain their original tracked progress and their timed last transmission.
+
+The whole plot, editorial style and out-of-order planet rules are documented
+in [Story Bible](STORY_BIBLE.md). See [Validation](VALIDATION.md)
+for the notification, multiplayer and old-save test matrix.
