@@ -90,6 +90,8 @@ jobs:
         run: lua5.2 tests/lua/test_planet_production_exchanges.lua
       - name: Check outer-world multi-planet production exchanges
         run: lua5.2 tests/lua/test_outer_production_exchanges.lua
+      - name: Check Vespera Orbital Catapult corridors
+        run: lua5.2 tests/lua/test_orbital_catapult.lua
       - name: Check source-backed factory comparison and safe optional sourcing
         run: lua5.2 tests/lua/test_razi_factory_comparison.lua
       - name: Check staged Cargo portfolio ordering and optional research

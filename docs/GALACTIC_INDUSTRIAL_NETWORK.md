@@ -46,12 +46,22 @@ guidance with an optional Codex link. It does **not** claim to detect
 actual channel wiring, receive signals, or change platform requests.
 This leverages the upstream implementation instead of duplicating it.
 
-Other candidates:
-- Orbital Catapult (orbital-cannon >=0.14): 2.1 MIT and mod-defined
-  one-way links, but each link can carry players as well as items and
-  could bypass a required planet-discovery or asteroid-belt crossing.
-  **Not enabled** until the target-research safety behavior can be
-  tested in the full modpack.
+Transport integrations and remaining candidates:
+- **Orbital Catapult >=0.15.0 now required** by Razi Protocol 3.0,
+  with the upstream author's recommended `~` dependency prefix, to avoid
+  forcing a problematic load order. It provides operational powered
+  catapults and source-owned handling for item/player transportation.
+  Razi registers three deliberately short **two-way Vespera corridors**
+  using six one-way link prototypes: Muria–Aquilo, Muria–Rubia and
+  Rubia–Aquilo. Original Muria–Aquilo IDs are unchanged for old saves.
+  Catapults complement normal space platforms, **not** replace their
+  routes. The existing startup option
+  `razi-orbital-catapult-local-links` now defaults ON and can disable
+  all six Razi lanes without uninstalling the source mod. No native
+  research, recipes, planet discoveries, surface restrictions or
+  Convergence shipments are rewritten. Player travel via catapult
+  is possible as defined by the original mod: check native
+  progression safety in-game before a public release.
 - Cargo Ships >=2.1.8: promising for local water-world logistics, but
   not interplanetary and not a universal required dependency.
 - Compact circuits >=2.1.0: useful to simplify advanced AAI relay
@@ -269,3 +279,37 @@ visible technologies with existing quests have return links.
 The dashboard reads force research and source prototype recipe details;
 it never claims factory production or freight delivery based on a quest,
 and it does not operate Planet Express.
+
+## Orbital Catapult: required Vespera local freight (3.0)
+
+**Source:** [Orbital Catapult](https://mods.factorio.com/mod/orbital-cannon)
+by Frontrider, 0.15.0+; original MIT-licensed transport behavior is
+unmodified. The mod has its own required dependencies, including
+`powered-machine`, which the Factorio mod portal resolves automatically.
+
+| Source | Destination | Return route | Role |
+|---|---|---|---|
+| Muria | Aquilo | Aquilo → Muria | Existing cryogenic resupply |
+| Muria | Rubia | Rubia → Muria | Nearby industrial transfers |
+| Rubia | Aquilo | Aquilo → Rubia | Direct material/cold-chain exchanges |
+
+Every row represents two separate `orbital-cannon-link` records.
+Register during `data.lua`, only when both planet prototypes exist.
+The source mod consumes registered links in its final-fixes phase,
+after Razi's system positions are defined. Leave `mods["orbital-cannon"]`
+checks to guard data-stage injection, but the metadata now requires
+the mod with `~ orbital-cannon >= 0.15.0`: the tilde is intentional
+and follows the source author's load-order warning.
+
+The same **startup setting ID** remains; it is now **ON by default**.
+Changing it requires restarting Factorio. OFF removes Razi's six
+declared corridors and keeps the source mod installed for any other
+compatible mod's lanes. Native space-platform routes remain independent.
+
+The existing Expedition Journal provides nearby-world dossiers for
+Muria, Rubia and Aquilo, encouraging discovery and infrastructure rather
+than inventing a new research requirement or counting catapult activity
+as completed Convergence freight. Catapult inventory/request throughput,
+electricity, planet placements and any player transfer require real
+Factorio 2.1 testing. Do **not** mark native planet discovery complete
+merely by registering a directed transport lane.

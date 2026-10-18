@@ -16,8 +16,10 @@ require("prototypes.ui.galactic_operations")
 require("prototypes.ui.dyson_stages")
 require("prototypes.ui.razi_journal")
 
--- Register source-declared catapult link prototypes at the DATA stage.
--- The source author reads these in final-fixes. The opt-in is OFF by default.
+-- Export Vespera's three local Orbital Catapult corridors at DATA stage.
+-- The source mod reads directed links in its later final-fixes pass.
+-- Required via "~ orbital-cannon" to avoid circular dependency/load order.
+-- Existing setting ID is retained; the links now default ON.
 require("prototypes.compat.orbital_catapult").data()
 
 -- CRITICAL LOAD-ORDER SAFEGUARD: Factorio runs *all* data.lua scripts

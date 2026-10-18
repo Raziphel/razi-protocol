@@ -1513,3 +1513,34 @@ current console messages and prints the new welcome. It is destructive,
 not a selective filter for Rubia, Nexus or Muluna messages. Their
 independent startup notices may still appear again if their own mods
 print them later.
+
+## Orbital Catapult required local corridors (3.0)
+
+```sh
+lua5.2 tests/lua/test_orbital_catapult.lua
+python3 -m unittest tests.test_razi_orbital_catapult
+python3 scripts/audit_campaign_consistency.py
+python3 -m unittest discover -s tests -p 'test_*.py'
+```
+
+For a full in-game test, install Orbital Catapult **0.15.0+** plus its
+`powered-machine` dependency, with Razi's `~` load-order-independent
+requirement. Confirm Factorio 2.1 loads without a dependency cycle.
+Verify Muria, Rubia and Aquilo form three **bidirectional** local
+catapult corridors at the correct starmap positions and that:
+1. The original Muria-Aquilo two directed IDs survive migrated saves.
+2. Normal platform routes, asteroid difficulty and existing research
+   prerequisites are unchanged.
+3. Only **actually discovered** planets become usable via the source
+   mod's own target gating; travel must not grant discovery research.
+4. Surface placement, electricity, transported items, player travel,
+   source requests/circuit operations and receiver inventory work.
+5. Turning the startup toggle OFF and restarting removes Razi's six
+   links without removing third-party links or any source technology.
+6. A source planet missing in a fixture skips only its affected
+   catapult links, without generating invalid custom prototypes.
+7. Journal dossiers accurately describe available short-haul lanes
+   without claiming the player has transported any cargo.
+
+No full Factorio engine/old-save tests were executed while authoring
+this patch. These must pass before public merging.

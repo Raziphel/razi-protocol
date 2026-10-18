@@ -12,7 +12,7 @@ class RaziThreePilotTests(unittest.TestCase):
     def test_all_records_and_industrial_briefs_are_source_gated(self):
         report=inspect(ROOT)
         self.assertEqual(report["record_count"],40)
-        self.assertEqual(report["brief_count"],12)
+        self.assertEqual(report["brief_count"],13)
         for key in ("duplicate_quest_ids","duplicate_record_ids",
                     "record_unlocks_without_quests","briefs_without_quests",
                     "locale_errors"):

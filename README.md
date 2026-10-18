@@ -48,6 +48,15 @@ can be disabled independently for compatibility. See
 [Expedition Journal](docs/EXPEDITION_JOURNAL.md) and
 [Validation](docs/VALIDATION.md).
 
+**Orbital Catapult integrated in 3.0:** Requires
+[Orbital Catapult 0.15.0+](https://mods.factorio.com/mod/orbital-cannon)
+via the author's recommended load-order-independent `~` dependency.
+Three nearby two-way Vespera freight corridors now default ON:
+Muria ↔ Aquilo, Muria ↔ Rubia and Rubia ↔ Aquilo. The existing
+startup option controls all six directed links; native platform routes,
+world discovery research and source transport behavior stay intact.
+See [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

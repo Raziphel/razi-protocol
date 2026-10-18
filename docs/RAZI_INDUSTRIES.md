@@ -396,3 +396,24 @@ interrupting production. Force merges keep the sent history.
 See [Story Bible](STORY_BIBLE.md) and
 [Expedition Journal](EXPEDITION_JOURNAL.md) for authoring and GUI details.
 The old source-owned planet lore and stable quest IDs remain intact.
+
+## Vespera freight: Orbital Catapult integrated (3.0)
+
+Orbital Catapult 0.15.0+ is now a required dependency, using its
+official recommended `~` dependency to prevent forced final-fixes
+ordering. Its real powered transport mechanics remain source-owned.
+
+RAZI offers six directed links in three local, reversible corridors:
+Muria–Aquilo, Muria–Rubia and Rubia–Aquilo. The earlier Muria–Aquilo
+identifiers remain stable. The single existing startup option
+`razi-orbital-catapult-local-links` is ON by default; OFF removes the
+RAZI links but keeps the source mod installed. Only present planet
+prototypes get paired links; cross-star teleports and optional planet
+arrival skips are intentionally excluded.
+
+Muria now has its own industrial Journal brief, linked to the existing
+Muria, Rubia and Aquilo research dossiers. No invented tech, cargo
+ledger, delivery status or victory gate is associated with the lanes.
+
+See [Galactic Industrial Network](GALACTIC_INDUSTRIAL_NETWORK.md)
+and [Validation](VALIDATION.md) for directions, scope and testing.

@@ -118,8 +118,11 @@ data:extend({
     "ba[integration]-d[companion-industries]"),
   -- Experimental upstream link format. Disabled by default so installs
   -- cannot bypass the Vespera belt or introduce starmap order problems.
+  -- Orbital Catapult is required via a load-order-independent dependency.
+  -- Keep the existing setting ID for old saves; enable local Vespera
+  -- freight links by default, without altering native planet research.
   {type="bool-setting",name="razi-orbital-catapult-local-links",
-    setting_type="startup",default_value=false,
+    setting_type="startup",default_value=true,
     order="ba[integration]-e[catapult-links]"},
 
   -- HOME SYSTEM MEGAPROJECT
