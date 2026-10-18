@@ -445,11 +445,22 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   gauge.style.width=math.max(130,width-38)
   gauge.style.height=6
   gauge.style.color=HUES.gold
-  -- Put the *next actual action* before the long project ledger. The
-  -- lead stays visible while the detailed dossier scrolls underneath.
-  local next=reader.add{type="frame",direction="vertical",
+  local scroll=reader.add{type="scroll-pane",direction="vertical",
+    name="razi_journal_project_reader"}
+  scroll.style.width=width-32
+  scroll.style.height=math.max(80,reader_height-(compact and 185 or 202))
+  scroll.tags={razi_scroll_context=p.project}
+  scroll.horizontal_scroll_policy="never"
+  scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
+  scroll.style.horizontally_squashable=true
+  local content=scroll.add{type="flow",direction="vertical"}
+  content.style.width=width-54
+  content.style.vertical_spacing=14
+  -- Project advice belongs at the top of the dossier's own scroll area,
+  -- leaving the narrow-screen reader free to show its real details.
+  local next=content.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
-  next.style.width=math.max(130,width-37)
+  next.style.width=math.max(120,width-72)
   next.style.padding=8
   next.style.vertical_spacing=4
   local eyebrow=next.add{type="label",caption=L("project-next-heading")}
@@ -458,7 +469,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local advice,quest_id=next_action(player.force,p.project,current)
   local guidance=next.add{type="label",caption=advice}
   guidance.style.single_line=false
-  guidance.style.maximal_width=math.max(115,width-68)
+  guidance.style.maximal_width=math.max(100,width-98)
   if quest_id and M.next_quest(player.force,p.project,current)==quest_id then
     next.add{type="button",caption=L("project-open-next"),
       tags={razi_journal_action="project-next"}}
@@ -466,19 +477,8 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local perspective=next.add{type="label",
     caption=L("project-measures-"..p.project)}
   perspective.style.single_line=false
-  perspective.style.maximal_width=math.max(115,width-68)
+  perspective.style.maximal_width=math.max(100,width-98)
   perspective.style.font_color=HUES.quiet
-  local scroll=reader.add{type="scroll-pane",direction="vertical",
-    name="razi_journal_project_reader"}
-  scroll.style.width=width-32
-  scroll.style.height=math.max(80,reader_height-(compact and 290 or 305))
-  scroll.tags={razi_scroll_context=p.project}
-  scroll.horizontal_scroll_policy="never"
-  scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
-  scroll.style.horizontally_squashable=true
-  local content=scroll.add{type="flow",direction="vertical"}
-  content.style.width=width-54
-  content.style.vertical_spacing=14
   local options={embedded=true,width=width-68}
   if p.project=="dyson" then
     dyson.render(content,player,options)
