@@ -31,7 +31,30 @@ function M.visible(force,id)
   local setting=settings and settings.global
     and settings.global["razi-hide-spoilers"]
   if not (setting and setting.value==true) then return true end
+  -- A dossier should become readable while there is still work ahead.
+  -- Avoid showing the Recovery counterpart until both source planets have
+  -- actually been discovered, preserving their names under spoiler fog.
+  if id=="recovery" then
+    local discovered={}
+    for _,technology in pairs(force and force.technologies or {}) do
+      if technology.researched then
+        for _,effect in pairs(technology.prototype
+          and technology.prototype.effects or {}) do
+          if effect.type=="unlock-space-location"
+            and (effect.space_location=="athos"
+              or effect.space_location=="nulla") then
+            discovered[effect.space_location]=true
+          end
+        end
+      end
+    end
+    if discovered.athos and discovered.nulla then return true end
+  end
   local name=project_technologies[id]
+  if id=="dyson" and force and force.technologies
+    and force.technologies["planet-discovery-sunorbit"] then
+    name="planet-discovery-sunorbit"
+  end
   local tech=force and force.technologies and force.technologies[name]
   if not tech then return false end
   if tech.researched then return true end
