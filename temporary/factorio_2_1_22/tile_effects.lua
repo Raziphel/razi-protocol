@@ -96,8 +96,24 @@ local function migrate_other(effect, effects)
     local atlas = image_texture(old[2])
     images = atlas and {atlas}
   elseif variation == "oil" and #old == 4 then
+    -- Legacy oil order is [noise, atlas, gradient, specular]. The 2.1 API
+    -- moves the gradient to NOISE (using the vanilla donor pair). Previously
+    -- we accidentally put the tiny 512x32 gradient in image_textures.
+    local gradient = old[3]
+    local atlas_source, spec_source = old[2], old[4]
+    local gradient_name = type(gradient) == "table" and gradient.filename
+    local atlas_w = type(atlas_source) == "table" and atlas_source.width
+    local atlas_h = type(atlas_source) == "table" and atlas_source.height
+    local spec_w = type(spec_source) == "table" and spec_source.width
+    local spec_h = type(spec_source) == "table" and spec_source.height
+    local gradient_ok = type(gradient_name) == "string" and
+      (gradient_name:lower():find("gradient", 1, true) ~= nil or
+        (type(gradient.height) == "number" and gradient.height <= 64))
+    local matching_atlases = atlas_w == spec_w and atlas_h == spec_h and
+      type(atlas_w) == "number" and type(atlas_h) == "number"
+    if not gradient_ok or not matching_atlases then return false end
     noise = water.noise_textures or donor_noise(effects, "oil-deep")
-    local atlas, spec = image_texture(old[3]), image_texture(old[4])
+    local atlas, spec = image_texture(atlas_source), image_texture(spec_source)
     images = atlas and spec and {atlas, spec}
   elseif variation == "water" and #old == 1 then
     local tex = copy_texture(old[1])

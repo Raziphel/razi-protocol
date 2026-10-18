@@ -6,7 +6,9 @@ local function legacy(variation, old)
     texture_variations_columns = 1, secondary_texture_variations_rows = 2,
     animation_speed = 1.5, foam_color = {59, 30, 9}}}
 end
-local function tex(name) return {filename = name, width = 512, height = 512} end
+local function tex(name, width, height)
+  return {filename = name, width = width or 512, height = height or 512}
+end
 local effects = {
   lava = {water = {shader_variation = "lava", noise_textures = {
     {filename = "lava-noise-1.png", size = 512, color_channels = 2},
@@ -18,8 +20,14 @@ local effects = {
     tex("__cubium__/graphics/terrain/cubium/lava-textures/lava.png")}),
   ["cubium-lava-2"] = legacy("lava", {tex("cubium-old-noise.png"),
     tex("__cubium__/graphics/terrain/cubium/lava-textures/coastal-lava.png")}),
-  ["other-oil"] = legacy("oil", {tex("old-noise"), tex("old-gradient"),
-    tex("custom-oil-atlas.png"), tex("custom-oil-spec.png")}),
+  ["other-oil"] = legacy("oil", {
+    tex("old-noise"),
+    tex("custom-oil-atlas.png", 2048, 1024),
+    tex("old-gradient", 512, 32),
+    tex("custom-oil-spec.png", 2048, 1024)}),
+  ["bad-oil-atlas-size"] = legacy("oil", {
+    tex("old-noise"), tex("atlas-2048.png", 2048, 1024),
+    tex("oil-gradient.png", 512, 32), tex("spec-512.png", 512, 512)}),
   ["water-source"] = legacy("water", {tex("mod-water-noise.png")}),
   ["already-modern"] = {water = {shader_variation = "lava",
     noise_textures = {{filename = "a"}, {filename = "b"}}}},
@@ -50,6 +58,12 @@ end
 check(effects["other-oil"].water.noise_textures[2].filename == "oil-gradient.png"
   and #effects["other-oil"].water.image_textures == 2,
   "Oil requires two noise images and must preserve both art atlases")
+check(effects["other-oil"].water.image_textures[1].filename ==
+  "custom-oil-atlas.png" and
+  effects["other-oil"].water.image_textures[2].filename ==
+  "custom-oil-spec.png", "2.1 artwork must be legacy slots 2 and 4")
+check(effects["bad-oil-atlas-size"].water.textures ~= nil,
+  "Do not migrate oil when artwork dimensions do not match")
 check(effects["water-source"].water.noise_textures[1].filename ==
   "mod-water-noise.png", "Ordinary water keeps its own noise texture")
 check(effects["already-modern"].water.noise_textures[1].filename == "a"

@@ -29,3 +29,10 @@ Tellus, K2SO, and other planet dependencies using the old API.
 The shims are version-gated but do not automatically switch off for future
 patches. They become no-ops on already-fixed prototypes. Do not remove them
 until the installed versions of the upstream mods work without them.
+
+## Oil atlas regression (Balack 1.1.2)
+The legacy oil texture order is noise, **image atlas**, gradient, **specular
+atlas**. Only slots 2 and 4 can enter `image_textures`. Slot 3 is the
+512x32 gradient belonging to the 2.1 two-texture noise shader instead.
+Oil artwork pairs are migrated only when their declared atlas dimensions
+match; unfamiliar layouts remain unchanged and are reported by the audit.
