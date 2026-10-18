@@ -8,6 +8,13 @@ The third pass also adds a combined offline factory-health audit and stricter
 native recipe byproduct safety. See [RAZI Industries](docs/RAZI_INDUSTRIES.md)
 for the boundaries and live-game validation still required.
 
+**Pass 4 economy work:** Additional machine ingredient-capacity safety,
+visible fixed output quantities for optional factory recipes, and a
+freight break-even audit that requires *user-supplied* material and
+shipping values. No recipe cost or science-price rebalance has been
+assumed without a complete loaded-modpack benchmark. See
+[RAZI Industries](docs/RAZI_INDUSTRIES.md).
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

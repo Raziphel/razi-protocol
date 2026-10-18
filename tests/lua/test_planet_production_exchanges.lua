@@ -152,6 +152,10 @@ local function setup(options)
     raw["assembling-machine"]["electromagnetic-plant"].surface_conditions={
       {property="magnetic-field", max=20}}
   end
+  if options.electromagnetic_ingredient_limit then
+    raw["assembling-machine"]["electromagnetic-plant"].ingredient_count=
+      options.electromagnetic_ingredient_limit
+  end
   rawset(_G,"data",{raw=raw,extend=function(self,prototypes)
     for _, prototype in ipairs(prototypes) do
       self.raw[prototype.type]=self.raw[prototype.type] or {}
@@ -337,6 +341,18 @@ absent({electromagnetic_machine_excluded=true},{
   ["razi-bio-rare-metal-casting"]=true,
   ["razi-cryo-energy-control"]=true
 })
+-- An optional premium recipe must fit a real machine's distinct input slots.
+-- The native electromagnetics recipe has three items; the freight recipe
+-- adds bioflux and holmium, for five distinct ingredients.
+absent({electromagnetic_ingredient_limit=4},{
+  ["razi-bio-rare-metal-casting"]=true,
+  ["razi-cryo-energy-control"]=true
+})
+local enough, enough_engine=setup({electromagnetic_ingredient_limit=5})
+enough_engine.data_final_fixes()
+check(enough.recipe["razi-electrobiological-components"],
+  "Five-slot electromagnetic machine unexpectedly rejected a valid upgrade")
+
 -- Disabling this optional category must not disturb native K2SO recipes.
 local disabled_raw, disabled_module = setup()
 rawset(_G, "settings", {startup={

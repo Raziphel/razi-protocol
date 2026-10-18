@@ -83,6 +83,7 @@ planetary industry briefs, safe crafting-group work and team authoring rules.
 | Factory partnerships / cargo overview | `scripts/razi_industry_portfolio.lua`, `scripts/galactic_trade.lua` |
 | Optional recipe safety | `prototypes/compat/planet_production_exchanges.lua` |
 | Offline factory health | `tools/factory_review.py`, `scripts/audit_industry_portfolio.py` |
+| Freight budget scenarios | `scripts/audit_freight_break_even.py` (user-provided costs, no invented metrics) |
 | Recovered lore | `scripts/razi_journal_records.lua`, `locale/en/razi_journal_transmissions.cfg` |
 | Starmap risk lines | `prototypes/system/route_highlights.lua` |
 | User settings | `settings.lua`, [Settings](SETTINGS.md) |

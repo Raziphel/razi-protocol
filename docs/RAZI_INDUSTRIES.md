@@ -184,3 +184,91 @@ Prefer **small, worthwhile bonuses for importing completed useful goods**
 over compulsory imports or new raw resources. A normal source recipe must
 always be available when its original research permits it. Keep performance
 stable and make every extra industrial connection clear in the UI.
+
+## Pass 04: freight break-even, route evidence and honest economy design
+
+**New in the game:** Cargo Network premium factories now show a deterministic
+product's real per-craft output when the installed recipe provides one. This
+is not displayed as a profit margin. Source-mod factories retain their
+original names, recipes and technologies.
+
+**New in data stage:** An optional interplanetary recipe is only registered
+when at least one compatible machine has enough declared ingredient capacity
+*as well as* the required fluid ports, category and surface support.
+Repeated imported/native ingredients count as one distinct input. Machines
+with no explicit ingredient_count limit are handled as before.
+
+**New in diagnostics:** The source-vs-premium recipe audit flags a recipe
+that omits a native material, even when the advertised bonus looks attractive.
+Its companion break-even model examines the eight established, explicitly
+mapped native/premium recipe pairs. Missing optional integrations are normal.
+
+### Interpreting a freight budget
+
+For equal native batches, with all other native inputs preserved:
+
+```text
+Freight budget per premium craft
+  = extra finished products × value per finished product
+    - extra imported ingredients × factory-gate input value
+    - max(0, extra machine seconds) × machine-second value
+```
+
+The result is the **maximum combined freight expense** that this
+specific user-provided value scenario can afford before the output
+bonus stops paying for itself. Negative budgets mean the hypothetical
+extra input and processing costs already exceed the extra output value.
+
+Do not read it as measured profit. Power, platform loading, technology
+costs, quality, modules, recycling, spoilage and geographic availability
+still need in-game validation. Actual source-native freight differences,
+if any, must be reviewed before using a scenario for balance changes.
+
+### Running the report
+
+1. Export a complete post-data-final-fixes Factorio `data.raw` JSON, using
+   the same actual mods/settings used for gameplay.
+2. Record realistic local factory-gate values in a JSON file, in arbitrary
+   but **consistent** units per item/fluid unit. All values must be finite
+   and nonnegative. Example values below are TEST ASSUMPTIONS, not prices:
+
+   ```json
+   {
+     "item:vesta-foundation": 2.0,
+     "item:razi-network-umbra-pressure-frame": 5.0
+   }
+   ```
+
+3. Record observed **shipping credits per craft** for premium recipe IDs in
+   a separate JSON file. You decide how to value loading, travel, return
+   flights and platform losses. The model never invents them.
+4. Review the output:
+
+   ```sh
+   python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+   python scripts/audit_freight_break_even.py --dump-data-raw loaded-data-raw.json \
+     --values factory-values.json --shipping-costs freight-costs.json \
+     --machine-second-value 0.25 --lane moshine,fulgora --json
+   ```
+
+   The `--lane` comparison adds shortest registered map kilometres only.
+   It does not multiply distance into credits or assume platform speed.
+   When source values are missing, the report says so instead of charging 0.
+
+### Design and review protocol
+
+- If a source recipe's native inputs or deterministic byproducts were
+  reduced, **fix the integrity issue first**. The margin is deliberately
+  suppressed. Optional bonuses must never erase native factory value.
+- Compare recipes by output bonus, machine seconds, upstream input cost,
+  platform capacity and typical journey, not raw output percentage alone.
+- Favor modest optional batches that produce something players genuinely
+  need. Do not punish a solo planet run or make optional mods mandatory.
+- Never rebalance a recipe on assumptions alone. Share the loaded audit
+  output and real factory measurements with Alex and the other developers.
+- A player who never uses the freight bonus must still complete the
+  entire intended science/planetary progression.
+
+The default economic values remain unchanged in Pass 04, pending real
+prototype dumps and playtesting. This is a deliberate release-safety limit,
+not a claim that all existing recipes are perfectly balanced.

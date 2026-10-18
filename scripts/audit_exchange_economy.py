@@ -62,6 +62,28 @@ def ingredients(recipe):
     return result
 
 
+def deterministic_results(recipe):
+    """Product quantities, retaining item/fluid types. None means unsafe to compare."""
+    if recipe.get("result"):
+        value=recipe.get("result_count",1)
+        return {("item",recipe["result"]):value} if isinstance(value,(int,float)) else None
+    totals={}
+    for entry in recipe.get("results",[]):
+        if isinstance(entry,list) and len(entry)>1:
+            kind,name,amount="item",entry[0],entry[1]
+        elif isinstance(entry,dict):
+            kind,name,amount=entry.get("type","item"),entry.get("name"),entry.get("amount")
+            if entry.get("probability",1)!=1 or "amount_min" in entry or "amount_max" in entry:
+                return None
+        else:
+            return None
+        if not isinstance(amount,(int,float)) or amount<=0 or not name:
+            return None
+        key=(kind,name)
+        totals[key]=totals.get(key,0)+amount
+    return totals
+
+
 def inspect(raw):
     recipes = raw.get("recipe", {})
     report = {}
@@ -93,11 +115,36 @@ def inspect(raw):
         scaled_original = {key: amount * batches
                            for key, amount in ingredients(native).items()}
         imported = {}
-        for key, amount in ingredients(alt).items():
+        premium_ingredients = ingredients(alt)
+        for key, amount in premium_ingredients.items():
             surplus = amount - scaled_original.get(key, 0)
             if surplus > 0:
                 imported[f"{key[0]}:{key[1]}"] = surplus
+        # A freight bonus must not quietly remove mandatory native inputs.
+        # The profitability scenario assumes these base costs are preserved.
+        native_shortfalls = {
+            f"{key[0]}:{key[1]}": round(required - premium_ingredients.get(key, 0), 6)
+            for key, required in scaled_original.items()
+            if premium_ingredients.get(key, 0) + 1e-6 < required
+        }
+        native_outputs=deterministic_results(native)
+        premium_outputs=deterministic_results(alt)
+        byproduct_shortfalls={}
+        if native_outputs is not None and premium_outputs is not None:
+            for key,amount in native_outputs.items():
+                if key==("item",product):
+                    continue
+                required=amount*batches
+                available=premium_outputs.get(key,0)
+                if available+1e-6<required:
+                    byproduct_shortfalls[f"{key[0]}:{key[1]}"]=round(required-available,6)
         reasons = []
+        if native_outputs is None or premium_outputs is None:
+            reasons.append("Non-deterministic byproduct output cannot be valued")
+        if byproduct_shortfalls:
+            reasons.append("Freight recipe reduces native byproducts")
+        if native_shortfalls:
+            reasons.append("Freight recipe discounts or removes native inputs")
         if extra <= 0:
             reasons.append("No bonus target product")
         if ratio > cap + 1e-6:
@@ -119,6 +166,8 @@ def inspect(raw):
             "bonus_fraction": round(ratio, 4),
             "machine_throughput_change": round(throughput, 4),
             "extra_imports_per_craft": dict(sorted(imported.items())),
+            "missing_native_inputs_per_craft": dict(sorted(native_shortfalls.items())),
+            "missing_native_byproducts_per_craft": dict(sorted(byproduct_shortfalls.items())),
             "research_units": raw.get("technology", {}).get(name, {}).get(
                 "unit", {}).get("count"),
             "issues": reasons,

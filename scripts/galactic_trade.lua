@@ -355,6 +355,22 @@ local function factory_opportunities(parent,player,width)
     local metadata=wrap(copy,{"",L("trade-state-short-"..entry.status),
       " / ",world_title(entry.site)},math.max(140,width-108))
     metadata.style.font_color={r=.66,g=.74,b=.78}
+    -- A real per-craft native product quantity is more useful than an
+    -- invented "profit" label. Never label probabilistic outputs as fixed.
+    for _,product in ipairs(entry.recipe.products or {}) do
+      local amount=product.amount
+      if type(amount)=="number" and amount>0
+        and (product.probability==nil or product.probability==1)
+        and not product.amount_min and not product.amount_max then
+        local kind=product.type=="fluid" and "fluid" or "item"
+        local prototype=product.name and item_proto(product.name,kind)
+        local output=wrap(copy,L("trade-portfolio-output",tostring(amount),
+          prototype and prototype.localised_name or product.name or "?"),
+          math.max(140,width-108))
+        output.style.font_color={r=.62,g=.77,b=.67}
+        break
+      end
+    end
   end
   if snapshot.available>#snapshot.entries then
     wrap(card,L("trade-portfolio-more",

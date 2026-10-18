@@ -317,14 +317,39 @@ local function crafting_machine_index()
   return index
 end
 
+-- Some machines (notably older assemblers and source-mod variants) have
+-- explicit recipe ingredient slot limits. Imported ingredients may add new
+-- *kinds* of input but repeated ingredients are merged by register_exchange.
+-- Check distinct type+name pairs to match the final generated recipe.
+local function distinct_ingredient_count(entries)
+  local names={}
+  local count=0
+  for _,entry in ipairs(entries or {}) do
+    local name=name_of(entry)
+    if name then
+      local kind=entry.type=="fluid" and "fluid" or "item"
+      local key=kind..":"..name
+      if not names[key] then
+        names[key]=true
+        count=count+1
+      end
+    end
+  end
+  return count
+end
+
 local function machine_can_craft(category, base, additional, world)
   local ingredients={}
   for _,entry in ipairs(base.ingredients) do ingredients[#ingredients+1]=entry end
   for _,entry in ipairs(additional) do ingredients[#ingredients+1]=entry end
+  local required_ingredients=distinct_ingredient_count(ingredients)
   local required_inputs=distinct_fluid_count(ingredients)
   local required_outputs=distinct_fluid_count(base.results)
   for _,candidate in ipairs(crafting_machine_index()[category] or {}) do
-    if candidate.inputs>=required_inputs and candidate.outputs>=required_outputs
+    local capacity=candidate.machine.ingredient_count
+    -- Nil means no explicit prototype limit. A numeric limit is authoritative.
+    if (type(capacity)~="number" or capacity>=required_ingredients)
+      and candidate.inputs>=required_inputs and candidate.outputs>=required_outputs
       and matches_surface(candidate.machine,world) then
       return true
     end

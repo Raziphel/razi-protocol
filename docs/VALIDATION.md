@@ -1299,3 +1299,33 @@ python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
 Also run `tests/lua/test_razi_industry_portfolio.lua` in the Lua
 regression runner and the full existing exchange suite. Live Factorio
 engine startup and save migration remain mandatory before release.
+
+## Razi 3.0 fourth-pass validation
+
+```sh
+python -m unittest tests.test_razi_3_0_fourth_pass tests.test_exchange_economy
+python -m unittest discover -s tests -p 'test_*.py'
+python scripts/audit_campaign_consistency.py
+python tools/journal_locale.py
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+python scripts/audit_freight_break_even.py --dump-data-raw loaded-data-raw.json --json
+```
+
+Also run `tests/lua/test_planet_production_exchanges.lua` from the
+repository root with Lua and execute your usual full Lua regression suite.
+
+The machine ingredient-capacity guard must reject a recipe with more
+distinct input types than the only compatible machine can accept. It must
+allow a recipe that fits exactly and continue accepting machines without
+an explicit limit. The original native recipe must remain unaffected.
+
+Compare recipes in the real Factorio craft menu after researching their
+native and optional technologies. The Cargo Network should show the
+true deterministic craft output, without implying shipping has occurred.
+Open a partnership's existing Journal dossier and confirm no GUI scroll
+position regression.
+
+The new freight report is **scenario math**, never authoritative
+shipping telemetry. Check its missing-price and missing-route handling,
+and reject a positive-looking scenario when native ingredients have been
+removed. Test multiplayer force research and old saves before release.
