@@ -4,7 +4,7 @@
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
-  "description": "A Space Age progression overhaul for huge K2SO planet packs, with custom system tech cards, rebuilt planet discovery, enemy routing, and a longer deep-space endgame across multiple star systems.\n\nSee the README for the full overview, compatibility notes, and credits.",
+  "description": "A connected Factorio 2.1 + K2SO galaxy with seven systems, curated routes, integrated research, industrial trade, an expedition Journal and a multi-stage deep-space finale. Adjustable challenge, visuals and optional performance settings.",
   "factorio_version": "2.1",
   "dependencies": [
     "base >= 2.1.20",

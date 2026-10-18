@@ -20,7 +20,7 @@ def settings_names(src):
 class WelcomeAndSettingsTests(unittest.TestCase):
     def test_every_setting_has_consistent_category_styling(self):
         ids=settings_names(contents("settings.lua"))
-        self.assertGreaterEqual(len(ids),59)
+        self.assertGreaterEqual(len(ids),62)
         for language in ("en","ru"):
             locale=contents(f"locale/{language}/settings.cfg")
             labels=section(locale,"mod-setting-name")
@@ -30,11 +30,26 @@ class WelcomeAndSettingsTests(unittest.TestCase):
             self.assertTrue(ids.issubset(description),
                             f"{language}: missing descriptions {ids-set(description)}")
             self.assertEqual(section(locale,"mod-name").get("razi-protocol"),
-                             "○ ! Razi Protocol")
+                             "Razi Protocol")
             for name in ids:
                 self.assertTrue(labels[name].startswith("[color=#"),
                                 f"{language}: unstyled {name}")
                 self.assertIn("[/color]",labels[name])
+                self.assertLessEqual(len(re.sub(r"\\[[^]]+\\]","",labels[name])),80,
+                                     f"{language}: long label {name}")
+                self.assertLessEqual(len(description[name]),260,
+                                     f"{language}: long description {name}")
+
+    def test_journal_visibility_controls_are_wired(self):
+        source=contents("settings.lua")
+        journal=contents("scripts/razi_journal.lua")
+        control=contents("control.lua")
+        for name in ("razi-journal-show-button","razi-journal-show-tracker"):
+            self.assertIn(name,source)
+            self.assertIn(name,journal)
+            self.assertIn(name,control)
+        self.assertIn('top.destroy()',journal)
+        self.assertIn('if player then razi_journal.sync(player) end',control)
 
     def test_research_and_welcome_default_options(self):
         raw=contents("settings.lua")

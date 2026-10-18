@@ -542,12 +542,19 @@ local function recipe_gallery(parent,quest,native,width,theme)
     or "factory-source-owned"),width-26)
 end
 
+local function show_player_option(player,name)
+  local personal=settings and settings.get_player_settings
+    and settings.get_player_settings(player)
+  local entry=personal and personal[name]
+  return not entry or entry.value~=false
+end
+
 local function render_tracker(player)
   local area=player.gui.left
   local old=area[TRACKER]
   if old and old.valid then old.destroy() end
   local p=pref(player.index)
-  if not p.tracker then return end
+  if not p.tracker or not show_player_option(player,"razi-journal-show-tracker") then return end
   local context=M.context(player.force)
   local quest=p.pinned and defs.by_id[p.pinned]
   if not quest or not M.journal_visible(player.force,quest,context) then
@@ -1682,9 +1689,13 @@ function M.sync(player)
   -- Clean failed placements without deleting player.gui.top[TOP].
   journal_button_cleanup.remove_other_placements(player,TOP)
   local top=player.gui.top[TOP]
-  if not (top and top.valid) then
-    top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",
-      {razi_journal_action="toggle"},L("button-tooltip"),TOP)
+  if show_player_option(player,"razi-journal-show-button") then
+    if not (top and top.valid) then
+      top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",
+        {razi_journal_action="toggle"},L("button-tooltip"),TOP)
+    end
+  elseif top and top.valid then
+    top.destroy()
   end
   render_tracker(player)
 end

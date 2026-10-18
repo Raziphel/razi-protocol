@@ -1,63 +1,37 @@
 # Razi Protocol
 
-I made Razi Protocol for the kind of Space Age playthrough where you install far too many planets and then realise half of them barely interact. It's built around Factorio 2.1 and Krastorio 2 Spaced Out, with the idea of turning those separate mods into one long expedition.
+**One galaxy. One connected expedition.**
 
-The starmap, technology tree and factory progression are tied together. You still get the original planets, machines and odd little mechanics that make each mod worth playing, but now there's a reason to bring materials and research between them.
+Razi Protocol brings sprawling **Factorio 2.1 + Krastorio 2 Spaced Out** planet packs together into a coherent campaign. Instead of a collection of isolated worlds, discoveries, science and manufacturing build on each other across seven star systems.
 
-## The Galaxy
+## Explore the galaxy
 
-The seven main systems follow three pairs of increasingly difficult expeditions:
+- **Calidus:** Nauvis, Muluna and the Dyson Sphere.
+- **Solaris & Nyxaris:** industrial and biological frontiers.
+- **Vibrant & Vespera:** electricity, cold worlds and asteroid belts.
+- **Beetlejuice & Umbra:** demanding outer-system expeditions.
+- **Beyond:** Bellicos, Aegis, Deep Space and the Convergence finale.
 
-- **Calidus:** Nauvis, Muluna, your first platform fleet and the Dyson Sphere project.
-- **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum and their industrial neighbours.
-- **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia and the biological frontier.
-- **Vibrant:** Fulgora, Cerys, Ribbonia, Paracelsin and the asteroid crossing.
-- **Vespera:** Muria, Aquilo, Rubia, Maraxsis and the colder outer routes.
-- **Beetlejuice:** Cubium, Linox, Secretas and Frozeta.
-- **Umbra:** Tenebris, Crucible, Vesta and the farthest factory challenges.
+Paired systems offer route choices without skipping the intended research progression. Original planet mechanics remain central.
 
-Solaris and Nyxaris can be started independently. So can the later paired systems, once you've finished the previous tier. The Aegis/Bellicos expedition, the solar-system edge and Deep Space are their own longer-distance projects.
+## Your expedition
 
-Some locations and features come from optional add-ons. Check `info.json` for the current required list.
+**Research with purpose.** Seven system science chapters connect existing planetary technologies. Optional cross-world recipes reward building real shipping networks without replacing native production.
 
-## Research and Manufacturing
+**A living Journal.** Follow objectives, recovered transmissions, chapter stories, factory projects and milestone records. Hide spoilers, pin goals or just explore. Open the Journal with **Ctrl + Shift + J**.
 
-System tech cards hold the main research chapters together. Existing planet sciences still matter, and the first trip to a planet shouldn't need its own science pack.
+**A readable starmap.** Curated routes, ten-level danger colors, useful travel tooltips and customizable sky details help you choose where to go next.
 
-There's also a growing network of alternate recipes for people who like building cargo routes. Moshine optics, Paracelsin zinc, Linox rare earths, Rubian composites, Vesta magnets and K2SO components all have places where they can help each other. These are bonus production options, not shortcuts past the original research.
+**An actual endgame.** Unlock Deep Space through the K2SO transceiver, then unite the galaxy's industry in a five-stage Convergence project.
 
-The asteroid belts and major travel routes have their own progression. The map shows where you can go next without turning every nearby planet into a dead end.
+## Make it yours
 
-## The Protocol Codex
+Mod settings let you tune asteroid populations, industry links, research distribution, map visuals, performance experiments, Journal controls and more. The standard defaults preserve the designed campaign; risky performance options are disabled by default.
 
-The in-game Codex catalogs 228 conditional research and exploration milestones across 18 chapters. You can search the objectives, browse science and recipe unlocks, pin a goal, read recovered transmissions and track how long each part of your run took.
+Startup settings may change existing progression or recipes. **Back up your save before switching campaign modes.**
 
-Each chapter has its own colours, art and atmosphere. Open it from the small top-row button or press **Ctrl + Shift + J**.
+## Community and credits
 
-The five Convergence Mandates now have their own original item
-artwork. The final Ignition Mandate uses three native-factory
-subassemblies connecting all eight system science disciplines,
-without adding another crafting machine or research laboratory.
+[Website](https://razisrealm.com) · [Discord](https://razisrealm.com/discord) · [Wiki](https://wiki.razisrealm.com)
 
-## More to Explore
-
-- The native K2SO intergalactic transceiver opens Deep Space. The real ending is a five-stage, physically delivered Convergence megaproject tied to all seven systems, the Calidus Dyson works and deep-space industry. The last shipment starts a save-safe final transmission before the native victory screen.
-- A Calidus Dyson Sphere project with staged construction.
-- Galactic Operations for navigating a crowded planet and platform list, with an integrated Convergence console, partial construction meters and native Deep Space expedition briefings.
-- An admin-only, read-only `/razi-audit` command for checking the real installed endgame science labs, mandate manufacturing, and research prerequisites without changing player progress.
-- A custom starmap with better local connections, route descriptions and space scenery.
-- Curated enemy encounters, including optional enemy mods on the planets that suit them.
-- A dedicated Vehicles & Infrastructure crafting tab and tidier science groups.
-- Nexus, bosses, Celestial Weather and other supported integrations where installed.
-
-Most of the pack is controlled through startup settings. Some settings change research or recipes, so back up a save before switching an ongoing campaign.
-
-## Support
-
-- Discord: https://discord.gg/fTEtu64whV
-- Patreon: https://www.patreon.com/cw/Raziphel
-- Foundry community: https://discord.gg/Dn5p7GZpKu
-
-## Credits
-
-The planet mods, enemies, machines, music and art belong to their respective creators. Razi Protocol connects their work rather than replacing it. Full acknowledgements are in `Credits.txt`.
+Razi Protocol connects the work of its planet, machine, enemy and art creators. See `Credits.txt` for full acknowledgements.

@@ -37,6 +37,13 @@ data:extend({
   {type="bool-setting",name="razi-show-welcome",
     setting_type="runtime-per-user",default_value=true,
     order="a1[welcome]-b[welcome-message]"},
+  -- Purely local UI visibility controls. The journal and hotkey still work.
+  {type="bool-setting",name="razi-journal-show-button",
+    setting_type="runtime-per-user",default_value=true,
+    order="a1[welcome]-c[journal-shortcut]"},
+  {type="bool-setting",name="razi-journal-show-tracker",
+    setting_type="runtime-per-user",default_value=true,
+    order="a1[welcome]-d[pinned-tracker]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.

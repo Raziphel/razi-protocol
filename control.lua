@@ -264,6 +264,10 @@ events:on_event(defines.events.on_runtime_mod_setting_changed,function(event)
     if event.setting=="razi-hide-spoilers" then
       razi_journal.refresh_open()
     end
+  elseif event and (event.setting=="razi-journal-show-button"
+    or event.setting=="razi-journal-show-tracker") then
+    local player=game.get_player(event.player_index)
+    if player then razi_journal.sync(player) end
   end
 end)
 -- Only carrier asteroid creation events do work; no per-tick asteroid scan.
