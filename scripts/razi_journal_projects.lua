@@ -316,6 +316,26 @@ local function next_action(force,id,status)
     return L("project-next-research",commission.localised_name),
       "convergence-commission"
   end
+  -- Match the actual delivery gates in razi_convergence.stage_ready:
+  -- later mandates cannot be submitted before synchronization/ignition.
+  if current>=3 then
+    local sync=force.technologies["razi-convergence-synchronization"]
+    if sync and not sync.researched then
+      return L("project-next-research",sync.localised_name),
+        "convergence-synchronization"
+    end
+  end
+  if current>=5 then
+    local ignition=force.technologies["razi-convergence-ignition"]
+    if ignition and not ignition.researched then
+      return L("project-next-research",ignition.localised_name),
+        "convergence-ignition-research"
+    end
+    local receivers_ready=convergence.dyson_readiness(force)
+    if not receivers_ready then
+      return L("project-next-convergence-receiver")
+    end
+  end
   local stage=convergence.stages[current]
   if not stage then return L("project-next-unavailable") end
   return L("project-next-convergence-deliver",
@@ -504,6 +524,11 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   perspective.style.single_line=false
   perspective.style.maximal_width=math.max(100,width-98)
   perspective.style.font_color=HUES.quiet
+  local context=content.add{type="label",
+    caption=L("project-context-"..p.project)}
+  context.style.single_line=false
+  context.style.maximal_width=math.max(115,width-72)
+  context.style.font_color=HUES.quiet
   local options={embedded=true,width=width-68}
   if p.project=="dyson" then
     dyson.render(content,player,options)

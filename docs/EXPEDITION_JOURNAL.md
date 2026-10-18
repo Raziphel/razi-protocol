@@ -755,3 +755,5 @@ The five original Projects remain inside the Expedition Journal: Dyson Sphere, I
 All guidance is derived when the Journal is opened or redrawn; no new polling, progress storage, map generation, source mod state mutation or recipes are added. Existing stage IDs and stored project selection remain unchanged. The main Journal's refresh button invalidates the source receiver snapshot if needed, while the normal redraw rechecks the other project counters. The following checks require a full in-engine Factorio 2.1 run before release: compact-screen layout, selecting objectives with spoiler fog active, transceiver activation, multiplayer force state and the final Convergence transmission.
 
 Recovery dashboard performance: native world unlocks are gathered in one technology pass per project snapshot, then reused for the summary and milestone rows. No stored progress or source-mod state is changed.
+
+The reader now includes brief, non-spoiler-breaking corporate field context. Convergence guidance follows the real synchronization, ignition and receiver prerequisites rather than prompting an impossible shipment.

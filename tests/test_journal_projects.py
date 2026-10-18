@@ -50,6 +50,11 @@ class ProjectsTests(unittest.TestCase):
         self.assertIn('project-measures-cargo=',locale)
         self.assertIn('project-measures-transceiver=',locale)
         self.assertIn('project-measures-convergence=',locale)
+        self.assertIn('project-context-convergence=',locale)
+        self.assertIn('project-next-convergence-receiver=',locale)
+        self.assertIn('if current>=3 then',projects)
+        self.assertIn('if current>=5 then',projects)
+        self.assertIn('convergence.dyson_readiness(force)',projects)
         self.assertIn('scroll.tags={razi_scroll_context=p.project}',projects)
         self.assertNotIn('on_tick',projects)
 
