@@ -1,7 +1,7 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.121",
-  "title": "0 ○ Razi Protocol",
+  "version": "2.1.122",
+  "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
   "description": "A Space Age progression overhaul for huge K2SO planet packs, with custom system tech cards, rebuilt planet discovery, enemy routing, and a longer deep-space endgame across multiple star systems.\n\nSee the README for the full overview, compatibility notes, and credits.",
@@ -103,7 +103,8 @@
     "+ shield-generators >= 0.7.0",
     "+ CircuitLaunchableRockets >= 1.4.6",
     "+ CargoBayLimitResearch >= 1.1.2",
-    "+ platform-logistics-overhaul >= 2.1.2"
+    "+ platform-logistics-overhaul >= 2.1.2",
+    "? 00-razi-protocol-settings >= 1.0.0"
   ],
   "quality_required": true,
   "rail_bridges_required": true,

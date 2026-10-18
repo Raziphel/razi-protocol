@@ -1,3 +1,7 @@
+-- Optional early-loading companion owns these same setting IDs when installed.
+-- Keep this fallback so Razi Protocol works normally without the companion.
+if mods["00-razi-protocol-settings"] then return end
+
 -- Settings use localized section labels and stable intra-mod order keys.
 -- The native settings GUI sorts by MOD before comparing these keys.
 -- A title prefix in locale/en/settings.cfg is a best-effort display hint,
