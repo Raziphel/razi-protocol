@@ -1650,7 +1650,7 @@ lua5.2 tests/lua/test_razi_welcome.lua
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-Validate **58 unique Archive IDs**, with 43 corporate files (18
+Validate **74 unique Archive IDs**, with 59 corporate files (34
 FIELD accounts plus the existing 25) and all corresponding localized
 title/origin/body text. All new unlock quests must preexist, including
 optional planetary discovery records. The five physically delivered
@@ -1666,7 +1666,7 @@ unread marker. Test personal dispatch mute, a burst of research,
 multi-player force merges and save restoration.
 
 On the new-game welcome, verify the terminal formatting, unread
-count, six standard lines (seven for an admin), replay via
+count, eight standard lines (nine for an admin), replay via
 `/razi-welcome` and explicit destructive clear via
 `/razi-welcome clear`. Operations status can advance only after
 automation, space platform, freight logistics or actual Commission
@@ -1676,3 +1676,35 @@ displays, Russian locale fallback and Factorio rich text.
 **Runtime tests and full modpack startup remain pending until run.**
 Committing static code or a manual-only Check workflow does not
 prove in-game behavior.
+
+## Witness story expansion, Archive filters, and current welcome
+
+```sh
+python3 scripts/audit_campaign_consistency.py
+python3 -m unittest tests.test_razi_story_expansion tests.test_razi_3_0_story_pass tests.test_razi_3_0_first_pass -v
+lua5.2 tests/lua/test_razi_story_dispatch.lua
+lua5.2 tests/lua/test_razi_welcome.lua
+lua5.2 tests/lua/test_razi_journal.lua
+```
+
+Check 74 source-quest-gated Archive entries and exactly 16
+additional FIELD accounts. Titles, origin labels and complete bodies
+must exist for all 59 corporate documents. Confirm the old
+victory-only epilogue stays behind the real timed Convergence finish,
+not a research completion or one delivery.
+
+Archive filters All / Expedition / Corporate / Personal must work
+across existing saved UI preferences and preserve Hide Spoilers.
+Counts reveal only aggregates, not the titles of locked records.
+**View discovery** may link only to the actual completed quest.
+Test rapid scrolling and narrow Journal layouts after the extra
+progress labels and filters. Confirm research unlock notices remain
+batched and can be muted per player.
+
+For the first-join briefing, verify the new field directive changes
+only on completed research, reports the player's current unread
+count, and prints the *actual* Hide Spoilers ON/OFF state. No future
+world or Convergence ending should appear before its legitimate
+research. Expected lines: eight for a normal user, nine for admins.
+Test `/razi-welcome`, `/razi-welcome clear`, returning players
+and old saves, including the option to keep all third-party chat.

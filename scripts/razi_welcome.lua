@@ -36,6 +36,19 @@ function M.signal(player)
   end
   return "status-initial"
 end
+-- Render the actual current map spoiler option. Never claim the
+-- research tree is hidden after the player turns it off.
+function M.spoiler_status()
+  local setting=settings and settings.global
+    and settings.global["razi-hide-spoilers"]
+  return setting and setting.value==false and "spoilers-off"
+    or "spoilers-on"
+end
+-- Immediate assignment follows existing force research. None of the
+-- priority lines name an undiscovered world or expose finale answers.
+function M.priority(player)
+  return M.signal(player):gsub("^status%-","priority-")
+end
 local function unread_count(index)
   local state=storage.razi_expedition_journal
     and storage.razi_expedition_journal[index]
@@ -50,8 +63,10 @@ local function briefing(player)
   player.print({"razi-welcome.identification"})
   player.print({"razi-welcome."..M.signal(player)})
   player.print({"razi-welcome.intro"})
+  player.print({"razi-welcome."..M.priority(player)})
   player.print({"razi-welcome.journal",
-    tostring(unread_count(player.index))})
+    tostring(unread_count(player.index)),
+    {"razi-welcome."..M.spoiler_status()}})
   player.print({"razi-welcome.links"})
   if player.admin then player.print({"razi-welcome.admin"}) end
 end

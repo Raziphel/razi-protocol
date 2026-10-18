@@ -19,20 +19,20 @@ def section(text,title):
 class NarrativePassTests(unittest.TestCase):
     def test_quest_gating_preserves_all_existing_ids(self):
         analysis=inspect(ROOT)
-        self.assertEqual(analysis["record_count"],58)
+        self.assertEqual(analysis["record_count"],74)
         self.assertEqual(analysis["duplicate_record_ids"],[])
         self.assertEqual(analysis["record_unlocks_without_quests"],[])
         self.assertEqual(analysis["locale_errors"],[])
         records=read("scripts/razi_journal_corporate.lua")
         names=re.findall(r'\{id="(corp-[a-z0-9-]+)",unlock="([a-z0-9-]+)"',records)
-        self.assertEqual(len(names),43)
-        self.assertEqual(len(set(a for a,b in names)),43)
+        self.assertEqual(len(names),59)
+        self.assertEqual(len(set(a for a,b in names)),59)
 
     def test_personal_field_files_preserve_the_original_finale(self):
         source=read("scripts/razi_journal_corporate.lua")
         fields=re.findall(r'\{id="(corp-[a-z0-9-]+)",unlock="([a-z0-9-]+)",series="field"\}',source)
-        self.assertEqual(len(fields),18)
-        self.assertEqual(len(set(name for name,quest in fields)),18)
+        self.assertEqual(len(fields),34)
+        self.assertEqual(len(set(name for name,quest in fields)),34)
         self.assertLess(source.index('id="corp-transceiver-reply"'),
                         source.index('id="corp-epilogue"'))
         self.assertNotIn("series=\"field\"",source.split('id="corp-epilogue"')[1])
@@ -76,7 +76,7 @@ class NarrativePassTests(unittest.TestCase):
                       "journal-record-body"):
             keys=section(src,title)
             self.assertTrue(all(record in keys for record in ids))
-            self.assertEqual(len([k for k in keys if k.startswith("corp-")]),43)
+            self.assertEqual(len([k for k in keys if k.startswith("corp-")]),59)
             self.assertTrue(all(keys[k].strip() for k in ids))
         count,issues=validate(ROOT)
         self.assertGreater(count,0)

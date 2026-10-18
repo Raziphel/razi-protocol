@@ -66,6 +66,8 @@ local function pref(index)
   value.query=value.query or ""
   value.story_unread=value.story_unread or {}
   value.story_alerts=value.story_alerts~=false
+  value.archive_filter=({all=true,legacy=true,corporate=true,
+    field=true})[value.archive_filter] and value.archive_filter or "all"
   value.chapter_cover=value.chapter_cover==true
   return value
 end
@@ -1223,8 +1225,37 @@ local function render_archive(parent,player,p,context,size)
   rail.style.width=size.rail
   rail.style.height=size.body
   subtitle(rail,"archive-navigator",size.rail-38,themes.get("echoes"))
+  -- Recovery ledger is derived solely from completed source milestones.
+  -- Sealed titles remain concealed; only aggregate counts are shown.
+  local counts={legacy={0,0},corporate={0,0},field={0,0}}
+  for _,record in ipairs(records) do
+    local category=record.id:sub(1,5)~="corp-" and "legacy"
+      or record.series=="field" and "field" or "corporate"
+    local entry=counts[category]
+    entry[2]=entry[2]+1
+    local quest=defs.by_id[record.unlock]
+    if quest and M.complete(player.force,quest,context) then
+      entry[1]=entry[1]+1
+    end
+  end
+  for _,category in ipairs({"legacy","corporate","field"}) do
+    local progress=label(rail,L("archive-ledger-"..category,
+      tostring(counts[category][1]),tostring(counts[category][2])))
+    progress.style.font_color=COLOR.muted
+  end
+  local chooser=rail.add{type="table",column_count=2}
+  chooser.style.horizontal_spacing=5
+  chooser.style.vertical_spacing=4
+  for _,category in ipairs({"all","legacy","corporate","field"}) do
+    local chosen_filter=p.archive_filter==category
+    local button=chooser.add{type="button",
+      caption=L("archive-filter-"..category),
+      tags={razi_journal_action="archive-filter",id=category}}
+    button.style.minimal_width=math.max(65,math.floor((size.rail-70)/2))
+    button.style.font_color=chosen_filter and COLOR.green or COLOR.muted
+  end
   local left=wheel_pane(rail,"razi_journal_archive_navigation",
-    size.rail-35,size.body-61)
+    size.rail-35,math.max(115,size.body-205))
   local collection=left.add{type="flow",direction="vertical"}
   collection.style.width=size.rail-56
   collection.style.vertical_spacing=8
@@ -1237,10 +1268,14 @@ local function render_archive(parent,player,p,context,size)
     if not opened then sealed=sealed+1 end
     -- Hide sealed pages entirely in spoiler mode. A counter replaces
     -- dozens of identical encrypted rows, without leaking future titles.
-    if opened or not M.hide_spoilers() then
+    local category=record.id:sub(1,5)~="corp-" and "legacy"
+      or record.series=="field" and "field" or "corporate"
+    if (p.archive_filter=="all" or p.archive_filter==category)
+      and (opened or not M.hide_spoilers()) then
     if not corporate_heading and record.id:sub(1,5)=="corp-" then
       corporate_heading=true
-      local heading=subtitle(collection,"archive-corporate-heading",
+      local heading=subtitle(collection,p.archive_filter=="field"
+        and "archive-personal-heading" or "archive-corporate-heading",
         size.rail-64,themes.get("network"))
       heading.style.top_margin=10
     end
@@ -1319,6 +1354,14 @@ local function render_archive(parent,player,p,context,size)
   title.style.font_color=COLOR.ink
   local origin=label(paper,{"journal-record-origin."..chosen.id})
   origin.style.font_color=COLOR.muted
+  if chosen_quest then
+    local source=paper.add{type="button",
+      caption=L("archive-open-source",
+        {"journal-title."..chosen_quest.id}),
+      tags={razi_journal_action="archive-source",id=chosen_quest.id},
+      tooltip=L("archive-source-tooltip")}
+    source.style.minimal_width=math.min(220,size.reader-58)
+  end
   paper.add{type="line",direction="horizontal"}
   local reading=wheel_pane(paper,"razi_journal_archive_reading",
     size.reader-38,size.body-179)
@@ -1915,12 +1958,28 @@ function M.gui_click(event)
       if p.story_unread and p.story_unread[record.id]
         and quest and M.complete(player.force,quest,context) then
         p.record=record.id
+        p.archive_filter="all"
         p.story_unread[record.id]=nil
         found=true
         break
       end
     end
     if not found then return end
+  elseif action=="archive-filter" then
+    if not ({all=true,legacy=true,corporate=true,field=true})[tags.id]
+      then return end
+    p.archive_filter=tags.id
+    p.record=nil
+  elseif action=="archive-source" then
+    local quest=defs.by_id[tags.id]
+    if not (quest and M.complete(player.force,quest)) then return end
+    p.selected=quest.id
+    p.chapter=quest.chapter
+    p.chapter_cover=false
+    p.view="quests"
+    p.filter="all"
+    p.query=""
+    p.reveal_selection=true
   elseif action=="record" then
     local context=M.context(player.force)
     for _,record in ipairs(records) do
@@ -1928,6 +1987,7 @@ function M.gui_click(event)
         local quest=defs.by_id[record.unlock]
         if quest and M.complete(player.force,quest,context) then
           p.record=record.id
+          p.archive_filter="all"
           p.view="archive"
           if p.story_unread then p.story_unread[record.id]=nil end
         end

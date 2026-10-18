@@ -184,7 +184,7 @@ Projects Convergence panel and Archive. No new competing screen.
 
 **Archive:** 15 legacy recovered transmissions retain their original
 IDs and prose. The 25 RAZI corporate files have a separately labeled
-section. All 58 records are gated by existing quest completions. The
+section. All 74 records are gated by existing quest completions. The
 first 19 corporate files are research/world-discovery records. The last
 six depend on physical Convergence progress or real victory.
 
@@ -295,8 +295,8 @@ The original 25 corporate case files remain stable, with the same
 research/physical-shipment gates and unchanged final epilogue.
 **Eighteen additional FIELD accounts** are interleaved among the
 older cases rather than placed after the ending. This brings the
-RAZI Industries collection to 43 files, and the entire Archive to
-58 when counting 15 legacy transmissions.
+RAZI Industries collection to 59 files, and the entire Archive to
+74 when counting 15 legacy transmissions.
 
 These are **fictional RAZI Industries annotations**, not retcons of
 Rubia, Nexuses, planetary mods' own canon or new simulated NPCs.
@@ -361,3 +361,49 @@ and Discord, plus an optional admin testing line. Existing
 per-player welcome/console-clear settings and replay command
 remain intact; Factorio still cannot selectively suppress the
 source mods' startup warnings.
+
+## Witness network: sixteen additional recovered field accounts
+
+The 3.0 Archive now comprises **74 source-gated documents**:
+15 legacy expedition transmissions, 25 original corporate case files
+and **34 independent field accounts**. This pass contributes 16
+additional human records with real unlocks, not custom collectibles.
+
+The story deliberately continues established names instead of
+introducing an omniscient narrator. Rhea Calder reappears in the early
+Nauvis blackout and the late singularity-test safety amendment.
+Noor Halden's emergency circuit idea resurfaces as a fallback relay
+that permits independent colonies to communicate without headquarters.
+Sera Ilyan's unapproved local delivery routing already exemplifies
+the same principle in ordinary life. These are optional recurring
+threads, **not** mandatory reading or a fixed planet visit order.
+
+Each new field account is a complete local incident: Arig's water
+register, Hyarion's rescue run, Apia's conservation decision,
+Ribbonia's repair, Maraxsis's Seadragon beacon, Abacayba's message,
+Crucible's shelter valve, Vesta's navigation, Frozeta's missed
+human-status field, the solar watch, Panglia's cooperative model and
+the materials standard. Side-world records never claim to define
+the source mod's entire history. A player arriving on any planet
+first should understand its account independently.
+
+The first 23 quest-story passages were rewritten or expanded to
+reinforce this same industrial ethics theme during normal gameplay,
+rather than keeping all narrative behind Archive navigation.
+Research milestones and source-owned world discovery remain the
+only triggers. No new chapter, research node, resource, item,
+cutscene, timer or manufactured shipment is involved.
+
+**Archive UX:** the navigator now has separate recovered counts for
+legacy transmissions, corporate case files and personal accounts;
+filters for each group; and an explicit **View discovery** link
+from an unlocked letter to its real source milestone. Filter state
+is a player's UI preference, not story progress. Hide Spoilers still
+conceals titles until their actual source-backed quest completes.
+
+**Startup terminal:** keeps the `○ ! RAZI PROTOCOL` identity and
+shared website/wiki/Discord links, now adding a real researched-state
+field directive. The spoiler-cover status is read from the current
+map setting rather than promising that spoilers are hidden even
+when the player has switched the option OFF. The welcome remains
+once per user on a save; replay is explicit via `/razi-welcome`.

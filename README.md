@@ -965,10 +965,10 @@ a per-player packing checklist across saves. No invented deliveries
 or source-machine behavior: the real powered catapults handle
 transport. Read [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
 
-**3.0 narrative and Journal expansion:** 18 new personal field
-accounts now deepen the RAZI Industries mystery through workers'
+**3.0 narrative and Journal expansion:** 34 personal field
+accounts deepen the RAZI Industries mystery through workers'
 letters, safety reports, manifests and rescue decisions, bringing
-the recovered Archive to **58 real-milestone-gated documents**.
+the recovered Archive to **74 real-milestone-gated documents**.
 Recurring signatures tell an optional human story without changing
 the true Convergence ending. The Journal now collapses sealed
 records when spoilers are hidden and offers **Read next unread**;
@@ -978,3 +978,14 @@ Expedition Terminal briefing with only researched progress and
 the player's actual unread count. See
 [Story Bible](docs/STORY_BIBLE.md) and
 [Expedition Journal](docs/EXPEDITION_JOURNAL.md).
+
+**Witness Archive and revised operations welcome (3.0):** Sixteen
+additional milestone-gated personal accounts bring the Archive
+to **74 entries**. The Journal now has separate recovery ledgers,
+Expedition/Corporate/Personal filters, and a direct link from a
+recovered record back to its quest. Twenty-three source-quest
+stories have stronger continuity with the human correspondence.
+The single-per-player `○ ! RAZI PROTOCOL` startup briefing now
+adds a researched-state field directive and accurately reflects
+the active Hide Spoilers setting without disclosing later events.
+See [Story Bible](docs/STORY_BIBLE.md).

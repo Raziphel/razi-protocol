@@ -517,7 +517,7 @@ were introduced. Saved journal selection and chapter IDs remain stable.
 ## Complete 3.0 RAZI Industries story and archive dispatches
 
 The Journal now contains a **25-entry corporate narrative** plus 15 legacy
-recovered transmissions (58 records total). Entries open using real research,
+recovered transmissions (74 records total). Entries open using real research,
 discovery, physical Convergence stage progress or final victory. No separate
 story completion flags or invented science unlocks exist.
 
@@ -685,8 +685,8 @@ or physical cargo are **never** inferred from checklist completion.
 
 ## 3.0: Field correspondence, archive reading and terminal welcome
 
-The recovered Archive now holds **58 files** (15 legacy
-transmissions, 25 original formal corporate files and 18 new
+The recovered Archive now holds **74 files** (15 legacy
+transmissions, 25 original formal corporate files and 34
 personal field accounts). The personal accounts carry recurring
 human signatures across unrelated factories, letters and manifests;
 their unlocks rely exclusively on existing gameplay milestones.
@@ -711,3 +711,32 @@ logistics or the Commission), and the number of *that player's*
 unread transmissions. It never names hidden future systems. The
 Journal shortcut is Ctrl+Shift+J. Razi's website, wiki, Discord
 and the two explicit welcome commands are still available.
+
+## The Witness Archive: browse the growing story (3.0)
+
+There are now **74 archived documents** (15 legacy transmissions,
+25 formal continuity case files, 34 personal field accounts).
+Every record unlocks from an existing source milestone. Sixteen
+additional personal accounts give Arig, Hyarion, Apia, Ribbonia,
+Abacayba, Crucible, Vesta, Frozeta and other worlds specific human
+perspectives without forcing a fixed expedition order.
+
+The Journal's Archive navigator reports three recovered-file totals
+and adds four filters: **All recovered**, **Expedition**, **Corporate**
+and **Personal**. These are personal UI preferences. With
+Hide Spoilers ON, filters never display unrecovered titles or
+unavailable source records. Each opened Archive document includes
+a **View discovery** button that returns to its actual completed
+quest, with no future quest shortcuts.
+
+We also refreshed 23 existing quest-story passages so the main
+dossiers continuously foreshadow the Continuity Protocol's deeper
+question without giving away the answer. Source planet mechanics
+remain unchanged.
+
+The RAZI welcome now has one additional current-research-driven
+field directive, an accurate unread count and a real spoiler-cover
+ON/OFF status. Both startup cleanup and message visibility remain
+separate personal settings; `/razi-welcome clear` still explicitly
+clears the user's entire chat, never selectively suppressing
+other mod warnings.
