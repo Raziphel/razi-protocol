@@ -4,6 +4,7 @@ local M={}
 local catalog=require("scripts.galactic_trade_catalog")
 local portfolio=require("scripts.razi_industry_portfolio")
 local catapults=require("scripts.razi_catapult_network")
+local freight_board=require("scripts.razi_freight_dispatch_ui")
 local signals=require("prototypes.compat.aai_signal_partnerships")
 local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
@@ -497,6 +498,7 @@ local function catapult_dossier(parent,player,width)
   end
   wrap(card,L("catapult-network-build"),width-44)
   wrap(card,L("catapult-network-safety"),width-44)
+  freight_board.render(card,player,state,width)
 end
 
 function M.render(parent,player,p,options)

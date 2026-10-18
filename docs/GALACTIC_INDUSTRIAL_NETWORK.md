@@ -389,3 +389,39 @@ surface restrictions, power, return links, item/player arrival and
 rocket/platform parity. Test existing saves with both toggles ON/OFF.
 The upstream source mod does not provide general freight telemetry to
 this integration. We must not report live shipments until measured.
+
+## Freight Desk: operational packing plans (3.0)
+
+The regional Orbital Catapult dashboard now has a **Freight Desk**.
+This is an actual interactive planning tool inside Expedition Journal
+→ Projects → Cargo Network, not just prose about route geometry.
+
+Players can select either direction of any **already discovered**
+and currently enabled catapult corridor, choose a **real item** from
+Factorio's item picker and enter the desired item quantity. The
+Freight Desk calculates the number of inventory stacks from the
+live `prototypes.item[item].stack_size` (including item-stack changes
+from the installed modpack). It shows the player's real carried
+item count alongside the order and provides controls to mark an order
+packed/unpacked or delete it.
+
+The queue is **per-player**, save-persistent, limited to 20 orders and
+1,000,000 items per order, and cleaned up when a player is removed.
+Only strings, numbers and booleans are saved, not Lua game objects.
+Route permissions use native planet-discovery research, the existing
+two independent corridor switches and the same source-backed route
+manifest as the actual catapult link definitions. Spoilers cannot
+reveal undiscovered endpoints through saved plans.
+
+This is intentionally **not** an auto-shipping system. Razi does not
+reserve materials, alter the source mod's transport machinery, manipulate
+catapult inventories, fabricate launch/delivery receipts, add free items,
+skip recipe costs or claim a completed Convergence shipment. Packing
+status is user-entered, while inventory numbers are strictly the
+player's own inventory, not a factory's or a catapult's contents.
+Update counts with the existing Journal refresh action.
+
+**Next potential integration:** machine counts, real throughput or
+remote dispatch would require documenting and testing a stable API
+provided by Orbital Catapult itself. We deliberately avoid guessed
+entity IDs and experimental remote calls in this release.

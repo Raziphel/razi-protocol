@@ -5,6 +5,7 @@ local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
 local industrial_briefs=require("scripts.razi_planet_briefs")
 local catapults=require("scripts.razi_catapult_network")
+local freight_orders=require("scripts.razi_freight_orders")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
@@ -1613,6 +1614,7 @@ function M.refresh_open()
   end
 end
 function M.on_removed(index)
+  freight_orders.cleanup(index)
   if storage.razi_expedition_journal then
     storage.razi_expedition_journal[index]=nil
   end
@@ -1747,6 +1749,19 @@ function M.gui_click(event)
       if not known or not convergence.available(player.force) then return end
       local message,amount=convergence.deliver(player,tags.value)
       player.print({"razi-ops."..message,tostring(amount)})
+    elseif p.project=="cargo" and native=="freight-select" then
+      if not freight_orders.select(player,tags.value) then return end
+    elseif p.project=="cargo" and native=="freight-add" then
+      if not freight_orders.add(player) then
+        player.print({"razi-ops.freight-board-invalid"})
+        return
+      end
+    elseif p.project=="cargo" and native=="freight-packed" then
+      if not freight_orders.update(player,tags.value,"packed") then return end
+    elseif p.project=="cargo" and native=="freight-remove" then
+      if not freight_orders.update(player,tags.value,"remove") then return end
+    elseif p.project=="cargo" and native=="freight-clear" then
+      freight_orders.clear(player)
     elseif native=="cargo-focus" and p.project=="cargo" then
       if not projects.valid_cargo(player.force,tags.value) then return end
       p.cargo_focus=p.cargo_focus==tags.value and nil or tags.value
@@ -1934,8 +1949,19 @@ function M.gui_click(event)
 end
 function M.text_changed(event)
   local element=event and event.element
-  if not (element and element.valid
-    and element.name=="razi_journal_search") then return end
+  if not (element and element.valid) then return end
+  local tags=element.tags
+  if tags and tags.razi_ops_action=="freight-count" then
+    local player=game.get_player(event.player_index)
+    if not (player and player.valid) then return end
+    local p=pref(player.index)
+    if player.gui.screen[FRAME] and p.view=="projects"
+      and p.project=="cargo" then
+      freight_orders.count_changed(player,element.text or "")
+    end
+    return
+  end
+  if element.name~="razi_journal_search" then return end
   local player=game.get_player(event.player_index)
   if not (player and player.valid) then return end
   local p=pref(player.index)
@@ -1956,6 +1982,19 @@ function M.text_changed(event)
     end
   end
   draw(player,true)
+end
+function M.elem_changed(event)
+  local element=event and event.element
+  if not (element and element.valid and element.tags
+    and element.tags.razi_ops_action=="freight-item") then return end
+  local player=game.get_player(event.player_index)
+  if not (player and player.valid) then return end
+  local p=pref(player.index)
+  if not (player.gui.screen[FRAME] and p.view=="projects"
+    and p.project=="cargo") then return end
+  if freight_orders.item_changed(player,element.elem_value) then
+    draw(player)
+  end
 end
 function M.selection_changed(event)
   local element=event and event.element

@@ -1609,3 +1609,32 @@ correct star systems while concealing undiscovered neighbors.
 **No full-modpack Factorio startup or old-save migration is claimed**
 merely from static source checks or committed test fixtures. The
 GitHub Check workflow remains manual-only.
+
+## Real regional Freight Desk planning
+
+```sh
+lua5.2 tests/lua/test_razi_freight_orders.lua
+python3 -m unittest tests.test_razi_freight_orders -v
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+In-game: open Projects → Cargo Network on an established save with
+Orbital Catapult installed, both corridor switches ON and planet
+research complete. Verify both directional selectors show on each
+valid discovered route; item selection uses the native Factorio item
+picker; quantities must be positive whole numbers at most 1,000,000.
+Check real stack-size calculation and player-carried item counts,
+especially if item stack size has been modified by another mod.
+Try 21 orders, invalid inputs and no item. Verify manual packed/unpacked
+and delete actions. Test save/load persistence, two different players,
+player removal, toggling each startup corridor group and Hide Spoilers
+ON/OFF. No save should ever gain free cargo or a fake completion flag.
+
+The board **does not** count actual launches, receiver inventory or
+transported goods. Checking a manual packed order must never mark
+Convergence progress or invoke Orbital Catapult methods. Test the
+entire modpack and old-save GUI layout before public release.
+
+The manual-only GitHub Check workflow now includes
+`tests/lua/test_razi_freight_orders.lua`; its execution and full
+Factorio startup are not implicitly confirmed by a GitHub commit.

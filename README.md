@@ -956,3 +956,11 @@ Orbital Catapult mod's native powered transport machinery. The Cargo
 Network and planetary Journal dossiers now group and explain these
 regional industries without claiming completed shipments or changing
 native research. [Details](docs/GALACTIC_INDUSTRIAL_NETWORK.md).
+
+**Interactive Catapult Freight Desk (3.0):** Cargo Network now lets
+players prepare real-item packing orders for discovered Orbital
+Catapult routes. Choose a direction, item and quantity, see actual
+inventory stacks and how many items you personally carry, and keep
+a per-player packing checklist across saves. No invented deliveries
+or source-machine behavior: the real powered catapults handle
+transport. Read [Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).

@@ -658,3 +658,27 @@ The two separate startup switches are
 `razi-orbital-catapult-regional-links` (new regional additions);
 both default ON. Hide Spoilers continues to gate presentation of
 undiscovered neighbors, not the underlying native researches.
+
+## Regional Freight Desk
+
+The Cargo Network Project now contains an interactive **Freight Desk**
+beneath the source-backed orbital route overview.
+
+Click the directional buttons of any corridor whose **both endpoint
+discovery technologies are researched**. Choose a real item, enter a
+whole number between 1 and 1,000,000, then **Add packing order**.
+A per-player packing queue displays item names, directed endpoints,
+the exact number of inventory stacks, and the number currently in
+that player's inventory. Players can manually **Mark packed**,
+**Unpack** or **Remove** an order.
+
+The Freight Desk is independent of source machine state and does not
+promise a launch or track a delivery. It is a guided preparation tool
+for the mod's actual source-owned catapult machinery. Up to 20 saved
+packing orders are permitted per player to minimize save growth.
+A player whose route becomes undiscovered or disabled cannot add to it;
+its saved order reappears when the route is valid again.
+
+The usual Journal refresh control updates the player's inventory
+comparison; research unlocks use existing refresh handling. Packets
+or physical cargo are **never** inferred from checklist completion.
