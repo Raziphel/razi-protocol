@@ -1,5 +1,5 @@
 package.path = "./?.lua;./?/init.lua;" .. package.path
-local M = require("prototypes.compat.fluid_box_21_compat")
+local M = require("temporary.factorio_2_1_22.fluid_boxes")
 local function check(ok, message)
   if not ok then error(message, 2) end
 end

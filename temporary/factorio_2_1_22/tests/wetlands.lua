@@ -1,5 +1,5 @@
 package.path = "./?.lua;./?/init.lua;" .. package.path
-local M = require("prototypes.compat.wetland_tile_effect_21_compat")
+local M = require("temporary.factorio_2_1_22.tile_effects")
 local function check(ok, message)
   if not ok then error(message, 2) end
 end

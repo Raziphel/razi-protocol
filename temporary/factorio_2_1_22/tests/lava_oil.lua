@@ -1,5 +1,5 @@
 package.path = "./?.lua;./?/init.lua;" .. package.path
-local module = require("prototypes.compat.wetland_tile_effect_21_compat")
+local module = require("temporary.factorio_2_1_22.tile_effects")
 local function check(ok, reason) if not ok then error(reason, 2) end end
 local function legacy(variation, old)
   return {water = {shader_variation = variation, textures = old,
