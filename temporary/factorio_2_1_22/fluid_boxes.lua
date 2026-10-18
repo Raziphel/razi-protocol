@@ -51,6 +51,65 @@ local input_box_by_type = {
   ["mining-drill"] = "input_fluid_box",
 }
 
+-- 2.1.22 also rejects NEW machine-level minimums below the filtered
+-- fluid's default temperature. Panglia roots have a minimum of zero even
+-- though branbalite slurry defaults to 165 C. Nil means unrestricted.
+local machine_fields = {
+  ["generator"] = {{"fluid_box","minimum_input_temperature","maximum_input_temperature"}},
+  ["boiler"] = {{"fluid_box","minimum_input_temperature","maximum_input_temperature"}},
+  ["fusion-generator"] = {{"input_fluid_box","minimum_input_temperature","maximum_input_temperature"}},
+  ["fusion-reactor"] = {{"input_fluid_box","minimum_input_temperature","maximum_input_temperature"}},
+  ["mining-drill"] = {{"input_fluid_box","minimum_input_temperature","maximum_input_temperature"}},
+  ["thruster"] = {
+    {"fuel_fluid_box","minimum_fuel_temperature","maximum_fuel_temperature"},
+    {"oxidizer_fluid_box","minimum_oxidizer_temperature","maximum_oxidizer_temperature"},
+  },
+}
+
+local function normalize_bounds(owner, box, minimum_key, maximum_key)
+  if type(owner) ~= "table" or type(box) ~= "table" then return 0 end
+  local fluid = type(box.filter) == "string" and
+    data.raw.fluid and data.raw.fluid[box.filter]
+  if type(fluid) ~= "table" or
+      type(fluid.default_temperature) ~= "number" then return 0 end
+  local changed = 0
+  if type(owner[minimum_key]) == "number" and
+      owner[minimum_key] < fluid.default_temperature then
+    owner[minimum_key] = nil -- existing default-temperature input is valid
+    changed = changed + 1
+  end
+  if owner[maximum_key] == 0 then
+    owner[maximum_key] = nil -- old unlimited-maximum sentinel
+    changed = changed + 1
+  end
+  return changed
+end
+
+local function normalize_machine_inputs()
+  local changed = 0
+  for kind, fields in pairs(machine_fields) do
+    for _, proto in pairs(data.raw[kind] or {}) do
+      for _, spec in ipairs(fields) do
+        changed = changed + normalize_bounds(
+          proto, proto[spec[1]], spec[2], spec[3])
+      end
+    end
+  end
+  for _, prototypes in pairs(data.raw) do
+    if type(prototypes) == "table" then
+      for _, proto in pairs(prototypes) do
+        if type(proto) == "table" and type(proto.energy_source) == "table" and
+            proto.energy_source.type == "fluid" then
+          local src = proto.energy_source
+          changed = changed + normalize_bounds(src, src.fluid_box,
+            "minimum_input_temperature", "maximum_input_temperature")
+        end
+      end
+    end
+  end
+  return changed
+end
+
 function M.data_final_fixes()
   if not requires_bridge() then return 0 end
 
@@ -114,11 +173,12 @@ function M.data_final_fixes()
     end
   end
 
-  if repaired > 0 and type(log) == "function" then
-    log("[Razi Protocol/2.1.22] Repaired " .. repaired ..
-      " obsolete FluidBox temperature declarations")
+  local bounds = normalize_machine_inputs()
+  if type(log) == "function" and repaired + bounds > 0 then
+    log("[Razi Protocol/2.1.22] Legacy fluid boxes=" .. repaired ..
+      ", invalid machine temperature bounds=" .. bounds)
   end
-  return repaired
+  return repaired + bounds
 end
 
 return M

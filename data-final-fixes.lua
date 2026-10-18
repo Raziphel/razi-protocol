@@ -279,11 +279,6 @@ require("prototypes.compat.legacy_lava_cleanup").data_final_fixes()
 -- this point, including legacy source-map or visualization modules.
 require("prototypes.system.bellicos").reconcile_final_positions()
 
--- Temporary Factorio 2.1.22 compatibility: source planet generators still
--- attach temperature limits to FluidBox instead of the owning machine.
--- Run after earlier source compatibility edits are included.
-require("prototypes.compat.fluid_box_21_compat").data_final_fixes()
-
--- Factorio 2.1.22 split wetland effect textures into separate noise
--- and atlas arrays. Repair only legacy two-texture wetland definitions.
-require("prototypes.compat.wetland_tile_effect_21_compat").data_final_fixes()
+-- TEMPORARY upstream compatibility patches. Entirely removable:
+-- delete temporary/factorio_2_1_22 and this single require.
+require("temporary.factorio_2_1_22.loader").data_final_fixes()
