@@ -68,10 +68,12 @@ function M.valid(id)
   for _,value in ipairs(ids) do if value==id then return true end end
   return false
 end
-function M.adjacent(force,id,step)
-  local visible={}
-  for _,project in ipairs(ids) do
-    if M.visible(force,project) then visible[#visible+1]=project end
+function M.adjacent(force,id,step,known_visible)
+  local visible=known_visible or {}
+  if not known_visible then
+    for _,project in ipairs(ids) do
+      if M.visible(force,project) then visible[#visible+1]=project end
+    end
   end
   for index,project in ipairs(visible) do
     if project==id then return visible[index+step] end
@@ -369,7 +371,7 @@ end
 -- Only link to entries already present and visible under the active
 -- spoiler setting; never reveal a future milestone through this shortcut.
 function M.next_quest(force,id,known_status)
-  if not M.visible(force,id) then return nil end
+  if not known_status and not M.visible(force,id) then return nil end
   local status=known_status or {status_for(force,id)}
   local _,quest_id=next_action(force,id,status)
   local quest=quest_id and objectives.by_id[quest_id]
@@ -450,7 +452,7 @@ local function project_entry(parent,player,p,id,width,index,statuses)
   meter.style.height=5
   meter.style.color=selected and HUES.gold or {r=.48,g=.62,b=.69}
 end
-local function project_reader(parent,player,p,size,width,compact,statuses)
+local function project_reader(parent,player,p,size,width,compact,statuses,displayed)
   local reader=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   reader.style.width=width
@@ -468,7 +470,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local spacer=controls.add{type="empty-widget"}
   spacer.style.horizontally_stretchable=true
   for _,step in ipairs({-1,1}) do
-    local target=M.adjacent(player.force,p.project,step)
+    local target=M.adjacent(player.force,p.project,step,displayed)
     if target then
       controls.add{type="button",style="tool_button",
         caption=L(step<0 and "project-previous" or "project-next"),
@@ -575,7 +577,11 @@ function M.render(parent,player,p,size)
     empty.style.font_color=HUES.quiet
     return
   end
-  if not M.visible(player.force,p.project) then p.project=displayed[1] end
+  local known=false
+  for _,id in ipairs(displayed) do
+    if id==p.project then known=true break end
+  end
+  if not known then p.project=displayed[1] end
   -- Each expensive source-owned project snapshot is evaluated once per
   -- redraw, even though the chosen project is drawn in two separate panes.
   local statuses={}
@@ -599,7 +605,7 @@ function M.render(parent,player,p,size)
       project_entry(grid,player,p,id,cell,
         string.format("%02d",index),statuses)
     end
-    project_reader(stack,player,p,size,size.width-43,true,statuses)
+    project_reader(stack,player,p,size,size.width-43,true,statuses,displayed)
   else
     local rail=parent.add{type="frame",direction="vertical",
       style="inside_shallow_frame_with_padding"}
@@ -618,7 +624,7 @@ function M.render(parent,player,p,size)
       project_entry(rail,player,p,id,size.rail-41,
         string.format("%02d",index),statuses)
     end
-    project_reader(parent,player,p,size,size.reader,false,statuses)
+    project_reader(parent,player,p,size,size.reader,false,statuses,displayed)
   end
 end
 function M.refresh(force) dyson_runtime.invalidate(force) end

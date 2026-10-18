@@ -757,3 +757,5 @@ All guidance is derived when the Journal is opened or redrawn; no new polling, p
 Recovery dashboard performance: native world unlocks are gathered in one technology pass per project snapshot, then reused for the summary and milestone rows. No stored progress or source-mod state is changed.
 
 The reader now includes brief, non-spoiler-breaking corporate field context. Convergence guidance follows the real synchronization, ignition and receiver prerequisites rather than prompting an impossible shipment.
+
+With spoiler fog enabled, the Dyson dossier becomes visible when its first real solar-orbit research is accessible, rather than waiting for the later sphere technology. The Recovery dossier becomes visible after both source worlds (Athos and Nulla) have been discovered, while keeping unknown destinations concealed. The selected reader reuses its computed visible-project list to avoid repeated discovery scans.
