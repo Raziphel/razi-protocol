@@ -22,7 +22,8 @@ class ExpeditionCopyTests(unittest.TestCase):
         self.assertTrue(all(45<=len(v)<=300 for v in en.values()))
         for key in ("nauvis","muluna","panglia","rubia","athos",
                     "razi-umbra-belt-outer","asteroid-belt-inner-edge",
-                    "asteroid-belt-outer-edge","shchierbin","planet-ferrum"):
+                    "asteroid-belt-outer-edge","shchierbin","planet-ferrum",
+                    "nulla","razi-deep-space-edge"):
             self.assertIn(key,en)
             self.assertIn(key,ru)
 
@@ -34,6 +35,13 @@ class ExpeditionCopyTests(unittest.TestCase):
                      'for _, kind in ipairs({"planet", "space-location"})'):
             self.assertIn(text,source)
         self.assertNotIn("data:extend",source)
+        rows=re.findall(r'^  (?:calidus|solaris|nyxaris|vibrant|vespera|beetlejuice|umbra|deep_space) = \{([^\n]+)\}',source,re.M)
+        mapped=set(re.findall(r'"([^"]+)"',"\n".join(rows)))
+        self.assertTrue(mapped)
+        for language in ("en","ru"):
+            localized=section(read(f"locale/{language}/names.cfg"),"razi-location-briefing")
+            self.assertTrue(mapped.issubset(localized),mapped-set(localized))
+        self.assertIn('"sol", "razi-deep-space-edge"',source)
 
     def test_route_notes_are_native_tooltip_only(self):
         notes=read("prototypes/system/route_dossiers.lua")
