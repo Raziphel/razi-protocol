@@ -35,7 +35,7 @@ class WelcomeAndSettingsTests(unittest.TestCase):
                 self.assertTrue(labels[name].startswith("[color=#"),
                                 f"{language}: unstyled {name}")
                 self.assertIn("[/color]",labels[name])
-                self.assertLessEqual(len(re.sub(r"\\[[^]]+\\]","",labels[name])),80,
+                self.assertLessEqual(len(re.sub(r"\[[^]]+\]","",labels[name])),80,
                                      f"{language}: long label {name}")
                 self.assertLessEqual(len(description[name]),260,
                                      f"{language}: long description {name}")
