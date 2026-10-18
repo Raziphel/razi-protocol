@@ -1,6 +1,7 @@
 -- The Protocol Codex reads research progress from each force.
 -- Player storage is just UI preferences, so an older save can reopen it.
 local M={}
+local mod_gui=require("mod-gui")
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
 local industrial_briefs=require("scripts.razi_planet_briefs")
@@ -1677,10 +1678,24 @@ function M.toggle(player)
 end
 function M.sync(player)
   if not (player and player.valid) then return end
-  local top=player.gui.top[TOP]
-  if not (top and top.valid) then
-    top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",
-      {razi_journal_action="toggle"},L("button-tooltip"),TOP)
+  -- Migrate the old stand-alone button on existing saves. Never keep two.
+  local old=player.gui.top[TOP]
+  if old and old.valid then old.destroy() end
+
+  -- Native Factorio mod buttons sit in the minimap's utility-button strip.
+  -- Using mod_gui_button keeps the same 40px hit area, hover and press state
+  -- as the other buttons rather than floating above the normal interface.
+  local flow=mod_gui.get_button_flow(player)
+  local button=flow[TOP]
+  if not (button and button.valid) then
+    button=flow.add{
+      type="sprite-button",
+      name=TOP,
+      style=mod_gui.button_style,
+      sprite="razi-journal-book-icon",
+      tags={razi_journal_action="toggle"},
+      tooltip=L("button-tooltip")
+    }
   end
   render_tracker(player)
 end
