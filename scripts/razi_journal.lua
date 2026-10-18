@@ -1687,6 +1687,13 @@ end
 function M.sync_all()
   for _,player in pairs(game.connected_players or {}) do M.sync(player) end
 end
+-- Vanilla can hide the side-menu without raising our journal events.
+-- Recheck only the visibility flag, no re-layout or journal redraw.
+function M.refresh_side_menu_visibility()
+  for _,player in pairs(game.connected_players or {}) do
+    journal_side_menu.update_visibility(player,TOP)
+  end
+end
 function M.refresh_open()
   for _,player in pairs(game.connected_players or {}) do
     local frame=player.gui and player.gui.screen and player.gui.screen[FRAME]

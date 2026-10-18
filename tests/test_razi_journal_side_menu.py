@@ -31,6 +31,8 @@ class RightSideJournalTests(unittest.TestCase):
         self.assertIn('if action=="toggle" then M.toggle(player);return end',source)
         self.assertIn('razi_journal.gui_click(event)',control)
         self.assertIn('razi_journal.sync_all()',control)
+        self.assertIn('razi_journal.refresh_side_menu_visibility()',control)
+        self.assertIn('journal_side_menu.update_visibility(player,TOP)',source)
         self.assertIn('razi_journal.sync(player)',control)
 
     def test_right_row_position_scales_with_screen(self):

@@ -207,6 +207,7 @@ events:on_nth_tick(600, function()
   -- Three small optional remote checks every ten seconds, no world scans.
   preserve_deep_space_campaign()
   check_existing_transceivers()
+  razi_journal.refresh_side_menu_visibility()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
   -- Nexus Bosses remains the only authority for all nine victories.
   razi_journal.refresh_nexus_visible()
