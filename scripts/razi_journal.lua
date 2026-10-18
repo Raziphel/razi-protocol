@@ -4,6 +4,7 @@ local M={}
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
 local industrial_briefs=require("scripts.razi_planet_briefs")
+local catapults=require("scripts.razi_catapult_network")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
@@ -764,6 +765,32 @@ local function render_details(parent,player,quest,p,context,size,view)
   if brief then
     section(prose,"industrial-brief-heading",
       {"razi-industries-brief."..brief},text_width,theme)
+  end
+  -- Existing Vespera dossiers can discuss actually configured neighboring
+  -- lanes. The shared snapshot hides undiscovered neighbors when spoiler
+  -- protection is ON; no invented shipment or catapult-building state.
+  if quest.id=="muria" or quest.id=="rubia" or quest.id=="aquilo" then
+    local network=catapults.snapshot(player.force)
+    if network.installed and network.enabled then
+      local local_lanes=catapults.for_world(network,quest.id)
+      if #local_lanes>0 then
+        local lanes=prose.add{type="flow",direction="vertical"}
+        lanes.style.width=text_width
+        lanes.style.vertical_spacing=4
+        subtitle(lanes,"catapult-local-heading",text_width-26,theme)
+        for _,link in ipairs(local_lanes) do
+          local neighbor=link.source==quest.id and link.target or link.source
+          local world=prototypes and (
+            (prototypes.space_location and prototypes.space_location[neighbor])
+            or (prototypes.planet and prototypes.planet[neighbor]))
+          wrap(lanes,L("catapult-local-neighbor",
+            world and world.localised_name or neighbor,
+            L(link.state=="researched" and "catapult-local-surveyed"
+              or "catapult-local-pending")),text_width-26)
+        end
+        tint(wrap(lanes,L("catapult-local-note"),text_width-26),theme.soft)
+      end
+    end
   end
   section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
   section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)

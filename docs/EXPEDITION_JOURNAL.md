@@ -618,3 +618,22 @@ If another mod still shows Rubia placeholders after switching to this
 feature-branch build, check for a third-party discovery-tree controller
 that is also rewriting the same technology flags. Never modify Rubia's
 source or delete its technologies as a workaround.
+
+## Short-haul Orbital Catapult guidance
+
+Muria, Rubia and Aquilo's existing quest dossiers now display the
+**local orbital freight corridors** relevant to each world when the
+required Orbital Catapult source and Razi's existing catapult link setting
+are active. This is **informational**, not a new mandatory objective.
+
+The Cargo Network Project displays a compact Vespera regional overview
+with three route pairs, their actual native discovery-research status,
+industrial use suggestions and source-owned equipment instructions.
+Do not interpret these as live freight connections or claim the source
+has placed powered catapults.
+
+The general **Hide Spoilers** setting applies to both views. A route
+is not named until both endpoints' real planet-discovery technologies
+have been researched. When spoiler hiding is disabled the dossier can
+preview future routes while identifying incomplete discovery research.
+This introduces no separate saved completion flags or new scroll state.

@@ -935,3 +935,13 @@ existing save, `/razi-welcome` reprints the new introduction.
 `/razi-welcome clear` additionally wipes that player's existing chat
 history on explicit request. The latter cannot selectively suppress
 Nexus or Muluna's own warnings; they may be repeated by those mods.
+
+**Orbital Catapult regional freight dashboard (3.0):**
+The Cargo Network Project now includes a discovery-aware guide to the
+three Vespera local freight corridors. The Muria, Rubia and Aquilo
+Journal dossiers show their nearby catapult opportunities. This is
+a read-only guide: native science controls discovery, Orbital Catapult
+handles physical transport, and no source technology or cargo
+inventory is modified. With Hide Spoilers ON, destinations remain
+unnamed until both endpoint discoveries are researched. See
+[Galactic Industrial Network](docs/GALACTIC_INDUSTRIAL_NETWORK.md).

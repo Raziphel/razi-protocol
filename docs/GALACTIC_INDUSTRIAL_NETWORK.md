@@ -313,3 +313,36 @@ as completed Convergence freight. Catapult inventory/request throughput,
 electricity, planet placements and any player transfer require real
 Factorio 2.1 testing. Do **not** mark native planet discovery complete
 merely by registering a directed transport lane.
+
+## Vespera regional freight dossier (3.0 follow-through)
+
+The required Orbital Catapult now has an integrated, **read-only**
+regional freight guide inside Expedition Journal > Projects > Cargo Network.
+It reads the same six directional prototypes registered in
+`prototypes/compat/orbital_catapult.lua`. Each pair is deduplicated
+into a single short-haul opportunity. Route suggestions are purpose-built:
+
+| Regional route | Suggested engineering role |
+|---|---|
+| Muria ⇄ Aquilo | Support the cryogenic supply chain with nearby manufacturing. |
+| Muria ⇄ Rubia | Exchange finished materials locally rather than routing every small load by platform. |
+| Rubia ⇄ Aquilo | Stage cryogenic and advanced-materials logistics after native production is established. |
+
+The guide reports the actual planet discovery technology **research state**,
+not catapult placement, freight throughput, shipped items, active receivers
+or proof of player arrival. With Hide Spoilers ON, it conceals a corridor
+until **both** native discovery researches are completed, preventing the
+Cargo page from naming unexplored planets. Disable spoiler hiding to preview
+all installed links, but do not confuse the preview with an unlock.
+
+World dossiers for Muria, Rubia and Aquilo also show discovered neighboring
+corridors. The feature adds **no new technology, power bonuses, recipes,
+items, surfaces, planets, routes outside Vespera, or simulation loops**.
+The source Orbital Catapult mod still owns circuit handling, machine
+placement, transport, players and inventories.
+
+The read-only dossier is evaluated only when opening/rebuilding the Journal,
+not every game tick. Missing optional planets remove only their affected
+entries, and the old links keep their original names. New testing lives in
+`tests/lua/test_razi_catapult_network.lua` and
+`tests/test_razi_catapult_network.py`.

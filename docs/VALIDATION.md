@@ -1544,3 +1544,32 @@ catapult corridors at the correct starmap positions and that:
 
 No full Factorio engine/old-save tests were executed while authoring
 this patch. These must pass before public merging.
+
+## Vespera regional freight UI integration
+
+```sh
+lua5.2 tests/lua/test_orbital_catapult.lua
+lua5.2 tests/lua/test_razi_catapult_network.lua
+python3 -m unittest tests.test_razi_orbital_catapult tests.test_razi_catapult_network -v
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+**Source tests:** three bidirectional links, no duplicate names,
+correct native discoveries, safe handling of absent planet prototypes,
+OFF startup option, OFF spoiler setting, no invented shipments, and no
+scheduled runtime scanning.
+
+**In-game verification (still required):** check Cargo Network at early
+Muria progression with Hide Spoilers ON. Unexplored Rubia and Aquilo
+should remain unnamed; after native planet discovery research, exactly
+one additional corridor should appear per valid discovered pair. With
+spoilers OFF, display all installed pairs but correctly label their
+research as outstanding. Open each planet's Journal dossier and confirm
+the listed neighbors match Cargo Network. Check narrow-screen layouts,
+tooltip/localization, old saves and game multiplayer.
+
+The transport source is authoritative: physically construct and power
+both catapult endpoints and test target selectors, electricity, cargo,
+item filters/circuits, player transport, native arrival conditions and
+normal space-platform behavior. Neither the dossier nor source checks
+prove the actual transport operates.

@@ -3,6 +3,7 @@
 local M={}
 local catalog=require("scripts.galactic_trade_catalog")
 local portfolio=require("scripts.razi_industry_portfolio")
+local catapults=require("scripts.razi_catapult_network")
 local signals=require("prototypes.compat.aai_signal_partnerships")
 local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
@@ -450,6 +451,48 @@ local function signal_network(parent,player,width)
   codex_link(frame,name,L("trade-signal-codex"))
 end
 
+-- Only the upstream link declaration and actual native discovery research
+-- appear here. This is NOT a throughput monitor, shipment log or unlock.
+local function catapult_dossier(parent,player,width)
+  local state=catapults.snapshot(player.force)
+  if not state.installed then return end
+  local card=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame"}
+  card.style.horizontally_stretchable=true
+  card.style.padding=9
+  heading(card,L("catapult-network-heading"),width-44)
+  wrap(card,L("catapult-network-intro"),width-44)
+  if not state.enabled then
+    wrap(card,L("catapult-network-disabled"),width-44)
+    return
+  end
+  if #state.entries==0 then
+    wrap(card,L(state.concealed>0
+      and "catapult-network-unrevealed" or "catapult-network-none"),width-44)
+  end
+  for _,entry in ipairs(state.entries) do
+    local line=card.add{type="flow",direction="vertical"}
+    line.style.vertical_spacing=3
+    local names=wrap(line,L("catapult-network-pair",
+      world_title(entry.source),world_title(entry.target)),width-48)
+    names.style.font="default-bold"
+    names.style.font_color={r=.69,g=.82,b=.87}
+    if entry.purpose then
+      local note=wrap(line,L("catapult-network-purpose-"..entry.purpose),width-48)
+      note.style.font_color={r=.72,g=.77,b=.81}
+    end
+    local status=wrap(line,L(entry.state=="researched"
+      and "catapult-network-surveyed" or "catapult-network-research"),width-48)
+    status.style.font_color=entry.state=="researched"
+      and {r=.53,g=.82,b=.67} or {r=.96,g=.74,b=.48}
+  end
+  if state.concealed>0 then
+    wrap(card,L("catapult-network-unrevealed"),width-44)
+  end
+  wrap(card,L("catapult-network-build"),width-44)
+  wrap(card,L("catapult-network-safety"),width-44)
+end
+
 function M.render(parent,player,p,options)
   p=p or {}
   options=options or {}
@@ -531,6 +574,7 @@ function M.render(parent,player,p,options)
     scroll.horizontal_scroll_policy="never"
     scroll.style.height=size.scroll
   end
+  catapult_dossier(scroll,player,size.width)
   heading(scroll,L("trade-components"),size.width-20)
   if #network.parts==0 then
     wrap(scroll,L("trade-no-components"),size.width-30)
