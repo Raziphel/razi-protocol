@@ -28,6 +28,25 @@ class ProjectsTests(unittest.TestCase):
         self.assertIn('for _,stage in ipairs(convergence.stages)',ui)
         self.assertNotIn('create_surface(',projects)
         self.assertNotIn('on_nth_tick',projects)
+    def test_project_status_and_guidance_match_real_events(self):
+        projects=read("scripts/razi_journal_projects.lua")
+        journal=read("scripts/razi_journal.lua")
+        locale=read("locale/en/razi_journal_interface.cfg")
+        self.assertIn('return active and 1 or 0,1,tech',projects)
+        self.assertNotIn('(tech.researched or active) and 1 or 0,1',projects)
+        self.assertIn('local function next_action(force,id,status)',projects)
+        self.assertIn('function M.next_quest(force,id)',projects)
+        self.assertIn('dossiers',read("prototypes/system/route_intel.lua"))
+        self.assertIn('razi_journal_action="project-next"',projects)
+        self.assertIn('action=="project-next"',journal)
+        self.assertIn('projects.next_quest(player.force,p.project)',journal)
+        self.assertIn('project-measures-dyson=',locale)
+        self.assertIn('project-measures-cargo=',locale)
+        self.assertIn('project-measures-transceiver=',locale)
+        self.assertIn('project-measures-convergence=',locale)
+        self.assertIn('scroll.tags={razi_scroll_context=p.project}',projects)
+        self.assertNotIn('on_tick',projects)
+
     def test_embedded_views_have_one_scroller(self):
         for p in ("scripts/galactic_dyson.lua",
                   "scripts/galactic_trade.lua","scripts/razi_convergence.lua"):

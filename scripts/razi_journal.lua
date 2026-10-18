@@ -1963,6 +1963,10 @@ function M.gui_click(event)
     p.view=tags.id
   elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
+  elseif action=="project-next" and p.view=="projects" then
+    local quest_id=projects.next_quest(player.force,p.project)
+    if not quest_id or not M.open_quest(player,quest_id) then return end
+    return
   elseif action=="story-alerts" and p.view=="archive" then
     p.story_alerts=not p.story_alerts
   elseif action=="record-next-unread" and p.view=="archive" then
@@ -2071,7 +2075,7 @@ function M.gui_click(event)
       p.pinned=tags.id;p.tracker=true
     end
     render_tracker(player)
-  elseif action=="refresh" and p.view=="projects" and p.project=="dyson" then
+  elseif action=="refresh" and p.view=="projects" then
     projects.refresh(player.force)
   elseif action~="refresh" then return end
   draw(player)

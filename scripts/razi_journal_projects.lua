@@ -9,6 +9,7 @@ local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local frontier=require("scripts.razi_journal_frontier")
+local objectives=require("scripts.razi_journal_data")
 local L=function(k,...) return {"journal-ui."..k,...} end
 local ids={"dyson","cargo","recovery","transceiver","convergence"}
 local project_technologies={
@@ -97,9 +98,10 @@ local PROJECT_ART={
   transceiver="technology/razi-intergalactic-transceiver-signal",
   convergence="technology/razi-convergence-commission"
 }
-local function art_for(id,force)
+local function art_for(id,force,statuses)
   if id=="dyson" then
-    local finished=dyson.status(force)
+    local recorded=statuses and statuses.dyson
+    local finished=recorded and recorded[1] or select(1,dyson.status(force))
     return PROJECT_ART.dyson..math.min(6,finished)
   end
   if id=="recovery" and not force.technologies["razi-frontier-recovery-charter"] then
@@ -182,26 +184,149 @@ local function recovery_reader(parent,player,width)
   note.style.maximal_width=width
   note.style.font_color=HUES.quiet
 end
+
+-- A completion bar measures the *named* native milestone, never a guessed
+-- percentage of satellites built, ships delivered or worlds conquered.
+-- The third snapshot value preserves detail for action guidance.
 local function status_for(force,id)
   if id=="dyson" then
-    local done,total=dyson.status(force)
-    return done,total
+    return dyson.status(force)
   elseif id=="recovery" then
     return recovery_status(force)
   elseif id=="cargo" then
     local network=catalog.snapshot(force)
-    return network.researched,network.available
+    return network.researched,network.available,network
   elseif id=="convergence" then
     if not convergence.available(force) then return 0,0 end
-    local done,total=convergence.progress(force)
-    return done,total
+    return convergence.progress(force)
   end
   local tech=force.technologies["razi-intergalactic-transceiver-signal"]
   if not tech then return 0,0 end
   local active=force.get_entity_count
     and force.get_entity_count("kr-activated-intergalactic-transceiver")>0
-  return (tech.researched or active) and 1 or 0,1
+  -- Research is not activation: the physical transceiver must exist.
+  return active and 1 or 0,1,tech
 end
+
+local function unmet(tech)
+  local missing={}
+  for _,required in pairs(tech and tech.prerequisites or {}) do
+    if not required.researched then missing[#missing+1]=required end
+  end
+  table.sort(missing,function(a,b)return a.name<b.name end)
+  return missing
+end
+
+-- Read-only next step from real source research, discoveries and deliveries.
+-- Return a localized caption and optional quest ID for a safe Journal link.
+local function next_action(force,id,status)
+  local done,total,detail=status[1],status[2],status[3]
+  if total==0 then return L("project-next-unavailable") end
+  if id=="dyson" then
+    for _,stage in ipairs(detail or {}) do
+      if not stage.tech.researched then
+        local missing=unmet(stage.tech)
+        if #missing>0 then
+          return L("project-next-prerequisite",missing[1].localised_name)
+        end
+        if stage.tech.enabled==false then return L("project-next-disabled") end
+        return L("project-next-research",stage.tech.localised_name)
+      end
+    end
+    return L("project-next-dyson-build")
+  elseif id=="cargo" then
+    for _,row in ipairs(detail and detail.parts or {}) do
+      if row.state.status=="ready" then
+        return L("project-next-research",row.technology.localised_name),
+          catalog.quest_for_technology(row.technology.name)
+      end
+    end
+    for _,row in ipairs(detail and detail.parts or {}) do
+      if row.state.status=="blocked" and row.state.missing[1] then
+        return L("project-next-prerequisite",
+          row.state.missing[1].localised_name)
+      end
+    end
+    return done==total and L("project-next-cargo-build")
+      or L("project-next-cargo-review")
+  elseif id=="recovery" then
+    for _,stage in ipairs(recovery_stages) do
+      if not recovery_done(force,stage) then
+        return L("project-next-recovery",
+          L("project-recovery-"..stage[1])),stage[1]
+      end
+    end
+    return L("project-next-recovery-done")
+  elseif id=="transceiver" then
+    if done==1 then return L("project-next-transceiver-done") end
+    if detail and detail.researched then
+      return L("project-next-transceiver-activate")
+    end
+    local missing=unmet(detail)
+    if #missing>0 then
+      return L("project-next-prerequisite",missing[1].localised_name)
+    end
+    if detail and detail.enabled==false then
+      return L("project-next-disabled")
+    end
+    return L("project-next-transceiver-research")
+  end
+  if detail==true then return L("project-next-convergence-done") end
+  local current=convergence.current(force)
+  if current>#convergence.stages then
+    return L("project-next-convergence-transmission")
+  end
+  local commission=force.technologies["razi-convergence-commission"]
+  if commission and not commission.researched then
+    return L("project-next-research",commission.localised_name)
+  end
+  local stage=convergence.stages[current]
+  return stage and L("project-next-convergence-deliver",
+    {"razi-ops.convergence-stage-"..stage.id})
+    or L("project-next-unavailable")
+end
+
+-- Only link to entries already present and visible under the active
+-- spoiler setting; never reveal a future milestone through this shortcut.
+function M.next_quest(force,id)
+  if not M.visible(force,id) then return nil end
+  local status={status_for(force,id)}
+  local _,quest_id=next_action(force,id,status)
+  local quest=quest_id and objectives.by_id[quest_id]
+  if not quest then return nil end
+  local spoiler=settings and settings.global
+    and settings.global["razi-hide-spoilers"]
+  if spoiler and spoiler.value==true then
+    if quest.tech then
+      local tech=force.technologies and force.technologies[quest.tech]
+      if not tech or (not tech.researched and tech.enabled==false) then
+        return nil
+      end
+    elseif quest.world then
+      -- World discovery links should not reveal locked native locations.
+      local seen=false
+      for _,tech in pairs(force.technologies or {}) do
+        for _,effect in pairs(tech.prototype and tech.prototype.effects or {}) do
+          if effect.type=="unlock-space-location"
+            and effect.space_location==quest.world
+            and (tech.researched or tech.enabled) then
+            seen=true
+            break
+          end
+        end
+        if seen then break end
+      end
+      if not seen then return nil end
+    end
+  end
+  return quest.id
+end
+
+local function project_progress(id,done,total)
+  if total==0 then return L("project-unavailable") end
+  return L("project-progress-"..id,tostring(done),tostring(total))
+end
+
 local function project_entry(parent,player,p,id,width,index,statuses)
   local selected=p.project==id
   -- Selected projects get the same gentle raised-paper treatment as
@@ -215,7 +340,7 @@ local function project_entry(parent,player,p,id,width,index,statuses)
   head.style.horizontal_spacing=10
   head.style.vertical_align="center"
   -- The emblem itself is the navigation target, not a separate grey arrow.
-  icons.button(head,art_for(id,player.force),"project_button",
+  icons.button(head,art_for(id,player.force,statuses),"project_button",
     {razi_journal_action="project",id=id},L("project-caption-"..id))
   local copy=head.add{type="flow",direction="vertical"}
   copy.style.vertical_spacing=3
@@ -237,8 +362,7 @@ local function project_entry(parent,player,p,id,width,index,statuses)
   local snapshot=statuses[id]
   local complete,total=snapshot[1],snapshot[2]
   local count=card.add{type="label",
-    caption=total==0 and L("project-unavailable")
-      or L("project-progress",tostring(complete),tostring(total))}
+    caption=project_progress(id,complete,total)}
   count.style.font_color=HUES.quiet
   local meter=card.add{type="progressbar",
     value=total>0 and complete/total or 0}
@@ -260,7 +384,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local header=reader.add{type="flow",direction="horizontal"}
   header.style.horizontal_spacing=12
   header.style.vertical_align="center"
-  icons.sprite(header,art_for(p.project,player.force),"project_hero")
+  icons.sprite(header,art_for(p.project,player.force,statuses),"project_hero")
   local copy=header.add{type="flow",direction="vertical"}
   copy.style.vertical_spacing=4
   local title=copy.add{type="label",caption=L("project-"..p.project)}
@@ -284,9 +408,8 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local digest=reader.add{type="flow",direction="horizontal"}
   digest.style.vertical_align="center"
   digest.style.horizontal_spacing=9
-  local count=digest.add{type="label",caption=total==0
-    and L("project-unavailable")
-    or L("project-progress",tostring(done),tostring(total))}
+  local count=digest.add{type="label",
+    caption=project_progress(p.project,done,total)}
   count.style.font="default-bold"
   count.style.font_color=total>0 and done==total
     and HUES.gold or HUES.quiet
@@ -295,10 +418,33 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   gauge.style.width=math.max(130,width-38)
   gauge.style.height=6
   gauge.style.color=HUES.gold
+  -- Put the *next actual action* before the long project ledger. The
+  -- lead stays visible while the detailed dossier scrolls underneath.
+  local next=reader.add{type="frame",direction="vertical",
+    style="inside_shallow_frame"}
+  next.style.width=math.max(130,width-37)
+  next.style.padding=8
+  next.style.vertical_spacing=4
+  local eyebrow=next.add{type="label",caption=L("project-next-heading")}
+  eyebrow.style.font="default-bold"
+  eyebrow.style.font_color=HUES.gold
+  local advice,quest_id=next_action(player.force,p.project,current)
+  local guidance=next.add{type="label",caption=advice}
+  guidance.style.single_line=false
+  guidance.style.maximal_width=math.max(115,width-68)
+  if quest_id and M.next_quest(player.force,p.project)==quest_id then
+    next.add{type="button",caption=L("project-open-next"),
+      tags={razi_journal_action="project-next"}}
+  end
+  local perspective=next.add{type="label",
+    caption=L("project-measures-"..p.project)}
+  perspective.style.single_line=false
+  perspective.style.maximal_width=math.max(115,width-68)
+  perspective.style.font_color=HUES.quiet
   local scroll=reader.add{type="scroll-pane",direction="vertical",
     name="razi_journal_project_reader"}
   scroll.style.width=width-32
-  scroll.style.height=math.max(80,reader_height-(compact and 185 or 202))
+  scroll.style.height=math.max(80,reader_height-(compact and 290 or 305))
   scroll.tags={razi_scroll_context=p.project}
   scroll.horizontal_scroll_policy="never"
   scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
@@ -344,10 +490,11 @@ function M.render(parent,player,p,size)
     local title=stack.add{type="label",caption=L("projects-heading")}
     title.style.font="default-bold"
     title.style.font_color=HUES.gold
-    local grid=stack.add{type="table",column_count=2}
+    local columns=size.width<620 and 1 or 2
+    local grid=stack.add{type="table",column_count=columns}
     grid.style.horizontal_spacing=9
     grid.style.vertical_spacing=9
-    local cell=math.max(170,math.floor((size.width-55)/2))
+    local cell=math.max(170,math.floor((size.width-55-(columns-1)*9)/columns))
     for index,id in ipairs(displayed) do
       project_entry(grid,player,p,id,cell,
         string.format("%02d",index),statuses)

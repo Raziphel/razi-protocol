@@ -740,3 +740,16 @@ ON/OFF status. Both startup cleanup and message visibility remain
 separate personal settings; `/razi-welcome clear` still explicitly
 clears the user's entire chat, never selectively suppressing
 other mod warnings.
+
+
+## Projects: the real-work dashboard (3.0)
+
+The five original Projects remain inside the Expedition Journal: Dyson Sphere, Interplanetary Logistics, Frontier Recovery, the Transceiver, and the Convergence. Each selected dossier now opens with a concise source-backed **next practical step** and a clear explanation of what its progress bar actually measures. The project index uses specific units, rather than incorrectly calling everything a "stage". Narrow layouts show one or two compact project columns, with an independent scrollable project reader.
+
+- **Dyson:** counts researched native stellar technologies, never satellite coverage or actual power output. When research is complete, directs the player to construct native satellite, repeater and receiver infrastructure.
+- **Cargo:** counts available researched component technologies, not fictional cargo movements. Ready component research appears before lower-priority blocked options; a finished tech portfolio still needs factories and freight.
+- **Recovery:** counts six source-owned discovery/research milestones, with outstanding workstreams rather than invented delivery requirements. Any link into the Journal must pass the active spoiler rules.
+- **Transceiver:** counts completion only after a **physically activated** K2SO transceiver is detected. A researched but unbuilt or inactive machine is explicitly incomplete.
+- **Convergence:** counts real mandate shipments, with partial deliveries in its existing detailed reader. Five filled mandates do not imply the final transmission/victory has already fired.
+
+All guidance is derived when the Journal is opened or redrawn; no new polling, progress storage, map generation, source mod state mutation or recipes are added. Existing stage IDs and stored project selection remain unchanged. The main Journal's refresh button invalidates the source receiver snapshot if needed, while the normal redraw rechecks the other project counters. The following checks require a full in-engine Factorio 2.1 run before release: compact-screen layout, selecting objectives with spoiler fog active, transceiver activation, multiplayer force state and the final Convergence transmission.
