@@ -10,6 +10,12 @@ The opening Calidus act introduces the factory. Later system chapters tie discov
 
 **For UI contributors:** prioritize native Factorio readability, clear selected state, bounded scroll areas, stable viewport position when expanding chapters, lazy construction and no expensive per-tick scans. Check narrow resolutions and older saves.
 
+**3.0 narrative pilot:** Six RAZI Industries dispatches share the recovered
+transmission archive, each unlocked by genuine existing milestones. Twelve
+optional industrial opportunity briefs appear in existing planetary dossiers.
+See [RAZI Industries](RAZI_INDUSTRIES.md) for authoring and review. No new
+quest gates, freight claims, per-tick work or second GUI were introduced.
+
 The historical implementation notes below are preserved for context, but may describe an earlier design.
 
 ---

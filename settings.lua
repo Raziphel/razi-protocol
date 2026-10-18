@@ -115,6 +115,12 @@ data:extend({
     "ca[quality-of-life]-a[redundant-assemblers]"),
   startup_toggle("razi-enable-expedition-briefings",
     "ca[quality-of-life]-b[expedition-briefings]"),
+  {type="bool-setting",name="razi-group-barreling-recipes",
+    setting_type="startup",default_value=true,
+    order="ca[quality-of-life]-b1[barreling-recipes]"},
+  {type="bool-setting",name="razi-group-spoilable-recipes",
+    setting_type="startup",default_value=false,
+    order="ca[quality-of-life]-b2[spoilable-recipes]"},
   -- Razi draws thin color on top of verified native route geometry,
   -- while the underlying Factorio connection remains clickable.
   {

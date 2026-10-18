@@ -17,6 +17,7 @@ FILES = (
     "razi_journal_stories.cfg",
     "razi_journal_field_notes.cfg",
     "razi_journal_transmissions.cfg",
+    "razi_journal_corporate.cfg",
 )
 ROOT = Path(__file__).resolve().parents[1]
 

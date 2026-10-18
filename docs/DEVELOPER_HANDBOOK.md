@@ -69,6 +69,9 @@ The **Expedition Journal** is the unified player-facing narrative surface: **Que
 - Stable localization keys are contracts. For writing and translating use [Localization](LOCALIZATION.md).
 - UI rebuilding should preserve navigation state where appropriate. Never introduce per-tick scans or unbounded widgets for the sake of atmosphere.
 
+See [RAZI Industries](RAZI_INDUSTRIES.md) for the corporate narrative pilot,
+planetary industry briefs, safe crafting-group work and team authoring rules.
+
 ## Engineering map
 
 | Concern | Primary starting points |

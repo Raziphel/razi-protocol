@@ -1,5 +1,5 @@
 -- Recovered Codex transmissions, unlocked by their matching research.
-return {
+local records={
  {id="reception",unlock="first-signal",origin="SURVEY LOG / CALIDUS"},
  {id="moon",unlock="muluna",origin="ASTRONOMICAL DIVISION / MULUNA"},
  {id="furnace",unlock="castra",origin="INDUSTRIAL RECOVERY / CASTRA"},
@@ -16,3 +16,8 @@ return {
  {id="nexus-nine",unlock="nexus-convergence",origin="NEXUS EXPEDITION / THE THIRD CIRCLE"},
  {id="nexus-silence-record",unlock="nexus-silence",origin="NEXUS ARCHIVE / THE SILENCED TRANSMISSION"},
 }
+-- Preserve legacy IDs; append independent source-milestone-gated records.
+for _,entry in ipairs(require("scripts.razi_journal_corporate")) do
+  records[#records+1]=entry
+end
+return records

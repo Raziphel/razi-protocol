@@ -20,6 +20,7 @@
 | [Contributing](CONTRIBUTING.md) | Change process, writing, translating and pull requests |
 | [Architecture](docs/ARCHITECTURE.md) | Module boundaries, source ownership and safe integration |
 | [Expedition Journal](docs/EXPEDITION_JOURNAL.md) | Quest/project/transmission behavior and UX |
+| [RAZI Industries](docs/RAZI_INDUSTRIES.md) | 3.0 narrative, industrial specialties, crafting and authoring safeguards |
 | [Localization](docs/LOCALIZATION.md) | Writing lore and translations in the split locale files |
 | [Art Direction](docs/ART_DIRECTION.md) | Starmap, route overlays and deliberate visual hierarchy |
 | [Distributed Technology](docs/DISTRIBUTED_TECHNOLOGY.md) | Moving technology gates without circular progression |

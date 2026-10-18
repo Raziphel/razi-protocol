@@ -3,6 +3,7 @@
 local M={}
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
+local industrial_briefs=require("scripts.razi_planet_briefs")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
@@ -726,6 +727,12 @@ local function render_details(parent,player,quest,p,context,size,view)
     wrap(bridge,L("convergence-codex-description"),text_width-26)
     bridge.add{type="button",caption=L("convergence-codex-open"),
       tags={razi_journal_action="open-convergence",id=quest.id}}
+  end
+  -- Source-backed operational context; not an extra research requirement.
+  local brief=industrial_briefs.for_quest(quest)
+  if brief then
+    section(prose,"industrial-brief-heading",
+      {"razi-industries-brief."..brief},text_width,theme)
   end
   section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
   section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
