@@ -278,3 +278,8 @@ require("prototypes.compat.legacy_lava_cleanup").data_final_fixes()
 -- Absolute last coordinate pass. Nothing may reposition Aegis nodes after
 -- this point, including legacy source-map or visualization modules.
 require("prototypes.system.bellicos").reconcile_final_positions()
+
+-- Temporary Factorio 2.1.22 compatibility: source planet generators still
+-- attach temperature limits to FluidBox instead of the owning machine.
+-- Run LAST so earlier source compatibility edits are included.
+require("prototypes.compat.fluid_box_21_compat").data_final_fixes()
