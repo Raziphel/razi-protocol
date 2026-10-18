@@ -124,18 +124,8 @@ local recovery_stages={
   {"nulla-robotic-science",tech="robotic-science-pack"},
   {"frontier-recovery-charter",tech="razi-frontier-recovery-charter"}
 }
-local function recovery_done(force,stage)
-  if stage.world then
-    for _,tech in pairs(force.technologies or {}) do
-      for _,effect in pairs(tech.prototype and tech.prototype.effects or {}) do
-        if effect.type=="unlock-space-location" and
-          effect.space_location==stage.world and tech.researched then
-          return true
-        end
-      end
-    end
-    return false
-  end
+local function recovery_done(force,stage,discovered)
+  if stage.world then return discovered and discovered[stage.world]==true end
   local name=stage.tech
   if stage[1]=="athos-particulate" then
     name=frontier.unlocking(
@@ -145,18 +135,40 @@ local function recovery_done(force,stage)
   return tech~=nil and tech.researched==true
 end
 local function recovery_status(force)
-  local done=0
-  for _,stage in ipairs(recovery_stages) do
-    if recovery_done(force,stage) then done=done+1 end
+  -- Scan the real technology list just once for native world discoveries.
+  local discovered={}
+  for _,tech in pairs(force.technologies or {}) do
+    if tech.researched then
+      for _,effect in pairs(tech.prototype and tech.prototype.effects or {}) do
+        if effect.type=="unlock-space-location" then
+          discovered[effect.space_location]=true
+        end
+      end
+    end
   end
-  return done,#recovery_stages
+  local done,states=0,{}
+  for _,stage in ipairs(recovery_stages) do
+    local complete=recovery_done(force,stage,discovered)
+    states[stage[1]]=complete
+    if complete then done=done+1 end
+  end
+  return done,#recovery_stages,states
 end
 M.recovery_status=recovery_status -- Read-only fixture target, no GUI needed.
-local function recovery_reader(parent,player,width)
+local function recovery_reader(parent,player,width,stage_states)
   local intro=parent.add{type="label",caption=L("project-recovery-description")}
   intro.style.single_line=false
   intro.style.maximal_width=width
-  local done,total=recovery_status(player.force)
+  local done,total
+  if stage_states then
+    total=#recovery_stages
+    done=0
+    for _,stage in ipairs(recovery_stages) do
+      if stage_states[stage[1]] then done=done+1 end
+    end
+  else
+    done,total,stage_states=recovery_status(player.force)
+  end
   local state=parent.add{type="label",
     caption=L("project-progress",tostring(done),tostring(total))}
   state.style.font="default-bold"
@@ -165,7 +177,7 @@ local function recovery_reader(parent,player,width)
     local line=parent.add{type="flow",direction="horizontal"}
     line.style.vertical_align="center"
     line.style.horizontal_spacing=9
-    local completed=recovery_done(player.force,stage)
+    local completed=stage_states[stage[1]]==true
     local progress=line.add{type="label",
       caption=L(completed and "project-recovery-done"
         or "project-recovery-pending")}
@@ -251,7 +263,7 @@ local function next_action(force,id,status)
       or L("project-next-cargo-review")
   elseif id=="recovery" then
     for _,stage in ipairs(recovery_stages) do
-      if not recovery_done(force,stage) then
+      if not (detail and detail[stage[1]]) then
         return L("project-next-recovery",
           L("project-recovery-"..stage[1])),stage[1]
       end
@@ -288,9 +300,9 @@ end
 
 -- Only link to entries already present and visible under the active
 -- spoiler setting; never reveal a future milestone through this shortcut.
-function M.next_quest(force,id)
+function M.next_quest(force,id,known_status)
   if not M.visible(force,id) then return nil end
-  local status={status_for(force,id)}
+  local status=known_status or {status_for(force,id)}
   local _,quest_id=next_action(force,id,status)
   local quest=quest_id and objectives.by_id[quest_id]
   if not quest then return nil end
@@ -432,7 +444,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   local guidance=next.add{type="label",caption=advice}
   guidance.style.single_line=false
   guidance.style.maximal_width=math.max(115,width-68)
-  if quest_id and M.next_quest(player.force,p.project)==quest_id then
+  if quest_id and M.next_quest(player.force,p.project,current)==quest_id then
     next.add{type="button",caption=L("project-open-next"),
       tags={razi_journal_action="project-next"}}
   end
@@ -458,7 +470,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   elseif p.project=="cargo" then
     trade.render(content,player,p,options)
   elseif p.project=="recovery" then
-    recovery_reader(content,player,width-68)
+    recovery_reader(content,player,width-68,statuses.recovery[3])
   elseif p.project=="convergence" then
     convergence.render(content,player,options)
   else
