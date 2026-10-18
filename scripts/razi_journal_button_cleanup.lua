@@ -1,14 +1,11 @@
--- Retire unsupported Expedition Journal overlays introduced in 2.1.118
--- and 2.1.119. Vanilla Factorio GUIs always draw above LuaGui::screen,
--- so trying to paint into the vanilla minimap menu's empty squares hides
--- the button. The journal now has a real Factorio shortcut-bar prototype.
+-- Remove failed 2.1.118-2.1.120 journal placements, but preserve the
+-- original player.gui.top[name] button. That is now the canonical home.
 local M={}
 local ANCHOR="razi_expedition_journal_minimap_anchor"
-function M.remove(player,name)
+function M.remove_other_placements(player,name)
   if not (player and player.valid) then return end
   local top=player.gui.top
-  local old=top[name]
-  if old and old.valid then old.destroy() end
+  local old
 
   -- The first attempt used mod_gui.get_button_flow(), on the top-left.
   local frame=top["mod_gui_top_frame"]

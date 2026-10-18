@@ -1,3 +1,11 @@
+Version: 2.1.121
+Date: 19. 10. 2026
+  Restore the original Expedition Journal button:
+    - Place the compact gold icon in the top-left corner again.
+    - Remove the failed minimap overlay and temporary shortcut-bar button.
+    - Preserve Ctrl+Shift+J, click-to-toggle and saved journal state.
+    - Migrate older saves without deleting the restored top-left button.
+
 Version: 2.1.120
 Date: 19. 10. 2026
   Expedition Journal native shortcut reliability:

@@ -1678,10 +1678,14 @@ function M.toggle(player)
 end
 function M.sync(player)
   if not (player and player.valid) then return end
-  -- Factorio's native minimap side-menu isn't script-extensible and game
-  -- windows draw above screen overlays. Delete every obsolete overlay so
-  -- the journal isn't stranded on the left or hidden under the minimap.
-  journal_button_cleanup.remove(player,TOP)
+  -- Return to the original top-left gold journal button.
+  -- Clean failed placements without deleting player.gui.top[TOP].
+  journal_button_cleanup.remove_other_placements(player,TOP)
+  local top=player.gui.top[TOP]
+  if not (top and top.valid) then
+    top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",
+      {razi_journal_action="toggle"},L("button-tooltip"),TOP)
+  end
   render_tracker(player)
 end
 function M.sync_all()
@@ -2142,7 +2146,7 @@ end
 function M.on_display_changed(event)
   local player=game.get_player(event.player_index)
   if not player then return end
-  journal_button_cleanup.remove(player,TOP)
+  M.sync(player)
   if player.gui.screen[FRAME] then
     close(player)
     open(player)
