@@ -108,7 +108,7 @@ class VisualPolishTests(unittest.TestCase):
         locale=load_journal_locale(ROOT)
         self.assertIn('local ids={"dyson","cargo","recovery","transceiver","convergence"}',
                       projects)
-        self.assertIn('icons.button(head,art_for(id,player.force),"project_button"',
+        self.assertIn('icons.button(head,art_for(id,player.force,statuses),"project_button"',
                       projects)
         self.assertIn('project_icon=32',icons)
         self.assertIn('local meter=card.add{type="progressbar"',projects)
