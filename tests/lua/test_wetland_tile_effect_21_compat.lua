@@ -23,8 +23,9 @@ local function legacy_effect()
 end
 
 local function run(raw, base_version, tellus)
-  rawset(_G, "mods", {base = base_version or "2.1.22",
-    ["planetaris-tellus"] = tellus == false and nil or "1.1.15"})
+  local loaded = {base = base_version or "2.1.22"}
+  if tellus ~= false then loaded["planetaris-tellus"] = "1.1.15" end
+  rawset(_G, "mods", loaded)
   rawset(_G, "data", {raw = {["tile-effect"] = raw}})
   return M.data_final_fixes()
 end
