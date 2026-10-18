@@ -370,12 +370,18 @@ local function safe_template(base, output)
   if not (base and base.ingredients and base.results and not base.normal
       and not base.expensive and not base.hidden) then return false end
   local found = false
+  -- We scale *every* native result when building a freight alternative,
+  -- not just the requested bonus product. A source mod may return random
+  -- byproducts, range-based amounts or catalysts with a missing amount.
+  -- Never attempt arithmetic on one of those templates.
   for _, result in ipairs(base.results) do
+    if type(result.amount)~="number" or result.amount<=0
+      or result.probability~=nil
+      or result.amount_min~=nil or result.amount_max~=nil then
+      return false
+    end
     if name_of(result) == output then
-      if result.type == "fluid" or result.probability
-        or result.amount_min or result.amount_max or not result.amount then
-        return false
-      end
+      if result.type == "fluid" then return false end
       found = true
     end
   end

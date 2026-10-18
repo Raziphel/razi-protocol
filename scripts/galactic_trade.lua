@@ -2,6 +2,7 @@
 -- the source mods own production and research, not this UI.
 local M={}
 local catalog=require("scripts.galactic_trade_catalog")
+local portfolio=require("scripts.razi_industry_portfolio")
 local signals=require("prototypes.compat.aai_signal_partnerships")
 local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
@@ -321,6 +322,46 @@ local function render_chain(parent,row,p,width,index)
   codex_link(actions,entry.id,L("trade-open-codex-short"),true)
 end
 
+-- Browse real optional industry researches without claiming factory or freight
+-- telemetry. Only installed technologies with loaded recipes are displayed.
+-- Selecting an opportunity jumps to its existing Expedition Journal dossier.
+local function factory_opportunities(parent,player,width)
+  local snapshot=portfolio.snapshot(player.force,8)
+  if snapshot.available==0 then return end
+  local card=parent.add{type="frame",direction="vertical",
+    style="inside_shallow_frame"}
+  card.style.horizontally_stretchable=true
+  card.style.padding=10
+  heading(card,L("trade-portfolio-heading"),width-36)
+  local overview=wrap(card,L("trade-portfolio-summary",
+    tostring(snapshot.available),tostring(snapshot.researched),
+    tostring(snapshot.ready)),width-40)
+  overview.style.font_color={r=.70,g=.79,b=.82}
+  local instruction=wrap(card,L("trade-portfolio-disclaimer"),width-40)
+  instruction.style.font_color={r=.63,g=.70,b=.75}
+  for _,entry in ipairs(snapshot.entries) do
+    local line=card.add{type="flow",direction="horizontal"}
+    line.style.horizontal_spacing=8
+    line.style.vertical_align="center"
+    fixed_sprite(line,"technology",entry.quest.tech,"cargo_research")
+    local copy=line.add{type="flow",direction="vertical"}
+    copy.style.vertical_spacing=2
+    local title=copy.add{type="label",style="clickable_label",
+      caption=entry.technology.localised_name,
+      tags={razi_journal_action="guidance-select",id=entry.quest.id},
+      tooltip=L("trade-portfolio-open")}
+    title.style.single_line=false
+    title.style.maximal_width=math.max(140,width-108)
+    local metadata=wrap(copy,{"",L("trade-state-short-"..entry.status),
+      " / ",world_title(entry.site)},math.max(140,width-108))
+    metadata.style.font_color={r=.66,g=.74,b=.78}
+  end
+  if snapshot.available>#snapshot.entries then
+    wrap(card,L("trade-portfolio-more",
+      tostring(snapshot.available-#snapshot.entries)),width-40)
+  end
+end
+
 -- Read-only communication research and operator guide. AAI owns the
 -- live circuit channels; unlike Planet Express, it provides no shipment
 -- inventory to count here. Never invent connected transmitters.
@@ -440,6 +481,7 @@ function M.render(parent,player,p,options)
     end
     wrap(scroll,L("trade-research-not-production"),size.width-30)
   end
+  factory_opportunities(scroll,player,size.width)
   local setup=scroll.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   setup.style.horizontally_stretchable=true

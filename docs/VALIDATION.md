@@ -1281,3 +1281,21 @@ Required smoke checks: original save + clean save, optional mod disabled,
 each corporate record unlocked after genuine research, related-planet links
 open correct dossiers without changing completion, barrel tabs don't hide
 native recipes, and perishable option disabled by default.
+
+## 3.0 third-pass factory validation
+
+The source-native exchange guard rejects source recipes with non-deterministic,
+range-based or missing result amounts *before* multiplying native batches.
+This prevents malformed optional recipes without changing original content.
+The Cargo Network portfolio reads actual technologies and loaded recipes.
+
+```sh
+python -m unittest tests.test_razi_3_0_third_pass tests.test_razi_3_0_second_pass tests.test_razi_3_0_first_pass
+python scripts/audit_campaign_consistency.py
+python tools/journal_locale.py
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+```
+
+Also run `tests/lua/test_razi_industry_portfolio.lua` in the Lua
+regression runner and the full existing exchange suite. Live Factorio
+engine startup and save migration remain mandatory before release.

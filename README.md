@@ -2,6 +2,12 @@
 
 **A curated seven-system Factorio 2.1 Space Age expedition.** Razi Protocol weaves source-owned planets and machines into a cohesive campaign: meaningful planetary research, challenging interstellar logistics, readable space routes, a unified Expedition Journal and a construction-driven deep-space finale.
 
+**3.0 development:** Factory Partnership opportunities are now discoverable
+in the Cargo Network from actual installed technologies and premium recipes.
+The third pass also adds a combined offline factory-health audit and stricter
+native recipe byproduct safety. See [RAZI Industries](docs/RAZI_INDUSTRIES.md)
+for the boundaries and live-game validation still required.
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

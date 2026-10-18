@@ -123,3 +123,64 @@ merge into public release `main` without these checks and contributor review.
 | Planet roles | Twelve source-aligned industrial dossier notes | Rewards and supply-chain validation |
 | Progression | Retained existing graph and economy audits | Loaded-pack research, lab and route review |
 | Developer workflow | Stable IDs, localized content and consistency tests | Contributor review and in-game smoke test |
+
+## Pass 03: useful factories and a measurable industry pipeline
+
+The Cargo Network's **Optional Factory Partnerships** ledger now discovers
+existing researched/available Razi industry quests using their real loaded
+technology and recipe prototypes. It previews up to eight relevant upgrades
+(prioritizing ready research, then researched production) and links directly to
+the original Codex dossier. Counts reflect installed prototypes and researched
+technology, **not actual shipments or factory throughput**.
+
+The shared source-recipe exchange engine now refuses to scale native templates
+containing probabilistic or range-based byproducts or missing deterministic
+amounts. This avoids data-stage arithmetic errors when third-party planet
+mods change a native recipe unexpectedly. It may suppress an optional bonus
+rather than crashing a pack. It never removes the native source recipe.
+
+### How to evaluate freight rewards
+
+Run the **combined one-dump review** against a full post-load Factorio export:
+
+```sh
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+```
+
+It includes four compatible independent checks:
+
+1. `scripts/audit_industry_portfolio.py`: expected optional research/recipe
+   pairings, unlock effects, deterministic output, productivity/recycling
+   safeguards, loaded category-capable machines, and lab science combinations.
+2. `scripts/audit_exchange_economy.py`: native vs. freight batch output and
+   per-machine throughput for the existing watched premium recipes.
+3. `scripts/audit_crafting_navigation.py`: unusual barrel and spoilable
+   recipe categories.
+4. `scripts/audit_tech_tree.py`: missing prerequisites, science lab coverage,
+   and the existing galaxy/finale research graph checks.
+
+These audits distinguish deliberately absent optional integrations from
+installed-but-suspicious recipes. A valid prototype is **not** proof of positive
+net economic benefit. Shipping time, source material costs, upstream machine
+throughput, planetary resource availability and route hazards must be measured
+in-game before modifying production yield or research cost.
+
+### Required playtest before approving economy changes
+
+- Start Factorio 2.1 with the actual required K2SO pack and recommended mods.
+- Confirm the Cargo Network ledger only lists installed bonus recipes.
+- Select a factory partnership and verify its existing Codex dossier opens.
+- Test a previously saved factory: no former technology or recipe is removed.
+- Inspect optional alt recipes and the native output side by side in machines
+  able to craft both. Verify byproducts, productivity and recycling are safe.
+- Check source worlds, route distance, travel fuel, production throughput and
+  the real inventory consumed per finished item before altering rewards.
+- Review results with the developers before merging into `main`.
+
+### Economy design rule
+
+Prefer **small, worthwhile bonuses for importing completed useful goods**
+over compulsory imports or new raw resources. A normal source recipe must
+always be available when its original research permits it. Keep performance
+stable and make every extra industrial connection clear in the UI.

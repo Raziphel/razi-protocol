@@ -80,6 +80,9 @@ planetary industry briefs, safe crafting-group work and team authoring rules.
 | Journal runtime and UI | `scripts/razi_journal.lua` |
 | Quest definitions | `scripts/razi_journal_data.lua`, `scripts/razi_journal_expansion.lua`, `scripts/razi_journal_frontier.lua`, `scripts/razi_journal_industry.lua` |
 | Optional workshop objectives | `scripts/razi_journal_fluxworks.lua` |
+| Factory partnerships / cargo overview | `scripts/razi_industry_portfolio.lua`, `scripts/galactic_trade.lua` |
+| Optional recipe safety | `prototypes/compat/planet_production_exchanges.lua` |
+| Offline factory health | `tools/factory_review.py`, `scripts/audit_industry_portfolio.py` |
 | Recovered lore | `scripts/razi_journal_records.lua`, `locale/en/razi_journal_transmissions.cfg` |
 | Starmap risk lines | `prototypes/system/route_highlights.lua` |
 | User settings | `settings.lua`, [Settings](SETTINGS.md) |
