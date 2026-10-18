@@ -15,6 +15,13 @@ shipping values. No recipe cost or science-price rebalance has been
 assumed without a complete loaded-modpack benchmark. See
 [RAZI Industries](docs/RAZI_INDUSTRIES.md).
 
+**Pass 6 midgame guidance:** The Cargo Network now shows grounded
+gross factory output bonuses, additional per-craft materials and real
+research blockers for its first/middle industrial partnerships. The
+combined factory audit now includes seven early/mid pacing checks.
+Nothing claims measured freight profit, and source-native recipes remain
+unchanged. See [RAZI Industries](docs/RAZI_INDUSTRIES.md).
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

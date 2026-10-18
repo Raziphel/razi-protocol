@@ -360,6 +360,32 @@ local function factory_opportunities(parent,player,width)
       " / ",L("trade-state-short-"..entry.status),
       " / ",world_title(entry.site)},math.max(140,width-108))
     metadata.style.font_color={r=.66,g=.74,b=.78}
+    -- A blocked research has a concrete first prerequisite, not a made-up
+    -- timetable for the player's supply network.
+    if entry.status=="blocked" and entry.blocker then
+      local more=math.max(0,(entry.blocker_count or 0)-1)
+      local blocker=wrap(copy,L("trade-portfolio-blocker",
+        entry.blocker.localised_name or entry.blocker.name or "?",
+        tostring(more)),math.max(140,width-108))
+      blocker.style.font_color={r=.96,g=.72,b=.45}
+    end
+    if entry.economy then
+      local gain=wrap(copy,L("trade-portfolio-gross",
+        tostring(entry.economy.bonus_percent)),
+        math.max(140,width-108))
+      gain.style.font_color={r=.55,g=.82,b=.69}
+      -- Show only the first two known additional materials, rather than
+      -- turning each compact card into a full recipe inspector.
+      for i=1,math.min(2,#entry.economy.additional) do
+        local extra=entry.economy.additional[i]
+        local proto=item_proto(extra.name,extra.kind)
+        local line=wrap(copy,L("trade-portfolio-input",
+          tostring(extra.amount),
+          proto and proto.localised_name or extra.name),
+          math.max(140,width-108))
+        line.style.font_color={r=.70,g=.77,b=.80}
+      end
+    end
     -- A real per-craft native product quantity is more useful than an
     -- invented "profit" label. Never label probabilistic outputs as fixed.
     for _,product in ipairs(entry.recipe.products or {}) do

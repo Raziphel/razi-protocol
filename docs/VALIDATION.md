@@ -1329,3 +1329,30 @@ The new freight report is **scenario math**, never authoritative
 shipping telemetry. Check its missing-price and missing-route handling,
 and reject a positive-looking scenario when native ingredients have been
 removed. Test multiplayer force research and old saves before release.
+
+## Razi 3.0 Pass 06: source-backed value and midgame guardrails
+
+The Cargo Network portfolio can show fixed gross output gains, up to two
+additional per-craft inputs and the first real unmet research prerequisite
+for first/middle-frontier factories. These are read-only comparisons and
+must not be mistaken for transport savings or completed deliveries.
+
+```sh
+python -m unittest tests.test_razi_3_0_sixth_pass
+python -m unittest discover -s tests -p 'test_*.py'
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+python scripts/audit_frontier_pacing.py --dump-data-raw loaded-data-raw.json --json
+luatex --luaonly tests/lua/test_razi_factory_comparison.lua
+luatex --luaonly tests/lua/test_razi_industry_portfolio.lua
+luatex --luaonly tests/lua/test_planet_production_exchanges.lua
+```
+
+Run Lua checks at the repository root (a local Lua interpreter works too).
+Focused comparison and Cargo portfolio tests passed with Lua 5.3 and
+exact Git-blob matches;
+the other listed tests still need execution against this commit, as do
+Factorio startup and migrated-save smoke checks.
+
+Verify that a blocked technology names an actual prerequisite, that missing
+source mods hide rather than invent the value comparison, and that clicking
+a card still opens its original Journal quest without scroll regressions.

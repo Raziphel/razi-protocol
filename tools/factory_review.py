@@ -17,6 +17,7 @@ if str(ROOT) not in sys.path:
 from scripts import audit_crafting_navigation
 from scripts import audit_exchange_economy
 from scripts import audit_freight_break_even
+from scripts import audit_frontier_pacing
 from scripts import audit_route_distances
 from scripts import audit_industry_portfolio
 from scripts import audit_tech_tree
@@ -26,6 +27,7 @@ def build_report(document,values=None,shipping_costs=None,
                  machine_second_value=0,lanes=()):
     raw=document.get("raw",document) if isinstance(document,dict) else {}
     report={
+        "frontier_pacing":audit_frontier_pacing.inspect(raw),
         "freight_break_even":audit_freight_break_even.analyze(
             raw,values,shipping_costs,machine_second_value,lanes),
         "route_distance_advisories": (
@@ -36,6 +38,10 @@ def build_report(document,values=None,shipping_costs=None,
         "research_graph":audit_tech_tree.analyze(raw)
     }
     issues=[]
+    for item in report["frontier_pacing"]["rows"]:
+        if item["status"]=="review":
+            issues.append({"area":"frontier-pacing","name":item["name"],
+                           "reasons":item["issues"]})
     for item in report["optional_factory_partnerships"]["rows"]:
         if item["status"]=="review":
             issues.append({"area":"factory-partnership","name":item["technology"],
@@ -94,6 +100,10 @@ def main():
               "/",factory["declared_optional_partnerships"])
         print("Crafting recipes:",recipes["total_recipes"])
         print("Potential research and economy issues:",report["review_count"])
+        frontier=report["frontier_pacing"]["stages"]
+        print("Factory pacing reviewed:",
+              frontier["first"]["installed"],"first-frontier and",
+              frontier["middle"]["installed"],"middle-frontier prototypes")
         print("Route distance advisories:",len(report["route_distance_advisories"]))
         priced=sum(r.get("status")=="priced" for r in
                    report["freight_break_even"]["recipes"].values())

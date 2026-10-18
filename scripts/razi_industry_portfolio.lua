@@ -4,6 +4,7 @@
 local M={}
 local journal=require("scripts.razi_journal_industry")
 local cargo=require("scripts.galactic_trade_catalog")
+local comparison=require("scripts.razi_factory_comparison")
 
 local priority={ready=1,researched=2,blocked=3,disabled=4}
 -- Existing 3.0 industrial research. Pure classification, not a research gate.
@@ -38,7 +39,10 @@ function M.snapshot(force,limit)
         found.tiers[stage]=found.tiers[stage]+1
         found.entries[#found.entries+1]={
           quest=quest,technology=tech,recipe=recipe,status=state.status,
-          site=quest.site,stage=stage
+          site=quest.site,stage=stage,
+          blocker=state.missing and state.missing[1] or nil,
+          blocker_count=state.count or 0,
+          economy=comparison.compare(quest.tech,recipes)
         }
       end
     end

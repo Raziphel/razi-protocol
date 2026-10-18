@@ -272,3 +272,52 @@ if any, must be reviewed before using a scenario for balance changes.
 The default economic values remain unchanged in Pass 04, pending real
 prototype dumps and playtesting. This is a deliberate release-safety limit,
 not a claim that all existing recipes are perfectly balanced.
+
+## Pass 06: factory-value guidance without invented profitability
+
+The Cargo Network now compares the seven first/middle-frontier premium recipes
+against their *real installed native recipe prototypes*. A qualifying card
+shows its **gross output percentage** and up to two actual **extra batch
+ingredients**. Blocked research shows the first unmet real technology and
+counts other unmet prerequisites.
+
+These figures are production comparisons only, not freight profitability.
+They do not represent imported inventory, researched unlock status beyond
+Factorio's real ForceTechnology, route speed or physical deliveries. A
+missing source recipe, probabilistic output, dropped native inputs or lost
+byproducts suppresses the comparison instead of showing misleading value.
+
+The previous first/middle/extended ordering is preserved. No new recipes,
+technology names, save storage, forced story progression, or per-tick updates
+are introduced.
+
+### Pacing and compatibility follow-through
+
+`scripts/audit_frontier_pacing.py` (added in Pass 05) now appears in
+`tools/factory_review.py`. It compares first/middle output per
+machine-second, the existing 25% gross cap, source inputs and byproducts,
+missing research effects, and late-system prerequisite ancestry.
+Missing optional planetary content is classified as absent, not broken.
+
+```sh
+python scripts/audit_frontier_pacing.py --dump-data-raw loaded-data-raw.json --json
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+python -m unittest tests.test_razi_3_0_sixth_pass
+luatex --luaonly tests/lua/test_razi_factory_comparison.lua
+```
+
+The focused Lua comparison and Cargo portfolio tests were executed with
+Lua 5.3, and all four tested files were verified against their Git blob hashes. The full Python suite,
+full source engine Lua suite, actual Factorio 2.1 startup, loaded prototype
+export, multiplayer and migrated saves remain pending; do not treat this
+pilot as a production-tested release.
+
+### Next actual-balance review
+
+Load the real K2SO/source-mod pack and collect the combined factory report.
+Use measured world-specific production constraints, imported component
+availability, cargo capacity and typical journey times to decide if the
+Paracelsin/Rubia and Fulgora/Aquilo *alternative* recipes need adjustment.
+Do not automatically lower source-native research prices or manufacture
+compulsory supply loops. Preserve the independence of the paired system
+entrances and the ability to progress without optional factory recipes.

@@ -37,4 +37,26 @@ check(#limited.entries==1 and limited.available==2,
   "Display limit must not change the installed recipe totals")
 local empty=module.snapshot(nil,8)
 check(empty.available==0 and #empty.entries==0,"Nil force did not fail safely")
+-- Pass 6: near-term choices outrank equally ready late-network factories.
+local journal=package.loaded["scripts.razi_journal_industry"]
+journal.quests[#journal.quests+1]={
+  id="alliance-first-example",tech="razi-frontier-test-silicon",site="moshine"}
+journal.quests[#journal.quests+1]={
+  id="alliance-middle-example",tech="razi-middle-test-coils",site="paracelsin"}
+prototypes.recipe["razi-frontier-test-silicon"]={name="razi-frontier-test-silicon"}
+prototypes.recipe["razi-middle-test-coils"]={name="razi-middle-test-coils"}
+local ordered=module.snapshot({technologies={
+  ["razi-test-a"]={researched=true,enabled=true},
+  ["razi-test-b"]={researched=false,enabled=true},
+  ["razi-frontier-test-silicon"]={researched=false,enabled=true},
+  ["razi-middle-test-coils"]={researched=false,enabled=true}
+}},8)
+check(ordered.available==4 and ordered.tiers.first==1 and
+  ordered.tiers.middle==1 and ordered.tiers.extended==2,
+  "First/middle/extended summary must reflect installed prototypes")
+check(ordered.entries[1].quest.id=="alliance-first-example" and
+  ordered.entries[2].quest.id=="alliance-middle-example",
+  "Near-term upgrades must precede distant equally ready upgrades")
+check(ordered.entries[3].quest.id=="alliance-b",
+  "Extended ready upgrade must precede previously researched technology")
 print("Razi Industries Cargo portfolio: prototype/read-only guards passed")

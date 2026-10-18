@@ -449,6 +449,27 @@ check(legacy.recipe[legacy_rule.name]
   and math.abs(legacy.recipe[legacy_rule.name].energy_required-9.2)<0.0001,
   "Default interplanetary batches should cost 15%, not 30%, extra time")
 
+-- Fifth-pass integer rounding: preserve the 4% per-machine advantage.
+local paced,paced_engine=setup()
+paced["assembling-machine"].standard={crafting_categories={"crafting"}}
+local paced_rule=clone(rule)
+paced_rule.name="razi-fixture-paced-economy"
+paced_rule.time_multiplier=1.15
+paced_rule.min_throughput_ratio=1.04
+paced_engine.register_k2so_balanced({paced_rule})
+check(paced.recipe[paced_rule.name] and
+  product(paced.recipe[paced_rule.name],"kr-electronic-components")==20,
+  "Sixteen original components should earn four premium components")
+check(paced_rule.bonus==1,"Bonus normalization mutated the input rule")
+local constrained,constrained_engine=setup()
+constrained["assembling-machine"].standard={crafting_categories={"crafting"}}
+local capped=clone(paced_rule)
+capped.name="razi-fixture-low-bonus-ceiling"
+capped.max_bonus_fraction=0.20
+constrained_engine.register_k2so_balanced({capped})
+check(not constrained.recipe[capped.name],
+  "Impossible throughput targets must respect the gross output ceiling")
+
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
