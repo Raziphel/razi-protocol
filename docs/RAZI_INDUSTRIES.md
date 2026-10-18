@@ -321,3 +321,53 @@ Paracelsin/Rubia and Fulgora/Aquilo *alternative* recipes need adjustment.
 Do not automatically lower source-native research prices or manufacture
 compulsory supply loops. Preserve the independence of the paired system
 entrances and the ability to progress without optional factory recipes.
+
+## Pass 07: midgame supplier audit and research evidence
+
+The four second-frontier factory partnerships (Fulgora resilient capacitors,
+Aquilo capacitor controllers, Paracelsin shielded coils, Rubia conductive
+frames) now have a dedicated post-load provenance audit:
+
+```sh
+python scripts/audit_midgame_partnerships.py --dump-data-raw loaded-data-raw.json --json
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+```
+
+The report inspects installed premium recipes **and** their native source
+recipes; real producing recipe outputs for imported components; expected
+extra imports above four native batches; native input conservation;
+unlock-recipe research effects; ancestor technology gates; and labs that
+can accept the complete science recipe. Missing optional integrations
+are **not** errors, and no research/recipe prices are changed.
+
+### Cargo Network usability
+
+For each first/middle factory partnership with a valid fixed-output
+comparison, the Cargo Network now identifies the **original native
+recipe** alongside the gross factory output gain, extra per-craft inputs,
+world and the first actual unmet research prerequisite. It cannot claim
+that freight shipments have happened or that the extra output is profitable.
+
+### Review protocol for actual changes
+
+1. Obtain a complete Factorio 2.1 post-data-stage prototype export with
+   the required K2SO and intended optional source mods.
+2. Inspect `midgame_partnerships.rows` from the combined factory report.
+   Resolve actual missing native suppliers or invalid unlocks before
+   touching output quantities.
+3. Measure *source-world production*, space-platform capacity, expected
+   travel time, losses and power from a fresh and representative old save.
+4. Compare expected rewards against the extra imported components and
+   the research cards actually consumed.
+5. **Only then** adjust the weakest factory recipes, as a separately
+   reviewed balance change. The native research progression must still
+   work without optional premium manufacturing.
+
+The repository's `Check` GitHub Actions workflow is intentionally
+**workflow_dispatch-only**. Pass 07 includes the newer Lua factory
+comparison and Cargo portfolio regressions in that manual workflow.
+Do not schedule redundant automatic CI just to obtain a green badge.
+
+**Still unverified:** Complete Factorio startup, production logistics,
+and save migrations. Static source validation is not a substitute for
+these checks, and the workflow has not been dispatched by this pass.

@@ -374,6 +374,14 @@ local function factory_opportunities(parent,player,width)
         tostring(entry.economy.bonus_percent)),
         math.max(140,width-108))
       gain.style.font_color={r=.55,g=.82,b=.69}
+      local native=prototypes and prototypes.recipe
+        and prototypes.recipe[entry.economy.native_name]
+      if native then
+        local source=wrap(copy,L("trade-portfolio-native",
+          native.localised_name or entry.economy.native_name),
+          math.max(140,width-108))
+        source.style.font_color={r=.65,g=.73,b=.79}
+      end
       -- Show only the first two known additional materials, rather than
       -- turning each compact card into a full recipe inspector.
       for i=1,math.min(2,#entry.economy.additional) do

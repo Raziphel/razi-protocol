@@ -18,6 +18,7 @@ from scripts import audit_crafting_navigation
 from scripts import audit_exchange_economy
 from scripts import audit_freight_break_even
 from scripts import audit_frontier_pacing
+from scripts import audit_midgame_partnerships
 from scripts import audit_route_distances
 from scripts import audit_industry_portfolio
 from scripts import audit_tech_tree
@@ -28,6 +29,7 @@ def build_report(document,values=None,shipping_costs=None,
     raw=document.get("raw",document) if isinstance(document,dict) else {}
     report={
         "frontier_pacing":audit_frontier_pacing.inspect(raw),
+        "midgame_partnerships":audit_midgame_partnerships.analyze(raw),
         "freight_break_even":audit_freight_break_even.analyze(
             raw,values,shipping_costs,machine_second_value,lanes),
         "route_distance_advisories": (
@@ -38,6 +40,10 @@ def build_report(document,values=None,shipping_costs=None,
         "research_graph":audit_tech_tree.analyze(raw)
     }
     issues=[]
+    for item in report["midgame_partnerships"]["rows"]:
+        if item["status"]=="review":
+            issues.append({"area":"midgame-sourcing","name":item["name"],
+                           "reasons":item["issues"]})
     for item in report["frontier_pacing"]["rows"]:
         if item["status"]=="review":
             issues.append({"area":"frontier-pacing","name":item["name"],
@@ -100,6 +106,10 @@ def main():
               "/",factory["declared_optional_partnerships"])
         print("Crafting recipes:",recipes["total_recipes"])
         print("Potential research and economy issues:",report["review_count"])
+        midgame=report["midgame_partnerships"]
+        print("Midgame sourcing checked:",midgame["installed"],
+              "of",midgame["declared"],
+              "installed, with",midgame["needs_review"],"for review")
         frontier=report["frontier_pacing"]["stages"]
         print("Factory pacing reviewed:",
               frontier["first"]["installed"],"first-frontier and",

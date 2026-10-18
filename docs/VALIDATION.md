@@ -1356,3 +1356,28 @@ Factorio startup and migrated-save smoke checks.
 Verify that a blocked technology names an actual prerequisite, that missing
 source mods hide rather than invent the value comparison, and that clicking
 a card still opens its original Journal quest without scroll regressions.
+
+## Razi 3.0 Pass 07: middle-frontier validation
+
+```sh
+python -m unittest tests.test_razi_3_0_seventh_pass -v
+python -m unittest discover -s tests -p 'test_*.py' -v
+python scripts/audit_midgame_partnerships.py --dump-data-raw loaded-data-raw.json --json
+python tools/factory_review.py --dump-data-raw loaded-data-raw.json --json
+```
+
+On GitHub, the existing **Actions > Check > Run workflow** step remains
+manual-only. It includes Lua tests for both source-backed factory value
+and optional factory portfolio ordering, plus the broader original
+exchange and Python discovery suites. Never infer a passing run merely
+because the workflow file is updated.
+
+Check source-mod absence, native output provenance, extra batch-import
+quantities, preservation of original native ingredients, technology
+unlock effects, science lab compatibility, and prevention of late
+Beetlejuice/Umbra requirements in midgame factory technologies.
+
+Within Factorio, verify paired Fulgora/Aquilo and Paracelsin/Rubia
+optional recipes against actual production, physical freight needs and
+an existing save. The Cargo Network's original recipe label must be
+truthful, and its journal links must not lose scroll position.

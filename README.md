@@ -22,6 +22,14 @@ combined factory audit now includes seven early/mid pacing checks.
 Nothing claims measured freight profit, and source-native recipes remain
 unchanged. See [RAZI Industries](docs/RAZI_INDUSTRIES.md).
 
+**Pass 7 midgame checks:** A new loaded-prototype audit traces the
+Fulgora/Aquilo and Paracelsin/Rubia premium factories back to their
+native recipes, supplier outputs, research and labs. The Cargo Network
+also identifies the original factory recipe for direct comparison.
+The optional GitHub Check workflow now includes the newer Lua tests,
+without enabling automatic Actions usage. See
+[RAZI Industries](docs/RAZI_INDUSTRIES.md).
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

@@ -82,6 +82,10 @@ jobs:
         run: lua5.2 tests/lua/test_planet_production_exchanges.lua
       - name: Check outer-world multi-planet production exchanges
         run: lua5.2 tests/lua/test_outer_production_exchanges.lua
+      - name: Check source-backed factory comparison and safe optional sourcing
+        run: lua5.2 tests/lua/test_razi_factory_comparison.lua
+      - name: Check staged Cargo portfolio ordering and optional research
+        run: lua5.2 tests/lua/test_razi_industry_portfolio.lua
       - name: Test native modded-planet industry bridges
         run: lua5.2 tests/lua/test_modded_planet_exchanges.lua
       - name: Test Ferrum and Balack manufacturing integration
