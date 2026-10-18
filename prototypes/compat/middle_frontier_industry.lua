@@ -18,9 +18,9 @@ local rules={
     science={"vibrant-tech-card","vespera-tech-card"},
     additional={{type="item",name="kr-energy-control-unit",amount=1},
       {type="item",name="optical-cable",amount=2}},
-    batch=4,bonus=1,count=680,time=45,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=680,time=45,
     bonus_icon="optical-cable",require_supplier_provenance=true,
-    max_bonus_fraction=0.25,time_multiplier=1.12,
+    max_bonus_fraction=0.25,min_throughput_ratio=1.04,time_multiplier=1.12,
     not_after={"beetlejuice-discovery","umbra-discovery"}
   },
   -- Aquilo control engineering uses Fulgora energy stores and old Nyxaris
@@ -38,9 +38,9 @@ local rules={
     science={"vibrant-tech-card","vespera-tech-card"},
     additional={{type="item",name="supercapacitor",amount=1},
       {type="item",name="optical-cable",amount=2}},
-    batch=4,bonus=1,count=740,time=45,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=740,time=45,
     bonus_icon="supercapacitor",require_supplier_provenance=true,
-    max_bonus_fraction=0.25,time_multiplier=1.12,
+    max_bonus_fraction=0.25,min_throughput_ratio=1.04,time_multiplier=1.12,
     not_after={"beetlejuice-discovery","umbra-discovery"}
   },
   -- Two mid-frontier anchor workshops exchange COMPLETED native materials.
@@ -58,9 +58,9 @@ local rules={
     science={"vibrant-tech-card","vespera-tech-card"},
     additional={{type="item",name="craptonite-frame",amount=2},
       {type="item",name="holmium-plate",amount=1}},
-    batch=4,bonus=1,count=880,time=50,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=880,time=50,
     bonus_icon="craptonite-frame",require_supplier_provenance=true,
-    max_bonus_fraction=0.25,time_multiplier=1.15,
+    max_bonus_fraction=0.25,min_throughput_ratio=1.04,time_multiplier=1.15,
     not_after={"beetlejuice-discovery","umbra-discovery"}
   },
   {
@@ -76,9 +76,9 @@ local rules={
     science={"vibrant-tech-card","vespera-tech-card"},
     additional={{type="item",name="electric-coil",amount=2},
       {type="item",name="supercapacitor",amount=1}},
-    batch=4,bonus=1,count=920,time=50,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=920,time=50,
     bonus_icon="electric-coil",require_supplier_provenance=true,
-    max_bonus_fraction=0.25,time_multiplier=1.15,
+    max_bonus_fraction=0.25,min_throughput_ratio=1.04,time_multiplier=1.15,
     not_after={"beetlejuice-discovery","umbra-discovery"}
   }
 }

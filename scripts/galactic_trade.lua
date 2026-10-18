@@ -337,6 +337,10 @@ local function factory_opportunities(parent,player,width)
     tostring(snapshot.available),tostring(snapshot.researched),
     tostring(snapshot.ready)),width-40)
   overview.style.font_color={r=.70,g=.79,b=.82}
+  local stages=wrap(card,L("trade-portfolio-tiers",
+    tostring(snapshot.tiers.first),tostring(snapshot.tiers.middle),
+    tostring(snapshot.tiers.extended)),width-40)
+  stages.style.font_color={r=.77,g=.73,b=.66}
   local instruction=wrap(card,L("trade-portfolio-disclaimer"),width-40)
   instruction.style.font_color={r=.63,g=.70,b=.75}
   for _,entry in ipairs(snapshot.entries) do
@@ -352,7 +356,8 @@ local function factory_opportunities(parent,player,width)
       tooltip=L("trade-portfolio-open")}
     title.style.single_line=false
     title.style.maximal_width=math.max(140,width-108)
-    local metadata=wrap(copy,{"",L("trade-state-short-"..entry.status),
+    local metadata=wrap(copy,{"",L("trade-portfolio-tier-"..entry.stage),
+      " / ",L("trade-state-short-"..entry.status),
       " / ",world_title(entry.site)},math.max(140,width-108))
     metadata.style.font_color={r=.66,g=.74,b=.78}
     -- A real per-craft native product quantity is more useful than an
@@ -370,6 +375,14 @@ local function factory_opportunities(parent,player,width)
         output.style.font_color={r=.62,g=.77,b=.67}
         break
       end
+    end
+    -- The research-unit count is real data from this force, not an
+    -- estimate of the time needed to produce the science packs.
+    local count=entry.technology.research_unit_count
+    if type(count)=="number" and count>0 then
+      local price=wrap(copy,L("trade-portfolio-research",
+        tostring(count)),math.max(140,width-108))
+      price.style.font_color={r=.68,g=.74,b=.81}
     end
   end
   if snapshot.available>#snapshot.entries then

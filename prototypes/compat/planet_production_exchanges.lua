@@ -469,6 +469,12 @@ local function register_exchange(rule)
   if rule.time_multiplier~=nil
     and (type(rule.time_multiplier)~="number"
       or rule.time_multiplier<1.1 or rule.time_multiplier>1.3) then return end
+  -- The early/middle partnerships may request a modest *per-machine*
+  -- minimum output rate. This is not a promise of net freight profitability.
+  if rule.min_throughput_ratio~=nil
+    and (type(rule.min_throughput_ratio)~="number"
+      or rule.min_throughput_ratio<1
+      or rule.min_throughput_ratio>1.08) then return end
   if rule.max_bonus_fraction~=nil
     and (type(rule.max_bonus_fraction)~="number"
       or rule.max_bonus_fraction<=0
@@ -488,6 +494,15 @@ local function register_exchange(rule)
     if type(share)~="number" or share<0.16 or share>0.25 then return end
     bonus=math.max(1,math.floor(native_amount*rule.batch*share+0.000001))
   end
+  if rule.min_throughput_ratio then
+    -- Integer output rounding otherwise makes a nominal 20% recipe yield
+    -- less than the time premium, particularly on 2-item native batches.
+    local time_ratio=rule.time_multiplier or 1.15
+    local base_output=native_amount*rule.batch
+    local needed=math.ceil(base_output*
+      (time_ratio*rule.min_throughput_ratio-1)-0.000001)
+    bonus=math.max(bonus or 0,needed)
+  end
   if type(bonus)~="number" or bonus<1 then return end
   -- No Razi exchange may increase a native deterministic batch by more
   -- than 30%; explicitly constrained modern freight recipes cap at 25%.
@@ -497,6 +512,11 @@ local function register_exchange(rule)
   end
   if rule.max_bonus_fraction~=nil and bonus>native_amount*rule.batch
     *rule.max_bonus_fraction+0.000001 then return end
+  if rule.min_throughput_ratio then
+    local time_ratio=rule.time_multiplier or 1.15
+    if (native_amount*rule.batch+bonus)/(native_amount*rule.batch*
+      time_ratio)+0.000001<rule.min_throughput_ratio then return end
+  end
 
   for _, pack in ipairs(rule.science) do
     if not raw("tool", pack) then return end

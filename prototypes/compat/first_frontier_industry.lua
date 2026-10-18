@@ -18,9 +18,9 @@ local rules={
     science={"solaris-tech-card","nyxaris-tech-card"},
     additional={{type="item",name="kr-rare-metals",amount=2},
       {type="item",name="bioflux",amount=1}},
-    batch=4,bonus=1,count=560,time=45,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=560,time=45,
     bonus_icon="kr-rare-metals",
-    require_supplier_provenance=true,max_bonus_fraction=0.25,
+    require_supplier_provenance=true,max_bonus_fraction=0.25,min_throughput_ratio=1.04,
     time_multiplier=1.12
   },
   -- Gleba can turn imported optics and metals into better carbon-fiber
@@ -37,9 +37,9 @@ local rules={
     science={"solaris-tech-card","nyxaris-tech-card"},
     additional={{type="item",name="optical-cable",amount=2},
       {type="item",name="kr-rare-metals",amount=1}},
-    batch=4,bonus=1,count=590,time=45,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=590,time=45,
     bonus_icon="optical-cable",
-    require_supplier_provenance=true,max_bonus_fraction=0.25,
+    require_supplier_provenance=true,max_bonus_fraction=0.25,min_throughput_ratio=1.04,
     time_multiplier=1.12
   },
   -- Castra gets a reason to receive biological composites and Moshine
@@ -56,9 +56,9 @@ local rules={
     science={"solaris-tech-card","nyxaris-tech-card"},
     additional={{type="item",name="carbon-fiber",amount=1},
       {type="item",name="silicon-cell",amount=1}},
-    batch=4,bonus=1,count=640,time=45,
+    batch=4,bonus=1,target_bonus_fraction=0.20,count=640,time=45,
     bonus_icon="carbon-fiber",
-    require_supplier_provenance=true,max_bonus_fraction=0.25,
+    require_supplier_provenance=true,max_bonus_fraction=0.25,min_throughput_ratio=1.04,
     time_multiplier=1.15
   }
 }
