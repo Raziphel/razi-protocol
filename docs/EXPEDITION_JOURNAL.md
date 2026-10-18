@@ -535,3 +535,30 @@ retain their original tracked progress and their timed last transmission.
 The whole plot, editorial style and out-of-order planet rules are documented
 in [Story Bible](STORY_BIBLE.md). See [Validation](VALIDATION.md)
 for the notification, multiplayer and old-save test matrix.
+
+## Hide Spoilers (ON by default)
+
+Factorio Mod Settings > Map > **Hide Spoilers (research and journal)**
+controls the shared spoiler mode. A full mod restart is not required.
+
+- With **ON**, the quest index hides locked or nonresearchable future
+  technologies, future chapters show only "Undiscovered chapter",
+  and sealed Archive pages never reveal their future titles. Unreached
+  Projects, including the Convergence, remain hidden until their real
+  research is available.
+  Active/current and completed objectives are still navigable.
+- With **OFF**, the complete, original Journal index and locked
+  Archive titles become visible immediately.
+- This setting is independent of personal **Dispatches: ON/MUTED**
+  controls; discovered lore remains readable even when notifications
+  are muted.
+- To keep research integrity, only Razi-owned future technologies
+  are hidden from Factorio's native technology GUI. We never disable
+  third-party planets or technology prototypes.
+- A force's real research achievements remain authoritative. The
+  option does not reset objectives, Convergence shipments, scroll
+  state or campaign completion.
+
+The whole spoiler mode is reversible using runtime settings. The
+native research-tree path must still be smoke-tested with the entire
+modpack and older saves before public release.

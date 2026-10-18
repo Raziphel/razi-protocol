@@ -15,6 +15,12 @@ local function startup_toggle(name, order)
 end
 
 data:extend({
+  -- One shared save setting controls research spoiler fog and the Journal.
+  -- Runtime-global allows multiplayer forces to agree on research visibility
+  -- and can be toggled without restarting or changing prototype IDs.
+  {type="bool-setting",name="razi-hide-spoilers",
+    setting_type="runtime-global",default_value=true,
+    order="a0[quality-of-life]-a[hide-spoilers]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.

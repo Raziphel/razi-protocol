@@ -11,6 +11,28 @@ local icons=require("scripts.razi_journal_icons")
 local frontier=require("scripts.razi_journal_frontier")
 local L=function(k,...) return {"journal-ui."..k,...} end
 local ids={"dyson","cargo","recovery","transceiver","convergence"}
+local project_technologies={
+  dyson="slp-dyson-sphere",
+  cargo="interplanetary-trade-logistics",
+  recovery="razi-frontier-recovery-charter",
+  transceiver="razi-intergalactic-transceiver-signal",
+  convergence="razi-convergence-commission"
+}
+function M.visible(force,id)
+  if not M.valid(id) then return false end
+  local setting=settings and settings.global
+    and settings.global["razi-hide-spoilers"]
+  if not (setting and setting.value==true) then return true end
+  local name=project_technologies[id]
+  local tech=force and force.technologies and force.technologies[name]
+  if not tech then return false end
+  if tech.researched then return true end
+  if tech.enabled==false then return false end
+  for _,required in pairs(tech.prerequisites or {}) do
+    if not required.researched then return false end
+  end
+  return true
+end
 function M.valid(id)
   for _,value in ipairs(ids) do if value==id then return true end end
   return false
@@ -298,11 +320,20 @@ local function project_reader(parent,player,p,size,width,compact,statuses)
   end
 end
 function M.render(parent,player,p,size)
-  p.project=M.valid(p.project) and p.project or "dyson"
+  local displayed={}
+  for _,id in ipairs(ids) do
+    if M.visible(player.force,id) then displayed[#displayed+1]=id end
+  end
+  if #displayed==0 then
+    local empty=parent.add{type="label",caption=L("project-spoiler-locked")}
+    empty.style.font_color=HUES.quiet
+    return
+  end
+  if not M.visible(player.force,p.project) then p.project=displayed[1] end
   -- Each expensive source-owned project snapshot is evaluated once per
   -- redraw, even though the chosen project is drawn in two separate panes.
   local statuses={}
-  for _,id in ipairs(ids) do
+  for _,id in ipairs(displayed) do
     statuses[id]={status_for(player.force,id)}
   end
   local compact=size.width<900
@@ -317,7 +348,7 @@ function M.render(parent,player,p,size)
     grid.style.horizontal_spacing=9
     grid.style.vertical_spacing=9
     local cell=math.max(170,math.floor((size.width-55)/2))
-    for index,id in ipairs(ids) do
+    for index,id in ipairs(displayed) do
       project_entry(grid,player,p,id,cell,
         string.format("%02d",index),statuses)
     end
@@ -335,7 +366,7 @@ function M.render(parent,player,p,size)
     note.style.font_color=HUES.quiet
     note.style.single_line=false
     note.style.maximal_width=size.rail-40
-    for index,id in ipairs(ids) do
+    for index,id in ipairs(displayed) do
       if index>1 then rail.add{type="line",direction="horizontal"} end
       project_entry(rail,player,p,id,size.rail-41,
         string.format("%02d",index),statuses)

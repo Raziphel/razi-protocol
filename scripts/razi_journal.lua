@@ -182,12 +182,37 @@ function M.state(force,quest,context)
   end
   return "active"
 end
+-- One shared runtime map setting, on by default in the actual mod settings.
+-- Tests without Factorio settings retain the legacy visibility model.
+function M.hide_spoilers()
+  local option=settings and settings.global
+    and settings.global["razi-hide-spoilers"]
+  return option and option.value==true or false
+end
+function M.journal_visible(force,quest,context,known_state)
+  if known_state=="unavailable" or
+    not M.available(force,quest,context) then return false end
+  if not M.hide_spoilers() or M.complete(force,quest,context) then
+    return true
+  end
+  if (known_state or M.state(force,quest,context))~="active" then
+    return false
+  end
+  local tech=technology(force,quest,context)
+  if tech then
+    if tech.enabled==false then return false end
+    for _,required in pairs(tech.prerequisites or {}) do
+      if not required.researched then return false end
+    end
+  end
+  return true
+end
 function M.summary(force,context)
   local completed,total,active=0,0,0
   context=context or M.context(force)
   for _,q in ipairs(defs.quests) do
     local state=M.state(force,q,context)
-    if state~="unavailable" and not q.optional then
+    if M.journal_visible(force,q,context,state) and not q.optional then
       total=total+1
       if state=="complete" then completed=completed+1
       elseif state=="active" then active=active+1 end
@@ -198,13 +223,15 @@ end
 function M.next_quest(force,context)
   context=context or M.context(force)
   local suggested=M.guidance(force,context)
-  if suggested.primary then return suggested.primary.quest end
+  if suggested.primary and M.journal_visible(force,suggested.primary.quest,context)
+    then return suggested.primary.quest end
   -- A blocked objective can still be inspected, but is not called ready.
   for _,q in ipairs(defs.quests) do
-    if M.state(force,q,context)=="active" then return q end
+    if M.state(force,q,context)=="active"
+      and M.journal_visible(force,q,context) then return q end
   end
   for _,q in ipairs(defs.quests) do
-    if M.state(force,q,context)~="unavailable" then return q end
+    if M.journal_visible(force,q,context) then return q end
   end
 end
 local function state_matches_filter(state,filter)
@@ -215,7 +242,8 @@ local function state_matches_filter(state,filter)
   return true
 end
 function M.show_in_filter(force,quest,filter,context)
-  return state_matches_filter(M.state(force,quest,context),filter)
+  return M.journal_visible(force,quest,context)
+    and state_matches_filter(M.state(force,quest,context),filter)
 end
 
 -- Calculate the visible campaign once per redraw. The navigator used to
@@ -233,8 +261,9 @@ function M.view_status(force,context)
     local result={quests={},completed=0,total=0}
     for _,quest in ipairs(quests_by_chapter[chapter.id] or {}) do
       local state=M.state(force,quest,context)
-      view.states[quest.id]=state
-      if state~="unavailable" then
+      local revealed=M.journal_visible(force,quest,context,state)
+      view.states[quest.id]=revealed and state or "unavailable"
+      if revealed then
         result.quests[#result.quests+1]=quest
         result.total=result.total+1
         if not quest.optional then view.total=view.total+1 end
@@ -347,7 +376,7 @@ local function chapter_index(id)
 end
 local function select_quest(force,p,context,plan)
   local selected=p.selected and defs.by_id[p.selected]
-  if selected and M.available(force,selected,context) then
+  if selected and M.journal_visible(force,selected,context) then
     if p.chapter==nil then p.chapter=selected.chapter end
     return selected
   end
@@ -516,7 +545,7 @@ local function render_tracker(player)
   if not p.tracker then return end
   local context=M.context(player.force)
   local quest=p.pinned and defs.by_id[p.pinned]
-  if not quest or not M.available(player.force,quest,context) then
+  if not quest or not M.journal_visible(player.force,quest,context) then
     quest=M.next_quest(player.force,context)
     p.pinned=quest and quest.id or nil
   end
@@ -796,7 +825,9 @@ end
 -- temporary render objects, or research mutations.
 local function render_chapter_cover(parent,player,p,context,size,view)
   local chapter=p.chapter and view.chapters[p.chapter]
-  if not chapter then return false end
+  if not chapter or (M.hide_spoilers() and #chapter.quests==0) then
+    return false
+  end
   local theme=themes.get(p.chapter)
   local width=size.reader
   local inner=width-38
@@ -929,7 +960,10 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   accent_rule(frame,themes.get(p.chapter or "calidus"),68,2)
   local names={}
   for _,ch in ipairs(defs.chapters) do
-    names[#names+1]={"journal-chapter."..ch.id}
+    local chapter=view.chapters[ch.id]
+    names[#names+1]=M.hide_spoilers() and chapter
+      and #chapter.quests==0 and L("spoiler-unknown-chapter")
+      or {"journal-chapter."..ch.id}
   end
   local dropdown=frame.add{type="drop-down",
     name="razi_journal_chapter_picker",items=names,
@@ -1156,6 +1190,7 @@ local function render_archive(parent,player,p,context,size)
     end
     local quest=defs.by_id[record.unlock]
     local opened=quest and M.complete(player.force,quest,context)
+    local concealed=M.hide_spoilers() and not opened
     if opened and (not chosen or record.id==p.record) then chosen=record end
     local highlighted=opened and record.id==p.record
       or opened and not p.record and chosen==record
@@ -1172,7 +1207,8 @@ local function render_archive(parent,player,p,context,size)
     else
       mark=row.add{type="button",style="tool_button",
         caption="◇",enabled=false,
-        tooltip={"journal-record-title."..record.id}}
+        tooltip=concealed and L("spoiler-sealed-record")
+          or {"journal-record-title."..record.id}}
       mark.style.font_color={r=.59,g=.62,b=.68}
     end
     mark.style.width=icons.size("archive_button")
@@ -1180,7 +1216,8 @@ local function render_archive(parent,player,p,context,size)
     local choice=row.add{type="label",
       style=opened and "clickable_label" or nil,
       caption={"",opened and p.story_unread and p.story_unread[record.id]
-        and "● " or "",{"journal-record-title."..record.id}},
+        and "● " or "",concealed and L("spoiler-sealed-record")
+        or {"journal-record-title."..record.id}},
       tags=opened and {razi_journal_action="record",id=record.id} or nil}
     choice.style.single_line=false
     choice.style.maximal_width=size.rail-105
@@ -1283,6 +1320,26 @@ local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
+  local context=M.context(player.force)
+  if M.hide_spoilers() then
+    local quest=p.selected and defs.by_id[p.selected]
+    if quest and not M.journal_visible(player.force,quest,context) then
+      p.selected=nil
+    end
+    if p.chapter then
+      local exposed=false
+      for _,candidate in ipairs(defs.quests) do
+        if candidate.chapter==p.chapter
+          and M.journal_visible(player.force,candidate,context) then
+          exposed=true;break
+        end
+      end
+      if not exposed then
+        p.chapter=false
+        p.chapter_cover=false
+      end
+    end
+  end
   local size=M.layout(player.display_resolution,player.display_scale)
   local reveal_on_redraw=p.reveal_selection==true
   local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
@@ -1319,7 +1376,6 @@ local function draw(player,focus_search)
     description.style.font_color=COLOR.quiet
   end
 
-  local context=M.context(player.force)
   p.nexus_revision=nexus_revision(context.nexus)
   local view=p.view=="quests" and M.view_status(player.force,context) or nil
   local plan=view and M.guidance(player.force,context,view)
@@ -1466,8 +1522,9 @@ end
 M.open=open
 function M.open_project(player,id,chain,target)
   if not (player and player.valid) then return false end
-  if id and not projects.valid(id) then return false end
-  if chain and not projects.valid_cargo(player.force,chain,target) then
+  if id and not projects.visible(player.force,id) then return false end
+  if chain and (not projects.visible(player.force,"cargo")
+    or not projects.valid_cargo(player.force,chain,target)) then
     return false
   end
   local p=pref(player.index)
@@ -1484,7 +1541,7 @@ end
 function M.open_quest(player,id)
   local quest=defs.by_id[id]
   if not (player and player.valid and quest
-    and M.available(player.force,quest)) then return false end
+    and M.journal_visible(player.force,quest)) then return false end
   local p=pref(player.index)
   p.selected=quest.id
   p.chapter=quest.chapter
@@ -1515,6 +1572,15 @@ function M.sync(player)
 end
 function M.sync_all()
   for _,player in pairs(game.connected_players or {}) do M.sync(player) end
+end
+function M.refresh_open()
+  for _,player in pairs(game.connected_players or {}) do
+    local frame=player.gui and player.gui.screen and player.gui.screen[FRAME]
+    if frame and frame.valid then draw(player) end
+    local p=storage.razi_expedition_journal
+      and storage.razi_expedition_journal[player.index]
+    if p and p.tracker then render_tracker(player) end
+  end
 end
 function M.on_removed(index)
   if storage.razi_expedition_journal then
@@ -1699,7 +1765,7 @@ function M.gui_click(event)
   end
   local p=pref(player.index)
   if (action=="select" or action=="guidance-select") and
-    defs.by_id[tags.id] and M.available(player.force,defs.by_id[tags.id]) then
+    defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
     p.chapter=defs.by_id[tags.id].chapter
     p.filter="all"
@@ -1714,6 +1780,16 @@ function M.gui_click(event)
       if ch.id==tags.id then known=true;break end
     end
     if not known then return end
+    if M.hide_spoilers() then
+      local exposed=false
+      for _,candidate in ipairs(defs.quests) do
+        if candidate.chapter==tags.id
+          and M.journal_visible(player.force,candidate) then
+          exposed=true;break
+        end
+      end
+      if not exposed then return end
+    end
     p.chapter=tags.id
     p.chapter_cover=true
     p.view="quests"
@@ -1721,7 +1797,7 @@ function M.gui_click(event)
     p.query=""
   elseif action=="chapter-continue" then
     local target=defs.by_id[tags.id]
-    if not (target and M.available(player.force,target)) then return end
+    if not (target and M.journal_visible(player.force,target)) then return end
     p.selected=target.id
     p.chapter=target.chapter
     p.chapter_cover=false
@@ -1729,10 +1805,20 @@ function M.gui_click(event)
     p.query=""
     p.reveal_selection=true
   elseif action=="chapter" then
+    if M.hide_spoilers() then
+      local exposed=false
+      for _,candidate in ipairs(defs.quests) do
+        if candidate.chapter==tags.id
+          and M.journal_visible(player.force,candidate) then
+          exposed=true;break
+        end
+      end
+      if not exposed then return end
+    end
     p.chapter=p.chapter==tags.id and false or tags.id
   elseif action=="view" and ({quests=true,projects=true,archive=true})[tags.id] then
     p.view=tags.id
-  elseif action=="project" and projects.valid(tags.id) then
+  elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
   elseif action=="story-alerts" and p.view=="archive" then
     p.story_alerts=not p.story_alerts
@@ -1789,7 +1875,7 @@ function M.gui_click(event)
     local context=M.context(player.force)
     local choices={}
     for _,quest in ipairs(defs.quests) do
-      if quest.chapter==p.chapter and M.available(player.force,quest,context)
+      if quest.chapter==p.chapter and M.journal_visible(player.force,quest,context)
         and M.show_in_filter(player.force,quest,p.filter,context) then
         choices[#choices+1]=quest
       end
@@ -1857,7 +1943,7 @@ function M.selection_changed(event)
   local context=M.context(player.force)
   for _,quest in ipairs(defs.quests) do
     if quest.chapter==chapter.id
-      and M.available(player.force,quest,context) then
+      and M.journal_visible(player.force,quest,context) then
       p.selected=quest.id
       break
     end

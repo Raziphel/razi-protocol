@@ -1411,3 +1411,39 @@ ending while Factorio still allows continuing the game.
 **Do not ship on static validation alone.** The full Lua/Python suites,
 actual modpack load, GUI layout, multiplayer and old-save verification
 remain required unless explicitly logged as completed.
+
+## 3.0 default-on spoiler protection
+
+```sh
+lua5.2 tests/lua/test_razi_spoiler_fog.lua
+lua5.2 tests/lua/test_razi_project_spoilers.lua
+lua5.2 tests/lua/test_razi_journal.lua
+python -m unittest tests.test_razi_spoilers -v
+python -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+Additional live Factorio checks:
+
+- New map defaults to **Hide Spoilers ON** without manual clicks.
+- Unreached quest/chapter/archive titles are not leaked through
+  browsing, searching, opening an old pinned quest, or selecting
+  the chapter drop-down. Completed pages remain readable.
+- Native research screen conceals only Razi-owned technologies with
+  unfinished prerequisites. Research the prerequisite, confirm the
+  successor becomes available immediately and still costs its
+  original science. Ensure no third-party research becomes disabled.
+- Turn Hide Spoilers **OFF** and verify all Razi-managed technologies
+  restore original enabled/visibility settings, including old saves.
+  Toggle **ON** again and verify consistent research gating.
+- Multiplayer: shared map setting changes must apply to all forces;
+  personal story dispatch muting remains separate.
+- Old saves containing researched technology, physical Convergence
+  deliveries and completed campaign victories must retain progress.
+- Ensure large cheat-research bursts and normal progress still
+  re-enable the right descendants, without per-tick tech scans.
+
+**Scope:** Factorio Lua can hide disabled research by setting
+`visible_when_disabled=false`. The safe implementation restricts
+runtime fog to Razi-owned technologies and their **real** prerequisite
+chain. Third-party enabled technologies are not forcibly disabled
+or hidden. Full-modpack validation is still pending until executed.

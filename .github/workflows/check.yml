@@ -44,6 +44,10 @@ jobs:
         run: lua5.2 tests/lua/test_compat.lua
       - name: Check Expedition Journal progress and scripted-research safety
         run: lua5.2 tests/lua/test_razi_journal.lua
+      - name: Check default-on and reversible Razi technology spoiler fog
+        run: lua5.2 tests/lua/test_razi_spoiler_fog.lua
+      - name: Check future Journal projects remain concealed until discovered
+        run: lua5.2 tests/lua/test_razi_project_spoilers.lua
       - name: Check Journal layout without rendering Factorio
         run: lua5.2 tests/lua/test_razi_journal_layout.lua
       - name: Verify Journal translations and responsive UI contract

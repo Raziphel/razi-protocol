@@ -234,3 +234,43 @@ old saves, new saves, muted players, a bulk research command, all five
 physical stages, real win/continue, game reload and multiplayer merge.
 This code has **not** been certified by a full game-engine run until
 those tests have been executed.
+
+## Default spoiler protection
+
+Razi 3.0 now ships with the shared map setting **Hide Spoilers** ON
+by default, available in Factorio's Mod Settings. It is reversible
+without restarting and preserves completed discoveries.
+
+- **Journal:** The Expedition Journal shows available and researched
+  objectives. Future chapters display as "Undiscovered chapter" in
+  the chapter chooser and do not show their future dossiers. Sealed
+  Archive records have the neutral name "Encrypted transmission"
+  until their true research or shipment milestone is complete.
+  The Projects reader similarly conceals later megaprojects, including
+  the Convergence, until their real prerequisite technology is reachable.
+- **Research screen:** Only **Razi-owned technologies** whose real
+  technology prerequisites are still incomplete are temporarily
+  disabled and hidden from Factorio's research GUI. Once their
+  prerequisites are researched they become available automatically.
+  Original enabled and `visible_when_disabled` values are tracked
+  for safe restoration.
+- **Third-party mod technologies remain untouched.** No source-mod
+  research graph or prototype is rewritten merely to conceal a title.
+  This is a deliberate compatibility boundary, not complete fog
+  over all externally installed technology.
+- **Off:** The Journal reveals its future quests and locked Archive
+  titles again; technologies hidden by Razi's fog are restored.
+  The setting is global to a multiplayer map because technology
+  availability is force-wide. Individual archive dispatch mutes
+  remain per player.
+
+Spoiler hiding is presentation and a reversible research-tree gate,
+not new progress storage. It does not alter real source discoveries,
+science cost, delivered Convergence cargo or the ending's actual
+victory requirement.
+
+Tests: `tests/lua/test_razi_spoiler_fog.lua`, the expanded journal
+Lua regression, `tests/test_razi_spoilers.py`, and the existing
+manual-only GitHub Check workflow. Perform a live new-save and
+old-save test, including the ON/OFF setting and native research screen,
+before treating this as fully validated.

@@ -37,6 +37,16 @@ epilogue. See the [Story Bible](docs/STORY_BIBLE.md) for canon,
 ending, authoring and test requirements. The release branch is
 unchanged until engine and save compatibility have been validated.
 
+**Spoiler protection (default ON):** A shared runtime **Hide Spoilers**
+setting conceals unreached Journal chapters and future dossiers,
+masks sealed Archive titles and future project dossiers, and hides
+unfinished Razi-owned research
+technologies until their native prerequisites are met. Switching it
+off reveals them again without restarting. Third-party technologies
+remain untouched for compatibility. See
+[Expedition Journal](docs/EXPEDITION_JOURNAL.md) and
+[Validation](docs/VALIDATION.md).
+
 **For contributors:** start with the [Developer Handbook](docs/DEVELOPER_HANDBOOK.md) for project vision, [Contributing](CONTRIBUTING.md) for workflow and [Architecture](docs/ARCHITECTURE.md) for code ownership. The active dependency contract is [info.json](info.json), not historical version notes below.
 
 ## What we are building

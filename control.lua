@@ -1,5 +1,6 @@
 local razi_journal = require("scripts.razi_journal")
 local story_dispatch = require("scripts.razi_story_dispatch")
+local spoiler_fog = require("scripts.razi_spoiler_fog")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local convergence = require("scripts.razi_convergence")
 local convergence_audit = require("scripts.razi_convergence_audit")
@@ -153,6 +154,7 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(function()
+  spoiler_fog.sync_all()
   convergence.restore_pending()
   preserve_deep_space_campaign()
   check_existing_transceivers()
@@ -160,6 +162,7 @@ events:on_init(function()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
+  spoiler_fog.sync_all()
 	convergence.restore_pending()
 	preserve_deep_space_campaign()
 	check_existing_transceivers()
@@ -223,12 +226,25 @@ events:on_event("razi-journal-toggle",function(event)
   if player then razi_journal.toggle(player) end
 end)
 events:on_event(defines.events.on_research_finished,function(event)
+  spoiler_fog.on_research(event)
   razi_journal.on_research(event)
   story_dispatch.on_research(event)
 end)
 events:on_event(defines.events.on_forces_merged,function(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
+  spoiler_fog.on_forces_merged(event)
+end)
+-- Razi-owned future techs are concealed per-force; gameplay progression
+-- remains based on the original technology prerequisites and research.
+events:on_event(defines.events.on_force_created,function(event)
+  if event and event.force then spoiler_fog.sync_force(event.force) end
+end)
+events:on_event(defines.events.on_runtime_mod_setting_changed,function(event)
+  if event and event.setting=="razi-hide-spoilers" then
+    spoiler_fog.sync_all()
+    razi_journal.refresh_open()
+  end
 end)
 -- Only carrier asteroid creation events do work; no per-tick asteroid scan.
 events:on_event(defines.events.on_script_trigger_effect,

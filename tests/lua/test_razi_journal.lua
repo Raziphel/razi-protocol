@@ -66,6 +66,23 @@ check(M.state(force,defs.by_id["first-signal"])=="active",
   "The opening Automation quest must be ready on a new save")
 check(M.state(force,defs.by_id["green-science"])=="locked",
   "Green science must have meaningful early Journal prerequisites")
+-- Hide Spoilers is a shared setting, ON by default in the mod. Preserve
+-- already reached quests, but don't expose future dossier titles or details.
+rawset(_G,"settings",{global={["razi-hide-spoilers"]={value=true}}})
+check(M.hide_spoilers(),"Mod setting must enable the journal spoiler filter")
+check(M.journal_visible(force,defs.by_id["first-signal"]),
+  "The first available quest should never be hidden")
+check(not M.journal_visible(force,defs.by_id["green-science"]),
+  "Unreached research must not appear in the Journal")
+local hidden=M.view_status(force,M.context(force))
+check(hidden.states["green-science"]=="unavailable",
+  "Hidden locked chapters must be masked in the navigator")
+check(not M.show_in_filter(force,defs.by_id["green-science"],"all"),
+  "Searching should not leak hidden research")
+rawset(_G,"settings",{global={["razi-hide-spoilers"]={value=false}}})
+check(M.journal_visible(force,defs.by_id["green-science"]),
+  "Turning off Hide Spoilers must immediately restore preview entries")
+rawset(_G,"settings",nil)
 -- Older and variant modpacks can omit K2 Electricity/Electronics:
 -- such missing research must never become an invisible campaign wall.
 local electricity=force.technologies.electricity
