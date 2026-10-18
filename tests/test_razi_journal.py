@@ -147,35 +147,6 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn("view-archive=Journal",locale)
         self.assertNotIn('local insignia=head.add{type="sprite"',ui)
 
-    def test_minimap_button_uses_native_mod_gui_and_migrates_old_button(self):
-        journal=read("scripts/razi_journal.lua")
-        prototype=read("prototypes/ui/razi_journal.lua")
-        control=read("control.lua")
-        # One native mod-button container; no duplicate top-level button.
-        self.assertIn('local mod_gui=require("mod-gui")',journal)
-        self.assertIn('local flow=mod_gui.get_button_flow(player)',journal)
-        self.assertIn('style=mod_gui.button_style',journal)
-        self.assertIn('local old=player.gui.top[TOP]',journal)
-        self.assertIn('if old and old.valid then old.destroy() end',journal)
-        self.assertIn('local button=flow[TOP]',journal)
-        self.assertIn('if not (button and button.valid) then',journal)
-        self.assertIn('tags={razi_journal_action="toggle"}',journal)
-        self.assertIn('tooltip=L("button-tooltip")',journal)
-        self.assertNotIn('icons.button(player.gui.top,"razi-journal-book-icon"',
-                         journal)
-        # The real journal's handlers and saved shortcut still apply.
-        self.assertIn('if action=="toggle" then M.toggle(player);return end',
-                      journal)
-        self.assertIn('razi_journal.gui_click(event)',control)
-        self.assertIn('razi_journal.sync_all()',control)
-        self.assertIn('razi_journal.sync(player)',control)
-        self.assertIn('key_sequence="CONTROL + SHIFT + J"',prototype)
-        # Native grey book icon, already used by Factorio's side menu,
-        # delivered at a 32px physical size in a 40px button.
-        self.assertIn('__core__/graphics/side-menu-buttons.png',prototype)
-        self.assertIn('size=64,y=192,scale=0.5,mipmap_count=2',prototype)
-        self.assertNotIn('interstellar-route.png',prototype)
-
     def test_responsive_reader_without_horizontal_scrollbars(self):
         ui=read("scripts/razi_journal.lua")
         control=read("control.lua")

@@ -1,7 +1,7 @@
 -- The Protocol Codex reads research progress from each force.
 -- Player storage is just UI preferences, so an older save can reopen it.
 local M={}
-local mod_gui=require("mod-gui")
+local journal_side_menu=require("scripts.razi_journal_side_menu")
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
 local industrial_briefs=require("scripts.razi_planet_briefs")
@@ -1678,25 +1678,10 @@ function M.toggle(player)
 end
 function M.sync(player)
   if not (player and player.valid) then return end
-  -- Migrate the old stand-alone button on existing saves. Never keep two.
-  local old=player.gui.top[TOP]
-  if old and old.valid then old.destroy() end
-
-  -- Native Factorio mod buttons sit in the minimap's utility-button strip.
-  -- Using mod_gui_button keeps the same 40px hit area, hover and press state
-  -- as the other buttons rather than floating above the normal interface.
-  local flow=mod_gui.get_button_flow(player)
-  local button=flow[TOP]
-  if not (button and button.valid) then
-    button=flow.add{
-      type="sprite-button",
-      name=TOP,
-      style=mod_gui.button_style,
-      sprite="razi-journal-book-icon",
-      tags={razi_journal_action="toggle"},
-      tooltip=L("button-tooltip")
-    }
-  end
+  -- The built-in right side menu has no mod insertion API in Factorio 2.1.
+  -- Place a native-styled 40px overlay in its unused lower-row cell.
+  -- Older top-left and mod-gui buttons are retired on first sync.
+  journal_side_menu.ensure(player, TOP, L("button-tooltip"))
   render_tracker(player)
 end
 function M.sync_all()
@@ -2157,6 +2142,7 @@ end
 function M.on_display_changed(event)
   local player=game.get_player(event.player_index)
   if not player then return end
+  journal_side_menu.ensure(player, TOP, L("button-tooltip"))
   if player.gui.screen[FRAME] then
     close(player)
     open(player)
