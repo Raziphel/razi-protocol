@@ -2,14 +2,13 @@
 -- Research, receivers, shipments and victory remain owned by source systems.
 local M={}
 local dyson=require("scripts.galactic_dyson")
-local trade=require("scripts.galactic_trade")
 local convergence=require("scripts.razi_convergence")
 local catalog=require("scripts.galactic_trade_catalog")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
-local frontier=require("scripts.razi_journal_frontier")
 local objectives=require("scripts.razi_journal_data")
+local platform_projects=require("scripts.razi_platform_projects")
 local quest_by_technology={}
 for _,quest in ipairs(objectives.quests or {}) do
   if quest.tech and not quest.convergence and
@@ -18,11 +17,9 @@ for _,quest in ipairs(objectives.quests or {}) do
   end
 end
 local L=function(k,...) return {"journal-ui."..k,...} end
-local ids={"dyson","cargo","recovery","transceiver","convergence"}
+local ids={"platform","voyage","dyson","transceiver","convergence"}
 local project_technologies={
   dyson="slp-dyson-sphere",
-  cargo="interplanetary-trade-logistics",
-  recovery="razi-frontier-recovery-charter",
   transceiver="razi-intergalactic-transceiver-signal",
   convergence="razi-convergence-commission"
 }
@@ -31,25 +28,10 @@ function M.visible(force,id)
   local setting=settings and settings.global
     and settings.global["razi-hide-spoilers"]
   if not (setting and setting.value==true) then return true end
-  -- A dossier should become readable while there is still work ahead.
-  -- Avoid showing the Recovery counterpart until both source planets have
-  -- actually been discovered, preserving their names under spoiler fog.
-  if id=="recovery" then
-    local discovered={}
-    for _,technology in pairs(force and force.technologies or {}) do
-      if technology.researched then
-        for _,effect in pairs(technology.prototype
-          and technology.prototype.effects or {}) do
-          if effect.type=="unlock-space-location"
-            and (effect.space_location=="athos"
-              or effect.space_location=="nulla") then
-            discovered[effect.space_location]=true
-          end
-        end
-      end
-    end
-    if discovered.athos and discovered.nulla then return true end
-  end
+  -- The first project must always be discoverable to new players.
+  if id=="platform" then return true end
+  -- The maiden voyage unlocks after a genuine built platform.
+  if id=="voyage" then return platform_projects.snapshot(force).platform end
   local name=project_technologies[id]
   if id=="dyson" and force and force.technologies
     and force.technologies["planet-discovery-sunorbit"] then
@@ -91,7 +73,6 @@ function M.valid_cargo(force,chain,target)
 end
 function M.research_related(name)
   if name=="razi-intergalactic-transceiver-signal"
-    or name=="razi-frontier-recovery-charter"
     or name=="razi-convergence-commission"
     or name=="razi-convergence-synchronization"
     or name=="razi-convergence-ignition" then return true end
@@ -125,7 +106,7 @@ local function transceiver(parent,player,width)
   note.style.single_line=false
   note.style.maximal_width=width
 end
--- Five curated project dossiers. All completion values come from the
+-- Five build-and-expedition project dossiers. All completion values come from the
 -- original mods: there is no fabricated megaproject percentage.
 local HUES={
   ink={r=.94,g=.93,b=.89},
@@ -134,9 +115,9 @@ local HUES={
   unused={r=.39,g=.46,b=.51}
 }
 local PROJECT_ART={
+  platform="item/space-platform-starter-pack",
+  voyage="entity/thruster",
   dyson="razi-dyson-works-stage-",
-  cargo="technology/interplanetary-trade-logistics",
-  recovery="technology/razi-frontier-recovery-charter",
   transceiver="technology/razi-intergalactic-transceiver-signal",
   convergence="technology/razi-convergence-commission"
 }
@@ -146,9 +127,6 @@ local function art_for(id,force,statuses)
     local finished=recorded and recorded[1] or select(1,dyson.status(force))
     return PROJECT_ART.dyson..math.min(6,finished)
   end
-  if id=="recovery" and not force.technologies["razi-frontier-recovery-charter"] then
-    return "razi-journal-book-icon"
-  end
   local path=PROJECT_ART[id]
   if helpers and helpers.is_valid_sprite_path
     and not helpers.is_valid_sprite_path(path) then
@@ -156,100 +134,15 @@ local function art_for(id,force,statuses)
   end
   return path
 end
--- All six stages are actual force research or space-location unlocks.
--- Never synthesize percentage from platform or inventory counters.
-local recovery_stages={
-  {"athos",world="athos"},
-  {"athos-particulate",tech="particulate-science-pack"},
-  {"nulla",world="nulla"},
-  {"nulla-electromagnetic",tech="electromagnetic-robotics"},
-  {"nulla-robotic-science",tech="robotic-science-pack"},
-  {"frontier-recovery-charter",tech="razi-frontier-recovery-charter"}
-}
-local function recovery_done(force,stage,discovered)
-  if stage.world then return discovered and discovered[stage.world]==true end
-  local name=stage.tech
-  if stage[1]=="athos-particulate" then
-    name=frontier.unlocking(
-      "particulate-science-pack") or name
-  end
-  local tech=force.technologies and force.technologies[name]
-  return tech~=nil and tech.researched==true
-end
-local function recovery_status(force)
-  -- Scan the real technology list just once for native world discoveries.
-  local discovered={}
-  for _,tech in pairs(force.technologies or {}) do
-    if tech.researched then
-      for _,effect in pairs(tech.prototype and tech.prototype.effects or {}) do
-        if effect.type=="unlock-space-location" then
-          discovered[effect.space_location]=true
-        end
-      end
-    end
-  end
-  local done,states=0,{}
-  for _,stage in ipairs(recovery_stages) do
-    local complete=recovery_done(force,stage,discovered)
-    states[stage[1]]=complete
-    if complete then done=done+1 end
-  end
-  return done,#recovery_stages,states
-end
-M.recovery_status=recovery_status -- Read-only fixture target, no GUI needed.
-local function recovery_reader(parent,player,width,stage_states)
-  local intro=parent.add{type="label",caption=L("project-recovery-description")}
-  intro.style.single_line=false
-  intro.style.maximal_width=width
-  local done,total
-  if stage_states then
-    total=#recovery_stages
-    done=0
-    for _,stage in ipairs(recovery_stages) do
-      if stage_states[stage[1]] then done=done+1 end
-    end
-  else
-    done,total,stage_states=recovery_status(player.force)
-  end
-  local state=parent.add{type="label",
-    caption=L("project-progress",tostring(done),tostring(total))}
-  state.style.font="default-bold"
-  state.style.font_color=HUES.gold
-  for _,stage in ipairs(recovery_stages) do
-    local line=parent.add{type="flow",direction="horizontal"}
-    line.style.vertical_align="center"
-    line.style.horizontal_spacing=9
-    local completed=stage_states[stage[1]]==true
-    local progress=line.add{type="label",
-      caption=L(completed and "project-recovery-done"
-        or "project-recovery-pending")}
-    progress.style.font_color=completed and
-      {r=.49,g=.83,b=.67} or HUES.quiet
-    local link=line.add{type="label",style="clickable_label",
-      caption=L("project-recovery-"..stage[1]),
-      tags={razi_journal_action="select",id=stage[1]}}
-    link.style.font=completed and "default" or "default-bold"
-    link.style.font_color=completed and HUES.quiet or HUES.ink
-    link.style.single_line=false
-    link.style.maximal_width=math.max(120,width-74)
-  end
-  local note=parent.add{type="label",caption=L("project-recovery-native")}
-  note.style.single_line=false
-  note.style.maximal_width=width
-  note.style.font_color=HUES.quiet
-end
-
 -- A completion bar measures the *named* native milestone, never a guessed
 -- percentage of satellites built, ships delivered or worlds conquered.
 -- The third snapshot value preserves detail for action guidance.
-local function status_for(force,id)
-  if id=="dyson" then
+local function status_for(force,id,ships)
+  if id=="platform" or id=="voyage" then
+    local facts=ships or platform_projects.snapshot(force)
+    return (facts[id] and 1 or 0),1,facts
+  elseif id=="dyson" then
     return dyson.status(force)
-  elseif id=="recovery" then
-    return recovery_status(force)
-  elseif id=="cargo" then
-    local network=catalog.snapshot(force)
-    return network.researched,network.available,network
   elseif id=="convergence" then
     if not convergence.available(force) then return 0,0 end
     return convergence.progress(force)
@@ -258,10 +151,44 @@ local function status_for(force,id)
   if not tech then return 0,0 end
   local active=force.get_entity_count
     and force.get_entity_count("kr-activated-intergalactic-transceiver")>0
-  -- Research is not activation: the physical transceiver must exist.
+  -- Research alone does not activate the actual K2SO machine.
   return active and 1 or 0,1,tech
 end
 
+local function platform_reader(parent,player,width,id,status)
+  local facts=status[3] or {}
+  local started=parent.add{type="label",
+    caption=L(id=="platform" and "project-platform-guide"
+      or "project-voyage-guide")}
+  started.style.single_line=false
+  started.style.maximal_width=width
+  local steps=id=="platform"
+    and {"project-platform-step-research","project-platform-step-launch",
+      "project-platform-step-hub"}
+    or {"project-voyage-step-thrusters","project-voyage-step-route",
+      "project-voyage-step-arrival"}
+  for i,key in ipairs(steps) do
+    local row=parent.add{type="flow",direction="horizontal"}
+    row.style.horizontal_spacing=9
+    local num=row.add{type="label",caption=string.format("%02d",i)}
+    num.style.font_color=HUES.gold
+    local label=row.add{type="label",caption=L(key)}
+    label.style.single_line=false
+    label.style.maximal_width=math.max(130,width-56)
+  end
+  if status[1]>0 then
+    local key=id=="platform" and "project-platform-success"
+      or "project-voyage-success"
+    local name=id=="platform" and facts.first_name
+      or facts.voyage_name
+    local message=parent.add{type="label",
+      caption=L(key,name or L("project-unnamed-platform"))}
+    message.style.font="default-bold"
+    message.style.single_line=false
+    message.style.maximal_width=width
+    message.style.font_color={r=.49,g=.83,b=.67}
+  end
+end
 local function unmet(tech)
   local missing={}
   for _,required in pairs(tech and tech.prerequisites or {}) do
@@ -276,7 +203,26 @@ end
 local function next_action(force,id,status)
   local done,total,detail=status[1],status[2],status[3]
   if total==0 then return L("project-next-unavailable") end
-  if id=="dyson" then
+  if id=="platform" then
+    if done==1 then return L("project-next-platform-done") end
+    local research=force.technologies and force.technologies["space-platform"]
+    if research and not research.researched then
+      local missing=unmet(research)
+      if #missing>0 then
+        return L("project-next-prerequisite",missing[1].localised_name),
+          quest_by_technology[missing[1].name]
+      end
+      return L("project-next-research",research.localised_name),
+        quest_by_technology[research.name]
+    end
+    return L("project-next-platform-launch")
+  elseif id=="voyage" then
+    if done==1 then return L("project-next-voyage-done") end
+    if not detail.platform then
+      return L("project-next-voyage-platform")
+    end
+    return L("project-next-voyage-launch")
+  elseif id=="dyson" then
     for _,stage in ipairs(detail or {}) do
       if not stage.tech.researched then
         local missing=unmet(stage.tech)
@@ -290,30 +236,6 @@ local function next_action(force,id,status)
       end
     end
     return L("project-next-dyson-build")
-  elseif id=="cargo" then
-    for _,row in ipairs(detail and detail.parts or {}) do
-      if row.state.status=="ready" then
-        return L("project-next-research",row.technology.localised_name),
-          catalog.quest_for_technology(row.technology.name)
-      end
-    end
-    for _,row in ipairs(detail and detail.parts or {}) do
-      if row.state.status=="blocked" and row.state.missing[1] then
-        return L("project-next-prerequisite",
-          row.state.missing[1].localised_name),
-          quest_by_technology[row.state.missing[1].name]
-      end
-    end
-    return done==total and L("project-next-cargo-build")
-      or L("project-next-cargo-review")
-  elseif id=="recovery" then
-    for _,stage in ipairs(recovery_stages) do
-      if not (detail and detail[stage[1]]) then
-        return L("project-next-recovery",
-          L("project-recovery-"..stage[1])),stage[1]
-      end
-    end
-    return L("project-next-recovery-done")
   elseif id=="transceiver" then
     if done==1 then return L("project-next-transceiver-done") end
     if detail and detail.researched then
@@ -555,12 +477,10 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   context.style.maximal_width=math.max(115,width-72)
   context.style.font_color=HUES.quiet
   local options={embedded=true,width=width-68}
-  if p.project=="dyson" then
+  if p.project=="platform" or p.project=="voyage" then
+    platform_reader(content,player,width-68,p.project,current)
+  elseif p.project=="dyson" then
     dyson.render(content,player,options)
-  elseif p.project=="cargo" then
-    trade.render(content,player,p,options)
-  elseif p.project=="recovery" then
-    recovery_reader(content,player,width-68,statuses.recovery[3])
   elseif p.project=="convergence" then
     convergence.render(content,player,options)
   else
@@ -585,8 +505,9 @@ function M.render(parent,player,p,size)
   -- Each expensive source-owned project snapshot is evaluated once per
   -- redraw, even though the chosen project is drawn in two separate panes.
   local statuses={}
+  local ships=platform_projects.snapshot(player.force)
   for _,id in ipairs(displayed) do
-    statuses[id]={status_for(player.force,id)}
+    statuses[id]={status_for(player.force,id,ships)}
   end
   local compact=size.width<900
   if compact then
