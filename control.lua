@@ -207,7 +207,6 @@ events:on_nth_tick(600, function()
   -- Three small optional remote checks every ten seconds, no world scans.
   preserve_deep_space_campaign()
   check_existing_transceivers()
-  razi_journal.refresh_side_menu_visibility()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
   -- Nexus Bosses remains the only authority for all nine victories.
   razi_journal.refresh_nexus_visible()
@@ -296,6 +295,11 @@ events:on_event(defines.events.on_player_created,function(event)
 end)
 events:on_event(defines.events.on_gui_click,function(event)
   razi_journal.gui_click(event)
+end)
+events:on_event(defines.events.on_lua_shortcut,function(event)
+  if event.prototype_name~="razi-expedition-journal-shortcut" then return end
+  local player=game.get_player(event.player_index)
+  if player and player.valid then razi_journal.toggle(player) end
 end)
 events:on_event(defines.events.on_gui_text_changed,function(event)
   razi_journal.text_changed(event)

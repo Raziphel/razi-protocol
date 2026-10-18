@@ -1,7 +1,7 @@
 -- The Protocol Codex reads research progress from each force.
 -- Player storage is just UI preferences, so an older save can reopen it.
 local M={}
-local journal_side_menu=require("scripts.razi_journal_side_menu")
+local journal_button_cleanup=require("scripts.razi_journal_button_cleanup")
 local defs=require("scripts.razi_journal_data")
 local records=require("scripts.razi_journal_records")
 local industrial_briefs=require("scripts.razi_planet_briefs")
@@ -1678,21 +1678,14 @@ function M.toggle(player)
 end
 function M.sync(player)
   if not (player and player.valid) then return end
-  -- The built-in right side menu has no mod insertion API in Factorio 2.1.
-  -- Place a native-styled 40px overlay in its unused lower-row cell.
-  -- Older top-left and mod-gui buttons are retired on first sync.
-  journal_side_menu.ensure(player, TOP, L("button-tooltip"))
+  -- Factorio's native minimap side-menu isn't script-extensible and game
+  -- windows draw above screen overlays. Delete every obsolete overlay so
+  -- the journal isn't stranded on the left or hidden under the minimap.
+  journal_button_cleanup.remove(player,TOP)
   render_tracker(player)
 end
 function M.sync_all()
   for _,player in pairs(game.connected_players or {}) do M.sync(player) end
-end
--- Vanilla can hide the side-menu without raising our journal events.
--- Recheck only the visibility flag, no re-layout or journal redraw.
-function M.refresh_side_menu_visibility()
-  for _,player in pairs(game.connected_players or {}) do
-    journal_side_menu.update_visibility(player,TOP)
-  end
 end
 function M.refresh_open()
   for _,player in pairs(game.connected_players or {}) do
@@ -2149,7 +2142,7 @@ end
 function M.on_display_changed(event)
   local player=game.get_player(event.player_index)
   if not player then return end
-  journal_side_menu.ensure(player, TOP, L("button-tooltip"))
+  journal_button_cleanup.remove(player,TOP)
   if player.gui.screen[FRAME] then
     close(player)
     open(player)

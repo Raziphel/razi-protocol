@@ -1,3 +1,14 @@
+Version: 2.1.120
+Date: 19. 10. 2026
+  Expedition Journal native shortcut reliability:
+    - Register a true Factorio shortcut-bar button (click to toggle journal).
+    - Keep Ctrl+Shift+J and existing journal screen and player preferences.
+    - Remove broken 2.1.118/2.1.119 overlays that appeared on the top-left
+      or were hidden under Factorio's unmodifiable minimap-side menu.
+    - Keep the built-in minimap buttons untouched; their empty slots are
+      not accessible through Factorio's public modding API.
+    - Clean old UI on mod migration, player join and display changes.
+
 Version: 2.1.119
 Date: 19. 10. 2026
   Expedition Journal right-side GUI migration:
