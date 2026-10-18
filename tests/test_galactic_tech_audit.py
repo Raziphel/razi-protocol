@@ -31,6 +31,29 @@ class TechGraphAuditTests(unittest.TestCase):
           "lab":{"lab":{"inputs":["science"]}},"planet":{"x":{}}})
         self.assertEqual(s["locations_without_research_unlock"],[])
         self.assertEqual(s["unresearchable_science_combinations"],{})
+    def test_missing_research_items_and_recipe_unlocks(self):
+        s=MODULE.analyze({"technology":{
+            "razi-test":{
+                "unit":{"ingredients":[["existent-pack",1],["lost-pack",1]]},
+                "effects":[{"type":"unlock-recipe","recipe":"razi-missing-recipe"}]
+            },
+            "native-test":{
+                "effects":[{"type":"unlock-recipe","recipe":"native-external"}]
+            }},
+            "tool":{"existent-pack":{}},
+            "recipe":{"real-recipe":{}}})
+        self.assertEqual(s["research_science_items_missing"]["razi-test"],
+                         ["lost-pack"])
+        self.assertEqual(s["razi_unlock_effect_recipes_missing"]["razi-test"],
+                         ["razi-missing-recipe"])
+        self.assertNotIn("native-test",s["razi_unlock_effect_recipes_missing"])
+
+    def test_partial_item_catalog_skips_missing_science_warning(self):
+        s=MODULE.analyze({"technology":{
+            "sample":{"unit":{"ingredients":[["not-in-partial-fixture",1]]}}}})
+        self.assertEqual(s["research_science_items_missing"],{})
+        self.assertFalse(s["science_item_catalog_available"])
+
     def test_planetary_finale_coverage_reports_gaps(self):
         fixture={"technology":{
           "razi-stable-intergalactic-singularity":{

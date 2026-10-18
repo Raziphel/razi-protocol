@@ -6,13 +6,14 @@ The Expedition Journal is Razi Protocol's **single, coherent player-facing narra
 
 The opening Calidus act introduces the factory. Later system chapters tie discoveries into science and interplanetary logistics. The additional thematic chapters organize fleet engineering, side worlds, laboratories, defense, collaborations and lore without pretending they are additional star systems.
 
-**For editors:** see [Localization](LOCALIZATION.md) for the six split `locale/en/razi_journal_*.cfg` files, [Developer Handbook](DEVELOPER_HANDBOOK.md) for voice and design intentions, and [Architecture](ARCHITECTURE.md) for implementation ownership. Preserve existing quest IDs and source research; adding prose must not introduce imaginary unlocks.
+**For editors:** see [Localization](LOCALIZATION.md) for the seven split `locale/en/razi_journal_*.cfg` files, [Developer Handbook](DEVELOPER_HANDBOOK.md) for voice and design intentions, and [Architecture](ARCHITECTURE.md) for implementation ownership. Preserve existing quest IDs and source research; adding prose must not introduce imaginary unlocks.
 
 **For UI contributors:** prioritize native Factorio readability, clear selected state, bounded scroll areas, stable viewport position when expanding chapters, lazy construction and no expensive per-tick scans. Check narrow resolutions and older saves.
 
-**3.0 narrative pilot:** Six RAZI Industries dispatches share the recovered
+**3.0 narrative pilot:** Ten RAZI Industries dispatches share the recovered
 transmission archive, each unlocked by genuine existing milestones. Twelve
-optional industrial opportunity briefs appear in existing planetary dossiers.
+optional industrial opportunity briefs appear in existing planetary dossiers,
+with guarded links to related real journal milestones.
 See [RAZI Industries](RAZI_INDUSTRIES.md) for authoring and review. No new
 quest gates, freight claims, per-tick work or second GUI were introduced.
 

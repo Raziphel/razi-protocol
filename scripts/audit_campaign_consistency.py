@@ -43,6 +43,17 @@ def inspect(root=ROOT):
     records=archived_entries(root)
     brief_source=read(root,"scripts/razi_planet_briefs.lua")
     brief_ids=re.findall(r'^  ([a-z0-9-]+)="[a-z0-9-]+",?$',brief_source,re.M)
+    relation_source=read(root,"scripts/razi_planet_briefs.lua")
+    section=re.search(r"local connections=\{(.*?)\n\}",relation_source,re.S)
+    links=re.findall(r'^  ([a-z0-9-]+)=\{([^}]*)\},?$',section.group(1),re.M) if section else []
+    relation_targets=[]
+    repeated=[]
+    owners=[]
+    for owner,payload in links:
+        owners.append(owner)
+        targets=re.findall(r'"([a-z0-9-]+)"',payload)
+        if len(targets)!=len(set(targets)): repeated.append(owner)
+        relation_targets.extend(targets)
     translations,locale_errors=parse_cfg(
         read(root,"locale/en/razi_journal_corporate.cfg"),
         "razi_journal_corporate.cfg")
@@ -64,6 +75,9 @@ def inspect(root=ROOT):
         "record_unlocks_without_quests":
             sorted({unlock for _,unlock in records if unlock not in known}),
         "briefs_without_quests":sorted(set(brief_ids)-known),
+        "related_quest_targets_missing":sorted(set(relation_targets)-known),
+        "duplicate_related_targets":sorted(repeated),
+        "links_without_briefs":sorted(set(owners)-set(brief_ids)),
         "locale_errors":locale_errors,
     }
 
@@ -72,5 +86,7 @@ if __name__=="__main__":
     print(json.dumps(report,indent=2))
     raise SystemExit(any(report[key] for key in (
         "duplicate_quest_ids","duplicate_record_ids",
-        "record_unlocks_without_quests","briefs_without_quests","locale_errors"
+        "record_unlocks_without_quests","briefs_without_quests",
+        "related_quest_targets_missing","duplicate_related_targets",
+        "links_without_briefs","locale_errors"
     )))

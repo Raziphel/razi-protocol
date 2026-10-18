@@ -1254,3 +1254,30 @@ view Carna and Velora at both close and distant zoom. If any red trails
 remain, capture the **new Factorio log** as the actual late renderer may
 be drawing from another mod namespace. Do not indiscriminately remove
 planet art or disable the transport mod.
+
+
+## Razi 3.0 second-pass audits
+
+Use a complete post-data-final-fixes Factorio `data.raw` JSON export before
+interpreting recipe-navigation or technology results:
+
+```sh
+python scripts/audit_crafting_navigation.py --dump-data-raw loaded-data-raw.json --json
+python scripts/audit_tech_tree.py --dump-data-raw loaded-data-raw.json --json
+python scripts/audit_research_balance.py --dump-data-raw loaded-data-raw.json --json
+python scripts/audit_campaign_consistency.py
+python tools/journal_locale.py
+python -m unittest tests.test_razi_3_0_first_pass tests.test_razi_3_0_second_pass tests.test_galactic_tech_audit
+```
+
+**Audit limitations:** source recipe grouping is display-only. The recipe
+audit validates name and ingredient/product shapes but cannot prove that
+the full modpack starts, that an assembled machine can craft a recipe or
+that a factory can ship enough goods. The tech audit's new missing-science
+and missing-unlock checks run only when item or recipe tables exist in
+the export. Treat unusual source mods as advisory until verified live.
+
+Required smoke checks: original save + clean save, optional mod disabled,
+each corporate record unlocked after genuine research, related-planet links
+open correct dossiers without changing completion, barrel tabs don't hide
+native recipes, and perishable option disabled by default.

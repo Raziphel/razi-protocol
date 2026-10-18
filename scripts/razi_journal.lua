@@ -1144,7 +1144,14 @@ local function render_archive(parent,player,p,context,size)
   collection.style.width=size.rail-56
   collection.style.vertical_spacing=8
   local chosen,focus
+  local corporate_heading=false
   for _,record in ipairs(records) do
+    if not corporate_heading and record.id:sub(1,5)=="corp-" then
+      corporate_heading=true
+      local heading=subtitle(collection,"archive-corporate-heading",
+        size.rail-64,themes.get("network"))
+      heading.style.top_margin=10
+    end
     local quest=defs.by_id[record.unlock]
     local opened=quest and M.complete(player.force,quest,context)
     if opened and (not chosen or record.id==p.record) then chosen=record end

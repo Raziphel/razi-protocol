@@ -109,7 +109,35 @@ def analyze(raw):
                 location_unlocks.add(effect.get("space_location"))
     unlinked=sorted(n for n,p in locations.items()
                     if not p.get("hidden") and n not in location_unlocks)
+    # Check extra post-load invariants only when the dump includes their
+    # catalogs. Partial test exports must not generate phantom problems.
+    item_kinds=("tool","item","item-with-tags","item-with-entity-data",
+                "module","ammo")
+    known_items=set().union(*(set(obj(raw.get(kind))) for kind in item_kinds))
+    all_recipes=obj(raw.get("recipe"))
+    missing_packs={}
+    bad_razi_unlocks={}
+    for name,t in techs.items():
+        if t.get("hidden") or t.get("enabled") is False:
+            continue
+        unit=obj(t.get("unit"))
+        science={ingredient_name(v) for v in unit.get("ingredients",[])}
+        science.discard(None)
+        if known_items:
+            missing=sorted(science-known_items)
+            if missing: missing_packs[name]=missing
+        if all_recipes and name.startswith("razi-"):
+            invalid_effects=sorted({effect.get("recipe")
+                for effect in t.get("effects",[])
+                if effect.get("type")=="unlock-recipe"
+                and isinstance(effect.get("recipe"),str)
+                and effect.get("recipe") not in all_recipes})
+            if invalid_effects: bad_razi_unlocks[name]=invalid_effects
     return {
+        "research_science_items_missing":missing_packs,
+        "razi_unlock_effect_recipes_missing":bad_razi_unlocks,
+        "science_item_catalog_available":bool(known_items),
+        "recipe_catalog_available":bool(all_recipes),
         "planetary_milestone_coverage":final_planet_coverage(techs,locations),
         "technologies":len(techs),
         "prerequisite_cycles":[list(x) for x in sorted(cycles)],
@@ -138,7 +166,9 @@ def main():
         if world["no_native_research_unlock"]:
             print("  Worlds using scripted/nonstandard unlocks:",
                   ", ".join(world["no_native_research_unlock"]))
-        for key in ("prerequisite_cycles","missing_prerequisites",
+        for key in ("research_science_items_missing",
+                    "razi_unlock_effect_recipes_missing",
+                    "prerequisite_cycles","missing_prerequisites",
                     "unresearchable_science_combinations",
                     "locations_without_research_unlock"):
             entries=result[key]
@@ -148,6 +178,7 @@ def main():
                     print("  ",name,":",", ".join(detail))
             else:
                 for row in entries[:18]: print("  ",row)
+        print("Science and recipe checks require a complete loaded prototype export.")
         print("Note: special/scripted unlocks and modded labs need in-game review.")
     return 0
 

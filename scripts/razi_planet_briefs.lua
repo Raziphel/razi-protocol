@@ -1,5 +1,5 @@
--- Non-mechanical editorial briefs for native planetary journal milestones.
--- No world is required to be explored in a particular order.
+-- Non-mechanical, native-milestone-linked industrial dossier references.
+-- These are suggested *relationships*, not mandatory routing or quest gates.
 local briefs={
   castra="castra",
   moshine="moshine",
@@ -14,9 +14,35 @@ local briefs={
   tenebris="tenebris",
   vesta="vesta"
 }
+-- Never assume a suggested world is installed or unlocked.
+-- Journal filters links through M.available() at the time of viewing.
+local connections={
+  castra={"arig","hyarion"},
+  moshine={"panglia","paracelsin"},
+  gleba={"moshine","rubia"},
+  fulgora={"paracelsin","aquilo"},
+  paracelsin={"rubia","moshine"},
+  aquilo={"nulla","rubia"},
+  rubia={"tenebris","vesta"},
+  panglia={"moshine","gleba"},
+  athos={"nulla","outer-mastery"},
+  nulla={"athos","outer-mastery"},
+  tenebris={"vesta","rubia"},
+  vesta={"outer-mastery","tenebris"}
+}
 local M={}
 function M.for_quest(quest)
   return quest and briefs[quest.id] or nil
 end
+function M.related(quest,by_id)
+  local result={}
+  if not (quest and by_id) then return result end
+  for _,id in ipairs(connections[quest.id] or {}) do
+    local target=by_id[id]
+    if target and target.id~=quest.id then result[#result+1]=target end
+  end
+  return result
+end
 M.briefs=briefs
+M.connections=connections
 return M

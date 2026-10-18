@@ -19,7 +19,10 @@ true purpose of the Protocol are left for a joint narrative decision.
 
 ### Narrative pilot
 
-Six independent corporate transmissions use existing quest milestones:
+Ten independent corporate transmissions now use existing source milestones.
+The original six retain their stable IDs, while Gleba, Fulgora, Aquilo
+and Tenebris provide additional independent archive records. The pilot's
+initial sequence includes:
 First Signal, Castra, Moshine, Precision Matrix, Outer Mastery and
 Convergence Commission. They coexist with all fifteen previous archival
 records. Progress comes from actual game research, not flags set by prose.
@@ -27,7 +30,9 @@ Players can discover the locations in different valid orders.
 
 ### World identity pilot
 
-Twelve quest dossiers gain industrial opportunity notes using the original
+Twelve quest dossiers gain industrial opportunity notes plus links to actual,
+available *related* journal milestones. These connections are optional
+reading shortcuts, not a required planet order. All notes use the original
 game content: Castra, Moshine, Gleba, Fulgora, Paracelsin, Aquilo, Rubia,
 Panglia, Athos, Nulla, Tenebris and Vesta. These are *editorial* summaries,
 not guaranteed automated production chains or claimed shipped items.
@@ -41,7 +46,9 @@ Validate every claim against loaded source prototypes.
 
 An enabled-by-default, display-only fluid barreling subgroup groups recognized
 fill/empty barrel recipes, when Factorio exposes its fluids item group.
-Experimental spoilable-intermediate grouping is OFF by default until verified
+Recipe classification now checks actual fluid and barrel components instead
+of relying on recipe name alone. Existing source-owned custom tabs remain
+untouched. Experimental spoilable-intermediate grouping is OFF by default until verified
 with the full installed pack. Neither changes crafting categories, ingredients,
 results, technology unlocks, recipe availability or item prototypes.
 
@@ -69,13 +76,43 @@ not need to understand game scripting to rewrite a story.
 ### Progression and compatibility gate
 
 For meaningful balance changes use the existing `scripts/audit_tech_tree.py`
-and `scripts/audit_research_balance.py` with a loaded Factorio `data.raw`
+and `scripts/audit_research_balance.py`, and the new
+`scripts/audit_crafting_navigation.py`, with a loaded Factorio `data.raw`
 export, plus fresh-game and migrated-save testing. Check prerequisite cycles,
 lab science-pack support, route availability and optional-mod absence.
 
 Alex's compatibility/porting changes and Podrick's narrative work must be
 reviewed rather than overwritten. Make changes on `feat/razi-3.0`;
 do not merge to public release `main` before contributors finish reviews.
+
+## Pass 02: deeper game-ready integration
+
+- Ten corporate transmissions share the existing archive, in a labeled
+  RAZI Industries section. The late narrative remains deliberately open.
+- Every industrial brief can link to other *installed* quest dossiers.
+  No new technology, route or shipping obligation is created.
+- Barreling grouping verifies ingredients/results and respects mod-owned tabs.
+  The opt-in spoilable subgroup still requires a full gameplay review.
+- A new recipe-navigation auditor reports verified candidates, unusual barrel
+  recipes, custom-group conflicts and perishable intermediate candidates.
+- The existing technology audit additionally reports missing research-science
+  item prototypes and Razi-owned unlocks pointing to missing recipes.
+  These checks are advisory and require a complete loaded data dump.
+- Authoring consistency catches missing or repeated cross-planet links.
+
+Commands:
+
+```sh
+python -m unittest tests.test_razi_3_0_first_pass tests.test_razi_3_0_second_pass tests.test_galactic_tech_audit
+python tools/journal_locale.py
+python scripts/audit_campaign_consistency.py
+python scripts/audit_crafting_navigation.py --dump-data-raw loaded-data-raw.json
+python scripts/audit_tech_tree.py --dump-data-raw loaded-data-raw.json
+```
+
+**Unverified:** Full Factorio 2.1 + K2SO startup, recipe GUI tabs,
+science labs, migrations and all source-mod combinations. Do not
+merge into public release `main` without these checks and contributor review.
 
 ## Pass 01 results and follow-up
 
