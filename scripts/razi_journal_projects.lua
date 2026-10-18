@@ -10,6 +10,13 @@ local icons=require("scripts.razi_journal_icons")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local frontier=require("scripts.razi_journal_frontier")
 local objectives=require("scripts.razi_journal_data")
+local quest_by_technology={}
+for _,quest in ipairs(objectives.quests or {}) do
+  if quest.tech and not quest.convergence and
+    not quest_by_technology[quest.tech] then
+    quest_by_technology[quest.tech]=quest.id
+  end
+end
 local L=function(k,...) return {"journal-ui."..k,...} end
 local ids={"dyson","cargo","recovery","transceiver","convergence"}
 local project_technologies={
@@ -239,10 +246,12 @@ local function next_action(force,id,status)
       if not stage.tech.researched then
         local missing=unmet(stage.tech)
         if #missing>0 then
-          return L("project-next-prerequisite",missing[1].localised_name)
+          return L("project-next-prerequisite",missing[1].localised_name),
+            quest_by_technology[missing[1].name]
         end
         if stage.tech.enabled==false then return L("project-next-disabled") end
-        return L("project-next-research",stage.tech.localised_name)
+        return L("project-next-research",stage.tech.localised_name),
+          quest_by_technology[stage.tech.name]
       end
     end
     return L("project-next-dyson-build")
@@ -256,7 +265,8 @@ local function next_action(force,id,status)
     for _,row in ipairs(detail and detail.parts or {}) do
       if row.state.status=="blocked" and row.state.missing[1] then
         return L("project-next-prerequisite",
-          row.state.missing[1].localised_name)
+          row.state.missing[1].localised_name),
+          quest_by_technology[row.state.missing[1].name]
       end
     end
     return done==total and L("project-next-cargo-build")
@@ -272,16 +282,19 @@ local function next_action(force,id,status)
   elseif id=="transceiver" then
     if done==1 then return L("project-next-transceiver-done") end
     if detail and detail.researched then
-      return L("project-next-transceiver-activate")
+      return L("project-next-transceiver-activate"),
+        quest_by_technology["kr-intergalactic-transceiver"]
     end
     local missing=unmet(detail)
     if #missing>0 then
-      return L("project-next-prerequisite",missing[1].localised_name)
+      return L("project-next-prerequisite",missing[1].localised_name),
+        quest_by_technology[missing[1].name]
     end
     if detail and detail.enabled==false then
       return L("project-next-disabled")
     end
-    return L("project-next-transceiver-research")
+    return L("project-next-transceiver-research"),
+      quest_by_technology["razi-intergalactic-transceiver-signal"]
   end
   if detail==true then return L("project-next-convergence-done") end
   local current=convergence.current(force)
@@ -290,12 +303,14 @@ local function next_action(force,id,status)
   end
   local commission=force.technologies["razi-convergence-commission"]
   if commission and not commission.researched then
-    return L("project-next-research",commission.localised_name)
+    return L("project-next-research",commission.localised_name),
+      "convergence-commission"
   end
   local stage=convergence.stages[current]
-  return stage and L("project-next-convergence-deliver",
-    {"razi-ops.convergence-stage-"..stage.id})
-    or L("project-next-unavailable")
+  if not stage then return L("project-next-unavailable") end
+  return L("project-next-convergence-deliver",
+    {"razi-ops.convergence-stage-"..stage.id}),
+    "convergence-"..stage.id
 end
 
 -- Only link to entries already present and visible under the active
