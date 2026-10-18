@@ -81,7 +81,7 @@ local old = {["wetland-blue-slime"] = legacy_effect()}
 check(run(old, "2.1.21") == 0 and old["wetland-blue-slime"].water.textures,
   "Do not change legacy fields on older Factorio")
 local absent = {["wetland-blue-slime"] = legacy_effect()}
-check(run(absent, "2.1.22", false) == 0 and
-  absent["wetland-blue-slime"].water.textures,
-  "Do not change wetland effects if Tellus is not installed")
+check(run(absent, "2.1.22", false) == 1 and
+  absent["wetland-blue-slime"].water.textures == nil,
+  "Repair legacy water effects regardless of which mod owns them")
 print("Planetaris Tellus wetland tile effect compatibility passed")
