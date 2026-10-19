@@ -59,7 +59,10 @@ function M.save(player,preferences,item)
   if type(index)~="number" or index~=math.floor(index)
     or index<1 or index>#paths then return false end
   local itinerary=paths[index]
-  if not graph_module.valid_path(graph,itinerary) then return false end
+  -- An index alone is not proof that the route shown when clicked still
+  -- exists. A mod/research change can reorder alternatives on the next tick.
+  if not (itinerary and preferences.supply_path_key==itinerary.key)
+    or not graph_module.valid_path(graph,itinerary) then return false end
   local materials=eligible(row,batches,item)
   if not materials then return false end
   local data=store(player.index)
@@ -93,8 +96,14 @@ end
 function M.visible(player,graph)
   local records=store(player.index).plans
   local result={}
+  -- One portfolio snapshot for the entire bounded list rather than one
+  -- full factory catalog rebuild for every saved itinerary.
+  local catalog={}
+  for _,recipe in ipairs(supply.catalog(player.force)) do
+    catalog[recipe.quest.tech]=recipe
+  end
   for _,plan in ipairs(records) do
-    local recipe=supply.recipe(player.force,plan.recipe)
+    local recipe=catalog[plan.recipe]
     local path={legs=plan.legs}
     local revealed=recipe and recipe.site==plan.destination
       and graph_module.valid_path(graph,path)
@@ -165,6 +174,11 @@ function M.render(parent,player,p,width,current)
       if type(selected)~="number" or selected<1
         or selected>#paths then selected=1 end
       p.supply_path=selected
+      -- A changed graph never silently grants authorization to a
+      -- different path that now occupies the same numeric selection.
+      if p.supply_path_key and p.supply_path_key~=paths[selected].key then
+        p.supply_path_key=nil
+      end
       heading(region,L("supply-multihop-alternatives",
         tostring(#paths)),width-45)
       for index,path in ipairs(paths) do
@@ -178,6 +192,9 @@ function M.render(parent,player,p,width,current)
         if chosen then btn.style.font_color={r=.82,g=.69,b=.48} end
       end
       local chosen=paths[selected]
+      if not p.supply_path_key then
+        wrap(region,L("supply-multihop-confirm-path"),width-45)
+      end
       local route=region.add{type="flow",direction="vertical"}
       route.style.vertical_spacing=3
       heading(route,L("supply-multihop-legs"),width-45)
@@ -190,7 +207,8 @@ function M.render(parent,player,p,width,current)
       wrap(region,L("supply-multihop-platform-km",
         tostring(chosen.platform_km)),width-45)
       wrap(region,L("supply-multihop-no-guarantees"),width-45)
-      if current.technology and current.technology.researched
+      if p.supply_path_key==chosen.key and current.technology
+        and current.technology.researched
         and current.recipe_enabled and supply.batches(p.supply_batches) then
         region.add{type="button",caption=L("supply-itinerary-save-all"),
           tags={razi_ops_action="supply-itinerary-save-all"}}
