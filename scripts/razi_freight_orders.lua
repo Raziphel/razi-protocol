@@ -100,6 +100,10 @@ function M.update(player,id,action)
     if order.id==id then
       if action=="remove" then table.remove(s.orders,i)
       elseif action=="packed" then order.packed=not order.packed
+      elseif action=="up" and i>1 then
+        s.orders[i],s.orders[i-1]=s.orders[i-1],s.orders[i]
+      elseif action=="down" and i<#s.orders then
+        s.orders[i],s.orders[i+1]=s.orders[i+1],s.orders[i]
       else return false end
       return true
     end
@@ -133,6 +137,62 @@ function M.orders(player)
         count=order.count,packed=order.packed,
         stacks=M.stacks(order.item,order.count)
       }
+    end
+  end
+  return result
+end
+-- Prepared load checks are deliberately NOT shipment telemetry.  A
+-- player's physical surface and carried inventory are the only evidence.
+-- Allocate the available count once across pending orders of the same item,
+-- in user-selected priority order, to avoid promising the same stock twice.
+-- Packing remains an explicit manual note and reserves/removes nothing.
+function M.readiness(player,listed)
+  local planet=player and player.physical_surface
+    and player.physical_surface.planet
+  local current=planet and planet.name or nil
+  local remaining={}
+  local report={ready=0,short=0,remote=0,packed=0,unknown=0,
+    planned_stacks=0,origin=current}
+  for _,entry in ipairs(listed or {}) do
+    report.planned_stacks=report.planned_stacks+(entry.stacks or 0)
+    entry.origin_here=current~=nil and current==entry.route.source
+    if entry.packed then
+      entry.load_state="packed"
+      report.packed=report.packed+1
+    elseif not entry.origin_here then
+      entry.load_state="remote"
+      report.remote=report.remote+1
+    elseif not (player and player.get_item_count) then
+      entry.load_state="unknown"
+      report.unknown=report.unknown+1
+    else
+      local stock=remaining[entry.item]
+      if stock==nil then
+        stock=math.max(0,player.get_item_count(entry.item) or 0)
+      end
+      entry.available=math.min(stock,entry.count)
+      entry.shortfall=entry.count-entry.available
+      remaining[entry.item]=math.max(0,stock-entry.count)
+      if entry.shortfall==0 then
+        entry.load_state="ready"
+        report.ready=report.ready+1
+      else
+        entry.load_state="short"
+        report.short=report.short+1
+      end
+    end
+  end
+  return report
+end
+
+-- Return only opaque identifiers for inaccessible saved plans. Never
+-- disclose hidden-world names, routes or items through spoiler controls.
+function M.unavailable(player)
+  local s=store(player.index)
+  local result={}
+  for _,order in ipairs(s.orders) do
+    if not M.route(player.force,order.route) or not item(order.item) then
+      result[#result+1]={id=order.id}
     end
   end
   return result
