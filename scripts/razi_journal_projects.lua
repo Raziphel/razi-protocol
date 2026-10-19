@@ -2,6 +2,7 @@
 -- Research, receivers, shipments and victory remain owned by source systems.
 local M={}
 local dyson=require("scripts.galactic_dyson")
+local trade=require("scripts.galactic_trade")
 local convergence=require("scripts.razi_convergence")
 local catalog=require("scripts.galactic_trade_catalog")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
@@ -61,6 +62,9 @@ function M.adjacent(force,id,step,known_visible)
     if project==id then return visible[index+step] end
   end
   return nil
+end
+function M.cargo_available(force)
+  return catalog.snapshot(force).available>0
 end
 function M.valid_cargo(force,chain,target)
   if not chain or not catalog.is_installed(force,chain) then return false end
@@ -487,7 +491,38 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
     transceiver(content,player,width-68)
   end
 end
+local function cargo_reference(parent,player,p,size)
+  -- Keep the real industrial reference and freight board, not a project tile.
+  local pane=parent.add{type="flow",direction="vertical"}
+  pane.style.width=size.width-36
+  pane.style.height=size.body
+  pane.style.vertical_spacing=7
+  local bar=pane.add{type="flow",direction="horizontal"}
+  bar.style.vertical_align="center"
+  local title=bar.add{type="label",caption=L("project-industry-reference")}
+  title.style.font="heading-2"
+  title.style.font_color=HUES.gold
+  local spacer=bar.add{type="empty-widget"}
+  spacer.style.horizontally_stretchable=true
+  bar.add{type="button",caption=L("project-back-to-projects"),
+    tags={razi_journal_action="project-back"}}
+  local scroll=pane.add{type="scroll-pane",direction="vertical",
+    name="razi_journal_project_reader"}
+  scroll.style.width=size.width-43
+  scroll.style.height=math.max(150,size.body-55)
+  scroll.tags={razi_scroll_context="cargo"}
+  scroll.horizontal_scroll_policy="never"
+  scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
+  local content=scroll.add{type="flow",direction="vertical"}
+  content.style.width=size.width-72
+  content.style.vertical_spacing=12
+  trade.render(content,player,p,{embedded=true,width=size.width-83})
+end
 function M.render(parent,player,p,size)
+  if p.project=="cargo" then
+    cargo_reference(parent,player,p,size)
+    return
+  end
   local displayed={}
   for _,id in ipairs(ids) do
     if M.visible(player.force,id) then displayed[#displayed+1]=id end
