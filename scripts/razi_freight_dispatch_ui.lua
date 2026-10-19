@@ -3,6 +3,7 @@
 -- catapult launch detection, automatic stock reservation or delivery.
 local M={}
 local orders=require("scripts.razi_freight_orders")
+local infrastructure=require("scripts.razi_freight_infrastructure")
 local function L(key,...) return {"razi-ops."..key,...} end
 local function line(parent,caption,width)
   local label=parent.add{type="label",caption=caption}
@@ -14,6 +15,38 @@ local function name(world)
   local proto=prototypes and prototypes.space_location
     and prototypes.space_location[world]
   return proto and proto.localised_name or world
+end
+-- Display an observed installation count, not power, delivery, actual
+-- catapult targeting or item transfer availability.
+local function hardware(site)
+  if not site or site.launcher_count==nil then
+    return L("freight-infra-hardware-unknown")
+  end
+  if site.launcher_count==0 then
+    return L("freight-infra-hardware-none")
+  end
+  return L("freight-infra-hardware-count",tostring(site.launcher_count))
+end
+local function platforms(site)
+  if not site or site.platforms==nil then
+    return L("freight-infra-platforms-unknown")
+  end
+  return L("freight-infra-platforms-count",
+    tostring(site.platforms),tostring(site.providers),
+    tostring(site.unscheduled))
+end
+local function render_infrastructure(parent,route,report,width)
+  if not route then return end
+  local from=report.worlds[route.source]
+  local to=report.worlds[route.target]
+  local physical=line(parent,L("freight-infra-endpoints",
+    name(route.source),hardware(from),
+    name(route.target),hardware(to)),width-48)
+  physical.style.font_color={r=.72,g=.78,b=.82}
+  local orbit=line(parent,L("freight-infra-orbit",
+    name(route.source),platforms(from),
+    name(route.target),platforms(to)),width-48)
+  orbit.style.font_color={r=.72,g=.78,b=.82}
 end
 function M.render(parent,player,snapshot,width)
   if not snapshot.installed then return end
@@ -27,6 +60,8 @@ function M.render(parent,player,snapshot,width)
   title.style.font_color={r=.86,g=.73,b=.49}
   line(panel,L("freight-board-explainer"),width-44)
   local data=orders.store(player.index)
+  -- At most one read per discovered world for this explicit Journal render.
+  local observed=infrastructure.snapshot(player.force,snapshot)
   if snapshot.visible==0 then
     line(panel,L("freight-board-undiscovered"),width-44)
     -- Even fully concealed or temporarily disabled routes must not leave
@@ -73,6 +108,7 @@ function M.render(parent,player,snapshot,width)
     local selected_line=line(panel,L("freight-board-selected",
       name(selected.source),name(selected.target)),width-44)
     selected_line.style.font="default-bold"
+    render_infrastructure(panel,selected,observed,width)
     local editor=panel.add{type="flow",direction="horizontal"}
     editor.style.vertical_align="center"
     editor.style.horizontal_spacing=8
@@ -96,6 +132,12 @@ function M.render(parent,player,snapshot,width)
     line(panel,L("freight-board-pick-route"),width-44)
   end
   local listed=orders.orders(player)
+  if selected or #listed>0 then
+    line(panel,L("freight-infra-disclaimer"),width-44)
+    line(panel,L(observed.platform_logistics and
+      "freight-infra-companion-installed" or
+      "freight-infra-companion-absent"),width-44)
+  end
   local readiness=orders.readiness(player,listed)
   local total=orders.saved_count(player)
   if total>0 then
@@ -140,6 +182,7 @@ function M.render(parent,player,snapshot,width)
       width<680 and width-52 or width-326))
     description.style.font_color=entry.packed
       and {r=.55,g=.84,b=.70} or {r=.72,g=.78,b=.82}
+    render_infrastructure(panel,entry.route,observed,width)
     -- Real inventory state is local to this player. It is not a
     -- measurement of launchpad storage or the destination's inventory.
     if player.get_item_count then
