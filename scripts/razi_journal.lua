@@ -86,6 +86,7 @@ local function pref(index)
   value.chapter_cover=value.chapter_cover==true
   value.goal_expanded=value.goal_expanded==true
   value.reader_focus=value.reader_focus==true
+  value.compact_index_open=value.compact_index_open==true
   -- Default to one Journal toolbar. Players can reveal the source buttons
   -- temporarily when they need Planet Express or Nexus native controls.
   value.native_controls_visible=value.native_controls_visible==true
@@ -323,12 +324,15 @@ function M.layout(resolution,scale)
   local width=math.min(1190,math.max(420,screen_w-52))
   local height=math.min(930,math.max(390,screen_h-64))
   local compact=width<1020 or height<660
+  -- Below this width, two simultaneous columns make the dossier unreadable.
+  -- Present a full-size document and switch to its index on demand.
+  local single_column=width<740
   local rail=math.min(compact and 282 or 302,
     math.max(228,math.floor(width*(compact and .30 or .255))))
   local reader=width-rail-43
   return {width=width,height=height,rail=rail,reader=reader,
     body=math.max(200,height-(compact and 183 or 204)),
-    compact=compact}
+    compact=compact,single_column=single_column}
 end
 local function label(parent,caption)
   return parent.add{type="label",caption=caption}
@@ -1599,7 +1603,8 @@ local function draw(player,focus_search)
   local size=M.layout(player.display_resolution,player.display_scale)
   -- Focus widens only the quest reader. Hidden chapter widgets stay alive,
   -- so opening the index again does not lose its scroll position.
-  if p.view~="systems" and p.reader_focus then
+  if (p.view~="systems" and p.reader_focus)
+    or (p.view=="quests" and size.single_column) then
     size.reader=size.width-43
   end
   local reveal_on_redraw=p.reveal_selection==true
@@ -1608,6 +1613,16 @@ local function draw(player,focus_search)
   local window_theme=themes.get(chapter_theme)
   local saved_scrolls={}
   collect_scrolls(frame,saved_scrolls)
+  -- A native hidden scroll pane may report zero. Cache its last visible
+  -- position before switching from Index to the mobile reading sheet.
+  if p.view=="quests" and size.single_column then
+    local previous=frame["razi_journal_content"]
+    local nav=previous and previous["razi_journal_navigation_panel"]
+    local scroller=nav and nav["razi_journal_navigation"]
+    if nav and nav.visible and scroller and scroller.valid then
+      p.compact_index_scroll=scroller.vertical_scroll_position
+    end
+  end
   frame.clear()
   frame.style.width=size.width
   frame.style.padding=10
@@ -1633,6 +1648,12 @@ local function draw(player,focus_search)
     tags={razi_journal_action="focus"}}
   focus.visible=p.view~="systems"
     and not (p.view=="projects" and p.project=="cargo")
+    and not (p.view=="quests" and size.single_column)
+  local compact_switch=head.add{type="button",
+    caption=L(p.compact_index_open and "compact-read" or "compact-index"),
+    tags={razi_journal_action="compact-index"},
+    tooltip=L("compact-index-tooltip")}
+  compact_switch.visible=p.view=="quests" and size.single_column
   focus.style.minimal_width=size.compact and 55 or 94
   local refresh=head.add{type="button",style="tool_button",
     caption="↻",tooltip=L("refresh"),
@@ -1788,8 +1809,13 @@ local function draw(player,focus_search)
     local selected=select_quest(player.force,p,context,plan)
     local search=render_chapters(body,player,p,context,size,view,plan)
     local navigation=body["razi_journal_navigation_panel"]
-    if navigation then navigation.visible=not p.reader_focus end
+    local on_small_screen=size.single_column
+    if navigation then
+      navigation.visible=on_small_screen and p.compact_index_open
+        or (not on_small_screen and not p.reader_focus)
+    end
     local reader=body.add{type="flow",name="razi_journal_reader_host",direction="vertical"}
+    reader.visible=not (on_small_screen and p.compact_index_open)
     reader.style.width=size.reader
     -- Normal chapter expand/collapse and dossier clicks retain the user's
     -- location in the list. Explicit quest navigation may deliberately
@@ -1812,6 +1838,14 @@ local function draw(player,focus_search)
   -- No decorative footer: useful space belongs to the dossiers.
   -- Restore only after the complete new GUI tree has been assembled.
   restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
+  if p.view=="quests" and size.single_column and p.compact_index_open
+    and type(p.compact_index_scroll)=="number" then
+    local navigation=body["razi_journal_navigation_panel"]
+    local scroll=navigation and navigation["razi_journal_navigation"]
+    if scroll then pcall(function()
+      scroll.vertical_scroll_position=p.compact_index_scroll
+    end) end
+  end
   -- A hidden index can report zero during a Focus layout. Reapply the
   -- actual pre-Focus native offsets on the first return to the index.
   if not p.reader_focus and p.focus_navigation_scrolls then
@@ -1841,7 +1875,7 @@ local function update_reader(player,preserve_reader)
   local p=pref(player.index)
   local context=M.context(player.force)
   local size=M.layout(player.display_resolution,player.display_scale)
-  if p.reader_focus then size.reader=size.width-43 end
+  if p.reader_focus or size.single_column then size.reader=size.width-43 end
   local view=M.view_status(player.force,context)
   -- A newly discovered/visible quest needs its first native GUI row built.
   -- That is the exceptional case where a full redraw is actually required.
@@ -2372,10 +2406,15 @@ function M.gui_click(event)
     end
     p.view="quests"
     p.chapter_cover=false
+    p.compact_index_open=false
     p.reveal_selection=false
   elseif action=="mission-details" and p.view=="quests"
     and p.selected==tags.id then
     p.goal_expanded=not p.goal_expanded
+  elseif action=="compact-index" and p.view=="quests"
+    and M.layout(player.display_resolution,player.display_scale).single_column then
+    p.reader_focus=false
+    p.compact_index_open=not p.compact_index_open
   elseif action=="focus" and p.view~="systems"
     and not (p.view=="projects" and p.project=="cargo") then
     if not p.reader_focus then
@@ -2412,6 +2451,7 @@ function M.gui_click(event)
     p.chapter=tags.id
     p.chapter_cover=true
     p.view="quests"
+    p.compact_index_open=false
     p.filter="all"
     p.query=""
   elseif action=="chapter-continue" then
@@ -2420,6 +2460,7 @@ function M.gui_click(event)
     p.selected=target.id
     p.chapter=target.chapter
     p.chapter_cover=false
+    p.compact_index_open=false
     p.filter="all"
     p.query=""
     p.reveal_selection=false
