@@ -1,4 +1,5 @@
 local razi_journal = require("scripts.razi_journal")
+local platform_projects = require("scripts.razi_platform_projects")
 local story_dispatch = require("scripts.razi_story_dispatch")
 local spoiler_fog = require("scripts.razi_spoiler_fog")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
@@ -160,6 +161,7 @@ events:on_init(function()
   convergence.restore_pending()
   preserve_deep_space_campaign()
   check_existing_transceivers()
+  for _,force in pairs(game.forces) do platform_projects.snapshot(force) end
   retire_connected_operations()
   razi_journal.sync_all()
 end)
@@ -169,6 +171,7 @@ events:on_configuration_changed(function(event)
 	convergence.restore_pending()
 	preserve_deep_space_campaign()
 	check_existing_transceivers()
+  for _,force in pairs(game.forces) do platform_projects.snapshot(force) end
 	-- Existing saves may have researched older Convergence stages before
 	-- their new manufacturing unlocks were introduced.
 	if event and event.mod_changes
@@ -226,6 +229,17 @@ events:on_event({
 }, on_entity_built)
 
 
+-- Sparse native events record real platform hubs and completed trips.
+-- A starter-pack placeholder without a built hub never earns completion.
+local function record_platform(event)
+  if event and platform_projects.observe(event.platform) then
+    razi_journal.refresh_open()
+  end
+end
+events:on_event(defines.events.on_space_platform_built_entity,record_platform)
+events:on_event(defines.events.on_space_platform_built_tile,record_platform)
+events:on_event(defines.events.on_space_platform_changed_state,record_platform)
+
 -- The old Galactic Operations hotkey now opens the Journal's Projects view.
 -- Keep the existing input identifier so player key bindings survive.
 events:on_event("razi-journal-toggle",function(event)
@@ -247,6 +261,7 @@ events:on_event(defines.events.on_technology_effects_reset,function()
   spoiler_fog.defer_all()
 end)
 events:on_event(defines.events.on_forces_merged,function(event)
+  platform_projects.forces_merged(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
   spoiler_fog.on_forces_merged(event)
