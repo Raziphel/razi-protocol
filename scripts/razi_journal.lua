@@ -1328,6 +1328,22 @@ local function render_archive(parent,player,p,context,size)
     end
     end
   end
+  -- Recovered RAZI Archive Array signals are separate from the original
+  -- 59 corporate records. Their three physical unlocks never inflate the
+  -- source-research archive totals or expose a future signal title.
+  local array_count=great_projects.recovered(player.force)
+  if array_count>0 then
+    local array_label=label(collection,L("archive-array-heading"))
+    array_label.style.font="default-bold"
+    array_label.style.font_color=COLOR.amber
+    for i=1,array_count do
+      local select_row=collection.add{type="label",style="clickable_label",
+        caption=L("archive-array-title-"..i),
+        tags={razi_journal_action="array-record",id=i}}
+      select_row.style.single_line=false
+      select_row.style.maximal_width=size.rail-65
+    end
+  end
   if M.hide_spoilers() and sealed>0 then
     local note=wrap(collection,L("archive-sealed-count",
       tostring(sealed)),size.rail-64)
@@ -1340,6 +1356,19 @@ local function render_archive(parent,player,p,context,size)
   paper.style.width=size.reader
   paper.style.height=size.body
   paper.style.padding=16
+  local array_page=p.record and
+    tonumber(p.record:match("^array%-(%d+)$"))
+  if array_page and array_page>=1 and array_page<=array_count then
+    local title=wrap(paper,L("archive-array-title-"..array_page),
+      size.reader-48)
+    title.style.font="heading-1"
+    title.style.font_color=COLOR.ink
+    local prose=wheel_pane(paper,"razi_journal_archive_reading",
+      size.reader-38,size.body-140)
+    prose.tags={razi_scroll_context=p.record}
+    wrap(prose,L("archive-array-record-"..array_page),size.reader-67)
+    return
+  end
   if not chosen then
     subtitle(paper,"archive-sealed-heading",size.reader-48)
     wrap(paper,L("archive-sealed"),size.reader-48)
@@ -1992,6 +2021,12 @@ function M.gui_click(event)
     local quest_id=projects.next_quest(player.force,p.project)
     if not quest_id or not M.open_quest(player,quest_id) then return end
     return
+  elseif action=="array-record" and p.view=="archive" then
+    local index=tonumber(tags.id)
+    if not index or index<1 or index>great_projects.recovered(player.force)
+      then return end
+    p.record="array-"..index
+    p.archive_filter="all"
   elseif action=="story-alerts" and p.view=="archive" then
     p.story_alerts=not p.story_alerts
   elseif action=="record-next-unread" and p.view=="archive" then
