@@ -108,5 +108,10 @@ require("prototypes.system.galaxy_layout").confirm_critical_positions()
 -- endgame labs have already registered it as an input.
 require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
 
+-- Late-stage source recipes and research are final now. Keep optional bulk card manufacture,
+-- then tier the system cards across the EXISTING laboratories of other mods (no new labs).
+require("prototypes.compat.system_card_manufacturing").data_final_fixes()
+require("prototypes.compat.system_card_laboratories").data_final_fixes()
+
 -- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()
