@@ -508,3 +508,68 @@ Developer regression:
 particularly when using Remote View, switching physical surfaces, changing
 mod settings, and editing an established save.
 
+## A.3: Engine-confirmed cargo-pod delivery history
+
+The Cargo Network now keeps a separate, force-owned **observed cargo-pod
+delivery** ledger. It subscribes only to Factorio 2.1's documented
+`defines.events.on_cargo_pod_delivered_cargo`, which fires **after** the
+engine deposits the cargo. Neither departure nor landing alone is enough.
+
+- One event records a *delivery occurrence* on the pod's destination
+  **planet**, only if that planet is an endpoint of a configured Razi
+  regional/local Orbital Catapult corridor. The event's cargo pod must have
+  a valid force and a valid planet surface.
+- The saved record has a single count per force per recognized destination
+  world and the latest **24** raw world/tick pairs. No inventory objects,
+  player references, entity references or enormous item inventories are
+  persisted. The list is size-limited for old-save longevity.
+- The Journal displays totals and up to eight latest destination/tick
+  observations **only for genuinely researched, visible and enabled
+  corridor endpoints**. Disabling links or hiding future worlds reveals
+  nothing. Unlocking a world may reveal previous recorded activity for
+  that world. Different forces have isolated ledgers; native force merges
+  preserve aggregate counters and trim merged history to 24 records.
+- The selected Freight Desk route can show how many engine-confirmed
+  pod delivery events occurred at each of its two worlds. These are two
+  *independent destination totals*, **not deliveries along that route**.
+  Manual catapult packing status, Skybridge and Convergence victories
+  remain fully separate.
+- On a migrated save the history naturally begins empty; there is no
+  reliable way to reconstruct old deliveries without a recorded event.
+  No periodic polling, cargo insertion or transport scheduling is added.
+
+### Source-attribution boundary
+
+A Factorio native cargo-pod delivery event does **not** report the
+original planet, the item IDs/quantities, a Freight Desk order ID or the
+responsible mod. Factorio documents that cargo-pod events can also be
+raised for modded pods. Therefore the ledger is labeled *observed cargo-pod
+activity*, **not Orbital Catapult shipments** or delivered contract units.
+We do not use it to close any order, pay any reward, satisfy Project
+Skybridge, or mark Convergence complete.
+
+Orbital Catapult 0.15.0's public integration contract documents
+`orbital-cannon-link` prototype declarations, but we have not verified a
+stable per-launch/per-delivery remote API or event with cargo and route
+provenance. Full Catapult-specific verified transport tracking is still
+**blocked pending a verified upstream interface**, rather than using
+world inventory deltas, guessed machine IDs or teleport detection.
+
+### Acceptance and safety
+
+Run locally (manual-only Check workflow, never scheduled automatically):
+
+```sh
+lua5.2 tests/lua/test_razi_freight_orders.lua
+lua5.2 tests/lua/test_razi_freight_infrastructure.lua
+lua5.2 tests/lua/test_razi_freight_receipts.lua
+```
+
+In Factorio 2.1, test a real rocket cargo delivery, a platform-to-world
+pod delivery, a modded pod where applicable, a remote-view player,
+a route whose other world is undiscovered, disabling both Razi link
+groups, force merge, restart/migrated save, and a game with many
+deliveries. Ensure the Journal's numbers represent **events**, never
+items or completed orders, and compare its destination records to
+real native events. A new save cannot infer older events.
+
