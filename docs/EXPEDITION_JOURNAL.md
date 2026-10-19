@@ -742,15 +742,19 @@ clears the user's entire chat, never selectively suppressing
 other mod warnings.
 
 
-## Projects: five genuine undertakings (Razi 3.0)
+## Projects: nine physical undertakings (Razi 3.0)
 
-The **Projects** tab is reserved for physical accomplishments, major construction, or the endgame transmission. It is not a collection of ordinary research portfolios. The five dossiers appear in expedition order:
+The **Projects** tab is reserved for physical accomplishments, major construction, or the endgame transmission. It is not a collection of ordinary research portfolios. The nine dossiers appear in expedition order:
 
 1. **First Space Platform:** Build a genuine Space Age platform hub after launching a starter pack. Research alone or a platform placeholder is not enough. The record remains complete if the platform is later destroyed.
 2. **First Voyage:** Guide a real space platform through at least one completed trip between space locations. The engine-reported completed-trip counter is authoritative; fuel production, a plotted route or an unfinished crossing do not count.
-3. **Dyson Sphere:** Develop the actual Calidus stellar research and construct source-owned satellites, repeaters and energy receivers. The existing research bar measures research only, never an invented percentage of physical construction.
-4. **Transceiver:** Build and activate the original K2SO intergalactic machine. Research alone does not mark the project complete.
-5. **Convergence:** Manufacture and physically deliver all five actual mandates and finish the real Convergence victory transmission. The save continues afterward.
+3. **Skybridge Initiative:** Use Razi's existing, explicitly configured directed Orbital Catapult links. Build actual native devices on both endpoint planets, issue a signed consignment with 20 real processing units at the origin, and physically carry its sealed receipt to the target. The native catapult mod does not expose trustworthy proof of which transport carried the item, so Razi states this limitation explicitly.
+4. **Operation Beltbreaker:** Physically cross both Vibrant's Inner/Outer Rim route and Umbra's Shattered Divide. The platform must be seen entering the actual route, then complete the trip and reach a corresponding endpoint. Visiting rim worlds via other paths does not count.
+5. **Dyson Sphere:** Develop the actual Calidus stellar research and construct source-owned satellites, repeaters and energy receivers. The existing research bar measures research only, never an invented percentage of physical construction.
+6. **Archive Array:** Research and craft a dedicated powered RAZI Archive Relay, using native radar artwork. Place and power at least one station in each of three distinct star systems. Each live site reveals a recovered fragment, which remains permanently accessible from the Journal Archive once unlocked.
+7. **Transceiver:** Build and activate the original K2SO intergalactic machine. Research alone does not mark the project complete.
+8. **Project Ark:** Build a heavy (at least 1,000,000 kg), armed factory ship with 3+ thrusters, 4+ ammunition turrets and 2+ assembling machines. Then complete an actual trip to an approved Deep Space destination with that qualifying vessel. Weight or research alone is insufficient.
+9. **Convergence:** Manufacture and physically deliver all five actual mandates and finish the real Convergence victory transmission. The save continues afterward.
 
 ### Preserved industrial references
 
@@ -760,8 +764,8 @@ The **Projects** tab is reserved for physical accomplishments, major constructio
 
 ### Correctness and performance
 
-The Space Age 2.1 `LuaForce.platforms` collection exposes real platforms, and each platform's built hub and `completed_trips` count determine the first two achievements. A very small force-level record persists attained milestones through platform destruction, reload and force merges. Event callbacks observe actual platform construction and state changes; the Journal also reconciles existing platforms on initial load, upgrades and opening the view. There is **no global per-tick platform scan**, no new recipes or fabricated objects, and no modifications to base-game platform schedules. An old save where the only historical platform has already been destroyed before Razi is installed cannot prove the lost achievement; the next live built platform or trip is needed.
+The Space Age 2.1 `LuaForce.platforms` collection exposes real platforms, and each platform's built hub and `completed_trips` count determine the first two achievements. A very small force-level record persists attained milestones through platform destruction, reload and force merges. Event callbacks observe actual platform construction and state changes; the Journal also reconciles existing platforms on initial load, upgrades and opening the view. There is **no global per-tick platform scan**, no fabricated source-mod telemetry and no modifications to base-game platform schedules. The Great Projects add one optional RAZI Archive Relay technology, recipe and entity, plus a one-off source-issued freight receipt item. The 300-tick fallback only inspects forces with an actual pending crossing. An old save where the only historical platform has already been destroyed before Razi is installed cannot prove the lost achievement; the next live built platform or trip is needed.
 
-The first platform is always visible, and First Voyage becomes discoverable once a real platform has been built. The later Dyson, Transceiver and Convergence dossiers continue to obey spoiler-relevant technology prerequisites. Source research and delivery IDs remain unchanged.
+The first platform is always visible. First Voyage becomes discoverable after a platform has been built; Skybridge and Beltbreaker unlock naturally with interplanetary exploration. The Archive Array is hidden until its own research is accessible, and Ark until the transceiver era. Dyson, Transceiver and Convergence still respect spoiler-relevant research. Source research and delivery IDs remain unchanged.
 
 Regression source checks: `tests/test_first_platform_projects.py`, `tests/test_journal_projects.py`, `tests/test_journal_visual_polish.py`; Lua fixtures: `tests/lua/test_razi_platform_projects.lua`, `tests/lua/test_razi_project_spoilers.lua`, `tests/lua/test_projects_runtime_require.lua`. Full Factorio 2.1 in-game testing is still required for space-platform events, completed-trip timing, force merges, old saves and responsive GUI.

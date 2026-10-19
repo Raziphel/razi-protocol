@@ -413,3 +413,11 @@ once per user on a save; replay is explicit via `/razi-welcome`.
 The in-game planet and corridor notes are the field-facing voice of RAZI's old freight network. On planets, use one vivid environmental detail and one actual logistics or research purpose; on curated routes, use a short freight dispatch explaining what the connection enables. Avoid declaring native source-mod secrets to be RAZI inventions.
 
 Keep this copy less revealing than Archive records: old ledgers, abandoned infrastructure, material shortages and lost decision-makers may be mentioned, but not the Continuity Engine's final resolution, the physical Convergence shipments or the ending. These notes are append-only to source planet descriptions, route-only on verified endpoint pairs, and available in English and Russian.
+
+## Great Projects: the recovered array (October 2026)
+
+Four new Projects add verified physical accomplishments: Skybridge's two-world native catapult infrastructure and signed delivered freight receipt; Beltbreaker's two genuine route crossings; a powered Archive Array spanning three different systems; and a large, defended production Ark reaching Deep Space. None creates free science or a planetary bypass.
+
+The Array's three recovered messages appear as separate entries in the existing Archive navigation and remain unlocked for the force after physical receivers are removed. They foreshadow the unresolved Continuity records without explaining away Convergence. Corporate voice stays restrained: log timestamps, missing personnel signatures and archival orders, not a new omniscient narrator.
+
+Skybridge's sealed manifest proves goods were physically carried between two installed catapult endpoints while a RAZI regional link exists, but **does not prove that the Orbital Catapult itself fired or transported the item**. The source mod has no publicly documented delivery callback suitable for that claim. If its physical devices cannot be identified by their actual source prototype names, the project deliberately reports that it cannot verify them rather than inventing progress. Native transportation and all third-party science remain controlled by their authors.
