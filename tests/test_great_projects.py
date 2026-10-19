@@ -34,6 +34,8 @@ class GreatProjects(unittest.TestCase):
         self.assertIn('energy_usage="1MW"',prototypes)
         self.assertIn('name="razi-archive-array"',prototypes)
         self.assertIn('name="razi-skybridge-consignment"',prototypes)
+        self.assertIn('stack_size=20,hidden=true',prototypes)
+        self.assertNotIn('flags={"hidden"}',prototypes)
         self.assertIn('require("prototypes.technology.razi_great_projects").data()',read("data.lua"))
     def test_archive_has_persistent_fragments(self):
         journal=read("scripts/razi_journal.lua")
