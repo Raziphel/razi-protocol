@@ -69,7 +69,8 @@ function M.cargo_available(force)
   local setting=settings and settings.global
     and settings.global["razi-hide-spoilers"]
   if setting and setting.value==true then
-    if not tech or tech.enabled==false then return false end
+    if not tech then return false end
+    if not tech.researched and tech.enabled==false then return false end
     if not tech.researched then
       for _,required in pairs(tech.prerequisites or {}) do
         if not required.researched then return false end
