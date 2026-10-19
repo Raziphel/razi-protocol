@@ -27,6 +27,7 @@ package.loaded["scripts.razi_supply_routes"]={
  end
 }
 local technology={researched=true}
+local revised=false
 local recipe={quest={tech="razi-test-supply"},site="moshine",
   technology=technology,recipe_enabled=true,
   recipe={ingredients={{name="iron-plate",amount=2}}}}
@@ -39,7 +40,8 @@ package.loaded["scripts.razi_supply_planner"]={
   return n and n>=1 and n<=1000 and n==math.floor(n) and n or nil
  end,
  ingredients=function(_,batches)
-  return {{name="iron-plate",count=2*batches,plannable=true},
+  return {{name="iron-plate",count=(revised and 5 or 2)*batches,
+      plannable=true},
     {name="copper-plate",count=3*batches,plannable=true},
     {name="water",kind="fluid",count=10*batches,plannable=false}}
  end
@@ -76,6 +78,12 @@ check(storage.razi_supply_itineraries[other.index]==nil,
  "Another player cannot inherit the first operator's itinerary")
 check(module.visible(player,graph)[1].valid,
  "Visible manifest must be revalidated against current graph")
+revised=true
+check(not module.visible(player,graph)[1].valid,
+ "Rebalanced source ingredients invalidate outdated saved quantities")
+revised=false
+check(module.visible(player,graph)[1].valid,
+ "Restored source recipe restores correctly matching itinerary bill")
 local forged={supply_recipe=p.supply_recipe,
  supply_batches=4,supply_origin="sealed",supply_path=1}
 check(not module.save(player,forged),
