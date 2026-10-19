@@ -45,6 +45,7 @@
     "rubia >= 0.69.159",
     "cubium >= 1.0.31",
     "Nexus-Updated >= 1.4.1",
+    "~ nexus-bosses >= 2.4.0",
     "+ celestial-weather-additions-updated >= 1.6.0",
     "! outer-rim",
     "+ VoidProcessing-Updated",

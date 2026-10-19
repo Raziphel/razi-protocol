@@ -5,6 +5,7 @@ local defs=require("prototypes.technology.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local galactic_catalog=require("scripts.galactic_catalog")
 local deep_expedition=require("scripts.razi_deep_space_expedition")
+local nexus_trials=require("scripts.razi_nexus_trials")
 local story_dispatch=require("scripts.razi_story_dispatch")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.
@@ -83,6 +84,9 @@ end
 function M.expedition_status(force)
  return deep_expedition.status(force)
 end
+function M.nexus_status(force)
+ return nexus_trials.snapshot(force)
+end
 function M.core_status(player)
  if not M.location(player) then return false end
  local surface=player.character.surface
@@ -152,6 +156,15 @@ local function stage_ready(force,index)
   local witness=force.technologies["razi-convergence-witness-network"]
   if not (witness and witness.researched) then
    return false,"convergence-need-witness-research"
+  end
+  -- Native Nexus Bosses is the authority for every fight.
+  -- Neither Nexus research nor the Silence warp key substitutes for wins.
+  local nexus=M.nexus_status(force)
+  if not nexus then
+   return false,"convergence-need-nexus-source"
+  end
+  if nexus.count<nexus.total then
+   return false,"convergence-need-nexus-trials"
   end
   if select(1,M.witness_status(force))<7 then
    return false,"convergence-need-witnesses"
@@ -527,6 +540,27 @@ function M.render(parent,player,options)
     string.format("%d:%02d:%02d",hours,minutes,secs))
   end
  end
+ -- Nexus trials are independently earned through real source-owned fights.
+ -- The nine boss flags are authoritative; this panel does not spawn bosses.
+ local trials_panel=scroll.add{type="frame",
+  style="inside_shallow_frame",direction="vertical"}
+ trials_panel.style.horizontally_stretchable=true
+ local nexus=M.nexus_status(force)
+ local count=nexus and nexus.count or 0
+ local total=#nexus_trials.order
+ local trials_title=line(trials_panel,"convergence-nexus-heading",width)
+ trials_title.style.font="heading-2"
+ line(trials_panel,nexus and "convergence-nexus-count"
+  or "convergence-nexus-unavailable",width,
+  tostring(count),tostring(total))
+ if nexus and count<total then
+  for _,boss in ipairs(nexus_trials.order) do
+   if not nexus_trials.defeated(nexus,boss) then
+    line(trials_panel,"convergence-nexus-missing",width,
+      {"nexus-bosses.boss-"..boss})
+   end
+  end
+ end
  -- Seven powered, independently built systems are the new physical
  -- countersignature. Never count technologies as functioning transmitters.
  local network=scroll.add{type="frame",
@@ -668,6 +702,11 @@ function M.render(parent,player,options)
       shown=shown+1
      end
     end
+   elseif next_index==5 and not nexus then
+    line(advice,"convergence-next-action-nexus-source",width)
+   elseif next_index==5 and count<total then
+    line(advice,"convergence-next-action-nexus",width,
+      tostring(count),tostring(total))
    elseif next_index==5 and wdone<wtotal then
     line(advice,"convergence-next-action-witnesses",width)
    elseif next_index==5 and (not chart_ready or landed<required) then

@@ -11,6 +11,7 @@ local icons=require("scripts.razi_journal_icons")
 local objectives=require("scripts.razi_journal_data")
 local platform_projects=require("scripts.razi_platform_projects")
 local great_projects=require("scripts.razi_great_projects")
+local nexus_trials=require("scripts.razi_nexus_trials")
 local quest_by_technology={}
 for _,quest in ipairs(objectives.quests or {}) do
   if quest.tech and not quest.convergence and
@@ -19,7 +20,7 @@ for _,quest in ipairs(objectives.quests or {}) do
   end
 end
 local L=function(k,...) return {"journal-ui."..k,...} end
-local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}
+local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}
 local project_technologies={
   dyson="slp-dyson-sphere",
   array="razi-archive-array",
@@ -44,6 +45,13 @@ function M.visible(force,id)
     local tech=force and force.technologies
       and force.technologies["planet-discovery-fulgora"]
     return tech and tech.researched==true or false
+  end
+  if id=="nexus-trials" then
+    local tech=force and force.technologies
+      and force.technologies["planet-discovery-nexus"]
+    local completed=nexus_trials.snapshot(force)
+    return (completed and completed.count>0) or
+      (tech and tech.researched==true) or false
   end
   if id=="ark" then
     local tech=force and force.technologies
@@ -157,6 +165,7 @@ local PROJECT_ART={
   ark="item/space-platform-foundation",
   dyson="razi-dyson-works-stage-",
   transceiver="technology/razi-intergalactic-transceiver-signal",
+  ["nexus-trials"]="technology/nexus-convergence",
   convergence="technology/razi-convergence-commission"
 }
 local function art_for(id,force,statuses)
@@ -179,6 +188,9 @@ local function status_for(force,id,ships)
   if id=="skybridge" then return great_projects.skybridge(force)
   elseif id=="beltbreaker" then return great_projects.beltbreaker(force)
   elseif id=="array" then return great_projects.array(force)
+  elseif id=="nexus-trials" then
+    local state=nexus_trials.snapshot(force)
+    return state and state.count or 0,#nexus_trials.order,state
   elseif id=="ark" then return great_projects.ark(force)
   elseif id=="platform" or id=="voyage" then
     local facts=ships or platform_projects.snapshot(force)
@@ -311,6 +323,61 @@ local function great_project_reader(parent,player,width,id,status)
   end
 end
 
+-- Each circle comes from the Nexus Bosses API's real per-force defeats.
+-- Source boss fights, trophy drops, warp key and music remain untouched.
+local function nexus_trials_reader(parent,player,width,status)
+  local state=status[3]
+  local intro=parent.add{type="label",
+    caption=L("project-nexus-guide")}
+  intro.style.single_line=false
+  intro.style.maximal_width=width
+  if not state then
+    local unavailable=parent.add{type="label",
+      caption=L("project-next-nexus-unavailable")}
+    unavailable.style.single_line=false
+    unavailable.style.maximal_width=width
+    return
+  end
+  for index,stage in ipairs(nexus_trials.circles) do
+    local stage_count=0
+    for _,boss in ipairs(stage.bosses) do
+      if nexus_trials.defeated(state,boss) then stage_count=stage_count+1 end
+    end
+    local card=parent.add{type="frame",
+      style="inside_shallow_frame",direction="vertical"}
+    card.style.horizontally_stretchable=true
+    card.style.padding=8
+    local heading=card.add{type="label",
+      caption=L("project-nexus-circle",tostring(index),
+        L("project-nexus-stage-"..stage.id),
+        tostring(stage_count),tostring(#stage.bosses))}
+    heading.style.font="default-bold"
+    for _,boss in ipairs(stage.bosses) do
+      local complete=nexus_trials.defeated(state,boss)
+      local row=card.add{type="flow",direction="horizontal"}
+      row.style.horizontal_spacing=8
+      row.style.vertical_align="center"
+      local mark=row.add{type="label",caption=complete
+        and L("project-nexus-defeated") or L("project-nexus-unbeaten")}
+      mark.style.font_color=complete
+        and {r=.48,g=.88,b=.67} or {r=.86,g=.68,b=.47}
+      local name=row.add{type="label",
+        caption={"nexus-bosses.boss-"..boss}}
+      name.style.single_line=false
+      name.style.maximal_width=math.max(110,width-174)
+      local spacer=row.add{type="empty-widget"}
+      spacer.style.horizontally_stretchable=true
+      row.add{type="button",style="tool_button",
+        caption=L("project-nexus-open-codex"),
+        tags={razi_journal_action="nexus-codex",id=boss}}
+    end
+  end
+  local signal=parent.add{type="label",
+    caption=L("project-nexus-silence")}
+  signal.style.single_line=false
+  signal.style.maximal_width=width
+end
+
 local function unmet(tech)
   local missing={}
   for _,required in pairs(tech and tech.prerequisites or {}) do
@@ -368,6 +435,16 @@ local function next_action(force,id,status)
       return L("project-next-research",tech.localised_name)
     end
     return L("project-next-array-build")
+  elseif id=="nexus-trials" then
+    if not detail then return L("project-next-nexus-unavailable") end
+    if done==total then return L("project-next-nexus-done") end
+    for _,boss in ipairs(nexus_trials.order) do
+      if not nexus_trials.defeated(detail,boss) then
+        return L("project-next-nexus-boss",
+          {"nexus-bosses.boss-"..boss})
+      end
+    end
+    return L("project-next-nexus-unavailable")
   elseif id=="ark" then
     if done==1 then return L("project-next-ark-done") end
     return L("project-next-ark-build")
@@ -650,6 +727,8 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
     great_project_reader(content,player,width-68,"beltbreaker",current)
   elseif p.project=="array" then
     great_project_reader(content,player,width-68,"array",current)
+  elseif p.project=="nexus-trials" then
+    nexus_trials_reader(content,player,width-68,current)
   elseif p.project=="ark" then
     great_project_reader(content,player,width-68,"ark",current)
   elseif p.project=="dyson" then
