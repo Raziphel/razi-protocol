@@ -25,7 +25,7 @@ function M.data()
     type="item",name="razi-skybridge-consignment",
     icon="__base__/graphics/icons/processing-unit.png",icon_size=64,
     subgroup="intermediate-product",order="z[razi]-b[skybridge]",
-    stack_size=20,flags={"hidden"}
+    stack_size=20,hidden=true
   }
   local recipe={
     type="recipe",name="razi-archive-relay",enabled=false,
