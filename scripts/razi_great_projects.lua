@@ -254,6 +254,37 @@ function M.ark(force)
   end
   return 0,1,candidate
 end
+-- Arrival state events have historically been unreliable in some engine
+-- builds. Only forces with an actual recorded outgoing crossing are checked
+-- every 300 ticks; no idle-platform, entity or surface scans occur.
+function M.flush_pending(forces)
+  local all=storage and storage.razi_great_projects
+  if not all then return false end
+  local changed=false
+  for force_index,state in pairs(all) do
+    if next(state.pending or {}) then
+      local force=forces and forces[force_index]
+      if force then
+        local current={}
+        for _,platform in pairs(force.platforms or {}) do
+          if platform.valid and platform.index then
+            current[platform.index]=platform
+          end
+        end
+        for index in pairs(state.pending) do
+          local platform=current[index]
+          if platform then
+            if M.observe(platform) then changed=true end
+          else
+            state.pending[index]=nil
+          end
+        end
+      end
+    end
+  end
+  return changed
+end
+
 function M.forces_merged(event)
   local all=storage and storage.razi_great_projects
   if not (all and event) then return end
