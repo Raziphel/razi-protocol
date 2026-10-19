@@ -304,7 +304,7 @@ function M.layout(resolution,scale)
   scale=math.max(0.5,scale or 1)
   local screen_w=math.floor((resolution and resolution.width or 1600)/scale)
   local screen_h=math.floor((resolution and resolution.height or 900)/scale)
-  local width=math.min(1370,math.max(420,screen_w-52))
+  local width=math.min(1190,math.max(420,screen_w-52))
   local height=math.min(930,math.max(390,screen_h-64))
   local compact=width<1020 or height<660
   local rail=math.min(compact and 295 or 326,
@@ -369,7 +369,8 @@ end
 local function wheel_pane(parent,name,width,height)
   local pane=parent.add{type="scroll-pane",name=name,
     horizontal_scroll_policy="never",
-    vertical_scroll_policy="dont-show-but-allow-scrolling"}
+    vertical_scroll_policy=name=="razi_journal_navigation"
+      and "auto" or "dont-show-but-allow-scrolling"}
   pane.style.width=width
   pane.style.height=math.max(120,height)
   pane.style.horizontally_squashable=true
@@ -1044,7 +1045,6 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   clear.style.height=32
   local scroll=wheel_pane(frame,"razi_journal_navigation",
     inner,size.body-147)
-  scroll.vertical_scroll_policy="auto"
   local column=scroll.add{type="flow",name="razi_journal_chapter_column",direction="vertical"}
   column.style.width=inner-13
   column.style.vertical_spacing=3
@@ -1467,7 +1467,7 @@ local function draw(player,focus_search)
   kicker.style.font="default-bold"
   local drag=head.add{type="empty-widget",style="draggable_space"}
   drag.style.horizontally_stretchable=true
-  drag.style.height=29
+  drag.style.height=19
   drag.drag_target=frame
   local refresh=head.add{type="button",caption=L("refresh"),
     tags={razi_journal_action="refresh"}}
@@ -1673,7 +1673,9 @@ local function update_reader(player)
             choice.style.font=chosen and "default-bold" or "default"
             choice.style.font_color=chosen and COLOR.ink or COLOR.muted
           end
-          if icon and chosen then icon.style.font_color=COLOR.amber end
+          if icon then
+            icon.style.font_color=chosen and COLOR.amber or COLOR.muted
+          end
         else
           mark(child)
         end
@@ -1994,7 +1996,6 @@ function M.gui_click(event)
   end
   local p=pref(player.index)
   local old_view=p.view
-  local old_chapter=p.chapter
   local old_query=p.query
   local old_filter=p.filter
   if (action=="select" or action=="guidance-select") and
