@@ -449,3 +449,7 @@ The transmission now lasts two minutes, with dispatches at 0/30/60/90 seconds, r
 ### Seven independent testimonies
 
 Each live 10 MW witness anchor reveals one otherwise inaccessible archival testimony in the Convergence reader. The sources are specific to Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra. No two stations share a generic witness statement, no testimony unlocks from research alone, and only the final verified cross-system accord can permanently revoke BLACKOUT-SEVEN. The different testimonies reinforce that systems contributed their own independent proof rather than submitting to a new central ruler.
+
+### The completeness of the Outer Expedition
+
+The final Convergence Accord also requires in-person witness passage throughout every installed navigable Deep Space destination, including the dangerous distant branches past Nexus, the Black Hole and the Shattered Planet when those routes exist. The engineer and fellow crew physically follow the old isolation routes rather than reading a research tick from a desk. This broadens the twist: the corporate BLACKOUT-SEVEN quarantine did not simply sever administrative communications; it stranded real explorers and destroyed the evidence trail across those far reaches. Only expedition crews who confront the full route network can sign the final testimony. No remote view, atlas progress, uncrewed platform or nonexisting optional world can satisfy the requirement. The final UI lists outstanding locations without pretending to know undocumented historical visits.

@@ -651,7 +651,13 @@ technology checkbox or a small factory delivery:
    amounts of existing factory materials to forge the new
    **50 MW Seven-Sun Array Core**. Install and energize that real
    entity on the deep-space delivery platform.
-5. Maintain the source Dyson receiver infrastructure, manufacture the
+5. **Crew every reachable Deep Space destination** in the installed pack,
+   including all physically connected Shattered Planet, Nexus, Black Hole,
+   Oort/Sol and optional outer expedition branches. Each location must
+   have a genuine player-character arrival on a built force-owned platform.
+   The saved force expedition ledger lists missing destinations, and
+   research or unmanned ship visits cannot substitute.
+6. Maintain the source Dyson receiver infrastructure, manufacture the
    final composite **Ignition Mandate**, stand physically aboard the
    platform beside its powered Array Core and submit the freight.
    The genuine engine ending follows a saved **two-minute signal** with
