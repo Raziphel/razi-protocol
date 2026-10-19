@@ -429,19 +429,19 @@ local function draw_gallery(parent,key,entries,width,max_items,theme)
   local block=parent.add{type="flow",direction="vertical"}
   block.style.vertical_spacing=5
   subtitle(block,key,width,theme)
-  local columns=math.max(1,math.min(7,math.floor(width/155)))
-  local card_width=math.max(112,math.floor((width-(columns-1)*7)/columns)-3)
+  local columns=math.max(1,math.min(4,math.floor(width/215)))
+  local card_width=math.max(180,math.floor((width-(columns-1)*7)/columns)-3)
   local grid=block.add{type="table",column_count=columns}
   grid.style.horizontal_spacing=7
   grid.style.vertical_spacing=7
   for i=1,math.min(max_items,#entries) do
     local entry=entries[i]
-    local card=grid.add{type="frame",direction="vertical",
-      style="inside_shallow_frame"}
+    local card=grid.add{type="flow",direction="horizontal"}
     card.style.width=card_width
     card.style.padding=4
+    card.style.horizontal_spacing=7
     icons.sprite(card,entry.sprite,"gallery",entry.tooltip or entry.name)
-    local caption=wrap(card,entry.name,card_width-10)
+    local caption=wrap(card,entry.name,card_width-54)
     caption.style.font_color=theme and theme.soft
       or {r=.86,g=.9,b=.94}
   end
@@ -598,7 +598,7 @@ local function render_details(parent,player,quest,p,context,size,view)
     style="inside_shallow_frame_with_padding"}
   panel.style.width=size.reader
   panel.style.height=size.body
-  panel.style.padding=15
+  panel.style.padding=11
   local inner=size.reader-38
   local status=M.state(player.force,quest,context)
   local theme=themes.get(quest.chapter)
@@ -640,7 +640,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   local hero_text=hero.add{type="flow",direction="vertical"}
   hero_text.style.vertical_spacing=2
   local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-57)
-  hero_title.style.font="heading-1"
+  hero_title.style.font="heading-2"
   hero_title.style.font_color=COLOR.ink
 
   local eyebrow=panel.add{type="flow",direction="horizontal"}
@@ -660,7 +660,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   prose.style.width=text_width
   prose.style.vertical_spacing=11
   local objective=prose.add{type="frame",direction="vertical",
-    style="inside_deep_frame"}
+    style="inside_shallow_frame"}
   objective.style.width=text_width
   objective.style.padding=13
   subtitle(objective,"objective-heading",text_width-26,theme)
@@ -857,7 +857,7 @@ local function render_details(parent,player,quest,p,context,size,view)
       tags={razi_journal_action="nexus-codex",id=quest.boss}}
   end
   local pinned=p.tracker and p.pinned==quest.id
-  actions.add{type="button",caption=L(pinned
+  actions.add{type="button",name="razi_journal_pin_button",caption=L(pinned
     and "tracker-hide" or "tracker-show"),
     tags={razi_journal_action="pin",id=quest.id}}
   actions.add{type="button",caption=L("previous-in-chapter"),
@@ -1176,15 +1176,14 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
           local chosen=quest.id==p.selected and not p.chapter_cover
-          local item=card.add{type=chosen and "frame" or "flow",
-            direction="horizontal",
-            style=chosen and "inside_shallow_frame" or nil}
+          local item=card.add{type="flow",name="razi_journal_item_"..quest.id,
+            direction="horizontal"}
           item.style.width=inner-34
-          item.style.padding=chosen and 4 or 1
-          if not chosen then item.style.horizontal_spacing=7 end
+          item.style.padding=3
+          item.style.horizontal_spacing=7
           icons.sprite(item,quest_art(player.force,quest,context),
             "quest_row")
-          local control=item.add{type="button",style="tool_button",
+          local control=item.add{type="button",name="razi_journal_item_control",style="tool_button",
             caption=state=="complete" and "✓"
               or state=="active" and "●" or "○",
             tags={razi_journal_action="select",id=quest.id},
@@ -1195,7 +1194,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             or state=="active" and {r=.98,g=.79,b=.46}
             or {r=.58,g=.61,b=.68}
           control.style.font_color=color
-          local choice=item.add{type="label",style="clickable_label",
+          local choice=item.add{type="label",name="razi_journal_item_choice",style="clickable_label",
             caption={"journal-title."..quest.id},
             tags={razi_journal_action="select",id=quest.id},
             tooltip=L("select-objective")}
@@ -1496,7 +1495,7 @@ local function draw(player,focus_search)
   collect_scrolls(frame,saved_scrolls)
   frame.clear()
   frame.style.width=size.width
-  frame.style.padding=16
+  frame.style.padding=12
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
@@ -1505,7 +1504,7 @@ local function draw(player,focus_search)
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
   local title=label(heading,L(size.compact and "window-compact" or "window"))
-  title.style.font="heading-1"
+  title.style.font="heading-2"
   title.style.font_color=COLOR.ink
   local kicker=tint(label(heading,L("header-eyebrow")),COLOR.muted)
   kicker.style.font="default-bold"
@@ -1563,8 +1562,8 @@ local function draw(player,focus_search)
   meter.style.vertical_spacing=2
   local overall=meter.add{type="progressbar",
     value=total>0 and done/total or 0}
-  overall.style.horizontally_stretchable=true
-  overall.style.height=9
+  overall.style.width=math.min(250,math.floor(size.width*.2))
+  overall.style.height=5
   overall.style.color=window_theme.primary
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
@@ -1646,19 +1645,21 @@ local function draw(player,focus_search)
   else
     local selected=select_quest(player.force,p,context,plan)
     local search=render_chapters(body,player,p,context,size,view,plan)
+    local reader=body.add{type="flow",name="razi_journal_reader_host",direction="vertical"}
+    reader.style.width=size.reader
     -- Normal chapter expand/collapse and dossier clicks retain the user's
     -- location in the list. Explicit quest navigation may deliberately
     -- reveal its selection, so that takes precedence over this restore.
     -- Restore all scroll readers once the complete GUI tree exists.
     if focus_search then pcall(function() search.focus() end) end
     if p.chapter_cover and render_chapter_cover(
-      body,player,p,context,size,view) then
+      reader,player,p,context,size,view) then
       -- A full chapter frontispiece replaces the quest reader until a
       -- real quest entry is selected.
     elseif selected then
-      render_details(body,player,selected,p,context,size,view)
+      render_details(reader,player,selected,p,context,size,view)
     else
-      local empty=body.add{type="frame",
+      local empty=reader.add{type="frame",
         style="inside_shallow_frame_with_padding"}
       empty.style.width=size.reader
       wrap(empty,L("missing-quest"),size.reader-40)
@@ -1668,6 +1669,53 @@ local function draw(player,focus_search)
   foot.style.font_color=COLOR.quiet
   -- Restore only after the complete new GUI tree has been assembled.
   restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
+end
+-- A new quest updates only the document, leaving the original chapter
+-- scroll pane alive. This is more reliable than restoring a rebuilt scrollbar.
+local function update_reader(player)
+  local frame=player.gui.screen[FRAME]
+  local body=frame and frame.valid and frame["razi_journal_content"]
+  local reader=body and body.valid and body["razi_journal_reader_host"]
+  if not (reader and reader.valid) then draw(player);return end
+  local p=pref(player.index)
+  local context=M.context(player.force)
+  local size=M.layout(player.display_resolution,player.display_scale)
+  local view=M.view_status(player.force,context)
+  local selected=select_quest(player.force,p,context,
+    M.guidance(player.force,context,view))
+  local nav=body.children[1]
+  local scroll=nav and nav["razi_journal_navigation"]
+  if scroll then
+    local function mark(parent)
+      for _,child in pairs(parent.children) do
+        if child.name and child.name:sub(1,18)=="razi_journal_item_" then
+          local choice=child["razi_journal_item_choice"]
+          local icon=child["razi_journal_item_control"]
+          local id=child.name:sub(19)
+          local chosen=p.selected==id and not p.chapter_cover
+          if choice then
+            choice.style.font=chosen and "default-bold" or "default"
+            choice.style.font_color=chosen and COLOR.ink or COLOR.muted
+          end
+          if icon and chosen then icon.style.font_color=COLOR.amber end
+        else
+          mark(child)
+        end
+      end
+    end
+    mark(scroll)
+  end
+  reader.clear()
+  if p.chapter_cover and render_chapter_cover(
+    reader,player,p,context,size,view) then
+  elseif selected then
+    render_details(reader,player,selected,p,context,size,view)
+  else
+    local empty=reader.add{type="frame",
+      style="inside_shallow_frame_with_padding"}
+    empty.style.width=size.reader
+    wrap(empty,L("missing-quest"),size.reader-40)
+  end
 end
 M.draw=draw
 local function open(player)
@@ -1969,6 +2017,10 @@ function M.gui_click(event)
     return
   end
   local p=pref(player.index)
+  local old_view=p.view
+  local old_chapter=p.chapter
+  local old_query=p.query
+  local old_filter=p.filter
   if (action=="select" or action=="guidance-select") and
     defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
@@ -2163,6 +2215,34 @@ function M.gui_click(event)
   elseif action=="refresh" and p.view=="systems" then
     systems.refresh(player)
   elseif action~="refresh" then return end
+  -- Keep the navigation GUI (and its native scrollbar) on ordinary clicks.
+  if old_view=="quests" and p.view=="quests"
+    and old_query==p.query and old_filter==p.filter
+    and old_chapter==p.chapter then
+    if action=="select" or action=="guidance-select"
+      or action=="chapter-dossier" or action=="chapter-continue"
+      or action=="next-in-chapter" or action=="previous-in-chapter" then
+      update_reader(player)
+      return
+    elseif action=="pin" then
+      local frame=player.gui.screen[FRAME]
+      local body=frame and frame["razi_journal_content"]
+      local reader=body and body["razi_journal_reader_host"]
+      local panel=reader and reader.children[1]
+      if panel then
+        for _,child in pairs(panel.children) do
+          if child.type=="table" then
+            local pin=child["razi_journal_pin_button"]
+            if pin then
+              pin.caption=L(p.tracker and p.pinned==tags.id
+                and "tracker-hide" or "tracker-show")
+            end
+          end
+        end
+      end
+      return
+    end
+  end
   draw(player)
 end
 function M.text_changed(event)
