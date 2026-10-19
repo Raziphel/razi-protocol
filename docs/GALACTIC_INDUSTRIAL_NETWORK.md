@@ -697,7 +697,8 @@ action buttons rebuild through the existing tab-scoped scroll
 restoration. Selecting an invalid quantity invalidates the stored
 count rather than reusing a previous valid amount.
 
-Research remains the required condition for *creating* orders; a
+Research **and the source recipe being enabled for the player's force**
+remain required conditions for *creating* orders; a
 discovered but not yet researched optional recipe can be previewed
 without generating orders. The new system never unlocks source
 technology, changes recipes or surfaces, grants items or marks
