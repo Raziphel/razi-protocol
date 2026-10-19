@@ -15,6 +15,7 @@ require "prototypes.technology.asteroid_belts"
 require("prototypes.ui.galactic_operations")
 require("prototypes.ui.dyson_stages")
 require("prototypes.ui.razi_journal")
+require("prototypes.technology.razi_great_projects").data()
 
 -- Export Vespera's three local Orbital Catapult corridors at DATA stage.
 -- The source mod reads directed links in its later final-fixes pass.

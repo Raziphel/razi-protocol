@@ -12,6 +12,7 @@ local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
 local convergence=require("scripts.razi_convergence")
 local projects=require("scripts.razi_journal_projects")
+local great_projects=require("scripts.razi_great_projects")
 local guidance=require("scripts.razi_journal_guidance")
 local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
@@ -1971,6 +1972,12 @@ function M.gui_click(event)
     p.view=tags.id
   elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
+  elseif action=="skybridge-sign" and p.view=="projects"
+    and p.project=="skybridge" then
+    if not great_projects.sign(player,tags.a,tags.b) then return end
+  elseif action=="skybridge-deliver" and p.view=="projects"
+    and p.project=="skybridge" then
+    if not great_projects.deliver(player) then return end
   elseif action=="project-back" and p.view=="projects"
     and p.project=="cargo" then
     p.project="platform"

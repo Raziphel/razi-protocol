@@ -1,5 +1,6 @@
 local razi_journal = require("scripts.razi_journal")
 local platform_projects = require("scripts.razi_platform_projects")
+local great_projects = require("scripts.razi_great_projects")
 local story_dispatch = require("scripts.razi_story_dispatch")
 local spoiler_fog = require("scripts.razi_spoiler_fog")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
@@ -133,7 +134,11 @@ local function repair_nexus_technology_visibility(event)
 end
 
 local function on_entity_built(event)
-	check_entity(event.entity or event.destination or event.created_entity)
+  local entity=event.entity or event.destination or event.created_entity
+  check_entity(entity)
+  if entity and entity.valid and entity.name=="razi-archive-relay" then
+    razi_journal.refresh_open()
+  end
 end
 
 -- K2SO's native transceiver may also declare victory when activated.
@@ -232,13 +237,31 @@ events:on_event({
 -- Sparse native events record real platform hubs and completed trips.
 -- A starter-pack placeholder without a built hub never earns completion.
 local function record_platform(event)
-  if event and platform_projects.observe(event.platform) then
-    razi_journal.refresh_open()
-  end
+  if not (event and event.platform) then return end
+  local first=platform_projects.observe(event.platform)
+  local major=great_projects.observe(event.platform)
+  if first or major then razi_journal.refresh_open() end
 end
 events:on_event(defines.events.on_space_platform_built_entity,record_platform)
 events:on_event(defines.events.on_space_platform_built_tile,record_platform)
 events:on_event(defines.events.on_space_platform_changed_state,record_platform)
+-- Reconcile arrival events on the existing (infrequent) platform state poll
+-- only when a crossing has an outstanding departure record.
+events:on_nth_tick(300,function()
+  great_projects.flush_pending(game.forces)
+end)
+
+events:on_event({
+  defines.events.on_mined_entity,
+  defines.events.on_robot_mined_entity,
+  defines.events.on_entity_died,
+  defines.events.script_raised_destroy
+},function(event)
+  local entity=event.entity
+  if entity and entity.valid and entity.name=="razi-archive-relay" then
+    razi_journal.refresh_open()
+  end
+end)
 
 -- The old Galactic Operations hotkey now opens the Journal's Projects view.
 -- Keep the existing input identifier so player key bindings survive.
@@ -262,6 +285,7 @@ events:on_event(defines.events.on_technology_effects_reset,function()
 end)
 events:on_event(defines.events.on_forces_merged,function(event)
   platform_projects.forces_merged(event)
+  great_projects.forces_merged(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
   spoiler_fog.on_forces_merged(event)

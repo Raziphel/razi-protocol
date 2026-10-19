@@ -10,6 +10,7 @@ local icons=require("scripts.razi_journal_icons")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local objectives=require("scripts.razi_journal_data")
 local platform_projects=require("scripts.razi_platform_projects")
+local great_projects=require("scripts.razi_great_projects")
 local quest_by_technology={}
 for _,quest in ipairs(objectives.quests or {}) do
   if quest.tech and not quest.convergence and
@@ -18,9 +19,10 @@ for _,quest in ipairs(objectives.quests or {}) do
   end
 end
 local L=function(k,...) return {"journal-ui."..k,...} end
-local ids={"platform","voyage","dyson","transceiver","convergence"}
+local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}
 local project_technologies={
   dyson="slp-dyson-sphere",
+  array="razi-archive-array",
   transceiver="razi-intergalactic-transceiver-signal",
   convergence="razi-convergence-commission"
 }
@@ -33,6 +35,21 @@ function M.visible(force,id)
   if id=="platform" then return true end
   -- The maiden voyage unlocks after a genuine built platform.
   if id=="voyage" then return platform_projects.snapshot(force).platform end
+  if id=="skybridge" then
+    return platform_projects.snapshot(force).voyage
+      and script and script.active_mods
+      and script.active_mods["orbital-cannon"]~=nil or false
+  end
+  if id=="beltbreaker" then
+    local tech=force and force.technologies
+      and force.technologies["planet-discovery-fulgora"]
+    return tech and tech.researched==true or false
+  end
+  if id=="ark" then
+    local tech=force and force.technologies
+      and force.technologies["razi-intergalactic-transceiver-signal"]
+    return tech and tech.researched==true or false
+  end
   local name=project_technologies[id]
   if id=="dyson" and force and force.technologies
     and force.technologies["planet-discovery-sunorbit"] then
@@ -134,6 +151,10 @@ local HUES={
 local PROJECT_ART={
   platform="item/space-platform-starter-pack",
   voyage="entity/thruster",
+  skybridge="item/processing-unit",
+  beltbreaker="technology/rocket-turret",
+  array="item/razi-archive-relay",
+  ark="item/space-platform-foundation",
   dyson="razi-dyson-works-stage-",
   transceiver="technology/razi-intergalactic-transceiver-signal",
   convergence="technology/razi-convergence-commission"
@@ -155,7 +176,11 @@ end
 -- percentage of satellites built, ships delivered or worlds conquered.
 -- The third snapshot value preserves detail for action guidance.
 local function status_for(force,id,ships)
-  if id=="platform" or id=="voyage" then
+  if id=="skybridge" then return great_projects.skybridge(force)
+  elseif id=="beltbreaker" then return great_projects.beltbreaker(force)
+  elseif id=="array" then return great_projects.array(force)
+  elseif id=="ark" then return great_projects.ark(force)
+  elseif id=="platform" or id=="voyage" then
     local facts=ships or platform_projects.snapshot(force)
     return (facts[id] and 1 or 0),1,facts
   elseif id=="dyson" then
@@ -206,6 +231,86 @@ local function platform_reader(parent,player,width,id,status)
     message.style.font_color={r=.49,g=.83,b=.67}
   end
 end
+local function great_project_reader(parent,player,width,id,status)
+  local detail=status[3]
+  local desc=parent.add{type="label",caption=L("project-"..id.."-guide")}
+  desc.style.single_line=false
+  desc.style.maximal_width=width
+  if id=="skybridge" then
+    if detail.missing then
+      local warning=parent.add{type="label",
+        caption=L("project-skybridge-native-unavailable")}
+      warning.style.single_line=false
+      warning.style.maximal_width=width
+    end
+    for _,lane in ipairs(detail.options or {}) do
+      local row=parent.add{type="flow",direction="horizontal"}
+      row.style.vertical_align="center"
+      row.style.horizontal_spacing=6
+      local label=row.add{type="label",caption=L("project-skybridge-link",
+        {"space-location-name."..lane.source},
+        {"space-location-name."..lane.target})}
+      label.style.single_line=false
+      label.style.maximal_width=math.max(110,width-115)
+      if not (detail.chosen and detail.chosen.from) then
+        row.add{type="button",caption=L("project-skybridge-sign"),
+          tags={razi_journal_action="skybridge-sign",
+            a=lane.source,b=lane.target}}
+      end
+    end
+    if detail.chosen and detail.chosen.from then
+      local claim=parent.add{type="label",
+        caption=L("project-skybridge-pending",
+          {"space-location-name."..detail.chosen.from},
+          {"space-location-name."..detail.chosen.to})}
+      claim.style.single_line=false
+      claim.style.maximal_width=width
+      if not detail.chosen.delivered then
+        parent.add{type="button",caption=L("project-skybridge-deliver"),
+          tags={razi_journal_action="skybridge-deliver"}}
+      end
+    end
+    local honesty=parent.add{type="label",
+      caption=L("project-skybridge-evidence")}
+    honesty.style.single_line=false
+    honesty.style.maximal_width=width
+  elseif id=="beltbreaker" then
+    for _,belt in ipairs({"vibrant","umbra"}) do
+      local row=parent.add{type="label",caption=L(
+        detail and detail[belt] and "project-beltbreaker-crossed"
+          or "project-beltbreaker-uncrossed",
+        L("project-beltbreaker-"..belt))}
+      row.style.single_line=false
+      row.style.maximal_width=width
+    end
+  elseif id=="array" then
+    for _,site in ipairs(detail or {}) do
+      local row=parent.add{type="label",caption=L(
+        "project-array-site",{"razi-route-intel.system-"..site.system},
+        {"space-location-name."..site.world})}
+      row.style.single_line=false
+      row.style.maximal_width=width
+    end
+    for i=1,math.min(3,status[1]) do
+      local evidence=parent.add{type="label",caption=L("project-array-record-"..i)}
+      evidence.style.single_line=false
+      evidence.style.maximal_width=width
+    end
+  else
+    local candidate=parent.add{type="label",
+      caption=L("project-ark-requirements",
+        tostring(great_projects.ark_weight))}
+    candidate.style.single_line=false
+    candidate.style.maximal_width=width
+    if detail then
+      local ship=parent.add{type="label",
+        caption=L("project-ark-candidate",detail)}
+      ship.style.single_line=false
+      ship.style.maximal_width=width
+    end
+  end
+end
+
 local function unmet(tech)
   local missing={}
   for _,required in pairs(tech and tech.prerequisites or {}) do
@@ -239,6 +344,33 @@ local function next_action(force,id,status)
       return L("project-next-voyage-platform")
     end
     return L("project-next-voyage-launch")
+  elseif id=="skybridge" then
+    if done==3 then return L("project-next-skybridge-done") end
+    if detail and detail.missing then
+      return L("project-next-skybridge-missing")
+    end
+    if not detail or not detail.options or #detail.options==0 then
+      return L("project-next-skybridge-build")
+    end
+    if not detail.chosen or not detail.chosen.from then
+      return L("project-next-skybridge-sign")
+    end
+    return L("project-next-skybridge-deliver")
+  elseif id=="beltbreaker" then
+    if done==2 then return L("project-next-beltbreaker-done") end
+    return L(detail and detail.vibrant
+      and "project-next-beltbreaker-umbra"
+      or "project-next-beltbreaker-vibrant")
+  elseif id=="array" then
+    if done>=total then return L("project-next-array-done") end
+    local tech=force.technologies and force.technologies["razi-archive-array"]
+    if tech and not tech.researched then
+      return L("project-next-research",tech.localised_name)
+    end
+    return L("project-next-array-build")
+  elseif id=="ark" then
+    if done==1 then return L("project-next-ark-done") end
+    return L("project-next-ark-build")
   elseif id=="dyson" then
     for _,stage in ipairs(detail or {}) do
       if not stage.tech.researched then
@@ -496,6 +628,14 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   local options={embedded=true,width=width-68}
   if p.project=="platform" or p.project=="voyage" then
     platform_reader(content,player,width-68,p.project,current)
+  elseif p.project=="skybridge" then
+    great_project_reader(content,player,width-68,"skybridge",current)
+  elseif p.project=="beltbreaker" then
+    great_project_reader(content,player,width-68,"beltbreaker",current)
+  elseif p.project=="array" then
+    great_project_reader(content,player,width-68,"array",current)
+  elseif p.project=="ark" then
+    great_project_reader(content,player,width-68,"ark",current)
   elseif p.project=="dyson" then
     dyson.render(content,player,options)
   elseif p.project=="convergence" then
