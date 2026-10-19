@@ -211,6 +211,43 @@ end
 
 local function platform_reader(parent,player,width,id,status)
   local facts=status[3] or {}
+  -- The native platform/voyage tracker only verifies two conditions here.
+  -- Keep instructional flight notes distinct from actual source evidence.
+  local title=parent.add{type="label",caption=L("project-verified-heading")}
+  title.style.font="default-bold"
+  title.style.font_color=HUES.gold
+  local tech=player.force.technologies
+    and player.force.technologies["space-platform"]
+  local checks
+  if id=="platform" then
+    checks={
+      {key="project-verified-platform-research",
+        done=tech and tech.researched==true,available=tech~=nil},
+      {key="project-verified-platform-built",
+        done=facts.platform==true,available=true}
+    }
+  else
+    checks={
+      {key="project-verified-voyage-platform",
+        done=facts.platform==true,available=true},
+      {key="project-verified-voyage-crossing",
+        done=facts.voyage==true,available=true}
+    }
+  end
+  for _,step in ipairs(checks) do
+    if step.available then
+      local row=parent.add{type="flow",direction="horizontal"}
+      row.style.horizontal_spacing=8
+      local mark=row.add{type="label",caption=step.done and "✓" or "○"}
+      mark.style.font_color=step.done and HUES.green or HUES.gold
+      local text=row.add{type="label",caption=L(step.key)}
+      text.style.single_line=false
+      text.style.maximal_width=math.max(125,width-45)
+    end
+  end
+  local flight=parent.add{type="label",caption=L("project-advisory-heading")}
+  flight.style.font="default-bold"
+  flight.style.font_color=HUES.quiet
   local started=parent.add{type="label",
     caption=L(id=="platform" and "project-platform-guide"
       or "project-voyage-guide")}
