@@ -42,3 +42,31 @@ the complete Factorio modpack with default and legacy settings, inspect
 the three research trees, and test a migrated save. Runtime/loaded-modpack
 validation is still required; local static tests alone cannot establish that
 every third-party technology remains reachable.
+
+## Phase 2: Late-power bypass screening (October 2026)
+
+The three guarded Aquilo stages continue to be **Foundation after Paracelsin
+and Maraxsis discovery**, **Fusion after Cubium and Tenebris discovery**, and
+**Legendary after Outer Frontier Mastery**. No further research gates are
+imposed without evidence from the full installed modpack.
+
+To detect compatibility mistakes or shortcuts, export final Factorio 2.1
+prototypes and run:
+
+```bash
+python scripts/audit_late_power.py --dump-data-raw data-raw-dump.json --json
+python -m unittest tests.test_late_power_audit
+```
+
+The auditor flags missing stage prerequisites, hidden/disabled ancestors,
+research cycles, enabled foundation/fusion recipes, alternate source research
+that unlocks those recipes, and alternate Legendary-quality unlock effects.
+These are candidate bypasses for manual review, **not proof that a player
+can craft or research an item early**. Explicitly verify available labs,
+producers, surface restrictions, physical planet visits and migrated saves.
+Its optional `--strict` mode returns nonzero for installed review items.
+
+Razi's 10-level quality asteroid ladder increases **hostile asteroid
+difficulty**. The quality carrier does not introduce collectable quality
+chunks; it does not itself bypass the delayed Legendary player technology.
+
