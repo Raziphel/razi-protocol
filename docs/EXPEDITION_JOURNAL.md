@@ -1,5 +1,17 @@
 # Expedition Journal: contributor overview
 
+## The stable-scroll Journal redesign (October 2026)
+
+The Quests navigation pane now remains alive when selecting quest entries or
+opening chapter folders. Chapter sections are allocated once and toggled via
+GUI visibility rather than frame rebuilds; only the right-side dossier changes.
+Pinning preserves the reading pane, and chapter selection uses the same native
+scrollbar. Routine event-driven story, filter and cross-view changes can still
+rebuild intentionally. The presentation uses shorter chapter rows, a small
+recommendation, narrower dossiers and compact science-card galleries instead
+of repeated heavy frames and progress bars. The work does not introduce new
+research or alter the campaign save model.
+
 ## Systems folio (3.0)
 
 The fourth Journal folio is **Systems**. It shows source-backed, read-only status
