@@ -30,6 +30,11 @@ The shims are version-gated but do not automatically switch off for future
 patches. They become no-ops on already-fixed prototypes. Do not remove them
 until the installed versions of the upstream mods work without them.
 
+**Phase 3 audit hardening:** the read-only checker now also reports legacy
+temperature fields nested in fluid-burning `energy_source` boxes. These are
+already covered by the migration bridge. All findings are diagnostics, not
+permission to modify third-party archives or remove the shim automatically.
+
 ## Oil atlas regression (Balack 1.1.2)
 The legacy oil texture order is noise, **image atlas**, gradient, **specular
 atlas**. Only slots 2 and 4 can enter `image_textures`. Slot 3 is the
