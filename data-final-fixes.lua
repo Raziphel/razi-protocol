@@ -80,6 +80,11 @@ require("prototypes.system.bellicos").data_final_fixes()
 -- Expedition briefings are appended to the final set of planet and location descriptions.
 require("prototypes.system.planet_descriptions").data_final_fixes()
 
+-- Set the campaign gates after the earlier compatibility passes: each system's discovery follows the
+-- previous tier and costs its cards.
+require("prototypes.technology.seven_system_gates").data_final_fixes()
+require("prototypes.technology.system_gate_links").data_final_fixes()
+
 -- Transceiver activation opens the Solar System Edge and Deep Space.
 -- Runs after the system cards (lab_cards) and the transceiver unlocks exist and after the
 -- other compatibility passes have settled the prerequisites, before the lab inputs are deduplicated.
