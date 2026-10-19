@@ -34,7 +34,7 @@ class JournalPolish(unittest.TestCase):
         self.assertNotIn("p.reveal_selection=true",selection)
         # External journal links may still intentionally reveal their target.
         self.assertIn("p.reveal_selection=true\n  open(player)",x)
-        self.assertIn('cover_title.style.font="default-bold"',x)
+        self.assertIn('cover_title.style.font="heading-2"',x)
         self.assertIn('journal-chapter-summary."..p.chapter',x)
         chapters=read("locale/en/razi_journal_chapters.cfg")
         self.assertIn("solaris=Solaris\n",chapters)
