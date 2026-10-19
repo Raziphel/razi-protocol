@@ -42,10 +42,25 @@ local function check(interface)
 end
 
 -- Read-only list for /razi-victory-audit and tests. No hidden setters.
+-- Any EXTRA opt-out interface is a compatibility candidate, not blanket
+-- permission to change a source mod whose API may have other semantics.
 function M.inspect()
   local results={}
+  local known={}
   for _,interface in ipairs(supported) do
+    known[interface]=true
     results[#results+1]=check(interface)
+  end
+  local extra={}
+  for name,api in pairs(remote and remote.interfaces or {}) do
+    if not known[name] and type(name)=="string" and
+      api and api.set_no_victory then
+      extra[#extra+1]=name
+    end
+  end
+  table.sort(extra)
+  for _,name in ipairs(extra) do
+    results[#results+1]={interface=name,state="unmanaged"}
   end
   return results
 end
