@@ -83,11 +83,11 @@ local function add_label(parent,name,caption,color,width)
 end
 local function card(root,id,title,description,width)
   local panel=root.add{type="frame",name=id,direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="inside_shallow_frame"}
   panel.style.width=width
-  panel.style.padding=12
+  panel.style.padding=10
   local header=add_label(panel,nil,L(title),COLOR.ink,width-32)
-  header.style.font="heading-2"
+  header.style.font="default-bold"
   local sub=add_label(panel,nil,L(description),COLOR.muted,width-32)
   sub.style.font="default"
   return panel
@@ -95,7 +95,7 @@ end
 local function meter(panel,name,color,width)
   local bar=panel.add{type="progressbar",name=name,value=0}
   bar.style.width=width
-  bar.style.height=8
+  bar.style.height=6
   bar.style.color=color
   return bar
 end
@@ -108,14 +108,22 @@ function M.render(parent,player,size)
   local intro=add_label(scroll,nil,L("intro"),COLOR.muted,width)
   intro.style.font="default-bold"
 
-  local fleet=card(scroll,"razi_sys_fleet","fleet-title","fleet-description",width)
-  add_label(fleet,"razi_sys_fleet_status",L("fleet-waiting"),COLOR.ink,width-32)
-  add_label(fleet,nil,L("fleet-tip"),COLOR.muted,width-32)
+  local compact=size.compact or width<800
+  local tile_width=compact and width or math.floor((width-12)/2)
+  local top=scroll.add{type="flow",name="razi_sys_summary_row",
+    direction=compact and "vertical" or "horizontal"}
+  top.style.width=width
+  top.style.horizontal_spacing=12
+  top.style.vertical_spacing=10
 
-  local cores=card(scroll,"razi_sys_cores","zpe-title","zpe-description",width)
-  add_label(cores,"razi_sys_cores_status",L("zpe-locked"),COLOR.ink,width-32)
-  meter(cores,"razi_sys_cores_bar",COLOR.teal,width-35)
-  add_label(cores,nil,L("zpe-tip"),COLOR.muted,width-32)
+  local fleet=card(top,"razi_sys_fleet","fleet-title","fleet-description",tile_width)
+  add_label(fleet,"razi_sys_fleet_status",L("fleet-waiting"),COLOR.ink,tile_width-32)
+  add_label(fleet,nil,L("fleet-tip"),COLOR.muted,tile_width-32)
+
+  local cores=card(top,"razi_sys_cores","zpe-title","zpe-description",tile_width)
+  add_label(cores,"razi_sys_cores_status",L("zpe-locked"),COLOR.ink,tile_width-32)
+  meter(cores,"razi_sys_cores_bar",COLOR.teal,tile_width-35)
+  add_label(cores,nil,L("zpe-tip"),COLOR.muted,tile_width-32)
 
   local storm=card(scroll,"razi_sys_storm","storm-title","storm-description",width)
   add_label(storm,"razi_sys_storm_status",L("storm-unavailable"),COLOR.muted,width-32)
@@ -131,8 +139,9 @@ end
 
 function M.refresh_root(root,player)
   if not (root and root.valid) then return end
-  local fleet=root["razi_sys_fleet"]
-  local cores=root["razi_sys_cores"]
+  local top=root["razi_sys_summary_row"]
+  local fleet=top and top["razi_sys_fleet"]
+  local cores=top and top["razi_sys_cores"]
   local storm=root["razi_sys_storm"]
   if not (fleet and cores and storm) then return end
 
