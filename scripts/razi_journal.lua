@@ -599,6 +599,39 @@ local function render_tracker(player)
     and (done and "tracker-boss-done" or "tracker-boss-pending")
     or (done and "tracker-done" or "tracker-pending")),245)
   signal.style.font_color=done and COLOR.green or COLOR.muted
+  -- A pinned goal should say what is actually blocking it, not just
+  -- "pending". Use the same source-backed checklist as the dossier.
+  if not done then
+    local tech=technology(player.force,quest,context)
+    local live=objectives.snapshot(quest,tech,M.state(player.force,quest,context),{
+      available=function(id)
+        local required=defs.by_id[id]
+        return required and M.available(player.force,required,context) or false
+      end,
+      visible=function(id)
+        local required=defs.by_id[id]
+        return required and M.journal_visible(player.force,required,context) or false
+      end,
+      complete=function(id)
+        local required=defs.by_id[id]
+        return required and M.complete(player.force,required,context) or false
+      end,
+      current_research=player.force.current_research,
+      research_progress=player.force.research_progress
+    })
+    if live.next_step then
+      local step=live.next_step
+      local kind=step.kind=="goal" and live.kind or step.kind
+      local next_action=wrap(frame,L("tracker-next",
+        L("mission-step-"..kind,step.name)),253)
+      next_action.style.font_color=theme.soft
+    end
+    if live.research_percent~=nil then
+      local research=label(frame,L("mission-research-progress",
+        tostring(live.research_percent)))
+      research.style.font_color=COLOR.teal
+    end
+  end
 end
 M.render_tracker=render_tracker
 local function render_details(parent,player,quest,p,context,size,view)
