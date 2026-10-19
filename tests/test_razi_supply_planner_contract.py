@@ -23,8 +23,7 @@ class SupplyPlannerContract(unittest.TestCase):
         self.assertIn('freight.route(force,id)', module)
 
     def test_no_fabricated_material_or_shipments(self):
-        module = source("scripts.razi_freight_orders.lua".replace(".", "/", 1)
-                        if False else "scripts/razi_supply_planner.lua")
+        module = source("scripts/razi_supply_planner.lua")
         self.assertIn("recipe.ingredients", module)
         self.assertIn("recipe.products", module)
         self.assertIn("ingredient.quality_min", module)
@@ -59,8 +58,8 @@ class SupplyPlannerContract(unittest.TestCase):
         self.assertIn('native=="supply-route"', journal)
         self.assertIn('native=="supply-plan"', journal)
         self.assertIn('native=="supply-recalculate"', journal)
-        self.assertIn('ra zi_ops_action=="supply-recipe"'.replace("ra zi_", "razi_"), journal)
-        self.assertIn('ra zi_ops_action=="supply-batches"'.replace("ra zi_", "razi_"), journal)
+        self.assertIn('razi_ops_action=="supply-recipe"', journal)
+        self.assertIn('razi_ops_action=="supply-batches"', journal)
         self.assertIn('tags={razi_ops_action="supply-plan-all"}', supply)
         self.assertIn('tags={razi_ops_action="supply-freight"}', supply)
         keys = set(re.findall(r'^([\w-]+)=', locale, re.MULTILINE))
