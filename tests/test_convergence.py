@@ -53,10 +53,10 @@ class ConvergenceTests(unittest.TestCase):
         proto=read("prototypes/technology/convergence.lua")
         entries=re.findall(r'\{id="([^"]+)",item="([^"]+)",count=(\d+)',proto)
         self.assertEqual(entries,[
-            ("stellar","razi-convergence-stellar-mandate","8"),
-            ("industry","razi-convergence-industrial-mandate","10"),
-            ("deep-space","razi-convergence-deep-space-mandate","6"),
-            ("resonance","razi-convergence-resonance-mandate","4"),
+            ("stellar","razi-convergence-stellar-mandate","24"),
+            ("industry","razi-convergence-industrial-mandate","30"),
+            ("deep-space","razi-convergence-deep-space-mandate","18"),
+            ("resonance","razi-convergence-resonance-mandate","12"),
             ("ignition","razi-convergence-ignition-mandate","1")
         ])
         self.assertIn('categories={"crafting"}',proto)
@@ -135,7 +135,10 @@ class ConvergenceTests(unittest.TestCase):
         self.assertIn("force.get_entity_count(name)",runtime)
         self.assertIn('return false,"convergence-need-receiver"',runtime)
         self.assertIn("if not M.dyson_readiness(force) then",runtime)
-        self.assertIn("M.transmission_duration=720",runtime)
+        self.assertIn('if select(1,M.witness_status(force))<7 then',runtime)
+        self.assertIn('if index==#M.stages and not M.core_status(player)',runtime)
+        self.assertIn('function M.blackbox(force)',runtime)
+        self.assertIn("M.transmission_duration=7200",runtime)
         self.assertIn("function M.advance(tick)",runtime)
         self.assertIn("function M.restore_pending()",runtime)
         self.assertIn("storage.razi_convergence_pending",runtime)

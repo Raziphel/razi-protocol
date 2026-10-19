@@ -10,7 +10,7 @@ local done=0
 rawset(_G,"defines",{controllers={remote=9}})
 rawset(_G,"game",{
  tick=42,finished=false,finished_but_continuing=false,
- forces={},
+ forces={},surfaces={},
  set_win_ending_info=function(data) check(data.title~=nil,"victory title") end,
  set_game_state=function(data) check(data.player_won and data.can_continue,
    "real Factorio victory state missing") done=done+1 end,
@@ -18,13 +18,18 @@ rawset(_G,"game",{
 })
 local function fixture(index)
  local force={index=index,name="Test Force "..index,
-  receiver_count=0,transmissions={},technologies={
+  receiver_count=0,core_powered=false,transmissions={},technologies={
+  ["razi-convergence-witness-network"]={researched=false},
   [mods.commission]={researched=true},
   [mods.authorization]={researched=true},
   [mods.ignition]={researched=false}
  }}
  function force.get_entity_count(name)
-  return name=="test-dyson-receiver" and force.receiver_count or 0
+  if name=="test-dyson-receiver" then return force.receiver_count end
+  if name=="razi-convergence-witness-anchor" then
+   return #(game.surfaces or {})
+  end
+  return 0
  end
  function force.print(message)
   force.transmissions[#force.transmissions+1]=message
@@ -42,7 +47,13 @@ local function fixture(index)
  end
  local character={valid=true,surface={
   platform={valid=true,force=force,
-   space_location={name="solar-system-edge"}}}}
+   space_location={name="solar-system-edge"}},
+  find_entities_filtered=function(filter)
+   if filter.name=="razi-convergence-array-core" and force.core_powered then
+    return {{valid=true,energy=100000000}}
+   end
+   return {}
+  end}}
  local player={force=force,character=character,name="Engineer",
   get_main_inventory=function() return inventory end}
  return force,player,inventory
@@ -107,10 +118,38 @@ check(message=="convergence-need-ignition" and done==0,
  "Final accord cannot skip Ignition research")
 force.technologies[mods.ignition].researched=true
 message,used=m.deliver(player,"ignition")
+check(message=="convergence-need-witness-research" and used==0,
+ "Final accord needs the separately researched Independent Witness Accord")
+force.technologies["razi-convergence-witness-network"].researched=true
+message,used=m.deliver(player,"ignition")
+check(message=="convergence-need-witnesses" and used==0,
+ "Seven true, powered systems must physically countersign the Accord")
+local worlds={
+ {"nauvis","calidus"},{"vulcanus","solaris"},{"gleba","nyxaris"},
+ {"fulgora","vibrant"},{"aquilo","vespera"},{"cubium","beetlejuice"},
+ {"tenebris","umbra"}
+}
+for _,world in ipairs(worlds) do
+ game.surfaces[#game.surfaces+1]={
+  planet={name=world[1]},
+  find_entities_filtered=function(spec)
+   if spec.name=="razi-convergence-witness-anchor" then
+    return {{valid=true,energy=1500000}}
+   end
+   return {}
+  end}
+end
+check(select(1,m.witness_status(force))==7,
+ "Seven independent real planet systems must supply live anchors")
+message,used=m.deliver(player,"ignition")
 check(message=="convergence-need-receiver" and used==0
  and inventory.items[m.stages[5].item]==1,
- "A missing native Dyson receiver must not consume final cargo")
+ "Missing native Dyson receivers cannot consume final cargo")
 force.receiver_count=1
+message,used=m.deliver(player,"ignition")
+check(message=="convergence-need-core" and used==0,
+ "The final physical Accord must have a powered core on this platform")
+force.core_powered=true
 message,used=m.deliver(player,"ignition")
 check(message=="convergence-transmission-started" and used==1
  and not m.completed(force,"victory") and done==0,
@@ -125,17 +164,17 @@ storage.razi_convergence_pending=nil
 m.restore_pending()
 check(storage.razi_convergence_pending[1],
  "A reload must rediscover the active transmission")
-game.tick=222
+game.tick=1842
 m.advance(game.tick)
 check(m.record(force).transmission.beat==2 and done==0,
- "Dyson sequence should advance after three seconds")
-game.tick=402
+ "Dyson sequence should advance after thirty seconds")
+game.tick=3642
 m.advance(game.tick)
-game.tick=582
+game.tick=5442
 m.advance(game.tick)
 check(m.record(force).transmission.beat==4 and #force.transmissions==4
  and done==0,"All four announcements must precede victory")
-game.tick=762
+game.tick=7242
 m.advance(game.tick)
 check(m.completed(force,"victory") and done==1
  and not storage.razi_convergence_pending[1]
@@ -189,14 +228,14 @@ end
 local donor=fixture(5)
 local recipient=fixture(6)
 storage.razi_convergence[5]={
- delivered={stellar=8,industry=10,["deep-space"]=6,
-  resonance=4,ignition=1},victory=false,
+ delivered={stellar=24,industry=30,["deep-space"]=18,
+  resonance=12,ignition=1},victory=false,
  transmission={started=1000,beat=1,
   operator="Earlier Engineer",site="nexus"}
 }
 storage.razi_convergence[6]={
- delivered={stellar=8,industry=10,["deep-space"]=6,
-  resonance=4,ignition=1},victory=false,
+ delivered={stellar=24,industry=30,["deep-space"]=18,
+  resonance=12,ignition=1},victory=false,
  transmission={started=1050,beat=1,
   operator="Later Engineer",site="shattered-planet"}
 }
@@ -208,7 +247,7 @@ check(storage.razi_convergence[5]==nil
  and storage.razi_convergence_pending[5]==nil
  and storage.razi_convergence_pending[6],
  "Merged forces must preserve exactly one earliest transmission")
-game.tick=1720
+game.tick=8200
 m.advance(game.tick)
 check(m.completed(recipient,"victory") and done==2
  and m.record(recipient).completed_by=="Earlier Engineer"
