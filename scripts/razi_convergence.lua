@@ -309,8 +309,15 @@ function M.repair_recipe_unlocks(force)
  end
  -- The three new 2.1.62 components must be available in existing saves
  -- where Ignition was already researched before their recipes existed.
+ local witness=force.technologies["razi-convergence-witness-network"]
+ if witness and witness.researched then
+  local anchor=force.recipes["razi-convergence-witness-anchor"]
+  if anchor then anchor.enabled=true end
+ end
  local ignition=force.technologies[defs.ignition]
  if ignition and ignition.researched then
+  local core=force.recipes["razi-convergence-array-core"]
+  if core then core.enabled=true end
   for _,part in ipairs(defs.assemblies or {}) do
    local recipe=force.recipes[part.item]
    if recipe then recipe.enabled=true end

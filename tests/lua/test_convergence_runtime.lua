@@ -69,6 +69,7 @@ check(allowed and unknown_count==nil,
 rawset(_G,"prototypes",source_registry)
 check(not m.completed(force,"victory"),"Fresh world prewon")
 check(m.current(force)==1,"Start at first delivery")
+check(m.blackbox(force)==0,"Do not reveal the Board's hidden order before real shipments")
 inventory.items[m.stages[1].item]=3
 local message,used=m.deliver(player,"stellar")
 check(message=="convergence-delivered" and used==3,
@@ -107,11 +108,15 @@ player.controller_type=1
 m.deliver(player,"deep-space")
 check(m.current(force)==4 and done==0,
  "Deep Space should lead to Pulsar Resonance, not an early win")
+check(m.blackbox(force)==1,
+ "Completed Deep-Space freight must reveal the signed BLACKOUT-SEVEN order")
 inventory.items[m.stages[4].item]=m.stages[4].count
 message,used=m.deliver(player,"resonance")
 check(message=="convergence-delivered" and used==m.stages[4].count
  and m.current(force)==5 and done==0,
  "Pulsar Resonance should lead to final ignition")
+check(m.blackbox(force)==2,
+ "Completed resonance cargo must expose the executive reclamation trap")
 inventory.items[m.stages[5].item]=1
 message=m.deliver(player,"ignition")
 check(message=="convergence-need-ignition" and done==0,
@@ -180,6 +185,7 @@ check(m.completed(force,"victory") and done==1
  and not storage.razi_convergence_pending[1]
  and m.record(force).completed_site=="solar-system-edge",
  "Native victory must fire once and archive the original transmission site")
+check(m.blackbox(force)==3,"The final refusal is revealed only after real victory")
 m.advance(game.tick+60)
 check(done==1,"Completed transmissions must not replay the win")
 local new_force,new_player,other=fixture(2)
@@ -223,6 +229,13 @@ for _,part in ipairs(mods.assemblies) do
  check(migration_force.recipes[part.item].enabled,
   "Existing researched save must unlock all three new assembly recipes")
 end
+migration_force.recipes["razi-convergence-witness-anchor"]={enabled=false}
+migration_force.recipes["razi-convergence-array-core"]={enabled=false}
+migration_force.technologies["razi-convergence-witness-network"].researched=true
+m.repair_recipe_unlocks(migration_force)
+check(migration_force.recipes["razi-convergence-witness-anchor"].enabled
+ and migration_force.recipes["razi-convergence-array-core"].enabled,
+ "Existing researched saves must restore new witness and core recipes")
 -- Two simultaneous force transmissions merged during the finale must
 -- retain the earlier accepted accord, archive its origin, and win once.
 local donor=fixture(5)
