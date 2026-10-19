@@ -40,9 +40,17 @@ M.TRACKER=TRACKER
 
 -- The research-all cheat can fire thousands of events. We only need to
 -- redraw for Codex milestones and world discovery unlocks.
-local research_goals,world_goals={},{}
+local research_goals,world_goals,quests_for_technology={},{},{}
 for _,quest in ipairs(defs.quests) do
-  if quest.tech then research_goals[quest.tech]=true end
+  if quest.tech then
+    research_goals[quest.tech]=true
+    local entries=quests_for_technology[quest.tech]
+    if not entries then
+      entries={}
+      quests_for_technology[quest.tech]=entries
+    end
+    entries[#entries+1]=quest
+  end
   if quest.world then world_goals[quest.world]=true end
 end
 function M.research_affects_journal(research)
@@ -709,9 +717,8 @@ local function render_details(parent,player,quest,p,context,size,view)
       return required and M.complete(force,required,context) or false
     end,
     quest_for_tech=function(name)
-      for _,candidate in ipairs(defs.quests) do
-        if candidate.tech==name and
-          M.journal_visible(force,candidate,context) then
+      for _,candidate in ipairs(quests_for_technology[name] or {}) do
+        if M.journal_visible(force,candidate,context) then
           return candidate.id
         end
       end
