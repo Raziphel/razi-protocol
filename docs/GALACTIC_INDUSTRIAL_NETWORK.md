@@ -425,3 +425,38 @@ Update counts with the existing Journal refresh action.
 remote dispatch would require documenting and testing a stable API
 provided by Orbital Catapult itself. We deliberately avoid guessed
 entity IDs and experimental remote calls in this release.
+
+### Razi 3.0: live departure-stock checks (Pass A foundation)
+
+The Freight Desk additionally checks the player's actual physical departure
+planet and their **currently carried** stock. Pending orders of the same
+item compete for the same stock in saved priority order. This prevents two
+plans from each claiming readiness against the same inventory. Players can
+move an order up/down to change which pending shipment gets the available
+materials first.
+
+Each visible order is classified as **ready to pack**, **short**, **on a
+different world**, **manually packed**, or **unable to check**. The combined
+readiness line shows the count in each of the first four states. "Ready"
+is an inventory estimate only, not proof of loading or launch. The
+existing packed checkbox remains explicitly manual, never a claim of
+verified transport. No items are removed or reserved.
+
+Plans concealed by undiscovered worlds, disabled corridors or removed
+item prototypes remain saved and spoiler-safe. The UI lets players delete
+each inaccessible order by an opaque ID, even when no corridor is visible,
+so the 20-order queue cannot become permanently blocked. Removed plans
+are not re-created if research or settings change later.
+
+This layer is read-only with respect to every source mod; it does not
+touch rocket/platform schedules, cargo pods, orbital launcher inventories,
+destination delivery counts or victory rules. Existing orders need no save
+migration. There are no background scans: the check runs when the freight
+board is rendered or manually refreshed.
+
+Developer regression:
+`luatex --luaonly tests/lua/test_razi_freight_orders.lua`
+(or the supported Lua 5.2 runner). In-game verification remains required,
+particularly when using Remote View, switching physical surfaces, changing
+mod settings, and editing an established save.
+
