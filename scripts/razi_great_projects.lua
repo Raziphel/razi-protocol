@@ -115,6 +115,11 @@ local function lanes(force)
   return catapult.snapshot(force)
 end
 function M.skybridge(force)
+  local past=store(force)
+  if past and past.skybridge and past.skybridge.complete then
+    return 3,3,{options={},chosen=past.skybridge,installed=true,
+      missing=false,transport_unverified=true}
+  end
   local snapshot=lanes(force)
   if not (snapshot.installed and snapshot.enabled) then
     return 0,3,{missing=true}
@@ -150,6 +155,8 @@ function M.sign(player,source,target)
   if not (player and player.valid and player.character
     and source and target and source~=target) then return false end
   if current_planet(player)~=source then return false end
+  local state=store(player.force).skybridge
+  if state.complete or state.from then return false end
   local _,_,status=M.skybridge(player.force)
   local accepted=false
   for _,lane in ipairs(status.options or {}) do
@@ -164,7 +171,6 @@ function M.sign(player,source,target)
     then return false end
   inv.remove{name="processing-unit",count=20}
   inv.insert{name="razi-skybridge-consignment",count=1}
-  local state=store(player.force).skybridge
   state.from=source
   state.to=target
   state.delivered=false
@@ -180,6 +186,7 @@ function M.deliver(player)
   end
   inv.remove{name="razi-skybridge-consignment",count=1}
   state.delivered=true
+  state.complete=true
   return true
 end
 -- Only registered source-route departures and destination arrivals count
