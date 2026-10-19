@@ -66,8 +66,9 @@ function M.targets()
   local results={}
   for _,name in ipairs(candidates) do
     local proto=location(name)
-    if proto and visited[name] and not proto.hidden
-      and not proto.sprite_only then
+    -- Runtime LuaSpaceLocationPrototype does not expose the data-stage
+    -- sprite_only flag; sprite-only parents are removed before runtime.
+    if proto and visited[name] and not proto.hidden then
       results[#results+1]={id=name,
         caption=proto.localised_name or {"",name}}
     end
