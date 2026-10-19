@@ -114,6 +114,8 @@ jobs:
         run: lua5.2 tests/lua/test_razi_shipment_operations.lua
       - name: Check A.8 native pod provenance, source force and spoiler safety
         run: lua5.2 tests/lua/test_razi_native_pod_trips.lua
+      - name: Check A.9 double-confirmed stock-backed manual freight staging
+        run: lua5.2 tests/lua/test_razi_shipment_handoff.lua
       - name: Check read-only and spoiler-aware Vespera freight dossier
         run: lua5.2 tests/lua/test_razi_catapult_network.lua
       - name: Check source-backed factory comparison and safe optional sourcing

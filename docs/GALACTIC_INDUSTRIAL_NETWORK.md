@@ -916,3 +916,59 @@ Manual local tests:
 
 A CI job's isolated source checks are not evidence of engine
 compatibility, transported items or successful logistics automation.
+
+
+## A.9: Controlled source-native Freight Desk handoff (feature closure)
+
+A.9 closes the logistics development sequence with a conservative,
+operator-authorized bridge from a CURRENT validated itinerary's NEXT
+undeclared Catapult leg into the existing Razi Freight Desk. This
+does not create a new transport engine or call an undocumented source
+mod remote API.
+
+A handoff is eligible only when the itinerary passes A.6 route,
+destination discovery, recipe and ingredient checks; the A.7 event
+timeline is well-formed and the next leg is not yet marked departed;
+the directed Orbital Catapult route is presently declared/unlocked;
+the player is physically on that leg's REAL departure planet; and
+the character actually carries sufficient quantities of every
+eligible item required by the manifest. Fluid, quality-uncertain or
+probabilistic ingredient requests are never silently converted to
+ordinary item orders.
+
+The action has TWO distinct user clicks. The first only records a
+short-lived (3,600-tick) UI review token bound to plan ID, leg,
+native directed route, item identities and exact quantities. The
+second recomputes the actual installed map, factory and inventory
+sources. If anything changed, the review fails closed. Success calls
+the existing bounded and atomic Freight Desk add_many operation
+(20 queued orders maximum) and records one non-duplicate handoff
+marker per itinerary leg. Manual checkpoint state is unchanged.
+
+This is deliberately ORDER STAGING, not autonomous dispatch. It
+does not reserve, remove, insert or teleport items; write catapult
+entity properties; create space platforms; change platform schedules;
+mark any A.7 leg complete; or award Convergence or other progress.
+Physical launch and transport stay entirely source-owned because
+Orbital Catapult 0.15.0 does not expose a verified stable public
+shipment API. Source-level observed pod activity stays separate
+from this player's authored order.
+
+A.9 also tightens A.6 saved-manifest verification: newly added
+deterministic ingredients, removed ingredients and duplicate items
+invalidate an outdated all-material saved bill, not merely changes
+to quantities already represented. Explicit single-item proposals
+retain their one-item source comparison.
+
+Manual isolated tests:
+- lua5.2 tests/lua/test_razi_shipment_handoff.lua
+- lua5.2 tests/lua/test_razi_supply_multihop.lua
+- lua5.2 tests/lua/test_razi_freight_orders.lua
+- lua5.2 tests/lua/test_razi_shipment_operations.lua
+
+Release remains gated on an actual Factorio 2.1 full-modpack test,
+including genuine source Catapult operation, a fresh save,
+existing save migration, depleted inventory, research rollback,
+missing route, multiplayer force safety and journal scroll behavior.
+Do not claim real shipping automation or engine-verified item
+fulfilment from the manual order board.

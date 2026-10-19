@@ -10,6 +10,7 @@ local freight_orders=require("scripts.razi_freight_orders")
 local supply=require("scripts.razi_supply_planner")
 local multihop=require("scripts.razi_supply_multihop")
 local shipment_operations=require("scripts.razi_shipment_operations")
+local shipment_handoff=require("scripts.razi_shipment_handoff")
 local supply_routes=require("scripts.razi_supply_routes")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
@@ -2439,6 +2440,19 @@ function M.gui_click(event)
         player.print({"razi-ops.supply-operation-rejected"})
         return
       end
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-handoff-review" then
+      if not shipment_handoff.review(player,p,tags.value) then
+        player.print({"razi-ops.handoff-failed"})
+        return
+      end
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-handoff-confirm" then
+      if not shipment_handoff.confirm(player,p,tags.value) then
+        player.print({"razi-ops.handoff-failed"})
+        return
+      end
+      player.print({"razi-ops.handoff-staged"})
     elseif p.project=="cargo" and p.logistics_tab=="supply"
       and native=="supply-freight" then
       p.logistics_tab="freight"

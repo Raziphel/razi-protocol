@@ -90,6 +90,19 @@ check(not module.visible(player,graph)[1].valid,
 revised=false
 check(module.visible(player,graph)[1].valid,
  "Restored source recipe restores correctly matching itinerary bill")
+local old_ingredients=package.loaded["scripts.razi_supply_planner"].ingredients
+package.loaded["scripts.razi_supply_planner"].ingredients=function(_,batches)
+ local rows=old_ingredients(nil,batches)
+ rows[#rows+1]={name="extra-material",count=batches,plannable=true}
+ return rows
+end
+prototypes.item["extra-material"]={localised_name="Extra material"}
+check(not module.visible(player,graph)[1].valid,
+ "New recipe item requirement must invalidate outdated all-item manifest")
+package.loaded["scripts.razi_supply_planner"].ingredients=old_ingredients
+prototypes.item["extra-material"]=nil
+check(module.visible(player,graph)[1].valid,
+ "Returning to the source bill restores a valid itinerary")
 local forged={supply_recipe=p.supply_recipe,
  supply_batches=4,supply_origin="sealed",supply_path=1}
 check(not module.save(player,forged),

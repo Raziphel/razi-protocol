@@ -5,6 +5,7 @@ local M={}
 local graph_module=require("scripts.razi_supply_routes")
 local supply=require("scripts.razi_supply_planner")
 local operations=require("scripts.razi_shipment_operations")
+local handoff=require("scripts.razi_shipment_handoff")
 local MAX_PLANS=12
 local MAX_MATERIALS=24
 local L=function(key,...) return {"razi-ops."..key,...} end
@@ -76,7 +77,7 @@ function M.save(player,preferences,item)
   -- Store only primitive values; never stash LuaRecipes or prototype refs.
   data.plans[#data.plans+1]={
     id=data.next_id,recipe=row.quest.tech,origin=origin,
-    destination=row.site,batches=batches,legs=path,
+    destination=row.site,batches=batches,selected_item=item,legs=path,
     materials=materials,tick=game and game.tick or 0
   }
   data.next_id=data.next_id+1
@@ -116,16 +117,30 @@ function M.visible(player,graph)
     -- Never show a "current" bill of materials with old source costs.
     if revealed then
       local current={}
+      local expected=0
       for _,part in ipairs(supply.ingredients(
           recipe.recipe,plan.batches)) do
-        if part.plannable then current[part.name]=part.count end
+        if part.plannable and (not plan.selected_item
+          or part.name==plan.selected_item) then
+          current[part.name]=part.count
+          expected=expected+1
+        end
       end
-      for _,part in ipairs(plan.materials or {}) do
-        if current[part.name]~=part.count
-          or not (prototypes and prototypes.item
-            and prototypes.item[part.name]) then
-          revealed=false
-          break
+      local materials=plan.materials
+      if type(materials)~="table" or #materials~=expected
+        or expected==0 or expected>MAX_MATERIALS then
+        revealed=false
+      else
+        local seen={}
+        for _,part in ipairs(materials) do
+          if type(part)~="table" or type(part.name)~="string"
+            or seen[part.name] or current[part.name]~=part.count
+            or not (prototypes and prototypes.item
+              and prototypes.item[part.name]) then
+            revealed=false
+            break
+          end
+          seen[part.name]=true
         end
       end
     end
@@ -294,6 +309,7 @@ function M.render(parent,player,p,width,current)
             tostring(material.count)),width-48)
         end
         operations.render(lane,player,plan,width-42)
+        handoff.render(lane,player,p,plan,width-42)
       end
     else
       wrap(lane,L("supply-itinerary-inaccessible"),width-42)
