@@ -703,19 +703,22 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
     style="inside_shallow_frame"}
   next.style.width=math.max(120,width-72)
   next.style.padding=8
-  next.style.vertical_spacing=4
-  local eyebrow=next.add{type="label",caption=L("project-next-heading")}
+  -- FrameStyle has no vertical_spacing: spacing belongs to a nested Flow.
+  local next_body=next.add{type="flow",direction="vertical"}
+  next_body.style.horizontally_stretchable=true
+  next_body.style.vertical_spacing=4
+  local eyebrow=next_body.add{type="label",caption=L("project-next-heading")}
   eyebrow.style.font="default-bold"
   eyebrow.style.font_color=HUES.gold
   local advice,quest_id=next_action(player.force,p.project,current)
-  local guidance=next.add{type="label",caption=advice}
+  local guidance=next_body.add{type="label",caption=advice}
   guidance.style.single_line=false
   guidance.style.maximal_width=math.max(100,width-98)
   if quest_id and M.next_quest(player.force,p.project,current)==quest_id then
-    next.add{type="button",caption=L("project-open-next"),
+    next_body.add{type="button",caption=L("project-open-next"),
       tags={razi_journal_action="project-next"}}
   end
-  local perspective=next.add{type="label",
+  local perspective=next_body.add{type="label",
     caption=L("project-measures-"..p.project)}
   perspective.style.single_line=false
   perspective.style.maximal_width=math.max(100,width-98)

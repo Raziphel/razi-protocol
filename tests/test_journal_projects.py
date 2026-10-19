@@ -68,6 +68,21 @@ class ProjectsTests(unittest.TestCase):
         self.assertIn('scroll.tags={razi_scroll_context=p.project}',projects)
         self.assertNotIn('on_tick',projects)
 
+    def test_project_dossier_spacing_uses_flow_style(self):
+        """FrameStyle cannot accept FlowStyle.vertical_spacing in Factorio."""
+        projects=read("scripts/razi_journal_projects.lua")
+        self.assertIn('local next=content.add{type="frame",direction="vertical",',projects)
+        self.assertIn('local next_body=next.add{type="flow",direction="vertical"}',projects)
+        self.assertIn('next_body.style.vertical_spacing=4',projects)
+        self.assertNotIn('next.style.vertical_spacing=',projects)
+        for snippet in (
+            'local eyebrow=next_body.add{',
+            'local guidance=next_body.add{',
+            'next_body.add{type="button",caption=L("project-open-next")',
+            'local perspective=next_body.add{',
+        ):
+            self.assertIn(snippet,projects)
+
     def test_embedded_views_have_one_scroller(self):
         for p in ("scripts/galactic_dyson.lua",
                   "scripts/galactic_trade.lua","scripts/razi_convergence.lua"):
