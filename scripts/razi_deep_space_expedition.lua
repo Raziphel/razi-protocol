@@ -52,8 +52,10 @@ function M.targets()
   end
   local visited={["solar-system-edge"]=true}
   local queue={"solar-system-edge"}
-  for i=1,#queue do
-    local at=queue[i]
+  local index=1
+  while index<=#queue do
+    local at=queue[index]
+    index=index+1
     for neighbor in pairs(graph[at] or {}) do
       if not visited[neighbor] then
         visited[neighbor]=true
