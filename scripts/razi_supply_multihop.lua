@@ -106,9 +106,28 @@ function M.visible(player,graph)
     local recipe=catalog[plan.recipe]
     local path={legs=plan.legs}
     local revealed=recipe and recipe.site==plan.destination
+      and recipe.technology and recipe.technology.researched
+      and recipe.recipe_enabled and supply.batches(plan.batches)
       and graph_module.valid_path(graph,path)
       and plan.legs[1].from==plan.origin
       and plan.legs[#plan.legs].to==plan.destination
+    -- Upstream recipe rebalance/removal must invalidate stale quantities.
+    -- Never show a "current" bill of materials with old source costs.
+    if revealed then
+      local current={}
+      for _,part in ipairs(supply.ingredients(
+          recipe.recipe,plan.batches)) do
+        if part.plannable then current[part.name]=part.count end
+      end
+      for _,part in ipairs(plan.materials or {}) do
+        if current[part.name]~=part.count
+          or not (prototypes and prototypes.item
+            and prototypes.item[part.name]) then
+          revealed=false
+          break
+        end
+      end
+    end
     result[#result+1]={id=plan.id,valid=revealed==true,
       plan=revealed and plan or nil}
   end
