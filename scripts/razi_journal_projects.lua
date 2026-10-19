@@ -154,6 +154,7 @@ local HUES={
   ink={r=.933,g=.890,b=.808},
   quiet={r=.60,g=.66,b=.65},
   gold={r=.82,g=.69,b=.48},
+  green={r=.58,g=.80,b=.66},
   unused={r=.39,g=.46,b=.51}
 }
 local PROJECT_ART={
