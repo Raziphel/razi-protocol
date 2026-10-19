@@ -30,7 +30,10 @@ corporate inventory, or compulsory side-world plot gates.
    authority over its own emergency stores and decisions. The seven-system
    Continuity Engine coordinates aid and survival plans.
 2. A cascading network catastrophe interrupts routes, destroys records
-   and isolates colonies. Leadership orders the Engine to "minimize loss"
+   and isolates colonies. The initial disaster is real; the continued isolation
+   is deliberate. In sealed Directive BLACKOUT-SEVEN, the Executive Board
+   orders surviving humanitarian routes disconnected to protect corporate
+   control. Leadership orders the Engine to "minimize loss"
    without clarifying that lost *people* outweigh lost *assets*. Regional
    departments stop answering. The Engine continues to optimize what its
    available ledgers can quantify.
@@ -59,8 +62,11 @@ corporate inventory, or compulsory side-world plot gates.
    supplies the old emergency power reserve. Singularity research and
    the Solar System Edge reveal that the real endgame requires the
    **Convergence**.
-8. Five mandates must be **manufactured and physically delivered** on
-   the force's own platform at an eligible deep-space location. Research
+8. Five costly mandates must be **manufactured and physically delivered** on
+   the force's own platform at an eligible deep-space location. The final
+   mandate also requires seven live 10 MW witness stations across seven
+   distinct founding systems and a 50 MW Array Core on the expedition
+   platform, as well as the source Dyson receiver grid. Research
    alone is insufficient. The fifth accepted shipment begins a
    persistent timed transmission. Only completion of that sequence
    constitutes victory.
@@ -138,6 +144,13 @@ because `convergence.completed(force, "victory")` is authoritative.
 ## The ending, fully defined
 
 The final message is **The Right to Continue**.
+
+The Engine asks for a surviving executive signature, and the black box
+proves a signature was never missing: the Board had deliberately signed
+BLACKOUT-SEVEN and left its reclamation authority dormant in the network.
+Restoring the old network without witnesses would have reactivated that
+corporate succession key. The Engine was obeying a human directive, not
+inventing evil for its own sake.
 
 The Engine asks for a surviving executive signature but cannot find one.
 It receives instead a working, distributed signal backed by actual
@@ -421,3 +434,13 @@ Four new Projects add verified physical accomplishments: Skybridge's two-world n
 The Array's three recovered messages appear as separate entries in the existing Archive navigation and remain unlocked for the force after physical receivers are removed. They foreshadow the unresolved Continuity records without explaining away Convergence. Corporate voice stays restrained: log timestamps, missing personnel signatures and archival orders, not a new omniscient narrator.
 
 Skybridge's sealed manifest proves goods were physically carried between two installed catapult endpoints while a RAZI regional link exists, but **does not prove that the Orbital Catapult itself fired or transported the item**. The source mod has no publicly documented delivery callback suitable for that claim. If its physical devices cannot be identified by their actual source prototype names, the project deliberately reports that it cannot verify them rather than inventing progress. Native transportation and all third-party science remain controlled by their authors.
+
+## Revised major twist: BLACKOUT-SEVEN and the Witness Accord
+
+The first network disaster was real, but the isolation that killed real people was a **deliberate corporate order**. This is only disclosed after the third physically completed Mandate. The fourth Mandate reveals the second half: the Convergence as originally signed would have reactivated the dormant executive reclamation key. A dissident engineering team hid an independent seven-system countersignature into the cargo process. **No one person, including the player, can become the new owner.** The seven physically powered stations are how people reject the order without giving that power to the player instead. The final broadcast revokes the claim; it does not magically delete the Engine or its evidence.
+
+The original five physical mandates remain in their original order but the first four now demand 24, 30, 18 and 12 manufactured units (previously 8/10/6/4); Ignition remains a three-part unique assembly with considerably more manufacturing overhead. Convergence research counts increase, with an additional Witness Accord technology after Synchronization and before Ignition. Researching the tech unlocks the RAZI Witness Anchor (10 MW), while Ignition unlocks the expedition-mounted Seven-Sun Array Core (50 MW).
+
+The seven stations must simultaneously be **built and powered**, one on a real planet within each founding system: Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra. Real planet-to-system mapping comes from the installed galaxy catalogue; multiple anchors in one system do not satisfy another. The final Core is physically installed and powered on the force's deep-space delivery platform. The final shipment is rejected without those prerequisites, and no inventory is consumed. Older forces with already-recorded victory keep their success and ending.
+
+The transmission now lasts two minutes, with dispatches at 0/30/60/90 seconds, rather than a 12-second cutscene. The recovered black-box evidence appears in the Convergence dossier only after real shipments; corporate Archive records expand the same reveal. The twist is intentionally unspoiled in initial planet and route descriptions, onboarding, quests and the Project cover. No branching endings, false morality choices, teleportation, new planetary biome or artificial entity scans on every tick.

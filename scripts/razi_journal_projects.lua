@@ -427,10 +427,18 @@ local function next_action(force,id,status)
       return L("project-next-research",ignition.localised_name),
         "convergence-ignition-research"
     end
+    local witness=force.technologies["razi-convergence-witness-network"]
+    if witness and not witness.researched then
+      return L("project-next-research",witness.localised_name)
+    end
+    if select(1,convergence.witness_status(force))<7 then
+      return L("project-next-convergence-witness")
+    end
     local receivers_ready=convergence.dyson_readiness(force)
     if not receivers_ready then
       return L("project-next-convergence-receiver")
     end
+    return L("project-next-convergence-core")
   end
   local stage=convergence.stages[current]
   if not stage then return L("project-next-unavailable") end

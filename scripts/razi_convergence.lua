@@ -52,7 +52,12 @@ function M.witness_status(force)
  local total=#M.witness_systems
  local known=force and force.get_entity_count
   and force.get_entity_count("razi-convergence-witness-anchor")
- if known==0 then return 0,total,locations end
+ if known==0 then
+  for _,system in ipairs(M.witness_systems) do
+   locations[#locations+1]={system=system}
+  end
+  return 0,total,locations
+ end
  for _,surface in pairs(game and game.surfaces or {}) do
   local planet=surface.planet
   local system=planet and galactic_catalog.system(planet.name)
