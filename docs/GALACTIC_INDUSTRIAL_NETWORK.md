@@ -656,8 +656,10 @@ database or automatic delivery system.
 - The planner uses `razi_industry_portfolio.snapshot(force)` and the
   installed `LuaRecipePrototype.ingredients/products` arrays. Only a
   factory site's *actually discovered* planet and installed/visible
-  source technology and recipe are shown. This does not reveal a hidden
-  destination just because spoilers are disabled.
+  source technology and recipe are shown. If a live per-force
+  `LuaRecipe` is available, its ingredient/product quantities take
+  precedence over the installed prototype's preview. This does not reveal
+  a hidden destination just because spoilers are disabled.
 - Choose a real recipe, enter **1–1000 crafts**, and recalculate exact
   recipe ingredient quantities. Multiple identical ingredient entries
   are merged. Deterministic, nonprobabilistic recipe outputs are also
