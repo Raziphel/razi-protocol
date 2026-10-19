@@ -112,19 +112,55 @@ function M.ingredients(recipe,batches)
   return list
 end
 
-function M.plan(player,recipe_id,route_id,item_name,batches)
-  if not (player and player.force and type(item_name)=="string") then
-    return false
+-- Compute expected recipe outputs only when deterministic; do not claim
+-- machine throughput, bonuses from quality or a running factory.
+function M.outputs(recipe,batches)
+  local amount=M.batches(batches)
+  local result={}
+  if not (recipe and amount) then return result end
+  for _,product in pairs(recipe.products or {}) do
+    if product.name and type(product.amount)=="number"
+      and product.amount>0 and not product.amount_min
+      and not product.amount_max
+      and (not product.probability or product.probability==1) then
+      result[#result+1]={name=product.name,
+        kind=product.type=="fluid" and "fluid" or "item",
+        count=product.amount*amount}
+    end
   end
+  table.sort(result,function(a,b)return a.name<b.name end)
+  return result
+end
+
+local function confirmed_recipe(player,recipe_id,route_id)
+  if not (player and player.force) then return nil end
   local row=M.recipe(player.force,recipe_id)
   if not (row and row.technology and row.technology.researched) then
-    return false
+    return nil
   end
-  local valid_route=false
   for _,option in ipairs(M.inbound(player.force,row.site)) do
-    if option.id==route_id then valid_route=true;break end
+    if option.id==route_id then return row end
   end
-  if not valid_route then return false end
+  return nil
+end
+
+function M.plan_all(player,recipe_id,route_id,batches)
+  local row=confirmed_recipe(player,recipe_id,route_id)
+  if not (row and M.batches(batches)) then return false end
+  local specs={}
+  for _,ingredient in ipairs(M.ingredients(row.recipe,batches)) do
+    if ingredient.plannable and ingredient.kind=="item" then
+      specs[#specs+1]={item=ingredient.name,count=ingredient.count}
+    end
+  end
+  if #specs==0 then return false end
+  return freight.add_many(player,route_id,specs)
+end
+
+function M.plan(player,recipe_id,route_id,item_name,batches)
+  if type(item_name)~="string" then return false end
+  local row=confirmed_recipe(player,recipe_id,route_id)
+  if not row then return false end
   for _,ingredient in ipairs(M.ingredients(row.recipe,batches)) do
     if ingredient.name==item_name and ingredient.kind=="item"
       and ingredient.plannable then
@@ -224,6 +260,15 @@ function M.render(parent,player,p,width)
     end
     wrap(editor,L("supply-source-disclaimer"),width-36)
   end
+  local outputs=M.outputs(current.recipe,batch)
+  if #outputs>0 then
+    wrap(parent,L("supply-output-heading"),width,true,GOLD)
+    for _,product in ipairs(outputs) do
+      local material=material(product)
+      wrap(parent,L("supply-output-row",material,
+        tostring(product.count)),width-35)
+    end
+  end
   local ingredients=M.ingredients(current.recipe,batch)
   wrap(parent,L("supply-materials-heading"),width,true,GOLD)
   if #ingredients==0 then wrap(parent,L("supply-no-ingredients"),width) end
@@ -251,6 +296,16 @@ function M.render(parent,player,p,width)
   end
   if #ingredients>max then
     wrap(parent,L("supply-truncated",tostring(#ingredients-max)),width)
+  end
+  local suitable=0
+  for _,ingredient in ipairs(ingredients) do
+    if ingredient.plannable then suitable=suitable+1 end
+  end
+  if researched and p.supply_route and suitable>0 then
+    parent.add{type="button",
+      caption=L("supply-plan-all",tostring(suitable)),
+      tooltip=L("supply-plan-all-help"),
+      tags={razi_ops_action="supply-plan-all"}}
   end
   wrap(parent,L("supply-footer"),width)
   parent.add{type="button",caption=L("supply-open-freight"),
