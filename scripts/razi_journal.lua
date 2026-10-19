@@ -2366,6 +2366,9 @@ function M.gui_click(event)
     elseif p.project=="cargo" and native=="logistics-route" then
       if not freight_orders.select(player,tags.value) then return end
       p.logistics_tab="freight"
+      -- The player deliberately selected a new route. Reveal its editor
+      -- at the top; ordinary tab switches and packing clicks keep scroll.
+      p.logistics_scrolls["razi_journal_project_reader|cargo:freight"]=0
     elseif p.project=="cargo" and native=="freight-select" then
       if not freight_orders.select(player,tags.value) then return end
     elseif p.project=="cargo" and native=="freight-add" then
