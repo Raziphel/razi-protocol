@@ -106,7 +106,7 @@ class VisualPolishTests(unittest.TestCase):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")
         locale=load_journal_locale(ROOT)
-        self.assertIn('local ids={"dyson","cargo","recovery","transceiver","convergence"}',
+        self.assertIn('local ids={"platform","voyage","dyson","transceiver","convergence"}',
                       projects)
         self.assertIn('icons.button(head,art_for(id,player.force,statuses),"project_button"',
                       projects)
@@ -116,15 +116,15 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('style=selected and "inside_shallow_frame" or nil',projects)
         self.assertIn('local current=statuses[p.project]',projects)
         self.assertIn('convergence.progress(force)',projects)
-        self.assertIn('catalog.snapshot(force)',projects)
+        self.assertIn('platform_projects.snapshot(force)',projects)
         self.assertIn('dyson.status(force)',projects)
         self.assertIn('options={embedded=true,width=width-68}',projects)
         self.assertIn('scroll.horizontal_scroll_policy="never"',projects)
         self.assertNotIn('on_tick',projects)
         self.assertNotIn('create_surface(',projects)
         for key in ("projects-heading","project-dossier","project-progress",
-                    "project-caption-dyson","project-caption-cargo",
-                    "project-caption-recovery","project-caption-transceiver",
+                    "project-caption-dyson","project-caption-platform",
+                    "project-caption-voyage","project-caption-transceiver",
                     "project-caption-convergence"):
             self.assertRegex(locale,rf"(?m)^{key}=")
 if __name__=="__main__":
