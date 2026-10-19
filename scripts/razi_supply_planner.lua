@@ -251,7 +251,7 @@ function M.render(parent,player,p,width)
     tags={razi_ops_action="supply-recalculate"}}
   if not batch then
     wrap(editor,L("supply-invalid-batches"),width-36)
-    return
+    return current
   end
   wrap(editor,L("supply-batch-limits",tostring(MAX_BATCHES)),width-36)
   local incoming=M.inbound(player.force,current.site)
@@ -326,5 +326,6 @@ function M.render(parent,player,p,width)
   wrap(parent,L("supply-footer"),width)
   parent.add{type="button",caption=L("supply-open-freight"),
     tags={razi_ops_action="supply-freight"}}
+  return current
 end
 return M
