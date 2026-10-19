@@ -27,6 +27,21 @@ class GreatProjects(unittest.TestCase):
         self.assertNotIn('create_space_platform',runtime)
         self.assertNotIn('set_recipe',runtime)
         self.assertNotIn('research.researched=true',runtime)
+    def test_platform_construction_fast_path_keeps_trip_verification(self):
+        runtime=read("scripts/razi_great_projects.lua")
+        control=read("control.lua")
+        fixture=read("tests/lua/test_great_projects.lua")
+        self.assertLess(
+            runtime.index("if previous and previous.from==from and previous.to==to then"),
+            runtime.index("ark=qualified_ark(platform)"))
+        block=control.split("local function record_platform_construction(event)",1)[1]
+        block=block.split("events:on_event(defines.events.on_space_platform_built_entity",1)[0]
+        self.assertNotIn("deep_expedition.observe_connected",block)
+        self.assertIn("great_projects.observe(platform)",block)
+        self.assertIn("events:on_nth_tick(300,function()",control)
+        self.assertIn("events:on_event(defines.events.on_space_platform_changed_state,record_platform)",control)
+        self.assertIn("ark_qualification_queries==captured",fixture)
+
     def test_new_buildable_receiver(self):
         prototypes=read("prototypes/technology/razi_great_projects.lua")
         self.assertIn('table.deepcopy(source)',prototypes)
