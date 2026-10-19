@@ -1,8 +1,10 @@
 # Orbital, railway and defense companion integration
 
-**Scope:** Razi Protocol Dev, 15 October 2026. All new companions are optional in gameplay.
-The manifest marks six as recommended; Orbital Catapult must be installed by
-the player because its author specifically prohibits regular ordering dependencies.
+**Scope:** Razi Protocol 3.0 development branch. The six extra logistics,
+rail and defense companions remain recommended and optional, but Orbital
+Catapult >= 0.15.0 is now a required mod. The manifest uses the upstream
+author's load-order-independent `~ orbital-cannon` dependency. Both
+Razi-owned link groups are independently configurable.
 
 ## Recommended companions and ownership
 
@@ -39,28 +41,39 @@ If `razi-companion-science-weave` is off, no change is made to the source
 technology graph. The feature does not create new labs, recipes, planet
 discovery chains or unresearchable science packs.
 
-## Orbital Catapult is deliberately separate
+## Orbital Catapult: real regional links, source-owned movement
 
-The source author instructs modders to depend on it using **only**
-`~ orbital-cannon` (load-order independent). This is not compatible with
-Razi's policy that all companion installs remain non-mandatory. Therefore it
-is **not a direct dependency declaration**. Its manually installed module
-is detected and the custom extension interface is used only when the
-**Experimental Muria–Aquilo orbital catapults** startup setting is enabled.
+Orbital Catapult is required via `~ orbital-cannon >= 0.15.0`. The
+`razi-orbital-catapult-local-links` and
+`razi-orbital-catapult-regional-links` startup options each default to ON.
+Each group exports six directed native `orbital-cannon-link` prototypes
+(three reversible corridors), but only for planets actually installed:
 
-There are precisely two one-way links, Muria -> Aquilo and Aquilo -> Muria.
-They do not cross the Vespera asteroid belt, do not cross star systems, and
-do not connect the critical Aquilo -> belt -> Rubia lane. They are **off by
-default** and not release-certified. Test the source's link availability,
-research, UI, map final-fixes order, power supply and old-save behavior before
-enabling this in a campaign. Never use this as a bypass for required gateways.
+- Vespera: Muria <-> Aquilo, Muria <-> Rubia, Rubia <-> Aquilo
+- Regional: Vulcanus <-> Castra, Gleba <-> Moshine, Rubia <-> Maraxsis
+
+These are local transport possibilities, not free freight. The source mod
+still owns power requirements, actual launchers, deliveries, arrival checks,
+items and player transport. Neither group connects across star systems or
+replaces space-platform routes. Test the native source's research/surface
+restrictions before declaring a connection usable.
+
+The Cargo Network includes an optional, per-player manual Freight Desk.
+It can check the player's physically carried departure-world inventory
+against prioritized orders and explain shortfalls without double-counting
+the same items. It does **not** reserve stock, read catapult machinery,
+observe a shipment, or verify delivery. Saved inaccessible orders can
+be removed without exposing spoiler-hidden route names.
+
+Recommended companion dependencies remain optional. Source-mod ownership and
+safe compatibility skips remain mandatory.
 
 ## Test profiles and release gates
 
-1. **Baseline:** Remove all six optional companions and manually installed
-   Orbital Catapult. Verify Razi starts without missing prototype errors,
-   the same native rocket/space-platform research exists, and the Cargo
-   Network doesn't claim uninstalled systems exist.
+1. **Baseline:** Remove all six optional companions, retain the now-required
+   Orbital Catapult, and disable both Razi link groups. Verify Razi loads,
+   keeps native rocket/platform research and reports zero Razi corridors
+   without claiming absent companions are installed.
 2. **Research profile:** Add just Space Age Railway Expansion and Shield
    Generators. Inspect `factorio-current.log` for successful or individually
    skipped `companion-industry` rules. Verify source recipes remain enabled,
@@ -77,11 +90,14 @@ enabling this in a campaign. Never use this as a bypass for required gateways.
    unreachable science and UPS. Space Age Railway Expansion's HD artwork
    may consume substantial VRAM; use its standard graphics initially.
    Shield Generators has Lua-driven combat overhead: measure large battles.
-5. **Catapult experiment only:** Back up save data first. Manually enable
-   Orbital Catapult, its own dependency `powered-machine`, and Razi's
-   catapult-link startup setting in a disposable save. Check reciprocal
-   Muria/Aquilo routes and confirm *no* shortcuts into Rubia or outside
-   Vespera. Disable if graphics or source unlock checks are inconsistent.
+5. **Catapult link profiles:** Test local-only, regional-only, both-ON
+   and both-OFF startup settings on copied saves. Verify up to twelve
+   directed native links (six reversible pairs), only between actually
+   installed and unlocked destinations. Check real endpoint machines,
+   reciprocal travel, inventory/player arrival, underwater Maraxsis
+   restrictions and no cross-star or asteroid-belt bypass. Confirm an
+   unavailable Freight Desk route never leaks its name and that order
+   stock checks don't pretend a delivery occurred.
 6. **Existing saves:** Backup before installing or removing any content mod.
    Load an old completed-Dyson / partial-Convergence save to confirm
    research progress, inventory and cargo deliveries remain intact.
