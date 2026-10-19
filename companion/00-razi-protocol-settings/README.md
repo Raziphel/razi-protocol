@@ -1,22 +1,39 @@
-# Razi Protocol: First Settings companion
+# Razi Protocol: early settings companion
 
-This is an optional, lightweight Factorio 2.1 mod with internal name `00-razi-protocol-settings`.
-It intentionally has only the base-game dependency so it loads *before* Razi Protocol's required planets. The native settings GUI groups settings by the mod that registered them, so this companion can bring the entire Protocol settings section near the beginning of the list.
+Factorio sorts mod settings by mod load order (primarily dependency depth),
+not by the visible title or individual setting order keys. This optional
+lightweight companion has a minimal dependency chain and the internal ID
+`00-razi-protocol-settings`, giving Razi's startup settings a chance to
+appear near the beginning of **Settings → Mod settings → Startup**. The exact
+placement is controlled by Factorio and must be checked in-game.
+
+## What it owns
+
+- **Startup only:** All of Razi Protocol's current startup settings, unchanged.
+- **NOT runtime:** The main `razi-protocol` mod retains map-wide and
+  per-player settings so that runtime writes and ownership keep working.
+- **No duplicated definitions:** The companion imports Razi Protocol's
+  current setting prototypes during the settings stage, avoiding stale
+  mirrored settings and removing manual translation synchronization.
+- **Optional:** If absent, Razi Protocol defines ALL its settings itself.
 
 ## Install
 
-1. Download [00-razi-protocol-settings_1.0.0.zip](../dist/00-razi-protocol-settings_1.0.0.zip) from `companion/dist/` (use GitHub's **Download raw file** action).
-2. Copy the ZIP **without extracting it** into Factorio's `mods` directory, alongside Razi Protocol.
-3. Enable the companion in the mod manager, restart Factorio, then open **Settings → Mod settings → Startup**.
+Use the `00-razi-protocol-settings_1.1.0.zip` archive (build it with
+`python3 tools/build_settings_companion.py` from the repo root, or use a
+release archive containing version 1.1.0). Place the ZIP unextracted in
+Factorio's `mods` folder, enable it, and restart the game. Do not install
+or reuse the outdated 1.0.0 companion ZIP.
 
-**Important:** The companion is a separate mod ZIP. It is not auto-installed merely because Razi Protocol lists it as optional. Without it, settings still work but remain in Razi Protocol's normal alphabetical section.
+The main mod's optional dependency specifies version 1.1.0 or newer.
+This helper does not rename Razi Protocol or touch world/progression content.
+Uninstall it at any time to return startup settings to Razi Protocol's
+ordinary section; the setting IDs and user choices are unchanged.
 
-Razi Protocol still works **without** this companion: its original `settings.lua` registers the settings when the companion is absent. When both are present, Razi Protocol skips its copies and the companion registers *the same* settings IDs, types and defaults once. This avoids duplicate prototypes and keeps existing setting values identified by their original keys.
+## Maintenance
 
-The companion does not change Razi Protocol's internal mod name, planets, dependencies, technologies or gameplay. The group is displayed as **○  Razi Protocol** (circle followed by two spaces). The internal `00-` ID encourages early ordering where Factorio sorts by mod identity; the extra subtle space is intended to place it before the common `○ Aegis`, `○ Castra` names where the GUI sorts by displayed title. Factorio owns the final sort algorithm, so verify the result in-game. No setting IDs are changed.
-
-## Development
-
-The root `settings.lua` is the source of truth. Run `python3 tools/build_settings_companion.py` from repository root after changing the Protocol's settings or translations. Commit the regenerated companion and ZIP **together** with changes to root settings. Do not manually edit generated copies. Keep the companion's version and ZIP name in sync if making a separate released revision.
-
-**Caveat:** Factorio restricts runtime *programmatic writes* to settings owned by that mod. Existing Razi Protocol code should continue reading these settings by ID; if a future Razi feature programmatically changes them, that feature will require an ownership-aware design. GUI changes remain supported.
+The root `settings.lua` is the single source of truth. Never add a
+hard-coded setting mirror to this companion. Run the builder only when
+publishing a new helper archive. It packages four tiny files:
+`info.json`, `settings.lua`, and the two section-title locales.
+Razi's main locales provide all individual settings names/descriptions.
