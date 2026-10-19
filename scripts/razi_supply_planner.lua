@@ -34,6 +34,12 @@ function M.catalog(force)
     if world_discovered(force,row.site) then
       local live=force.recipes and force.recipes[row.quest.tech]
       row.recipe_enabled=live and live.enabled==true or false
+      -- When the force exposes a live LuaRecipe, its real ingredient
+      -- quantities take precedence over a potentially stale prototype.
+      -- Keep the source prototype only as read-only fallback guidance.
+      if live and live.valid~=false and live.ingredients then
+        row.recipe=live
+      end
       result[#result+1]=row
     end
   end
