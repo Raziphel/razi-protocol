@@ -104,5 +104,26 @@ check(none.checked==0 and next(none.worlds)==nil,
 network.enabled=false
 check(mod.snapshot(force,network).checked==0,
  "Disabled corridors must not scan any planets")
+-- A.7 on-demand snapshot must keep unknown/unresearched waypoints sealed
+-- and inspect a repeated unlocked source planet only once.
+force.is_space_location_unlocked=function(world)
+ return world=="muria" or world=="rubia"
+end
+local before=calls.muria
+local selected=mod.inspect_worlds(force,{
+ "muria","rubia","muria","aquilo","sealed"})
+check(selected.checked==2 and selected.worlds.muria~=nil
+ and selected.worlds.rubia~=nil and selected.worlds.aquilo==nil
+ and selected.worlds.sealed==nil,
+ "Only genuine researched planets appear in a selected itinerary scan")
+check(calls.muria==before+1,
+ "Duplicate selected waypoints must not scan the same source surface twice")
+local skipped=mod.inspect_worlds(force,{
+ "sealed1","sealed2","sealed3","sealed4",
+ "sealed5","sealed6","sealed7","muria"})
+check(skipped.checked==0 and skipped.worlds.muria==nil,
+ "Selected itinerary inspections may visit at most seven distinct positions")
+check(mod.inspect_worlds(nil,{"muria"}).checked==0,
+ "Invalid forces cannot inspect saved itineraries")
 -- No claimed transport telemetry, machine creation, or inventory mutation.
 print("A.2 source-world endpoint and 2.1 docked-platform checks passed")
