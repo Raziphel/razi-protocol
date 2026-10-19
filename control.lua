@@ -280,8 +280,21 @@ local function record_platform(event)
   local visited=deep_expedition.observe_connected(event.platform)
   if first or major or visited then razi_journal.refresh_open() end
 end
-events:on_event(defines.events.on_space_platform_built_entity,record_platform)
-events:on_event(defines.events.on_space_platform_built_tile,record_platform)
+-- Construction events can fire hundreds of times per platform. Record
+-- milestone/Ark state, but do not scan connected player characters on every
+-- placed tile. State changes, boarding events and the 300-tick fallback
+-- still capture legitimate Deep Space visits.
+local function record_platform_construction(event)
+  local platform=event and event.platform
+  if not platform then return end
+  local first=platform_projects.observe(platform)
+  local major=great_projects.observe(platform)
+  if first or major then razi_journal.refresh_open() end
+end
+events:on_event(defines.events.on_space_platform_built_entity,
+  record_platform_construction)
+events:on_event(defines.events.on_space_platform_built_tile,
+  record_platform_construction)
 events:on_event(defines.events.on_space_platform_changed_state,record_platform)
 -- Reconcile arrival events on the existing (infrequent) platform state poll
 -- only when a crossing has an outstanding departure record.
