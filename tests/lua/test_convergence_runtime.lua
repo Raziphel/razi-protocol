@@ -5,7 +5,19 @@ local m=require("scripts.razi_convergence")
 rawset(_G,"storage",{})
 rawset(_G,"prototypes",{item={
  ["ds-energy-loader-mk1"]={place_result={name="test-dyson-receiver"}}
-},entity={["test-dyson-receiver"]={}}})
+},entity={["test-dyson-receiver"]={}},
+space_location={
+ ["solar-system-edge"]={localised_name="Solar System Edge"},
+ ["nexus"]={localised_name="Nexus"},
+ ["shattered-planet"]={localised_name="Shattered Planet"},
+ ["oort-cloud"]={localised_name="Oort Cloud"},
+ ["sol"]={localised_name="Sol"}
+},space_connection={
+ edge_nexus={from="solar-system-edge",to="nexus"},
+ edge_shattered={from="solar-system-edge",to="shattered-planet"},
+ nexus_oort={from="nexus",to="oort-cloud"},
+ oort_sol={from="oort-cloud",to="sol"}
+}})
 local done=0
 rawset(_G,"defines",{controllers={remote=9}})
 rawset(_G,"game",{
@@ -46,8 +58,8 @@ local function fixture(index)
   return removed
  end
  local character={valid=true,surface={
-  platform={valid=true,force=force,
-   space_location={name="solar-system-edge"}},
+  platform={valid=true,force=force,hub={valid=true},
+   completed_trips=2,space_location={name="solar-system-edge"}},
   find_entities_filtered=function(filter)
    if filter.name=="razi-convergence-array-core" and force.core_powered then
     return {{valid=true,energy=100000000}}
@@ -55,6 +67,7 @@ local function fixture(index)
    return {}
   end}}
  local player={force=force,character=character,name="Engineer",
+  valid=true,controller_type=1,
   get_main_inventory=function() return inventory end}
  return force,player,inventory
 end
@@ -146,6 +159,21 @@ for _,world in ipairs(worlds) do
 end
 check(select(1,m.witness_status(force))==7,
  "Seven independent real planet systems must supply live anchors")
+message,used=m.deliver(player,"ignition")
+check(message=="convergence-need-deep-expedition" and used==0,
+ "The final Mandate cannot be submitted without in-person travel to every reachable deep-space stop")
+local expedition=require("scripts.razi_deep_space_expedition")
+local _,required,stops,chart_ready=expedition.status(force)
+check(chart_ready and required==5,
+ "Connected mandatory destinations include distant Oort and Sol routes")
+for _,stop in ipairs(stops) do
+ player.character.surface.platform.space_location.name=stop.id
+ check(expedition.observe(player),
+   "A real crew member physically arriving must register each required stop")
+end
+player.character.surface.platform.space_location.name="solar-system-edge"
+check(select(1,expedition.status(force))==5,
+ "All five physical expedition arrivals must persist")
 message,used=m.deliver(player,"ignition")
 check(message=="convergence-need-receiver" and used==0
  and inventory.items[m.stages[5].item]==1,
