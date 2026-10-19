@@ -803,7 +803,10 @@ local function render_details(parent,player,quest,p,context,size,view)
   research_bar.style.height=4
   research_bar.style.color=COLOR.teal
   -- Next Action and Success Condition are already visible above these rows.
-  local shown=objectives.visible_rows(plan,p.goal_expanded,
+  -- An expanded checklist belongs to one dossier, not every quest the
+  -- player visits afterward.
+  local goal_expanded=p.goal_expanded and p.goal_expanded_quest==quest.id
+  local shown=objectives.visible_rows(plan,goal_expanded,
     size.compact and 1 or 2)
   local checklist=mission.add{type="flow",direction="vertical"}
   checklist.style.vertical_spacing=4
@@ -830,9 +833,9 @@ local function render_details(parent,player,quest,p,context,size,view)
       note.style.font_color=row.done and COLOR.muted or COLOR.ink
     end
   end
-  if p.goal_expanded or #plan.rows>1 then
+  if goal_expanded or #plan.rows>1 then
     local toggle=mission.add{type="label",style="clickable_label",
-      caption=L(p.goal_expanded and "mission-collapse" or "mission-expand",
+      caption=L(goal_expanded and "mission-collapse" or "mission-expand",
         tostring(#plan.rows)),
       tags={razi_journal_action="mission-details",id=quest.id}}
     toggle.style.font_color=theme.soft
@@ -1638,6 +1641,7 @@ local function draw(player,focus_search)
   title.style.font_color=COLOR.ink
   local kicker=tint(label(heading,L("header-eyebrow")),COLOR.muted)
   kicker.style.font="default"
+  kicker.visible=not size.compact
   local drag=head.add{type="empty-widget",style="draggable_space_header"}
   drag.style.horizontally_stretchable=true
   drag.style.height=19
@@ -1712,7 +1716,8 @@ local function draw(player,focus_search)
   overall.style.color=window_theme.primary
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
-  toolbar.style.horizontal_spacing=size.compact and 15 or 24
+  toolbar.style.horizontal_spacing=size.single_column and 8
+    or size.compact and 15 or 24
   toolbar.style.vertical_align="bottom"
   -- The three folios use typographic navigation and a slender active rule.
   for _,view in ipairs({"quests","projects","archive","systems"}) do
@@ -1720,7 +1725,7 @@ local function draw(player,focus_search)
     local folio=toolbar.add{type="flow",direction="vertical"}
     folio.style.vertical_spacing=3
     local line=folio.add{type="flow",direction="horizontal"}
-    line.style.horizontal_spacing=5
+    line.style.horizontal_spacing=size.single_column and 3 or 5
     line.style.vertical_align="center"
     local theme_id=view=="quests" and (p.chapter or "calidus")
       or view=="projects" and "stellar"
@@ -1732,7 +1737,7 @@ local function draw(player,focus_search)
     button.style.font_color=active and COLOR.ink or COLOR.muted
     if active then accent_rule(folio,window_theme,76,2) end
   end
-  if p.view=="quests" then
+  if p.view=="quests" and not size.single_column then
     local spacer=toolbar.add{type="empty-widget"}
     spacer.style.horizontally_stretchable=true
     toolbar.add{type="button",caption=L("next-milestone"),
@@ -2410,7 +2415,9 @@ function M.gui_click(event)
     p.reveal_selection=false
   elseif action=="mission-details" and p.view=="quests"
     and p.selected==tags.id then
-    p.goal_expanded=not p.goal_expanded
+    p.goal_expanded=p.goal_expanded_quest~=tags.id
+      or not p.goal_expanded
+    p.goal_expanded_quest=tags.id
   elseif action=="compact-index" and p.view=="quests"
     and M.layout(player.display_resolution,player.display_scale).single_column then
     p.reader_focus=false
