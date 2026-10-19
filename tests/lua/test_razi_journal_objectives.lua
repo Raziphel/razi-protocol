@@ -13,15 +13,16 @@ local callbacks={
   available=function(id)return id~="gone" end,
   visible=function(id)return id~="secret" end,
   complete=function(id)return state[id] end,
+  tech_for_quest=function(id)return id=="first" and "stone" or nil end,
   quest_for_tech=function(id)return id=="steel" and "steel" or nil end,
   current_research={name="space-platform"},research_progress=.38
 }
 local quest={id="platform",tech="space-platform",
   requires={"first","second","gone","secret"}}
 local snapshot=plans.snapshot(quest,native,"active",callbacks)
-check(snapshot.requirements==4 and snapshot.satisfied==2,
-  "Only installed and visible campaign and technology prerequisites count")
-check(#snapshot.rows==5 and snapshot.rows[#snapshot.rows].kind=="goal",
+check(snapshot.requirements==3 and snapshot.satisfied==1,
+  "Installed campaign goals replace duplicate native research requirements")
+check(#snapshot.rows==4 and snapshot.rows[#snapshot.rows].kind=="goal",
   "Final completion criterion must appear after all source requirements")
 check(snapshot.rows[1].done and not snapshot.rows[2].done,
   "Real campaign prerequisite status should be carried through")
@@ -32,7 +33,7 @@ check(snapshot.research_percent==38,
 local short=plans.visible_rows(snapshot,false,2)
 check(#short==2 and not short[1].done and not short[2].done,
   "Collapsed checklists show unmet blockers rather than arbitrary achievements")
-check(#plans.visible_rows(snapshot,true)==5,
+check(#plans.visible_rows(snapshot,true)==4,
   "Expanded checklist must not silently truncate required milestones")
 local done=plans.snapshot(quest,
   {name="space-platform",researched=true,enabled=true,
