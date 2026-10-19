@@ -644,3 +644,87 @@ Regional catapult options; and **scroll position while clicking
 Freight add/remove/pack controls**. Static/mock tests do not
 replace Factorio GUI, live modpack or multiplayer verification.
 
+## A.5: Source-backed supply-chain planning
+
+The Expedition Journal's Galactic Logistics Command now has a fifth,
+responsive **Supply Chains** section. This is a real bill-of-materials
+planner for installed optional industrial recipes, not an invented producer
+database or automatic delivery system.
+
+### Source and quantity rules
+
+- The planner uses `razi_industry_portfolio.snapshot(force)` and the
+  installed `LuaRecipePrototype.ingredients/products` arrays. Only a
+  factory site's *actually discovered* planet and installed/visible
+  source technology and recipe are shown. This does not reveal a hidden
+  destination just because spoilers are disabled.
+- Choose a real recipe, enter **1–1000 crafts**, and recalculate exact
+  recipe ingredient quantities. Multiple identical ingredient entries
+  are merged. Deterministic, nonprobabilistic recipe outputs are also
+  shown, without claiming factory throughput or productivity bonuses.
+  The quantity is **per recipe craft**, not per machine or minute.
+- Only physical, named item prototypes with whole, bounded quantities
+  (1 to 1,000,000 items per order) can become manual freight orders.
+  Fluids, quality-constrained inputs, probabilistic/ranged/ambiguous
+  amounts and missing prototypes remain **read-only**. No conversion of
+  fluids into made-up barrels occurs.
+- A proposed **inbound Orbital Catapult corridor** appears only if it is
+  currently configured, exists in the source manifest and *both*
+  endpoints have their actual planet-discovery technology researched.
+  A world without a direct corridor still has useful ingredient guidance.
+- The selected **origin is a PLAYER CHOICE**, never a claim that the
+  ingredient is manufactured there. The planner does not invent an
+  upstream producing recipe/location, machine count, available stock,
+  working catapult, transit time or delivery status.
+
+### Freight Desk handoff
+
+The player may stage one qualifying item or choose **Stage all eligible
+item ingredients**. Staging adds exactly the computed amounts to the
+existing per-player Freight Desk as ordinary, *unpacked* orders.
+The existing route guard, item prototype guard and 20-order limit apply
+to all entries. Bulk staging checks every specification and total queue
+capacity **before writing anything**: either all eligible items are
+queued or none. No partial batch, stock reservation, deletion, inventory
+change or transfer occurs. The prior hand-edited Freight Desk draft is
+preserved.
+
+The UI saves only the chosen recipe, inbound route and validated craft
+count in the existing per-player Journal preferences. It uses native
+recipe drop-down selection and text-change events, and does not redraw
+the Journal as a side effect of typing each character. Recalculate and
+action buttons rebuild through the existing tab-scoped scroll
+restoration. Selecting an invalid quantity invalidates the stored
+count rather than reusing a previous valid amount.
+
+Research remains the required condition for *creating* orders; a
+discovered but not yet researched optional recipe can be previewed
+without generating orders. The new system never unlocks source
+technology, changes recipes or surfaces, grants items or marks
+Convergence/Project freight contracts fulfilled.
+
+### Validation and remaining scope
+
+Manual tests (the Check workflow remains opt-in):
+
+```sh
+lua5.2 tests/lua/test_razi_supply_planner.lua
+lua5.2 tests/lua/test_razi_freight_orders.lua
+python3 -m unittest tests/test_razi_supply_planner_contract.py -v
+```
+
+Check an actual Factorio 2.1 campaign with several installed industrial
+mods. Verify recipe dropdown names, per-craft totals, empty/missing
+producer cases, settings with either catapult group off, fully-discovered
+destination vs spoiler-hidden source, recipe tech not yet researched,
+very large quantities, variable outputs, fluids, optional quality
+requirements, save/reload preferences and narrow-screen tab scrolling.
+Confirm one-click batch staging is atomic at the 20-order limit, that
+hand-edited drafts stay intact, and that Freight Desk contains new plans
+but no actual items.
+
+**Not included:** automated supplier discovery, multihop platform
+shipping, route cost optimization, verified item production, live machine
+inventories, and shipment-by-shipment Catapult confirmation. These
+require additional verified source interfaces and would belong to a
+later, separately tested stage.
