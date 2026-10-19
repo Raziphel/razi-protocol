@@ -808,6 +808,7 @@ function M.render(parent,player,p,size)
     stack.style.width=size.width-37
     stack.style.vertical_spacing=8
     local title=stack.add{type="label",caption=L("projects-heading")}
+    title.visible=not p.reader_focus
     title.style.font="default-bold"
     title.style.font_color=HUES.gold
     local columns=size.width<620 and 1 or 2
@@ -818,6 +819,7 @@ function M.render(parent,player,p,size)
       horizontal_scroll_policy="never",vertical_scroll_policy="auto"}
     selector.style.width=size.width-43
     selector.style.height=selector_height
+    selector.visible=not p.reader_focus
     local grid=selector.add{type="table",column_count=columns}
     grid.style.horizontal_spacing=9
     grid.style.vertical_spacing=9
@@ -827,10 +829,11 @@ function M.render(parent,player,p,size)
         string.format("%02d",index),statuses)
     end
     project_reader(stack,player,p,size,size.width-43,true,statuses,displayed,
-      math.max(170,size.body-selector_height-42))
+      math.max(170,size.body-(p.reader_focus and 35 or selector_height+42)))
   else
-    local rail=parent.add{type="frame",direction="vertical",
-      style="razi_journal_index"}
+    local rail=parent.add{type="frame",name="razi_journal_project_index",
+      direction="vertical",style="razi_journal_index"}
+    rail.visible=not p.reader_focus
     rail.style.width=size.rail
     rail.style.height=size.body
     rail.style.padding=10
