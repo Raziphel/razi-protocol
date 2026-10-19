@@ -25,6 +25,52 @@ These optimizations have been reviewed at the source level only.
 Cold/warm startup and runtime FPS/UPS measurements require the actual
 Factorio installation, full modpack and representative save.
 
+## Phase 3: Measurable startup and safe runtime cleanup (October 2026)
+
+Platform construction used to invoke the Great Projects Ark qualification
+(three `count_entities_filtered` calls) repeatedly for the very same
+space-connection departure. The departure snapshot is now reused until
+the route changes or the platform arrives. Construction events also stop
+rechecking connected players for crewed Deep Space visits. State changes,
+physical boarding events and the existing five-second reconciliation still
+record genuine arrivals. These optimizations add no new storage fields and
+do not change milestone IDs or platform navigation.
+
+The 2.1.22 temporary FluidBox/tile shims remain active **only when
+applicable** and must not be deleted without testing the entire installed
+planet ecosystem. The read-only compatibility audit now additionally detects
+obsolete temperature fields in fluid-burning energy sources. The Panglia
+registry entry uses a supported review status and retains a note that engine
+verification is outstanding.
+
+### Compare two real Factorio startup logs
+
+Capture logs from **identical Factorio versions, mod versions, startup
+settings, and prototype/sprite-cache state**. The new offline parser extracts
+only explicit timestamped startup milestones. It does not run any mod code or
+change game saves:
+
+```bash
+python3 tools/factorio_startup_report.py \
+  --before factorio-before.log --after factorio-after.log
+python3 tools/factorio_startup_report.py \
+  --before factorio-before.log --after factorio-after.log --json
+python3 -m unittest tests.test_factorio_startup_report \
+  tests.test_great_projects tests.test_phase3_compatibility
+```
+
+Missing or reordered log milestones appear as unavailable. Negative
+differences mean a shorter *observed* interval, not proven causality. Run
+several cold and warm tests on the same save before drawing conclusions.
+
+### Legacy Galactic Operations
+
+The old standalone Operations GUI source remains in the repository for
+historical reference and existing fixture contracts, but `control.lua` does
+**not require** it. Its historical shortcut identifier is retained so existing
+player keybinds continue to work with the Expedition Journal. Deleting this
+unloaded source would not improve runtime UPS; avoid claiming otherwise.
+
 # Faster startup for Razi Protocol and large Factorio 2.1 modpacks
 
 This is a **client-side performance guide** for players, not a new gameplay
