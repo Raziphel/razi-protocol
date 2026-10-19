@@ -630,36 +630,52 @@ ingredients needed to reach the edge. The source transceiver's
 activation remains unchanged; its independent victory condition is
 suppressed through K2SO's supported remote interface when available.
 
-**The Convergence** is now the playable post-transceiver ending. After
-reaching the Solar System Edge and undertaking the native late-game
-expeditions, research the Convergence Commission. Three physical
-factory-built manifests then turn prior research and materials into
-something the galaxy can ship together:
+**The Convergence** is the playable post-transceiver finale, expanded for
+Razi Protocol 3.0 into the **Seven-Sun Witness Accord**. It is not a
+technology checkbox or a small factory delivery:
 
-- **Stellar Mandate:** 8 Calidus/Solaris/Nyxaris research payloads and
-  orbital electronics. Native Dyson Sphere research is a prerequisite
-  when installed and compatible.
-- **Industrial Mandate:** 10 Vibrant/Vespera payloads with rare metals,
-  Gleba bioflux and suitable existing supplier-world components.
-- **Deep-Space Mandate:** 6 Beetlejuice/Umbra/Deep Space payloads,
-  incorporating genuine native post-edge science materials where present.
+1. Reach the Solar System Edge with the original K2SO transceiver, then
+   research the Convergence Commission.
+2. Manufacture and physically submit **24 Stellar, 30 Industrial,
+   18 Deep-Space and 12 Pulsar Resonance Mandates** on a force-owned
+   expedition platform at a supported deep-space location. Deep-Space
+   Synchronization research gates the outer assignments. Partial real
+   deliveries persist by force, including across force merges.
+3. Research the additional **Independent Witness Accord** after
+   Synchronization. Build **seven 10 MW powered Witness Anchors**, with
+   one on a real planet in *each founding star system*: Calidus,
+   Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra. Two
+   receivers in the same system never substitute for another system.
+4. Complete Ignition research, manufacture **eight Calidus Frames,
+   eight Outer-System Matrices and four Deep-Space Lenses** plus large
+   amounts of existing factory materials to forge the new
+   **50 MW Seven-Sun Array Core**. Install and energize that real
+   entity on the deep-space delivery platform.
+5. Maintain the source Dyson receiver infrastructure, manufacture the
+   final composite **Ignition Mandate**, stand physically aboard the
+   platform beside its powered Array Core and submit the freight.
+   The genuine engine ending follows a saved **two-minute signal** with
+   four staged broadcasts. Continue remains enabled afterward.
 
-Manufacture the manifests in original assembling machines. Carry them
-physically onto a platform owned by your force, parked at the Solar
-System Edge or a supported deeper destination. Open **The Convergence**
-from Galactic Operations or from its linked Codex objective; submit
-real items from your character inventory. Team contributions persist
-by force, including partial shipments and force merges. The final
-submission requires Deep-Space Synchronization research and displays
-Factorio's genuine victory screen, with Continue enabled. Razi also
-suppresses the source K2SO transceiver and vanilla Space Age
-Solar System Edge victory triggers where their supported
-`set_no_victory` interfaces are available.
+**The BLACKOUT-SEVEN reveal:** The catastrophe was real, but the
+continued isolation was deliberately ordered by RAZI executives to
+preserve corporate asset control. The buried Convergence protocol was
+also a succession trap: without seven independent witnesses, rebuilding
+the original network could reactivate corporate reclamation. The
+player uncovers the order after the Deep-Space Mandate and the trap
+after Pulsar Resonance. The seven powered witnesses and the
+physically delivered Accord let the colonies reject the old authority
+without appointing the player as its replacement. Original late-game
+shipments and already-earned victories are preserved; the previous
+8/10/6/4 partial deliveries become credited toward the harder totals.
 
-This ending **does not** add a new planet, laboratory, artificial cargo
-teleportation, replacement transceiver, or boss. It works with optional
-source content when that content exists, but never pretends to have
-shipped cargo merely because research was completed.
+The project does **not** add a planet, a laboratory, a teleport, a
+replacement transceiver or a mandatory boss. Convergence construction
+uses a new RAZI-owned radar-derived entity for each Witness Anchor and
+the expedition Array Core, plus the original source-produced Mandates
+and components. Its live powered stations and final deliveries are
+verified against the actual world; there is no synthetic energy
+production or fake delivered cargo.
 
 **Laboratory tiers** reuse the installed native machines instead of
 adding custom Razi labs. Existing 2.1.54 custom lab items and entities

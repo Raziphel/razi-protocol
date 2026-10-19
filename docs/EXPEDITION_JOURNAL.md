@@ -21,7 +21,7 @@ The historical implementation notes below are preserved for context, but may des
 
 ---
 
-> **Current UI (October 2026):** The Expedition Journal has Quests, Projects and Archive. Open it with Ctrl+Shift+J. Projects follows five real undertakings: First Space Platform, First Voyage, Dyson Sphere, Transceiver and Convergence. Research portfolios and the recovery charter remain in their related Journal dossiers.
+> **Current UI (October 2026):** The Expedition Journal has Quests, Projects and Archive. Open it with Ctrl+Shift+J. Projects follows nine real undertakings: First Space Platform, First Voyage, Skybridge, Beltbreaker, Dyson Sphere, Archive Array, Transceiver, Project Ark and the Convergence. Research portfolios and the recovery charter remain in their related Journal dossiers.
 
 ## October 2026: Nauvis is now a four-act expedition
 
@@ -106,6 +106,8 @@ these as three new Codex delivery objectives.
 
 The existing force-owned deep-space submission, twelve-second
 transmission and final victory are unchanged.
+
+> **Razi 3.0 Convergence update:** The older 2.1.56-2.1.60 notes below describe the historical twelve-second finale. The current branch requires seven powered witness stations and a powered Array Core, triples the first four Mandate totals, and transmits for two minutes. See the updated Convergence expansion section at the bottom.
 
 ## 2.1.60: Cleaner handoffs to Convergence
 
