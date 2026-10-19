@@ -720,7 +720,8 @@ local function render_details(parent,player,quest,p,context,size,view)
       local required=defs.by_id[id]
       -- World objectives may use an alternate source technology in the
       -- installed modpack. Do not guess that technology from a world ID.
-      return required and not required.world and required.tech or nil
+      return required and not (required.world or required.boss or
+        required.convergence) and required.tech or nil
     end,
     quest_for_tech=function(name)
       for _,candidate in ipairs(quests_for_technology[name] or {}) do
