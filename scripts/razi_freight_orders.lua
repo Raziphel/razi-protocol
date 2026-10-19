@@ -77,21 +77,27 @@ function M.count_changed(player,value)
   store(player.index).draft.count=count
   return count~=nil
 end
-function M.add(player)
+-- Programmatic planning ONLY appends a manual plan. It never changes the
+-- user's Freight Desk draft or inserts/removes/reserves any inventory.
+function M.add_spec(player,route_id,item_name,quantity)
+  if not (player and player.index and player.force) then return false end
+  local route=M.route(player.force,route_id)
+  local proto=item(item_name)
+  local count=positive_count(quantity)
   local s=store(player.index)
-  local d=s.draft
-  local route=M.route(player.force,d.route)
-  local proto=item(d.item)
-  local count=positive_count(d.count)
   if not (route and proto and count and #s.orders<LIMIT) then
     return false
   end
   s.orders[#s.orders+1]={
-    id=s.next_id,route=route.id,item=d.item,count=count,
+    id=s.next_id,route=route.id,item=item_name,count=count,
     packed=false
   }
   s.next_id=s.next_id+1
   return true
+end
+function M.add(player)
+  local d=store(player.index).draft
+  return M.add_spec(player,d.route,d.item,d.count)
 end
 function M.update(player,id,action)
   local s=store(player.index)
