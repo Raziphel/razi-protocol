@@ -75,6 +75,7 @@ local function pref(index)
   value.archive_filter=({all=true,legacy=true,corporate=true,
     field=true})[value.archive_filter] and value.archive_filter or "all"
   value.chapter_cover=value.chapter_cover==true
+  value.reader_focus=value.reader_focus==true
   -- Default to one Journal toolbar. Players can reveal the source buttons
   -- temporarily when they need Planet Express or Nexus native controls.
   value.native_controls_visible=value.native_controls_visible==true
@@ -316,7 +317,7 @@ function M.layout(resolution,scale)
     math.max(228,math.floor(width*(compact and .30 or .255))))
   local reader=width-rail-43
   return {width=width,height=height,rail=rail,reader=reader,
-    body=math.max(200,height-(compact and 205 or 232)),
+    body=math.max(200,height-(compact and 183 or 204)),
     compact=compact}
 end
 local function label(parent,caption)
@@ -600,7 +601,7 @@ end
 M.render_tracker=render_tracker
 local function render_details(parent,player,quest,p,context,size,view)
   local panel=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_paper"}
   panel.style.width=size.reader
   panel.style.height=size.body
   panel.style.padding=11
@@ -656,7 +657,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   prose.style.width=text_width
   prose.style.vertical_spacing=9
   local objective=prose.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_callout"}
   objective.style.width=text_width
   objective.style.padding=10
   subtitle(objective,"objective-heading",text_width-26,theme)
@@ -889,7 +890,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   local width=size.reader
   local inner=width-38
   local panel=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="razi_journal_paper"}
   panel.style.width=width
   panel.style.height=size.body
   panel.style.padding=12
@@ -1010,7 +1011,7 @@ end
 -- buttons. One chapter jump selector covers distant chapters with no bars.
 local function render_chapters(parent,player,p,context,size,view,plan)
   local frame=parent.add{type="frame",name="razi_journal_navigation_panel",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_index"}
   frame.style.width=size.rail
   frame.style.height=size.body
   frame.style.padding=10
@@ -1125,6 +1126,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       counts.style.vertical_align="center"
       counts.style.horizontal_spacing=5
       counts.style.left_padding=45
+      counts.visible=open
       local count=counts.add{type="label",name="razi_journal_chapter_count",
         caption=L("chapter-progress-short",tostring(completed),tostring(total))}
       count.style.font_color=COLOR.quiet
@@ -1219,7 +1221,7 @@ function M.unlocked_records(force,context)
 end
 local function render_archive(parent,player,p,context,size)
   local rail=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_index"}
   rail.style.width=size.rail
   rail.style.height=size.body
   rail.style.padding=10
@@ -1345,7 +1347,7 @@ local function render_archive(parent,player,p,context,size)
   if focus then pcall(function() left.scroll_to_element(focus) end) end
 
   local paper=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_paper"}
   paper.style.width=size.reader
   paper.style.height=size.body
   paper.style.padding=12
@@ -1480,6 +1482,11 @@ local function draw(player,focus_search)
     end
   end
   local size=M.layout(player.display_resolution,player.display_scale)
+  -- Focus widens only the quest reader. Hidden chapter widgets stay alive,
+  -- so opening the index again does not lose its scroll position.
+  if p.view=="quests" and p.reader_focus then
+    size.reader=size.width-43
+  end
   local reveal_on_redraw=p.reveal_selection==true
   local chapter_theme=p.view=="systems" and "network"
     or (p.view=="projects" and "stellar" or p.chapter or "calidus")
@@ -1505,6 +1512,12 @@ local function draw(player,focus_search)
   drag.style.horizontally_stretchable=true
   drag.style.height=19
   drag.drag_target=frame
+  local focus=head.add{type="button",
+    caption=L(p.reader_focus and "focus-show-index" or "focus-read"),
+    tooltip=L("focus-tooltip"),
+    tags={razi_journal_action="focus"}}
+  focus.visible=p.view=="quests"
+  focus.style.minimal_width=size.compact and 55 or 94
   local refresh=head.add{type="button",style="tool_button",
     caption="↻",tooltip=L("refresh"),
     tags={razi_journal_action="refresh"}}
@@ -1568,8 +1581,15 @@ local function draw(player,focus_search)
   for _,view in ipairs({"quests","projects","archive","systems"}) do
     local active=p.view==view
     local folio=toolbar.add{type="flow",direction="vertical"}
-    folio.style.vertical_spacing=4
-    local button=folio.add{type="label",style="clickable_label",
+    folio.style.vertical_spacing=3
+    local line=folio.add{type="flow",direction="horizontal"}
+    line.style.horizontal_spacing=5
+    line.style.vertical_align="center"
+    local theme_id=view=="quests" and (p.chapter or "calidus")
+      or view=="projects" and "stellar"
+      or view=="archive" and "echoes" or "network"
+    icons.sprite(line,themes.icon(theme_id),"tab_icon")
+    local button=line.add{type="label",style="clickable_label",
       caption=L("view-"..view),tags={razi_journal_action="view",id=view}}
     button.style.font=active and "default-bold" or "default"
     button.style.font_color=active and COLOR.ink or COLOR.muted
@@ -1651,6 +1671,8 @@ local function draw(player,focus_search)
   else
     local selected=select_quest(player.force,p,context,plan)
     local search=render_chapters(body,player,p,context,size,view,plan)
+    local navigation=body["razi_journal_navigation_panel"]
+    if navigation then navigation.visible=not p.reader_focus end
     local reader=body.add{type="flow",name="razi_journal_reader_host",direction="vertical"}
     reader.style.width=size.reader
     -- Normal chapter expand/collapse and dossier clicks retain the user's
@@ -1694,6 +1716,7 @@ local function update_reader(player,preserve_reader)
   local p=pref(player.index)
   local context=M.context(player.force)
   local size=M.layout(player.display_resolution,player.display_scale)
+  if p.reader_focus then size.reader=size.width-43 end
   local view=M.view_status(player.force,context)
   -- A newly discovered/visible quest needs its first native GUI row built.
   -- That is the exceptional case where a full redraw is actually required.
@@ -1760,6 +1783,7 @@ local function update_reader(player,preserve_reader)
         count.caption=L("chapter-progress-short",
           tostring(data.completed),tostring(data.total))
       end
+      if count_holder then count_holder.visible=expanded end
       if heading then
         heading.style.font=expanded and "default-bold" or "default"
         heading.style.font_color=expanded and COLOR.ink or COLOR.muted
@@ -2173,6 +2197,8 @@ function M.gui_click(event)
     p.view="quests"
     p.chapter_cover=false
     p.reveal_selection=false
+  elseif action=="focus" and p.view=="quests" then
+    p.reader_focus=not p.reader_focus
   elseif action=="chapter-dossier" then
     local known=false
     for _,ch in ipairs(defs.chapters) do
