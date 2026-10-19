@@ -18,7 +18,9 @@ package.loaded["scripts.razi_catapult_network"]={
 }
 prototypes={entity={["orbital-cannon-launcher"]={type="assembling-machine"}}}
 local surface={}
+local ark_qualification_queries=0
 function surface.count_entities_filtered(q)
+  ark_qualification_queries=ark_qualification_queries+1
   if q.name=="thruster" then return 3 end
   if q.type=="ammo-turret" then return 4 end
   if q.type=="assembling-machine" then return 2 end
@@ -34,6 +36,13 @@ local start={valid=true,hub={valid=true},index=101,force=force,name="Beltwright"
     to={name="asteroid-belt-outer-edge"}}}
 force.platforms[1]=start
 check(not m.observe(start),"Departure must not imply successful crossing")
+local captured=ark_qualification_queries
+check(captured==3,"New departure must sample the three Ark entity groups")
+for i=1,20 do
+  check(not m.observe(start),"Same crossing must remain pending")
+end
+check(ark_qualification_queries==captured,
+  "Repeated construction events must not rescan Ark entity groups")
 start.space_connection=nil
 start.space_location={name="asteroid-belt-outer-edge"}
 start.completed_trips=6
