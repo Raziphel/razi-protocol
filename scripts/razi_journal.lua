@@ -1873,7 +1873,10 @@ end
 function M.refresh_open()
   for _,player in pairs(game.connected_players or {}) do
     local frame=player.gui and player.gui.screen and player.gui.screen[FRAME]
-    if frame and frame.valid then draw(player) end
+    if frame and frame.valid then
+      if pref(player.index).view=="quests" then update_reader(player)
+      else draw(player) end
+    end
     local p=storage.razi_expedition_journal
       and storage.razi_expedition_journal[player.index]
     if p and p.tracker then render_tracker(player) end
@@ -1890,7 +1893,10 @@ local function refresh_force(force)
   for _,player in pairs(game.connected_players or {}) do
     if player.force==force then
       local frame=player.gui.screen[FRAME]
-      if frame and frame.valid then draw(player) end
+      if frame and frame.valid then
+        if pref(player.index).view=="quests" then update_reader(player)
+        else draw(player) end
+      end
       local existing=storage.razi_expedition_journal
         and storage.razi_expedition_journal[player.index]
       if existing and existing.tracker then render_tracker(player) end
@@ -1997,7 +2003,10 @@ function M.refresh_nexus_visible()
         end
         -- Preserve both scroll panes and search focus on ordinary polls.
         -- Only a real boss-victory change warrants a full redraw.
-        if p.nexus_revision~=revision then draw(player) end
+        if p.nexus_revision~=revision then
+          if p.view=="quests" then update_reader(player)
+          else draw(player) end
+        end
       end
       if p.tracker and p.pinned and defs.by_id[p.pinned]
         and defs.by_id[p.pinned].boss then
@@ -2088,8 +2097,6 @@ function M.gui_click(event)
   end
   local p=pref(player.index)
   local old_view=p.view
-  local old_query=p.query
-  local old_filter=p.filter
   if (action=="select" or action=="guidance-select") and
     defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
@@ -2289,12 +2296,12 @@ function M.gui_click(event)
     systems.refresh(player)
   elseif action~="refresh" then return end
   -- Keep the navigation GUI (and its native scrollbar) on ordinary clicks.
-  if old_view=="quests" and p.view=="quests"
-    and old_query==p.query and old_filter==p.filter then
+  if old_view=="quests" and p.view=="quests" then
     if action=="select" or action=="guidance-select" or action=="chapter"
       or action=="next" or action=="chapter-dossier" or action=="chapter-continue"
-      or action=="next-in-chapter" or action=="previous-in-chapter" then
-      update_reader(player,action=="chapter")
+      or action=="next-in-chapter" or action=="previous-in-chapter"
+      or action=="filter" or action=="filter-ready" or action=="clear-search" then
+      update_reader(player,action=="chapter" or action=="filter")
       return
     elseif action=="pin" then
       local frame=player.gui.screen[FRAME]
@@ -2351,7 +2358,7 @@ function M.text_changed(event)
       end
     end
   end
-  draw(player,true)
+  update_reader(player)
 end
 function M.elem_changed(event)
   local element=event and event.element
