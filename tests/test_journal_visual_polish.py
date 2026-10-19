@@ -15,16 +15,18 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('local folio=toolbar.add{type="flow",direction="vertical"}',
                       journal)
         self.assertIn('accent_rule(folio,window_theme,76,2)',journal)
-        self.assertIn('local totals=frame.add{type="flow",direction="vertical"}',
+        self.assertIn('local totals=frame.add{type="flow",name="razi_journal_overview",direction="vertical"}',
                       journal)
         self.assertNotIn('local totals=frame.add{type="frame"',journal)
         self.assertIn('body.style.width=size.width-33',journal)
         self.assertIn('hero_title.style.font_color=COLOR.ink',journal)
+        self.assertIn('local masthead=panel.add{type="flow",direction="horizontal"}',journal)
+        self.assertIn('filterbar.visible=p.view~="quests"',journal)
 
     def test_chapters_use_an_index_instead_of_repeating_cards(self):
         journal=read("scripts/razi_journal.lua")
         self.assertIn('name="razi_journal_chapter_"..index',journal)
-        self.assertIn('card.style.padding=4',journal)
+        self.assertIn('card.style.padding=2',journal)
         self.assertIn('name="razi_journal_chapter_entries"',journal)
         self.assertIn('name="razi_journal_chapter_count"',journal)
         self.assertIn('name="razi_journal_filter_"..filter',journal)
@@ -100,7 +102,7 @@ class VisualPolishTests(unittest.TestCase):
         for phase in ("machines","growth","chemistry","departure"):
             self.assertIn('phase="'+phase+'"',core)
             self.assertIn(phase+"=",locale)
-        self.assertIn('nauvis_phase(card,quest.phase,theme,inner-34)',ui)
+        self.assertIn('nauvis_phase(entries,quest.phase,theme,inner-34)',ui)
         self.assertIn('nauvis_phase(body,quest.phase,theme,text_width)',ui)
         self.assertNotIn("data:extend(",core)
 
@@ -115,7 +117,7 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('project_icon=32',icons)
         self.assertIn('local meter=card.add{type="progressbar"',projects)
         self.assertIn('statuses[id]={status_for(player.force,id,ships)}',projects)
-        self.assertIn('style=selected and "inside_shallow_frame" or nil',projects)
+        self.assertIn('local card=parent.add{type="flow",direction="vertical"}',projects)
         self.assertIn('local current=statuses[p.project]',projects)
         self.assertIn('convergence.progress(force)',projects)
         self.assertIn('platform_projects.snapshot(force)',projects)
