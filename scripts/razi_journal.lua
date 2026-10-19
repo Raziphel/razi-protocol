@@ -9,6 +9,7 @@ local catapults=require("scripts.razi_catapult_network")
 local freight_orders=require("scripts.razi_freight_orders")
 local supply=require("scripts.razi_supply_planner")
 local multihop=require("scripts.razi_supply_multihop")
+local shipment_operations=require("scripts.razi_shipment_operations")
 local supply_routes=require("scripts.razi_supply_routes")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
@@ -2429,6 +2430,15 @@ function M.gui_click(event)
       and native=="supply-itinerary-remove" then
       if not multihop.remove(player,tags.value) then return end
       if p.supply_expanded==tags.value then p.supply_expanded=nil end
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and (native=="supply-operation-depart"
+        or native=="supply-operation-arrive"
+        or native=="supply-operation-undo") then
+      local operation=native:match("^supply%-operation%-(%a+)$")
+      if not shipment_operations.change(player,tags.value,operation) then
+        player.print({"razi-ops.supply-operation-rejected"})
+        return
+      end
     elseif p.project=="cargo" and p.logistics_tab=="supply"
       and native=="supply-freight" then
       p.logistics_tab="freight"

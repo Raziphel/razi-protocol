@@ -4,6 +4,7 @@
 local M={}
 local graph_module=require("scripts.razi_supply_routes")
 local supply=require("scripts.razi_supply_planner")
+local operations=require("scripts.razi_shipment_operations")
 local MAX_PLANS=12
 local MAX_MATERIALS=24
 local L=function(key,...) return {"razi-ops."..key,...} end
@@ -267,6 +268,11 @@ function M.render(parent,player,p,width,current)
       wrap(lane,L("supply-itinerary-entry",
         name(plan.origin),name(plan.destination),
         tostring(#plan.legs),tostring(#plan.materials)),width-40,true)
+      local logged=operations.progress(plan)
+      if logged then
+        wrap(lane,L("supply-operation-compact",
+          tostring(logged.received),tostring(logged.total)),width-42)
+      end
       local expanded=p.supply_expanded==plan.id
       lane.add{type="button",caption=L(expanded and
         "supply-itinerary-collapse" or "supply-itinerary-expand"),
@@ -287,7 +293,7 @@ function M.render(parent,player,p,width,current)
             prototype and prototype.localised_name or material.name,
             tostring(material.count)),width-48)
         end
-        wrap(lane,L("supply-itinerary-pending"),width-42)
+        operations.render(lane,player,plan,width-42)
       end
     else
       wrap(lane,L("supply-itinerary-inaccessible"),width-42)

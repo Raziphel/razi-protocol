@@ -133,4 +133,35 @@ function M.snapshot(force,network,options)
   end
   return result
 end
+
+-- A.7: read only <=7 explicit, currently researched waypoints of ONE
+-- expanded A.6 plan. Stars or worlds without a real planet surface skip.
+function M.inspect_worlds(force,worlds,options)
+  options=options or {}
+  local result={worlds={},checked=0}
+  if not (force and type(worlds)=="table") then return result end
+  local planets=options.planets or (game and game.planets) or {}
+  local names=options.launcher_names or M.launcher_names()
+  local seen={}
+  for i=1,math.min(#worlds,7) do
+    local world=worlds[i]
+    if type(world)=="string" and not seen[world] then
+      seen[world]=true
+      local unlocked=false
+      if force.is_space_location_unlocked then
+        unlocked=force.is_space_location_unlocked(world)==true
+      else
+        local tech=force.technologies and
+          force.technologies["planet-discovery-"..world]
+        unlocked=tech and tech.researched==true or false
+      end
+      local planet=unlocked and planets[world]
+      if planet then
+        result.worlds[world]=read_world(force,world,planet,names)
+        result.checked=result.checked+1
+      end
+    end
+  end
+  return result
+end
 return M

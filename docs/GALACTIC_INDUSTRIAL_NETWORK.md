@@ -836,3 +836,35 @@ and low-resolution scrolling. Inspect actual native connection
 directionality, asteroid risks, space platform schedules and
 infrastructure requirements. Neither static fixtures nor a drawn
 route establish successful or possible live deliveries.
+
+
+## A.7: Logistics feasibility and operator shipment notebook
+
+Saved, source-validated A.6 itineraries now contain an operator-only
+leg-by-leg activity notebook. Every manually noted departure must precede
+its arrival, and each leg must be noted before the next one. The newest note
+can be reversed, and the log is limited to two entries per leg (twelve
+entries for a six-leg plan). Old saved itineraries simply start with an
+empty notebook. Entries are primitive action/leg/game-tick records.
+
+EVERY write revalidates the current source-defined map, discovery research,
+factory recipe enabled state, original ingredients, and saved plan identity.
+An invalidated plan has no visible waypoints or operative controls. Notes
+are private to the player who saved the itinerary; the existing player
+removal cleanup applies. These controls never create a shipment, order,
+platform, contract, progression credit or remote API request.
+
+Only an expanded valid itinerary inspects at most seven unique researched,
+installed planet waypoints. The observation uses source-named hardware
+candidates, native built/docked force platforms and schedule-presence
+counts, not readiness guarantees. Independent A.3 engine cargo-pod events
+at an endpoint may be displayed but CANNOT advance a manual leg: those
+events do not expose source world, transported item, its quantity or
+the operator's original shipping plan.
+
+The entire feature is opt-in to user action with no periodic scans, no
+background transport simulation and no automatic CI runs. The full modpack
+still needs in-game validation for route changes, old-save migrations,
+mixed catapult/platform transfers, lore-safe hiding and narrow-resolution
+GUI controls. A completed manual log NEVER represents a confirmed source
+delivery or a Convergence victory.
