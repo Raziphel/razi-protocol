@@ -28,6 +28,9 @@ local force={index=1,recipes={[id]={enabled=true}},technologies={
  ["planet-discovery-vulcanus"]={researched=true},
  ["razi-frontier-castra-composite-rounds"]=tech
 }}
+force.recipes[id].ingredients=recipe.ingredients
+force.recipes[id].products=recipe.products or {}
+force.recipes[id].localised_name=recipe.localised_name
 local row={quest={tech=id},site="castra",recipe=recipe,technology=tech}
 package.loaded["scripts.razi_industry_portfolio"]={
  snapshot=function() return {entries={row}} end}
@@ -83,8 +86,9 @@ check(index.lubricant.count==60 and not index.lubricant.plannable,
 check(not index["variable-token"].plannable
  and not index["probability-token"].plannable,
  "Probabilistic / ranged items must fail closed")
-check(#planner.catalog(force)==1 and planner.recipe(force,id)==row,
- "Only researched destination worlds reveal their installed recipes")
+check(#planner.catalog(force)==1 and planner.recipe(force,id)==row
+ and row.recipe==force.recipes[id],
+ "Only researched destination worlds appear; force-owned recipes take precedence")
 local inbound=planner.inbound(force,"castra")
 check(#inbound==1 and inbound[1].source=="vulcanus",
  "Only real surveyed inbound routes may be selected")
