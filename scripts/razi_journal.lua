@@ -1012,11 +1012,11 @@ end
 -- Wrapped, selectable labels replace the old too-wide chapter and quest
 -- buttons. One chapter jump selector covers distant chapters with no bars.
 local function render_chapters(parent,player,p,context,size,view,plan)
-  local frame=parent.add{type="frame",direction="vertical",
+  local frame=parent.add{type="frame",name="razi_journal_navigation_panel",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   frame.style.width=size.rail
   frame.style.height=size.body
-  frame.style.padding=12
+  frame.style.padding=9
   local inner=size.rail-35
   subtitle(frame,"navigator-title",inner)
   accent_rule(frame,themes.get(p.chapter or "calidus"),68,2)
@@ -1043,68 +1043,28 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   clear.style.width=32
   clear.style.height=32
   local scroll=wheel_pane(frame,"razi_journal_navigation",
-    inner,size.body-151)
-  local column=scroll.add{type="flow",direction="vertical"}
+    inner,size.body-147)
+  scroll.vertical_scroll_policy="auto"
+  local column=scroll.add{type="flow",name="razi_journal_chapter_column",direction="vertical"}
   column.style.width=inner-13
-  column.style.vertical_spacing=7
+  column.style.vertical_spacing=3
   local selected_element
 
   plan=plan or M.guidance(player.force,context,view)
-  local priority=column.add{type="frame",direction="vertical",
-    style="inside_deep_frame"}
-  priority.style.width=inner-16
-  priority.style.padding=8
-  -- FrameStyle has no vertical_spacing; content uses native frame spacing.
-  local heading=wrap(priority,L("guidance-heading"),inner-40)
-  heading.style.font="default-bold"
-  heading.style.font_color=COLOR.amber
-  if not plan.primary then
-    wrap(priority,L("guidance-none"),inner-38)
-  else
-    for i,entry in ipairs(plan.selected) do
-      local chapter_theme=themes.get(entry.chapter)
-      local row=priority.add{type="flow",direction="horizontal"}
-      row.style.horizontal_spacing=6
-      icons.sprite(row,quest_art(player.force,entry.quest,context),
-        "priority")
-      local prefix
-      if entry.kind=="delivery-ready" then
-        prefix=i==1 and "guidance-main-delivery"
-          or "guidance-parallel-delivery"
-      elseif entry.kind=="transmission-pending" then
-        prefix="guidance-transmission"
-      else
-        prefix=i==1 and "guidance-main" or "guidance-parallel"
-      end
-      local item=row.add{type="label",style="clickable_label",
-        caption={"",L(prefix)," ",{"journal-title."..entry.quest.id}},
-        tags={razi_journal_action="guidance-select",id=entry.quest.id},
-        tooltip={"journal-chapter."..entry.chapter}}
-      item.style.single_line=false
-      item.style.maximal_width=inner-79
-      item.style.font_color=i==1 and COLOR.ink or COLOR.muted
-      if i==1 then item.style.font="default-bold" end
-    end
-  end
-  if plan.blocker then
-    local blocked=plan.blocker
-    local warning=wrap(priority,L("guidance-blocker-heading"),inner-38)
-    warning.style.font="default-bold"
-    warning.style.font_color=COLOR.amber
-    local link=priority.add{type="label",style="clickable_label",
-      caption={"journal-title."..blocked.quest.id},
-      tags={razi_journal_action="guidance-select",id=blocked.quest.id}}
-    link.style.single_line=false
-    link.style.maximal_width=inner-38
-    if blocked.disabled then
-      wrap(priority,L("guidance-disabled"),inner-38)
-    elseif blocked.tech_blockers and #blocked.tech_blockers>0 then
-      wrap(priority,L("guidance-tech-needs",
-        blocked.tech_blockers[1].localised_name),inner-38)
-    elseif blocked.quest_blockers and #blocked.quest_blockers>0 then
-      wrap(priority,L("guidance-quest-needs",
-        {"journal-title."..blocked.quest_blockers[1]}),inner-38)
-    end
+  -- A compact next-objective link rather than the old tall dashboard card.
+  if plan.primary and plan.primary.quest then
+    local lead=column.add{type="flow",direction="vertical"}
+    lead.style.width=inner-16
+    lead.style.vertical_spacing=2
+    local title=label(lead,L("guidance-heading"))
+    title.style.font="default-bold"
+    title.style.font_color=COLOR.amber
+    local entry=lead.add{type="label",style="clickable_label",
+      caption={"journal-title."..plan.primary.quest.id},
+      tags={razi_journal_action="guidance-select",id=plan.primary.quest.id}}
+    entry.style.maximal_width=inner-24
+    entry.style.single_line=false
+    entry.style.font_color=COLOR.ink
   end
   local found=false
 
@@ -1124,16 +1084,16 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       local open=p.query~="" or p.chapter==chapter.id
       -- Only the expanded chapter gets a surfaced panel. Collapsed
       -- chapters read like a quiet table of contents.
-      local card=column.add{type=open and "frame" or "flow",
-        direction="vertical",style=open and "inside_shallow_frame" or nil}
+      local card=column.add{type="flow",name="razi_journal_chapter_"..index,
+        direction="vertical"}
       card.style.width=inner-16
-      card.style.padding=open and 8 or 3
-      local head=card.add{type="flow",direction="horizontal"}
+      card.style.padding=4
+      local head=card.add{type="flow",name="razi_journal_chapter_head",direction="horizontal"}
       head.style.horizontal_spacing=6
       icons.button(head,themes.icon(chapter.id),"chapter_button",
         {razi_journal_action="chapter",id=chapter.id},
         {"journal-chapter."..chapter.id})
-      local toggle=head.add{type="button",style="tool_button",
+      local toggle=head.add{type="button",name="razi_journal_chapter_toggle",style="tool_button",
         caption=open and "▾" or "▸",
         tags={razi_journal_action="chapter",id=chapter.id},
         tooltip={"journal-chapter."..chapter.id}}
@@ -1145,21 +1105,18 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       heading.style.font="default"
       heading.style.font_color=open and COLOR.ink or COLOR.muted
       heading.style.vertical_align="center"
-      if open then
-        accent_rule(card,theme,math.min(82,inner-40),2)
-      end
-      local counts=card.add{type="flow",direction="vertical"}
-      counts.style.vertical_spacing=3
+
+      local counts=card.add{type="flow",direction="horizontal"}
+      counts.style.vertical_align="center"
       local count=label(counts,
         L("chapter-progress-short",tostring(completed),tostring(total)))
       count.style.font_color=COLOR.quiet
-      local progress=counts.add{type="progressbar",
-        value=total>0 and completed/total or 0}
-      progress.style.width=math.max(95,inner-43)
-      progress.style.height=6
-      progress.style.color=theme.primary
-      if open then
-        local open_cover=card.add{type="label",style="clickable_label",
+      -- The chapter count is enough; full-width bars made the index noisy.
+      local entries=card.add{type="flow",name="razi_journal_chapter_entries",direction="vertical"}
+      entries.visible=open
+      entries.style.vertical_spacing=4
+      do
+        local open_cover=entries.add{type="label",style="clickable_label",
           caption=L(p.chapter_cover and p.chapter==chapter.id
             and "chapter-cover-current" or "chapter-cover-open"),
           tooltip=L("chapter-cover-tooltip"),
@@ -1169,14 +1126,14 @@ local function render_chapters(parent,player,p,context,size,view,plan)
         for _,quest in ipairs(available) do
           if chapter.id=="calidus" and quest.phase
             and quest.phase~=last_phase then
-            nauvis_phase(card,quest.phase,theme,inner-34)
+            nauvis_phase(entries,quest.phase,theme,inner-34)
           end
           last_phase=quest.phase
           local state=view.states[quest.id]
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
           local chosen=quest.id==p.selected and not p.chapter_cover
-          local item=card.add{type="flow",name="razi_journal_item_"..quest.id,
+          local item=entries.add{type="flow",name="razi_journal_item_"..quest.id,
             direction="horizontal"}
           item.style.width=inner-34
           item.style.padding=3
@@ -1678,6 +1635,25 @@ local function update_reader(player)
   local reader=body and body.valid and body["razi_journal_reader_host"]
   if not (reader and reader.valid) then draw(player);return end
   local p=pref(player.index)
+  -- Expand/collapse existing chapter groups without discarding the scroll pane.
+  local navigation=body["razi_journal_navigation_panel"]
+  local navigation_scroll=navigation and navigation["razi_journal_navigation"]
+  local column=navigation_scroll and navigation_scroll["razi_journal_chapter_column"]
+  if column then
+    for index,ch in ipairs(defs.chapters) do
+      local card=column["razi_journal_chapter_"..index]
+      if card then
+        local entries=card["razi_journal_chapter_entries"]
+        local head=card["razi_journal_chapter_head"]
+        local toggle=head and head["razi_journal_chapter_toggle"]
+        local expanded=p.chapter==ch.id or p.query~=""
+        if entries then entries.visible=expanded end
+        if toggle then toggle.caption=expanded and "▾" or "▸" end
+      end
+    end
+  end
+  local picker=navigation and navigation["razi_journal_chapter_picker"]
+  if picker then picker.selected_index=chapter_index(p.chapter) end
   local context=M.context(player.force)
   local size=M.layout(player.display_resolution,player.display_scale)
   local view=M.view_status(player.force,context)
@@ -2217,9 +2193,8 @@ function M.gui_click(event)
   elseif action~="refresh" then return end
   -- Keep the navigation GUI (and its native scrollbar) on ordinary clicks.
   if old_view=="quests" and p.view=="quests"
-    and old_query==p.query and old_filter==p.filter
-    and old_chapter==p.chapter then
-    if action=="select" or action=="guidance-select"
+    and old_query==p.query and old_filter==p.filter then
+    if action=="select" or action=="guidance-select" or action=="chapter"
       or action=="chapter-dossier" or action=="chapter-continue"
       or action=="next-in-chapter" or action=="previous-in-chapter" then
       update_reader(player)
@@ -2302,6 +2277,7 @@ function M.selection_changed(event)
   local player=game.get_player(event.player_index)
   if not (chapter and player and player.valid) then return end
   local p=pref(player.index)
+  local preserve=p.view=="quests" and p.query=="" and p.filter=="all"
   p.chapter=chapter.id
   p.filter="all"
   p.query=""
@@ -2315,7 +2291,7 @@ function M.selection_changed(event)
       break
     end
   end
-  draw(player)
+  if preserve then update_reader(player) else draw(player) end
 end
 function M.gui_closed(event)
   if event.element and event.element.valid and event.element.name==FRAME then
