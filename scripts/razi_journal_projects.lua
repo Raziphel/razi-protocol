@@ -151,9 +151,9 @@ end
 -- Five build-and-expedition project dossiers. All completion values come from the
 -- original mods: there is no fabricated megaproject percentage.
 local HUES={
-  ink={r=.94,g=.93,b=.89},
-  quiet={r=.62,g=.68,b=.72},
-  gold={r=.87,g=.73,b=.49},
+  ink={r=.933,g=.890,b=.808},
+  quiet={r=.60,g=.66,b=.65},
+  gold={r=.82,g=.69,b=.48},
   unused={r=.39,g=.46,b=.51}
 }
 local PROJECT_ART={
@@ -582,21 +582,20 @@ end
 
 local function project_entry(parent,player,p,id,width,index,statuses)
   local selected=p.project==id
-  -- Selected projects get the same gentle raised-paper treatment as
-  -- selected quests. Unselected projects remain quiet index entries.
-  local card=parent.add{type=selected and "frame" or "flow",
-    direction="vertical",style=selected and "inside_shallow_frame" or nil}
+  -- Treat the left column as a project index, not ten stacked cards.
+  -- Selection is expressed through type weight and a single small bar.
+  local card=parent.add{type="flow",direction="vertical"}
   card.style.width=width
-  card.style.padding=selected and 8 or 2
-  if not selected then card.style.vertical_spacing=6 end
+  card.style.padding=3
+  card.style.vertical_spacing=4
   local head=card.add{type="flow",direction="horizontal"}
-  head.style.horizontal_spacing=10
+  head.style.horizontal_spacing=8
   head.style.vertical_align="center"
   -- The emblem itself is the navigation target, not a separate grey arrow.
   icons.button(head,art_for(id,player.force,statuses),"project_button",
     {razi_journal_action="project",id=id},L("project-caption-"..id))
   local copy=head.add{type="flow",direction="vertical"}
-  copy.style.vertical_spacing=3
+  copy.style.vertical_spacing=2
   local over=copy.add{type="label",caption=L("project-number",index)}
   over.style.font_color=selected and HUES.gold or HUES.quiet
   local name=copy.add{type="label",style="clickable_label",
@@ -606,12 +605,6 @@ local function project_entry(parent,player,p,id,width,index,statuses)
   name.style.font_color=selected and HUES.ink or {r=.73,g=.78,b=.81}
   name.style.single_line=false
   name.style.maximal_width=math.max(100,width-73)
-  if selected then
-    local accent=card.add{type="progressbar",value=1}
-    accent.style.width=math.max(110,width-18)
-    accent.style.height=3
-    accent.style.color=HUES.gold
-  end
   local snapshot=statuses[id]
   local complete,total=snapshot[1],snapshot[2]
   local count=card.add{type="label",
@@ -620,12 +613,13 @@ local function project_entry(parent,player,p,id,width,index,statuses)
   local meter=card.add{type="progressbar",
     value=total>0 and complete/total or 0}
   meter.style.width=math.max(95,width-(selected and 32 or 18))
-  meter.style.height=5
-  meter.style.color=selected and HUES.gold or {r=.48,g=.62,b=.69}
+  meter.style.height=3
+  meter.style.color=HUES.gold
+  meter.visible=selected
 end
 local function project_reader(parent,player,p,size,width,compact,statuses,displayed,reader_override)
   local reader=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="inside_shallow_frame"}
   reader.style.width=width
   local reader_height=reader_override or (compact
     and math.max(175,size.body-175) or size.body)
@@ -666,7 +660,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   description.style.maximal_width=math.max(125,width-112)
   description.style.font_color=HUES.quiet
   local accent=reader.add{type="progressbar",value=1}
-  accent.style.width=math.max(130,width-38)
+  accent.style.width=math.min(104,width-38)
   accent.style.height=3
   accent.style.color=HUES.gold
   -- Real stage totals provide a compact project cover summary; the
@@ -683,8 +677,8 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
     and HUES.gold or HUES.quiet
   local gauge=reader.add{type="progressbar",
     value=total>0 and done/total or 0}
-  gauge.style.width=math.max(130,width-38)
-  gauge.style.height=6
+  gauge.style.width=math.min(240,width-38)
+  gauge.style.height=4
   gauge.style.color=HUES.gold
   local scroll=reader.add{type="scroll-pane",direction="vertical",
     name="razi_journal_project_reader"}
@@ -696,13 +690,13 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   scroll.style.horizontally_squashable=true
   local content=scroll.add{type="flow",direction="vertical"}
   content.style.width=width-54
-  content.style.vertical_spacing=14
+  content.style.vertical_spacing=10
   -- Project advice belongs at the top of the dossier's own scroll area,
   -- leaving the narrow-screen reader free to show its real details.
   local next=content.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   next.style.width=math.max(120,width-72)
-  next.style.padding=8
+  next.style.padding=10
   -- FrameStyle has no vertical_spacing: spacing belongs to a nested Flow.
   local next_body=next.add{type="flow",direction="vertical"}
   next_body.style.horizontally_stretchable=true
@@ -836,27 +830,22 @@ function M.render(parent,player,p,size)
       math.max(170,size.body-selector_height-42))
   else
     local rail=parent.add{type="frame",direction="vertical",
-      style="inside_shallow_frame_with_padding"}
+      style="inside_shallow_frame"}
     rail.style.width=size.rail
     rail.style.height=size.body
-    rail.style.padding=13
+    rail.style.padding=10
     local section=rail.add{type="label",caption=L("projects-heading")}
     section.style.font="default-bold"
     section.style.font_color=HUES.gold
-    local note=rail.add{type="label",caption=L("project-index-hint")}
-    note.style.font_color=HUES.quiet
-    note.style.single_line=false
-    note.style.maximal_width=size.rail-40
     local selector=rail.add{type="scroll-pane",
       name="razi_journal_project_navigation",direction="vertical",
       horizontal_scroll_policy="never",vertical_scroll_policy="auto"}
     selector.style.width=size.rail-27
-    selector.style.height=math.max(120,size.body-115)
+    selector.style.height=math.max(120,size.body-78)
     local entries=selector.add{type="flow",direction="vertical"}
     entries.style.width=size.rail-44
-    entries.style.vertical_spacing=5
+    entries.style.vertical_spacing=3
     for index,id in ipairs(displayed) do
-      if index>1 then entries.add{type="line",direction="horizontal"} end
       project_entry(entries,player,p,id,size.rail-45,
         string.format("%02d",index),statuses)
     end
