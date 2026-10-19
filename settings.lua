@@ -14,6 +14,28 @@ data:extend({
 		order = "a[compat]-b[redundant-assemblers]"
 	},
 	{
+		type = "bool-setting",
+		name = "razi-curated-space-routes",
+		setting_type = "startup",
+		default_value = true,
+		order = "ca[quality-of-life]-c3[curated-route-authority]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-route-distance-repair",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-z[distance-repair]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-asteroid-population",
+		setting_type = "startup",
+		default_value = "standard",
+		allowed_values = {"sparse", "standard", "dense", "swarm"},
+		order = "aa[worlds]-d[asteroid-population]"
+	},
+	{
 		type = "string-setting",
 		name = "razi-starmap-orbit-density",
 		setting_type = "startup",

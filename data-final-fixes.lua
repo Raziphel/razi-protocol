@@ -29,34 +29,18 @@ require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
 require("prototypes.compat.variant_surface_conditions").data_final_fixes()
 
-deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
-deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
-deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
-deleteRoute("igrys-orbit-ribbonia") -- AND FUCK YOU 4
-deleteRoute("sye-vibrant-muria")
-deleteRoutesBetween("sye-vibrant", "muria")
-
--- Muria has changed its stock connections across releases, and compatibility
--- mods may add more during later data stages. Razi Protocol deliberately places
--- Muria in the Vibrant system with Aquilo as its sole route.
-if mods["Muria"] then
-	local unwanted_muria_routes = {}
-	for name, connection in pairs(data.raw["space-connection"] or {}) do
-		if name ~= "muria-aquilo" and (connection.from == "muria" or connection.to == "muria") then
-			unwanted_muria_routes[#unwanted_muria_routes + 1] = name
-		end
-	end
-	for _, name in ipairs(unwanted_muria_routes) do
-		deleteRoute(name)
-	end
-end
+-- Old interstellar shortcuts cut across the revised map.
+-- Muria's routes are handled by seven_systems and route_reconcile.
+deleteRoute("crucible-maraxsis")
+deleteRoute("crucible-orbit-ribbonia")
+deleteRoute("moshine-ribbonia")
+deleteRoute("igrys-orbit-ribbonia")
 
 deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")
-deleteRoute("sye-vibrant-shchierbin")
-deleteRoutesBetween("sye-vibrant", "shchierbin")
 
-require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()
+-- Razi's own route network: planned routes, lengths, asteroid profiles and danger levels.
+require("prototypes.system.route_reconcile").data_final_fixes()
 
 local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
 if ribbonia then
@@ -100,6 +84,25 @@ for _, lab in pairs(data.raw.lab or {}) do
 		lab.inputs = unique_inputs
 	end
 end
+
+-- One authoritative seven-system graph, after all planet modules have run.
+-- Native moon links, the original belt crossing and special source subsystems
+-- have documented exceptions and are never indiscriminately wiped.
+require("prototypes.system.route_authority").data_final_fixes()
+
+-- Imersite-Asteroids' belt on routes to Aquilo: after the last route deletion.
+require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()
+
+-- Calibrate severe source-native 1,000 km shortcuts after the route reconciliation.
+require("prototypes.system.route_distance_balance").data_final_fixes()
+-- Only existing source-mod asteroid families are distributed on the final approved routes.
+require("prototypes.system.modded_asteroid_distribution").data_final_fixes()
+
+-- Resolve difficulty stages for all finalized connected worlds, including
+-- mod-provided outer expeditions with unknown location IDs.
+require("scripts.razi_asteroid_difficulty").prepare_routes(data.raw["space-connection"])
+
+require("prototypes.system.route_icons").data_final_fixes()
 
 -- Re-assert Khemia's position in case a compatibility pass above moved it.
 require("prototypes.system.galaxy_layout").confirm_critical_positions()
