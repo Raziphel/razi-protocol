@@ -7,6 +7,7 @@ local M={}
 local SIZES={
   toolbar=42,
   window_emblem=28,
+  tab_icon=16,
   tracker_chapter=18,
   tracker_quest=24,
   chapter_seal=26,
