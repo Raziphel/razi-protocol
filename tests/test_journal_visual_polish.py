@@ -112,7 +112,7 @@ class VisualPolishTests(unittest.TestCase):
                       projects)
         self.assertIn('project_icon=32',icons)
         self.assertIn('local meter=card.add{type="progressbar"',projects)
-        self.assertIn('statuses[id]={status_for(player.force,id)}',projects)
+        self.assertIn('statuses[id]={status_for(player.force,id,ships)}',projects)
         self.assertIn('style=selected and "inside_shallow_frame" or nil',projects)
         self.assertIn('local current=statuses[p.project]',projects)
         self.assertIn('convergence.progress(force)',projects)
@@ -126,7 +126,8 @@ class VisualPolishTests(unittest.TestCase):
                     "project-caption-dyson","project-caption-platform",
                     "project-caption-voyage","project-caption-skybridge",
                     "project-caption-beltbreaker","project-caption-array",
-                    "project-caption-ark","project-caption-transceiver",
+                    "project-caption-ark","project-caption-nexus-trials",
+                    "project-caption-transceiver",
                     "project-caption-convergence"):
             self.assertRegex(locale,rf"(?m)^{key}=")
 if __name__=="__main__":
