@@ -12,5 +12,13 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		order = "a[compat]-b[redundant-assemblers]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-starmap-orbit-density",
+		setting_type = "startup",
+		default_value = "full",
+		allowed_values = {"full", "balanced", "clean", "off"},
+		order = "cb[starmap]-a2[orbit-density]"
 	}
 })

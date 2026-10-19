@@ -75,6 +75,10 @@ if starmap_star and starmap_star.layers then
 	end
 end
 
+-- Star map layout: six systems around Calidus, Deep Space to the north. Visual only (orbits, origins, ring drawing);
+-- routes and unlocks are not touched. Nothing after this moves an orbit.
+require("prototypes.system.galaxy_layout").data_final_fixes()
+
 -- Transceiver activation opens the Solar System Edge and Deep Space.
 -- Runs after the system cards (lab_cards) and the transceiver unlocks exist and after the
 -- other compatibility passes have settled the prerequisites, before the lab inputs are deduplicated.
@@ -96,6 +100,9 @@ for _, lab in pairs(data.raw.lab or {}) do
 		lab.inputs = unique_inputs
 	end
 end
+
+-- Re-assert Khemia's position in case a compatibility pass above moved it.
+require("prototypes.system.galaxy_layout").confirm_critical_positions()
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
