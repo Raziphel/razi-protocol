@@ -35,8 +35,10 @@ check(issued["unknown-custom-victory"]==nil,
 local inspected=guard.inspect()
 check(inspected[1].state=="unverified" and
  inspected[2].state=="disabled" and
- inspected[3].state=="disabled",
- "Admin audit must distinguish verified from getter-less opt-outs")
+ inspected[3].state=="disabled" and
+ inspected[4].state=="unmanaged" and
+ inspected[4].interface=="unknown-custom-victory",
+ "Admin audit must distinguish verified, getter-less and unknown opt-outs")
 remote.interfaces["kr-intergalactic-transceiver"].set_no_victory=nil
 check(guard.enforce()==1,
  "Unsupported interface must be skipped without crashing")

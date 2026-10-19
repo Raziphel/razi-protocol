@@ -1029,7 +1029,8 @@ objectives still work normally; only the victory trigger is disabled.
 An administrator may run `/razi-victory-audit` to inspect those three
 endpoints. Results distinguish verified **disabled** from
 **unverified** (the API exposes a setter but no getter),
-**unsupported** (the expected setter is missing), and **absent**
+**unsupported** (the expected setter is missing), **unmanaged**
+(an additional unknown mod advertises an opt-out), and **absent**
 (the interface is not registered). This command **never modifies**
 the installed mods' state.
 

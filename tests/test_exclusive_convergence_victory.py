@@ -21,6 +21,8 @@ class ExclusiveVictoryTests(unittest.TestCase):
         self.assertIn('state="unverified"',guard)
         self.assertIn('state="unsupported"',guard)
         self.assertIn('state="absent"',guard)
+        self.assertIn('state="unmanaged"',guard)
+        self.assertIn('not known[name]',guard)
     def test_existing_victory_and_convergence_are_preserved(self):
         guard=read("scripts/razi_victory_guard.lua")
         self.assertIn('inherited_finished=(game.finished==true',guard)

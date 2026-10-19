@@ -232,6 +232,8 @@ commands.add_command("razi-victory-audit",
     end
     lines[#lines+1]="  Recovered stray game endings: "..
       tostring(victory_guard.recoveries())
+    lines[#lines+1]="  Unmanaged: another mod exposes a victory opt-out,"..
+      " but Razi will not call an unverified API."
     lines[#lines+1]="  Note: unknown mods calling game.set_game_state"..
       " directly cannot be universally vetoed."
     local output=table.concat(lines,"\n")
