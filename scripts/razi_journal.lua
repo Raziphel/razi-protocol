@@ -1051,13 +1051,13 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   plan=plan or M.guidance(player.force,context,view)
   -- A compact next-objective link rather than the old tall dashboard card.
   if plan.primary and plan.primary.quest then
-    local lead=column.add{type="flow",direction="vertical"}
+    local lead=column.add{type="flow",name="razi_journal_lead",direction="vertical"}
     lead.style.width=inner-16
     lead.style.vertical_spacing=2
     local title=label(lead,L("guidance-heading"))
     title.style.font="default-bold"
     title.style.font_color=COLOR.amber
-    local entry=lead.add{type="label",style="clickable_label",
+    local entry=lead.add{type="label",name="razi_journal_lead_link",style="clickable_label",
       caption={"journal-title."..plan.primary.quest.id},
       tags={razi_journal_action="guidance-select",id=plan.primary.quest.id}}
     entry.style.maximal_width=inner-24
@@ -1172,7 +1172,11 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       end
     end
   end
-  if not found then wrap(column,L("nothing-found"),inner-28) end
+  local empty=column.add{type="label",name="razi_journal_no_results",
+    caption=L("nothing-found")}
+  empty.style.single_line=false
+  empty.style.maximal_width=inner-28
+  empty.visible=not found
   -- Search results should not jump while the player is still typing.
   if selected_element and p.reveal_selection and p.query=="" then
     pcall(function() scroll.scroll_to_element(selected_element) end)
@@ -1495,34 +1499,35 @@ local function draw(player,focus_search)
     done,total,ready=M.summary(player.force,context)
   end
   -- Editorial status strip: honest progress, no generic dashboard tiles.
-  local totals=frame.add{type="flow",direction="vertical"}
+  local totals=frame.add{type="flow",name="razi_journal_overview",direction="vertical"}
   totals.visible=p.view~="systems"
   totals.style.horizontally_stretchable=true
   totals.style.vertical_spacing=4
-  local metrics_row=totals.add{type="flow",direction="horizontal"}
+  local metrics_row=totals.add{type="flow",name="razi_journal_metrics",direction="horizontal"}
   metrics_row.style.horizontally_stretchable=true
   metrics_row.style.vertical_align="center"
   metrics_row.style.horizontal_spacing=size.compact and 8 or 18
-  local metric=metrics_row.add{type="flow",direction="horizontal"}
+  local metric=metrics_row.add{type="flow",name="razi_journal_completion",direction="horizontal"}
   metric.style.horizontal_spacing=5
   subtitle(metric,"completion-heading")
-  local completed=label(metric,L("completion-value",tostring(done),tostring(total)))
+  local completed=metric.add{type="label",name="razi_journal_completed",
+    caption=L("completion-value",tostring(done),tostring(total))}
   completed.tooltip=L("progress-tooltip")
   completed.style.font="default-bold"
   completed.style.font_color=COLOR.ink
-  local readiness=metrics_row.add{type="flow",direction="horizontal"}
+  local readiness=metrics_row.add{type="flow",name="razi_journal_readiness",direction="horizontal"}
   readiness.style.horizontal_spacing=5
   subtitle(readiness,"ready-heading")
-  local ready_label=readiness.add{type="label",style="clickable_label",
+  local ready_label=readiness.add{type="label",name="razi_journal_ready",style="clickable_label",
     caption=L("ready-value",tostring(ready)),
     tooltip=L("filter-ready-tooltip"),
     tags={razi_journal_action="filter-ready"}}
   ready_label.style.font="default-bold"
   ready_label.style.font_color=COLOR.amber
-  local meter=totals.add{type="flow",direction="vertical"}
+  local meter=totals.add{type="flow",name="razi_journal_meter",direction="vertical"}
   meter.style.horizontally_stretchable=true
   meter.style.vertical_spacing=2
-  local overall=meter.add{type="progressbar",
+  local overall=meter.add{type="progressbar",name="razi_journal_progress",
     value=total>0 and done/total or 0}
   overall.style.width=math.min(250,math.floor(size.width*.2))
   overall.style.height=5
@@ -1548,7 +1553,7 @@ local function draw(player,focus_search)
     toolbar.add{type="button",caption=L("next-milestone"),
       tags={razi_journal_action="next"}}
   end
-  local filterbar=frame.add{type="flow",direction="horizontal"}
+  local filterbar=frame.add{type="flow",name="razi_journal_filterbar",direction="horizontal"}
   filterbar.style.horizontal_spacing=6
   filterbar.style.vertical_align="center"
   if p.view=="archive" then
@@ -1584,7 +1589,8 @@ local function draw(player,focus_search)
     subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
       local active=p.filter==filter
-      local button=filterbar.add{type="label",style="clickable_label",
+      local button=filterbar.add{type="label",name="razi_journal_filter_"..filter,
+        style="clickable_label",
         caption=L("filter-"..filter),
         tags={razi_journal_action="filter",id=filter}}
       button.style.font=active and "default-bold" or "default"
@@ -1712,6 +1718,48 @@ local function update_reader(player,preserve_reader)
       if count then
         count.caption=L("chapter-progress-short",
           tostring(data.completed),tostring(data.total))
+      end
+    end
+  end
+  local empty=column["razi_journal_no_results"]
+  if empty then
+    local any=false
+    for index,_ in ipairs(defs.chapters) do
+      local card=column["razi_journal_chapter_"..index]
+      if card and card.visible then any=true;break end
+    end
+    empty.visible=not any
+  end
+  local lead=column["razi_journal_lead"]
+  local lead_link=lead and lead["razi_journal_lead_link"]
+  if lead_link then
+    local next_quest=plan.primary and plan.primary.quest
+    lead.visible=next_quest~=nil
+    if next_quest then
+      lead_link.caption={"journal-title."..next_quest.id}
+      lead_link.tags={razi_journal_action="guidance-select",id=next_quest.id}
+    end
+  end
+  local overview=frame["razi_journal_overview"]
+  local metrics=overview and overview["razi_journal_metrics"]
+  local completion=metrics and metrics["razi_journal_completion"]
+  local completed=completion and completion["razi_journal_completed"]
+  local readiness=metrics and metrics["razi_journal_readiness"]
+  local ready=readiness and readiness["razi_journal_ready"]
+  local meter=overview and overview["razi_journal_meter"]
+  local progress=meter and meter["razi_journal_progress"]
+  if completed then
+    completed.caption=L("completion-value",tostring(view.done),tostring(view.total))
+  end
+  if ready then ready.caption=L("ready-value",tostring(view.ready)) end
+  if progress then progress.value=view.total>0 and view.done/view.total or 0 end
+  local filterbar=frame["razi_journal_filterbar"]
+  if filterbar then
+    for _,filter in ipairs({"all","ready","unfinished","done"}) do
+      local button=filterbar["razi_journal_filter_"..filter]
+      if button then
+        button.style.font=p.filter==filter and "default-bold" or "default"
+        button.style.font_color=p.filter==filter and COLOR.ink or COLOR.quiet
       end
     end
   end
