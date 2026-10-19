@@ -1,3 +1,12 @@
+## Razi 3.0 phase 2: Deep Space dispatch notes
+
+Eight optional Deep Space route notes now distinguish long-haul resupply
+corridors, the Black Hole's short end hop, the separate Shattered Approach
+and real Shattered Planet 1,000 km transfer, and the optional Lost Beyond
+departure. Only existing source routes receive a matched dispatch; neither
+prototype names nor travel behavior changes. English and Russian route
+tooltips carry the same text keys, without revealing late story twists.
+
 ## Razi 3.0 phase 2: local-transfer clarity
 
 Transfers whose displayed markers are under 10 chart units apart now keep

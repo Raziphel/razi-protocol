@@ -43,6 +43,19 @@ class RouteIntelIntegrationTests(unittest.TestCase):
         self.assertNotIn('field("composition"',source)
         self.assertNotIn('route.localised_description=',source)
 
+    def test_deep_space_dispatches_are_grounded_and_translated(self):
+        notes=(ROOT/"prototypes/system/route_dossiers.lua").read_text()
+        english=(ROOT/"locale/en/routes.cfg").read_text()
+        russian=(ROOT/"locale/ru/routes.cfg").read_text()
+        for key in ("deep-nexus-survey","deep-black-hole-approach",
+                    "deep-black-hole-final","deep-oort-transition",
+                    "deep-sol-approach","deep-shattered-approach",
+                    "deep-shattered-shuttle","deep-lost-beyond"):
+            self.assertIn('"'+key+'"',notes)
+            self.assertIn("dispatch-"+key+"=",english)
+            self.assertIn("dispatch-"+key+"=",russian)
+        self.assertIn('{"shattered-planet","skewer_shattered_planet","deep-shattered-shuttle"}',notes)
+
     def test_deep_space_travel_is_retained(self):
         routes=(ROOT/"prototypes/system/route_reconcile.lua").read_text()
         for source in ("secretas","vesta"):
