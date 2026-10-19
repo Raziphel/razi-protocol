@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.122",
+  "version": "2.1.123",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -105,7 +105,7 @@
     "+ CircuitLaunchableRockets >= 1.4.6",
     "+ CargoBayLimitResearch >= 1.1.2",
     "+ platform-logistics-overhaul >= 2.1.2",
-    "? 00-razi-protocol-settings >= 1.0.0"
+    "? 00-razi-protocol-settings >= 1.1.0"
   ],
   "quality_required": true,
   "rail_bridges_required": true,
