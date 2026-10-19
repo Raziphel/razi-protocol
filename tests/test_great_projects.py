@@ -7,7 +7,7 @@ def read(path):
 class GreatProjects(unittest.TestCase):
     def test_implemented_and_wired(self):
         ui=read("scripts/razi_journal_projects.lua")
-        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}',ui)
+        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}',ui)
         for name in ("skybridge","beltbreaker","array","ark"):
             self.assertIn('great_project_reader(content,player,width-68,"'+name+'",current)',ui)
             self.assertIn('great_projects.'+name+'(force)',ui)

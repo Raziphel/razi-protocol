@@ -136,6 +136,25 @@ check(message=="convergence-need-ignition" and done==0,
  "Final accord cannot skip Ignition research")
 force.technologies[mods.ignition].researched=true
 message,used=m.deliver(player,"ignition")
+check(message=="convergence-need-nexus-source" and used==0,
+ "Required source Nexus Bosses must expose its genuine per-force defeat record")
+local boss_defeats={}
+rawset(_G,"remote",{
+ interfaces={["nexus-bosses"]={get_state=true}},
+ call=function(interface,method)
+  check(interface=="nexus-bosses" and method=="get_state",
+    "Razi must only read source boss victories")
+  return {defeated={[force.name]=boss_defeats}}
+ end
+})
+message,used=m.deliver(player,"ignition")
+check(message=="convergence-need-nexus-trials" and used==0,
+ "Nexus Silence research or warp keys cannot substitute for nine boss victories")
+local boss_bridge=require("scripts.razi_nexus_trials")
+for _,boss in ipairs(boss_bridge.order) do boss_defeats[boss]=true end
+check(boss_bridge.snapshot(force).count==9,
+ "All nine authentic source boss defeat flags satisfy the victory requirement")
+message,used=m.deliver(player,"ignition")
 check(message=="convergence-need-witness-research" and used==0,
  "Final accord needs the separately researched Independent Witness Accord")
 force.technologies["razi-convergence-witness-network"].researched=true

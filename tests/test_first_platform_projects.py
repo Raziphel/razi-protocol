@@ -6,7 +6,7 @@ def source(p): return (ROOT/p).read_text(encoding="utf-8")
 class FirstPlatformProjects(unittest.TestCase):
     def test_project_index(self):
         p=source("scripts/razi_journal_projects.lua")
-        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}',p)
+        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}',p)
         self.assertNotIn('local ids={"dyson","cargo","recovery","transceiver","convergence"}',p)
         self.assertIn('function M.cargo_available(force)',p)
         self.assertIn('local function cargo_reference(parent,player,p,size)',p)

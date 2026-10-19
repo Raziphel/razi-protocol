@@ -106,7 +106,7 @@ class VisualPolishTests(unittest.TestCase):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")
         locale=load_journal_locale(ROOT)
-        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}',
+        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}',
                       projects)
         self.assertIn('icons.button(head,art_for(id,player.force,statuses),"project_button"',
                       projects)
