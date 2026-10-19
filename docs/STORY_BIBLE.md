@@ -453,3 +453,15 @@ Each live 10 MW witness anchor reveals one otherwise inaccessible archival testi
 ### The completeness of the Outer Expedition
 
 The final Convergence Accord also requires in-person witness passage throughout every installed navigable Deep Space destination, including the dangerous distant branches past Nexus, the Black Hole and the Shattered Planet when those routes exist. The engineer and fellow crew physically follow the old isolation routes rather than reading a research tick from a desk. This broadens the twist: the corporate BLACKOUT-SEVEN quarantine did not simply sever administrative communications; it stranded real explorers and destroyed the evidence trail across those far reaches. Only expedition crews who confront the full route network can sign the final testimony. No remote view, atlas progress, uncrewed platform or nonexisting optional world can satisfy the requirement. The final UI lists outstanding locations without pretending to know undocumented historical visits.
+
+### Only one campaign ending
+
+The seven-system Accord is the sole intended Factorio-level victory.
+The Black Hole expedition, Nexus boss trials/Silence, optional outer
+missions, K2SO's transceiver and the original Space Age route finale
+retain their achievements, research, rewards and story consequences,
+but none should mark the **entire campaign won**. Only Convergence's
+actual, validated final transmission invokes Factorio's native win state.
+Compatibility uses the source mods' documented opt-outs. Unsupported
+direct game-state calls are monitored for recovery, not patched by
+silently deleting the mods' gameplay.

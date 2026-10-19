@@ -787,3 +787,29 @@ Before the final **Ignition Mandate** can be submitted, at least one **real play
 The **Outer Expedition** checklist in the Convergence dossier shows every applicable destination, including Solar System Edge, Shattered Planet, Nexus, Black Hole Approach, Black Hole, Oort Cloud, Sol, the extended Deep Space Edge, optional Shattered Planet/Skewer expeditions and optional Aegis/Bellicos endpoints **when installed and actually connected to the Solar System Edge network**. A location is a mandatory requirement only when its runtime prototype exists, is navigable, is not hidden or decorative, and has a real connecting path. This prevents removed mods and dangling route markers from hard-locking the finale. Conversely, deliberately not researching or visiting an installed accessible optional destination cannot bypass the requirement.
 
 If the installed route graph is missing or invalid, Ignition fails closed with clear guidance instead of treating an empty target list as completion. A completed victory from an older save remains complete; earlier unrecorded visits cannot be invented retroactively, but an ongoing voyage can be credited from a player physically present at its actual destination. The check occurs only at a platform-state or player-location change, sparse reconciliation, or the final delivery read, not every tick.
+
+### Prevent competing mod endings
+
+Razi Protocol's victory guard disables the native Space Age Edge,
+K2/K2SO transceiver and legacy silo victory conditions through their
+documented supported remote interfaces. Each source may continue
+operating, generating discoveries, powering structures and completing
+its own optional challenges; no boss trophy, research, platform journey,
+transceiver activation or cargo side quest should invoke the Factorio
+campaign victory ahead of Convergence.
+
+The guard is reasserted at initialization, modpack configuration change,
+and during normal play. The `/razi-victory-audit` admin command shows
+the opt-out state of all three sources, plus how many unsupported native
+victory events were recovered. An 'unverified' entry means the source
+supports suppression but does not provide a read-back method. A missing
+or unsupported interface is a compatibility issue, **not proof that
+victory is blocked**.
+
+A source mod that directly invokes `game.set_game_state` and has no
+opt-out cannot be prevented by a general Factorio event hook. The
+safety net recovers a newly triggered unintended ending only once the
+simulation proceeds. It does **not** reset a victory screen that
+was already shown on an imported save, or a genuine Convergence win.
+For this reason a full installed-modpack victory-trigger regression
+test remains required before release.

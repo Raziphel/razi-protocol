@@ -1014,3 +1014,37 @@ The single-per-player `○ ! RAZI PROTOCOL` startup briefing now
 adds a researched-state field directive and accurately reflects
 the active Hide Spoilers setting without disclosing later events.
 See [Story Bible](docs/STORY_BIBLE.md).
+
+## Exclusive campaign victory: Convergence only
+
+In the curated Razi Protocol modpack, **Convergence is the only intended
+native victory condition**. Space Age's Solar System Edge victory,
+Krastorio's transceiver victory, and the old rocket/satellite win are
+suppressed using each source's official `set_no_victory(true)` remote
+interface. They are applied at game initialization and configuration
+changes and reasserted every ten seconds, so other mods cannot reliably
+re-enable an old ending. Reaching their content and completing gameplay
+objectives still work normally; only the victory trigger is disabled.
+
+An administrator may run `/razi-victory-audit` to inspect those three
+endpoints. Results distinguish verified **disabled** from
+**unverified** (the API exposes a setter but no getter),
+**unsupported** (the expected setter is missing), and **absent**
+(the interface is not registered). This command **never modifies**
+the installed mods' state.
+
+If another mod calls `game.set_game_state` directly, Factorio has
+**no global before-victory veto**. Razi can detect and reset an
+unexpected native victory when simulation resumes, recording the
+incident without rewriting anyone's mod logic. A source that stops
+the simulation at its victory screen may need its own opt-out or a
+compatibility patch; the fallback is not a promise that a screen
+can never flash. Previously completed saves are explicitly protected,
+as is Convergence's legitimately triggered endgame.
+
+Pre-release in-engine tests: launch a normal rocket; reach Solar
+System Edge; activate K2SO's true transceiver; finish Nexus's
+boss/warp-drive arc; reach Shattered Planet and the optional deep
+routes; save and reload; then submit the actual fifth Convergence
+Mandate and verify its two-minute native victory screen. No other
+step should finish the scenario.
