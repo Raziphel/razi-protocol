@@ -95,7 +95,9 @@ local system_tech_cards = {
 	"solaris-tech-card",
 	"nyxaris-tech-card",
 	"vibrant-tech-card",
-	"beetlejuice-tech-card"
+	"vespera-tech-card",
+	"beetlejuice-tech-card",
+	"umbra-tech-card"
 }
 
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -329,9 +331,11 @@ set_first_existing_prerequisite("planet-discovery-maraxsis", {
 	"planet-discovery-aquilo",
 	"vibrant-discovery"
 })
+-- Beetlejuice and Umbra cards are made from Vespera cards, whose recipe Muria unlocks.
 add_existing_prerequisites("beetlejuice-discovery", {
 	"planet-discovery-ribbonia",
 	"planet-discovery-paracelsin",
+	"planet-discovery-muria",
 	"planet-discovery-aquilo",
 	"planet-discovery-rubia",
 	"planet-discovery-maraxsis"
