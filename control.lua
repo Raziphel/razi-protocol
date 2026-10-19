@@ -162,6 +162,7 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(function()
+  victory_guard.prepare()
   spoiler_fog.sync_all()
   spoiler_fog.defer_all()
   convergence.restore_pending()
@@ -173,6 +174,7 @@ events:on_init(function()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
+  victory_guard.prepare()
   spoiler_fog.sync_all()
   spoiler_fog.defer_all()
 	convergence.restore_pending()
@@ -195,6 +197,10 @@ end)
 -- An idle Convergence has no pending work. Active force transmissions
 -- advance once per second and only redraw their open final panels.
 events:on_nth_tick(60,function(event)
+  -- An unknown source mod may call native victory directly. Official
+  -- opt-outs prevent known triggers; this heals a stray state on the
+  -- next simulation tick without erasing inherited or Razi victories.
+  victory_guard.recover_unexpected()
   local changed=convergence.advance(event.tick)
   if changed then
     for _,index in ipairs(changed) do
@@ -210,6 +216,28 @@ commands.add_command("razi-cheat",
 commands.add_command("razi-welcome",
   {"razi-welcome.command-help"},welcome.command)
 -- Explicit diagnostic only. Never scans recipes, labs or source mods on ticks.
+commands.add_command("razi-victory-audit",
+  "Display the supported external victory opt-outs and any recovered stray victories.",
+  function(event)
+    local player=event.player_index and game.get_player(event.player_index)
+    if player and not player.admin then
+      player.print("[RAZI] This diagnostic requires administrator access.")
+      return
+    end
+    -- An audit is explicitly read-only: do not toggle mod endpoints here.
+    local lines={"[RAZI] Only Convergence should set the campaign victory."}
+    for _,row in ipairs(victory_guard.inspect()) do
+      lines[#lines+1]="  "..row.interface..": "..row.state..
+        (row.error and (" ("..row.error..")") or "")
+    end
+    lines[#lines+1]="  Recovered stray game endings: "..
+      tostring(victory_guard.recoveries())
+    lines[#lines+1]="  Note: unknown mods calling game.set_game_state"..
+      " directly cannot be universally vetoed."
+    local output=table.concat(lines,"\n")
+    if player then player.print(output)
+    else game.print(output) end
+  end)
 commands.add_command("razi-audit",
   {"razi-audit.help"},convergence_audit.command)
 events:on_nth_tick(6, razi_safe_cheat.tick)
