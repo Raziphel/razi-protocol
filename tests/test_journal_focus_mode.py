@@ -42,6 +42,9 @@ class NativeMidnightArchiveFocus(unittest.TestCase):
         self.assertIn('scroll.vertical_scroll_position=navigation_scroll',ui)
         self.assertIn('collect_scrolls(frame,saved_scrolls)',ui)
         self.assertIn('restore_scrolls(frame,saved_scrolls,reveal_on_redraw)',ui)
+        self.assertIn('p.focus_navigation_scrolls={}',ui)
+        self.assertIn('restore_scrolls(frame,p.focus_navigation_scrolls,false)',ui)
+        self.assertIn('p.focus_navigation_scrolls=nil',ui)
         self.assertIn('restore_scrolls(reader,saved,false)',ui)
         self.assertNotIn('storage.razi_expedition_journal={}\n',ui)
 
