@@ -1,3 +1,55 @@
+## Mission Plan objective system (October 2026)
+
+The Journal formerly reduced most objectives to "Research X" and at most four
+raw technology prerequisites. This left players without an explicit success
+condition, a full list of dependencies, or a reliable next action.
+
+The source-owned **Mission Plan** in `scripts/razi_journal_objectives.lua`
+now builds a read-only checklist from the installed force's actual research
+prerequisites and the existing Codex `requires` links. It reports the final
+success condition, first outstanding milestone, and verified progress.
+Expanded requirements include every visible prerequisite, never an arbitrary
+four-item cutoff. The default keeps up to three missing steps in view so
+story content remains easy to read. A research milestone that corresponds to
+a campaign requirement is counted once and can link back to its dossier.
+
+Boss objectives are marked complete only by the Nexus source victory API.
+Convergence mandates and the final transmission use their original physical
+delivery/win records. A world's research unlock is **not** falsely described
+as proof the player physically arrived there. Missing or spoiler-hidden
+dependencies are not displayed as invented phantom tasks. Native
+`LuaForce.current_research` progress is refreshed in the existing 120-tick
+monitoring pass, updating the active progress text/bar in-place without
+destroying either scroll pane.
+
+The pinned tracker uses the same source-backed next-step evaluation. The
+first platform and maiden voyage Project dossiers additionally distinguish
+the real researched / platform-established / voyage-completed evidence from
+advisory flight preparation. Source milestone values and saved campaign IDs
+remain completely unchanged. New `goal_expanded` is only a per-player UI
+preference.
+
+### For developers and translators
+
+- Add new research objectives to existing Codex lists using valid `tech`
+  or `world` sources and stable `requires` Codex IDs. The checklist will
+  derive the native prerequisites and localized technology names on its own.
+- Do not define unverified build/travel "completed" stages without a real
+  owner module that can prove them from the save or owning mod.
+- Extend `journal-ui.mission-step-*` for genuinely new *source* completion
+  categories; keep the exact runtime distinction among research, discovery,
+  boss victory, cargo delivery and transmission.
+- The native tech/quest deduplication excludes boss, Convergence and world
+  completion because their proof is **not** simply researching the technology.
+- For full validation, launch the complete modpack with an old save, find
+  a research milestone with 5+ dependencies, toggle Show All requirements,
+  pin it, start research and watch the percent update, complete it, switch to
+  boss/Convergence projects and check correctness of their live stages.
+
+Smoke tests: `tests/lua/test_razi_journal_objectives.lua` and
+`tests/test_journal_mission_plan.py`. Source assertions alone are not
+an in-game Factorio GUI render or Lua execution report.
+
 ## Midnight Archive: Focus Reading and native folio surfaces (October 2026)
 
 The Journal has a second visual pass inspired by a corporate exploration
