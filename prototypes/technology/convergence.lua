@@ -5,25 +5,25 @@ M.commission="razi-convergence-commission"
 M.authorization="razi-convergence-synchronization"
 M.ignition="razi-convergence-ignition"
 M.shipments={
- {id="stellar",item="razi-convergence-stellar-mandate",count=8,
+ {id="stellar",item="razi-convergence-stellar-mandate",count=24,
   icon="calidus-tech-card",ingredients={
    {"calidus-tech-card",2},{"solaris-tech-card",1},
    {"nyxaris-tech-card",1},{"processing-unit",8},
    {"low-density-structure",8}}},
- {id="industry",item="razi-convergence-industrial-mandate",count=10,
+ {id="industry",item="razi-convergence-industrial-mandate",count=30,
   icon="vibrant-tech-card",ingredients={
    {"vibrant-tech-card",2},{"vespera-tech-card",2},
    {"kr-rare-metals",8},{"bioflux",8}},
   supplies={{"holmium-plate",6},{"optical-cable",6},
    {"craptonite-frame",6}}},
- {id="deep-space",item="razi-convergence-deep-space-mandate",count=6,
+ {id="deep-space",item="razi-convergence-deep-space-mandate",count=18,
   unlock=M.authorization,icon="deep-space-tech-card",ingredients={
    {"beetlejuice-tech-card",2},{"umbra-tech-card",2},
    {"deep-space-tech-card",2}},
   supplies={{"promethium-science-pack",4},
    {"kr-singularity-tech-card",2},{"pulsar-science-pack",2},
    {"supermagnet",3}}},
- {id="resonance",item="razi-convergence-resonance-mandate",count=4,
+ {id="resonance",item="razi-convergence-resonance-mandate",count=12,
   unlock=M.authorization,icon="deep-space-tech-card",ingredients={
    {"beetlejuice-tech-card",2},{"umbra-tech-card",2},
    {"deep-space-tech-card",2},{"processing-unit",12},
@@ -246,9 +246,9 @@ function M.data_final_fixes()
  local base_icon=raw("tool","beetlejuice-tech-card")
  local final_icon=raw("tool","deep-space-tech-card")
  local begin=make_technology(M.commission,base_icon,base,
-  commission_science,1050)
+  commission_science,2400)
  local ending=make_technology(M.authorization,final_icon,{M.commission},
-  final_science,2300)
+  final_science,4200)
  for _,id in ipairs({"promethium-science-pack",
    "razi-network-extreme-lattice"}) do
   if optional_parent(tech,M.authorization,id) then
@@ -258,7 +258,7 @@ function M.data_final_fixes()
  -- Dyson distribution joins the last engineering commission when
  -- installed, preserving source recipes and research ownership.
  local ignition=make_technology(M.ignition,final_icon,
-  {M.authorization},final_science,1800)
+  {M.authorization},final_science,5000)
  for _,id in ipairs({"slp-dyson-sphere-grounded",
    "ds-energy-loader-mk2"}) do
   if optional_parent(tech,M.ignition,id) then
