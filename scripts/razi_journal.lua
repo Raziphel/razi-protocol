@@ -1021,9 +1021,10 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     style="inside_shallow_frame"}
   frame.style.width=size.rail
   frame.style.height=size.body
-  frame.style.padding=9
+  frame.style.padding=10
   local inner=size.rail-35
-  subtitle(frame,"navigator-title",inner)
+  local index_title=subtitle(frame,"navigator-title",inner)
+  index_title.style.font_color=COLOR.amber
   local names={}
   for _,ch in ipairs(defs.chapters) do
     local chapter=view.chapters[ch.id]
@@ -1035,7 +1036,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     name="razi_journal_chapter_picker",items=names,
     selected_index=chapter_index(p.chapter)}
   dropdown.style.width=inner
-  subtitle(frame,"search-heading",inner)
+  -- Search is immediately above its filters and the actual chapter list.
   local find_row=frame.add{type="flow",direction="horizontal"}
   find_row.style.horizontal_spacing=5
   local search=find_row.add{type="textfield",name="razi_journal_search",
@@ -1044,10 +1045,22 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   local clear=find_row.add{type="button",style="tool_button",
     caption="×",tooltip=L("clear-search"),
     tags={razi_journal_action="clear-search"}}
-  clear.style.width=32
-  clear.style.height=32
+  clear.style.width=28
+  clear.style.height=28
+  local filters=frame.add{type="flow",name="razi_journal_filterbar",
+    direction="horizontal"}
+  filters.style.horizontal_spacing=9
+  for _,filter in ipairs({"all","ready","unfinished","done"}) do
+    local active=p.filter==filter
+    local item=filters.add{type="label",style="clickable_label",
+      name="razi_journal_filter_"..filter,
+      caption=L("filter-"..filter),
+      tags={razi_journal_action="filter",id=filter}}
+    item.style.font=active and "default-bold" or "default"
+    item.style.font_color=active and COLOR.ink or COLOR.quiet
+  end
   local scroll=wheel_pane(frame,"razi_journal_navigation",
-    inner,size.body-147)
+    inner,size.body-164)
   local column=scroll.add{type="flow",name="razi_journal_chapter_column",direction="vertical"}
   column.style.width=inner-13
   column.style.vertical_spacing=2
@@ -1094,40 +1107,37 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       local card=column.add{type="flow",name="razi_journal_chapter_"..index,
         direction="vertical"}
       card.style.width=inner-16
-      card.style.padding=4
+      card.style.padding=2
       card.visible=visible_count>0
       local head=card.add{type="flow",name="razi_journal_chapter_head",direction="horizontal"}
-      head.style.horizontal_spacing=6
-      icons.button(head,themes.icon(chapter.id),"chapter_button",
-        {razi_journal_action="chapter",id=chapter.id},
+      head.style.horizontal_spacing=5
+      icons.sprite(head,themes.icon(chapter.id),"chapter_button",
         {"journal-chapter."..chapter.id})
       local toggle=head.add{type="button",name="razi_journal_chapter_toggle",style="tool_button",
         caption=open and "▾" or "▸",
         tags={razi_journal_action="chapter",id=chapter.id},
         tooltip={"journal-chapter."..chapter.id}}
-      toggle.style.width=22
-      toggle.style.height=26
+      toggle.style.width=20
+      toggle.style.height=22
       toggle.style.font_color=open and theme.primary or COLOR.quiet
-      local heading=wrap(head,{"journal-chapter."..chapter.id},inner-112)
-      -- Short section names keep the chapter index compact and readable.
-      heading.style.font="default"
+      local heading=head.add{type="label",name="razi_journal_chapter_title",
+        style="clickable_label",caption={"journal-chapter."..chapter.id},
+        tags={razi_journal_action="chapter",id=chapter.id}}
+      heading.style.single_line=false
+      heading.style.maximal_width=inner-85
+      heading.style.font=open and "default-bold" or "default"
       heading.style.font_color=open and COLOR.ink or COLOR.muted
       heading.style.vertical_align="center"
 
       local counts=card.add{type="flow",name="razi_journal_chapter_status",direction="horizontal"}
       counts.style.vertical_align="center"
-      counts.style.horizontal_spacing=8
+      counts.style.horizontal_spacing=5
+      counts.style.left_padding=45
       local count=counts.add{type="label",name="razi_journal_chapter_count",
         caption=L("chapter-progress-short",tostring(completed),tostring(total))}
       count.style.font_color=COLOR.quiet
-      -- A restrained completion stroke accompanies the expanded folio.
-      -- Collapsed chapters remain text-first, with no redundant wide bars.
-      local chapter_meter=counts.add{type="progressbar",name="razi_journal_chapter_meter",
-        value=total>0 and completed/total or 0}
-      chapter_meter.style.width=math.max(40,inner-164)
-      chapter_meter.style.height=3
-      chapter_meter.style.color=theme.primary
-      chapter_meter.visible=open
+      -- The numerical count is sufficient; redundant progress bars added
+      -- visual noise eighteen times in a long chapter list.
       local entries=card.add{type="flow",name="razi_journal_chapter_entries",direction="vertical"}
       entries.visible=open and visible_count>0
       entries.style.vertical_spacing=2
@@ -1154,8 +1164,14 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           item.style.width=inner-34
           item.visible=state_matches_filter(state,p.filter)
             and matches_query(quest,p.query)
-          item.style.padding=3
-          item.style.horizontal_spacing=7
+          item.style.padding=2
+          item.style.horizontal_spacing=5
+          local select_rule=item.add{type="progressbar",
+            name="razi_journal_item_rule",value=1}
+          select_rule.style.width=3
+          select_rule.style.height=18
+          select_rule.style.color=theme.primary
+          select_rule.visible=chosen
           icons.sprite(item,quest_art(player.force,quest,context),
             "quest_row")
           local control=item.add{type="button",name="razi_journal_item_control",style="tool_button",
@@ -1163,8 +1179,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
               or state=="active" and "●" or "○",
             tags={razi_journal_action="select",id=quest.id},
             tooltip={"journal-title."..quest.id}}
-          control.style.width=24
-          control.style.height=24
+          control.style.width=21
+          control.style.height=21
           local color=state=="complete" and {r=.48,g=.85,b=.67}
             or state=="active" and {r=.98,g=.79,b=.46}
             or {r=.58,g=.61,b=.68}
@@ -1711,7 +1727,7 @@ local function update_reader(player,preserve_reader)
       local toggle=head and head["razi_journal_chapter_toggle"]
       local count_holder=card["razi_journal_chapter_status"]
       local count=count_holder and count_holder["razi_journal_chapter_count"]
-      local chapter_meter=count_holder and count_holder["razi_journal_chapter_meter"]
+      local heading=head and head["razi_journal_chapter_title"]
       local shown=0
       for _,quest in ipairs(data.quests) do
         local row=entries and entries["razi_journal_item_"..quest.id]
@@ -1724,6 +1740,8 @@ local function update_reader(player,preserve_reader)
           local choice=row["razi_journal_item_choice"]
           local marker=row["razi_journal_item_control"]
           local chosen=p.selected==quest.id and not p.chapter_cover
+          local selection=row["razi_journal_item_rule"]
+          if selection then selection.visible=chosen end
           if choice then
             choice.style.font=chosen and "default-bold" or "default"
             choice.style.font_color=chosen and COLOR.ink
@@ -1746,9 +1764,9 @@ local function update_reader(player,preserve_reader)
         count.caption=L("chapter-progress-short",
           tostring(data.completed),tostring(data.total))
       end
-      if chapter_meter then
-        chapter_meter.value=data.total>0 and data.completed/data.total or 0
-        chapter_meter.visible=expanded
+      if heading then
+        heading.style.font=expanded and "default-bold" or "default"
+        heading.style.font_color=expanded and COLOR.ink or COLOR.muted
       end
     end
   end
@@ -1784,7 +1802,8 @@ local function update_reader(player,preserve_reader)
   end
   if ready then ready.caption=L("ready-value",tostring(view.ready)) end
   if progress then progress.value=view.total>0 and view.done/view.total or 0 end
-  local filterbar=frame["razi_journal_filterbar"]
+  local filterbar=navigation["razi_journal_filterbar"]
+    or frame["razi_journal_filterbar"]
   if filterbar then
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
       local button=filterbar["razi_journal_filter_"..filter]
