@@ -39,7 +39,13 @@ function M.targets()
   end
   local graph={}
   local function attach(a,b)
-    if not (a and b and location(a) and location(b)) then return end
+    if not (a and b) then return end
+    local source,target=location(a),location(b)
+    -- Hidden intermediary markers are not navigable transfer stops.
+    -- Do not claim a destination is reachable solely through one.
+    if not (source and target) or source.hidden or target.hidden then
+      return
+    end
     graph[a]=graph[a] or {}
     graph[b]=graph[b] or {}
     graph[a][b]=true
