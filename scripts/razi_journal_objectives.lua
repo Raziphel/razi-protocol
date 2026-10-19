@@ -89,19 +89,17 @@ function M.snapshot(quest,technology,status,options)
   }
 end
 
--- A short view puts blockers FIRST and always includes the final target
--- when no unmet prerequisite remains. Expanded lists show every stage,
--- including achieved steps, in their original authoritative order.
+-- The summary already displays the next action and final success
+-- condition above the checklist. Show OTHER unfinished steps here; never
+-- repeat the first blocker or clutter a completed dossier with checked rows.
+-- Expanded lists always contain the complete, source-backed history.
 function M.visible_rows(plan,expanded,limit)
   if expanded then return plan.rows end
-  local max=limit or 3
   local result={}
+  if plan.finished then return result end
+  local max=math.max(0,limit or 2)
   for _,row in ipairs(plan.rows) do
-    if not row.done and #result<max then result[#result+1]=row end
-  end
-  if #result==0 then
-    for _,row in ipairs(plan.rows) do
-      if #result>=max then break end
+    if not row.done and row~=plan.next_step and #result<max then
       result[#result+1]=row
     end
   end
