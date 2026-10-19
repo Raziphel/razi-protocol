@@ -225,11 +225,16 @@ function M.observe(platform)
   if from and to then
     local origin=platform.last_visited_space_location
     local last=origin and origin.name
-    local pending={from=from,to=to,
-      count=platform.completed_trips or 0,
-      ark=qualified_ark(platform)}
+    -- A second build/tile event on this exact crossing retains the
+    -- departure snapshot. Do not issue three engine entity counts only
+    -- to throw away the new result.
+    local pending
     if previous and previous.from==from and previous.to==to then
       pending=previous
+    else
+      pending={from=from,to=to,
+        count=platform.completed_trips or 0,
+        ark=qualified_ark(platform)}
     end
     if (last==from or last==to) then
       state.pending[index]=pending
