@@ -134,6 +134,18 @@ function M.visible(player,graph)
   return result
 end
 
+function M.toggle_details(player,p,id)
+  if not (player and p and type(id)=="number") then return false end
+  local graph=graph_module.graph(player.force)
+  local found=false
+  for _,entry in ipairs(M.visible(player,graph)) do
+    if entry.id==id and entry.valid then found=true;break end
+  end
+  if not found then return false end
+  p.supply_expanded=p.supply_expanded==id and nil or id
+  return true
+end
+
 local function wrap(parent,caption,width,bold,color)
   local l=parent.add{type="label",caption=caption}
   l.style.single_line=false
@@ -188,7 +200,9 @@ function M.render(parent,player,p,width,current)
     select.style.minimal_width=math.max(170,math.min(width-80,360))
     wrap(region,L("supply-multihop-origin-disclaimer"),width-45)
     local paths=graph_module.paths(graph,p.supply_origin,current.site)
-    if #paths>0 then
+    if #paths==0 then
+      wrap(region,L("supply-multihop-no-path"),width-45)
+    else
       local selected=p.supply_path
       if type(selected)~="number" or selected<1
         or selected>#paths then selected=1 end
@@ -253,14 +267,28 @@ function M.render(parent,player,p,width,current)
       wrap(lane,L("supply-itinerary-entry",
         name(plan.origin),name(plan.destination),
         tostring(#plan.legs),tostring(#plan.materials)),width-40,true)
-      for _,material in ipairs(plan.materials) do
-        local prototype=prototypes and prototypes.item
-          and prototypes.item[material.name]
-        wrap(lane,L("supply-itinerary-material",
-          prototype and prototype.localised_name or material.name,
-          tostring(material.count)),width-48)
+      local expanded=p.supply_expanded==plan.id
+      lane.add{type="button",caption=L(expanded and
+        "supply-itinerary-collapse" or "supply-itinerary-expand"),
+        tags={razi_ops_action="supply-itinerary-toggle",value=entry.id}}
+      if expanded then
+        heading(lane,L("supply-multihop-legs"),width-45)
+        for index,leg in ipairs(plan.legs) do
+          step(lane,leg,width-48)
+          if index<#plan.legs
+            and leg.mode~=plan.legs[index+1].mode then
+            wrap(lane,L("supply-multihop-transfer"),width-48)
+          end
+        end
+        for _,material in ipairs(plan.materials) do
+          local prototype=prototypes and prototypes.item
+            and prototypes.item[material.name]
+          wrap(lane,L("supply-itinerary-material",
+            prototype and prototype.localised_name or material.name,
+            tostring(material.count)),width-48)
+        end
+        wrap(lane,L("supply-itinerary-pending"),width-42)
       end
-      wrap(lane,L("supply-itinerary-pending"),width-42)
     else
       wrap(lane,L("supply-itinerary-inaccessible"),width-42)
     end
