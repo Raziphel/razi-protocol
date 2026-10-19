@@ -138,8 +138,15 @@ require("scripts.razi_asteroid_difficulty").prepare_routes(data.raw["space-conne
 
 require("prototypes.system.route_icons").data_final_fixes()
 
+-- Route tooltips and the star map backdrop read the final routes and orbits.
+require("prototypes.system.route_intel").data_final_fixes()
+require("prototypes.system.starmap_background").data_final_fixes()
+
 -- Re-assert Khemia's position in case a compatibility pass above moved it.
 require("prototypes.system.galaxy_layout").confirm_critical_positions()
+
+-- Colored route lines follow the final positions; they never change travel data.
+require("prototypes.system.route_highlights").data_final_fixes()
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
@@ -149,6 +156,11 @@ require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
 -- then tier the system cards across the EXISTING laboratories of other mods (no new labs).
 require("prototypes.compat.system_card_manufacturing").data_final_fixes()
 require("prototypes.compat.system_card_laboratories").data_final_fixes()
+
+-- Last starmap art passes: drop stray trail sprites left by other mods, then
+-- put Razi's gate and belt-rim markers on top.
+require("prototypes.system.starmap_trail_cleanup").data_final_fixes()
+require("prototypes.system.location_icons").data_final_fixes()
 
 -- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()
