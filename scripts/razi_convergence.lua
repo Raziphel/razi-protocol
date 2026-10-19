@@ -3,16 +3,17 @@
 local M={}
 local defs=require("prototypes.technology.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
+local galactic_catalog=require("scripts.galactic_catalog")
 local story_dispatch=require("scripts.razi_story_dispatch")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.
 M.transmission_beats={
  {tick=0,key="convergence-transmission-sealed"},
- {tick=180,key="convergence-transmission-dyson"},
- {tick=360,key="convergence-transmission-resonance"},
- {tick=540,key="convergence-transmission-alignment"}
+ {tick=1800,key="convergence-transmission-dyson"},
+ {tick=3600,key="convergence-transmission-resonance"},
+ {tick=5400,key="convergence-transmission-alignment"}
 }
-M.transmission_duration=720
+M.transmission_duration=7200
 M.module_colors={
  stellar={r=.98,g=.72,b=.39},
  industry={r=.43,g=.75,b=.92},
@@ -40,6 +41,62 @@ local destinations={
  ["razi-deep-space-edge"]=true,
  ["black-hole-approach"]=true
 }
+-- Witness anchors are RAZI's physical, decentralized veto. Each of the
+-- seven founding systems must independently keep a genuine powered station.
+M.witness_systems={
+ "calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
+}
+function M.witness_status(force)
+ local locations={}
+ local found={}
+ local total=#M.witness_systems
+ local known=force and force.get_entity_count
+  and force.get_entity_count("razi-convergence-witness-anchor")
+ if known==0 then return 0,total,locations end
+ for _,surface in pairs(game and game.surfaces or {}) do
+  local planet=surface.planet
+  local system=planet and galactic_catalog.system(planet.name)
+  if system and not found[system]
+   and surface.find_entities_filtered then
+   for _,entity in pairs(surface.find_entities_filtered{
+     name="razi-convergence-witness-anchor",force=force}) do
+    if entity.valid and (entity.energy or 0)>0 then
+     found[system]=planet.name
+     break
+    end
+   end
+  end
+ end
+ local active=0
+ for _,system in ipairs(M.witness_systems) do
+  if found[system] then active=active+1 end
+  locations[#locations+1]={system=system,planet=found[system]}
+ end
+ return active,total,locations
+end
+function M.core_status(player)
+ if not M.location(player) then return false end
+ local surface=player.character.surface
+ if not (surface and surface.find_entities_filtered) then return false end
+ for _,entity in pairs(surface.find_entities_filtered{
+  name="razi-convergence-array-core",force=player.force}) do
+  if entity.valid and (entity.energy or 0)>0 then return true end
+ end
+ return false
+end
+-- Actual recovered evidence, not unlocked by an early research tooltip.
+function M.blackbox(force)
+ local saved=storage and storage.razi_convergence
+ local record=saved and force and saved[force.index]
+ if record and record.victory then return 3 end
+ local delivered=record and record.delivered or {}
+ if (delivered.resonance or 0)>=M.stages[4].count then
+  return 2
+ elseif (delivered["deep-space"] or 0)>=M.stages[3].count then
+  return 1
+ end
+ return 0
+end
 function M.record(force)
  storage.razi_convergence=storage.razi_convergence or {}
  local key=force.index
@@ -82,6 +139,13 @@ local function stage_ready(force,index)
  if index>=5 then
   if not force.technologies[defs.ignition].researched then
    return false,"convergence-need-ignition"
+  end
+  local witness=force.technologies["razi-convergence-witness-network"]
+  if not (witness and witness.researched) then
+   return false,"convergence-need-witness-research"
+  end
+  if select(1,M.witness_status(force))<7 then
+   return false,"convergence-need-witnesses"
   end
   if not M.dyson_readiness(force) then
    return false,"convergence-need-receiver"
@@ -190,6 +254,9 @@ function M.deliver(player,id)
  local allowed,why=stage_ready(force,index)
  if not allowed then return why,0 end
  if not M.location(player) then return "convergence-need-platform",0 end
+ if index==#M.stages and not M.core_status(player) then
+  return "convergence-need-core",0
+ end
  local inv=player.get_main_inventory()
  if not (inv and inv.valid) then
   return "convergence-no-cargo",0
@@ -437,6 +504,40 @@ function M.render(parent,player,options)
     string.format("%d:%02d:%02d",hours,minutes,secs))
   end
  end
+ -- Seven powered, independently built systems are the new physical
+ -- countersignature. Never count technologies as functioning transmitters.
+ local network=scroll.add{type="frame",
+  style="inside_shallow_frame",direction="vertical"}
+ network.style.horizontally_stretchable=true
+ local wdone,wtotal,sites=M.witness_status(force)
+ local witness_title=line(network,"convergence-witness-heading",width)
+ witness_title.style.font="heading-2"
+ line(network,"convergence-witness-count",width,
+   tostring(wdone),tostring(wtotal))
+ local network_research=force.technologies["razi-convergence-witness-network"]
+ if network_research and not network_research.researched then
+  line(network,"convergence-witness-research",width)
+ end
+ for _,site in ipairs(sites) do
+  line(network,site.planet and "convergence-witness-online"
+   or "convergence-witness-offline",width,
+   {"razi-ops.convergence-system-"..site.system})
+ end
+ line(network,M.core_status(player)
+   and "convergence-core-ready"
+   or "convergence-core-missing",width)
+ -- Black-box recovery is shipment-gated; the reveal has tangible evidence.
+ local blackbox=M.blackbox(force)
+ if blackbox>0 then
+  local archive=scroll.add{type="frame",
+    style="inside_shallow_frame",direction="vertical"}
+  archive.style.horizontally_stretchable=true
+  local label=line(archive,"convergence-blackbox-heading",width)
+  label.style.font="heading-2"
+  for i=1,blackbox do
+    line(archive,"convergence-blackbox-"..i,width)
+  end
+ end
  -- A built, force-owned receiver is tangible evidence of the Dyson grid.
  -- The source mod remains authoritative for real satellite count and MW.
  local receiver_ready,receivers=M.dyson_readiness(force)
@@ -520,6 +621,10 @@ function M.render(parent,player,options)
       shown=shown+1
      end
     end
+   elseif next_index==5 and wdone<wtotal then
+    line(advice,"convergence-next-action-witnesses",width)
+   elseif next_index==5 and not M.core_status(player) then
+    line(advice,"convergence-next-action-core",width)
    elseif next_index==5 and not receiver_ready then
     line(advice,"convergence-next-action-receiver",width)
    elseif not (force.recipes and force.recipes[next_rule.item]
