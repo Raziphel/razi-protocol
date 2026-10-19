@@ -15,6 +15,7 @@ local projects=require("scripts.razi_journal_projects")
 local systems=require("scripts.razi_journal_systems")
 local great_projects=require("scripts.razi_great_projects")
 local guidance=require("scripts.razi_journal_guidance")
+local objectives=require("scripts.razi_journal_objectives")
 local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
@@ -75,6 +76,7 @@ local function pref(index)
   value.archive_filter=({all=true,legacy=true,corporate=true,
     field=true})[value.archive_filter] and value.archive_filter or "all"
   value.chapter_cover=value.chapter_cover==true
+  value.goal_expanded=value.goal_expanded==true
   value.reader_focus=value.reader_focus==true
   -- Default to one Journal toolbar. Players can reveal the source buttons
   -- temporarily when they need Planet Express or Nexus native controls.
@@ -656,74 +658,106 @@ local function render_details(parent,player,quest,p,context,size,view)
   local prose=scroll.add{type="flow",direction="vertical"}
   prose.style.width=text_width
   prose.style.vertical_spacing=9
-  local objective=prose.add{type="frame",direction="vertical",
-    style="razi_journal_callout"}
-  objective.style.width=text_width
-  objective.style.padding=10
-  subtitle(objective,"objective-heading",text_width-26,theme)
-   local native=technology(player.force,quest,context)
-  if quest.boss then
-    wrap(objective,{"",L("objective-boss")," ",
-      {"nexus-bosses.boss-"..quest.boss}},text_width-26)
-    local record=context.nexus
-    if record then
-      tint(label(objective,L("nexus-victories",
-        tostring(record.count),tostring(record.total))),
-        {r=.55,g=.87,b=.75})
-    end
-  else
-    wrap(objective,{"",L(quest.world and "objective-discovery"
-      or "objective-research",
-      native and native.localised_name or quest.world or quest.tech)},
-      text_width-26)
-  end
-  if native and not native.researched then
-    local blockers={}
-    for _,prior in pairs(native.prerequisites or {}) do
-      if not prior.researched then blockers[#blockers+1]=prior end
-    end
-    table.sort(blockers,function(a,b) return a.name<b.name end)
-    for i=1,math.min(4,#blockers) do
-      wrap(objective,{"",L("native-prerequisite")," ",
-        blockers[i].localised_name},text_width-26)
-    end
-  end
-  -- Prerequisite links lead to the actual Codex entry, rather than
-  -- trapping players at a noninteractive list of dependencies.
-  local met,required_total=0,0
-  for _,required in ipairs(quest.requires or {}) do
-    local prior=defs.by_id[required]
-    if prior and M.available(player.force,prior,context) then
-      required_total=required_total+1
-      if M.complete(player.force,prior,context) then
-        met=met+1
-      elseif status~="complete" then
-        local needs=objective.add{type="flow",direction="horizontal"}
-        needs.style.horizontal_spacing=7
-        local mark=label(needs,"○")
-        mark.style.font_color=theme.soft
-        local jump=needs.add{type="label",style="clickable_label",
-          caption={"",L("requires-heading")," ",
-            {"journal-title."..prior.id}},
-          tags={razi_journal_action="guidance-select",id=prior.id},
-          tooltip=L("open-prerequisite")}
-        jump.style.single_line=false
-        jump.style.maximal_width=text_width-57
+  local native=technology(player.force,quest,context)
+  local force=player.force
+  -- Read each milestone through the same native state as the index. No
+  -- artificial crafting counters, discovered worlds or stored completion.
+  local plan=objectives.snapshot(quest,native,status,{
+    available=function(id)
+      local required=defs.by_id[id]
+      return required and M.available(force,required,context) or false
+    end,
+    visible=function(id)
+      local required=defs.by_id[id]
+      return required and M.journal_visible(force,required,context) or false
+    end,
+    complete=function(id)
+      local required=defs.by_id[id]
+      return required and M.complete(force,required,context) or false
+    end,
+    quest_for_tech=function(name)
+      for _,candidate in ipairs(defs.quests) do
+        if candidate.tech==name and
+          M.journal_visible(force,candidate,context) then
+          return candidate.id
+        end
       end
+    end,
+    current_research=force.current_research,
+    research_progress=force.research_progress
+  })
+  local mission=prose.add{type="frame",direction="vertical",
+    style="razi_journal_callout"}
+  mission.style.width=text_width
+  mission.style.padding=11
+  local mission_header=mission.add{type="flow",direction="horizontal"}
+  mission_header.style.horizontal_spacing=8
+  mission_header.style.vertical_align="center"
+  local mission_heading=label(mission_header,L("mission-plan"))
+  mission_heading.style.font="default-bold"
+  mission_heading.style.font_color=theme.soft
+  local mission_space=mission_header.add{type="empty-widget"}
+  mission_space.style.horizontally_stretchable=true
+  local count=label(mission_header,L("mission-stage-count",
+    tostring(plan.satisfied),tostring(plan.requirements)))
+  count.style.font_color=COLOR.muted
+  -- The top line is always the next verifiable action, never a made-up
+  -- logistical task. For bosses and deliveries the source owns the result.
+  if plan.finished then
+    local done=wrap(mission,L("mission-complete"),text_width-28)
+    done.style.font_color=COLOR.green
+  elseif plan.next_step then
+    local step=plan.next_step
+    local key=step.kind=="goal" and plan.kind or step.kind
+    local action=wrap(mission,L("mission-next",
+      L("mission-step-"..key,step.name)),text_width-28)
+    action.style.font="default-bold"
+    action.style.font_color=COLOR.ink
+  end
+  if plan.disabled and not plan.finished then
+    local warning=wrap(mission,L("mission-disabled"),text_width-28)
+    warning.style.font_color=COLOR.amber
+  end
+  if plan.research_percent~=nil then
+    local running=label(mission,L("mission-research-progress",
+      tostring(plan.research_percent)))
+    running.style.font_color=COLOR.teal
+    local research_bar=mission.add{type="progressbar",
+      value=plan.research_percent/100}
+    research_bar.style.width=math.min(240,text_width-32)
+    research_bar.style.height=4
+    research_bar.style.color=COLOR.teal
+  end
+  local shown=objectives.visible_rows(plan,p.goal_expanded,3)
+  local checklist=mission.add{type="flow",direction="vertical"}
+  checklist.style.vertical_spacing=4
+  for _,row in ipairs(shown) do
+    local item=checklist.add{type="flow",direction="horizontal"}
+    item.style.horizontal_spacing=8
+    item.style.vertical_align="center"
+    local marker=label(item,row.done and "✓" or "○")
+    marker.style.font_color=row.done and COLOR.green
+      or row.kind=="goal" and theme.primary or COLOR.amber
+    local kind=row.kind=="goal" and plan.kind or row.kind
+    local caption=L("mission-step-"..kind,row.name)
+    if row.link then
+      local link=item.add{type="label",style="clickable_label",
+        caption=caption,tooltip=L("open-prerequisite"),
+        tags={razi_journal_action="guidance-select",id=row.link}}
+      link.style.single_line=false
+      link.style.maximal_width=text_width-64
+      link.style.font_color=row.done and COLOR.muted or COLOR.ink
+    else
+      local note=wrap(item,caption,text_width-64)
+      note.style.font_color=row.done and COLOR.muted or COLOR.ink
     end
   end
-  if required_total>0 then
-    local readiness=prose.add{type="flow",direction="vertical"}
-    readiness.style.width=text_width
-    readiness.style.vertical_spacing=5
-    dossier_heading(readiness,"dossier-readiness",theme,text_width)
-    local count=label(readiness,L("dossier-prerequisites",
-      tostring(met),tostring(required_total)))
-    count.style.font_color=met==required_total and COLOR.green or COLOR.muted
-    local bar=readiness.add{type="progressbar",value=met/required_total}
-    bar.style.width=math.min(240,text_width-18)
-    bar.style.height=5
-    bar.style.color=theme.primary
+  if #shown<#plan.rows or (p.goal_expanded and #plan.rows>3) then
+    local toggle=mission.add{type="label",style="clickable_label",
+      caption=L(p.goal_expanded and "mission-collapse" or "mission-expand",
+        tostring(#plan.rows)),
+      tags={razi_journal_action="mission-details",id=quest.id}}
+    toggle.style.font_color=theme.soft
   end
   -- A journal is primarily a story. After the live objective and its
   -- immediate blockers, let the player read the entry before secondary
@@ -2217,6 +2251,9 @@ function M.gui_click(event)
     p.view="quests"
     p.chapter_cover=false
     p.reveal_selection=false
+  elseif action=="mission-details" and p.view=="quests"
+    and p.selected==tags.id then
+    p.goal_expanded=not p.goal_expanded
   elseif action=="focus" and p.view~="systems"
     and not (p.view=="projects" and p.project=="cargo") then
     if not p.reader_focus then
@@ -2424,7 +2461,8 @@ function M.gui_click(event)
     if action=="select" or action=="guidance-select" or action=="chapter"
       or action=="next" or action=="chapter-dossier" or action=="chapter-continue"
       or action=="next-in-chapter" or action=="previous-in-chapter"
-      or action=="filter" or action=="filter-ready" or action=="clear-search" then
+      or action=="filter" or action=="filter-ready" or action=="clear-search"
+      or action=="mission-details" then
       update_reader(player,action=="chapter" or action=="filter")
       return
     elseif action=="pin" then
