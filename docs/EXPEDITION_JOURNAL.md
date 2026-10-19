@@ -14,7 +14,9 @@ dossier to the available window width. On compact project layouts, it hides
 the project selector strip and expands the reading height. The preference
 `reader_focus` belongs to the player's existing UI preferences, not to the
 campaign state or technology graph. Hidden indexes retain their native
-scroll-pane instances. Switching Focus/Index triggers one deliberate redraw,
+scroll-pane instances. The native navigation scrollbar offset is also captured
+before entering Focus and restored explicitly on exit, even if Factorio clamps
+a hidden pane to zero. Switching Focus/Index triggers one deliberate redraw,
 with existing scroll context IDs restored afterward. Systems already has no
 index and does not need the control; the Cargo reference also does not.
 
