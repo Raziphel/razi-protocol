@@ -17,6 +17,7 @@ class MissionPlanContracts(unittest.TestCase):
             "current.name==technology.name",
             "options.research_progress",
             "function M.visible_rows(plan,expanded,limit)",
+            "row~=plan.next_step",
         ):
             self.assertIn(fragment,src)
         for risky in ("game.surfaces", "find_entities_filtered",
@@ -29,6 +30,8 @@ class MissionPlanContracts(unittest.TestCase):
         self.assertIn('require("scripts.razi_journal_objectives")',src)
         self.assertIn("objectives.snapshot(",src)
         self.assertIn("objectives.visible_rows(",src)
+        self.assertIn("local goal_expanded=p.goal_expanded and p.goal_expanded_quest==quest.id",src)
+        self.assertIn('tags={razi_journal_action="guidance-select",id=step.link}',src)
         self.assertIn('action=="mission-details"',src)
         self.assertIn("value.goal_expanded=value.goal_expanded==true",src)
         self.assertIn('razi_journal_action="guidance-select"',src)
