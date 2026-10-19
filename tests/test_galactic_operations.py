@@ -88,7 +88,10 @@ class GalacticOperationsTests(unittest.TestCase):
         ui=(ROOT/"scripts/galactic_operations.lua").read_text()
         self.assertIn('retire_connected_operations()',control)
         self.assertNotIn('galactic_operations.sync_all_map_buttons',control)
-        self.assertNotIn('on_player_controller_changed',control)
+        # Controller changes record actual Deep Space crew visits; they
+        # no longer manage the old Galactic Operations map button.
+        self.assertIn('defines.events.on_player_controller_changed',control)
+        self.assertIn('deep_expedition.observe(player)',control)
         self.assertIn('events:on_nth_tick(30, function()',control)
         self.assertIn('razi_journal.flush_research_refreshes()',control)
         self.assertNotIn('on_lua_shortcut',control)
