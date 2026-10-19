@@ -111,6 +111,36 @@ check(orders.add(a),"Re-create an order")
 check(orders.saved_count(a)==1,"Expected one saved packing plan")
 orders.clear(a)
 check(orders.saved_count(a)==0,"Clearing all restores capacity")
+-- A.5 bulk staging cannot overfill the queue or leave half a recipe
+-- staged when an ingredient, amount or directed route is invalid.
+local bill={{item="iron-plate",count=150},
+ {item="low-density-structure",count=20}}
+check(orders.add_many(a,route,bill),"Real, researched direct import can stage a batch")
+local after=orders.orders(a)
+check(#after==2 and after[1].item=="iron-plate"
+ and after[2].item=="low-density-structure",
+ "Bulk staging must preserve both source item quantities")
+local draft=orders.store(a.index).draft
+check(draft.item=="iron-plate" and draft.count==201 and draft.route==route,
+ "Supply stage must never overwrite the hand-edited Freight Desk draft")
+check(not orders.add_many(a,route,{
+ {item="iron-plate",count=3},{item="no-such-item",count=9}})
+ and #orders.orders(a)==2,
+ "Invalid bulk item must not cause partially appended plans")
+check(not orders.add_many(a,route,{
+ {item="iron-plate",count=3},{item="iron-plate",count=1.3}})
+ and #orders.orders(a)==2,
+ "Invalid bulk quantity must fail atomically")
+local too_many={}
+for i=1,19 do too_many[i]={item="iron-plate",count=i} end
+check(not orders.add_many(a,route,too_many)
+ and #orders.orders(a)==2,
+ "Queue overflow must reject entire bill, not stage the first orders")
+check(not orders.add_many(a,"razi-forged-catapult",bill)
+ and #orders.orders(a)==2,
+ "Forged directed route must be rejected before storing any order")
+orders.clear(a)
+check(orders.saved_count(a)==0,"Bulk orders must still support original clear")
 orders.cleanup(a.index)
 check(storage.razi_freight_orders[a.index]==nil,
  "Removed players must not leave serialized packing plans")
