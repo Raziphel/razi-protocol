@@ -31,13 +31,22 @@ local worlds={
 game={planets=worlds}
 script={active_mods={["orbital-cannon"]="0.15.0",
  ["platform-logistics-overhaul"]="2.1.2"}}
+local function cargo_bays(n)
+ return {valid=true,count_entities_filtered=function(filter)
+   check(filter.name=="cargo-bay" and filter.force==force,
+     "Native bay inventory must only query this force's platform")
+   return n
+ end}
+end
 local docks={
  muria={
   {valid=true,hidden=false,scheduled_for_deletion=0,
    hub={valid=true,type="space-platform-hub",providing_to_other_platforms=true},
+   surface=cargo_bays(2),
    schedule={records={{station="other"}}}},
   {valid=true,hidden=false,scheduled_for_deletion=0,
    hub={valid=true,type="space-platform-hub",providing_to_other_platforms=false},
+   surface=cargo_bays(3),
    schedule=nil},
   {valid=true,hidden=true,scheduled_for_deletion=0,
    hub={valid=true,type="space-platform-hub"}},
@@ -47,6 +56,7 @@ local docks={
  rubia={
   {valid=true,hidden=false,scheduled_for_deletion=0,
    hub={valid=true,type="space-platform-hub",providing_to_other_platforms=true},
+   surface=cargo_bays(1),
    schedule={records={{station="next"}}}}
  }
 }
@@ -69,11 +79,13 @@ check(status.worlds.muria.launcher_count==2
  "Real existing and missing candidate counts should remain distinct")
 check(status.worlds.muria.platforms==2
  and status.worlds.muria.providers==1
- and status.worlds.muria.unscheduled==1,
+ and status.worlds.muria.unscheduled==1
+ and status.worlds.muria.vanilla_bays==5,
  "Only real visible docked platforms with hubs count; provider is native")
 check(status.worlds.rubia.platforms==1
  and status.worlds.rubia.providers==1
- and status.worlds.rubia.unscheduled==0,
+ and status.worlds.rubia.unscheduled==0
+ and status.worlds.rubia.vanilla_bays==1,
  "Destination sharing and schedule status should be recorded accurately")
 check(calls.muria==1 and calls.rubia==1 and calls.aquilo==nil,
  "Each known destination must be queried just once on explicit render")
