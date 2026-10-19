@@ -90,19 +90,17 @@ local nyxaris_locations = {
             orientation = 0.91,
         },
     },
-    {
-        type = "planet",
-        name = "panglia",
-        orbit = {
-            parent = {
-                type = "space-location",
-                name = "nyxaris",
-            },
-            distance = 18,
-            orientation = 0.72,
-        },
-    },
 }
+
+-- Panglia follows Moshine in its original source technology chain.
+-- Global galaxy_layout remains the final authority on orbit placement.
+if mods["panglia_planet"] and data.raw.planet and data.raw.planet["panglia"] then
+    table.insert(nyxaris_locations, {
+        type = "planet", name = "panglia",
+        orbit = {parent = {type = "space-location", name = "nyxaris"},
+                 distance = 44, orientation = 0.44}
+    })
+end
 
 if mods["pelagos"] then
     table.insert(nyxaris_locations, {
