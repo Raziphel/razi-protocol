@@ -152,9 +152,10 @@ Restoring the old network without witnesses would have reactivated that
 corporate succession key. The Engine was obeying a human directive, not
 inventing evil for its own sake.
 
-The Engine asks for a surviving executive signature but cannot find one.
-It receives instead a working, distributed signal backed by actual
-delivered materials, independent research and real receiving equipment.
+The Engine requests a new authorized executive successor, but no living
+colony appoints one. Instead, seven independent witness stations submit a
+working, distributed refusal backed by real delivered materials, research
+and powered receiving equipment.
 It can no longer label the colonies as dead or irrecoverable. The Protocol
 releases central control; RAZI Industries' corporate authority expires.
 No factory, person or colony is a balance-sheet asset.
