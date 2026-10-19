@@ -1704,6 +1704,12 @@ local function draw(player,focus_search)
   -- No decorative footer: useful space belongs to the dossiers.
   -- Restore only after the complete new GUI tree has been assembled.
   restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
+  -- A hidden index can report zero during a Focus layout. Reapply the
+  -- actual pre-Focus native offsets on the first return to the index.
+  if not p.reader_focus and p.focus_navigation_scrolls then
+    restore_scrolls(frame,p.focus_navigation_scrolls,false)
+    p.focus_navigation_scrolls=nil
+  end
 end
 -- A new quest updates only the document, leaving the original chapter
 -- scroll pane alive. This is more reliable than restoring a rebuilt scrollbar.
@@ -2213,6 +2219,20 @@ function M.gui_click(event)
     p.reveal_selection=false
   elseif action=="focus" and p.view~="systems"
     and not (p.view=="projects" and p.project=="cargo") then
+    if not p.reader_focus then
+      local frame=player.gui.screen[FRAME]
+      local saved={}
+      collect_scrolls(frame,saved)
+      p.focus_navigation_scrolls={}
+      for _,name in ipairs({"razi_journal_navigation",
+          "razi_journal_project_navigation",
+          "razi_journal_archive_navigation"}) do
+        local key=name.."|"
+        if type(saved[key])=="number" then
+          p.focus_navigation_scrolls[key]=saved[key]
+        end
+      end
+    end
     p.reader_focus=not p.reader_focus
   elseif action=="chapter-dossier" then
     local known=false
