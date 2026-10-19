@@ -10,4 +10,5 @@ require "prototypes.system.beetlejuice"
 require "prototypes.system.linox"
 require "prototypes.system.deep_space"
 require("prototypes.compat.k2so_tweaks").data()
+require "prototypes.system.seven_systems"
 require "prototypes.technology"
