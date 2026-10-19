@@ -119,8 +119,13 @@ function M.render(parent,player,size)
   local top=scroll.add{type="flow",name="razi_sys_summary_row",
     direction=compact and "vertical" or "horizontal"}
   top.style.width=width
-  top.style.horizontal_spacing=12
-  top.style.vertical_spacing=10
+  -- Factorio uses different runtime style classes for horizontal/vertical flows.
+  -- A horizontal flow rejects vertical_spacing (and vice versa).
+  if compact then
+    top.style.vertical_spacing=10
+  else
+    top.style.horizontal_spacing=12
+  end
 
   local fleet=card(top,"razi_sys_fleet","fleet-title","fleet-description",tile_width,COLOR.teal)
   add_label(fleet,"razi_sys_fleet_status",L("fleet-waiting"),COLOR.ink,tile_width-32)
