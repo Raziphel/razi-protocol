@@ -73,6 +73,9 @@ local function pref(index)
   value.archive_filter=({all=true,legacy=true,corporate=true,
     field=true})[value.archive_filter] and value.archive_filter or "all"
   value.chapter_cover=value.chapter_cover==true
+  -- Default to one Journal toolbar. Players can reveal the source buttons
+  -- temporarily when they need Planet Express or Nexus native controls.
+  value.native_controls_visible=value.native_controls_visible==true
   return value
 end
 M.preferences=pref
@@ -1595,6 +1598,13 @@ local function draw(player,focus_search)
     tint(label(filterbar,L("projects-hint")),window_theme.soft)
   elseif p.view=="systems" then
     tint(label(filterbar,{"journal-systems.status-strip"}),window_theme.soft)
+    local spacer=filterbar.add{type="empty-widget"}
+    spacer.style.horizontally_stretchable=true
+    filterbar.add{type="button",name="razi_journal_systems_native",
+      caption=L(p.native_controls_visible and "systems-native-hide" or
+        "systems-native-show"),
+      tooltip=L("systems-native-tooltip"),
+      tags={razi_journal_action="systems-native"}}
   else
     subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
@@ -1872,6 +1882,7 @@ function M.sync(player)
   -- Return to the original top-left gold journal button.
   -- Clean failed placements without deleting player.gui.top[TOP].
   journal_button_cleanup.remove_other_placements(player,TOP)
+  systems.sync_companion_widgets(player,pref(player.index).native_controls_visible)
   local top=player.gui.top[TOP]
   if show_player_option(player,"razi-journal-show-button") then
     if not (top and top.valid) then
@@ -1986,11 +1997,12 @@ function M.refresh_convergence(force)
   end
 end
 function M.refresh_systems_visible()
-  -- Source data is sampled only while somebody is actually reading Systems.
-  -- Update named labels in place: no full Journal rebuild or scroll jumps.
+  -- A small reconciliation also catches companion GUIs rebuilt by their own
+  -- join/research/configuration handlers; it never scans the world.
   for _,player in pairs(game.connected_players or {}) do
     local p=storage.razi_expedition_journal
       and storage.razi_expedition_journal[player.index]
+    systems.sync_companion_widgets(player,p and p.native_controls_visible)
     if p and p.view=="systems" then systems.refresh(player) end
   end
 end
@@ -2081,6 +2093,21 @@ function M.gui_click(event)
   end
   if action=="toggle" then M.toggle(player);return end
   if action=="close" then close(player);return end
+  if action=="systems-native" then
+    local p=pref(player.index)
+    local frame=player.gui.screen[FRAME]
+    if not (frame and frame.valid and p.view=="systems") then return end
+    -- Never redraw the folio for this control: preserve scroll position.
+    p.native_controls_visible=not p.native_controls_visible
+    systems.sync_companion_widgets(player,p.native_controls_visible)
+    local bar=frame["razi_journal_filterbar"]
+    local button=bar and bar["razi_journal_systems_native"]
+    if button and button.valid then
+      button.caption=L(p.native_controls_visible and "systems-native-hide"
+        or "systems-native-show")
+    end
+    return
+  end
   if action=="nexus-codex" then
     if not trials.open_codex(player,tags.id) then
       player.print(L("nexus-codex-unavailable"))
