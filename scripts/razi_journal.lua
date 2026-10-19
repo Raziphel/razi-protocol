@@ -1844,10 +1844,13 @@ function M.refresh_nexus_visible()
       and storage.razi_expedition_journal[player.index]
     if p then
       local frame=player.gui.screen[FRAME]
-      if p.view=="quests" and frame and frame.valid
-        and (p.chapter=="deepworks"
+      local relevant=(p.view=="quests" and
+        (p.chapter=="deepworks"
           or (p.selected and defs.by_id[p.selected]
-            and defs.by_id[p.selected].boss)) then
+            and defs.by_id[p.selected].boss)))
+        or (p.view=="projects"
+          and (p.project=="nexus-trials" or p.project=="convergence"))
+      if relevant and frame and frame.valid then
         local force=player.force
         local revision=revisions[force.index]
         if not revision then

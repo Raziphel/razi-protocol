@@ -504,6 +504,13 @@ local function next_action(force,id,status)
       return L("project-next-research",ignition.localised_name),
         "convergence-ignition-research"
     end
+    local boss_status=nexus_trials.snapshot(force)
+    if not boss_status then
+      return L("project-next-nexus-unavailable")
+    end
+    if boss_status.count<boss_status.total then
+      return L("project-next-convergence-nexus")
+    end
     local witness=force.technologies["razi-convergence-witness-network"]
     if witness and not witness.researched then
       return L("project-next-research",witness.localised_name)
