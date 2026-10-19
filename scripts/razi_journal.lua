@@ -1226,8 +1226,9 @@ function M.unlocked_records(force,context)
   return unlocked,#records
 end
 local function render_archive(parent,player,p,context,size)
-  local rail=parent.add{type="frame",direction="vertical",
-    style="razi_journal_index"}
+  local rail=parent.add{type="frame",name="razi_journal_archive_index",
+    direction="vertical",style="razi_journal_index"}
+  rail.visible=not p.reader_focus
   rail.style.width=size.rail
   rail.style.height=size.body
   rail.style.padding=10
@@ -1490,7 +1491,7 @@ local function draw(player,focus_search)
   local size=M.layout(player.display_resolution,player.display_scale)
   -- Focus widens only the quest reader. Hidden chapter widgets stay alive,
   -- so opening the index again does not lose its scroll position.
-  if p.view=="quests" and p.reader_focus then
+  if p.view~="systems" and p.reader_focus then
     size.reader=size.width-43
   end
   local reveal_on_redraw=p.reveal_selection==true
@@ -1522,7 +1523,8 @@ local function draw(player,focus_search)
     caption=L(p.reader_focus and "focus-show-index" or "focus-read"),
     tooltip=L("focus-tooltip"),
     tags={razi_journal_action="focus"}}
-  focus.visible=p.view=="quests"
+  focus.visible=p.view~="systems"
+    and not (p.view=="projects" and p.project=="cargo")
   focus.style.minimal_width=size.compact and 55 or 94
   local refresh=head.add{type="button",style="tool_button",
     caption="↻",tooltip=L("refresh"),
@@ -2209,7 +2211,8 @@ function M.gui_click(event)
     p.view="quests"
     p.chapter_cover=false
     p.reveal_selection=false
-  elseif action=="focus" and p.view=="quests" then
+  elseif action=="focus" and p.view~="systems"
+    and not (p.view=="projects" and p.project=="cargo") then
     p.reader_focus=not p.reader_focus
   elseif action=="chapter-dossier" then
     local known=false
