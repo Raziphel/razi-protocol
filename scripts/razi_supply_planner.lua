@@ -32,6 +32,8 @@ function M.catalog(force)
   local result={}
   for _,row in ipairs(industry.snapshot(force,MAX_ROWS).entries) do
     if world_discovered(force,row.site) then
+      local live=force.recipes and force.recipes[row.quest.tech]
+      row.recipe_enabled=live and live.enabled==true or false
       result[#result+1]=row
     end
   end
@@ -140,7 +142,8 @@ end
 local function confirmed_recipe(player,recipe_id,route_id)
   if not (player and player.force) then return nil end
   local row=M.recipe(player.force,recipe_id)
-  if not (row and row.technology and row.technology.researched) then
+  if not (row and row.technology and row.technology.researched
+    and row.recipe_enabled) then
     return nil
   end
   for _,option in ipairs(M.inbound(player.force,row.site)) do
@@ -223,9 +226,11 @@ function M.render(parent,player,p,width)
   select.style.minimal_width=math.max(175,math.min(width-80,420))
   wrap(editor,L("supply-factory-destination",name(current.site)),width-36)
   local researched=current.technology and current.technology.researched
-  wrap(editor,L(researched and "supply-research-ready"
-    or "supply-research-locked"),width-36,false,
-    researched and {r=.56,g=.81,b=.67} or GOLD)
+  local enabled=researched and current.recipe_enabled
+  wrap(editor,L(not researched and "supply-research-locked"
+    or enabled and "supply-research-ready"
+    or "supply-recipe-disabled"),width-36,false,
+    enabled and {r=.56,g=.81,b=.67} or GOLD)
   local row=editor.add{type="flow",direction=width<670 and "vertical"
     or "horizontal"}
   row.style.vertical_align="center"
@@ -290,7 +295,7 @@ function M.render(parent,player,p,width)
     if item.plannable then
       wrap(card,L("supply-material-stacks",
         tostring(item.stacks or 0)),width-35)
-      if researched and p.supply_route then
+      if enabled and p.supply_route then
         card.add{type="button",
           caption=L("supply-create-plan"),
           tags={razi_ops_action="supply-plan",value=item.name}}
@@ -306,7 +311,7 @@ function M.render(parent,player,p,width)
   for _,ingredient in ipairs(ingredients) do
     if ingredient.plannable then suitable=suitable+1 end
   end
-  if researched and p.supply_route and suitable>0 then
+  if enabled and p.supply_route and suitable>0 then
     parent.add{type="button",
       caption=L("supply-plan-all",tostring(suitable)),
       tooltip=L("supply-plan-all-help"),
