@@ -716,6 +716,12 @@ local function render_details(parent,player,quest,p,context,size,view)
       local required=defs.by_id[id]
       return required and M.complete(force,required,context) or false
     end,
+    tech_for_quest=function(id)
+      local required=defs.by_id[id]
+      -- World objectives may use an alternate source technology in the
+      -- installed modpack. Do not guess that technology from a world ID.
+      return required and not required.world and required.tech or nil
+    end,
     quest_for_tech=function(name)
       for _,candidate in ipairs(quests_for_technology[name] or {}) do
         if M.journal_visible(force,candidate,context) then
