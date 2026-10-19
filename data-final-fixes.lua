@@ -93,10 +93,29 @@ require("prototypes.technology.deep_space_arrival").data_final_fixes()
 -- Make sure every system card in the price of the new gates is unlocked before the gate.
 require("prototypes.technology.seven_systems").data_final_fixes()
 
+-- Planet branches of one system require each other's science. After the gates and their links, so the
+-- opening choices of every system stay free.
+require("prototypes.technology.campaign_weave").data_final_fixes()
+
+-- Linox, Crucible and Vesta must not need their own late science to be reached; the weave above adds
+-- ancestors, so the arrival chains are cleaned after it.
+require("prototypes.compat.linox_science_guard").data_final_fixes()
+require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
+
+-- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
+require("prototypes.technology.regional_research_bridges").data_final_fixes()
+require("prototypes.technology.galactic_mod_research").data_final_fixes()
+require("prototypes.technology.tech_tree_visibility").data_final_fixes()
+
 -- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
 -- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
 -- the cycle check sees the final graph) and before the lab inputs are deduplicated.
 require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+
+-- The bridges and the staged Aquilo upgrades add prerequisites after the first pass of the arrival
+-- guards; repeat them so the final prerequisite graph is clean.
+require("prototypes.compat.linox_science_guard").data_final_fixes()
+require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 
 -- Planet packs frequently append their science inputs without checking whether
 -- another compatibility pass already added the same pack. Duplicate lab inputs
