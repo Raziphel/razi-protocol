@@ -78,6 +78,12 @@ check(storage.razi_supply_itineraries[other.index]==nil,
  "Another player cannot inherit the first operator's itinerary")
 check(module.visible(player,graph)[1].valid,
  "Visible manifest must be revalidated against current graph")
+check(module.toggle_details(player,p,one.plans[1].id)
+ and p.supply_expanded==one.plans[1].id,
+ "Saved itinerary should expand only after explicit click")
+check(module.toggle_details(player,p,one.plans[1].id)
+ and p.supply_expanded==nil,
+ "Saved itinerary should collapse to the compact summary")
 revised=true
 check(not module.visible(player,graph)[1].valid,
  "Rebalanced source ingredients invalidate outdated saved quantities")
@@ -102,7 +108,8 @@ check(not module.save(player,p),
 technology.researched=true
 enabled=false
 check(not module.save(player,p) and not module.visible(player,graph)[1].valid
- and module.visible(player,graph)[1].plan==nil,
+ and module.visible(player,graph)[1].plan==nil
+ and not module.toggle_details(player,p,one.plans[1].id),
  "Lost route source or research must conceal saved contents")
 check(module.remove(player,one.plans[1].id),
  "Concealed manifests must be removable with opaque ID")
@@ -134,8 +141,9 @@ end
 module.render(gui(),player,p,750,recipe)
 check(actions["supply-origin"] and actions["supply-path"]
  and actions["supply-itinerary-save-all"]
- and actions["supply-itinerary-remove"],
- "Source and route selection plus save/remove must have native GUI tags")
+ and actions["supply-itinerary-remove"]
+ and actions["supply-itinerary-toggle"],
+ "Source and route selection plus save/expand/remove must have native GUI tags")
 module.cleanup(player.index)
 check(storage.razi_supply_itineraries[player.index]==nil,
  "Removed player must not leave orphaned itinerary records")
