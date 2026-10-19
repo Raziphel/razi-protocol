@@ -50,7 +50,8 @@ local function render_infrastructure(parent,route,report,width)
     name(route.target),platforms(to)),width-48)
   orbit.style.font_color={r=.72,g=.78,b=.82}
 end
-function M.render(parent,player,snapshot,width)
+function M.render(parent,player,snapshot,width,options)
+  options=options or {}
   if not snapshot.installed then return end
   if not snapshot.enabled and orders.saved_count(player)==0 then return end
   local panel=parent.add{type="frame",direction="vertical",
@@ -63,8 +64,10 @@ function M.render(parent,player,snapshot,width)
   line(panel,L("freight-board-explainer"),width-44)
   local data=orders.store(player.index)
   -- At most one read per discovered world for this explicit Journal render.
-  local observed=infrastructure.snapshot(player.force,snapshot)
-  local delivered=pod_receipts.snapshot(player.force,snapshot)
+  local observed=not options.clean and
+    infrastructure.snapshot(player.force,snapshot) or nil
+  local delivered=not options.clean and
+    pod_receipts.snapshot(player.force,snapshot) or nil
   if snapshot.visible==0 then
     line(panel,L("freight-board-undiscovered"),width-44)
     -- Even fully concealed or temporarily disabled routes must not leave
@@ -111,12 +114,14 @@ function M.render(parent,player,snapshot,width)
     local selected_line=line(panel,L("freight-board-selected",
       name(selected.source),name(selected.target)),width-44)
     selected_line.style.font="default-bold"
-    render_infrastructure(panel,selected,observed,width)
-    local first=delivered.worlds[selected.source] or 0
-    local second=delivered.worlds[selected.target] or 0
-    line(panel,L("freight-pod-route-evidence",
-      name(selected.source),tostring(first),
-      name(selected.target),tostring(second)),width-44)
+    if not options.clean then
+      render_infrastructure(panel,selected,observed,width)
+      local first=delivered.worlds[selected.source] or 0
+      local second=delivered.worlds[selected.target] or 0
+      line(panel,L("freight-pod-route-evidence",
+        name(selected.source),tostring(first),
+        name(selected.target),tostring(second)),width-44)
+    end
     local editor=panel.add{type="flow",direction="horizontal"}
     editor.style.vertical_align="center"
     editor.style.horizontal_spacing=8
@@ -140,7 +145,7 @@ function M.render(parent,player,snapshot,width)
     line(panel,L("freight-board-pick-route"),width-44)
   end
   local listed=orders.orders(player)
-  if selected or #listed>0 then
+  if not options.clean and (selected or #listed>0) then
     line(panel,L("freight-infra-disclaimer"),width-44)
     line(panel,L(observed.platform_logistics and
       "freight-infra-companion-installed" or
@@ -190,7 +195,9 @@ function M.render(parent,player,snapshot,width)
       width<680 and width-52 or width-326))
     description.style.font_color=entry.packed
       and {r=.55,g=.84,b=.70} or {r=.72,g=.78,b=.82}
-    render_infrastructure(panel,entry.route,observed,width)
+    if not options.clean then
+      render_infrastructure(panel,entry.route,observed,width)
+    end
     -- Real inventory state is local to this player. It is not a
     -- measurement of launchpad storage or the destination's inventory.
     if player.get_item_count then
@@ -228,8 +235,9 @@ function M.render(parent,player,snapshot,width)
     container.add{type="button",caption=L("freight-board-remove"),
       tags={razi_ops_action="freight-remove",value=entry.id}}
   end
-  -- Engine-confirmed events are displayed separately from the manual
-  -- catapult plans. They prove neither the sender nor any shipment quantity.
+  -- A.4 keeps verified activity in Command Overview, not repeated under
+  -- all manually staged orders in the compact Freight view.
+  if not options.clean then
   local header=line(panel,L("freight-pod-ledger-heading"),width-44)
   header.style.font="default-bold"
   header.style.font_color={r=.86,g=.73,b=.49}
@@ -244,6 +252,7 @@ function M.render(parent,player,snapshot,width)
     end
   end
   line(panel,L("freight-pod-ledger-caution"),width-44)
+  end
   line(panel,L("freight-board-manual"),width-44)
 end
 return M
