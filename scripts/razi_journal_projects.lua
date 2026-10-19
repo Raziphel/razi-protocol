@@ -800,7 +800,7 @@ local function cargo_reference(parent,player,p,size)
     name="razi_journal_project_reader"}
   scroll.style.width=size.width-43
   scroll.style.height=math.max(150,size.body-55)
-  scroll.tags={razi_scroll_context="cargo"}
+  scroll.tags={razi_scroll_context="cargo:"..(p.logistics_tab or "overview")}
   scroll.horizontal_scroll_policy="never"
   scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
   local content=scroll.add{type="flow",direction="vertical"}
