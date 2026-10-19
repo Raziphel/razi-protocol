@@ -595,7 +595,7 @@ end
 M.render_tracker=render_tracker
 local function render_details(parent,player,quest,p,context,size,view)
   local panel=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="inside_shallow_frame"}
   panel.style.width=size.reader
   panel.style.height=size.body
   panel.style.padding=11
@@ -1013,7 +1013,7 @@ end
 -- buttons. One chapter jump selector covers distant chapters with no bars.
 local function render_chapters(parent,player,p,context,size,view,plan)
   local frame=parent.add{type="frame",name="razi_journal_navigation_panel",direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="inside_shallow_frame"}
   frame.style.width=size.rail
   frame.style.height=size.body
   frame.style.padding=9
@@ -2344,6 +2344,8 @@ function M.text_changed(event)
   local p=pref(player.index)
   local query=(element.text or ""):sub(1,80)
   if p.query==query then return end
+  local prior=p.selected
+  local prior_cover=p.chapter_cover
   p.query=query
   -- Select the first matching visible milestone so the reader follows search.
   if query~="" then
@@ -2358,7 +2360,7 @@ function M.text_changed(event)
       end
     end
   end
-  update_reader(player)
+  update_reader(player,p.selected==prior and p.chapter_cover==prior_cover)
 end
 function M.elem_changed(event)
   local element=event and event.element
