@@ -1659,8 +1659,7 @@ local function update_reader(player)
   local view=M.view_status(player.force,context)
   local selected=select_quest(player.force,p,context,
     M.guidance(player.force,context,view))
-  local nav=body.children[1]
-  local scroll=nav and nav["razi_journal_navigation"]
+  local scroll=navigation_scroll
   if scroll then
     local function mark(parent)
       for _,child in pairs(parent.children) do
@@ -2196,7 +2195,7 @@ function M.gui_click(event)
   if old_view=="quests" and p.view=="quests"
     and old_query==p.query and old_filter==p.filter then
     if action=="select" or action=="guidance-select" or action=="chapter"
-      or action=="chapter-dossier" or action=="chapter-continue"
+      or action=="next" or action=="chapter-dossier" or action=="chapter-continue"
       or action=="next-in-chapter" or action=="previous-in-chapter" then
       update_reader(player)
       return
