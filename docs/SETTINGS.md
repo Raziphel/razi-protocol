@@ -4,9 +4,19 @@ Choose **Settings → Mod settings**. Most gameplay and starmap options are **St
 
 The defaults are designed for the main expedition. Optional performance experiments start **off**. Fragment and enemy reductions also change balance, not just visuals.
 
-## Find Razi settings first
+## RAZI Library shared settings (1.3.0)
 
-Install the optional [early-loading settings companion](../companion/00-razi-protocol-settings/README.md) as a separate enabled mod. It registers the same settings under `○  Razi Protocol` while preserving their IDs, types, defaults, and behavior. Without it, Razi Protocol registers settings normally in its own section. Installing the companion is required to test the early group position: Factorio controls final cross-mod ordering.
+RAZI Library can host **startup** options for compatible RAZI mods in its own
+native mod-settings group. The first enrolled mod is Razi Protocol. Its IDs,
+defaults, values, order keys and localization remain unchanged. Razi Protocol
+still owns its map-wide and per-user options, which must remain writable.
+
+With RAZI Library 1.3.0+, the library attempts the handoff automatically;
+when unavailable, Razi Protocol still registers every setting itself. The
+optional [early-loading settings companion](../companion/00-razi-protocol-settings/README.md)
+continues to take precedence when installed. The bridge doesn't override
+Factorio's cross-mod order, so test the visible position in-game. More mods
+can opt in by adding an explicit provider to RAZI Library's settings registry.
 
 ## Quick recommendations
 
