@@ -81,13 +81,18 @@ local function add_label(parent,name,caption,color,width)
   if color then el.style.font_color=color end
   return el
 end
-local function card(root,id,title,description,width)
+local function card(root,id,title,description,width,accent)
   local panel=root.add{type="frame",name=id,direction="vertical",
     style="inside_shallow_frame"}
   panel.style.width=width
   panel.style.padding=10
   local header=add_label(panel,nil,L(title),COLOR.ink,width-32)
   header.style.font="default-bold"
+  header.style.font_color=accent or COLOR.ink
+  local stripe=panel.add{type="progressbar",name=id.."_accent",value=1}
+  stripe.style.width=math.min(112,width-34)
+  stripe.style.height=3
+  stripe.style.color=accent or COLOR.teal
   local sub=add_label(panel,nil,L(description),COLOR.muted,width-32)
   sub.style.font="default"
   return panel
@@ -102,7 +107,8 @@ end
 
 function M.render(parent,player,size)
   local width=math.max(285,size.width-66)
-  local scroll=parent.add{type="scroll-pane",name=ROOT,direction="vertical"}
+  local scroll=parent.add{type="scroll-pane",name=ROOT,direction="vertical",
+    horizontal_scroll_policy="never",vertical_scroll_policy="auto"}
   scroll.style.width=math.max(301,size.width-45)
   scroll.style.height=size.body
   local intro=add_label(scroll,nil,L("intro"),COLOR.muted,width)
@@ -116,16 +122,16 @@ function M.render(parent,player,size)
   top.style.horizontal_spacing=12
   top.style.vertical_spacing=10
 
-  local fleet=card(top,"razi_sys_fleet","fleet-title","fleet-description",tile_width)
+  local fleet=card(top,"razi_sys_fleet","fleet-title","fleet-description",tile_width,COLOR.teal)
   add_label(fleet,"razi_sys_fleet_status",L("fleet-waiting"),COLOR.ink,tile_width-32)
   add_label(fleet,nil,L("fleet-tip"),COLOR.muted,tile_width-32)
 
-  local cores=card(top,"razi_sys_cores","zpe-title","zpe-description",tile_width)
+  local cores=card(top,"razi_sys_cores","zpe-title","zpe-description",tile_width,COLOR.amber)
   add_label(cores,"razi_sys_cores_status",L("zpe-locked"),COLOR.ink,tile_width-32)
   meter(cores,"razi_sys_cores_bar",COLOR.teal,tile_width-35)
   add_label(cores,nil,L("zpe-tip"),COLOR.muted,tile_width-32)
 
-  local storm=card(scroll,"razi_sys_storm","storm-title","storm-description",width)
+  local storm=card(scroll,"razi_sys_storm","storm-title","storm-description",width,COLOR.teal)
   add_label(storm,"razi_sys_storm_status",L("storm-unavailable"),COLOR.muted,width-32)
   add_label(storm,"razi_sys_instability",L("instability","0"),COLOR.ink,width-32)
   meter(storm,"razi_sys_instability_bar",COLOR.red,width-35)
@@ -182,7 +188,9 @@ function M.refresh_root(root,player)
   local shield=storm["razi_sys_shield"]
   local shield_bar=storm["razi_sys_shield_bar"]
   local stabilizers=storm["razi_sys_stabilizers"]
+  local accent=storm["razi_sys_storm_accent"]
   if not ws.available then
+    if accent then accent.style.color=COLOR.muted end
     status.caption=L("storm-unavailable")
     status.style.font_color=COLOR.muted
     unstable.visible=false
@@ -197,6 +205,10 @@ function M.refresh_root(root,player)
   shield.visible=true
   shield_bar.visible=true
   stabilizers.visible=true
+  if accent then
+    accent.style.color=ws.active and COLOR.red
+      or ws.warning and COLOR.amber or COLOR.teal
+  end
   if ws.active then
     status.caption=L("storm-active",math.ceil(ws.timer))
     status.style.font_color=COLOR.red

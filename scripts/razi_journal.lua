@@ -1052,6 +1052,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   -- A compact next-objective link rather than the old tall dashboard card.
   if plan.primary and plan.primary.quest then
     local lead=column.add{type="flow",name="razi_journal_lead",direction="vertical"}
+    lead.visible=p.query=="" and p.filter=="all"
     lead.style.width=inner-16
     lead.style.vertical_spacing=2
     local title=label(lead,L("guidance-heading"))
@@ -1108,12 +1109,20 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       heading.style.font_color=open and COLOR.ink or COLOR.muted
       heading.style.vertical_align="center"
 
-      local counts=card.add{type="flow",direction="horizontal"}
+      local counts=card.add{type="flow",name="razi_journal_chapter_status",direction="horizontal"}
       counts.style.vertical_align="center"
+      counts.style.horizontal_spacing=8
       local count=counts.add{type="label",name="razi_journal_chapter_count",
         caption=L("chapter-progress-short",tostring(completed),tostring(total))}
       count.style.font_color=COLOR.quiet
-      -- The chapter count is enough; full-width bars made the index noisy.
+      -- A restrained completion stroke accompanies the expanded folio.
+      -- Collapsed chapters remain text-first, with no redundant wide bars.
+      local chapter_meter=counts.add{type="progressbar",name="razi_journal_chapter_meter",
+        value=total>0 and completed/total or 0}
+      chapter_meter.style.width=math.max(40,inner-164)
+      chapter_meter.style.height=3
+      chapter_meter.style.color=theme.primary
+      chapter_meter.visible=open
       local entries=card.add{type="flow",name="razi_journal_chapter_entries",direction="vertical"}
       entries.visible=open and visible_count>0
       entries.style.vertical_spacing=2
@@ -1161,8 +1170,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             tooltip=L("select-objective")}
           choice.style.single_line=false
           choice.style.maximal_width=inner-108
-          choice.style.font_color=chosen
-            and COLOR.ink or COLOR.muted
+          choice.style.font_color=chosen and COLOR.ink
+            or state=="active" and theme.soft or COLOR.muted
           if chosen then
             control.style.font_color=theme.primary
             choice.style.font="default-bold"
@@ -1400,7 +1409,8 @@ local scroll_names={
   razi_journal_navigation=true,razi_journal_reading=true,
   razi_journal_chapter_reading=true,razi_journal_archive_reading=true,
   razi_journal_archive_navigation=true,
-  razi_journal_project_reader=true,razi_journal_systems_reading=true
+  razi_journal_project_reader=true,razi_journal_project_navigation=true,
+  razi_journal_systems_reading=true
 }
 local function scroll_key(element)
   local tags=element.tags
@@ -1684,8 +1694,9 @@ local function update_reader(player,preserve_reader)
       local entries=card["razi_journal_chapter_entries"]
       local head=card["razi_journal_chapter_head"]
       local toggle=head and head["razi_journal_chapter_toggle"]
-      local count_holder=card.children[2]
+      local count_holder=card["razi_journal_chapter_status"]
       local count=count_holder and count_holder["razi_journal_chapter_count"]
+      local chapter_meter=count_holder and count_holder["razi_journal_chapter_meter"]
       local shown=0
       for _,quest in ipairs(data.quests) do
         local row=entries and entries["razi_journal_item_"..quest.id]
@@ -1700,7 +1711,8 @@ local function update_reader(player,preserve_reader)
           local chosen=p.selected==quest.id and not p.chapter_cover
           if choice then
             choice.style.font=chosen and "default-bold" or "default"
-            choice.style.font_color=chosen and COLOR.ink or COLOR.muted
+            choice.style.font_color=chosen and COLOR.ink
+              or state=="active" and themes.get(ch.id).soft or COLOR.muted
           end
           if marker then
             marker.caption=state=="complete" and "✓"
@@ -1719,6 +1731,10 @@ local function update_reader(player,preserve_reader)
         count.caption=L("chapter-progress-short",
           tostring(data.completed),tostring(data.total))
       end
+      if chapter_meter then
+        chapter_meter.value=data.total>0 and data.completed/data.total or 0
+        chapter_meter.visible=expanded
+      end
     end
   end
   local empty=column["razi_journal_no_results"]
@@ -1734,7 +1750,7 @@ local function update_reader(player,preserve_reader)
   local lead_link=lead and lead["razi_journal_lead_link"]
   if lead_link then
     local next_quest=plan.primary and plan.primary.quest
-    lead.visible=next_quest~=nil
+    lead.visible=next_quest~=nil and p.query=="" and p.filter=="all"
     if next_quest then
       lead_link.caption={"journal-title."..next_quest.id}
       lead_link.tags={razi_journal_action="guidance-select",id=next_quest.id}

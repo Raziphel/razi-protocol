@@ -623,12 +623,12 @@ local function project_entry(parent,player,p,id,width,index,statuses)
   meter.style.height=5
   meter.style.color=selected and HUES.gold or {r=.48,g=.62,b=.69}
 end
-local function project_reader(parent,player,p,size,width,compact,statuses,displayed)
+local function project_reader(parent,player,p,size,width,compact,statuses,displayed,reader_override)
   local reader=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame_with_padding"}
   reader.style.width=width
-  local reader_height=compact
-    and math.max(175,size.body-175) or size.body
+  local reader_height=reader_override or (compact
+    and math.max(175,size.body-175) or size.body)
   reader.style.height=reader_height
   reader.style.padding=11
   local controls=reader.add{type="flow",direction="horizontal"}
@@ -656,7 +656,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   local copy=header.add{type="flow",direction="vertical"}
   copy.style.vertical_spacing=4
   local title=copy.add{type="label",caption=L("project-"..p.project)}
-  title.style.font="heading-1"
+  title.style.font="heading-2"
   title.style.font_color=HUES.ink
   title.style.single_line=false
   title.style.maximal_width=math.max(125,width-112)
@@ -692,7 +692,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   scroll.style.height=math.max(80,reader_height-(compact and 185 or 202))
   scroll.tags={razi_scroll_context=p.project}
   scroll.horizontal_scroll_policy="never"
-  scroll.vertical_scroll_policy="dont-show-but-allow-scrolling"
+  scroll.vertical_scroll_policy="auto"
   scroll.style.horizontally_squashable=true
   local content=scroll.add{type="flow",direction="vertical"}
   content.style.width=width-54
@@ -817,7 +817,14 @@ function M.render(parent,player,p,size)
     title.style.font="default-bold"
     title.style.font_color=HUES.gold
     local columns=size.width<620 and 1 or 2
-    local grid=stack.add{type="table",column_count=columns}
+    -- Ten project cards must not push the active dossier off a compact screen.
+    local selector_height=math.max(88,math.min(148,math.floor(size.body*.28)))
+    local selector=stack.add{type="scroll-pane",
+      name="razi_journal_project_navigation",direction="vertical",
+      horizontal_scroll_policy="never",vertical_scroll_policy="auto"}
+    selector.style.width=size.width-43
+    selector.style.height=selector_height
+    local grid=selector.add{type="table",column_count=columns}
     grid.style.horizontal_spacing=9
     grid.style.vertical_spacing=9
     local cell=math.max(170,math.floor((size.width-55-(columns-1)*9)/columns))
@@ -825,7 +832,8 @@ function M.render(parent,player,p,size)
       project_entry(grid,player,p,id,cell,
         string.format("%02d",index),statuses)
     end
-    project_reader(stack,player,p,size,size.width-43,true,statuses,displayed)
+    project_reader(stack,player,p,size,size.width-43,true,statuses,displayed,
+      math.max(170,size.body-selector_height-42))
   else
     local rail=parent.add{type="frame",direction="vertical",
       style="inside_shallow_frame_with_padding"}
@@ -839,9 +847,17 @@ function M.render(parent,player,p,size)
     note.style.font_color=HUES.quiet
     note.style.single_line=false
     note.style.maximal_width=size.rail-40
+    local selector=rail.add{type="scroll-pane",
+      name="razi_journal_project_navigation",direction="vertical",
+      horizontal_scroll_policy="never",vertical_scroll_policy="auto"}
+    selector.style.width=size.rail-27
+    selector.style.height=math.max(120,size.body-115)
+    local entries=selector.add{type="flow",direction="vertical"}
+    entries.style.width=size.rail-44
+    entries.style.vertical_spacing=5
     for index,id in ipairs(displayed) do
-      if index>1 then rail.add{type="line",direction="horizontal"} end
-      project_entry(rail,player,p,id,size.rail-41,
+      if index>1 then entries.add{type="line",direction="horizontal"} end
+      project_entry(entries,player,p,id,size.rail-45,
         string.format("%02d",index),statuses)
     end
     project_reader(parent,player,p,size,size.reader,false,statuses,displayed)
