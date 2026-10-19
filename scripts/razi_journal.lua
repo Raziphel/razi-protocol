@@ -2423,8 +2423,12 @@ function M.gui_click(event)
       end
       player.print({"razi-ops.supply-itinerary-saved"})
     elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-itinerary-toggle" then
+      if not multihop.toggle_details(player,p,tags.value) then return end
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
       and native=="supply-itinerary-remove" then
       if not multihop.remove(player,tags.value) then return end
+      if p.supply_expanded==tags.value then p.supply_expanded=nil end
     elseif p.project=="cargo" and p.logistics_tab=="supply"
       and native=="supply-freight" then
       p.logistics_tab="freight"
