@@ -64,15 +64,35 @@ function M.targets()
     end
   end
   local results={}
-  for _,name in ipairs(candidates) do
+  local included={}
+  local function include(name)
+    if included[name] then return end
     local proto=location(name)
     -- Runtime LuaSpaceLocationPrototype does not expose the data-stage
     -- sprite_only flag; sprite-only parents are removed before runtime.
     if proto and visited[name] and not proto.hidden then
+      included[name]=true
       results[#results+1]={id=name,
         caption=proto.localised_name or {"",name}}
     end
   end
+  for _,name in ipairs(candidates) do include(name) end
+  -- The source Aegis/Bellicos and Shattered/Skewer families rename their
+  -- endpoints across ports. Include every connected real location from
+  -- those families rather than silently overlooking a new named Warden.
+  local extra={}
+  for name in pairs(prototypes.space_location or {}) do
+    local lower=type(name)=="string" and name:lower() or ""
+    if (lower:find("aegis",1,true)
+      or lower:find("bellicos",1,true)
+      or lower:find("warden",1,true)
+      or lower:find("skewer",1,true))
+      and not included[name] then
+      extra[#extra+1]=name
+    end
+  end
+  table.sort(extra)
+  for _,name in ipairs(extra) do include(name) end
   -- A disconnected Edge cannot be presented as the whole expedition.
   -- If every route is missing, report an unavailable chart instead.
   if #queue==1 then return {},false end
