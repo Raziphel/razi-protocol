@@ -692,7 +692,9 @@ local function render_details(parent,player,quest,p,context,size,view)
     tooltip=L("chapter-cover-tooltip")}
   folio_link.style.font_color=theme.soft
   accent_rule(panel,theme,math.min(92,inner),2)
-  local content_height=size.body-(size.compact and 170 or 186)
+  -- Dossier actions now scroll with the reading sheet, instead of
+  -- permanently stealing vertical space at small resolutions.
+  local content_height=size.body-(size.compact and 124 or 148)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
   scroll.tags={razi_scroll_context=quest.id}
   local text_width=inner-18
@@ -736,7 +738,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   local mission=prose.add{type="frame",name="razi_journal_mission_plan",
     direction="vertical",style="razi_journal_callout"}
   mission.style.width=text_width
-  mission.style.padding=11
+  mission.style.padding=size.compact and 8 or 10
   local mission_header=mission.add{type="flow",direction="horizontal"}
   mission_header.style.horizontal_spacing=8
   mission_header.style.vertical_align="center"
@@ -796,7 +798,9 @@ local function render_details(parent,player,quest,p,context,size,view)
   research_bar.style.width=math.min(240,text_width-32)
   research_bar.style.height=4
   research_bar.style.color=COLOR.teal
-  local shown=objectives.visible_rows(plan,p.goal_expanded,3)
+  -- Next Action and Success Condition are already visible above these rows.
+  local shown=objectives.visible_rows(plan,p.goal_expanded,
+    size.compact and 1 or 2)
   local checklist=mission.add{type="flow",direction="vertical"}
   checklist.style.vertical_spacing=4
   for _,row in ipairs(shown) do
@@ -822,7 +826,7 @@ local function render_details(parent,player,quest,p,context,size,view)
       note.style.font_color=row.done and COLOR.muted or COLOR.ink
     end
   end
-  if #shown<#plan.rows or (p.goal_expanded and #plan.rows>3) then
+  if p.goal_expanded or #plan.rows>1 then
     local toggle=mission.add{type="label",style="clickable_label",
       caption=L(p.goal_expanded and "mission-collapse" or "mission-expand",
         tostring(#plan.rows)),
@@ -951,8 +955,8 @@ local function render_details(parent,player,quest,p,context,size,view)
   end
 
   -- Never let the long Nexus and pin actions overflow narrow readers.
-  local actions=panel.add{type="table",
-    column_count=size.reader<700 and 2 or 4}
+  local actions=prose.add{type="table",
+    column_count=text_width<350 and 1 or text_width<640 and 2 or 4}
   actions.style.horizontal_spacing=8
   actions.style.vertical_spacing=6
   if quest.boss then
