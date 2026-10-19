@@ -24,6 +24,7 @@ function M.snapshot(quest,technology,status,options)
   local requirements=0
   local satisfied=0
   local seen={}
+  local native_covered_by_campaign={}
   local function add(kind,id,name,done,link)
     local row={kind=kind,id=id,name=name,done=done==true,link=link}
     rows[#rows+1]=row
@@ -36,6 +37,8 @@ function M.snapshot(quest,technology,status,options)
     if not seen[id] and (not options.available or options.available(id))
       and (not options.visible or options.visible(id)) then
       seen[id]=true
+      local tech_name=options.tech_for_quest and options.tech_for_quest(id)
+      if tech_name then native_covered_by_campaign[tech_name]=true end
       add("campaign",id,{"journal-title."..id},
         options.complete and options.complete(id),id)
     end
@@ -44,10 +47,12 @@ function M.snapshot(quest,technology,status,options)
   -- ForceTechnology completion. Their final row follows the real source.
   if not quest.boss and not quest.convergence then
     for _,tech in ipairs(sorted_prerequisites(technology)) do
-      local link=options.quest_for_tech and
-        options.quest_for_tech(tech.name) or nil
-      add("research",tech.name,tech.localised_name or tech.name,
-        tech.researched,link)
+      if not native_covered_by_campaign[tech.name] then
+        local link=options.quest_for_tech and
+          options.quest_for_tech(tech.name) or nil
+        add("research",tech.name,tech.localised_name or tech.name,
+          tech.researched,link)
+      end
     end
   end
   local kind=quest.boss and "boss" or quest.convergence and
