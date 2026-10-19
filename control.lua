@@ -1,5 +1,6 @@
 local Events = require("__razi_lib__/runtime/events")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
+local razi_prepared_2x = require("scripts.razi_prepared_2x")
 
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -141,6 +142,7 @@ events:on_init(check_existing_transceivers)
 events:on_configuration_changed(function(event)
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
+	razi_prepared_2x.on_configuration_changed(event)
 end)
 events:on_nth_tick(600, check_existing_transceivers)
 events:on_event(transceiver_build_events, on_entity_built)
