@@ -4,21 +4,6 @@ Choose **Settings → Mod settings**. Most gameplay and starmap options are **St
 
 The defaults are designed for the main expedition. Optional performance experiments start **off**. Fragment and enemy reductions also change balance, not just visuals.
 
-## Find Razi startup settings sooner
-
-Factorio orders mod settings by mod load order, chiefly dependency-chain
-depth. Prefixing Razi Protocol's visible title or moving its settings into
-RAZI Library does not put them first. RAZI Library 1.3.1 restores the library's
-passive behavior and no longer registers Protocol settings.
-
-The optional [early-loading settings companion](../companion/00-razi-protocol-settings/README.md)
-(version **1.1.0** or newer) imports Razi Protocol's current startup definitions
-and registers them under its own short-dependency section, which may appear
-near the beginning of the Startup tab. Razi Protocol itself keeps **Map** and
-**Per-player** settings; those must remain writable at runtime. No setting
-identifiers or values change. Without the companion, the ordinary Razi
-Protocol section works as before. Placement must be verified in Factorio.
-
 ## Quick recommendations
 
 - **First playthrough:** Keep the standard settings, especially curated routes, interdependence = Balanced and ten-level asteroid difficulty = Balanced.
@@ -29,7 +14,7 @@ Protocol section works as before. Placement must be verified in Factorio.
 
 ## Complete settings reference
 
-Existing setting IDs and defaults are preserved. The early-loading `00-razi-protocol-settings` companion mirrors the exact same IDs, types and tooltips.
+Existing setting IDs and defaults are preserved. All settings are registered directly by Razi Protocol.
 
 ### Expedition & Story
 
@@ -135,6 +120,6 @@ Existing setting IDs and defaults are preserved. The early-loading `00-razi-prot
 
 ## Compatibility
 
-The optional first-in-list companion owns the settings only when installed. Otherwise Razi Protocol defines them itself. Keep companion files and its distributable ZIP synchronized using `python3 tools/build_settings_companion.py`. Factorio determines cross-mod settings order; no text prefix can guarantee the top position.
+Razi Protocol defines all startup, map-wide, and per-player options directly. No separate settings companion is required.
 
 All settings are available in English and Russian. The UI section names are visual labels, not extra settings.
