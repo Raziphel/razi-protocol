@@ -4,6 +4,7 @@ local M={}
 local catalog=require("scripts.galactic_trade_catalog")
 local portfolio=require("scripts.razi_industry_portfolio")
 local command=require("scripts.razi_logistics_command")
+local supply=require("scripts.razi_supply_planner")
 local signals=require("prototypes.compat.aai_signal_partnerships")
 local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
@@ -563,8 +564,8 @@ end
 
 -- The journal keeps one scroll pane and switches its DOCUMENT CONTENT.
 -- Factory catalogs and optional manufacturing checks only run on Industry.
-local logistics_tabs={"overview","routes","freight","industry"}
-local logistics_valid={overview=true,routes=true,freight=true,industry=true}
+local logistics_tabs={"overview","routes","supply","freight","industry"}
+local logistics_valid={overview=true,routes=true,supply=true,freight=true,industry=true}
 function M.render(parent,player,p,options)
   p=p or {}
   options=options or {}
@@ -579,8 +580,10 @@ function M.render(parent,player,p,options)
   eyebrow.style.font_color={r=.62,g=.75,b=.74}
   local title=label(header,L("logistics-command-heading"),"heading-2")
   title.style.font_color={r=.91,g=.87,b=.79}
-  local tabs=parent.add{type="flow",direction=width<520
-    and "vertical" or "horizontal"}
+  -- Native table wraps five folios into two/three short rows instead of
+  -- overflowing the Journal on 720px and compact laptop layouts.
+  local tabs=parent.add{type="table",column_count=width<490 and 2
+    or width<790 and 3 or 5}
   tabs.style.vertical_spacing=5
   tabs.style.horizontal_spacing=width<720 and 5 or 12
   for _,tab in ipairs(logistics_tabs) do
@@ -591,7 +594,7 @@ function M.render(parent,player,p,options)
     button.style.font=active and "default-bold" or "default"
     button.style.font_color=active
       and {r=.88,g=.73,b=.48} or {r=.70,g=.77,b=.76}
-    button.style.minimal_width=width<700 and 75 or 105
+    button.style.minimal_width=width<790 and 75 or 105
   end
   -- The parent Journal owns scrolling and remembers one offset per tab.
   if current=="industry" then
@@ -602,6 +605,9 @@ function M.render(parent,player,p,options)
   end
   if current=="freight" then
     return command.freight(parent,player,width)
+  end
+  if current=="supply" then
+    return supply.render(parent,player,p,width)
   end
   return command.overview(parent,player,width,M.summary(player.force))
 end
