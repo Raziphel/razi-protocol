@@ -123,6 +123,10 @@ data:extend({
   -- planetary science. Switch off for legacy/alternate start scenarios.
   startup_toggle("razi-distributed-technology",
     "ba[integration]-c[planetary-tech-distribution]"),
+  -- Keep Aquilo's cryogenic capabilities, but earn terrain, portable
+  -- fusion and legendary quality across later campaign milestones.
+  startup_toggle("razi-stage-aquilo-breakthroughs",
+    "ba[integration]-c2[aquilo-breakthroughs]"),
   -- Only late source-owned trains and shield research; never change
   -- cargo bay limits, source mod machinery or base rocket logistics.
   startup_toggle("razi-companion-science-weave",

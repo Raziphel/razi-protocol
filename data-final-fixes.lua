@@ -233,6 +233,11 @@ require("prototypes.compat.frontier_companions").data_final_fixes()
 -- recovery charter. No additional laboratory or substitute science pack.
 require("prototypes.compat.frontier_recovery").data_final_fixes()
 
+-- Aquilo is reached midway through a much larger modded campaign.
+-- Defer only the three vanilla endgame breakthroughs, not cryogenic
+-- science, initial planetary survival tools, planet discoveries or recipes.
+require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+
 -- All Razi technology passes have now run. Repeat the narrow Secretas
 -- bootstrap repair so a later weave cannot reintroduce the golden/recycler
 -- feedback loop; report any remaining independently authored tech cycles.

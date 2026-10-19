@@ -2,6 +2,13 @@
 
 **A curated seven-system Factorio 2.1 Space Age expedition.** Razi Protocol weaves source-owned planets and machines into a cohesive campaign: meaningful planetary research, challenging interstellar logistics, readable space routes, a unified Expedition Journal and a construction-driven deep-space finale.
 
+**Aquilo progression balance (3.0):** Aquilo keeps its cryogenic toolkit,
+but its three campaign-wide breakthroughs are earned in stages: foundation
+after Paracelsin and Maraxsis, fusion after Cubium and Tenebris, and
+legendary quality after outer-frontier mastery. A default-on startup setting
+can restore the original Aquilo unlock timing. Existing researched technology
+is never revoked. See [Aquilo progression](docs/AQUILO_PROGRESSION.md).
+
 **3.0 development:** Factory Partnership opportunities are now discoverable
 in the Cargo Network from actual installed technologies and premium recipes.
 The third pass also adds a combined offline factory-health audit and stricter
