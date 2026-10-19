@@ -13,12 +13,23 @@ function M.remove_other_placements(player,name)
   if inner and inner.valid then
     old=inner[name]
     if old and old.valid then old.destroy() end
-    -- The containing mod-gui may belong to another mod. Leave it alone.
+    -- The containing mod-gui may belong to another mod. Keep it if occupied.
+  end
+  -- Retiring the button can leave a visible, empty grey mod-gui tab.
+  -- Remove that abandoned wrapper only when it has no other mod's controls.
+  if frame and frame.valid then
+    local children=frame.children
+    if #children==0 or (#children==1 and children[1]==inner
+      and inner and inner.valid and #inner.children==0) then
+      frame.destroy()
+    end
   end
   local legacy=top["mod_gui_button_flow"]
   if legacy and legacy.valid then
     old=legacy[name]
     if old and old.valid then old.destroy() end
+    -- This older standalone flow is also a ghost when its last button goes.
+    if #legacy.children==0 then legacy.destroy() end
   end
 
   local screen=player.gui.screen

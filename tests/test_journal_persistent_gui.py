@@ -36,6 +36,20 @@ class PersistentJournalTests(unittest.TestCase):
         self.assertIn('if pref(player.index).view=="quests" then update_reader(player)',refresh)
         self.assertIn('razi_journal_archive_navigation=true',src)
 
+    def test_retired_journal_button_does_not_leave_ghost_bar(self):
+        cleanup=read("scripts/razi_journal_button_cleanup.lua")
+        self.assertIn('old=inner[name]',cleanup)
+        self.assertIn('if old and old.valid then old.destroy() end',cleanup)
+        self.assertIn('#children==1 and children[1]==inner',cleanup)
+        self.assertIn('inner.valid and #inner.children==0',cleanup)
+        self.assertIn('frame.destroy()',cleanup)
+        self.assertIn('if #legacy.children==0 then legacy.destroy() end',cleanup)
+        self.assertIn('local top=player.gui.top',cleanup)
+        # Do not remove the still-used standalone Journal control.
+        journal=self.journal
+        self.assertIn('local top=player.gui.top[TOP]',journal)
+        self.assertIn('icons.button(player.gui.top,"razi-journal-book-icon","toolbar"',journal)
+
     def test_saved_view_identity_and_tab_name(self):
         src=self.journal
         self.assertIn('archive=true,systems=true',src)
