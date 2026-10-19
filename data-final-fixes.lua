@@ -26,7 +26,6 @@ require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
 -- Final, visual-only regrouping; source ingredients and machines stay intact.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
-require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
 require("prototypes.compat.variant_surface_conditions").data_final_fixes()
@@ -61,12 +60,25 @@ if starmap_star and starmap_star.layers then
 	end
 end
 
+-- Additional planet mods join their star systems and local hubs. Runs after the route
+-- reconciler and before the layout, which positions the orbits they register.
+require("prototypes.system.optional_planets").data_final_fixes()
+require("prototypes.system.community_expansions").data_final_fixes()
+require("prototypes.system.abacayba_integration").data_final_fixes()
+
 -- Vibrant's belt rims sit on the western edge of the system; place them before the layout reads the orbits.
 require("prototypes.system.asteroid_belt_integration").data_final_fixes()
 
 -- Star map layout: six systems around Calidus, Deep Space to the north. Visual only (orbits, origins, ring drawing);
--- routes and unlocks are not touched. Nothing after this moves an orbit.
+-- routes and unlocks are not touched. Only the Bellicos expedition is reconciled after it.
 require("prototypes.system.galaxy_layout").data_final_fixes()
+
+-- Bellicos reconciles its native positions after the general layout pass, so the
+-- Aegis expedition is not moved twice.
+require("prototypes.system.bellicos").data_final_fixes()
+
+-- Expedition briefings are appended to the final set of planet and location descriptions.
+require("prototypes.system.planet_descriptions").data_final_fixes()
 
 -- Transceiver activation opens the Solar System Edge and Deep Space.
 -- Runs after the system cards (lab_cards) and the transceiver unlocks exist and after the
@@ -94,6 +106,9 @@ for _, lab in pairs(data.raw.lab or {}) do
 		lab.inputs = unique_inputs
 	end
 end
+
+-- Recheck Abacayba's discovery gate after the late research passes; no cycles are introduced.
+require("prototypes.system.abacayba_integration").gate()
 
 -- One authoritative seven-system graph, after all planet modules have run.
 -- Native moon links, the original belt crossing and special source subsystems

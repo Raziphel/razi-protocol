@@ -75,6 +75,20 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-enable-expedition-briefings",
+		setting_type = "startup",
+		default_value = true,
+		order = "ca[quality-of-life]-b[expedition-briefings]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-starmap-soften-bellicos",
+		setting_type = "startup",
+		default_value = true,
+		order = "cb[starmap]-c2[pulsar-glare]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-stage-aquilo-breakthroughs",
 		setting_type = "startup",
 		default_value = true,
