@@ -465,6 +465,9 @@ local function catapult_dossier(parent,player,width)
   wrap(card,L("catapult-network-intro"),width-44)
   if not state.enabled then
     wrap(card,L("catapult-network-disabled"),width-44)
+    -- Show the read-only board when saved orders need cleanup, even
+    -- after both Razi corridor switches have been disabled.
+    freight_board.render(card,player,state,width)
     return
   end
   if #state.entries==0 then
