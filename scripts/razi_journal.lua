@@ -785,6 +785,8 @@ local function render_details(parent,player,quest,p,context,size,view)
     local marker=label(item,row.done and "✓" or "○")
     marker.style.font_color=row.done and COLOR.green
       or row.kind=="goal" and theme.primary or COLOR.amber
+    marker.tooltip=L(row.done and "mission-goal-status-done"
+      or "mission-goal-status-open")
     local kind=row.kind=="goal" and plan.kind or row.kind
     local caption=L("mission-step-"..kind,row.name)
     if row.link then
