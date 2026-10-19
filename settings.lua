@@ -49,5 +49,19 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		order = "ba[integration]-c2[aquilo-breakthroughs]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-group-barreling-recipes",
+		setting_type = "startup",
+		default_value = true,
+		order = "ca[quality-of-life]-b1[barreling-recipes]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-group-spoilable-recipes",
+		setting_type = "startup",
+		default_value = false,
+		order = "ca[quality-of-life]-b2[spoilable-recipes]"
 	}
 })

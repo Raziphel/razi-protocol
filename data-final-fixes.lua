@@ -24,6 +24,8 @@ require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compat.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
+-- Final, visual-only regrouping; source ingredients and machines stay intact.
+require("prototypes.compat.crafting_navigation").data_final_fixes()
 require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
