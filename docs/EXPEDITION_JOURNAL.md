@@ -1,3 +1,49 @@
+## Adaptive Mission Plan layout (October 2026)
+
+A source audit exposed two practical defects after introducing full mission
+checklists: the first missing objective appeared **twice**, and the dossier's
+button row permanently consumed vertical room beneath the scrolling story.
+Now the "NEXT" instruction is the single clickable reference for the
+primary blocker; the compact preview lists only *additional* missing steps.
+A completed mission does not repeat checked history by default. **Show all**
+still reveals every verified prerequisite and milestone, but expansion is
+scoped to the selected dossier rather than applied globally to later quests.
+
+Pin, Previous, Next and any Nexus actions now live at the end of the same
+native reading scroll pane. The document gets back roughly 40 GUI units at
+typical window sizes, with button columns chosen to fit the available
+reading width. The pin button caption updates in place via a named action
+container, with no scroll-pane rebuild.
+
+### Narrow screens (effective GUI width under 740)
+
+Instead of squeezing the index beside an unreadably thin dossier, **Quests**
+becomes a single-column interface. It opens directly into a full-width
+reading sheet. The header shows **Index**, switching to the chapter
+navigator; **Read dossier** switches back. Selecting a chapter's quest
+or opening a quest link automatically returns to reading. The last visible
+native index scroll position survives the switch. Search, filters and
+chapter headings retain their old source-backed behavior.
+
+Narrow mode is based on *effective Factorio GUI units*, including the
+player's display scale. Desktop widths retain the familiar side-by-side
+layout and existing Focus behavior. Project, Archive and Systems source
+integrations remain unaffected.
+
+### Validation
+
+A mock GUI regression covers a 1024x768 physical viewport at 150% UI
+scale, Index/Read switching, full reader width, selection navigation, and
+the original scroll offset. The Python source contracts inspect the same
+behavior plus dossier action placement and next-action deduplication.
+
+A real Factorio executable is not installed in the current editing
+environment. **Actual in-game fonts, focus/hover states, sprite scaling,
+and scroll reflow must still be checked in Factorio** at 1024x768 (150%),
+1280x720 (100% and 150%), 1600x900 (125%) and 1920x1080 (100% and 150%).
+Inspect collapsed and expanded Mission Plans, a long localized technology,
+a boss victory, a Convergence delivery, Focus mode, and an old save.
+
 ## Mission Plan objective system (October 2026)
 
 The Journal formerly reduced most objectives to "Research X" and at most four
