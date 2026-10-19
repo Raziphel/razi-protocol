@@ -95,7 +95,12 @@ function M.ingredients(recipe,batches)
       else
         row.count=row.count+n*amount
       end
-      if kind~="item" then row.plannable=false end
+      -- Name/count-only freight cannot express min/max/changed quality
+      -- requirements. Preserve the ingredient as read-only guidance.
+      if kind~="item" or ingredient.quality_min
+        or ingredient.quality_max or ingredient.quality_change then
+        row.plannable=false
+      end
     end
   end
   for _,row in ipairs(list) do
