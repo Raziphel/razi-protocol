@@ -1,10 +1,31 @@
 local transceiver_endgame = {}
+local Science = require("__razi_lib__/lib/science")
 
 local icon = "__Krastorio2Assets__/technologies/intergalactic-transceiver.png"
 
--- The ingredients are filled in data-final-fixes (prototypes/compat/transceiver_endgame.lua):
--- the system tech cards do not exist yet at this stage.
-local function make_transceiver_technology(name, prerequisites, count, effects)
+local function add_science_pack(ingredients, name, amount)
+	Science.add_pack(ingredients, name, amount)
+end
+
+local function build_transceiver_science(multiplier)
+	local ingredients = {}
+
+	add_science_pack(ingredients, "calidus-tech-card", 1)
+	add_science_pack(ingredients, "solaris-tech-card", 1)
+	add_science_pack(ingredients, "nyxaris-tech-card", 1)
+	add_science_pack(ingredients, "vibrant-tech-card", 1)
+	add_science_pack(ingredients, "vespera-tech-card", 1)
+	add_science_pack(ingredients, "beetlejuice-tech-card", multiplier)
+	add_science_pack(ingredients, "umbra-tech-card", multiplier)
+	add_science_pack(ingredients, "kr-matter-tech-card", 1)
+	add_science_pack(ingredients, "kr-advanced-tech-card", 1)
+	add_science_pack(ingredients, "kr-singularity-tech-card", multiplier)
+	add_science_pack(ingredients, "promethium-science-pack", multiplier)
+
+	return ingredients
+end
+
+local function make_transceiver_technology(name, prerequisites, count, multiplier, effects)
 	return {
 		type = "technology",
 		name = name,
@@ -17,7 +38,7 @@ local function make_transceiver_technology(name, prerequisites, count, effects)
 		unit = {
 			count = count,
 			time = 60,
-			ingredients = {}
+			ingredients = build_transceiver_science(multiplier)
 		}
 	}
 end
@@ -27,18 +48,21 @@ end
 data:extend({
 	make_transceiver_technology(
 		"razi-singularity-theory",
-		{"kr-intergalactic-transceiver"},
-		5000
+		{"kr-intergalactic-transceiver", "razi-outer-frontier-mastery"},
+		5000,
+		1
 	),
 	make_transceiver_technology(
 		"razi-singularity-test-fire",
 		{"razi-singularity-theory"},
-		7500
+		7500,
+		2
 	),
 	make_transceiver_technology(
 		"razi-stable-intergalactic-singularity",
 		{"razi-singularity-test-fire"},
 		10000,
+		3,
 		{
 			{type = "unlock-recipe", recipe = "kr-intergalactic-transceiver"}
 		}
