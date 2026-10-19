@@ -534,6 +534,11 @@ function M.render(parent,player,options)
   line(network,site.planet and "convergence-witness-online"
    or "convergence-witness-offline",width,
    {"razi-ops.convergence-system-"..site.system})
+  if site.planet then
+   local testimony=line(network,
+     "convergence-witness-testimony-"..site.system,width)
+   testimony.style.font_color={r=.73,g=.77,b=.82}
+  end
  end
  line(network,M.core_status(player)
    and "convergence-core-ready"
