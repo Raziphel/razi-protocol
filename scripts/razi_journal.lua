@@ -725,6 +725,10 @@ local function render_details(parent,player,quest,p,context,size,view)
     bar.style.height=5
     bar.style.color=theme.primary
   end
+  -- A journal is primarily a story. After the live objective and its
+  -- immediate blockers, let the player read the entry before secondary
+  -- route previews, industry notes or production analytics.
+  section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
   -- Direct campaign handoffs share the force snapshot with the chapter rail.
   local next_steps=guidance.followups(quest.id,view and view.states,3)
   if #next_steps>0 then
@@ -805,9 +809,8 @@ local function render_details(parent,player,quest,p,context,size,view)
       end
     end
   end
-  -- Individual files lead with their own story, not a repeated chapter
-  -- history block. The broader history lives on the chapter briefing.
-  section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
+  -- The practical guidance complements the chapter's individual account;
+  -- shared background still lives on the chapter briefing page.
   section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
   -- The human accounts are useful where their actual milestone was
   -- completed, not just buried in the Archive's growing collection.
@@ -853,12 +856,15 @@ local function render_details(parent,player,quest,p,context,size,view)
       tags={razi_journal_action="nexus-codex",id=quest.boss}}
   end
   local pinned=p.tracker and p.pinned==quest.id
-  actions.add{type="button",name="razi_journal_pin_button",caption=L(pinned
+  actions.add{type="button",style="razi_journal_action_button",
+    name="razi_journal_pin_button",caption=L(pinned
     and "tracker-hide" or "tracker-show"),
     tags={razi_journal_action="pin",id=quest.id}}
-  actions.add{type="button",caption=L("previous-in-chapter"),
+  actions.add{type="button",style="razi_journal_action_button",
+    caption=L("previous-in-chapter"),
     tags={razi_journal_action="previous-in-chapter"}}
-  actions.add{type="button",caption=L("next-in-chapter"),
+  actions.add{type="button",style="razi_journal_action_button",
+    caption=L("next-in-chapter"),
     tags={razi_journal_action="next-in-chapter"}}
 end
 
@@ -1708,6 +1714,9 @@ local function update_reader(player,preserve_reader)
   local navigation=body and body.valid and body["razi_journal_navigation_panel"]
   local scroll=navigation and navigation.valid
     and navigation["razi_journal_navigation"]
+  -- Filtering hides/reveals children inside the same native scroll pane.
+  -- Remember its actual scroll offset before the content is reflowed.
+  local navigation_scroll=scroll and scroll.vertical_scroll_position
   local column=scroll and scroll.valid and scroll["razi_journal_chapter_column"]
   if not (reader and reader.valid and column and column.valid) then
     draw(player)
@@ -1839,6 +1848,9 @@ local function update_reader(player,preserve_reader)
   end
   local search=navigation["razi_journal_search"]
   if search and search.text~=(p.query or "") then search.text=p.query or "" end
+  if type(navigation_scroll)=="number" then
+    scroll.vertical_scroll_position=navigation_scroll
+  end
   -- Keep typing focus and the chapter scrollbar untouched. Readers are
   -- independently scrollable and restored when the same dossier refreshes.
   if preserve_reader then return end
