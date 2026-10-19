@@ -248,7 +248,9 @@ events:on_event(defines.events.on_space_platform_changed_state,record_platform)
 -- Reconcile arrival events on the existing (infrequent) platform state poll
 -- only when a crossing has an outstanding departure record.
 events:on_nth_tick(300,function()
-  great_projects.flush_pending(game.forces)
+  if great_projects.flush_pending(game.forces) then
+    razi_journal.refresh_open()
+  end
 end)
 
 events:on_event({
