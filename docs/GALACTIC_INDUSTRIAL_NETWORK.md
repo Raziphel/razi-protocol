@@ -868,3 +868,51 @@ still needs in-game validation for route changes, old-save migrations,
 mixed catapult/platform transfers, lore-safe hiding and narrow-resolution
 GUI controls. A completed manual log NEVER represents a confirmed source
 delivery or a Convergence victory.
+
+
+## A.8: Native pod departure/delivery provenance, no fabricated Catapult API
+
+On Factorio 2.1 the built-in on_cargo_pod_started_ascending and
+on_cargo_pod_finished_ascending events provide a cargo-pod entity,
+and on_cargo_pod_delivered_cargo confirms that a cargo pod delivered.
+The engine documents LuaEntity.unit_number as optional, so only pods
+with a stable non-nil unit number can be correlated. A.8 captures the
+actual force and planet surface at departure and matches the later
+delivered-cargo event to the SAME pod identity and force on a DIFFERENT
+real planet. Anonymous or expired pods remain covered only by the
+separate A.3 destination-only ledger. There is NO guessed fallback.
+
+The bounded force-specific record keeps up to 96 in-flight pods and
+24 recent correlations. Pending evidence expires after 30 game minutes
+on the next relevant event; nothing polls each tick. In-flight
+records are not transferred between merged forces, since that would
+fabricate cross-force provenance. Bounded completed history may merge
+and is subject to normal research and live planet visibility checks.
+All records are serialized primitive values without LuaObject references.
+
+A.8's expandable Supply Chains operations notebook shows each leg's
+read-only compatible endpoint correlation and up to six recent native
+pod records. The command overview also displays currently researched
+regional endpoint correlations. Every record is marked as an
+**independent native cargo-pod observation**, not a Catapult delivery
+or verified contents. Any compatible native event is neither attributed
+to a player's itinerary nor allowed to advance its operator notes,
+Freight Desk, Skybridge, Nexus, Convergence, research or victory.
+
+The Orbital Catapult mod documents one-way data-stage route definitions
+but no public and stable runtime event that confirms an item shipment
+with a freight-order identifier. Its source code/public callback has
+not been verified, so do not invent one. The specific pod
+unit_number may be unavailable in certain Factorio/modded pod types;
+those pods are deliberately NOT correlated. Full installed 2.1
+modpack testing is needed to determine coverage and whether source
+mods deliver pod identities and planet surfaces at both moments.
+
+Manual local tests:
+
+    lua5.2 tests/lua/test_razi_native_pod_trips.lua
+    lua5.2 tests/lua/test_razi_shipment_operations.lua
+    lua5.2 tests/lua/test_razi_freight_receipts.lua
+
+A CI job's isolated source checks are not evidence of engine
+compatibility, transported items or successful logistics automation.

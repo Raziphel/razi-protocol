@@ -5,6 +5,7 @@ local M={}
 local routes=require("scripts.razi_catapult_network")
 local infrastructure=require("scripts.razi_freight_infrastructure")
 local deliveries=require("scripts.razi_freight_receipts")
+local native_pods=require("scripts.razi_native_pod_trips")
 local orders=require("scripts.razi_freight_orders")
 local board=require("scripts.razi_freight_dispatch_ui")
 local L=function(key,...) return {"razi-ops."..key,...} end
@@ -167,6 +168,21 @@ function M.overview(parent,player,width,fleet)
     end
   end
   text(activity,L("logistics-activity-caution"),width-36)
+  -- Only candidate evidence on currently researched real corridor
+  -- endpoints, not Catapult source dispatch data.
+  local legs={}
+  for _,lane in ipairs(network.entries) do
+    if lane.state=="researched" and lane.source_researched
+      and lane.target_researched then
+      legs[#legs+1]={from=lane.source,to=lane.target}
+      if #legs>=6 then break end
+    end
+  end
+  if #legs>0 then
+    local linked=native_pods.for_legs(player.force,legs)
+    text(activity,L("logistics-pod-provenance-summary",
+      tostring(linked.total)),width-36,true,teal)
+  end
   text(parent,L("logistics-navigation-help"),width)
 end
 

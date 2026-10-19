@@ -113,6 +113,10 @@ function M.render(parent,player,plan,width)
   local receipts=require("scripts.razi_freight_receipts")
   local arrivals=receipts.snapshot(player.force,
     catapult.snapshot(player.force)).worlds
+  -- Source observations are separate from operator notes and never
+  -- mark any manual step completed automatically.
+  local native_trips=require("scripts.razi_native_pod_trips")
+  local engine=native_trips.for_legs(player.force,plan.legs)
   for i,leg in ipairs(plan.legs) do
     local mode=leg.mode=="catapult" and
       L("supply-operation-catapult") or L("supply-operation-platform")
@@ -129,10 +133,24 @@ function M.render(parent,player,plan,width)
     end
     label(box,status,width-25)
     label(box,hardware(leg,sites),width-25)
+    if engine.counts[i] then
+      label(box,L("supply-operation-native-pod-correlations",
+        tostring(engine.counts[i])),width-25)
+    else
+      label(box,L("supply-operation-native-pod-none"),width-25)
+    end
     local observed=arrivals[leg.to]
     if type(observed)=="number" and observed>0 then
       label(box,L("supply-operation-pods",
         world(leg.to),tostring(observed)),width-25)
+    end
+  end
+  if engine.total>0 then
+    label(box,L("supply-operation-native-pod-caution"),width-20)
+    for _,trip in ipairs(engine.recent) do
+      label(box,L("supply-operation-native-pod-row",
+        world(trip.from),world(trip.to),
+        tostring(trip.departed),tostring(trip.delivered)),width-24)
     end
   end
   for _,entry in ipairs(p.entries) do
