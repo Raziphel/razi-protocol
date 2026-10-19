@@ -84,8 +84,8 @@ function M.array(force)
   -- The Factorio engine maintains this count; most saves have no relays.
   -- Avoid scanning every generated planet when the project is untouched.
   local known=force and force.get_entity_count and
-    force.get_entity_count("razi-archive-relay") or 0
-  if known<=0 then return 0,3,sites end
+    force.get_entity_count("razi-archive-relay")
+  if known==0 then return 0,3,sites end
   for _,surface in pairs(game and game.surfaces or {}) do
     local world=surface.planet
     local id=world and world.name
