@@ -383,20 +383,21 @@ for _,entry in ipairs(live_elements()) do
 end
 check(bridge and bridge.tags.id=="precision-matrix",
   "Industry quest must offer the real cargo chain navigation")
-local linked,readiness=0,false
+local linked,mission,finish=0,false,false
 for _,entry in ipairs(live_elements()) do
   if entry.tags and entry.tags.razi_journal_action=="guidance-select"
     and (entry.tags.id=="fulgora" or entry.tags.id=="moshine")
     and entry.tooltip and entry.tooltip[1]=="journal-ui.open-prerequisite" then
     linked=linked+1
   end
+  if entry.name=="razi_journal_mission_plan" then mission=true end
   if entry.caption and type(entry.caption)=="table"
-    and entry.caption[1]=="journal-ui.dossier-prerequisites" then
-    readiness=(entry.caption[2]=="0" and entry.caption[3]=="2")
+    and entry.caption[1]=="journal-ui.mission-finish-line" then
+    finish=true
   end
 end
-check(linked==2 and readiness,
-  "Quest dossier must show real, clickable unfinished prerequisites")
+check(linked>=1 and mission and finish,
+  "Quest dossier needs a source-backed mission and clickable next blockers")
 local original_open_project=journal.open_project
 local called
 journal.open_project=function(_,kind,chain,technology_name)
@@ -410,4 +411,64 @@ check(called and called[1]=="cargo"
   and called[3]=="razi-network-precision-matrix",
   "Codex must deep-link to the correct installed Cargo Network factory")
 
-print("Journal GUI: bounded sprites, quest-first layout, hidden scrollbars and cargo bridge passed")
+-- A narrow effective GUI must NOT show two unreadably compressed
+-- columns. The Index / Read switch should retain its native scroll offset,
+-- and selecting a milestone should reopen the full-width dossier.
+player.display_resolution={width=1024,height=768}
+player.display_scale=1.5
+journal.preferences(1).view="quests"
+journal.preferences(1).selected="first-signal"
+journal.preferences(1).chapter="calidus"
+journal.preferences(1).compact_index_open=false
+journal.draw(player)
+local narrow=journal.layout(player.display_resolution,player.display_scale)
+check(narrow.single_column and narrow.width<740,
+  "Small effective screens must use the single-column reader")
+local function panels()
+  local body=root["razi_journal_content"]
+  check(body,"Narrow Journal must retain its live body")
+  return body["razi_journal_navigation_panel"],
+    body["razi_journal_reader_host"]
+end
+local nav,reader=panels()
+check(nav.visible==false and reader.visible==true,
+  "Reader should be full width by default on a narrow screen")
+check(reader.style.width==narrow.width-43,
+  "The narrow dossier should get the actual available width")
+local switch
+for _,element in ipairs(live_elements()) do
+  if element.tags and element.tags.razi_journal_action=="compact-index" then
+    switch=element;break
+  end
+end
+check(switch,"Narrow screens must have a usable Index / Read switch")
+journal.gui_click({player_index=1,element=switch})
+nav,reader=panels()
+check(nav.visible==true and reader.visible==false,
+  "Index mode must hide the dossier, not squeeze it beside the rail")
+local scroller=nav["razi_journal_navigation"]
+check(scroller,"The same scrollable chapter index should still be available")
+scroller.vertical_scroll_position=83
+journal.gui_click({player_index=1,element=switch})
+nav,reader=panels()
+check(not nav.visible and reader.visible,
+  "Leaving Index must reopen the reading page")
+journal.gui_click({player_index=1,element=switch})
+nav,reader=panels()
+check(nav.visible and not reader.visible
+  and nav["razi_journal_navigation"].vertical_scroll_position==83,
+  "Returning to Index must restore its last native scroll position")
+local chosen
+for _,element in ipairs(live_elements()) do
+  if element.tags and element.tags.razi_journal_action=="select"
+    and element.tags.id=="first-signal" then chosen=element;break end
+end
+check(chosen,"The compact index must retain real selectable milestones")
+journal.gui_click({player_index=1,element=chosen})
+nav,reader=panels()
+check(not nav.visible and reader.visible
+  and journal.preferences(1).compact_index_open==false,
+  "Selecting a milestone should immediately reopen the full-width dossier")
+check(reader.children[1] and reader.children[1].style.width==narrow.width-43,
+  "After an in-place selection, the full-width dossier must stay responsive")
+print("Journal GUI: adaptive single-column mission reader, native index position and source-linked actions passed")
