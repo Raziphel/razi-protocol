@@ -731,3 +731,99 @@ shipping, route cost optimization, verified item production, live machine
 inventories, and shipment-by-shipment Catapult confirmation. These
 require additional verified source interfaces and would belong to a
 later, separately tested stage.
+
+## A.6: Mixed-mode interplanetary supply-chain route planning
+
+The existing **Supply Chains** folio now offers **real map topology**
+alternatives from discovered departure planets to a source-backed
+factory. It does not assume that the departure world actually produces
+the requested items, or that a ship/catapult is staffed, fueled, powered
+or automatically scheduled.
+
+### Source authority and graph rules
+
+- Space-platform legs are read from installed
+  `prototypes.space_connection` entries. Native prototype
+  `from`, `to`, `length` and `hidden` determine **mapped
+  connectivity and actual length**, not an operating logistics service.
+  Native space connections are presented as two platform-traversable
+  directions. Traversal still depends on the player's ships, schedules,
+  speed, asteroid defenses, cargo pads and underlying game rules.
+- Catapult legs come **only** from the existing
+  `razi_catapult_network.snapshot(force)` and are individually
+  validated by `razi_freight_orders.route(force,id)`. A link is
+  considered structurally usable only when installed, configured and
+  the **real destination/source discoveries** are met. This is **not**
+  verified launcher installation, working power or shipment telemetry.
+- Waypoints, including intermediate star/space locations, must be
+  **unlocked for the player's force** via
+  `LuaForce.is_space_location_unlocked` (the source technology check is
+  only a fallback for testing older API mocks). All location identities
+  come from `prototypes.space_location`. Player-selectable origins
+  are **discovered real planets** in `game.planets`, never stars,
+  hidden future worlds or hardcoded guesses.
+- The planner enumerates up to **four alternatives**, up to six legs,
+  using a bounded search (1,600 explored edges, max 400 graph edges).
+  It ranks found alternatives by fewer legs, fewer mode changes and
+  fewer platform legs, then uses comparable mapped platform distance
+  as a tie-breaker. Distances **exclude catapult legs**, which do not
+  expose comparable km. No ETA, verified cargo capacity or automatic
+  price is fabricated.
+- Mode changes are explicitly labeled as **transfer required**.
+  A platform leg is a request to manually arrange a capable actual
+  space platform, not a new Planet Express schedule or a hidden Razi
+  transport service. A Catapult leg requires native source-owned
+  launcher infrastructure. Nothing creates routes or rewrites
+  source connection prototypes.
+
+### Durable manual manifests and research changes
+
+The player chooses a starting planet and an alternative path. The
+selected route ID signature must match the **exact currently displayed
+sequence** before a manual itinerary can be saved; if a mod/version/
+research change reorders or removes links, the route must be explicitly
+chosen again.
+
+A manifest includes one existing factory recipe, selected batch count,
+up to 24 **eligible deterministic item ingredients**, their exact
+quantities and the ordered native/catapult leg identities. It is
+**read-only manual planning guidance** and is **NOT automatically
+converted into Freight Desk orders**, because doing so across a
+platform or intermediate transfer would invent stock availability and
+shipment provenance. The A.5 direct Catapult Freight Desk handoff
+remains available for genuine single-leg route plans.
+
+At most **12** saved itineraries per player are retained as plain
+serializable values. No LuaObject is stored. Manifests are revalidated
+against the current route map and visible installed factory catalog
+when displayed. A now-inaccessible plan is represented by a concealed
+stub with a delete button so removed mods or rolled-back research do
+not leak old waypoints/materials or strand save data. Removed players
+clean up their own itinerary storage. This feature never updates
+contracts, Project Skybridge, Convergence or victory.
+
+### Cost and performance boundaries
+
+The graph is rebuilt **only when the Supply Chains tab is rendered
+or the player uses its controls**. There is no per-tick polling,
+inventory scan, platform creation, movement or remote transport API
+call. Each readable saved manifest shares one factory catalog
+snapshot rather than triggering another full catalog read per plan.
+
+Manual-only tests (no automatically triggered GitHub Actions):
+
+```sh
+lua5.2 tests/lua/test_razi_supply_routes.lua
+lua5.2 tests/lua/test_razi_supply_multihop.lua
+lua5.2 tests/lua/test_razi_supply_planner.lua
+lua5.2 tests/lua/test_razi_freight_orders.lua
+```
+
+**Full Factorio testing remains required**: traverse real native
+multi-star links and local Razi Catapult corridors, test spoiler
+locks on intermediate waypoints, disabled link groups, a missing
+planet mod, player removal, force changes, a save with 12 manifests
+and low-resolution scrolling. Inspect actual native connection
+directionality, asteroid risks, space platform schedules and
+infrastructure requirements. Neither static fixtures nor a drawn
+route establish successful or possible live deliveries.
