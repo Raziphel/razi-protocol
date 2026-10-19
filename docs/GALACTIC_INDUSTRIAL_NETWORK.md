@@ -796,11 +796,20 @@ remains available for genuine single-leg route plans.
 At most **12** saved itineraries per player are retained as plain
 serializable values. No LuaObject is stored. Manifests are revalidated
 against the current route map and visible installed factory catalog
-when displayed. A now-inaccessible plan is represented by a concealed
-stub with a delete button so removed mods or rolled-back research do
-not leak old waypoints/materials or strand save data. Removed players
-clean up their own itinerary storage. This feature never updates
-contracts, Project Skybridge, Convergence or victory.
+when displayed. Research, recipe-enabled status and exact eligible
+ingredient quantities are also rechecked, so upstream recipe changes
+cannot present stale bills of materials as current instructions. A
+now-inaccessible plan is represented by a concealed stub with a delete
+button so removed mods or rolled-back research do not leak old
+waypoints/materials or strand save data.
+
+Saved proposal rows are **collapsed by default**. Clicking a validated
+row reveals its detailed travel steps and ingredient list; invalidated
+proposals cannot be expanded and can always be deleted. Separate
+tab-scoped scroll memory prevents a new planning action from jumping
+the main Journal reading position. Removed players clean up their
+own itinerary storage. This feature never updates contracts, Project
+Skybridge, Convergence or victory.
 
 ### Cost and performance boundaries
 
