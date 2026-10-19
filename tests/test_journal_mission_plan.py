@@ -35,15 +35,42 @@ class MissionPlanContracts(unittest.TestCase):
         self.assertIn('restore_scrolls(reader,saved,false)',src)
         self.assertIn('section(prose,"story-heading"',src)
 
+    def test_live_research_updates_only_named_gui_elements(self):
+        journal=(ROOT/"scripts/razi_journal.lua").read_text()
+        control=(ROOT/"control.lua").read_text()
+        self.assertIn("function M.refresh_research_visible()",journal)
+        self.assertIn('name="razi_journal_research_row"',journal)
+        self.assertIn('name="razi_journal_research_progress"',journal)
+        self.assertIn('name="razi_journal_research_percent"',journal)
+        self.assertIn('strip.visible=active==true',journal)
+        self.assertIn('if bar then bar.value=value end',journal)
+        self.assertIn("razi_journal.refresh_research_visible()",control)
+        updater=journal.split("function M.refresh_research_visible()",1)[1].split(
+            "function M.refresh_systems_visible()",1)[0]
+        self.assertNotIn("draw(player)",updater)
+        self.assertNotIn("frame.clear()",updater)
+        self.assertNotIn("find_entities_filtered",updater)
+
+    def test_project_verifications_are_real_evidence_not_guide_numbers(self):
+        projects=(ROOT/"scripts/razi_journal_projects.lua").read_text()
+        for marker in ('facts.platform==true','facts.voyage==true',
+                       'tech and tech.researched==true',
+                       'project-verified-heading','project-advisory-heading'):
+            self.assertIn(marker,projects)
+        self.assertIn('name="razi_journal_mission_plan"',(ROOT/"scripts/razi_journal.lua").read_text())
+
     def test_locale(self):
         src=(ROOT/"locale/en/razi_journal_interface.cfg").read_text()
-        for key in ("mission-plan","mission-step-research",
+        for key in ("mission-plan","mission-finish-line","mission-step-research",
                     "mission-step-campaign","mission-step-boss",
                     "mission-step-delivery","mission-step-transmission",
                     "mission-step-discovery","mission-next","mission-complete",
                     "mission-disabled","mission-stage-count",
                     "mission-research-progress","mission-expand","mission-collapse",
-                    "mission-goal-status-done","mission-goal-status-open"):
+                    "mission-goal-status-done","mission-goal-status-open",
+                    "tracker-next","project-verified-heading",
+                    "project-verified-platform-built",
+                    "project-verified-voyage-crossing"):
             self.assertIn(key+"=",src)
 
 if __name__=="__main__":
