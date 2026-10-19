@@ -246,6 +246,7 @@ events:on_nth_tick(6, razi_safe_cheat.tick)
 -- No work when the Systems folio is closed; live labels only, no redraw.
 events:on_nth_tick(120, function()
   razi_journal.refresh_systems_visible()
+  razi_journal.refresh_research_visible()
 end)
 events:on_nth_tick(600, function()
   -- Other mods may restore their win triggers during a save migration.
