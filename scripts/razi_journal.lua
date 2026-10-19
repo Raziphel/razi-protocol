@@ -908,7 +908,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   heading.style.vertical_align="center"
   icons.sprite(heading,themes.icon(p.chapter),"chapter_seal")
   local cover_title=wrap(heading,{"journal-chapter."..p.chapter},inner-52)
-  cover_title.style.font="heading-1"
+  cover_title.style.font="default-bold"
   cover_title.style.font_color=COLOR.ink
   accent_rule(panel,theme,math.min(170,inner),3)
   local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
@@ -935,7 +935,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   body.style.width=text_width
   body.style.vertical_spacing=12
   section(body,"chapter-cover-story",
-    {"journal-chapter-story."..p.chapter},text_width,theme)
+    {"journal-chapter-summary."..p.chapter},text_width,theme)
   section(body,"chapter-cover-dispatch",
     {"journal-chapter-dispatch."..p.chapter},text_width,theme)
   dossier_heading(body,"chapter-cover-entries",theme,text_width)
@@ -1140,7 +1140,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       toggle.style.height=26
       toggle.style.font_color=open and theme.primary or COLOR.quiet
       local heading=wrap(head,{"journal-chapter."..chapter.id},inner-112)
-      heading.style.font="default-bold"
+      -- Short section names keep the chapter index compact and readable.
+      heading.style.font="default"
       heading.style.font_color=open and COLOR.ink or COLOR.muted
       heading.style.vertical_align="center"
       if open then
@@ -1654,9 +1655,10 @@ local function draw(player,focus_search)
       wrap(empty,L("missing-quest"),size.reader-40)
     end
   end
-  restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
   local foot=wrap(frame,L("footer-hint"),size.width-38)
   foot.style.font_color=COLOR.quiet
+  -- Restore only after the complete new GUI tree has been assembled.
+  restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
 end
 M.draw=draw
 local function open(player)
@@ -1957,8 +1959,7 @@ function M.gui_click(event)
     p.view="quests"
     p.query=""
     p.chapter_cover=false
-    p.reveal_selection=true
-    p.chapter_cover=false
+    p.reveal_selection=false
   elseif action=="chapter-dossier" then
     local known=false
     for _,ch in ipairs(defs.chapters) do
@@ -1988,7 +1989,7 @@ function M.gui_click(event)
     p.chapter_cover=false
     p.filter="all"
     p.query=""
-    p.reveal_selection=true
+    p.reveal_selection=false
   elseif action=="chapter" then
     if M.hide_spoilers() then
       local exposed=false
@@ -2062,7 +2063,7 @@ function M.gui_click(event)
     p.view="quests"
     p.filter="all"
     p.query=""
-    p.reveal_selection=true
+    p.reveal_selection=false
   elseif action=="record" then
     local context=M.context(player.force)
     for _,record in ipairs(records) do
@@ -2097,7 +2098,7 @@ function M.gui_click(event)
     if target then
       p.selected=target.id
       p.chapter=target.chapter
-      p.reveal_selection=true
+      p.reveal_selection=false
     end
   elseif action=="filter" and ({all=true,ready=true,unfinished=true,
       done=true})[tags.id] then
@@ -2110,7 +2111,7 @@ function M.gui_click(event)
       p.filter="all"
       p.view="quests"
       p.query=""
-      p.reveal_selection=true
+      p.reveal_selection=false
       p.chapter_cover=false
     end
   elseif action=="next-in-chapter" or action=="previous-in-chapter" then
@@ -2204,7 +2205,7 @@ function M.selection_changed(event)
   p.chapter=chapter.id
   p.filter="all"
   p.query=""
-  p.reveal_selection=true
+  p.reveal_selection=false
   p.chapter_cover=true
   local context=M.context(player.force)
   for _,quest in ipairs(defs.quests) do

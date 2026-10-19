@@ -13,12 +13,15 @@ class JournalToolbarTests(unittest.TestCase):
         self.assertIn('top=icons.button(player.gui.top,"razi-journal-book-icon","toolbar",',journal)
         self.assertIn('{razi_journal_action="toggle"},L("button-tooltip"),TOP)',journal)
         self.assertIn('if action=="toggle" then M.toggle(player);return end',journal)
-        self.assertIn('graphics/icons/routes/interstellar-route.png',proto)
+        self.assertIn('graphics/ui/razi-journal-book.png',proto)
+        self.assertTrue((ROOT/"graphics/ui/razi-journal-book.png").is_file())
+        self.assertIn('toolbar=42',read("scripts/razi_journal_icons.lua"))
+        self.assertIn('razi_journal_hud_button',proto)
         self.assertIn('key_sequence="CONTROL + SHIFT + J"',proto)
         self.assertNotIn('type="shortcut"',proto)
         self.assertNotIn('defines.events.on_lua_shortcut',control)
         self.assertIn('razi_journal.gui_click(event)',control)
-        self.assertIn('"version": "2.1.121"',read("info.json"))
+        self.assertIn('"name": "razi-protocol"',read("info.json"))
 
     def test_legacy_placements_removed_without_touching_top_button(self):
         journal=read("scripts/razi_journal.lua")

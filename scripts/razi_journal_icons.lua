@@ -5,7 +5,7 @@
 local M={}
 
 local SIZES={
-  toolbar=32,
+  toolbar=42,
   window_emblem=28,
   tracker_chapter=18,
   tracker_quest=24,
@@ -50,7 +50,9 @@ end
 function M.button(parent,path,role,tags,tooltip,name)
   local edge=M.size(role)
   local element=parent.add{
-    type="sprite-button",name=name,style="slot_button",sprite=path,
+    type="sprite-button",name=name,
+    style=role=="toolbar" and "razi_journal_hud_button" or "slot_button",
+    sprite=path,
     tags=tags,tooltip=tooltip
   }
   element.style.size=edge

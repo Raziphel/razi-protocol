@@ -14,6 +14,20 @@ class JournalPolish(unittest.TestCase):
         self.assertIn("scroll.tags={razi_scroll_context=quest.id}",x)
         self.assertIn("reading.tags={razi_scroll_context=chosen.id}",x)
         self.assertIn("scroll.tags={razi_scroll_context=p.project}",read("scripts/razi_journal_projects.lua"))
+        # Clicking ordinary navigation controls may not override the saved offset.
+        click=x.split("function M.gui_click(event)",1)[1].split("function M.text_changed(event)",1)[0]
+        self.assertNotIn("p.reveal_selection=true",click)
+        self.assertIn("p.reveal_selection=false",click)
+        selection=x.split("function M.selection_changed(event)",1)[1].split("function M.gui_closed(event)",1)[0]
+        self.assertNotIn("p.reveal_selection=true",selection)
+        # External journal links may still intentionally reveal their target.
+        self.assertIn("p.reveal_selection=true\\n  open(player)",x)
+        self.assertIn('cover_title.style.font="default-bold"',x)
+        self.assertIn('journal-chapter-summary."..p.chapter',x)
+        chapters=read("locale/en/razi_journal_chapters.cfg")
+        self.assertIn("solaris=Solaris\\n",chapters)
+        self.assertIn("[journal-chapter-summary]",chapters)
+
     def test_localization_and_cards(self):
         x=read("scripts/razi_journal.lua")
         self.assertNotIn('{"journal-workshop."..quest.id}',x)
