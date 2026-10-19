@@ -64,6 +64,18 @@ function M.adjacent(force,id,step,known_visible)
   return nil
 end
 function M.cargo_available(force)
+  local tech=force and force.technologies
+    and force.technologies["interplanetary-trade-logistics"]
+  local setting=settings and settings.global
+    and settings.global["razi-hide-spoilers"]
+  if setting and setting.value==true then
+    if not tech or tech.enabled==false then return false end
+    if not tech.researched then
+      for _,required in pairs(tech.prerequisites or {}) do
+        if not required.researched then return false end
+      end
+    end
+  end
   return catalog.snapshot(force).available>0
 end
 function M.valid_cargo(force,chain,target)
@@ -520,8 +532,14 @@ local function cargo_reference(parent,player,p,size)
 end
 function M.render(parent,player,p,size)
   if p.project=="cargo" then
-    cargo_reference(parent,player,p,size)
-    return
+    if M.cargo_available(player.force) then
+      cargo_reference(parent,player,p,size)
+      return
+    end
+    -- Existing saves with a locked Cargo reference return to Projects.
+    p.project="platform"
+    p.cargo_focus=nil
+    p.cargo_target=nil
   end
   local displayed={}
   for _,id in ipairs(ids) do
