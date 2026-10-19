@@ -350,8 +350,7 @@ local function dossier_heading(parent,key,theme,width)
   local heading=parent.add{type="flow",direction="horizontal"}
   heading.style.horizontal_spacing=9
   heading.style.vertical_align="center"
-  accent_rule(heading,theme,50,2)
-  local title=subtitle(heading,key,width-65)
+  local title=subtitle(heading,key,width)
   title.style.font_color=COLOR.muted
   return heading
 end
@@ -1465,7 +1464,7 @@ local function draw(player,focus_search)
   title.style.font_color=COLOR.ink
   local kicker=tint(label(heading,L("header-eyebrow")),COLOR.muted)
   kicker.style.font="default-bold"
-  local drag=head.add{type="empty-widget",style="draggable_space"}
+  local drag=head.add{type="empty-widget",style="draggable_space_header"}
   drag.style.horizontally_stretchable=true
   drag.style.height=19
   drag.drag_target=frame
