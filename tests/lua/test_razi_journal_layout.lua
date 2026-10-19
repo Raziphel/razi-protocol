@@ -111,9 +111,23 @@ rawset(_G,"game",{
   connected_players={player},forces={player=force},
   get_player=function(id) if id==1 then return player end end
 })
+-- Persistent GUI updates must be inspected through the live widget tree,
+-- not only the latest allocation batch. Old tests assumed frame.clear()
+-- recreated every widget and therefore missed valid retained controls.
+local function live_elements()
+  local found={}
+  local function visit(parent)
+    for _,child in ipairs(parent.children) do
+      found[#found+1]=child
+      visit(child)
+    end
+  end
+  visit(root)
+  return found
+end
 local function assert_panes()
   local count=0
-  for _,element in ipairs(created) do
+  for _,element in ipairs(live_elements()) do
     if element.type=="scroll-pane" then
       count=count+1
       check(element.horizontal_scroll_policy=="never",
@@ -133,7 +147,7 @@ check(wide.width>960,"The redesigned window was not enlarged")
 check(root.style.width==wide.width,"Frame width ignores resolution")
 check(assert_panes()==2,"Quest view needs only navigator and reader panes")
 local sprites={}
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.sprite then sprites[entry.sprite]=true end
 end
 check(sprites["technology/automation"],"Native research art is missing")
@@ -142,7 +156,7 @@ check(sprites["entity/assembling-machine-1"],"Native building art is missing")
 check(sprites[themes.icon("calidus")],
   "Navigator must show the chapter insignia")
 local nauvis_acts={}
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if type(entry.caption)=="table" and
     type(entry.caption[1])=="string" and
     entry.caption[1]:find("^journal%-nauvis%-phase%.") then
@@ -157,7 +171,7 @@ end
 -- widgets must ignore intrinsic dimensions, even on heavily modded packs.
 local roles=require("scripts.razi_journal_icons")
 local icon_count=0
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.sprite then
     local width=entry.style.size or entry.style.width
     local height=entry.style.size or entry.style.height
@@ -177,7 +191,7 @@ check(icon_count>=4 and roles.size("quest_hero")==36
   and roles.size("quest_row")==20 and roles.size("gallery")==28,
   "Codex icon sizing policy is missing")
 local top_priority,parallel=0,0
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.tags and entry.tags.razi_journal_action=="guidance-select" then
     local q=defs.by_id[entry.tags.id]
     check(q and entry.type=="label",
@@ -189,19 +203,19 @@ end
 check(top_priority>=1,
   "Navigator must show at least one genuine research-ready priority")
 local selected_quest_paper,readiness_bar=0,0
-for _,entry in ipairs(created) do
-  if entry.type=="frame" and entry.style.padding==4
-    and entry.style.width and entry.style.width<400 then
+for _,entry in ipairs(live_elements()) do
+  if entry.type=="flow"
+    and entry.name=="razi_journal_item_"..(journal.preferences(1).selected or "") then
     selected_quest_paper=selected_quest_paper+1
   end
   if entry.type=="progressbar" and entry.style.height==5 then
     readiness_bar=readiness_bar+1
   end
 end
-check(selected_quest_paper>=0,
-  "Selected milestones must not require extra heavy card chrome")
+check(selected_quest_paper==1,
+  "Selected objective must exist once in the persistent chapter index")
 local tinted=0
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.type=="progressbar" and entry.style.color then
     tinted=tinted+1
   end
@@ -212,7 +226,7 @@ check(journal.matches_query(defs.by_id["first-signal"],"automation"),
 check(not journal.matches_query(defs.by_id["first-signal"],"maraxsis"),
   "Search must exclude unrelated technologies")
 local search_field
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.name=="razi_journal_search" then search_field=entry end
 end
 check(search_field,"Live search input is missing")
@@ -226,7 +240,7 @@ journal.draw(player)
 -- A real chapter briefing must open in the same reader, keep two hidden
 -- wheel-scrolling panes, and let a player continue to source milestones.
 local cover_link
-for _,element in ipairs(created) do
+for _,element in ipairs(live_elements()) do
   if element.tags and element.tags.razi_journal_action=="chapter-dossier"
     and element.tags.id=="calidus" then cover_link=element;break end
 end
@@ -238,7 +252,7 @@ check(journal.preferences(1).chapter_cover==true,
 check(assert_panes()==2,
   "Chapter briefing should reuse one navigator and one scrollable reader")
 local chapter_reading,cover_title,open_milestone
-for _,element in ipairs(created) do
+for _,element in ipairs(live_elements()) do
   if element.name=="razi_journal_chapter_reading" then
     chapter_reading=element
   elseif type(element.caption)=="table"
@@ -259,7 +273,7 @@ check(not journal.preferences(1).chapter_cover
 -- The actionable ready count switches to Quests and the genuine Ready
 -- filter, rather than showing an inert cosmetic number.
 local ready_jump
-for _,element in ipairs(created) do
+for _,element in ipairs(live_elements()) do
   if element.tags and element.tags.razi_journal_action=="filter-ready" then
     ready_jump=element;break
   end
@@ -278,7 +292,7 @@ journal.preferences(1).chapter="alliances"
 created={}
 journal.draw(player)
 local industry_sprites={}
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.sprite then industry_sprites[entry.sprite]=true end
 end
 check(industry_sprites[themes.icon("alliances")],
@@ -294,7 +308,7 @@ journal.preferences(1).query="no-such-technology"
 created={}
 journal.draw(player)
 local recommendation
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.tags and entry.tags.razi_journal_action=="guidance-select" then
     recommendation=entry
     break
@@ -314,7 +328,7 @@ created={}
 journal.draw(player)
 local picker
 local selector
-for _,element in ipairs(created) do
+for _,element in ipairs(live_elements()) do
   if element.name=="razi_journal_chapter_picker" then picker=element end
   if element.tags and element.tags.razi_journal_action=="select"
     and element.type=="button" then selector=element end
@@ -362,7 +376,7 @@ check(journal.preferences(1).selected=="precision-matrix"
   and journal.preferences(1).query=="",
   "Cargo link must select the exact milestone and clear stale filters")
 local bridge
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.tags and entry.tags.razi_journal_action=="open-cargo" then
     bridge=entry
   end
@@ -370,7 +384,7 @@ end
 check(bridge and bridge.tags.id=="precision-matrix",
   "Industry quest must offer the real cargo chain navigation")
 local linked,readiness=0,false
-for _,entry in ipairs(created) do
+for _,entry in ipairs(live_elements()) do
   if entry.tags and entry.tags.razi_journal_action=="guidance-select"
     and (entry.tags.id=="fulgora" or entry.tags.id=="moshine")
     and entry.tooltip and entry.tooltip[1]=="journal-ui.open-prerequisite" then
