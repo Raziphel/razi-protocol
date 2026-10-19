@@ -1634,64 +1634,98 @@ local function draw(player,focus_search)
 end
 -- A new quest updates only the document, leaving the original chapter
 -- scroll pane alive. This is more reliable than restoring a rebuilt scrollbar.
+-- Razi 3.0: keep the native navigator and its scrollbar alive while the
+-- right-hand dossier and source-backed status are refreshed independently.
 local function update_reader(player,preserve_reader)
   local frame=player.gui.screen[FRAME]
   local body=frame and frame.valid and frame["razi_journal_content"]
   local reader=body and body.valid and body["razi_journal_reader_host"]
-  if not (reader and reader.valid) then draw(player);return end
+  local navigation=body and body.valid and body["razi_journal_navigation_panel"]
+  local scroll=navigation and navigation.valid
+    and navigation["razi_journal_navigation"]
+  local column=scroll and scroll.valid and scroll["razi_journal_chapter_column"]
+  if not (reader and reader.valid and column and column.valid) then
+    draw(player)
+    return
+  end
   local p=pref(player.index)
   local context=M.context(player.force)
   local size=M.layout(player.display_resolution,player.display_scale)
   local view=M.view_status(player.force,context)
-  local selected=select_quest(player.force,p,context,
-    M.guidance(player.force,context,view))
-  -- Expand/collapse existing chapter groups without discarding the scroll pane.
-  local navigation=body["razi_journal_navigation_panel"]
-  local navigation_scroll=navigation and navigation["razi_journal_navigation"]
-  local column=navigation_scroll and navigation_scroll["razi_journal_chapter_column"]
-  if column then
-    for index,ch in ipairs(defs.chapters) do
-      local card=column["razi_journal_chapter_"..index]
-      if card then
-        local entries=card["razi_journal_chapter_entries"]
-        local head=card["razi_journal_chapter_head"]
-        local toggle=head and head["razi_journal_chapter_toggle"]
-        local expanded=p.chapter==ch.id or p.query~=""
-        if entries then entries.visible=expanded end
-        if toggle then toggle.caption=expanded and "▾" or "▸" end
+  -- A newly discovered/visible quest needs its first native GUI row built.
+  -- That is the exceptional case where a full redraw is actually required.
+  for index,ch in ipairs(defs.chapters) do
+    local data=view.chapters[ch.id]
+    local card=column["razi_journal_chapter_"..index]
+    if #data.quests>0 and not card then draw(player);return end
+    local entries=card and card["razi_journal_chapter_entries"]
+    if entries then
+      for _,quest in ipairs(data.quests) do
+        if not entries["razi_journal_item_"..quest.id] then
+          draw(player)
+          return
+        end
       end
     end
   end
-  local picker=navigation and navigation["razi_journal_chapter_picker"]
-  if picker then picker.selected_index=chapter_index(p.chapter) end
-  local scroll=navigation_scroll
-  if scroll then
-    local function mark(parent)
-      for _,child in pairs(parent.children) do
-        if child.name and child.name:sub(1,18)=="razi_journal_item_" then
-          local choice=child["razi_journal_item_choice"]
-          local icon=child["razi_journal_item_control"]
-          local id=child.name:sub(19)
-          local chosen=p.selected==id and not p.chapter_cover
+  local plan=M.guidance(player.force,context,view)
+  local selected=select_quest(player.force,p,context,plan)
+  p.nexus_revision=nexus_revision(context.nexus)
+  for index,ch in ipairs(defs.chapters) do
+    local data=view.chapters[ch.id]
+    local card=column["razi_journal_chapter_"..index]
+    if card then
+      local entries=card["razi_journal_chapter_entries"]
+      local head=card["razi_journal_chapter_head"]
+      local toggle=head and head["razi_journal_chapter_toggle"]
+      local count_holder=card.children[2]
+      local count=count_holder and count_holder["razi_journal_chapter_count"]
+      local shown=0
+      for _,quest in ipairs(data.quests) do
+        local row=entries and entries["razi_journal_item_"..quest.id]
+        if row then
+          local state=view.states[quest.id]
+          local matching=state_matches_filter(state,p.filter)
+            and matches_query(quest,p.query)
+          row.visible=matching
+          if matching then shown=shown+1 end
+          local choice=row["razi_journal_item_choice"]
+          local marker=row["razi_journal_item_control"]
+          local chosen=p.selected==quest.id and not p.chapter_cover
           if choice then
             choice.style.font=chosen and "default-bold" or "default"
             choice.style.font_color=chosen and COLOR.ink or COLOR.muted
           end
-          if icon then
-            local status=view.states[id]
-            icon.style.font_color=chosen and COLOR.amber
-              or status=="complete" and COLOR.green
-              or status=="active" and COLOR.amber or COLOR.muted
+          if marker then
+            marker.caption=state=="complete" and "✓"
+              or state=="active" and "●" or "○"
+            marker.style.font_color=chosen and themes.get(ch.id).primary
+              or state=="complete" and COLOR.green
+              or state=="active" and COLOR.amber or COLOR.quiet
           end
-        else
-          mark(child)
         end
       end
+      card.visible=shown>0
+      local expanded=shown>0 and (p.chapter==ch.id or p.query~="")
+      if entries then entries.visible=expanded end
+      if toggle then toggle.caption=expanded and "▾" or "▸" end
+      if count then
+        count.caption=L("chapter-progress-short",
+          tostring(data.completed),tostring(data.total))
+      end
     end
-    mark(scroll)
   end
-  -- Expanding a chapter is not a request to reset the current document.
+  local picker=navigation["razi_journal_chapter_picker"]
+  if picker and picker.selected_index~=chapter_index(p.chapter) then
+    picker.selected_index=chapter_index(p.chapter)
+  end
+  local search=navigation["razi_journal_search"]
+  if search and search.text~=(p.query or "") then search.text=p.query or "" end
+  -- Keep typing focus and the chapter scrollbar untouched. Readers are
+  -- independently scrollable and restored when the same dossier refreshes.
   if preserve_reader then return end
+  local saved={}
+  collect_scrolls(reader,saved)
   reader.clear()
   if p.chapter_cover and render_chapter_cover(
     reader,player,p,context,size,view) then
@@ -1703,6 +1737,7 @@ local function update_reader(player,preserve_reader)
     empty.style.width=size.reader
     wrap(empty,L("missing-quest"),size.reader-40)
   end
+  restore_scrolls(reader,saved,false)
 end
 M.draw=draw
 local function open(player)
