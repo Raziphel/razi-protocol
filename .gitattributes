@@ -17,3 +17,7 @@ tools export-ignore
 README.md export-ignore
 FACTORIO-2.1-COMPATIBILITY.md export-ignore
 mod_desc.txt export-ignore
+contributing.md export-ignore
+# tests and development documents of 3.0
+tests export-ignore
+docs export-ignore
