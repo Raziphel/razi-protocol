@@ -15,10 +15,13 @@ class JournalPolish(unittest.TestCase):
         self.assertIn("reading.tags={razi_scroll_context=chosen.id}",x)
         self.assertIn("scroll.tags={razi_scroll_context=p.project}",read("scripts/razi_journal_projects.lua"))
         # Ordinary chapter/quest clicks retain engine-owned scrollbar objects.
-        self.assertIn("local function update_reader(player)",x)
+        self.assertIn("local function update_reader(player,preserve_reader)",x)
         self.assertIn("update_reader(player)",x)
+        self.assertIn("restore_scrolls(reader,saved,false)",x)
+        self.assertIn("row.visible=matching",x)
+        # Source of truth for typing/search remains the existing native GUI.\n        self.assertIn("  update_reader(player)\nend\nfunction M.elem_changed",x)
         self.assertIn('name="razi_journal_chapter_entries"',x)
-        self.assertIn("entries.visible=expanded",x)
+        self.assertIn("if entries then entries.visible=expanded end",x)
         self.assertIn('name="razi_journal_reader_host"',x)
         # Clicking ordinary navigation controls may not override the saved offset.
         click=x.split("function M.gui_click(event)",1)[1].split("function M.text_changed(event)",1)[0]
@@ -39,5 +42,5 @@ class JournalPolish(unittest.TestCase):
         self.assertNotIn('{"journal-workshop."..quest.id}',x)
         self.assertIn("preview.workshop_fallback(quest,prototypes)",x)
         self.assertIn("function M.workshop_fallback",read("scripts/razi_journal_recipe_preview.lua"))
-        self.assertIn("math.min(7,math.floor(width/155))",x)
+        self.assertIn("math.min(4,math.floor(width/215))",x)
 if __name__=="__main__": unittest.main()

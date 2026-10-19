@@ -1,5 +1,17 @@
 # Expedition Journal: contributor overview
 
+## Persistent event-driven Journal interface (October 2026)
+
+The chapter navigator now allocates discoverable quest rows once. Search and
+status filters operate by toggling existing native elements. Opening chapters,
+selecting milestones, refreshing research, and observing relevant platform
+events update the reader and existing index without clearing the whole GUI.
+The same dossier's scroll offset is collected/restored when its contents
+change, while search field focus and the chapter scrollbar remain untouched.
+A full redraw is reserved for new discoveries or switching between folios.
+The visible "Archive" name replaces the ambiguous third "Journal" tab without
+changing its internal view ID or any savegame data.
+
 ## The stable-scroll Journal redesign (October 2026)
 
 The Quests navigation pane now remains alive when selecting quest entries or

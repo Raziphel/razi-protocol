@@ -26,6 +26,8 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('name="razi_journal_chapter_"..index',journal)
         self.assertIn('card.style.padding=4',journal)
         self.assertIn('name="razi_journal_chapter_entries"',journal)
+        self.assertIn('name="razi_journal_chapter_count"',journal)
+        self.assertIn('name="razi_journal_filter_"..filter',journal)
         self.assertIn('name="razi_journal_search"',journal)
         self.assertIn('name="razi_journal_chapter_picker"',journal)
         self.assertIn('razi_journal_action="guidance-select"',journal)
