@@ -106,6 +106,10 @@ jobs:
         run: lua5.2 tests/lua/test_razi_logistics_command.lua
       - name: Check A.5 native recipe supply planner and atomic freight handoff
         run: lua5.2 tests/lua/test_razi_supply_planner.lua
+      - name: Check A.6 source-connected platform and catapult route alternatives
+        run: lua5.2 tests/lua/test_razi_supply_routes.lua
+      - name: Check A.6 manual multi-hop itinerary records and invalidation
+        run: lua5.2 tests/lua/test_razi_supply_multihop.lua
       - name: Check read-only and spoiler-aware Vespera freight dossier
         run: lua5.2 tests/lua/test_razi_catapult_network.lua
       - name: Check source-backed factory comparison and safe optional sourcing
