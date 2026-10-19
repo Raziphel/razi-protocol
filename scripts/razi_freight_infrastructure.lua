@@ -57,7 +57,7 @@ end
 local function read_world(force,world,planet,names)
   local state={
     world=world,launcher_count=nil,launcher_state="unknown",
-    platforms=nil,providers=nil,unscheduled=nil
+    platforms=nil,providers=nil,unscheduled=nil,vanilla_bays=nil
   }
   -- A planet surface may not exist until first arrival. Do not create it.
   local surface=planet and planet.surface
@@ -71,13 +71,22 @@ local function read_world(force,world,planet,names)
   end
   local docked=orbiting(force,world)
   if docked then
-    local count,providers,unscheduled=0,0,0
+    local count,providers,unscheduled,bays=0,0,0,0
+    local bays_known=true
     for _,platform in pairs(docked) do
       if built(platform) then
         count=count+1
         if platform.hub.type=="space-platform-hub"
           and platform.hub.providing_to_other_platforms==true then
           providers=providers+1
+        end
+        local platform_surface=platform.surface
+        if platform_surface and platform_surface.valid~=false
+          and platform_surface.count_entities_filtered then
+          bays=bays+platform_surface.count_entities_filtered{
+            name="cargo-bay",force=force}
+        else
+          bays_known=false
         end
         local schedule=platform.schedule
         if not (schedule and schedule.records
@@ -89,6 +98,7 @@ local function read_world(force,world,planet,names)
     state.platforms=count
     state.providers=providers
     state.unscheduled=unscheduled
+    if bays_known then state.vanilla_bays=bays end
   end
   return state
 end
