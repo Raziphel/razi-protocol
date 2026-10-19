@@ -23,6 +23,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-stage-aquilo-breakthroughs",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-c2[aquilo-breakthroughs]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-group-barreling-recipes",
 		setting_type = "startup",
 		default_value = true,
