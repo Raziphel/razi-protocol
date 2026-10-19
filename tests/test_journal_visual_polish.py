@@ -10,7 +10,7 @@ def read(path):
 class VisualPolishTests(unittest.TestCase):
     def test_folio_navigation_and_quiet_counters(self):
         journal=read("scripts/razi_journal.lua")
-        self.assertIn('for _,view in ipairs({"quests","projects","archive"})',journal)
+        self.assertIn('for _,view in ipairs({"quests","projects","archive","systems"})',journal)
         self.assertIn('style="clickable_label"',journal)
         self.assertIn('local folio=toolbar.add{type="flow",direction="vertical"}',
                       journal)

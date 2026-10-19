@@ -1,5 +1,21 @@
 # Expedition Journal: contributor overview
 
+## Systems folio (3.0)
+
+The fourth Journal folio is **Systems**. It shows source-backed, read-only status
+for three optional external features without introducing a second progress
+system: Planet Express fleet counts from its own per-player monitor dock,
+Nexus-Updated engine-core counts and research limit, and Nexus Threat state
+from its documented read-only `nexus-threat.get_state` remote interface.
+Missing mods and locked techs show honest unavailable states, never invented
+zeros. The Systems folio refreshes its named labels and bars every 120 ticks
+**only while open**. This avoids resetting scroll position, expensive full
+rebuilds and cross-force leaks. The source mods retain ownership of operations
+and all original access controls. In particular, do not remove Planet Express
+or Nexus Threat buttons until a supported upstream interface exists for their
+full Monitor and stabilizer power controls.
+
+
 The Expedition Journal is Razi Protocol's **single, coherent player-facing narrative interface**: Quests, Projects and Journal records. Its purpose is to explain what to do, why each destination matters, and what the factory has actually achieved.
 
 **The key contract:** quest completion derives from real technology/discovery/boss events; Projects report their own genuine production, construction and delivery state; recovered transmissions are story unlocked by matching milestones. Never mark a delivery complete merely because its research was unlocked.

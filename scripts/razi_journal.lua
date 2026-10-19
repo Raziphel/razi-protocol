@@ -12,6 +12,7 @@ local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
 local convergence=require("scripts.razi_convergence")
 local projects=require("scripts.razi_journal_projects")
+local systems=require("scripts.razi_journal_systems")
 local great_projects=require("scripts.razi_great_projects")
 local guidance=require("scripts.razi_journal_guidance")
 local preview=require("scripts.razi_journal_recipe_preview")
@@ -63,7 +64,7 @@ local function pref(index)
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
-  value.view=({quests=true,projects=true,archive=true})[value.view] and value.view or "quests"
+  value.view=({quests=true,projects=true,archive=true,systems=true})[value.view] and value.view or "quests"
   value.project=(projects.valid(value.project) or value.project=="cargo")
     and value.project or "platform"
   value.query=value.query or ""
@@ -1434,7 +1435,7 @@ end
 local scroll_names={
   razi_journal_navigation=true,razi_journal_reading=true,
   razi_journal_chapter_reading=true,razi_journal_archive_reading=true,
-  razi_journal_project_reader=true
+  razi_journal_project_reader=true,razi_journal_systems_reading=true
 }
 local function scroll_key(element)
   local tags=element.tags
@@ -1488,7 +1489,8 @@ local function draw(player,focus_search)
   end
   local size=M.layout(player.display_resolution,player.display_scale)
   local reveal_on_redraw=p.reveal_selection==true
-  local chapter_theme=p.view=="projects" and "stellar" or p.chapter or "calidus"
+  local chapter_theme=p.view=="systems" and "network"
+    or (p.view=="projects" and "stellar" or p.chapter or "calidus")
   local window_theme=themes.get(chapter_theme)
   local saved_scrolls={}
   collect_scrolls(frame,saved_scrolls)
@@ -1533,6 +1535,7 @@ local function draw(player,focus_search)
   end
   -- Editorial status strip: honest progress, no generic dashboard tiles.
   local totals=frame.add{type="flow",direction="vertical"}
+  totals.visible=p.view~="systems"
   totals.style.horizontally_stretchable=true
   totals.style.vertical_spacing=4
   local metrics_row=totals.add{type="flow",direction="horizontal"}
@@ -1568,7 +1571,7 @@ local function draw(player,focus_search)
   toolbar.style.horizontal_spacing=20
   toolbar.style.vertical_align="bottom"
   -- The three folios use typographic navigation and a slender active rule.
-  for _,view in ipairs({"quests","projects","archive"}) do
+  for _,view in ipairs({"quests","projects","archive","systems"}) do
     local active=p.view==view
     local folio=toolbar.add{type="flow",direction="vertical"}
     folio.style.vertical_spacing=4
@@ -1614,6 +1617,8 @@ local function draw(player,focus_search)
       tags={razi_journal_action="story-alerts"}}
   elseif p.view=="projects" then
     tint(label(filterbar,L("projects-hint")),window_theme.soft)
+  elseif p.view=="systems" then
+    tint(label(filterbar,{"journal-systems.status-strip"}),window_theme.soft)
   else
     subtitle(filterbar,"filter-heading")
     for _,filter in ipairs({"all","ready","unfinished","done"}) do
@@ -1626,7 +1631,9 @@ local function draw(player,focus_search)
     end
   end
 
-  local body=frame.add{type="flow",direction="horizontal"}
+  local body=frame.add{type="flow",
+    name=p.view=="systems" and "razi_journal_systems_body" or "razi_journal_content",
+    direction="horizontal"}
   body.style.width=size.width-33
   body.style.height=size.body
   body.style.horizontal_spacing=10
@@ -1634,6 +1641,8 @@ local function draw(player,focus_search)
     render_archive(body,player,p,context,size)
   elseif p.view=="projects" then
     projects.render(body,player,p,size)
+  elseif p.view=="systems" then
+    systems.render(body,player,size)
   else
     local selected=select_quest(player.force,p,context,plan)
     local search=render_chapters(body,player,p,context,size,view,plan)
@@ -1836,6 +1845,15 @@ function M.refresh_convergence(force)
       and frame and frame.valid then draw(player) end
   end
 end
+function M.refresh_systems_visible()
+  -- Source data is sampled only while somebody is actually reading Systems.
+  -- Update named labels in place: no full Journal rebuild or scroll jumps.
+  for _,player in pairs(game.connected_players or {}) do
+    local p=storage.razi_expedition_journal
+      and storage.razi_expedition_journal[player.index]
+    if p and p.view=="systems" then systems.refresh(player) end
+  end
+end
 function M.refresh_nexus_visible()
   if not (remote and remote.interfaces and
     remote.interfaces["nexus-bosses"]) then return end
@@ -2002,7 +2020,7 @@ function M.gui_click(event)
       if not exposed then return end
     end
     p.chapter=p.chapter==tags.id and false or tags.id
-  elseif action=="view" and ({quests=true,projects=true,archive=true})[tags.id] then
+  elseif action=="view" and ({quests=true,projects=true,archive=true,systems=true})[tags.id] then
     p.view=tags.id
   elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
@@ -2142,6 +2160,8 @@ function M.gui_click(event)
     render_tracker(player)
   elseif action=="refresh" and p.view=="projects" then
     projects.refresh(player.force)
+  elseif action=="refresh" and p.view=="systems" then
+    systems.refresh(player)
   elseif action~="refresh" then return end
   draw(player)
 end

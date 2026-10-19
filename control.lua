@@ -243,6 +243,10 @@ commands.add_command("razi-victory-audit",
 commands.add_command("razi-audit",
   {"razi-audit.help"},convergence_audit.command)
 events:on_nth_tick(6, razi_safe_cheat.tick)
+-- No work when the Systems folio is closed; live labels only, no redraw.
+events:on_nth_tick(120, function()
+  razi_journal.refresh_systems_visible()
+end)
 events:on_nth_tick(600, function()
   -- Other mods may restore their win triggers during a save migration.
   -- Three small optional remote checks every ten seconds, no world scans.
