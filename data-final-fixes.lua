@@ -87,6 +87,11 @@ require("prototypes.technology.deep_space_arrival").data_final_fixes()
 -- Make sure every system card in the price of the new gates is unlocked before the gate.
 require("prototypes.technology.seven_systems").data_final_fixes()
 
+-- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
+-- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
+-- the cycle check sees the final graph) and before the lab inputs are deduplicated.
+require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+
 -- Planet packs frequently append their science inputs without checking whether
 -- another compatibility pass already added the same pack. Duplicate lab inputs
 -- are invalid in Factorio 2.1, so normalize them after every Razi compatibility
