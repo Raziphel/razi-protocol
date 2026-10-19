@@ -789,8 +789,9 @@ local function cargo_reference(parent,player,p,size)
   pane.style.vertical_spacing=7
   local bar=pane.add{type="flow",direction="horizontal"}
   bar.style.vertical_align="center"
-  local title=bar.add{type="label",caption=L("project-industry-reference")}
-  title.style.font="heading-2"
+  local title=bar.add{type="label",
+    caption={"razi-ops.logistics-command-folio"}}
+  title.style.font="default-bold"
   title.style.font_color=HUES.gold
   local spacer=bar.add{type="empty-widget"}
   spacer.style.horizontally_stretchable=true
