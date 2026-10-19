@@ -31,6 +31,7 @@ local recipe={quest={tech="razi-test-supply"},site="moshine",
   technology=technology,recipe_enabled=true,
   recipe={ingredients={{name="iron-plate",amount=2}}}}
 package.loaded["scripts.razi_supply_planner"]={
+ catalog=function() return {recipe} end,
  recipe=function(_,name)
   if name=="razi-test-supply" then return recipe end end,
  batches=function(value)
@@ -56,9 +57,15 @@ local module=require("scripts.razi_supply_multihop")
 local player={index=10,force={index=2}}
 local other={index=11,force=player.force}
 local p={supply_recipe="razi-test-supply",
- supply_batches=4,supply_origin="vulcanus",supply_path=1}
+ supply_batches=4,supply_origin="vulcanus",supply_path=1,
+ supply_path_key="path"}
 check(module.save(player,p),
  "Valid researched factory should create manual manifest")
+local key=p.supply_path_key
+p.supply_path_key="stale-route-id"
+check(not module.save(player,p),
+ "Reordered route list must not silently save the wrong path")
+p.supply_path_key=key
 local one=storage.razi_supply_itineraries[player.index]
 check(#one.plans==1 and one.plans[1].batches==4
  and #one.plans[1].materials==2
