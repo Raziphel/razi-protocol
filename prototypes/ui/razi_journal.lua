@@ -13,4 +13,16 @@ if styles then
   styles.razi_journal_hud_button={
     type="button_style",parent="slot_button",size=42,padding=3
   }
+  -- Midnight Archive has a dark navigation well and a quieter reading
+  -- surface. Derive from Factorio's supported native styles: no custom
+  -- shaders, generated atlases or incompatible GUI style fields.
+  styles.razi_journal_index={
+    type="frame_style",parent="inside_deep_frame",padding=10
+  }
+  styles.razi_journal_paper={
+    type="frame_style",parent="inside_shallow_frame",padding=12
+  }
+  styles.razi_journal_callout={
+    type="frame_style",parent="inside_shallow_frame",padding=10
+  }
 end
