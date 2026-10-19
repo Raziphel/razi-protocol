@@ -34,7 +34,7 @@ class RouteIntelIntegrationTests(unittest.TestCase):
         self.assertNotIn('field("quality-hazard",',source)
         self.assertNotIn('field("distance",',source)
         self.assertIn('if show("salvage") and report.chunks>0 then',source)
-        self.assertIn('if type(route.length)=="number" and route.length>75000 then',source)
+        self.assertIn('if show("haul") and type(route.length)=="number" and route.length>75000 then',source)
         self.assertIn('if show("belts") and hazards.is_belt_crossing(route) then',source)
         self.assertIn('danger=[font=default-bold]Asteroid difficulty',locale)
         self.assertIn('prepare-legendary=',locale)
