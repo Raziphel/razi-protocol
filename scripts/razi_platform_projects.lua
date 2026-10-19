@@ -21,7 +21,7 @@ local function real_hub(platform)
   local hub=platform.hub
   return hub~=nil and hub.valid==true
 end
-local function remember(force,platform,voyage,name)
+local function remember(force,platform,voyage,name,trip_name)
   local saved=record(force)
   if not saved then return false end
   local changed=false
@@ -33,7 +33,7 @@ local function remember(force,platform,voyage,name)
   if voyage and not saved.voyage then
     saved.platform=true
     saved.voyage=true
-    saved.voyage_name=name
+    saved.voyage_name=trip_name or name
     changed=true
   end
   return changed
@@ -68,7 +68,7 @@ function M.snapshot(force)
         if platform and voyage then break end
       end
     end
-    if platform then remember(force,true,voyage,first or ship) end
+    if platform then remember(force,true,voyage,first or ship,ship) end
   end
   return {platform=platform,voyage=voyage,
     first_name=first,voyage_name=ship}
