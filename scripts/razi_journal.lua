@@ -2393,6 +2393,14 @@ function M.gui_click(event)
       end
       player.print({"razi-ops.supply-plan-added"})
     elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-plan-all" then
+      if not supply.plan_all(player,p.supply_recipe,p.supply_route,
+        p.supply_batches) then
+        player.print({"razi-ops.supply-plan-invalid"})
+        return
+      end
+      player.print({"razi-ops.supply-all-added"})
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
       and native=="supply-freight" then
       p.logistics_tab="freight"
     elseif p.project=="cargo" and native=="freight-select" then
