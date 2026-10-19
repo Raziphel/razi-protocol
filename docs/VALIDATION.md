@@ -168,29 +168,6 @@ The full dump now checks safe-rim resource spawns, one actual route per
 belt and richer native ore at each route midpoint. Runtime compatibility,
 platform damage balance and UPS remain unverified until Factorio runs.
 
-## 2.1.69: Mod settings sort-position experiment (reverted 2.1.84)
-
-Factorio sorts option groups **by mod first**, then sorts the settings
-inside each group by each prototype's `order` and `name`. Its published
-modding API does not expose a supported per-mod settings sort priority.
-Renaming `razi-protocol` would break mod identity, dependencies and
-`__razi-protocol__` asset paths; do not do that.
-
-The cosmetic experiment did not improve the settings group position.
-In 2.1.84, English `locale/en/settings.cfg` again contains
-`[mod-name] razi-protocol=Razi Protocol`, matching the canonical
-`info.json` title. Mod identifiers and setting names remain unchanged.
-Do not introduce special punctuation to game-facing names or modify
-dependency exclusions (the `! mod-name` syntax in `info.json` is
-meaningful and must remain). Use Factorio's settings search/filter
-instead of trying to force cross-mod sort order.
-
-Run the static identity check locally:
-```bash
-python3 -m unittest discover -s tests -p 'test_settings_sort_hint.py'
-```
-This validates localization and identity only, not the engine's GUI sort.
-
 ## 2.1.68: Science-economy and freight balance release gate
 
 The seven system-card freight alternatives are **optional**, never first
