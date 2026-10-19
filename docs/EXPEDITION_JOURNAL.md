@@ -1,3 +1,45 @@
+## Midnight Archive: Focus Reading and native folio surfaces (October 2026)
+
+The Journal has a second visual pass inspired by a corporate exploration
+archive. The left index uses a dark inset well; the dossier is a restrained
+reading sheet; source-backed objectives use a smaller native callout. All
+styles derive from Factorio's existing GUI frame/button types and are defined
+in `prototypes/ui/razi_journal.lua`, not injected into live game styles.
+
+### Focus Reading
+
+The upper-right **Focus / Index** action is available in Quests, Projects
+and Archive. Focus hides the relevant navigation column, expanding the
+dossier to the available window width. On compact project layouts, it hides
+the project selector strip and expands the reading height. The preference
+`reader_focus` belongs to the player's existing UI preferences, not to the
+campaign state or technology graph. Hidden indexes retain their native
+scroll-pane instances. Switching Focus/Index triggers one deliberate redraw,
+with existing scroll context IDs restored afterward. Systems already has no
+index and does not need the control; the Cargo reference also does not.
+
+### Reading hierarchy
+
+The chapter/story are no longer buried under several analytic sections.
+Each quest shows its actual research objective and blockers, then its own
+story, then secondary related research, freight and production information.
+The broad chapter narrative belongs only on the briefing cover.
+Chapter rows use one-line headings by default, revealing their progress
+counts only while expanded; research updates are synchronized in place.
+Folio tabs have small 16px chapter-sourced glyphs. Header action buttons
+share a compact button style.
+
+### Before release
+
+Test Factorio GUI styles in game on an existing save, including Focus
+switches with both sides independently scrolled, research updates with
+the navigation index hidden, and opening an Archive record. Verify
+resolutions 1024x768, 1280x720, 1600x900, 1920x1080 at 100%-150%
+UI scale. Confirm source-mod sprites (including missing-mod fallbacks),
+all four folios, research prerequisites, unspoiled quests and Source controls.
+Source tests are structural only and cannot prove final on-screen aesthetics.
+
+
 ## Midnight Archive Journal redesign (October 2026)
 
 The user-facing Journal should feel like a purposeful corporate expedition
