@@ -14,13 +14,14 @@ def read(path):
 
 
 class LogisticsCommandContract(unittest.TestCase):
-    def test_four_sections_have_distinct_content_paths(self):
+    def test_five_sections_have_distinct_content_paths(self):
         source = read("scripts/galactic_trade.lua")
-        for tab in ("overview", "routes", "freight", "industry"):
+        for tab in ("overview", "routes", "supply", "freight", "industry"):
             self.assertIn(f'"{tab}"', source)
         self.assertIn("function M.render_industry(", source)
         self.assertIn("return command.routes(parent,player,width)", source)
         self.assertIn("return command.freight(parent,player,width)", source)
+        self.assertIn("return supply.render(parent,player,p,width)", source)
         self.assertIn("return command.overview(parent,player,width,", source)
         self.assertNotIn("catapult_dossier(scroll,player", source)
 
