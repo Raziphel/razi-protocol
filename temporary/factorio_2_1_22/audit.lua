@@ -26,6 +26,19 @@ function M.scan()
               warn(kind.."/"..name.."."..field)
             end
           end
+          -- Also report fluid-burning energy-source boxes, which are
+          -- migrated by the same temporary bridge in data-final-fixes.
+          if type(proto.energy_source)=="table" and
+            proto.energy_source.type=="fluid" then
+            for _,field in ipairs({"fluid_box","output_fluid_box"}) do
+              local box=proto.energy_source[field]
+              if type(box)=="table" and
+                (box.minimum_temperature~=nil or
+                box.maximum_temperature~=nil) then
+                warn(kind.."/"..name..".energy_source."..field)
+              end
+            end
+          end
           if type(proto.fluid_boxes)=="table" then
             for i,box in pairs(proto.fluid_boxes) do
               if type(box)=="table" and (box.minimum_temperature~=nil or
