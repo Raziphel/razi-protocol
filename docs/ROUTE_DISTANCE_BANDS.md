@@ -5,8 +5,8 @@ Factorio uses **kilometres** for the platform travel length recorded by a
 for orbits and star-system spacing. Visual positions are **not light-years**.
 
 Razi now preserves the 1,000 km trip from Shattered Planet Approach to
-the actual Skewer Shattered Planet because their map icons are 19 units
-apart. Lost Beyond is 145 units away from that planet and no longer
+the actual Skewer Shattered Planet because the map icons are now only 5 units apart, with opposite-facing
+captions to keep both locations readable. Lost Beyond is 145 units away from that planet and no longer
 qualifies for a 1,000 km native commute.
 
 The source-owned distance safety pass runs once at the end of the Factorio

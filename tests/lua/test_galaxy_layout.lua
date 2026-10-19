@@ -264,7 +264,7 @@ end
 local sx,sy=position("shattered-planet")
 local skx,sky=position("skewer_shattered_planet")
 local lostx,losty=position("skewer_lost_beyond")
-check(math.abs(skx-sx)<2 and sky>sy+10.5 and sky<sy+12.5,
+check(math.abs(skx-sx)<1 and sky>sy+4.7 and sky<sy+5.2,
   "The 1,000 km Skewer planet must sit closely SOUTH of its approach")
 check(lostx>skx+105 and losty<sky-85,
   "Lost Beyond must branch away from the Oort/Sol label corridor")

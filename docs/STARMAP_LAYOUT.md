@@ -493,7 +493,7 @@ chapters advancing upward to Deep Space and Bellicos.
 
 ### Skewer Shattered expedition and final victory
 
-- Skewer's real `skewer_shattered_planet` now sits **11.5 chart units
+- Skewer's real `skewer_shattered_planet` now sits **5 chart units
   almost directly SOUTH** of the original `shattered-planet` Approach.
   Their source route is only **1,000 km**: the short map hop finally matches
   the feel of the gameplay length. Its `skewer_lost_beyond` child remains
