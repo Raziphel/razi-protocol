@@ -1,3 +1,44 @@
+## Midnight Archive Journal redesign (October 2026)
+
+The user-facing Journal should feel like a purposeful corporate expedition
+archive, *not* a set of generic game dashboards.
+
+**Visual vocabulary:** warm parchment text (#EEE3CE), antique brass (#D1B17A),
+void charcoal (#0D1012) and restrained spectral teal. Chapter-specific
+colors identify locations but never replace the basic reading palette.
+Use engine-supported native Factorio GUI styles with small, bounded icons.
+Do not add gradient cards, giant chapter headers or cosmetic status widgets.
+
+**Layout:** one compact header with the Journal emblem, a four-folio tab row,
+and (for Quests) a left chapter/search/filter rail beside a substantial
+reading paper. Never put a second row of quest filters across the entire
+window. Each chapter is a concise heading plus optional progress *text*;
+there should not be eighteen duplicate progress bars. Selected objectives
+are identified with a small colored stripe, source icon, and legible title.
+The right dossier starts with chapter, file number, live status and one
+prominent mission title; it then leads with objective and story. Repeated
+chapter history lives on the chapter briefing page, not every quest.
+
+**Projects and Archive:** indexed selections, not stacked raised cards.
+Use the same subdued typography, short selection accents and clean page
+margins. Systems retains source-owned fleet/energy/storm monitors with no
+invented status data or duplicate game logic.
+
+**Interaction invariants:** quest selection, chapter expansion, active
+filters, type-ahead search, and research refresh must retain native chapter
+scroll identity. A right-side dossier can rebuild without scrolling the
+left rail. Don't introduce hidden tick-based redraws, replace story IDs,
+rename saved fields, or expose unavailable/spoiler-protected objectives.
+Keep width budgets and verify Factorio's FrameStyle/FlowStyle restrictions.
+
+**In-game acceptance:** inspect at 1280x720, 1600x900 and 1920x1080,
+including 125%-150% UI scale; open the Quests, Projects, Archive and Systems
+folios; scroll to a late chapter, type and clear search, switch filters,
+click several records, test native companion controls and finish research.
+These source checks are *not* a visual playtest. Compare the resulting
+screen with the older screenshot before shipping a release.
+
+
 # Expedition Journal: contributor overview
 
 ## Persistent event-driven Journal interface (October 2026)
