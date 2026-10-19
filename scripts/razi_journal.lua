@@ -769,8 +769,18 @@ local function render_details(parent,player,quest,p,context,size,view)
   elseif plan.next_step then
     local step=plan.next_step
     local key=step.kind=="goal" and plan.kind or step.kind
-    local action=wrap(mission,L("mission-next",
-      L("mission-step-"..key,step.name)),text_width-28)
+    local next_caption=L("mission-next",
+      L("mission-step-"..key,step.name))
+    local action
+    if step.link then
+      action=mission.add{type="label",style="clickable_label",
+        caption=next_caption,tooltip=L("open-prerequisite"),
+        tags={razi_journal_action="guidance-select",id=step.link}}
+      action.style.single_line=false
+      action.style.maximal_width=text_width-28
+    else
+      action=wrap(mission,next_caption,text_width-28)
+    end
     action.style.font="default-bold"
     action.style.font_color=COLOR.ink
   end
