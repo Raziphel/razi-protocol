@@ -110,11 +110,6 @@ Carna/Velora dotted visual tails are suppressed without changing their
 travel routes. Science and Atlas memberships follow the new locations.
 Full live-game visual verification is still pending.
 
-**2.1.84: Restore Razi Protocol's normal displayed name.** The old
-`!` prefix did not sort the mod settings first, so the in-game mod title
-now simply reads **Razi Protocol**. Mod ID, option keys, defaults,
-dependency incompatibility markers, and saved settings do not change.
-
 **2.1.82: Eneas and Solar Halo removed.** Neither source mod is now
 optional, recommended, or required. Their Razi-authored integration routes,
 discovery hooks, and obsolete regression fixtures were removed. The Calidus
