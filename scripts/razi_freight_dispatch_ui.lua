@@ -28,6 +28,21 @@ function M.render(parent,player,snapshot,width)
   local data=orders.store(player.index)
   if snapshot.visible==0 then
     line(panel,L("freight-board-undiscovered"),width-44)
+    -- Even fully concealed or temporarily disabled routes must not leave
+    -- a player trapped at the 20-order cap with no removal controls.
+    local hidden=orders.unavailable(player)
+    if #hidden>0 then
+      line(panel,L("freight-board-unavailable",tostring(#hidden)),width-44)
+      for _,entry in ipairs(hidden) do
+        local row=panel.add{type="flow",direction="horizontal"}
+        row.style.vertical_align="center"
+        line(row,L("freight-board-hidden-plan"),math.max(110,width-190))
+        row.add{type="button",caption=L("freight-board-remove"),
+          tags={razi_ops_action="freight-remove",value=entry.id}}
+      end
+      panel.add{type="button",caption=L("freight-board-clear"),
+        tags={razi_ops_action="freight-clear"}}
+    end
     return
   end
   for _,entry in ipairs(snapshot.entries) do
