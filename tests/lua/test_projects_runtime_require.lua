@@ -1,29 +1,23 @@
--- The Projects tab is rendered after Factorio finishes loading control.lua.
--- Runtime require() crashes the game, so block it while evaluating status.
 package.path="./?.lua;./?/init.lua;"..package.path
-local check=function(ok,msg) if not ok then error(msg,2) end end
-rawset(_G,"prototypes",{technology={
-  ["source-particulate-research"]={effects={{
-    type="unlock-recipe",recipe="particulate-science-pack"
-  }}}
-}})
+package.loaded["scripts.razi_journal_data"]={quests={},by_id={}}
 local projects=require("scripts.razi_journal_projects")
-local real_require=require
-require=function(name) error("Illegal runtime require: "..name,2) end
-local research={
-  ["source-particulate-research"]={researched=true},
-  ["electromagnetic-robotics"]={researched=true},
-  ["robotic-science-pack"]={researched=true},
-  ["razi-frontier-recovery-charter"]={researched=true},
-  ["discovered-athos"]={researched=true,prototype={effects={{
-    type="unlock-space-location",space_location="athos"
-  }}}},
-  ["discovered-nulla"]={researched=true,prototype={effects={{
-    type="unlock-space-location",space_location="nulla"
-  }}}}
-}
-local ok,done,total=pcall(projects.recovery_status,{technologies=research})
-require=real_require
-check(ok,"Projects runtime must never invoke require()")
-check(done==6 and total==6,"All source-owned Frontier Recovery milestones must remain visible")
-print("Projects GUI late-require regression passed")
+local tracker=require("scripts.razi_platform_projects")
+local original=require
+require=function(name) error("Illegal GUI-time require: "..name,2) end
+storage={}
+local force={index=7,platforms={},technologies={}}
+local ok,err=pcall(function()
+  assert(projects.valid("platform") and projects.valid("voyage"))
+  assert(not projects.valid("cargo") and not projects.valid("recovery"))
+  assert(projects.visible(force,"platform"))
+  local ship={valid=true,hub={valid=true},force=force,name="Anvil",
+    scheduled_for_deletion=0,completed_trips=0}
+  force.platforms[1]=ship
+  assert(tracker.observe(ship))
+  assert(projects.visible(force,"voyage"))
+  ship.completed_trips=1
+  assert(tracker.observe(ship) and tracker.snapshot(force).voyage)
+end)
+require=original
+if not ok then error(err) end
+print("Projects runtime require guard passed")
