@@ -26,7 +26,10 @@ class VisualPolishTests(unittest.TestCase):
     def test_chapters_use_an_index_instead_of_repeating_cards(self):
         journal=read("scripts/razi_journal.lua")
         self.assertIn('name="razi_journal_chapter_"..index',journal)
-        self.assertIn('card.style.padding=2',journal)
+        self.assertIn('card.style.padding=6',journal)
+        self.assertIn('style="razi_journal_chapter_group"',journal)
+        self.assertIn('column.style.vertical_spacing=9',journal)
+        self.assertIn('accent_rule(card,theme,math.min(72,inner-40),2)',journal)
         self.assertIn('name="razi_journal_chapter_entries"',journal)
         self.assertIn('name="razi_journal_chapter_count"',journal)
         self.assertIn('name="razi_journal_filter_"..filter',journal)
@@ -106,7 +109,21 @@ class VisualPolishTests(unittest.TestCase):
             self.assertIn(phase+"=",locale)
         self.assertIn('nauvis_phase(entries,quest.phase,theme,inner-34)',ui)
         self.assertIn('nauvis_phase(body,quest.phase,theme,text_width)',ui)
+        self.assertIn('style="razi_journal_phase_divider"',ui)
         self.assertNotIn("data:extend(",core)
+
+    def test_milestone_dossiers_do_not_duplicate_technology_unlocks(self):
+        ui=read("scripts/razi_journal.lua")
+        locale=load_journal_locale(ROOT)
+        detail=ui.split("local function render_details(",1)[1].split(
+            "local function nauvis_phase(",1)[0]
+        self.assertNotIn('science_gallery(native)',detail)
+        self.assertNotIn('unlock_gallery(native)',detail)
+        self.assertNotIn('draw_gallery(prose,"recipe-unlock-heading"',detail)
+        self.assertIn('recipe_gallery(prose,quest,native,text_width,theme)',detail)
+        self.assertNotIn('recipe-unlock-heading=UNLOCKS',locale)
+        self.assertNotIn('science-pack-heading=RESEARCH COST',locale)
+        self.assertIn('more-gallery-items=__1__ more entries',locale)
 
     def test_megaproject_dossiers_use_real_status(self):
         projects=read("scripts/razi_journal_projects.lua")

@@ -28,4 +28,10 @@ if styles then
   styles.razi_journal_action_button={
     type="button_style",parent="button",padding=5
   }
+  styles.razi_journal_chapter_group={
+    type="frame_style",parent="inside_shallow_frame",padding=6
+  }
+  styles.razi_journal_phase_divider={
+    type="frame_style",parent="inside_shallow_frame",padding=7
+  }
 end

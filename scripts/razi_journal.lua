@@ -477,56 +477,9 @@ local function draw_gallery(parent,key,entries,width,max_items,theme)
       or {r=.86,g=.9,b=.94}
   end
   if #entries>max_items then
-    wrap(block,L("more-unlocks",tostring(#entries-max_items)),width)
+    wrap(block,L("more-gallery-items",tostring(#entries-max_items)),width)
   end
 end
-local function science_gallery(native)
-  local result={}
-  for _,ingredient in ipairs(native and native.research_unit_ingredients or {}) do
-    local path=sprite_if_valid("item/"..ingredient.name)
-    local item=prototypes and prototypes.item
-      and prototypes.item[ingredient.name]
-    if path then result[#result+1]={
-      sprite=path,name=item and item.localised_name or ingredient.name,
-      tooltip=L("science-per-unit",tostring(ingredient.amount or 1))} end
-  end
-  return result
-end
-local function unlock_gallery(native)
-  local result,seen={},{}
-  for _,effect in ipairs(native and native.prototype
-    and native.prototype.effects or {}) do
-    if effect.type=="unlock-recipe" and effect.recipe and
-      not seen[effect.recipe] then
-      seen[effect.recipe]=true
-      local recipe=prototypes and prototypes.recipe
-        and prototypes.recipe[effect.recipe]
-      if recipe and not recipe.hidden then
-        local output=recipe.main_product or
-          (recipe.products and recipe.products[1])
-        local item=output and output.type~="fluid"
-          and prototypes and prototypes.item and prototypes.item[output.name]
-        local building=item and item.place_result
-        local sprite=building and sprite_if_valid("entity/"..building.name)
-          or output and sprite_if_valid(
-            (output.type=="fluid" and "fluid/" or "item/")..output.name)
-          or sprite_if_valid("recipe/"..effect.recipe)
-        if sprite then result[#result+1]={
-          sprite=sprite,
-          name=(building and building.localised_name)
-            or (item and item.localised_name) or recipe.localised_name,
-          tooltip=recipe.localised_name,building=building and true or false} end
-      end
-    end
-  end
-  table.sort(result,function(a,b)
-    if a.building~=b.building then return a.building end
-    return false
-  end)
-  return result
-end
-
-
 -- Exact recipe illustration for Razi's source-proven alternate processes.
 -- Reads one recipe by ID only while its quest is viewed: no global scans.
 local function recipe_gallery(parent,quest,native,width,theme)
@@ -966,11 +919,9 @@ local function render_details(parent,player,quest,p,context,size,view)
       end
     end
   end
+  -- Research costs and unlocks belong to Factorio's technology screen.
+  -- The Journal keeps only the practical, source-backed workshop diagram.
   if native then
-    draw_gallery(prose,"science-pack-heading",
-      science_gallery(native),text_width,12,theme)
-    draw_gallery(prose,"recipe-unlock-heading",
-      unlock_gallery(native),text_width,8,theme)
     recipe_gallery(prose,quest,native,text_width,theme)
   end
   local forecast=weather.for_quest(quest)
@@ -1009,14 +960,19 @@ end
 -- navigation, not new research gates, progress storage or a separate UI.
 local function nauvis_phase(parent,phase,theme,width)
   if not phase then return end
-  local heading=parent.add{type="flow",direction="horizontal"}
-  heading.style.horizontal_spacing=8
-  heading.style.vertical_align="center"
-  accent_rule(heading,theme,50,2)
-  local name=label(heading,{"journal-nauvis-phase."..phase})
+  -- These are editorial acts of the Calidus chapter, not research gates.
+  -- Give each a real inset separator so the mission list never reads as
+  -- one undifferentiated column; it scrolls with the existing navigator.
+  local divider=parent.add{type="frame",direction="vertical",
+    style="razi_journal_phase_divider"}
+  divider.style.width=width
+  divider.style.padding=7
+  accent_rule(divider,theme,math.min(76,width-22),2)
+  local name=label(divider,{"journal-nauvis-phase."..phase})
   name.style.font="default-bold"
   name.style.font_color=theme.soft
-  name.style.maximal_width=math.max(80,width-65)
+  name.style.single_line=false
+  name.style.maximal_width=math.max(100,width-22)
 end
 
 -- A source-backed frontispiece for each chapter. It is a *view* of the
@@ -1198,7 +1154,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     inner,size.body-164)
   local column=scroll.add{type="flow",name="razi_journal_chapter_column",direction="vertical"}
   column.style.width=inner-13
-  column.style.vertical_spacing=2
+  column.style.vertical_spacing=9
   local selected_element
 
   plan=plan or M.guidance(player.force,context,view)
@@ -1208,6 +1164,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     lead.visible=p.query=="" and p.filter=="all"
     lead.style.width=inner-16
     lead.style.vertical_spacing=2
+    lead.style.bottom_padding=5
     local title=label(lead,L("guidance-heading"))
     title.style.font="default-bold"
     title.style.font_color=COLOR.amber
@@ -1237,13 +1194,14 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     if #available>0 then
       found=found or visible_count>0
       local open=p.query~="" or p.chapter==chapter.id
-      -- Only the expanded chapter gets a surfaced panel. Collapsed
-      -- chapters read like a quiet table of contents.
-      local card=column.add{type="flow",name="razi_journal_chapter_"..index,
-        direction="vertical"}
+      -- Each chapter gets its own quiet inset surface. Separation remains
+      -- visible when collapsed, without adding extra scrolling containers.
+      local card=column.add{type="frame",name="razi_journal_chapter_"..index,
+        direction="vertical",style="razi_journal_chapter_group"}
       card.style.width=inner-16
-      card.style.padding=2
+      card.style.padding=6
       card.visible=visible_count>0
+      accent_rule(card,theme,math.min(72,inner-40),2)
       local head=card.add{type="flow",name="razi_journal_chapter_head",direction="horizontal"}
       head.style.horizontal_spacing=5
       icons.sprite(head,themes.icon(chapter.id),"chapter_button",
@@ -1256,7 +1214,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       toggle.style.height=22
       toggle.style.font_color=open and theme.primary or COLOR.quiet
       local heading=head.add{type="label",name="razi_journal_chapter_title",
-        style="clickable_label",caption={"journal-chapter."..chapter.id},
+        style="clickable_label",
+        caption={"",string.format("%02d",index)," / ",{"journal-chapter."..chapter.id}},
         tags={razi_journal_action="chapter",id=chapter.id}}
       heading.style.single_line=false
       heading.style.maximal_width=inner-85
@@ -1276,7 +1235,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       -- visual noise eighteen times in a long chapter list.
       local entries=card.add{type="flow",name="razi_journal_chapter_entries",direction="vertical"}
       entries.visible=open and visible_count>0
-      entries.style.vertical_spacing=2
+      entries.style.vertical_spacing=4
       do
         local open_cover=entries.add{type="label",style="clickable_label",
           caption=L(p.chapter_cover and p.chapter==chapter.id

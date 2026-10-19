@@ -162,8 +162,8 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('razi_journal.selection_changed(event)',control)
         self.assertIn('razi_journal.text_changed(event)',control)
         self.assertIn('name="razi_journal_search"',ui)
-        self.assertIn('science_gallery(native)',ui)
-        self.assertIn('unlock_gallery(native)',ui)
+        self.assertNotIn('science_gallery(native)',ui)
+        self.assertNotIn('unlock_gallery(native)',ui)
         self.assertIn('recipe_gallery(prose,quest,native,text_width,theme)',ui)
         self.assertIn('prototypes.recipe[quest.tech]',ui)
         self.assertIn('quest_art(player.force,quest,context)',ui)
@@ -323,7 +323,7 @@ class ExpeditionJournalTests(unittest.TestCase):
         self.assertIn('if step.state~="complete" then',source)
         self.assertNotIn('objective_bar=panel.add',source)
         self.assertLess(source.index('section(prose,"tip-heading"'),
-                        source.index('draw_gallery(prose,"science-pack-heading"'))
+                        source.index('recipe_gallery(prose,quest,native,text_width,theme)'))
         self.assertIn('forecast.style.vertical_spacing=4',source)
         self.assertIn('bridge.style.vertical_spacing=4',source)
 
