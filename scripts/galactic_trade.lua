@@ -5,6 +5,7 @@ local catalog=require("scripts.galactic_trade_catalog")
 local portfolio=require("scripts.razi_industry_portfolio")
 local command=require("scripts.razi_logistics_command")
 local supply=require("scripts.razi_supply_planner")
+local multihop=require("scripts.razi_supply_multihop")
 local signals=require("prototypes.compat.aai_signal_partnerships")
 local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
@@ -607,7 +608,8 @@ function M.render(parent,player,p,options)
     return command.freight(parent,player,width)
   end
   if current=="supply" then
-    return supply.render(parent,player,p,width)
+    local recipe=supply.render(parent,player,p,width)
+    return multihop.render(parent,player,p,width,recipe)
   end
   return command.overview(parent,player,width,M.summary(player.force))
 end
