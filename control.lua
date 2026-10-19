@@ -11,6 +11,7 @@ local convergence_audit = require("scripts.razi_convergence_audit")
 local Events = require("__razi_lib__/runtime/events")
 local victory_guard = require("scripts.razi_victory_guard")
 local quality_asteroids = require("scripts.razi_quality_asteroids")
+local pod_receipts = require("scripts.razi_freight_receipts")
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
@@ -297,6 +298,10 @@ events:on_event(defines.events.on_space_platform_built_entity,
 events:on_event(defines.events.on_space_platform_built_tile,
   record_platform_construction)
 events:on_event(defines.events.on_space_platform_changed_state,record_platform)
+-- Actual Factorio delivery notifications; this event does NOT identify
+-- Orbital Catapult shipments or prove an individual Freight Desk order.
+events:on_event(defines.events.on_cargo_pod_delivered_cargo,
+  pod_receipts.on_delivered)
 -- Reconcile arrival events on the existing (infrequent) platform state poll
 -- only when a crossing has an outstanding departure record.
 events:on_nth_tick(300,function()
@@ -353,6 +358,7 @@ end)
 events:on_event(defines.events.on_forces_merged,function(event)
   platform_projects.forces_merged(event)
   great_projects.forces_merged(event)
+  pod_receipts.forces_merged(event)
   deep_expedition.forces_merged(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
