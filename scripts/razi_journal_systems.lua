@@ -5,9 +5,9 @@ local ROOT="razi_journal_systems_reading"
 local FRAME="razi_expedition_journal"
 local BODY="razi_journal_systems_body"
 local COLOR={
-  ink={r=.94,g=.93,b=.89},muted={r=.70,g=.74,b=.76},
-  green={r=.61,g=.82,b=.69},amber={r=.91,g=.75,b=.52},
-  red={r=1,g=.49,b=.47},teal={r=.52,g=.79,b=.79}
+  ink={r=.933,g=.890,b=.808},muted={r=.72,g=.73,b=.71},
+  green={r=.58,g=.80,b=.66},amber={r=.82,g=.69,b=.48},
+  red={r=.91,g=.46,b=.45},teal={r=.52,g=.78,b=.76}
 }
 local function L(key,...) return {"journal-systems."..key,...} end
 local function loaded(name)
@@ -90,8 +90,8 @@ local function card(root,id,title,description,width,accent)
   header.style.font="default-bold"
   header.style.font_color=accent or COLOR.ink
   local stripe=panel.add{type="progressbar",name=id.."_accent",value=1}
-  stripe.style.width=math.min(112,width-34)
-  stripe.style.height=3
+  stripe.style.width=math.min(74,width-34)
+  stripe.style.height=2
   stripe.style.color=accent or COLOR.teal
   local sub=add_label(panel,nil,L(description),COLOR.muted,width-32)
   sub.style.font="default"
@@ -100,7 +100,7 @@ end
 local function meter(panel,name,color,width)
   local bar=panel.add{type="progressbar",name=name,value=0}
   bar.style.width=width
-  bar.style.height=6
+  bar.style.height=4
   bar.style.color=color
   return bar
 end
