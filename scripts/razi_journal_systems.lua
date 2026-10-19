@@ -231,6 +231,35 @@ function M.refresh_root(root,player)
   stabilizers.caption=L("stabilizers",math.floor(ws.stabilizers))
 end
 
+-- The Systems folio now owns the small status readouts; hide only the
+-- three verified source widgets and leave their Lua elements intact.
+-- Planet Express refreshes its dock caption even while hidden, and checks
+-- that clicks come from its own dock. We therefore never forge its events:
+-- readers can temporarily reveal native controls for the full Monitor.
+-- Nexus Threat's native slider also remains accessible on demand.
+function M.sync_companion_widgets(player,show_native)
+  if not (player and player.valid and player.gui and player.gui.top) then return end
+  local top=player.gui.top
+  local visible=show_native==true
+  local function set_visible(name)
+    local element=top[name]
+    if element and element.valid and element.visible~=visible then
+      element.visible=visible
+    end
+  end
+  if loaded("planet-express") then
+    set_visible("planet-express-monitor-dock")
+  end
+  if loaded("Nexus-Updated") or loaded("Nexus") then
+    -- The source GUI currently contains only the ZPE core cap.
+    set_visible("nexus_limit_frame")
+  end
+  if loaded("Nexus-Threat-Updated") or loaded("Nexus-Threat") then
+    set_visible("nexus_toggle_button")
+    set_visible("nexus_frame")
+  end
+end
+
 function M.refresh(player)
   if not (player and player.valid) then return end
   local frame=player.gui.screen[FRAME]
