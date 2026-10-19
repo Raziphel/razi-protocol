@@ -1629,7 +1629,7 @@ local function draw(player,focus_search)
 end
 -- A new quest updates only the document, leaving the original chapter
 -- scroll pane alive. This is more reliable than restoring a rebuilt scrollbar.
-local function update_reader(player)
+local function update_reader(player,preserve_reader)
   local frame=player.gui.screen[FRAME]
   local body=frame and frame.valid and frame["razi_journal_content"]
   local reader=body and body.valid and body["razi_journal_reader_host"]
@@ -1682,6 +1682,8 @@ local function update_reader(player)
     end
     mark(scroll)
   end
+  -- Expanding a chapter is not a request to reset the current document.
+  if preserve_reader then return end
   reader.clear()
   if p.chapter_cover and render_chapter_cover(
     reader,player,p,context,size,view) then
@@ -2001,9 +2003,13 @@ function M.gui_click(event)
     defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
     p.chapter=defs.by_id[tags.id].chapter
-    p.filter="all"
+    -- Keep a clicked search/filter result in its original list.
+    -- Guidance links may jump outside the filter, so only they clear it.
+    if action=="guidance-select" then
+      p.filter="all"
+      p.query=""
+    end
     p.view="quests"
-    p.query=""
     p.chapter_cover=false
     p.reveal_selection=false
   elseif action=="chapter-dossier" then
@@ -2197,7 +2203,7 @@ function M.gui_click(event)
     if action=="select" or action=="guidance-select" or action=="chapter"
       or action=="next" or action=="chapter-dossier" or action=="chapter-continue"
       or action=="next-in-chapter" or action=="previous-in-chapter" then
-      update_reader(player)
+      update_reader(player,action=="chapter")
       return
     elseif action=="pin" then
       local frame=player.gui.screen[FRAME]
