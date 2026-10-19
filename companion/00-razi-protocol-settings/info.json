@@ -1,10 +1,10 @@
 {
   "name": "00-razi-protocol-settings",
-  "version": "1.0.0",
-  "title": "○  Razi Protocol",
+  "version": "1.1.0",
+  "title": "Razi Protocol Settings",
   "author": "Raziphel",
   "factorio_version": "2.1",
-  "description": "Optional early-loading companion for Razi Protocol. Groups the same settings under an easy-to-find heading near the top of Factorio's mod settings.",
+  "description": "Optional lightweight early-loading host for Razi Protocol startup settings. Settings are imported from Razi Protocol, never copied or renamed; live settings remain with the main mod.",
   "dependencies": [
     "base >= 2.1.0"
   ]
