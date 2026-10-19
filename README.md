@@ -657,7 +657,12 @@ technology checkbox or a small factory delivery:
    have a genuine player-character arrival on a built force-owned platform.
    The saved force expedition ledger lists missing destinations, and
    research or unmanned ship visits cannot substitute.
-6. Maintain the source Dyson receiver infrastructure, manufacture the
+6. Complete the **Ninefold Signal**: defeat all nine native Nexus Bosses
+   through their original summon encounters across Whisper, Chorus and
+   the final Nexus signal circle. Every defeat must be present in the
+   source mod's per-force victory record. Research, warp-key crafting
+   and inventory trophies cannot replace any of those fights.
+7. Maintain the source Dyson receiver infrastructure, manufacture the
    final composite **Ignition Mandate**, stand physically aboard the
    platform beside its powered Array Core and submit the freight.
    The genuine engine ending follows a saved **two-minute signal** with
@@ -1049,3 +1054,9 @@ boss/warp-drive arc; reach Shattered Planet and the optional deep
 routes; save and reload; then submit the actual fifth Convergence
 Mandate and verify its two-minute native victory screen. No other
 step should finish the scenario.
+
+### Required Nexus Bosses Project
+
+Razi's Expedition Journal includes **The Ninefold Signal** between the Transceiver and Project Ark. It displays 3 source-owned circles and all nine boss victories from Nexus Bosses' documented read-only `get_state()` interface; the boss Codex button opens the original mod's UI. Completing the Project is now mandatory before the final Convergence Ignition cargo can be accepted. The mod retains its own summoning gameplay, boss mechanics, trophies, warp key, Silence, story and rewards.
+
+The dependency uses `~ nexus-bosses >= 2.4.0`: Factorio requires the mod but introduces no load-order constraint, avoiding a cycle with Nexus Bosses' `? razi-protocol` optional dependency. This integration reads force-owned defeat evidence only. No fabricated boss deaths, script research or custom entity kills are added. Previous Convergence winners retain their victory state.

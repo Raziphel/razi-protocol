@@ -465,3 +465,7 @@ actual, validated final transmission invokes Factorio's native win state.
 Compatibility uses the source mods' documented opt-outs. Unsupported
 direct game-state calls are monitored for recovery, not patched by
 silently deleting the mods' gameplay.
+
+### The Ninefold Signal before Convergence
+
+The genuine nine Nexus Bosses are a required physical part of the endgame, not a silent research flag. Nexus retains its source-authored Long Echo wreck logs, beacons, circles (Whisper, Chorus and its own Convergence circle), lairs, trophies, warp key and Silence. Razi's Journal labels that third circle **The Final Signal** so players distinguish it from Razi's separate grand Convergence. These victories prove the survivors can confront what answers the signal without giving up control of the frontier. The nine battles are a Project before the final Accord, but never fire an early Factorio victory screen. Razi's own corporate BLACKOUT-SEVEN reveal remains gated by its true physical Mandate deliveries.

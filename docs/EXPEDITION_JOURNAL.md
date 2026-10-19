@@ -744,9 +744,9 @@ clears the user's entire chat, never selectively suppressing
 other mod warnings.
 
 
-## Projects: nine physical undertakings (Razi 3.0)
+## Projects: ten physical undertakings (Razi 3.0)
 
-The **Projects** tab is reserved for physical accomplishments, major construction, or the endgame transmission. It is not a collection of ordinary research portfolios. The nine dossiers appear in expedition order:
+The **Projects** tab is reserved for physical accomplishments, major construction, or the endgame transmission. It is not a collection of ordinary research portfolios. The ten dossiers appear in expedition order:
 
 1. **First Space Platform:** Build a genuine Space Age platform hub after launching a starter pack. Research alone or a platform placeholder is not enough. The record remains complete if the platform is later destroyed.
 2. **First Voyage:** Guide a real space platform through at least one completed trip between space locations. The engine-reported completed-trip counter is authoritative; fuel production, a plotted route or an unfinished crossing do not count.
@@ -755,8 +755,9 @@ The **Projects** tab is reserved for physical accomplishments, major constructio
 5. **Dyson Sphere:** Develop the actual Calidus stellar research and construct source-owned satellites, repeaters and energy receivers. The existing research bar measures research only, never an invented percentage of physical construction.
 6. **Archive Array:** Research and craft a dedicated powered RAZI Archive Relay, using native radar artwork. Place and power at least one station in each of three distinct star systems. Each live site reveals a recovered fragment, which remains permanently accessible from the Journal Archive once unlocked.
 7. **Transceiver:** Build and activate the original K2SO intergalactic machine. Research alone does not mark the project complete.
-8. **Project Ark:** Build a heavy (at least 1,000,000 kg), armed factory ship with 3+ thrusters, 4+ ammunition turrets and 2+ assembling machines. Then complete an actual trip to an approved Deep Space destination with that qualifying vessel. Weight or research alone is insufficient.
-9. **Convergence:** Manufacture and physically deliver all five actual mandates and finish the real Convergence victory transmission. The save continues afterward.
+8. **The Ninefold Signal (Nexus Boss Trials):** The required [Nexus Bosses](https://mods.factorio.com/mod/nexus-bosses) adds nine real source-owned summon encounters in three circles. Progress comes exclusively from the stable `remote.call("nexus-bosses","get_state").defeated[force.name]` flags for all nine canonical boss IDs. No trophies or research can spoof it, and native boss mechanics, lairs, Codex, Silence and warp-key unlocks remain intact. The new Project dossier displays each circle and offers source-owned Codex buttons.
+9. **Project Ark:** Build a heavy (at least 1,000,000 kg), armed factory ship with 3+ thrusters, 4+ ammunition turrets and 2+ assembling machines. Then complete an actual trip to an approved Deep Space destination with that qualifying vessel. Weight or research alone is insufficient.
+10. **Convergence:** Manufacture and physically deliver all five actual mandates and finish the real Convergence victory transmission. The save continues afterward.
 
 ### Preserved industrial references
 
@@ -813,3 +814,9 @@ simulation proceeds. It does **not** reset a victory screen that
 was already shown on an imported save, or a genuine Convergence win.
 For this reason a full installed-modpack victory-trigger regression
 test remains required before release.
+
+### Mandatory Nexus trial victory gate
+
+Convergence's **final Ignition** shipment requires **all nine** native Nexus Bosses force victories: Arachnid Queen, Watcher, Rogue Spidertron; Twin Maws, Colossus, Plague Hulk; Storm Guardian, Devourer and Last Commander. The source mod exposes a read-only `get_state().defeated[force_name][boss_id]` API, available since version 2.0.0. Razi uses that authority directly and shows a three-circle progress dossier, individual defeat status and the original boss Codex. Nexus's `nexus-silence` warp key is valuable progression but never substitutes for boss records. This is a dedicated real-world combat Project, not a technology tick.
+
+`info.json` uses `~ nexus-bosses >= 2.4.0`, a **required dependency with no load-order constraint**, because Nexus Bosses itself lists `? razi-protocol` and a normal hard dependency would produce a circular load order. Nexus Bosses supplies its own threat, enemy and soundtrack dependencies; Razi does not copy or override its bosses. The gate fails closed if the source API is missing or malformed, and existing completed Razi victories remain completed.
