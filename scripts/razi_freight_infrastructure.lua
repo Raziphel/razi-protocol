@@ -14,7 +14,7 @@ local entity_types={
 function M.launcher_names(known)
   local result={}
   for name,proto in pairs(known or (prototypes and prototypes.entity) or {}) do
-    if type(name)=="string" and type(proto)=="table"
+    if type(name)=="string" and proto
       and entity_types[proto.type]
       and (name:find("^orbital%-cannon")
         or name:find("^orbital%-catapult")) then
