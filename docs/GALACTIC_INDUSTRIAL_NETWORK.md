@@ -454,6 +454,54 @@ destination delivery counts or victory rules. Existing orders need no save
 migration. There are no background scans: the check runs when the freight
 board is rendered or manually refreshed.
 
+## A.2: Source-aware transport infrastructure and platform logistics
+
+The Cargo Network's existing Freight Desk now displays a read-only
+infrastructure snapshot beside a selected route and each visible freight plan.
+This is computed only when the player opens or refreshes the Journal; no
+background polls or cross-surface entity searches run on ticks.
+
+For each genuinely discovered and enabled route endpoint it checks:
+
+- **Orbital Catapult hardware candidates:** known runtime entity prototype
+  names matching the upstream `orbital-cannon` or `orbital-catapult` naming
+  families, scoped to the player's force on an already-created planet surface.
+  The name/type match is intentionally **heuristic**, not an upstream
+  verified machine registry. Zero means none of those candidates were found;
+  it does NOT prove no alternative native launcher exists. An uncreated
+  surface or a missing recognized prototype yields **unknown**, never zero.
+- **Docked built space platforms:** Factorio 2.1
+  `LuaForce.get_space_platforms(location)`, including only valid visible
+  built platforms with hubs and no deletion scheduled. Traveling vessels
+  are not represented as currently orbiting.
+- **Native cross-platform provision:** count of real space-platform hubs
+  with `providing_to_other_platforms = true`, independently of whether
+  Platform Logistics Overhaul is installed.
+- **Operational planning:** docked platforms with no schedule records,
+  plus literal vanilla `cargo-bay` entity counts on their surfaces. This
+  is **not** a total of all custom/Various Cargo Bays capacity. A missing
+  platform surface makes cargo-bay evidence unknown.
+- **Optional companion recognition:** whether the
+  `platform-logistics-overhaul` mod is actually installed. Razi does not
+  read its internal transport queue or claim its pod deliveries.
+
+The results are *observations*, never “ready for shipment”, “connected
+catapult”, “powered launcher”, throughput, inventory at the machine, or
+arrival receipts. No machine, shipping schedule, stored item or native
+companion data is changed. Unresearched/hidden route endpoints are never
+probed even if spoiler previews are allowed by the UI.
+
+The source-aware probe and native engine view are implemented in
+`scripts/razi_freight_infrastructure.lua`. Its read-only mock fixture is
+`tests/lua/test_razi_freight_infrastructure.lua`, runnable with:
+`luatex --luaonly tests/lua/test_razi_freight_infrastructure.lua`.
+
+**Game validation required:** confirm exact real Orbital Catapult 0.15.0
+entity prototype naming on both ends, visit a planet before/after surface
+creation, compare platform sharing checkbox and schedules, test mixed
+vanilla/custom cargo bays and save migration. Do not broaden heuristics
+until source entity IDs or a stable remote API are confirmed.
+
 Developer regression:
 `luatex --luaonly tests/lua/test_razi_freight_orders.lua`
 (or the supported Lua 5.2 runner). In-game verification remains required,
