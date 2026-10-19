@@ -1219,9 +1219,10 @@ function M.unlocked_records(force,context)
 end
 local function render_archive(parent,player,p,context,size)
   local rail=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="inside_shallow_frame"}
   rail.style.width=size.rail
   rail.style.height=size.body
+  rail.style.padding=10
   subtitle(rail,"archive-navigator",size.rail-38,themes.get("echoes"))
   -- Recovery ledger is derived solely from completed source milestones.
   -- Sealed titles remain concealed; only aggregate counts are shown.
@@ -1242,21 +1243,21 @@ local function render_archive(parent,player,p,context,size)
     progress.style.font_color=COLOR.muted
   end
   local chooser=rail.add{type="table",column_count=2}
-  chooser.style.horizontal_spacing=5
-  chooser.style.vertical_spacing=4
+  chooser.style.horizontal_spacing=9
+  chooser.style.vertical_spacing=8
   for _,category in ipairs({"all","legacy","corporate","field"}) do
     local chosen_filter=p.archive_filter==category
-    local button=chooser.add{type="button",
+    local button=chooser.add{type="label",style="clickable_label",
       caption=L("archive-filter-"..category),
       tags={razi_journal_action="archive-filter",id=category}}
-    button.style.minimal_width=math.max(65,math.floor((size.rail-70)/2))
-    button.style.font_color=chosen_filter and COLOR.green or COLOR.muted
+    button.style.font=chosen_filter and "default-bold" or "default"
+    button.style.font_color=chosen_filter and COLOR.ink or COLOR.quiet
   end
   local left=wheel_pane(rail,"razi_journal_archive_navigation",
     size.rail-35,math.max(115,size.body-205))
   local collection=left.add{type="flow",direction="vertical"}
   collection.style.width=size.rail-56
-  collection.style.vertical_spacing=8
+  collection.style.vertical_spacing=5
   local chosen,focus
   local sealed=0
   local corporate_heading=false
@@ -1281,11 +1282,14 @@ local function render_archive(parent,player,p,context,size)
     if opened and (not chosen or record.id==p.record) then chosen=record end
     local highlighted=opened and record.id==p.record
       or opened and not p.record and chosen==record
-    local row=collection.add{type=highlighted and "frame" or "flow",
-      direction="horizontal",
-      style=highlighted and "inside_shallow_frame" or nil}
-    row.style.padding=highlighted and 5 or 1
-    if not highlighted then row.style.horizontal_spacing=8 end
+    local row=collection.add{type="flow",direction="horizontal"}
+    row.style.padding=2
+    row.style.horizontal_spacing=7
+    local selection=row.add{type="progressbar",value=1}
+    selection.style.width=3
+    selection.style.height=20
+    selection.style.color=COLOR.amber
+    selection.visible=highlighted
     local mark
     if opened then
       mark=icons.button(row,quest_art(player.force,quest,context),
@@ -1341,16 +1345,16 @@ local function render_archive(parent,player,p,context,size)
   if focus then pcall(function() left.scroll_to_element(focus) end) end
 
   local paper=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame_with_padding"}
+    style="inside_shallow_frame"}
   paper.style.width=size.reader
   paper.style.height=size.body
-  paper.style.padding=16
+  paper.style.padding=12
   local array_page=p.record and
     tonumber(p.record:match("^array%-(%d+)$"))
   if array_page and array_page>=1 and array_page<=array_count then
     local title=wrap(paper,L("archive-array-title-"..array_page),
       size.reader-48)
-    title.style.font="heading-1"
+    title.style.font="heading-2"
     title.style.font_color=COLOR.ink
     local prose=wheel_pane(paper,"razi_journal_archive_reading",
       size.reader-38,size.body-140)
@@ -1369,7 +1373,7 @@ local function render_archive(parent,player,p,context,size)
   subtitle(paper,chosen.series=="field" and
     "archive-field-heading" or "archive-entry-label",
     size.reader-48,archive_theme)
-  accent_rule(paper,archive_theme,math.min(142,size.reader-42),3)
+  accent_rule(paper,archive_theme,math.min(100,size.reader-42),2)
   local cover=paper.add{type="flow",direction="horizontal"}
   cover.style.horizontal_spacing=10
   local entry_quest=defs.by_id[chosen.unlock]
@@ -1378,7 +1382,7 @@ local function render_archive(parent,player,p,context,size)
       "archive_cover")
   end
   local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-94)
-  title.style.font="heading-1"
+  title.style.font="heading-2"
   title.style.font_color=COLOR.ink
   local origin=label(paper,{"journal-record-origin."..chosen.id})
   origin.style.font_color=COLOR.muted
@@ -1396,7 +1400,7 @@ local function render_archive(parent,player,p,context,size)
   reading.tags={razi_scroll_context=chosen.id}
   local page=reading.add{type="flow",direction="vertical"}
   page.style.width=size.reader-67
-  page.style.vertical_spacing=18
+  page.style.vertical_spacing=12
   wrap(page,{"journal-record-body."..chosen.id},size.reader-67)
   wrap(paper,L("archive-disclaimer"),size.reader-48)
 end
