@@ -1,7 +1,4 @@
 -- Settings use localized section labels and stable intra-mod order keys.
--- The native settings GUI sorts by MOD before comparing these keys.
--- A title prefix in locale/en/settings.cfg is a best-effort display hint,
--- not a supported way to override the engine's mod-section ordering.
 -- Only real Razi-owned behavior is configurable.
 -- Setting names and types stay stable; Full native orbits are now the default.
 local function startup_toggle(name, order)
