@@ -21,11 +21,11 @@ class JournalPolish(unittest.TestCase):
         selection=x.split("function M.selection_changed(event)",1)[1].split("function M.gui_closed(event)",1)[0]
         self.assertNotIn("p.reveal_selection=true",selection)
         # External journal links may still intentionally reveal their target.
-        self.assertIn("p.reveal_selection=true\\n  open(player)",x)
+        self.assertIn("p.reveal_selection=true\n  open(player)",x)
         self.assertIn('cover_title.style.font="default-bold"',x)
         self.assertIn('journal-chapter-summary."..p.chapter',x)
         chapters=read("locale/en/razi_journal_chapters.cfg")
-        self.assertIn("solaris=Solaris\\n",chapters)
+        self.assertIn("solaris=Solaris\n",chapters)
         self.assertIn("[journal-chapter-summary]",chapters)
 
     def test_localization_and_cards(self):
