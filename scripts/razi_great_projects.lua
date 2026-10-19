@@ -81,6 +81,11 @@ end
 function M.array(force)
   local systems={}
   local sites={}
+  -- The Factorio engine maintains this count; most saves have no relays.
+  -- Avoid scanning every generated planet when the project is untouched.
+  local known=force and force.get_entity_count and
+    force.get_entity_count("razi-archive-relay") or 0
+  if known<=0 then return 0,3,sites end
   for _,surface in pairs(game and game.surfaces or {}) do
     local world=surface.planet
     local id=world and world.name
@@ -97,6 +102,7 @@ function M.array(force)
         end
       end
     end
+    if #sites>=3 then break end
   end
   table.sort(sites,function(a,b)return a.system<b.system end)
   -- Only genuine powered relays release each archive fragment. Once
