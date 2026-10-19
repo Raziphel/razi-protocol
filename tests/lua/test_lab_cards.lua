@@ -71,7 +71,9 @@ local full_packs = {
 	"biorecycling-science-pack", "rubia-biofusion-science-pack",
 	"golden-science-pack", "bioluminescent-science-pack",
 	"gas-manipulation-science-pack", "planet-crucible-science-pack",
-	"promethium-science-pack"
+	"promethium-science-pack", "planetaris-compression-science-pack",
+	"planetaris-polishing-science-pack", "planetaris-bioengineering-science-pack",
+	"planetaris-pathological-science-pack", "planetaris-refraction-science-pack"
 }
 local technologies = {
 	"space-science-pack", "planet-discovery-castra", "planet-discovery-moshine",
@@ -112,6 +114,13 @@ check(beetlejuice["golden-science-pack"] == 2 and beetlejuice["vibrant-tech-card
 local solaris = amounts(raw.recipe["solaris-tech-card"])
 check(solaris["calidus-tech-card"] == 1 and solaris["tungsten-science-pack"] == 1,
 	"Inner frontier packs stay single")
+-- Pathological and refraction science need Fulgora, so they belong to the Vibrant card, not Solaris.
+check(solaris["planetaris-polishing-science-pack"] == 1, "Solaris keeps the other Planetaris packs")
+check(not solaris["planetaris-pathological-science-pack"] and not solaris["planetaris-refraction-science-pack"],
+	"Solaris must not need Fulgora's science")
+local vibrant = amounts(raw.recipe["vibrant-tech-card"])
+check(vibrant["planetaris-pathological-science-pack"] == 1 and vibrant["planetaris-refraction-science-pack"] == 1,
+	"Vibrant takes the Fulgora-bound Planetaris packs")
 local deep = amounts(raw.recipe["deep-space-tech-card"])
 check(deep["beetlejuice-tech-card"] == 1 and deep["umbra-tech-card"] == 1
 	and deep["promethium-science-pack"] == 2, "Deep Space ingredients")

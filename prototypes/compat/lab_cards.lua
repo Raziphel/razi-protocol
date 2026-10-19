@@ -38,9 +38,9 @@ local system_card_definitions = {
 			"tungsten-science-pack", "battlefield-science-pack",
 			"planetaris-compression-science-pack",
 			"planetaris-polishing-science-pack",
-			"planetaris-bioengineering-science-pack",
-			"planetaris-pathological-science-pack",
-			"planetaris-refraction-science-pack"
+			"planetaris-bioengineering-science-pack"
+			-- Pathological and refraction science belong to the Vibrant card: their
+			-- research needs Fulgora's science, and Fulgora is priced in Solaris cards.
 			-- Paracelsin electrochemistry is reached in the NEXT frontier.
 			-- It must not block the Solaris card used to enter Vibrant.
 		},
@@ -74,7 +74,9 @@ local system_card_definitions = {
 		unlock_technology_candidates = {"planet-discovery-ribbonia"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
-			"electromagnetic-science-pack", "ribbonia-alien-science-pack"
+			"electromagnetic-science-pack", "ribbonia-alien-science-pack",
+			"planetaris-pathological-science-pack",
+			"planetaris-refraction-science-pack"
 			-- Keep Paracelsin and Ferrum galvanisation for later industry
 			-- rather than requiring it for the first Vibrant card.
 		},
