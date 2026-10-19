@@ -20,5 +20,12 @@ data:extend({
 		default_value = "full",
 		allowed_values = {"full", "balanced", "clean", "off"},
 		order = "cb[starmap]-a2[orbit-density]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-stage-aquilo-breakthroughs",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-c2[aquilo-breakthroughs]"
 	}
 })
