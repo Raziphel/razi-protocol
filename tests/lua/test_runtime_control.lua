@@ -75,7 +75,8 @@ local forces = {
 	enemy = force("enemy", false, 0),
 	done = force("done", true, 1)
 }
-rawset(_G, "game", {tick = 0, forces = forces, get_player = function() return nil end})
+rawset(_G, "game", {tick = 0, forces = forces, players = {}, get_player = function() return nil end})
+rawset(_G, "storage", {})
 
 require("control")
 

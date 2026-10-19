@@ -71,6 +71,11 @@ require("prototypes.technology.deep_space_arrival").data_final_fixes()
 -- Make sure every system card in the price of the new gates is unlocked before the gate.
 require("prototypes.technology.seven_systems").data_final_fixes()
 
+-- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
+-- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
+-- the cycle check sees the final graph) and before the lab inputs are deduplicated.
+require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+
 -- Planet packs frequently append their science inputs without checking whether
 -- another compatibility pass already added the same pack. Duplicate lab inputs
 -- are invalid in Factorio 2.1, so normalize them after every Razi compatibility
@@ -110,6 +115,11 @@ require("prototypes.system.galaxy_layout").confirm_critical_positions()
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
 require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
+
+-- Late-stage source recipes and research are final now. Keep optional bulk card manufacture,
+-- then tier the system cards across the EXISTING laboratories of other mods (no new labs).
+require("prototypes.compat.system_card_manufacturing").data_final_fixes()
+require("prototypes.compat.system_card_laboratories").data_final_fixes()
 
 -- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()
