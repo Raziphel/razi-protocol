@@ -214,6 +214,8 @@ How to work on the mod: [contributing.md](contributing.md).
 
 If you enjoy the mod and want to support future updates:
 
+- Razi Protocol project page: https://razisrealm.com/factorio
+- Razi's Realm gaming community: https://razisrealm.com/community
 - Discord: https://discord.gg/fTEtu64whV
 - Patreon: https://www.patreon.com/cw/Raziphel
 - Foundry community: https://discord.gg/Dn5p7GZpKu
