@@ -58,12 +58,13 @@ local function pref(index)
   local value=storage.razi_expedition_journal[index]
   if not value then
     value={selected=nil,pinned=nil,tracker=false,
-      chapter=nil,chapter_cover=false,filter="all",view="quests",project="dyson",record=nil,query=""}
+      chapter=nil,chapter_cover=false,filter="all",view="quests",project="platform",record=nil,query=""}
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
   value.view=({quests=true,projects=true,archive=true})[value.view] and value.view or "quests"
-  value.project=projects.valid(value.project) and value.project or "dyson"
+  value.project=(projects.valid(value.project) or value.project=="cargo")
+    and value.project or "platform"
   value.query=value.query or ""
   value.story_unread=value.story_unread or {}
   value.story_alerts=value.story_alerts~=false
@@ -1644,16 +1645,23 @@ end
 M.open=open
 function M.open_project(player,id,chain,target)
   if not (player and player.valid) then return false end
-  if id and not projects.visible(player.force,id) then return false end
-  if chain and (not projects.visible(player.force,"cargo")
-    or not projects.valid_cargo(player.force,chain,target)) then
+  local cargo=id=="cargo" or chain~=nil
+  if cargo then
+    if not projects.cargo_available(player.force) then return false end
+    if chain and not projects.valid_cargo(player.force,chain,target) then
+      return false
+    end
+  elseif id=="recovery" then
+    -- The old project ID now points to its actual research milestones.
+    return M.open_quest(player,"frontier-recovery-charter")
+      or M.open_quest(player,"athos")
+  elseif id and not projects.visible(player.force,id) then
     return false
   end
   local p=pref(player.index)
   p.view="projects"
-  p.project=id or p.project
-  if chain then
-    p.project="cargo"
+  p.project=cargo and "cargo" or id or p.project
+  if cargo then
     p.cargo_focus=chain
     p.cargo_target=target
   end
@@ -1963,6 +1971,11 @@ function M.gui_click(event)
     p.view=tags.id
   elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
+  elseif action=="project-back" and p.view=="projects"
+    and p.project=="cargo" then
+    p.project="platform"
+    p.cargo_focus=nil
+    p.cargo_target=nil
   elseif action=="project-cycle" and p.view=="projects"
     and projects.visible(player.force,tags.id)
     and (projects.adjacent(player.force,p.project,-1)==tags.id
