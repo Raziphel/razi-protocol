@@ -1,7 +1,7 @@
 local lab_cards = {}
-local Collections = require("__razi_lib__/lib/collections")
 local Prototype = require("__razi_lib__/lib/prototype")
 local Recipe = require("__razi_lib__/lib/recipe")
+local Science = require("__razi_lib__/lib/science")
 local Technology = require("__razi_lib__/lib/technology")
 
 local system_card_subgroup = "system-tech-card"
@@ -14,142 +14,128 @@ local system_card_definitions = {
 		localised_name = {"item-name.calidus-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
-		unlock_technology_candidates = {
-			"planet-discovery-muluna",
-			"moon-discovery-cerys",
-			"space-science-pack"
-		},
+		craft_time = 10, regional_science_amount = 1,
+		unlock_technology_candidates = {"space-science-pack", "planet-discovery-muluna"},
 		ingredients = {
-			"automation-science-pack",
-			"logistic-science-pack",
-			"military-science-pack",
-			"chemical-science-pack",
-			"production-science-pack",
-			"utility-science-pack",
-			"space-science-pack",
-			"metallurgic-science-pack",
-			"electromagnetic-science-pack",
-			"agricultural-science-pack",
-			"lithium-science-pack",
-			"tungsten-science-pack",
-			"lunar-science-pack",
-			"interstellar-science-pack",
-			"advanced-space-science-pack"
+			"automation-science-pack", "logistic-science-pack",
+			"military-science-pack", "chemical-science-pack",
+			"production-science-pack", "utility-science-pack",
+			"space-science-pack"
+			-- The frontier systems now own metallurgy, biology and electronics.
+			-- No later-planet science may be needed to construct this first card.
 		},
-		fallback_ingredients = {
-			"automation-science-pack"
-		}
+		fallback_ingredients = {"automation-science-pack"}
 	},
 	{
 		name = "solaris-tech-card",
 		localised_name = {"item-name.solaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/solaris-tech-card.png",
 		order = "s[system]-b[solaris]",
-		unlock_technology_candidates = {
-			"planet-discovery-castra"
-		},
+		craft_time = 12, regional_science_amount = 1,
+		unlock_technology_candidates = {"planet-discovery-castra"},
 		ingredients = {
-			"battlefield-science-pack",
+			"calidus-tech-card", "metallurgic-science-pack",
+			"tungsten-science-pack", "battlefield-science-pack",
 			"planetaris-compression-science-pack",
 			"planetaris-polishing-science-pack",
 			"planetaris-bioengineering-science-pack",
 			"planetaris-pathological-science-pack",
-			"planetaris-refraction-science-pack",
-			"electrochemical-science-pack"
+			"planetaris-refraction-science-pack"
+			-- Paracelsin electrochemistry is reached in the NEXT frontier.
+			-- It must not block the Solaris card used to enter Vibrant.
 		},
-		fallback_ingredients = {
-			"calidus-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
 	},
 	{
 		name = "nyxaris-tech-card",
 		localised_name = {"item-name.nyxaris-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/nyxaris-tech-card.png",
 		order = "s[system]-c[nyxaris]",
+		craft_time = 12, regional_science_amount = 1,
+		-- Never put optional Dea Dia / Pelagos science into a mandatory card.
 		unlock_technology_candidates = {
-			"system-discovery-dea-dia",
-			"planet-discovery-dea-dia",
-			"planet-discovery-apia-carnova",
 			"planet-discovery-moshine",
-			"planet-discovery-pelagos"
+			"planet-discovery-apia-carnova",
+			"panglia_planet_discovery_panglia"
 		},
 		ingredients = {
-			"aerospace-science-pack",
+			"calidus-tech-card", "agricultural-science-pack",
 			"insulation-science-pack",
-			"thermodynamic-science-pack",
-			"apicultural-science-pack",
-			"pelagos-science-pack"
+			"thermodynamic-science-pack", "apicultural-science-pack"
 		},
-		fallback_ingredients = {
-			"solaris-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
 	},
 	{
 		name = "vibrant-tech-card",
 		localised_name = {"item-name.vibrant-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
 		order = "s[system]-d[vibrant]",
-		unlock_technology_candidates = {
-			"planet-discovery-ribbonia",
-			"planet-discovery-aquilo",
-			"planet-discovery-maraxsis"
-		},
+		craft_time = 16, regional_science_amount = 1,
+		unlock_technology_candidates = {"planet-discovery-ribbonia"},
 		ingredients = {
-			"ribbonia-alien-science-pack",
-			"biorecycling-science-pack",
-			"rubia-biofusion-science-pack",
-			"galvanization-science-pack",
-			"paracelsin-galvanization-science-pack",
-			"hydraulic-science-pack"
+			"solaris-tech-card", "nyxaris-tech-card",
+			"electromagnetic-science-pack", "ribbonia-alien-science-pack"
+			-- Keep Paracelsin and Ferrum galvanisation for later industry
+			-- rather than requiring it for the first Vibrant card.
 		},
-		fallback_ingredients = {
-			"nyxaris-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
+	},
+	{
+		name = "vespera-tech-card",
+		localised_name = {"item-name.vespera-tech-card"},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/vespera-tech-card.png",
+		order = "s[system]-e[vespera]",
+		craft_time = 16, regional_science_amount = 1,
+		unlock_technology_candidates = {"planet-discovery-muria"},
+		ingredients = {
+			"solaris-tech-card", "nyxaris-tech-card",
+			"acidworking-science-pack", "cryogenic-science-pack",
+			"biorecycling-science-pack", "rubia-biofusion-science-pack"
+			-- Maraxsis hydraulics remain a late Vespera specialty.
+		},
+		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
 	{
 		name = "beetlejuice-tech-card",
 		localised_name = {"item-name.beetlejuice-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
-		order = "s[system]-e[beetlejuice]",
-		unlock_technology_candidates = {
-			"planet-discovery-cubium",
-			"planet-discovery-tenebris"
-		},
+		order = "s[system]-f[beetlejuice]",
+		craft_time = 22, regional_science_amount = 2,
+		unlock_technology_candidates = {"planet-discovery-cubium"},
 		ingredients = {
-			"bioluminescent-science-pack",
-			"cryogenic-science-pack",
-			"gas-manipulation-science-pack",
-			"planet-crucible-science-pack",
+			"vibrant-tech-card", "vespera-tech-card",
 			"golden-science-pack"
 		},
-		fallback_ingredients = {
-			"vibrant-tech-card",
-			"space-science-pack"
-		}
+		fallback_ingredients = {"vibrant-tech-card", "vespera-tech-card"}
+	},
+	{
+		name = "umbra-tech-card",
+		localised_name = {"item-name.umbra-tech-card"},
+		icon = "__razi-protocol__/graphics/icons/tech-cards/umbra-tech-card.png",
+		order = "s[system]-g[umbra]",
+		craft_time = 22, regional_science_amount = 2,
+		unlock_technology_candidates = {"planet-discovery-tenebris"},
+		ingredients = {
+			"vibrant-tech-card", "vespera-tech-card",
+			"bioluminescent-science-pack", "gas-manipulation-science-pack",
+			"planet-crucible-science-pack"
+		},
+		fallback_ingredients = {"vibrant-tech-card", "vespera-tech-card"}
 	},
 	{
 		name = "deep-space-tech-card",
 		localised_name = {"item-name.deep-space-tech-card"},
 		icon = "__razi-protocol__/graphics/icons/tech-cards/deep-space-tech-card.png",
-		order = "s[system]-f[deep-space]",
-		unlock_technology_candidates = {
-			"promethium-882-research",
-			"razi-singularity-theory"
-		},
+		order = "s[system]-h[deep-space]",
+		craft_time = 28, regional_science_amount = 2,
+		unlock_technology_candidates = {"razi-singularity-theory", "promethium-882-research"},
 		ingredients = {
-			"beetlejuice-tech-card",
-			"promethium-science-pack",
-			"promethium-882-science-pack",
-			"space-logistic-science-pack",
-			"pulsar-science-pack"
-		},
-		fallback_ingredients = {
-			"beetlejuice-tech-card",
+			"beetlejuice-tech-card", "umbra-tech-card",
 			"promethium-science-pack"
-		}
+			-- Aegis/Bellicos logistics and pulsar science lie beyond the
+			-- first Deep Space experiments. They remain optional freight.
+		},
+		fallback_ingredients = {"beetlejuice-tech-card", "umbra-tech-card"}
 	}
 }
 
@@ -190,11 +176,14 @@ local modded_science_ids = {
 	"kr-advanced-tech-card",
 	"kr-matter-tech-card",
 	"kr-singularity-tech-card",
+	"acidworking-science-pack",
 	"calidus-tech-card",
 	"solaris-tech-card",
 	"nyxaris-tech-card",
 	"vibrant-tech-card",
+	"vespera-tech-card",
 	"beetlejuice-tech-card",
+	"umbra-tech-card",
 	"deep-space-tech-card"
 }
 
@@ -217,15 +206,19 @@ local function ensure_item_subgroup(name, group, order)
 end
 
 local function science_pack_exists(name)
-	return Prototype.exists("tool", name) or Prototype.exists("item", name)
+	return Science.exists(name)
 end
 
-local function build_recipe_ingredients(science_packs)
+-- Native frontier sciences become more demanding at the outer edge;
+-- predecessor SYSTEM cards always stay at one per recipe to avoid
+-- multiplying the entire campaign's earlier factories recursively.
+local function build_recipe_ingredients(science_packs, regional_amount)
 	local ingredients = {}
 
 	for _, science_pack in ipairs(science_packs or {}) do
 		if science_pack_exists(science_pack) then
-			table.insert(ingredients, {type = "item", name = science_pack, amount = 1})
+			local amount = science_pack:match("%-tech%-card$") and 1 or (regional_amount or 1)
+			table.insert(ingredients, {type = "item", name = science_pack, amount = amount})
 		end
 	end
 
@@ -242,17 +235,11 @@ local function add_recipe_unlock(technology_name, recipe_name)
 end
 
 local function find_first_existing_technology(candidates)
-	for _, technology_name in ipairs(candidates or {}) do
-		if Prototype.exists("technology", technology_name) then
-			return technology_name
-		end
-	end
-
-	return nil
+	return Technology.first_existing_name(candidates)
 end
 
 local function upsert_system_card(card)
-	local ingredients = build_recipe_ingredients(card.ingredients)
+	local ingredients = build_recipe_ingredients(card.ingredients, card.regional_science_amount)
 	if #ingredients == 0 then
 		ingredients = build_recipe_ingredients(card.fallback_ingredients)
 	end
@@ -309,7 +296,7 @@ local function upsert_system_card(card)
 				localised_name = {"", card.localised_name},
 				enabled = false,
 				categories = {"crafting"},
-				energy_required = 10,
+				energy_required = card.craft_time or 10,
 				ingredients = ingredients,
 				results = {
 					{type = "item", name = card.name, amount = 1}
@@ -325,7 +312,7 @@ local function upsert_system_card(card)
 		recipe.localised_name = {"", card.localised_name}
 		recipe
 			:set_categories({"crafting"})
-			:set_energy(10)
+			:set_energy(card.craft_time or 10)
 			:set_ingredients(ingredients)
 			:set_results({
 				{type = "item", name = card.name, amount = 1}
@@ -341,7 +328,7 @@ local function upsert_system_card(card)
 end
 
 local function add_unique_input(lab, input_name)
-	Collections.append_unique(lab.inputs, input_name)
+	Science.add_lab_input(lab, input_name)
 end
 
 local function set_science_weight(name, weight)
@@ -383,7 +370,11 @@ local function add_system_cards_to_regular_labs()
 end
 
 function lab_cards.data_final_fixes()
-	ensure_item_subgroup(system_card_subgroup, "science", "0[system-tech-card]")
+	-- Science Tab is a recommended companion, not an essential mod.
+	-- Vanilla Factorio has no guaranteed `science` item group.
+	local group = data.raw["item-group"] and data.raw["item-group"]["science"]
+		and "science" or "intermediate-products"
+	ensure_item_subgroup(system_card_subgroup, group, "0[system-tech-card]")
 
 	for _, card in ipairs(system_card_definitions) do
 		upsert_system_card(card)
