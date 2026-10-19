@@ -736,6 +736,11 @@ local function render_details(parent,player,quest,p,context,size,view)
       tostring(plan.satisfied),tostring(plan.requirements)))
     count.style.font_color=COLOR.muted
   end
+  -- Always display the *actual* success criterion, even if a
+  -- long blocker list collapses below the first three pending steps.
+  local finish=wrap(mission,L("mission-finish-line",
+    L("mission-step-"..plan.kind,plan.target)),text_width-28)
+  finish.style.font_color=COLOR.muted
   -- The top line is always the next verifiable action, never a made-up
   -- logistical task. For bosses and deliveries the source owns the result.
   if plan.finished then
