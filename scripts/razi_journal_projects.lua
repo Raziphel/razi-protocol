@@ -434,6 +434,14 @@ local function next_action(force,id,status)
     if select(1,convergence.witness_status(force))<7 then
       return L("project-next-convergence-witness")
     end
+    local arrived,required,_,chart_ready=convergence.expedition_status(force)
+    if not chart_ready or required==0 then
+      return L("project-next-convergence-chart")
+    end
+    if arrived<required then
+      return L("project-next-convergence-deep-tour",
+        tostring(arrived),tostring(required))
+    end
     local receivers_ready=convergence.dyson_readiness(force)
     if not receivers_ready then
       return L("project-next-convergence-receiver")

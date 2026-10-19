@@ -4,6 +4,7 @@ local M={}
 local defs=require("prototypes.technology.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local galactic_catalog=require("scripts.galactic_catalog")
+local deep_expedition=require("scripts.razi_deep_space_expedition")
 local story_dispatch=require("scripts.razi_story_dispatch")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.
@@ -79,6 +80,9 @@ function M.witness_status(force)
  end
  return active,total,locations
 end
+function M.expedition_status(force)
+ return deep_expedition.status(force)
+end
 function M.core_status(player)
  if not M.location(player) then return false end
  local surface=player.character.surface
@@ -151,6 +155,13 @@ local function stage_ready(force,index)
   end
   if select(1,M.witness_status(force))<7 then
    return false,"convergence-need-witnesses"
+  end
+  local visited,required,_,chart_ready=M.expedition_status(force)
+  if not chart_ready or required==0 then
+   return false,"convergence-need-deep-chart"
+  end
+  if visited<required then
+   return false,"convergence-need-deep-expedition"
   end
   if not M.dyson_readiness(force) then
    return false,"convergence-need-receiver"
@@ -555,6 +566,25 @@ function M.render(parent,player,options)
     line(archive,"convergence-blackbox-"..i,width)
   end
  end
+ -- Complete personal landings, not technology research or an empty
+ -- autopilot tour. Multiple real crew members may sign for one force.
+ local expedition=scroll.add{type="frame",
+   style="inside_shallow_frame",direction="vertical"}
+ expedition.style.horizontally_stretchable=true
+ local landed,required,stops,chart_ready=M.expedition_status(force)
+ local expedition_title=line(expedition,"convergence-deep-tour-heading",width)
+ expedition_title.style.font="heading-2"
+ line(expedition,chart_ready and "convergence-deep-tour-count"
+   or "convergence-deep-tour-unavailable",width,
+   tostring(landed),tostring(required))
+ for _,stop in ipairs(stops) do
+   local item=line(expedition,stop.visited
+     and "convergence-deep-tour-arrived"
+     or "convergence-deep-tour-missing",width,stop.caption)
+   item.style.font_color=stop.visited
+     and {r=.48,g=.9,b=.72} or {r=.94,g=.72,b=.49}
+ end
+ line(expedition,"convergence-deep-tour-proof",width)
  -- A built, force-owned receiver is tangible evidence of the Dyson grid.
  -- The source mod remains authoritative for real satellite count and MW.
  local receiver_ready,receivers=M.dyson_readiness(force)
@@ -640,6 +670,8 @@ function M.render(parent,player,options)
     end
    elseif next_index==5 and wdone<wtotal then
     line(advice,"convergence-next-action-witnesses",width)
+   elseif next_index==5 and (not chart_ready or landed<required) then
+    line(advice,"convergence-next-action-deep-tour",width)
    elseif next_index==5 and not M.core_status(player) then
     line(advice,"convergence-next-action-core",width)
    elseif next_index==5 and not receiver_ready then

@@ -1,6 +1,7 @@
 local razi_journal = require("scripts.razi_journal")
 local platform_projects = require("scripts.razi_platform_projects")
 local great_projects = require("scripts.razi_great_projects")
+local deep_expedition = require("scripts.razi_deep_space_expedition")
 local story_dispatch = require("scripts.razi_story_dispatch")
 local spoiler_fog = require("scripts.razi_spoiler_fog")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
@@ -167,6 +168,7 @@ events:on_init(function()
   preserve_deep_space_campaign()
   check_existing_transceivers()
   for _,force in pairs(game.forces) do platform_projects.snapshot(force) end
+  deep_expedition.observe_connected()
   retire_connected_operations()
   razi_journal.sync_all()
 end)
@@ -177,6 +179,7 @@ events:on_configuration_changed(function(event)
 	preserve_deep_space_campaign()
 	check_existing_transceivers()
   for _,force in pairs(game.forces) do platform_projects.snapshot(force) end
+  deep_expedition.observe_connected()
 	-- Existing saves may have researched older Convergence stages before
 	-- their new manufacturing unlocks were introduced.
 	if event and event.mod_changes
@@ -240,7 +243,8 @@ local function record_platform(event)
   if not (event and event.platform) then return end
   local first=platform_projects.observe(event.platform)
   local major=great_projects.observe(event.platform)
-  if first or major then razi_journal.refresh_open() end
+  local visited=deep_expedition.observe_connected(event.platform)
+  if first or major or visited then razi_journal.refresh_open() end
 end
 events:on_event(defines.events.on_space_platform_built_entity,record_platform)
 events:on_event(defines.events.on_space_platform_built_tile,record_platform)
@@ -248,7 +252,20 @@ events:on_event(defines.events.on_space_platform_changed_state,record_platform)
 -- Reconcile arrival events on the existing (infrequent) platform state poll
 -- only when a crossing has an outstanding departure record.
 events:on_nth_tick(300,function()
-  if great_projects.flush_pending(game.forces) then
+  local major=great_projects.flush_pending(game.forces)
+  local visited=deep_expedition.observe_connected()
+  if major or visited then
+    razi_journal.refresh_open()
+  end
+end)
+-- A player physically boarding a parked platform can also count as
+-- visiting that location. Remote View never grants the achievement.
+events:on_event({
+  defines.events.on_player_changed_surface,
+  defines.events.on_player_controller_changed
+},function(event)
+  local player=game.get_player(event.player_index)
+  if player and deep_expedition.observe(player) then
     razi_journal.refresh_open()
   end
 end)
@@ -288,6 +305,7 @@ end)
 events:on_event(defines.events.on_forces_merged,function(event)
   platform_projects.forces_merged(event)
   great_projects.forces_merged(event)
+  deep_expedition.forces_merged(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
   spoiler_fog.on_forces_merged(event)
