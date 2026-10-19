@@ -79,6 +79,10 @@ local function pref(index)
   value.project=(projects.valid(value.project) or value.project=="cargo")
     and value.project or "platform"
   value.query=value.query or ""
+  value.logistics_tab=({overview=true,routes=true,
+    freight=true,industry=true})[value.logistics_tab]
+    and value.logistics_tab or "overview"
+  value.logistics_scrolls=value.logistics_scrolls or {}
   value.story_unread=value.story_unread or {}
   value.story_alerts=value.story_alerts~=false
   value.archive_filter=({all=true,legacy=true,corporate=true,
@@ -1626,6 +1630,17 @@ local function draw(player,focus_search)
   local window_theme=themes.get(chapter_theme)
   local saved_scrolls={}
   collect_scrolls(frame,saved_scrolls)
+  -- Scroll state belongs to the logistics TAB, not the overall Projects
+  -- view. Capture the old tab before frame.clear, and restore prior tabs'
+  -- offsets only when their matching pane returns on a later selection.
+  for key,position in pairs(saved_scrolls) do
+    if key:find("^razi_journal_project_reader|cargo:") then
+      p.logistics_scrolls[key]=position
+    end
+  end
+  for key,position in pairs(p.logistics_scrolls) do
+    if saved_scrolls[key]==nil then saved_scrolls[key]=position end
+  end
   -- A native hidden scroll pane may report zero. Cache its last visible
   -- position before switching from Index to the mobile reading sheet.
   if p.view=="quests" and size.single_column then
@@ -2078,6 +2093,9 @@ function M.open_project(player,id,chain,target)
   if cargo then
     p.cargo_focus=chain
     p.cargo_target=target
+    -- A Codex factory link opens the actual Industry reference instead
+    -- of landing on the new Command dashboard.
+    if chain then p.logistics_tab="industry" end
   end
   open(player)
   return true
@@ -2341,6 +2359,13 @@ function M.gui_click(event)
       if not known or not convergence.available(player.force) then return end
       local message,amount=convergence.deliver(player,tags.value)
       player.print({"razi-ops."..message,tostring(amount)})
+    elseif p.project=="cargo" and native=="logistics-tab" then
+      if not ({overview=true,routes=true,freight=true,industry=true})
+        [tags.value] then return end
+      p.logistics_tab=tags.value
+    elseif p.project=="cargo" and native=="logistics-route" then
+      if not freight_orders.select(player,tags.value) then return end
+      p.logistics_tab="freight"
     elseif p.project=="cargo" and native=="freight-select" then
       if not freight_orders.select(player,tags.value) then return end
     elseif p.project=="cargo" and native=="freight-add" then
