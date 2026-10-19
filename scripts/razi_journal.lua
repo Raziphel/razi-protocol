@@ -1019,7 +1019,6 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   frame.style.padding=9
   local inner=size.rail-35
   subtitle(frame,"navigator-title",inner)
-  accent_rule(frame,themes.get(p.chapter or "calidus"),68,2)
   local names={}
   for _,ch in ipairs(defs.chapters) do
     local chapter=view.chapters[ch.id]
@@ -1046,7 +1045,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     inner,size.body-147)
   local column=scroll.add{type="flow",name="razi_journal_chapter_column",direction="vertical"}
   column.style.width=inner-13
-  column.style.vertical_spacing=3
+  column.style.vertical_spacing=2
   local selected_element
 
   plan=plan or M.guidance(player.force,context,view)
@@ -1071,15 +1070,18 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     local theme=themes.get(chapter.id)
     local data=view.chapters[chapter.id]
     local completed,total=data.completed,data.total
-    local available={}
-    for _,quest in ipairs(data.quests) do
+    -- Allocate visible quest rows once; later search/filter changes only
+    -- toggle native GUI visibility, keeping the same scroll-pane instance.
+    local available=data.quests
+    local visible_count=0
+    for _,quest in ipairs(available) do
       if state_matches_filter(view.states[quest.id],p.filter)
         and matches_query(quest,p.query) then
-        available[#available+1]=quest
+        visible_count=visible_count+1
       end
     end
     if #available>0 then
-      found=true
+      found=found or visible_count>0
       local open=p.query~="" or p.chapter==chapter.id
       -- Only the expanded chapter gets a surfaced panel. Collapsed
       -- chapters read like a quiet table of contents.
@@ -1087,6 +1089,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
         direction="vertical"}
       card.style.width=inner-16
       card.style.padding=4
+      card.visible=visible_count>0
       local head=card.add{type="flow",name="razi_journal_chapter_head",direction="horizontal"}
       head.style.horizontal_spacing=6
       icons.button(head,themes.icon(chapter.id),"chapter_button",
@@ -1107,13 +1110,13 @@ local function render_chapters(parent,player,p,context,size,view,plan)
 
       local counts=card.add{type="flow",direction="horizontal"}
       counts.style.vertical_align="center"
-      local count=label(counts,
-        L("chapter-progress-short",tostring(completed),tostring(total)))
+      local count=counts.add{type="label",name="razi_journal_chapter_count",
+        caption=L("chapter-progress-short",tostring(completed),tostring(total))}
       count.style.font_color=COLOR.quiet
       -- The chapter count is enough; full-width bars made the index noisy.
       local entries=card.add{type="flow",name="razi_journal_chapter_entries",direction="vertical"}
-      entries.visible=open
-      entries.style.vertical_spacing=4
+      entries.visible=open and visible_count>0
+      entries.style.vertical_spacing=2
       do
         local open_cover=entries.add{type="label",style="clickable_label",
           caption=L(p.chapter_cover and p.chapter==chapter.id
@@ -1135,6 +1138,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           local item=entries.add{type="flow",name="razi_journal_item_"..quest.id,
             direction="horizontal"}
           item.style.width=inner-34
+          item.visible=state_matches_filter(state,p.filter)
+            and matches_query(quest,p.query)
           item.style.padding=3
           item.style.horizontal_spacing=7
           icons.sprite(item,quest_art(player.force,quest,context),
@@ -1144,8 +1149,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
               or state=="active" and "●" or "○",
             tags={razi_journal_action="select",id=quest.id},
             tooltip={"journal-title."..quest.id}}
-          control.style.width=27
-          control.style.height=27
+          control.style.width=24
+          control.style.height=24
           local color=state=="complete" and {r=.48,g=.85,b=.67}
             or state=="active" and {r=.98,g=.79,b=.46}
             or {r=.58,g=.61,b=.68}
@@ -1390,6 +1395,7 @@ end
 local scroll_names={
   razi_journal_navigation=true,razi_journal_reading=true,
   razi_journal_chapter_reading=true,razi_journal_archive_reading=true,
+  razi_journal_archive_navigation=true,
   razi_journal_project_reader=true,razi_journal_systems_reading=true
 }
 local function scroll_key(element)
