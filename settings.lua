@@ -88,6 +88,14 @@ data:extend({
 		order = "cb[starmap]-c2[pulsar-glare]"
 	},
 	{
+		type = "string-setting",
+		name = "razi-planetary-interdependence",
+		setting_type = "startup",
+		default_value = "balanced",
+		allowed_values = {"off", "balanced"},
+		order = "ba[integration]-0[interdependence]"
+	},
+	{
 		type = "bool-setting",
 		name = "razi-stage-aquilo-breakthroughs",
 		setting_type = "startup",
