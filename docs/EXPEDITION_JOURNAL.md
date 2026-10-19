@@ -860,3 +860,17 @@ test remains required before release.
 Convergence's **final Ignition** shipment requires **all nine** native Nexus Bosses force victories: Arachnid Queen, Watcher, Rogue Spidertron; Twin Maws, Colossus, Plague Hulk; Storm Guardian, Devourer and Last Commander. The source mod exposes a read-only `get_state().defeated[force_name][boss_id]` API, available since version 2.0.0. Razi uses that authority directly and shows a three-circle progress dossier, individual defeat status and the original boss Codex. Nexus's `nexus-silence` warp key is valuable progression but never substitutes for boss records. This is a dedicated real-world combat Project, not a technology tick.
 
 `info.json` uses `~ nexus-bosses >= 2.4.0`, a **required dependency with no load-order constraint**, because Nexus Bosses itself lists `? razi-protocol` and a normal hard dependency would produce a circular load order. Nexus Bosses supplies its own threat, enemy and soundtrack dependencies; Razi does not copy or override its bosses. The gate fails closed if the source API is missing or malformed, and existing completed Razi victories remain completed.
+
+### Razi 3.0 hands-on Journal acceptance
+
+With the main modpack installed, open Quests halfway down the chapter index
+and scroll to a late chapter. Select several quests and switch chapter headings:
+the **left** scroll offset must remain stable. Open a long dossier, scroll its
+prose, and complete source research; the **right** reading offset must remain
+stable for the same selected record. Type an 80-character search in stages,
+clear it and cycle All/Ready/Unfinished/Completed: no GUI-wide teardown or
+loss of typing focus. Verify chapter counts, completion and ready numbers
+reflect the source force and that newly discoverable spoiler-safe entries
+become visible. Test the Archive scroll independently and check the 4th
+Systems tab. Repeat at 1280×720 and 1920×1080 with larger UI scale and on
+a copy of an established save. Source-only tests do not replace the game run.

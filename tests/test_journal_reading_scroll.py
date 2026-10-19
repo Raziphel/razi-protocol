@@ -17,9 +17,12 @@ class JournalPolish(unittest.TestCase):
         # Ordinary chapter/quest clicks retain engine-owned scrollbar objects.
         self.assertIn("local function update_reader(player,preserve_reader)",x)
         self.assertIn("update_reader(player)",x)
+        self.assertIn("row.visible=matching",x)
         self.assertIn("restore_scrolls(reader,saved,false)",x)
         self.assertIn("row.visible=matching",x)
-        # Source of truth for typing/search remains the existing native GUI.\n        self.assertIn("  update_reader(player)\nend\nfunction M.elem_changed",x)
+        # Search preserves the native navigator and only updates the reader
+        # when its selected entry changes.
+        self.assertIn("update_reader(player,p.selected==prior and p.chapter_cover==prior_cover)",x)
         self.assertIn('name="razi_journal_chapter_entries"',x)
         self.assertIn("if entries then entries.visible=expanded end",x)
         self.assertIn('name="razi_journal_reader_host"',x)
