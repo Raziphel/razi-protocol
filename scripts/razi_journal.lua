@@ -688,7 +688,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
   scroll.tags={razi_scroll_context=quest.id}
   local text_width=inner-18
-  local prose=scroll.add{type="flow",direction="vertical"}
+  local prose=scroll.add{type="flow",name="razi_journal_prose",direction="vertical"}
   prose.style.width=text_width
   prose.style.vertical_spacing=9
   local native=technology(player.force,quest,context)
@@ -719,8 +719,8 @@ local function render_details(parent,player,quest,p,context,size,view)
     current_research=force.current_research,
     research_progress=force.research_progress
   })
-  local mission=prose.add{type="frame",direction="vertical",
-    style="razi_journal_callout"}
+  local mission=prose.add{type="frame",name="razi_journal_mission_plan",
+    direction="vertical",style="razi_journal_callout"}
   mission.style.width=text_width
   mission.style.padding=11
   local mission_header=mission.add{type="flow",direction="horizontal"}
@@ -765,16 +765,23 @@ local function render_details(parent,player,quest,p,context,size,view)
     local warning=wrap(mission,L("mission-disabled"),text_width-28)
     warning.style.font_color=COLOR.amber
   end
-  if plan.research_percent~=nil then
-    local running=label(mission,L("mission-research-progress",
-      tostring(plan.research_percent)))
-    running.style.font_color=COLOR.teal
-    local research_bar=mission.add{type="progressbar",
-      value=plan.research_percent/100}
-    research_bar.style.width=math.min(240,text_width-32)
-    research_bar.style.height=4
-    research_bar.style.color=COLOR.teal
-  end
+  -- Allocate this tiny research strip once; a 120-tick reader-only
+  -- update keeps it alive without resetting the dossier scroll position.
+  local research_row=mission.add{type="flow",name="razi_journal_research_row",
+    direction="vertical"}
+  research_row.style.vertical_spacing=3
+  research_row.visible=plan.research_percent~=nil
+  local running=research_row.add{type="label",
+    name="razi_journal_research_percent",
+    caption=L("mission-research-progress",
+      tostring(plan.research_percent or 0))}
+  running.style.font_color=COLOR.teal
+  local research_bar=research_row.add{type="progressbar",
+    name="razi_journal_research_progress",
+    value=(plan.research_percent or 0)/100}
+  research_bar.style.width=math.min(240,text_width-32)
+  research_bar.style.height=4
+  research_bar.style.color=COLOR.teal
   local shown=objectives.visible_rows(plan,p.goal_expanded,3)
   local checklist=mission.add{type="flow",direction="vertical"}
   checklist.style.vertical_spacing=4
@@ -2143,6 +2150,54 @@ function M.refresh_convergence(force)
       and frame and frame.valid then draw(player) end
   end
 end
+-- The progress indicator is a sampled ForceTechnology percentage, not
+-- a separate quest state. This never rebuilds the reader or moves scroll.
+function M.refresh_research_visible()
+  for _,player in pairs(game.connected_players or {}) do
+    local p=storage.razi_expedition_journal and
+      storage.razi_expedition_journal[player.index]
+    if p and p.view=="quests" and p.selected and not p.chapter_cover then
+      local frame=player.gui.screen[FRAME]
+      local body=frame and frame.valid and frame["razi_journal_content"]
+      local host=body and body["razi_journal_reader_host"]
+      local panel=host and host.children[1]
+      local scroll=panel and panel["razi_journal_reading"]
+      local prose=scroll and scroll["razi_journal_prose"]
+      local mission=prose and prose["razi_journal_mission_plan"]
+      local strip=mission and mission["razi_journal_research_row"]
+      if strip and strip.valid then
+        local quest=defs.by_id[p.selected]
+        local current=player.force.current_research
+        local active=current and quest and not quest.boss
+          and not quest.convergence and quest.tech==current.name
+        if current and quest and quest.world and not active then
+          for _,effect in pairs(current.prototype and
+              current.prototype.effects or {}) do
+            if effect.type=="unlock-space-location"
+              and effect.space_location==quest.world then
+              active=true
+              break
+            end
+          end
+        end
+        active=active and current.researched~=true
+        strip.visible=active==true
+        if active then
+          local value=player.force.research_progress
+          value=type(value)=="number" and value or 0
+          value=math.max(0,math.min(1,value))
+          local percent=math.floor(value*100+.5)
+          local text=strip["razi_journal_research_percent"]
+          local bar=strip["razi_journal_research_progress"]
+          if text then text.caption=L("mission-research-progress",
+            tostring(percent)) end
+          if bar then bar.value=value end
+        end
+      end
+    end
+  end
+end
+
 function M.refresh_systems_visible()
   -- A small reconciliation also catches companion GUIs rebuilt by their own
   -- join/research/configuration handlers; it never scans the world.
