@@ -657,17 +657,13 @@ technology checkbox or a small factory delivery:
    The genuine engine ending follows a saved **two-minute signal** with
    four staged broadcasts. Continue remains enabled afterward.
 
-**The BLACKOUT-SEVEN reveal:** The catastrophe was real, but the
-continued isolation was deliberately ordered by RAZI executives to
-preserve corporate asset control. The buried Convergence protocol was
-also a succession trap: without seven independent witnesses, rebuilding
-the original network could reactivate corporate reclamation. The
-player uncovers the order after the Deep-Space Mandate and the trap
-after Pulsar Resonance. The seven powered witnesses and the
-physically delivered Accord let the colonies reject the old authority
-without appointing the player as its replacement. Original late-game
-shipments and already-earned victories are preserved; the previous
-8/10/6/4 partial deliveries become credited toward the harder totals.
+**The recovered black box:** The third and fourth physical Mandates
+uncover evidence that fundamentally changes how the expedition understands
+RAZI Industries, the Continuity Engine and the purpose of the original
+Protocol. Seven independent star-system testimonies become part of the
+actual endgame. The decisive revelation and its consequences are
+deliberately kept out of this public overview; players discover the truth
+by delivering the real shipments and constructing the witness network.
 
 The project does **not** add a planet, a laboratory, a teleport, a
 replacement transceiver or a mandatory boss. Convergence construction
