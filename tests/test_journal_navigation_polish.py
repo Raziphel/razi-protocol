@@ -19,12 +19,13 @@ class JournalNavigationPolishTests(unittest.TestCase):
         self.assertIn('scroll.vertical_scroll_policy="auto"', projects)
         self.assertNotIn('title.style.font="heading-1"', projects)
 
-    def test_chapter_meter_and_search_stay_in_sync_after_partial_updates(self):
+    def test_chapter_index_has_no_redundant_meters_and_keeps_live_search(self):
         journal = source("scripts/razi_journal.lua")
         self.assertIn('name="razi_journal_chapter_status"', journal)
-        self.assertIn('name="razi_journal_chapter_meter"', journal)
-        self.assertIn('chapter_meter.value=data.total>0 and data.completed/data.total or 0', journal)
-        self.assertIn('chapter_meter.visible=expanded', journal)
+        self.assertNotIn('name="razi_journal_chapter_meter"', journal)
+        self.assertIn('name="razi_journal_item_rule"', journal)
+        self.assertIn('selection.visible=chosen', journal)
+        self.assertIn('local filterbar=navigation["razi_journal_filterbar"]', journal)
         self.assertIn('lead.visible=next_quest~=nil and p.query=="" and p.filter=="all"', journal)
         self.assertIn('lead.visible=p.query=="" and p.filter=="all"', journal)
         self.assertIn('or state=="active" and theme.soft or COLOR.muted', journal)
