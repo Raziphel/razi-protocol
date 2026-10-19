@@ -972,7 +972,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   end
 
   -- Never let the long Nexus and pin actions overflow narrow readers.
-  local actions=prose.add{type="table",
+  local actions=prose.add{type="table",name="razi_journal_actions",
     column_count=text_width<350 and 1 or text_width<640 and 2 or 4}
   actions.style.horizontal_spacing=8
   actions.style.vertical_spacing=6
@@ -1910,6 +1910,13 @@ local function update_reader(player,preserve_reader)
   end
   local plan=M.guidance(player.force,context,view)
   local selected=select_quest(player.force,p,context,plan)
+  if size.single_column then
+    if navigation.visible and type(navigation_scroll)=="number" then
+      p.compact_index_scroll=navigation_scroll
+    end
+    navigation.visible=p.compact_index_open
+    reader.visible=not p.compact_index_open
+  end
   p.nexus_revision=nexus_revision(context.nexus)
   for index,ch in ipairs(defs.chapters) do
     local data=view.chapters[ch.id]
@@ -2086,6 +2093,7 @@ function M.open_quest(player,id)
   p.query=""
   p.view="quests"
   p.chapter_cover=false
+  p.compact_index_open=false
   p.reveal_selection=true
   open(player)
   return true
@@ -2552,6 +2560,7 @@ function M.gui_click(event)
     p.chapter=quest.chapter
     p.chapter_cover=false
     p.view="quests"
+    p.compact_index_open=false
     p.filter="all"
     p.query=""
     p.reveal_selection=false
@@ -2589,6 +2598,7 @@ function M.gui_click(event)
     if target then
       p.selected=target.id
       p.chapter=target.chapter
+      p.compact_index_open=false
       p.reveal_selection=false
     end
   elseif action=="filter" and ({all=true,ready=true,unfinished=true,
@@ -2597,6 +2607,7 @@ function M.gui_click(event)
   elseif action=="next" then
     local next=M.next_quest(player.force)
     if next then
+      p.compact_index_open=false
       p.selected=next.id
       p.chapter=next.chapter
       p.filter="all"
@@ -2650,16 +2661,13 @@ function M.gui_click(event)
       local body=frame and frame["razi_journal_content"]
       local reader=body and body["razi_journal_reader_host"]
       local panel=reader and reader.children[1]
-      if panel then
-        for _,child in pairs(panel.children) do
-          if child.type=="table" then
-            local pin=child["razi_journal_pin_button"]
-            if pin then
-              pin.caption=L(p.tracker and p.pinned==tags.id
-                and "tracker-hide" or "tracker-show")
-            end
-          end
-        end
+      local scroll=panel and panel["razi_journal_reading"]
+      local prose=scroll and scroll["razi_journal_prose"]
+      local actions=prose and prose["razi_journal_actions"]
+      local pin=actions and actions["razi_journal_pin_button"]
+      if pin then
+        pin.caption=L(p.tracker and p.pinned==tags.id
+          and "tracker-hide" or "tracker-show")
       end
       return
     end
