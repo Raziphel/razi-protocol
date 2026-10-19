@@ -607,70 +607,60 @@ local function render_details(parent,player,quest,p,context,size,view)
   local inner=size.reader-38
   local status=M.state(player.force,quest,context)
   local theme=themes.get(quest.chapter)
-  local banner=panel.add{type="flow",direction="horizontal"}
-  banner.style.horizontal_spacing=10
-  banner.style.vertical_align="center"
-  icons.sprite(banner,themes.icon(quest.chapter),"chapter_seal",
+  -- One dossier masthead instead of five independent header strips.
+  -- The story has one title; chapter, file ID and live state are metadata.
+  local masthead=panel.add{type="flow",direction="horizontal"}
+  masthead.style.vertical_align="center"
+  masthead.style.horizontal_spacing=8
+  icons.sprite(masthead,themes.icon(quest.chapter),"chapter_seal",
     {"journal-chapter."..quest.chapter})
-  local identification=banner.add{type="flow",direction="vertical"}
-  identification.style.vertical_spacing=2
-  local chapter_intro=label(identification,{"journal-chapter."..quest.chapter})
+  local file_meta=masthead.add{type="flow",direction="vertical"}
+  file_meta.style.vertical_spacing=1
+  local chapter_intro=label(file_meta,{"journal-chapter."..quest.chapter})
   chapter_intro.style.font="default-bold"
-  chapter_intro.style.font_color=theme.primary
-  if not size.compact then
-    local atmosphere=label(identification,{"journal-mood."..quest.chapter})
-    atmosphere.style.font_color=theme.soft
-  end
-  accent_rule(panel,theme,math.min(148,inner),3)
-  -- A quiet editorial identity for the selected dossier. All three values
-  -- are read from the real force snapshot, never invented progress.
-  local identity=panel.add{type="flow",direction="horizontal"}
-  identity.style.vertical_align="center"
-  identity.style.horizontal_spacing=9
-  local folio_number=tint(label(identity,
-    L("dossier-index",string.format("%02d",chapter_index(quest.chapter)))),COLOR.quiet)
-  folio_number.style.font="default-bold"
-  local chapter_ink=label(identity,quest.chapter=="calidus"
-    and quest.phase and {"journal-nauvis-phase."..quest.phase}
-    or L("dossier-classification"))
-  chapter_ink.style.font_color=theme.soft
-  local chapter_link=identity.add{type="label",style="clickable_label",
-    caption=L("chapter-cover-open"),
-    tags={razi_journal_action="chapter-dossier",id=quest.chapter},
-    tooltip=L("chapter-cover-tooltip")}
-  chapter_link.style.font_color=theme.primary
-  local hero=panel.add{type="flow",direction="horizontal"}
-  hero.style.horizontal_spacing=10
-  icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
-  local hero_text=hero.add{type="flow",direction="vertical"}
-  hero_text.style.vertical_spacing=2
-  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-57)
-  hero_title.style.font="heading-2"
-  hero_title.style.font_color=COLOR.ink
-
-  local eyebrow=panel.add{type="flow",direction="horizontal"}
-  eyebrow.style.horizontally_stretchable=true
-  -- Status first: players should recognize whether they can act before
-  -- reading the full narrative. Avoid repeating the same chapter number.
-  local status_label=label(eyebrow,L("status-"..status))
+  chapter_intro.style.font_color=theme.soft
+  local serial=label(file_meta,L("dossier-index",
+    string.format("%02d",chapter_index(quest.chapter))))
+  serial.style.font_color=COLOR.quiet
+  local masthead_space=masthead.add{type="empty-widget"}
+  masthead_space.style.horizontally_stretchable=true
+  local status_label=label(masthead,L("status-"..status))
   status_label.style.font="default-bold"
   status_label.style.font_color=status=="complete" and COLOR.green
     or status=="active" and COLOR.amber or COLOR.muted
-  -- The completion status is already visible; give the reader that space.
-  local content_height=size.body-(size.compact and 225 or 248)
+
+  local hero=panel.add{type="flow",direction="horizontal"}
+  hero.style.horizontal_spacing=11
+  hero.style.vertical_align="center"
+  icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
+  local hero_text=hero.add{type="flow",direction="vertical"}
+  hero_text.style.vertical_spacing=2
+  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-68)
+  hero_title.style.font="heading-2"
+  hero_title.style.font_color=COLOR.ink
+  if not size.compact then
+    local mood=wrap(hero_text,{"journal-mood."..quest.chapter},inner-68)
+    mood.style.font_color=COLOR.muted
+  end
+  local folio_link=panel.add{type="label",style="clickable_label",
+    caption=L("chapter-cover-open"),
+    tags={razi_journal_action="chapter-dossier",id=quest.chapter},
+    tooltip=L("chapter-cover-tooltip")}
+  folio_link.style.font_color=theme.soft
+  accent_rule(panel,theme,math.min(92,inner),2)
+  local content_height=size.body-(size.compact and 170 or 186)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
   scroll.tags={razi_scroll_context=quest.id}
   local text_width=inner-18
   local prose=scroll.add{type="flow",direction="vertical"}
   prose.style.width=text_width
-  prose.style.vertical_spacing=11
+  prose.style.vertical_spacing=9
   local objective=prose.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   objective.style.width=text_width
-  objective.style.padding=13
+  objective.style.padding=10
   subtitle(objective,"objective-heading",text_width-26,theme)
-  accent_rule(objective,theme,math.min(text_width-26,96),2)
-  local native=technology(player.force,quest,context)
+   local native=technology(player.force,quest,context)
   if quest.boss then
     wrap(objective,{"",L("objective-boss")," ",
       {"nexus-bosses.boss-"..quest.boss}},text_width-26)
@@ -814,10 +804,10 @@ local function render_details(parent,player,quest,p,context,size,view)
       end
     end
   end
-  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
+  -- Individual files lead with their own story, not a repeated chapter
+  -- history block. The broader history lives on the chapter briefing.
   section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
-  section(prose,"chapter-context",
-    {"journal-chapter-story."..quest.chapter},text_width,theme)
+  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
   -- The human accounts are useful where their actual milestone was
   -- completed, not just buried in the Archive's growing collection.
   -- No link or future title is shown before source quest completion.
@@ -902,7 +892,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     style="inside_shallow_frame_with_padding"}
   panel.style.width=width
   panel.style.height=size.body
-  panel.style.padding=15
+  panel.style.padding=12
   local labelline=panel.add{type="flow",direction="horizontal"}
   labelline.style.horizontal_spacing=7
   local over=label(labelline,L("chapter-cover-eyebrow",
@@ -914,9 +904,9 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   heading.style.vertical_align="center"
   icons.sprite(heading,themes.icon(p.chapter),"chapter_seal")
   local cover_title=wrap(heading,{"journal-chapter."..p.chapter},inner-52)
-  cover_title.style.font="default-bold"
+  cover_title.style.font="heading-2"
   cover_title.style.font_color=COLOR.ink
-  accent_rule(panel,theme,math.min(170,inner),3)
+  accent_rule(panel,theme,math.min(112,inner),2)
   local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
   mood.style.font="default-bold"
   mood.style.font_color=theme.soft
@@ -929,7 +919,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   local measure=panel.add{type="progressbar",
     value=chapter.total>0 and chapter.completed/chapter.total or 0}
   measure.style.width=math.min(inner,420)
-  measure.style.height=7
+  measure.style.height=4
   measure.style.color=theme.primary
 
   -- Limited-height outer folio, one scroll pane only. This lets even the
@@ -944,6 +934,8 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     {"journal-chapter-summary."..p.chapter},text_width,theme)
   section(body,"chapter-cover-dispatch",
     {"journal-chapter-dispatch."..p.chapter},text_width,theme)
+  section(body,"chapter-context",
+    {"journal-chapter-story."..p.chapter},text_width,theme)
   dossier_heading(body,"chapter-cover-entries",theme,text_width)
 
   local next_entry
