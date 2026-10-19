@@ -731,9 +731,11 @@ local function render_details(parent,player,quest,p,context,size,view)
   mission_heading.style.font_color=theme.soft
   local mission_space=mission_header.add{type="empty-widget"}
   mission_space.style.horizontally_stretchable=true
-  local count=label(mission_header,L("mission-stage-count",
-    tostring(plan.satisfied),tostring(plan.requirements)))
-  count.style.font_color=COLOR.muted
+  if plan.requirements>0 then
+    local count=label(mission_header,L("mission-stage-count",
+      tostring(plan.satisfied),tostring(plan.requirements)))
+    count.style.font_color=COLOR.muted
+  end
   -- The top line is always the next verifiable action, never a made-up
   -- logistical task. For bosses and deliveries the source owns the result.
   if plan.finished then
@@ -746,6 +748,13 @@ local function render_details(parent,player,quest,p,context,size,view)
       L("mission-step-"..key,step.name)),text_width-28)
     action.style.font="default-bold"
     action.style.font_color=COLOR.ink
+  end
+  if plan.requirements>0 then
+    local readiness=mission.add{type="progressbar",
+      value=plan.satisfied/plan.requirements}
+    readiness.style.width=math.min(245,text_width-34)
+    readiness.style.height=3
+    readiness.style.color=theme.primary
   end
   if plan.disabled and not plan.finished then
     local warning=wrap(mission,L("mission-disabled"),text_width-28)
