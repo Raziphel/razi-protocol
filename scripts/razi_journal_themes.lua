@@ -1,4 +1,5 @@
--- Colors and icons for each Codex chapter.
+-- Chapter accents match the native starmap's identifiable star colors.
+-- Neutral parchment and ink remain constant for readable narrative text.
 -- Use the installed game's sprites, falling back to our route emblem.
 local M={}
 M.themes={
@@ -6,15 +7,15 @@ M.themes={
     icons={"technology/automation","item/automation-science-pack"}},
   solaris={primary={r=1,g=0.48,b=0.23},soft={r=0.94,g=0.65,b=0.42},
     icons={"space-location/sye-solaris","space-location/vulcanus","technology/metallurgic-science-pack"}},
-  nyxaris={primary={r=0.39,g=0.94,b=0.64},soft={r=0.62,g=0.81,b=0.72},
+  nyxaris={primary={r=0.50,g=0.70,b=0.99},soft={r=0.68,g=0.80,b=0.96},
     icons={"space-location/sye-nyxaris","space-location/gleba","technology/agricultural-science-pack"}},
-  vibrant={primary={r=0.43,g=0.72,b=1},soft={r=0.63,g=0.81,b=0.97},
+  vibrant={primary={r=0.71,g=0.58,b=1},soft={r=0.84,g=0.78,b=0.97},
     icons={"space-location/sye-vibrant","space-location/fulgora","technology/electromagnetic-science-pack"}},
-  vespera={primary={r=0.72,g=0.64,b=1},soft={r=0.81,g=0.77,b=0.96},
+  vespera={primary={r=0.91,g=0.87,b=0.74},soft={r=0.88,g=0.85,b=0.78},
     icons={"space-location/sye-vespera","space-location/aquilo","technology/cryogenic-science-pack"}},
-  beetlejuice={primary={r=1,g=0.73,b=0.34},soft={r=0.96,g=0.81,b=0.55},
+  beetlejuice={primary={r=0.50,g=0.83,b=0.54},soft={r=0.72,g=0.86,b=0.74},
     icons={"space-location/sye-beetlejuice","space-location/cubium","technology/production-science-pack"}},
-  umbra={primary={r=1,g=0.42,b=0.56},soft={r=0.94,g=0.7,b=0.77},
+  umbra={primary={r=0.88,g=0.58,b=0.43},soft={r=0.89,g=0.73,b=0.64},
     icons={"space-location/sye-umbra","space-location/tenebris","technology/military-science-pack"}},
   stellar={primary={r=1,g=0.9,b=0.43},soft={r=0.95,g=0.86,b=0.63},
     icons={"technology/slp-dyson-sphere","technology/solar-energy","item/solar-panel"}},

@@ -48,11 +48,14 @@ function M.annotate(route)
   local level_text=lo==hi and localise("quality-stage",tostring(hi))
     or localise("quality-stages",tostring(lo),tostring(hi))
   local hex=quality_levels.route_color_richtext(hi)
-  local additions={field("route",localise("kind-"..kind),220)}
+  -- Show the shared ten-level risk first; native route ownership,
+  -- connection length, and third-party custom fields remain untouched.
+  local additions={}
   if show("danger") then
     additions[#additions+1]=field("danger",
-      {"","[color="..hex.."]",level_text,"[/color]"},221)
+      {"","[color="..hex.."]",level_text,"[/color]"},218)
   end
+  additions[#additions+1]=field("route",localise("kind-"..kind),220)
   if show("sizes") and report.largest~="none" then
     additions[#additions+1]=field("largest",
       localise("size-"..report.largest),223)

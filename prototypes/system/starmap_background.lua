@@ -6,7 +6,8 @@ local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local ATMOSPHERE_SIZE=512
 -- One low-alpha halo per system, each using its existing dedicated
 -- texture instead of six identical copies of a generic atlas ring.
--- Nyxaris is consistently sapphire/cyan, Vibrant stays violet.
+-- Nyxaris is sapphire, Vibrant violet, Vespera ivory, Beetlejuice green.
+-- Journal accents and route sector labels follow these same identities.
 local systems={
   {name="calidus",tint={r=1,g=.87,b=.53},strength=.38,radius=1.50},
   {name="solaris",art="glow-solaris.png",tint={r=1,g=.58,b=.32},strength=.34,radius=1.55},
@@ -86,6 +87,8 @@ end
 local function strength(name,levels)
   return levels[selected(name,"standard")] or 1
 end
+-- Dim the far-field stars slightly so native destinations and route-risk
+-- ribbons keep visual priority, without adding new textures or layers.
 local function add_starfield(layers,cinematic)
   local function tile(row,col,variant,exposure)
     local rgb=sky_colors[variant]
@@ -96,7 +99,7 @@ local function add_starfield(layers,cinematic)
       priority="extra-high-no-scale",flags={"gui-icon"},
       blend_mode="normal",
       tint={r=rgb[1],g=rgb[2],b=rgb[3],
-        a=math.min(1,(cinematic and .88 or .70)*exposure*
+        a=math.min(1,(cinematic and .80 or .62)*exposure*
           strength("razi-map-star-intensity",{dim=.6,standard=1,bright=1.3}))}
     }
   end
@@ -150,7 +153,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       local x,y=anchor(system.name)
       if x and y then
         insert_asset(layers,system.art or "atlas-halo.png",system.radius,
-          x,y,system.tint,(cinematic and .30 or .185)*system.strength*
+          x,y,system.tint,(cinematic and .34 or .21)*system.strength*
             strength("razi-map-halo-intensity",{faint=.5,standard=1,strong=1.45}))
       end
     end
@@ -184,7 +187,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
       }
       for _,p in ipairs(pockets) do
         insert_asset(layers,"atlas-dust-"..p[5]..".png",3.50,p[1],p[2],p[3],
-          (cinematic and .25 or .155)*(p[4] or 1)*
+          (cinematic and .20 or .12)*(p[4] or 1)*
             strength("razi-map-dust-intensity",{faint=.5,standard=1,strong=1.4}))
       end
     end
@@ -201,7 +204,7 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
           -- Keep these delicate fragments beyond inhabited orbital rings.
           insert_asset(layers,"atlas-dust-"..accent[4]..".png",
             1.85,x+accent[2],y+accent[3],WHITE,
-            (cinematic and .13 or .075)*
+            (cinematic and .11 or .06)*
               strength("razi-map-dust-intensity",{faint=.5,standard=1,strong=1.4}))
         end
       end
