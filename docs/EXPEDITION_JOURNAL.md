@@ -21,7 +21,7 @@ The historical implementation notes below are preserved for context, but may des
 
 ---
 
-> **Current UI (October 2026):** The Protocol Codex now has Quests, Projects, and Journal views. Open it with Ctrl+Shift+J. Projects contains Dyson Sphere, Cargo Network, Transceiver, and Convergence. Ctrl+Shift+G opens Projects directly. The separate Galactic Operations window and floating starmap button are retired. Older sections below describe the prior interface.
+> **Current UI (October 2026):** The Expedition Journal has Quests, Projects and Archive. Open it with Ctrl+Shift+J. Projects follows five real undertakings: First Space Platform, First Voyage, Dyson Sphere, Transceiver and Convergence. Research portfolios and the recovery charter remain in their related Journal dossiers.
 
 ## October 2026: Nauvis is now a four-act expedition
 
@@ -90,8 +90,8 @@ folio tab row replaces a wall of competing buttons. The active chapter receives
 the raised panel, while unopened chapters become entries in a compact index.
 
 **Projects** use a project index with restrained existing game art and actual
-stage completion. A separate dossier pane contains native Dyson construction,
-cargo chains, Transceiver state and Convergence deliveries. Small screens use
+stage completion. A separate dossier pane contains native platform accomplishments, Dyson construction,
+Transceiver state and Convergence deliveries. Cargo chains remain reachable through Journal research links. Small screens use
 a two-column selection grid above one scrollable reader. The original physical
 game systems remain authoritative. No new sprite atlas, decorative game tick,
 save migration, research technology or fake power/satellite telemetry is added.
@@ -626,7 +626,7 @@ Muria, Rubia and Aquilo's existing quest dossiers now display the
 required Orbital Catapult source and Razi's existing catapult link setting
 are active. This is **informational**, not a new mandatory objective.
 
-The Cargo Network Project displays a compact Vespera regional overview
+The Cargo Network reference displays a compact Vespera regional overview
 with three route pairs, their actual native discovery-research status,
 industrial use suggestions and source-owned equipment instructions.
 Do not interpret these as live freight connections or claim the source
@@ -661,7 +661,7 @@ undiscovered neighbors, not the underlying native researches.
 
 ## Regional Freight Desk
 
-The Cargo Network Project now contains an interactive **Freight Desk**
+The Cargo Network reference now contains an interactive **Freight Desk**
 beneath the source-backed orbital route overview.
 
 Click the directional buttons of any corridor whose **both endpoint
@@ -742,20 +742,26 @@ clears the user's entire chat, never selectively suppressing
 other mod warnings.
 
 
-## Projects: the real-work dashboard (3.0)
+## Projects: five genuine undertakings (Razi 3.0)
 
-The five original Projects remain inside the Expedition Journal: Dyson Sphere, Interplanetary Logistics, Frontier Recovery, the Transceiver, and the Convergence. Each selected dossier now opens with a concise source-backed **next practical step** and a clear explanation of what its progress bar actually measures. The project index uses specific units, rather than incorrectly calling everything a "stage". Narrow layouts show one or two compact project columns, with an independent scrollable project reader.
+The **Projects** tab is reserved for physical accomplishments, major construction, or the endgame transmission. It is not a collection of ordinary research portfolios. The five dossiers appear in expedition order:
 
-- **Dyson:** counts researched native stellar technologies, never satellite coverage or actual power output. When research is complete, directs the player to construct native satellite, repeater and receiver infrastructure.
-- **Cargo:** counts available researched component technologies, not fictional cargo movements. Ready component research appears before lower-priority blocked options; a finished tech portfolio still needs factories and freight.
-- **Recovery:** counts six source-owned discovery/research milestones, with outstanding workstreams rather than invented delivery requirements. Any link into the Journal must pass the active spoiler rules.
-- **Transceiver:** counts completion only after a **physically activated** K2SO transceiver is detected. A researched but unbuilt or inactive machine is explicitly incomplete.
-- **Convergence:** counts real mandate shipments, with partial deliveries in its existing detailed reader. Five filled mandates do not imply the final transmission/victory has already fired.
+1. **First Space Platform:** Build a genuine Space Age platform hub after launching a starter pack. Research alone or a platform placeholder is not enough. The record remains complete if the platform is later destroyed.
+2. **First Voyage:** Guide a real space platform through at least one completed trip between space locations. The engine-reported completed-trip counter is authoritative; fuel production, a plotted route or an unfinished crossing do not count.
+3. **Dyson Sphere:** Develop the actual Calidus stellar research and construct source-owned satellites, repeaters and energy receivers. The existing research bar measures research only, never an invented percentage of physical construction.
+4. **Transceiver:** Build and activate the original K2SO intergalactic machine. Research alone does not mark the project complete.
+5. **Convergence:** Manufacture and physically deliver all five actual mandates and finish the real Convergence victory transmission. The save continues afterward.
 
-All guidance is derived when the Journal is opened or redrawn; no new polling, progress storage, map generation, source mod state mutation or recipes are added. Existing stage IDs and stored project selection remain unchanged. The main Journal's refresh button invalidates the source receiver snapshot if needed, while the normal redraw rechecks the other project counters. The following checks require a full in-engine Factorio 2.1 run before release: compact-screen layout, selecting objectives with spoiler fog active, transceiver activation, multiplayer force state and the final Convergence transmission.
+### Preserved industrial references
 
-Recovery dashboard performance: native world unlocks are gathered in one technology pass per project snapshot, then reused for the summary and milestone rows. No stored progress or source-mod state is changed.
+**Cargo Network** is now an **Industrial Reference** opened through the existing Codex research links. Its component technologies, production chains, Orbital Catapult integration and interactive freight board are preserved, just no longer misrepresented as a major Project. The embedded scroll panel has a **Return to Projects** button.
 
-The reader now includes brief, non-spoiler-breaking corporate field context. Convergence guidance follows the real synchronization, ignition and receiver prerequisites rather than prompting an impossible shipment.
+**Frontier Recovery** remains an ordinary Athos/Nulla research charter in the existing Journal network chapter. Its original six research/discovery milestones and quest IDs are untouched; it no longer occupies a Projects card. Old direct project links redirect to the corresponding Codex milestones. Old saved project preferences default to **First Space Platform** when pointing to a retired item.
 
-With spoiler fog enabled, the Dyson dossier becomes visible when its first real solar-orbit research is accessible, rather than waiting for the later sphere technology. The Recovery dossier becomes visible after both source worlds (Athos and Nulla) have been discovered, while keeping unknown destinations concealed. The selected reader reuses its computed visible-project list to avoid repeated discovery scans.
+### Correctness and performance
+
+The Space Age 2.1 `LuaForce.platforms` collection exposes real platforms, and each platform's built hub and `completed_trips` count determine the first two achievements. A very small force-level record persists attained milestones through platform destruction, reload and force merges. Event callbacks observe actual platform construction and state changes; the Journal also reconciles existing platforms on initial load, upgrades and opening the view. There is **no global per-tick platform scan**, no new recipes or fabricated objects, and no modifications to base-game platform schedules. An old save where the only historical platform has already been destroyed before Razi is installed cannot prove the lost achievement; the next live built platform or trip is needed.
+
+The first platform is always visible, and First Voyage becomes discoverable once a real platform has been built. The later Dyson, Transceiver and Convergence dossiers continue to obey spoiler-relevant technology prerequisites. Source research and delivery IDs remain unchanged.
+
+Regression source checks: `tests/test_first_platform_projects.py`, `tests/test_journal_projects.py`, `tests/test_journal_visual_polish.py`; Lua fixtures: `tests/lua/test_razi_platform_projects.lua`, `tests/lua/test_razi_project_spoilers.lua`, `tests/lua/test_projects_runtime_require.lua`. Full Factorio 2.1 in-game testing is still required for space-platform events, completed-trip timing, force merges, old saves and responsive GUI.
