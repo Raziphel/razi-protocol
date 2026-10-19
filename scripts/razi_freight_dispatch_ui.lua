@@ -16,7 +16,8 @@ local function name(world)
   return proto and proto.localised_name or world
 end
 function M.render(parent,player,snapshot,width)
-  if not (snapshot.installed and snapshot.enabled) then return end
+  if not snapshot.installed then return end
+  if not snapshot.enabled and orders.saved_count(player)==0 then return end
   local panel=parent.add{type="frame",direction="vertical",
     style="inside_shallow_frame"}
   panel.style.horizontally_stretchable=true
