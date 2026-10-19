@@ -29,8 +29,9 @@ class SettingsHostingTests(unittest.TestCase):
 
     def test_ids_have_no_localized_duplicate(self):
         locale = (ROOT / "locale/en/settings.cfg").read_text(encoding="utf-8")
-        self.assertIn("[mod-name]\\nrazi-protocol=Razi Protocol\\n", locale)
-        names = re.findall(r"^(razi-[\\w-]+)=", locale.split("[mod-setting-name]", 1)[1].split("[string-mod-setting]", 1)[0], re.M)
+        self.assertIn("[mod-name]\nrazi-protocol=Razi Protocol\n", locale)
+        names = re.findall(r"^(razi-[\w-]+)=", locale.split("[mod-setting-name]", 1)[1].split("[string-mod-setting]", 1)[0], re.M)
+        self.assertGreater(len(names), 40)
         self.assertEqual(len(names), len(set(names)))
 
 
