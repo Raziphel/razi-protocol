@@ -25,4 +25,7 @@ if styles then
   styles.razi_journal_callout={
     type="frame_style",parent="inside_shallow_frame",padding=10
   }
+  styles.razi_journal_action_button={
+    type="button_style",parent="button",padding=5
+  }
 end
