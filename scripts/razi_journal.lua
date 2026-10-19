@@ -23,10 +23,12 @@ local L=function(key,...) return {"journal-ui."..key,...} end
 local themes=require("scripts.razi_journal_themes")
 local icons=require("scripts.razi_journal_icons")
 -- A field-manual palette: chapter hues are restrained accents, not the ink.
+-- Midnight Archive: soft parchment, antique brass and spectral teal.
+-- Chapter pigments are used as signposts, never as entire text surfaces.
 local COLOR={
-  ink={r=.94,g=.93,b=.89}, muted={r=.69,g=.73,b=.76},
-  quiet={r=.52,g=.58,b=.63}, green={r=.61,g=.82,b=.69},
-  amber={r=.91,g=.75,b=.52}
+  ink={r=.933,g=.890,b=.808}, muted={r=.72,g=.73,b=.71},
+  quiet={r=.52,g=.58,b=.58}, green={r=.58,g=.80,b=.66},
+  amber={r=.82,g=.69,b=.48}, teal={r=.52,g=.78,b=.76}
 }
 M.chapter_theme=themes.get
 M.chapter_icon=themes.icon
@@ -310,11 +312,11 @@ function M.layout(resolution,scale)
   local width=math.min(1190,math.max(420,screen_w-52))
   local height=math.min(930,math.max(390,screen_h-64))
   local compact=width<1020 or height<660
-  local rail=math.min(compact and 295 or 326,
-    math.max(235,math.floor(width*(compact and .31 or .265))))
+  local rail=math.min(compact and 282 or 302,
+    math.max(228,math.floor(width*(compact and .30 or .255))))
   local reader=width-rail-43
   return {width=width,height=height,rail=rail,reader=reader,
-    body=math.max(200,height-(compact and 215 or 250)),
+    body=math.max(200,height-(compact and 205 or 232)),
     compact=compact}
 end
 local function label(parent,caption)
@@ -1474,11 +1476,11 @@ local function draw(player,focus_search)
   collect_scrolls(frame,saved_scrolls)
   frame.clear()
   frame.style.width=size.width
-  frame.style.padding=12
+  frame.style.padding=10
   local head=frame.add{type="flow",direction="horizontal"}
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
-  head.style.horizontal_spacing=10
+  head.style.horizontal_spacing=8
   icons.sprite(head,themes.icon(chapter_theme),"window_emblem")
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
@@ -1486,21 +1488,22 @@ local function draw(player,focus_search)
   title.style.font="heading-2"
   title.style.font_color=COLOR.ink
   local kicker=tint(label(heading,L("header-eyebrow")),COLOR.muted)
-  kicker.style.font="default-bold"
+  kicker.style.font="default"
   local drag=head.add{type="empty-widget",style="draggable_space_header"}
   drag.style.horizontally_stretchable=true
   drag.style.height=19
   drag.drag_target=frame
-  local refresh=head.add{type="button",caption=L("refresh"),
+  local refresh=head.add{type="button",style="tool_button",
+    caption="↻",tooltip=L("refresh"),
     tags={razi_journal_action="refresh"}}
-  refresh.style.minimal_width=size.compact and 66 or 94
-  local dismiss=head.add{type="button",caption=L("close"),
+  refresh.style.width=30
+  refresh.style.height=30
+  local dismiss=head.add{type="button",style="tool_button",
+    caption="×",tooltip=L("close"),
     tags={razi_journal_action="close"}}
-  dismiss.style.minimal_width=size.compact and 66 or 94
-  if not size.compact then
-    local description=wrap(frame,L("subtitle-short"),size.width-42)
-    description.style.font_color=COLOR.quiet
-  end
+  dismiss.style.width=30
+  dismiss.style.height=30
+  -- The old subtitle restated the masthead and consumed a full screen row.
 
   p.nexus_revision=nexus_revision(context.nexus)
   local view=p.view=="quests" and M.view_status(player.force,context) or nil
@@ -1515,7 +1518,7 @@ local function draw(player,focus_search)
   local totals=frame.add{type="flow",name="razi_journal_overview",direction="vertical"}
   totals.visible=p.view~="systems"
   totals.style.horizontally_stretchable=true
-  totals.style.vertical_spacing=4
+  totals.style.vertical_spacing=2
   local metrics_row=totals.add{type="flow",name="razi_journal_metrics",direction="horizontal"}
   metrics_row.style.horizontally_stretchable=true
   metrics_row.style.vertical_align="center"
@@ -1543,11 +1546,11 @@ local function draw(player,focus_search)
   local overall=meter.add{type="progressbar",name="razi_journal_progress",
     value=total>0 and done/total or 0}
   overall.style.width=math.min(250,math.floor(size.width*.2))
-  overall.style.height=5
+  overall.style.height=3
   overall.style.color=window_theme.primary
 
   local toolbar=frame.add{type="flow",direction="horizontal"}
-  toolbar.style.horizontal_spacing=20
+  toolbar.style.horizontal_spacing=size.compact and 15 or 24
   toolbar.style.vertical_align="bottom"
   -- The three folios use typographic navigation and a slender active rule.
   for _,view in ipairs({"quests","projects","archive","systems"}) do
@@ -1567,6 +1570,9 @@ local function draw(player,focus_search)
       tags={razi_journal_action="next"}}
   end
   local filterbar=frame.add{type="flow",name="razi_journal_filterbar",direction="horizontal"}
+  -- Quest filters now live beside their chapter search, not in a separate
+  -- window-wide toolbar that competes with the four primary folios.
+  filterbar.visible=p.view~="quests"
   filterbar.style.horizontal_spacing=6
   filterbar.style.vertical_align="center"
   if p.view=="archive" then
@@ -1653,8 +1659,7 @@ local function draw(player,focus_search)
       wrap(empty,L("missing-quest"),size.reader-40)
     end
   end
-  local foot=wrap(frame,L("footer-hint"),size.width-38)
-  foot.style.font_color=COLOR.quiet
+  -- No decorative footer: useful space belongs to the dossiers.
   -- Restore only after the complete new GUI tree has been assembled.
   restore_scrolls(frame,saved_scrolls,reveal_on_redraw)
 end
