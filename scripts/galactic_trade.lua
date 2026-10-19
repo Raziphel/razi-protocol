@@ -3,8 +3,7 @@
 local M={}
 local catalog=require("scripts.galactic_trade_catalog")
 local portfolio=require("scripts.razi_industry_portfolio")
-local catapults=require("scripts.razi_catapult_network")
-local freight_board=require("scripts.razi_freight_dispatch_ui")
+local command=require("scripts.razi_logistics_command")
 local signals=require("prototypes.compat.aai_signal_partnerships")
 local icons=require("scripts.razi_journal_icons")
 local function L(key,...) return {"razi-ops."..key,...} end
@@ -452,59 +451,7 @@ local function signal_network(parent,player,width)
   codex_link(frame,name,L("trade-signal-codex"))
 end
 
--- Only the upstream link declaration and actual native discovery research
--- appear here. This is NOT a throughput monitor, shipment log or unlock.
-local function catapult_dossier(parent,player,width)
-  local state=catapults.snapshot(player.force)
-  if not state.installed then return end
-  local card=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
-  card.style.horizontally_stretchable=true
-  card.style.padding=9
-  heading(card,L("catapult-network-heading"),width-44)
-  wrap(card,L("catapult-network-intro"),width-44)
-  if not state.enabled then
-    wrap(card,L("catapult-network-disabled"),width-44)
-    -- Show the read-only board when saved orders need cleanup, even
-    -- after both Razi corridor switches have been disabled.
-    freight_board.render(card,player,state,width)
-    return
-  end
-  if #state.entries==0 then
-    wrap(card,L(state.concealed>0
-      and "catapult-network-unrevealed" or "catapult-network-none"),width-44)
-  end
-  local current_region=nil
-  for _,entry in ipairs(state.entries) do
-    if entry.region and entry.region~=current_region then
-      current_region=entry.region
-      heading(card,L("catapult-network-region",
-        world_title(entry.region)),width-44)
-    end
-    local line=card.add{type="flow",direction="vertical"}
-    line.style.vertical_spacing=3
-    local names=wrap(line,L("catapult-network-pair",
-      world_title(entry.source),world_title(entry.target)),width-48)
-    names.style.font="default-bold"
-    names.style.font_color={r=.69,g=.82,b=.87}
-    if entry.purpose then
-      local note=wrap(line,L("catapult-network-purpose-"..entry.purpose),width-48)
-      note.style.font_color={r=.72,g=.77,b=.81}
-    end
-    local status=wrap(line,L(entry.state=="researched"
-      and "catapult-network-surveyed" or "catapult-network-research"),width-48)
-    status.style.font_color=entry.state=="researched"
-      and {r=.53,g=.82,b=.67} or {r=.96,g=.74,b=.48}
-  end
-  if state.concealed>0 then
-    wrap(card,L("catapult-network-unrevealed"),width-44)
-  end
-  wrap(card,L("catapult-network-build"),width-44)
-  wrap(card,L("catapult-network-safety"),width-44)
-  freight_board.render(card,player,state,width)
-end
-
-function M.render(parent,player,p,options)
+function M.render_industry(parent,player,p,options)
   p=p or {}
   options=options or {}
   local size=layout(player,options.width)
@@ -585,7 +532,6 @@ function M.render(parent,player,p,options)
     scroll.horizontal_scroll_policy="never"
     scroll.style.height=size.scroll
   end
-  catapult_dossier(scroll,player,size.width)
   heading(scroll,L("trade-components"),size.width-20)
   if #network.parts==0 then
     wrap(scroll,L("trade-no-components"),size.width-30)
@@ -613,5 +559,50 @@ function M.render(parent,player,p,options)
     local state=catalog.state(fleet.research)
     blockers(setup,state,size.width-45)
   end
+end
+
+-- The journal keeps one scroll pane and switches its DOCUMENT CONTENT.
+-- Factory catalogs and optional manufacturing checks only run on Industry.
+local logistics_tabs={"overview","routes","freight","industry"}
+local logistics_valid={overview=true,routes=true,freight=true,industry=true}
+function M.render(parent,player,p,options)
+  p=p or {}
+  options=options or {}
+  local current=logistics_valid[p.logistics_tab] and p.logistics_tab
+    or "overview"
+  p.logistics_tab=current
+  local width=layout(player,options.width).width
+  local header=parent.add{type="flow",direction="vertical"}
+  header.style.vertical_spacing=3
+  header.style.horizontally_stretchable=true
+  local eyebrow=label(header,L("logistics-command-eyebrow"))
+  eyebrow.style.font_color={r=.62,g=.75,b=.74}
+  local title=label(header,L("logistics-command-heading"),"heading-2")
+  title.style.font_color={r=.91,g=.87,b=.79}
+  local tabs=parent.add{type="flow",direction=width<520
+    and "vertical" or "horizontal"}
+  tabs.style.vertical_spacing=5
+  tabs.style.horizontal_spacing=width<720 and 5 or 12
+  for _,tab in ipairs(logistics_tabs) do
+    local active=tab==current
+    local button=tabs.add{type="button",
+      caption=L("logistics-tab-"..tab),
+      tags={razi_ops_action="logistics-tab",value=tab}}
+    button.style.font=active and "default-bold" or "default"
+    button.style.font_color=active
+      and {r=.88,g=.73,b=.48} or {r=.70,g=.77,b=.76}
+    button.style.minimal_width=width<700 and 75 or 105
+  end
+  -- The parent Journal owns scrolling and remembers one offset per tab.
+  if current=="industry" then
+    return M.render_industry(parent,player,p,options)
+  end
+  if current=="routes" then
+    return command.routes(parent,player,width)
+  end
+  if current=="freight" then
+    return command.freight(parent,player,width)
+  end
+  return command.overview(parent,player,width,M.summary(player.force))
 end
 return M
