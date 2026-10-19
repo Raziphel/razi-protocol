@@ -83,7 +83,7 @@ local function add_label(parent,name,caption,color,width)
 end
 local function card(root,id,title,description,width,accent)
   local panel=root.add{type="frame",name=id,direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_callout"}
   panel.style.width=width
   panel.style.padding=10
   local header=add_label(panel,nil,L(title),COLOR.ink,width-32)
