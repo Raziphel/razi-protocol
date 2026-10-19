@@ -99,7 +99,17 @@ function M.array(force)
     end
   end
   table.sort(sites,function(a,b)return a.system<b.system end)
+  -- Only genuine powered relays release each archive fragment. Once
+  -- recovered, its historical text persists even if a relay is dismantled.
+  local saved=store(force)
+  if saved then saved.archive_recovered=math.max(
+    saved.archive_recovered or 0,math.min(3,#sites)) end
   return #sites,3,sites
+end
+function M.recovered(force)
+  local all=storage and storage.razi_great_projects
+  local record=all and force and all[force.index]
+  return record and record.archive_recovered or 0
 end
 local function lanes(force)
   return catapult.snapshot(force)
@@ -298,6 +308,8 @@ function M.forces_merged(event)
   for id,done in pairs(source.belts or {}) do
     if done then target.belts[id]=true end
   end
+  target.archive_recovered=math.max(target.archive_recovered or 0,
+    source.archive_recovered or 0)
   if source.ark and not target.ark then
     target.ark=true
     target.ark_name=source.ark_name
