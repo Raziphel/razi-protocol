@@ -172,13 +172,14 @@ function M.render(parent,player,p,width)
   editor.style.horizontally_stretchable=true
   editor.style.padding=8
   wrap(editor,L("supply-factory-heading"),width-36,true,GOLD)
+  local item_names={}
+  for _,row in ipairs(options) do
+    item_names[#item_names+1]=row.recipe.localised_name
+  end
   local select=editor.add{type="drop-down",
-    items={},selected_index=index,
+    items=item_names,selected_index=index,
     tags={razi_ops_action="supply-recipe"}}
   select.style.minimal_width=math.max(175,math.min(width-80,420))
-  for _,row in ipairs(options) do
-    select.add_item(row.recipe.localised_name)
-  end
   wrap(editor,L("supply-factory-destination",name(current.site)),width-36)
   local researched=current.technology and current.technology.researched
   wrap(editor,L(researched and "supply-research-ready"
