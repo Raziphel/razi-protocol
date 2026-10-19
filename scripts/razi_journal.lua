@@ -2414,6 +2414,7 @@ function M.gui_click(event)
       if not (type(index)=="number" and index==math.floor(index)
         and index>=1 and index<=#options) then return end
       p.supply_path=index
+      p.supply_path_key=options[index].key
     elseif p.project=="cargo" and p.logistics_tab=="supply"
       and native=="supply-itinerary-save-all" then
       if not multihop.save(player,p,nil) then
@@ -2841,6 +2842,7 @@ function M.selection_changed(event)
     p.supply_route=nil
     p.supply_origin=nil
     p.supply_path=1
+    p.supply_path_key=nil
     draw(player)
     return
   end
@@ -2858,6 +2860,7 @@ function M.selection_changed(event)
     if not world then return end
     p.supply_origin=world
     p.supply_path=1
+    p.supply_path_key=nil
     draw(player)
     return
   end
