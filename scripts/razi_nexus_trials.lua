@@ -2,11 +2,17 @@
 -- Its remote snapshot is provided by the boss mod. One call per Journal view,
 -- no polling, no boss entity scanning, and no mutation of the source's state.
 local M={}
-M.order={
-  "arachnid-queen","watcher","rogue-spidertron",
-  "twin-maws","colossus","plague-hulk",
-  "storm-guardian","devourer","last-commander"
+M.circles={
+  {id="whisper",bosses={"arachnid-queen","watcher","rogue-spidertron"}},
+  {id="chorus",bosses={"twin-maws","colossus","plague-hulk"}},
+  {id="convergence",bosses={"storm-guardian","devourer","last-commander"}}
 }
+M.order={}
+for _,circle in ipairs(M.circles) do
+  for _,id in ipairs(circle.bosses) do
+    M.order[#M.order+1]=id
+  end
+end
 function M.snapshot(force)
   if not (force and remote and remote.interfaces
     and remote.interfaces["nexus-bosses"]
@@ -15,6 +21,7 @@ function M.snapshot(force)
   if not ok or type(snapshot)~="table"
     or type(snapshot.defeated)~="table" then return nil end
   local defeated=snapshot.defeated[force.name] or {}
+  if type(defeated)~="table" then return nil end
   local count=0
   for _,id in ipairs(M.order) do
     if defeated[id]==true then count=count+1 end
