@@ -19,7 +19,7 @@ def read(path):
     return (ROOT / path).read_text(encoding="utf-8")
 
 def triples(text):
-    return tuple(float(n) for n in re.findall("[0-9]+(?:[.][0-9]+)?", text))
+    return tuple(float(n) for n in re.findall("[.][0-9]+|[0-9]+(?:[.][0-9]+)?", text))
 
 class StarmapIdentityTests(unittest.TestCase):
     def test_system_color_matches_english_and_russian_briefings(self):
