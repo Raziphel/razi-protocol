@@ -619,7 +619,7 @@ local function project_entry(parent,player,p,id,width,index,statuses)
 end
 local function project_reader(parent,player,p,size,width,compact,statuses,displayed,reader_override)
   local reader=parent.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_paper"}
   reader.style.width=width
   local reader_height=reader_override or (compact
     and math.max(175,size.body-175) or size.body)
@@ -694,7 +694,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   -- Project advice belongs at the top of the dossier's own scroll area,
   -- leaving the narrow-screen reader free to show its real details.
   local next=content.add{type="frame",direction="vertical",
-    style="inside_shallow_frame"}
+    style="razi_journal_callout"}
   next.style.width=math.max(120,width-72)
   next.style.padding=10
   -- FrameStyle has no vertical_spacing: spacing belongs to a nested Flow.
@@ -830,7 +830,7 @@ function M.render(parent,player,p,size)
       math.max(170,size.body-selector_height-42))
   else
     local rail=parent.add{type="frame",direction="vertical",
-      style="inside_shallow_frame"}
+      style="razi_journal_index"}
     rail.style.width=size.rail
     rail.style.height=size.body
     rail.style.padding=10
