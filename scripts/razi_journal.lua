@@ -2352,6 +2352,10 @@ function M.gui_click(event)
       if not freight_orders.update(player,tags.value,"packed") then return end
     elseif p.project=="cargo" and native=="freight-remove" then
       if not freight_orders.update(player,tags.value,"remove") then return end
+    elseif p.project=="cargo" and native=="freight-up" then
+      if not freight_orders.update(player,tags.value,"up") then return end
+    elseif p.project=="cargo" and native=="freight-down" then
+      if not freight_orders.update(player,tags.value,"down") then return end
     elseif p.project=="cargo" and native=="freight-clear" then
       freight_orders.clear(player)
     elseif native=="cargo-focus" and p.project=="cargo" then
