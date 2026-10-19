@@ -1,6 +1,8 @@
--- Optional early-loading companion owns these same setting IDs when installed.
--- Keep this fallback so Razi Protocol works normally without the companion.
-if mods["00-razi-protocol-settings"] then return end
+-- 00-razi-protocol-settings retains priority when explicitly installed.
+-- RAZI Library may import these prototypes early and host only startup ones.
+-- Runtime settings MUST remain owned by Razi Protocol for writable values.
+local exporting = rawget(_G, "__razi_lib_settings_export") == true
+if not exporting and mods["00-razi-protocol-settings"] then return end
 
 -- Settings use localized section labels and stable intra-mod order keys.
 -- The native settings GUI sorts by MOD before comparing these keys.
@@ -18,7 +20,7 @@ local function startup_toggle(name, order)
   }
 end
 
-data:extend({
+local declared_settings = {
   -- One shared save setting controls research spoiler fog and the Journal.
   -- Runtime-global allows multiplayer forces to agree on research visibility
   -- and can be toggled without restarting or changing prototype IDs.
@@ -226,4 +228,21 @@ data:extend({
   {type="string-setting",name="razi-map-halo-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-g[halos]"},
   {type="string-setting",name="razi-map-belt-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-h[belt]"},
   {type="string-setting",name="razi-map-dust-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-i[dust]"}
-})
+}
+
+-- Exporting returns raw prototypes without registering them under this mod.
+-- RAZI Library imports and registers startup prototypes in its own phase.
+if exporting then return declared_settings end
+
+-- The library only marks hosting after it has successfully extended the
+-- startup prototypes. Fall back to the native section if the import failed
+-- or the user is running an older RAZI Library.
+local hosted = rawget(_G, "__razi_lib_settings_hosted")
+local library_owns_startup = type(hosted) == "table" and hosted["razi-protocol"] == true
+local own_settings = {}
+for _, spec in ipairs(declared_settings) do
+  if not library_owns_startup or spec.setting_type ~= "startup" then
+    own_settings[#own_settings + 1] = spec
+  end
+end
+if #own_settings > 0 then data:extend(own_settings) end
