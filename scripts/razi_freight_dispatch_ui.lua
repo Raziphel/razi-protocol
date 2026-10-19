@@ -80,8 +80,14 @@ function M.render(parent,player,snapshot,width)
     line(panel,L("freight-board-pick-route"),width-44)
   end
   local listed=orders.orders(player)
+  local readiness=orders.readiness(player,listed)
   local total=orders.saved_count(player)
   if total>0 then
+    local status=line(panel,L("freight-board-readiness",
+      tostring(readiness.ready),tostring(readiness.short),
+      tostring(readiness.remote),tostring(readiness.packed)),width-44)
+    status.style.font_color={r=.74,g=.82,b=.82}
+    line(panel,L("freight-board-readiness-caution"),width-44)
     local header=panel.add{type="flow",direction="horizontal"}
     header.style.vertical_align="center"
     header.style.horizontal_spacing=8
@@ -89,9 +95,18 @@ function M.render(parent,player,snapshot,width)
     title.style.font="default-bold"
     header.add{type="button",caption=L("freight-board-clear"),
       tags={razi_ops_action="freight-clear"}}
-    if total>#listed then
+    local hidden=orders.unavailable(player)
+    if #hidden>0 then
       line(panel,L("freight-board-unavailable",
-        tostring(total-#listed)),width-44)
+        tostring(#hidden)),width-44)
+      for _,entry in ipairs(hidden) do
+        local concealed=panel.add{type="flow",direction="horizontal"}
+        concealed.style.vertical_align="center"
+        line(concealed,L("freight-board-hidden-plan"),math.max(110,width-190))
+        concealed.add{type="button",
+          caption=L("freight-board-remove"),
+          tags={razi_ops_action="freight-remove",value=entry.id}}
+      end
     end
   end
   for _,entry in ipairs(listed) do
@@ -106,7 +121,7 @@ function M.render(parent,player,snapshot,width)
       tostring(entry.stacks or "?"),
       L(entry.packed and "freight-board-packed"
         or "freight-board-planned")),math.max(135,
-      width<680 and width-52 or width-260))
+      width<680 and width-52 or width-326))
     description.style.font_color=entry.packed
       and {r=.55,g=.84,b=.70} or {r=.72,g=.78,b=.82}
     -- Real inventory state is local to this player. It is not a
@@ -118,6 +133,27 @@ function M.render(parent,player,snapshot,width)
       note.style.font_color=carried>=entry.count
         and {r=.55,g=.84,b=.70} or {r=.72,g=.78,b=.82}
     end
+    if entry.load_state=="ready" then
+      local note=line(panel,L("freight-board-load-ready"),width-48)
+      note.style.font_color={r=.55,g=.84,b=.70}
+    elseif entry.load_state=="short" then
+      local note=line(panel,L("freight-board-load-short",
+        tostring(entry.shortfall)),width-48)
+      note.style.font_color={r=.86,g=.73,b=.49}
+    elseif entry.load_state=="remote" then
+      line(panel,L("freight-board-load-remote",
+        name(entry.route.source)),width-48)
+    elseif entry.load_state=="packed" then
+      line(panel,L("freight-board-load-packed"),width-48)
+    else
+      line(panel,L("freight-board-load-unknown"),width-48)
+    end
+    container.add{type="button",caption="↑",
+      tooltip=L("freight-board-move-up"),
+      tags={razi_ops_action="freight-up",value=entry.id}}
+    container.add{type="button",caption="↓",
+      tooltip=L("freight-board-move-down"),
+      tags={razi_ops_action="freight-down",value=entry.id}}
     container.add{type="button",
       caption=L(entry.packed and "freight-board-undo"
         or "freight-board-pack"),
