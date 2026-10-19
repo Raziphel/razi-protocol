@@ -44,10 +44,20 @@ local function candidate(owner,route,mode,scope)
   if not a or not b then return nil end
   local span=sqrt((a.x-b.x)^2+(a.y-b.y)^2)
   if span<2.5 or span>1800 then return nil end
+  local belt=hz.is_belt_crossing(route)
+  -- Nearby transfers still have a native route and the 1-10 tooltip.
+  -- Painting a full-width coloured line through two adjacent icons made
+  -- little moons and the Shattered Approach look like giant corridors.
+  -- Genuine hazardous belt crossings are ALWAYS painted.
+  if span<10 and not belt then return nil end
   if scope=="major" and not owner.is_major(route,a,b) then return nil end
   local sample,length=owner.route_path(route,a,b)
   if not sample or length<2.5 then return nil end
-  local trim=math.min(1.1,length*.10)
+  -- Give planet labels and circular destination markers breathing room.
+  -- Preserve the shorter trim on actual belt crossings so the dangerous
+  -- passage remains visible right up to both surveyed rim markers.
+  local trim=belt and math.min(1.1,length*.10)
+    or math.min(math.max(1.8,length*.055),3.5,length*.20)
   local covered=length-2*trim
   if covered<=0 then return nil end
   local cost=compact()

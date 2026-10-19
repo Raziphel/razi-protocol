@@ -1,3 +1,17 @@
+## Razi 3.0 phase 2: local-transfer clarity
+
+Transfers whose displayed markers are under 10 chart units apart now keep
+Factorio's original native space-connection line, hover data, travel distance,
+asteroid simulation and 1-10 difficulty tooltip, but omit the extra coloured
+ribbon. This particularly helps the 5-unit Shattered Planet Approach -> real
+Shattered Planet hop (1,000 km) read as a short local transfer. Actual belt
+crossings are explicitly exempt and always show their hazardous ribbon.
+
+The longer route ribbons now end 1.8-3.5 chart units short of their endpoints
+(depending on length) to leave planet markers and labels clear. Belt ribbons
+keep the earlier smaller endpoint gap. No native routes, path curves, technology,
+hazards or route lengths were changed.
+
 ## 2.1.101: one asteroid difficulty scale, not two
 
 **Only the 10-level quality/danger ladder is a difficulty rating.**

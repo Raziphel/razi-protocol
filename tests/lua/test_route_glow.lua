@@ -36,6 +36,15 @@ check(#m.strokes_for_connection(huge,"danger","all")>5,
  "Severe route must have real colored geometry")
 check(#m.strokes_for_connection(belt,"danger","major")>=2,
  "Belt crossing must visibly be a colored line through its own field")
+-- Five chart units is a local hop, not a thick interstellar highway.
+-- The original native route (and its tooltip) remain untouched.
+raw.planet.near={distance=15,orientation=.25}
+local near={from="a",to="near",shape="line",
+  length=1000,asteroid_spawn_definitions={}}
+check(#m.strokes_for_connection(near,"danger","all")==0,
+ "A 1,000 km local hop should keep its native line without extra ribbons")
+check(#m.strokes_for_connection(belt,"danger","all")>=2,
+ "A nearby belt crossing must not lose its critical hazard marker")
 local ribbons=m.strokes_for_connection(safe,"danger","all")
 local first=ribbons[1]
 local ribbon_module=require("prototypes.system.route_ribbons")

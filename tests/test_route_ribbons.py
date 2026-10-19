@@ -103,6 +103,13 @@ class RouteRibbonTests(unittest.TestCase):
         self.assertIn("math.min(1,.96+.004*grade)",renderer)
         self.assertIn("shift={(a.x+b.x)*16,(a.y+b.y)*16}",renderer)
 
+    def test_short_native_transfers_keep_their_hover_route_not_a_color_bar(self):
+        module=(ROOT/"prototypes/system/route_ribbons.lua").read_text()
+        self.assertIn("if span<10 and not belt then return nil end",module)
+        self.assertIn("local belt=hz.is_belt_crossing(route)",module)
+        self.assertIn("math.min(math.max(1.8,length*.055),3.5,length*.20)",module)
+        self.assertIn("belt and math.min(1.1,length*.10)",module)
+
     def test_native_geometry_and_budget(self):
         module=(ROOT/"prototypes/system/route_ribbons.lua").read_text()
         owner=(ROOT/"prototypes/system/route_highlights.lua").read_text()

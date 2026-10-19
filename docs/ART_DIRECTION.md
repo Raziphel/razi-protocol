@@ -14,6 +14,14 @@ The detailed implementation log below is historical and should be checked agains
 
 ---
 
+## Phase 2 navigation clarity (October 2026)
+
+Keep local transfers legible as short **native** lines; do not paint extra
+colored atlas strokes between markers closer than 10 map units. Physical
+debris-belt crossings remain the exception because their hazards must stand
+out. On long journeys, stop extra tinted strokes short of destination icons.
+This is only an overlay decision; do not modify actual connection prototypes.
+
 ## Starmap overlay: continuous, subdued hazard corridors (October 2026)
 
 Inspired by the documented behavior and screenshots of valent125's
