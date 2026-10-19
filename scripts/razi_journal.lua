@@ -1331,6 +1331,7 @@ local function render_archive(parent,player,p,context,size)
   -- Recovered RAZI Archive Array signals are separate from the original
   -- 59 corporate records. Their three physical unlocks never inflate the
   -- source-research archive totals or expose a future signal title.
+  great_projects.array(player.force)
   local array_count=great_projects.recovered(player.force)
   if array_count>0 then
     local array_label=label(collection,L("archive-array-heading"))
