@@ -56,6 +56,14 @@ package.loaded["scripts.razi_freight_orders"]={
  add_spec=function(_,rid,item,amount)
   added[#added+1]={route=rid,item=item,count=amount}
   return true
+ end,
+ add_many=function(_,rid,specs)
+  check(rid==route_id and #specs==2,
+    "Bulk planning must select only two deterministic item inputs")
+  for _,spec in ipairs(specs) do
+   added[#added+1]={route=rid,item=spec.item,count=spec.count}
+  end
+  return true
  end}
 local planner=require("scripts.razi_supply_planner")
 check(planner.batches("3")==3 and planner.batches("0")==nil
@@ -88,6 +96,15 @@ check(planner.plan(player,id,route_id,"iron-plate",3),
 check(#added==1 and added[1].count==18
  and added[1].route==route_id and added[1].item=="iron-plate",
  "Created freight plan must contain exact source ingredient quantity")
+check(#planner.outputs({products={{name="machine",type="item",amount=2},
+ {name="waste",type="item",amount=1,probability=.5}}},3)==1,
+ "Recipe outputs must exclude probabilistic product claims")
+check(planner.plan_all(player,id,route_id,3),
+ "All eligible deterministic item ingredients should stage together")
+check(#added==3 and added[2].item=="copper-plate"
+ and added[2].count==9 and added[3].item=="iron-plate"
+ and added[3].count==18,
+ "Bulk order counts must retain the exact native input quantities")
 check(not planner.plan(player,id,"razi-cheat-castra-catapult","iron-plate",3)
  and not planner.plan(player,id,route_id,"lubricant",3)
  and not planner.plan(player,id,route_id,"probability-token",3)
@@ -108,7 +125,7 @@ check(#planner.inbound(force,"castra")==0
  and not planner.plan(player,id,route_id,"iron-plate",3),
  "Disabled routes must not produce manual orders")
 enabled=true
-check(#added==1,"Failed actions must not mutate the freight board")
+check(#added==3,"Failed actions must not mutate the freight board")
 
 -- The small Journal renderer keeps a real drop-down, batch input and
 -- source options and uses existing action tags instead of remote transport.
@@ -137,6 +154,6 @@ for _,obj in ipairs(rendered) do
 end
 check(actions["supply-recipe"] and actions["supply-batches"]
  and actions["supply-plan"] and actions["supply-route"]
- and actions["supply-freight"],
+ and actions["supply-freight"] and actions["supply-plan-all"],
  "All Supply view native selectors and planning actions must be interactive")
 print("Razi A.5 real recipe imports, provenance and quantity guards passed")
