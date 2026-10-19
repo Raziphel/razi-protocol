@@ -21,7 +21,7 @@ class ProjectsTests(unittest.TestCase):
         self.assertIn('trade.render(content,player,p,{embedded=true,width=size.width-83})',projects)
         self.assertIn('convergence.render(content,player,options)',projects)
         self.assertIn('platform_reader(content,player,width-68,p.project,current)',projects)
-        self.assertIn('local ids={"platform","voyage","dyson","transceiver","convergence"}',projects)
+        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}',projects)
         self.assertNotIn('local ids={"dyson","cargo","recovery","transceiver","convergence"}',projects)
         self.assertIn('convergence.deliver(player,tags.value)',ui)
         self.assertIn('projects.valid_cargo(player.force,chain,target)',ui)

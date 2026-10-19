@@ -106,7 +106,7 @@ class VisualPolishTests(unittest.TestCase):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")
         locale=load_journal_locale(ROOT)
-        self.assertIn('local ids={"platform","voyage","dyson","transceiver","convergence"}',
+        self.assertIn('local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","ark","convergence"}',
                       projects)
         self.assertIn('icons.button(head,art_for(id,player.force,statuses),"project_button"',
                       projects)
@@ -124,7 +124,9 @@ class VisualPolishTests(unittest.TestCase):
         self.assertNotIn('create_surface(',projects)
         for key in ("projects-heading","project-dossier","project-progress",
                     "project-caption-dyson","project-caption-platform",
-                    "project-caption-voyage","project-caption-transceiver",
+                    "project-caption-voyage","project-caption-skybridge",
+                    "project-caption-beltbreaker","project-caption-array",
+                    "project-caption-ark","project-caption-transceiver",
                     "project-caption-convergence"):
             self.assertRegex(locale,rf"(?m)^{key}=")
 if __name__=="__main__":
