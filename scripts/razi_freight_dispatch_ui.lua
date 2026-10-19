@@ -4,6 +4,7 @@
 local M={}
 local orders=require("scripts.razi_freight_orders")
 local infrastructure=require("scripts.razi_freight_infrastructure")
+local pod_receipts=require("scripts.razi_freight_receipts")
 local function L(key,...) return {"razi-ops."..key,...} end
 local function line(parent,caption,width)
   local label=parent.add{type="label",caption=caption}
@@ -63,6 +64,7 @@ function M.render(parent,player,snapshot,width)
   local data=orders.store(player.index)
   -- At most one read per discovered world for this explicit Journal render.
   local observed=infrastructure.snapshot(player.force,snapshot)
+  local delivered=pod_receipts.snapshot(player.force,snapshot)
   if snapshot.visible==0 then
     line(panel,L("freight-board-undiscovered"),width-44)
     -- Even fully concealed or temporarily disabled routes must not leave
@@ -110,6 +112,11 @@ function M.render(parent,player,snapshot,width)
       name(selected.source),name(selected.target)),width-44)
     selected_line.style.font="default-bold"
     render_infrastructure(panel,selected,observed,width)
+    local first=delivered.worlds[selected.source] or 0
+    local second=delivered.worlds[selected.target] or 0
+    line(panel,L("freight-pod-route-evidence",
+      name(selected.source),tostring(first),
+      name(selected.target),tostring(second)),width-44)
     local editor=panel.add{type="flow",direction="horizontal"}
     editor.style.vertical_align="center"
     editor.style.horizontal_spacing=8
@@ -221,6 +228,22 @@ function M.render(parent,player,snapshot,width)
     container.add{type="button",caption=L("freight-board-remove"),
       tags={razi_ops_action="freight-remove",value=entry.id}}
   end
+  -- Engine-confirmed events are displayed separately from the manual
+  -- catapult plans. They prove neither the sender nor any shipment quantity.
+  local header=line(panel,L("freight-pod-ledger-heading"),width-44)
+  header.style.font="default-bold"
+  header.style.font_color={r=.86,g=.73,b=.49}
+  line(panel,L("freight-pod-ledger-summary",
+    tostring(delivered.total)),width-44)
+  if #delivered.recent==0 then
+    line(panel,L("freight-pod-ledger-empty"),width-44)
+  else
+    for _,receipt in ipairs(delivered.recent) do
+      line(panel,L("freight-pod-ledger-row",
+        name(receipt.world),tostring(receipt.tick)),width-44)
+    end
+  end
+  line(panel,L("freight-pod-ledger-caution"),width-44)
   line(panel,L("freight-board-manual"),width-44)
 end
 return M
