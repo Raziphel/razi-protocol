@@ -2,7 +2,8 @@
 local M = {}
 local function preference(name,default)
   local item=settings and settings.startup and settings.startup[name]
-  return item and item.value or default
+  if item==nil or item.value==nil then return default end
+  return item.value
 end
 local function asteroid_factor()
   local name=preference("razi-asteroid-population","standard")
@@ -134,11 +135,25 @@ local function add_belt_size_encounters(definitions, profile)
   if not wanted then return end
   local asteroid_entities = data and data.raw and data.raw["asteroid"] or {}
   local found = {}
-  for _, def in ipairs(definitions) do found[def.asteroid] = true end
+  local factor = belt_factor()
+  for index, def in ipairs(definitions) do
+    found[def.asteroid] = true
+    -- Big and huge asteroids the preset already carries follow the same setting.
+    local size = vanilla_sizes[def.asteroid]
+    if factor ~= 1 and (size == "big" or size == "huge") then
+      local scaled = copy(def)
+      for _, point in ipairs(scaled.spawn_points or {}) do
+        if type(point.probability) == "number" then
+          point.probability = point.probability * factor
+        end
+      end
+      definitions[index] = scaled
+    end
+  end
   for _, family in ipairs({"metallic","carbonic","oxide"}) do
     for _, size in ipairs({"big","huge"}) do
       local name = size.."-"..family.."-asteroid"
-      local chance = wanted[size] and wanted[size]*belt_factor()
+      local chance = wanted[size] and wanted[size]*factor
       if chance and asteroid_entities[name] and not found[name] then
         definitions[#definitions+1] = {
           type="entity", asteroid=name,

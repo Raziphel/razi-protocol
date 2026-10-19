@@ -59,6 +59,9 @@ if starmap_star and starmap_star.layers then
 	end
 end
 
+-- Vibrant's belt rims sit on the western edge of the system; place them before the layout reads the orbits.
+require("prototypes.system.asteroid_belt_integration").data_final_fixes()
+
 -- Star map layout: six systems around Calidus, Deep Space to the north. Visual only (orbits, origins, ring drawing);
 -- routes and unlocks are not touched. Nothing after this moves an orbit.
 require("prototypes.system.galaxy_layout").data_final_fixes()
@@ -94,6 +97,10 @@ end
 -- Native moon links, the original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.system.route_authority").data_final_fixes()
+
+-- Harvest-rich native asteroid belts get final spawn curves only after the approved crossings
+-- and route IDs have been reconciled.
+require("prototypes.system.belt_expeditions").data_final_fixes()
 
 -- Imersite-Asteroids' belt on routes to Aquilo: after the last route deletion.
 require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()

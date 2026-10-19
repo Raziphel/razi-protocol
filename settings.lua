@@ -37,6 +37,36 @@ data:extend({
 	},
 	{
 		type = "string-setting",
+		name = "razi-belt-threats",
+		setting_type = "startup",
+		default_value = "standard",
+		allowed_values = {"relaxed", "standard", "severe"},
+		order = "aa[worlds]-e[belt-threats]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-belt-resource-richness",
+		setting_type = "startup",
+		default_value = "standard",
+		allowed_values = {"scarce", "standard", "rich"},
+		order = "aa[worlds]-f[belt-ore-richness]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-belt-midsection-salvage",
+		setting_type = "startup",
+		default_value = true,
+		order = "aa[worlds]-g[belt-midsection-salvage]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-belt-edge-harvesting",
+		setting_type = "startup",
+		default_value = true,
+		order = "aa[worlds]-h[belt-edge-harvesting]"
+	},
+	{
+		type = "string-setting",
 		name = "razi-starmap-orbit-density",
 		setting_type = "startup",
 		default_value = "full",
