@@ -12,7 +12,7 @@ for _,entry in ipairs({{"off",false},{"balanced",true},{"deep",true}}) do
   check(mode.current()==(entry[1]=="off" and "off" or "balanced"),"Wrong startup mode")
   check(mode.enabled()==entry[2],"Off must suppress elective research")
 end
-settings.startup["razi-planetary-interdependence"].value="invalid"
+settings.startup["razi-planetary-interdependence"].value="invalid" -- luacheck: ignore 122
 check(mode.current()=="balanced","Unknown saved value should fail safe")
 rawset(_G,"settings",nil)
 

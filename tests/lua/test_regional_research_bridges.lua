@@ -47,7 +47,7 @@ module.data_final_fixes()
 assertok(not parent("planet-discovery-corrundum",
   "planet-discovery-apia-carnova"),
   "Off mode must not silently add regional bridge prerequisites")
-settings.startup["razi-planetary-interdependence"]={value="balanced"}
+settings.startup["razi-planetary-interdependence"]={value="balanced"} -- luacheck: ignore 122
 module.data_final_fixes()
 for _,edge in ipairs(module.bridges) do
  assertok(parent(edge[1],edge[2]),"Missing native cross-system edge")
