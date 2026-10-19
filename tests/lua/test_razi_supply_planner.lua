@@ -22,12 +22,12 @@ prototypes={
 }
 game={planets={castra={},vulcanus={}}}
 local tech={researched=true}
+local id="razi-frontier-castra-composite-rounds"
 local force={index=1,recipes={[id]={enabled=true}},technologies={
  ["planet-discovery-castra"]={researched=true},
  ["planet-discovery-vulcanus"]={researched=true},
  ["razi-frontier-castra-composite-rounds"]=tech
 }}
-local id="razi-frontier-castra-composite-rounds"
 local row={quest={tech=id},site="castra",recipe=recipe,technology=tech}
 package.loaded["scripts.razi_industry_portfolio"]={
  snapshot=function() return {entries={row}} end}
