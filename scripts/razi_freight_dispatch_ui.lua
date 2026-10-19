@@ -33,7 +33,8 @@ local function platforms(site)
   end
   return L("freight-infra-platforms-count",
     tostring(site.platforms),tostring(site.providers),
-    tostring(site.unscheduled))
+    tostring(site.unscheduled),site.vanilla_bays~=nil
+      and tostring(site.vanilla_bays) or L("freight-infra-bays-unknown"))
 end
 local function render_infrastructure(parent,route,report,width)
   if not route then return end
