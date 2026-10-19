@@ -10,7 +10,11 @@ local force={technologies={
 settings={startup={["razi-orbital-catapult-local-links"]={value=true}},
  global={["razi-hide-spoilers"]={value=true}}}
 script={active_mods={["orbital-cannon"]="0.15.0"}}
-prototypes={planet={muria={},rubia={},aquilo={}}}
+-- Reproduce Factorio's strict LuaPrototypes behavior: missing keys throw.
+prototypes=setmetatable({}, {__index=function(_,key)
+ error("Unexpected LuaPrototypes field: "..tostring(key))
+end})
+game={planets={muria={},rubia={},aquilo={}}}
 local network=require("scripts.razi_catapult_network")
 local report=network.snapshot(force)
 check(report.installed and report.enabled and report.total==3,

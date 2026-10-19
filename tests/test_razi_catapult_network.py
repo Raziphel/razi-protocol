@@ -21,6 +21,14 @@ class RegionalFreightTests(unittest.TestCase):
         self.assertIn('planet-discovery-aquilo',report)
         self.assertIn('if hide and not (from and to) then',report)
         self.assertIn('if planet_protos[a] and planet_protos[b]',report)
+        self.assertIn('game and game.planets',report)
+        self.assertNotIn('prototypes.planet',report)
+        self.assertNotIn('prototypes.space_location',report)
+        for fixture in ('tests/lua/test_razi_catapult_network.lua',
+                        'tests/lua/test_razi_catapult_regional.lua'):
+            test=read(fixture)
+            self.assertIn('game={planets=',test)
+            self.assertIn('Unexpected LuaPrototypes field:',test)
         self.assertIn('result.concealed=result.concealed+1',report)
         for bad in ("on_nth_tick","script.on_event","player.teleport(",
                     "force.research_all_technologies(","inventory.insert("):

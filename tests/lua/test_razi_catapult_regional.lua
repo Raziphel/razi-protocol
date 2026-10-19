@@ -8,7 +8,10 @@ for _,world in ipairs(worlds) do
   planets[world]={}
   technologies["planet-discovery-"..world]={researched=false}
 end
-prototypes={planet=planets}
+prototypes=setmetatable({}, {__index=function(_,key)
+ error("Unexpected LuaPrototypes field: "..tostring(key))
+end})
+game={planets=planets}
 settings={startup={
   ["razi-orbital-catapult-local-links"]={value=true},
   ["razi-orbital-catapult-regional-links"]={value=true}},

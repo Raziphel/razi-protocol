@@ -33,8 +33,10 @@ local function setting(name,group,default)
 end
 function M.snapshot(force,options)
   options=options or {}
-  local planet_protos=options.planets or (prototypes and
-    (prototypes.planet or prototypes.space_location)) or {}
+  -- Runtime LuaPrototypes does not expose a planet collection, and probing
+  -- unknown LuaPrototypes keys raises an error rather than returning nil.
+  -- LuaGameScript.planets is the native registry of real planets.
+  local planet_protos=options.planets or (game and game.planets) or {}
   local loaded=options.loaded
   if loaded==nil then loaded=script and script.active_mods
     and script.active_mods["orbital-cannon"]~=nil or false end
