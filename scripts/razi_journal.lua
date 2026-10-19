@@ -7,6 +7,7 @@ local records=require("scripts.razi_journal_records")
 local industrial_briefs=require("scripts.razi_planet_briefs")
 local catapults=require("scripts.razi_catapult_network")
 local freight_orders=require("scripts.razi_freight_orders")
+local supply=require("scripts.razi_supply_planner")
 local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
@@ -80,9 +81,10 @@ local function pref(index)
     and value.project or "platform"
   value.query=value.query or ""
   value.logistics_tab=({overview=true,routes=true,
-    freight=true,industry=true})[value.logistics_tab]
+    supply=true,freight=true,industry=true})[value.logistics_tab]
     and value.logistics_tab or "overview"
   value.logistics_scrolls=value.logistics_scrolls or {}
+  if value.supply_batches==nil then value.supply_batches=1 end
   value.story_unread=value.story_unread or {}
   value.story_alerts=value.story_alerts~=false
   value.archive_filter=({all=true,legacy=true,corporate=true,
@@ -2360,8 +2362,8 @@ function M.gui_click(event)
       local message,amount=convergence.deliver(player,tags.value)
       player.print({"razi-ops."..message,tostring(amount)})
     elseif p.project=="cargo" and native=="logistics-tab" then
-      if not ({overview=true,routes=true,freight=true,industry=true})
-        [tags.value] then return end
+      if not ({overview=true,routes=true,supply=true,
+        freight=true,industry=true})[tags.value] then return end
       p.logistics_tab=tags.value
     elseif p.project=="cargo" and native=="logistics-route" then
       if not freight_orders.select(player,tags.value) then return end
@@ -2369,6 +2371,30 @@ function M.gui_click(event)
       -- The player deliberately selected a new route. Reveal its editor
       -- at the top; ordinary tab switches and packing clicks keep scroll.
       p.logistics_scrolls["razi_journal_project_reader|cargo:freight"]=0
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-route" then
+      local candidate=supply.recipe(player.force,p.supply_recipe)
+      if not candidate then return end
+      local allowed=false
+      for _,route in ipairs(supply.inbound(player.force,candidate.site)) do
+        if route.id==tags.value then allowed=true;break end
+      end
+      if not allowed then return end
+      p.supply_route=tags.value
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-recalculate" then
+      -- Batch quantity was recorded by the native text-change event.
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-plan" then
+      if not supply.plan(player,p.supply_recipe,p.supply_route,
+        tags.value,p.supply_batches) then
+        player.print({"razi-ops.supply-plan-invalid"})
+        return
+      end
+      player.print({"razi-ops.supply-plan-added"})
+    elseif p.project=="cargo" and p.logistics_tab=="supply"
+      and native=="supply-freight" then
+      p.logistics_tab="freight"
     elseif p.project=="cargo" and native=="freight-select" then
       if not freight_orders.select(player,tags.value) then return end
     elseif p.project=="cargo" and native=="freight-add" then
@@ -2710,6 +2736,16 @@ function M.text_changed(event)
   local element=event and event.element
   if not (element and element.valid) then return end
   local tags=element.tags
+  if tags and tags.razi_ops_action=="supply-batches" then
+    local player=game.get_player(event.player_index)
+    if not (player and player.valid) then return end
+    local p=pref(player.index)
+    if player.gui.screen[FRAME] and p.view=="projects"
+      and p.project=="cargo" and p.logistics_tab=="supply" then
+      p.supply_batches=supply.batches(element.text or "") or false
+    end
+    return
+  end
   if tags and tags.razi_ops_action=="freight-count" then
     local player=game.get_player(event.player_index)
     if not (player and player.valid) then return end
@@ -2759,8 +2795,22 @@ function M.elem_changed(event)
 end
 function M.selection_changed(event)
   local element=event and event.element
-  if not (element and element.valid
-    and element.name=="razi_journal_chapter_picker") then return end
+  if not (element and element.valid) then return end
+  if element.tags and element.tags.razi_ops_action=="supply-recipe" then
+    local player=game.get_player(event.player_index)
+    if not (player and player.valid) then return end
+    local p=pref(player.index)
+    if not (player.gui.screen[FRAME] and p.view=="projects"
+      and p.project=="cargo" and p.logistics_tab=="supply") then return end
+    local options=supply.catalog(player.force)
+    local row=options[element.selected_index]
+    if not row then return end
+    p.supply_recipe=row.quest.tech
+    p.supply_route=nil
+    draw(player)
+    return
+  end
+  if element.name~="razi_journal_chapter_picker" then return end
   local chapter=defs.chapters[element.selected_index]
   local player=game.get_player(event.player_index)
   if not (chapter and player and player.valid) then return end
