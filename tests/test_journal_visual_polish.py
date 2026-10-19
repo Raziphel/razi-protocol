@@ -23,9 +23,9 @@ class VisualPolishTests(unittest.TestCase):
 
     def test_chapters_use_an_index_instead_of_repeating_cards(self):
         journal=read("scripts/razi_journal.lua")
-        self.assertIn('type=open and "frame" or "flow"',journal)
-        self.assertIn('card.style.padding=open and 8 or 3',journal)
-        self.assertIn('accent_rule(card,theme,math.min(82,inner-40),2)',journal)
+        self.assertIn('name="razi_journal_chapter_"..index',journal)
+        self.assertIn('card.style.padding=4',journal)
+        self.assertIn('name="razi_journal_chapter_entries"',journal)
         self.assertIn('name="razi_journal_search"',journal)
         self.assertIn('name="razi_journal_chapter_picker"',journal)
         self.assertIn('razi_journal_action="guidance-select"',journal)
@@ -40,7 +40,7 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('if M.complete(player.force,prior,context) then',journal)
         self.assertIn('value=met/required_total',journal)
         self.assertIn('tags={razi_journal_action="guidance-select",id=prior.id}',journal)
-        self.assertIn('style=chosen and "inside_shallow_frame" or nil',journal)
+        self.assertIn('name="razi_journal_item_"..quest.id',journal)
         self.assertIn('razi_journal_action="filter-ready"',journal)
         self.assertIn('elseif action=="filter-ready" then',journal)
         self.assertNotIn('local convergence=require("scripts.razi_convergence")\n'
