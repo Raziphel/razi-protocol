@@ -22,7 +22,7 @@ prototypes={
 }
 game={planets={castra={},vulcanus={}}}
 local tech={researched=true}
-local force={index=1,technologies={
+local force={index=1,recipes={[id]={enabled=true}},technologies={
  ["planet-discovery-castra"]={researched=true},
  ["planet-discovery-vulcanus"]={researched=true},
  ["razi-frontier-castra-composite-rounds"]=tech
@@ -115,6 +115,11 @@ tech.researched=false
 check(not planner.plan(player,id,route_id,"iron-plate",3),
  "Research previews must not create plans before unlock")
 tech.researched=true
+force.recipes[id].enabled=false
+check(not planner.plan(player,id,route_id,"iron-plate",3)
+ and not planner.plan_all(player,id,route_id,3),
+ "Research does not override a force-disabled recipe")
+force.recipes[id].enabled=true
 force.technologies["planet-discovery-castra"].researched=false
 check(#planner.catalog(force)==0
  and not planner.plan(player,id,route_id,"iron-plate",3),
