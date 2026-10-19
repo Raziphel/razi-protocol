@@ -162,5 +162,13 @@ require("prototypes.compat.system_card_laboratories").data_final_fixes()
 require("prototypes.system.starmap_trail_cleanup").data_final_fixes()
 require("prototypes.system.location_icons").data_final_fixes()
 
+-- Optional, off by default: hostile asteroids on the routes can spawn with quality. Runs after every
+-- route and spawn-table edit so the carriers replace the final hostile entries. Resource chunks are untouched.
+require("prototypes.system.quality_asteroids").data_final_fixes()
+
+-- Optional, off by default: asteroid and weapon effect reductions. After the quality carriers so their
+-- spawn scripts are left alone.
+require("prototypes.system.asteroid_performance").data_final_fixes()
+
 -- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()
