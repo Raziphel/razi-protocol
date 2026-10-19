@@ -1,3 +1,5 @@
+local razi_prepare_3 = require("scripts.razi_prepare_3")
+
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local nexus_visibility_technologies = {
@@ -135,3 +137,6 @@ script.on_event({
 	defines.events.script_raised_built,
 	defines.events.script_raised_revive
 }, on_entity_built)
+
+-- Run before updating to Razi Protocol 3.0; see scripts/razi_prepare_3.lua.
+razi_prepare_3.register()
