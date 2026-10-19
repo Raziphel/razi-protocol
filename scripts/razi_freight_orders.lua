@@ -77,23 +77,35 @@ function M.count_changed(player,value)
   store(player.index).draft.count=count
   return count~=nil
 end
--- Programmatic planning ONLY appends a manual plan. It never changes the
--- user's Freight Desk draft or inserts/removes/reserves any inventory.
-function M.add_spec(player,route_id,item_name,quantity)
-  if not (player and player.index and player.force) then return false end
+-- Atomic manual planning: check route, each item and the 20-order limit
+-- BEFORE storing anything. Never touch freight draft, inventories or pods.
+function M.add_many(player,route_id,specs)
+  if not (player and player.index and player.force
+    and type(specs)=="table" and #specs>0) then return false end
   local route=M.route(player.force,route_id)
-  local proto=item(item_name)
-  local count=positive_count(quantity)
+  if not route then return false end
   local s=store(player.index)
-  if not (route and proto and count and #s.orders<LIMIT) then
-    return false
+  if #s.orders+#specs>LIMIT then return false end
+  local prepared={}
+  for _,spec in ipairs(specs) do
+    local proto=spec and item(spec.item)
+    local count=spec and positive_count(spec.count)
+    if not (proto and count) then return false end
+    prepared[#prepared+1]={route=route.id,item=spec.item,count=count}
   end
-  s.orders[#s.orders+1]={
-    id=s.next_id,route=route.id,item=item_name,count=count,
-    packed=false
-  }
-  s.next_id=s.next_id+1
+  for _,spec in ipairs(prepared) do
+    s.orders[#s.orders+1]={
+      id=s.next_id,route=spec.route,item=spec.item,
+      count=spec.count,packed=false
+    }
+    s.next_id=s.next_id+1
+  end
   return true
+end
+function M.add_spec(player,route_id,item_name,quantity)
+  return M.add_many(player,route_id,{
+    {item=item_name,count=quantity}
+  })
 end
 function M.add(player)
   local d=store(player.index).draft
