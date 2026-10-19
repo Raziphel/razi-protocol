@@ -1634,6 +1634,11 @@ local function update_reader(player,preserve_reader)
   local reader=body and body.valid and body["razi_journal_reader_host"]
   if not (reader and reader.valid) then draw(player);return end
   local p=pref(player.index)
+  local context=M.context(player.force)
+  local size=M.layout(player.display_resolution,player.display_scale)
+  local view=M.view_status(player.force,context)
+  local selected=select_quest(player.force,p,context,
+    M.guidance(player.force,context,view))
   -- Expand/collapse existing chapter groups without discarding the scroll pane.
   local navigation=body["razi_journal_navigation_panel"]
   local navigation_scroll=navigation and navigation["razi_journal_navigation"]
@@ -1653,11 +1658,6 @@ local function update_reader(player,preserve_reader)
   end
   local picker=navigation and navigation["razi_journal_chapter_picker"]
   if picker then picker.selected_index=chapter_index(p.chapter) end
-  local context=M.context(player.force)
-  local size=M.layout(player.display_resolution,player.display_scale)
-  local view=M.view_status(player.force,context)
-  local selected=select_quest(player.force,p,context,
-    M.guidance(player.force,context,view))
   local scroll=navigation_scroll
   if scroll then
     local function mark(parent)
@@ -1672,7 +1672,10 @@ local function update_reader(player,preserve_reader)
             choice.style.font_color=chosen and COLOR.ink or COLOR.muted
           end
           if icon then
-            icon.style.font_color=chosen and COLOR.amber or COLOR.muted
+            local status=view.states[id]
+            icon.style.font_color=chosen and COLOR.amber
+              or status=="complete" and COLOR.green
+              or status=="active" and COLOR.amber or COLOR.muted
           end
         else
           mark(child)
