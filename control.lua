@@ -1,6 +1,7 @@
 local Events = require("__razi_lib__/runtime/events")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local razi_prepared_2x = require("scripts.razi_prepared_2x")
+local quality_asteroids = require("scripts.razi_quality_asteroids")
 
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -151,6 +152,8 @@ events:on_event(transceiver_build_events, on_entity_built)
 commands.add_command("razi-cheat", {"razi-cheat.help"}, razi_safe_cheat.command)
 -- Exits at once while no staged research is running.
 events:on_nth_tick(6, razi_safe_cheat.tick)
+-- Only the quality carrier asteroids raise this effect: no scanning and no ticking.
+events:on_event(defines.events.on_script_trigger_effect, quality_asteroids.on_script_trigger_effect)
 -- /cheat is a built-in command and cannot be replaced. This notification
 -- runs only if the engine gets far enough to emit its console event.
 events:on_event(defines.events.on_console_command, razi_safe_cheat.warn_builtin)

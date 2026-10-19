@@ -291,5 +291,47 @@ data:extend({
 		default_value = "standard",
 		allowed_values = {"faint", "standard", "strong"},
 		order = "cb[starmap]-i[dust]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-quality-asteroids",
+		setting_type = "startup",
+		default_value = false,
+		order = "aa[worlds]-b[quality-asteroids]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-performance-asteroid-particles",
+		setting_type = "startup",
+		default_value = false,
+		order = "ad[asteroid-performance]-a[debris-effects]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-performance-weapon-particles",
+		setting_type = "startup",
+		default_value = false,
+		order = "ad[asteroid-performance]-b[weapon-effects]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-performance-reduced-fragments",
+		setting_type = "startup",
+		default_value = false,
+		order = "ad[asteroid-performance]-c[fragment-count]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-performance-outer-hostile-density",
+		setting_type = "startup",
+		default_value = false,
+		order = "ad[asteroid-performance]-d[outer-hostiles]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-performance-space-explosion-smoke",
+		setting_type = "startup",
+		default_value = false,
+		order = "ad[asteroid-performance]-e[explosion-smoke]"
 	}
 })
