@@ -26,7 +26,9 @@ research or alter the campaign save model.
 
 ## Systems folio (3.0)
 
-The fourth Journal folio is **Systems**. It shows source-backed, read-only status
+The fourth Journal folio is **Systems**. The fleet and reactor summaries
+share a restrained two-column row on wide screens and stack on narrow screens;
+the Nexus Threat panel remains full width. Source-owned controls stay intact. It shows source-backed, read-only status
 for three optional external features without introducing a second progress
 system: Planet Express fleet counts from its own per-player monitor dock,
 Nexus-Updated engine-core counts and research limit, and Nexus Threat state

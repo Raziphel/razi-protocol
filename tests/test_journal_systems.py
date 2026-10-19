@@ -28,6 +28,14 @@ class SystemsFolio(unittest.TestCase):
                           'script.on_tick','force.technologies["zpe-core-limit-1"].researched=true'):
             self.assertNotIn(forbidden,lua)
 
+    def test_responsive_telemetry_layout(self):
+        lua=load("scripts/razi_journal_systems.lua")
+        self.assertIn('name="razi_sys_summary_row"',lua)
+        self.assertIn('local tile_width=compact and width',lua)
+        self.assertIn('local top=root["razi_sys_summary_row"]',lua)
+        self.assertIn('local storm=card(scroll',lua)
+        self.assertIn('M.refresh_root(scroll,player)',lua)
+
     def test_locale(self):
         text=load("locale/en/razi_journal_systems.cfg")
         for k in ("view-systems","fleet-counts","zpe-count","storm-active",
