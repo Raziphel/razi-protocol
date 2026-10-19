@@ -186,8 +186,9 @@
         "Krastorio2-spaced-out"
       ],
       "purpose": "Reciprocal, source-guarded Panglite glass and Moshine optical-cable bonus recipes using Gleba bioflux. Native surface pressure, data-cell unlocks, manufacturer checks and productivity caps are respected.",
-      "upstream_status": "source-audited; engine-validation-pending",
-      "fixture": "tests/lua/test_panglia_integration.lua"
+      "upstream_status": "needs-review",
+      "fixture": "tests/lua/test_panglia_integration.lua",
+      "validation_note": "Source-audited; full engine and installed modpack validation pending. Do not remove before verifying upstream fixes."
     }
   ]
 }
