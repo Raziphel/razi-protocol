@@ -20,5 +20,19 @@ data:extend({
 		default_value = "full",
 		allowed_values = {"full", "balanced", "clean", "off"},
 		order = "cb[starmap]-a2[orbit-density]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-group-barreling-recipes",
+		setting_type = "startup",
+		default_value = true,
+		order = "ca[quality-of-life]-b1[barreling-recipes]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-group-spoilable-recipes",
+		setting_type = "startup",
+		default_value = false,
+		order = "ca[quality-of-life]-b2[spoilable-recipes]"
 	}
 })
