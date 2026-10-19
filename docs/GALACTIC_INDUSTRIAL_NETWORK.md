@@ -573,3 +573,74 @@ deliveries. Ensure the Journal's numbers represent **events**, never
 items or completed orders, and compare its destination records to
 real native events. A new save cannot infer older events.
 
+## A.4: Galactic Logistics Command, integrated Journal folio
+
+The Journal's existing Cargo Network reference has been reorganized into
+four compact sections, **without** creating a separate always-on GUI or
+changing source transport mechanics:
+
+| Section | Contents | Evidence source |
+| --- | --- | --- |
+| Command | Number of researched corridors, saved packing plans, built/in-flight native space platforms and recent pod-delivery events | Discovered Razi corridor registry, existing per-player freight plans, Factorio platform state and `on_cargo_pod_delivered_cargo` records |
+| Routes | Per-endpoint potential source launcher counts, docked platforms, native sharing flags, unscheduled vessels, vanilla cargo bays and observed destination pod events; explicit directional plan buttons | The A.2 read-only inspector and A.3 arrival history |
+| Freight Desk | Directed route selector, item-count/stack planning, carried-inventory readiness, order priority and manual packed/unpacked/delete controls | Existing A.1 persisted player freight orders; no source cargo modification |
+| Industry | Existing source-backed science/factory opportunities, installed companion notes, technology links and manufacturing guidance | `galactic_trade_catalog`, `razi_industry_portfolio`, native prototypes and research |
+
+The **original order IDs and saved manual packing state are unchanged**.
+Selecting a route in the Routes section validates it with the original
+route authority and opens the Freight Desk with that route chosen.
+Research-to-Industry links still open the appropriate factory chain,
+not the top of an unrelated dashboard. All ship/platform, machine and
+delivery data is read only when the relevant page is rendered, not on
+ticks or in repeated per-order scans.
+
+### UX and scrolling
+
+The Cargo reference still uses one native
+`razi_journal_project_reader` scroll pane. Each of the four sections
+gets an independent `razi_scroll_context` (`cargo:overview`,
+`cargo:routes`, `cargo:freight`, `cargo:industry`). Previously
+scrolled sections restore their last known native vertical position
+when reopened, rather than resetting on every button press. The
+stored offsets are numbers inside the already existing per-player
+Journal preference object; no migration of freight data is required.
+
+The Freight Desk now uses a compact presentation that does not
+repeat infrastructure/arrival evidence for each of 20 possible
+plans. Routes and Command own those facts. The old full-page
+catapult dossier was retired from the Industry reader, leaving the
+manufacturing research and optional production upgrades intact.
+
+On narrow resolutions the tab bar stacks vertically and route
+endpoint details switch to a single column; smaller text and
+source-backed statuses preserve legibility without large
+decorative cards or duplicate progress metrics.
+
+### Ownership and testing
+
+A native delivery event does not reveal origin, shipment amount
+or Orbital Catapult activity. The central view carefully calls
+the data *observed pod deliveries at destinations*, never
+completed Catapult orders or shipment throughput. A potential
+launcher entity is not proof of a powered live endpoint. Neither
+manual packing nor the new dashboard changes research,
+Convergence, inventory, native platform schedules, contracts
+or victory conditions.
+
+Manual regression commands:
+
+```sh
+lua5.2 tests/lua/test_razi_freight_orders.lua
+lua5.2 tests/lua/test_razi_freight_infrastructure.lua
+lua5.2 tests/lua/test_razi_freight_receipts.lua
+lua5.2 tests/lua/test_razi_logistics_command.lua
+```
+
+Also verify an established save with 20 orders; switching between
+all four tabs at low resolution; reopening the former Industry
+Codex link; hiding future corridors; a disabled catapult network;
+A.3 receipts after an actual rocket/pod delivery; both Local and
+Regional catapult options; and **scroll position while clicking
+Freight add/remove/pack controls**. Static/mock tests do not
+replace Factorio GUI, live modpack or multiplayer verification.
+
