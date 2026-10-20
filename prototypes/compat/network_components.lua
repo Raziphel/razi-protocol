@@ -2,6 +2,7 @@
 -- Skip registration when a material, machine or research unlock is missing.
 local M={}
 local mode=require("prototypes.compat.interdependence_mode")
+local portfolio=require("prototypes.compat.industry_portfolio")
 local factory=require("prototypes.compat.planet_production_exchanges")
 local function raw(kind,id) return (data.raw[kind] or {})[id] end
 local function entry_name(entry) return entry.name or entry[1] end
@@ -169,30 +170,31 @@ local parts={
     -- This is a late framework built from completed planetary industries.
     -- No unstable hydrogen plates or altered Crucible production loops.
     name="razi-network-umbra-pressure-frame",
-    source_icon="planet-crucible-science-pack",accent_icon="supermagnet",
+    source_icon="supermagnet",accent_icon="holmium-plate",
     required_mods={"planet-crucible","skewer_planet_vesta",
       "linox","panglia_planet"},
     ingredients={
       {type="item",name="razi-network-panglia-optic-bond",amount=1},
-      {type="item",name="planet-crucible-science-pack",amount=1},
+      {type="item",name="holmium-plate",amount=2},
       {type="item",name="supermagnet",amount=2},
       {type="item",name="rare-earth-powder",amount=2}
     },
     suppliers={
       {recipe="razi-network-panglia-optic-bond",
         product="razi-network-panglia-optic-bond"},
-      {recipe="planet-crucible-science-pack",
-        product="planet-crucible-science-pack"},
+      {recipe="holmium-plate",product="holmium-plate"},
       {recipe="supermagnet",product="supermagnet"},
       {recipe="linox-recipe_rare-earth-refining",product="rare-earth-powder"}
     },
     planets={"panglia_planet_discovery_panglia",
       "linox-technology_planet-discovery-linox",
-      "planet-discovery-crucible","planet-discovery-vesta"},
+      "planet-discovery-crucible","planet-discovery-vesta",
+      "planet-discovery-fulgora"},
     science={"beetlejuice-tech-card","umbra-tech-card"},
-    -- A multi-world frame is expensive to establish, so each run
-    -- produces enough for repeated outer-world shipments.
-    count=980,energy=20,output=8,deep_only=true
+    -- Fully material-driven late framework. The source Crucible milestone
+    -- remains a gate, but no science pack is consumed as machine feedstock.
+    -- Keep it available in Balanced as a real fourth network component.
+    count=980,energy=20,output=8
   }
 }
 M.parts=parts
@@ -208,8 +210,9 @@ local function register_part(part,index)
   if raw("item",part.name) or raw("recipe",part.name)
     or raw("technology",part.name) then return false end
   if not assembler_exists() then return false end
-  if not lab_supports(part.science) then return false end
-  for _,pack in ipairs(part.science) do
+  local science=portfolio.science(part)
+  if not lab_supports(science) then return false end
+  for _,pack in ipairs(science) do
     if not raw("tool",pack) then return false end
   end
   for _,planet in ipairs(part.planets) do
@@ -270,7 +273,7 @@ local function register_part(part,index)
     unit={count=part.count,time=45,ingredients={}},
     order="f[razi-industry]-"..part.name
   }
-  for _,pack in ipairs(part.science) do
+  for _,pack in ipairs(science) do
     technology.unit.ingredients[#technology.unit.ingredients+1]={pack,1}
   end
   data:extend({object,recipe,technology})
