@@ -223,18 +223,79 @@ local function native_unlockers()
   return index
 end
 
-local function unlock_technology(recipe_name, guard)
-  for _, name in ipairs(native_unlockers()[recipe_name] or {}) do
-    local tech = technologies()[name]
-    if tech and tech.enabled ~= false and not tech.hidden then
-      local too_late = false
-      for _, gate in ipairs(guard.not_after or {}) do
-        if depends_on(name, gate) then too_late = true break end
+-- More than one technology may unlock the same native recipe. Iteration
+-- order in the modded technology index is NOT progression order (the former
+-- selected Outer Frontier Mastery-gated gold refining in one modpack).
+-- Prefer the earliest legitimate source unlocker in the *actual graph*.
+local ancestor_size={}
+local function ancestor_count(name)
+  if ancestor_size[name] then return ancestor_size[name] end
+  local seen={}
+  local function visit(current)
+    local tech=technologies()[current]
+    for _,parent in ipairs(tech and tech.prerequisites or {}) do
+      if not seen[parent] then
+        seen[parent]=true
+        visit(parent)
       end
-      if not too_late then return name end
     end
   end
-  return nil
+  visit(name)
+  local total=0
+  for _ in pairs(seen) do total=total+1 end
+  ancestor_size[name]=total
+  return total
+end
+
+local function unlock_technology(recipe_name, guard)
+  local candidates={}
+  for _,name in ipairs(native_unlockers()[recipe_name] or {}) do
+    local tech=technologies()[name]
+    if tech and tech.enabled~=false and not tech.hidden then
+      local too_late=false
+      for _,gate in ipairs(guard.not_after or {}) do
+        if name==gate or depends_on(name,gate) then
+          too_late=true break
+        end
+      end
+      if not too_late then candidates[#candidates+1]=name end
+    end
+  end
+  table.sort(candidates,function(a,b)
+    local a_before_b=depends_on(b,a)
+    local b_before_a=depends_on(a,b)
+    if a_before_b~=b_before_a then return a_before_b end
+    local ac,bc=ancestor_count(a),ancestor_count(b)
+    if ac~=bc then return ac<bc end
+    local at,bt=technologies()[a],technologies()[b]
+    local au=at.unit and at.unit.count or 0
+    local bu=bt.unit and bt.unit.count or 0
+    if au~=bu then return au<bu end
+    return a<b
+  end)
+  return candidates[1]
+end
+
+-- Set research effort by the highest *actual* required tier. An advanced
+-- native unlock or source supplier can put an otherwise cheap blueprint
+-- behind a late galaxy gate; research cost must acknowledge that.
+local research_tiers={
+  {"solaris-discovery",500},{"nyxaris-discovery",500},
+  {"vibrant-discovery",950},{"vespera-discovery",950},
+  {"beetlejuice-discovery",1450},{"umbra-discovery",1450},
+  {"razi-outer-frontier-mastery",1950}
+}
+local function gated_research_count(rule,parents)
+  local cost=rule.count
+  for _,name in ipairs(parents) do
+    for _,entry in ipairs(research_tiers) do
+      if technologies()[entry[1]] and
+        (name==entry[1] or depends_on(name,entry[1])) then
+        cost=math.max(cost,entry[2])
+      end
+    end
+  end
+  return cost
 end
 
 -- Lab inputs are stable by the time the exchange modules run.
@@ -688,7 +749,8 @@ local function register_exchange(rule)
     prerequisites = prerequisite_list,
     effects = {{type="unlock-recipe", recipe=rule.name}},
     unit = {
-      count = rule.count, time = rule.time,
+      count = gated_research_count(rule,prerequisite_list),
+      time = rule.time,
       ingredients = {}
     },
     order = "fz[razi-exchanges]-" .. rule.name
