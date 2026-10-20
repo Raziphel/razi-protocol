@@ -820,7 +820,7 @@ See `tests/test_route_distances.py` and `tests/lua/test_galaxy.lua`.
 
 ## Startup settings and localized grouping
 
-The FluxWorks-style Razi startup settings are checked by
+The grouped Razi startup settings are checked by
 `lua5.2 tests/lua/test_settings_presentation.lua` for stable prototype
 names, startup types, default values, deterministic category ordering,
 colored rich-text labels, and English/Russian descriptions. The existing

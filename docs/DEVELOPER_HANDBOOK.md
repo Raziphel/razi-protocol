@@ -63,7 +63,7 @@ Before editing a dependency:
 4. Define the fallback for missing mods or startup settings.
 5. Validate on the expected pack and on at least one intentionally reduced optional-mod combination.
 
-Cross-world manufacturing should reward logistics with distinct industry, not just import chores. Respect the original recipes and ownership boundaries. See [FluxWorks](FLUXWORKS_INDUSTRY_ATLAS.md).
+Cross-world manufacturing should reward logistics with distinct industry, not just import chores. Respect the original recipes and ownership boundaries. See the [industrial exchange playbook](industrial-exchange-playbook.md).
 
 ## Expedition Journal, projects and fiction
 
@@ -87,7 +87,6 @@ planetary industry briefs, safe crafting-group work and team authoring rules.
 | Mod manifest and dependencies | `info.json` |
 | Journal runtime and UI | `scripts/razi_journal.lua` |
 | Quest definitions | `scripts/razi_journal_data.lua`, `scripts/razi_journal_expansion.lua`, `scripts/razi_journal_frontier.lua`, `scripts/razi_journal_industry.lua` |
-| Optional workshop objectives | `scripts/razi_journal_fluxworks.lua` |
 | Factory partnerships / cargo overview | `scripts/razi_industry_portfolio.lua`, `scripts/galactic_trade.lua` |
 | Optional recipe safety | `prototypes/compat/planet_production_exchanges.lua` |
 | Offline factory health | `tools/factory_review.py`, `scripts/audit_industry_portfolio.py` |
