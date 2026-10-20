@@ -92,10 +92,6 @@ M.chapters={
     {id="networks",missions={"alliance-photonic-coils","alliance-network-cubium","alliance-balack-shield","alliance-matrix-rubia","alliance-matrix-aquilo","alliance-lattice-vesta","alliance-vesta-foundations","alliance-balack-vesta","alliance-aquilo-outer"}},
     {id="convergence",missions={"alliance-panglia-bond","alliance-bond-paracelsin","alliance-bond-linox","alliance-pressure-frame","alliance-pressure-vesta","alliance-pressure-aquilo"}},
   },
-  ["fluxworks"]={
-    {id="regional",missions={"flux-calidus","flux-solaris","flux-nyxaris","flux-vibrant","flux-vespera","flux-beetlejuice","flux-umbra"}},
-    {id="exchange",missions={"flux-link-calidus-solaris","flux-link-nyxaris-vibrant","flux-link-solaris-vespera","flux-link-vibrant-beetlejuice","flux-link-nyxaris-umbra"}},
-  },
 }
 local by_quest={}
 local fallbacks={}

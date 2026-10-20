@@ -135,21 +135,6 @@ for _,chapter in ipairs(industry.chapters) do
   table.insert(M.chapters,position or #M.chapters+1,chapter)
 end
 for _,quest in ipairs(industry.quests) do M.quests[#M.quests+1]=quest end
--- The FluxWorks industrial atlas exists only when the optional mod is
--- installed. Missing source technologies are filtered by M.available().
-if script and script.active_mods and script.active_mods["FluxWorks"] then
-  local fluxworks=require("scripts.razi_journal_fluxworks")
-  for _,chapter in ipairs(fluxworks.chapters) do
-    local position=#M.chapters+1
-    for i,current in ipairs(M.chapters) do
-      if current.id=="alliances" then position=i+1;break end
-    end
-    table.insert(M.chapters,position,chapter)
-  end
-  for _,quest in ipairs(fluxworks.quests) do
-    M.quests[#M.quests+1]=quest
-  end
-end
 -- In 2.1 the native AAI technology has its own research ID. Use the
 -- installed research prototype rather than creating a duplicate or
 -- misreporting completion when a compatible AAI fork renamed the ID.

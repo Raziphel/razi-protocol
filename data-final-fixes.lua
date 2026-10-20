@@ -186,19 +186,6 @@ require("prototypes.system.route_intel").data_final_fixes()
 
 require("prototypes.system.starmap_background").data_final_fixes()
 
--- FluxWorks is an optional factory expansion. Run after chapter/route gates so
--- its manufacturing options cannot redefine the campaign progression.
-require("prototypes.compat.fluxworks").data_final_fixes()
--- Optional industrial projects with their own Codex milestones; never gate routes.
-require("prototypes.compat.fluxworks_specializations").data_final_fixes()
--- Optional paired workshops require BOTH regional industry milestones.
-require("prototypes.compat.fluxworks_industry_exchanges").data_final_fixes()
--- Collapse only prerequisite arrows already implied by other research paths.
-require("prototypes.compat.fluxworks_research_clarity").data_final_fixes()
--- Ease selected specialist machinery research tolls without altering any
--- prerequisites, science packs, planet discovery, or standalone FluxWorks.
-require("prototypes.compat.fluxworks_machine_pacing").data_final_fixes()
-
 -- Final positions, then Razi's own path-aware visual overlay. All
 -- connections are registered before this pass; it never changes travel data.
 require("prototypes.system.galaxy_layout").confirm_critical_positions()

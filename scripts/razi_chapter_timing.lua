@@ -46,7 +46,7 @@ function M.observe(force,quests,available,complete,historical,tick,act_for)
   local chapters,acts={},{}
   local changed=false
   -- One completion rule for every chapter. Optional missions are timed but
-  -- only block a section that contains no required missions (FluxWorks).
+  -- only block a section that contains no required missions.
   local function add(group,quest,done)
     group.total=group.total+1
     if done then group.done=group.done+1 end

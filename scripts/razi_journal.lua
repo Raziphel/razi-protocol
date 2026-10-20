@@ -1662,6 +1662,20 @@ local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
+  -- Retired and uninstalled optional chapters must never leave the reader
+  -- stranded on an old chapter ID when an existing save is reopened.
+  if p.chapter then
+    local present=false
+    for _,chapter in ipairs(defs.chapters) do
+      if chapter.id==p.chapter then present=true break end
+    end
+    if not present then
+      p.chapter=false
+      p.chapter_cover=false
+    end
+  end
+  if p.selected and not defs.by_id[p.selected] then p.selected=nil end
+  if p.pinned and not defs.by_id[p.pinned] then p.pinned=nil end
   local context=M.context(player.force)
   if M.hide_spoilers() then
     local quest=p.selected and defs.by_id[p.selected]
