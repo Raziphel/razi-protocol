@@ -81,3 +81,35 @@ All 83 known locations, including optional and source-owned worlds, have concise
 The 61 selected physical space connections have one optional narrative freight field in the **existing native route tooltip**, beneath the real ten-level hazard, salvage and preparation data. Notes describe why a passage matters, not an extra hidden difficulty scale or a fictional shortcut. The field is matched by its two endpoint IDs, so a missing route or unrecognized third-party connection receives no invented annotation. Source tooltip fields, route length, physics, order and technology gates remain unchanged.
 
 Important narrative guardrails: the chart never solves native planet mysteries; optional worlds are not prerequisites; the Continuity Engine failure and Convergence conclusion remain in unlock-gated Journal records, not visible in a pre-discovery travel note. No runtime polling, GUI duplication, route prototype creation or duplicate danger warnings are added. See [Story Bible](STORY_BIBLE.md).
+
+## B.1: Planetary field assignments, star charters and freight roles (October 2026)
+
+Razi Protocol's seven system chapter covers now explain the economic
+identity of their star system rather than treating every world as another
+technology-card source. Planetary quest dossiers include a short, distinct
+field assignment and up to two existing Codex follow-up links. Links are
+filtered through the real installed quest and the same spoiler visibility
+rules as the Journal. They do **not** create a new quest, unlock, completion
+timestamp, item, reward or research requirement.
+
+The Supply Network's recipe-backed planner uses the same planet registry for
+destination-specific freight advice, but only its original live ingredient
+and recipe checks determine plannable goods and quantities. The advice
+does not claim real stock, platform delivery or source-mod completion.
+Regional catapult lanes are now eligible to appear in all relevant planetary
+dossiers, only when the installed catapult snapshot lists actual available
+or declared corridors. The underlying map connections remain untouched.
+
+**Maintenance contracts:** `scripts/razi_planet_briefs.lua` owns the advisory
+world/system registry; `locale/en/razi_planet_charters.cfg` owns copy; the
+Journal displays the advice and safe links. The Freight Desk never creates
+a shipment from a narrative statement. Retain existing quest IDs, source
+research, the A.9 manual handoff review and all old saved freight records.
+
+**Before release:** load a fresh and migrated full Factorio 2.1 save.
+Inspect a world with two unlocked follow-ups, one spoiler-hidden world,
+a missing optional world, two independent opening systems, a destination
+without a direct route and a source-native catapult corridor. Check tiny
+screens and 150% UI scaling. Test the complete actual modpack because
+static fixture checks cannot establish transport viability or final UI
+layout. Pure Lua fixture: `tests/lua/test_razi_planet_charters.lua`.
