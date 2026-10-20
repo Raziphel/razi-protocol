@@ -39,7 +39,7 @@ change between modes. No automatic recycling or productivity stacking.
 | Aquilo ← Precision Control Matrix | Control units | Accelerated: the combined middle-system network stabilises cryogenic lines |
 | Vesta ← Extreme-Environment Lattice | Supermagnets | Bulk: large composite-assisted magnet batches |
 | Paracelsin ← Panglia Optic Bond | Electric coils | Accelerated: optical precision in high-throughput windings |
-| Linox ← Panglia Optic Bond | Rare-earth powder | Accelerated: better measurement and feed control in refining |
+| Castra ← Gleba carbon fibre + Moshine silicon cells | Piercing ammunition | Accelerated: composite tooling improves native ammunition production throughput |
 | Vesta ← Umbra Pressure Frame | Foundations | Bulk: robust late-system building materials |
 | Aquilo ← Umbra Pressure Frame | Control units | Bulk: late-game cold-resistant control-unit returns |
 
