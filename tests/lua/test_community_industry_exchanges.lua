@@ -159,83 +159,46 @@ local function amount(parts,name)
     if part.name==name then return part.amount end
   end
 end
+-- Ferrum and Balack remain independent third-party industries. Their Razi
+-- bonus variants duplicate existing routes and are no longer in the small
+-- Balanced/Deep cargo portfolio.
+local portfolio=require("prototypes.compat.industry_portfolio")
+for _,name in ipairs(names) do
+  check(not portfolio.keep(name),
+    "Ferrum/Balack duplication should stay out of curated freight")
+end
 local raw,engine=fixture()
 local before={}
 for _,name in ipairs(bases) do before[name]=clone(raw.recipe[name]) end
 engine.data_final_fixes()
-local specs={
-  {name=names[1],native=bases[1],output="ferrum-rare-earth-magnet",
-    original=1,batch=3,bonus=1,inputs={"rare-earth-powder","optical-cable"},
-    prerequisite="ferrum-rare-earth-processing",fluids=2},
-  {name=names[2],native=bases[2],output="bm-radiation-sheilding",
-    original=5,batch=2,bonus=2,
-    inputs={"craptonite-frame","chitosan"},
-    prerequisite="bm-planet-discovery-balack",fluids=1}
-}
-for _,spec in ipairs(specs) do
-  local r,t=raw.recipe[spec.name],raw.technology[spec.name]
-  check(r and t,"Community production exchange missing: "..spec.name)
-  check(r.enabled==false and rawget(r,"auto_recycle")==false,
-    "Bonus recipe must not replace native production")
-  check(r.allow_productivity==false and rawget(r,"maximum_productivity")==0,
-    "Trade bonus cannot stack with productivity")
-  check(amount(r.results,spec.output)==spec.original*spec.batch+spec.bonus,
-    "Incorrect trade output yield: "..spec.name)
-  local unit=rawget(t,"unit") or {}
-  local packs=rawget(unit,"ingredients") or {}
-  local prerequisites=rawget(t,"prerequisites") or {}
-  check(#packs==2 and #prerequisites>=3,
-    "Trade exchange has bypassed research: "..spec.name)
-  local original_unlock=false
-  for _,prereq in ipairs(rawget(t,"prerequisites") or {}) do
-    if prereq==spec.prerequisite then original_unlock=true end
-  end
-  check(original_unlock,"Native research was skipped: "..spec.name)
-  for _,name in ipairs(spec.inputs) do
-    check((amount(r.ingredients,name) or 0)>0,
-      "Supplier ingredient missing: "..name)
-  end
+for _,name in ipairs(names) do
+  check(not raw.recipe[name] and not raw.technology[name],
+    "Retired bonus variant must not appear: "..name)
 end
--- Native Ferrum chemistry and Balack promethium
--- are always scaled with the original base recipe rather than replaced.
-check(amount(raw.recipe[names[1]].ingredients,"electrolyte")==30
-  and amount(raw.recipe[names[1]].ingredients,"molten-iron")==60,
-  "Ferrum native chemistry was shortcut")
-check(amount(raw.recipe[names[2]].ingredients,"promethium-asteroid-chunk")==2
-  and amount(raw.recipe[names[2]].ingredients,"heavy-oil")==20,
-  "Balack native promethium and oil costs were bypassed")
 for _,name in ipairs(bases) do
-  check(amount(raw.recipe[name].results,before[name].results[1].name)
-    ==before[name].results[1].amount,
-    "Native recipe changed during import exchange")
+  local now=raw.recipe[name]
+  check(now and now.results[1].amount==before[name].results[1].amount,
+    "Original source output changed when retiring optional freight")
+  check(#now.ingredients==#before[name].ingredients,
+    "Original source materials changed when retiring optional freight")
 end
-engine.data_final_fixes()
-local function absent(opts,without)
-  local state,m=fixture(opts)
+-- Native source mods still load independently; absent modules cannot
+-- resurrect removed Razi alternatives.
+for _,options in ipairs({
+  {off=true},{mod="planet-ferrum"},{mod="Moshine"},
+  {mod="biological-machines-planet-balack"},{mod="rubia"},
+  {ingredient="chitosan"},{ingredient="rare-earth-powder"}
+}) do
+  local state,m=fixture(options)
   m.data_final_fixes()
-  for _,name in ipairs(without) do
+  for _,name in ipairs(names) do
     check(not state.recipe[name] and not state.technology[name],
-      "Missing prerequisite still advertised alternate: "..name)
+      "Retired optional exchange resurrected: "..name)
   end
 end
-absent({off=true},names)
-absent({mod="planet-ferrum"},{names[1]})
-absent({mod="Moshine"},{names[1]})
-absent({mod="biological-machines-planet-balack"},{names[2]})
-absent({mod="rubia"},{names[2]})
-absent({ingredient="chitosan"},{names[2]})
-absent({ingredient="rare-earth-powder"},{names[1]})
-absent({native_recipe="ferrum-rare-earth-magnet"},{names[1]})
-absent({native_unlock="ferrum-rare-earth-processing"},{names[1]})
-absent({homeworld="bm-balack"},{names[2]})
-absent({fluid_ports="foundry"},{names[1]})
-absent({fluid_ports="bm-bio-cube"},{names[2]})
-absent({wrong_category="bm-radiation-sheilding"},{names[2]})
 local f=assert(io.open("data-final-fixes.lua","r"))
-local entry=f:read("*a") f:close()
-local established=assert(entry:find(
-  'require("prototypes.compat.modded_planet_exchanges").data_final_fixes()',1,true))
-local expanded=assert(entry:find(
-  'require("prototypes.compat.community_industry_exchanges").data_final_fixes()',1,true))
-check(established<expanded,"Community exchanges should follow modded production setup")
-print("Ferrum and Balack optional industry exchanges passed")
+local entry=f:read("*a");f:close()
+check(entry:find(
+  'require("prototypes.compat.community_industry_exchanges").data_final_fixes()',1,true),
+  "Compatibility entrypoint must remain for modpack stability")
+print("Community freight: duplicate alternatives retired without changing source industries")
