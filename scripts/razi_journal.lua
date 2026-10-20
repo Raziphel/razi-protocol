@@ -2041,7 +2041,16 @@ local function update_reader(player,preserve_reader)
           end
         end
         local extra=entries["razi_journal_act_"..ch.id.."_additional"]
-        if extra then extra.visible=matching_acts[ch.id..":additional"]==true end
+        if extra then
+          extra.visible=matching_acts[ch.id..":additional"]==true
+          local stamp=extra["razi_journal_act_stamp"]
+          if stamp then
+            local caption=completion_caption(chapter_timing.get(
+              player.force,"phases",ch.id..":additional"),"phase")
+            stamp.caption=caption or ""
+            stamp.visible=caption~=nil
+          end
+        end
       end
       local expanded=shown>0 and (p.chapter==ch.id or p.query~="")
       if entries then entries.visible=expanded end
