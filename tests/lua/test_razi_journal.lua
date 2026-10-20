@@ -41,6 +41,45 @@ for _,q in ipairs(defs.quests) do
       prototype={hidden=false},localised_name=q.tech}
   end
 end
+-- Fresh saves must always show the source-owned opening quest, even
+-- when a modpack starts with Automation hidden or prerequisite-gated.
+local bootstrap={name="automation",researched=false,enabled=false,
+  prototype={hidden=true},
+  prerequisites={{researched=false}}}
+local fresh={technologies={automation=bootstrap}}
+rawset(_G,"settings",{global={
+  ["razi-hide-spoilers"]={value=true}
+}})
+local opener=defs.by_id["first-signal"]
+check(opener and M.available(fresh,opener),
+  "Opening quest must remain source-backed and available for onboarding")
+check(M.state(fresh,opener)=="locked",
+  "Source-disabled opening research must not be falsely marked ready")
+check(M.journal_visible(fresh,opener),
+  "Spoiler fog must not conceal the first journal quest")
+local fresh_view=M.view_status(fresh)
+check(fresh_view.total==1 and fresh_view.ready==0,
+  "Fresh-save index must show one locked opening objective, not 0/0")
+check(#fresh_view.chapters.calidus.quests==1 and
+  fresh_view.chapters.calidus.quests[1].id=="first-signal",
+  "Calidus must show the opening mission in the chapter index")
+check(M.next_quest(fresh) and M.next_quest(fresh).id=="first-signal",
+  "Fresh-save reader must open the Automation mission by default")
+bootstrap.prototype.hidden=false
+bootstrap.enabled=true
+bootstrap.prerequisites={}
+check(M.state(fresh,opener)=="active",
+  "Opening quest becomes ready only when native research is truly ready")
+check(M.view_status(fresh).ready==1,
+  "A research-ready opener must contribute one ready mission")
+bootstrap.researched=true
+check(M.state(fresh,opener)=="complete",
+  "Completion must come from native Factorio research")
+bootstrap.researched=false
+fresh.technologies.automation=nil
+check(M.view_status(fresh).total==0,
+  "Absent source research must not create fictitious quest completion")
+rawset(_G,"settings",nil)
 -- Column budgets remain inside the game display at different UI scales.
 for _,screen in ipairs({
   {width=1920,height=1080,scale=1},
