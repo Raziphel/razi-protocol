@@ -274,6 +274,25 @@ check(raw.recipe["razi-modded-vesta-rare-earth-supermagnets"]
   "Vesta's atmosphere restriction was lost")
 mod.data_final_fixes()
 
+-- Moshine optical cable is gated by Fulgora science even if its native
+-- technology has no explicit Vibrant ancestor. The exchange must inherit
+-- the real late-tier research cost without requiring that pack again.
+local optical,optical_engine=setup()
+optical.technology["unlock-optical-cable"].unit={
+  count=350,time=30,
+  ingredients={{"electromagnetic-science-pack",1}}
+}
+optical_engine.data_final_fixes()
+local optical_bridge=optical.technology["razi-modded-paracelsin-optical-coils"]
+check(optical_bridge and optical_bridge.unit.count>=950,
+  "Optical-cable supplier science must raise its Razi exchange to Vibrant-tier pricing")
+local has_unlock=false
+for _,tech in ipairs(optical_bridge.prerequisites or {}) do
+  if tech=="unlock-optical-cable" then has_unlock=true end
+end
+check(has_unlock,
+  "Paracelsin exchange must remain blocked until Fulgora-gated optics research")
+
 local function absent(options,names)
   local state,bridge=setup(options)
   bridge.data_final_fixes()
