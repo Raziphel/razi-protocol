@@ -494,6 +494,26 @@ constrained_engine.register_k2so_balanced({capped})
 check(not constrained.recipe[capped.name],
   "Impossible throughput targets must respect the gross output ceiling")
 
+-- Deep must require heavier physical shipments, never a third research
+-- card or extra item output. Native production must stay untouched.
+rawset(_G,"settings",{startup={
+  ["razi-planetary-interdependence"]={value="deep"}
+}})
+local deep_raw,deep_engine=setup()
+deep_engine.data_final_fixes()
+local deep_recipe=deep_raw.recipe["razi-bio-rare-metal-casting"]
+check(deep_recipe and ingredient(deep_recipe,"bioflux")==3,
+  "Deep trade must increase actual imported bioflux by 50%")
+check(product(deep_recipe,"kr-rare-metals")==5,
+  "Deep material penalty must not inflate a recipe's bonus yield")
+check(ingredient(deep_raw.recipe["kr-casting-rare-metals"],"kr-molten-rare-metals")==10,
+  "Deep mode must never mutate the native factory")
+for _,pack in ipairs(deep_raw.technology["razi-bio-rare-metal-casting"].unit.ingredients) do
+  check(not pack[1]:find("tech%-card"),
+    "Deep trade must not reintroduce old-system tech card costs")
+end
+rawset(_G,"settings",nil)
+
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
