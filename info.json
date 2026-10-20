@@ -128,6 +128,7 @@
     "Velora >= 2.2.2",
     "alchemy-khemia >= 0.3.6",
     "Arcanyx >= 1.1.5",
+    "biological-machines-planet-balack >= 1.1.2",
     "+ planet-ferrum >= 0.1.4",
     "+ skewer_shattered_planet >= 1.0.42",
     "+ rabbasca-underground >= 0.10.3",

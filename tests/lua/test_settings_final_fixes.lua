@@ -20,13 +20,14 @@ local raw = {
     ["s6x-prismite-on-nauvis"] = { default_value = false },
     ["s6x-colored-concrete"] = { default_value = true },
     ["adjust-maraxsis"] = { default_value = true },
+    ["bm-armored-biters-override"] = { default_value = true },
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
   },
 }
 run(raw)
-for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis" }) do
+for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis", "bm-armored-biters-override" }) do
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == false and setting.default_value == false and setting.hidden == true, name .. " not pinned to false")

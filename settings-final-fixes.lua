@@ -6,8 +6,9 @@ if adjust_maraxsis then
 	adjust_maraxsis.hidden = true
 end
 
--- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft) whose default or opt-in value
--- rewrites vanilla, Krastorio 2 or Space Age progression. Each is pinned and hidden; a missing mod or setting is skipped.
+-- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft) and of Balack whose default or opt-in
+-- value rewrites vanilla, Krastorio 2 or Space Age progression, or removes what Razi Protocol relies on. Each is pinned
+-- and hidden; a missing mod or setting is skipped.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -21,6 +22,11 @@ local pinned_bool_settings = {
 	-- Default true: redefines the ten Planetaris refined concrete tiles (new layer, mined into vanilla-named colored
 	-- concrete instead of the planetaris-* items) and adds a second set of colored concrete recipes and dyes.
 	["s6x-colored-concrete"] = false,
+	-- Default true: Balack removes the armoured biters' own nest from the map generator and hides the armoured biters
+	-- (or, with the nest setting off, takes them out of the vanilla nests). Razi Protocol places that nest on Hyarion,
+	-- Nexus, Crucible and Panglia (compat/armoured_biters.lua), which would then have no enemies at all. With false the
+	-- nest stays; its tile restriction there keeps it off Nauvis.
+	["bm-armored-biters-override"] = false,
 }
 
 for name, value in pairs(pinned_bool_settings) do
