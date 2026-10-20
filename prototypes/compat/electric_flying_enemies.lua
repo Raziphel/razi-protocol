@@ -153,9 +153,8 @@ end
 
 local electric_spawners = collect_electric_spawners()
 
-for _, spawner in pairs(electric_spawners) do
-	extend_tile_restriction(spawner)
-end
+-- Planet-local nests are generated in the final ecology pass.
+-- Do not append a union of unrelated terrain to the shared source nest.
 
 for _, planet_name in pairs(electric_planets) do
 	add_electric_enemies_to_planet(planet_name, electric_spawners)

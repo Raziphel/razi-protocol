@@ -107,9 +107,8 @@ local toxic_planet_tiles = {
 
 local existing_toxic_planet_tiles = enemy_autoplace.existing_tiles(toxic_planet_tiles)
 
-for entity_name, entity_type in pairs(toxic_enemy_autoplace) do
-	enemy_autoplace.restrict_entity_to_tiles(entity_type, entity_name, existing_toxic_planet_tiles)
-end
+-- Preserve original poison-biter habitat rules; the final ecology
+-- creates scoped variants on other chemical and biological planets.
 
 for _, planet_name in pairs(toxic_source_planets) do
 	enemy_autoplace.remove_entities_from_planet(planet_name, toxic_enemy_entities)

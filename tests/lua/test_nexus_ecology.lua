@@ -57,8 +57,11 @@ local eco=require("prototypes.compat.razi_enemy_ecology")
 check(eco.data_final_fixes(),"Nexus ecology final pass didn't run")
 local planet=data.raw.planet.nexus.map_gen_settings
 local units=planet.autoplace_settings.entity.settings
-check(units["biter-spawner"] and units["spitter-spawner"],
- "Nexus must preserve vanilla Nauvis biters")
+check(units["razi-nexus-biter-spawner"]
+ and units["razi-nexus-spitter-spawner"],
+ "Nexus must spawn native Nauvis biter and spitter families using isolated nests")
+check(data.raw["unit-spawner"]["razi-nexus-biter-spawner"],
+ "Nexus-specific native biter nest must exist")
 check(units["razi-nexus-gleba-spawner"]
  and units["razi-nexus-gleba-spawner-small"],
  "Nexus must actually register native pentapod egg-raft types")

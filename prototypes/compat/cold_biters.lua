@@ -87,7 +87,8 @@ local function restrict_entity_to_cold_tiles(entity_type, entity_name, distance,
 		entity.autoplace.force = "enemy"
 		entity.autoplace.probability_expression = cold_autoplace_expression(distance, worm)
 		entity.autoplace.richness_expression = 1
-		entity.autoplace.tile_restriction = existing_cold_planet_tiles
+		-- Never union or overwrite source tile restrictions globally.
+		-- Final ecology owns planet-specific cold nest variants.
 	end
 end
 

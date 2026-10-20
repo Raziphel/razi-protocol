@@ -98,9 +98,8 @@ local armoured_spawner = enemy_autoplace.entity_exists("unit-spawner", "armoured
 -- autoplace={} on the dedicated nest breaks Factorio 2.1 validation.
 if enemy_autoplace.has_valid_autoplace(armoured_spawner) then
 	remove_armoured_units_from_spawner(enemy_autoplace.entity_exists("unit-spawner", "biter-spawner"))
-	armoured_spawner.autoplace.tile_restriction =
-		enemy_autoplace.existing_tiles(armoured_biter_tiles)
-
+	-- Keep source-owned tile restrictions unchanged. Final RP3 placement
+	-- creates planet-local spawner variants for new habitats.
 	for _, planet_name in pairs(armoured_planets) do
 		enemy_autoplace.add_entities_to_planet(planet_name, armoured_enemy_entities, "enemy-base", armoured_spawner_exists)
 	end

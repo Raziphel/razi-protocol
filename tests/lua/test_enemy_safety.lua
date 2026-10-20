@@ -56,8 +56,8 @@ data.raw["unit-spawner"]["armoured-biter-spawner"].autoplace = {
 router.add_entities_to_planet("test-world", {"armoured-biter-spawner", "missing-mod-spawner"},
 	"enemy-base")
 check(settings_map["armoured-biter-spawner"] ~= nil, "Valid custom spawner not installed")
-check(settings_map["biter-spawner"].frequency == 0, "Vanilla spawner not suppressed")
-check(settings_map["small-worm-turret"].frequency == 0, "Vanilla worm not suppressed")
+check(settings_map["biter-spawner"].frequency == 1, "Additive specialists must not suppress native biters")
+check(settings_map["small-worm-turret"].frequency == 1, "Additive specialists must not suppress native worms")
 
 router = setup()
 local mock_settings = rawget(_G, "settings")

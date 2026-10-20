@@ -66,9 +66,8 @@ local explosive_planet_tiles = {
 
 local existing_explosive_planet_tiles = enemy_autoplace.existing_tiles(explosive_planet_tiles)
 
-for entity_name, entity_type in pairs(explosive_enemy_autoplace) do
-	enemy_autoplace.restrict_entity_to_tiles(entity_type, entity_name, existing_explosive_planet_tiles)
-end
+-- Source tile restrictions stay untouched. Final ecology installs
+-- planet-local variants to target valid hot/rocky terrain safely.
 
 for _, planet_name in pairs(explosive_source_planets) do
 	enemy_autoplace.remove_entities_from_planet(planet_name, explosive_enemy_entities, explosive_enemy_control)

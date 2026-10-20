@@ -33,30 +33,10 @@ local function planet_entity_settings(planet_name)
 end
 
 function enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
-	-- Nexus is the ultimate combined ecosystem. Never suppress its native
-	-- biters or worms when installing exotic spawners.
-	if planet_name == "nexus" then return end
-	if not enemy_autoplace.enabled() then
-		return
-	end
-
-	local entity_settings = planet_entity_settings(planet_name)
-	if not entity_settings then
-		return
-	end
-
-	for _, entity_name in pairs(vanilla_enemy_entities) do
-		if
-			(data.raw["unit-spawner"] and data.raw["unit-spawner"][entity_name]) or
-			(data.raw.turret and data.raw.turret[entity_name])
-		then
-			entity_settings[entity_name] = {
-				frequency = 0,
-				size = 0,
-				richness = 0
-			}
-		end
-	end
+  -- Retained for existing integrations. All custom enemies are now additive:
+  -- do not wipe Nauvis nests on their native worlds, or the Nexus mix.
+  -- Spawning variants are isolated by the final ecology pass instead.
+  return false
 end
 
 function enemy_autoplace.existing_tiles(tile_names)
@@ -192,11 +172,15 @@ function enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
-	map_gen_settings.autoplace_controls[control_name] = {
-		frequency = enemy_autoplace.pressure(planet_name),
-		size = 1,
-		richness = 1
-	}
+	-- Never overwrite an already configured source-mod control when adding
+	-- another enemy family to the same planet.
+	if not map_gen_settings.autoplace_controls[control_name] then
+		map_gen_settings.autoplace_controls[control_name] = {
+			frequency = enemy_autoplace.pressure(planet_name),
+			size = 1,
+			richness = 1
+		}
+	end
 
 	map_gen_settings.autoplace_settings = map_gen_settings.autoplace_settings or {}
 	map_gen_settings.autoplace_settings.entity = map_gen_settings.autoplace_settings.entity or {}

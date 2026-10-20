@@ -1,90 +1,146 @@
--- Final world-gen enemy ecology. Nexus deliberately mixes all species,
--- including native Nauvis nests, Gleba pentapods and Vulcanus demolishers.
--- Existing map chunks cannot be changed by prototype edits.
+-- The final, additive and planet-scoped enemy ecology pass.
+-- Source nest prototypes are NEVER given union-of-galaxy tile restrictions:
+-- the same nest may be native to a very different biome elsewhere.
+-- Static, deterministic placement only; no per-tick spawning controller.
 local M={}
 local router=require("prototypes.compat.enemy_autoplace")
-local difficulty=require("scripts.razi_difficulty_presets")
 local by_theme={
-  {mod={"ArmouredBiters21Compat","ArmouredBiters"},
-    planets={"hyarion","castra","athos","nexus"},
-    names={"armoured-biter-spawner"}},
-  {mod={"Cold_biters"},
-    planets={"aquilo","vesta","frozeta","shchierbin","nexus"},
-    names={"cb-cold-spawner"}},
-  {mod={"Explosive_biters"},
-    planets={"moshine","cubium","corrundum","nexus"},
-    names={"explosive-biter-spawner"}},
-  {mod={"Toxic_biters"},
-    planets={"cubium","vesta","paracelsin","rabbasca","foliax","nexus"},
-    names={"toxic-biter-spawner"}},
-  {mod={"Arachnids_enemy"},
-    planets={"arig","crucible","castra","athos","nexus"},
-    names={"arachnid-spawner-unitspawner"}}
+ {mod={"ArmouredBiters21Compat","ArmouredBiters"},
+  planets={"hyarion","crucible","castra","athos","ferrum","obsidiax","nexus"},
+  names={"armoured-biter-spawner"},
+  habitat={"dirt","rock","sand","stone","soil","crystal","ash","volcan","slag"}},
+ {mod={"Cold_biters"},
+  planets={"aquilo","frozeta","shchierbin","vesta","muria","bm-balack","nexus"},
+  names={"cb-cold-spawner","small-cold-worm-turret",
+    "medium-cold-worm-turret","big-cold-worm-turret"},
+  habitat={"ice","snow","frost","crystal","cold","dust"}},
+ {mod={"Explosive_biters"},
+  planets={"moshine","cubium","corrundum","crucible","obsidiax","nexus"},
+  names={"explosive-biter-spawner","small-explosive-worm-turret",
+    "medium-explosive-worm-turret","big-explosive-worm-turret"},
+  habitat={"ash","volcan","crack","dirt","stone","rock","sand","dust","slag"}},
+ {mod={"Toxic_biters"},
+  planets={"cubium","vesta","paracelsin","rabbasca","foliax",
+    "gleba","velora","alchemy-planet","crucible","nexus"},
+  names={"toxic-biter-spawner","small-toxic-worm-turret",
+    "medium-toxic-worm-turret","big-toxic-worm-turret"},
+  habitat={"soil","mud","swamp","grass","dirt","rock","fung",
+    "forest","ash","volcan","sand","dust","crust"}},
+ {mod={"Arachnids_enemy"},
+  planets={"arig","crucible","castra","athos","panglia","tenebris","nexus"},
+  names={"arachnid-spawner-unitspawner"},
+  habitat={"sand","dirt","soil","grass","desert","rock","ash","stone"}},
+ {mod={"Electric_flying_enemies"},
+  planets={"corrundum","ribbonia","fulgora","ferrum","cerys",
+    "alchemy-planet","nexus"},
+  names={"flying-electric-unit-spawner","walker-electric-unit-spawner",
+    "fulgoran-enemy-spawner","electric-flying-enemy-spawner",
+    "electric-flying-enemies-spawner","electric-enemy-spawner"},
+  habitat={"fulgor","electric","conduit","metal","machine","scrap",
+    "rock","dust","dirt","sand","soil","stone"}}
 }
-local function has_mod(group)
- for _,name in ipairs(group) do if mods and mods[name] then return true end end
+M.by_theme=by_theme
+local function has_mod(names)
+ for _,name in ipairs(names) do if mods and mods[name] then return true end end
  return false
 end
-local function maps(planet)
- local entry=(data.raw.planet or {})[planet]
- return entry and entry.map_gen_settings
+local function maps(name)
+ local proto=(data.raw.planet or {})[name]
+ return proto and proto.map_gen_settings
 end
-local function valid_entity(name)
- local e=router.enemy_entity_exists(name)
- return e and router.has_valid_autoplace(e) and e or nil
+local function source_entity(name)
+ local kinds={"unit-spawner","turret"}
+ for _,kind in ipairs(kinds) do
+  local e=(data.raw[kind] or {})[name]
+  if e and router.has_valid_autoplace(e) then return e,kind end
+ end
 end
-local function land_tiles(map)
- -- Source mods often restrict their enemies to native biome tiles.
- -- Include target-world LAND tiles so their nests can really generate on
- -- new planet mods. Never include lava/ocean/lake or void tiles.
- local available={}
- local tile_settings=map and map.autoplace_settings
+local function is_land(name)
+ local low=name:lower()
+ for _,fragment in ipairs({"water","ocean","lava","ammoniacal",
+   "molten","void","out-of-map","empty-space","space-platform",
+   "deepwater","abyss","bottomless","acid-lake","oil-sea",
+   "ribbonia-gap","ribbonia-void","brash-ice"}) do
+  if low:find(fragment,1,true) then return false end
+ end
+ return true
+end
+local function land_tiles(map,habitat)
+ local tiles=map and map.autoplace_settings
    and map.autoplace_settings.tile
-   and map.autoplace_settings.tile.settings
- for name in pairs(tile_settings or {}) do
-   if (data.raw.tile or {})[name]
-     and not name:match("water") and not name:match("ocean")
-     and not name:match("lava") and not name:match("lake")
-     and not name:match("void") then
-     available[#available+1]=name
+   and map.autoplace_settings.tile.settings or {}
+ local all,preferred={},{}
+ for name in pairs(tiles) do
+  if (data.raw.tile or {})[name] and is_land(name) then
+   all[#all+1]=name
+   if habitat then
+    for _,fragment in ipairs(habitat) do
+     if name:lower():find(fragment,1,true) then
+      preferred[#preferred+1]=name
+      break
+     end
+    end
    end
+  end
  end
- table.sort(available)
- return available
+ table.sort(all)
+ table.sort(preferred)
+ -- If the planet mod uses uncommon tile names, using all known land is
+ -- preferable to silently producing zero nests or putting nests on oceans.
+ return #preferred>0 and preferred or all
 end
-local function extend_restriction(entity,tiles)
- if not (entity and entity.autoplace and #tiles>0) then return end
- if type(entity.autoplace.tile_restriction)~="table" then return end
- local before=entity.autoplace.tile_restriction
- local seen={}
- for _,name in ipairs(before) do seen[name]=true end
- for _,name in ipairs(tiles) do
-   if not seen[name] then before[#before+1]=name;seen[name]=true end
- end
-end
-local function ensure(planet,name)
- local map=maps(planet)
- if not map then return false end
- local entry=valid_entity(name)
- if not entry then return false end
+M.land_tiles=land_tiles
+local function entity_settings(map)
  map.autoplace_settings=map.autoplace_settings or {}
  map.autoplace_settings.entity=map.autoplace_settings.entity or {}
  local entity=map.autoplace_settings.entity
  entity.settings=entity.settings or {}
- entity.settings[name]=entity.settings[name] or {}
- -- Respect the enemy pack's own autoplace-control prototype. Register its
- -- control on previously unsupported planets rather than trusting that a
- -- copied spawner will use the destination's unrelated enemy-base noise.
- local control=entry.autoplace and entry.autoplace.control
- if type(control)=="string"
-   and (data.raw["autoplace-control"] or {})[control] then
-   map.autoplace_controls=map.autoplace_controls or {}
-   if not map.autoplace_controls[control] then
-     map.autoplace_controls[control]={
-       frequency=router.pressure(planet),size=1,richness=1}
-   end
+ return entity.settings
+end
+local function put(planet,name,kind,habitat,seed,weight)
+ local map=maps(planet)
+ local source,actual_kind=source_entity(name)
+ if not (map and source and (not kind or kind==actual_kind)) then return false end
+ local tiles=land_tiles(map,habitat)
+ if #tiles==0 then return false end
+ local id="razi-"..planet.."-"..name
+ local registry=data.raw[actual_kind] or {}
+ if not registry[id] then
+  local clone=table.deepcopy(source)
+  clone.name=id
+  clone.type=actual_kind
+  clone.autoplace={
+   control="enemy-base",
+   order="z[razi-ecology]-"..name,
+   force="enemy",
+   probability_expression=string.format(
+     "enemy_autoplace_base(0, %d) * %.3f",seed,weight),
+   richness_expression=1,
+   tile_restriction=tiles
+  }
+  data:extend({clone})
  end
- extend_restriction(entry,land_tiles(map))
+ local settings=entity_settings(map)
+ settings[id]=settings[id] or {}
+ -- If this pack previously registered the shared original spawner on the
+ -- same planet, retire only that mapgen entry to prevent double spawning.
+ settings[name]=nil
+ map.autoplace_controls=map.autoplace_controls or {}
+ if (data.raw["autoplace-control"] or {})["enemy-base"]
+   and not map.autoplace_controls["enemy-base"] then
+  map.autoplace_controls["enemy-base"]={
+    frequency=router.pressure(planet),size=1,richness=1}
+ end
+ return true
+end
+M.put=put
+local function ensure(planet,name)
+ -- Used only for a fully formed Nexus-only clone, not a shared source
+ -- prototype whose tile restriction would otherwise be changed globally.
+ local map=maps(planet)
+ if not (map and source_entity(name)) then return false end
+ local settings=entity_settings(map)
+ settings[name]=settings[name] or {}
  return true
 end
 -- Gleba's original egg-raft noise may depend on its own biome.
@@ -94,7 +150,7 @@ end
 local function nexus_pentapod_raft(name,map)
  local base=(data.raw["unit-spawner"] or {})[name]
  if not router.has_valid_autoplace(base) then return false end
- local tiles=land_tiles(map)
+ local tiles=land_tiles(map,{"grass","dirt","soil","rock","sand"})
  if #tiles==0 then return false end
  local id="razi-nexus-"..name
  if (data.raw["unit-spawner"] or {})[id] then return ensure("nexus",id) end
@@ -122,14 +178,17 @@ local function nexus()
  local entity=map.autoplace_settings.entity
  entity.settings=entity.settings or {}
  local multiplier=router.pressure("nexus")
- -- Restore all source vanilla biter/spitter nest and worm entries.
+ -- Preserve native Nauvis enemies through Nexus-only spawn variants.
  -- This also heals earlier external integrations that set frequency=0.
  for _,id in ipairs({"biter-spawner","spitter-spawner",
    "small-worm-turret","medium-worm-turret",
    "big-worm-turret","behemoth-worm-turret"}) do
-   if valid_entity(id) then
-     entity.settings[id]={}
-     extend_restriction(valid_entity(id),land_tiles(map))
+   local kind=id:find("spawner",1,true) and "unit-spawner" or "turret"
+   if not put("nexus",id,kind,{"grass","dirt","soil","sand",
+     "rock","stone"},80+#id,.12) then
+     -- Source IDs are still valid fallback when a map has no usable
+     -- tile settings. Never mutate their tile restrictions globally.
+     if source_entity(id) then entity.settings[id]=entity.settings[id] or {} end
    end
  end
  map.autoplace_controls["enemy-base"]={
@@ -143,7 +202,7 @@ local function nexus()
    and gleba.autoplace_settings.entity.settings or {}
  for name in pairs(eggs) do
    if (name=="gleba-spawner" or name=="gleba-spawner-small"
-     or name:match("egg%-raft")) and valid_entity(name) then
+     or name:match("egg%-raft")) and source_entity(name) then
      if not nexus_pentapod_raft(name,map) then
        -- Source-version fallback, still keeping vanilla Gleba intact.
        ensure("nexus",name)
@@ -176,18 +235,24 @@ local function nexus()
 end
 function M.data_final_fixes()
  if not router.enabled() then return false end
- for _,group in ipairs(by_theme) do
+ local installed=0
+ for family,group in ipairs(by_theme) do
    if has_mod(group.mod) then
-     for _,planet in ipairs(group.planets) do
-       for _,id in ipairs(group.names) do
-         -- Add validated nests to the actual final planet map prototypes,
-         -- not just names in the catalog.
-         ensure(planet,id)
+     for world,planet in ipairs(group.planets) do
+       for index,id in ipairs(group.names) do
+         local is_worm=id:find("worm",1,true)~=nil
+         local chance=is_worm and .034 or .085
+         -- Keep specialist encounters bounded when several packs share
+         -- one planet, while Nexus remains the everything-spawns world.
+         if planet=="nexus" then chance=chance*1.22 end
+         if put(planet,id,is_worm and "turret" or "unit-spawner",
+           group.habitat,110+family*130+world*13+index,
+           chance) then installed=installed+1 end
        end
      end
    end
  end
  nexus()
- return true
+ return installed
 end
 return M
