@@ -28,6 +28,10 @@ class HeliosRiskTests(unittest.TestCase):
   self.assertIn("marathon={outer=175000,inner=100000}",source)
   self.assertIn("profiles.apply(route,profile)",source)
   self.assertIn("if minimum and (not route.length or route.length<minimum)",source)
+ def test_original_dyson_plasma_never_gets_quality_proxy(self):
+  converter=read("prototypes/system/quality_asteroids.lua")
+  self.assertIn("function M.preserve_stellar_source_enemy(target,name)",converter)
+  self.assertIn("and not M.preserve_stellar_source_enemy(target,entry.asteroid)",converter)
  def test_shared_quality_grade_drives_both_display_and_actual_spawns(self):
   difficulty=read("scripts/razi_asteroid_difficulty.lua")
   self.assertIn("return clamp(initial+.65*midpoint,1,10)",difficulty)

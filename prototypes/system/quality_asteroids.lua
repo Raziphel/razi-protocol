@@ -71,6 +71,21 @@ local function native_multiplier(name,level)
   if level>=6 then factor=factor*(sizes[size] or 1) end
   return math.min(1.55,factor)
 end
+-- The SLP solar passages carry custom plasma-clot enemies with their own
+-- source-specific effects. Increasing their difficulty must not turn them
+-- into Razi proxy asteroids or alter source ownership. Vanilla Space Age
+-- hostiles still get the endgame quality tiers on these connections.
+local function vanilla_hostile(name)
+ if type(name)~="string" then return false end
+ local size=name:match("^(small)%-") or name:match("^(medium)%-")
+   or name:match("^(big)%-") or name:match("^(huge)%-")
+ local material=name:match("%-([%a]+)%-asteroid$")
+ return size~=nil and ({metallic=true,carbonic=true,
+   oxide=true,promethium=true})[material]==true
+end
+function M.preserve_stellar_source_enemy(target,name)
+ return engine.stellar_route_tier(target)~=nil and not vanilla_hostile(name)
+end
 local function rewrite(target,level,entities,scale)
   local definitions=target.asteroid_spawn_definitions
   if type(definitions)~="table" then return 0 end
@@ -78,7 +93,8 @@ local function rewrite(target,level,entities,scale)
   local result={}
   for i,entry in ipairs(definitions) do
     local def=entry
-    if is_enemy(entry,entities) then
+    if is_enemy(entry,entities)
+      and not M.preserve_stellar_source_enemy(target,entry.asteroid) then
       local proxy=proxy_for(entry.asteroid,entities)
       if proxy then
         def=clone(entry)
