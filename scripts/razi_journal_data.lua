@@ -124,6 +124,17 @@ for _,quest in ipairs(frontier.quests) do M.quests[#M.quests+1]=quest end
 local extended=require("scripts.razi_journal_expansion")
 for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end
 for _,quest in ipairs(extended.quests) do M.quests[#M.quests+1]=quest end
+-- Recovering launches is part of the expedition, not a replacement for
+-- source-owned rocket tech. Optional improved crushing follows real planets.
+local salvage=require("scripts.razi_journal_salvage")
+for _,chapter in ipairs(salvage.chapters) do
+  local position=#M.chapters+1
+  for i,current in ipairs(M.chapters) do
+    if current.id=="fleet" then position=i+1 break end
+  end
+  table.insert(M.chapters,position,chapter)
+end
+for _,quest in ipairs(salvage.quests) do M.quests[#M.quests+1]=quest end
 local industry=require("scripts.razi_journal_industry")
 -- Place the industrial atlas next to the existing supply-network chapter,
 -- not after the final intergalactic signal.

@@ -1,5 +1,11 @@
 # Razi Protocol
 
+## Orbital salvage integration (3.0)
+
+**Razi Rocket Reusability** is included as a required mod (version 1.1.5 or newer). Its source-owned Rocket Chunk Processing, Remnant Beacon, collision handling and K2SO/Muluna balance are preserved. The Expedition Journal gains a complete **Orbital Salvage** chapter with five research-backed milestones, and Razi adds three optional interplanetary bulk-crushing technologies unlocked after Fulgora, Aquilo and the supply-network matrix. Recipes copy the native final salvage outputs so they respect the installed mod pack; only modest handling bonuses and faster batching are added. These upgrades never gate reaching another planet.
+
+**Difficulty:** The companion rocket mod's 1.1.6 source update automatically enables side-arriving rocket wrecks in Hard and Nightmare presets at the existing configured side-arrival chance. Easy, Normal, standalone and Custom retain their own setting behaviour. Publish/install 1.1.6 to activate the difficulty link; older 1.1.5 installs still load safely but do not yet interpret Razi difficulty. See [Orbital Salvage](docs/ROCKET_SALVAGE.md).
+
 ![Razi Protocol corporate dragon emblem](graphics/branding/razi-protocol-lockup.png)
 
 **A curated seven-system Factorio 2.1 Space Age expedition.** Razi Protocol weaves source-owned planets and machines into a cohesive campaign: meaningful planetary research, challenging interstellar logistics, readable space routes, a unified Expedition Journal and a construction-driven deep-space finale.

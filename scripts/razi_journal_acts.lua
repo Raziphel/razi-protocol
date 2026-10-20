@@ -61,6 +61,11 @@ M.chapters={
     {id="journey",missions={"interstellar-science","advanced-space","thrusters","bulk-cargo"}},
     {id="asteroids",missions={"asteroid-processing","asteroid-reprocessing"}},
   },
+  ["salvage"]={
+    {id="recovery",missions={"rocket-salvage-survey","rocket-salvage-beacon"}},
+    {id="calibration",missions={"rocket-salvage-precision","rocket-salvage-cryogenic"}},
+    {id="redistribution",missions={"rocket-salvage-network"}},
+  },
   ["outposts"]={
     {id="settlement",missions={"igrys","foliax","rabbasca","velora","pelagos","dea-dia","lemures","prosephina"}},
     {id="expeditions",missions={"khemia","ferrum","obsidiax","balack"}},

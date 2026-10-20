@@ -29,6 +29,8 @@ M.themes={
     icons={"item/assembling-machine-1","technology/steel-processing"}},
   fleet={primary={r=0.44,g=0.77,b=1},soft={r=0.72,g=0.84,b=0.98},
     icons={"technology/space-platform","technology/rocket-silo","item/rocket-silo"}},
+  salvage={primary={r=0.67,g=0.82,b=0.93},soft={r=0.78,g=0.84,b=0.87},
+    icons={"technology/rocket-chunk-processing","technology/remnant-beacon","item/rocket-chunk"}},
   outposts={primary={r=0.69,g=0.91,b=0.49},soft={r=0.78,g=0.89,b=0.66},
     icons={"technology/planet-discovery-muluna","item/radar","technology/radar"}},
   sciences={primary={r=0.79,g=0.58,b=1},soft={r=0.84,g=0.75,b=0.96},
