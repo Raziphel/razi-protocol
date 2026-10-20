@@ -24,8 +24,6 @@ require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compat.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
--- Final, visual-only regrouping; source ingredients and machines stay intact.
-require("prototypes.compat.crafting_navigation").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
 require("prototypes.compat.variant_surface_conditions").data_final_fixes()
@@ -195,5 +193,9 @@ require("prototypes.system.quality_asteroids").data_final_fixes()
 -- spawn scripts are left alone.
 require("prototypes.system.asteroid_performance").data_final_fixes()
 
--- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs last.
+-- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs after every prototype pass.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()
+
+-- Run only after all Razi, partner-mod and temporary recipes have settled.
+-- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
+require("prototypes.compat.crafting_navigation").data_final_fixes()
