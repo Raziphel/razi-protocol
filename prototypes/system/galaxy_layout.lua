@@ -22,11 +22,11 @@ local anchors = {
   -- Shattered Planet southeast and the Black Hole west.
   -- These are visual positions only, not route lengths or travel unlocks.
   {"space-location","shattered-planet","solar-system-edge",140,0.33},
-  -- The 1,000 km Shattered Planet hop is deliberately compact on the
-  -- starmap; keep it below the Approach to separate their captions.
+  -- This is just a 1,000 km hop. Place the real planet very close to the
+  -- Approach with opposite caption directions so the names remain distinct.
   -- Lost Beyond remains a far-flung north-east expedition, with a distinct
   -- lane away from the Nexus / Oort / Sol corridor. Route km are unchanged.
-  {"planet","skewer_shattered_planet","shattered-planet",11.5,0.485},
+  {"planet","skewer_shattered_planet","shattered-planet",5.0,0.485},
   {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.14},
   {"planet","nexus","solar-system-edge",94,0.18},
   {"space-location","black-hole-approach","solar-system-edge",112,0.70},
@@ -438,11 +438,11 @@ function M.data_final_fixes()
     ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
-    ["carna"]=0.75,
+    ["obsidiax"]=0.25,["carna"]=0.75,
     -- Two source-owned Crucible destinations occupy nearly the same
     -- chart point; split their captions in opposite directions.
     ["crucible-orbit"]=0.75,["crucible"]=0.25,
-    ["tenebris"]=0.75,
+    ["tenebris"]=0.75,["arcanyx"]=0.0,
     ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
     ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.75,["abacayba"]=0.25,
