@@ -1,7 +1,20 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
 
--- ArmouredBiters21Compat is the 2.1 fork of Armoured Biters with the same prototype names.
-if not enemy_autoplace.enabled() or not (mods["ArmouredBiters"] or mods["ArmouredBiters21Compat"]) then
+-- ArmouredBiters21Compat and ArmouredBiters-2_1-update (the one Balack requires) are 2.1 forks of Armoured Biters with
+-- the same prototype names; with both installed the one that loads last owns them.
+local armoured_biter_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}
+
+local function armoured_biters_installed()
+	for _, mod_name in ipairs(armoured_biter_mods) do
+		if mods[mod_name] then
+			return true
+		end
+	end
+
+	return false
+end
+
+if not enemy_autoplace.enabled() or not armoured_biters_installed() then
 	return
 end
 
