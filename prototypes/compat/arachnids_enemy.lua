@@ -52,7 +52,7 @@ local function add_arachnids_to_planet(planet_name)
 	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls["enemy-base"] = {
-		frequency = 1,
+		frequency = enemy_autoplace.pressure(planet_name),
 		size = 1,
 		richness = 1
 	}

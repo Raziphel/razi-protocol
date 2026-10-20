@@ -1,48 +1,60 @@
-# Razi Protocol difficulty presets (2.1, feat/razi-3.0)
+# RP3 Difficulty Director and curated Freeplay map
 
-The Razi master preset controls *effective behaviour* in Razi-owned modules;
-it is not a game-wide mutation of other mods' player-selected settings.
+## Modes and manual overrides
 
-**Default: Custom**, preserving all existing save/installation choices.
-Choosing a named mode requires a Factorio restart because the option is a
-startup setting. Advanced individual controls remain visible in Factorio's
-settings panel; when a named mode is active, their saved UI values remain
-untouched, but the supported effective values below take precedence. Return
-to Custom to apply them individually.
+- **Normal (default):** all RP gameplay settings at their original defaults.
+- **Easy:** less enemy pressure, easier belts and less disruptive HELIOS.
+- **Hard:** stronger enemy populations, tougher logistics, activates
+  Big-Monsters through the source mod's published `bigmonster.on` interface.
+- **Nightmare:** late research gates and the strongest supported challenge,
+  Big-Monsters enabled, severe Nexus ecology and HELIOS.
+- **Custom:** effective automatically whenever a supported Razi *gameplay*
+  option differs from its original Normal value, or when explicitly selected.
+  Factorio cannot physically switch the **displayed startup preset selector**
+  while the player is editing the Mod Settings UI. It will still show the
+  previously chosen preset, but resolved gameplay uses the manual settings.
 
-| Effective setting | Relaxed | Standard | Hard | Extreme |
-|---|---|---|---|---|
-| asteroid difficulty scale | balanced | balanced | challenging | relentless |
-| asteroid population | sparse | standard | dense | dense |
-| belt threats | relaxed | standard | severe | severe |
-| belt resource richness | rich | standard | scarce | scarce |
-| HELIOS progression | late | late | late | epic |
-| HELIOS route danger | challenging | extreme | extreme | extreme |
-| HELIOS route distance | extended | extended | marathon | marathon |
-| HELIOS commissioning | expedition | expedition | monumental | monumental |
-| HELIOS coronal surges | off | occasional | volatile | volatile |
+The 13 managed levers cover asteroid quality/population, belt threat/resource
+richness, HELIOS travel/progression/stationkeeping/coronal surges, enemy
+density, Nexus severity, Big-Monsters event activation, and Razi's optional
+planetary integration setting. Visual, accessibility and UPS safeguards remain
+independent; Nightmare caps asteroid density to **Dense**, never **Swarm**.
 
-**Safety boundaries:**
-- **No performance sabotage:** The Extreme preset deliberately caps asteroid
-  population at **dense**, never **swarm**. The other difficulty controls
-  increase challenge without forcing avoidable multiplayer UPS spikes.
-- **No prototype deletion:** HELIOS construction, unlocked recipe/component
-  existence, planet list, mission dependencies and the final Convergence
-  victory requirements remain user-controlled. No preset silently disables
-  a machine, science tree or physical megaproject.
-- **No source mod setting corruption:** Big-Monsters `bm-event-days`
-  retains its independent RP3 new-save default of 0. Razi cannot
-  programmatically overwrite another mod's selected global mod setting
-  at runtime. Third-party adapters must be explicitly audited and opt-in.
-- **No presentation changes:** Per-user controls, visuals, text, route-map
-  presentation, performance switches, and accessibility are independent.
-- **Save safety:** Presets don't rewrite any saved settings or factory
-  inventory. Changing startup balance may affect future production/progression;
-  back up an existing campaign before switching.
-- **Performance:** One constant-size table lookup in data or GUI setup.
-  No new every-tick event handlers, world scans or runtime setting writes.
+### Big-Monsters
 
-The first pass wires asteroid profiles, real quality distributions and
-route colors, stellar routes/research/commissioning, and coronal surges to
-the same audited resolver. Extend the mapping only after covering every
-consumer of a new setting with regression tests.
+- The source `bm-event-days` runtime-global **player-selected interval is
+  never rewritten**. Its RP3 new-save default remains 0. An interval of 0
+  is not a guaranteed off switch in the source mod.
+- RP3 Normal/Easy requests the published `off` interface, Hard/Nightmare
+  `on`. If the interface is absent, RP3 gracefully skips the call.
+- The published `add_surface` interface includes registered planetary
+  surfaces during Hard/Nightmare. New surfaces are registered on creation.
+- For scheduled boss frequency, players may still need to adjust
+  `bm-event-days` in **Big-Monsters settings**. RP cannot change another
+  mod's runtime-global value on their behalf.
+
+### Nexus and other enemies
+
+- Nexus retains vanilla biter and spitter nests and worms, in addition to
+  integrated Armoured, Cold, Explosive, Toxic and Arachnid nests.
+- Valid native Gleba egg-raft spawners are added by prototype ID and mapgen
+  eligibility; valid Vulcanus territory settings are reused for demolishers.
+  Both require actual chunk-generation validation with the full modpack,
+  especially their original noise expressions.
+- Other planets receive theme-appropriate packs only when prototypes,
+  surface mapgen controls and suitable land tiles are present.
+- Edits affect **new chunks**, not already explored land. No per-tick
+  enemy spawner scan or scripted boss duplication was added.
+
+### Curated new game setup
+
+Under New Game, select **Razi Protocol · Curated Expedition** (Nauvis).
+It includes a 1.65× starting area, slightly richer early resource patches,
+restrained initial enemies and normal late-game enemy evolution/expansion.
+Factorio map-generation presets can coexist with Freeplay, and the map
+generator selection is independent of Razi's startup mod difficulty.
+The MapGenPreset `default=true` flag is mutually exclusive with custom
+preset properties. **A named preset cannot automatically replace the
+default Freeplay scenario and its settings in one safe prototype change.**
+A dedicated scenario could replace scenario control and starting items, but
+is a larger separate migration with multiplayer/startup ramifications.

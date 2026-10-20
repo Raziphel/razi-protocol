@@ -72,6 +72,18 @@ local function ensure(planet,name)
  local entity=map.autoplace_settings.entity
  entity.settings=entity.settings or {}
  entity.settings[name]=entity.settings[name] or {}
+ -- Respect the enemy pack's own autoplace-control prototype. Register its
+ -- control on previously unsupported planets rather than trusting that a
+ -- copied spawner will use the destination's unrelated enemy-base noise.
+ local control=entry.autoplace and entry.autoplace.control
+ if type(control)=="string"
+   and (data.raw["autoplace-control"] or {})[control] then
+   map.autoplace_controls=map.autoplace_controls or {}
+   if not map.autoplace_controls[control] then
+     map.autoplace_controls[control]={
+       frequency=router.pressure(planet),size=1,richness=1}
+   end
+ end
  extend_restriction(entry,land_tiles(map))
  return true
 end

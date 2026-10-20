@@ -247,6 +247,8 @@ require("prototypes.compat.enemy_autoplace").repair_optional_enemy_autoplace()
 -- Final enemy ecology runs after optional enemy packs and all planet
 -- prototypes are registered. It never changes already-generated chunks.
 require("prototypes.compat.razi_enemy_ecology").data_final_fixes()
+-- A curated, explicitly selectable New Game preset; Freeplay remains intact.
+require("prototypes.system.razi_map_preset").data_final_fixes()
 
 -- ABSOLUTE LAST ART PASS: Orbital Catapult draws independent red dotted
 -- routes into the same starmap atlas. Remove those visuals and leftover
