@@ -19,6 +19,11 @@ data:extend({
     setting_type="startup",default_value="normal",
     allowed_values={"custom","easy","normal","hard","nightmare"},
     order="00[gameplay-difficulty]-a[preset]"},
+  -- The map generator initially selects a Razi-branded default. Turn off
+  -- to retain Factorio/other-mod default choice and default map values.
+  {type="bool-setting",name="razi-default-new-game-map",
+    setting_type="startup",default_value=true,
+    order="00[gameplay-difficulty]-b[map-generator]"},
   -- One shared save setting controls research spoiler fog and the Journal.
   -- Runtime-global allows multiplayer forces to agree on research visibility
   -- and can be toggled without restarting or changing prototype IDs.

@@ -50,7 +50,34 @@ independent; Nightmare caps asteroid density to **Dense**, never **Swarm**.
 - Edits affect **new chunks**, not already explored land. No per-tick
   enemy spawner scan or scripted boss duplication was added.
 
-### Curated new game setup
+### Auto-selected map preset and per-difficulty profiles
+
+With **Select Razi's map preset by default** enabled (the default),
+Factorio's New Game screen initially selects `Razi Protocol · Recommended
+(Auto)`. The currently effective startup difficulty (Easy, Normal, Hard,
+Nightmare, or Normal fallback for Custom) informs the default Nauvis
+autoplace controls and map-settings evolution/expansion. No post-start
+map generation changes or hidden scenario controller are used.
+
+**Important 2.1 engine limitation:** `MapGenPreset.default=true` may
+have only `default` and `order` properties. Thus the auto-selected
+entry cannot impose custom `starting_area` or the full resource slider
+values by itself. For complete, previewable hand-tuned worlds select
+`Razi Protocol · Easy / Normal / Hard / Nightmare / Custom` explicitly
+from the New Game dropdown.
+
+Map presets control Nauvis generation and shared base map settings.
+Choosing a named map profile does **not** write RP3's startup mod
+difficulty; for consistent world/combat difficulty, select the same
+difficulty in Mod Settings before restarting Factorio. The Razi default
+selection may be disabled to keep the base-game/other-mod default.
+
+The vanilla **Default** and all other named Factorio presets remain
+selectable. When Razi auto-selection is enabled the default prototype's
+underlying world values reflect the RP3 profile, so selecting vanilla
+Default does not guarantee pre-RP3 original baselines.
+
+### Original curated new game setup
 
 Under New Game, select **Razi Protocol · Curated Expedition** (Nauvis).
 It includes a 1.65× starting area, slightly richer early resource patches,
