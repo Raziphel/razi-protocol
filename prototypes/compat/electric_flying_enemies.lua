@@ -13,58 +13,6 @@ local electric_enemy_name_patterns = {
 	"droid"
 }
 
-local electric_enemy_tiles = {
-	"fulgoran-dust",
-	"fulgoran-rock",
-	"fulgoran-conduit",
-	"fulgoran-machinery",
-	"oil-ocean-shallow",
-	"oil-ocean-deep",
-	"fulgoran-space-platform",
-	"ribbonia-gap",
-	"ribbonia-water",
-	"ribbonia-void",
-	"dirt-1",
-	"dirt-2",
-	"dirt-3",
-	"dirt-4",
-	"dirt-5",
-	"dirt-6",
-	"dirt-7",
-	"grass-1",
-	"grass-2",
-	"grass-3",
-	"grass-4",
-	"red-desert-0",
-	"red-desert-1",
-	"red-desert-2",
-	"red-desert-3",
-	"dry-dirt",
-	"sand-1",
-	"sand-2",
-	"sand-3",
-	"corrundum-dunes",
-	"corrundum-sand",
-	"petroleum-tile",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
-}
-
 local explicit_electric_spawners = {
 	"flying-electric-unit-spawner",
 	"walker-electric-unit-spawner",
@@ -95,26 +43,6 @@ local function name_matches_electric_enemy(name)
 	end
 
 	return false
-end
-
-local function add_unique(values, value)
-	for _, existing in pairs(values) do
-		if existing == value then
-			return
-		end
-	end
-
-	table.insert(values, value)
-end
-
-local function extend_tile_restriction(spawner)
-	-- Preserve scripted nests without inventing invalid placement rules.
-	if not enemy_autoplace.has_valid_autoplace(spawner) then return end
-	spawner.autoplace.tile_restriction = spawner.autoplace.tile_restriction or {}
-
-	for _, tile_name in pairs(enemy_autoplace.existing_tiles(electric_enemy_tiles)) do
-		add_unique(spawner.autoplace.tile_restriction, tile_name)
-	end
 end
 
 local function collect_electric_spawners()

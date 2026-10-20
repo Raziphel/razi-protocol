@@ -6,41 +6,6 @@ end
 
 local arachnid_spawner = data.raw["unit-spawner"]["arachnid-spawner-unitspawner"]
 
-local arachnid_tiles = {
-	"arig-sand",
-	"arig-deep-sand",
-	"arig-stable-sand",
-	"planetaris-sandstone-1",
-	"planetaris-sandstone-2",
-	"planetaris-sandstone-3",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks",
-	"planet-crucible-dirt-1",
-	"planet-crucible-dirt-2",
-	"planet-crucible-dirt-3",
-	"planet-crucible-dirt-4",
-	"planet-crucible-rock-1",
-	"planet-crucible-rock-2",
-	"planet-crucible-rock-3",
-	"planet-crucible-rock-4",
-	"planet-crucible-sand-1"
-}
-
 local function add_arachnids_to_planet(planet_name)
 	local planet = data.raw.planet[planet_name]
 	local map_gen_settings = planet and planet.map_gen_settings

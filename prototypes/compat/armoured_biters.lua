@@ -25,52 +25,6 @@ local armoured_enemy_entities = {
 	"armoured-biter-spawner"
 }
 
-local armoured_biter_tiles = {
-	"hyarion-jagged-ground",
-	"hyarion-cracks-hot",
-	"hyarion-cracks-warm",
-	"hyarion-cracks",
-	"hyarion-folds-flat",
-	"hyarion-crystal-light",
-	"hyarion-crystal-dark",
-	"hyarion-crystal-flats",
-	"hyarion-pumice-stones",
-	"hyarion-smooth-stone",
-	"hyarion-smooth-stone-warm",
-	"hyarion-crystal-cracks",
-	"hyarion-folds",
-	"hyarion-folds-warm",
-	"hyarion-soil-dark",
-	"hyarion-soil-light",
-	"hyarion-crystal-soil",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks",
-	"planet-crucible-dirt-1",
-	"planet-crucible-dirt-2",
-	"planet-crucible-dirt-3",
-	"planet-crucible-dirt-4",
-	"planet-crucible-rock-1",
-	"planet-crucible-rock-2",
-	"planet-crucible-rock-3",
-	"planet-crucible-rock-4",
-	"planet-crucible-sand-1"
-}
-
 local function remove_armoured_units_from_spawner(spawner)
 	if not spawner or not spawner.result_units then
 		return

@@ -39,36 +39,6 @@ local cold_source_planets = {
 	"nauvis"
 }
 
-local cold_planet_tiles = {
-	"snow-flat",
-	"snow-crests",
-	"snow-lumpy",
-	"snow-patchy",
-	"ice-rough",
-	"ice-smooth",
-	"ammoniacal-ocean",
-	"ammoniacal-ocean-2",
-	"brash-ice",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
-}
-
-local existing_cold_planet_tiles = enemy_autoplace.existing_tiles(cold_planet_tiles)
-
 local function cold_autoplace_expression(distance, worm)
 	local expression = "cb_enemy_autoplace_base(" .. distance .. ", " .. (42000 + distance) .. ")"
 	if worm then
