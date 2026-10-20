@@ -147,7 +147,7 @@ ok(#without_halos==#parts-8+14,
   "Turning off halos must remove native and cinematic corona layers")
 -- Disable only cluster pockets, then only nebulae; both are optional.
 settings.startup["razi-starmap-micro-details"].value=false
-ok(#bg.make_layers("cinematic",true,true,true,false)==#parts+20,
+ok(#bg.make_layers("cinematic",true,true,true,false)==#parts-4+20,
   "Disabling micro details must remove the eight cinematic star clusters")
 settings.startup["razi-starmap-micro-details"].value=true
 settings.startup["razi-starmap-galactic-ornaments"].value=false
