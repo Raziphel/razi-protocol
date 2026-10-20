@@ -68,13 +68,6 @@
       "reason": "Core K2SO science, native assets, laboratory and transceiver progression"
     },
     {
-      "mod": "FluxWorks",
-      "type": "hidden-optional",
-      "declaration": "(?) FluxWorks >= 0.2.12",
-      "group": "hidden-optional",
-      "reason": "Hidden until the compatible 0.2.12 release is publicly available and tested"
-    },
-    {
       "mod": "aai-signal-transmission",
       "type": "recommended",
       "declaration": "+ aai-signal-transmission >= 0.6.0",
