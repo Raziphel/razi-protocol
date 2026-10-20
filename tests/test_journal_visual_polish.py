@@ -107,8 +107,8 @@ class VisualPolishTests(unittest.TestCase):
         for phase in ("machines","growth","chemistry","departure"):
             self.assertIn('phase="'+phase+'"',core)
             self.assertIn(phase+"=",locale)
-        self.assertIn('nauvis_phase(entries,quest.phase,theme,inner-34)',ui)
-        self.assertIn('nauvis_phase(body,quest.phase,theme,text_width)',ui)
+        self.assertIn('nauvis_phase(entries,quest.phase,theme,inner-34,player.force)',ui)
+        self.assertIn('nauvis_phase(body,quest.phase,theme,text_width,player.force)',ui)
         self.assertIn('style="razi_journal_phase_divider"',ui)
         self.assertNotIn("data:extend(",core)
 
@@ -141,7 +141,7 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn("M.record_chapter_completions(force,false,tick)",journal)
         self.assertIn('name="razi_journal_chapter_time"',journal)
         self.assertIn("nauvis_phase(entries,quest.phase,theme,inner-34,player.force)",journal)
-        self.assertIn("chapter-time-recorded=Finished at __1__ played",loc)
+        self.assertIn("chapter-time-recorded=Completed at __1__",loc)
         self.assertIn("chapter-time-earlier=Finished before timing began",loc)
 
     def test_megaproject_dossiers_use_real_status(self):
