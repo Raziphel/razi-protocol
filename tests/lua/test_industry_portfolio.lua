@@ -19,7 +19,7 @@ for _,name in ipairs({
   "razi-cubium-precious-metal-alloying",
   "razi-network-precision-chitosan",
   "razi-network-golden-cubium-alloys",
-  "razi-network-bond-linox-refining"
+  "razi-linox-rare-earth-exchange"
 }) do
   check(not p.keep(name),"Redundant/late exchange must stay retired: "..name)
 end
