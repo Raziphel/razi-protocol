@@ -1,3 +1,33 @@
+## Cinematic mode: distinct starfield composition (2.1.126)
+
+**Subtle** is unchanged: 42 low-contrast starfield tiles, real system
+glows, source belt debris, four quiet sky pockets and four local dust flecks.
+
+**Cinematic** now adds 28 additional *static* layers when all visual switches
+are on: eight individually positioned star-cluster pockets (the existing
+1024px tiny-star atlas at 1.18–1.35× rather than background 4×), fourteen
+depth-separated real-star coronas (seven source systems, two layers each),
+and six tinted dust structures in otherwise quiet sky sectors. The optional
+Bellicos star gets two more corona layers only when installed; the
+Deep Space coordinate parent deliberately does NOT become a fake star.
+These layers make Cinematic visibly different rather than merely lifting
+alpha by ~0.2.
+
+The new **Extra cinematic starfield** toggle (on by default) controls only
+those 28 decorative layers. Turning off *Show star halos* removes their
+coronas, turning off *Show distant star details* removes star clusters and
+dust, and the existing separate ornament/micro-detail switches also apply.
+Off mode and optional Better Starmap Background retain full precedence.
+
+The assets are the same four existing indexed starfield textures, six
+dedicated stellar glows, one native-compatible halo and three dust textures.
+**No new PNGs, per-tick animation, random runtime variation, route lines,
+fake orbital rings, map destinations, save changes or hazards.** Default
+Cinematic adds 28 sprite compositions, raising its typical background
+from 59 to 87 precomputed layers. Real navigation markers remain above
+these background layers. Test multiple starmap zoom levels in-game before
+treating the visuals as approved.
+
 ## October 2026 graphics retirement
 
 The active starmap now ships only the four pinpoint starfield atlas tiles,

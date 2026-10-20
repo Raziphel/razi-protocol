@@ -272,6 +272,8 @@ data:extend({
     "cb[starmap]-d2[quiet-nebula-structure]"),
   startup_toggle("razi-starmap-micro-details",
     "cb[starmap]-d3[micro-details]"),
+  startup_toggle("razi-starmap-cinematic-extras",
+    "cb[starmap]-d4[cinematic-extras]"),
   {
     type="bool-setting",
     name="razi-starmap-cartography",
