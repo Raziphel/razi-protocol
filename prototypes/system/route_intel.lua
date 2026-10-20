@@ -93,6 +93,11 @@ function M.annotate(route)
     additions[#additions+1]=field("haul",
       localise("haul-"..hazards.haul_class(route)),230)
   end
+  local solar=quality_levels.stellar_route_tier(route)
+  if solar then
+    additions[#additions+1]=field("stellar",
+      localise("stellar-"..solar),225)
+  end
   -- A single concise, route-specific field note. No claim of ownership
   -- over source mod descriptions and no guessed notes on unknown routes.
   local dossier=dossiers.note_for(route)

@@ -1,6 +1,7 @@
 -- Route danger levels for the map legend and hover text.
 -- Uses the asteroid spawn definitions without changing them.
 local M = {}
+local difficulty=require("scripts.razi_asteroid_difficulty")
 -- This module inspects physical asteroid sizes and resource chunks only.
 -- All Level 1-10 danger calculations and colors belong exclusively to
 -- scripts.razi_asteroid_difficulty. No second severity scale lives here.
@@ -22,6 +23,9 @@ end
 
 function M.kind(route)
   local a,b=route.from or "",route.to or ""
+  local solar=difficulty.stellar_route_tier(route)
+  if solar=="inner" then return "stellar-inner" end
+  if solar=="outer" then return "stellar-approach" end
   if M.is_belt_crossing(route) then return "belt-crossing" end
   if a:find("belt",1,true) or b:find("belt",1,true) then
     return "belt-approach"

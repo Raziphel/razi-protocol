@@ -54,9 +54,9 @@ package.loaded["prototypes.compat.calidus_dyson"]=nil
 local dyson=require("prototypes.compat.calidus_dyson")
 check(dyson.fortify_routes()==3,
  "every retained solar connection must be reinforced")
-check(fallback.length==65000 and source_route.length==65000,
+check(fallback.length==125000 and source_route.length==125000,
  "source or Razi outer orbit retained an easy shortcut")
-check(inner_route.length==30000,
+check(inner_route.length==65000,
  "inner solar orbit should demand a longer, harder voyage")
 check(source_route.asteroid_spawn_definitions[1]==plasma,
  "native plasma encounter was overwritten or reordered")
@@ -68,7 +68,7 @@ settings.startup["razi-helios-route-distance"].value="marathon"
 settings.startup["razi-helios-route-danger"].value="native"
 check(dyson.fortify_routes()==3,
  "marathon setting did not modify routes")
-check(fallback.length==100000 and inner_route.length==45000,
+check(fallback.length==175000 and inner_route.length==100000,
  "marathon distance thresholds not applied")
 local original=#source_route.asteroid_spawn_definitions
 settings.startup["razi-helios-route-distance"].value="native"

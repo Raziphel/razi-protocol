@@ -156,11 +156,18 @@ function M.fortify_routes()
  local outer=M.destination("planet-discovery-sunorbit")
  local inner=M.destination("slp-solar-system-sun2")
  if not outer and not inner then return 0 end
+ -- Register native technology-effect IDs, not invented endpoint IDs.
+ -- The same ten-level model powers starmap ribbons, route tooltips, and
+ -- actual quality-asteroid spawns.
+ require("scripts.razi_asteroid_difficulty")
+   .register_stellar_locations(outer,inner)
  local danger=setting("razi-helios-route-danger","extreme")
  local distance=setting("razi-helios-route-distance","extended")
  local minima={
-   extended={outer=65000,inner=30000},
-   marathon={outer=100000,inner=45000}
+   -- An approach to Calidus must be a genuine expedition. A second
+   -- high-risk leg into the corona cannot be a cheap shuttle.
+   extended={outer=125000,inner=65000},
+   marathon={outer=175000,inner=100000}
  }
  local profiles
  if danger~="native" then

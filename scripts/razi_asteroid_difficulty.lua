@@ -48,15 +48,68 @@ local exceptional={
   ["near_bellicos_orbit"]=10,
   -- Source-owned fractured routes branching from Shattered Planet.
   ["skewer_shattered_planet"]=10,
-  ["skewer_lost_beyond"]=10
+  ["skewer_lost_beyond"]=10,
+  -- SLP uses source-owned orbits rather than Razi's Calidus hub.
+  -- Both need a real late-game quality tier even when connected to Nauvis.
+  ["sun-orbit"]=9,["close-sun-orbit"]=10,
+  ["slp-solar-orbit-outer"]=9,["slp-solar-orbit-inner"]=10
 }
 M.explicit_levels=exceptional
+-- The upstream mod may rename its orbital prototypes across versions.
+-- Resolve their actual IDs once from their technology unlocks rather than
+-- running a technology scan for every passing quality asteroid.
+local stellar={outer={},inner={}}
+for _,name in ipairs({"sun-orbit","slp-solar-orbit-outer"}) do
+  stellar.outer[name]=true
+end
+for _,name in ipairs({"close-sun-orbit","slp-solar-orbit-inner"}) do
+  stellar.inner[name]=true
+end
+function M.register_stellar_locations(outer,inner)
+ if type(outer)=="string" then stellar.outer[outer]=true end
+ if type(inner)=="string" then stellar.inner[inner]=true end
+end
+local stellar_scanned=false
+local function scan_native_technologies()
+ if stellar_scanned then return end
+ local technology=(data and data.raw and data.raw.technology)
+   or (prototypes and prototypes.technology)
+ if not technology then return end
+ stellar_scanned=true
+ local source={
+   {"planet-discovery-sunorbit","outer"},
+   {"slp-solar-system-sun2","inner"}
+ }
+ for _,entry in ipairs(source) do
+   local tech=technology[entry[1]]
+   for _,effect in ipairs(tech and tech.effects or {}) do
+     if effect.type=="unlock-space-location"
+       and type(effect.space_location)=="string" then
+       stellar[entry[2]][effect.space_location]=true
+     end
+   end
+ end
+end
+function M.stellar_location_tier(name)
+ if type(name)~="string" then return nil end
+ scan_native_technologies()
+ if stellar.inner[name] then return "inner" end
+ if stellar.outer[name] then return "outer" end
+end
+function M.stellar_route_tier(route)
+ if not route then return nil end
+ local from=M.stellar_location_tier(route.from)
+ local to=M.stellar_location_tier(route.to)
+ if from=="inner" or to=="inner" then return "inner" end
+ if from=="outer" or to=="outer" then return "outer" end
+end
 local inferred={}
 -- This data-stage pass handles optional source worlds whose IDs weren't
 -- known while designing the fixed campaign. The graph is connected to the
 -- *final retained routes*, never to speculative legacy shortcuts.
 function M.prepare_routes(routes)
   inferred={}
+  scan_native_technologies()
   local edges={}
   for _,r in pairs(routes or {}) do
     -- Data prototypes use string IDs, but runtime LuaSpaceConnectionPrototype
@@ -76,6 +129,8 @@ function M.prepare_routes(routes)
   -- hub. Only unknowns are inferred, so early planets never drift upward.
   local levels={}
   for name,level in pairs(exceptional) do levels[name]=level end
+  for name in pairs(stellar.outer) do levels[name]=9 end
+  for name in pairs(stellar.inner) do levels[name]=10 end
   table.sort(edges,function(a,b)
     if a[1]==b[1] then return a[2]<b[2] end
     return a[1]<b[1]
@@ -166,6 +221,9 @@ local function value(n,fallback)
 end
 function M.location_level(name)
   if type(name)~="string" then return 1 end
+  local solar=M.stellar_location_tier(name)
+  if solar=="inner" then return 10 end
+  if solar=="outer" then return 9 end
   local fixed=exceptional[name] or inferred[name]
   if fixed then return fixed end
   -- Dynamic Aegis/Bellicos descendants sometimes use version-specific
@@ -185,6 +243,16 @@ function M.is_belt(a,b)
 end
 function M.route_level(route,progress,setting)
   if type(route)~="table" then return 1 end
+  local tier=M.stellar_route_tier(route)
+  if tier then
+    -- Corona hazards do not stop being deadly near a safe departure
+    -- planet. Symmetric progression means travel in either direction is
+    -- dangerous. Peak grade matches the actual high-tier asteroid pool.
+    local t=clamp(value(progress,.5),0,1)
+    local midpoint=4*t*(1-t)
+    local initial=tier=="inner" and 9.25 or 8.20
+    return clamp(initial+.65*midpoint,1,10)
+  end
   local a=M.location_level(route.from)
   local b=M.location_level(route.to)
   local t=clamp(value(progress,.5),0,1)
