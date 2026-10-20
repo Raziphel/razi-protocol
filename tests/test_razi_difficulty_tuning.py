@@ -21,6 +21,7 @@ class NativeDifficulty(unittest.TestCase):
   self.assertIn('require("scripts.razi_difficulty_tuning")',code)
   self.assertIn("tuning.profile(mode,M.profiles,difficulty)",code)
   self.assertIn("tuning.pollution(source.pollution,original.pollution,spec)",code)
+  self.assertIn("entry.advanced_settings.pollution.min_to_diffuse=nil",code)
   self.assertIn("tuning.unit_groups(source.unit_group,original.unit_group,spec)",code)
  def test_normal_and_nightmare_ui_choices_translated(self):
   for lang in ("en","ru"):

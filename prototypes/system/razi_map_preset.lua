@@ -186,8 +186,11 @@ function M.explicit_preset(mode)
      local ageing=source.pollution.ageing
      local consume=source.pollution.enemy_attack_pollution_consumption_modifier
      entry.advanced_settings.pollution={}
+     -- Only diffusion_ratio exists on MapGenPresetPollutionSettings.
+     -- min_to_diffuse belongs to global MapSettings, not map presets.
      tuning.pollution(entry.advanced_settings.pollution,
        source.pollution,spec)
+     entry.advanced_settings.pollution.min_to_diffuse=nil
      if type(ageing)=="number" then
        entry.advanced_settings.pollution.ageing=
          math.max(.1,ageing*spec.pollution_ageing)

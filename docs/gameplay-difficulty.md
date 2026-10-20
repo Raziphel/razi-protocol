@@ -146,3 +146,7 @@ source-mod baseline. The field is not valid in a MapGenPreset's own
 `difficulty_settings`, so the startup RP3 selection is authoritative.
 A separate Spoilage and perishability setting lets Custom players opt out.
 Check new maps carefully before affecting an established save.
+
+**MapGen schema guard:** The `min_to_diffuse` pollution threshold is
+valid only on the global `MapSettings` prototype. Named map generator
+presets may set `diffusion_ratio`, but must omit `min_to_diffuse`.

@@ -121,6 +121,12 @@ for _,spec in ipairs(specs) do
  local spoil={easy=1.4,normal=1,hard=.82,nightmare=.65}
  check(global.difficulty_settings.spoil_time_modifier==spoil[mode],
    "Biological spoilage time is not difficulty adjusted")
+ local explicit=group["razi-protocol-easy"]
+ if explicit and explicit.advanced_settings then
+   check(not (explicit.advanced_settings.pollution
+     and explicit.advanced_settings.pollution.min_to_diffuse),
+     "Unsupported pollution threshold field inside map preset")
+ end
  check(global.pollution.ageing==mod.profiles[mode].pollution_ageing,
    "Pollution absorption did not scale")
  check(global.asteroids.spawning_rate==mod.profiles[mode].asteroids,
