@@ -125,6 +125,25 @@ class VisualPolishTests(unittest.TestCase):
         self.assertNotIn('science-pack-heading=RESEARCH COST',locale)
         self.assertIn('more-gallery-items=__1__ more entries',locale)
 
+    def test_chapter_times_preserve_original_completion(self):
+        journal=read("scripts/razi_journal.lua")
+        control=read("control.lua")
+        times=read("scripts/razi_chapter_timing.lua")
+        loc=load_journal_locale(ROOT)
+        self.assertIn("function M.record_chapter_completions(force,historical,tick)",journal)
+        self.assertIn("not quest.optional and available(quest)",times)
+        self.assertIn('quest.chapter=="calidus" and quest.phase',times)
+        self.assertIn("if row[kind][id]~=nil then return false end",times)
+        self.assertIn("historical and false or",times)
+        self.assertIn("chapter_timing.forces_merged(event)",journal)
+        self.assertIn("razi_journal.initialize_chapter_completions()",control)
+        self.assertIn("razi_journal.refresh_chapter_completions()",control)
+        self.assertIn("M.record_chapter_completions(force,false,tick)",journal)
+        self.assertIn('name="razi_journal_chapter_time"',journal)
+        self.assertIn("nauvis_phase(entries,quest.phase,theme,inner-34,player.force)",journal)
+        self.assertIn("chapter-time-recorded=Finished at __1__ played",loc)
+        self.assertIn("chapter-time-earlier=Finished before timing began",loc)
+
     def test_megaproject_dossiers_use_real_status(self):
         projects=read("scripts/razi_journal_projects.lua")
         icons=read("scripts/razi_journal_icons.lua")

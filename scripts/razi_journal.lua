@@ -21,6 +21,7 @@ local systems=require("scripts.razi_journal_systems")
 local great_projects=require("scripts.razi_great_projects")
 local guidance=require("scripts.razi_journal_guidance")
 local objectives=require("scripts.razi_journal_objectives")
+local chapter_timing=require("scripts.razi_chapter_timing")
 local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
@@ -206,6 +207,38 @@ function M.complete(force,quest,context)
   local t=technology(force,quest,context)
   return t~=nil and t.researched==true
 end
+
+-- Capture first clear without changing quest state or scanning all research
+-- prototypes on every frame. Real Factorio ticks, not wall-clock timestamps.
+function M.record_chapter_completions(force,historical,tick)
+  if not (force and force.index and force.technologies) then return false end
+  local context=M.context(force)
+  return chapter_timing.observe(force,defs.quests,
+    function(quest) return M.available(force,quest,context) end,
+    function(quest) return M.complete(force,quest,context) end,
+    historical,tick or (game and game.tick or 0))
+end
+function M.initialize_chapter_completions()
+  -- Old saves cannot reveal the minute when a finished objective was earned.
+  local historical=(game and game.tick or 0)>0
+  for _,force in pairs(game.forces or {}) do
+    if force.name~="enemy" and force.name~="neutral" then
+      M.record_chapter_completions(force,historical)
+    end
+  end
+end
+function M.forces_merged(event)
+  chapter_timing.forces_merged(event)
+  local force=event and (event.destination or
+    (game and game.forces[event.destination_index]))
+  if force then M.record_chapter_completions(force,false) end
+end
+local function completion_caption(tick,kind)
+  if tick==nil then return nil end
+  if tick==false then return L(kind.."-time-earlier") end
+  return L(kind.."-time-recorded",chapter_timing.format(tick))
+end
+
 function M.state(force,quest,context)
   if not M.available(force,quest,context) then return "unavailable" end
   if M.complete(force,quest,context) then return "complete" end
@@ -958,7 +991,7 @@ end
 
 -- Compact editorial act divider for Nauvis. The four acts are meaningful
 -- navigation, not new research gates, progress storage or a separate UI.
-local function nauvis_phase(parent,phase,theme,width)
+local function nauvis_phase(parent,phase,theme,width,force)
   if not phase then return end
   -- These are editorial acts of the Calidus chapter, not research gates.
   -- Give each a real inset separator so the mission list never reads as
@@ -973,6 +1006,11 @@ local function nauvis_phase(parent,phase,theme,width)
   name.style.font_color=theme.soft
   name.style.single_line=false
   name.style.maximal_width=math.max(100,width-22)
+  local stamped=completion_caption(chapter_timing.get(force,"phases",phase),"phase")
+  if stamped then
+    local stamp=label(divider,stamped)
+    stamp.style.font_color=COLOR.quiet
+  end
 end
 
 -- A source-backed frontispiece for each chapter. It is a *view* of the
@@ -1015,6 +1053,13 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     tostring(chapter.completed),tostring(chapter.total)))
   count.style.font="default-bold"
   count.style.font_color=COLOR.muted
+  local stamped=completion_caption(
+    chapter_timing.get(player.force,"chapters",p.chapter),"chapter")
+  if stamped then
+    local stamp=label(panel,stamped)
+    stamp.style.font_color=COLOR.green
+    stamp.tooltip=L("chapter-time-explanation")
+  end
   local measure=panel.add{type="progressbar",
     value=chapter.total>0 and chapter.completed/chapter.total or 0}
   measure.style.width=math.min(inner,420)
@@ -1061,7 +1106,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     shown=shown+1
     if p.chapter=="calidus" and quest.phase
       and quest.phase~=last_phase then
-      nauvis_phase(body,quest.phase,theme,text_width)
+      nauvis_phase(body,quest.phase,theme,text_width,player.force)
     end
     last_phase=quest.phase
     local state=view.states[quest.id]
@@ -1223,14 +1268,21 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       heading.style.font_color=open and COLOR.ink or COLOR.muted
       heading.style.vertical_align="center"
 
-      local counts=card.add{type="flow",name="razi_journal_chapter_status",direction="horizontal"}
-      counts.style.vertical_align="center"
-      counts.style.horizontal_spacing=5
+      local counts=card.add{type="flow",name="razi_journal_chapter_status",direction="vertical"}
+      counts.style.vertical_spacing=1
       counts.style.left_padding=45
-      counts.visible=open
+      local stamped=completion_caption(
+        chapter_timing.get(player.force,"chapters",chapter.id),"chapter")
+      counts.visible=open or stamped~=nil
       local count=counts.add{type="label",name="razi_journal_chapter_count",
         caption=L("chapter-progress-short",tostring(completed),tostring(total))}
+      count.visible=open
       count.style.font_color=COLOR.quiet
+      local stamp=counts.add{type="label",name="razi_journal_chapter_time",
+        caption=stamped or ""}
+      stamp.visible=stamped~=nil
+      stamp.style.font_color=COLOR.green
+      stamp.tooltip=L("chapter-time-explanation")
       -- The numerical count is sufficient; redundant progress bars added
       -- visual noise eighteen times in a long chapter list.
       local entries=card.add{type="flow",name="razi_journal_chapter_entries",direction="vertical"}
@@ -1247,7 +1299,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
         for _,quest in ipairs(available) do
           if chapter.id=="calidus" and quest.phase
             and quest.phase~=last_phase then
-            nauvis_phase(entries,quest.phase,theme,inner-34)
+            nauvis_phase(entries,quest.phase,theme,inner-34,player.force)
           end
           last_phase=quest.phase
           local state=view.states[quest.id]
@@ -1945,7 +1997,17 @@ local function update_reader(player,preserve_reader)
         count.caption=L("chapter-progress-short",
           tostring(data.completed),tostring(data.total))
       end
-      if count_holder then count_holder.visible=expanded end
+      if count_holder then
+        local stamped=completion_caption(
+          chapter_timing.get(player.force,"chapters",ch.id),"chapter")
+        local stamp=count_holder["razi_journal_chapter_time"]
+        if stamp then
+          stamp.caption=stamped or ""
+          stamp.visible=stamped~=nil
+        end
+        if count then count.visible=expanded end
+        count_holder.visible=expanded or stamped~=nil
+      end
       if heading then
         heading.style.font=expanded and "default-bold" or "default"
         heading.style.font_color=expanded and COLOR.ink or COLOR.muted
@@ -2168,6 +2230,7 @@ function M.on_research(event)
   local force=research and research.force
   if not (force and M.research_affects_journal(research)) then return end
   local tick=game and game.tick or 0
+  M.record_chapter_completions(force,false,tick)
   local pending=storage.razi_journal_pending_forces
   if not pending then
     pending={}
@@ -2198,6 +2261,14 @@ function M.flush_research_refreshes()
     end
   end
   if not next(pending) then storage.razi_journal_pending_forces=nil end
+end
+function M.refresh_chapter_completions()
+  for _,force in pairs(game.forces or {}) do
+    if force.name~="enemy" and force.name~="neutral"
+      and M.record_chapter_completions(force,false) then
+      refresh_force(force)
+    end
+  end
 end
 -- Refresh only visible boss objectives during the existing ten-second
 -- maintenance tick. No global entity scans or per-tick remote calls.

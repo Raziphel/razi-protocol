@@ -173,6 +173,7 @@ events:on_init(function()
   for _,force in pairs(game.forces) do platform_projects.snapshot(force) end
   deep_expedition.observe_connected()
   retire_connected_operations()
+  razi_journal.initialize_chapter_completions()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
@@ -194,6 +195,7 @@ events:on_configuration_changed(function(event)
 	end
 	repair_nexus_technology_visibility(event)
   retire_connected_operations()
+  razi_journal.initialize_chapter_completions()
   razi_journal.sync_all()
 end)
 -- An idle Convergence has no pending work. Active force transmissions
@@ -258,6 +260,7 @@ events:on_nth_tick(600, function()
   -- Repaint only an open Nexus Journal or pinned boss objective. Native
   -- Nexus Bosses remains the only authority for all nine victories.
   razi_journal.refresh_nexus_visible()
+  razi_journal.refresh_chapter_completions()
 end)
 events:on_nth_tick(30, function()
   razi_journal.flush_research_refreshes()
@@ -373,11 +376,15 @@ events:on_event(defines.events.on_forces_merged,function(event)
   convergence.forces_merged(event)
   story_dispatch.forces_merged(event)
   spoiler_fog.on_forces_merged(event)
+  razi_journal.forces_merged(event)
 end)
 -- Razi-owned future techs are concealed per-force; gameplay progression
 -- remains based on the original technology prerequisites and research.
 events:on_event(defines.events.on_force_created,function(event)
-  if event and event.force then spoiler_fog.sync_force(event.force) end
+  if event and event.force then
+    spoiler_fog.sync_force(event.force)
+    razi_journal.record_chapter_completions(event.force,(game.tick or 0)>0)
+  end
 end)
 events:on_event(defines.events.on_runtime_mod_setting_changed,function(event)
   if event and (event.setting=="razi-hide-spoilers"
