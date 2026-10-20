@@ -14,7 +14,7 @@
   while the player is editing the Mod Settings UI. It will still show the
   previously chosen preset, but resolved gameplay uses the manual settings.
 
-The 25 directly managed levers cover asteroid quality/population, belt
+The 31 directly managed levers cover asteroid quality/population, belt
 threat/resource richness, HELIOS travel/progression/stationkeeping/coronal
 surges, enemy density, Nexus severity, Big-Monsters event activation, and
 Razi's optional planetary integration setting. Eleven additional material

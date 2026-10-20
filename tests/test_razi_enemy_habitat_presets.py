@@ -7,7 +7,7 @@ def read(p):return (ROOT/p).read_text(encoding="utf-8")
 IDS=["armoured-biters","cold-biters","explosive-biters",
      "toxic-biters","arachnids","electric-enemies"]
 class HabitatPresets(unittest.TestCase):
- def test_six_family_settings_cover_all_five_options(self):
+ def test_six_family_settings_support_follow_difficulty_and_manual_tiers(self):
   cfg=read("settings.lua")
   diff=read("scripts/razi_difficulty_presets.lua")
   for id in IDS:

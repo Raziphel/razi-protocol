@@ -66,7 +66,7 @@ per-tick spawning fallback is installed.
 ## Difficulty-aware habitat coverage (2.1.131)
 
 There are now **six startup habitat settings**, one for each enemy family.
-Each lets players choose **Off / Limited / Curated / Expanded / All**.
+Each defaults to **Follow difficulty** and also allows **Off / Limited / Curated / Expanded / All**.
 The overarching RP3 difficulty maps to these levels automatically:
 
 | Master difficulty | Habitat reach |
