@@ -3,8 +3,8 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
-check(#defs.chapters==19,"Nineteen current expedition chapters expected")
-check(#defs.quests==256,"Protocol Codex must include the authored 256 expedition milestones")
+check(#defs.chapters==18,"Eighteen expedition chapters expected")
+check(#defs.quests==244,"Protocol Codex must include 244 source-backed expedition milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true

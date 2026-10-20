@@ -25,7 +25,8 @@ class TestSourceOwnership(unittest.TestCase):
                          "VoidProcessing-Updated"}.issubset(recommended))
         self.assertEqual({d for d in deps if d.startswith("? ")},
                          {"? shchierbin >= 0.3.19", "? planet-rabbasca >= 0.22.2"})
-        self.assertIn("(?) FluxWorks >= 0.2.12",deps)
+        self.assertFalse({d for d in deps if d.startswith("(?) ")},
+                         "Retired experimental integrations must not remain as hidden dependencies")
         self.assertIn("! outer-rim",deps)
         self.assertIn("! Hephaestus",deps)
         normalised=[]

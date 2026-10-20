@@ -13,7 +13,6 @@ class AllJournalActs(unittest.TestCase):
             "scripts/razi_journal_data.lua",
             "scripts/razi_journal_expansion.lua",
             "scripts/razi_journal_industry.lua",
-            "scripts/razi_journal_fluxworks.lua",
             "scripts/razi_journal_frontier.lua"))
         missions=re.findall(r'\{id="([^"]+)"\s*,\s*chapter="([^"]+)"',catalog)
         source=read("scripts/razi_journal_acts.lua")
@@ -25,8 +24,8 @@ class AllJournalActs(unittest.TestCase):
                     self.assertNotIn(mission,assigned,mission)
                     assigned[mission]=chapter
         self.assertEqual(dict(missions),assigned)
-        self.assertEqual(19,len(set(assigned.values())))
-        self.assertEqual(256,len(assigned))
+        self.assertEqual(18,len(set(assigned.values())))
+        self.assertEqual(244,len(assigned))
 
     def test_every_chapter_uses_same_timing_and_section_renderer(self):
         ui=read("scripts/razi_journal.lua")

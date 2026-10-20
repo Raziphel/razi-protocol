@@ -10,7 +10,7 @@ for name,enabled in pairs(p.retained) do
   count=count+1
 end
 check(count==15,"Exactly 15 curated K2SO/modded recipes expected")
--- Five specialist FluxWorks exchanges bring the total to twenty.
+-- All retained optional alternatives are drawn from real planetary industries.
 for _,name in ipairs({
   "razi-ferrum-linox-optical-magnets",
   "razi-balack-rubia-chitosan-shielding",
@@ -47,4 +47,4 @@ for _,old in ipairs({
     check(pack:find("%-science%-pack$")~=nil,"Use native research science")
   end
 end
-print("Curated industry: twenty optional recipes, native research and real freight")
+print("Curated industry: fifteen optional manufacturing alternatives, native research and real freight")

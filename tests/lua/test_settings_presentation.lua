@@ -1,5 +1,5 @@
 ---@diagnostic disable: missing-fields
--- The FluxWorks-style headings are localized, not extra dummy settings.
+-- The grouped startup headings are localized, not extra dummy settings.
 -- Guard the actual names/defaults/order used by existing saves and startup.
 local function check(value, why)
   if not value then error(why, 2) end
@@ -50,7 +50,7 @@ for _, spec in ipairs(expected) do
   end
   check(rawget(setting, "setting_type") == "startup", "Startup mode changed: " .. name)
   check(rawget(setting, "order") == order and order > previous_order,
-    "FluxWorks-style color section order is unstable: " .. name)
+    "Color-coded settings section order is unstable: " .. name)
   check(not rawget(setting, "hidden") and not rawget(setting, "forced_value"),
     "A displayed setting was accidentally hidden or forced")
   previous_order = order
@@ -107,4 +107,4 @@ for _, language in ipairs({"en", "ru"}) do
     end
   end
 end
-print("Localized FluxWorks-style Razi settings and unchanged defaults passed")
+print("Localized grouped Razi settings and unchanged defaults passed")
