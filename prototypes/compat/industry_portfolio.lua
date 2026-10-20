@@ -1,6 +1,7 @@
 -- Single, curated manufacturing portfolio for Balanced and Deep.
--- Source recipes are NEVER removed. Retired Razi alternates are simply not
--- registered; their old researched technology remains harmless in saves.
+-- Native source recipes and technologies are NEVER removed. Retired Razi
+-- optional alternatives are not registered on new loads; a save can lose
+-- those Razi-only alternate unlocks without losing native production.
 local M={}
 local retained={
   ["razi-bio-rare-metal-casting"]=true,
