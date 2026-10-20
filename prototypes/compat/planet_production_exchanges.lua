@@ -599,7 +599,9 @@ local function register_exchange(rule)
   alternative.type = "recipe"
   alternative.name = rule.name
   alternative.localised_name = {"recipe-name." .. rule.name}
-  alternative.localised_description = {"recipe-description." .. rule.name}
+  alternative.localised_description = {"",
+    {"recipe-description." .. rule.name},"\n",
+    {"razi-industry-profile." .. profile.kind}}
   alternative.icon, alternative.icon_size = nil, nil
   alternative.icons = icons
   alternative.enabled = false
@@ -667,7 +669,9 @@ local function register_exchange(rule)
     type = "technology",
     name = rule.name,
     localised_name = {"technology-name." .. rule.name},
-    localised_description = {"technology-description." .. rule.name},
+    localised_description = {"",
+      {"technology-description." .. rule.name},"\n",
+      {"razi-industry-profile." .. profile.kind}},
     icon = visual.icon,
     icons = visual.icons and deepcopy(visual.icons) or nil,
     -- The native technology may use a 64px icon with no icon_size field.
