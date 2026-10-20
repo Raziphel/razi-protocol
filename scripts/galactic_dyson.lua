@@ -71,11 +71,18 @@ function M.component_counts(force,refresh)
    and tick-prior.tick<M.production_cache_ticks then
    return prior.counts
  end
+ -- Ignore nonexistent source-mod item prototypes. This avoids calling
+ -- the statistics API for retired IDs on each planet/platform surface.
+ local items=prototypes and prototypes.item
+ local available={}
+ for _,name in ipairs(counted_items) do
+   if not items or items[name] then available[#available+1]=name end
+ end
  for _,surface in pairs(game.surfaces) do
-   if surface.valid~=false then
+   if surface.valid~=false and #available>0 then
      local stats=force.get_item_production_statistics(surface)
      if stats and stats.valid~=false then
-       for _,name in ipairs(counted_items) do
+       for _,name in ipairs(available) do
          -- get_input_count is consumption. OUTPUT is actual manufacturing.
          counts[name]=(counts[name] or 0)
            +(stats.get_output_count(name) or 0)

@@ -19,6 +19,7 @@ class HeliosPerformance(unittest.TestCase):
   self.assertIn("stats.get_output_count(name)",gui)
   self.assertNotIn("+(stats.get_input_count(name)",gui)
   self.assertIn("storage.razi_helios_production_cache",gui)
+  self.assertIn("if not items or items[name]",gui)
  def test_non_solar_platforms_do_not_allocate_held_state(self):
   operations=read("scripts/razi_helios_operations.lua")
   begin=operations.index("function M.observe(platform)")
