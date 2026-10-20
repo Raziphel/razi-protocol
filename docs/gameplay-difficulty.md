@@ -50,46 +50,62 @@ independent; Nightmare caps asteroid density to **Dense**, never **Swarm**.
 - Edits affect **new chunks**, not already explored land. No per-tick
   enemy spawner scan or scripted boss duplication was added.
 
-### Auto-selected map preset and per-difficulty profiles
+### World-generation difficulty across all installed planets
 
-With **Select Razi's map preset by default** enabled (the default),
-Factorio's New Game screen initially selects `Razi Protocol · Recommended
-(Auto)`. The currently effective startup difficulty (Easy, Normal, Hard,
-Nightmare, or Normal fallback for Custom) informs the default Nauvis
-autoplace controls and map-settings evolution/expansion. No post-start
-map generation changes or hidden scenario controller are used.
+On New Game, RP3 automatically selects **Razi Protocol · Normal** for
+fresh installs. Changing the RP3 startup difficulty to Easy, Hard or
+Nightmare and restarting automatically selects that named preset instead.
+The old Recommended (Auto) and Custom map-generator entries were removed.
+The **Custom difficulty** remains in Mod Settings for manual overrides,
+where the safe Normal world-generation baseline is used unless players
+select a different map profile.
 
-**Important 2.1 engine limitation:** `MapGenPreset.default=true` may
-have only `default` and `order` properties. Thus the auto-selected
-entry cannot impose custom `starting_area` or the full resource slider
-values by itself. For complete, previewable hand-tuned worlds select
-`Razi Protocol · Easy / Normal / Hard / Nightmare / Custom` explicitly
-from the New Game dropdown.
+**Before starting a new save**, open Settings > Mod settings > Razi
+Protocol and select your difficulty and individual gameplay preferences.
+Restart Factorio to apply startup settings, then verify the selected
+world-generation profile before generating the map. You can still edit
+individual sliders on the Resources, Terrain, Enemy and Advanced tabs.
 
-Map presets control Nauvis generation and shared base map settings.
-Choosing a named map profile does **not** write RP3's startup mod
-difficulty; for consistent world/combat difficulty, select the same
-difficulty in Mod Settings before restarting Factorio. The Razi default
-selection may be disabled to keep the base-game/other-mod default.
+Map profiles now inspect every registered `autoplace-control` from the
+complete loaded modpack. Resources receive separate **frequency, patch
+size, richness** changes; enemies receive frequency and size changes;
+cliffs and supported tree/water terrain controls receive conservative
+frequency changes. Special terrain noises, planetary climate expression
+functions, disabled source controls, and other mods' script-defined boss
+events are never overwritten. In addition to named preset GUI controls,
+the startup-selected profile scales **all already-present controls on
+every planet prototype**, preserving planet-specific multipliers and zero
+(disabled) entries.
 
-The vanilla **Default** and all other named Factorio presets remain
-selectable. When Razi auto-selection is enabled the default prototype's
-underlying world values reflect the RP3 profile, so selecting vanilla
-Default does not guarantee pre-RP3 original baselines.
+Advanced settings also vary enemy evolution, enemy expansion frequency/
+group size, scientific research costs, pollution absorption and pollution
+consumption per enemy attack, and asteroid spawning rate (capped at 1.12×
+on Nightmare to protect UPS). These are legitimate Factorio map settings,
+not periodic scripted scans.
 
-### Expected New Game behavior
+| Map tuning | Easy | Normal | Hard | Nightmare |
+|---|---:|---:|---:|---:|
+| Resource frequency | 130% | 105% | 82% | 68% |
+| Resource patch size | 130% | 108% | 85% | 75% |
+| Resource richness | 155% | 120% | 75% | 60% |
+| Enemy nest frequency | 48% | 85% | 135% | 170% |
+| Enemy nest size | 72% | 100% | 118% | 128% |
+| Nauvis starting area | 255% | 165% | 115% | 90% |
+| Science cost | 100% | 100% | 125% | 175% |
 
-1. Set RP3 **Game Difficulty** in Mod Settings, then restart to apply.
-2. New Game initially shows **Razi Protocol · Recommended (Auto)**,
-   reflecting the active difficulty's *supported prototype defaults*.
-3. For the full curated map-generation sliders, including starting-area
-   radius and research-price multiplier, choose the corresponding **Razi
-   Protocol · Easy / Normal / Hard / Nightmare** entry from the dropdown.
-4. Or select **Razi Protocol · Custom** and edit all map settings manually.
+**Factorio 2.1 limitation:** A `default=true` map-gen preset must not
+contain any other fields except `order`. RP3 makes the selected difficulty
+the default marker and places its actual prototype defaults into MapSettings
+and source planet map-gen controls. Other named profiles carry explicit,
+fully editable mapgen data. There is no post-start world mutation.
+A manually chosen map profile does not write RP3 startup difficulty.
+The base game Freeplay scenario remains unchanged, other mods' claimed
+defaults take precedence, and opting out via **Select Razi's map preset by
+default** preserves the vanilla selection.
 
-Selecting a map-generation preset does not change your mod difficulty
-setting. The auto-selected default and explicit profiles coexist with
-Freeplay. Factorio's 2.1 `default=true` restriction prevents the automatic
-entry from carrying a full custom `starting_area` and other mapgen
-overrides. This is an engine limitation, not a hidden post-start mutation.
-Existing worlds retain their already-generated chunks and settings.
+For compatibility, player-modded planets with custom noise functions can
+still diverge from percentage sliders. Always visually test the generated
+planet, because frequency/size/richness scaling cannot guarantee exactly
+those output quantities. Existing saves retain generated terrain; no forced
+regeneration of explored chunks. Changes should be verified in the full
+Factorio build before multiplayer rollout.
