@@ -82,11 +82,15 @@ local function restrict_entity_to_cold_tiles(entity_type, entity_name, distance,
 	local entity = data.raw[entity_type] and data.raw[entity_type][entity_name]
 	if entity then
 		entity.autoplace = entity.autoplace or {}
-		entity.autoplace.control = cold_enemy_control
-		entity.autoplace.order = worm and "b[enemy]-b[worm]" or "b[enemy]-a[spawner]"
-		entity.autoplace.force = "enemy"
-		entity.autoplace.probability_expression = cold_autoplace_expression(distance, worm)
-		entity.autoplace.richness_expression = 1
+		-- The source mod's valid expression belongs to that mod. Only
+		-- supply a fallback for forks whose autoplace is incomplete.
+		if entity.autoplace.probability_expression == nil then
+			entity.autoplace.control = cold_enemy_control
+			entity.autoplace.order = worm and "b[enemy]-b[worm]" or "b[enemy]-a[spawner]"
+			entity.autoplace.force = "enemy"
+			entity.autoplace.probability_expression = cold_autoplace_expression(distance, worm)
+			entity.autoplace.richness_expression = 1
+		end
 		-- Never union or overwrite source tile restrictions globally.
 		-- Final ecology owns planet-specific cold nest variants.
 	end

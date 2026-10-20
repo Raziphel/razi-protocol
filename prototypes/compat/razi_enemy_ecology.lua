@@ -156,6 +156,7 @@ local function nexus_pentapod_raft(name,map)
  if (data.raw["unit-spawner"] or {})[id] then return ensure("nexus",id) end
  local nest=table.deepcopy(base)
  nest.name=id
+ nest.type="unit-spawner"
  nest.autoplace={
    control="enemy-base",
    order="z[razi-nexus]-"..name,
@@ -180,12 +181,12 @@ local function nexus()
  local multiplier=router.pressure("nexus")
  -- Preserve native Nauvis enemies through Nexus-only spawn variants.
  -- This also heals earlier external integrations that set frequency=0.
- for _,id in ipairs({"biter-spawner","spitter-spawner",
+ for index,id in ipairs({"biter-spawner","spitter-spawner",
    "small-worm-turret","medium-worm-turret",
    "big-worm-turret","behemoth-worm-turret"}) do
    local kind=id:find("spawner",1,true) and "unit-spawner" or "turret"
    if not put("nexus",id,kind,{"grass","dirt","soil","sand",
-     "rock","stone"},80+#id,.12) then
+     "rock","stone"},80+index*11,.12) then
      -- Source IDs are still valid fallback when a map has no usable
      -- tile settings. Never mutate their tile restrictions globally.
      if source_entity(id) then entity.settings[id]=entity.settings[id] or {} end

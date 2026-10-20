@@ -18,6 +18,7 @@ class EcologyTests(unittest.TestCase):
   self.assertIn("local nest=table.deepcopy(base)",s)
   self.assertIn('"enemy_autoplace_base(0, 25) * 0.15"',s)
   self.assertIn('nest.name=id',s)
+  self.assertIn('nest.type="unit-spawner"',s)
   self.assertIn('data:extend({nest})',s)
   self.assertIn('map.territory_settings=table.deepcopy(native_territory)',s)
   self.assertIn("map.territory_settings=table.deepcopy(native_territory)",s)
