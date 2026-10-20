@@ -4,6 +4,17 @@
 local production=require("prototypes.compat.planet_production_exchanges")
 local M={}
 
+-- Castra's piercing magazines use castra-crafting in the current pack.
+-- Read the REAL source recipe on every data-final-fixes run so another
+-- mod's category override does not silently delete our optional factory.
+local function native_category(name,fallback)
+  local recipes=data and data.raw and data.raw.recipe
+  local recipe=recipes and recipes[name]
+  if not recipe then return fallback end
+  return recipe.category or (recipe.categories and recipe.categories[1])
+    or fallback
+end
+
 local rules={
   -- Bring Vulcanus metallurgy and Gleba's biology to Moshine's silicon line.
   {
@@ -48,7 +59,8 @@ local rules={
     name="razi-frontier-castra-composite-rounds",
     required_mods={"Moshine","castra-prime"},
     source="piercing-rounds-magazine",product="piercing-rounds-magazine",
-    category="crafting",keep_native_category=true,working_world="castra",
+    category=native_category("piercing-rounds-magazine","castra-crafting"),
+    keep_native_category=true,working_world="castra",
     planets={"planet-discovery-castra","planet-discovery-gleba",
       "planet-discovery-moshine"},
     supplier_recipes={{recipe="carbon-fiber",product="carbon-fiber"},
