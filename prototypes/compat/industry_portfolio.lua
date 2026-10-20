@@ -16,7 +16,7 @@ local retained={
   ["razi-network-matrix-cryo-controllers"]=true,
   ["razi-network-lattice-vesta-magnets"]=true,
   ["razi-network-bond-paracelsin-coils"]=true,
-  ["razi-network-bond-linox-refining"]=true,
+  ["razi-frontier-castra-composite-rounds"]=true,
   ["razi-network-frame-vesta-foundations"]=true,
   ["razi-network-frame-aquilo-controllers"]=true
 }
@@ -46,7 +46,7 @@ local profiles={
   ["razi-network-matrix-cryo-controllers"]={kind="accelerated"},
   ["razi-network-lattice-vesta-magnets"]={kind="bulk"},
   ["razi-network-bond-paracelsin-coils"]={kind="accelerated"},
-  ["razi-network-bond-linox-refining"]={kind="accelerated"},
+  ["razi-frontier-castra-composite-rounds"]={kind="accelerated"},
   ["razi-network-frame-vesta-foundations"]={kind="bulk"},
   ["razi-network-frame-aquilo-controllers"]={kind="bulk"}
 }
