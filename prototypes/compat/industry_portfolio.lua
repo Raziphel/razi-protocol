@@ -8,7 +8,7 @@ local retained={
   ["razi-electrobiological-components"]=true,
   ["razi-cryo-energy-control"]=true,
   ["razi-gleba-tenebris-biopolymer"]=true,
-  ["razi-linox-rare-earth-exchange"]=true,
+  ["razi-network-bond-linox-refining"]=true,
   ["razi-modded-vesta-rare-earth-supermagnets"]=true,
   ["razi-first-frontier-relay-components"]=true,
   ["razi-modded-paracelsin-optical-coils"]=true,
@@ -34,8 +34,7 @@ local profiles={
   ["razi-cryo-energy-control"]={
     kind="catalytic",conserve="kr-electronic-components",fraction=0.12},
   ["razi-gleba-tenebris-biopolymer"]={kind="bulk"},
-  ["razi-linox-rare-earth-exchange"]={
-    kind="catalytic",conserve="sulfuric-acid",type="fluid",fraction=0.12},
+  ["razi-network-bond-linox-refining"]={kind="accelerated"},
   ["razi-modded-vesta-rare-earth-supermagnets"]={
     kind="catalytic",conserve="holmium-plate",fraction=0.12},
   ["razi-first-frontier-relay-components"]={kind="accelerated"},
