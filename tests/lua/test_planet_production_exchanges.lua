@@ -94,12 +94,18 @@ local function setup(options)
   local raw={
     item=items,fluid=fluids,recipe=recipes,technology=techs,
     tool={["calidus-tech-card"]={},["solaris-tech-card"]={},
-      ["nyxaris-tech-card"]={}},
+      ["nyxaris-tech-card"]={},
+      ["automation-science-pack"]={},["logistic-science-pack"]={},
+      ["chemical-science-pack"]={},["production-science-pack"]={},
+      ["utility-science-pack"]={}},
     planet={vulcanus={surface_properties={pressure=4000}},
       fulgora={surface_properties={["magnetic-field"]=99}},
       aquilo={surface_properties={pressure=300}}},
     lab={["kr-advanced-lab"]={inputs={"calidus-tech-card",
-      "solaris-tech-card","nyxaris-tech-card"}}},
+      "solaris-tech-card","nyxaris-tech-card",
+      "automation-science-pack","logistic-science-pack",
+      "chemical-science-pack","production-science-pack",
+      "utility-science-pack"}}},
     ["assembling-machine"]={
       foundry={crafting_categories={"metallurgy"},fluid_boxes={
         {production_type="input"},{production_type="input"},
@@ -211,6 +217,10 @@ local names={
   "razi-electrobiological-components",
   "razi-cryo-energy-control"
 }
+for _,name in ipairs(names) do
+  local rule=require("prototypes.compat.industry_portfolio")
+  check(rule.keep(name),"A core cross-world exchange must be curated")
+end
 for _, name in ipairs(names) do
   local recipe, tech=full.recipe[name],full.technology[name]
   check(recipe and tech,"Missing integrated production exchange: "..name)
@@ -220,6 +230,10 @@ for _, name in ipairs(names) do
     "Cross-planet recipe can multiply bonus with productivity")
   check(#recipe.icons>=1 and tech.icon,"Recipe or technology icon missing")
   check(tech.effects[1].recipe==name,"Exchange not unlocked by its research")
+  for _,ingredient in ipairs(tech.unit.ingredients) do
+    check(not ingredient[1]:find("tech%-card"),
+      "Exchange research must not demand earlier-star tech cards")
+  end
 end
 check(product(full.recipe[names[1]],"kr-rare-metals")==5,
   "Bioflux metallurgy should output five rare metals from four batches")
@@ -393,6 +407,16 @@ end
 check(off_raw.recipe["kr-casting-rare-metals"],
   "Master Off must retain K2SO's original production")
 rawset(_G, "settings", nil)
+
+-- Fixture-only alternative names must be opted into the curated policy so
+-- the production arithmetic can still be tested independently of the
+-- shipping portfolio without enabling these names in a real modpack.
+local portfolio=require("prototypes.compat.industry_portfolio")
+for _,name in ipairs({
+  "razi-fixture-bulk-electronics","razi-fixture-default-energy",
+  "razi-fixture-legacy-economy","razi-fixture-paced-economy",
+  "razi-fixture-low-bonus-ceiling","razi-fixture-unsafe-bonus"
+}) do portfolio.retained[name]=true end
 
 -- Native recipes with many outputs need proportional bonus math. A
 -- fixed +1 on 16 components would be worse than the old four native runs.
