@@ -25,7 +25,7 @@ class ResponsiveMissionPlan(unittest.TestCase):
     def test_actions_and_story_share_one_scroll_context(self):
         journal=read("scripts/razi_journal.lua")
         dossier=journal.split("local function render_details(",1)[1].split(
-            "local function nauvis_phase(",1)[0]
+            "local function chapter_act(",1)[0]
         self.assertIn("local actions=prose.add{type=\"table\"",dossier)
         self.assertNotIn("local actions=panel.add{type=\"table\"",dossier)
         self.assertIn('name="razi_journal_actions"',dossier)
