@@ -46,6 +46,11 @@ local helios_products={
  ["razi-helios-swarm-engineering"]="razi-helios-stellar-frame",
  ["razi-helios-relay-engineering"]="razi-helios-relay-matrix"
 }
+-- The native mod deploys components separately at its own solar orbits.
+-- Engine production statistics can count manufacturing, NOT deployment.
+local native_satellites={
+ "slp-ds-satellite","slp-ds-planet-satellite"
+}
 -- Recorded production, not simulated construction progress or satellite MW.
 -- Read only when the journal is displayed; no tick scans or cached guesses.
 function M.component_counts(force)
@@ -57,6 +62,9 @@ function M.component_counts(force)
    local stats=force.get_item_production_statistics(surface)
    if stats and stats.valid~=false then
      for _,name in pairs(helios_products) do
+       counts[name]=(counts[name] or 0)+(stats.get_input_count(name) or 0)
+     end
+     for _,name in ipairs(native_satellites) do
        counts[name]=(counts[name] or 0)+(stats.get_input_count(name) or 0)
      end
    end
@@ -94,6 +102,15 @@ local function helios_progress(parent,force)
  end
  label(frame,L("dyson-helios-progress",
    tostring(complete),tostring(#existing)))
+ local source_items=prototypes and prototypes.item or {}
+ for _,name in ipairs(native_satellites) do
+   if source_items[name] then
+     label(frame,L("dyson-native-produced",
+       source_items[name].localised_name,
+       tostring(counts[name] or 0)))
+   end
+ end
+ label(frame,L("dyson-native-not-deployed"))
 end
 local function commission(parent,player)
  if not (player.force.technologies

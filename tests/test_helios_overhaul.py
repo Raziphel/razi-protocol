@@ -31,6 +31,8 @@ class HeliosTests(unittest.TestCase):
   src=read("scripts/galactic_dyson.lua")
   self.assertIn("force.get_item_production_statistics(surface)",src)
   self.assertIn("stats.get_input_count(name)",src)
+  self.assertIn('"slp-ds-satellite","slp-ds-planet-satellite"',src)
+  self.assertIn("dyson-native-not-deployed",src)
   self.assertNotIn("script.on_nth_tick",src)
  def test_ui_is_research_based(self):
   src=read("scripts/galactic_dyson.lua")
