@@ -260,6 +260,15 @@ check(amount_of(original["craptonite-casting"],
 check(original["craptonite-casting"]
   .surface_conditions[1].property=="pressure",
   "Rubia's wind world restrictions were lost")
+check(amount_of(raw.recipe["razi-modded-paracelsin-optical-coils"],
+  "ingredients","zinc-rivets")==18,
+  "Moshine optics must reduce Paracelsin's native zinc-rivet consumption")
+check(amount_of(raw.recipe["razi-modded-moshine-zinc-silicon"],
+  "ingredients","silicon")==18,
+  "Imported zinc solder must conserve raw Moshine silicon")
+check(amount_of(raw.recipe["razi-modded-vesta-rare-earth-supermagnets"],
+  "ingredients","holmium-plate")==14,
+  "Rare-earth magnets must substitute some native holmium")
 check(raw.recipe["razi-modded-vesta-rare-earth-supermagnets"]
   .surface_conditions[1].property=="gasous_atmosphere",
   "Vesta's atmosphere restriction was lost")
