@@ -124,9 +124,9 @@ function M.data_final_fixes()
       if not recipe.hidden and not recipe.hide_from_player_crafting then
         if barrels and source_fluid_group(recipe)
           and barrel_recipe(name,recipe) then
-          recipe.subgroup = "razi-fluid-barreling"
+          recipe.subgroup="razi-fluid-barreling"
         elseif perishables and perishable_result(recipe) then
-          recipe.subgroup = "razi-perishable-products"
+          recipe.subgroup="razi-perishable-products"
         end
       end
     end
