@@ -5,6 +5,7 @@
 -- Other modes carry fully editable MapGenPreset fields.
 local M={}
 local difficulty=require("scripts.razi_difficulty_presets")
+local tuning=require("scripts.razi_difficulty_tuning")
 M.profiles={
  easy={starting_area=2.55,resource={frequency=1.30,size=1.30,richness=1.55},
   oil=1.62,enemy={frequency=.48,size=.72},water=1.25,trees=1.28,
@@ -96,7 +97,7 @@ end
 -- Terrain noise (except trees/water) and scripted enemy factories are not
 -- generic ore patches; keep the owning mod's climate/territory mechanics.
 function M.control_entries(mode)
- local spec=M.profiles[mode] or M.profiles.normal
+ local spec=tuning.profile(mode,M.profiles,difficulty)
  local out={}
  for id,proto in pairs((data.raw["autoplace-control"] or {})) do
    local kind=control_kind(id,proto)
@@ -118,7 +119,7 @@ end
 local originals=setmetatable({},{__mode="k"})
 local original_map_settings=setmetatable({},{__mode="k"})
 function M.scale_planets(mode)
- local spec=M.profiles[mode] or M.profiles.normal
+ local spec=tuning.profile(mode,M.profiles,difficulty)
  local count=0
  local controls=(data.raw["autoplace-control"] or {})
  for name,planet in pairs(data.raw.planet or {}) do
@@ -149,7 +150,7 @@ function M.scale_planets(mode)
  return count
 end
 local function advanced(mode)
- local spec=M.profiles[mode] or M.profiles.normal
+ local spec=tuning.profile(mode,M.profiles,difficulty)
  return {
   enemy_evolution={enabled=true,
     time_factor=spec.evolution.time_factor,
@@ -167,7 +168,7 @@ local function advanced(mode)
  }
 end
 function M.explicit_preset(mode)
- local spec=M.profiles[mode] or M.profiles.normal
+ local spec=tuning.profile(mode,M.profiles,difficulty)
  local entry={
   order="01[razi]-"..mode,
   basic_settings={
@@ -185,6 +186,8 @@ function M.explicit_preset(mode)
      local ageing=source.pollution.ageing
      local consume=source.pollution.enemy_attack_pollution_consumption_modifier
      entry.advanced_settings.pollution={}
+     tuning.pollution(entry.advanced_settings.pollution,
+       source.pollution,spec)
      if type(ageing)=="number" then
        entry.advanced_settings.pollution.ageing=
          math.max(.1,ageing*spec.pollution_ageing)
@@ -206,7 +209,7 @@ function M.active_mode()
  return M.profiles[name] and name or "normal"
 end
 function M.set_world_defaults(mode)
- local spec=M.profiles[mode] or M.profiles.normal
+ local spec=tuning.profile(mode,M.profiles,difficulty)
  local source=(data.raw["map-settings"] or {})["map-settings"]
  if source then
    local original=original_map_settings[source]
@@ -219,6 +222,7 @@ function M.set_world_defaults(mode)
      end
    end
    if source.pollution and original.pollution then
+     tuning.pollution(source.pollution,original.pollution,spec)
      for field,multiplier_value in pairs({
        ageing=spec.pollution_ageing,
        enemy_attack_pollution_consumption_modifier=spec.attack_consumption
@@ -228,6 +232,10 @@ function M.set_world_defaults(mode)
            original.pollution[field]*multiplier_value)
        end
      end
+   end
+   -- Native engine attack organization (no per-tick AI controller).
+   if source.unit_group and original.unit_group then
+     tuning.unit_groups(source.unit_group,original.unit_group,spec)
    end
    if source.asteroids and original.asteroids
       and type(original.asteroids.spawning_rate)=="number" then
