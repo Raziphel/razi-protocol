@@ -89,7 +89,12 @@ identity of their star system rather than treating every world as another
 technology-card source. Planetary quest dossiers include a short, distinct
 field assignment and up to two existing Codex follow-up links. Links are
 filtered through the real installed quest and the same spoiler visibility
-rules as the Journal. They do **not** create a new quest, unlock, completion
+rules as the Journal. Where a world has a meaningful existing physical project, its field card
+also offers an explicit shortcut to that project. Available links include
+Maiden Voyage, Skybridge, Beltbreaker, Archive Array and Ark, guarded by
+the same project visibility checks as the Journal. Those projects use their
+own engine/source evidence rather than the field card's narrative advice.
+They do **not** create a new quest, unlock, completion
 timestamp, item, reward or research requirement.
 
 The Supply Network's recipe-backed planner uses the same planet registry for
