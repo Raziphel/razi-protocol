@@ -2,6 +2,11 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 local captured={}
+-- Modpack fixture: Castra overrides the native magazine crafting category.
+data={raw={recipe={
+  ["piercing-rounds-magazine"]={
+    name="piercing-rounds-magazine",category="castra-crafting"}
+}}}
 package.loaded["prototypes.compat.planet_production_exchanges"]={
   register_additional=function(rules) captured=rules end
 }
@@ -28,6 +33,10 @@ for _,recipe in ipairs(captured) do
     "Native recipe or world changed for "..recipe.name)
   check(recipe.product==recipe.source and recipe.keep_native_category,
     "Only native-product alternatives in original categories are allowed")
+  if recipe.name=="razi-frontier-castra-composite-rounds" then
+    check(recipe.category=="castra-crafting",
+      "Castra piercing rounds must retain castra-crafting, not base crafting")
+  end
   check(recipe.require_supplier_provenance and
     recipe.max_bonus_fraction==0.25 and recipe.batch==4 and recipe.bonus==1,
     "Bonus or provenance guard missing from "..recipe.name)
@@ -53,4 +62,14 @@ for _,recipe in ipairs(captured) do
   check(#recipe.planets>=3,"This must genuinely connect several worlds")
 end
 for name in pairs(required) do check(recipes[name],"Missing "..name) end
+-- A different source-mod version can change the category again.
+data.raw.recipe["piercing-rounds-magazine"].category="castra-special-assembly"
+package.loaded["prototypes.compat.first_frontier_industry"]=nil
+require("prototypes.compat.first_frontier_industry").data_final_fixes()
+for _,rule in ipairs(captured) do
+  if rule.name=="razi-frontier-castra-composite-rounds" then
+    check(rule.category=="castra-special-assembly",
+      "Castra bridge must use the current source category, not a hardcoded guess")
+  end
+end
 print("First-frontier manufacturing rules and provenance passed")
