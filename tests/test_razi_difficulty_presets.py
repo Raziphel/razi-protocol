@@ -26,6 +26,10 @@ class DifficultyDirector(unittest.TestCase):
   self.assertIn("for name,default in pairs(M.baseline)",d)
   self.assertIn('["razi-enable-modded-planet-exchanges"]=true',d)
   self.assertIn('if #M.manual_overrides()>0 then return "custom" end',d)
+  self.assertIn('if name=="custom" then return "custom" end',d)
+  self.assertIn("function M.is_overridden(name)",d)
+  self.assertIn("local selected=M.selected()",d)
+  self.assertIn("if M.is_overridden(name) then return item.value end",d)
   for name in ("easy","normal","hard","nightmare"):
    self.assertIn(name+"={",d)
  def test_big_monsters_api_is_supported_and_event_driven(self):

@@ -37,8 +37,20 @@ check(difficulty.active()=="custom","Manual gameplay change must resolve Custom"
 check(difficulty.effective("razi-enemy-pressure")=="light",
  "Manual value must override a previously selected preset")
 check(#difficulty.manual_overrides()==1,"Manual change detection inflated")
+check(difficulty.selected()=="nightmare",
+ "Underlying selected Nightmare must survive effective Custom")
+check(difficulty.effective("razi-nexus-hostility")=="apocalypse",
+ "Manual density adjustment must not reset Nightmare Nexus")
+check(difficulty.effective("razi-rocket-launch-cost")=="punishing",
+ "Manual enemy change must not reset Nightmare rockets")
+check(difficulty.effective("razi-habitat-cold-biters")=="all",
+ "Manual enemy change must not reset other Nightmare habitat tiers")
+check(difficulty.effective("razi-science-demand")=="grueling",
+ "Manual enemy change must not reset Nightmare science")
 select("hard")
 settings.startup["razi-helios-convergence-proof"].value=true
+check(difficulty.effective("razi-factory-throughput")=="constrained",
+ "Hard factories must stay Hard when a structural switch is changed")
 check(difficulty.active()=="custom",
  "Manual structural finale option must resolve Custom without erasing it")
 check(difficulty.effective("razi-helios-convergence-proof")==true,
@@ -47,7 +59,13 @@ select("normal")
 settings.startup["razi-big-monsters-events"].value=true
 check(difficulty.active()=="custom","Manual Big-Monsters choice must be Custom")
 select("custom")
+check(difficulty.selected()=="custom",
+ "The actual Custom dropdown must not silently resolve to Normal")
 check(difficulty.active()=="custom","Explicit Custom must be retained")
+check(difficulty.effective("razi-enemy-pressure")=="normal",
+ "Explicit Custom uses player-owned baseline settings")
+check(difficulty.effective("razi-habitat-toxic-biters")=="auto",
+ "Explicit Custom preserves the saved Follow difficulty setting")
 select("normal")
 check(difficulty.effective("razi-route-visibility","bright")=="bright",
  "Cosmetic settings must not be touched")

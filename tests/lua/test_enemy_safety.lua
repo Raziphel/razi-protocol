@@ -103,8 +103,9 @@ dedicated = {autoplace = {probability_expression = "enemy_spawner"}}
 data.raw["unit-spawner"]["armoured-biter-spawner"] = dedicated
 package.loaded["prototypes.compat.armoured_biters"] = nil
 require("prototypes.compat.armoured_biters")
-check(#vanilla.result_units == 1 and vanilla.result_units[1][1] == "small-biter",
-	"Valid dedicated nest must avoid double-spawning armoured units")
+check(#vanilla.result_units == 2
+ and vanilla.result_units[1][1] == "small-armoured-biter",
+ "RP3 must not strip native armoured units from base spawner result_units")
 check(data.raw.planet.hyarion.map_gen_settings.autoplace_settings.entity.settings["armoured-biter-spawner"] == nil,
 	"Early Armoured Biters integration must defer extra worlds to the final ecology pass")
 check(dedicated.autoplace.probability_expression == "enemy_spawner",

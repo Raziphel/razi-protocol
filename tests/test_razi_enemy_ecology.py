@@ -25,7 +25,7 @@ class EcologyTests(unittest.TestCase):
   self.assertIn('data.raw["segmented-unit"]',s)
   self.assertIn("source_entity(name)",s)
   self.assertIn('clone.name=id',s)
-  self.assertIn('if settings[name] then return false end',s)
+  self.assertIn('if existing and existing[name] then return false end',s)
   self.assertNotIn("script.on_nth_tick",s)
  def test_more_planet_species_and_last_pass(self):
   for p in ("castra","athos","shchierbin","corrundum","rabbasca","foliax"):

@@ -32,6 +32,6 @@ class DifficultyUILabels(unittest.TestCase):
             self.assertIn("[mod-setting-description]",body)
             self.assertIn("razi-difficulty-preset=",body)
     def test_bumped_version_for_installed_mod_distinction(self):
-        self.assertEqual(json.loads(text("info.json"))["version"],"2.1.131")
+        self.assertEqual(json.loads(text("info.json"))["version"],"2.1.132")
 if __name__=="__main__":
     unittest.main()

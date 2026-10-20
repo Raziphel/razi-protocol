@@ -15,6 +15,8 @@ class EconomyDifficulty(unittest.TestCase):
    self.assertIn(control,engine)
    self.assertIn('name="'+control+'"',read("settings.lua"))
   self.assertIn('if resolver.active()~="custom" then return spec end',engine)
+  self.assertIn('return resolver.is_overridden(key) and factor(resolver,key) or 1',engine)
+  self.assertIn('local name=difficulty.selected()',profile)
  def test_rocket_is_prototype_only_and_storage_guarded(self):
   src=read("prototypes/compat/razi_launch_economy.lua")
   self.assertIn("silo.rocket_parts_required=crafts",src)

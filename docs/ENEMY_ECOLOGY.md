@@ -110,3 +110,15 @@ apparently fixed Curated display even while Hard or Nightmare is selected.
 Manual tiers override **only that family** while the other Auto families
 continue following the selected master difficulty, even though the overall
 effective game difficulty displays Custom after an override.
+
+### Source ownership and prototype allocation (2.1.132)
+
+The Armoured Biters adapter no longer edits the original
+`biter-spawner.result_units`, even when it finds a valid dedicated
+armoured nest. This retains fauna from source mods and respects Off.
+
+Before allocating a `razi-<planet>-<nest>` prototype, the final
+ecology pass checks whether the source mod already registered a
+native nest on that world, or the Razi clone was already installed.
+This avoids orphaned prototypes and duplicate density, while
+retaining native spawners on all difficulties.

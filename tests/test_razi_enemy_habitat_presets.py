@@ -31,7 +31,7 @@ class HabitatPresets(unittest.TestCase):
   self.assertIn('local preset=difficulty.presets[difficulty.selected()]',src)
   self.assertIn('if chosen~="auto" then return chosen end',src)
   self.assertIn("selected.nexus=true",src)
-  self.assertIn('if settings[name] then return false end',src)
+  self.assertIn('if existing and existing[name] then return false end',src)
   self.assertNotIn("script.on_nth_tick",src)
  def test_old_modules_no_longer_bypass_difficulty(self):
   for module in ("armoured_biters","cold_biters","explosive_biters",

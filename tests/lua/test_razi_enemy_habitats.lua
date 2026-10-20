@@ -52,6 +52,7 @@ rawset(_G,"data",{raw={
    panglia=world({"panglia-grass","panglia-sand","water"}),
    alchemy_ignored=world({"mud"}),
    ["alchemy-planet"]=world({"alchemy-soil","acid-lake"}),
+   ["native-colony"]=world({"nexus-rock"}),
    gleba=world({"gleba-mud","gleba-grass","water"}),
    nexus=world({"nexus-sand","nexus-rock","oil-ocean-shallow"})
  },
@@ -115,6 +116,15 @@ for _,group in ipairs(eco.by_theme) do
  settings.startup[group.setting]=nil
 end
 settings.startup["razi-difficulty-preset"].value="nightmare"
+-- A source mod can already own a nest on a planet. This must not create
+-- an unused clone or steal that mod's native map-generation ownership.
+local native=data.raw.planet["native-colony"].map_gen_settings
+native.autoplace_settings.entity.settings["toxic-biter-spawner"]={}
+local before=eco.put("native-colony","toxic-biter-spawner",
+ "unit-spawner",{"rock"},239,.085)
+check(before==false
+ and not data.raw["unit-spawner"]["razi-native-colony-toxic-biter-spawner"],
+ "A native source enemy must not allocate an orphaned Razi nest clone")
 local placed=eco.data_final_fixes()
 check(placed>=7,"Expected multiple themed families on newly integrated planets")
 local ferrum=data.raw.planet.ferrum.map_gen_settings

@@ -190,3 +190,26 @@ Each enemy habitat setting defaults to **Follow difficulty**, so its visible
 value clearly delegates to the master difficulty. Manual habitat tiers affect
 only their own family; Auto families continue following the original selected
 Easy/Normal/Hard/Nightmare mode when the effective game setting is Custom.
+
+### Difficulty polish and isolation (2.1.132)
+
+An advanced setting that differs from its Normal saved baseline reports
+**Custom** as the effective label, but does NOT wipe the originally selected
+Hard/Nightmare preset for all other controls. Named presets are the baseline;
+each manually changed control overrides *only itself*. This applies across
+ore frequency/size/richness, tech prices, native enemy evolution, pollution,
+factory throughput, rocket launches, late-game routes and enemy habitat
+families.
+
+The explicit **Custom** master dropdown is distinct: it uses the actual
+saved manual settings without inheriting Hard/Nightmare.
+
+Source-owned biter result units and natural nests are no longer stripped
+by RP3's Armoured integration. Planet-local nest cloning checks source
+occupancy *before* allocating any clone, reducing needless prototype work.
+
+**Upgrading from 2.1.131:** if any enemy habitat setting was previously
+saved as Curated, open startup settings and choose *Follow difficulty*
+for that family to inherit Hard/Nightmare automatically. Previously
+generated terrain is unchanged. Full Factorio startup and new-chunk
+verification are still required.
