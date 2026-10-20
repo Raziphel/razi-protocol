@@ -86,6 +86,20 @@ class VisualPolishTests(unittest.TestCase):
             self.assertRegex(locale,rf"(?m)^{name}=")
         self.assertIn("[journal-chapter-dispatch]",locale)
 
+    def test_first_mission_stays_visible_on_new_saves(self):
+        source=read("scripts/razi_journal.lua")
+        locale=load_journal_locale(ROOT)
+        lua=read("tests/lua/test_razi_journal.lua")
+        self.assertIn('if quest.id~="first-signal" and proto and proto.hidden',source)
+        self.assertIn('if quest.id=="first-signal" then return true end',source)
+        self.assertIn('if quest.id=="first-signal" then',source)
+        self.assertIn('native.enabled==false',source)
+        self.assertIn('for _,required in pairs(native.prerequisites or {})',source)
+        self.assertIn('bootstrap-research-missing=',locale)
+        self.assertIn('fresh_view.total==1 and fresh_view.ready==0',lua)
+        self.assertIn('fresh_view.chapters.calidus.quests[1].id=="first-signal"',lua)
+        self.assertIn('M.next_quest(fresh).id=="first-signal"',lua)
+
     def test_nauvis_acts_use_existing_research(self):
         core=read("scripts/razi_journal_data.lua")
         foundation=read("scripts/razi_journal_expansion.lua")
