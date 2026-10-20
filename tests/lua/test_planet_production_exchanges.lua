@@ -253,6 +253,17 @@ check(ingredient(full.recipe[names[2]],"holmium-plate")==1
 check(full.recipe[names[2]].surface_conditions[1].property=="magnetic-field",
   "Electromagnetic exchange escaped Fulgora's magnetic-field restriction")
 check(product(full.recipe[names[3]],"kr-energy-control-unit")==5,
+  "Cryogenic energy controls should still produce the promised batch")
+check(ingredient(full.recipe[names[3]],"kr-electronic-components")==32,
+  "Imported superconducting parts should conserve 4 native electronic components")
+local fast=full.recipe["razi-electrobiological-components"]
+local native_batch=16
+local output_per_second=19/fast.energy_required
+local native_per_second=native_batch/(4*2)
+check(output_per_second>native_per_second and
+  output_per_second/native_per_second<=1.1700001,
+  "Electrobiological acceleration must be worthwhile but bounded")
+check(product(full.recipe[names[3]],"kr-energy-control-unit")==5,
   "Cryogenic controllers must yield five from four native units")
 check(ingredient(full.recipe[names[3]],"carbon-fiber")==4
   and ingredient(full.recipe[names[3]],"supercapacitor")==2
