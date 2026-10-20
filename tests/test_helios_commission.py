@@ -13,7 +13,7 @@ class HeliosCommissionTests(unittest.TestCase):
  def test_structures_require_real_energy(self):
   proto=src("prototypes/compat/helios_structures.lua")
   self.assertIn('radar.energy_usage="15MW"',proto)
-  self.assertIn('category="advanced-crafting"',proto)
+  self.assertIn('categories={"advanced-crafting"}',proto)
   self.assertIn('dyson.safe_link("ds-energy-loader-mk3",tech.name)',proto)
  def test_orbital_deliveries_are_physical_and_team_bound(self):
   engine=src("scripts/razi_helios_operations.lua")

@@ -47,6 +47,9 @@ check(raw.radar["razi-helios-grid-anchor"].energy_usage=="15MW",
  "Grid anchor must consume 15MW")
 check(raw.radar["razi-helios-grid-anchor"].energy_source.buffer_capacity=="150MJ",
  "Grid buffer must support the calibration load")
+check(raw.recipe["razi-helios-orbital-lattice"].categories[1]=="advanced-crafting"
+ and raw.recipe["razi-helios-grid-anchor"].categories[1]=="advanced-crafting",
+ "Factorio 2.1 requires the categories table for physical HELIOS recipes")
 check(raw.item["razi-helios-orbital-lattice"]
  and raw.recipe["razi-helios-orbital-lattice"],
  "Physical lattice cargo is not craftable")

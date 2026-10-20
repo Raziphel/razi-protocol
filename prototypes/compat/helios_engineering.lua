@@ -99,7 +99,7 @@ function M.data_final_fixes()
    end
    local recipe={type="recipe",name=spec.product,enabled=false,
      localised_name={"recipe-name."..spec.product},
-     subgroup="intermediate-product",category="advanced-crafting",
+     subgroup="intermediate-product",categories={"advanced-crafting"},
      energy_required=45,ingredients=ingredients,
      results={{type="item",name=spec.product,amount=1}},
      allow_productivity=false,auto_recycle=false,

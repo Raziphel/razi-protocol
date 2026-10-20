@@ -44,7 +44,7 @@ local function item_recipe(id,source_icon,inputs,seconds,place_result)
  end
  return product,{type="recipe",name=id,
    localised_name={"recipe-name."..id},
-   enabled=false,category="advanced-crafting",
+   enabled=false,categories={"advanced-crafting"},
    energy_required=seconds,ingredients=ingredients,
    results={{type="item",name=id,amount=1}},
    subgroup="intermediate-product",

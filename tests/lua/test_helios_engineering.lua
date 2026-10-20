@@ -28,11 +28,11 @@ local function fixture(options)
  end
  local recipes={
   ["source-dyson-satellite"]={
-   category="crafting",
+   categories={"crafting"},
    ingredients={{type="item",name="processing-unit",amount=20}},
    results={{type="item",name="slp-ds-satellite",amount=1}}},
   ["source-repeater-satellite"]={
-   category="crafting",
+   categories={"crafting"},
    ingredients={{type="item",name="low-density-structure",amount=20}},
    results={{type="item",name="slp-ds-planet-satellite",amount=1}}}}
  local raw={item=items,technology=technologies,recipe=recipes,
@@ -67,6 +67,10 @@ end
 local raw,engine=fixture()
 assert_ok(engine.data_final_fixes(),"HELIOS should register full component chain")
 for _,spec in ipairs(engine.components) do
+ assert_ok(raw.recipe[spec.product]
+   and raw.recipe[spec.product].categories
+   and raw.recipe[spec.product].categories[1]=="advanced-crafting",
+  "Factorio 2.1 machine recipe categories missing for "..spec.product)
  assert_ok(raw.item[spec.product] and raw.recipe[spec.product],
   "missing physical component "..spec.product)
  assert_ok(raw.technology[spec.tech] and #raw.technology[spec.tech].effects==1,
