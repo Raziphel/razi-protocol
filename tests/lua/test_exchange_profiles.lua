@@ -16,8 +16,8 @@ for name in pairs(p.retained) do
       "Catalyst must name a real native input and a small savings ceiling")
   end
 end
-check(total==15 and counts.catalytic==6 and
-  counts.accelerated==5 and counts.bulk==4,
+check(total==15 and counts.catalytic==5 and
+  counts.accelerated==6 and counts.bulk==4,
   "Fifteen curated recipes should deliver three distinct kinds of benefit")
 local catalyst=p.profile("razi-bio-rare-metal-casting")
 local native={{type="fluid",name="kr-molten-rare-metals",amount=40},
@@ -45,4 +45,4 @@ check(5/(4*edge)<=1.1700001,
 local bulk=p.profile("razi-network-frame-vesta-foundations")
 check(p.time_multiplier(bulk,10,4,8,1.12)==1.12,
   "Bulk output should preserve deliberate native machine pacing")
-print("Exchange profiles: 6 catalysts, 5 accelerated, 4 bulk with guarded costs")
+print("Exchange profiles: 5 catalysts, 6 accelerated, 4 bulk with guarded costs")
