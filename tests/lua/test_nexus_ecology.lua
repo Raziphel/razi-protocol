@@ -1,6 +1,14 @@
 -- Endgame Nexus: source nests and Gleba rafts, no vanilla suppression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(a,b) if not a then error(b,2) end end
+-- Factorio supplies table.deepcopy in the data stage. Provide an equivalent
+-- for this pure Lua fixture, so the source prototype is demonstrably cloned.
+table.deepcopy=table.deepcopy or function(value)
+  if type(value)~="table" then return value end
+  local out={}
+  for k,v in pairs(value) do out[k]=table.deepcopy(v) end
+  return out
+end
 local function tile_map()
  return {map_gen_settings={autoplace_controls={
    ["enemy-base"]={frequency=1}},

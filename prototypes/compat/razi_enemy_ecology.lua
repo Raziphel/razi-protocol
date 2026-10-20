@@ -122,10 +122,6 @@ local function nexus()
  local entity=map.autoplace_settings.entity
  entity.settings=entity.settings or {}
  local multiplier=router.pressure("nexus")
- local native=maps("nauvis")
- local native_entities=native and native.autoplace_settings
-   and native.autoplace_settings.entity
-   and native.autoplace_settings.entity.settings or {}
  -- Restore all source vanilla biter/spitter nest and worm entries.
  -- This also heals earlier external integrations that set frequency=0.
  for _,id in ipairs({"biter-spawner","spitter-spawner",
