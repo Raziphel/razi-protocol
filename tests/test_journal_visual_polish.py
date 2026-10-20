@@ -107,16 +107,17 @@ class VisualPolishTests(unittest.TestCase):
         for phase in ("machines","growth","chemistry","departure"):
             self.assertIn('phase="'+phase+'"',core)
             self.assertIn(phase+"=",locale)
-        self.assertIn('nauvis_phase(entries,quest.phase,theme,inner-34,player.force)',ui)
-        self.assertIn('nauvis_phase(body,quest.phase,theme,text_width,player.force)',ui)
+        self.assertIn('chapter_act(entries,act,theme,inner-34,player.force)',ui)
+        self.assertIn('chapter_act(body,act,theme,text_width,player.force)',ui)
         self.assertIn('style="razi_journal_phase_divider"',ui)
+        self.assertIn('journal_acts.for_quest(quest)',ui)
         self.assertNotIn("data:extend(",core)
 
     def test_milestone_dossiers_do_not_duplicate_technology_unlocks(self):
         ui=read("scripts/razi_journal.lua")
         locale=load_journal_locale(ROOT)
         detail=ui.split("local function render_details(",1)[1].split(
-            "local function nauvis_phase(",1)[0]
+            "local function chapter_act(",1)[0]
         self.assertNotIn('science_gallery(native)',detail)
         self.assertNotIn('unlock_gallery(native)',detail)
         self.assertNotIn('draw_gallery(prose,"recipe-unlock-heading"',detail)
@@ -132,8 +133,8 @@ class VisualPolishTests(unittest.TestCase):
         loc=load_journal_locale(ROOT)
         self.assertIn("function M.record_chapter_completions(force,historical,tick)",journal)
         self.assertIn('M.mark(force,"milestones",quest.id,tick,historical)',times)
-        self.assertIn("if not quest.optional then",times)
-        self.assertIn('quest.chapter=="calidus" and quest.phase',times)
+        self.assertIn('local act_id=act_for and act_for(quest) or quest.phase',times)
+        self.assertIn('if state.required>0 then return state.done_required==state.required end',times)
         self.assertIn("if row[kind][id]~=nil then return false end",times)
         self.assertIn("historical and false or",times)
         self.assertIn("chapter_timing.forces_merged(event)",journal)
@@ -143,7 +144,7 @@ class VisualPolishTests(unittest.TestCase):
         self.assertIn('name="razi_journal_chapter_time"',journal)
         self.assertIn('chapter_timing.get(player.force,"milestones",quest.id)',journal)
         self.assertIn("milestone-time-recorded=Milestone completed at __1__",loc)
-        self.assertIn("nauvis_phase(entries,quest.phase,theme,inner-34,player.force)",journal)
+        self.assertIn("chapter_act(entries,act,theme,inner-34,player.force)",journal)
         self.assertIn("chapter-time-recorded=Completed at __1__",loc)
         self.assertIn("chapter-time-earlier=Finished before timing began",loc)
 
