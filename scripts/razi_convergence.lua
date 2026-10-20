@@ -3,6 +3,7 @@
 local M={}
 local defs=require("prototypes.technology.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
+local helios_operations=require("scripts.razi_helios_operations")
 local galactic_catalog=require("scripts.galactic_catalog")
 local deep_expedition=require("scripts.razi_deep_space_expedition")
 local nexus_trials=require("scripts.razi_nexus_trials")
@@ -178,6 +179,12 @@ local function stage_ready(force,index)
   end
   if not M.dyson_readiness(force) then
    return false,"convergence-need-receiver"
+  end
+  local proof=settings and settings.startup
+    and settings.startup["razi-helios-convergence-proof"]
+  if proof and proof.value==true
+    and not helios_operations.ready(force) then
+    return false,"convergence-need-helios"
   end
  end
  return true
@@ -638,6 +645,13 @@ function M.render(parent,player,options)
     or "convergence-dyson-tech-pending",width,tech.localised_name)
   end
  end
+ local proof=settings and settings.startup
+   and settings.startup["razi-helios-convergence-proof"]
+ if proof and proof.value==true then
+   local info=helios_operations.status(force)
+   line(dyson,info.complete and "convergence-helios-ready"
+     or "convergence-need-helios",width)
+ end
  local sequence=saved.transmission
  if sequence and not won then
   local panel=scroll.add{type="frame",style="inside_shallow_frame",
@@ -808,7 +822,11 @@ function M.render(parent,player,options)
    tags={razi_ops_action="convergence-deliver",value=rule.id}}
   button.enabled=i==next_index and carried>0 and where~=nil
    and (i<3 or sync.researched)
-   and (i<5 or (ignition.researched and receiver_ready))
+   and (i<5 or (ignition.researched and receiver_ready
+     and ((not settings or not settings.startup
+       or not settings.startup["razi-helios-convergence-proof"]
+       or settings.startup["razi-helios-convergence-proof"].value~=true)
+       or helios_operations.ready(force))))
    and commission.researched
  end
  line(scroll,"convergence-continued-play",width)

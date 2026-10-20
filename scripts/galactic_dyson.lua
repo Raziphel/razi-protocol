@@ -129,7 +129,8 @@ local function commission(parent,player)
      local deliver=entry.add{type="button",
        caption=L("helios-deliver-"..name),
        tags={razi_ops_action="helios-deliver",value=name}}
-     deliver.enabled=ready and carrying>0
+     -- Allow a click to recheck elapsed time and redraw after station-keeping.
+     deliver.enabled=carrying>0
        and ((player.force.technologies[spec.tech] or {}).researched==true)
        and (name=="outer" or result.outer>=req.outer)
    end
