@@ -109,6 +109,11 @@ local function commission(parent,player)
  local heading=label(frame,L("helios-commission-heading"))
  heading.style.font="default-bold"
  label(frame,L("helios-commission-guidance"))
+ local surge,remaining=operations.coronal_surge(game.tick or 0)
+ if surge then
+   local warning=label(frame,L("helios-surge-active",tostring(remaining)))
+   warning.style.font_color={r=.94,g=.52,b=.38}
+ end
  local inv=player.get_main_inventory()
  for _,name in ipairs({"outer","inner"}) do
    local spec=operations.stages[name]

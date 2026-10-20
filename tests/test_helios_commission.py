@@ -4,6 +4,12 @@ import unittest
 ROOT=Path(__file__).resolve().parents[1]
 def src(path): return (ROOT/path).read_text(encoding="utf-8")
 class HeliosCommissionTests(unittest.TestCase):
+ def test_coronal_surge_is_event_checked_not_entity_spam(self):
+  srcfile=src("scripts/razi_helios_operations.lua")
+  self.assertIn("function M.coronal_surge(tick)",srcfile)
+  self.assertIn('if surge then return "helios-need-surge"',srcfile)
+  self.assertNotIn("script.on_nth_tick",srcfile)
+  self.assertNotIn("surface.create_entity",srcfile)
  def test_structures_require_real_energy(self):
   proto=src("prototypes/compat/helios_structures.lua")
   self.assertIn('radar.energy_usage="15MW"',proto)

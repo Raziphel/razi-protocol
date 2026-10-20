@@ -82,6 +82,28 @@ function M.observe(platform)
    all[key]={location=location,since=game.tick or 0}
  end
 end
+-- Scheduled coronal communication outages are deterministic for all forces.
+-- They interrupt physical commissioning, never the native SLP power logic.
+-- Computed on demand, with no global timer, entity spawns or tick scans.
+local surge_periods={
+ occasional={cycle=36000,active=3600},
+ volatile={cycle=24000,active=4800}
+}
+function M.coronal_surge(tick)
+ local s=settings and settings.startup
+   and settings.startup["razi-helios-coronal-surges"]
+ local rule=surge_periods[s and s.value or "occasional"]
+ if not rule then return false,0,nil end
+ tick=math.max(0,tick or 0)
+ local start=tick-math.fmod(tick,rule.cycle)
+ local phase=tick-start
+ local active=phase<rule.active
+ local seconds=math.ceil((active and rule.active-phase
+   or rule.cycle-phase)/60)
+ local last_end=active and start-rule.cycle+rule.active
+   or start+rule.active
+ return active,seconds,last_end
+end
 function M.hold_seconds(player,stage)
  local spec=M.stages[stage]
  if not spec then return 0,false end
@@ -92,8 +114,11 @@ function M.hold_seconds(player,stage)
  end
  M.observe(platform)
  local entry=holds()[platform.index]
- local duration=math.max(0,(game.tick or 0)-(entry.since or 0))
- return math.floor(duration/60),duration>=spec.hold
+ local active,_,last_end=M.coronal_surge(game.tick or 0)
+ if active then return 0,false,true end
+ local since=math.max(entry.since or 0,last_end or 0)
+ local duration=math.max(0,(game.tick or 0)-since)
+ return math.floor(duration/60),duration>=spec.hold,false
 end
 function M.deliver(player,stage)
  local spec=M.stages[stage]
@@ -106,7 +131,8 @@ function M.deliver(player,stage)
  if delivered>=needed then return "helios-complete",0 end
  local tech=player.force.technologies and player.force.technologies[spec.tech]
  if not (tech and tech.researched) then return "helios-need-research",0 end
- local elapsed,ready=M.hold_seconds(player,stage)
+ local elapsed,ready,surge=M.hold_seconds(player,stage)
+ if surge then return "helios-need-surge",0 end
  if not ready then
    if elapsed==0 then return "helios-need-orbit",0 end
    return "helios-need-hold",0

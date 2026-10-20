@@ -169,6 +169,10 @@ data:extend({
   {type="bool-setting",name="razi-helios-convergence-proof",
     setting_type="startup",default_value=false,
     order="bb[stellar]-h[finale-proof]"},
+  {type="string-setting",name="razi-helios-coronal-surges",
+    setting_type="startup",default_value="occasional",
+    allowed_values={"off","occasional","volatile"},
+    order="bb[stellar]-i[coronal-surges]"},
   -- QUALITY OF LIFE
   startup_toggle("razi-hide-redundant-assembler-tiers",
     "ca[quality-of-life]-a[redundant-assemblers]"),

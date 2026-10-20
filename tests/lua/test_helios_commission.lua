@@ -12,7 +12,8 @@ rawset(_G,"prototypes",{technology={
  ["slp-solar-system-sun2"]={effects={{
    type="unlock-space-location",space_location=inner}}}}})
 rawset(_G,"settings",{startup={
- ["razi-helios-commissioning"]={value="expedition"}}})
+ ["razi-helios-commissioning"]={value="expedition"},
+ ["razi-helios-coronal-surges"]={value="off"}}})
 rawset(_G,"defines",{controllers={remote="remote"}})
 rawset(_G,"storage",{})
 local inventory={
@@ -82,4 +83,16 @@ check(not helios.ready(force),
 settings.startup["razi-helios-commissioning"].value="off"
 check(helios.ready(force),
  "Disabled commissioning must not gate a campaign")
-print("HELIOS physical delivery, dwell, power grid and save state fixtures passed")
+settings.startup["razi-helios-commissioning"].value="expedition"
+settings.startup["razi-helios-coronal-surges"].value="occasional"
+check(select(1,helios.coronal_surge(100))==true,
+ "Occasional surge was not active in the designed outage window")
+check(select(1,helios.coronal_surge(3700))==false,
+ "Coronal outage should finish after its scheduled 60 seconds")
+settings.startup["razi-helios-coronal-surges"].value="volatile"
+check(select(1,helios.coronal_surge(100))==true,
+ "Volatile surge must be active on schedule")
+settings.startup["razi-helios-coronal-surges"].value="off"
+check(select(1,helios.coronal_surge(100))==false,
+ "Surges disabled must never block orbital deliveries")
+print("HELIOS physical delivery, stellar surges and grid fixtures passed")
