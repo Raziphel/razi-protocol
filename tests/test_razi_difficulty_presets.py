@@ -41,6 +41,10 @@ class DifficultyDirector(unittest.TestCase):
   self.assertIn('razi_difficulty_presets',
     read("prototypes/compat/interdependence_mode.lua"))
   self.assertIn('["razi-big-monsters-events"]=true',d)
+  for setting in ("razi-pollution-pressure","razi-raid-coordination",
+                  "razi-colony-expansion"):
+   self.assertIn('name="'+setting+'"',read("settings.lua"))
+   self.assertIn('["'+setting+'"]',d)
  def test_translations(self):
   for lang in ("en","ru"):
    cfg=read(f"locale/{lang}/settings.cfg")

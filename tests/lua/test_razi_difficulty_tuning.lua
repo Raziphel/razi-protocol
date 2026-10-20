@@ -13,7 +13,7 @@ local presets={
    min_expansion_cooldown=9000,max_expansion_cooldown=120000}}
 }
 local resolver={active=function()return "normal" end,
- effective=function(_,_,default)return default end}
+ effective=function(name,default)return default end}
 local base={diffusion_ratio=.02,min_to_diffuse=15}
 local raids={max_unit_group_size=200,max_gathering_unit_groups=20,
  min_group_gathering_time=3000,max_group_gathering_time=18000}
@@ -38,7 +38,7 @@ for _,name in ipairs({"easy","normal","hard","nightmare"}) do
  end
 end
 local custom={active=function()return "custom" end,
- effective=function(_,name,default)
+ effective=function(name,default)
   if name=="razi-pollution-pressure" then return "toxic" end
   if name=="razi-raid-coordination" then return "siege" end
   if name=="razi-colony-expansion" then return "invasive" end

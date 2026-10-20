@@ -14,7 +14,7 @@
   while the player is editing the Mod Settings UI. It will still show the
   previously chosen preset, but resolved gameplay uses the manual settings.
 
-The 13 directly managed levers cover asteroid quality/population, belt
+The 16 directly managed levers cover asteroid quality/population, belt
 threat/resource richness, HELIOS travel/progression/stationkeeping/coronal
 surges, enemy density, Nexus severity, Big-Monsters event activation, and
 Razi's optional planetary integration setting. Eleven additional material
@@ -115,3 +115,24 @@ planet, because frequency/size/richness scaling cannot guarantee exactly
 those output quantities. Existing saves retain generated terrain; no forced
 regeneration of explored chunks. Changes should be verified in the full
 Factorio build before multiplayer rollout.
+
+### Native pollution, raiding and colony controls (2.1.128)
+
+The new Pollution spread, Enemy raid organization and Enemy colony expansion
+settings work with Factorio's native engine and remain independent choices
+when effective difficulty is Custom.
+
+| Native behaviour | Easy | Normal | Hard | Nightmare |
+|---|---:|---:|---:|---:|
+| Pollution diffusion | 0.72× | 1× | 1.18× | 1.32× |
+| Pollution spread threshold | 1.45× | 1× | 0.82× | 0.67× |
+| Attack group size | 0.74× | 1× | 1.12× | 1.27× |
+| Gathering group count | 0.78× | 1× | 1.10× | 1.16× |
+| New colony settler size | 0.78× | 1× | 1.15× | 1.22× |
+| Colony expansion cooldown | 1.50× | 1× | 0.83× | 0.70× |
+
+Attack groups are capped at 200 and concurrently gathering groups at 24
+on tuned difficulties. Normal preserves native source values. These settings
+do not install a new enemy AI tick loop. The active startup difficulty
+controls group organization because full map presets do not expose those
+engine settings individually.
