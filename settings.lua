@@ -109,6 +109,15 @@ data:extend({
     setting_type="startup",default_value="normal",
     allowed_values={"economical","normal","costly","punishing"},
     order="aa[worlds]-b3[rocket-parts]"},
+  -- Prototype-only production and fortification difficulty.
+  {type="string-setting",name="razi-factory-throughput",
+    setting_type="startup",default_value="normal",
+    allowed_values={"boosted","normal","constrained","strained"},
+    order="aa[worlds]-b4[throughput]"},
+  {type="string-setting",name="razi-fortification-durability",
+    setting_type="startup",default_value="normal",
+    allowed_values={"reinforced","normal","fragile","brittle"},
+    order="aa[worlds]-b5[fortifications]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.

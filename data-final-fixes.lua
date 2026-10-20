@@ -287,6 +287,9 @@ require("temporary.factorio_2_1_22.loader").data_final_fixes()
 -- Adjust required crafts per rocket using source mod silo prototypes, not
 -- hardcoded rocket-part recipes or a simulation-time launch controller.
 require("prototypes.compat.razi_launch_economy").data_final_fixes()
+-- Keep source industries, recipes and defense identities; adjust only
+-- supported crafting speeds and wall/gate health at prototype-load time.
+require("prototypes.compat.razi_industrial_difficulty").data_final_fixes()
 
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.

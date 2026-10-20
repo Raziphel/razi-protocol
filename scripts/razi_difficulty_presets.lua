@@ -28,6 +28,8 @@ M.baseline={
  ["razi-science-demand"]="normal",
  ["razi-evolution-speed"]="normal",
  ["razi-rocket-launch-cost"]="normal",
+ ["razi-factory-throughput"]="normal",
+ ["razi-fortification-durability"]="normal",
  -- Additional gameplay changes resolve the session to Custom but are not
  -- blindly overwritten by presets (structural / compatibility switches).
  ["razi-enable-enemy-routing"]=true,
@@ -54,7 +56,8 @@ M.managed={
  "razi-colony-expansion","razi-spoilage-pressure",
  "razi-resource-frequency","razi-resource-patch-size",
  "razi-resource-richness","razi-science-demand",
- "razi-evolution-speed","razi-rocket-launch-cost"
+ "razi-evolution-speed","razi-rocket-launch-cost",
+ "razi-factory-throughput","razi-fortification-durability"
 }
 M.presets={
  easy={
@@ -78,7 +81,9 @@ M.presets={
   ["razi-resource-richness"]="generous",
   ["razi-science-demand"]="light",
   ["razi-evolution-speed"]="slow",
-  ["razi-rocket-launch-cost"]="economical"
+  ["razi-rocket-launch-cost"]="economical",
+  ["razi-factory-throughput"]="boosted",
+  ["razi-fortification-durability"]="reinforced"
  },
  normal={
   ["razi-asteroid-difficulty-scale"]="balanced",
@@ -101,7 +106,9 @@ M.presets={
   ["razi-resource-richness"]="normal",
   ["razi-science-demand"]="normal",
   ["razi-evolution-speed"]="normal",
-  ["razi-rocket-launch-cost"]="normal"
+  ["razi-rocket-launch-cost"]="normal",
+  ["razi-factory-throughput"]="normal",
+  ["razi-fortification-durability"]="normal"
  },
  hard={
   ["razi-asteroid-difficulty-scale"]="challenging",
@@ -124,7 +131,9 @@ M.presets={
   ["razi-resource-richness"]="poor",
   ["razi-science-demand"]="intensive",
   ["razi-evolution-speed"]="accelerated",
-  ["razi-rocket-launch-cost"]="costly"
+  ["razi-rocket-launch-cost"]="costly",
+  ["razi-factory-throughput"]="constrained",
+  ["razi-fortification-durability"]="fragile"
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -148,7 +157,9 @@ M.presets={
   ["razi-resource-richness"]="meager",
   ["razi-science-demand"]="grueling",
   ["razi-evolution-speed"]="runaway",
-  ["razi-rocket-launch-cost"]="punishing"
+  ["razi-rocket-launch-cost"]="punishing",
+  ["razi-factory-throughput"]="strained",
+  ["razi-fortification-durability"]="brittle"
  }
 }
 local legacy={relaxed="easy",standard="normal",extreme="nightmare"}

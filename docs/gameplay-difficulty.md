@@ -150,3 +150,29 @@ Check new maps carefully before affecting an established save.
 **MapGen schema guard:** The `min_to_diffuse` pollution threshold is
 valid only on the global `MapSettings` prototype. Named map generator
 presets may set `diffusion_ratio`, but must omit `min_to_diffuse`.
+
+### Extended industrial and rocket logistics difficulty (2.1.129)
+
+The eight new controls are resource frequency, patch size, richness,
+research demand, enemy evolution speed, rocket launch cost, factory
+throughput and fortification durability. This expands the Difficulty
+Director from 17 to **25 managed gameplay levers**.
+
+| Lever | Easy | Normal | Hard | Nightmare |
+|---|---:|---:|---:|---:|
+| Rocket-part crafts per launch | 70% | 100% | 130% | 165% |
+| Assembler and furnace speed | 115% | 100% | 92% | 82% |
+| Wall and gate maximum health | 125% | 100% | 90% | 78% |
+
+Resource, science and evolution controls adjust the Normal world-gen profile
+individually in Custom mode. Named difficulties already have calibrated
+planet-wide ores, science costs and evolution factors. We deliberately
+avoid double-applying their percentage modifiers.
+
+Rocket costs adjust the source-owned `RocketSiloPrototype.rocket_parts_required`
+for installed silos, preserving the source's rocket recipe ingredients.
+An explicit nonzero `rocket_parts_storage_cap` is increased when needed
+to match new parts; the special zero value is preserved.
+Both rocket and industrial adjustments are prototype-only, with no
+simulation ticks. Existing saved rocket progress and factory throughput
+may change after a mod startup reload, so back up campaigns first.
