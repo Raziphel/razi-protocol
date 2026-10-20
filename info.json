@@ -123,6 +123,8 @@
     "! factorioplus",
     "Igrys >= 1.5.40",
     "foliax >= 2.0.37",
+    "obsidiax >= 1.0.29",
+    "carna >= 0.3.22",
     "+ planet-ferrum >= 0.1.4",
     "+ skewer_shattered_planet >= 1.0.42",
     "+ rabbasca-underground >= 0.10.3",
