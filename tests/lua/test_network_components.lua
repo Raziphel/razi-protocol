@@ -41,8 +41,12 @@ local function setup(options)
    ["vibrant-tech-card"]={},["vespera-tech-card"]={},
    ["beetlejuice-tech-card"]={},["umbra-tech-card"]={},
    ["planet-crucible-science-pack"]={
-     icon="__base__/graphics/icons/iron-plate.png",icon_size=64}
-  },lab={standard={inputs={"solaris-tech-card","nyxaris-tech-card",
+     icon="__base__/graphics/icons/iron-plate.png",icon_size=64},
+   ["chemical-science-pack"]={},["production-science-pack"]={},
+   ["utility-science-pack"]={}
+  },lab={standard={inputs={"chemical-science-pack",
+      "production-science-pack","utility-science-pack",
+      "solaris-tech-card","nyxaris-tech-card",
       "vibrant-tech-card","vespera-tech-card",
       "beetlejuice-tech-card","umbra-tech-card"}}},
    ["assembling-machine"]={factory={crafting_categories={"crafting"}}}}
@@ -121,7 +125,7 @@ local matrix="razi-network-precision-matrix"
 local lattice="razi-network-extreme-lattice"
 local bond="razi-network-panglia-optic-bond"
 local frame="razi-network-umbra-pressure-frame"
-for _,name in ipairs({matrix,lattice,bond}) do
+for _,name in ipairs({matrix,lattice,bond,frame}) do
   local item,recipe,tech=raw.item[name],raw.recipe[name],raw.technology[name]
   check(item and recipe and tech,"Expected guarded cross-system components")
   check(recipe.enabled==false and recipe.auto_recycle==false,
@@ -130,7 +134,7 @@ for _,name in ipairs({matrix,lattice,bond}) do
       and recipe.category==nil and recipe.additional_categories==nil,
     "Component recipe must use Factorio 2.1's unified categories field")
   check(recipe.allow_productivity==false,"Intermediate is productivity-safe")
-  check(recipe.results[1].amount==(name==bond and 8 or 2),
+  check(recipe.results[1].amount==((name==bond or name==frame) and 8 or 2),
     "Initial and return-cargo components must keep their balanced batch size")
   check(#tech.unit.ingredients==2,"No five-pack research soup")
   check(item.icons and #item.icons>=2,
@@ -155,11 +159,19 @@ check(#raw.recipe[bond].ingredients==3
   and raw.recipe[bond].energy_required==10
   and has(raw.technology[bond],"panglia_planet_discovery_panglia"),
   "Panglia optical export is not tied to its native glass factory")
-check(not raw.item[frame],
-  "Pressure-frame item escaped Deep interdependence mode")
+check(raw.item[frame] and raw.recipe[frame] and raw.technology[frame],
+  "Pressure Frame must be present with the other three Balanced components")
+check(raw.recipe[frame].ingredients[2].name=="holmium-plate",
+  "Pressure Frame must consume industrial cargo, not science packs")
+for _,part in ipairs({matrix,lattice,bond,frame}) do
+  for _,entry in ipairs(raw.technology[part].unit.ingredients) do
+    check(not entry[1]:find("tech%-card"),
+      "Network component must not charge earlier-system tech cards")
+  end
+end
 module.register_premium()
-check(calls.k2==1 and calls.modded==5 and calls.deep==2
-  and calls.k2deep==0,
+check(calls.k2==1 and calls.modded==5 and calls.deep==3
+  and calls.k2deep==1,
   "Premium recipes were not partitioned into source-owned factories")
 for _,group in ipairs({
   module.premium.k2,module.premium.modded,module.premium.deep,
@@ -212,8 +224,8 @@ for _,case in ipairs({
       "Skipped network must not publish premium recipes")
   end
 end
--- The pressure frame has four real source suppliers and is available
--- only with Deep enabled. It unlocks a Vesta and an Aquilo sink.
+-- Pressure Frame is a four-import industrial component in BOTH modes;
+-- its premium return-freight manufacturing options still require Deep.
 local deep_raw,deep_network,deep_calls=setup({deep=true})
 deep_network.data_final_fixes()
 check(deep_raw.item[frame] and deep_raw.recipe[frame]
@@ -233,8 +245,8 @@ check(deep_calls.modded==5 and deep_calls.deep==3
   and deep_calls.k2deep==1,
   "Deep framework must feed one Vesta and one Aquilo sink")
 deep_network.data_final_fixes()
-check(deep_raw.recipe[frame].ingredients[2].name=="planet-crucible-science-pack",
-  "Crucible's safe high-pressure science export was lost")
+check(deep_raw.recipe[frame].ingredients[2].name=="holmium-plate",
+  "Deep Pressure Frame must ship real metal rather than consume science")
 
 local missing_panglia,panglia_network=setup({no_panglia=true,deep=true})
 panglia_network.data_final_fixes()
