@@ -2,6 +2,7 @@
 -- Each alternative has to respect the original recipe's research unlock.
 local M = {}
 local interdependence = require("prototypes.compat.interdependence_mode")
+local portfolio = require("prototypes.compat.industry_portfolio")
 
 local exchanges = {
   {
@@ -431,6 +432,9 @@ local function source_supports_category(base, category)
 end
 
 local function register_exchange(rule)
+  -- Keep a small set of actually different production chains. Legacy
+  -- duplicate variants and Ferrum/Balack dependencies are not generated.
+  if not portfolio.keep(rule.name) then return end
   if rule.deep_only and not interdependence.deep() then return end
   if rule.source_mod and not mods[rule.source_mod] then return end
   for _, needed_mod in ipairs(rule.required_mods or {}) do
@@ -518,10 +522,14 @@ local function register_exchange(rule)
       time_ratio)+0.000001<rule.min_throughput_ratio then return end
   end
 
-  for _, pack in ipairs(rule.science) do
-    if not raw("tool", pack) then return end
+  -- Source tech and every supplying planet still gate the unlock. Ordinary
+  -- research packs pay for the blueprint, while actual cross-world resources
+  -- must be imported for every production batch.
+  local science=portfolio.science(rule)
+  for _,pack in ipairs(science) do
+    if not raw("tool",pack) then return end
   end
-  if not lab_can_research(rule.science) then return end
+  if not lab_can_research(science) then return end
 
   local native_unlock
   if base.enabled == false then
@@ -627,6 +635,12 @@ local function register_exchange(rule)
     end
   end
   for _, ingredient in ipairs(rule.additional) do
+    local import=deepcopy(ingredient)
+    -- Deep mode means larger physical freight orders, NOT more earlier-tier
+    -- science cards. Keep the bonus fixed and never alter native recipes.
+    if interdependence.deep() then
+      import.amount=math.ceil(import.amount*1.5)
+    end
     local duplicate
     for _, existing in ipairs(alternative.ingredients) do
       if name_of(existing) == name_of(ingredient)
@@ -636,9 +650,9 @@ local function register_exchange(rule)
       end
     end
     if duplicate then
-      duplicate.amount = duplicate.amount + ingredient.amount
+      duplicate.amount = duplicate.amount + import.amount
     else
-      alternative.ingredients[#alternative.ingredients + 1] = deepcopy(ingredient)
+      alternative.ingredients[#alternative.ingredients + 1] = import
     end
   end
 
@@ -661,8 +675,8 @@ local function register_exchange(rule)
     },
     order = "fz[razi-exchanges]-" .. rule.name
   }
-  for _, pack in ipairs(rule.science) do
-    tech.unit.ingredients[#tech.unit.ingredients + 1] = {pack, 1}
+  for _,pack in ipairs(science) do
+    tech.unit.ingredients[#tech.unit.ingredients + 1] = {pack,1}
   end
   data:extend({alternative, tech})
 end
