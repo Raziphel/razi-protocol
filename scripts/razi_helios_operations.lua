@@ -69,14 +69,20 @@ end
 -- Normal platform arrival event is an early witness. The GUI also starts
 -- a hold lazily, so existing saves without arrival records remain playable.
 function M.observe(platform)
- if not (platform and platform.valid) then return end
+ if not (enabled() and platform and platform.valid) then return end
  local location=platform.space_location and platform.space_location.name
- local all=holds()
  local key=platform.index
- if not location or platform.space_connection then
-   all[key]=nil
+ -- This event is raised for *every* moving platform. Keep a hold record
+ -- only for actual SLP solar destinations and discard stale departures.
+ local relevant=location and not platform.space_connection
+   and (location==M.destination("planet-discovery-sunorbit")
+     or location==M.destination("slp-solar-system-sun2"))
+ if not relevant then
+   local all=storage and storage.razi_helios_holds
+   if all then all[key]=nil end
    return
  end
+ local all=holds()
  local known=all[key]
  if not known or known.location~=location then
    all[key]={location=location,since=game.tick or 0}
@@ -150,15 +156,42 @@ function M.deliver(player,stage)
  row[stage]=math.min(needed,delivered+removed)
  return "helios-delivered",removed
 end
-function M.grid(force)
+-- Never enumerate planet surfaces on every GUI redraw. The engine tracks
+-- total anchor counts in O(1), while a three-second snapshot covers voltage
+-- changes between physical build/remove events. The final cargo submission
+-- can explicitly request a fresh result.
+M.grid_cache_ticks=180
+function M.invalidate_grid(force)
+ local all=storage and storage.razi_helios_grid_cache
+ if not all then return end
+ if force and force.index then all[force.index]=nil
+ else storage.razi_helios_grid_cache=nil end
+end
+function M.anchor_changed(entity)
+ if entity and entity.valid and entity.name=="razi-helios-grid-anchor" then
+   M.invalidate_grid(entity.force)
+ end
+end
+function M.grid(force,refresh)
  local result={installed=0,powered=0,worlds={}}
  if not (enabled() and force and game and game.surfaces
    and force.get_entity_count) then return result end
  local name="razi-helios-grid-anchor"
- if force.get_entity_count(name)==0 then return result end
+ local total=force.get_entity_count(name) -- O(1), even on massive saves.
+ if total==0 then
+   M.invalidate_grid(force)
+   return result
+ end
+ local tick=game.tick or 0
+ local all=storage and storage.razi_helios_grid_cache
+ local key=force.index or force.name
+ local entry=all and all[key]
+ if not refresh and entry and entry.total==total
+   and tick>=entry.tick and tick-entry.tick<M.grid_cache_ticks then
+   return entry.value
+ end
  for _,surface in pairs(game.surfaces) do
-   -- Planetary grid means *actual* planets. A parked space platform
-   -- cannot substitute for an energized terrestrial distribution network.
+   -- Planet surfaces only. No platform or unrelated entity enumeration.
    if surface.valid~=false and surface.planet and not surface.platform then
      local entities=surface.find_entities_filtered{name=name,force=force}
      local online=0
@@ -177,12 +210,17 @@ function M.grid(force)
    end
  end
  table.sort(result.worlds,function(a,b)return a.name<b.name end)
+ if storage then
+   storage.razi_helios_grid_cache=storage.razi_helios_grid_cache or {}
+   storage.razi_helios_grid_cache[key]={
+     tick=tick,total=total,value=result}
+ end
  return result
 end
-function M.status(force)
+function M.status(force,refresh)
  local req=M.targets()
  local done=M.record(force)
- local grid=M.grid(force)
+ local grid=M.grid(force,refresh)
  local distinct=0
  for _,world in ipairs(grid.worlds) do
    if world.powered>0 then distinct=distinct+1 end
@@ -192,7 +230,7 @@ function M.status(force)
    complete=not enabled() or ((done.outer or 0)>=req.outer
      and (done.inner or 0)>=req.inner and distinct>=req.grid)}
 end
-function M.ready(force)
+function M.ready(force,refresh)
  if not enabled() then return true end
  -- If an upstream update removed an essential native recipe or if a valid
  -- mod combination cannot register our hardware, the optional finale gate
@@ -201,13 +239,15 @@ function M.ready(force)
  if not (technologies and technologies["razi-helios-grid-commission"]) then
    return true
  end
- return M.status(force).complete
+ return M.status(force,refresh).complete
 end
 function M.forces_merged(event)
  local all=storage and storage.razi_helios_commissions
  if not all then return end
  local src,dst=event.source_index,event.destination_index
  if not (src and dst and src~=dst) then return end
+ M.invalidate_grid({index=src})
+ M.invalidate_grid({index=dst})
  local source=all[src]
  if not source then return end
  local dest=all[dst] or {outer=0,inner=0}

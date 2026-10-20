@@ -183,7 +183,7 @@ local function stage_ready(force,index)
   local proof=settings and settings.startup
     and settings.startup["razi-helios-convergence-proof"]
   if proof and proof.value==true
-    and not helios_operations.ready(force) then
+    and not helios_operations.ready(force,true) then
     return false,"convergence-need-helios"
   end
  end

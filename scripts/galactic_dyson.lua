@@ -51,23 +51,42 @@ local helios_products={
 local native_satellites={
  "slp-ds-satellite","slp-ds-planet-satellite"
 }
--- Recorded production, not simulated construction progress or satellite MW.
--- Read only when the journal is displayed; no tick scans or cached guesses.
-function M.component_counts(force)
+-- Engine-produced counts only, not satellite deployment or generated MW.
+-- Cache plain numbers per force for 10 seconds while a Journal stays open.
+-- No periodic tick handler, global platform scan, or stored Lua objects.
+M.production_cache_ticks=600
+local counted_items={
+ "razi-helios-corona-shield","razi-helios-stellar-frame",
+ "razi-helios-relay-matrix","slp-ds-satellite","slp-ds-planet-satellite"
+}
+function M.component_counts(force,refresh)
  local counts={}
- if not (game and game.surfaces and force.get_item_production_statistics) then
-   return counts
+ if not (force and game and game.surfaces
+   and force.get_item_production_statistics) then return counts end
+ local tick=game.tick or 0
+ local key=force.index or force.name
+ local cache=storage and storage.razi_helios_production_cache
+ local prior=cache and cache[key]
+ if not refresh and prior and tick>=prior.tick
+   and tick-prior.tick<M.production_cache_ticks then
+   return prior.counts
  end
  for _,surface in pairs(game.surfaces) do
-   local stats=force.get_item_production_statistics(surface)
-   if stats and stats.valid~=false then
-     for _,name in pairs(helios_products) do
-       counts[name]=(counts[name] or 0)+(stats.get_input_count(name) or 0)
-     end
-     for _,name in ipairs(native_satellites) do
-       counts[name]=(counts[name] or 0)+(stats.get_input_count(name) or 0)
+   if surface.valid~=false then
+     local stats=force.get_item_production_statistics(surface)
+     if stats and stats.valid~=false then
+       for _,name in ipairs(counted_items) do
+         -- get_input_count is consumption. OUTPUT is actual manufacturing.
+         counts[name]=(counts[name] or 0)
+           +(stats.get_output_count(name) or 0)
+       end
      end
    end
+ end
+ if storage then
+   storage.razi_helios_production_cache=
+     storage.razi_helios_production_cache or {}
+   storage.razi_helios_production_cache[key]={tick=tick,counts=counts}
  end
  return counts
 end

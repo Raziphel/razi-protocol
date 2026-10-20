@@ -140,6 +140,7 @@ end
 local function on_entity_built(event)
   local entity=event.entity or event.destination or event.created_entity
   check_entity(entity)
+  helios_operations.anchor_changed(entity)
   if entity and entity.valid and entity.name=="razi-archive-relay" then
     razi_journal.refresh_open()
   end
@@ -344,6 +345,7 @@ events:on_event({
   defines.events.script_raised_destroy
 },function(event)
   local entity=event.entity
+  helios_operations.anchor_changed(entity)
   if entity and entity.valid and entity.name=="razi-archive-relay" then
     razi_journal.refresh_open()
   end
