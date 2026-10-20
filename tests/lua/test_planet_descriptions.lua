@@ -10,11 +10,12 @@ local planet = {
   maraxsis = {},
   rabbasca = {localised_description = "A native moon description."},
   carna = {},
+  skewer_shattered_planet = {},
   unrelated = {localised_description = "Keep this unchanged"}
 }
 local locations = {
   vespera = {}, ["sye-calidus"] = {},
-  ["apia-carnova-orbit"] = {},
+  ["apia-carnova-orbit"] = {}, skewer_lost_beyond = {},
 }
 rawset(_G, "data", {raw = {planet = planet, ["space-location"] = locations}})
 package.loaded["prototypes.system.planet_descriptions"] = nil
@@ -40,6 +41,8 @@ for _, pair in ipairs({
   {locations.vespera, "vespera", "vespera"},
   {locations["sye-calidus"], "calidus", "sye-calidus"},
   {locations["apia-carnova-orbit"], "nyxaris", "apia-carnova-orbit"},
+  {planet.skewer_shattered_planet, "deep-space", "skewer_shattered_planet"},
+  {locations.skewer_lost_beyond, "deep-space", "skewer_lost_beyond"},
 }) do
   local value = check_context(pair[1], pair[2], pair[3])
   check(value[2][1] == "?" and value[2][2][2][1] == "space-location-description." .. pair[3],
