@@ -20,6 +20,71 @@ local retained={
   ["razi-network-frame-vesta-foundations"]=true,
   ["razi-network-frame-aquilo-controllers"]=true
 }
+-- A freight partnership needs to do something distinct, not merely ask
+-- for one more colored research card. These are gameplay profiles, not
+-- cosmetic labels. No prototype owned by another mod is modified.
+--
+-- catalytic: the shipped reagent substitutes part of a named *native* input.
+-- accelerated: imported hardware improves machine output per second.
+-- bulk: material-heavy industrial yield, without a speed shortcut.
+local profiles={
+  ["razi-bio-rare-metal-casting"]={
+    kind="catalytic",conserve="kr-molten-rare-metals",type="fluid",fraction=0.12},
+  ["razi-electrobiological-components"]={kind="accelerated"},
+  ["razi-cryo-energy-control"]={
+    kind="catalytic",conserve="kr-electronic-components",fraction=0.12},
+  ["razi-gleba-tenebris-biopolymer"]={kind="bulk"},
+  ["razi-linox-rare-earth-exchange"]={
+    kind="catalytic",conserve="sulfuric-acid",type="fluid",fraction=0.12},
+  ["razi-modded-vesta-rare-earth-supermagnets"]={
+    kind="catalytic",conserve="holmium-plate",fraction=0.12},
+  ["razi-first-frontier-relay-components"]={kind="accelerated"},
+  ["razi-modded-paracelsin-optical-coils"]={
+    kind="catalytic",conserve="zinc-rivets",fraction=0.12},
+  ["razi-modded-moshine-zinc-silicon"]={
+    kind="catalytic",conserve="silicon",fraction=0.12},
+  ["razi-network-matrix-cryo-controllers"]={kind="accelerated"},
+  ["razi-network-lattice-vesta-magnets"]={kind="bulk"},
+  ["razi-network-bond-paracelsin-coils"]={kind="accelerated"},
+  ["razi-network-bond-linox-refining"]={kind="accelerated"},
+  ["razi-network-frame-vesta-foundations"]={kind="bulk"},
+  ["razi-network-frame-aquilo-controllers"]={kind="bulk"}
+}
+M.profiles=profiles
+function M.profile(name) return profiles[name] end
+
+-- Only consume fewer *native* inputs, never the imported cargo itself.
+-- Saving rounds down to whole recipe units and never exceeds 12% of the
+-- full native batch. Changed mods that remove the ingredient skip this
+-- particular optional exchange, preserving all native manufacturing.
+function M.conserve(ingredients,profile)
+  if not profile or not profile.conserve then return true,0 end
+  local expected_type=profile.type or "item"
+  for _,ingredient in ipairs(ingredients) do
+    if ingredient.name==profile.conserve
+      and (ingredient.type or "item")==expected_type then
+      if type(ingredient.amount)~="number"
+        or ingredient.amount<=0 then return false,0 end
+      local saved=math.floor(ingredient.amount*profile.fraction)
+      if saved>0 and ingredient.amount-saved>=1 then
+        ingredient.amount=ingredient.amount-saved
+      end
+      return true,saved
+    end
+  end
+  return false,0
+end
+
+-- A fast factory still pays for ALL its imported goods. Limit final bonus
+-- output per native crafting second to +17%, so the imported specialist
+-- equipment cannot become an unchecked free-power multiplier.
+function M.time_multiplier(profile,native_amount,batch,bonus,original)
+  if not profile or profile.kind~="accelerated" then return original end
+  local amount=native_amount*batch
+  local minimum=(amount+bonus)/(amount*1.17)
+  return math.max(1.06,minimum)
+end
+
 M.retained=retained
 function M.keep(name) return retained[name]==true end
 
