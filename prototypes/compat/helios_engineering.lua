@@ -99,7 +99,7 @@ function M.data_final_fixes()
    end
    local recipe={type="recipe",name=spec.product,enabled=false,
      localised_name={"recipe-name."..spec.product},
-     subgroup="intermediate-product",category="crafting",
+     subgroup="intermediate-product",category="advanced-crafting",
      energy_required=45,ingredients=ingredients,
      results={{type="item",name=spec.product,amount=1}},
      allow_productivity=false,auto_recycle=false,
@@ -130,19 +130,27 @@ local function outputs(recipe,name)
 end
 local function machine_accepts(recipe,required)
  local categories=recipe.categories or {recipe.category or "crafting"}
- for _,kind in ipairs({"assembling-machine","furnace"}) do
-   for _,machine in pairs(data.raw[kind] or {}) do
-     if type(machine.ingredient_count)=="number"
-       and machine.ingredient_count>=required then
-       for _,category in ipairs(categories) do
-         for _,allowed in ipairs(machine.crafting_categories or {}) do
-           if category==allowed then return true end
-         end
+ -- Ingredient slots count ITEMS, not fluids; a missing limit means the
+ -- Factorio 2.1 prototype default of 65535 for assembling machines.
+ for _,machine in pairs(data.raw["assembling-machine"] or {}) do
+   if (machine.ingredient_count or 65535)>=required
+     and (not machine.fixed_recipe or machine.fixed_recipe==""
+       or machine.fixed_recipe==recipe.name) then
+     for _,category in ipairs(categories) do
+       for _,allowed in ipairs(machine.crafting_categories or {}) do
+         if category==allowed then return true end
        end
      end
    end
  end
  return false
+end
+local function item_inputs(recipe)
+ local count=0
+ for _,ingredient in ipairs(recipe.ingredients or {}) do
+   if (ingredient.type or "item")=="item" then count=count+1 end
+ end
+ return count
 end
 function M.reinforce_satellites()
  if choice("razi-helios-progression","late")=="legacy"
@@ -158,7 +166,7 @@ function M.reinforce_satellites()
          for _,ingredient in ipairs(recipe.ingredients) do
            if (ingredient.name or ingredient[1])==component then found=true end
          end
-         if not found and machine_accepts(recipe,#recipe.ingredients+1) then
+         if not found and machine_accepts(recipe,item_inputs(recipe)+1) then
            local ingredients=copy(recipe.ingredients)
            ingredients[#ingredients+1]={type="item",name=component,amount=1}
            recipe.ingredients=ingredients

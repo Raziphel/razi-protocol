@@ -14,7 +14,8 @@ class HeliosTests(unittest.TestCase):
  def test_research_and_satellite_safety(self):
   src=read("prototypes/compat/helios_engineering.lua")
   self.assertIn("dyson.safe_link(spec.gate,spec.tech)",src)
-  self.assertIn("machine_accepts(recipe,#recipe.ingredients+1)",src)
+  self.assertIn("machine_accepts(recipe,item_inputs(recipe)+1)",src)
+  self.assertIn('category="advanced-crafting"',src)
   self.assertIn("recipe.ingredients=ingredients",src)
   self.assertNotIn("script.on_nth_tick",src)
   self.assertNotIn("remote.call(",src)
