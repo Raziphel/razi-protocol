@@ -1,45 +1,34 @@
-"""Static contract for the Razi gameplay preset coordinator."""
+"""Static contracts for Normal-default RP3 Difficulty Director."""
 from pathlib import Path
 import unittest
-
 ROOT=Path(__file__).resolve().parents[1]
-def read(p): return (ROOT/p).read_text(encoding="utf-8")
-
-class DifficultyPresetTests(unittest.TestCase):
- def test_master_is_opt_in_and_has_explicit_choices(self):
-  text=read("settings.lua")
-  self.assertIn('name="razi-difficulty-preset"',text)
-  self.assertIn('setting_type="startup",default_value="custom"',text)
-  self.assertIn('allowed_values={"custom","relaxed","standard","hard","extreme"}',text)
- def test_no_user_settings_overwritten(self):
-  body=read("scripts/razi_difficulty_presets.lua")
-  self.assertIn("function M.effective(name,fallback)",body)
-  self.assertNotIn("settings.global[",body)
-  self.assertNotIn("data.raw[",body)
-  self.assertNotIn("script.on_nth_tick",body)
-  self.assertIn('["razi-asteroid-population"]="dense"',body)
-  self.assertNotIn('["razi-helios-construction"]',body)
- def test_every_scoped_consumer_reads_shared_resolver(self):
-  consumers=(
-    "prototypes/system/asteroid_profiles.lua",
-    "prototypes/compat/calidus_dyson.lua",
-    "prototypes/compat/helios_engineering.lua",
-    "prototypes/compat/helios_structures.lua",
-    "scripts/razi_helios_operations.lua",
-    "prototypes/system/route_highlights.lua",
-    "prototypes/system/route_intel.lua",
-    "prototypes/system/route_ribbons.lua",
-    "prototypes/system/quality_asteroids.lua",
-    "scripts/razi_quality_asteroids.lua",
-  )
-  for path in consumers:
-   with self.subTest(path=path):
-    self.assertIn("razi_difficulty_presets",read(path))
- def test_localizations(self):
+def read(p):return (ROOT/p).read_text(encoding="utf-8")
+class DifficultyDirector(unittest.TestCase):
+ def test_five_modes_and_normal_default(self):
+  s=read("settings.lua")
+  self.assertIn('setting_type="startup",default_value="normal"',s)
+  self.assertIn('allowed_values={"custom","easy","normal","hard","nightmare"}',s)
+ def test_manual_override_detection(self):
+  d=read("scripts/razi_difficulty_presets.lua")
+  self.assertIn("function M.manual_overrides()",d)
+  self.assertIn("choice.value~=M.baseline[name]",d)
+  self.assertIn('if #M.manual_overrides()>0 then return "custom" end',d)
+  for name in ("easy","normal","hard","nightmare"):
+   self.assertIn(name+"={",d)
+ def test_big_monsters_api_is_supported_and_event_driven(self):
+  b=read("scripts/razi_big_monsters_bridge.lua")
+  self.assertIn('api(M.active() and "on" or "off")',b)
+  self.assertIn('return api("add_surface",surface.name)',b)
+  self.assertNotIn("script.on_nth_tick(",b)
+  self.assertNotIn('settings.global["bm-event-days"]=',b)
+  self.assertIn("big_monsters_bridge.sync()",read("control.lua"))
+ def test_source_integrations(self):
+  d=read("scripts/razi_difficulty_presets.lua")
+  self.assertIn('["razi-planetary-interdependence"]="deep"',d)
+  self.assertIn('["razi-big-monsters-events"]=true',d)
+ def test_translations(self):
   for lang in ("en","ru"):
-   with self.subTest(lang=lang):
-    data=read("locale/"+lang+"/settings.cfg")
-    for suffix in ("","-custom","-relaxed","-standard","-hard","-extreme"):
-     self.assertIn("razi-difficulty-preset"+suffix+"=",data)
-
-if __name__=="__main__": unittest.main()
+   cfg=read(f"locale/{lang}/settings.cfg")
+   for tail in ("-custom","-easy","-normal","-hard","-nightmare"):
+    self.assertIn("razi-difficulty-preset"+tail+"=",cfg)
+if __name__=="__main__":unittest.main()

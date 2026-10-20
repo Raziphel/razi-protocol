@@ -32,6 +32,9 @@ local function planet_entity_settings(planet_name)
 end
 
 function enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
+	-- Nexus is the ultimate combined ecosystem. Never suppress its native
+	-- biters or worms when installing exotic spawners.
+	if planet_name == "nexus" then return end
 	if not enemy_autoplace.enabled() then
 		return
 	end

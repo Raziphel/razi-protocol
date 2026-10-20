@@ -16,8 +16,8 @@ data:extend({
   -- exactly as saved. All modes leave accessibility, visuals, QoL,
   -- performance, third-party settings and physical prototype existence alone.
   {type="string-setting",name="razi-difficulty-preset",
-    setting_type="startup",default_value="custom",
-    allowed_values={"custom","relaxed","standard","hard","extreme"},
+    setting_type="startup",default_value="normal",
+    allowed_values={"custom","easy","normal","hard","nightmare"},
     order="00[gameplay-difficulty]-a[preset]"},
   -- One shared save setting controls research spoiler fog and the Journal.
   -- Runtime-global allows multiplayer forces to agree on research visibility
@@ -44,6 +44,22 @@ data:extend({
   {type="bool-setting",name="razi-journal-show-tracker",
     setting_type="runtime-per-user",default_value=true,
     order="a1[welcome]-d[pinned-tracker]"},
+  -- Combat systems use a common difficulty mode, but the player can still
+  -- customize each value independently. Changes to advanced gameplay
+  -- controls make the resolved difficulty Custom without overwriting them.
+  {type="string-setting",name="razi-enemy-pressure",
+    setting_type="startup",default_value="normal",
+    allowed_values={"light","normal","aggressive","overrun"},
+    order="aa[worlds]-a1[enemy-pressure]"},
+  {type="string-setting",name="razi-nexus-hostility",
+    setting_type="startup",default_value="normal",
+    allowed_values={"normal","hard","apocalypse"},
+    order="aa[worlds]-a2[nexus-threat]"},
+  -- Big-Monsters is controlled only through its published remote API.
+  -- Its own interval and event weighting remain independently editable.
+  {type="bool-setting",name="razi-big-monsters-events",
+    setting_type="startup",default_value=false,
+    order="aa[worlds]-a3[big-monsters]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.

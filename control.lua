@@ -8,6 +8,7 @@ local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local welcome = require("scripts.razi_welcome")
 local convergence = require("scripts.razi_convergence")
 local helios_operations = require("scripts.razi_helios_operations")
+local big_monsters_bridge = require("scripts.razi_big_monsters_bridge")
 local convergence_audit = require("scripts.razi_convergence_audit")
 local Events = require("__razi_lib__/runtime/events")
 local victory_guard = require("scripts.razi_victory_guard")
@@ -166,6 +167,7 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(function()
+  big_monsters_bridge.sync()
   victory_guard.prepare()
   spoiler_fog.sync_all()
   spoiler_fog.defer_all()
@@ -179,6 +181,7 @@ events:on_init(function()
   razi_journal.sync_all()
 end)
 events:on_configuration_changed(function(event)
+  big_monsters_bridge.sync()
   victory_guard.prepare()
   spoiler_fog.sync_all()
   spoiler_fog.defer_all()
@@ -199,6 +202,10 @@ events:on_configuration_changed(function(event)
   retire_connected_operations()
   razi_journal.initialize_chapter_completions()
   razi_journal.sync_all()
+end)
+events:on_event(defines.events.on_surface_created,function(event)
+  local surface=event and game.surfaces[event.surface_index]
+  if surface then big_monsters_bridge.surface(surface) end
 end)
 -- An idle Convergence has no pending work. Active force transmissions
 -- advance once per second and only redraw their open final panels.
