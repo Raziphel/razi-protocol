@@ -21,8 +21,6 @@ M.themes={
     icons={"technology/slp-dyson-sphere","technology/solar-energy","item/solar-panel"}},
   network={primary={r=0.33,g=0.91,b=0.85},soft={r=0.63,g=0.88,b=0.86},
     icons={"technology/interplanetary-trade-logistics","technology/logistic-robotics","item/logistic-robot"}},
-  fluxworks={primary={r=0.76,g=0.56,b=1},soft={r=0.86,g=0.77,b=0.97},
-    icons={"item/fw-stabilized-flux-crystal","item/fw-synthesis-plant","technology/processing-unit"}},
   alliances={primary={r=1,g=0.64,b=0.35},soft={r=0.94,g=0.78,b=0.57},
     icons={"technology/razi-network-precision-matrix","technology/kr-advanced-tech-card","technology/steel-processing"}},
   finale={primary={r=0.82,g=0.8,b=1},soft={r=0.89,g=0.86,b=1},

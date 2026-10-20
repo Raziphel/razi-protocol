@@ -87,7 +87,8 @@ class DependencyPolicyTests(unittest.TestCase):
                                  for raw in deps),candidate)
         self.assertNotIn("Nexus-Threat-Updated >= 1.1.0",deps)
         self.assertNotIn("slp-dyson-sphere-reworked-fork >= 1.0.5",deps)
-        self.assertIn("(?) FluxWorks >= 0.2.12",deps)
+        self.assertFalse([d for d in deps if d.startswith("(?) ")],
+                         "Unmaintained hidden integrations must not remain declared")
         self.assertIn("! outer-rim",deps)
         self.assertIn("! Hephaestus",deps)
         self.assertFalse(any(raw.startswith("+ Hephaestus")
