@@ -108,7 +108,9 @@ M.allocate=allocate
 
 local function render(owner,row,mode,n)
   local result={}
-  local mode=row.difficulty_mode
+  -- Final-pass rows already carry a preset. Direct callers supply the mode.
+  -- Do not discard that argument when building short endpoint ribbons.
+  mode=row.difficulty_mode or mode
   for j=1,n do
     local start=(row.trim+row.covered*(j-1)/n)/row.length
     local finish=(row.trim+row.covered*j/n)/row.length

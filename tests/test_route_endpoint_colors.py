@@ -26,6 +26,7 @@ class RouteEndpointColors(unittest.TestCase):
   ribbon=read("prototypes/system/route_ribbons.lua")
   self.assertIn("owner.route_path(route,a,b)",ribbon)
   self.assertIn("shift={(a.x+b.x)*16,(a.y+b.y)*16}",ribbon)
+  self.assertIn("mode=row.difficulty_mode or mode",ribbon)
   self.assertNotIn("script.on_nth_tick",ribbon)
   self.assertNotIn("rendered_span",ribbon)
 if __name__=="__main__":unittest.main()
