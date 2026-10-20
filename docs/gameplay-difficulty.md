@@ -176,3 +176,12 @@ to match new parts; the special zero value is preserved.
 Both rocket and industrial adjustments are prototype-only, with no
 simulation ticks. Existing saved rocket progress and factory throughput
 may change after a mod startup reload, so back up campaigns first.
+
+### Hostile habitats (2.1.131)
+
+The Difficulty Director now manages **31 gameplay controls**, including six
+new biter/hostile species habitat settings. Each supports Off, Limited,
+Curated, Expanded, and All. Easy = Limited, Normal = Curated, Hard = Expanded,
+Nightmare = All. **Nexus remains the all-family endgame** at every enabled
+level. All changes apply during startup and affect newly generated territory.
+See [ENEMY_ECOLOGY.md](ENEMY_ECOLOGY.md) for exact planetary coverage.

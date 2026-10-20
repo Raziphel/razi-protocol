@@ -33,4 +33,7 @@ class EnemyHabitats(unittest.TestCase):
   for name in ("ferrum","obsidiax","panglia","gleba","alchemy-planet"):
    self.assertIn(name,fixture)
   self.assertIn('eco.data_final_fixes()',fixture)
+  self.assertIn('check_planets("easy",group,#group.limited)',fixture)
+  self.assertIn('check_planets("hard",group,#group.expanded)',fixture)
+  self.assertIn('check(next(eco.selected_planets(group))==nil',fixture)
 if __name__=="__main__":unittest.main()

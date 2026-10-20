@@ -19,7 +19,7 @@ local function world(tiles)
  }}
 end
 rawset(_G,"settings",{startup={
- ["razi-difficulty-preset"]={value="normal"},
+ ["razi-difficulty-preset"]={value="nightmare"},
  ["razi-enable-enemy-routing"]={value=true}
 }})
 rawset(_G,"mods",{ArmouredBiters21Compat="2.1",Toxic_biters="2.1",
@@ -84,6 +84,30 @@ end})
 package.loaded["prototypes.compat.enemy_autoplace"]=nil
 package.loaded["prototypes.compat.razi_enemy_ecology"]=nil
 local eco=require("prototypes.compat.razi_enemy_ecology")
+local function check_planets(mode,group,expected)
+ settings.startup["razi-difficulty-preset"].value=mode
+ local selection=eco.selected_planets(group)
+ local count=0
+ for name in pairs(selection) do count=count+1 end
+ check(count==expected+1,mode.." must select precisely "..expected
+   .." optional worlds plus Nexus for "..group.setting)
+ check(selection.nexus,"Every enabled tier must retain Nexus")
+end
+for _,group in ipairs(eco.by_theme) do
+ check_planets("easy",group,#group.limited)
+ check_planets("normal",group,#group.curated)
+ check_planets("hard",group,#group.expanded)
+ check_planets("nightmare",group,#group.planets-1)
+ -- The family Off option must not silently re-enable extras on Nexus.
+ settings.startup["razi-difficulty-preset"].value="normal"
+ settings.startup[group.setting]={value="off"}
+ check(next(eco.selected_planets(group))==nil,
+   "Off must disable all Razi extra nests for "..group.setting)
+ check(require("scripts.razi_difficulty_presets").active()=="custom",
+   "Manual family edit must resolve Custom")
+ settings.startup[group.setting]=nil
+end
+settings.startup["razi-difficulty-preset"].value="nightmare"
 local placed=eco.data_final_fixes()
 check(placed>=7,"Expected multiple themed families on newly integrated planets")
 local ferrum=data.raw.planet.ferrum.map_gen_settings

@@ -87,3 +87,18 @@ The original early integration scripts no longer pre-register extras on
 planets, so lower difficulties do not accidentally inherit all families.
 If a source mod naturally registers an enemy on a world, that original
 spawn remains regardless of RP3 habitat selection.
+
+### Exact tier rosters, excluding Nexus
+
+| Family | Easy (Limited) | Normal (Curated) | Hard (Expanded) | Nightmare (All) |
+|---|---|---|---|---|
+| Armoured | Hyarion | Hyarion, Castra, Athos | +Crucible, Ferrum | +Obsidiax |
+| Cold | Aquilo | Aquilo, Frozeta, Shchierbin | +Vesta, Muria | +Balack |
+| Explosive | Moshine | Moshine, Cubium | +Corrundum, Crucible | +Obsidiax |
+| Toxic | Cubium | Cubium, Vesta, Paracelsin, Gleba | +Rabbasca, Foliax, Crucible, Velora | +Khemia |
+| Arachnids | Arig | Arig, Castra, Athos | +Crucible, Panglia | +Tenebris |
+| Electric | Fulgora | Fulgora, Ribbonia, Corrundum | +Cerys, Ferrum | +Khemia |
+
+Each tier includes all destinations from the previous tier. Nexus is eligible
+for every family on every enabled tier. The setting controls only **RP3-added**
+planet-local nests; source-owned enemy placements remain untouched.
