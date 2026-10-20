@@ -3,6 +3,15 @@
 -- The extra research is never a prerequisite for a Razi campaign or planet gate.
 local M = {}
 
+-- Exchange research uses ordinary science. The actual specialist imports
+-- (flux, refined composites and planetary parts) remain mandatory inputs.
+local function research_packs(spec)
+  if spec.id=="calidus-solaris" then
+    return {"chemical-science-pack","production-science-pack"}
+  end
+  return {"production-science-pack","utility-science-pack"}
+end
+
 local function part(name,amount,kind)
   return {type=kind or "item",name=name,amount=amount}
 end
@@ -85,7 +94,7 @@ local function can_add(spec)
     and data.raw["recipe-category"][spec.category]) then
     return false
   end
-  for _,name in ipairs(spec.science) do
+  for _,name in ipairs(research_packs(spec)) do
     if not item(name) then return false end
   end
   local fluids=0
@@ -142,7 +151,7 @@ local function register(spec,index)
 
   if not data.raw.technology[name] then
     local costs={}
-    for _,pack in ipairs(spec.science) do
+    for _,pack in ipairs(research_packs(spec)) do
       costs[#costs+1]={pack,1}
     end
     data:extend({{
