@@ -108,11 +108,11 @@ class Codec:
     @staticmethod
     def out_string(s: str | None) -> bytes:
         if s is None:
-            return b"\\x01"
+            return b"\x01"
         raw = s.encode("utf-8")
         length = len(raw)
-        return (b"\\x00" + (bytes((length,)) if length < 255 else
-                b"\\xff" + struct.pack("<I", length)) + raw)
+        return (b"\x00" + (bytes((length,)) if length < 255 else
+                b"\xff" + struct.pack("<I", length)) + raw)
 
     @classmethod
     def out_node(cls, n: Node, depth: int = 0) -> bytes:
