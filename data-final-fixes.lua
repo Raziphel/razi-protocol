@@ -87,6 +87,9 @@ require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 -- Set the campaign gates after the earlier compatibility passes: each system's discovery follows the
 -- previous tier and costs its cards.
 require("prototypes.technology.seven_system_gates").data_final_fixes()
+-- Ferrum's robotics science and magnets stay out of the research that Ferrum itself needs; otherwise the next pass takes
+-- two packs out of the Vibrant card to break a cycle, and the cryogenic plant waits for the planet.
+require("prototypes.compat.ferrum_progression_guard").data_final_fixes()
 require("prototypes.technology.system_gate_links").data_final_fixes()
 
 -- Transceiver activation opens the Solar System Edge and Deep Space.
