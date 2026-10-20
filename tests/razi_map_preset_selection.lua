@@ -23,9 +23,10 @@ local gen=require("prototypes.system.razi_map_preset")
 local function fixture()
  return {
    ["type"]="map-gen-presets",name="default",
-   default={default=true,order="a"},
-   other_mod={default=true,order="b",basic_settings={starting_area=4}},
-   ["razi-protocol-hard"]={default=true,order="z"}
+   default={order="a"},
+   other_mod={default=true,order="b"},
+   other_mod_profile={order="c",basic_settings={starting_area=4}},
+   ["razi-protocol-hard"]={order="z"}
  }
 end
 local function selected(group)
@@ -55,12 +56,12 @@ for _,mode in ipairs({"easy","normal","hard","nightmare","custom"}) do
   assert(gen.data_final_fixes())
   assert(gen.data_final_fixes(),"second pass should be idempotent")
   local expected=enabled and "razi-protocol-"..mode or "other_mod"
-  -- When disabled the fixture deliberately has more than one native
-  -- default; the code MUST preserve third-party selections untouched.
+  -- With automatic Razi selection disabled, preserve the existing single
+  -- valid third-party default and its separate editable profile.
   if enabled then
     assert(selected(group)==expected,mode.." not auto-selected")
   else
-    assert(group.other_mod.default==true and group.default.default==true,
+    assert(group.other_mod.default==true and group.default.default~=true,
       "disabled option must not change foreign default flags")
     assert(group["razi-protocol-"..mode]==nil or
       group["razi-protocol-"..mode].default~=true,
@@ -74,7 +75,7 @@ for _,mode in ipairs({"easy","normal","hard","nightmare","custom"}) do
        "other manually selectable profile lost its worldgen settings")
    end
   end
-  assert(group.other_mod.basic_settings.starting_area==4,
+  assert(group.other_mod_profile.basic_settings.starting_area==4,
     "must preserve another mod's profile settings")
  end
 end
