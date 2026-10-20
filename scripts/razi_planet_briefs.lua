@@ -141,6 +141,16 @@ function M.visible_related(quest,by_id,visible,limit)
 end
 M.charters=charters
 M.charter_paths=charter_paths
+-- Chapter-level system personalities. Only show a signature on its own
+-- already visible chapter cover; never unveil a sealed destination.
+local stars={
+  calidus=true,solaris=true,nyxaris=true,vibrant=true,
+  vespera=true,beetlejuice=true,umbra=true
+}
+function M.star_charter(id)
+  return type(id)=="string" and stars[id] and id or nil
+end
+M.stars=stars
 
 M.briefs=briefs
 M.connections=connections
