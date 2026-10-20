@@ -140,9 +140,13 @@ local function setup(opts)
   local raw={
     item=items,fluid=fluid_set,recipe=recipes,technology=technologies,
     tool={["solaris-tech-card"]={},["nyxaris-tech-card"]={},
-      ["vibrant-tech-card"]={},["vespera-tech-card"]={}},
+      ["vibrant-tech-card"]={},["vespera-tech-card"]={},
+      ["chemical-science-pack"]={},["production-science-pack"]={},
+      ["utility-science-pack"]={}},
     lab={lab={inputs={"solaris-tech-card","nyxaris-tech-card",
-      "vibrant-tech-card","vespera-tech-card"}}},
+      "vibrant-tech-card","vespera-tech-card",
+      "chemical-science-pack","production-science-pack",
+      "utility-science-pack"}}},
     planet={
       rubia={surface_properties={pressure=1000}},
       paracelsin={surface_properties={pressure=5300}},
@@ -205,12 +209,17 @@ local function amount_of(recipe,list_name,name)
   end
   return nil
 end
+local portfolio=require("prototypes.compat.industry_portfolio")
 local raw,mod=setup()
 local original=clone(raw.recipe)
 mod.data_final_fixes()
 for _,rule in ipairs(rules) do
   local recipe,technology=raw.recipe[rule.name],raw.technology[rule.name]
-  check(recipe and technology, "Modded planet exchange missing: "..rule.name)
+  if not portfolio.keep(rule.name) then
+    check(not recipe and not technology,
+      "Redundant alternate still generated: "..rule.name)
+  else
+  check(recipe and technology, "Curated planet exchange missing: "..rule.name)
   check(recipe.enabled==false and not recipe.auto_recycle,
     "Alternative cannot replace or auto-recycle the original")
   check(recipe.allow_productivity==false and recipe.maximum_productivity==0,
@@ -241,10 +250,14 @@ for _,rule in ipairs(rules) do
   check(original[rule.source].results[1].amount
     ==raw.recipe[rule.source].results[1].amount,
     "Source author's production output was modified: "..rule.source)
+  end
 end
-check(amount_of(raw.recipe["razi-modded-rubia-craptonite-composites"],
-  "results","concrete")==30,"Rubia's native concrete return was discarded")
-check(raw.recipe["razi-modded-rubia-craptonite-composites"]
+check(not raw.recipe["razi-modded-rubia-craptonite-composites"],
+  "Duplicated Rubia composites should be retired")
+-- Previous native concrete return and surface rules remain on source recipe.
+check(amount_of(original["craptonite-casting"],
+  "results","concrete")==10,"Rubia's native concrete return was discarded")
+check(original["craptonite-casting"]
   .surface_conditions[1].property=="pressure",
   "Rubia's wind world restrictions were lost")
 check(raw.recipe["razi-modded-vesta-rare-earth-supermagnets"]
