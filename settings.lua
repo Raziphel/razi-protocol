@@ -66,6 +66,19 @@ data:extend({
   {type="bool-setting",name="razi-big-monsters-events",
     setting_type="startup",default_value=false,
     order="aa[worlds]-a3[big-monsters]"},
+  -- Native, non-scripted challenge systems with independent Custom controls.
+  {type="string-setting",name="razi-pollution-pressure",
+    setting_type="startup",default_value="normal",
+    allowed_values={"gentle","normal","heavy","toxic"},
+    order="aa[worlds]-a4[pollution-pressure]"},
+  {type="string-setting",name="razi-raid-coordination",
+    setting_type="startup",default_value="normal",
+    allowed_values={"small","normal","organized","siege"},
+    order="aa[worlds]-a5[raid-coordination]"},
+  {type="string-setting",name="razi-colony-expansion",
+    setting_type="startup",default_value="normal",
+    allowed_values={"slow","normal","rapid","invasive"},
+    order="aa[worlds]-a6[colony-expansion]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.
