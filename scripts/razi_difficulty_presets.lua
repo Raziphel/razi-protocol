@@ -1,3 +1,9 @@
+-- Central RP3 difficulty, preserving all manually selected values.
+-- The settings GUI cannot be programmatically switched to Custom during
+-- settings editing. Effective mode resolves to Custom if a supported
+-- gameplay lever differs from its original Normal default.
+-- No source-mod setting is mutated, and no UPS-heavy dynamic world scans.
+local M={}
 M.baseline={
  ["razi-asteroid-difficulty-scale"]="balanced",
  ["razi-asteroid-population"]="standard",
@@ -24,7 +30,6 @@ M.baseline={
  ["razi-rocket-launch-cost"]="normal",
  ["razi-factory-throughput"]="normal",
  ["razi-fortification-durability"]="normal",
- ["razi-grid-resilience"]="normal",
  ["razi-habitat-armoured-biters"]="auto",
  ["razi-habitat-cold-biters"]="auto",
  ["razi-habitat-explosive-biters"]="auto",
@@ -59,7 +64,6 @@ M.managed={
  "razi-resource-richness","razi-science-demand",
  "razi-evolution-speed","razi-rocket-launch-cost",
  "razi-factory-throughput","razi-fortification-durability",
- "razi-grid-resilience",
  "razi-habitat-armoured-biters","razi-habitat-cold-biters","razi-habitat-explosive-biters","razi-habitat-toxic-biters","razi-habitat-arachnids","razi-habitat-electric-enemies"
 }
 M.presets={
@@ -87,7 +91,6 @@ M.presets={
   ["razi-rocket-launch-cost"]="economical",
   ["razi-factory-throughput"]="boosted",
   ["razi-fortification-durability"]="reinforced",
-  ["razi-grid-resilience"]="robust",
   ["razi-habitat-armoured-biters"]="limited",
   ["razi-habitat-cold-biters"]="limited",
   ["razi-habitat-explosive-biters"]="limited",
@@ -119,7 +122,6 @@ M.presets={
   ["razi-rocket-launch-cost"]="normal",
   ["razi-factory-throughput"]="normal",
   ["razi-fortification-durability"]="normal",
-  ["razi-grid-resilience"]="normal",
   ["razi-habitat-armoured-biters"]="curated",
   ["razi-habitat-cold-biters"]="curated",
   ["razi-habitat-explosive-biters"]="curated",
@@ -151,7 +153,6 @@ M.presets={
   ["razi-rocket-launch-cost"]="costly",
   ["razi-factory-throughput"]="constrained",
   ["razi-fortification-durability"]="fragile",
-  ["razi-grid-resilience"]="limited",
   ["razi-habitat-armoured-biters"]="expanded",
   ["razi-habitat-cold-biters"]="expanded",
   ["razi-habitat-explosive-biters"]="expanded",
@@ -184,7 +185,6 @@ M.presets={
   ["razi-rocket-launch-cost"]="punishing",
   ["razi-factory-throughput"]="strained",
   ["razi-fortification-durability"]="brittle",
-  ["razi-grid-resilience"]="precarious",
   ["razi-habitat-armoured-biters"]="all",
   ["razi-habitat-cold-biters"]="all",
   ["razi-habitat-explosive-biters"]="all",

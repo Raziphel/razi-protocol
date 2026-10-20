@@ -121,12 +121,6 @@ data:extend({
     setting_type="startup",default_value="normal",
     allowed_values={"reinforced","normal","fragile","brittle"},
     order="aa[worlds]-b5[fortifications]"},
-  -- Scale ordinary solar panels and accumulators, preserving other mods'
-  -- own saved settings, power generation scripts and storage flow limits.
-  {type="string-setting",name="razi-grid-resilience",
-    setting_type="startup",default_value="normal",
-    allowed_values={"robust","normal","limited","precarious"},
-    order="aa[worlds]-b6[grid-resilience]"},
   -- Difficulty-aware, individually configurable enemy habitat coverage.
   {type="string-setting",name="razi-habitat-armoured-biters",
     setting_type="startup",default_value="auto",
