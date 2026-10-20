@@ -12,12 +12,13 @@ local function startup_toggle(name, order)
 end
 
 data:extend({
-  -- Master preset for REAL gameplay values. Custom keeps every prior choice
-  -- exactly as saved. All modes leave accessibility, visuals, QoL,
-  -- performance, third-party settings and physical prototype existence alone.
+  -- Normal is the default for fresh installations. Old saved startup choices
+  -- remain player-owned, including an existing Custom selection.
+  -- Custom appears LAST, as an advanced/manual override mode. Gameplay modes
+  -- never override accessibility, cosmetics or source mod settings.
   {type="string-setting",name="razi-difficulty-preset",
     setting_type="startup",default_value="normal",
-    allowed_values={"custom","easy","normal","hard","nightmare"},
+    allowed_values={"easy","normal","hard","nightmare","custom"},
     order="00[gameplay-difficulty]-a[preset]"},
   -- The map generator initially selects a Razi-branded default. Turn off
   -- to retain Factorio/other-mod default choice and default map values.

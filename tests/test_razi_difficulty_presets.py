@@ -7,7 +7,18 @@ class DifficultyDirector(unittest.TestCase):
  def test_five_modes_and_normal_default(self):
   s=read("settings.lua")
   self.assertIn('setting_type="startup",default_value="normal"',s)
-  self.assertIn('allowed_values={"custom","easy","normal","hard","nightmare"}',s)
+  self.assertIn('allowed_values={"easy","normal","hard","nightmare","custom"}',s)
+ def test_difficulty_labels_are_short_but_tooltips_stay_detailed(self):
+  for lang, expected in (("en",{"easy":"Easy","normal":"Normal",
+                               "hard":"Hard","nightmare":"Nightmare",
+                               "custom":"Custom"}),
+                         ("ru",{"easy":"Лёгкая","normal":"Обычная",
+                                "hard":"Сложная","nightmare":"Кошмар",
+                                "custom":"Своя"})):
+   body=read("locale/"+lang+"/settings.cfg")
+   for name,label in expected.items():
+    self.assertIn("razi-difficulty-preset-"+name+"="+label+"\n",body)
+   self.assertIn("razi-difficulty-preset=",body)
  def test_manual_override_detection(self):
   d=read("scripts/razi_difficulty_presets.lua")
   self.assertIn("function M.manual_overrides()",d)

@@ -12,6 +12,8 @@ end
 local function check(test,message) if not test then error(message,2) end end
 select("normal")
 check(difficulty.active()=="normal","Normal must be the default")
+-- The source dropdown keeps old user-selected Custom values until changed.
+-- Never rewrite existing startup settings while presenting a new default.
 check(not difficulty.effective("razi-big-monsters-events",true),
  "Normal should not enable Big-Monsters events")
 select("easy")
