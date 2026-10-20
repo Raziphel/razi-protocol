@@ -435,6 +435,8 @@ local function register_exchange(rule)
   -- Keep a small set of actually different production chains. Legacy
   -- duplicate variants and Ferrum/Balack dependencies are not generated.
   if not portfolio.keep(rule.name) then return end
+  local profile=portfolio.profile(rule.name)
+  if not profile then return end
   if rule.deep_only and not interdependence.deep() then return end
   if rule.source_mod and not mods[rule.source_mod] then return end
   for _, needed_mod in ipairs(rule.required_mods or {}) do
@@ -610,7 +612,8 @@ local function register_exchange(rule)
   -- Imported materials already pay the logistics price, so use a smaller
   -- default machine-time premium for legacy alternatives.
   alternative.energy_required = (base.energy_required or 0.5) * rule.batch
-    * (rule.time_multiplier or 1.15)
+    * portfolio.time_multiplier(profile,native_amount,rule.batch,bonus,
+      rule.time_multiplier or 1.15)
   alternative.auto_recycle = false
   alternative.allow_decomposition = false
   -- Rewards cross-planet shipping without stacking free bonus throughput
@@ -624,6 +627,10 @@ local function register_exchange(rule)
       ingredient.ignored_by_stats = ingredient.ignored_by_stats * rule.batch
     end
   end
+  -- Apply catalytic savings only to the cloned native ingredients after
+  -- scaling. If the source author removed the targeted ingredient, do not
+  -- publish a recipe whose advertised industrial effect is fictional.
+  if not portfolio.conserve(alternative.ingredients,profile) then return end
   for _, product in ipairs(alternative.results) do
     product.amount = product.amount * rule.batch
     for _, field in ipairs({"ignored_by_stats", "ignored_by_productivity",
