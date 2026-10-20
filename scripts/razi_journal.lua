@@ -972,6 +972,16 @@ local function render_details(parent,player,quest,p,context,size,view)
           or theme.soft
       end
     end
+    -- Real build/travel/delivery tasks live in Projects, where physical
+    -- evidence is verified. Only show a supported, spoiler-visible project.
+    local project=industrial_briefs.project_for_quest(quest)
+    if project and projects.visible(force,project) then
+      local jump=field.add{type="button",
+        caption=L("field-assignment-project"),
+        tooltip=L("field-assignment-project-help"),
+        tags={razi_journal_action="field-project",id=project}}
+      jump.style.font_color=theme.soft
+    end
     local advice=wrap(field,L("field-assignment-advisory"),text_width-26)
     advice.style.font_color=COLOR.quiet
   end
@@ -2791,6 +2801,10 @@ function M.gui_click(event)
     p.chapter=p.chapter==tags.id and false or tags.id
   elseif action=="view" and ({quests=true,projects=true,archive=true,systems=true})[tags.id] then
     p.view=tags.id
+  elseif action=="field-project" and
+    projects.visible(player.force,tags.id) then
+    M.open_project(player,tags.id)
+    return
   elseif action=="project" and projects.visible(player.force,tags.id) then
     p.project=tags.id
   elseif action=="skybridge-sign" and p.view=="projects"
