@@ -178,7 +178,8 @@ function M.explicit_preset(mode)
  }
  -- Pollution and asteroid rate are part of the Advanced tab as well.
  -- Use source prototype baselines for a consistent, predictable multiplier.
- local source=(data.raw["map-settings"] or {})["map-settings"]
+ local active=(data.raw["map-settings"] or {})["map-settings"]
+ local source=active and (original_map_settings[active] or active)
  if source then
    if source.pollution then
      local ageing=source.pollution.ageing

@@ -1,42 +1,49 @@
-"""Factorio 2.1-safe RP3 default selection and world-generation profiles."""
-from pathlib import Path
+"""Factorio 2.1-safe Razi defaults and planet-wide map-generation tuning."""
 import unittest
+from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-def read(path):return (ROOT/path).read_text(encoding="utf-8")
-class MapPresets(unittest.TestCase):
- def test_default_preset_has_no_custom_settings(self):
-  source=read("prototypes/system/razi_map_preset.lua")
-  self.assertIn('group["razi-protocol"]={default=true,order=',source)
-  self.assertIn("group.default.default=nil",source)
-  self.assertIn("M.set_world_defaults(M.active_mode())",source)
-  self.assertIn("if not competing then",source)
-  self.assertIn('and preset.default==true',source)
-  self.assertIn('local settings_map=(raw["map-settings"] or {})["map-settings"]',source)
-  self.assertNotIn('group.default={',source)
- def test_selectable_profiles_cover_each_difficulty(self):
-  s=read("prototypes/system/razi_map_preset.lua")
-  self.assertIn('{"easy","normal","hard","nightmare"}',s)
-  self.assertIn('group["razi-protocol-custom"]=explicit_preset',s)
-  self.assertIn("starting_area=2.55",s)
-  self.assertIn("starting_area=1.65",s)
-  self.assertIn("starting_area=1.15",s)
-  self.assertIn("starting_area=.90",s)
-  self.assertIn("technology_price_multiplier=spec.research",s)
- def test_default_can_be_disabled(self):
-  settings=read("settings.lua")
-  self.assertIn('name="razi-default-new-game-map"',settings)
-  self.assertIn('setting_type="startup",default_value=true',settings)
-  s=read("prototypes/system/razi_map_preset.lua")
-  self.assertIn('autoselect.value~=false',s)
- def test_localizations_and_docs(self):
+def read(p):return (ROOT/p).read_text(encoding="utf-8")
+class MapGenProfiles(unittest.TestCase):
+ def test_auto_marker_is_matching_difficulty(self):
+  code=read("prototypes/system/razi_map_preset.lua")
+  self.assertIn('local name="razi-protocol-"..mode',code)
+  self.assertIn('group[name]={order="00[razi-default]",default=true}',code)
+  self.assertIn('if autoselect and not competing and mode==selected then',code)
+  self.assertIn('group["razi-protocol-custom"]=nil',code)
+  self.assertIn('group["razi-protocol"]=nil',code)
+  self.assertNotIn('group["razi-protocol-custom"]=explicit_preset',code)
+ def test_all_registered_resources_and_enemies_not_just_vanilla_ores(self):
+  code=read("prototypes/system/razi_map_preset.lua")
+  self.assertIn('for id,proto in pairs((data.raw["autoplace-control"] or {}))',code)
+  self.assertIn('if category=="resource" then',code)
+  self.assertIn('if category=="enemy" then',code)
+  self.assertIn('for name,planet in pairs(data.raw.planet or {})',code)
+  self.assertIn('local value=scaled',code)
+  self.assertIn('if value<=0 then return 0 end',code)
+  self.assertIn('if category=="terrain" and (id=="water" or id=="trees")',code)
+ def test_advanced_controls_and_performance_caps(self):
+  code=read("prototypes/system/razi_map_preset.lua")
+  for key in ('pollution_ageing','attack_consumption','asteroids',
+    'difficulty_settings','enemy_evolution','enemy_expansion'):
+   self.assertIn(key,code)
+  self.assertIn('asteroids=1.12',code)
+  self.assertIn('original_map_settings',code)
+ def test_locale_is_short_and_guides_settings(self):
   for lang in ("en","ru"):
-   text=read(f"locale/{lang}/map_preset.cfg")
-   for name in ("razi-protocol","razi-protocol-easy",
-     "razi-protocol-normal","razi-protocol-hard",
-     "razi-protocol-nightmare","razi-protocol-custom"):
-    self.assertIn(name+"=",text)
-   self.assertIn("razi-default-new-game-map=",read(
-     f"locale/{lang}/settings.cfg"))
-  self.assertIn('razi_map_preset").data_final_fixes()',
-    read("data-final-fixes.lua"))
-if __name__=="__main__":unittest.main()
+   content=read(f"locale/{lang}/map_preset.cfg")
+   self.assertNotIn("razi-protocol-custom=",content)
+   self.assertNotIn("razi-protocol=Razi Protocol",content)
+   for label in ("easy","normal","hard","nightmare"):
+    self.assertIn("razi-protocol-"+label+"=",content)
+   self.assertIn("Mod",content)
+  english=read("locale/en/map_preset.cfg")
+  self.assertIn("Before starting your new galaxy",english)
+  self.assertIn("Restart Factorio",english)
+ def test_tests_cover_source_planet_and_third_party_defaults(self):
+  test=read("tests/lua/test_razi_map_preset.lua")
+  for label in ("ionite-ore","ferric-scrap","meteorite-chunk",
+   "biter-base","other-mod-default","iron-ore"):
+   self.assertIn(label,test)
+  self.assertIn("Custom",read("scripts/razi_difficulty_presets.lua"))
+if __name__=="__main__":
+ unittest.main()
