@@ -159,10 +159,10 @@ local function put(planet,name,kind,habitat,seed,weight)
   data:extend({clone})
  end
  local settings=entity_settings(map)
+ -- Preserve native/source-mod spawning when it already owns this world.
+ -- Never replace or remove a legitimate source's map-gen record.
+ if settings[name] then return false end
  settings[id]=settings[id] or {}
- -- If this pack previously registered the shared original spawner on the
- -- same planet, retire only that mapgen entry to prevent double spawning.
- settings[name]=nil
  map.autoplace_controls=map.autoplace_controls or {}
  if (data.raw["autoplace-control"] or {})["enemy-base"]
    and not map.autoplace_controls["enemy-base"] then

@@ -18,7 +18,7 @@ class EnemyHabitats(unittest.TestCase):
   self.assertIn('local clone=table.deepcopy(source)',src)
   self.assertIn('clone.type=actual_kind',src)
   self.assertIn('tile_restriction=tiles',src)
-  self.assertIn('settings[name]=nil',src)
+  self.assertIn('if settings[name] then return false end',src)
   self.assertIn('if #tiles==0 then return false end',src)
   self.assertNotIn('extend_restriction',src)
   self.assertNotIn('script.on_nth_tick',src)

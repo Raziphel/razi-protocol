@@ -6,16 +6,6 @@ end
 
 local cold_enemy_control = "frost_enemy_base"
 
-local cold_enemy_entities = {
-	"cb-cold-spawner",
-	"small-cold-worm-turret",
-	"medium-cold-worm-turret",
-	"big-cold-worm-turret",
-	"behemoth-cold-worm-turret",
-	"leviathan-cold-worm-turret",
-	"mother-cold-worm-turret"
-}
-
 local cold_enemy_autoplace = {
 	["cb-cold-spawner"] = {type = "unit-spawner", distance = 0, worm = false},
 	["small-cold-worm-turret"] = {type = "turret", distance = 0, worm = true},
@@ -66,21 +56,8 @@ local function restrict_entity_to_cold_tiles(entity_type, entity_name, distance,
 	end
 end
 
-local function cold_entity_exists(entity_name)
-	local autoplace = cold_enemy_autoplace[entity_name]
-	return autoplace
-		and data.raw[autoplace.type]
-		and data.raw[autoplace.type][entity_name]
-end
-
-for entity_name, autoplace in pairs(cold_enemy_autoplace) do
-	restrict_entity_to_cold_tiles(autoplace.type, entity_name, autoplace.distance, autoplace.worm)
-end
-
-for _, planet_name in pairs(cold_source_planets) do
-	enemy_autoplace.remove_entities_from_planet(planet_name, cold_enemy_entities, cold_enemy_control)
-end
-
-for _, planet_name in pairs(cold_planets) do
-	enemy_autoplace.add_entities_to_planet(planet_name, cold_enemy_entities, cold_enemy_control, cold_entity_exists)
+-- Existing cold nests keep their source placement; RP3 introduces
+-- separate planet-local nests at data-final-fixes according to difficulty.
+for name,spec in pairs(cold_enemy_autoplace) do
+  restrict_entity_to_cold_tiles(spec.type,name,spec.distance,spec.worm)
 end

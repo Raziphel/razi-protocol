@@ -62,3 +62,28 @@ per-tick spawning fallback is installed.
   Panglia, Gleba, Aquilo and Nexus), especially terrain-specific noise and
   species balance. Watch chunk-generation time and UPS with Nexus's full
   enemy roster. Avoid increasing density until these checks pass.
+
+## Difficulty-aware habitat coverage (2.1.131)
+
+There are now **six startup habitat settings**, one for each enemy family.
+Each lets players choose **Off / Limited / Curated / Expanded / All**.
+The overarching RP3 difficulty maps to these levels automatically:
+
+| Master difficulty | Habitat reach |
+|---|---|
+| Easy | Limited: 1 primary world per family |
+| Normal (default) | Curated: 2–4 logical worlds per family |
+| Hard | Expanded: most eligible planets |
+| Nightmare | All: every planet in each family roster |
+
+Nexus remains an eligible **all-families endgame** planet for any enabled
+level. The explicit Off mode disables RP3's extra placements for a family,
+including Nexus, but **never deletes original source-mod spawn definitions**.
+Manual family settings count as Custom difficulty, without modifying other
+mod settings. Preset/worldgen decisions happen when Factorio loads prototypes;
+existing chunks are not retroactively filled.
+
+The original early integration scripts no longer pre-register extras on
+planets, so lower difficulties do not accidentally inherit all families.
+If a source mod naturally registers an enemy on a world, that original
+spawn remains regardless of RP3 habitat selection.

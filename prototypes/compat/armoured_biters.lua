@@ -13,18 +13,6 @@ local armoured_biter_units = {
 	["leviathan-armoured-biter"] = true
 }
 
-local armoured_planets = {
-	"hyarion",
-	"nexus",
-	"crucible",
-	"castra",
-	"athos"
-}
-
-local armoured_enemy_entities = {
-	"armoured-biter-spawner"
-}
-
 local function remove_armoured_units_from_spawner(spawner)
 	if not spawner or not spawner.result_units then
 		return
@@ -40,10 +28,6 @@ local function remove_armoured_units_from_spawner(spawner)
 	spawner.result_units = result_units
 end
 
-local function armoured_spawner_exists(entity_name)
-	return enemy_autoplace.entity_exists("unit-spawner", entity_name)
-end
-
 local armoured_spawner = enemy_autoplace.entity_exists("unit-spawner", "armoured-biter-spawner")
 
 -- Only separate armoured units from normal nests when the fork really
@@ -54,7 +38,6 @@ if enemy_autoplace.has_valid_autoplace(armoured_spawner) then
 	remove_armoured_units_from_spawner(enemy_autoplace.entity_exists("unit-spawner", "biter-spawner"))
 	-- Keep source-owned tile restrictions unchanged. Final RP3 placement
 	-- creates planet-local spawner variants for new habitats.
-	for _, planet_name in pairs(armoured_planets) do
-		enemy_autoplace.add_entities_to_planet(planet_name, armoured_enemy_entities, "enemy-base", armoured_spawner_exists)
-	end
+	-- Do not pre-register RP3 nests here. Their eligible planets depend on
+	-- the difficulty / per-family habitat settings in the final data pass.
 end
