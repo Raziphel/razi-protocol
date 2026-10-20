@@ -40,10 +40,11 @@ independent; Nightmare caps asteroid density to **Dense**, never **Swarm**.
 
 - Nexus retains vanilla biter and spitter nests and worms, in addition to
   integrated Armoured, Cold, Explosive, Toxic and Arachnid nests.
-- Valid native Gleba egg-raft spawners are added by prototype ID and mapgen
-  eligibility; valid Vulcanus territory settings are reused for demolishers.
-  Both require actual chunk-generation validation with the full modpack,
-  especially their original noise expressions.
+- Gleba's native egg-raft spawners are source-cloned only for Nexus and
+  assigned general enemy placement noise, while retaining their native
+  pentapod unit lists, art and AI. No source prototype is modified.
+  Valid Vulcanus territory rules are reused for demolishers.
+  Both require full modpack chunk-generation validation.
 - Other planets receive theme-appropriate packs only when prototypes,
   surface mapgen controls and suitable land tiles are present.
 - Edits affect **new chunks**, not already explored land. No per-tick

@@ -87,6 +87,32 @@ local function ensure(planet,name)
  extend_restriction(entry,land_tiles(map))
  return true
 end
+-- Gleba's original egg-raft noise may depend on its own biome.
+-- Clone the source spawner ONLY for Nexus, with valid general enemy noise.
+-- This retains its actual pentapod units, source art, AI and death effects;
+-- no new per-tick spawning controller or changes to vanilla Gleba.
+local function nexus_pentapod_raft(name,map)
+ local base=(data.raw["unit-spawner"] or {})[name]
+ if not router.has_valid_autoplace(base) then return false end
+ local tiles=land_tiles(map)
+ if #tiles==0 then return false end
+ local id="razi-nexus-"..name
+ if (data.raw["unit-spawner"] or {})[id] then return ensure("nexus",id) end
+ local nest=table.deepcopy(base)
+ nest.name=id
+ nest.autoplace={
+   control="enemy-base",
+   order="z[razi-nexus]-"..name,
+   force="enemy",
+   probability_expression=name=="gleba-spawner-small"
+     and "enemy_autoplace_base(0, 25) * 0.15"
+     or "enemy_autoplace_base(0, 26) * 0.10",
+   richness_expression=1,
+   tile_restriction=tiles
+ }
+ data:extend({nest})
+ return ensure("nexus",id)
+end
 local function nexus()
  local map=maps("nexus")
  if not map then return end
@@ -122,7 +148,10 @@ local function nexus()
  for name in pairs(eggs) do
    if (name=="gleba-spawner" or name=="gleba-spawner-small"
      or name:match("egg%-raft")) and valid_entity(name) then
-     ensure("nexus",name)
+     if not nexus_pentapod_raft(name,map) then
+       -- Source-version fallback, still keeping vanilla Gleba intact.
+       ensure("nexus",name)
+     end
      local gcontrols=gleba and gleba.autoplace_controls or {}
      for key,val in pairs(gcontrols) do
        if (data.raw["autoplace-control"] or {})[key]

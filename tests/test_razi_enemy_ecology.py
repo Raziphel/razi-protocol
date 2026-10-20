@@ -13,6 +13,10 @@ class EcologyTests(unittest.TestCase):
  def test_native_gleba_and_vulcanus_are_prototype_guarded(self):
   s=read("prototypes/compat/razi_enemy_ecology.lua")
   self.assertIn('name=="gleba-spawner" or name=="gleba-spawner-small"',s)
+  self.assertIn("local nest=table.deepcopy(base)",s)
+  self.assertIn('"enemy_autoplace_base(0, 25) * 0.15"',s)
+  self.assertIn('nest.name=id',s)
+  self.assertIn('data:extend({nest})',s)
   self.assertIn("map.territory_settings=table.deepcopy(native_territory)",s)
   self.assertIn('data.raw["segmented-unit"]',s)
   self.assertIn("valid_entity(name)",s)
