@@ -22,6 +22,7 @@ class EnemyHabitats(unittest.TestCase):
   self.assertIn('if #tiles==0 then return false end',src)
   self.assertNotIn('extend_restriction',src)
   self.assertNotIn('script.on_nth_tick',src)
+  self.assertIn('local available=not is_worm or index<=3 or planet=="nexus"',src)
  def test_safe_additive_legacy_routing(self):
   old=read("prototypes/compat/enemy_autoplace.lua")
   self.assertIn('function enemy_autoplace.disable_vanilla_enemies_on_planet',old)

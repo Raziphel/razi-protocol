@@ -35,7 +35,8 @@ local by_theme={
     "alchemy-planet","nexus"},
   names={"flying-electric-unit-spawner","walker-electric-unit-spawner",
     "fulgoran-enemy-spawner","electric-flying-enemy-spawner",
-    "electric-flying-enemies-spawner","electric-enemy-spawner"},
+    "electric-flying-enemies-spawner","electric-enemy-spawner",
+    "fulgoran-replicator","fulgoran-unit-replicator"},
   habitat={"fulgor","electric","conduit","metal","machine","scrap",
     "rock","dust","dirt","sand","soil","stone"}}
 }
@@ -243,10 +244,14 @@ function M.data_final_fixes()
        for index,id in ipairs(group.names) do
          local is_worm=id:find("worm",1,true)~=nil
          local chance=is_worm and .034 or .085
-         -- Keep specialist encounters bounded when several packs share
-         -- one planet, while Nexus remains the everything-spawns world.
+         -- Only the first two worm sizes appear away from Nexus.
+         -- Other worlds should not receive endgame-class worm nests at
+         -- game start by bypassing the pack's original evolution curve.
+         -- Nexus is the everything-spawns endgame and gets every tier.
+         local available=not is_worm or index<=3 or planet=="nexus"
          if planet=="nexus" then chance=chance*1.22 end
-         if put(planet,id,is_worm and "turret" or "unit-spawner",
+         if available and put(planet,id,
+           is_worm and "turret" or "unit-spawner",
            group.habitat,110+family*130+world*13+index,
            chance) then installed=installed+1 end
        end
