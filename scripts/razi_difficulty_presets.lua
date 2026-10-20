@@ -22,6 +22,12 @@ M.baseline={
  ["razi-raid-coordination"]="normal",
  ["razi-colony-expansion"]="normal",
  ["razi-spoilage-pressure"]="normal",
+ ["razi-resource-frequency"]="normal",
+ ["razi-resource-patch-size"]="normal",
+ ["razi-resource-richness"]="normal",
+ ["razi-science-demand"]="normal",
+ ["razi-evolution-speed"]="normal",
+ ["razi-rocket-launch-cost"]="normal",
  -- Additional gameplay changes resolve the session to Custom but are not
  -- blindly overwritten by presets (structural / compatibility switches).
  ["razi-enable-enemy-routing"]=true,
@@ -45,7 +51,10 @@ M.managed={
  "razi-nexus-hostility","razi-big-monsters-events",
  "razi-planetary-interdependence",
  "razi-pollution-pressure","razi-raid-coordination",
- "razi-colony-expansion","razi-spoilage-pressure"
+ "razi-colony-expansion","razi-spoilage-pressure",
+ "razi-resource-frequency","razi-resource-patch-size",
+ "razi-resource-richness","razi-science-demand",
+ "razi-evolution-speed","razi-rocket-launch-cost"
 }
 M.presets={
  easy={
@@ -63,7 +72,13 @@ M.presets={
   ["razi-pollution-pressure"]="gentle",
   ["razi-raid-coordination"]="small",
   ["razi-colony-expansion"]="slow",
-  ["razi-spoilage-pressure"]="forgiving"
+  ["razi-spoilage-pressure"]="forgiving",
+  ["razi-resource-frequency"]="abundant",
+  ["razi-resource-patch-size"]="expansive",
+  ["razi-resource-richness"]="generous",
+  ["razi-science-demand"]="light",
+  ["razi-evolution-speed"]="slow",
+  ["razi-rocket-launch-cost"]="economical"
  },
  normal={
   ["razi-asteroid-difficulty-scale"]="balanced",
@@ -80,7 +95,13 @@ M.presets={
   ["razi-pollution-pressure"]="normal",
   ["razi-raid-coordination"]="normal",
   ["razi-colony-expansion"]="normal",
-  ["razi-spoilage-pressure"]="normal"
+  ["razi-spoilage-pressure"]="normal",
+  ["razi-resource-frequency"]="normal",
+  ["razi-resource-patch-size"]="normal",
+  ["razi-resource-richness"]="normal",
+  ["razi-science-demand"]="normal",
+  ["razi-evolution-speed"]="normal",
+  ["razi-rocket-launch-cost"]="normal"
  },
  hard={
   ["razi-asteroid-difficulty-scale"]="challenging",
@@ -97,7 +118,13 @@ M.presets={
   ["razi-pollution-pressure"]="heavy",
   ["razi-raid-coordination"]="organized",
   ["razi-colony-expansion"]="rapid",
-  ["razi-spoilage-pressure"]="fast"
+  ["razi-spoilage-pressure"]="fast",
+  ["razi-resource-frequency"]="scarce",
+  ["razi-resource-patch-size"]="small",
+  ["razi-resource-richness"]="poor",
+  ["razi-science-demand"]="intensive",
+  ["razi-evolution-speed"]="accelerated",
+  ["razi-rocket-launch-cost"]="costly"
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -115,7 +142,13 @@ M.presets={
   ["razi-pollution-pressure"]="toxic",
   ["razi-raid-coordination"]="siege",
   ["razi-colony-expansion"]="invasive",
-  ["razi-spoilage-pressure"]="brutal"
+  ["razi-spoilage-pressure"]="brutal",
+  ["razi-resource-frequency"]="desolate",
+  ["razi-resource-patch-size"]="tiny",
+  ["razi-resource-richness"]="meager",
+  ["razi-science-demand"]="grueling",
+  ["razi-evolution-speed"]="runaway",
+  ["razi-rocket-launch-cost"]="punishing"
  }
 }
 local legacy={relaxed="easy",standard="normal",extreme="nightmare"}
