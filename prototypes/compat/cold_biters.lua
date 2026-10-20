@@ -30,7 +30,9 @@ local cold_planets = {
 	"aquilo",
 	"paracelsin",
 	"frozeta",
-	"nexus"
+	"nexus",
+	"shchierbin",
+	"vesta"
 }
 
 local cold_source_planets = {

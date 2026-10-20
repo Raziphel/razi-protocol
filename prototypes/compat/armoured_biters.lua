@@ -16,7 +16,9 @@ local armoured_biter_units = {
 local armoured_planets = {
 	"hyarion",
 	"nexus",
-	"crucible"
+	"crucible",
+	"castra",
+	"athos"
 }
 
 local armoured_enemy_entities = {

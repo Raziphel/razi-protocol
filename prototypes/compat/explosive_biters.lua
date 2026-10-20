@@ -18,7 +18,9 @@ local explosive_enemy_entities = {
 
 local explosive_planets = {
 	"moshine",
-	"nexus"
+	"nexus",
+	"cubium",
+	"corrundum"
 }
 
 local explosive_source_planets = {

@@ -72,4 +72,8 @@ if enemy_autoplace.has_valid_autoplace(arachnid_spawner) then
 	add_arachnids_to_planet("arig")
 	add_arachnids_to_planet("nexus")
 	add_arachnids_to_planet("crucible")
+	-- Athos/Castra have dry, rugged territory suited to burrowing nests.
+	-- Their actual tile restrictions are extended by the final ecology pass.
+	add_arachnids_to_planet("athos")
+	add_arachnids_to_planet("castra")
 end

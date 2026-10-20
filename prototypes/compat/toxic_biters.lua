@@ -20,7 +20,10 @@ local toxic_planets = {
 	"cubium",
 	"vesta",
 	"nexus",
-	"crucible"
+	"crucible",
+	"paracelsin",
+	"rabbasca",
+	"foliax"
 }
 
 local toxic_source_planets = {

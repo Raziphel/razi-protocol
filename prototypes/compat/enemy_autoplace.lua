@@ -1,4 +1,5 @@
 local enemy_autoplace = {}
+local difficulty=require("scripts.razi_difficulty_presets")
 
 local vanilla_enemy_entities = {
 	"biter-spawner",
@@ -165,6 +166,17 @@ function enemy_autoplace.remove_entities_from_planet(planet_name, entity_names, 
 	end
 end
 
+function enemy_autoplace.pressure(planet_name)
+  local mode=difficulty.effective("razi-enemy-pressure","normal")
+  local scales={light=.62,normal=1,aggressive=1.28,overrun=1.52}
+  local multiplier=scales[mode] or 1
+  if planet_name=="nexus" then
+    local nexus=difficulty.effective("razi-nexus-hostility","normal")
+    multiplier=multiplier*({normal=1,hard=1.30,apocalypse=1.70})[nexus]
+  end
+  return math.min(multiplier,2.5) -- World-gen density, not per-tick AI.
+end
+
 function enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 	if not enemy_autoplace.enabled() then
 		return nil
@@ -181,7 +193,7 @@ function enemy_autoplace.prepare_custom_enemy_planet(planet_name, control_name)
 
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls[control_name] = {
-		frequency = 1,
+		frequency = enemy_autoplace.pressure(planet_name),
 		size = 1,
 		richness = 1
 	}
