@@ -284,6 +284,10 @@ require("prototypes.system.bellicos").reconcile_final_positions()
 -- delete temporary/factorio_2_1_22 and this single require.
 require("temporary.factorio_2_1_22.loader").data_final_fixes()
 
+-- Adjust required crafts per rocket using source mod silo prototypes, not
+-- hardcoded rocket-part recipes or a simulation-time launch controller.
+require("prototypes.compat.razi_launch_economy").data_final_fixes()
+
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.helios_engineering").reinforce_satellites()

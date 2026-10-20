@@ -6,6 +6,7 @@
 local M={}
 local difficulty=require("scripts.razi_difficulty_presets")
 local tuning=require("scripts.razi_difficulty_tuning")
+local economy=require("scripts.razi_economy_difficulty")
 M.profiles={
  easy={starting_area=2.55,resource={frequency=1.30,size=1.30,richness=1.55},
   oil=1.62,enemy={frequency=.48,size=.72},water=1.25,trees=1.28,
@@ -97,7 +98,7 @@ end
 -- Terrain noise (except trees/water) and scripted enemy factories are not
 -- generic ore patches; keep the owning mod's climate/territory mechanics.
 function M.control_entries(mode)
- local spec=tuning.profile(mode,M.profiles,difficulty)
+ local spec=economy.profile(mode,tuning.profile(mode,M.profiles,difficulty),difficulty)
  local out={}
  for id,proto in pairs((data.raw["autoplace-control"] or {})) do
    local kind=control_kind(id,proto)
@@ -119,7 +120,7 @@ end
 local originals=setmetatable({},{__mode="k"})
 local original_map_settings=setmetatable({},{__mode="k"})
 function M.scale_planets(mode)
- local spec=tuning.profile(mode,M.profiles,difficulty)
+ local spec=economy.profile(mode,tuning.profile(mode,M.profiles,difficulty),difficulty)
  local count=0
  local controls=(data.raw["autoplace-control"] or {})
  for name,planet in pairs(data.raw.planet or {}) do
@@ -150,7 +151,7 @@ function M.scale_planets(mode)
  return count
 end
 local function advanced(mode)
- local spec=tuning.profile(mode,M.profiles,difficulty)
+ local spec=economy.profile(mode,tuning.profile(mode,M.profiles,difficulty),difficulty)
  return {
   enemy_evolution={enabled=true,
     time_factor=spec.evolution.time_factor,
@@ -168,7 +169,7 @@ local function advanced(mode)
  }
 end
 function M.explicit_preset(mode)
- local spec=tuning.profile(mode,M.profiles,difficulty)
+ local spec=economy.profile(mode,tuning.profile(mode,M.profiles,difficulty),difficulty)
  local entry={
   order="01[razi]-"..mode,
   basic_settings={
@@ -212,7 +213,7 @@ function M.active_mode()
  return M.profiles[name] and name or "normal"
 end
 function M.set_world_defaults(mode)
- local spec=tuning.profile(mode,M.profiles,difficulty)
+ local spec=economy.profile(mode,tuning.profile(mode,M.profiles,difficulty),difficulty)
  local source=(data.raw["map-settings"] or {})["map-settings"]
  if source then
    local original=original_map_settings[source]
