@@ -8,6 +8,11 @@ for _,world in ipairs(worlds) do
   check(M.charter_for_quest({id=world})==world,"missing Journal charter: "..world)
 end
 check(M.charter_for_site("not-installed")==nil,"unknown sites must have no charter")
+for _,star in ipairs({"calidus","solaris","nyxaris","vibrant",
+  "vespera","beetlejuice","umbra"}) do
+  check(M.star_charter(star)==star,"missing system charter: "..star)
+end
+check(M.star_charter("finale")==nil,"finale must not be a star system")
 check(M.charter_for_quest({id="convergence-victory"})==nil,
   "final victory must never become a planetary side assignment")
 local by_id={
