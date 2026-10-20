@@ -18,7 +18,8 @@ for _,name in ipairs({
   "razi-network-galvanic-ferrum-magnets",
   "razi-cubium-precious-metal-alloying",
   "razi-network-precision-chitosan",
-  "razi-network-golden-cubium-alloys"
+  "razi-network-golden-cubium-alloys",
+  "razi-network-bond-linox-refining"
 }) do
   check(not p.keep(name),"Redundant/late exchange must stay retired: "..name)
 end
@@ -28,7 +29,8 @@ for _,name in ipairs({
   "razi-network-matrix-cryo-controllers",
   "razi-network-bond-paracelsin-coils",
   "razi-network-lattice-vesta-magnets",
-  "razi-network-frame-aquilo-controllers"
+  "razi-network-frame-aquilo-controllers",
+  "razi-frontier-castra-composite-rounds"
 }) do
   check(p.keep(name),"Important independent freight route retired: "..name)
 end
