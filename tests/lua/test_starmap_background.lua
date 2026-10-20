@@ -26,8 +26,8 @@ rawset(_G,"settings",{startup={
 }})
 rawset(_G,"mods",{})
 local parts=bg.make_layers("subtle",true,true,true,false)
-ok(parts[1].tint.a>.65 and parts[1].tint.a<.8,
-  "Pinpoint sky should use visible tiny dots instead of faded giant blobs")
+ok(parts[1].tint.a>.60 and parts[1].tint.a<.65,
+  "Subtle should keep its low-key tiny stars, not cinematic exposure")
 ok(#parts==59,"Subtle atlas uses 42 sky tiles, 8 halos, 1 Umbra belt and 8 dust pockets")
 local counts={sky=0,halo=0,belt=0,dust=0}
 for _,layer in ipairs(parts) do
@@ -110,17 +110,17 @@ end
 ok(repeats[1]~=repeats[2] and repeats[1]~=repeats[7],
   "Repeated sky tiles need restrained per-cell exposure variation")
 bg.data_final_fixes()
-ok(#sprites.layers==61,"Clean atlas was not attached")
+ok(#sprites.layers==#parts+1,"Clean atlas was not attached")
 ok(sprites.layers[1].filename:find("atlas%-starfield%-"),"Atlas not behind native art")
 ok(sprites.layers[#sprites.layers]==native,"Source star art changed")
 bg.data_final_fixes()
-ok(#sprites.layers==61,"Duplicate background layer registration")
+ok(#sprites.layers==#parts+1,"Duplicate background layer registration")
 ok(#bg.make_layers("off",true,true,true,false)==0,"Off mode still draws")
 ok(#bg.make_layers("subtle",false,false,false,false)==42,
   "Turning off optional layers must leave native map alone")
-ok(#bg.make_layers("subtle",true,true,false,false)==52,
-  "Disabling detail pockets should leave 8 halos and 2 belt layers")
-ok(#bg.make_layers("subtle",true,true,true,true)==61,
+ok(#bg.make_layers("subtle",true,true,false,false)==51,
+  "Disabling details should leave 42 sky tiles, 8 halos and 1 Umbra belt")
+ok(#bg.make_layers("subtle",true,true,true,true)==60,
   "Cartography adds only a single distant dust pocket")
 local cine=bg.make_layers("cinematic",true,true,true,false)
 ok(#cine==#parts+28 and cine[1].tint.a>parts[1].tint.a,
@@ -145,6 +145,15 @@ settings.startup["razi-starmap-cinematic-extras"].value=true
 local without_halos=bg.make_layers("cinematic",false,true,true,false)
 ok(#without_halos==#parts-8+14,
   "Turning off halos must remove native and cinematic corona layers")
+-- Disable only cluster pockets, then only nebulae; both are optional.
+settings.startup["razi-starmap-micro-details"].value=false
+ok(#bg.make_layers("cinematic",true,true,true,false)==#parts+20,
+  "Disabling micro details must remove the eight cinematic star clusters")
+settings.startup["razi-starmap-micro-details"].value=true
+settings.startup["razi-starmap-galactic-ornaments"].value=false
+ok(#bg.make_layers("cinematic",true,true,true,false)==#parts-4+22,
+  "Disabling ornaments must remove the four subtle and six cinematic pockets")
+settings.startup["razi-starmap-galactic-ornaments"].value=true
 local without_details=bg.make_layers("cinematic",true,true,false,false)
 ok(#without_details==42+8+1+14,
   "Turning off fine details must remove all extra cinematic dust and clusters")
