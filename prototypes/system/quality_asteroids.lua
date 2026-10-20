@@ -103,7 +103,7 @@ local function rewrite(target,level,entities,scale)
   return transformed
 end
 function M.data_final_fixes()
-  if not settings_value("razi-quality-asteroids",false) then return 0 end
+  if not settings_value("razi-quality-asteroids",true) then return 0 end
   if mods and (mods["Quality-Asteroids-Expanded"]
     or mods["quality-asteroids"]) then
     -- These mods use their own creation triggers. Never double-convert.

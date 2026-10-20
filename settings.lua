@@ -304,7 +304,7 @@ data:extend({
 		type = "bool-setting",
 		name = "razi-quality-asteroids",
 		setting_type = "startup",
-		default_value = false,
+		default_value = true,
 		order = "aa[worlds]-b[quality-asteroids]"
 	},
 	{
