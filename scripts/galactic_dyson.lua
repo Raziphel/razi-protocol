@@ -33,6 +33,39 @@ function M.research_phase(completed)
  if completed>=2 then return "plasma" end
  return "survey"
 end
+-- Player-visible research milestones are real source-owned or Razi techs.
+-- Do not fabricate satellite production or delivered MW measurements.
+local helios_stages={
+ "razi-helios-corona-engineering",
+ "razi-helios-swarm-engineering",
+ "razi-helios-relay-engineering"
+}
+local function helios_progress(parent,force)
+ local existing={}
+ for _,name in ipairs(helios_stages) do
+   local tech=force.technologies and force.technologies[name]
+   if tech then existing[#existing+1]=tech end
+ end
+ if #existing==0 then return end
+ local frame=parent.add{type="frame",style="inside_shallow_frame",
+   direction="vertical"}
+ frame.style.horizontally_stretchable=true
+ local title=label(frame,L("dyson-helios-heading"))
+ title.style.font="default-bold"
+ label(frame,L("dyson-helios-summary"))
+ local complete=0
+ for _,technology in ipairs(existing) do
+   if technology.researched then complete=complete+1 end
+   local row=frame.add{type="flow",direction="horizontal"}
+   row.style.horizontal_spacing=8
+   local mark=label(row,technology.researched and "✓" or "○")
+   mark.style.font_color=technology.researched
+     and {r=.55,g=.83,b=.68} or {r=.85,g=.70,b=.46}
+   label(row,technology.localised_name)
+ end
+ label(frame,L("dyson-helios-progress",
+   tostring(complete),tostring(#existing)))
+end
 local function inspection(parent,player)
  local status=runtime.snapshot(player.force)
  local frame=parent.add{type="frame",direction="vertical",
@@ -95,6 +128,7 @@ function M.render(parent,player,options)
    value=total>0 and completed/total or 0}
  progress.style.horizontally_stretchable=true
  if not options.embedded then label(copy,L("dyson-phase-disclaimer")) end
+ helios_progress(parent,player.force)
  inspection(parent,player)
  local research=label(parent,L("dyson-research-heading"))
  research.style.font="default-bold"

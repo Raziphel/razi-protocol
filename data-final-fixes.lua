@@ -109,6 +109,7 @@ require("prototypes.technology.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
 
 require("prototypes.compat.calidus_dyson").data_final_fixes()
+require("prototypes.compat.helios_engineering").data_final_fixes()
 
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 
@@ -279,4 +280,5 @@ require("temporary.factorio_2_1_22.loader").data_final_fixes()
 
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
+require("prototypes.compat.helios_engineering").reinforce_satellites()
 require("prototypes.compat.crafting_navigation").data_final_fixes()

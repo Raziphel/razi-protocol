@@ -157,6 +157,10 @@ data:extend({
     setting_type="startup",default_value="extended",
     allowed_values={"native","extended","marathon"},
     order="bb[stellar]-f[corona-distance]"},
+  {type="string-setting",name="razi-helios-construction",
+    setting_type="startup",default_value="satellites",
+    allowed_values={"off","engineering","satellites"},
+    order="bb[stellar]-d[industrial-construction]"},
   -- QUALITY OF LIFE
   startup_toggle("razi-hide-redundant-assembler-tiers",
     "ca[quality-of-life]-a[redundant-assemblers]"),
