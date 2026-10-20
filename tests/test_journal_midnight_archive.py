@@ -49,7 +49,7 @@ class MidnightArchiveDesign(unittest.TestCase):
     def test_story_is_first_and_chapter_context_lives_on_cover(self):
         ui=self.journal
         dossier=ui.split('local function render_details(',1)[1].split(
-            'local function nauvis_phase(',1)[0]
+            'local function chapter_act(',1)[0]
         chapter=ui.split('local function render_chapter_cover(',1)[1].split(
             'local function render_chapters(',1)[0]
         self.assertLess(dossier.index('section(prose,"story-heading"'),
