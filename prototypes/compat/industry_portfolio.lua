@@ -88,6 +88,31 @@ end
 M.retained=retained
 function M.keep(name) return retained[name]==true end
 
+-- A late supplier can be science-gated without explicitly depending on a
+-- system-discovery technology. For example, Moshine optical cable can need
+-- Fulgora electromagnetic science. Price the OPTIONAL exchange appropriately
+-- without demanding that science pack or an earlier-star card AGAIN.
+local science_floors={
+  ["metallurgic-science-pack"]=500,
+  ["agricultural-science-pack"]=500,
+  ["electromagnetic-science-pack"]=950,
+  ["cryogenic-science-pack"]=950,
+  ["nuclear-science-pack"]=950,
+  ["kr-electromagnetic-research-data"]=950,
+  ["kr-cryogenic-research-data"]=950,
+  ["planet-crucible-science-pack"]=1450,
+  ["promethium-science-pack"]=1950
+}
+function M.science_floor(technology)
+  local minimum=0
+  local unit=technology and technology.unit
+  for _,ingredient in ipairs(unit and unit.ingredients or {}) do
+    local name=ingredient.name or ingredient[1]
+    minimum=math.max(minimum,science_floors[name] or 0)
+  end
+  return minimum
+end
+
 -- Generic, lab-compatible research is an administrative unlock, never a
 -- demand for technology cards from earlier stars. Actual planet and source
 -- recipe research prerequisites provide the tier gate; imported ingredients
