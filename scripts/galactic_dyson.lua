@@ -40,6 +40,28 @@ local helios_stages={
  "razi-helios-swarm-engineering",
  "razi-helios-relay-engineering"
 }
+local helios_products={
+ ["razi-helios-corona-engineering"]="razi-helios-corona-shield",
+ ["razi-helios-swarm-engineering"]="razi-helios-stellar-frame",
+ ["razi-helios-relay-engineering"]="razi-helios-relay-matrix"
+}
+-- Recorded production, not simulated construction progress or satellite MW.
+-- Read only when the journal is displayed; no tick scans or cached guesses.
+function M.component_counts(force)
+ local counts={}
+ if not (game and game.surfaces and force.get_item_production_statistics) then
+   return counts
+ end
+ for _,surface in pairs(game.surfaces) do
+   local stats=force.get_item_production_statistics(surface)
+   if stats and stats.valid~=false then
+     for _,name in pairs(helios_products) do
+       counts[name]=(counts[name] or 0)+(stats.get_input_count(name) or 0)
+     end
+   end
+ end
+ return counts
+end
 local function helios_progress(parent,force)
  local existing={}
  for _,name in ipairs(helios_stages) do
@@ -53,6 +75,7 @@ local function helios_progress(parent,force)
  local title=label(frame,L("dyson-helios-heading"))
  title.style.font="default-bold"
  label(frame,L("dyson-helios-summary"))
+ local counts=M.component_counts(force)
  local complete=0
  for _,technology in ipairs(existing) do
    if technology.researched then complete=complete+1 end
@@ -62,6 +85,11 @@ local function helios_progress(parent,force)
    mark.style.font_color=technology.researched
      and {r=.55,g=.83,b=.68} or {r=.85,g=.70,b=.46}
    label(row,technology.localised_name)
+   local product=helios_products[technology.name]
+   if product and counts[product] then
+     label(frame,{"",{"item-name."..product},": ",
+       tostring(counts[product])," ",L("dyson-helios-produced")})
+   end
  end
  label(frame,L("dyson-helios-progress",
    tostring(complete),tostring(#existing)))

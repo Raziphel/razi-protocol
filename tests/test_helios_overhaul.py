@@ -26,6 +26,11 @@ class HeliosTests(unittest.TestCase):
                   src.index('helios_engineering").reinforce_satellites()'))
   self.assertLess(src.index('temporary.factorio_2_1_22.loader'),
                   src.index('helios_engineering").reinforce_satellites()'))
+ def test_real_component_output_is_observable(self):
+  src=read("scripts/galactic_dyson.lua")
+  self.assertIn("force.get_item_production_statistics(surface)",src)
+  self.assertIn("stats.get_input_count(name)",src)
+  self.assertNotIn("script.on_nth_tick",src)
  def test_ui_is_research_based(self):
   src=read("scripts/galactic_dyson.lua")
   self.assertIn("helios_progress(parent,player.force)",src)
