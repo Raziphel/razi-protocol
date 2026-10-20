@@ -438,11 +438,11 @@ function M.data_final_fixes()
     ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
-    ["obsidiax"]=0.25,["carna"]=0.75,
+    ["carna"]=0.75,
     -- Two source-owned Crucible destinations occupy nearly the same
     -- chart point; split their captions in opposite directions.
     ["crucible-orbit"]=0.75,["crucible"]=0.25,
-    ["tenebris"]=0.75,["arcanyx"]=0.0,
+    ["tenebris"]=0.75,
     ["aquilo"]=0.75,
     ["ferrum"]=0.75,["alchemy-planet"]=0.25,
     ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.75,["abacayba"]=0.25,
