@@ -94,8 +94,6 @@ production contribute to the late Frontier Recovery Charter. Both keep
 their author's native mechanics and Razi's source-stage compatibility
 guards; a full engine startup is needed before public release.
 
-**Experimental manual install only:** `(?) FluxWorks >= 0.2.12`. The
-integration minimum must be released and validated before promotion.
 Unported Pelagos and Dea Dia are not declared.
 
 **Suggested installation order:** curated required universe first, then

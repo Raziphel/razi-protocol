@@ -275,8 +275,7 @@ Full Factorio startup and installed-save tests remain outstanding.
 **2.1.64: Curated recommended companions.** Factorio 2.1's new
 recommended dependency marker now advertises AAI Signal Transmission
 and Imersite Asteroids without requiring either. All eligible Factorio 2.1 companion integrations are now recommended,
-not plain optional. FluxWorks remains hidden pending integration tests;
-Outer Rim is excluded for conflicting with Secretas Orbit Patch and Razi's
+not plain optional. Outer Rim is excluded for conflicting with Secretas Orbit Patch and Razi's
 own asteroid belts. Dea Dia and Pelagos remain unported. See
 [Optional Dependencies](docs/OPTIONAL_DEPENDENCIES.md) for the policy.
 
@@ -394,37 +393,9 @@ I wanted a galaxy you can actually navigate, with different ways through it and 
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
 
-## FluxWorks industrial companion (experimental)
-
-FluxWorks 0.2.12+ is an optional expansion to Razi's manufacturing. Its four Flux spectra, specialized machines, phase logistics, and K2SO production are now compatible with Razi's seven-system campaign. FluxWorks does **not** replace the Shattered Planet space location, victory, global planet resources, or chapter research in companion mode.
-
-The four FluxWorks science packs remain optional mastery research instead of mandatory costs for ordinary industrial technologies. Four additional production recipes are attached to the Solaris, Nyxaris, Vibrant, and Vespera chapters. Rift Exchange transfers require Outer Frontier Mastery so the logistics system cannot skip the main campaign.
-
-See [FluxWorks Integration](docs/FLUXWORKS_INTEGRATION.md) for the exact responsibilities, test matrix and important existing-save warnings. This is still experimental until tested in the actual Factorio engine.
-
-### Seven-System Industrial Atlas
-
-With FluxWorks installed, seven **optional regional industry technologies** offer specialized production for Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra. The Codex adds a matching violet **FluxWorks | Industrial Atlas** chapter with seven engineering missions, suggested factory worlds and short narrative briefings. Nothing becomes a travel requirement.
-
-See [FluxWorks Industrial Atlas](docs/FLUXWORKS_INDUSTRY_ATLAS.md) for details and validation notes.
-
-### Linked FluxWorks factory networks
-
-Five optional industry exchanges connect pairs of FluxWorks system workshops, from Calidus–Solaris aerospace framing to Nyxaris–Umbra living phase technology. The FluxWorks Codex chapter has twelve research-tracked objectives, and duplicate FluxWorks technology arrows are simplified without lifting research requirements. Source-mod recipes and the campaign gates stay intact.
-
-See [FluxWorks Industrial Exchanges](docs/FLUXWORKS_INDUSTRIAL_EXCHANGES.md).
-
-### FluxWorks machine progression and Codex previews
-
-When FluxWorks is enabled, the Industrial Atlas now shows each specialization's actual factory recipe, ingredient and output quantities, recommended machine, and suggested production world. Its twelve optional research goals have their own chapter progress and no longer inflate the main campaign's completion totals or distract from higher-priority story research.
-
-Selected FluxWorks engineering technologies also have lighter research costs in **Razi companion mode only**. All requirements and rewards remain intact; standalone FluxWorks is unchanged.
-
-See [FluxWorks Progression and Usability Audit](docs/FLUXWORKS_PROGRESSION_AUDIT.md) for the exact changes and playtest checklist.
-
 ## Mod Settings
 
-Razi Protocol's startup settings are organized into three color-coded groups inspired by FluxWorks: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
+Razi Protocol's startup settings are organized into three color-coded groups: **Worlds & Encounters**, **Production Integration**, and **Quality of Life**. Each option includes a clear Yes/No explanation and recommended default. See [Settings guide](docs/SETTINGS.md) for every option and its effects.
 
 The optional K2SO and modded-planet production exchanges can be controlled independently. Their normal defaults leave the existing Razi experience unchanged, and disabling them never removes the native recipes supplied by planet mods.
 

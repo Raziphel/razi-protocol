@@ -142,8 +142,6 @@ Nexus-Updated **does not** require Big Monsters. The separate Nexus Bosses add-o
 | `+ platform-logistics-overhaul >= 2.1.2` | recommended |
 | **Optional side worlds** | **1 entries** |
 | `? shchierbin >= 0.3.19` | optional |
-| **Hidden integration ordering** | **1 entries** |
-| `(?) FluxWorks >= 0.2.12` | hidden-optional |
 | **Excluded conflicts** | **20 entries** |
 | `! AsteroidBelt` | incompatible |
 | `! space-route-overlay` | incompatible |

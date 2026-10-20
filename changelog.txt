@@ -446,7 +446,7 @@ Date: 15. 10. 2026
   Move reusable foundations to Razi Lib 1.2.0:
     - Centralize technology ancestry, deterministic cycle detection, safe research links and recipe unlock indexing.
     - Share recipe output inspection and stable laboratory input deduplication.
-    - Replace deeply recursive research walkers used by Athos, FluxWorks, industrial research and native labs.
+    - Replace deeply recursive research walkers used by Athos, industrial research and native labs.
     - Preserve every planet-specific rule, native source ID, route, tech requirement and existing save record.
     - Require razi_lib >= 1.2.0. Publish/install the matching library before loading this build.
     - Only offline structural validation performed; full Factorio startup and test fixtures remain to be run.
@@ -580,7 +580,7 @@ Date: 15. 10. 2026
 Version: 2.1.75
 Date: 15. 10. 2026
   Dependency and modpack conflict repair:
-    - Keep 48 required mods, 24 recommended companions, one hidden FluxWorks integration, and 23 explicit incompatibilities.
+    - Keep required mods, recommended companions and explicit incompatibilities.
     - Exclude Outer Rim 2.9, which conflicts with Secretas Orbit Patch and recommends the custom-belt-breaking kry asteroid belt.
     - Withdraw the weather additions recommendation after installed 1.6.0 reports incompatibility with Celestial Weather Updated; preserve the core weather recommendation and guarded guide.
     - Keep source progression and all save records unchanged; improve policy and regression tests. No automatic GitHub Actions.
@@ -691,7 +691,7 @@ Date: 14. 10. 2026
     - Promote Planet Express, Rocket Turrets Upgraded, the two Celestial Weather forks, Frost Biters, Science Tab and Big Monsters to recommended without altering their version floors.
     - Keep Nexus Threat required, because Nexus-Updated directly requires it; a Razi + marker cannot change that upstream requirement.
     - Make the Razi system science subgroup fall back to vanilla Intermediate Products when Science Tab is absent.
-    - Keep experimental planets, FluxWorks and alternate-source systems optional; preserve all explicit conflicts and the Nexus Bosses reverse-dependency boundary.
+    - Keep experimental planets and alternate-source systems optional; preserve all explicit conflicts and the Nexus Bosses reverse-dependency boundary.
     - Add a complete machine-readable policy ledger, matching human audit and offline regression tests.
     - Full Factorio 2.1 engine loading, transitive minimum-version resolution and old-save toggling remain to be verified. GitHub Actions stays manual-only.
 
@@ -700,7 +700,6 @@ Date: 14. 10. 2026
   Recommended optional companions:
     - Use Factorio 2.1's + recommended dependency marker for AAI Signal Transmission 0.6.0+ and Imersite Asteroids 1.3.0+.
     - Preserve their optional status and the existing source-owned research, asteroid mining, routes, items and runtime integration.
-    - Keep FluxWorks optional while its declared 0.2.12 minimum is not yet available on the public Mod Portal and its full integration is experimental.
     - Keep 2.0-only Dea Dia / Pelagos and potentially conflicting Outer Rim / Secretas orbit choices optional instead of recommending incompatible installs.
     - Add focused manifest regression coverage; no game-engine or GitHub Actions workflow automatically run.
 
@@ -947,37 +946,6 @@ Date: 13. 10. 2026
     - Use sixteen static sky sprites behind real stars, routes and planets.
     - Preserve existing Calidus sun and halo polish, graphics presets and compatibility guard.
     - Update asset and Lua regression tests; in-engine visual validation is still required.
-
-Version: 2.1.37
-Date: 13. 10. 2026
-  FluxWorks progression and Codex usability:
-    - Fix the twelve FluxWorks Codex factory previews to use actual unlocked recipe IDs instead of treating their technology ID as a recipe.
-    - Show production ingredient quantities, outputs, the relevant FluxWorks machine and a suggested manufacturing world.
-    - Add workshop guidance and keep optional FluxWorks objectives' chapter progress separate from compulsory Protocol campaign completion and primary story research recommendations.
-    - Lighten eight consecutive specialist FluxWorks research costs in the Razi companion profile, preserving all prerequisites, science pack types and original unlock rewards.
-    - Preserve the standalone FluxWorks mod and the stable Protocol release; no new progression gates, runtime event loops or save ID migrations.
-    - Add regression coverage and migration notes. Full Factorio 2.1/K2SO/FluxWorks integration playtesting is still required.
-
-Version: 2.1.36
-Date: 13. 10. 2026
-  FluxWorks industry exchanges and cleanup:
-    - Create five optional paired factory networks connecting Calidus/Solaris, Nyxaris/Vibrant, Solaris/Vespera, Vibrant/Beetlejuice and Nyxaris/Umbra.
-    - Unlock established FluxWorks and vanilla industrial products from paired regional inputs without adding new materials or mandatory planet gates.
-    - Add five Codex research objectives, completing the twelve-entry FluxWorks Industrial Atlas with more factory guidance and expedition stories.
-    - Simplify duplicate direct research arrows only when their requirement is already implied by another FluxWorks technology prerequisite.
-    - Reduce avoidable input complexity in optional Vespera cryogel and Beetlejuice quantum fabrication; keep the seven regional specialists within five ingredient lanes.
-    - Guard optional sources, respect two fluid inputs, preserve original recipe names and add regression coverage for mod-free games, graph reachability and exchange unlocks.
-    - Source checks are complete; the full Factorio 2.1 modpack load and save-migration checks remain to be performed.
-
-Version: 2.1.35
-Date: 13. 10. 2026
-  Optional FluxWorks industrial atlas:
-    - Add seven optional system-specific industry technologies and manufacturing alternatives for Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice and Umbra.
-    - Build on existing FluxWorks and source-planet machines, products, Flux spectra and native materials without adding mandatory research or route gates.
-    - Add a violet, FluxWorks-only Protocol Codex chapter with seven research-tracked industrial objectives, factory tips and expedition stories.
-    - Guard each production route against missing source prototypes and keep all changes absent when FluxWorks is not installed.
-    - Add Lua regression harnesses and technical notes for optional loading, recipe unlocks, required inputs and journal registration.
-    - The industrial atlas remains experimental until tested in Factorio 2.1 with the complete K2SO pack.
 
 Version: 2.1.33
 Date: 13. 10. 2026

@@ -5,8 +5,8 @@ for another research pack. It should create a *logistics decision* that can be
 seen in the recipe, work with the native process, and make an upstream world
 worth revisiting.
 
-This portfolio includes 15 guarded native-K2SO/planet-mod alternatives and
-five distinct FluxWorks workshops, **not** all 58 legacy bonus variants.
+This portfolio includes 15 guarded native-K2SO/planet-mod alternatives,
+selected from the former 58 overlapping optional variants.
 Missing source mods or ingredients suppress individual alternatives. Nothing
 overwrites third-party recipes or gates base planetary discoveries behind
 optional exchange research.
@@ -48,22 +48,6 @@ The **Precision Matrix**, **Panglia Optic Bond**, **Extreme Lattice**, and
 components. Their recipes use actual exports rather than science packs as
 factory ingredients. The pressure frame is accessible in Balanced when all
 required source mods and production paths are present.
-
-## Five FluxWorks workshops
-
-- Calidus + Solaris: reinforced low-density aerospace structures from metal
-  mesh and annealed cermet.
-- Nyxaris + Vibrant: advanced processing units from cultivated substrate,
-  superconductors and flux chemistry.
-- Solaris + Vespera: thermal buffers from high-temperature cermets and Aquilo
-  cryogel.
-- Vibrant + Beetlejuice: resonance cells using substrate, quantum computation
-  and stabilised flux crystal.
-- Nyxaris + Umbra: rift stabilisers from biological substrate, phase manifolds
-  and chitosan.
-
-These already create *different products*, rather than cloning source batches.
-Their paired specialisation technologies and imported inputs are their gates.
 
 ## Safeguards and review checklist
 
