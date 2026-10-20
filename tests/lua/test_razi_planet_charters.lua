@@ -13,6 +13,12 @@ for _,star in ipairs({"calidus","solaris","nyxaris","vibrant",
   check(M.star_charter(star)==star,"missing system charter: "..star)
 end
 check(M.star_charter("finale")==nil,"finale must not be a star system")
+check(M.project_for_quest({id="fulgora"})=="beltbreaker",
+  "Fulgora should link to a genuine crossing project")
+check(M.project_for_quest({id="muluna"})=="voyage",
+  "The first moon should link to the real maiden voyage")
+check(M.project_for_quest({id="panglia"})==nil,
+  "A world without a supported physical project must not fabricate one")
 check(M.charter_for_quest({id="convergence-victory"})==nil,
   "final victory must never become a planetary side assignment")
 local by_id={
