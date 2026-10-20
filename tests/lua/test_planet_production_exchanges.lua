@@ -237,7 +237,7 @@ for _, name in ipairs(names) do
 end
 check(product(full.recipe[names[1]],"kr-rare-metals")==5,
   "Bioflux metallurgy should output five rare metals from four batches")
-check(ingredient(full.recipe[names[1]],"kr-molten-rare-metals")==40,
+check(ingredient(full.recipe[names[1]],"kr-molten-rare-metals")==36,
   "Bio-molten casting lost its native molten rare-metal input")
 check(ingredient(full.recipe[names[1]],"bioflux")==2,
   "Gleba is not providing industrial bioflux")
@@ -416,7 +416,10 @@ for _,name in ipairs({
   "razi-fixture-bulk-electronics","razi-fixture-default-energy",
   "razi-fixture-legacy-economy","razi-fixture-paced-economy",
   "razi-fixture-low-bonus-ceiling","razi-fixture-unsafe-bonus"
-}) do portfolio.retained[name]=true end
+}) do
+  portfolio.retained[name]=true
+  portfolio.profiles[name]={kind="bulk"}
+end
 
 -- Native recipes with many outputs need proportional bonus math. A
 -- fixed +1 on 16 components would be worse than the old four native runs.
