@@ -167,6 +167,8 @@ require("prototypes.system.belt_expeditions").data_final_fixes()
 -- Calibrate severe source-native 1,000 km shortcuts after all map/route
 -- reconciliation, before hazard intelligence and quality escalation.
 require("prototypes.system.route_distance_balance").data_final_fixes()
+-- Harden every native or Razi solar route after route authority runs.
+require("prototypes.compat.calidus_dyson").fortify_routes()
 -- Only existing source-mod asteroid families are distributed on the final
 -- approved routes, before hover analysis and the quality-asteroid proxy.
 require("prototypes.system.modded_asteroid_distribution").data_final_fixes()

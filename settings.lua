@@ -144,6 +144,19 @@ data:extend({
   startup_toggle("razi-dyson-calidus-layout",
     "bb[stellar]-b[calidus-placement]"),
 
+  -- HELIOS: route difficulty and source-preserving late-game progression.
+  {type="string-setting",name="razi-helios-progression",
+    setting_type="startup",default_value="late",
+    allowed_values={"legacy","late","epic"},
+    order="bb[stellar]-c[progression]"},
+  {type="string-setting",name="razi-helios-route-danger",
+    setting_type="startup",default_value="extreme",
+    allowed_values={"native","challenging","extreme"},
+    order="bb[stellar]-e[corona-threats]"},
+  {type="string-setting",name="razi-helios-route-distance",
+    setting_type="startup",default_value="extended",
+    allowed_values={"native","extended","marathon"},
+    order="bb[stellar]-f[corona-distance]"},
   -- QUALITY OF LIFE
   startup_toggle("razi-hide-redundant-assembler-tiers",
     "ca[quality-of-life]-a[redundant-assemblers]"),

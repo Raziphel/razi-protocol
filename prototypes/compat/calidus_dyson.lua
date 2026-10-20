@@ -87,6 +87,18 @@ function M.data_final_fixes()
        M.safe_link(stage.id,parent)
      end
    end
+   local mode=settings and settings.startup
+     and settings.startup["razi-helios-progression"]
+   local value=mode and mode.value or "late"
+   if value~="legacy" then
+     M.safe_link("planet-discovery-sunorbit","vibrant-discovery")
+     M.safe_link("planet-discovery-sunorbit","vespera-discovery")
+     M.safe_link("slp-solar-system-sun2","planet-discovery-aquilo")
+     M.safe_link("slp-dyson-sphere","planet-discovery-aquilo")
+     if value=="epic" then
+       M.safe_link("planet-discovery-sunorbit","razi-outer-frontier-mastery")
+     end
+   end
    -- Make the existing stellar infrastructure a real final engineering
    -- research milestone, without demanding satellite counts via guessed
    -- internal SLP APIs. The native launch/repeater tasks stay source-owned.
@@ -131,5 +143,72 @@ function M.connect_calidus()
  local icons=require("prototypes.system.route_icons")
  icons.assign(route,"starter")
  data:extend({route})
+end
+-- Strengthen all reachable solar approaches, including source shortcuts.
+-- The original plasma encounters, satellites and repeaters remain owned by SLP.
+local function setting(name,default)
+ local entry=settings and settings.startup and settings.startup[name]
+ if entry then return entry.value end
+ return default
+end
+function M.fortify_routes()
+ if not (mods and mods["slp-dyson-sphere-reworked-fork"]) then return 0 end
+ local outer=M.destination("planet-discovery-sunorbit")
+ local inner=M.destination("slp-solar-system-sun2")
+ if not outer and not inner then return 0 end
+ local danger=setting("razi-helios-route-danger","extreme")
+ local distance=setting("razi-helios-route-distance","extended")
+ local minima={
+   extended={outer=65000,inner=30000},
+   marathon={outer=100000,inner=45000}
+ }
+ local profiles
+ if danger~="native" then
+   profiles=require("prototypes.system.asteroid_profiles")
+ end
+ local changed=0
+ for _,route in pairs(data.raw["space-connection"] or {}) do
+   local tier=(route.from==inner or route.to==inner) and "inner"
+     or (route.from==outer or route.to==outer) and "outer" or nil
+   if tier then
+     local touched=false
+     local minimum=minima[distance] and minima[distance][tier]
+     if minimum and (not route.length or route.length<minimum) then
+       route.length=minimum
+       touched=true
+     end
+     if profiles then
+       local profile=tier=="inner" and "belt_umbra_crossing"
+         or "outer_ring_crosslink"
+       local previous=route.asteroid_spawn_definitions
+       if not previous or #previous==0 then
+         route.asteroid_spawn_definitions=profiles.create(profile)
+       else
+         -- Rebalance *known vanilla* models without changing SLP plasma.
+         profiles.apply(route,profile)
+         local existing={}
+         for _,entry in ipairs(route.asteroid_spawn_definitions) do
+           existing[(entry.type or "entity").."|"..tostring(entry.asteroid)]=true
+         end
+         for _,entry in ipairs(profiles.create(profile)) do
+           local key=(entry.type or "entity").."|"..tostring(entry.asteroid)
+           if not existing[key] then
+             route.asteroid_spawn_definitions[#route.asteroid_spawn_definitions+1]=entry
+             existing[key]=true
+           end
+         end
+       end
+       profiles.apply_field(route,danger=="extreme"
+         and (tier=="inner" and 1.85 or 1.55) or 1.24)
+       touched=true
+     end
+     if touched then changed=changed+1 end
+   end
+ end
+ if type(log)=="function" then
+   log("[Razi Protocol/HELIOS] Reinforced "..changed..
+     " native solar approaches without modifying plasma hazards")
+ end
+ return changed
 end
 return M

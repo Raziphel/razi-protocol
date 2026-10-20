@@ -18,6 +18,8 @@ local function setup(options)
   ["planet-discovery-aquilo"]=tech(),
   ["maraxsis-project-seadragon"]=tech(),
   ["razi-outer-frontier-mastery"]=tech(),
+  ["vibrant-discovery"]=tech(),
+  ["vespera-discovery"]=tech(),
   ["razi-singularity-test-fire"]=tech({"razi-singularity-theory"}),
   ["razi-singularity-theory"]=tech(),
   ["planet-discovery-sunorbit"]=tech({},unlock("slp-solar-orbit-outer")),
@@ -71,6 +73,10 @@ for _,stage in ipairs(mod.stages) do
    "Dyson project ignored source milestone "..stage.id.." -> "..parent)
  end
 end
+check(has(raw.technology["planet-discovery-sunorbit"],"vespera-discovery"),
+  "HELIOS solar access should require Vespera by default")
+check(has(raw.technology["slp-solar-system-sun2"],"planet-discovery-aquilo"),
+  "HELIOS inner solar orbit must be late game")
 check(has(raw.technology["razi-singularity-test-fire"],
  "slp-dyson-sphere-grounded"),"Dyson receiver absent from endgame test-fire")
 local outer=raw["space-location"]["slp-solar-orbit-outer"]
