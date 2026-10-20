@@ -161,6 +161,14 @@ data:extend({
     setting_type="startup",default_value="satellites",
     allowed_values={"off","engineering","satellites"},
     order="bb[stellar]-d[industrial-construction]"},
+  -- Second HELIOS expedition: physical commissioning and powered grid hardware.
+  {type="string-setting",name="razi-helios-commissioning",
+    setting_type="startup",default_value="expedition",
+    allowed_values={"off","expedition","monumental"},
+    order="bb[stellar]-g[commissioning]"},
+  {type="bool-setting",name="razi-helios-convergence-proof",
+    setting_type="startup",default_value=false,
+    order="bb[stellar]-h[finale-proof]"},
   -- QUALITY OF LIFE
   startup_toggle("razi-hide-redundant-assembler-tiers",
     "ca[quality-of-life]-a[redundant-assemblers]"),

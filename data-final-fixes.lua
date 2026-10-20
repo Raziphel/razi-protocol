@@ -110,6 +110,7 @@ require("prototypes.technology.tech_tree_visibility").data_final_fixes()
 
 require("prototypes.compat.calidus_dyson").data_final_fixes()
 require("prototypes.compat.helios_engineering").data_final_fixes()
+require("prototypes.compat.helios_structures").data_final_fixes()
 
 require("prototypes.compat.deep_interdependence").data_final_fixes()
 
