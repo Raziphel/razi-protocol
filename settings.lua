@@ -116,6 +116,16 @@ data:extend({
 		default_value = false,
 		order = "ca[quality-of-life]-b2[spoilable-recipes]"
 	},
+	-- Only the crafting-list visibility changes; research and factories remain
+	-- intact. Prototype settings apply to all players and require a restart.
+	{
+		type = "string-setting",
+		name = "razi-hand-crafting-cleanup",
+		setting_type = "startup",
+		default_value = "all",
+		allowed_values = {"off", "razi", "all"},
+		order = "ca[quality-of-life]-b3[hand-crafting]"
+	},
 	{
 		type = "bool-setting",
 		name = "razi-performance-compact-route-overlays",
