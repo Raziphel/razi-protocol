@@ -528,6 +528,50 @@ for _,pack in ipairs(deep_raw.technology["razi-bio-rare-metal-casting"].unit.ing
 end
 rawset(_G,"settings",nil)
 
+-- Undeclared planet properties must inherit registered prototype
+-- defaults. Aquilo may omit Cerys ambient radiation yet allow cryo plants.
+local ambient,ambient_engine=setup()
+ambient["surface-property"]={
+  ["cerys-ambient-radiation"]={default_value=10}
+}
+ambient["assembling-machine"].cryogenic_plant.surface_conditions={
+  {property="cerys-ambient-radiation",min=0,max=20}
+}
+ambient_engine.data_final_fixes()
+check(ambient.recipe["razi-cryo-energy-control"]~=nil,
+  "Absent Aquilo override must use the Cerys property default_value")
+local hostile,hostile_engine=setup()
+hostile["surface-property"]={
+  ["cerys-ambient-radiation"]={default_value=100}
+}
+hostile["assembling-machine"].cryogenic_plant.surface_conditions={
+  {property="cerys-ambient-radiation",min=0,max=20}
+}
+hostile_engine.data_final_fixes()
+check(not hostile.recipe["razi-cryo-energy-control"],
+  "Out-of-range property defaults must still reject incompatible machinery")
+-- An earlier native source unlock must win over a late alphabetically-first
+-- alternative, and any actual Vibrant gate must raise research unit costs.
+local tier,tier_engine=setup()
+tier.technology["aaa-later-electronics"]={
+  name="aaa-later-electronics",enabled=true,hidden=false,
+  effects={{type="unlock-recipe",recipe="kr-electronic-components"}},
+  prerequisites={"vibrant-discovery"},
+  icon="__base__/graphics/technology/automation.png",icon_size=256
+}
+tier.technology["planet-discovery-fulgora"].prerequisites={"vibrant-discovery"}
+tier_engine.data_final_fixes()
+local tier_tech=tier.technology["razi-electrobiological-components"]
+check(tier_tech and tier_tech.unit.count>=950,
+  "Post-Vibrant exchanges must not use early-Solaris research pricing")
+local found_early,found_late=false,false
+for _,prerequisite in ipairs(tier_tech.prerequisites or {}) do
+  if prerequisite=="kr-electronic-components" then found_early=true end
+  if prerequisite=="aaa-later-electronics" then found_late=true end
+end
+check(found_early and not found_late,
+  "Duplicate unlockers must select earliest legitimate native research")
+
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
