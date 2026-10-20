@@ -6,9 +6,9 @@ if adjust_maraxsis then
 	adjust_maraxsis.hidden = true
 end
 
--- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft) and of Balack whose default or opt-in
--- value rewrites vanilla, Krastorio 2 or Space Age progression, or removes what Razi Protocol relies on. Each is pinned
--- and hidden; a missing mod or setting is skipped.
+-- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
+-- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
+-- removes what Razi Protocol relies on. Each is pinned and hidden; a missing mod or setting is skipped.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -27,6 +27,26 @@ local pinned_bool_settings = {
 	-- Nexus, Crucible and Panglia (compat/armoured_biters.lua), which would then have no enemies at all. With false the
 	-- nest stays; its tile restriction there keeps it off Nauvis.
 	["bm-armored-biters-override"] = false,
+	-- Default true: Nulla adds robotic-science-pack to the price and prerequisites of follower-robot-count-5, which is
+	-- first-system research; it would wait for Nulla's discovery in Vespera. The other two Nulla science settings only
+	-- touch research that is already behind Vespera (promethium-science-pack, research-productivity) and stay on.
+	["nulla-vanila-science"] = false,
+	-- Default true: with Krastorio 2 present, Crushing Industry replaces the K2 sand and glass recipes: kr-glass is
+	-- hidden in favour of its own glass recipe, and the kr-sand recipe loses its unlock in kr-stone-processing to the
+	-- Crushing Industry sand recipe. Off, the K2 recipes stay (this needs the glass setting below off as well).
+	["crushing-industry-k2"] = false,
+	-- Default true: Crushing Industry adds glass to lab, chemical-plant, solar-panel, laser-turret, the rail signals,
+	-- small-lamp and others. With the K2 replacement off the added glass becomes kr-glass beside the kr-glass that K2
+	-- already has in small-lamp, and the game refuses to load (duplicate ingredient); with it on, the K2 glass recipe
+	-- is replaced.
+	["crushing-industry-glass"] = false,
+	-- Default true: optical-fiber is made from the Crushing Industry glass and added to advanced-circuit. PlanetAthos
+	-- and Muluna read this setting and expect the item, which does not exist without glass.
+	["crushing-industry-optical-fiber"] = false,
+	-- Default true: swaps the concrete item for a concrete-mix fluid in 36 recipes (K2 kr-fusion-reactor and
+	-- kr-crush-concrete, nuclear-reactor, rocket-silo, centrifuge, cargo-landing-pad, rail ramps, the Planetaris
+	-- concretes and others), moves them to fluid crafting and takes them out of hand crafting.
+	["crushing-industry-concrete-mix"] = false,
 }
 
 for name, value in pairs(pinned_bool_settings) do

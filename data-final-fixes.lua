@@ -112,6 +112,9 @@ require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 -- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
 require("prototypes.technology.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.galactic_mod_research").data_final_fixes()
+
+-- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
+require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
 
 -- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
@@ -123,6 +126,9 @@ require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
 -- guards; repeat them so the final prerequisite graph is clean.
 require("prototypes.compat.linox_science_guard").data_final_fixes()
 require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
+
+-- All technology passes have run; report any cycle that is left and remove only the ones Athos owns.
+require("prototypes.compat.athos_cycle_guard").repair("after-all-razi-technology")
 
 -- Planet packs frequently append their science inputs without checking whether
 -- another compatibility pass already added the same pack. Duplicate lab inputs
