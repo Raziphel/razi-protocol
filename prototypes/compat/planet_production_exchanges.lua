@@ -287,7 +287,19 @@ local research_tiers={
 }
 local function gated_research_count(rule,parents)
   local cost=rule.count
+  local scanned={}
+  local function science_ancestors(name)
+    if scanned[name] then return end
+    scanned[name]=true
+    local node=technologies()[name]
+    if not node then return end
+    cost=math.max(cost,portfolio.science_floor(node))
+    for _,parent in ipairs(node.prerequisites or {}) do
+      science_ancestors(parent)
+    end
+  end
   for _,name in ipairs(parents) do
+    science_ancestors(name)
     for _,entry in ipairs(research_tiers) do
       if technologies()[entry[1]] and
         (name==entry[1] or depends_on(name,entry[1])) then
