@@ -198,6 +198,8 @@ function M.selected()
  local startup=settings and settings.startup
  local v=startup and startup["razi-difficulty-preset"]
  local name=v and v.value or "normal"
+ -- Custom is a real, selectable option, not a preset dictionary key.
+ if name=="custom" then return "custom" end
  return legacy[name] or (M.presets[name] and name or "normal")
 end
 function M.manual_overrides()
@@ -222,13 +224,27 @@ function M.active()
  if #M.manual_overrides()>0 then return "custom" end
  return choice
 end
-function M.effective(name,fallback)
- local mode=M.active()
- local preset=M.presets[mode]
- if preset and preset[name]~=nil then return preset[name] end
+-- A saved override is independent of the other gameplay levers. Previously,
+-- *any* advanced override made effective mode Custom, silently reverting
+-- every untouched Hard/Nightmare system to its Normal startup value.
+function M.is_overridden(name)
  local startup=settings and settings.startup
  local item=startup and startup[name]
- if item then return item.value end
- return fallback
+ return item~=nil and M.baseline[name]~=nil
+   and item.value~=M.baseline[name]
+end
+function M.effective(name,fallback)
+ local startup=settings and settings.startup
+ local item=startup and startup[name]
+ local selected=M.selected()
+ -- Explicit Custom means "use the saved manual configuration", rather than
+ -- secretly inheriting a named preset.
+ if selected=="custom" then
+   return item and item.value or fallback
+ end
+ if M.is_overridden(name) then return item.value end
+ local preset=M.presets[selected]
+ if preset and preset[name]~=nil then return preset[name] end
+ return item and item.value or fallback
 end
 return M

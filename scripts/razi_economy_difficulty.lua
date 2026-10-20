@@ -14,21 +14,25 @@ local function factor(resolver,key,fallback)
  local value=resolver.effective(key,fallback or "normal")
  return (factors[key] or {})[value] or 1
 end
+local function custom_factor(resolver,key)
+ -- Named world profiles already encode their balance. Only add the factor
+ -- if the user ACTUALLY changed this control away from its saved baseline.
+ return resolver.is_overridden(key) and factor(resolver,key) or 1
+end
 function M.profile(mode,spec,resolver)
- -- The four named profiles already define resource/science/evolution
- -- factors in their map-generation balance matrix. Applying again would
- -- double penalize Nightmare. Only Custom adjusts these values separately.
+ -- Preserve the current named mode's curated balance, changing *only*
+ -- fields that the player has explicitly customized.
  if resolver.active()~="custom" then return spec end
  spec.resource.frequency=spec.resource.frequency*
-   factor(resolver,"razi-resource-frequency")
+   custom_factor(resolver,"razi-resource-frequency")
  spec.resource.size=spec.resource.size*
-   factor(resolver,"razi-resource-patch-size")
- local richness=factor(resolver,"razi-resource-richness")
+   custom_factor(resolver,"razi-resource-patch-size")
+ local richness=custom_factor(resolver,"razi-resource-richness")
  spec.resource.richness=spec.resource.richness*richness
  spec.oil=spec.oil*richness
  spec.research=math.max(.001,math.min(100000,spec.research*
-   factor(resolver,"razi-science-demand")))
- local evolution=factor(resolver,"razi-evolution-speed")
+   custom_factor(resolver,"razi-science-demand")))
+ local evolution=custom_factor(resolver,"razi-evolution-speed")
  for _,name in ipairs({"time_factor","destroy_factor","pollution_factor"}) do
    local value=spec.evolution[name]
    if type(value)=="number" then spec.evolution[name]=value*evolution end

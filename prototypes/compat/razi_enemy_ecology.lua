@@ -151,7 +151,14 @@ local function put(planet,name,kind,habitat,seed,weight)
  if not (map and source and (not kind or kind==actual_kind)) then return false end
  local tiles=land_tiles(map,habitat)
  if #tiles==0 then return false end
+ -- A source mod may already own this world. Skip *before* allocating a
+ -- cloned prototype to avoid orphaned nest prototypes and pointless work.
+ local existing=map.autoplace_settings
+   and map.autoplace_settings.entity
+   and map.autoplace_settings.entity.settings
+ if existing and existing[name] then return false end
  local id="razi-"..planet.."-"..name
+ if existing and existing[id] then return false end
  local registry=data.raw[actual_kind] or {}
  if not registry[id] then
   local clone=table.deepcopy(source)
@@ -169,10 +176,9 @@ local function put(planet,name,kind,habitat,seed,weight)
   data:extend({clone})
  end
  local settings=entity_settings(map)
- -- Preserve native/source-mod spawning when it already owns this world.
- -- Never replace or remove a legitimate source's map-gen record.
- if settings[name] then return false end
- settings[id]=settings[id] or {}
+ -- The source occupancy check happened before cloning; this only registers
+ -- a new, validated planet-local nest.
+ settings[id]={}
  map.autoplace_controls=map.autoplace_controls or {}
  if (data.raw["autoplace-control"] or {})["enemy-base"]
    and not map.autoplace_controls["enemy-base"] then

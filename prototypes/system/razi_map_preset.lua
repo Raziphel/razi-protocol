@@ -209,7 +209,9 @@ function M.explicit_preset(mode)
  return entry
 end
 function M.active_mode()
- local name=difficulty.active()
+ -- Show Custom for a manual change, but preserve the selected difficulty as
+ -- the world-generation base for all OTHER controls.
+ local name=difficulty.selected()
  return M.profiles[name] and name or "normal"
 end
 function M.set_world_defaults(mode)

@@ -38,10 +38,9 @@ function M.profile(mode,profiles,resolver)
  local spec=deepcopy(profiles[mode] or profiles.normal)
  local ids=named[mode] or named.normal
  local function choose(index,key)
-  if mode=="normal" and resolver.active()=="custom" then
-   return resolver.effective(key,ids[index])
-  end
-  return ids[index]
+  -- Each combat pressure switch can override its own selected tier, without
+  -- changing the rest of Hard/Nightmare to Normal.
+  return resolver.effective(key,ids[index])
  end
  spec.pollution_tuning=pollution[choose(1,"razi-pollution-pressure")]
    or pollution.normal
