@@ -3,6 +3,7 @@
 local M={}
 local L=function(name,...) return {"razi-ops."..name,...} end
 local runtime=require("scripts.galactic_dyson_runtime")
+local operations=require("scripts.razi_helios_operations")
 M.stages={
  {"planet-discovery-sunorbit","dyson-outer"},
  {"slp-solar-system-sun2","dyson-inner"},
@@ -94,6 +95,60 @@ local function helios_progress(parent,force)
  label(frame,L("dyson-helios-progress",
    tostring(complete),tostring(#existing)))
 end
+local function commission(parent,player)
+ if not (player.force.technologies
+   and player.force.technologies["razi-helios-grid-commission"]) then
+   return
+ end
+ local req=operations.targets()
+ if req.outer==0 then return end
+ local result=operations.status(player.force)
+ local frame=parent.add{type="frame",direction="vertical",
+   style="inside_shallow_frame"}
+ frame.style.horizontally_stretchable=true
+ local heading=label(frame,L("helios-commission-heading"))
+ heading.style.font="default-bold"
+ label(frame,L("helios-commission-guidance"))
+ local inv=player.get_main_inventory()
+ for _,name in ipairs({"outer","inner"}) do
+   local spec=operations.stages[name]
+   local done=result[name]
+   local required=req[name]
+   local entry=frame.add{type="flow",direction="vertical"}
+   entry.style.vertical_spacing=3
+   local status=label(entry,L("helios-"..name.."-progress",
+     tostring(done),tostring(required)))
+   status.style.font_color=done>=required
+     and {r=.55,g=.83,b=.68} or {r=.85,g=.70,b=.46}
+   if done<required then
+     local seconds,ready=operations.hold_seconds(player,name)
+     local carrying=inv and inv.valid and inv.get_item_count(spec.item) or 0
+     label(entry,L("helios-carried",tostring(carrying)))
+     label(entry,L("helios-hold",tostring(seconds),
+       tostring(math.floor(spec.hold/60))))
+     local deliver=entry.add{type="button",
+       caption=L("helios-deliver-"..name),
+       tags={razi_ops_action="helios-deliver",value=name}}
+     deliver.enabled=ready and carrying>0
+       and ((player.force.technologies[spec.tech] or {}).researched==true)
+       and (name=="outer" or result.outer>=req.outer)
+   end
+ end
+ local grid_title=label(frame,L("helios-grid-title",
+   tostring(result.worlds),tostring(req.grid)))
+ grid_title.style.font="default-bold"
+ label(frame,L("helios-grid-installed",
+   tostring(result.grid.installed),tostring(result.grid.powered)))
+ for i=1,math.min(#result.grid.worlds,8) do
+   local site=result.grid.worlds[i]
+   label(frame,L("helios-grid-site",site.name,
+     tostring(site.powered),tostring(site.installed)))
+ end
+ if result.complete then
+   local finished=label(frame,L("helios-commission-complete"))
+   finished.style.font_color={r=.55,g=.83,b=.68}
+ end
+end
 local function inspection(parent,player)
  local status=runtime.snapshot(player.force)
  local frame=parent.add{type="frame",direction="vertical",
@@ -157,6 +212,7 @@ function M.render(parent,player,options)
  progress.style.horizontally_stretchable=true
  if not options.embedded then label(copy,L("dyson-phase-disclaimer")) end
  helios_progress(parent,player.force)
+ commission(parent,player)
  inspection(parent,player)
  local research=label(parent,L("dyson-research-heading"))
  research.style.font="default-bold"

@@ -16,6 +16,7 @@ local trials=require("scripts.razi_nexus_trials")
 local weather=require("scripts.razi_weather_guide")
 local cargo_catalog=require("scripts.galactic_trade_catalog")
 local convergence=require("scripts.razi_convergence")
+local helios_operations=require("scripts.razi_helios_operations")
 local projects=require("scripts.razi_journal_projects")
 local systems=require("scripts.razi_journal_systems")
 local great_projects=require("scripts.razi_great_projects")
@@ -2538,7 +2539,11 @@ function M.gui_click(event)
   if native then
     local p=pref(player.index)
     if not (player.gui.screen[FRAME] and p.view=="projects") then return end
-    if native=="convergence-deliver" and p.project=="convergence" then
+    if native=="helios-deliver" and p.project=="dyson" then
+      if tags.value~="outer" and tags.value~="inner" then return end
+      local message,amount=helios_operations.deliver(player,tags.value)
+      player.print({"razi-ops."..message,tostring(amount)})
+    elseif native=="convergence-deliver" and p.project=="convergence" then
       local known=false
       for _,stage in ipairs(convergence.stages) do
         if stage.id==tags.value then known=true;break end
