@@ -21,8 +21,6 @@ require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compat.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
--- Final, visual-only regrouping; source ingredients and machines stay intact.
-require("prototypes.compat.crafting_navigation").data_final_fixes()
 -- Delay Bellicos native reconciliation until AFTER Razi's general galaxy
 -- relocation pass. Otherwise source Warden can be moved twice.
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
@@ -276,3 +274,7 @@ require("prototypes.system.bellicos").reconcile_final_positions()
 -- TEMPORARY upstream compatibility patches. Entirely removable:
 -- delete temporary/factorio_2_1_22 and this single require.
 require("temporary.factorio_2_1_22.loader").data_final_fixes()
+
+-- Run only after all Razi, partner-mod and temporary recipes have settled.
+-- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
+require("prototypes.compat.crafting_navigation").data_final_fixes()
