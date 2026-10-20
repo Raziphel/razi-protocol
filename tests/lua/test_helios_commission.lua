@@ -69,13 +69,22 @@ result,accepted=helios.deliver(player,"inner")
 check(result=="helios-delivered" and accepted==12,
  "Inner lattice delivery ignored real cargo or orbital hold")
 check(helios.ready(force),"All physically witnessed milestones should complete HELIOS")
+force.technologies["razi-helios-grid-commission"]=nil
+check(helios.ready(force),"Missing source hardware must not softlock Convergence")
+force.technologies["razi-helios-grid-commission"]={researched=true}
 check(inventory["razi-helios-orbital-lattice"]==0,
  "Inner lattice was not consumed exactly once")
 check(select(1,helios.deliver(player,"inner"))=="helios-complete",
  "Duplicate commissioning should never consume additional items")
 player.controller_type="remote"
-check(select(1,helios.deliver(player,"outer"))=="helios-complete",
- "Completion lookup must not consume cargo in Remote View")
+helios.record(force).outer=7
+inventory["razi-helios-corona-shield"]=1
+local remote_result=select(1,helios.deliver(player,"outer"))
+check(remote_result=="helios-need-orbit"
+ and inventory["razi-helios-corona-shield"]==1,
+ "Remote View cannot authorize or consume actual construction cargo")
+helios.record(force).outer=8
+inventory["razi-helios-corona-shield"]=0
 player.controller_type="character"
 settings.startup["razi-helios-commissioning"].value="monumental"
 check(not helios.ready(force),

@@ -194,6 +194,13 @@ function M.status(force)
 end
 function M.ready(force)
  if not enabled() then return true end
+ -- If an upstream update removed an essential native recipe or if a valid
+ -- mod combination cannot register our hardware, the optional finale gate
+ -- must never create an impossible permanent research deadlock.
+ local technologies=force and force.technologies
+ if not (technologies and technologies["razi-helios-grid-commission"]) then
+   return true
+ end
  return M.status(force).complete
 end
 function M.forces_merged(event)

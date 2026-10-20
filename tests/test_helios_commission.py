@@ -37,6 +37,8 @@ class HeliosCommissionTests(unittest.TestCase):
  def test_optional_finale(self):
   control=src("scripts/razi_convergence.lua")
   self.assertIn('and not helios_operations.ready(force)',control)
+  self.assertIn('technologies["razi-helios-grid-commission"]',
+    src("scripts/razi_helios_operations.lua"))
   self.assertIn('name="razi-helios-convergence-proof"',src("settings.lua"))
  def test_locales_have_unique_sections(self):
   for file in ("locale/en/helios.cfg","locale/ru/helios.cfg"):
