@@ -62,6 +62,22 @@ jobs:
         run: lua5.2 tests/lua/test_route_icons.lua
       - name: Test optional enemy placement safety
         run: lua5.2 tests/lua/test_enemy_safety.lua
+      # Prototype-stage difficulty and ecology fixtures. The workflow
+      # remains workflow_dispatch-only; no new automatic Actions usage.
+      - name: Check 31 difficulty modes and independent manual overrides
+        run: lua5.2 tests/lua/test_razi_difficulty_presets.lua
+      - name: Check native pollution, raids, colony expansion and spoilage
+        run: lua5.2 tests/lua/test_razi_difficulty_tuning.lua
+      - name: Check difficulty-specific map generation on modded planets
+        run: lua5.2 tests/lua/test_razi_map_preset.lua
+      - name: Check economy controls and rocket-silo requirements
+        run: lua5.2 tests/lua/test_razi_economy_difficulty.lua
+      - name: Check factory and defense prototype scaling
+        run: lua5.2 tests/lua/test_razi_industrial_difficulty.lua
+      - name: Check six family-specific planetary habitat selections
+        run: lua5.2 tests/lua/test_razi_enemy_habitats.lua
+      - name: Check Nexus native biters, Gleba fauna and demolishers
+        run: lua5.2 tests/lua/test_nexus_ecology.lua
       - name: Test research trigger migrations
         run: lua5.2 tests/lua/test_trigger_compat.lua
       - name: Check interwoven planet science progression
