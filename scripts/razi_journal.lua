@@ -182,7 +182,11 @@ local function technology(force,quest,context)
   end
   if not t then return nil end
   local proto=t.prototype
-  if proto and proto.hidden and not t.researched then return nil end
+  -- The opener is the one spoiler-safe signpost a fresh save MUST retain.
+  -- Other mods can hide or delay Automation's research prototype on startup.
+  -- Keep that source technology inspectable without inventing completion.
+  if quest.id~="first-signal" and proto and proto.hidden
+    and not t.researched then return nil end
   return t
 end
 function M.available(force,quest,context)
@@ -247,6 +251,18 @@ end
 function M.state(force,quest,context)
   if not M.available(force,quest,context) then return "unavailable" end
   if M.complete(force,quest,context) then return "complete" end
+  if quest.id=="first-signal" then
+    local native=technology(force,quest,context)
+    -- Always SHOW the bootstrap mission, but don't mark it "ready"
+    -- if a source mod actually disabled or prerequisite-gated its research.
+    if not native or native.enabled==false
+      or (native.prototype and native.prototype.hidden) then
+      return "locked"
+    end
+    for _,required in pairs(native.prerequisites or {}) do
+      if not required.researched then return "locked" end
+    end
+  end
   for _,required in ipairs(quest.requires or {}) do
     local prior=defs.by_id[required]
     -- Source content not present in this modpack is not a phantom
@@ -266,6 +282,10 @@ end
 function M.journal_visible(force,quest,context,known_state)
   if known_state=="unavailable" or
     not M.available(force,quest,context) then return false end
+  -- The very first mission is onboarding, not a spoiler. Show it even
+  -- when its native Automation research has unmet source prerequisites.
+  -- Every later mission still obeys the normal spoiler rules.
+  if quest.id=="first-signal" then return true end
   if not M.hide_spoilers() or M.complete(force,quest,context) then
     return true
   end
@@ -1373,8 +1393,11 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       end
     end
   end
+  local missing_start=not (player.force.technologies
+    and player.force.technologies["automation"])
   local empty=column.add{type="label",name="razi_journal_no_results",
-    caption=L("nothing-found")}
+    caption=(not found and missing_start and p.query=="" and p.filter=="all")
+      and L("bootstrap-research-missing") or L("nothing-found")}
   empty.style.single_line=false
   empty.style.maximal_width=inner-28
   empty.visible=not found
@@ -1904,7 +1927,10 @@ local function draw(player,focus_search)
       local empty=reader.add{type="frame",
         style="inside_shallow_frame_with_padding"}
       empty.style.width=size.reader
-      wrap(empty,L("missing-quest"),size.reader-40)
+      local missing_start=not (player.force.technologies
+        and player.force.technologies["automation"])
+      wrap(empty,missing_start and L("bootstrap-research-missing")
+        or L("missing-quest"),size.reader-40)
     end
   end
   -- No decorative footer: useful space belongs to the dossiers.
