@@ -1145,6 +1145,13 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   body.style.vertical_spacing=12
   section(body,"chapter-cover-story",
     {"journal-chapter-summary."..p.chapter},text_width,theme)
+  -- The seven founding systems get distinct operating identities, kept
+  -- inside the already-unlocked cover instead of leaking future names.
+  local star=industrial_briefs.star_charter(p.chapter)
+  if star then
+    section(body,"star-charter-heading",
+      {"razi-star-signature."..star},text_width,theme)
+  end
   section(body,"chapter-cover-dispatch",
     {"journal-chapter-dispatch."..p.chapter},text_width,theme)
   section(body,"chapter-context",
