@@ -209,9 +209,11 @@ function M.explicit_preset(mode)
  return entry
 end
 function M.active_mode()
- -- Show Custom for a manual change, but preserve the selected difficulty as
- -- the world-generation base for all OTHER controls.
+ -- The New Game selector must reflect the actual startup choice. Custom has
+ -- its own visible default marker; its baseline mapgen remains Normal, while
+ -- individual saved gameplay overrides are resolved by the difficulty layer.
  local name=difficulty.selected()
+ if name=="custom" then return "custom" end
  return M.profiles[name] and name or "normal"
 end
 function M.set_world_defaults(mode)
@@ -262,37 +264,46 @@ function M.set_world_defaults(mode)
  -- don't enable disabled resource slots or modify a planet's noise rules.
  M.scale_planets(mode)
 end
+-- Explicitly opting in to "Select Razi's map preset by default" gives
+-- Razi control of the initial selector even if another mod advertises a
+-- default. Preserve all other presets and their gameplay fields, changing
+-- only the default flag. Factorio allows exactly one active default; a
+-- default=true entry cannot also contain map-generation settings.
+function M.claim_default(group,mode)
+ local key="razi-protocol-"..mode
+ for _,preset in pairs(group) do
+   if type(preset)=="table" and preset.default==true then
+     preset.default=nil
+   end
+ end
+ group[key]={order="00[razi-default]",default=true}
+ return key
+end
 function M.data_final_fixes()
  local group=data.raw["map-gen-presets"]
    and data.raw["map-gen-presets"].default
  if not group then return false end
- -- Drop obsolete "Recommended (Auto)" and the duplicate Custom map preset.
+ -- Remove only the old "Recommended (Auto)" compatibility alias. The
+ -- Custom marker is rebuilt below only if the player actually selects it.
  group["razi-protocol"]=nil
  group["razi-protocol-custom"]=nil
  local selected=M.active_mode()
  local auto=settings and settings.startup
    and settings.startup["razi-default-new-game-map"]
  local autoselect=not auto or auto.value~=false
- local competing=false
- for name,preset in pairs(group) do
-   if name~="default" and not name:match("^razi%-protocol%-")
-      and type(preset)=="table" and preset.default==true then
-     competing=true
-   end
- end
+ -- Always provide the four fully editable Razi profiles. The selected one
+ -- becomes a lightweight default marker only when auto-selection is on.
  for _,mode in ipairs({"easy","normal","hard","nightmare"}) do
-   local name="razi-protocol-"..mode
-   if autoselect and not competing and mode==selected then
-     -- In Factorio 2.1 a default=true entry cannot carry any mapgen data.
-     group[name]={order="00[razi-default]",default=true}
-   else
-     group[name]=M.explicit_preset(mode)
-   end
+   group["razi-protocol-"..mode]=M.explicit_preset(mode)
  end
- if autoselect and not competing then
-   if group.default then group.default.default=nil end
-   M.set_world_defaults(selected)
+ if autoselect then
+   M.claim_default(group,selected)
+   -- Custom still honors saved Razi gameplay controls via the Normal
+   -- world-generation baseline. This does not override source mod settings.
+   M.set_world_defaults(selected=="custom" and "normal" or selected)
  end
+ -- When disabled, leave every other mod's default flag untouched. Razi's
+ -- selectable profiles remain available but are never forced as defaults.
  return true
 end
 return M
