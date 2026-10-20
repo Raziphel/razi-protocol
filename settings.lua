@@ -14,6 +14,9 @@ end
 data:extend({
   -- Normal is the default for fresh installations. Old saved startup choices
   -- remain player-owned, including an existing Custom selection.
+  -- Startup changes require a Factorio restart BEFORE entering a save:
+  -- other prototype-stage passes resolve the preset during the next mod load.
+  -- The GUI still displays the saved manual controls, not resolved values.
   -- Custom appears LAST, as an advanced/manual override mode. Gameplay modes
   -- never override accessibility, cosmetics or source mod settings.
   {type="string-setting",name="razi-difficulty-preset",
