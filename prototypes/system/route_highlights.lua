@@ -98,6 +98,9 @@ function M.is_navigation_highlight(route,scope)
     return false
   end
   if hazards.is_belt_crossing(route) then return true end
+  -- High-risk solar expeditions must be visible even in Major Routes mode.
+  local kind=hazards.kind(route)
+  if kind=="stellar-approach" or kind=="stellar-inner" then return true end
   if scope=="all" then return true end
   return major_waypoint(route.from) and major_waypoint(route.to)
     and reconcile.allowed_pairs[
@@ -138,7 +141,9 @@ local function route_path(route,a,b)
 end
 
 local function is_major(route,a,b)
-  return hazards.is_belt_crossing(route) or magnitude(a,b)>=54
+  local kind=hazards.kind(route)
+  return kind=="stellar-approach" or kind=="stellar-inner"
+    or hazards.is_belt_crossing(route) or magnitude(a,b)>=54
     or (route.shape=="line" and magnitude(a,b)>=38)
 end
 

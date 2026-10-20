@@ -13,6 +13,11 @@ end
 local UNIT=50 -- authored line body in source pixels (extra joined end caps)
 local TARGET_SPAN=3.6 -- starmap chart units
 local ROUTE_LIMIT,LAYER_BUDGET=128,2400
+-- Endpoints should be coloured right up to the icon, not leave multi-unit
+-- grey stubs at every planet. Tiny overlapping icons remain unpainted.
+local END_CLEARANCE=0.65
+local MIN_VISIBLE_SPAN=0.85
+local MAX_CHORD=13.5
 -- Optional render-only economy mode. It does not alter native connections,
 -- danger grades, travel logic or actual asteroid simulation.
 local function compact()
@@ -43,21 +48,18 @@ local function candidate(owner,route,mode,scope)
   local a,b=owner.position(route.from),owner.position(route.to)
   if not a or not b then return nil end
   local span=sqrt((a.x-b.x)^2+(a.y-b.y)^2)
-  if span<2.5 or span>1800 then return nil end
+  if span<MIN_VISIBLE_SPAN or span>1800 then return nil end
   local belt=hz.is_belt_crossing(route)
-  -- Nearby transfers still have a native route and the 1-10 tooltip.
-  -- Painting a full-width coloured line through two adjacent icons made
-  -- little moons and the Shattered Approach look like giant corridors.
-  -- Genuine hazardous belt crossings are ALWAYS painted.
-  if span<10 and not belt then return nil end
+  -- Short native planet/moon links should be coloured too. Their small
+  -- chords naturally render thin lines, avoiding oversized corridors.
   if scope=="major" and not owner.is_major(route,a,b) then return nil end
   local sample,length=owner.route_path(route,a,b)
-  if not sample or length<2.5 then return nil end
-  -- Give planet labels and circular destination markers breathing room.
-  -- Preserve the shorter trim on actual belt crossings so the dangerous
-  -- passage remains visible right up to both surveyed rim markers.
-  local trim=belt and math.min(1.1,length*.10)
-    or math.min(math.max(1.8,length*.055),3.5,length*.20)
+  if not sample or length<MIN_VISIBLE_SPAN then return nil end
+  -- Trim at most ~0.65 chart units from the *actual* curved line at either
+  -- end. Planet icons render above the background ribbon, hiding its end.
+  -- Belt/rim links use an even smaller clearance. Very short links get
+  -- proportionally smaller clearance instead of disappearing entirely.
+  local trim=math.min(length*.10,belt and .40 or END_CLEARANCE)
   local covered=length-2*trim
   if covered<=0 then return nil end
   local cost=compact()
@@ -69,6 +71,40 @@ local function candidate(owner,route,mode,scope)
     covered=covered,pieces=pieces}
 end
 M.candidate=candidate
+
+-- Reserve enough sprite chords to cover every eligible connection rather
+-- than dropping whole routes when proportional downsampling grows too large.
+-- Extra detail uses spare atlas capacity; each ribbon remains bounded in
+-- thickness and follows the final native arc/line geometry.
+local function allocate(routes,budget,max_chord)
+  local required,extras=0,0
+  for _,row in ipairs(routes) do
+    local minimum=math.max(1,ceil(row.covered/max_chord))
+    if minimum<=ROUTE_LIMIT then
+      row.minimum_pieces=minimum
+      required=required+minimum
+      extras=extras+math.max(0,row.pieces-minimum)
+    else
+      row.minimum_pieces=nil -- impossible to rasterize without a fat stripe
+    end
+  end
+  local fraction=required<budget and
+    math.min(1,(budget-required)/math.max(1,extras)) or 0
+  local remaining=budget
+  for _,row in ipairs(routes) do
+    local minimum=row.minimum_pieces
+    local count=minimum and math.max(minimum,
+      minimum+floor(math.max(0,row.pieces-minimum)*fraction)) or 0
+    if count<=remaining then
+      row.draw_pieces=count
+      remaining=remaining-count
+    else
+      row.draw_pieces=0
+    end
+  end
+  return remaining
+end
+M.allocate=allocate
 
 local function render(owner,row,mode,n)
   local result={}
@@ -147,6 +183,8 @@ function M.data_final_fixes(owner)
       row.difficulty_mode=difficulty_mode
       row.grade=owner.route_color_level(route)
       row.belt=hz.is_belt_crossing(route) and true or false
+      local kind=hz.kind(route)
+      row.stellar=kind=="stellar-inner" or kind=="stellar-approach"
       routes[#routes+1]=row
       total=total+row.pieces
     end
@@ -155,27 +193,23 @@ function M.data_final_fixes(owner)
   -- resolved native route rather than use the entire budget on the first
   -- dangerous star corridor, which left the screenshot mostly grey.
   table.sort(routes,function(a,b)
+    if a.stellar~=b.stellar then return a.stellar end
     if a.belt~=b.belt then return a.belt end
     if a.grade~=b.grade then return a.grade>b.grade end
     return a.name<b.name
   end)
-  local density=math.max(1,total/layer_budget)
+  allocate(routes,layer_budget,is_compact and 18.5 or MAX_CHORD)
   local count,covered,skipped=0,0,0
   for _,row in ipairs(routes) do
-    if count>=layer_budget then skipped=skipped+1
-    else
-      local n=math.min(layer_budget-count,
-        math.max(1,floor(row.pieces/density)))
-      -- Do not stretch narrow line artwork into thick, ugly map stripes.
-      if row.covered/n<=(is_compact and 18.5 or 13.5) then
-        local segments=render(owner,row,mode,n)
-        for _,sprite in ipairs(segments) do
-          atlas.layers[#atlas.layers+1]=sprite
-          count=count+1
-        end
-        if #segments>0 then covered=covered+1 end
-      else skipped=skipped+1 end
-    end
+    local n=row.draw_pieces or 0
+    if n>0 then
+      local segments=render(owner,row,mode,n)
+      for _,sprite in ipairs(segments) do
+        atlas.layers[#atlas.layers+1]=sprite
+        count=count+1
+      end
+      if #segments>0 then covered=covered+1 end
+    else skipped=skipped+1 end
   end
   if type(log)=="function" then
     log(("[Razi Protocol/routes] Colored %d/%d known routes with %d "..
