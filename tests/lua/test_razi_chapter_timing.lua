@@ -9,13 +9,21 @@ local quests={
   {id="m2",chapter="calidus",phase="machines"},
   {id="g1",chapter="calidus",phase="growth"},
   {id="bonus",chapter="calidus",phase="growth",optional=true},
-  {id="next",chapter="solaris"}
+  {id="next",chapter="solaris"},
+  {id="next2",chapter="solaris"},
+  {id="addon",chapter="fluxworks",optional=true},
+  {id="addon2",chapter="fluxworks",optional=true}
 }
+local function act(q)
+  if q.chapter=="calidus" then return q.phase end
+  if q.chapter=="solaris" then return "solaris:landfall" end
+  if q.chapter=="fluxworks" then return "fluxworks:regional" end
+end
 local finished={}
 local function available(_) return true end
 local function complete(q) return finished[q.id]==true end
 local function scan(force,tick,historical)
-  return clock.observe(force,quests,available,complete,historical,tick)
+  return clock.observe(force,quests,available,complete,historical,tick,act)
 end
 local f1={index=1}
 check(not scan(f1,0,false),"New game must not record unfinished acts")
@@ -53,6 +61,24 @@ check(clock.get(f1,"milestones","m1")==54000,
   "Reversing research must not erase original mission time")
 finished.m1=true
 check(not scan(f1,1600000,false),"Recompletion must retain the first time")
+finished.next=true
+check(scan(f1,1700000,false),"Solaris should track milestones immediately")
+check(clock.get(f1,"phases","solaris:landfall")==nil,
+  "Solaris act should wait for every required mission")
+finished.next2=true
+check(scan(f1,1800000,false),"Solaris acts must be timed as well")
+check(clock.get(f1,"phases","solaris:landfall")==1800000
+  and clock.get(f1,"chapters","solaris")==1800000,
+  "Solaris needs the exact same timestamp rules as Calidus")
+finished.addon=true
+check(scan(f1,1900000,false),"Optional-only missions still earn times")
+check(clock.get(f1,"chapters","fluxworks")==nil,
+  "Optional-only chapter must not complete on the first mission")
+finished.addon2=true
+check(scan(f1,2000000,false),"Optional-only chapter should earn a clear")
+check(clock.get(f1,"phases","fluxworks:regional")==2000000
+  and clock.get(f1,"chapters","fluxworks")==2000000,
+  "FluxWorks sections need the same tracking even with optional-only goals")
 -- A new force with already-complete research gets a historical unknown.
 local f2={index=2}
 check(scan(f2,1600000,true),"Pre-tracking achievements need legacy markers")
