@@ -1,5 +1,5 @@
--- Immutable first-clear times per force for expedition milestones, chapters
--- and Calidus acts. A false timestamp means cleared on a legacy save.
+-- Immutable first-clear times for missions, all authored acts and chapters.
+-- The historic 'phases' storage key remains compatible with older saves.
 local M={}
 local KEY="razi_chapter_completion_times"
 
@@ -42,38 +42,45 @@ end
 
 -- Source completion is authoritative. Spoiler-hidden research is still
 -- counted; optional quests do not prevent a story chapter's first clear.
-function M.observe(force,quests,available,complete,historical,tick)
-  local chapters,phases={},{}
+function M.observe(force,quests,available,complete,historical,tick,act_for)
+  local chapters,acts={},{}
   local changed=false
+  -- One completion rule for every chapter. Optional missions are timed but
+  -- only block a section that contains no required missions (FluxWorks).
+  local function add(group,quest,done)
+    group.total=group.total+1
+    if done then group.done=group.done+1 end
+    if not quest.optional then
+      group.required=group.required+1
+      if done then group.done_required=group.done_required+1 end
+    end
+  end
+  local function bucket(collection,id)
+    if not collection[id] then
+      collection[id]={total=0,done=0,required=0,done_required=0}
+    end
+    return collection[id]
+  end
   for _,quest in ipairs(quests) do
     if available(quest) then
       local done=complete(quest)
-      -- Optional milestones are timed too, without blocking chapter clears.
       if done and M.mark(force,"milestones",quest.id,tick,historical) then
         changed=true
       end
-      if not quest.optional then
-        local chapter=chapters[quest.chapter] or {total=0,done=0}
-        chapters[quest.chapter]=chapter
-        chapter.total=chapter.total+1
-        local act
-        if quest.chapter=="calidus" and quest.phase then
-          act=phases[quest.phase] or {total=0,done=0}
-          phases[quest.phase]=act
-          act.total=act.total+1
-        end
-        if done then
-          chapter.done=chapter.done+1
-          if act then act.done=act.done+1 end
-        end
-      end
+      add(bucket(chapters,quest.chapter),quest,done)
+      local act_id=act_for and act_for(quest) or quest.phase
+      if act_id then add(bucket(acts,act_id),quest,done) end
     end
   end
+  local function finished(state)
+    if state.required>0 then return state.done_required==state.required end
+    return state.total>0 and state.done==state.total
+  end
+  -- "phases" remains the legacy save key, protecting old Calidus records.
   for _,kind in ipairs({"chapters","phases"}) do
-    local buckets=kind=="chapters" and chapters or phases
+    local buckets=kind=="chapters" and chapters or acts
     for id,state in pairs(buckets) do
-      if state.total>0 and state.total==state.done
-        and M.mark(force,kind,id,tick,historical) then
+      if finished(state) and M.mark(force,kind,id,tick,historical) then
         changed=true
       end
     end

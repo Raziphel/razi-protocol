@@ -22,6 +22,7 @@ local great_projects=require("scripts.razi_great_projects")
 local guidance=require("scripts.razi_journal_guidance")
 local objectives=require("scripts.razi_journal_objectives")
 local chapter_timing=require("scripts.razi_chapter_timing")
+local journal_acts=require("scripts.razi_journal_acts")
 local preview=require("scripts.razi_journal_recipe_preview")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
@@ -216,7 +217,11 @@ function M.record_chapter_completions(force,historical,tick)
   return chapter_timing.observe(force,defs.quests,
     function(quest) return M.available(force,quest,context) end,
     function(quest) return M.complete(force,quest,context) end,
-    historical,tick or (game and game.tick or 0))
+    historical,tick or (game and game.tick or 0),
+    function(quest)
+      local act=journal_acts.for_quest(quest)
+      return act and act.key
+    end)
 end
 function M.initialize_chapter_completions()
   -- Old saves cannot reveal the minute when a finished objective was earned.
@@ -318,8 +323,10 @@ end
 -- Calculate the visible campaign once per redraw. The navigator used to
 -- walk all quests for every chapter and repeat most of these state checks.
 local quests_by_chapter={}
+local quest_order={}
 for _,chapter in ipairs(defs.chapters) do quests_by_chapter[chapter.id]={} end
-for _,quest in ipairs(defs.quests) do
+for index,quest in ipairs(defs.quests) do
+  quest_order[quest.id]=index
   local list=quests_by_chapter[quest.chapter]
   if list then list[#list+1]=quest end
 end
@@ -344,6 +351,12 @@ function M.view_status(force,context)
         end
       end
     end
+    -- Later source-mod catalogs should not split an act into repeated headers.
+    table.sort(result.quests,function(a,b)
+      local ao,bo=journal_acts.order(a),journal_acts.order(b)
+      if ao~=bo then return ao<bo end
+      return quest_order[a.id]<quest_order[b.id]
+    end)
     view.chapters[chapter.id]=result
   end
   return view
@@ -996,28 +1009,27 @@ local function render_details(parent,player,quest,p,context,size,view)
 end
 
 
--- Compact editorial act divider for Nauvis. The four acts are meaningful
--- navigation, not new research gates, progress storage or a separate UI.
-local function nauvis_phase(parent,phase,theme,width,force)
-  if not phase then return end
-  -- These are editorial acts of the Calidus chapter, not research gates.
-  -- Give each a real inset separator so the mission list never reads as
-  -- one undifferentiated column; it scrolls with the existing navigator.
-  local divider=parent.add{type="frame",direction="vertical",
+-- One shared section renderer for every chapter, including Calidus.
+local function chapter_act(parent,act,theme,width,force)
+  if not act then return end
+  local divider=parent.add{type="frame",name="razi_journal_act_"..
+    act.chapter.."_"..act.id,direction="vertical",
     style="razi_journal_phase_divider"}
   divider.style.width=width
   divider.style.padding=7
   accent_rule(divider,theme,math.min(76,width-22),2)
-  local name=label(divider,{"journal-nauvis-phase."..phase})
+  local name=label(divider,{"",string.format("%02d",act.order),
+    " / ",journal_acts.caption(act)})
   name.style.font="default-bold"
   name.style.font_color=theme.soft
   name.style.single_line=false
   name.style.maximal_width=math.max(100,width-22)
-  local stamped=completion_caption(chapter_timing.get(force,"phases",phase),"phase")
-  if stamped then
-    local stamp=label(divider,stamped)
-    stamp.style.font_color=COLOR.quiet
-  end
+  local stamped=completion_caption(
+    chapter_timing.get(force,"phases",act.key),"phase")
+  local stamp=divider.add{type="label",name="razi_journal_act_stamp",
+    caption=stamped or ""}
+  stamp.visible=stamped~=nil
+  stamp.style.font_color=COLOR.quiet
 end
 
 -- A source-backed frontispiece for each chapter. It is a *view* of the
@@ -1107,15 +1119,15 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   -- A real chapter navigation log; each entry jumps to its existing
   -- quest dossier, with colours derived from actual force research.
   local shown=0
-  local last_phase=nil
+  local last_act=nil
   for _,quest in ipairs(chapter.quests) do
     if shown>=8 then break end
     shown=shown+1
-    if p.chapter=="calidus" and quest.phase
-      and quest.phase~=last_phase then
-      nauvis_phase(body,quest.phase,theme,text_width,player.force)
+    local act=journal_acts.for_quest(quest)
+    if act and act.key~=last_act then
+      chapter_act(body,act,theme,text_width,player.force)
     end
-    last_phase=quest.phase
+    last_act=act and act.key
     local state=view.states[quest.id]
     local row=body.add{type="flow",direction="horizontal"}
     row.style.horizontal_spacing=9
@@ -1302,13 +1314,13 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           tooltip=L("chapter-cover-tooltip"),
           tags={razi_journal_action="chapter-dossier",id=chapter.id}}
         open_cover.style.font_color=theme.soft
-        local last_phase=nil
+        local last_act=nil
         for _,quest in ipairs(available) do
-          if chapter.id=="calidus" and quest.phase
-            and quest.phase~=last_phase then
-            nauvis_phase(entries,quest.phase,theme,inner-34,player.force)
+          local act=journal_acts.for_quest(quest)
+          if act and act.key~=last_act then
+            chapter_act(entries,act,theme,inner-34,player.force)
           end
-          last_phase=quest.phase
+          last_act=act and act.key
           local state=view.states[quest.id]
           local milestone_time=completion_caption(
             chapter_timing.get(player.force,"milestones",quest.id),"milestone")
@@ -1974,6 +1986,7 @@ local function update_reader(player,preserve_reader)
       local count=count_holder and count_holder["razi_journal_chapter_count"]
       local heading=head and head["razi_journal_chapter_title"]
       local shown=0
+      local matching_acts={}
       for _,quest in ipairs(data.quests) do
         local row=entries and entries["razi_journal_item_"..quest.id]
         if row then
@@ -1981,7 +1994,11 @@ local function update_reader(player,preserve_reader)
           local matching=state_matches_filter(state,p.filter)
             and matches_query(quest,p.query)
           row.visible=matching
-          if matching then shown=shown+1 end
+          if matching then
+            shown=shown+1
+            local act=journal_acts.for_quest(quest)
+            if act then matching_acts[act.key]=true end
+          end
           local choice=row["razi_journal_item_choice"]
           local marker=row["razi_journal_item_control"]
           local chosen=p.selected==quest.id and not p.chapter_cover
@@ -2009,6 +2026,23 @@ local function update_reader(player,preserve_reader)
         end
       end
       card.visible=shown>0
+      if entries then
+        for _,act in ipairs(journal_acts.chapters[ch.id] or {}) do
+          local divider=entries["razi_journal_act_"..ch.id.."_"..act.id]
+          if divider then
+            divider.visible=matching_acts[act.key]==true
+            local stamp=divider["razi_journal_act_stamp"]
+            if stamp then
+              local caption=completion_caption(
+                chapter_timing.get(player.force,"phases",act.key),"phase")
+              stamp.caption=caption or ""
+              stamp.visible=caption~=nil
+            end
+          end
+        end
+        local extra=entries["razi_journal_act_"..ch.id.."_additional"]
+        if extra then extra.visible=matching_acts[ch.id..":additional"]==true end
+      end
       local expanded=shown>0 and (p.chapter==ch.id or p.query~="")
       if entries then entries.visible=expanded end
       if toggle then toggle.caption=expanded and "▾" or "▸" end
