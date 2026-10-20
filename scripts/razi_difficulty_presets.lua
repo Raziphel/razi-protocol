@@ -30,6 +30,12 @@ M.baseline={
  ["razi-rocket-launch-cost"]="normal",
  ["razi-factory-throughput"]="normal",
  ["razi-fortification-durability"]="normal",
+ ["razi-habitat-armoured-biters"]="curated",
+ ["razi-habitat-cold-biters"]="curated",
+ ["razi-habitat-explosive-biters"]="curated",
+ ["razi-habitat-toxic-biters"]="curated",
+ ["razi-habitat-arachnids"]="curated",
+ ["razi-habitat-electric-enemies"]="curated",
  -- Additional gameplay changes resolve the session to Custom but are not
  -- blindly overwritten by presets (structural / compatibility switches).
  ["razi-enable-enemy-routing"]=true,
@@ -57,7 +63,8 @@ M.managed={
  "razi-resource-frequency","razi-resource-patch-size",
  "razi-resource-richness","razi-science-demand",
  "razi-evolution-speed","razi-rocket-launch-cost",
- "razi-factory-throughput","razi-fortification-durability"
+ "razi-factory-throughput","razi-fortification-durability",
+ "razi-habitat-armoured-biters","razi-habitat-cold-biters","razi-habitat-explosive-biters","razi-habitat-toxic-biters","razi-habitat-arachnids","razi-habitat-electric-enemies"
 }
 M.presets={
  easy={
@@ -83,7 +90,13 @@ M.presets={
   ["razi-evolution-speed"]="slow",
   ["razi-rocket-launch-cost"]="economical",
   ["razi-factory-throughput"]="boosted",
-  ["razi-fortification-durability"]="reinforced"
+  ["razi-fortification-durability"]="reinforced",
+  ["razi-habitat-armoured-biters"]="limited",
+  ["razi-habitat-cold-biters"]="limited",
+  ["razi-habitat-explosive-biters"]="limited",
+  ["razi-habitat-toxic-biters"]="limited",
+  ["razi-habitat-arachnids"]="limited",
+  ["razi-habitat-electric-enemies"]="limited"
  },
  normal={
   ["razi-asteroid-difficulty-scale"]="balanced",
@@ -108,7 +121,13 @@ M.presets={
   ["razi-evolution-speed"]="normal",
   ["razi-rocket-launch-cost"]="normal",
   ["razi-factory-throughput"]="normal",
-  ["razi-fortification-durability"]="normal"
+  ["razi-fortification-durability"]="normal",
+  ["razi-habitat-armoured-biters"]="curated",
+  ["razi-habitat-cold-biters"]="curated",
+  ["razi-habitat-explosive-biters"]="curated",
+  ["razi-habitat-toxic-biters"]="curated",
+  ["razi-habitat-arachnids"]="curated",
+  ["razi-habitat-electric-enemies"]="curated"
  },
  hard={
   ["razi-asteroid-difficulty-scale"]="challenging",
@@ -133,7 +152,13 @@ M.presets={
   ["razi-evolution-speed"]="accelerated",
   ["razi-rocket-launch-cost"]="costly",
   ["razi-factory-throughput"]="constrained",
-  ["razi-fortification-durability"]="fragile"
+  ["razi-fortification-durability"]="fragile",
+  ["razi-habitat-armoured-biters"]="expanded",
+  ["razi-habitat-cold-biters"]="expanded",
+  ["razi-habitat-explosive-biters"]="expanded",
+  ["razi-habitat-toxic-biters"]="expanded",
+  ["razi-habitat-arachnids"]="expanded",
+  ["razi-habitat-electric-enemies"]="expanded"
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -159,7 +184,13 @@ M.presets={
   ["razi-evolution-speed"]="runaway",
   ["razi-rocket-launch-cost"]="punishing",
   ["razi-factory-throughput"]="strained",
-  ["razi-fortification-durability"]="brittle"
+  ["razi-fortification-durability"]="brittle",
+  ["razi-habitat-armoured-biters"]="all",
+  ["razi-habitat-cold-biters"]="all",
+  ["razi-habitat-explosive-biters"]="all",
+  ["razi-habitat-toxic-biters"]="all",
+  ["razi-habitat-arachnids"]="all",
+  ["razi-habitat-electric-enemies"]="all"
  }
 }
 local legacy={relaxed="easy",standard="normal",extreme="nightmare"}

@@ -6,20 +6,36 @@ local M={}
 local router=require("prototypes.compat.enemy_autoplace")
 local by_theme={
  {mod={"ArmouredBiters21Compat","ArmouredBiters"},
+  setting="razi-habitat-armoured-biters",
+  limited={"hyarion"},
+  curated={"hyarion","castra","athos"},
+  expanded={"hyarion","castra","athos","crucible","ferrum"},
   planets={"hyarion","crucible","castra","athos","ferrum","obsidiax","nexus"},
   names={"armoured-biter-spawner"},
   habitat={"dirt","rock","sand","stone","soil","crystal","ash","volcan","slag"}},
  {mod={"Cold_biters"},
+  setting="razi-habitat-cold-biters",
+  limited={"aquilo"},
+  curated={"aquilo","frozeta","shchierbin"},
+  expanded={"aquilo","frozeta","shchierbin","vesta","muria"},
   planets={"aquilo","frozeta","shchierbin","vesta","muria","bm-balack","nexus"},
   names={"cb-cold-spawner","small-cold-worm-turret",
     "medium-cold-worm-turret","big-cold-worm-turret"},
   habitat={"ice","snow","frost","crystal","cold","dust"}},
  {mod={"Explosive_biters"},
+  setting="razi-habitat-explosive-biters",
+  limited={"moshine"},
+  curated={"moshine","cubium"},
+  expanded={"moshine","cubium","corrundum","crucible"},
   planets={"moshine","cubium","corrundum","crucible","obsidiax","nexus"},
   names={"explosive-biter-spawner","small-explosive-worm-turret",
     "medium-explosive-worm-turret","big-explosive-worm-turret"},
   habitat={"ash","volcan","crack","dirt","stone","rock","sand","dust","slag"}},
  {mod={"Toxic_biters"},
+  setting="razi-habitat-toxic-biters",
+  limited={"cubium"},
+  curated={"cubium","vesta","paracelsin","gleba"},
+  expanded={"cubium","vesta","paracelsin","gleba","rabbasca","foliax","crucible","velora"},
   planets={"cubium","vesta","paracelsin","rabbasca","foliax",
     "gleba","velora","alchemy-planet","crucible","nexus"},
   names={"toxic-biter-spawner","small-toxic-worm-turret",
@@ -27,10 +43,18 @@ local by_theme={
   habitat={"soil","mud","swamp","grass","dirt","rock","fung",
     "forest","ash","volcan","sand","dust","crust"}},
  {mod={"Arachnids_enemy"},
+  setting="razi-habitat-arachnids",
+  limited={"arig"},
+  curated={"arig","castra","athos"},
+  expanded={"arig","castra","athos","crucible","panglia"},
   planets={"arig","crucible","castra","athos","panglia","tenebris","nexus"},
   names={"arachnid-spawner-unitspawner"},
   habitat={"sand","dirt","soil","grass","desert","rock","ash","stone"}},
  {mod={"Electric_flying_enemies"},
+  setting="razi-habitat-electric-enemies",
+  limited={"fulgora"},
+  curated={"fulgora","ribbonia","corrundum"},
+  expanded={"fulgora","ribbonia","corrundum","cerys","ferrum"},
   planets={"corrundum","ribbonia","fulgora","ferrum","cerys",
     "alchemy-planet","nexus"},
   names={"flying-electric-unit-spawner","walker-electric-unit-spawner",
@@ -41,6 +65,19 @@ local by_theme={
     "rock","dust","dirt","sand","soil","stone"}}
 }
 M.by_theme=by_theme
+-- RP3 sets only *extra* nests. Native source creatures are never removed.
+function M.selected_planets(group)
+ local level=require("scripts.razi_difficulty_presets").effective(
+   group.setting,"curated")
+ if level=="off" then return {} end
+ local roster=level=="all" and group.planets
+   or group[level] or group.curated
+ local selected={}
+ for _,name in ipairs(roster) do selected[name]=true end
+ -- Nexus is always the all-species endgame on enabled tiers.
+ selected.nexus=true
+ return selected
+end
 local function has_mod(names)
  for _,name in ipairs(names) do if mods and mods[name] then return true end end
  return false
@@ -240,7 +277,9 @@ function M.data_final_fixes()
  local installed=0
  for family,group in ipairs(by_theme) do
    if has_mod(group.mod) then
+     local active=M.selected_planets(group)
      for world,planet in ipairs(group.planets) do
+       if active[planet] then
        for index,id in ipairs(group.names) do
          local is_worm=id:find("worm",1,true)~=nil
          local chance=is_worm and .034 or .085
@@ -254,6 +293,7 @@ function M.data_final_fixes()
            is_worm and "turret" or "unit-spawner",
            group.habitat,110+family*130+world*13+index,
            chance) then installed=installed+1 end
+       end
        end
      end
    end
