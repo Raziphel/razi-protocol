@@ -683,6 +683,13 @@ local function render_details(parent,player,quest,p,context,size,view)
   local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-68)
   hero_title.style.font="heading-2"
   hero_title.style.font_color=COLOR.ink
+  local milestone_time=completion_caption(
+    chapter_timing.get(player.force,"milestones",quest.id),"milestone")
+  if status=="complete" and milestone_time then
+    local stamp=wrap(hero_text,milestone_time,inner-68)
+    stamp.style.font_color=COLOR.green
+    stamp.tooltip=L("milestone-time-explanation")
+  end
   if not size.compact then
     local mood=wrap(hero_text,{"journal-mood."..quest.chapter},inner-68)
     mood.style.font_color=COLOR.muted
@@ -1303,6 +1310,11 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           end
           last_phase=quest.phase
           local state=view.states[quest.id]
+          local milestone_time=completion_caption(
+            chapter_timing.get(player.force,"milestones",quest.id),"milestone")
+          local milestone_tooltip=milestone_time
+            and {"",{"journal-title."..quest.id},"\n",milestone_time}
+            or {"journal-title."..quest.id}
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
           local chosen=quest.id==p.selected and not p.chapter_cover
@@ -1325,7 +1337,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             caption=state=="complete" and "✓"
               or state=="active" and "●" or "○",
             tags={razi_journal_action="select",id=quest.id},
-            tooltip={"journal-title."..quest.id}}
+            tooltip=milestone_tooltip}
           control.style.width=21
           control.style.height=21
           local color=state=="complete" and {r=.48,g=.85,b=.67}
@@ -1335,7 +1347,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           local choice=item.add{type="label",name="razi_journal_item_choice",style="clickable_label",
             caption={"journal-title."..quest.id},
             tags={razi_journal_action="select",id=quest.id},
-            tooltip=L("select-objective")}
+            tooltip=milestone_tooltip}
           choice.style.single_line=false
           choice.style.maximal_width=inner-108
           choice.style.font_color=chosen and COLOR.ink
@@ -1973,6 +1985,13 @@ local function update_reader(player,preserve_reader)
           local choice=row["razi_journal_item_choice"]
           local marker=row["razi_journal_item_control"]
           local chosen=p.selected==quest.id and not p.chapter_cover
+          local milestone_time=completion_caption(
+            chapter_timing.get(player.force,"milestones",quest.id),"milestone")
+          local milestone_tooltip=milestone_time
+            and {"",{"journal-title."..quest.id},"\n",milestone_time}
+            or {"journal-title."..quest.id}
+          if choice then choice.tooltip=milestone_tooltip end
+          if marker then marker.tooltip=milestone_tooltip end
           local selection=row["razi_journal_item_rule"]
           if selection then selection.visible=chosen end
           if choice then

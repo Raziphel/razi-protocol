@@ -1,5 +1,5 @@
--- Immutable first-clear times for each force's expedition chapters and
--- four Calidus acts. A false timestamp means cleared on a legacy save.
+-- Immutable first-clear times per force for expedition milestones, chapters
+-- and Calidus acts. A false timestamp means cleared on a legacy save.
 local M={}
 local KEY="razi_chapter_completion_times"
 
@@ -12,7 +12,7 @@ local function records(force,create)
   if not (all and force and force.index) then return nil end
   local record=all[force.index]
   if not record and create then
-    record={chapters={},phases={}}
+    record={chapters={},phases={},milestones={}}
     all[force.index]=record
   end
   return record
@@ -24,7 +24,7 @@ function M.get(force,kind,id)
 end
 
 function M.mark(force,kind,id,tick,historical)
-  if kind~="chapters" and kind~="phases" then return false end
+  if kind~="chapters" and kind~="phases" and kind~="milestones" then return false end
   local row=records(force,true)
   if not row then return false end
   row[kind]=row[kind] or {}
@@ -44,24 +44,31 @@ end
 -- counted; optional quests do not prevent a story chapter's first clear.
 function M.observe(force,quests,available,complete,historical,tick)
   local chapters,phases={},{}
+  local changed=false
   for _,quest in ipairs(quests) do
-    if not quest.optional and available(quest) then
-      local chapter=chapters[quest.chapter] or {total=0,done=0}
-      chapters[quest.chapter]=chapter
-      chapter.total=chapter.total+1
-      local act
-      if quest.chapter=="calidus" and quest.phase then
-        act=phases[quest.phase] or {total=0,done=0}
-        phases[quest.phase]=act
-        act.total=act.total+1
+    if available(quest) then
+      local done=complete(quest)
+      -- Optional milestones are timed too, without blocking chapter clears.
+      if done and M.mark(force,"milestones",quest.id,tick,historical) then
+        changed=true
       end
-      if complete(quest) then
-        chapter.done=chapter.done+1
-        if act then act.done=act.done+1 end
+      if not quest.optional then
+        local chapter=chapters[quest.chapter] or {total=0,done=0}
+        chapters[quest.chapter]=chapter
+        chapter.total=chapter.total+1
+        local act
+        if quest.chapter=="calidus" and quest.phase then
+          act=phases[quest.phase] or {total=0,done=0}
+          phases[quest.phase]=act
+          act.total=act.total+1
+        end
+        if done then
+          chapter.done=chapter.done+1
+          if act then act.done=act.done+1 end
+        end
       end
     end
   end
-  local changed=false
   for _,kind in ipairs({"chapters","phases"}) do
     local buckets=kind=="chapters" and chapters or phases
     for id,state in pairs(buckets) do
@@ -90,8 +97,8 @@ function M.forces_merged(event)
     return
   end
   local from=all[source]
-  local into=all[target] or {chapters={},phases={}}
-  for _,kind in ipairs({"chapters","phases"}) do
+  local into=all[target] or {chapters={},phases={},milestones={}}
+  for _,kind in ipairs({"chapters","phases","milestones"}) do
     into[kind]=into[kind] or {}
     for id,tick in pairs(from[kind] or {}) do
       into[kind][id]=earliest(into[kind][id],tick)
