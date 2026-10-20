@@ -1,5 +1,8 @@
 -- Original compact top-left Expedition Journal button and hotkey.
 data:extend({
+ {type="sprite",name="razi-corporate-emblem",
+  filename="__razi-protocol__/graphics/ui/razi-corporate-emblem.png",
+  width=128,height=128,scale=0.5},
  {type="custom-input",name="razi-journal-toggle",
   key_sequence="CONTROL + SHIFT + J",consuming="none"},
  {type="sprite",name="razi-journal-book-icon",

@@ -1785,7 +1785,7 @@ local function draw(player,focus_search)
   head.style.horizontally_stretchable=true
   head.style.vertical_align="center"
   head.style.horizontal_spacing=8
-  icons.sprite(head,themes.icon(chapter_theme),"window_emblem")
+  icons.sprite(head,"razi-corporate-emblem","window_emblem")
   local heading=head.add{type="flow",direction="vertical"}
   heading.style.vertical_spacing=1
   local title=label(heading,L(size.compact and "window-compact" or "window"))

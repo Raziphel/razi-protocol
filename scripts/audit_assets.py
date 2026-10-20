@@ -30,6 +30,7 @@ MATCH_ONLY_GRAPHICS = {
 
 
 REQUIRED_DIMENSIONS = {
+    "graphics/ui/razi-corporate-emblem.png": (128, 128),
     "graphics/icons/CalidusStar.png": (1024, 1024),
     "graphics/icons/SolarisStar.png": (1024, 1024),
     "graphics/icons/NyxarisStar.png": (1024, 1024),
@@ -220,6 +221,18 @@ def audit_repository(root: Path) -> list[str]:
     for relative, expected in REQUIRED_DIMENSIONS.items():
         if relative not in seen:
             errors.append(f"unreferenced required asset: {relative}")
+
+    # The mod portal and README consume these directly, outside Lua prototypes.
+    for relative, expected in {
+        "thumbnail.png": (256, 256),
+        "graphics/branding/razi-protocol-lockup.png": (900, 300),
+    }.items():
+        try:
+            width, height, alpha = png_info(root / relative)
+            if (width, height) != expected or not alpha:
+                errors.append(f"invalid branding asset: {relative}")
+        except (OSError, ValueError) as exc:
+            errors.append(f"invalid branding asset: {relative}: {exc}")
 
     # Catch accidental return of retired graphical clutter. The PNG set is
     # explicit because starmap and icon names are constructed dynamically.

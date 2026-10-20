@@ -1,5 +1,7 @@
 # Razi Protocol
 
+![Razi Protocol corporate dragon emblem](graphics/branding/razi-protocol-lockup.png)
+
 **A curated seven-system Factorio 2.1 Space Age expedition.** Razi Protocol weaves source-owned planets and machines into a cohesive campaign: meaningful planetary research, challenging interstellar logistics, readable space routes, a unified Expedition Journal and a construction-driven deep-space finale.
 
 **Aquilo progression balance (3.0):** Aquilo keeps its cryogenic toolkit,
