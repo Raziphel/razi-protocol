@@ -121,6 +121,8 @@
     "! external-rocket-parts",
     "! Wood_Gasification_updated",
     "! factorioplus",
+    "Igrys >= 1.5.40",
+    "foliax >= 2.0.37",
     "+ planet-ferrum >= 0.1.4",
     "+ skewer_shattered_planet >= 1.0.42",
     "+ rabbasca-underground >= 0.10.3",

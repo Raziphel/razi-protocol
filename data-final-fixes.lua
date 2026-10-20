@@ -80,6 +80,11 @@ require("prototypes.system.bellicos").data_final_fixes()
 -- Expedition briefings are appended to the final set of planet and location descriptions.
 require("prototypes.system.planet_descriptions").data_final_fixes()
 
+-- K2SO material names and research data settle before the gates read the system cards.
+require("prototypes.compat.k2so_planet_integration").data_final_fixes()
+-- The integration renames recipe products; repoint the research triggers that still name the old ones.
+require("prototypes.compat.renamed_research_triggers").data_final_fixes()
+
 -- Set the campaign gates after the earlier compatibility passes: each system's discovery follows the
 -- previous tier and costs its cards.
 require("prototypes.technology.seven_system_gates").data_final_fixes()
