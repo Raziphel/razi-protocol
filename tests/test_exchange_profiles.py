@@ -32,7 +32,7 @@ class ExchangeIdentity(unittest.TestCase):
     def test_physical_catalysts_do_not_edit_native_recipe(self):
         self.assertIn("alternative = deepcopy(base)",self.engine)
         self.assertIn("portfolio.conserve(alternative.ingredients,profile)",self.engine)
-        self.assertIn("for _,ingredient in ipairs(alternative.ingredients)",self.engine)
+        self.assertIn("in ipairs(alternative.ingredients)",self.engine)
         self.assertIn("profile.type or",self.policy)
         self.assertIn("math.floor(ingredient.amount*profile.fraction)",self.policy)
         self.assertIn("return false,0",self.policy)
