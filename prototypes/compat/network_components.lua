@@ -43,11 +43,81 @@ local function unlock_index()
   for _,list in pairs(index) do table.sort(list) end
   return index
 end
+-- A source may have multiple unlock technologies. Pick the earliest
+-- legitimate one by native prerequisites, never the first alphabetical
+-- match (which can be downstream of Outer Frontier Mastery).
+local function depends_on(name,target)
+  local seen={}
+  local function visit(current)
+    if current==target then return true end
+    if seen[current] then return false end
+    seen[current]=true
+    local node=raw("technology",current)
+    for _,parent in ipairs(node and node.prerequisites or {}) do
+      if visit(parent) then return true end
+    end
+    return false
+  end
+  return visit(name)
+end
+local function ancestry_count(name)
+  local seen={}
+  local function visit(current)
+    local node=raw("technology",current)
+    for _,parent in ipairs(node and node.prerequisites or {}) do
+      if not seen[parent] then
+        seen[parent]=true
+        visit(parent)
+      end
+    end
+  end
+  visit(name)
+  local count=0
+  for _ in pairs(seen) do count=count+1 end
+  return count
+end
 local function source_unlock(recipe_name,index)
   local recipe=raw("recipe",recipe_name)
   if not recipe or recipe.hidden then return nil end
   if recipe.enabled~=false then return true end
-  return (index[recipe_name] or {})[1]
+  local candidates={}
+  for _,id in ipairs(index[recipe_name] or {}) do
+    local tech=raw("technology",id)
+    if tech and tech.enabled~=false and not tech.hidden then
+      candidates[#candidates+1]=id
+    end
+  end
+  table.sort(candidates,function(a,b)
+    local ab=depends_on(b,a)
+    local ba=depends_on(a,b)
+    if ab~=ba then return ab end
+    local ac,bc=ancestry_count(a),ancestry_count(b)
+    if ac~=bc then return ac<bc end
+    local at,bt=raw("technology",a),raw("technology",b)
+    local au=at.unit and at.unit.count or 0
+    local bu=bt.unit and bt.unit.count or 0
+    if au~=bu then return au<bu end
+    return a<b
+  end)
+  return candidates[1]
+end
+
+local research_tiers={
+  {"solaris-discovery",500},{"nyxaris-discovery",500},
+  {"vibrant-discovery",950},{"vespera-discovery",950},
+  {"beetlejuice-discovery",1450},{"umbra-discovery",1450},
+  {"razi-outer-frontier-mastery",1950}
+}
+local function research_count(base,parents)
+  local cost=base
+  for _,name in ipairs(parents) do
+    for _,tier in ipairs(research_tiers) do
+      if raw("technology",tier[1]) and depends_on(name,tier[1]) then
+        cost=math.max(cost,tier[2])
+      end
+    end
+  end
+  return cost
 end
 local function usable_supplier(source,index)
   if not item(source.product) then return nil end
@@ -270,7 +340,8 @@ local function register_part(part,index)
     localised_description={"technology-description."..part.name},
     prerequisites=prerequisites,
     effects={{type="unlock-recipe",recipe=part.name}},
-    unit={count=part.count,time=45,ingredients={}},
+    unit={count=research_count(part.count,prerequisites),
+      time=45,ingredients={}},
     order="f[razi-industry]-"..part.name
   }
   for _,pack in ipairs(science) do
