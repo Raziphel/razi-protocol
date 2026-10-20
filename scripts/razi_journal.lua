@@ -942,13 +942,43 @@ local function render_details(parent,player,quest,p,context,size,view)
     section(prose,"industrial-brief-heading",
       {"razi-industries-brief."..brief},text_width,theme)
   end
+  -- Field assignments are advisory, not research, physical exploration or
+  -- shipment completion. Follow-ups must be actual, spoiler-visible Codex IDs.
+  local charter=industrial_briefs.charter_for_quest(quest)
+  if charter then
+    local field=prose.add{type="flow",direction="vertical"}
+    field.style.width=text_width
+    field.style.vertical_spacing=5
+    subtitle(field,"field-assignment-heading",text_width-26,theme)
+    wrap(field,{"razi-planet-charter."..charter},text_width-26)
+    local handoffs=industrial_briefs.visible_related(quest,defs.by_id,
+      function(target)
+        return M.journal_visible(force,target,context)
+      end,2)
+    if #handoffs>0 then
+      local heading=wrap(field,L("field-assignment-followups"),
+        text_width-26,true)
+      heading.style.font_color=theme.soft
+      for _,target in ipairs(handoffs) do
+        local state=M.state(force,target,context)
+        local next_link=field.add{type="label",style="clickable_label",
+          caption={"",{"journal-title."..target.id},"  /  ",
+            L("next-step-"..state)},
+          tooltip=L("open-prerequisite"),
+          tags={razi_journal_action="guidance-select",id=target.id}}
+        next_link.style.single_line=false
+        next_link.style.maximal_width=text_width-26
+        next_link.style.font_color=state=="complete" and COLOR.green
+          or theme.soft
+      end
+    end
+    local advice=wrap(field,L("field-assignment-advisory"),text_width-26)
+    advice.style.font_color=COLOR.quiet
+  end
   -- Existing Vespera dossiers can discuss actually configured neighboring
   -- lanes. The shared snapshot hides undiscovered neighbors when spoiler
   -- protection is ON; no invented shipment or catapult-building state.
-  if quest.id=="muria" or quest.id=="rubia" or quest.id=="aquilo"
-    or quest.id=="vulcanus" or quest.id=="castra"
-    or quest.id=="gleba" or quest.id=="moshine"
-    or quest.id=="maraxsis" then
+  if charter then
     local network=catapults.snapshot(player.force)
     if network.installed and network.enabled then
       local local_lanes=catapults.for_world(network,quest.id)
