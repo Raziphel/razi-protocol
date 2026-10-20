@@ -59,5 +59,5 @@ for _,key in ipairs(difficulty.managed) do
   check(preset[key]~=nil,"Missing "..key.." in "..name)
  end
 end
-check(count>=12,"Difficulty Director needs substantial gameplay breadth")
+check(count==25,"All 25 managed gameplay levers must be mapped")
 print("Five modes, source monster activation, manual overrides and safety passed")

@@ -40,7 +40,8 @@ check(math.abs(adjusted.resource.size-.648)<.00001,
 check(math.abs(adjusted.resource.richness-.54)<.00001
  and math.abs(adjusted.oil-.54)<.00001,
  "Custom richness must also scale oil")
-check(adjusted.research==2 and adjusted.evolution.destroy_factor==.0034,
+check(adjusted.research==2
+ and math.abs(adjusted.evolution.destroy_factor-.0034)<.00000001,
  "Custom research/evolution must affect the engine profile")
 local silos={
  base={rocket_parts_required=50,rocket_parts_storage_cap=50},
