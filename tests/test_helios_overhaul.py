@@ -30,8 +30,10 @@ class HeliosTests(unittest.TestCase):
  def test_real_component_output_is_observable(self):
   src=read("scripts/galactic_dyson.lua")
   self.assertIn("force.get_item_production_statistics(surface)",src)
-  self.assertIn("stats.get_input_count(name)",src)
-  self.assertIn('"slp-ds-satellite","slp-ds-planet-satellite"',src)
+  self.assertIn("stats.get_output_count(name)",src)
+  self.assertNotIn("+(stats.get_input_count(name)",src)
+  self.assertIn('"slp-ds-satellite"',src)
+  self.assertIn('"slp-ds-planet-satellite"',src)
   self.assertIn("dyson-native-not-deployed",src)
   self.assertNotIn("script.on_nth_tick",src)
  def test_ui_is_research_based(self):

@@ -242,12 +242,18 @@ function M.ready(force,refresh)
  return M.status(force,refresh).complete
 end
 function M.forces_merged(event)
- local all=storage and storage.razi_helios_commissions
- if not all then return end
  local src,dst=event.source_index,event.destination_index
  if not (src and dst and src~=dst) then return end
  M.invalidate_grid({index=src})
  M.invalidate_grid({index=dst})
+ if storage and storage.razi_helios_production_cache then
+   -- Cosmetic totals are per-force; merged forces must not borrow an old
+   -- ten-second snapshot from a now-extinct or previously independent force.
+   storage.razi_helios_production_cache[src]=nil
+   storage.razi_helios_production_cache[dst]=nil
+ end
+ local all=storage and storage.razi_helios_commissions
+ if not all then return end
  local source=all[src]
  if not source then return end
  local dest=all[dst] or {outer=0,inner=0}

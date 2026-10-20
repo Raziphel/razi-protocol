@@ -178,8 +178,14 @@ function M.fortify_routes()
        touched=true
      end
      if profiles then
-       local profile=tier=="inner" and "belt_umbra_crossing"
-         or "outer_ring_crosslink"
+       -- Extended transit time already multiplies total combat exposure.
+       -- Keep big asteroid pressure but avoid extreme density spikes that
+       -- would crowd multiplayer UPS (especially after quality scaling).
+       local profile=tier=="inner"
+         and (danger=="extreme" and "belt_umbra_crossing"
+           or "belt_umbra_approach")
+         or (danger=="extreme" and "outer_ring_crosslink"
+           or "outer_crosslink")
        local previous=route.asteroid_spawn_definitions
        if not previous or #previous==0 then
          route.asteroid_spawn_definitions=profiles.create(profile)
@@ -198,8 +204,10 @@ function M.fortify_routes()
            end
          end
        end
+       -- Previously 1.85 / 1.55: excessive bursts when multiplied by
+       -- profile density and the long voyage. Use a bounded mid-route bump.
        profiles.apply_field(route,danger=="extreme"
-         and (tier=="inner" and 1.85 or 1.55) or 1.24)
+         and (tier=="inner" and 1.22 or 1.14) or 1.08)
        touched=true
      end
      if touched then changed=changed+1 end

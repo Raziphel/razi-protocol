@@ -36,7 +36,7 @@ class HeliosCommissionTests(unittest.TestCase):
     src("scripts/galactic_dyson.lua"))
  def test_optional_finale(self):
   control=src("scripts/razi_convergence.lua")
-  self.assertIn('and not helios_operations.ready(force)',control)
+  self.assertIn('and not helios_operations.ready(force,true)',control)
   self.assertIn('technologies["razi-helios-grid-commission"]',
     src("scripts/razi_helios_operations.lua"))
   self.assertIn('name="razi-helios-convergence-proof"',src("settings.lua"))
