@@ -10,6 +10,8 @@ class MapPresets(unittest.TestCase):
   self.assertIn("group.default.default=nil",source)
   self.assertIn("M.set_world_defaults(M.active_mode())",source)
   self.assertIn("if not competing then",source)
+  self.assertIn('and preset.default==true',source)
+  self.assertIn('local settings_map=(raw["map-settings"] or {})["map-settings"]',source)
   self.assertNotIn('group.default={',source)
  def test_selectable_profiles_cover_each_difficulty(self):
   s=read("prototypes/system/razi_map_preset.lua")

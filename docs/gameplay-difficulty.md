@@ -77,15 +77,19 @@ selectable. When Razi auto-selection is enabled the default prototype's
 underlying world values reflect the RP3 profile, so selecting vanilla
 Default does not guarantee pre-RP3 original baselines.
 
-### Original curated new game setup
+### Expected New Game behavior
 
-Under New Game, select **Razi Protocol · Curated Expedition** (Nauvis).
-It includes a 1.65× starting area, slightly richer early resource patches,
-restrained initial enemies and normal late-game enemy evolution/expansion.
-Factorio map-generation presets can coexist with Freeplay, and the map
-generator selection is independent of Razi's startup mod difficulty.
-The MapGenPreset `default=true` flag is mutually exclusive with custom
-preset properties. **A named preset cannot automatically replace the
-default Freeplay scenario and its settings in one safe prototype change.**
-A dedicated scenario could replace scenario control and starting items, but
-is a larger separate migration with multiplayer/startup ramifications.
+1. Set RP3 **Game Difficulty** in Mod Settings, then restart to apply.
+2. New Game initially shows **Razi Protocol · Recommended (Auto)**,
+   reflecting the active difficulty's *supported prototype defaults*.
+3. For the full curated map-generation sliders, including starting-area
+   radius and research-price multiplier, choose the corresponding **Razi
+   Protocol · Easy / Normal / Hard / Nightmare** entry from the dropdown.
+4. Or select **Razi Protocol · Custom** and edit all map settings manually.
+
+Selecting a map-generation preset does not change your mod difficulty
+setting. The auto-selected default and explicit profiles coexist with
+Freeplay. Factorio's 2.1 `default=true` restriction prevents the automatic
+entry from carrying a full custom `starting_area` and other mapgen
+overrides. This is an engine limitation, not a hidden post-start mutation.
+Existing worlds retain their already-generated chunks and settings.

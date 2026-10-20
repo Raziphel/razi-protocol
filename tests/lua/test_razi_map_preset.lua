@@ -80,4 +80,25 @@ custom.data_final_fixes()
 check(data.raw.planet.nauvis.map_gen_settings
  .autoplace_controls["enemy-base"].frequency==.85,
  "Custom without a Razi profile uses safe Normal worldgen defaults")
-print("RP3 default marker, all four difficulty profiles, Custom, safety checks passed")
+-- A different mod's own default must never be silently overwritten.
+local other=mock("hard",true)
+local group=data.raw["map-gen-presets"].default
+group.default.default=nil
+group["other-mod-default"]={default=true,order="a"}
+other.data_final_fixes()
+check(group["other-mod-default"].default==true
+   and not group["razi-protocol"],
+ "A competing mod's default must be preserved without duplicates")
+check(data.raw.planet.nauvis.map_gen_settings
+ .autoplace_controls["enemy-base"].frequency==1,
+ "Conflicting selection must not secretly rewrite the shared worldgen")
+-- Applying the final pass twice must not create a duplicate preset or
+-- turn the once-displaced vanilla default back on.
+local twice=mock("normal",true)
+twice.data_final_fixes()
+twice.data_final_fixes()
+check(data.raw["map-gen-presets"].default["razi-protocol"].default,
+ "A second pass unexpectedly cleared the auto-selected Razi marker")
+check(not data.raw["map-gen-presets"].default.default.default,
+ "A second pass unexpectedly selected the vanilla preset")
+print("RP3 default marker, five difficulties, mod conflicts and idempotence passed")
