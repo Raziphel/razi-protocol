@@ -90,11 +90,17 @@ not periodic scripted scans.
 | Resource richness | 155% | 120% | 75% | 60% |
 | Enemy nest frequency | 48% | 85% | 135% | 170% |
 | Enemy nest size | 72% | 100% | 118% | 128% |
-| Nauvis starting area | 255% | 165% | 115% | 90% |
+| Named-profile starting area | 255% | 165% | 115% | 90% |
 | Science cost | 100% | 100% | 125% | 175% |
 
 **Factorio 2.1 limitation:** A `default=true` map-gen preset must not
-contain any other fields except `order`. RP3 makes the selected difficulty
+contain any other fields except `order`. The default-marked profile
+cannot also set a custom starting-area radius: use the map generator's
+starting-area control for that specific option. The automatic profile
+still applies its underlying planet and global MapSettings defaults.
+Space Age's explicit map-gen preset sliders chiefly describe Nauvis;
+Razi's startup profile is the authoritative per-planet scaling.
+ RP3 makes the selected difficulty
 the default marker and places its actual prototype defaults into MapSettings
 and source planet map-gen controls. Other named profiles carry explicit,
 fully editable mapgen data. There is no post-start world mutation.

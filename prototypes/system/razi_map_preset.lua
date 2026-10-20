@@ -61,7 +61,7 @@ local function scaled(base,factor)
  -- Zero means deliberately absent: do not enable a forbidden resource
  -- on another planet or override a source-owned terrain restriction.
  if value<=0 then return 0 end
- return math.max(.1,math.min(6,value*factor))
+ return math.max(0,math.min(6,value*factor))
 end
 local function control_kind(id,proto)
  if not proto then return nil end

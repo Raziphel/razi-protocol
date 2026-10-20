@@ -35,7 +35,10 @@ class MapGenProfiles(unittest.TestCase):
    self.assertNotIn("razi-protocol=Razi Protocol",content)
    for label in ("easy","normal","hard","nightmare"):
     self.assertIn("razi-protocol-"+label+"=",content)
-   self.assertIn("Mod",content)
+   if lang=="en":
+    self.assertIn("Mod settings",content)
+   else:
+    self.assertIn("Настройки модов",content)
   english=read("locale/en/map_preset.cfg")
   self.assertIn("Before starting your new galaxy",english)
   self.assertIn("Restart Factorio",english)
