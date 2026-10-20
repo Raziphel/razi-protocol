@@ -49,6 +49,99 @@ function M.related(quest,by_id)
   end
   return result
 end
+
+-- B.1 planetary field charters are optional OPERATING ADVICE, not
+-- technologies, saved missions, shipment evidence or progression gates.
+-- Both the Journal and the recipe-backed Freight Desk share these keys.
+local charters={
+  muluna=true,
+  vulcanus=true,
+  castra=true,
+  arig=true,
+  hyarion=true,
+  tellus=true,
+  corrundum=true,
+  gleba=true,
+  moshine=true,
+  apia=true,
+  panglia=true,
+  fulgora=true,
+  cerys=true,
+  ribbonia=true,
+  paracelsin=true,
+  muria=true,
+  athos=true,
+  rubia=true,
+  aquilo=true,
+  nulla=true,
+  maraxsis=true,
+  cubium=true,
+  linox=true,
+  secretas=true,
+  frozeta=true,
+  tenebris=true,
+  crucible=true,
+  vesta=true,
+  abacayba=true,
+}
+-- These links point only to existing Codex IDs. They are filtered against
+-- actually installed and spoiler-visible milestones at render time.
+local charter_paths={
+  muluna={"space-science","solaris-gate"},
+  vulcanus={"castra","corrundum"},
+  castra={"arig","hyarion"},
+  arig={"hyarion","tellus"},
+  hyarion={"arig","tellus"},
+  tellus={"corrundum"},
+  corrundum={"vibrant-gate","vespera-gate"},
+  gleba={"moshine","apia"},
+  moshine={"panglia","gleba"},
+  apia={"panglia","vibrant-gate"},
+  panglia={"panglia-biooptic-trade","panglia-optical-return"},
+  fulgora={"cerys","paracelsin"},
+  cerys={"paracelsin"},
+  ribbonia={"asteroid-belt"},
+  paracelsin={"beetlejuice-gate","umbra-gate"},
+  muria={"athos","rubia"},
+  athos={"athos-particulate","frontier-recovery-charter"},
+  rubia={"aquilo","maraxsis"},
+  aquilo={"nulla","maraxsis"},
+  nulla={"nulla-robotic-science","frontier-recovery-charter"},
+  maraxsis={"seadragon","beetlejuice-gate"},
+  cubium={"linox","secretas"},
+  linox={"outer-mastery"},
+  secretas={"frozeta"},
+  frozeta={"outer-mastery"},
+  tenebris={"crucible","vesta"},
+  crucible={"vesta"},
+  vesta={"abacayba","outer-mastery"},
+  abacayba={"outer-mastery"},
+}
+function M.charter_for_quest(quest)
+  return quest and charters[quest.id] and quest.id or nil
+end
+function M.charter_for_site(site)
+  return type(site)=="string" and charters[site] and site or nil
+end
+function M.visible_related(quest,by_id,visible,limit)
+  local result={}
+  if not (quest and by_id and type(visible)=="function") then return result end
+  local max=math.max(0,math.min(3,math.floor(tonumber(limit) or 2)))
+  if max==0 then return result end
+  local seen={}
+  for _,id in ipairs(charter_paths[quest.id] or connections[quest.id] or {}) do
+    local target=by_id[id]
+    if target and target.id~=quest.id and not seen[id] and visible(target) then
+      seen[id]=true
+      result[#result+1]=target
+      if #result>=max then break end
+    end
+  end
+  return result
+end
+M.charters=charters
+M.charter_paths=charter_paths
+
 M.briefs=briefs
 M.connections=connections
 return M
