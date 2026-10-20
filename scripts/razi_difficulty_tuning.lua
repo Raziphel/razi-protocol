@@ -25,11 +25,12 @@ local colonies={
  rapid={settlers=1.15,cooldown=.83},
  invasive={settlers=1.22,cooldown=.70}
 }
+local spoilage={forgiving=1.4,normal=1,fast=.82,brutal=.65}
 local named={
- easy={"gentle","small","slow"},
- normal={"normal","normal","normal"},
- hard={"heavy","organized","rapid"},
- nightmare={"toxic","siege","invasive"}
+ easy={"gentle","small","slow","forgiving"},
+ normal={"normal","normal","normal","normal"},
+ hard={"heavy","organized","rapid","fast"},
+ nightmare={"toxic","siege","invasive","brutal"}
 }
 M.named=named
 local function rounded(n) return math.max(1,math.floor(n+.5)) end
@@ -46,6 +47,8 @@ function M.profile(mode,profiles,resolver)
    or pollution.normal
  spec.raid_tuning=raids[choose(2,"razi-raid-coordination")]
    or raids.normal
+ spec.spoil_time_modifier=spoilage[choose(4,"razi-spoilage-pressure")]
+   or spoilage.normal
  local colony=colonies[choose(3,"razi-colony-expansion")]
    or colonies.normal
  for _,field in ipairs({"settler_group_min_size",

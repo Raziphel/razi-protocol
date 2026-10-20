@@ -79,6 +79,10 @@ data:extend({
     setting_type="startup",default_value="normal",
     allowed_values={"slow","normal","rapid","invasive"},
     order="aa[worlds]-a6[colony-expansion]"},
+  {type="string-setting",name="razi-spoilage-pressure",
+    setting_type="startup",default_value="normal",
+    allowed_values={"forgiving","normal","fast","brutal"},
+    order="aa[worlds]-a7[spoilage]"},
   -- WORLDS & ENCOUNTERS
   startup_toggle("razi-enable-enemy-routing", "aa[worlds]-a[enemy-routing]"),
   -- Native ten-stage quality asteroid escalation. No separate quality mod.

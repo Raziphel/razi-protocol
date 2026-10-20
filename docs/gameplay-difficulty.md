@@ -14,7 +14,7 @@
   while the player is editing the Mod Settings UI. It will still show the
   previously chosen preset, but resolved gameplay uses the manual settings.
 
-The 16 directly managed levers cover asteroid quality/population, belt
+The 17 directly managed levers cover asteroid quality/population, belt
 threat/resource richness, HELIOS travel/progression/stationkeeping/coronal
 surges, enemy density, Nexus severity, Big-Monsters event activation, and
 Razi's optional planetary integration setting. Eleven additional material
@@ -136,3 +136,13 @@ on tuned difficulties. Normal preserves native source values. These settings
 do not install a new enemy AI tick loop. The active startup difficulty
 controls group organization because full map presets do not expose those
 engine settings individually.
+
+### Biological supply-line pressure (2.1.128)
+
+Easy extends spoil times 1.40×, Normal preserves 1×, Hard uses 0.82×,
+and Nightmare 0.65×. This uses the Factorio 2.1
+`map-settings.difficulty_settings.spoil_time_modifier`, retaining any
+source-mod baseline. The field is not valid in a MapGenPreset's own
+`difficulty_settings`, so the startup RP3 selection is authoritative.
+A separate Spoilage and perishability setting lets Custom players opt out.
+Check new maps carefully before affecting an established save.

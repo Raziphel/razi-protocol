@@ -21,6 +21,7 @@ M.baseline={
  ["razi-pollution-pressure"]="normal",
  ["razi-raid-coordination"]="normal",
  ["razi-colony-expansion"]="normal",
+ ["razi-spoilage-pressure"]="normal",
  -- Additional gameplay changes resolve the session to Custom but are not
  -- blindly overwritten by presets (structural / compatibility switches).
  ["razi-enable-enemy-routing"]=true,
@@ -44,7 +45,7 @@ M.managed={
  "razi-nexus-hostility","razi-big-monsters-events",
  "razi-planetary-interdependence",
  "razi-pollution-pressure","razi-raid-coordination",
- "razi-colony-expansion"
+ "razi-colony-expansion","razi-spoilage-pressure"
 }
 M.presets={
  easy={
@@ -61,7 +62,8 @@ M.presets={
   ["razi-planetary-interdependence"]="balanced",
   ["razi-pollution-pressure"]="gentle",
   ["razi-raid-coordination"]="small",
-  ["razi-colony-expansion"]="slow"
+  ["razi-colony-expansion"]="slow",
+  ["razi-spoilage-pressure"]="forgiving"
  },
  normal={
   ["razi-asteroid-difficulty-scale"]="balanced",
@@ -77,7 +79,8 @@ M.presets={
   ["razi-planetary-interdependence"]="balanced",
   ["razi-pollution-pressure"]="normal",
   ["razi-raid-coordination"]="normal",
-  ["razi-colony-expansion"]="normal"
+  ["razi-colony-expansion"]="normal",
+  ["razi-spoilage-pressure"]="normal"
  },
  hard={
   ["razi-asteroid-difficulty-scale"]="challenging",
@@ -93,7 +96,8 @@ M.presets={
   ["razi-planetary-interdependence"]="deep",
   ["razi-pollution-pressure"]="heavy",
   ["razi-raid-coordination"]="organized",
-  ["razi-colony-expansion"]="rapid"
+  ["razi-colony-expansion"]="rapid",
+  ["razi-spoilage-pressure"]="fast"
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -110,7 +114,8 @@ M.presets={
   ["razi-planetary-interdependence"]="deep",
   ["razi-pollution-pressure"]="toxic",
   ["razi-raid-coordination"]="siege",
-  ["razi-colony-expansion"]="invasive"
+  ["razi-colony-expansion"]="invasive",
+  ["razi-spoilage-pressure"]="brutal"
  }
 }
 local legacy={relaxed="easy",standard="normal",extreme="nightmare"}

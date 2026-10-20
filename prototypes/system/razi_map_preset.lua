@@ -215,6 +215,15 @@ function M.set_world_defaults(mode)
    local original=original_map_settings[source]
    if not original then original=deepcopy(source);original_map_settings[source]=original end
    local result=advanced(mode)
+   -- Factorio's DifficultySettings has a spoil-time modifier, but named
+   -- MapGenPresetDifficultySettings does not expose this field. Apply only
+   -- in the world defaults so existing source mod recipes remain intact.
+   if source.difficulty_settings then
+     local original_difficulty=original.difficulty_settings or {}
+     local baseline=original_difficulty.spoil_time_modifier or 1
+     source.difficulty_settings.spoil_time_modifier=
+       math.max(.01,math.min(100,baseline*spec.spoil_time_modifier))
+   end
    for _,field in ipairs({"enemy_evolution","enemy_expansion",
      "difficulty_settings"}) do
      if source[field] then
