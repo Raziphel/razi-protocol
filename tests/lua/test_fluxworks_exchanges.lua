@@ -71,6 +71,10 @@ for _,id in ipairs(ids) do
   local tech=assert(raw.technology["razi-fw-"..id.."-exchange"])
   local recipe=assert(raw.recipe["razi-fw-"..id.."-assembly"])
   assert(#tech.prerequisites==2 and #tech.unit.ingredients==2)
+  for _,pack in ipairs(tech.unit.ingredients) do
+    assert(not pack[1]:find("tech%-card"),
+      "FluxWorks exchange research must not demand old system tech cards")
+  end
   for _,parent in ipairs(tech.prerequisites) do
     assert(raw.technology[parent],"missing workshop parent "..parent)
   end
