@@ -26,6 +26,16 @@ local function safe_link(name,prereq)
   return true
 end
 
+-- upgraded-rocket-turrets 2.1.1 names its content upgraded-rocket-mk<n>
+-- (items, recipes) and upgraded-rocket-<n> (technologies): the word "turret"
+-- appears nowhere, so the generic match below never saw it.
+local function source_tier(value)
+  local tier=tonumber(value:match("^upgraded%-rocket%-mk(%d)$")
+    or value:match("^upgraded%-rocket%-(%d)$"))
+  if tier and tier>=1 and tier<=4 then return tier end
+  return nil
+end
+
 -- Identify only rocket-turret MK upgrades unlocked by the actual installed
 -- source's effects. Do not assume a guessed technology identifier.
 local function turret_mk(name,node)
@@ -35,6 +45,10 @@ local function turret_mk(name,node)
     if effect.type=="unlock-recipe" and effect.recipe then
       pieces[#pieces+1]=effect.recipe
     end
+  end
+  for _,value in ipairs(pieces) do
+    local exact=source_tier(value)
+    if exact then return exact end
   end
   for _,value in ipairs(pieces) do
     local normalized=value:lower():gsub("[^%a%d]","")
