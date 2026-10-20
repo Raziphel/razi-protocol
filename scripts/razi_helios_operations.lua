@@ -3,6 +3,7 @@
 -- No private Dyson globals, invented satellite counts, simulated megawatts
 -- or scheduled per-tick surface scans.
 local M={}
+local difficulty=require("scripts.razi_difficulty_presets")
 local requirements={expedition={outer=8,inner=12,grid=2},
   monumental={outer=20,inner=24,grid=4}}
 M.requirements=requirements
@@ -13,9 +14,7 @@ M.stages={
    location_tech="slp-solar-system-sun2",hold=7200}
 }
 local function mode()
- local s=settings and settings.startup
-   and settings.startup["razi-helios-commissioning"]
- return s and s.value or "expedition"
+ return difficulty.effective("razi-helios-commissioning","expedition")
 end
 local function enabled()
  return requirements[mode()]~=nil
@@ -96,9 +95,8 @@ local surge_periods={
  volatile={cycle=24000,active=4800}
 }
 function M.coronal_surge(tick)
- local s=settings and settings.startup
-   and settings.startup["razi-helios-coronal-surges"]
- local rule=surge_periods[s and s.value or "occasional"]
+ local rule=surge_periods[difficulty.effective(
+   "razi-helios-coronal-surges","occasional")]
  if not rule then return false,0,nil end
  tick=math.max(0,tick or 0)
  local start=tick-math.fmod(tick,rule.cycle)

@@ -12,6 +12,13 @@ local function startup_toggle(name, order)
 end
 
 data:extend({
+  -- Master preset for REAL gameplay values. Custom keeps every prior choice
+  -- exactly as saved. All modes leave accessibility, visuals, QoL,
+  -- performance, third-party settings and physical prototype existence alone.
+  {type="string-setting",name="razi-difficulty-preset",
+    setting_type="startup",default_value="custom",
+    allowed_values={"custom","relaxed","standard","hard","extreme"},
+    order="00[gameplay-difficulty]-a[preset]"},
   -- One shared save setting controls research spoiler fog and the Journal.
   -- Runtime-global allows multiplayer forces to agree on research visibility
   -- and can be toggled without restarting or changing prototype IDs.

@@ -42,9 +42,9 @@ function M.annotate(route)
   -- Only one difficulty exists: the campaign's ten-level quality/route
   -- ladder. Physical asteroid sizes are separate descriptive facts.
   -- Preserve source-provided tooltip fields, names, and descriptions.
-  local mode=settings and settings.startup
-    and settings.startup["razi-asteroid-difficulty-scale"]
-  local lo,hi=quality_levels.route_range(route,mode and mode.value)
+  local mode=require("scripts.razi_difficulty_presets")
+    .effective("razi-asteroid-difficulty-scale","balanced")
+  local lo,hi=quality_levels.route_range(route,mode)
   local level_text=lo==hi and localise("quality-stage",tostring(hi))
     or localise("quality-stages",tostring(lo),tostring(hi))
   local hex=quality_levels.route_color_richtext(hi)

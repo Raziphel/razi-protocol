@@ -2,12 +2,11 @@
 -- connectors remain source-owned; this module adds guarded research and parts.
 local M={}
 local dyson=require("prototypes.compat.calidus_dyson")
+local difficulty=require("scripts.razi_difficulty_presets")
 local function raw(kind,id) return (data.raw[kind] or {})[id] end
 local function item(id) return raw("item",id) or raw("tool",id) end
 local function choice(id,default)
- local s=settings and settings.startup and settings.startup[id]
- if s then return s.value end
- return default
+ return difficulty.effective(id,default)
 end
 local function copy(v)
  if type(v)~="table" then return v end

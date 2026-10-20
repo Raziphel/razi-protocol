@@ -3,6 +3,7 @@
 -- access to private third-party storage, and no scripted power generation.
 -- The K2 rebalance owns its Plasma tech-card conversion.
 local M={}
+local difficulty=require("scripts.razi_difficulty_presets")
 local stages={
  {id="planet-discovery-sunorbit",parents={
    "planet-discovery-vulcanus","planet-discovery-fulgora"}},
@@ -87,9 +88,7 @@ function M.data_final_fixes()
        M.safe_link(stage.id,parent)
      end
    end
-   local mode=settings and settings.startup
-     and settings.startup["razi-helios-progression"]
-   local value=mode and mode.value or "late"
+   local value=difficulty.effective("razi-helios-progression","late")
    if value~="legacy" then
      M.safe_link("planet-discovery-sunorbit","vibrant-discovery")
      M.safe_link("planet-discovery-sunorbit","vespera-discovery")
@@ -147,9 +146,7 @@ end
 -- Strengthen all reachable solar approaches, including source shortcuts.
 -- The original plasma encounters, satellites and repeaters remain owned by SLP.
 local function setting(name,default)
- local entry=settings and settings.startup and settings.startup[name]
- if entry then return entry.value end
- return default
+ return difficulty.effective(name,default)
 end
 function M.fortify_routes()
  if not (mods and mods["slp-dyson-sphere-reworked-fork"]) then return 0 end

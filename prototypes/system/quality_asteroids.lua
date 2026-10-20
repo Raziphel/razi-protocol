@@ -14,8 +14,7 @@ local function clone(x)
   return copy
 end
 local function settings_value(name,default)
-  local s=settings and settings.startup and settings.startup[name]
-  return s and s.value or default
+  return require("scripts.razi_difficulty_presets").effective(name,default)
 end
 local function is_enemy(def,entities)
   return type(def)=="table" and (def.type==nil or def.type=="entity")

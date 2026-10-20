@@ -3,15 +3,14 @@
 -- authoritative; no unverified calls into its private runtime state.
 local M={}
 local dyson=require("prototypes.compat.calidus_dyson")
+local difficulty=require("scripts.razi_difficulty_presets")
 local function raw(kind,id) return (data.raw[kind] or {})[id] end
 local function enabled(name)
  local t=raw("technology",name)
  return t and t.enabled~=false and t.hidden~=true
 end
 local function setting(name,default)
- local option=settings and settings.startup and settings.startup[name]
- if option then return option.value end
- return default
+ return difficulty.effective(name,default)
 end
 local function clone(value)
  if table.deepcopy then return table.deepcopy(value) end

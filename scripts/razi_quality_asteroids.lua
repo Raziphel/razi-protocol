@@ -10,9 +10,8 @@ local length=#PREFIX
 local active_mode
 local function mode()
   if not active_mode then
-    local s=settings and settings.startup
-      and settings.startup["razi-asteroid-difficulty-scale"]
-    active_mode=s and s.value or "balanced"
+    active_mode=require("scripts.razi_difficulty_presets")
+      .effective("razi-asteroid-difficulty-scale","balanced")
   end
   return active_mode
 end

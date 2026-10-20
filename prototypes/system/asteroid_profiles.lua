@@ -1,8 +1,8 @@
 -- Asteroid spawn profiles for Razi's routes and belt crossings.
 local M = {}
+local difficulty=require("scripts.razi_difficulty_presets")
 local function preference(name,default)
-  local item=settings and settings.startup and settings.startup[name]
-  return item and item.value or default
+  return difficulty.effective(name,default)
 end
 local function asteroid_factor()
   local name=preference("razi-asteroid-population","standard")
