@@ -5,6 +5,7 @@ local M={}
 local industry=require("scripts.razi_industry_portfolio")
 local routes=require("scripts.razi_catapult_network")
 local freight=require("scripts.razi_freight_orders")
+local field_charters=require("scripts.razi_planet_briefs")
 local L=function(key,...) return {"razi-ops."..key,...} end
 local GOLD={r=.82,g=.69,b=.48}
 local INK={r=.91,g=.87,b=.79}
@@ -231,6 +232,12 @@ function M.render(parent,player,p,width)
     tags={razi_ops_action="supply-recipe"}}
   select.style.minimal_width=math.max(175,math.min(width-80,420))
   wrap(editor,L("supply-factory-destination",name(current.site)),width-36)
+  -- The source recipe determines feasible freight. The charter adds
+  -- destination-specific context, never item counts or supplier promises.
+  local charter=field_charters.charter_for_site(current.site)
+  if charter then
+    wrap(editor,{"razi-planet-freight."..charter},width-36)
+  end
   local researched=current.technology and current.technology.researched
   local enabled=researched and current.recipe_enabled
   wrap(editor,L(not researched and "supply-research-locked"
