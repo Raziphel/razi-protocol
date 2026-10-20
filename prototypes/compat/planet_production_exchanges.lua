@@ -263,9 +263,16 @@ local function matches_surface(recipe, world)
   if not world then return false end
   local conditions = recipe.surface_conditions or {}
   if #conditions == 0 then return true end
-  if not world.surface_properties then return false end
   for _, condition in ipairs(conditions) do
-    local value = world.surface_properties[condition.property]
+    -- An omitted per-planet surface property uses the registered Factorio
+    -- surface property's default_value. Missing is NOT automatically zero
+    -- or a mismatch: e.g. Cerys ambient radiation on Aquilo cryo machines.
+    local properties=world.surface_properties or {}
+    local value=properties[condition.property]
+    if value==nil then
+      local property=raw("surface-property",condition.property)
+      value=property and property.default_value
+    end
     if type(value) ~= "number" then return false end
     if condition.min and value < condition.min then return false end
     if condition.max and value > condition.max then return false end
