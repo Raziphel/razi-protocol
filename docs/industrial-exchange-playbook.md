@@ -31,7 +31,7 @@ change between modes. No automatic recycling or productivity stacking.
 | Fulgora ← Gleba bioflux | Electronic components | Accelerated: bio-electrical deposition using Fulgoran holmium |
 | Aquilo ← Fulgora capacitors + Gleba carbon fibre | Energy-control units | Catalytic: fewer native electronic components rejected during cold assembly |
 | Tenebris ← Gleba bioflux | Biopolymer plastics | Bulk: fungal/chitin polymer amplification without replacing local chitin |
-| Linox ← Vulcanus rare metals + Fulgora holmium | Rare-earth powder | Catalytic: lower sulphuric-acid consumption in native rare-earth refining |
+| Linox ← Panglia Optic Bond | Rare-earth powder | Accelerated: optical calibration improves native Linox mineral throughput |
 | Vesta ← Linox rare earths + Moshine optics | Supermagnets | Catalytic: rare-earth doping substitutes some native holmium |
 | Nauvis ← Vulcanus metals + Gleba bioflux + Moshine cable | Relay electronics | Accelerated: mature systems return useful control hardware to the original factory |
 | Paracelsin ← Moshine optical cable | Electric coils | Catalytic: less zinc-rivet winding needed, native nitric acid still necessary |
