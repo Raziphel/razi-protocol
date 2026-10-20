@@ -17,7 +17,20 @@ M.baseline={
  ["razi-enemy-pressure"]="normal",
  ["razi-nexus-hostility"]="normal",
  ["razi-big-monsters-events"]=false,
- ["razi-planetary-interdependence"]="balanced"
+ ["razi-planetary-interdependence"]="balanced",
+ -- Additional gameplay changes resolve the session to Custom but are not
+ -- blindly overwritten by presets (structural / compatibility switches).
+ ["razi-enable-enemy-routing"]=true,
+ ["razi-quality-asteroids"]=true,
+ ["razi-enable-k2so-production-exchanges"]=true,
+ ["razi-enable-modded-planet-exchanges"]=true,
+ ["razi-distributed-technology"]=true,
+ ["razi-stage-aquilo-breakthroughs"]=true,
+ ["razi-helios-construction"]="satellites",
+ ["razi-helios-convergence-proof"]=false,
+ ["razi-dyson-milestone-weave"]=true,
+ ["razi-belt-midsection-salvage"]=true,
+ ["razi-belt-edge-harvesting"]=true
 }
 M.managed={
  "razi-asteroid-difficulty-scale","razi-asteroid-population",
@@ -93,9 +106,11 @@ end
 function M.manual_overrides()
  local found={}
  local startup=settings and settings.startup
- for _,name in ipairs(M.managed) do
+ -- Watch *all* material gameplay toggles, not just the controls a named
+ -- mode safely overrides. Prototype-changing switches remain independent.
+ for name,default in pairs(M.baseline) do
   local choice=startup and startup[name]
-  if choice and choice.value~=M.baseline[name] then
+  if choice and choice.value~=default then
     found[#found+1]=name
   end
  end

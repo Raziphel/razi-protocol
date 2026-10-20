@@ -14,10 +14,13 @@
   while the player is editing the Mod Settings UI. It will still show the
   previously chosen preset, but resolved gameplay uses the manual settings.
 
-The 13 managed levers cover asteroid quality/population, belt threat/resource
-richness, HELIOS travel/progression/stationkeeping/coronal surges, enemy
-density, Nexus severity, Big-Monsters event activation, and Razi's optional
-planetary integration setting. Visual, accessibility and UPS safeguards remain
+The 13 directly managed levers cover asteroid quality/population, belt
+threat/resource richness, HELIOS travel/progression/stationkeeping/coronal
+surges, enemy density, Nexus severity, Big-Monsters event activation, and
+Razi's optional planetary integration setting. Eleven additional material
+gameplay switches are *watched* for Custom detection but left independent
+because silently toggling structural technology and recipe integrations
+would be dangerous for existing campaigns. Visual, accessibility and UPS safeguards remain
 independent; Nightmare caps asteroid density to **Dense**, never **Swarm**.
 
 ### Big-Monsters

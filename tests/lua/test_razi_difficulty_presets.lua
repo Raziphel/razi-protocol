@@ -35,6 +35,12 @@ check(difficulty.active()=="custom","Manual gameplay change must resolve Custom"
 check(difficulty.effective("razi-enemy-pressure")=="light",
  "Manual value must override a previously selected preset")
 check(#difficulty.manual_overrides()==1,"Manual change detection inflated")
+select("hard")
+settings.startup["razi-helios-convergence-proof"].value=true
+check(difficulty.active()=="custom",
+ "Manual structural finale option must resolve Custom without erasing it")
+check(difficulty.effective("razi-helios-convergence-proof")==true,
+ "Manual Convergence requirement must survive Custom")
 select("normal")
 settings.startup["razi-big-monsters-events"].value=true
 check(difficulty.active()=="custom","Manual Big-Monsters choice must be Custom")

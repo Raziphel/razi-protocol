@@ -3,9 +3,8 @@
 -- existing balanced behavior rather than silently disabling progression.
 local M = {}
 function M.current()
-  local setting = settings and settings.startup
-    and settings.startup["razi-planetary-interdependence"]
-  local value = setting and setting.value or "balanced"
+  local value=require("scripts.razi_difficulty_presets")
+    .effective("razi-planetary-interdependence","balanced")
   if value == "off" or value == "deep" then return value end
   return "balanced"
 end

@@ -11,7 +11,9 @@ class DifficultyDirector(unittest.TestCase):
  def test_manual_override_detection(self):
   d=read("scripts/razi_difficulty_presets.lua")
   self.assertIn("function M.manual_overrides()",d)
-  self.assertIn("choice.value~=M.baseline[name]",d)
+  self.assertIn("choice.value~=default",d)
+  self.assertIn("for name,default in pairs(M.baseline)",d)
+  self.assertIn('["razi-enable-modded-planet-exchanges"]=true',d)
   self.assertIn('if #M.manual_overrides()>0 then return "custom" end',d)
   for name in ("easy","normal","hard","nightmare"):
    self.assertIn(name+"={",d)
@@ -25,6 +27,8 @@ class DifficultyDirector(unittest.TestCase):
  def test_source_integrations(self):
   d=read("scripts/razi_difficulty_presets.lua")
   self.assertIn('["razi-planetary-interdependence"]="deep"',d)
+  self.assertIn('razi_difficulty_presets',
+    read("prototypes/compat/interdependence_mode.lua"))
   self.assertIn('["razi-big-monsters-events"]=true',d)
  def test_translations(self):
   for lang in ("en","ru"):
