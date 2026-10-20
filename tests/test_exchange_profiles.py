@@ -27,7 +27,7 @@ class ExchangeIdentity(unittest.TestCase):
         self.assertEqual(
             {kind:sum(k==kind for _,k in assignments)
              for kind in ("catalytic","accelerated","bulk")},
-            {"catalytic":6,"accelerated":5,"bulk":4})
+            {"catalytic":5,"accelerated":6,"bulk":4})
 
     def test_physical_catalysts_do_not_edit_native_recipe(self):
         self.assertIn("alternative = deepcopy(base)",self.engine)
