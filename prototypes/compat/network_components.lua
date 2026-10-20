@@ -110,7 +110,19 @@ local research_tiers={
 }
 local function research_count(base,parents)
   local cost=base
+  local scanned={}
+  local function science_ancestors(name)
+    if scanned[name] then return end
+    scanned[name]=true
+    local node=raw("technology",name)
+    if not node then return end
+    cost=math.max(cost,portfolio.science_floor(node))
+    for _,parent in ipairs(node.prerequisites or {}) do
+      science_ancestors(parent)
+    end
+  end
   for _,name in ipairs(parents) do
+    science_ancestors(name)
     for _,tier in ipairs(research_tiers) do
       if raw("technology",tier[1]) and depends_on(name,tier[1]) then
         cost=math.max(cost,tier[2])
