@@ -118,6 +118,9 @@ for _,spec in ipairs(specs) do
    "Auto-selected evolution wasn't applied")
  check(global.difficulty_settings.technology_price_multiplier==research,
    "Science cost was not synced with map profile")
+ local spoil={easy=1.4,normal=1,hard=.82,nightmare=.65}
+ check(global.difficulty_settings.spoil_time_modifier==spoil[mode],
+   "Biological spoilage time is not difficulty adjusted")
  check(global.pollution.ageing==mod.profiles[mode].pollution_ageing,
    "Pollution absorption did not scale")
  check(global.asteroids.spawning_rate==mod.profiles[mode].asteroids,

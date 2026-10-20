@@ -18,9 +18,12 @@ local base={diffusion_ratio=.02,min_to_diffuse=15}
 local raids={max_unit_group_size=200,max_gathering_unit_groups=20,
  min_group_gathering_time=3000,max_group_gathering_time=18000}
 local previous_cooldown=math.huge
+local expected_spoil={easy=1.4,normal=1,hard=.82,nightmare=.65}
 for _,name in ipairs({"easy","normal","hard","nightmare"}) do
  local spec=tuning.profile(name,presets,resolver)
  local planet,groups={},{}
+ check(spec.spoil_time_modifier==expected_spoil[name],
+  "Native spoil-time modifier did not match "..name)
  tuning.pollution(planet,base,spec)
  tuning.unit_groups(groups,raids,spec)
  check(planet.diffusion_ratio>0 and planet.min_to_diffuse>0,
@@ -42,11 +45,13 @@ local custom={active=function()return "custom" end,
   if name=="razi-pollution-pressure" then return "toxic" end
   if name=="razi-raid-coordination" then return "siege" end
   if name=="razi-colony-expansion" then return "invasive" end
+  if name=="razi-spoilage-pressure" then return "brutal" end
   return default
  end}
 local overridden=tuning.profile("normal",presets,custom)
 check(overridden.pollution_tuning.diffusion==1.32
  and overridden.raid_tuning.size==1.27
+ and overridden.spoil_time_modifier==.65
  and overridden.expansion.min_expansion_cooldown<14400,
  "Manual Custom gameplay options were not applied")
 check(presets.normal.expansion.min_expansion_cooldown==14400,

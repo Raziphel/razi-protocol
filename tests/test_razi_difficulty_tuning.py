@@ -12,6 +12,9 @@ class NativeDifficulty(unittest.TestCase):
    self.assertIn('name="'+name+'"',read("settings.lua"))
   self.assertIn("function M.pollution(target,baseline,spec)",src)
   self.assertIn("function M.unit_groups(target,baseline,spec)",src)
+  self.assertIn('spec.spoil_time_modifier=spoilage[choose(4,"razi-spoilage-pressure")]',src)
+  self.assertIn("source.difficulty_settings.spoil_time_modifier=",
+                read("prototypes/system/razi_map_preset.lua"))
   self.assertNotIn("script.on_nth_tick",src)
  def test_real_mapgen_reads_native_tuning(self):
   code=read("prototypes/system/razi_map_preset.lua")
