@@ -105,6 +105,13 @@ for _,group in ipairs(eco.by_theme) do
    "Off must disable all Razi extra nests for "..group.setting)
  check(require("scripts.razi_difficulty_presets").active()=="custom",
    "Manual family edit must resolve Custom")
+ settings.startup["razi-difficulty-preset"].value="hard"
+ local other=eco.by_theme[group==eco.by_theme[1] and 2 or 1]
+ check(eco.habitat_level(other)=="expanded",
+   "Manual adjustment of one species must preserve other Hard habitats")
+ settings.startup[group.setting].value="curated"
+ check(eco.habitat_level(group)=="curated",
+   "Explicit Curated should override Hard only for this species")
  settings.startup[group.setting]=nil
 end
 settings.startup["razi-difficulty-preset"].value="nightmare"

@@ -66,9 +66,19 @@ local by_theme={
 }
 M.by_theme=by_theme
 -- RP3 sets only *extra* nests. Native source creatures are never removed.
+function M.habitat_level(group)
+ local difficulty=require("scripts.razi_difficulty_presets")
+ local startup=settings and settings.startup
+ local saved=startup and startup[group.setting]
+ local chosen=saved and saved.value or "auto"
+ -- Overrides are per family. Other Auto groups still follow selected
+ -- Hard/Nightmare even if a manual edit changes effective mode to Custom.
+ if chosen~="auto" then return chosen end
+ local preset=difficulty.presets[difficulty.selected()]
+ return preset and preset[group.setting] or "curated"
+end
 function M.selected_planets(group)
- local level=require("scripts.razi_difficulty_presets").effective(
-   group.setting,"curated")
+ local level=M.habitat_level(group)
  if level=="off" then return {} end
  local roster=level=="all" and group.planets
    or group[level] or group.curated

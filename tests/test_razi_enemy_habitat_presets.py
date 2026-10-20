@@ -13,9 +13,9 @@ class HabitatPresets(unittest.TestCase):
   for id in IDS:
    key="razi-habitat-"+id
    self.assertIn('name="'+key+'"',cfg)
-   self.assertIn('default_value="curated"',cfg)
-   self.assertIn('allowed_values={"off","limited","curated","expanded","all"}',cfg)
-   self.assertIn('["'+key+'"]="curated"',diff)
+   self.assertIn('default_value="auto"',cfg)
+   self.assertIn('allowed_values={"auto","off","limited","curated","expanded","all"}',cfg)
+   self.assertIn('["'+key+'"]="auto"',diff)
  def test_exact_mode_mapping(self):
   src=read("scripts/razi_difficulty_presets.lua")
   for mode,value in {"easy":"limited","normal":"curated",
@@ -28,6 +28,8 @@ class HabitatPresets(unittest.TestCase):
   self.assertIn("local active=M.selected_planets(group)",src)
   self.assertIn("if active[planet] then",src)
   self.assertIn('if level=="off" then return {} end',src)
+  self.assertIn('local preset=difficulty.presets[difficulty.selected()]',src)
+  self.assertIn('if chosen~="auto" then return chosen end',src)
   self.assertIn("selected.nexus=true",src)
   self.assertIn('if settings[name] then return false end',src)
   self.assertNotIn("script.on_nth_tick",src)
@@ -42,7 +44,7 @@ class HabitatPresets(unittest.TestCase):
   for lang in ("en","ru"):
    text=read(f"locale/{lang}/settings.cfg")
    for id in IDS:
-    for tail in ("","-off","-limited","-curated","-expanded","-all"):
+    for tail in ("","-auto","-off","-limited","-curated","-expanded","-all"):
      self.assertIn("razi-habitat-"+id+tail+"=",text)
  def test_nexus_and_optional_mods_remain_guarded(self):
   text=read("prototypes/compat/razi_enemy_ecology.lua")

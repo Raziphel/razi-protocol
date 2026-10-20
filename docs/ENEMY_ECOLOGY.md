@@ -102,3 +102,11 @@ spawn remains regardless of RP3 habitat selection.
 Each tier includes all destinations from the previous tier. Nexus is eligible
 for every family on every enabled tier. The setting controls only **RP3-added**
 planet-local nests; source-owned enemy placements remain untouched.
+
+### Recommended per-family default: Follow difficulty
+
+All six dropdowns now default to **Follow difficulty** (Auto), avoiding an
+apparently fixed Curated display even while Hard or Nightmare is selected.
+Manual tiers override **only that family** while the other Auto families
+continue following the selected master difficulty, even though the overall
+effective game difficulty displays Custom after an override.

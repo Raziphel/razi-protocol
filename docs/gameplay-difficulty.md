@@ -185,3 +185,8 @@ Curated, Expanded, and All. Easy = Limited, Normal = Curated, Hard = Expanded,
 Nightmare = All. **Nexus remains the all-family endgame** at every enabled
 level. All changes apply during startup and affect newly generated territory.
 See [ENEMY_ECOLOGY.md](ENEMY_ECOLOGY.md) for exact planetary coverage.
+
+Each enemy habitat setting defaults to **Follow difficulty**, so its visible
+value clearly delegates to the master difficulty. Manual habitat tiers affect
+only their own family; Auto families continue following the original selected
+Easy/Normal/Hard/Nightmare mode when the effective game setting is Custom.

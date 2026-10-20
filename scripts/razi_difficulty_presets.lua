@@ -30,12 +30,12 @@ M.baseline={
  ["razi-rocket-launch-cost"]="normal",
  ["razi-factory-throughput"]="normal",
  ["razi-fortification-durability"]="normal",
- ["razi-habitat-armoured-biters"]="curated",
- ["razi-habitat-cold-biters"]="curated",
- ["razi-habitat-explosive-biters"]="curated",
- ["razi-habitat-toxic-biters"]="curated",
- ["razi-habitat-arachnids"]="curated",
- ["razi-habitat-electric-enemies"]="curated",
+ ["razi-habitat-armoured-biters"]="auto",
+ ["razi-habitat-cold-biters"]="auto",
+ ["razi-habitat-explosive-biters"]="auto",
+ ["razi-habitat-toxic-biters"]="auto",
+ ["razi-habitat-arachnids"]="auto",
+ ["razi-habitat-electric-enemies"]="auto",
  -- Additional gameplay changes resolve the session to Custom but are not
  -- blindly overwritten by presets (structural / compatibility switches).
  ["razi-enable-enemy-routing"]=true,
