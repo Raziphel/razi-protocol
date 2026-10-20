@@ -151,6 +151,22 @@ function M.star_charter(id)
   return type(id)=="string" and stars[id] and id or nil
 end
 M.stars=stars
+-- Optional detours with REAL physical project evidence. These are links to
+-- existing source-backed projects, not another set of completion counters.
+local charter_projects={
+  muluna="voyage",
+  vulcanus="skybridge",castra="skybridge",arig="skybridge",
+  hyarion="skybridge",gleba="skybridge",moshine="skybridge",
+  muria="skybridge",rubia="skybridge",maraxsis="skybridge",
+  aquilo="skybridge",fulgora="beltbreaker",ribbonia="beltbreaker",
+  paracelsin="beltbreaker",tenebris="beltbreaker",crucible="beltbreaker",
+  vesta="array",linox="ark",secretas="ark",frozeta="ark",
+  abacayba="ark"
+}
+function M.project_for_quest(quest)
+  return quest and charter_projects[quest.id] or nil
+end
+M.charter_projects=charter_projects
 
 M.briefs=briefs
 M.connections=connections
