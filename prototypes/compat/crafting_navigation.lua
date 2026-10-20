@@ -4,7 +4,8 @@ local M = {}
 
 local function option(name, fallback)
   local entry = settings and settings.startup and settings.startup[name]
-  return entry and entry.value or fallback
+  if entry then return entry.value end
+  return fallback
 end
 
 local function subgroup(name, group, order)
