@@ -2,17 +2,16 @@
 
 Razi Protocol 3.0 integrates [Razi Rocket Reusability](https://mods.factorio.com/mod/razi-rocket-reusability) without duplicating its asteroid spawns, beacons or research. The dependency is mandatory for the curated campaign, and all salvage operations continue to be driven by the original mod.
 
-## Challenge presets
+## Challenge presets and actual Mod Settings
 
-The rocket mod's companion 1.1.6 source update reads the startup `razi-difficulty-preset` itself:
-- **Easy, Normal:** Side wrecks follow the ordinary runtime-global toggle (off by default).
-- **Hard, Nightmare:** Side wrecks are active regardless of that toggle. The runtime side-arrival **chance** is still adjustable (35% default).
-- **Custom:** The runtime-global toggle has full control.
-- **Standalone:** The rocket mod works with its own ordinary settings.
+The 1.1.7+ Rocket Reusability source mod contains a Lua bridge that reads `razi-difficulty-preset` and updates **its own** `razi-rocket-reusability-side-arrivals` Map setting once per second when necessary:
+- **Easy, Normal:** Restore the player's original preference after leaving Hard/Nightmare; otherwise leave the setting untouched.
+- **Hard, Nightmare:** Set the real Side-arriving wrecks checkbox On, even if a player manually unchecked it. The independent arrival chance remains adjustable.
+- **Custom or standalone:** Restore the earlier manual preference when leaving a forced difficulty.
 
-No cross-mod settings writes are used (Factorio forbids those). A side approach replaces a front approach for an existing eligible recovery roll; it does not spawn additional wrecks. The wreck cap, priority of powered beacons, 18x18 safety clearance and front-fallback all remain source-owned.
+These are real Map setting changes, performed only by the mod that OWNS the setting. Factorio does not allow Razi Protocol to write settings belonging to other mods. It does not alter source startup settings, recovery chance, active wreck cap, beacon priorities, or safe front-fallback.
 
-**Release order:** Razi Protocol accepts rocket mod 1.1.5+, but **automatic preset activation requires 1.1.6+ to be published and installed**. The public mod portal build does not change when GitHub alone is updated.
+**Versions:** Razi Protocol accepts Rocket Reusability 1.1.5+. Version 1.1.6 provides the effective gameplay fallback but cannot update the checkbox. The **1.1.7** source update implements real in-game setting synchronization; it must be published to and installed from the mod portal separately. The one-second runtime check occurs after entering a map, not in the main-menu settings screen.
 
 ## Expedition Journal
 
@@ -37,7 +36,7 @@ No planetary discovery, science gate, source recipe, Remnant Beacon or rocket si
 
 ## In-game verification checklist
 
-- Start Easy, Normal, Hard, Nightmare and Custom saves with rocket mod **1.1.6+**; verify flank arrivals occur only when enabled and at the configured chance.
+- Start Easy, Normal, Hard, Nightmare and Custom saves with rocket mod **1.1.7+**; after at least one second verify the actual side-arrivals Map checkbox and restoration of the previous manual value.
 - Change the side-arrival chance live; verify a zero chance yields front-only wrecks even on Hard/Nightmare.
 - Test long, broad and asymmetrical platforms. Side lanes should retry/fall back safely without additional wrecks.
 - Verify actual K2SO and Muluna `rocket-chunk-processing` outputs and the three bulk recipes with their loaded mod settings.
