@@ -8,7 +8,8 @@ end
 
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
--- removes what Razi Protocol relies on. Each is pinned and hidden; a missing mod or setting is skipped.
+-- removes what Razi Protocol relies on, and of Rigor Module (which Planet Crucible requires) whose default would push
+-- the recipe count past the engine limit. Each is pinned and hidden; a missing mod or setting is skipped.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -47,6 +48,15 @@ local pinned_bool_settings = {
 	-- kr-crush-concrete, nuclear-reactor, rocket-silo, centrifuge, cargo-landing-pad, rail ramps, the Planetaris
 	-- concretes and others), moves them to fluid crafting and takes them out of hand crafting.
 	["crushing-industry-concrete-mix"] = false,
+	-- Default false: Rigor Module copies every recipe with a chance among its products into hidden
+	-- <recipe>__rigor_module_mod__<N> variants, one per rigor step (25 776 copies of 395 recipes in the full pack), and
+	-- the game stops at 65 535 recipes ("Reached id limit for recipe"). In compatibility mode only the vanilla recipes
+	-- (next setting) and the recipes that Planet Crucible and Muluna whitelist get copies, so rigor modules keep
+	-- working on those and the other recipes are left alone.
+	["rigor-module-compatibility-mode"] = true,
+	-- Default true: keeps the vanilla and Space Age recipes (uranium processing, scrap recycling, yumako and jellynut
+	-- processing, bacteria, asteroid crushing and reprocessing) among those that get rigor copies in compatibility mode.
+	["rigor-module-compatibility-mode-include-vanilla"] = true,
 }
 
 for name, value in pairs(pinned_bool_settings) do

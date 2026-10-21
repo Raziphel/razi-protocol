@@ -28,6 +28,9 @@ local raw = {
     ["crushing-industry-optical-fiber"] = { default_value = true },
     ["crushing-industry-concrete-mix"] = { default_value = true },
     ["crushing-industry-ore"] = { default_value = true },
+    ["rigor-module-compatibility-mode"] = { default_value = false },
+    ["rigor-module-compatibility-mode-include-vanilla"] = { default_value = true },
+    ["rigor-module-disable-rigor-effect"] = { default_value = false },
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
@@ -45,12 +48,25 @@ local overlap = raw["string-setting"]["s6x-ii-krastorio-overlap-tech"]
 check(overlap.default_value == "kr" and #overlap.allowed_values == 1 and overlap.allowed_values[1] == "kr" and overlap.hidden == true,
   "Krastorio overlap setting not pinned to kr")
 
+-- Rigor Module runs in compatibility mode with the vanilla recipes included, to stay under the recipe limit.
+for _, name in ipairs({ "rigor-module-compatibility-mode", "rigor-module-compatibility-mode-include-vanilla" }) do
+  ---@type table
+  local setting = raw["bool-setting"][name]
+  check(setting.forced_value == true and setting.default_value == true and setting.hidden == true, name .. " not pinned to true")
+end
+
 -- The other settings of Nulla and Crushing Industry keep their defaults and stay visible.
 for _, name in ipairs({ "nulla-science-promethium", "crushing-industry-ore" }) do
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.default_value == true and setting.forced_value == nil and setting.hidden == nil, name .. " must stay untouched")
 end
+
+-- The other settings of Rigor Module stay as they are.
+---@type table
+local rigor_effect = raw["bool-setting"]["rigor-module-disable-rigor-effect"]
+check(rigor_effect.default_value == false and rigor_effect.forced_value == nil and rigor_effect.hidden == nil,
+  "rigor-module-disable-rigor-effect must stay untouched")
 
 -- Only one of the settings present is enough.
 local partial = { ["bool-setting"] = { ["s6x-arcanyx-mythril-nuclear"] = { default_value = true } } }
