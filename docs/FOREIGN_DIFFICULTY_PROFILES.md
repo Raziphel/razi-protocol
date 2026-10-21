@@ -59,7 +59,7 @@ References:
 6. Verify the recorded setting values are restored at the end of data stage
    and multiplayer CRC and save/load remain valid.
 7. Exercise all 51 hard-required mods in a real Factorio 2.1 startup. Only
-   seven settings are currently claimed as covered; other mods need
+   nine settings are currently claimed as covered; other mods need
    corresponding source-phase verification before being added.
 
 No separate executable, settings-file editor or third-party bridge is needed.
