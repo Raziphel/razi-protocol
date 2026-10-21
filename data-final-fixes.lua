@@ -298,3 +298,8 @@ require("prototypes.compat.razi_industrial_difficulty").data_final_fixes()
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.helios_engineering").reinforce_satellites()
 require("prototypes.compat.crafting_navigation").data_final_fixes()
+
+-- All source data-updates/final-fixes readers have now used the temporary
+-- difficulty-selected values. Put the Lua settings view back exactly as it
+-- was, leaving the player's saved foreign settings untouched.
+require("prototypes.compat.foreign_difficulty_settings").restore()

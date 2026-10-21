@@ -1,3 +1,7 @@
+-- Inject Razi difficulty-selected upstream setting values before any
+-- REQUIRED mod's data-updates.lua runs (all data.lua files finish first).
+require("prototypes.compat.foreign_difficulty_settings").apply()
+
 require "prototypes.system.calidus"
 require("prototypes.system.bellicos").data()
 require "prototypes.system.solaris"
