@@ -1,6 +1,7 @@
 -- Additional independent planet mods join Razi's seven-system campaign.
 -- Keep their native science, entities, surfaces and research chains intact.
--- No planet added here is required to reach Deep Space.
+-- Rabbasca is optional and off the path to Deep Space. The others are required dependencies; Igrys and Foliax are
+-- on that path through regional_research_bridges.lua (their discovery gates Vibrant and Vespera) unless interdependence is off.
 local optional_planets = {}
 local asteroid_profiles = require("prototypes.system.asteroid_profiles")
 local route_icons = require("prototypes.system.route_icons")
