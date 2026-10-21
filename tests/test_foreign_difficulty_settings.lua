@@ -7,6 +7,9 @@ local saved={["razi-difficulty-preset"]={value="hard"}}
 for name,mod in pairs(M.owners) do
  if enabled[mod] then saved[name]={value=M.profiles.normal[name]} end
 end
+local ownership_count=0
+for _ in pairs(M.owners) do ownership_count=ownership_count+1 end
+assert(ownership_count==9,"Expected exactly nine reviewed foreign setting IDs")
 local original={}
 for name,v in pairs(saved) do original[name]=v.value end
 assert(M.apply(saved,enabled)>0,"Hard should replace real source setting values")
@@ -32,6 +35,13 @@ assert(M.apply(saved,enabled)>0)
 assert(saved["rubia-tech-cost-multiplier"].value==1)
 assert(M.restore()>0)
 assert(saved["rubia-tech-cost-multiplier"].value==10)
+-- Normal is also authoritative over other mods' manually selected values.
+saved["razi-difficulty-preset"].value="normal"
+saved["rubia-tech-cost-multiplier"].value=9
+assert(M.apply(saved,enabled)>0)
+assert(saved["rubia-tech-cost-multiplier"].value==1)
+assert(M.restore()>0)
+assert(saved["rubia-tech-cost-multiplier"].value==9)
 -- Missing source mods never allow incidental collision with the setting ID.
 saved["razi-difficulty-preset"].value="hard"
 local count=M.apply(saved,{})
@@ -40,5 +50,15 @@ assert(M.restore()==0)
 -- No unsupported type coercion.
 saved["rubia-tech-cost-multiplier"].value="not numeric"
 assert(M.apply(saved,{rubia="1"})==0)
+assert(M.restore()==0)
+-- The settings view might be immutable in some engine versions. Fail
+-- closed rather than crashing the full modpack.
+saved["rubia-tech-cost-multiplier"]=setmetatable({},{
+ __index=function(_,key)
+  if key=="value" then return 9 end
+ end,
+ __newindex=function() error("read-only engine setting") end
+})
+assert(M.apply(saved,{rubia="1"})==0,"read-only value must be skipped")
 assert(M.restore()==0)
 print("Foreign difficulty source setting stage shim: PASS")
