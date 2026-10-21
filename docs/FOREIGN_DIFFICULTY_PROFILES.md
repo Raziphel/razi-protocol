@@ -180,6 +180,19 @@ and [original ten technology multipliers](https://github.com/NullCascade/xy-k2so
 version 0.7.7; Razi requires 0.8.5+. Compatibility needs a real game
 load with that installed version before relying on this integration.
 
+## Big Monsters: boss-health multiplier
+
+For recommended `Big-Monsters >= 2.2.1`, Razi reconciles its **actual
+`bm-big-enemy-hp-multiplier`** numeric setting for recognized named
+giant-boss prototypes. Easy uses 0.80×, Hard 1.20×, Nightmare 1.50×;
+**Normal and Custom remain unchanged**, even for manual Big Monsters
+settings. Event interval, event frequency, chance, evolution, damage
+and unrelated enemy prototypes are not altered.
+
+[Big Monsters detailed source audit](BIG_MONSTERS_DIFFICULTY.md)
+includes exact source names, API limitations, regression checks, and
+2.2.1 compatibility caveats.
+
 ## Follow-up audit: numeric settings worth integrating next
 
 These are verified **source-owned** controls in Razi's dependency stack.

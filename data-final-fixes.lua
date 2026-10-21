@@ -316,3 +316,6 @@ require("prototypes.compat.muluna_power_difficulty").data_final_fixes()
 require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
 -- Source XY's optional numerical inflation scale; never enable its toggle.
 require("prototypes.compat.xy_inflation_difficulty").data_final_fixes()
+-- Big Monsters boss HP native multiplier: only explicitly named source
+-- threats; runtime events/chances and all generic enemies are untouched.
+require("prototypes.compat.big_monsters_difficulty").data_final_fixes()
