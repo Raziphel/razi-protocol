@@ -1,5 +1,8 @@
--- Guard Nulla 1.0.2's radio-interference helper in DATA UPDATES, before
--- its final-fixes script dereferences a missing K2SO electric furnace.
+-- Guard Nulla 1.0.2's radio-interference helpers in DATA UPDATES, before
+-- its final-fixes script dereferences a missing K2SO electric furnace
+-- (lib.lua:67) and before add_radio_interference replaces the whole
+-- emissions_per_second of an entity (lib.lua:47-55), which drops the other
+-- pollutants it had (Tellus' pollen of its roboports and beacons).
 local M={}
 local wrapped=setmetatable({},{__mode="k"})
 local function protect(lib)
@@ -9,6 +12,23 @@ local function protect(lib)
   lib.add_radio_interference_energy=function(prototype,amount)
     if type(prototype)~="table" then return end
     return original(prototype,amount)
+  end
+  local add=lib.add_radio_interference
+  if type(add)=="function" then
+    lib.add_radio_interference=function(prototype,amount)
+      if type(prototype)~="table" then return end
+      local emissions=prototype.emissions_per_second
+      if type(emissions)=="table" and next(emissions)~=nil
+        and emissions.radio_interference==nil then
+        emissions.radio_interference=amount
+        if type(log)=="function" then
+          log("[Razi Protocol/Nulla] Kept the other emissions of "..
+            tostring(prototype.name))
+        end
+        return
+      end
+      return add(prototype,amount)
+    end
   end
   wrapped[lib]=true
   return true
