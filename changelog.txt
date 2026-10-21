@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.7
+Date: 2026-10-20
+  Bugfixes:
+    - Linox 1.8.10 is required: its magnet generator loads on Factorio 2.1.22 and its science packs no longer break other mods' labs
+---------------------------------------------------------------------------------------------------
 Version: 2.1.6
 Date: 2026-10-16
   Compatibility:

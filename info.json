@@ -1,6 +1,6 @@
 {
   "name": "razi-protocol",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "title": "Razi Protocol",
   "author": "Raziphel",
   "homepage": "https://github.com/Raziphel/razi-protocol",
@@ -25,7 +25,7 @@
     "? spidertron-unit-07",
     "? mferrari_lib >= 0.7.5",
     "? informatron >= 0.5.0",
-    "linox >= 1.8.9",
+    "linox >= 1.8.10",
     "? shchierbin >= 0.3.19",
     "Muria >= 1.8.6",
     "? terrapalus",
