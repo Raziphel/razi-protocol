@@ -147,6 +147,42 @@ Only the above source-owned numbers are adjusted. Player-customized source
 settings on Normal/Custom, production recipes, **every belt speed (including
 Promethium Belts)**, module slots, pollution elsewhere and feature toggles remain untouched.
 
+## Follow-up audit: numeric settings worth integrating next
+
+These are verified **source-owned** controls in Razi's dependency stack.
+They are candidates, not integrations. Do not silently alter their saved
+values or prototype counterparts without a source-accurate adapter.
+
+| Mod and actual setting ID | Native stage | Why it is useful | Implementation constraint |
+| --- | --- | --- | --- |
+| **Castra Prime:** `castra-prime-research-rate-multiplier` | Map/runtime-global, 0.01–100 | Enemy research speed affects the pressure of Castra's arms race | Castra reads the Map setting in its own `control.lua`. Requires cooperating source-owner runtime adapter; Razi's data stage cannot change it |
+| **Cerys:** `cerys-solar-wind-spawn-rate-percentage` | Map/runtime-global, 0–200 | More intense solar-wind events for challenging difficulties | Source-owned event generation, not a numeric technology prototype. Requires a verified native runtime integration point |
+| **Cerys:** `cerys-plutonium-generation-rate-multiplier` | Map/runtime-global, 0.1–1000 | Adjusts a real planetary energy/resource yield multiplier | The source's runtime generator must opt in or expose a supported API |
+| **XY K2SO Enhancements (Null fork):** `xy-tech-inflation-scale` | Startup percentage string: 25%, 50%, 75%, 100%, 150%, 200% | Optional multiplier for existing technology inflation | Only meaningful if the player's separate `xy-tech-inflation` checkbox is **already enabled**. Do not enable inflation or apply it globally without a source-specific reconciliation |
+| **Muluna:** `muluna-balance-fulgoran-cargo-drop-item-multiplier` | Startup number read by runtime Lua | Adjusts starting cargo-drop quantities without changing technology unlocks | The owning script captures the startup value in a private local on load; modifying its saved value or the data-stage view is not enough |
+| **Igrys:** `igrys-oil-band-offset` | Startup integer, 30–200 | Changes the resource-band layout at generation time | Deliberately **not mapped**: geometry/distance, not a multiplier, and changes can strand earlier generated terrain |
+| **Rabbasca (optional):** `rabbasca-evolution-per-vault` | Map/runtime-global, 0–100 | A natural difficulty multiplier for its hacked-vault threat | The source mod is optional and owns its runtime setting; needs an adapter and exact source mapping before implementation |
+
+### Explicit exclusions
+
+**All transport speeds are out of scope**, including
+`promethium-belt-speed`. Changing later-tier belts makes their technology
+investment pointless. Similarly, do not adjust Igrys resource-band geometry,
+K2SO thruster-fuel recipe reversals, binary feature settings, cosmetic
+weather particle speeds, or new generic entity speed modifiers.
+
+**Normal and Custom are always strict no-ops** for other mods' settings.
+Easy, Hard and Nightmare may adjust only narrowly verified source-defined
+quantities. Missing mods and missing prototypes must be skipped safely.
+
+Source audits:
+[Castra](https://github.com/pauldennis2/castra-prime/blob/main/settings.lua),
+[Cerys](https://github.com/danielmartin0/Cerys-Moon-of-Fulgora/blob/main/settings.lua),
+[XY Null fork](https://github.com/NullCascade/xy-k2so-enhancements/blob/main/settings.lua),
+[Muluna](https://github.com/nicholasgower/planet-muluna/blob/main/settings.lua),
+[Igrys](https://github.com/EgorexW/Igrys/blob/main/settings.lua),
+[Rabbasca](https://github.com/PizzaPlanner/planet-rabbasca/blob/master/settings.lua).
+
 ## Other required-mod settings assessed
 
 The required-mod audit distinguishes numerical gameplay controls from
