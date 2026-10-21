@@ -24,16 +24,16 @@ prototype-stage selection.
 
 | Owner | Real numeric setting | Easy | Normal | Hard | Nightmare | Consumer |
 |---|---|---:|---:|---:|---:|---|
-| Muluna | `space-science-pack-output` (science output count) | 4 | 2 | 1 | 1 | `data-updates.lua` |
-| Muluna | `muluna-interstellar-science-pack-packs-required` (research requirement count) | 1 | 2 | 3 | 4 | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
-| Muluna | `muluna-interstellar-science-pack-dynamic-packs-required-percentage-required` (dynamic requirement %) | 25% | 50% | 65% | 85% | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
-| Rubia | `rubia-tech-cost-multiplier` (research multiplier) | 1× | 1× | 2× | 3× | `prototypes/technology-updates.lua` called in `data-updates.lua` |
+| Muluna | `space-science-pack-output` (science output count) | 4 | Unchanged | 1 | 1 | `data-updates.lua` |
+| Muluna | `muluna-interstellar-science-pack-packs-required` (research requirement count) | 1 | Unchanged | 3 | 4 | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
+| Muluna | `muluna-interstellar-science-pack-dynamic-packs-required-percentage-required` (dynamic requirement %) | 25% | Unchanged | 65% | 85% | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
+| Rubia | `rubia-tech-cost-multiplier` (research multiplier) | 1× | Unchanged | 2× | 3× | `prototypes/technology-updates.lua` called in `data-updates.lua` |
 
 **Only numeric costs, requirements, percentages and output quantities are
 controlled.** Razi does **not** alter K2SO's `kr-revert-thruster-fuel-changes`
 or any binary recipe-choice, technology-unlock, progression, cosmetic, or
-feature switch. All four named modes use numeric scaling; Custom defers
-entirely to the source mod's saved values.
+feature switch. Only Easy, Hard and Nightmare apply numeric changes. **Normal and Custom
+are strictly hands-off**, even if the player customized other mods' settings.
 
 Both Muluna interstellar requirement modes are supported: its existing
 settings checkbox chooses between a fixed number and a percentage of installed
@@ -42,9 +42,8 @@ both modes without changing that checkbox.
 
 The bridge modifies **only existing, type-matching settings** when the
 owning mod is enabled. No attempt is made to inject a nonexistent setting
-or rewrite prototype definitions. The central Razi difficulty choice
-determines this entire table, even if the other mod setting has been
-manually changed. Set Razi difficulty to **Custom** to stop this effect.
+or rewrite prototype definitions. Easy, Hard and Nightmare can override numeric source controls. **Normal and
+Custom make zero source-setting writes or numeric prototype corrections.**
 
 References:
 - Muluna: https://github.com/nicholasgower/planet-muluna
@@ -61,7 +60,7 @@ References:
    its earlier `data.lua`, which is outside this bridge's reach.
 4. Check K2SO thruster fuel recipes, Muluna alternate battery/wood-gas
    options, and other boolean settings are **never** modified.
-5. Confirm Custom leaves all source settings unchanged and the previous
+5. Confirm Normal and Custom leave all source settings unchanged and the previous
    numeric values are restored after the prototype-loading process.
 6. Load the actual modpack in Factorio 2.1. A mock Lua test alone cannot
    prove the engine permits overwriting the data-stage settings view.
@@ -79,9 +78,9 @@ recipe/research quantities, **not** generic factories or technology trees.
 
 | Mod | Source numeric setting | Easy | Normal | Hard | Nightmare | Actual effect |
 |---|---|---:|---:|---:|---:|---|
-| Muluna | `space-science-pack-energy` | 5 | 7 | 9 | 12 | `space-science-pack` craft time, relative to Muluna's own saved setting |
-| Muluna | `muluna-balance-exploration-science-data-cost` | 6 | 10 | 14 | 20 | `muluna-astronomical-data` fluid amount for native interstellar science recipe |
-| Cerys | `cerys-undo-marathon-multiplier` | 1.5× | 1× | 0.8× | 0.6× | Relative scaling of the 16 research counts/triggers created using Cerys's `correct(n)` helper |
+| Muluna | `space-science-pack-energy` | 5 | Unchanged | 9 | 12 | `space-science-pack` craft time, relative to Muluna's own saved setting |
+| Muluna | `muluna-balance-exploration-science-data-cost` | 6 | Unchanged | 14 | 20 | `muluna-astronomical-data` fluid amount for native interstellar science recipe |
+| Cerys | `cerys-undo-marathon-multiplier` | 1.5× | Unchanged | 0.8× | 0.6× | Relative scaling of the 16 research counts/triggers created using Cerys's `correct(n)` helper |
 
 Cerys source reads the saved value in `prototypes/technology.lua` and
 constructs research counts with `ceil(base / saved)`. Razi takes the final
@@ -92,7 +91,7 @@ Muluna is similarly adjusted using `target / saved` on two specific
 recipe properties.
 
 **Scope constraints:** No source settings in the player's Mod Settings
-are rewritten; Custom does not change anything. These passes require both
+are rewritten; Normal and Custom do not change anything. These passes require both
 the source mod and its named recipe or technology to be present. They
 preserve ingredients unrelated to the named source numeric option.
 Scientific progression or other setting-dependent Lua paths not represented

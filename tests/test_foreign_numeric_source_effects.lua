@@ -36,11 +36,17 @@ M.apply(raw,startup,enabled)
 assert(raw.recipe["space-science-pack"].energy_required==12)
 assert(raw.recipe["interstellar-science-pack"].ingredients[2].amount==20)
 assert(raw.technology["cerys-electromagnetic-tooling"].unit.count==34)
+-- Startup difficulty changes require a restart. A hypothetical Normal
+-- selection mid-stage cannot change any existing prototype values.
 startup["razi-difficulty-preset"].value="normal"
-M.apply(raw,startup,enabled)
-assert(raw.recipe["space-science-pack"].energy_required==7)
-assert(raw.recipe["interstellar-science-pack"].ingredients[2].amount==10)
-assert(raw.technology["cerys-electromagnetic-tooling"].unit.count==20)
+local a=raw.recipe["space-science-pack"].energy_required
+local b=raw.recipe["interstellar-science-pack"].ingredients[2].amount
+local c=raw.technology["cerys-electromagnetic-tooling"].unit.count
+local untouched=M.apply(raw,startup,enabled)
+assert(untouched.recipes==0 and untouched.technology==0,"Normal must do no writes")
+assert(raw.recipe["space-science-pack"].energy_required==a)
+assert(raw.recipe["interstellar-science-pack"].ingredients[2].amount==b)
+assert(raw.technology["cerys-electromagnetic-tooling"].unit.count==c)
 startup["razi-difficulty-preset"].value="custom"
 assert(M.apply(raw,startup,enabled).recipes==0,"Custom has no effect")
 -- Source mod options with non-default manual values are preserved in ratio.

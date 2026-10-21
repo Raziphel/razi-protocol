@@ -8,11 +8,6 @@ M.profiles={
   ["muluna-balance-exploration-science-data-cost"]=6,
   ["cerys-undo-marathon-multiplier"]=1.5,
  },
- normal={
-  ["space-science-pack-energy"]=7,
-  ["muluna-balance-exploration-science-data-cost"]=10,
-  ["cerys-undo-marathon-multiplier"]=1,
- },
  hard={
   ["space-science-pack-energy"]=9,
   ["muluna-balance-exploration-science-data-cost"]=14,

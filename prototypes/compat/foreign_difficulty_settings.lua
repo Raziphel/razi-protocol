@@ -17,12 +17,6 @@ M.profiles={
   ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]=25,
   ["rubia-tech-cost-multiplier"]=1,
  },
- normal={
-  ["space-science-pack-output"]=2,
-  ["muluna-interstellar-science-pack-packs-required"]=2,
-  ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]=50,
-  ["rubia-tech-cost-multiplier"]=1,
- },
  hard={
   ["space-science-pack-output"]=1,
   ["muluna-interstellar-science-pack-packs-required"]=3,

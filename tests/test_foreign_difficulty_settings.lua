@@ -8,8 +8,8 @@ local n=0
 for name,mod in pairs(M.owners) do
  n=n+1
  assert(mod=="planet-muluna" or mod=="rubia","non-numeric source owner")
- assert(type(profile.normal[name])=="number","must be a numerical scaling setting: "..name)
- for _,mode in ipairs({"easy","normal","hard","nightmare"}) do
+ assert(type(profile.hard[name])=="number","must be a numerical scaling setting: "..name)
+ for _,mode in ipairs({"easy","hard","nightmare"}) do
   assert(type(profile[mode][name])=="number",mode.." numeric mapping missing: "..name)
  end
 end
@@ -22,7 +22,7 @@ local saved={
  ["muluna-interstellar-science-pack-dynamic-packs-required"]={value=true},
 }
 for name,mod in pairs(M.owners) do
- if enabled[mod] then saved[name]={value=profile.normal[name]} end
+ if enabled[mod] then saved[name]={value=9} end
 end
 local function test_mode(mode)
  saved["razi-difficulty-preset"].value=mode
@@ -45,10 +45,14 @@ local function test_mode(mode)
  end
 end
 for _,mode in ipairs({"easy","hard","nightmare"}) do test_mode(mode) end
--- Normal is authoritative even if a player manually increased Rubia costs.
-saved["rubia-tech-cost-multiplier"].value=9
-test_mode("normal")
-assert(saved["rubia-tech-cost-multiplier"].value==9)
+-- Normal is a strict no-op, even when players manually changed source values.
+saved["razi-difficulty-preset"].value="normal"
+for name in pairs(M.owners) do saved[name].value=37 end
+assert(M.apply(saved,enabled)==0,"Normal must be a strict no-op")
+assert(M.restore()==0)
+for name in pairs(M.owners) do
+ assert(saved[name].value==37,"Normal changed manual setting "..name)
+end
 saved["razi-difficulty-preset"].value="custom"
 assert(M.apply(saved,enabled)==0,"Custom must not modify player settings")
 assert(M.restore()==0)
