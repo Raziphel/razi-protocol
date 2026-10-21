@@ -311,3 +311,6 @@ require("prototypes.compat.foreign_numeric_stage_effects").data_final_fixes()
 -- Same treatment for the native Muluna platform-power-consumption setting:
 -- correct scan-power, buffer, charge and source tooltip together.
 require("prototypes.compat.muluna_power_difficulty").data_final_fixes()
+-- Exact source numeric settings: Balack bio-fabricator speed/pollution,
+-- plus optional Promethium Belts research requirement and transport speed.
+require("prototypes.compat.biological_machines_difficulty").data_final_fixes()

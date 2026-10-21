@@ -120,6 +120,35 @@ electric producers and other mod settings remain untouched. This is a
 Muluna-specific reconciliation of its *own* numeric setting, not a new
 generic Razi energy feature.
 
+## Balack and optional Promethium Belts numerical controls
+
+Razi now reconciles the original Biological Machines: Planet Balack settings
+at the **exact native prototype properties** created by those settings.
+The separate Promethium Belts companion is optional; its two settings are
+used only if its real prototypes and saved settings are present.
+
+| Real source setting | Easy | Normal / Custom | Hard | Nightmare |
+| --- | ---: | --- | ---: | ---: |
+| Balack `bm-cube-speed` (bio-fabricator crafting speed) | 1.25 | Unchanged | 0.85 | 0.65 |
+| Balack `bm-cube-pollution` (emissions/minute) | 7,500 | Unchanged | 16,000 | 25,000 |
+| Promethium Belts `promethium-belt-science-count` | 3,000 | Unchanged | 7,500 | 12,000 |
+| Promethium Belts `promethium-belt-speed` (source speed parameter) | 120 | Unchanged | 90 | 75 |
+
+The original source values are used to compute **target/saved** ratios on
+specific native fields: `bm-bio-cube.crafting_speed`,
+`bm-bio-cube.energy_source.emissions_per_minute.pollution`,
+`promethium-transport-belt` research count, and the four matching
+transport/underground/splitter/loader belt speed prototypes.
+
+Source references:
+- [Balack setting definitions](https://github.com/bradythehuman/Biological-Machines/blob/main/biological-machines-planet-balack/settings.lua)
+- [Balack original prototype consumers](https://github.com/bradythehuman/Biological-Machines/blob/main/biological-machines-planet-balack/prototypes/entities.lua)
+- [Promethium Belts settings](https://github.com/bradythehuman/Biological-Machines/blob/main/biological-machines-promethium-belts/settings.lua)
+
+Only the above source-owned numbers are adjusted. Player-customized source
+settings on Normal/Custom, production recipes, belts of other mods, module
+slots, pollution elsewhere and feature toggles remain untouched.
+
 ## Other required-mod settings assessed
 
 The required-mod audit distinguishes numerical gameplay controls from
