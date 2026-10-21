@@ -8,19 +8,16 @@ M.profiles={
   ["bm-cube-speed"]=1.25,
   ["bm-cube-pollution"]=7500,
   ["promethium-belt-science-count"]=3000,
-  ["promethium-belt-speed"]=120,
  },
  hard={
   ["bm-cube-speed"]=0.85,
   ["bm-cube-pollution"]=16000,
   ["promethium-belt-science-count"]=7500,
-  ["promethium-belt-speed"]=90,
  },
  nightmare={
   ["bm-cube-speed"]=0.65,
   ["bm-cube-pollution"]=25000,
   ["promethium-belt-science-count"]=12000,
-  ["promethium-belt-speed"]=75,
  },
 }
 local previous=setmetatable({},{__mode="k"})
@@ -55,7 +52,7 @@ function M.apply(raw,startup,enabled)
  local selected=startup["razi-difficulty-preset"]
  local mode=selected and selected.value
  local profile=M.profiles[mode]
- local changed={machine=0,pollution=0,technology=0,belts=0}
+ local changed={machine=0,pollution=0,technology=0}
  -- Normal and Custom are unconditional NO-OPS, even with manual source edits.
  if not profile then return changed end
 
@@ -77,6 +74,7 @@ function M.apply(raw,startup,enabled)
   end
  end
 
+ -- Promethium Belts research cost is optional. Its belt SPEED is never changed.
  -- Promethium Belts is an optional companion to Balack, not an RP hard
  -- requirement. Guard every owner field and prototype independently.
  if enabled["biological-machines-promethium-belts"] then
@@ -86,22 +84,7 @@ function M.apply(raw,startup,enabled)
   if cost and tech and scale(tech.unit,"count",cost,true) then
    changed.technology=changed.technology+1
   end
-  local speed=ratio(startup,"promethium-belt-speed",
-    profile["promethium-belt-speed"])
-  if speed then
-   for _,type_and_name in ipairs({
-    {"transport-belt","promethium-transport-belt"},
-    {"underground-belt","promethium-underground-belt"},
-    {"splitter","promethium-splitter"},
-    {"loader","promethium-loader"},
-   }) do
-    local group=raw[type_and_name[1]]
-    local entity=group and group[type_and_name[2]]
-    if entity and scale(entity,"speed",speed) then
-     changed.belts=changed.belts+1
-    end
-   end
-  end
+
  end
  return changed
 end
