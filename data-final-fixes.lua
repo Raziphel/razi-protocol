@@ -206,6 +206,10 @@ require("prototypes.system.asteroid_performance").data_final_fixes()
 -- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs after every prototype pass.
 require("prototypes.compat.factorio_2_1_22").data_final_fixes()
 
+-- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
+-- copy or add a prototype, as the last edit of created_effect.
+require("prototypes.compat.carna_spire_copies").data_final_fixes()
+
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
