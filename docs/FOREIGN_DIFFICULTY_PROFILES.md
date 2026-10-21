@@ -102,3 +102,31 @@ runtime-global settings can be rewritten by Razi.
 The local Lua tests use mocked Factorio tables and cover changing difficulty
 and source values; full in-game loading is still needed to validate the
 actual source prototype layouts and interactions with all modpack compat mods.
+
+## Other required-mod settings assessed
+
+The required-mod audit distinguishes numerical gameplay controls from
+settings that merely look adjustable. The following real source settings
+were checked against public settings definitions. This list is *not* a
+claim that every released build has the same options; installed versions
+must be verified during in-game compatibility testing.
+
+| Required mod | Candidate native setting | Disposition |
+| --- | --- | --- |
+| **Castra Prime** | `castra-prime-research-rate-multiplier` | Real runtime-global rate modifier; **not** safe to rewrite from RP's prototype stage. Requires source-owner runtime support or an explicitly verified equivalent API |
+| **Cerys** | `cerys-solar-wind-spawn-rate-percentage`, `cerys-plutonium-generation-rate-multiplier` | Real runtime-global numerical gameplay settings; source scripts read live values, so not covered by prototype reconciliation |
+| **Muluna** | `platform-power-consumption` | Startup numeric, but its source generates nav-beacon energy fields, mod-data, and matching descriptions in different phases. All parts must be reconciled together before adding |
+| **Muluna** | `muluna-balance-fulgoran-cargo-drop-item-multiplier` | Numeric startup setting used by a runtime cargo-drop script, not safely overwritten by the prototype-stage bridge |
+| **Tenebris Prime** | `tenebris-small-centipede-length` and related sizes | Actual numeric settings exist, but the inspected enemy creation calls consuming them are commented out. No verified active gameplay effect to scale |
+| **Maraxsis** | `maraxsis-water-opacity` | Numeric but graphical only, not a difficulty control |
+| **Planetaris Tellus** | `tellus-bugs-particle-amount`, `tellus-bugs-particle-speed` | Cosmetic particle effects, deliberately excluded |
+| **Planetaris Hyarion / Arig** | Dust/lights/sand particle-speed settings | Cosmetic environmental particles, excluded |
+| **K2SO Spaced Out** | `kr-revert-thruster-fuel-changes` | Binary recipe rules, explicitly excluded at user request |
+| **Rubia** | `rubia-tech-cost-multiplier` | Already integrated through the source's later technology-updates pass; earlier data.lua consumers are outside the bridge |
+
+The guiding rule is **quantitative source controls only**, not arbitrary
+checkboxes or a generic buff/nerf applied to all entities. Future
+extensions must identify a real source setting, its unit/range, whether it
+runs during data.lua/data-updates/control, and the exact outcome being
+adjusted. A setting is not marked integrated until the implementation is
+present, and only a full Factorio load can verify it in the complete modpack.
