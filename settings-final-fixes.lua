@@ -57,6 +57,10 @@ local pinned_bool_settings = {
 	-- Default true: keeps the vanilla and Space Age recipes (uranium processing, scrap recycling, yumako and jellynut
 	-- processing, bacteria, asteroid crushing and reprocessing) among those that get rigor copies in compatibility mode.
 	["rigor-module-compatibility-mode-include-vanilla"] = true,
+	-- Default false: Voidcraft machines and recipes can be built and run anywhere, including on space platforms, where
+	-- they make fuel, asteroid chunks, foundation and ores of every planet from nothing, and void-fuel returns 12 MJ for
+	-- 2.5 MJ of electricity. With true the machines and all voidcrafting recipes need magic = 100, which only Arcanyx has.
+	["s6x-arcanyx-voidcraft"] = true,
 }
 
 for name, value in pairs(pinned_bool_settings) do
