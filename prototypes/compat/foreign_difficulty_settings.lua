@@ -13,6 +13,8 @@ local M={}
 M.profiles={
  easy={
   ["space-science-pack-output"]=4,
+  ["muluna-easy-simple-wood-gasification"]=true,
+  ["muluna-easy-alternative-battery-recipe"]=true,
   ["muluna-easy-vanilla-advanced-thruster-fuel-costs"]=true,
   ["muluna-change-quality-science-pack-drain"]=true,
   ["muluna-interstellar-science-pack-dynamic-packs-required"]=false,
@@ -22,6 +24,8 @@ M.profiles={
  },
  normal={
   ["space-science-pack-output"]=2,
+  ["muluna-easy-simple-wood-gasification"]=false,
+  ["muluna-easy-alternative-battery-recipe"]=false,
   ["muluna-easy-vanilla-advanced-thruster-fuel-costs"]=false,
   ["muluna-change-quality-science-pack-drain"]=true,
   ["muluna-interstellar-science-pack-dynamic-packs-required"]=false,
@@ -31,6 +35,8 @@ M.profiles={
  },
  hard={
   ["space-science-pack-output"]=1,
+  ["muluna-easy-simple-wood-gasification"]=false,
+  ["muluna-easy-alternative-battery-recipe"]=false,
   ["muluna-easy-vanilla-advanced-thruster-fuel-costs"]=false,
   ["muluna-change-quality-science-pack-drain"]=false,
   ["muluna-interstellar-science-pack-dynamic-packs-required"]=false,
@@ -40,6 +46,8 @@ M.profiles={
  },
  nightmare={
   ["space-science-pack-output"]=1,
+  ["muluna-easy-simple-wood-gasification"]=false,
+  ["muluna-easy-alternative-battery-recipe"]=false,
   ["muluna-easy-vanilla-advanced-thruster-fuel-costs"]=false,
   ["muluna-change-quality-science-pack-drain"]=false,
   ["muluna-interstellar-science-pack-dynamic-packs-required"]=false,
@@ -52,6 +60,8 @@ M.profiles={
 -- essential. Collision-prone names are never applied to an absent mod.
 M.owners={
  ["space-science-pack-output"]="planet-muluna",
+ ["muluna-easy-simple-wood-gasification"]="planet-muluna",
+ ["muluna-easy-alternative-battery-recipe"]="planet-muluna",
  ["muluna-easy-vanilla-advanced-thruster-fuel-costs"]="planet-muluna",
  ["muluna-change-quality-science-pack-drain"]="planet-muluna",
  ["muluna-interstellar-science-pack-dynamic-packs-required"]="planet-muluna",

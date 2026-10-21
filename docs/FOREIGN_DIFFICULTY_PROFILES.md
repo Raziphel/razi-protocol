@@ -25,6 +25,8 @@ prototype-stage selection.
 | Owner | Actual setting ID | Easy | Normal | Hard | Nightmare | Source consumer |
 |---|---|---:|---:|---:|---:|---|
 | Muluna | `space-science-pack-output` | 4 | 2 | 1 | 1 | data-updates.lua |
+| Muluna | `muluna-easy-simple-wood-gasification` | true | false | false | false | data-updates.lua |
+| Muluna | `muluna-easy-alternative-battery-recipe` | true | false | false | false | prototypes/recipe/vanilla-alternate-recipes.lua via data-updates.lua |
 | Muluna | `muluna-easy-vanilla-advanced-thruster-fuel-costs` | true | false | false | false | data-updates.lua |
 | Muluna | `muluna-change-quality-science-pack-drain` | true | true | false | false | data-updates.lua |
 | Muluna | `muluna-interstellar-science-pack-dynamic-packs-required` | false | false | false | false | prototypes/mod-data/interstellar-science-pack.lua used in data-updates.lua |
@@ -49,7 +51,7 @@ References:
 1. After changing Razi difficulty, restart Factorio before loading a game.
 2. Verify source mod data-updates.lua readers see the effective values and
    that the expected *actual source-owned* recipes/technologies changed.
-3. Check Muluna science pack yield, advanced thruster fuel, quality science
+3. Check Muluna science pack yield, battery alternative, wood gasification, advanced thruster fuel, quality science
    drain, and interstellar science prerequisites.
 4. Confirm Rubia source research costs and K2SO thruster ingredients change.
    Rubia's data.lua-based special forage scaling is **not** covered.
