@@ -147,6 +147,39 @@ Only the above source-owned numbers are adjusted. Player-customized source
 settings on Normal/Custom, production recipes, **every belt speed (including
 Promethium Belts)**, module slots, pollution elsewhere and feature toggles remain untouched.
 
+## XY K2SO research inflation percentage (opt-in source setting)
+
+Razi now integrates the **real** `xy-tech-inflation-scale` multiplier from
+hard-required `xy-k2so-enhancements-nulls-fork`. This acts only when its
+separate `xy-tech-inflation` checkbox was **already enabled by the player**.
+Razi never enables inflation or changes that boolean setting.
+
+| Source multiplier | Easy | Normal / Custom | Hard | Nightmare |
+| --- | ---: | --- | ---: | ---: |
+| `xy-tech-inflation-scale` | 75% | Unchanged | 150% | 200% |
+
+The source's `patches/technology.lua` multiplies ten hardcoded tech
+counts and also runs a broad science-pack-based pass. Razi reconciles
+**only those ten explicitly identified techs**, proportionally against
+the saved source percentage. This avoids unexpectedly inflating the
+rest of Razi's research tree after its later science-card weaving.
+
+Affected source names: the Aquilo, Maraxsis, Paracelsin, Moshine, and
+Secretas discoveries; legendary quality; quantum processor;
+K2SO intergalactic transceiver; K2SO advanced card; and biolab.
+It changes their research **counts only**, never prerequisites, cards,
+recipes, technologies belonging to other source settings, or belts.
+
+Normal/Custom, disabled source inflation, missing settings or an absent
+mod all result in **zero changes**.
+
+[XY source setting IDs](https://github.com/NullCascade/xy-k2so-enhancements/blob/main/settings.lua)
+and [original ten technology multipliers](https://github.com/NullCascade/xy-k2so-enhancements/blob/main/patches/technology.lua).
+
+**Version caveat:** The published GitHub source inspected identifies
+version 0.7.7; Razi requires 0.8.5+. Compatibility needs a real game
+load with that installed version before relying on this integration.
+
 ## Follow-up audit: numeric settings worth integrating next
 
 These are verified **source-owned** controls in Razi's dependency stack.

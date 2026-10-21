@@ -314,3 +314,5 @@ require("prototypes.compat.muluna_power_difficulty").data_final_fixes()
 -- Exact source numeric settings: Balack bio-fabricator speed/pollution,
 -- plus optional Promethium Belts research requirement. Never change belt speed.
 require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
+-- Source XY's optional numerical inflation scale; never enable its toggle.
+require("prototypes.compat.xy_inflation_difficulty").data_final_fixes()
