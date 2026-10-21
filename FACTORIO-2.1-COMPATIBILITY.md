@@ -29,7 +29,7 @@ The minimum versions below are now recorded in `info.json`.
 - `planetaris-tellus >= 1.1.11`
 - `planetaris-hyarion >= 1.3.23`
 - `planetaris-arig >= 1.1.44`
-- `linox >= 1.8.9`
+- `linox >= 1.8.10`
 - `shchierbin >= 0.3.19`
 - `Muria >= 1.8.6`
 - `corrundum >= 1.0.49`
