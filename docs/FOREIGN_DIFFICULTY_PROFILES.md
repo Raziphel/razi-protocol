@@ -167,7 +167,7 @@ rest of Razi's research tree after its later science-card weaving.
 Affected source names: the Aquilo, Maraxsis, Paracelsin, Moshine, and
 Secretas discoveries; legendary quality; quantum processor;
 K2SO intergalactic transceiver; K2SO advanced card; and biolab.
-It changes their research **counts only**, never prerequisites, cards,
+It changes their research **counts only**, skips source-excluded upgrade technologies, and never changes prerequisites, cards,
 recipes, technologies belonging to other source settings, or belts.
 
 Normal/Custom, disabled source inflation, missing settings or an absent

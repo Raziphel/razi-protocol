@@ -39,9 +39,10 @@ function M.apply(raw,startup,enabled)
  for _,name in ipairs(M.hardcoded) do
   local proto=raw.technology and raw.technology[name]
   local unit=proto and proto.unit
-  if type(unit)=="table" and valid(unit.count) then
+  if proto and not proto.upgrade and type(unit)=="table" and valid(unit.count) then
    local base=originals[unit]
    if base==nil then base=unit.count;originals[unit]=base end
+   -- Source intentionally excludes upgrade techs: preserve that exact rule.
    -- Source multiplier cancels. Razi changes only the original percentage.
    local desired=math.max(1,math.ceil(base*target/saved))
    if unit.count~=desired then

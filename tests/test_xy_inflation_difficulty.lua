@@ -10,7 +10,8 @@ local enabled={["xy-k2so-enhancements-nulls-fork"]="0.8.5"}
 local raw={technology={
  ["legendary-quality"]={unit={count=300}},
  ["kr-intergalactic-transceiver"]={unit={count=1000}},
- ["biolab"]={unit={count=40}},
+ ["biolab"]={unit={count=40},upgrade=true},
+ ["quantum-processor"]={unit={count=80}},
  ["unrelated-tech"]={unit={count=77}},
 }}
 local function mode(v)
@@ -22,7 +23,8 @@ assert(raw.technology["legendary-quality"].unit.count==300)
 assert(mode("easy")==3)
 assert(raw.technology["legendary-quality"].unit.count==450)
 assert(raw.technology["kr-intergalactic-transceiver"].unit.count==1500)
-assert(raw.technology.biolab.unit.count==60)
+assert(raw.technology.biolab.unit.count==40, "upgrade tech must be untouched")
+assert(raw.technology["quantum-processor"].unit.count==120)
 assert(raw.technology["unrelated-tech"].unit.count==77)
 assert(mode("easy")==0,"idempotent")
 assert(mode("hard")==3)
