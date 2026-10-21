@@ -190,6 +190,10 @@ require("prototypes.compat.corrundum_compat_plus").data_final_fixes()
 require("prototypes.compat.system_card_manufacturing").data_final_fixes()
 require("prototypes.compat.system_card_laboratories").data_final_fixes()
 
+-- Optional, off by default: a few robot and nuclear technologies (and Planet Express' trade research) are tied to the
+-- science of the first planets. Runs after every research and lab pass, so the lab check sees the final labs.
+require("prototypes.technology.distributed_industry").data_final_fixes()
+
 -- Last starmap art passes: drop stray trail sprites left by other mods, then
 -- put Razi's gate and belt-rim markers on top.
 require("prototypes.system.starmap_trail_cleanup").data_final_fixes()

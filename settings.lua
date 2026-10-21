@@ -97,6 +97,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-distributed-technology",
+		setting_type = "startup",
+		default_value = false,
+		order = "ba[integration]-c[planetary-tech-distribution]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-stage-aquilo-breakthroughs",
 		setting_type = "startup",
 		default_value = true,
