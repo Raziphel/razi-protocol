@@ -31,6 +31,9 @@ local raw = {
     ["rigor-module-compatibility-mode"] = { default_value = false },
     ["rigor-module-compatibility-mode-include-vanilla"] = { default_value = true },
     ["rigor-module-disable-rigor-effect"] = { default_value = false },
+    ["s6x-arcanyx-voidcraft"] = { default_value = false },
+    ["s6x-no-voidcraft-in-space"] = { default_value = false },
+    ["s6x-voidcraft-science"] = { default_value = false },
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
@@ -53,6 +56,17 @@ for _, name in ipairs({ "rigor-module-compatibility-mode", "rigor-module-compati
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == true and setting.default_value == true and setting.hidden == true, name .. " not pinned to true")
+end
+
+-- Voidcraft runs only on Arcanyx; its other settings stay visible and at their defaults.
+---@type table
+local arcanyx_voidcraft = raw["bool-setting"]["s6x-arcanyx-voidcraft"]
+check(arcanyx_voidcraft.forced_value == true and arcanyx_voidcraft.default_value == true and arcanyx_voidcraft.hidden == true,
+  "s6x-arcanyx-voidcraft not pinned to true")
+for _, name in ipairs({ "s6x-no-voidcraft-in-space", "s6x-voidcraft-science" }) do
+  ---@type table
+  local setting = raw["bool-setting"][name]
+  check(setting.default_value == false and setting.forced_value == nil and setting.hidden == nil, name .. " must stay untouched")
 end
 
 -- The other settings of Nulla and Crushing Industry keep their defaults and stay visible.
