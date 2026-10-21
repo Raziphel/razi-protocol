@@ -16,7 +16,7 @@ Official engine references:
 
 The owner of each source mod must provide an opt-in adapter in its own control.lua that reads settings.startup['razi-difficulty-preset'] and writes only settings.global entries that belong to THAT mod. It should guard missing settings, validate allowed values, avoid per-tick work, preserve Custom choices, and keep multiplayer determinism. No separate executables or file editors are required.
 
-Razi Protocol now also has a separate [prototype-stage, effective foreign startup setting bridge](FOREIGN_DIFFICULTY_PROFILES.md) for nine source options read only in later prototype passes. It restores the saved Lua setting view before startup completes and does not change their actual Mod Settings UI values.
+Razi Protocol now also has a separate [prototype-stage, effective foreign startup setting bridge](FOREIGN_DIFFICULTY_PROFILES.md) for three numeric source options read only in later prototype passes. It restores the saved Lua setting view before startup completes and does not change their actual Mod Settings UI values.
 
 Source-mod startup settings cannot be automatically rewritten according to Razi difficulty by any Factorio mod. If an owner adapts its own data.lua to read the Razi difficulty and change gameplay, that changes EFFECTIVE balance, not the saved setting shown in the GUI. This distinction must be stated accurately.
 

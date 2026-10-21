@@ -22,17 +22,17 @@ prototype-stage selection.
 
 ## Curated upstream setting IDs
 
-| Owner | Actual setting ID | Easy | Normal | Hard | Nightmare | Source consumer |
+| Owner | Real numeric setting | Easy | Normal | Hard | Nightmare | Consumer |
 |---|---|---:|---:|---:|---:|---|
-| Muluna | `space-science-pack-output` | 4 | 2 | 1 | 1 | data-updates.lua |
-| Muluna | `muluna-easy-simple-wood-gasification` | true | false | false | false | data-updates.lua |
-| Muluna | `muluna-easy-alternative-battery-recipe` | true | false | false | false | prototypes/recipe/vanilla-alternate-recipes.lua via data-updates.lua |
-| Muluna | `muluna-easy-vanilla-advanced-thruster-fuel-costs` | true | false | false | false | data-updates.lua |
-| Muluna | `muluna-change-quality-science-pack-drain` | true | true | false | false | data-updates.lua |
-| Muluna | `muluna-interstellar-science-pack-dynamic-packs-required` | false | false | false | false | prototypes/mod-data/interstellar-science-pack.lua used in data-updates.lua |
-| Muluna | `muluna-interstellar-science-pack-packs-required` | 1 | 2 | 3 | 4 | prototypes/mod-data/interstellar-science-pack.lua used in data-updates.lua |
-| Rubia | `rubia-tech-cost-multiplier` | 1 | 1 | 2 | 3 | prototypes/technology-updates.lua via data-updates.lua |
-| K2SO | `kr-revert-thruster-fuel-changes` | true | false | false | false | prototypes/updates/base/recipes.lua via data-updates.lua |
+| Muluna | `space-science-pack-output` (science output count) | 4 | 2 | 1 | 1 | `data-updates.lua` |
+| Muluna | `muluna-interstellar-science-pack-packs-required` (research requirement count) | 1 | 2 | 3 | 4 | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
+| Rubia | `rubia-tech-cost-multiplier` (research multiplier) | 1× | 1× | 2× | 3× | `prototypes/technology-updates.lua` called in `data-updates.lua` |
+
+**Only proportional, numeric costs, requirements, and output quantities are
+controlled.** Razi does **not** alter K2SO's `kr-revert-thruster-fuel-changes`
+or any binary recipe-choice, technology-unlock, progression, cosmetic, or
+feature switch. All four named modes use numeric scaling; Custom defers
+entirely to the source mod's saved values.
 
 The bridge modifies **only existing, type-matching settings** when the
 owning mod is enabled. No attempt is made to inject a nonexistent setting
@@ -43,27 +43,23 @@ manually changed. Set Razi difficulty to **Custom** to stop this effect.
 References:
 - Muluna: https://github.com/nicholasgower/planet-muluna
 - Rubia: https://github.com/LoupAndSnoop/rubia
-- Krastorio 2 Spaced Out: https://github.com/Polka37/Krastorio2-Spaced-Out
 - Factorio stages: https://lua-api.factorio.com/latest/auxiliary/data-lifecycle.html
 
 ## Verification and limits
 
-1. After changing Razi difficulty, restart Factorio before loading a game.
-2. Verify source mod data-updates.lua readers see the effective values and
-   that the expected *actual source-owned* recipes/technologies changed.
-3. Check Muluna science pack yield, battery alternative, wood gasification, advanced thruster fuel, quality science
-   drain, and interstellar science prerequisites.
-4. Confirm Rubia source research costs and K2SO thruster ingredients change.
-   Rubia's data.lua-based special forage scaling is **not** covered.
-5. Confirm Custom behaves exactly as foreign saved startup settings specify.
-6. Verify the recorded setting values are restored at the end of data stage
-   and multiplayer CRC and save/load remain valid.
-7. Exercise all 51 hard-required mods in a real Factorio 2.1 startup. Only
-   nine settings are currently claimed as covered; other mods need
-   corresponding source-phase verification before being added.
+1. Restart Factorio after changing difficulty.
+2. Verify Muluna space-science output and interstellar science requirements
+   follow the selected quantities, rather than recipe or unlock toggles.
+3. Verify Rubia research-trigger costs use the selected multiplier in the
+   source's `data-updates.lua` stage. Rubia also consumes this setting in
+   its earlier `data.lua`, which is outside this bridge's reach.
+4. Check K2SO thruster fuel recipes, Muluna alternate battery/wood-gas
+   options, and other boolean settings are **never** modified.
+5. Confirm Custom leaves all source settings unchanged and the previous
+   numeric values are restored after the prototype-loading process.
+6. Load the actual modpack in Factorio 2.1. A mock Lua test alone cannot
+   prove the engine permits overwriting the data-stage settings view.
 
-No separate executable, settings-file editor or third-party bridge is needed.
-Static Lua tests validate the rule table and snapshot/restore mechanics,
-but *do not prove* the Factorio engine allows overriding its data-stage
-setting view. If it is immutable, the bridge will skip the unsupported write
-rather than crash or falsely claim the setting was applied.
+This is a deliberately small verified numeric-only integration. Additional
+multiplier-type options will be added only after identifying a real source
+setting and a reachable source consumer. No external tools are needed.
