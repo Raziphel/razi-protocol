@@ -180,18 +180,21 @@ and [original ten technology multipliers](https://github.com/NullCascade/xy-k2so
 version 0.7.7; Razi requires 0.8.5+. Compatibility needs a real game
 load with that installed version before relying on this integration.
 
-## Big Monsters: boss-health multiplier
+## Big Monsters: native runtime difficulty only
 
-For recommended `Big-Monsters >= 2.2.1`, Razi reconciles its **actual
-`bm-big-enemy-hp-multiplier`** numeric setting for recognized named
-giant-boss prototypes. Easy uses 0.80×, Hard 1.20×, Nightmare 1.50×;
-**Normal and Custom remain unchanged**, even for manual Big Monsters
-settings. Event interval, event frequency, chance, evolution, damage
-and unrelated enemy prototypes are not altered.
+The old `bm-big-enemy-hp-multiplier` prototype scaler has been
+**removed**. Razi's desired integration uses the owning mod's
+`bm-difficulty-level`: **Hard 5, Nightmare 7**. Easy, Normal and Custom
+leave Big Monsters alone.
 
-[Big Monsters detailed source audit](BIG_MONSTERS_DIFFICULTY.md)
-includes exact source names, API limitations, regression checks, and
-2.2.1 compatibility caveats.
+The owning mod reads this Map setting into private runtime storage. Its
+public remote interface currently has no setter, so Razi cannot apply
+these levels by itself. The Razi bridge safely detects an optional
+source-owned `bigmonster.set_difficulty_level` method if a compatible
+release adds it. On current releases this is **a pending integration**,
+not an automatic override.
+
+[Big Monsters source audit and owner patch contract](BIG_MONSTERS_DIFFICULTY.md)
 
 ## Follow-up audit: numeric settings worth integrating next
 

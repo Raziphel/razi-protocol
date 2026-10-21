@@ -3,6 +3,14 @@
 -- We cannot assign other mods' runtime-global setting values.
 local M={}
 local difficulty=require("scripts.razi_difficulty_presets")
+-- Source-owned native difficulty level. Razi can request the adjustment,
+-- but cannot write Big Monsters' saved runtime-global setting.  The public
+-- source does not expose this setter yet; missing methods are safe no-ops.
+local source_levels={hard=5,nightmare=7}
+function M.target_level()
+ local preset=difficulty.selected()
+ return source_levels[preset]
+end
 local function api(action,...)
  if not (remote and remote.interfaces
    and remote.interfaces["bigmonster"]
@@ -22,7 +30,11 @@ function M.surface(surface)
  return api("add_surface",surface.name)
 end
 function M.sync()
- if not (mods and mods["Big-Monsters"]) then return false end
+ if not (script and script.active_mods and script.active_mods["Big-Monsters"]) then return false end
+ -- Only the owning mod may adjust the true difficulty level. An optional
+ -- remote interface provides this without rewriting foreign settings.
+ local requested=M.target_level()
+ if requested then api("set_difficulty_level",requested) end
  local mode=difficulty.active()
  if mode=="custom" then
    -- Explicit custom settings own the source toggle, but a manual RP3

@@ -1,90 +1,99 @@
-# Big Monsters: source-aligned numerical difficulty
+# Big Monsters: native difficulty level integration
 
-Razi Protocol includes Big Monsters as a **recommended** dependency
-(`+ Big-Monsters >= 2.2.1`). The public Factorio mod portal lists
-2.2.1 as the latest release. A public mirror of Big Monsters 2.1.2 was
-used to verify its original setting IDs and source prototype names.
-Because the exact 2.2.1 source isn't public in that mirror, this
-adapter requires a full installed-game compatibility test.
+## Requested mapping
 
-## Integrated: Big Monsters giant-health multiplier
+| Razi difficulty | Big Monsters `bm-difficulty-level` |
+|---|---:|
+| Easy | Leave the source value unchanged |
+| Normal | **Leave the source value unchanged** |
+| Hard | **5** |
+| Nightmare | **7** |
+| Custom | **Leave the source value unchanged** |
 
-Big Monsters owns the real startup setting
-`bm-big-enemy-hp-multiplier` (native range 0.2–10, default 1).
-It creates enormous HP values in its early `data.lua` pass; Razi
-reconciles those **already-defined boss prototypes** after all mods
-have finished loading, using `target / saved Big-Monsters multiplier`.
-The settings menu and other mods' saved values are unchanged.
+**The previous boss HP prototype scaling has been completely removed.**
+No monster health, attack damage, event frequency, evolution thresholds,
+belts, recipes or optional gameplay toggles are modified by this integration.
 
-| Razi difficulty | Effective giant-boss HP multiplier |
-| --- | ---: |
-| Easy | 0.80× |
-| Normal | Unchanged |
-| Hard | 1.20× |
-| Nightmare | 1.50× |
-| Custom | Unchanged |
+## Engine/API limitation and current status
 
-The only eligible prototypes are the source's explicitly recognized
-`biterzilla1*`, `biterzilla2*`, `biterzilla3*`,
-`bm-motherbiterzilla*`, `maf-giant-fire-spitter*`,
-`maf-giant-acid-spitter*`, `bm-spidertron_*`, the four
-Big Monsters worm-boss turrets, and `bm-volcano`. Exact name
-matches and a `Big-Monsters` mod presence guard prevent changes
-to vanilla biters/spiders, unrelated modded enemies, recipes, or
-building/belt speeds. If prototypes are missing in a newer version,
-they are simply skipped.
+`bm-difficulty-level` is Big Monsters' **runtime-global Map setting**
+(range 1–10; source default 1). Its `control.lua` copies that setting
+to `storage.difficulty_level` in `ReadRunTimeSettings()`, which drives
+wave counts, invasion size, certain monster health calculations, and
+other *native* difficulty effects.
 
-Unlike rewriting a source startup setting, this affects the effective
-health of *newly created threats*. Changing difficulty requires a
-Factorio restart and reload; it does not instantly heal/damage
-already spawned monsters.
+Factorio only allows each mod to write its **own** runtime settings.
+Razi Protocol therefore **cannot** assign
+`settings.global["bm-difficulty-level"] = {value=5}` or `{value=7}`.
+The existing public Big Monsters `bigmonster` remote interface
+contains event creation, planet/surface registration and other
+functions, but NO method that sets its stored difficulty.
 
-## Further settings confirmed for review, not integrated
+The Razi integration bridge now computes exactly 5 or 7 and will call
+`remote.call("bigmonster", "set_difficulty_level", level)` **only when
+that function exists**. As of the inspected public source, it does
+not exist. Thus the requested values are **not yet applied
+automatically by the published Big Monsters release**. No fabricated
+Razi-side enemy balancing substitutes for the real setting.
 
-The source has genuine numerical controls, but most are Map/runtime
-settings owned by Big Monsters. Razi is not allowed to overwrite those
-saved values, and its control.lua snapshots them into private storage.
+The installed Big Monsters release is 2.2.1, while the publicly
+available source mirror inspected is 2.1.2. Validate any owner-side
+change against the actual 2.2.1 code.
 
-| Big Monsters setting | Actual purpose | Stage | Status |
-| --- | --- | --- | --- |
-| `bm-enemy-damage-multiplier` | Boss and projectile damage | Startup, 0.5–10 | Not integrated: direct attacks, projectiles and area damage must be audited together |
-| `bm-big-enemy-hp-variant` | Tier-by-tier giant health variance | Startup, 0.2–4 | Not integrated: nonlinear health curve, risky early-game |
-| `bm-worm-enemy-hp-multiplier` | Worm HP option | Startup | Not integrated: source mirror does not show a live consumer |
-| `bm-difficulty-level` | Invasion size, waves and boss health | Runtime-global, 1–10 | Cannot write source setting from Razi |
-| `bm-event-days` | Interval between events; zero disables | Runtime-global, 0–20 | Cannot rewrite source scheduling without a supported owner API |
-| `bm-invasion-chance`, `bm-worms-chance`, `bm-biterzilla-chance`, etc. | Individual disaster probabilities | Runtime-global | Cannot write source settings from Razi |
-| `bm-biterzilla-min_evo`, `bm-worms-min_evo`, etc. | Minimum evolution thresholds | Runtime-global | Not changed to prevent early boss surprises |
-| `bm-spawn_on_sa_planets` | Enable events on extra Space Age planets | Runtime-global boolean | Not changed: feature toggle, not a multiplier |
+## Owner-side native Lua implementation
 
-Big Monsters exposes a **remote interface** for creating events and
-including/excluding planets, not for changing its numeric runtime
-difficulty, interval or chance settings. Calling extra events would
-not be equivalent to its own event-frequency option, and risks
-unfair back-to-back disasters. The current Razi integration does not
-do that.
+Big Monsters' own source can implement the behaviour in Factorio's
+standard `.lua` files without an external executable or launcher.
+There are two legitimate ways:
 
-The source already scales challenge with evolution and player count,
-so these boss-HP adjustments are deliberately moderate.
+**Preferred: direct Razi-aware source integration.** In Big Monsters'
+`ReadRunTimeSettings()`, immediately after its line loading
+`storage.difficulty_level = settings.global["bm-difficulty-level"].value`,
+add:
 
-## Validation
+```lua
+local rp = settings.startup["razi-difficulty-preset"]
+if script.active_mods["razi-protocol"] and rp then
+  if rp.value == "hard" then
+    storage.difficulty_level = 5
+  elseif rp.value == "nightmare" then
+    storage.difficulty_level = 7
+  end
+end
+```
 
-- Load with **Big Monsters 2.2.1** and without it.
-- Inspect the exact source prototype names and max_health at all four
-  named modes plus Custom with source multiplier 1 and a manually
-  customized multiplier.
-- Verify saved `bm-big-enemy-hp-multiplier` never changes in Mod Settings;
-  Normal and Custom must preserve any manual value.
-- Check vanilla enemies and players' normal spidertron, as well as
-  modded enemies from other mods, remain unchanged.
-- Test actual boss spawns and evolution on multiple Space Age planets;
-  the source runtime event scheduler remains untouched.
-- Compare against the **2.2.1 installed zip**, which may differ from
-  the publicly mirrored 2.1.2 source. Test multiplayer consistency.
-- Run `texlua tests/test_big_monsters_difficulty.lua`; the mocked
-  prototype test does not replace a live Factorio startup test.
+This applies the source's own wave/event logic, not a facsimile. It
+never writes the player's saved Map setting. All other Razi modes
+retain Big Monsters' native `bm-difficulty-level`. It also survives
+Big Monsters' `on_runtime_mod_setting_changed` refreshes.
 
-Source evidence:
-- [Factorio mod portal](https://mods.factorio.com/mod/Big-Monsters)
-- [2.1.2 Big Monsters source mirror](https://github.com/FactorioParanoidal/ParanoidalModpack/tree/master/mods/Big-Monsters)
-- [Mirror settings.lua](https://github.com/FactorioParanoidal/ParanoidalModpack/blob/master/mods/Big-Monsters/settings.lua)
-- [Mirror boss entities.lua](https://github.com/FactorioParanoidal/ParanoidalModpack/blob/master/mods/Big-Monsters/prototypes/entities.lua)
+**Optional remote adapter:** If Big Monsters instead adds
+`set_difficulty_level(level)` to its `bigmonster` remote interface,
+Razi's existing bridge will call it on init/configuration. The source
+implementation must update `storage.difficulty_level` **inside Big
+Monsters** and ensure that later setting-change events do not reset
+the override. An owner patch is still required.
+
+The Big Monsters mod portal lists the source as unavailable and its
+license is CC BY-NC-ND 4.0; do not redistribute a modified build without
+the author's permission.
+
+## Verification
+
+- Launch Big Monsters 2.2.1 with Razi Protocol and confirm 5 on Hard,
+  7 on Nightmare **only after installing a cooperating source version**.
+- Test Normal, Custom, and Easy with manually configured source values
+  such as 2 and 9; neither the Razi bridge nor source adapter may change
+  them.
+- Confirm Big Monsters' real invasion sizes and event behaviour respond
+  to its internal `storage.difficulty_level`, and saved source Mod
+  Settings remain unchanged.
+- Test save/load, configuration changes, multiplayer, and repeated
+  runtime setting changes.
+- Razi bridge tests should verify no remote calls if the setter does
+  not exist and no calls for modes other than Hard/Nightmare.
+
+Source references:
+- [Factorio LuaSettings API](https://lua-api.factorio.com/latest/classes/LuaSettings.html)
+- [Big Monsters portal](https://mods.factorio.com/mod/Big-Monsters)
+- [Public 2.1.2 control.lua mirror](https://github.com/FactorioParanoidal/ParanoidalModpack/blob/master/mods/Big-Monsters/control.lua)
