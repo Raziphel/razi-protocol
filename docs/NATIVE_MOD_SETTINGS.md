@@ -6,7 +6,7 @@ At runtime, a Lua mod can read the Razi startup difficulty and change its OWN ru
 
 ## Working Lua-only integration
 
-Razi Rocket Reusability 1.1.7+ reads the Razi difficulty in its own runtime/razi-protocol-settings.lua and uses the Factorio LuaSettings API to write its own side-arrivals Map checkbox On for Hard/Nightmare. The bridge records the original preference per save, enforces the option once per second, and restores the previous preference after switching to Easy, Normal, Custom or standalone. It does not write settings belonging to a different mod.
+Razi Rocket Reusability 1.1.8+ reads the Razi difficulty in its own runtime/razi-protocol-settings.lua and uses the Factorio LuaSettings API to write FIVE source-owned Map settings on Hard/Nightmare: recovery chance, wreck spawn distance, maximum active wrecks, side arrivals and side-arrival chance. The bridge records previous preferences per save, enforces the prescribed values once per second, and restores each original value on Easy, Normal, Custom or standalone. The legacy 1.1.7 side-arrivals-only snapshot is migrated. It does not write settings belonging to any different mod.
 
 Official engine references:
 - https://lua-api.factorio.com/latest/auxiliary/data-lifecycle.html
@@ -20,6 +20,6 @@ Source-mod startup settings cannot be automatically rewritten according to Razi 
 
 ## Release and tests
 
-Razi Rocket Reusability 1.1.7+ must be published and installed before relying on checkbox synchronization; the earlier 1.1.6 fallback changes behaviour only. After changing difficulty, restart Factorio, load or create a map, wait one second, and inspect the rocket mod's Map checkbox. Test restoring a manual selection, changes during Hard/Nightmare, saved games and multiplayer. The standalone Lua test is tests/protocol-settings.lua in the Rocket Reusability repository.
+Razi Rocket Reusability 1.1.8+ must be published and installed for all five Map-setting updates; 1.1.7 changes only the side-arrivals checkbox and 1.1.6 changes effective behaviour only. After changing difficulty, restart Factorio, load or create a map, wait one second, and inspect the rocket mod's Map checkbox. Test restoring all five manual selections, changes during Hard/Nightmare, old 1.1.7 saves, saved games and multiplayer. The standalone Lua test is tests/protocol-settings.lua in the Rocket Reusability repository.
 
 This project intentionally does NOT ship Python, executables, mod-settings.dat editors or launcher wrappers.

@@ -4,14 +4,14 @@ Razi Protocol 3.0 integrates [Razi Rocket Reusability](https://mods.factorio.com
 
 ## Challenge presets and actual Mod Settings
 
-The 1.1.7+ Rocket Reusability source mod contains a Lua bridge that reads `razi-difficulty-preset` and updates **its own** `razi-rocket-reusability-side-arrivals` Map setting once per second when necessary:
+The 1.1.8+ Rocket Reusability source mod contains a Lua bridge that reads `razi-difficulty-preset` and updates **five of its own** Map settings once per second when necessary:
 - **Easy, Normal:** Restore the player's original preference after leaving Hard/Nightmare; otherwise leave the setting untouched.
-- **Hard, Nightmare:** Set the real Side-arriving wrecks checkbox On, even if a player manually unchecked it. The independent arrival chance remains adjustable.
+- **Hard:** Recovery 90%, spawn distance 56 tiles, maximum 4 active wrecks, side arrivals On, side chance 55%.\n- **Nightmare:** Recovery 75%, spawn distance 44 tiles, maximum 6 active wrecks, side arrivals On, side chance 80%. The source-owned adapter enforces these real Map settings, even if a player previously changed them.
 - **Custom or standalone:** Restore the earlier manual preference when leaving a forced difficulty.
 
 These are real Map setting changes, performed only by the mod that OWNS the setting. Factorio does not allow Razi Protocol to write settings belonging to other mods. It does not alter source startup settings, recovery chance, active wreck cap, beacon priorities, or safe front-fallback.
 
-**Versions:** Razi Protocol accepts Rocket Reusability 1.1.5+. Version 1.1.6 provides the effective gameplay fallback but cannot update the checkbox. The **1.1.7** source update implements real in-game setting synchronization; it must be published to and installed from the mod portal separately. The one-second runtime check occurs after entering a map, not in the main-menu settings screen.
+**Versions:** Razi Protocol accepts Rocket Reusability 1.1.5+. Version 1.1.6 provides effective gameplay integration only; 1.1.7 synchronizes the side-arrivals checkbox; **1.1.8 synchronizes all five Map settings**. Version 1.1.8 must be published to and installed from the mod portal separately. The one-second runtime check occurs after entering a map, not in the main-menu settings screen.
 
 ## Expedition Journal
 
@@ -36,7 +36,7 @@ No planetary discovery, science gate, source recipe, Remnant Beacon or rocket si
 
 ## In-game verification checklist
 
-- Start Easy, Normal, Hard, Nightmare and Custom saves with rocket mod **1.1.7+**; after at least one second verify the actual side-arrivals Map checkbox and restoration of the previous manual value.
+- Start Easy, Normal, Hard, Nightmare and Custom saves with rocket mod **1.1.8+**; after at least one second verify all five real Map values and restoration of the previous manual values.
 - Change the side-arrival chance live; verify a zero chance yields front-only wrecks even on Hard/Nightmare.
 - Test long, broad and asymmetrical platforms. Side lanes should retry/fall back safely without additional wrecks.
 - Verify actual K2SO and Muluna `rocket-chunk-processing` outputs and the three bulk recipes with their loaded mod settings.
