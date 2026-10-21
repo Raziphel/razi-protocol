@@ -14,30 +14,37 @@ M.profiles={
  easy={
   ["space-science-pack-output"]=4,
   ["muluna-interstellar-science-pack-packs-required"]=1,
+  ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]=25,
   ["rubia-tech-cost-multiplier"]=1,
  },
  normal={
   ["space-science-pack-output"]=2,
   ["muluna-interstellar-science-pack-packs-required"]=2,
+  ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]=50,
   ["rubia-tech-cost-multiplier"]=1,
  },
  hard={
   ["space-science-pack-output"]=1,
   ["muluna-interstellar-science-pack-packs-required"]=3,
+  ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]=65,
   ["rubia-tech-cost-multiplier"]=2,
  },
  nightmare={
   ["space-science-pack-output"]=1,
   ["muluna-interstellar-science-pack-packs-required"]=4,
+  ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]=85,
   ["rubia-tech-cost-multiplier"]=3,
  },
 }
 -- Only numeric scaling controls are eligible; this deliberately excludes
 -- binary choices such as K2SO fuel-recipe reverts and Muluna unlock toggles.
 -- Normal values are the upstream defaults, not a gameplay rewrite.
+-- Both fixed and dynamic percentage requirement values are mapped without
+-- changing Muluna's saved dynamic-packs boolean switch.
 M.owners={
  ["space-science-pack-output"]="planet-muluna",
  ["muluna-interstellar-science-pack-packs-required"]="planet-muluna",
+ ["muluna-interstellar-science-pack-dynamic-packs-required-percentage-required"]="planet-muluna",
  ["rubia-tech-cost-multiplier"]="rubia",
 }
 local original={}

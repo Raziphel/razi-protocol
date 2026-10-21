@@ -26,13 +26,19 @@ prototype-stage selection.
 |---|---|---:|---:|---:|---:|---|
 | Muluna | `space-science-pack-output` (science output count) | 4 | 2 | 1 | 1 | `data-updates.lua` |
 | Muluna | `muluna-interstellar-science-pack-packs-required` (research requirement count) | 1 | 2 | 3 | 4 | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
+| Muluna | `muluna-interstellar-science-pack-dynamic-packs-required-percentage-required` (dynamic requirement %) | 25% | 50% | 65% | 85% | `prototypes/mod-data/interstellar-science-pack.lua` called in `data-updates.lua` |
 | Rubia | `rubia-tech-cost-multiplier` (research multiplier) | 1× | 1× | 2× | 3× | `prototypes/technology-updates.lua` called in `data-updates.lua` |
 
-**Only proportional, numeric costs, requirements, and output quantities are
+**Only numeric costs, requirements, percentages and output quantities are
 controlled.** Razi does **not** alter K2SO's `kr-revert-thruster-fuel-changes`
 or any binary recipe-choice, technology-unlock, progression, cosmetic, or
 feature switch. All four named modes use numeric scaling; Custom defers
 entirely to the source mod's saved values.
+
+Both Muluna interstellar requirement modes are supported: its existing
+settings checkbox chooses between a fixed number and a percentage of installed
+planetary science packs. Razi controls the relevant numeric parameter in
+both modes without changing that checkbox.
 
 The bridge modifies **only existing, type-matching settings** when the
 owning mod is enabled. No attempt is made to inject a nonexistent setting
@@ -48,7 +54,7 @@ References:
 ## Verification and limits
 
 1. Restart Factorio after changing difficulty.
-2. Verify Muluna space-science output and interstellar science requirements
+2. Verify Muluna space-science output and interstellar science requirements (fixed and dynamic percentage)
    follow the selected quantities, rather than recipe or unlock toggles.
 3. Verify Rubia research-trigger costs use the selected multiplier in the
    source's `data-updates.lua` stage. Rubia also consumes this setting in

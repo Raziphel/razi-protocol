@@ -13,7 +13,7 @@ for name,mod in pairs(M.owners) do
   assert(type(profile[mode][name])=="number",mode.." numeric mapping missing: "..name)
  end
 end
-assert(n==3,"Only three verified numeric source settings should be managed")
+assert(n==4,"Only four verified numeric source settings should be managed")
 local saved={
  ["razi-difficulty-preset"]={value="hard"},
  ["kr-revert-thruster-fuel-changes"]={value=true},
