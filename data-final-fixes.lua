@@ -308,3 +308,6 @@ require("prototypes.compat.foreign_difficulty_settings").restore()
 -- be reached by the transient settings view. Recreate ONLY their confirmed
 -- source cost/yield formulas on their already-built prototypes instead.
 require("prototypes.compat.foreign_numeric_stage_effects").data_final_fixes()
+-- Same treatment for the native Muluna platform-power-consumption setting:
+-- correct scan-power, buffer, charge and source tooltip together.
+require("prototypes.compat.muluna_power_difficulty").data_final_fixes()

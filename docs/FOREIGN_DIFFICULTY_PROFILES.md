@@ -102,6 +102,24 @@ The local Lua tests use mocked Factorio tables and cover changing difficulty
 and source values; full in-game loading is still needed to validate the
 actual source prototype layouts and interactions with all modpack compat mods.
 
+## Muluna platform power consumption (native numeric source setting)
+
+The source's `platform-power-consumption` setting supplies the native
+`muluna-satellite-radar` energy usage, accumulator buffer capacity, input
+flow limit, mod-data scan-energy value and quality-dependent tooltip.
+These linked fields are corrected together, **relative to the saved source
+value**, after Muluna's own late prototype passes.
+
+| Setting | Easy | Normal | Hard | Nightmare |
+| --- | ---: | --- | ---: | ---: |
+| `platform-power-consumption` (MW baseline) | 75 | Unchanged | 125 | 170 |
+
+Normal and Custom leave all values exactly as the source mod created them.
+The radar's scan area, energy output flow, quality modifiers, unrelated
+electric producers and other mod settings remain untouched. This is a
+Muluna-specific reconciliation of its *own* numeric setting, not a new
+generic Razi energy feature.
+
 ## Other required-mod settings assessed
 
 The required-mod audit distinguishes numerical gameplay controls from
@@ -114,7 +132,7 @@ must be verified during in-game compatibility testing.
 | --- | --- | --- |
 | **Castra Prime** | `castra-prime-research-rate-multiplier` | Real runtime-global rate modifier; **not** safe to rewrite from RP's prototype stage. Requires source-owner runtime support or an explicitly verified equivalent API |
 | **Cerys** | `cerys-solar-wind-spawn-rate-percentage`, `cerys-plutonium-generation-rate-multiplier` | Real runtime-global numerical gameplay settings; source scripts read live values, so not covered by prototype reconciliation |
-| **Muluna** | `platform-power-consumption` | Startup numeric, but its source generates nav-beacon energy fields, mod-data, and matching descriptions in different phases. All parts must be reconciled together before adding |
+| **Muluna** | `platform-power-consumption` | **Integrated:** linked nav-beacon power, buffer, charge, scan metadata and tooltip are reconciled together after Muluna's late passes |
 | **Muluna** | `muluna-balance-fulgoran-cargo-drop-item-multiplier` | Numeric startup setting used by a runtime cargo-drop script, not safely overwritten by the prototype-stage bridge |
 | **Tenebris Prime** | `tenebris-small-centipede-length` and related sizes | Actual numeric settings exist, but the inspected enemy creation calls consuming them are commented out. No verified active gameplay effect to scale |
 | **Maraxsis** | `maraxsis-water-opacity` | Numeric but graphical only, not a difficulty control |
