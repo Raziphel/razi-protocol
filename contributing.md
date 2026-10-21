@@ -30,7 +30,7 @@ See [Releases in the README](README.md#releases):
 ## Design rules
 
 1. **Source mods own their content.** Use their real prototype IDs and mechanics; patch them only on purpose, with a comment saying why.
-2. **Progression is meaningful, not circular.** Every required technology stays reachable with the labs, science, routes and prerequisites that exist. Optional worlds do not silently become mandatory.
+2. **Progression is meaningful, not circular.** Every required technology stays reachable with the labs, science, routes and prerequisites that exist. Optional worlds do not silently become mandatory: the path to the intergalactic transceiver (`razi-stable-intergalactic-singularity`) needs none of them, except Cerys and Dea Dia, which razi-protocol itself puts on the path when they are installed; research outside the path may need the packs of installed optional worlds (the choice of the mod that owns it).
 3. **Travel routes are gameplay.** The starmap stays legible; danger and asteroid exposure show real route properties.
 4. **The journal is honest.** Its progress tracks real research, discovery and construction.
 5. **Save compatibility comes first.**
