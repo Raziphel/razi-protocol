@@ -69,3 +69,36 @@ References:
 This is a deliberately small verified numeric-only integration. Additional
 multiplier-type options will be added only after identifying a real source
 setting and a reachable source consumer. No external tools are needed.
+
+## Numeric source settings consumed earlier in data.lua
+
+These genuine settings are handled by a separate, source-specific **late
+prototype reconciliation**, because their owning mods read them before
+Razi Protocol's data.lua is reached. This targets the same setting-owned
+recipe/research quantities, **not** generic factories or technology trees.
+
+| Mod | Source numeric setting | Easy | Normal | Hard | Nightmare | Actual effect |
+|---|---|---:|---:|---:|---:|---|
+| Muluna | `space-science-pack-energy` | 5 | 7 | 9 | 12 | `space-science-pack` craft time, relative to Muluna's own saved setting |
+| Muluna | `muluna-balance-exploration-science-data-cost` | 6 | 10 | 14 | 20 | `muluna-astronomical-data` fluid amount for native interstellar science recipe |
+| Cerys | `cerys-undo-marathon-multiplier` | 1.5× | 1× | 0.8× | 0.6× | Relative scaling of the 16 research counts/triggers created using Cerys's `correct(n)` helper |
+
+Cerys source reads the saved value in `prototypes/technology.lua` and
+constructs research counts with `ceil(base / saved)`. Razi takes the final
+source values and applies `saved / target` to only the 16 named Cerys
+technologies confirmed in that file. This preserves upstream compatibility
+modifications multiplicatively, subject to ordinary integer rounding.
+Muluna is similarly adjusted using `target / saved` on two specific
+recipe properties.
+
+**Scope constraints:** No source settings in the player's Mod Settings
+are rewritten; Custom does not change anything. These passes require both
+the source mod and its named recipe or technology to be present. They
+preserve ingredients unrelated to the named source numeric option.
+Scientific progression or other setting-dependent Lua paths not represented
+by these exact prototype fields remain source-owned. No other mod's
+runtime-global settings can be rewritten by Razi.
+
+The local Lua tests use mocked Factorio tables and cover changing difficulty
+and source values; full in-game loading is still needed to validate the
+actual source prototype layouts and interactions with all modpack compat mods.

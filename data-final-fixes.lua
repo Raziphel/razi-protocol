@@ -303,3 +303,8 @@ require("prototypes.compat.crafting_navigation").data_final_fixes()
 -- difficulty-selected values. Put the Lua settings view back exactly as it
 -- was, leaving the player's saved foreign settings untouched.
 require("prototypes.compat.foreign_difficulty_settings").restore()
+
+-- Numeric options consumed by source mods in their earlier data.lua cannot
+-- be reached by the transient settings view. Recreate ONLY their confirmed
+-- source cost/yield formulas on their already-built prototypes instead.
+require("prototypes.compat.foreign_numeric_stage_effects").data_final_fixes()
