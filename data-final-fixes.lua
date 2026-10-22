@@ -229,6 +229,11 @@ require("prototypes.compat.carna_spire_copies").data_final_fixes()
 -- that could add a recipe, before the menu pass.
 require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
 
+-- Lithium Battery deletes two recipe copies that Planet Crucible's productivity technologies still list, and doubles a biter egg
+-- of the promethium research data with Maraxsis. After every pass that could add a recipe effect or ingredient, before the
+-- menu pass.
+require("prototypes.compat.lithium_battery").data_final_fixes()
+
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
