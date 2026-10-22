@@ -78,39 +78,60 @@ for _,name in ipairs({"rocket-silo","robotics","space-platform",
   #raw.technology[name].unit.ingredients==3,
   "Bootstrap technology was changed: "..name)
 end
+check(#M.core==2 and M.core[1].tech=="nuclear-power"
+  and M.core[2].tech=="nuclear-fuel-reprocessing",
+  "Only nuclear technologies may be spread over the planets")
+for _,name in ipairs({"construction-robotics","logistic-robotics",
+ "personal-roboport-equipment","logistic-system"}) do
+ local tech=raw.technology[name]
+ check(#tech.unit.ingredients==3 and not contains(tech.prerequisites,
+  "planet-discovery-gleba") and not contains(tech.prerequisites,
+  "planet-discovery-fulgora") and not contains(tech.prerequisites,
+  "planet-discovery-vulcanus"),
+  "Robots and logistics must stay on Nauvis: "..name)
+end
+check(#raw.technology["logistic-system"].prerequisites==1 and
+ raw.technology["logistic-system"].prerequisites[1]=="logistic-robotics" and
+ #raw.technology["construction-robotics"].prerequisites==1 and
+ #raw.technology["logistic-robotics"].prerequisites==1 and
+ #raw.technology["personal-roboport-equipment"].prerequisites==1,
+ "Robot and logistic prerequisites must stay as in the source")
+check(#raw.technology["nuclear-power"].prerequisites==5 and
+ #raw.technology["nuclear-power"].unit.ingredients==5,
+ "Nuclear power must get four planetary prerequisites and two packs")
 local size=#raw.technology["nuclear-power"].unit.ingredients
 M.data_final_fixes()
 check(#raw.technology["nuclear-power"].unit.ingredients==size,
  "Re-applying a data pass must not duplicate research ingredients")
 local safe=fixture()
 safe.technology["agricultural-science-pack"].prerequisites={
- "construction-robotics"}
+ "nuclear-power"}
 check(not M.apply(safe,M.core[1]),
- "Must not gate construction robots behind a science producer using them")
-check(not contains(safe.technology["construction-robotics"].prerequisites,
+ "Must not gate nuclear power behind a science producer using it")
+check(not contains(safe.technology["nuclear-power"].prerequisites,
  "agricultural-science-pack"),"Failed guard left half the research change")
 local missing=fixture()
 missing.recipe["metallurgic-science-pack"]=nil
-check(not M.apply(missing,M.core[2]),
+check(not M.apply(missing,M.core[1]),
  "A missing science producer must not gate nuclear power")
 local no_lab=fixture()
 no_lab.lab["lab"].inputs={
  "automation-science-pack","logistic-science-pack","chemical-science-pack",
  "metallurgic-science-pack"}
-check(not M.apply(no_lab,M.core[3]),
+check(not M.apply(no_lab,M.core[1]),
  "No research lab may accept an impossible dual-source pack mixture")
 local absent=fixture()
 absent.technology["planet-discovery-gleba"]=nil
-check(not M.apply(absent,M.core[2]),
+check(not M.apply(absent,M.core[1]),
  "Missing source mod/discovery must not break a vanilla reactor")
 local disabled=fixture()
 disabled.technology["nuclear-power"].enabled=false
-check(not M.apply(disabled,M.core[2]),
+check(not M.apply(disabled,M.core[1]),
  "Disabled native technologies must stay disabled and unmodified")
 local trigger=fixture()
 trigger.technology["nuclear-power"].research_trigger={type="craft-item",
  item="nuclear-reactor",count=1}
-check(not M.apply(trigger,M.core[2]),
+check(not M.apply(trigger,M.core[1]),
  "Native trigger research must not be converted into science units")
 local before=fixture()
 data.raw=before
@@ -119,4 +140,4 @@ M.data_final_fixes()
 check(#before.technology["nuclear-power"].prerequisites==1 and
  #before.technology["nuclear-power"].unit.ingredients==3,
  "Legacy startup switch must preserve the original native tech tree")
-print("Distributed nuclear, robots, Cerys and modded technologies passed")
+print("Distributed nuclear, Cerys and modded technologies passed")

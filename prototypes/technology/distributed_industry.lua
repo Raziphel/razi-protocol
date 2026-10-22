@@ -22,24 +22,13 @@ M.reaches=reaches
 -- This is a deliberate selection, not an all-technologies scan. It never
 -- gates rockets, robot frames, labs, the first two discoveries, or science
 -- producers behind technologies which those very systems need to bootstrap.
+-- Robots and the logistic system stay on Nauvis, as in K2SO, and
+-- logistic-robotics is a prerequisite of rocket-silo, so its rule made a cycle.
 M.core={
-  {tech="construction-robotics",stage="gleba",
-    parents={"planet-discovery-gleba","agricultural-science-pack"},
-    packs={"agricultural-science-pack"}},
   {tech="nuclear-power",stage="first-pair",
     parents={"planet-discovery-vulcanus","planet-discovery-gleba",
       "metallurgic-science-pack","agricultural-science-pack"},
     packs={"metallurgic-science-pack","agricultural-science-pack"}},
-  {tech="logistic-robotics",stage="first-pair",
-    parents={"planet-discovery-vulcanus","planet-discovery-gleba",
-      "metallurgic-science-pack","agricultural-science-pack"},
-    packs={"metallurgic-science-pack","agricultural-science-pack"}},
-  {tech="personal-roboport-equipment",stage="gleba",
-    parents={"construction-robotics","agricultural-science-pack"},
-    packs={"agricultural-science-pack"}},
-  {tech="logistic-system",stage="fulgora",
-    parents={"planet-discovery-fulgora","electromagnetic-science-pack"},
-    packs={"electromagnetic-science-pack"}},
   -- Cerys has its own optional nuclear science in the curated pack.
   -- Fuel reprocessing is a late efficiency reward, never needed to
   -- operate reactors or make the first nuclear fuel cells.
