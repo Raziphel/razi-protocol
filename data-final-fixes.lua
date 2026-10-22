@@ -109,6 +109,12 @@ require("prototypes.technology.campaign_weave").data_final_fixes()
 require("prototypes.compat.linox_science_guard").data_final_fixes()
 require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
 
+-- Interplanetary exchanges: the shared components first, then the exchange
+-- recipes that consume them (K2SO recipe names are settled by now).
+require("prototypes.compat.network_components").data_final_fixes()
+require("prototypes.compat.planet_production_exchanges").data_final_fixes()
+require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
+
 -- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
 require("prototypes.technology.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.galactic_mod_research").data_final_fixes()
@@ -116,6 +122,11 @@ require("prototypes.technology.galactic_mod_research").data_final_fixes()
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
+
+-- Castra's exchange, then the exchanges that return component cargo; they run
+-- after the other research passes so that the research links see the final tree.
+require("prototypes.compat.first_frontier_industry").data_final_fixes()
+require("prototypes.compat.network_components").register_premium()
 
 -- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
 -- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
