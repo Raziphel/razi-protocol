@@ -99,11 +99,10 @@ local function setup(options)
   if options.no_panglia then mods.panglia_planet=nil end
   if options.no_crucible then mods["planet-crucible"]=nil end
   rawset(_G,"mods",mods)
-  if options.off or options.disable_modded or options.deep then
+  if options.off or options.deep then
     rawset(_G,"settings",{startup={
       ["razi-planetary-interdependence"]={
-        value=options.off and "off" or options.deep and "deep" or "balanced"},
-      ["razi-enable-modded-planet-exchanges"]={value=not options.disable_modded}
+        value=options.off and "off" or "deep"}
     }})
   else rawset(_G,"settings",nil) end
   local calls={k2=0,modded=0,deep=0}
@@ -206,7 +205,7 @@ check(#raw.recipe[lattice].ingredients==5,
   "Repeated registration should preserve production identities")
 for _,case in ipairs({
  {hide_optics=true},{remove_linox=true},{no_lab=true},
- {missing_mod=true},{off=true},{disable_modded=true}
+ {missing_mod=true},{off=true}
 }) do
   local raw_case,mock,actions=setup(case)
   mock.data_final_fixes()

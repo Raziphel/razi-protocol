@@ -358,18 +358,18 @@ enough_engine.data_final_fixes()
 check(enough.recipe["razi-electrobiological-components"],
   "Five-slot electromagnetic machine unexpectedly rejected a valid upgrade")
 
--- Disabling this optional category must not disturb native K2SO recipes.
+-- Off mode removes the exchanges but must not disturb native K2SO recipes.
 local disabled_raw, disabled_module = setup()
 rawset(_G, "settings", {startup={
-  ["razi-enable-k2so-production-exchanges"] = {value = false}
+  ["razi-planetary-interdependence"] = {value = "off"}
 }})
 disabled_module.data_final_fixes()
 for _, name in ipairs(names) do
   check(not disabled_raw.recipe[name] and not disabled_raw.technology[name],
-    "Disabled K2SO exchange still appeared: " .. name)
+    "Off mode kept a K2SO exchange: " .. name)
 end
 check(disabled_raw.recipe["kr-casting-rare-metals"],
-  "Disabling optional exchange removed native K2SO manufacturing")
+  "Off mode removed native K2SO manufacturing")
 rawset(_G, "settings", nil)
 
 -- Imports already used by a native recipe are merged rather than duplicated.

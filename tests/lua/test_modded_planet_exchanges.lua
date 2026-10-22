@@ -281,17 +281,15 @@ for _,rule in ipairs(rules) do
   check(not no_k2.recipe[rule.name],"Modded exchange appeared without K2SO")
 end
 
--- The second production toggle controls these cross-mod bridges
--- independently of the ordinary K2SO production option.
+-- Off mode removes these cross-mod bridges but keeps the native recipes.
 local off_raw, off_mod = setup()
 rawset(_G, "settings", {startup={
-  ["razi-enable-modded-planet-exchanges"] = {value = false},
-  ["razi-enable-k2so-production-exchanges"] = {value = true}
+  ["razi-planetary-interdependence"] = {value = "off"}
 }})
 off_mod.data_final_fixes()
 for _, rule in ipairs(rules) do
   check(not off_raw.recipe[rule.name] and not off_raw.technology[rule.name],
-    "Disabled modded world production recipe still exists: " .. rule.name)
+    "Off mode kept a modded world production recipe: " .. rule.name)
   check(off_raw.recipe[rule.source],
     "Native production disappeared after disabling bridge")
 end

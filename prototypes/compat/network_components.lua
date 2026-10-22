@@ -282,10 +282,6 @@ local parts={
   }
 }
 M.parts=parts
-local function enabled(name)
-  local setting=settings and settings.startup and settings.startup[name]
-  return not setting or setting.value~=false
-end
 local function register_part(part,index)
   if part.deep_only and not mode.deep() then return false end
   for _,mod_name in ipairs(part.required_mods or {}) do
@@ -491,8 +487,7 @@ local function arrange()
 end
 
 function M.data_final_fixes()
-  if not mode.enabled() or not (mods and mods["Krastorio2-spaced-out"])
-    or not enabled("razi-enable-modded-planet-exchanges") then return end
+  if not mode.enabled() or not (mods and mods["Krastorio2-spaced-out"]) then return end
   local index=unlock_index()
   for _,part in ipairs(parts) do register_part(part,index) end
 end
