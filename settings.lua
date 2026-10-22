@@ -92,7 +92,7 @@ data:extend({
 		name = "razi-planetary-interdependence",
 		setting_type = "startup",
 		default_value = "balanced",
-		allowed_values = {"off", "balanced"},
+		allowed_values = {"off", "balanced", "deep"},
 		order = "ba[integration]-0[interdependence]"
 	},
 	{
