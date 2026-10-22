@@ -179,6 +179,11 @@ require("prototypes.system.modded_asteroid_distribution").data_final_fixes()
 -- mod-provided outer expeditions with unknown location IDs.
 require("scripts.razi_asteroid_difficulty").prepare_routes(data.raw["space-connection"])
 
+-- Razi More Asteroids owns the eight material families and K2SO recipes.
+-- Reprofile the final surviving RP3 connections, including both Razi belts,
+-- before route tooltips and quality-asteroid carrier conversion inspect them.
+require("prototypes.system.more_asteroids_integration").data_final_fixes()
+
 require("prototypes.system.route_icons").data_final_fixes()
 
 -- Route tooltips and the star map backdrop read the final routes and orbits.
