@@ -214,6 +214,10 @@ require("prototypes.compat.factorio_2_1_22").data_final_fixes()
 -- copy or add a prototype, as the last edit of created_effect.
 require("prototypes.compat.carna_spire_copies").data_final_fixes()
 
+-- Arcanyx's keep-Voidcraft-on-Arcanyx condition misses the Astral voidforge and, in 2.1, every inverse recipe. After every pass
+-- that could add a recipe, before the menu pass.
+require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
+
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
