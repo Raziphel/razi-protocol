@@ -10,6 +10,8 @@ local notes = {
   {"sye-nyxaris","sye-vespera","vespera-link"},
   {"sye-vespera","sye-umbra","umbra-link"},
   {"sye-solaris","sye-nyxaris","frontier-bridge"},
+  {"sye-solaris","calidus-bellicos-stargate-calidus","aegis-solaris"},
+  {"sye-nyxaris","calidus-bellicos-stargate-calidus","aegis-nyxaris"},
   {"sye-beetlejuice","sye-umbra","outer-bridge"},
   {"sye-vibrant","asteroid-belt-outer-edge","vibrant-outer"},
   {"ribbonia","asteroid-belt-inner-edge","vibrant-inner"},
