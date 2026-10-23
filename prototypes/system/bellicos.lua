@@ -419,6 +419,52 @@ function bellicos.retire_far_gate()
   return removed
 end
 
+-- Late compatibility passes may register a second route under a different
+-- ID after the main Aegis spine was curated. Keep one connection per unordered
+-- pair, preferring native names, and merge only exclusive custom asteroid
+-- materials before dropping the duplicate. Does not create or reroute travel.
+function bellicos.dedupe_internal_routes()
+  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
+  local routes=data.raw["space-connection"] or {}
+  local nodes={
+    [entry_gate]=true,
+    ["aegis-outer-edge"]=true,["aegis-inner-edge"]=true,
+    ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
+    ["near_bellicos_orbit"]=true
+  }
+  for _,name in ipairs(find_wardens()) do nodes[name]=true end
+  local names={}
+  for name in pairs(routes) do names[#names+1]=name end
+  table.sort(names,function(a,b)
+    local a_razi=a:sub(1,5)=="razi-"
+    local b_razi=b:sub(1,5)=="razi-"
+    if a_razi~=b_razi then return not a_razi end
+    return a<b
+  end)
+  local kept,removed={},0
+  local asteroid=require("prototypes.system.asteroid_profiles")
+  for _,name in ipairs(names) do
+    local route=routes[name]
+    if route and nodes[route.from] and nodes[route.to]
+      and route.from~=route.to then
+      local a,b=route.from,route.to
+      if a>b then a,b=b,a end
+      local key=a.."|"..b
+      if kept[key] then
+        asteroid.preserve_custom(kept[key],route)
+        routes[name]=nil
+        removed=removed+1
+      else
+        kept[key]=route
+      end
+    end
+  end
+  if removed>0 and type(log)=="function" then
+    log(("[Razi Protocol/Aegis] Removed %d late duplicate native corridors"):format(removed))
+  end
+  return removed
+end
+
 -- Run after final route ownership and asteroid-family integration. Keep the
 -- author's native species/curves; harden vanilla asteroid mid-route encounters.
 -- Protect one readable route spine. The former fallback algorithm appended
