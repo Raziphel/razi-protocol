@@ -54,7 +54,7 @@ function M.witness_status(force)
  local found={}
  local total=#M.witness_systems
  local known=force and force.get_entity_count
-  and force.get_entity_count("razi-convergence-witness-anchor")
+  and force.get_entity_count("radar")
  if known==0 then
   for _,system in ipairs(M.witness_systems) do
    locations[#locations+1]={system=system}
@@ -67,7 +67,7 @@ function M.witness_status(force)
   if system and not found[system]
    and surface.find_entities_filtered then
    for _,entity in pairs(surface.find_entities_filtered{
-     name="razi-convergence-witness-anchor",force=force}) do
+     name="radar",force=force}) do
     if entity.valid and (entity.energy or 0)>0 then
      found[system]=planet.name
      break
@@ -290,9 +290,7 @@ function M.deliver(player,id)
  local allowed,why=stage_ready(force,index)
  if not allowed then return why,0 end
  if not M.location(player) then return "convergence-need-platform",0 end
- if index==#M.stages and not M.core_status(player) then
-  return "convergence-need-core",0
- end
+ -- Native-only finale: no custom core entity required.
  local inv=player.get_main_inventory()
  if not (inv and inv.valid) then
   return "convergence-no-cargo",0
