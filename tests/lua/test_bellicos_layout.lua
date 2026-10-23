@@ -12,7 +12,7 @@ package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"] = {
 }
 
 local gate_a = "calidus-bellicos-stargate-calidus"
-local gate_b = "calidus-bellicos-stargate-bellicos"
+local retired_gate = "calidus-bellicos-stargate-bellicos"
 local old_route = "razi-vespera-aegis-stargate"
 
 local function run(options)
@@ -22,7 +22,7 @@ local function run(options)
     ["sye-vespera"] = {name="sye-vespera"},
     ["sye-calidus"] = {name="sye-calidus"},
     [gate_a] = {name=gate_a},
-    [gate_b] = {name=gate_b}
+    [retired_gate] = {name=retired_gate}
   }
   local planets = {}
   if options.pulsar == "space-location" then
@@ -81,6 +81,8 @@ local function run(options)
   local module = require("prototypes.system.bellicos")
   module.data()
   module.data_final_fixes()
+  -- In the real data-final-fixes pipeline, fortify_routes runs after source
+  -- route registration. Test retirement independently in its route fixture.
   return module, places, planets, routes, updates
 end
 
@@ -96,11 +98,11 @@ local check_module=require("prototypes.system.bellicos")
 check_module.data_updates()
 check(good_pulsar.orbit.sprite==pulsar_image,
   "Bellicos pre-render reparenting removed its preserved source sprite")
+check(present[retired_gate] and not present[retired_gate].orbit,
+  "The retired gate must not receive a new orbit placement")
 check(present.pulsar.orbit.parent.name == "sye-calidus"
   and present.pulsar.orbit.distance==190,
   "Pulsar did not join shared southern frontier")
-check(present[gate_b].orbit.parent.name == "pulsar",
-  "Present pulsar gateway not attached to pulsar")
 check(present[gate_a].orbit.parent.name == "sye-calidus"
   and present[gate_a].orbit.distance==151
   and present[gate_a].orbit.orientation==0.468,
@@ -108,11 +110,6 @@ check(present[gate_a].orbit.parent.name == "sye-calidus"
 check(not connected[old_route], "Legacy Vespera-only route was not retired")
 
 local _, missing, _, fallback = run()
-check(missing[gate_b].orbit.parent.name=="sye-calidus",
-  "Missing pulsar must attach gateway to southern frontier")
-check(missing[gate_b].orbit.distance>225
-  and missing[gate_b].orbit.distance<260,
-  "Missing pulsar fallback must stay in southern frontier")
 check(not fallback[old_route], "Legacy route resurfaced on pulsar fallback")
 
 -- Exercise the REAL data-final-fixes path, including the near/pulsar drift
@@ -132,8 +129,6 @@ check(near_locations["near-bellicos-orbit"].orbit.distance>189
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
   "Native Aegis belt nodes were left behind")
-check(near_locations[gate_b].orbit.parent.name=="near-bellicos-orbit",
-  "Remote Bellicos stargate is detached from its destination")
 -- Prevent a regression to the flat row of "Aegis Point Warden" labels.
 -- The native fields must agree with the PlanetsLib source orbit angles.
 local function actual_position(name)
@@ -147,12 +142,11 @@ local near_x,near_y=actual_position("near-bellicos-orbit")
 local inner_x,inner_y=actual_position("aegis-inner-edge")
 local point_x,point_y=actual_position("point-warden")
 local outer_x,outer_y=actual_position("aegis-outer-edge")
-local gate_x,gate_y=actual_position(gate_b)
 check(outer_y<inner_y-10 and inner_y<near_y
-  and point_y>inner_y+20 and gate_y>point_y+12,
+  and point_y>inner_y+20,
   "Aegis route spine is overlapping or running back into its source belt")
-check(outer_x<inner_x and inner_x<point_x and point_x<gate_x,
-  "Aegis waypoints no longer advance from outer rim toward Bellicos")
+check(outer_x<inner_x and inner_x<point_x,
+  "Aegis waypoints no longer advance from outer rim toward Point Warden")
 -- Two long nearly coincident Inner-Edge departures looked like a doubled
 -- route. Require distinct bearings WITHOUT removing any source game route.
 local wx,wy=point_x-inner_x,point_y-inner_y
@@ -160,11 +154,8 @@ local ox,oy=outer_x-inner_x,outer_y-inner_y
 local spread=math.abs(wx*oy-wy*ox)/
   (math.sqrt(wx*wx+wy*wy)*math.sqrt(ox*ox+oy*oy))
 check(spread<0.25,"The single Aegis route spine started zig-zagging again")
-local gate_dx,gate_dy=gate_x-point_x,gate_y-point_y
-check(math.sqrt((gate_x-point_x)^2+(gate_y-point_y)^2)<35,
-  "Bellicos stargate must be close to Point Warden")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
-   "aegis-outer-edge",gate_b}) do
+   "aegis-outer-edge"}) do
   local body=near_locations[name]
   local orbit=body.orbit
   check(type(body.distance)=="number"
@@ -178,16 +169,15 @@ end
 -- Local radii are stored in orbit metadata; native fields are absolute.
 check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
   and math.abs(near_locations["point-warden"].orbit.distance-48)<.001
-  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-32)<.001
-  and math.abs(near_locations[gate_b].orbit.distance-74)<.001,
+  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-32)<.001,
   "Aegis sector local radii drifted")
 
 
 local _, alt_locations, alt_planets = run({pulsar="planet"})
 check(alt_planets.pulsar.orbit.parent.name=="sye-calidus",
   "Retyped native pulsar was not found in data.raw.planet")
-check(alt_locations[gate_b].orbit.parent.type=="planet",
-  "Gateway orbit does not use the actual pulsar prototype type")
+check(alt_locations["near-bellicos-orbit"]==nil,
+  "Optional near-orbit unexpectedly created during pulsar-only test")
 
 local _, absent, _, no_route = run({no_entry_gate=true})
 check(not absent[gate_a] and not no_route[old_route],
@@ -198,10 +188,10 @@ check(not absent[gate_a] and not no_route[old_route],
 local disappearing, disappearing_locations = run({pulsar="space-location"})
 disappearing_locations.pulsar = nil
 disappearing.data_final_fixes()
-check(disappearing_locations[gate_b].orbit.parent.name=="sye-calidus",
-  "Final-stage removed pulsar still referenced as orbit parent")
+check(disappearing_locations[gate_a].orbit.parent.name=="sye-calidus",
+  "Final-stage removed pulsar displaced the surviving entry gate")
 
--- Late gateway removal also invalidates the route Razi registered in data.lua.
+-- Late ENTRY-gate removal must not resurrect a legacy approach route.
 local no_longer_present, late_locations, _, late_routes =
   run({pulsar="space-location"})
 late_locations[gate_a] = nil
@@ -234,7 +224,7 @@ check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
 check(near_py>edge_y+188 and math.abs(near_px-edge_x)<5,
   "Near Bellicos Orbit must be south of two starter stars")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
-    "aegis-outer-edge",gate_b}) do
+    "aegis-outer-edge"}) do
   local cx,cy=absolute(name)
   local distance=math.sqrt((cx-near_px)^2+(cy-near_py)^2)
   check(distance<=75,"Aegis location outside its pulsar system: "..name)
