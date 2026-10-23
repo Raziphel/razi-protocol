@@ -5,6 +5,7 @@ local function check(value, message)
 end
 local tech = {
   ["vespera-discovery"]={},
+  ["solaris-discovery"]={},["nyxaris-discovery"]={},
   ["beetlejuice-discovery"]={prerequisites={"vespera-discovery"}},
   ["stellar-discovery-solar-system-edge"]={prerequisites={"beetlejuice-discovery"}},
   ["planet-discovery-aquilo"]={prerequisites={"vespera-discovery"}},
@@ -37,6 +38,7 @@ local tech = {
   }
 }
 rawset(_G,"data",{raw={technology=tech,planet={["bm-balack"]={},shchierbin={}},
+  ["space-location"]={["calidus-bellicos-stargate-calidus"]={}},
   tool={["cryogenic-science-pack"]={}}}})
 rawset(_G,"mods",{["Krastorio2-spaced-out"]="2.1.0",
   ["bellicos-and-aegis"]="0.4.1"})
@@ -67,9 +69,19 @@ end
 check(cryogenic==1 and promethium==0,"Promethium replacement duplicated or failed")
 check(tech["bm-ai-control-unit"].unit.ingredients[1][1]=="promethium-science-pack",
   "Post-Balack native equipment science was changed")
-check(has("discovery-aegis-outer","vespera-discovery") and
+check(has("discovery-aegis-outer","solaris-discovery") and
+  has("discovery-aegis-outer","nyxaris-discovery") and
+  not has("discovery-aegis-outer","vespera-discovery") and
   not has("discovery-aegis-outer","stellar-discovery-solar-system-edge"),
-  "Aegis must open with middle-tier Vespera")
+  "Aegis requires both first frontiers, without a later-system gate")
+local native_gate=false
+for _,effect in ipairs(tech["discovery-aegis-outer"].effects or {}) do
+  if effect.type=="unlock-space-location" and
+    effect.space_location=="calidus-bellicos-stargate-calidus" then
+    native_gate=true
+  end
+end
+check(native_gate,"Shared Aegis survey must unlock its native entry stargate")
 check(has("discovery-aegis-inner","beetlejuice-discovery"),
   "The deeper Bellicos expedition must require tier three")
 check(has("planet-discovery-shchierbin","planet-discovery-paracelsin"),
