@@ -20,7 +20,7 @@ local function xy(location)
   return location.distance*math.sin(theta),
     -location.distance*math.cos(theta)
 end
-for _,entry in ipairs({{inner,31,.725},{outer,46,.74}}) do
+for _,entry in ipairs({{inner,30,.670},{outer,40,.690}}) do
   local loc,radius=entry[1],entry[2]
   check(loc.orbit.parent.name=="star" and not loc.draw_orbit,
     "Vibrant belt must use a native root-star orbit")
@@ -32,10 +32,16 @@ for _,entry in ipairs({{inner,31,.725},{outer,46,.74}}) do
 end
 local ix,iy=xy(inner)
 local ox,oy=xy(outer)
-check(math.sqrt((ix-ox)^2+(iy-oy)^2)>14,
+check(math.sqrt((ix-ox)^2+(iy-oy)^2)>10,
   "Vibrant Inner and Outer markers must not pile labels together")
-check(math.sqrt((ix-ox)^2+(iy-oy)^2)<22,
-  "Vibrant crossing must remain one short surveyed corridor")
+check(math.sqrt((ix-ox)^2+(iy-oy)^2)<12,
+  "Vibrant markers must straddle the actual rock band, not empty space")
+local vinner=math.sqrt((ix-cx)^2+(iy-cy)^2)
+local vouter=math.sqrt((ox-cx)^2+(oy-cy)^2)
+check(vinner<31 and vinner>=29 and vouter>39 and vouter<=41,
+  "Both rim markers must be immediately beside the 31–39 chart-unit debris")
+check(math.abs(iy-oy)<2,
+  "The surveyed passage should cross the southwest rim without a long diagonal")
 check(#layers==5,"Expected three restrained Vibrant belt layers")
 for i=1,3 do
   local layer=layers[i]
