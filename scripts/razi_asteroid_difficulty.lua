@@ -38,14 +38,14 @@ local exceptional={
   ["shattered-planet"]=10,["nexus"]=10,
   ["black-hole-approach"]=10,["black-hole"]=10,
   ["oort-cloud"]=10,["sol"]=10,
-  -- The Aegis/Bellicos expedition is BEYOND Solar System Edge, not
-  -- a Calidus level-1 route despite the legacy gate's ID prefix.
-  ["calidus-bellicos-stargate-calidus"]=9,
+  -- Shared first-frontier Aegis ramps from 8 at its entry to 10 by
+  -- the late Bellicos interior. Legacy Calidus gate IDs never imply safety.
+  ["calidus-bellicos-stargate-calidus"]=8,
   ["calidus-bellicos-stargate-bellicos"]=10,
-  ["pulsar"]=10,["aegis-inner-edge"]=10,
-  ["aegis-outer-edge"]=10,["point-warden"]=10,
-  ["near-bellicos-orbit"]=10,["bellicos-near-orbit"]=10,
-  ["near_bellicos_orbit"]=10,
+  ["pulsar"]=9,["aegis-inner-edge"]=8,
+  ["aegis-outer-edge"]=9,["point-warden"]=9,
+  ["near-bellicos-orbit"]=9,["bellicos-near-orbit"]=9,
+  ["near_bellicos_orbit"]=9,
   -- Source-owned fractured routes branching from Shattered Planet.
   ["skewer_shattered_planet"]=10,
   ["skewer_lost_beyond"]=10,
@@ -226,11 +226,13 @@ function M.location_level(name)
   if solar=="outer" then return 9 end
   local fixed=exceptional[name] or inferred[name]
   if fixed then return fixed end
-  -- Dynamic Aegis/Bellicos descendants sometimes use version-specific
-  -- identifiers. Never default the far-edge expedition to Level 2.
+  -- Source variants retain difficult Aegis interior levels without being
+  -- mislabeled as deep-space routes simply because of their old names.
   local n=name:lower()
+  if n:find("warden",1,true) then return 9 end
   if n:find("bellicos",1,true) or n:find("aegis",1,true)
-    or n:find("pulsar",1,true) or n:find("skewer_",1,true)
+    or n:find("pulsar",1,true) then return 9 end
+  if n:find("skewer_",1,true)
     or n:find("black-hole",1,true) then return 10 end
   return base[members.system(name)] or 4
 end
