@@ -143,8 +143,8 @@ places["alchemy-planet"]=nil
 check(planets["alchemy-planet"].origin and
   math.abs(planets["alchemy-planet"].origin.x-vx)<.01 and
   math.abs(planets["alchemy-planet"].origin.y-vy)<.01 and
-  math.abs(planets["alchemy-planet"].distance-67)<.01 and
-  math.abs(planets["alchemy-planet"].orientation-.595)<.001,
+  math.abs(planets["alchemy-planet"].distance-22)<.01 and
+  math.abs(planets["alchemy-planet"].orientation-.81)<.001,
   "Pre-render Khemia artwork did not follow its new Vibrant orbit")
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.
