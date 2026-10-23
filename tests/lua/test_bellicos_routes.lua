@@ -64,18 +64,18 @@ local bellicos=require("prototypes.system.bellicos")
 local added,removed=bellicos.fortify_routes()
 check(added==1 and removed==2,
   "Route director should replace exactly one missing entry and two shortcuts")
-local pairs={}
+local seen_pairs={}
 for name,r in pairs(routes) do
   local a,b=r.from,r.to
   local key=a<b and (a.."|"..b) or (b.."|"..a)
-  check(not pairs[key],"Duplicate Aegis corridor: "..key)
-  pairs[key]=r
+  check(not seen_pairs[key],"Duplicate Aegis corridor: "..key)
+  seen_pairs[key]=r
   check(r.shape=="line" and r.origin==nil,
     "An old native Aegis arc still crosses the pulsar: "..name)
 end
 local function has(a,b)
   local key=a<b and a.."|"..b or b.."|"..a
-  return pairs[key]
+  return seen_pairs[key]
 end
 check(has(entry,outer) and has(outer,inner)
   and has(inner,warden) and has(warden,deep) and has(near,inner),
