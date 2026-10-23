@@ -10,6 +10,12 @@ local tech = {
   ["stellar-discovery-solar-system-edge"]={prerequisites={"beetlejuice-discovery"}},
   ["planet-discovery-aquilo"]={prerequisites={"vespera-discovery"}},
   ["planet-discovery-paracelsin"]={prerequisites={"vespera-discovery"}},
+  ["planet-discovery-ribbonia"]={prerequisites={"vespera-discovery"}},
+  ["planet-discovery-khemia"]={
+    prerequisites={"planet-discovery-paracelsin","space-discovery-asteroid-belt","automation-3"},
+    effects={{type="unlock-space-location",space_location="alchemy-planet"}},
+    unit={count=650,time=30,ingredients={{"space-science-pack",2}}}
+  },
   ["promethium-science-pack"]={prerequisites={"stellar-discovery-solar-system-edge"}},
   ["discovery-aegis-outer"]={
     prerequisites={"stellar-discovery-solar-system-edge"},
@@ -37,7 +43,7 @@ local tech = {
     effects={{type="unlock-space-location",space_location="shchierbin"}}
   }
 }
-rawset(_G,"data",{raw={technology=tech,planet={["bm-balack"]={},shchierbin={}},
+rawset(_G,"data",{raw={technology=tech,planet={["bm-balack"]={},shchierbin={},["alchemy-planet"]={}},
   ["space-location"]={["calidus-bellicos-stargate-calidus"]={}},
   tool={["cryogenic-science-pack"]={}}}})
 rawset(_G,"mods",{["Krastorio2-spaced-out"]="2.1.0",
@@ -86,12 +92,25 @@ check(has("discovery-aegis-inner","beetlejuice-discovery"),
   "The deeper Bellicos expedition must require tier three")
 check(has("planet-discovery-shchierbin","planet-discovery-paracelsin"),
   "Shchierbin must follow exterior Paracelsin")
+check(has("planet-discovery-khemia","planet-discovery-ribbonia")
+  and not has("planet-discovery-khemia","planet-discovery-paracelsin")
+  and not has("planet-discovery-khemia","space-discovery-asteroid-belt")
+  and has("planet-discovery-khemia","automation-3"),
+  "Inner Khemia cannot be gated behind exterior Paracelsin or the belt")
+check(tech["planet-discovery-khemia"].unit.count==650
+  and tech["planet-discovery-khemia"].effects[1].space_location=="alchemy-planet",
+  "Do not replace native alchemy research costs or unlocks")
 module.data_final_fixes()
 local seen={}
 for _, ingredient in ipairs(balack.unit.ingredients) do
   check(not seen[ingredient[1]],"Repeated reconciliation duplicated science")
   seen[ingredient[1]]=true
 end
+local khemia_ribbonia=0
+for _,parent in ipairs(tech["planet-discovery-khemia"].prerequisites) do
+  if parent=="planet-discovery-ribbonia" then khemia_ribbonia=khemia_ribbonia+1 end
+end
+check(khemia_ribbonia==1,"Repeated pass duplicated Khemia's Ribbonia prerequisite")
 local parent_counts={}
 for _, parent in ipairs(tech["discovery-aegis-inner"].prerequisites) do
   parent_counts[parent]=(parent_counts[parent] or 0)+1
