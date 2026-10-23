@@ -1,8 +1,8 @@
-> **Current map policy (October 23, 2026):** The Aegis/Bellicos pulsar
-> sits **below Solaris and Nyxaris**, with a dangerous researched approach
-> from **each** first frontier. The native interior grows into tier three.
-> Vibrant's outer worlds sit beyond its SW asteroid crossing, and Deep Space's
-> northern destinations have been redistributed to fill the old pulsar gap.
+> **Current map policy (October 24, 2026):** Aegis/Bellicos remains beneath
+> Solaris and Nyxaris with separate dangerous approaches. Vibrant's two rim
+> markers now sit on the actual southwest asteroid ring at radius 30/40.
+> **Khemia is inside** that ring, accessible from Ribbonia; Paracelsin and
+> Shchierbin remain outside. Deep Space retains its redistributed outer worlds.
 > Earlier Vespera-side and post-Deep-Space Aegis notes below are historical.
 > See [current map layout](STARMAP_LAYOUT.md).
 
@@ -26,7 +26,7 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 * **Calidus:** Nauvis, Muluna, Calidus Drift orbital salvage stop
 * **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys
 * **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax, Rabbasca and Terra Palus (Gleba moons), optional Pelagos and Dea Dia
-* **Vibrant:** Fulgora, Ribbonia, Paracelsin, optional Shchierbin and Cerys
+* **Vibrant:** Inner Fulgora, Ribbonia, Khemia and Cerys; outer Paracelsin and Shchierbin
 * **Vespera:** Muria, Aquilo, Rubia, Maraxsis, Balack
 * **Beetlejuice:** Cubium, Linox, Secretas, Frozeta, Ferrum
 * **Umbra:** Tenebris, Crucible and its orbit, Vesta, Carna, Arcanyx, Obsidiax
@@ -42,7 +42,7 @@ The route table itself lives in `prototypes/system/route_reconcile.lua`.
 Calidus sits at the center of a compact six-star hexagon (radius 104).
 Solaris/Nyxaris are the first frontiers to the south, Vibrant/Vespera
 form the middle pair, and Beetlejuice/Umbra lie to the north. Deep Space
-while Aegis/Bellicos is directly south of the first two stars.
+occupies a distinct northern frontier; Aegis/Bellicos lies south of Solaris and Nyxaris.
 Star artwork and source-owned moons stay intact. Several planets now
 have climate-themed orbit radii, without gameplay temperature changes.
 The Calidus departure hub stays 20 map units south of home.
@@ -67,7 +67,8 @@ Local branches remain connected inside their own systems, including:
 
     Solaris: Vulcanus -> Castra -> Arig/Hyarion -> Tellus -> Corrundum
     Nyxaris: Gleba | Moshine -> Apia/Carnova -> Panglia (+ Rabbasca / Foliax / Pelagos / Dea Dia)
-    Vibrant: Fulgora | Ribbonia -> Native Belt Inner -> Outer -> frozen Paracelsin (+ Cerys)
+    Vibrant: Fulgora -> Ribbonia -> Khemia (inner alchemy spur)
+             Ribbonia -> Native Belt Inner -> Outer -> frozen Paracelsin (+ Shchierbin, Cerys)
              Belt Outer -> Paracelsin is an extra post-crossing return link
     Vespera: Slip Stream -> Muria -> Rubia -> Maraxsis
                                      \-> Aquilo (optional Balack)
