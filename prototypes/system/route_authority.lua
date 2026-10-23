@@ -29,6 +29,10 @@ local side_routes={
   {"athos","muria",24000,"cryogenic"},
   -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
   {"shchierbin","paracelsin",18000,"chemistry_deep"},
+  -- Two independent first-frontier approaches to the same native Aegis gate.
+  -- The source Bellicos interior remains native; there is no Deep Space bypass.
+  {"sye-solaris","calidus-bellicos-stargate-calidus",112000,"aegis_approach"},
+  {"sye-nyxaris","calidus-bellicos-stargate-calidus",118000,"aegis_approach"},
   -- Both optional Umbra worlds have one interior connection. A
   -- Carna-to-Slip-Stream line would bypass the real belt passage.
 }
@@ -47,8 +51,7 @@ local native_pairs={
   {"fulgora","cerys"},
   {"gleba","rabbasca"},
   {"gleba","terrapalus"},
-  -- Only Aegis arrival moves; all its inner source connections remain untouched.
-  {"sye-vespera","calidus-bellicos-stargate-calidus"},
+  -- Keep all source-owned Aegis internal connections untouched.
   {"gleba","velora"}
 }
 local function exists(name)
