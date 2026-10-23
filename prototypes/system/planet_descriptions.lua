@@ -12,10 +12,32 @@ local destinations = {
   vespera = {"muria", "aquilo", "nulla", "rubia", "maraxsis", "bm-balack", "athos", "vespera", "sye-vespera"},
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "ferrum", "beetlejuice", "sye-beetlejuice", "planet-ferrum"},
   umbra = {"tenebris", "crucible", "vesta", "abacayba", "carna", "arcanyx", "obsidiax", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
-  deep_space = {"nexus", "shattered-planet", "solar-system-edge", "pulsar", "calidus-bellicos-stargate-calidus", "calidus-bellicos-stargate-bellicos", "black-hole-approach", "black-hole", "oort-cloud", "sol", "razi-deep-space-edge"}
+  aegis = {"pulsar", "calidus-bellicos-stargate-calidus",
+    "aegis-inner-edge", "aegis-outer-edge",
+    "near-bellicos-orbit", "bellicos-near-orbit", "near_bellicos_orbit",
+    "point-warden", "aegis-point-warden"},
+  deep_space = {"nexus", "shattered-planet", "skewer_shattered_planet",
+    "skewer_lost_beyond", "solar-system-edge",
+    "black-hole-approach", "black-hole", "oort-cloud", "sol",
+    "razi-deep-space-edge"}
 }
 
+-- Native descriptions are still authoritative for mechanics, but some
+-- relocated Aegis source tooltips literally describe a return to Calidus
+-- or the removed Bellicos stargate. Only these MOVED chart waypoints use a
+-- corrected primary geographical description. All non-location mechanics,
+-- planet descriptions and ordinary source prose remain unchanged.
+local relocated_source_briefs = {
+  ["calidus-bellicos-stargate-calidus"]=true,
+  ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true,
+  ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
+  ["near_bellicos_orbit"]=true,
+  ["point-warden"]=true,["aegis-point-warden"]=true
+}
 local function original_description(prototype, name)
+  if relocated_source_briefs[name] then
+    return {"", {"razi-location-primary." .. name}, "\n\n"}
+  end
   if prototype.localised_description then
     return {"", prototype.localised_description, "\n\n"}
   end
