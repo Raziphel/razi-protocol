@@ -33,7 +33,7 @@ return {
   {id="rabbasca",chapter="outposts",world="rabbasca",requires={"gleba"}},
    {id="terrapalus",chapter="outposts",world="terrapalus",requires={"gleba"}},
   {id="velora",chapter="outposts",world="velora",requires={"nyxaris-gate"}},
-  {id="khemia",chapter="outposts",world="alchemy-planet",weather_world="khemia",requires={"vibrant-gate"}},
+  {id="khemia",chapter="outposts",world="alchemy-planet",weather_world="khemia",requires={"ribbonia"}},
    {id="shchierbin",chapter="outposts",world="shchierbin",requires={"paracelsin"}},
   {id="ferrum",chapter="outposts",world="ferrum",requires={"beetlejuice-gate"}},
   {id="obsidiax",chapter="outposts",world="obsidiax",requires={"vesta"}},
