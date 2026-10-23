@@ -55,7 +55,7 @@ class RouteDifficultyProgression(unittest.TestCase):
                      "aegis-outer-edge","point-warden",
                      "skewer_lost_beyond"):
             self.assertEqual(levels[name],10,name)
-        self.assertEqual(levels["calidus-bellicos-stargate-calidus"],9)
+        self.assertEqual(levels["calidus-bellicos-stargate-calidus"],6)
 
     def test_optional_world_graph_shared_with_runtime(self):
         difficulty=read("scripts/razi_asteroid_difficulty.lua")

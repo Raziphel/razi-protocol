@@ -45,6 +45,8 @@ local presets = {
   deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"},
   -- Aegis is a difficult SHARED first-frontier expedition, not a Deep Space bypass.
   -- Use real high-density vanilla families so More Asteroids can enrich them.
+  -- The approach uses "middle_deep" sizes (no huge asteroids): only railguns
+  -- stop huge ones, and the first frontier has no railgun.
   aegis_approach={"aquilo_solar_system_edge",1.65,"fulgora_aquilo","metallic"},
   aegis_depths={"aquilo_solar_system_edge",1.85,"gleba_aquilo","carbonic"},
   belt_vibrant_crossing={"gleba_aquilo",1.32,"fulgora_aquilo","metallic"},
@@ -66,7 +68,7 @@ local size_tiers = {
   outer_ring_crosslink="outer_deep",
   outer_industry="outer", outer_void="outer",
   outer_industry_deep="outer_deep", outer_void_deep="outer_deep",
-  deep_edge="edge",aegis_approach="outer_deep",aegis_depths="edge",
+  deep_edge="edge",aegis_approach="middle_deep",aegis_depths="edge",
   belt_vibrant_crossing="belt_middle",
   belt_umbra_approach="outer_deep",
   belt_umbra_crossing="belt_outer",
@@ -132,9 +134,11 @@ end
 local belt_escalations = {
   belt_vibrant_crossing={big=0.0035},
   belt_umbra_crossing={big=0.010, huge=0.0008},
-  -- Guarantee native big/huge asteroid encounters even if an upstream Aegis
-  -- release provides only small asteroids. Never duplicate a source species.
-  aegis_approach={big=0.0075,huge=0.00045},
+  -- Guarantee native big (approach) and big/huge (depths) asteroid encounters
+  -- even if an upstream Aegis release provides only small asteroids. The
+  -- approach has no huge asteroids (see its size tier). Never duplicate a
+  -- source species.
+  aegis_approach={big=0.0075},
   aegis_depths={big=0.014,huge=0.0021}
 }
 local function add_belt_size_encounters(definitions, profile)

@@ -38,9 +38,12 @@ local exceptional={
   ["shattered-planet"]=10,["nexus"]=10,
   ["black-hole-approach"]=10,["black-hole"]=10,
   ["oort-cloud"]=10,["sol"]=10,
-  -- Shared first-frontier Aegis ramps from 8 at its entry to 10 by
-  -- the late Bellicos interior. Legacy Calidus gate IDs never imply safety.
-  ["calidus-bellicos-stargate-calidus"]=8,
+  -- Shared first-frontier Aegis: the entry gate is level 6 (like Rubia and
+  -- the outer belt edge), so the long approach from Solaris and Nyxaris
+  -- (level 2) stays survivable with rocket turrets. Danger then ramps to 9 at
+  -- the outer edge and 10 at Bellicos. Legacy Calidus gate IDs never imply
+  -- safety.
+  ["calidus-bellicos-stargate-calidus"]=6,
   ["pulsar"]=9,["aegis-inner-edge"]=9,
   ["aegis-outer-edge"]=9,["point-warden"]=9,
   ["near-bellicos-orbit"]=9,["bellicos-near-orbit"]=9,
