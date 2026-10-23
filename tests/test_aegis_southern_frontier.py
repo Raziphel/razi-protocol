@@ -94,6 +94,61 @@ class SouthernAegis(unittest.TestCase):
                                  point("sye-nyxaris", layout), gate))
         self.assertNotIn('{"sye-vespera","calidus-bellicos-stargate-calidus"}', approved)
 
+    def test_approaches_do_not_cross_existing_freight_routes(self):
+        # A gate west of the pulsar crossed Moshine/Panglia freight in the
+        # screenshot. Confirm BOTH new approaches remain clear of every
+        # geometric route belonging to installed first-party locations.
+        data = anchors()
+        root = point("sye-calidus", data)
+        gate = (
+            root[0] + 151 * math.sin(2 * math.pi * .468),
+            root[1] - 151 * math.cos(2 * math.pi * .468),
+        )
+        near = (root[0] + 3, root[1] + 190)
+        def orbit(radius, turn):
+            return (
+                near[0] + radius * math.sin(2 * math.pi * turn),
+                near[1] - radius * math.cos(2 * math.pi * turn),
+            )
+        nodes = {
+            "calidus-bellicos-stargate-calidus": gate,
+            "aegis-outer-edge": orbit(32, .10),
+            "aegis-inner-edge": orbit(29, .21),
+            "point-warden": orbit(48, .32),
+            "calidus-bellicos-stargate-bellicos": orbit(74, .345),
+            "near-bellicos-orbit": near,
+        }
+        branches = [
+            ("sye-solaris", "calidus-bellicos-stargate-calidus"),
+            ("sye-nyxaris", "calidus-bellicos-stargate-calidus"),
+            ("calidus-bellicos-stargate-calidus", "aegis-outer-edge"),
+            ("aegis-outer-edge", "aegis-inner-edge"),
+            ("aegis-inner-edge", "point-warden"),
+            ("point-warden", "calidus-bellicos-stargate-bellicos"),
+            ("near-bellicos-orbit", "aegis-inner-edge"),
+        ]
+        candidates = []
+        for source in ("prototypes/system/route_reconcile.lua",
+                       "prototypes/system/route_authority.lua"):
+            candidates.extend(re.findall(
+                r'\{\s*"([^"]+)"\s*,\s*"([^"]+)"\s*,\s*\d+\s*,\s*"[\w_]+"\s*\}',
+                read(source),
+            ))
+        def coord(name):
+            return nodes[name] if name in nodes else point(name, data)
+        segments = [
+            (a, b) for a, b in candidates
+            if (a in data or a in nodes) and (b in data or b in nodes)
+        ]
+        for idx, (a, b) in enumerate(branches):
+            for c, d in segments + branches[idx+1:]:
+                if len({a, b, c, d}) != 4:
+                    continue
+                self.assertFalse(
+                    crossed(coord(a), coord(b), coord(c), coord(d)),
+                    f"Aegis {a}->{b} crosses {c}->{d}",
+                )
+
     def test_native_art_halo_has_one_authoritative_anchor(self):
         bel = read("prototypes/system/bellicos.lua")
         bg = read("prototypes/system/starmap_background.lua")
