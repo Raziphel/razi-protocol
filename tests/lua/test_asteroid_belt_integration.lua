@@ -20,7 +20,7 @@ local function xy(location)
   return location.distance*math.sin(theta),
     -location.distance*math.cos(theta)
 end
-for _,entry in ipairs({{inner,31,.77},{outer,39,.775}}) do
+for _,entry in ipairs({{inner,31,.725},{outer,46,.74}}) do
   local loc,radius=entry[1],entry[2]
   check(loc.orbit.parent.name=="star" and not loc.draw_orbit,
     "Vibrant belt must use a native root-star orbit")
@@ -30,6 +30,12 @@ for _,entry in ipairs({{inner,31,.77},{outer,39,.775}}) do
   check(math.abs(y-(cy-radius*math.cos(entry[3]*2*math.pi)))<.01,
     "Belt rim Y coordinate changed")
 end
+local ix,iy=xy(inner)
+local ox,oy=xy(outer)
+check(math.sqrt((ix-ox)^2+(iy-oy)^2)>14,
+  "Vibrant Inner and Outer markers must not pile labels together")
+check(math.sqrt((ix-ox)^2+(iy-oy)^2)<22,
+  "Vibrant crossing must remain one short surveyed corridor")
 check(#layers==5,"Expected three restrained Vibrant belt layers")
 for i=1,3 do
   local layer=layers[i]
