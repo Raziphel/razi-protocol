@@ -1,6 +1,7 @@
 ---@diagnostic disable: missing-fields, assign-type-mismatch, need-check-nil
 -- Lithium Battery in the pack (compat/lithium_battery.lua) on a mocked data.raw: the productivity effects of the recipe copies it
--- deletes are taken out of Planet Crucible's technologies, and equal ingredients of the research data recipes are added up.
+-- deletes (7.5.0 and older) are taken out of Planet Crucible's technologies, and equal ingredients of the research data recipes and
+-- of the copies it keeps (7.5.1), which share one list with them, are added up.
 -- Run from the mod root with the library bootstrap:
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_lithium_battery.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -101,6 +102,40 @@ check(ingredient_list({ingredients = {table.unpack(data_raw.recipe["kr-promethiu
 	"merged: " .. ingredient_list({ingredients = {table.unpack(data_raw.recipe["kr-promethium-research-data"].ingredients, 1, 5)}}))
 check(#data_raw.recipe["kr-promethium-research-data"].ingredients == 6, "the shorthand ingredient stays")
 check(ingredient_list(data_raw.recipe["kr-cryogenic-research-data"]) == "item:ice=3,item:lithium-plate=1", "recipe without doubles untouched")
+
+-- 7.5.1 keeps the copies, and a copy and its research data recipe hold the same ingredient list: Maraxsis appends the biter eggs to
+-- the shared list, the sum of one recipe must not reach the other, and both end without doubles
+local shared_promethium = {
+	{type = "item", name = "hea-engine", amount = 1},
+	{type = "item", name = "biter-egg", amount = 7},
+	{type = "item", name = "promethium-asteroid-chunk", amount = 18},
+	{type = "item", name = "biter-egg", amount = 10},
+}
+local shared_cryogenic = {{type = "item", name = "ice", amount = 3}, {type = "item", name = "lithium-plate", amount = 1}}
+data_raw, module = setup({LithiumBattery = true})
+data_raw.recipe["cryogenic-science-pack-clone"] = {type = "recipe", name = "cryogenic-science-pack-clone", hidden = true,
+	enabled = false, ingredients = shared_cryogenic}
+data_raw.recipe["kr-cryogenic-research-data"] = {type = "recipe", name = "kr-cryogenic-research-data", ingredients = shared_cryogenic}
+data_raw.recipe["promethium-science-pack-clone"] = {type = "recipe", name = "promethium-science-pack-clone", hidden = true,
+	enabled = false, ingredients = shared_promethium}
+data_raw.recipe["kr-promethium-research-data"] = {type = "recipe", name = "kr-promethium-research-data", ingredients = shared_promethium}
+module.data_final_fixes()
+local merged_promethium = "item:hea-engine=1,item:biter-egg=17,item:promethium-asteroid-chunk=18"
+check(ingredient_list(data_raw.recipe["kr-promethium-research-data"]) == merged_promethium,
+	"research data: " .. ingredient_list(data_raw.recipe["kr-promethium-research-data"]))
+check(ingredient_list(data_raw.recipe["promethium-science-pack-clone"]) == merged_promethium,
+	"copy: " .. ingredient_list(data_raw.recipe["promethium-science-pack-clone"]))
+check(data_raw.recipe["kr-promethium-research-data"].ingredients ~= data_raw.recipe["promethium-science-pack-clone"].ingredients,
+	"the copy and the research data recipe still share the list")
+check(data_raw.recipe["kr-promethium-research-data"].ingredients[2] ~= data_raw.recipe["promethium-science-pack-clone"].ingredients[2],
+	"the copy and the research data recipe still share an ingredient")
+check(data_raw.recipe["promethium-science-pack-clone"].hidden == true and data_raw.recipe["promethium-science-pack-clone"].enabled == false,
+	"the copy stays hidden and disabled")
+check(ingredient_list(data_raw.recipe["kr-cryogenic-research-data"]) == "item:ice=3,item:lithium-plate=1"
+	and data_raw.recipe["cryogenic-science-pack-clone"].ingredients == shared_cryogenic, "recipes without doubles untouched")
+check(#logged == 2, "one log line per sum, per recipe: " .. #logged)
+module.data_final_fixes()
+check(#logged == 2, "second run logged")
 
 -- without Lithium Battery the ingredients stay as they are
 data_raw, module = setup({})
