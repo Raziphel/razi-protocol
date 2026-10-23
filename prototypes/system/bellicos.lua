@@ -10,7 +10,7 @@ local root_parent = "sye-calidus"
 -- the EAST side of the pulsar beam, leaving the native star art untouched
 -- and preventing the Nyxaris route from crossing Panglia freight.
 local pulsar_radius, pulsar_turn = 190, .5
-local entry_radius, entry_turn = 153, .469
+local entry_radius, entry_turn = 151, .468
 
 local function remove_stock_entry_routes()
 	deleteRoute("nauvis-stargate-connection")
