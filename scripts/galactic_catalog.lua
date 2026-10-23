@@ -9,6 +9,7 @@ local groups={
            "igrys","igrys-orbit"},
   nyxaris={"sye-nyxaris","gleba","rabbasca","moshine","panglia","apia","carnova",
            "apia-carnova-orbit","pelagos","foliax","terrapalus","dea-dia",
+          "star-dea-dia",
           "dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},
   vibrant={"sye-vibrant","fulgora","cerys","ribbonia",
