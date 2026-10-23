@@ -68,18 +68,18 @@ class SouthernAegis(unittest.TestCase):
         bel = read("prototypes/system/bellicos.lua")
         approved = read("prototypes/system/route_authority.lua")
         self.assertIn('root_parent = "sye-calidus"', bel)
-        self.assertIn("pulsar_radius, pulsar_turn = 208, .5", bel)
-        self.assertIn("entry_radius, entry_turn = 185, .55", bel)
+        self.assertIn("pulsar_radius, pulsar_turn = 190, .5", bel)
+        self.assertIn("entry_radius, entry_turn = 153, .53", bel)
         self.assertAlmostEqual(sx, -nx, places=3)
         self.assertAlmostEqual(sy, ny, places=3)
-        cx, cy = (root[0], root[1] + 208)
+        cx, cy = (root[0], root[1] + 190)
         self.assertAlmostEqual(cx, (sx + nx) / 2, places=3)
-        self.assertGreater(cy, sy + 125)
+        self.assertGreater(cy, sy + 95)
         gate = (
-            root[0] + 185 * math.sin(2 * math.pi * .55),
-            root[1] - 185 * math.cos(2 * math.pi * .55),
+            root[0] + 153 * math.sin(2 * math.pi * .53),
+            root[1] - 153 * math.cos(2 * math.pi * .53),
         )
-        self.assertLess(gate[0], -50)
+        self.assertLess(gate[0], -20)
         self.assertGreater(gate[1], sy + 50)
         self.assertLess(gate[1], cy)
         self.assertIn(
