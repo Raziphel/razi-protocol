@@ -162,6 +162,8 @@ require("prototypes.system.abacayba_integration").gate()
 -- Native moon links, original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.system.route_authority").data_final_fixes()
+-- Native Aegis links and asteroid fields settle after the two curated entries.
+require("prototypes.system.bellicos").fortify_routes()
 
 -- Harvest-rich native asteroid belts get final source-safe spawn curves only
 -- after the approved crossings and route IDs have been reconciled.
