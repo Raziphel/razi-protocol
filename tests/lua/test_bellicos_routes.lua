@@ -30,7 +30,17 @@ local routes={
     outer,deep,500,"native-exotic-asteroid")
 }
 rawset(_G,"data",{raw={["space-location"]=places,planet={},
-  ["space-connection"]=routes},
+  ["space-connection"]=routes,
+  ["utility-sprites"]={default={starmap_star={layers={
+    {planetslib_orbit_name=deep, filename="old-gate-orbit.png"},
+    {planetslib_orbit_name="near-bellicos-orbit", filename="aegis-belt.png"}
+  }}}},
+  technology={
+    ["source-deep-technology"]={effects={
+      {type="unlock-space-location",space_location=deep},
+      {type="unlock-space-location",space_location=inner}
+    }}
+  }},
   extend=function(self,additions)
     for _,value in ipairs(additions) do
       check(not routes[value.name],"Duplicate route "..value.name)
@@ -62,7 +72,7 @@ package.loaded["prototypes.system.route_icons"]={
 package.loaded["prototypes.system.bellicos"]=nil
 local bellicos=require("prototypes.system.bellicos")
 local added,removed=bellicos.fortify_routes()
-check(added==1 and removed==2,
+check(added==1 and removed==3,
   "Route director should replace exactly one missing entry and two shortcuts")
 local seen_pairs={}
 for name,r in pairs(routes) do
@@ -78,14 +88,15 @@ local function has(a,b)
   return seen_pairs[key]
 end
 check(has(entry,outer) and has(outer,inner)
-  and has(inner,warden) and has(warden,deep) and has(near,inner),
+  and has(inner,warden) and has(near,inner),
   "Main Aegis expedition or orbit spur disconnected")
+check(not places[deep], "Dead-end Bellicos gateway location still exists")
 check(not has(entry,deep) and not has(outer,deep)
-  and not has(inner,deep),
+  and not has(inner,deep) and not has(warden,deep),
   "A source shortcut bypasses the Aegis asteroid crossing")
 local count=0
 for _ in pairs(routes) do count=count+1 end
-check(count==5,"The Aegis map should contain exactly five playable corridors")
+check(count==4,"The Aegis map should contain exactly four playable corridors")
 check(routes["native-outer-inner"] and
   routes["native-outer-inner"].length>=45000,
   "Native Outer-to-Inner route name and dangerous distance were lost")
@@ -95,7 +106,17 @@ for _,def in ipairs(has(entry,outer).asteroid_spawn_definitions or {}) do
 end
 check(custom["native-rare-asteroid"] and custom["native-exotic-asteroid"],
   "Source-exclusive asteroid spawns vanished when removing shortcuts")
+local effects=data.raw.technology["source-deep-technology"].effects
+check(#effects==1 and effects[1].space_location==inner,
+  "Retired gateway unlock effect survived or source research was damaged")
+local layers=data.raw["utility-sprites"].default.starmap_star.layers
+check(#layers==1 and layers[1].planetslib_orbit_name==near,
+  "Retired gateway art was not removed or Aegis belt art was lost")
+for _,route in pairs(routes) do
+  check(route.from~=deep and route.to~=deep,
+    "A connection still references the deleted location")
+end
 local next_added,next_removed=bellicos.fortify_routes()
 check(next_added==0 and next_removed==0,
   "Repeated pass must not recreate or double the Aegis routes")
-print("Aegis source route pruning, research path and exotic asteroid retention passed")
+print("Aegis dead-end gate removal, technology cleanup, sprite retention and corridor continuity passed")
