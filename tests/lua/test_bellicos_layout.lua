@@ -232,7 +232,7 @@ local function absolute(name)
 end
 local near_px,near_py=absolute("near-bellicos-orbit")
 check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
-  "Missing pulsar sent Near Bellicos Orbit away from southern frontier")
+  "Missing pulsar sent Near Bellicos Orbit sideways from southern frontier")
 check(near_py>edge_y+220 and math.abs(near_px-edge_x)<5,
   "Near Bellicos Orbit must be south of two starter stars")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
