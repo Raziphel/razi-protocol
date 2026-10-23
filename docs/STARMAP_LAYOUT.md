@@ -1,3 +1,36 @@
+## October 23, 2026: optional worlds and research-tier correction
+
+This is the current map policy and supersedes historical Aegis placement
+notes further down the file.
+
+**Aegis/Bellicos:** The existing pulsar, Warden nodes, asteroid field art,
+and source-owned inner routes now sit in a separate northwest annex of
+Vespera. The entrance route departs from Vespera Slip Stream in the middle
+(tier-two) frontier rather than from Deep Space. Aegis's entrance science
+requires Vespera; deeper Bellicos discovery requires outer-tier Beetlejuice.
+The incoming stargate route remains **250,000 km** and retains its original
+asteroid spawn definitions. It does not grant early access to Deep Space.
+
+**Balack:** An optional branch off Aquilo, researched after Aquilo, with
+native Cryogenic Science in place of any Promethium Science requirement
+on the discovery tech. Its source machines, biochemistry, asteroid content
+and native planet mechanics are untouched. This does not change the global
+Promethium progression.
+
+**Linox:** Intentionally retains its Beetlejuice placement and post-Cubium
+third-tier research. This is later than its standalone post-Vulcanus point.
+
+**Terra Palus:** The upstream planet `terrapalus` is placed as a moon of
+Gleba in Nyxaris, using the mod's existing Gleba connection and native
+Gleba discovery prerequisite. Pelagos, Dea Dia and Shchierbin remain
+their established Nyxaris, Nyxaris and outer-Vibrant locations. All four
+appear in the atlas and mission journal; Shchierbin's discovery follows
+Paracelsin and the real asteroid-belt passage.
+
+No replacement planets, custom expedition crafting recipes, or duplicate
+source science packs are introduced. Live Factorio 2.1 startup and
+existing-save platform schedules should be checked before a release.
+
 ## October 2026: Vesta's optional infestation moon and an outer Obsidiax arc
 
 Obsidiax moves from radius 50 / turn 0.245 to radius 68 / turn 0.25,
