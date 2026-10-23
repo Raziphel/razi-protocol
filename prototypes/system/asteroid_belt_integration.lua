@@ -5,8 +5,10 @@ local HOST="vibrant"
 local PIXELS=32
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local coords={
-  {"asteroid-belt-inner-edge",31,0.77},
-  {"asteroid-belt-outer-edge",39,0.775}
+  -- Both ends share a narrow SW corridor so no route cuts diagonally
+  -- through the field. The exterior node now faces Paracelsin and Khemia.
+  {"asteroid-belt-inner-edge",31,0.715},
+  {"asteroid-belt-outer-edge",39,0.725}
 }
 M.coords=coords
 function M.data_final_fixes()
@@ -19,7 +21,7 @@ function M.data_final_fixes()
       local radians=entry[3]*2*math.pi
       local x=cx+entry[2]*math.sin(radians)
       local y=cy-entry[2]*math.cos(radians)
-      if x>=cx or x<0 or math.abs(y-cy)>10 then
+      if x>=cx or x<0 or math.abs(y-cy)>14 then
         error("Razi: Vibrant belt entries are no longer on the western rim")
       end
       local distance=math.sqrt(x*x+y*y)
