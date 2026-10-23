@@ -121,7 +121,6 @@ These declarations intentionally remain in `info.json` without invented 2.1 vers
 | `castra-prime-k2-turret-ammo-fix` | 1.0.0 | 2.0 |
 | `kr-air-purifier-helper` | 2.0.6 | 2.0 |
 | `Noxys_Swimming` | 0.5.3 | 2.0 |
-| `rocket-reusability` | 1.0.7 | 2.0 |
 | `slp-dyson-sphere-reworked` | 1.0.4 | 2.0 |
 | `spiderbots` | 0.3.2 | 2.0 |
 | `spidertron-unit-07` | 0.1.0 | 2.0 |

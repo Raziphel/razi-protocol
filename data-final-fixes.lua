@@ -239,6 +239,11 @@ require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
 -- menu pass.
 require("prototypes.compat.lithium_battery").data_final_fixes()
 
+-- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
+-- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
+-- remnant-beacon. The copies take the already normalized native recipe, so running after the passes above is safe; before the menu pass.
+require("prototypes.compat.rocket_salvage").data_final_fixes()
+
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
