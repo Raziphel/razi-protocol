@@ -3,7 +3,7 @@
 The live seven-system design keeps the source-author Aegis/Bellicos pulsar,
 waypoints, asteroid art and special mechanics. The visible pulsar sits at
 **(0, 210)** on the galaxy chart, directly **south of Solaris and Nyxaris**,
-with its entry stargate at **(-29, 170)**. These two positions are derived from
+with its entry stargate at **(30, 170)**. These two positions are derived from
 the existing Calidus Slip Stream coordinate, not duplicate prototype stars.
 Two **112,000 / 118,000 km** researched approaches connect the Solaris and
 Nyxaris Slip Streams independently to the native Aegis entry gate. This
@@ -40,7 +40,7 @@ the newly available northern sky. Shattered Planet's distinct approach,
 real final planet and Lost Beyond expedition remain separate. All original
 tech unlocks, route lengths, world surfaces and old destination IDs remain.
 
-The Aegis network now uses a single connected spine: Frontier Gate → Outer Edge → Inner Edge → Point Warden → Bellicos Gate, with Near Bellicos Orbit reachable as a short Inner Edge spur. Redundant author shortcuts are pruned, retaining each approved native route name and copying source-exclusive asteroid drops onto surviving paths. The colossal pulsar beam is dimmed without replacing source art. Nyxaris moon and twin-world captions are separated, while Vibrant's two long rim labels no longer collide.
+The Aegis network now uses a single connected spine: Frontier Gate → Outer Edge → Inner Edge → Point Warden → Bellicos Gate, with Near Bellicos Orbit reachable as a short Inner Edge spur. Redundant author shortcuts are pruned, retaining each approved native route name and copying source-exclusive asteroid drops onto surviving paths. The colossal pulsar beam is dimmed without replacing source art. The first-frontier gateway and internal expedition now all remain east of the beam to avoid cutting through the native sprite. Nyxaris moon and twin-world captions are separated, while Vibrant's two long rim labels no longer collide.
 
 Static route-geometry audits found no new line intersections. Verify the
 actual Factorio 2.1 rendered coordinates, saved platform schedules and
