@@ -4,12 +4,34 @@ local M = {}
 M.commission = "razi-convergence-commission"
 M.authorization = "razi-convergence-synchronization"
 M.ignition = "razi-convergence-ignition"
+-- All cargo is produced by source mods. Each stage requires several
+-- independent native industries rather than a Razi-only assembly recipe.
+-- Supplied amounts are expedition-wide totals, not per-craft ingredients.
 M.shipments = {
-  {id="stellar", item="slp-ds-satellite", count=24},
-  {id="industry", item="kr-rare-metals", count=600},
-  {id="deep-space", item="promethium-science-pack", count=180},
-  {id="resonance", item="superconductor", count=400},
-  {id="ignition", item="kr-singularity-tech-card", count=120}
+  {id="stellar",item="slp-ds-satellite",count=24,supplies={
+    {"holmium-plate",240},{"tungsten-plate",300},
+    {"processing-unit",400},{"low-density-structure",400},
+    {"superconductor",120},{"lithium-plate",180}}},
+  {id="industry",item="kr-rare-metals",count=600,supplies={
+    {"optical-cable",180},{"craptonite-frame",100},
+    {"chitosan",160},{"zinc-plate",180},
+    {"electric-coil",200},{"rare-earth-powder",180}}},
+  {id="deep-space",item="promethium-science-pack",count=180,supplies={
+    {"kr-cryogenic-research-data",120},
+    {"kr-electromagnetic-research-data",120},
+    {"kr-agricultural-research-data",120},
+    {"planet-crucible-science-pack",100},
+    {"pulsar-science-pack",100}}},
+  {id="resonance",item="superconductor",count=400,supplies={
+    {"supermagnet",160},{"gold-plate",220},
+    {"kr-energy-control-unit",160},
+    {"holmium-plate",240},{"lithium-plate",240}}},
+  {id="ignition",item="kr-singularity-tech-card",count=120,supplies={
+    {"deep-space-tech-card",100},
+    {"calidus-tech-card",80},{"solaris-tech-card",80},
+    {"nyxaris-tech-card",80},{"vibrant-tech-card",80},
+    {"vespera-tech-card",80},{"beetlejuice-tech-card",80},
+    {"umbra-tech-card",80},{"antimatter-science-pack",80}}}
 }
 M.assemblies = {}
 
@@ -60,11 +82,18 @@ function M.data_final_fixes()
     or not active("stellar-discovery-solar-system-edge")
     or technology[M.commission] or technology[M.authorization]
     or technology[M.ignition] then return end
-  -- No substitute items: every cargo must be an existing source product.
+  -- Only install stages whose complete native supply set exists.
+  -- Missing items are reported rather than silently replaced by new crafts.
   for _,shipment in ipairs(M.shipments) do
-    if not icon_from(shipment.item) then
-      if log then log("[RAZI Convergence] Missing native cargo: "..shipment.item) end
-      return
+    local cargo={shipment.item}
+    for _,part in ipairs(shipment.supplies or {}) do
+      cargo[#cargo+1]=part[1]
+    end
+    for _,name in ipairs(cargo) do
+      if not icon_from(name) then
+        if log then log("[RAZI Convergence] Missing native supply: "..name) end
+        return
+      end
     end
   end
   local begin=tech(M.commission,"stellar-discovery-solar-system-edge",
