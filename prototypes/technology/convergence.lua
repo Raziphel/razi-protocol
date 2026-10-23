@@ -40,6 +40,8 @@ local function science_unit(source, count)
 end
 local function tech(name,source,prereqs,count)
   local unit=science_unit(source,count)
+    or science_unit("slp-dyson-sphere",count)
+    or science_unit("planet-discovery-aquilo",count)
   local art=icon_from("promethium-science-pack")
   if not (unit and art) then return end
   local result={
