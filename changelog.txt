@@ -1,3 +1,12 @@
+Version: 2.1.137
+Date: 23. 10. 2026
+  Changes:
+    - Replace all fabricated Convergence mandates, assemblies, and witness hardware with native mod materials and native powered radars.
+    - Retain five cargo delivery stages, source-owned recipes, research milestones, Dyson readiness, Nexus trials, deep-space expedition and victory transmission.
+    - Never force-unlock other mods' recipes; update native cargo audit.
+  Note:
+    - Existing saves with partial Convergence deliveries should be reviewed because shipment materials and quantities changed.
+
 Version: 2.1.136
 Date: 23. 10. 2026
   Changes:
