@@ -131,7 +131,11 @@ end
 -- designated belt crossings, guarded by the actual installed prototypes.
 local belt_escalations = {
   belt_vibrant_crossing={big=0.0035},
-  belt_umbra_crossing={big=0.010, huge=0.0008}
+  belt_umbra_crossing={big=0.010, huge=0.0008},
+  -- Guarantee native big/huge asteroid encounters even if an upstream Aegis
+  -- release provides only small asteroids. Never duplicate a source species.
+  aegis_approach={big=0.0075,huge=0.00045},
+  aegis_depths={big=0.014,huge=0.0021}
 }
 local function add_belt_size_encounters(definitions, profile)
   local wanted = belt_escalations[profile]
