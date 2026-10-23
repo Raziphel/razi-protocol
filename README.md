@@ -453,7 +453,7 @@ Aegis branches from **both** Solaris and Nyxaris after the initial discoveries; 
 - **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
 - **Panglia** has direct Moshine and Apia/Carnova freight routes, a distinct Nyxaris orbit, new Chronicle research objectives, and guarded Moshine optical-cable / Panglite-glass production exchanges. Neither bonus recipe replaces native manufacturing.
 - **Nexus and Void-related endgame branches** remain beyond the transceiver gateway, not required for the seven-star arrival sequence.
-- **Aegis/Bellicos** retains its native pulsar and stargate routes. Twin researched departures from Solaris and Nyxaris converge on its southern Aegis gateway; tougher Bellicos science follows tier three.
+- **Aegis/Bellicos** retains its native pulsar and researched **entry** gateway. Twin dangerous departures from Solaris and Nyxaris converge on this gateway, then continue through the asteroid rims to Point Warden. The redundant, unreachable far-side Bellicos stargate has been removed; native Bellicos science remains.
 
 ### Progression principles
 
@@ -585,7 +585,7 @@ Some world relationships need particular care:
 - **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
 - **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
 - **Moshine and Apia/Carnova** feed into **Panglia**, whose original Moshine data cells, DNA analysis, timewarp research and cloning remain essential. Pelagos and Dea Dia remain optional.
-- **Aegis and Bellicos** occupy a shared southern frontier beneath Solaris and Nyxaris, with two dangerous researched entry routes. Their source-owned pulsar, asteroid species and stargate technology remain intact.
+- **Aegis and Bellicos** occupy a shared southern frontier beneath Solaris and Nyxaris, with two dangerous researched entry routes. Their source-owned pulsar, asteroid species and entry-gate technology remain intact; the old far-side dead-end stargate is removed.
 
 The last data-stage route pass removes unintended cross-chapter shortcuts among the systems Razi owns, without deleting internal source-mod networks.
 
