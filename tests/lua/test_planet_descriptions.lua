@@ -15,6 +15,14 @@ local planet = {
 local locations = {
   vespera = {}, ["sye-calidus"] = {},
   ["apia-carnova-orbit"] = {},
+  -- Source lore refers to a Calidus wormhole and a removed destination.
+  -- These have been relocated, so their primary geography is Razi-owned.
+  ["calidus-bellicos-stargate-calidus"] = {
+    localised_description = "Old wormhole beyond Calidus"},
+  ["aegis-inner-edge"] = {
+    localised_description = "Old Aegis corridor to the removed gate"},
+  ["point-warden"] = {localised_description = "Obsolete source return route"},
+  ["sye-vibrant"] = {localised_description = "Native Vibrant transfer rules"},
 }
 rawset(_G, "data", {raw = {planet = planet, ["space-location"] = locations}})
 package.loaded["prototypes.system.planet_descriptions"] = nil
@@ -47,6 +55,20 @@ for _, pair in ipairs({
 end
 check(planet.unrelated.localised_description == "Keep this unchanged",
   "Unrelated source world was modified")
+for _,entry in ipairs({
+  {"calidus-bellicos-stargate-calidus"},
+  {"aegis-inner-edge"},
+  {"point-warden"},
+}) do
+  local name=entry[1]
+  local value=check_context(locations[name],"aegis",name)
+  check(value[2][2][1]=="razi-location-primary."..name,
+    "Relocated Aegis waypoint still displays obsolete source geography")
+end
+local normal=check_context(locations["sye-vibrant"],"vibrant","sye-vibrant")
+check(normal[2][2]=="Native Vibrant transfer rules",
+  "Regular world gameplay descriptions must preserve their source wording")
+
 local first = planet.nauvis.localised_description
 descriptions.data_final_fixes()
 check(planet.nauvis.localised_description == first,
