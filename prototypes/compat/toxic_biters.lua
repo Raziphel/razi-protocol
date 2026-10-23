@@ -1,4 +1,5 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
 if not enemy_autoplace.enabled() or not mods["Toxic_biters"] then
 	return
@@ -14,13 +15,6 @@ local toxic_enemy_entities = {
 	"behemoth-toxic-worm-turret",
 	"leviathan-toxic-worm-turret",
 	"mother-toxic-worm-turret"
-}
-
-local toxic_planets = {
-	"cubium",
-	"vesta",
-	"nexus",
-	"crucible"
 }
 
 local toxic_source_planets = {
@@ -57,49 +51,7 @@ local toxic_planet_tiles = {
 	"cubium-folds-warm",
 	"cubium-soil-dark",
 	"cubium-soil-light",
-	"cubium-ash-soil",
-	"dust-flat-vesta",
-	"dust-crests-vesta",
-	"dust-lumpy-vesta",
-	"dust-patchy-vesta",
-	"ice-rough-vesta",
-	"ice-smooth-vesta",
-	"brash-ice-2-vesta",
-	"ammoniacal-ocean-vesta-yellow",
-	"ammoniacal-ocean-vesta-pink",
-	"ammoniacal-ocean-vesta-lime",
-	"ammoniacal-ocean-vesta-red",
-	"ammoniacal-ocean-vesta-yellow-ransom",
-	"ammoniacal-ocean-vesta-red-ransom",
-	"ammoniacal-ocean-vesta-lime-coast",
-	"ammoniacal-ocean-vesta-tritium",
-	"ammoniacal-ocean-vesta-deuterium",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks",
-	"planet-crucible-dirt-1",
-	"planet-crucible-dirt-2",
-	"planet-crucible-dirt-3",
-	"planet-crucible-dirt-4",
-	"planet-crucible-rock-1",
-	"planet-crucible-rock-2",
-	"planet-crucible-rock-3",
-	"planet-crucible-rock-4",
-	"planet-crucible-sand-1"
+	"cubium-ash-soil"
 }
 
 local existing_toxic_planet_tiles = enemy_autoplace.existing_tiles(toxic_planet_tiles)
@@ -112,6 +64,7 @@ for _, planet_name in pairs(toxic_source_planets) do
 	enemy_autoplace.remove_entities_from_planet(planet_name, toxic_enemy_entities)
 end
 
-for _, planet_name in pairs(toxic_planets) do
+enemy_homes.claim("toxic", toxic_enemy_entities)
+for _, planet_name in pairs(enemy_homes.planets("toxic")) do
 	enemy_autoplace.add_entities_to_planet(planet_name, toxic_enemy_entities, toxic_enemy_control)
 end

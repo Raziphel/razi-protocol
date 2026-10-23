@@ -28,6 +28,7 @@ end
 local function setup(active_mods)
 	package.loaded["prototypes.compat.armoured_biters"] = nil
 	package.loaded["prototypes.compat.enemy_autoplace"] = nil
+	package.loaded["prototypes.compat.enemy_homes"] = nil
 	package.loaded["prototypes.compat.enemy_planet_pollution"] = nil
 	rawset(_G, "mods", active_mods)
 	rawset(_G, "settings", {startup = {}})
@@ -71,8 +72,9 @@ for _, mod_name in ipairs({"ArmouredBiters", "ArmouredBiters21Compat", "Armoured
 	check(#units == 2 and units[1][1] == "small-biter" and units[2][1] == "medium-biter",
 		mod_name .. ": armoured units leave the vanilla nest")
 	local nest = data.raw["unit-spawner"]["armoured-biter-spawner"] --[[@as table]]
-	local restriction = nest.autoplace.tile_restriction
-	check(restriction and #restriction == 2, mod_name .. ": the nest is restricted to the tiles that exist")
+	local restriction = nest.autoplace.tile_restriction --[[@as string[] ]]
+	check(restriction and #restriction == 1 and restriction[1] == "hyarion-soil-dark",
+		mod_name .. ": the nest is restricted to Hyarion's tiles that exist")
 
 	require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
 	local absorptions = data.raw.tile["hyarion-soil-dark"].absorptions_per_second
