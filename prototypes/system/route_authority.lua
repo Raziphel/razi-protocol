@@ -242,7 +242,10 @@ function M.data_final_fixes()
   -- Never copy another system's vanilla asteroid size/density curve.
   for _,spec in ipairs(side_routes) do
     local world,hub=spec[1],spec[2]
-    if exists(world) and exists(hub) then
+    -- The Solaris/Nyxaris hub approaches are *not* optional-world spurs.
+    -- Never import unrelated first-frontier custom asteroids onto Aegis.
+    if world~="sye-solaris" and world~="sye-nyxaris"
+      and exists(world) and exists(hub) then
       local target
       for _,route in pairs(routes) do
         if route.from and route.to
