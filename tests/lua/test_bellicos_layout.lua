@@ -103,7 +103,7 @@ check(present[gate_b].orbit.parent.name == "pulsar",
   "Present pulsar gateway not attached to pulsar")
 check(present[gate_a].orbit.parent.name == "sye-calidus"
   and present[gate_a].orbit.distance==153
-  and present[gate_a].orbit.orientation==0.53,
+  and present[gate_a].orbit.orientation==0.469,
   "Aegis entry must lie north of the pulsar")
 check(not connected[old_route], "Legacy Vespera-only route was not retired")
 
@@ -159,7 +159,7 @@ local wx,wy=point_x-inner_x,point_y-inner_y
 local ox,oy=outer_x-inner_x,outer_y-inner_y
 local spread=math.abs(wx*oy-wy*ox)/
   (math.sqrt(wx*wx+wy*wy)*math.sqrt(ox*ox+oy*oy))
-check(spread>0.45,"Aegis Inner Edge routes became nearly parallel again")
+check(spread<0.25,"The single Aegis route spine started zig-zagging again")
 local gate_dx,gate_dy=gate_x-point_x,gate_y-point_y
 check(math.sqrt((gate_x-point_x)^2+(gate_y-point_y)^2)<35,
   "Bellicos stargate must be close to Point Warden")
@@ -178,7 +178,7 @@ end
 -- Local radii are stored in orbit metadata; native fields are absolute.
 check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
   and math.abs(near_locations["point-warden"].orbit.distance-48)<.001
-  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-35)<.001
+  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-32)<.001
   and math.abs(near_locations[gate_b].orbit.distance-74)<.001,
   "Aegis sector local radii drifted")
 
