@@ -25,7 +25,7 @@ M.chapters={
     {id="belt",missions={"ribbonia","asteroid-belt","paracelsin"}},
   },
   ["vespera"]={
-    {id="frontier",missions={"vespera-gate","muria","athos","athos-particulate","rubia","aegis"}},
+    {id="frontier",missions={"vespera-gate","muria","athos","athos-particulate","rubia"}},
     {id="cold",missions={"aquilo","nulla","nulla-electromagnetic","nulla-robotic-science"}},
     {id="depths",missions={"maraxsis","seadragon"}},
   },
@@ -42,7 +42,7 @@ M.chapters={
     {id="sphere",missions={"dyson-build","dyson-repeaters","dyson-mk2","dyson-mk3"}},
   },
   ["network"]={
-    {id="trade",missions={"interplanetary-trade","signal-network","first-frontier-relay","panglia-biooptic-trade","panglia-optical-return"}},
+    {id="trade",missions={"interplanetary-trade","signal-network","first-frontier-relay","panglia-biooptic-trade","panglia-optical-return","aegis"}},
     {id="precision",missions={"precision-matrix"}},
     {id="lattice",missions={"extreme-lattice","frontier-recovery-charter"}},
   },
