@@ -6,8 +6,10 @@ local old_calidus_entry_route = "sye-calidus-bellicos-stargate"
 -- This is a shared frontier BELOW the two starter stars. These native IDs
 -- must remain stable even though their upstream names say "calidus".
 local root_parent = "sye-calidus"
-local pulsar_radius, pulsar_turn = 226, .5
-local entry_radius, entry_turn = 166, .5
+-- Compact southern system; a sideways arrival prevents the pulsar beam
+-- from running straight through the entrance and other space connections.
+local pulsar_radius, pulsar_turn = 208, .5
+local entry_radius, entry_turn = 185, .55
 
 local function remove_stock_entry_routes()
 	deleteRoute("nauvis-stargate-connection")
@@ -132,20 +134,20 @@ local function plan_expedition()
   if near then
     -- Fan the Warden spur apart from the Inner -> Outer belt crossing.
     -- The older bearings drew two nearly parallel routes across Aegis.
-    -- Keep all SOURCE connections and asteroid encounters unchanged;
-    -- only the visual native destination positions are reshaped.
-    append("aegis-inner-edge",near,virtual_near,29,.205)
+    -- The final route pass picks one source-compatible spine and preserves
+    -- the author-provided custom asteroid resources before pruning shortcuts.
+    append("aegis-inner-edge",near,virtual_near,29,.21)
     for _,name in ipairs(find_wardens()) do
-      append(name,near,virtual_near,48,.255)
+      append(name,near,virtual_near,48,.32)
     end
     -- Outer Edge turns southeast, then the Bellicos-side stargate follows
     -- on a short almost-vertical exit instead of doubling back to the west.
-    append("aegis-outer-edge",near,virtual_near,66,.345)
-    append(bellicos_gate,near,virtual_near,81,.37,true)
+    append("aegis-outer-edge",near,virtual_near,35,.88)
+    append(bellicos_gate,near,virtual_near,74,.345,true)
   elseif pulsar then
-    append(bellicos_gate,pulsar,virtual_pulsar,81,.37,true)
+    append(bellicos_gate,pulsar,virtual_pulsar,74,.345,true)
   else
-    local gx,gy=offset(sx,sy,81,.37)
+    local gx,gy=offset(sx,sy,74,.345)
     -- Also used when the source supplies neither a persistent pulsar
     -- prototype nor the Near Bellicos parent. Keep the gateway near the
     -- missing pulsar rather than projecting it toward the central stars.
@@ -344,7 +346,7 @@ local function soften_pulsar_art()
     if tagged or source_file then
       local tint=layer.tint or {r=1,g=1,b=1,a=1}
       layer.tint={r=tint.r or 1,g=tint.g or 1,b=tint.b or 1,
-        a=math.min(tint.a or 1,.82)}
+        a=math.min(tint.a or 1,.50)}
       touched=touched+1
     end
   end
@@ -364,65 +366,126 @@ end
 
 -- Run after final route ownership and asteroid-family integration. Keep the
 -- author's native species/curves; harden vanilla asteroid mid-route encounters.
+-- Protect one readable route spine. The former fallback algorithm appended
+-- more lines atop the source's multiple direct chords and bypassed the ring.
+-- Preserve native IDs and custom asteroid drops on the surviving connections.
 function bellicos.fortify_routes()
   if not (mods and mods["bellicos-and-aegis"]) then return 0 end
   local routes=data.raw["space-connection"] or {}
   local asteroid=require("prototypes.system.asteroid_profiles")
   local icons=require("prototypes.system.route_icons")
-  local warden={}
-  for _,name in ipairs(find_wardens()) do warden[name]=true end
+  local wardens=find_wardens()
+  table.sort(wardens,function(a,b)
+    if a=="point-warden" then return true end
+    if b=="point-warden" then return false end
+    return a<b
+  end)
+  local near=near_orbit()
   local points={
+    [entry_gate]=true,[bellicos_gate]=true,
     ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true,
-    ["calidus-bellicos-stargate-calidus"]=true,
-    ["calidus-bellicos-stargate-bellicos"]=true,
     ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
     ["near_bellicos_orbit"]=true
   }
-  for name in pairs(warden) do points[name]=true end
-  local function has(a,b)
-    for _,route in pairs(routes) do
-      if (route.from==a and route.to==b)
-        or (route.to==a and route.from==b) then return true end
-    end
-    return false
+  for _,name in ipairs(wardens) do points[name]=true end
+  local function key(a,b)
+    if a>b then a,b=b,a end
+    return a.."|"..b
   end
-  -- Restore missing native connections without overwriting a genuine
-  -- author route or bridging directly around their original Aegis belt.
-  local links={
-    -- Start at the OUTER edge; never offer an extra skip around the author\'s
-    -- inner/outer Aegis crossing, even if one of its source routes is absent.
-    {entry_gate,"aegis-outer-edge",56000,"aegis_approach"},
-    {"aegis-outer-edge","aegis-inner-edge",35000,"aegis_depths"},
-    {"aegis-outer-edge",bellicos_gate,38000,"aegis_depths"}
-  }
-  for _,name in ipairs(find_wardens()) do
-    links[#links+1]={"aegis-inner-edge",name,28000,"aegis_depths"}
-    links[#links+1]={name,"aegis-outer-edge",34000,"aegis_depths"}
+  local specs={}
+  local order={}
+  local function connect(a,b,km,profile)
+    if not (endpoint_type(a) and endpoint_type(b)) then return end
+    local k=key(a,b)
+    if not specs[k] then
+      specs[k]={a=a,b=b,km=km,profile=profile}
+      order[#order+1]=k
+    end
+  end
+  -- The incoming Aegis gate first approaches the OUTER rim, crosses inward,
+  -- then follows the Warden and Bellicos stargate. No long diagonal jumps.
+  connect(entry_gate,"aegis-outer-edge",56000,"aegis_approach")
+  connect("aegis-outer-edge","aegis-inner-edge",45000,"aegis_depths")
+  if near then connect(near,"aegis-inner-edge",12000,"aegis_depths") end
+  if #wardens==0 then
+    connect("aegis-inner-edge",bellicos_gate,62000,"aegis_depths")
+  else
+    local first=wardens[1]
+    connect("aegis-inner-edge",first,38000,"aegis_depths")
+    connect(first,bellicos_gate,47000,"aegis_depths")
+    -- Variant/extra wardens are discoverable spurs, not parallel shortcuts.
+    for i=2,#wardens do
+      connect("aegis-inner-edge",wardens[i],33000,"aegis_depths")
+    end
+  end
+  -- Choose a native route first for each pair so saved platform schedules
+  -- remain valid whenever possible. Repeated runs must be idempotent.
+  local names={}
+  for name in pairs(routes) do names[#names+1]=name end
+  table.sort(names,function(a,b)
+    local an,bn=a:sub(1,5)=="razi-",b:sub(1,5)=="razi-"
+    if an~=bn then return not an end
+    return a<b
+  end)
+  local kept,discarded={},{}
+  for _,name in ipairs(names) do
+    local route=routes[name]
+    if route and type(route.from)=="string" and type(route.to)=="string"
+      and points[route.from] and points[route.to] then
+      local k=key(route.from,route.to)
+      if specs[k] and not kept[k] then
+        kept[k]=route
+      else
+        discarded[#discarded+1]={name=name,route=route}
+      end
+    end
+  end
+  -- Transfer only custom/source asteroid species from removed chords into
+  -- the closest surviving part of that native expedition.
+  for _,old in ipairs(discarded) do
+    local candidate
+    for _,k in ipairs(order) do
+      local spec=specs[k]
+      if spec.a==old.route.from or spec.b==old.route.from
+        or spec.a==old.route.to or spec.b==old.route.to then
+        candidate=kept[k]
+        if candidate then break end
+      end
+    end
+    if candidate then asteroid.preserve_custom(candidate,old.route) end
+    routes[old.name]=nil
   end
   local added=0
-  for _,link in ipairs(links) do
-    local a,b,km,profile=link[1],link[2],link[3],link[4]
-    if endpoint_type(a) and endpoint_type(b) and not has(a,b) then
-      local key="razi-aegis-"..a.."-"..b
-      data:extend({icons.assign({
-        type="space-connection",name=key,from=a,to=b,length=km,
-        shape="line",asteroid_spawn_definitions=asteroid.create(profile)
-      },profile)})
-      added=added+1
+  for _,k in ipairs(order) do
+    local spec=specs[k]
+    local route=kept[k]
+    if not route then
+      local name="razi-aegis-"..spec.a.."-"..spec.b
+      if not routes[name] then
+        route=icons.assign({
+          type="space-connection",name=name,from=spec.a,to=spec.b,
+          length=spec.km,shape="line",
+          asteroid_spawn_definitions=asteroid.create(spec.profile)
+        },spec.profile)
+        data:extend({route})
+        added=added+1
+      end
     end
-  end
-  for _,route in pairs(routes) do
-    if points[route.from] or points[route.to] then
-      local internal=points[route.from] and points[route.to]
-      if internal then asteroid.apply(route,"aegis_depths") end
-      asteroid.apply_field(route,internal and 1.80 or 1.52)
+    if route then
+      route.length=math.max(route.length or 0,spec.km)
+      route.shape="line"
+      route.origin=nil
+      -- Native exotic spawns survive; only ordinary hostile asteroids are
+      -- raised to a genuinely dangerous encounter level.
+      asteroid.apply(route,spec.profile)
+      asteroid.apply_field(route,spec.profile=="aegis_approach" and 1.5 or 1.8)
     end
   end
   if type(log)=="function" then
-    log("[Razi Protocol/Aegis] Restored "..added..
-      " missing source-compatible links and reinforced native asteroid routes")
+    log(("[Razi Protocol/Aegis] Expedition spine: %d new links, %d obsolete chords removed"):format(
+      added,#discarded))
   end
-  return added
+  return added,#discarded
 end
 
 return bellicos
