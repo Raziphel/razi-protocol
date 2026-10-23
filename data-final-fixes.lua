@@ -320,3 +320,6 @@ require("prototypes.compat.muluna_power_difficulty").data_final_fixes()
 require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
 -- Source XY's optional numerical inflation scale; never enable its toggle.
 require("prototypes.compat.xy_inflation_difficulty").data_final_fixes()
+
+-- Repair Crucible's dangling legacy cryogenic recipe after LithiumBattery removes it.
+require("prototypes.compat.lithium_crucible_science").data_final_fixes()
