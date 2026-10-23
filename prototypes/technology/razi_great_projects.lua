@@ -1,5 +1,8 @@
 -- RAZI-owned project hardware. One craftable, powered archive relay and
 -- one source-issued freight receipt. No copied mod assets or new laboratories.
+-- The archive relay and its technology only recover story records, so they
+-- are created only while the storyline is on (scripts/razi_story.lua).
+local story=require("scripts.razi_story")
 local M={}
 function M.data()
   local source=data.raw.radar and data.raw.radar.radar
@@ -49,6 +52,10 @@ function M.data()
     }},
     order="z[razi]-m[archive-array]"
   }
-  data:extend{relay,item,receipt,recipe,tech}
+  if story.enabled() then
+    data:extend{relay,item,receipt,recipe,tech}
+  else
+    data:extend{receipt}
+  end
 end
 return M

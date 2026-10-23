@@ -7,6 +7,7 @@ local convergence=require("scripts.razi_convergence")
 local catalog=require("scripts.galactic_trade_catalog")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
+local story=require("scripts.razi_story")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local objectives=require("scripts.razi_journal_data")
 local platform_projects=require("scripts.razi_platform_projects")
@@ -21,6 +22,15 @@ for _,quest in ipairs(objectives.quests or {}) do
 end
 local L=function(k,...) return {"journal-ui."..k,...} end
 local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}
+-- The Archive Array project only recovers story records, so it exists only
+-- together with the story.
+local plain_ids={}
+for _,id in ipairs(ids) do
+  if id~="array" then plain_ids[#plain_ids+1]=id end
+end
+local function project_ids()
+  return story.enabled() and ids or plain_ids
+end
 local project_technologies={
   dyson="slp-dyson-sphere",
   array="razi-archive-array",
@@ -73,13 +83,13 @@ function M.visible(force,id)
   return true
 end
 function M.valid(id)
-  for _,value in ipairs(ids) do if value==id then return true end end
+  for _,value in ipairs(project_ids()) do if value==id then return true end end
   return false
 end
 function M.adjacent(force,id,step,known_visible)
   local visible=known_visible or {}
   if not known_visible then
-    for _,project in ipairs(ids) do
+    for _,project in ipairs(project_ids()) do
       if M.visible(force,project) then visible[#visible+1]=project end
     end
   end
@@ -755,11 +765,13 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   perspective.style.single_line=false
   perspective.style.maximal_width=math.max(100,width-98)
   perspective.style.font_color=HUES.quiet
-  local context=content.add{type="label",
-    caption=L("project-context-"..p.project)}
-  context.style.single_line=false
-  context.style.maximal_width=math.max(115,width-72)
-  context.style.font_color=HUES.quiet
+  if story.enabled() then
+    local context=content.add{type="label",
+      caption=L("project-context-"..p.project)}
+    context.style.single_line=false
+    context.style.maximal_width=math.max(115,width-72)
+    context.style.font_color=HUES.quiet
+  end
   local options={embedded=true,width=width-68}
   if p.project=="platform" or p.project=="voyage" then
     platform_reader(content,player,width-68,p.project,current)
@@ -821,7 +833,7 @@ function M.render(parent,player,p,size)
     p.cargo_target=nil
   end
   local displayed={}
-  for _,id in ipairs(ids) do
+  for _,id in ipairs(project_ids()) do
     if M.visible(player.force,id) then displayed[#displayed+1]=id end
   end
   if #displayed==0 then

@@ -345,11 +345,15 @@ check(journal.preferences(1).chapter=="nyxaris",
 check(journal.preferences(1).selected~=nil,
   "Chapter jump must select a visible objective")
 created={}
+-- The Archive tab belongs to the story; test it with the story on.
+require("scripts.razi_story").configure(true)
 journal.preferences(1).view="archive"
 force.technologies.automation.researched=true
 journal.draw(player)
 check(assert_panes()==2,
   "Archive navigation and reading should also hide both scrollbars")
+require("scripts.razi_story").configure(false)
+journal.preferences(1).view="quests"
 for _,size in ipairs({
   {width=1920,height=1080,scale=1},
   {width=1920,height=1080,scale=1.25},

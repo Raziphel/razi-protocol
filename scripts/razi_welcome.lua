@@ -1,6 +1,7 @@
 -- One compact, localized welcome per player. Optional new-map console
 -- cleanup is a one-shot: Factorio does NOT let us selectively delete
 -- another mod's messages. Never clear console on an existing save.
+local story=require("scripts.razi_story")
 local M={}
 local WAIT=180
 local NEW_MAP_LIMIT=600
@@ -58,7 +59,32 @@ local function unread_count(index)
   end
   return count
 end
+-- Text version of the briefing. `seen` stores the version a player has read,
+-- so a player who only saw the plain text still gets the story briefing
+-- once it is switched on. Older saves hold `true`, which was the story text.
+local PLAIN_VERSION=1
+local STORY_VERSION=2
+local function version()
+  return story.enabled() and STORY_VERSION or PLAIN_VERSION
+end
+local function has_seen(s,index)
+  local seen=s.seen[index]
+  if seen==true then seen=STORY_VERSION end
+  return type(seen)=="number" and seen>=version()
+end
+function M.help()
+  return story.enabled() and {"razi-welcome.command-help"}
+    or {"razi-welcome-plain.command-help"}
+end
+local function plain_briefing(player)
+  player.print({"razi-welcome-plain.header"})
+  player.print({"razi-welcome-plain.journal",
+    {"razi-welcome-plain."..M.spoiler_status()}})
+  player.print({"razi-welcome-plain.links"})
+  if player.admin then player.print({"razi-welcome-plain.admin"}) end
+end
 local function briefing(player)
+  if not story.enabled() then return plain_briefing(player) end
   player.print({"razi-welcome.header"})
   player.print({"razi-welcome.identification"})
   player.print({"razi-welcome."..M.signal(player)})
@@ -73,8 +99,8 @@ end
 function M.deliver(player,early)
   if not (player and player.valid) then return end
   local s=state()
-  if s.seen[player.index] then return end
-  s.seen[player.index]=true
+  if has_seen(s,player.index) then return end
+  s.seen[player.index]=version()
   s.pending[player.index]=nil
   -- This API clears all chat lines, not only third-party startup banners.
   -- Never use it after the first ten seconds of a newly created map.
@@ -89,7 +115,7 @@ end
 local function greet(player)
   if not (player and player.valid) then return end
   local s=state()
-  if s.seen[player.index] or s.pending[player.index] then return end
+  if has_seen(s,player.index) or s.pending[player.index] then return end
   if game.tick<=NEW_MAP_LIMIT then
     s.pending[player.index]={tick=game.tick+WAIT,early=true}
   else

@@ -11,7 +11,7 @@ class ProjectsTests(unittest.TestCase):
         self.assertIn('razi_journal.open_project(player)',control)
         self.assertNotIn('galactic_operations.sync_all_map_buttons',control)
         self.assertIn('retire_operations(player)',control)
-        self.assertIn('for _,view in ipairs({"quests","projects","archive","systems"})',journal)
+        self.assertIn('{"quests","projects","archive","systems"}',journal)
         self.assertIn('projects.render(body,player,p,size)',journal)
         self.assertIn('p.view="projects"',journal)
     def test_source_data_and_delivery_validation(self):

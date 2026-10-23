@@ -1,6 +1,9 @@
 -- Friendly onboarding without erasing existing worlds' chat histories.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,why) if not ok then error(why,2) end end
+-- The original briefing is the story text; its own checks run with the story on.
+local story=require("scripts.razi_story")
+story.configure(true)
 storage={}
 local settings_map={
  ["razi-clean-startup-chat"]={value=true},
@@ -93,4 +96,50 @@ check(module.signal(player)=="status-network","Real freight network signal")
 player.force.technologies["razi-convergence-commission"].researched=true
 check(module.signal(player)=="status-commission","Real commission signal")
 player.force.technologies["razi-convergence-commission"].researched=false
+check(module.help()[1]=="razi-welcome.command-help","Story help text")
+
+-- Story off: a short plain message, and a per-version "seen" marker.
+story.configure(false)
+check(module.help()[1]=="razi-welcome-plain.command-help","Plain help text")
+module.on_player_removed(1)
+settings.global["razi-hide-spoilers"].value=true
+received={}
+game.tick=3500
+module.on_player_joined(player)
+check(#received==4,"Admin sees header, journal hint, links and admin line")
+check(received[1][1]=="razi-welcome-plain.header"
+  and received[2][1]=="razi-welcome-plain.journal"
+  and received[2][2][1]=="razi-welcome-plain.spoilers-on"
+  and received[3][1]=="razi-welcome-plain.links"
+  and received[4][1]=="razi-welcome-plain.admin",
+  "Plain welcome must use only plain keys")
+for _,line in ipairs(received) do
+  check(line[1]:match("^razi%-welcome%-plain%."),"Story key in plain welcome")
+end
+check(storage.razi_welcome.seen[1]==1,"Plain text version is stored")
+module.on_player_joined(player)
+game.tick=4000
+module.flush()
+check(#received==4,"A player who saw the plain text is not greeted twice")
+player.admin=false
+received={}
+module.command{player_index=1}
+check(#received==3,"Non-admin plain replay has no admin line")
+-- Switching the story on shows the story briefing once to such a player.
+story.configure(true)
+received={}
+module.on_player_joined(player)
+game.tick=4500
+module.flush()
+check(#received>=7 and received[1][1]=="razi-welcome.header",
+  "Story briefing must follow once the story is on")
+check(storage.razi_welcome.seen[1]==2,"Story text version is stored")
+-- Saves from before text versions store true, which was the story text.
+storage.razi_welcome.seen[1]=true
+received={}
+module.on_player_joined(player)
+check(#received==0,"Old marker counts as the story text")
+story.configure(false)
+module.on_player_joined(player)
+check(#received==0,"Old marker also covers the plain text")
 print("Razi startup welcome, options, replay and existing-save safety passed")

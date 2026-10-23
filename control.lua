@@ -2,7 +2,7 @@ local razi_journal = require("scripts.razi_journal")
 local platform_projects = require("scripts.razi_platform_projects")
 local great_projects = require("scripts.razi_great_projects")
 local deep_expedition = require("scripts.razi_deep_space_expedition")
-local story_dispatch = require("scripts.razi_story_dispatch")
+local story_dispatch = require("scripts.razi_story").dispatch
 local spoiler_fog = require("scripts.razi_spoiler_fog")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local welcome = require("scripts.razi_welcome")
@@ -227,7 +227,7 @@ commands.add_command("razi-cheat",
   {"razi-cheat.help"},
   razi_safe_cheat.command)
 commands.add_command("razi-welcome",
-  {"razi-welcome.command-help"},welcome.command)
+  welcome.help(),welcome.command)
 -- Explicit diagnostic only. Never scans recipes, labs or source mods on ticks.
 commands.add_command("razi-victory-audit",
   "Display the supported external victory opt-outs and any recovered stray victories.",
