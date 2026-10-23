@@ -115,7 +115,6 @@ class SouthernAegis(unittest.TestCase):
             "aegis-outer-edge": orbit(32, .10),
             "aegis-inner-edge": orbit(29, .21),
             "point-warden": orbit(48, .32),
-            "calidus-bellicos-stargate-bellicos": orbit(74, .345),
             "near-bellicos-orbit": near,
         }
         branches = [
@@ -124,7 +123,6 @@ class SouthernAegis(unittest.TestCase):
             ("calidus-bellicos-stargate-calidus", "aegis-outer-edge"),
             ("aegis-outer-edge", "aegis-inner-edge"),
             ("aegis-inner-edge", "point-warden"),
-            ("point-warden", "calidus-bellicos-stargate-bellicos"),
             ("near-bellicos-orbit", "aegis-inner-edge"),
         ]
         candidates = []
@@ -169,7 +167,7 @@ class SouthernAegis(unittest.TestCase):
         for n in ("paracelsin", "shchierbin", "alchemy-planet", "sye-vibrant"):
             self.assertGreater(radius(n), 39)
         self.assertAlmostEqual(radius("asteroid-belt-inner-edge"), 31, places=3)
-        self.assertAlmostEqual(radius("asteroid-belt-outer-edge"), 39, places=3)
+        self.assertAlmostEqual(radius("asteroid-belt-outer-edge"), 46, places=3)
         inner = point("asteroid-belt-inner-edge", data)
         outer = point("asteroid-belt-outer-edge", data)
         self.assertGreater(math.dist(inner, outer), 14)
@@ -184,9 +182,12 @@ class SouthernAegis(unittest.TestCase):
         self.assertIn('connect(entry_gate,"aegis-outer-edge",56000', source)
         self.assertIn('connect("aegis-outer-edge","aegis-inner-edge",45000', source)
         self.assertIn('connect("aegis-inner-edge",first,38000', source)
-        self.assertIn('connect(first,bellicos_gate,47000', source)
+        self.assertNotIn('connect(first,bellicos_gate', source)
+        self.assertIn('connect("aegis-inner-edge",wardens[1],38000', source)
         self.assertNotIn('connect(entry_gate,bellicos_gate', source)
         self.assertIn('routes[old.name]=nil', source)
+        self.assertIn('bellicos.retire_far_gate()', source)
+        self.assertIn('data.raw[kind][retired_gate]=nil', source)
         self.assertIn('asteroid.preserve_custom(candidate,old.route)', source)
         self.assertIn('route.shape="line"', source)
 
@@ -199,7 +200,7 @@ class SouthernAegis(unittest.TestCase):
         self.assertIn('aegis_depths={big=0.014,huge=0.0021}', profile)
         self.assertIn('asteroid.apply_field(route,spec.profile=="aegis_approach"', bel)
         self.assertIn('["calidus-bellicos-stargate-calidus"]=8', level)
-        self.assertIn('["calidus-bellicos-stargate-bellicos"]=10', level)
+        self.assertNotIn('["calidus-bellicos-stargate-bellicos"]=10', level)
         self.assertIn('gate("discovery-aegis-outer", "solaris-discovery")', tech)
         self.assertIn('gate("discovery-aegis-outer", "nyxaris-discovery")', tech)
 
