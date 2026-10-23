@@ -68,14 +68,18 @@ class SouthernAegis(unittest.TestCase):
         bel = read("prototypes/system/bellicos.lua")
         approved = read("prototypes/system/route_authority.lua")
         self.assertIn('root_parent = "sye-calidus"', bel)
-        self.assertIn("pulsar_radius, pulsar_turn = 226, .5", bel)
-        self.assertIn("entry_radius, entry_turn = 166, .5", bel)
+        self.assertIn("pulsar_radius, pulsar_turn = 208, .5", bel)
+        self.assertIn("entry_radius, entry_turn = 185, .55", bel)
         self.assertAlmostEqual(sx, -nx, places=3)
         self.assertAlmostEqual(sy, ny, places=3)
-        cx, cy = (root[0], root[1] + 226)
+        cx, cy = (root[0], root[1] + 208)
         self.assertAlmostEqual(cx, (sx + nx) / 2, places=3)
         self.assertGreater(cy, sy + 125)
-        gate = (root[0], root[1] + 166)
+        gate = (
+            root[0] + 185 * math.sin(2 * math.pi * .55),
+            root[1] - 185 * math.cos(2 * math.pi * .55),
+        )
+        self.assertLess(gate[0], -50)
         self.assertGreater(gate[1], sy + 50)
         self.assertLess(gate[1], cy)
         self.assertIn(
@@ -113,11 +117,23 @@ class SouthernAegis(unittest.TestCase):
         self.assertAlmostEqual(radius("asteroid-belt-outer-edge"), 39, places=3)
         inner = point("asteroid-belt-inner-edge", data)
         outer = point("asteroid-belt-outer-edge", data)
-        self.assertLess(math.dist(inner, outer), 9)
+        self.assertGreater(math.dist(inner, outer), 14)
+        self.assertLess(math.dist(inner, outer), 22)
         self.assertLess(math.dist(outer, point("paracelsin", data)), 15)
         routes = read("prototypes/system/route_reconcile.lua")
         self.assertIn('{"ribbonia", "asteroid-belt-inner-edge",', routes)
         self.assertIn('{"asteroid-belt-outer-edge", "paracelsin",', routes)
+
+    def test_aegis_route_spine_has_no_shortcut_chords(self):
+        source = read("prototypes/system/bellicos.lua")
+        self.assertIn('connect(entry_gate,"aegis-outer-edge",56000', source)
+        self.assertIn('connect("aegis-outer-edge","aegis-inner-edge",45000', source)
+        self.assertIn('connect("aegis-inner-edge",first,38000', source)
+        self.assertIn('connect(first,bellicos_gate,47000', source)
+        self.assertNotIn('connect(entry_gate,bellicos_gate', source)
+        self.assertIn('routes[old.name]=nil', source)
+        self.assertIn('asteroid.preserve_custom(candidate,old.route)', source)
+        self.assertIn('route.shape="line"', source)
 
     def test_risk_and_research_have_the_right_tiers(self):
         profile = read("prototypes/system/asteroid_profiles.lua")
@@ -126,7 +142,7 @@ class SouthernAegis(unittest.TestCase):
         tech = read("prototypes/compat/planet_arrival_pacing.lua")
         self.assertIn('aegis_approach={"aquilo_solar_system_edge",1.65', profile)
         self.assertIn('aegis_depths={big=0.014,huge=0.0021}', profile)
-        self.assertIn('asteroid.apply_field(route,internal and 1.80 or 1.52)', bel)
+        self.assertIn('asteroid.apply_field(route,spec.profile=="aegis_approach"', bel)
         self.assertIn('["calidus-bellicos-stargate-calidus"]=8', level)
         self.assertIn('["calidus-bellicos-stargate-bellicos"]=10', level)
         self.assertIn('gate("discovery-aegis-outer", "solaris-discovery")', tech)
