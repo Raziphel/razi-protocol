@@ -224,9 +224,18 @@ function M.assembly_fraction(force)
  if saved and saved.victory then return 1 end
  local credit=0
  for _,rule in ipairs(M.stages) do
-  local donated=saved and saved.delivered
-   and saved.delivered[rule.id] or 0
-  credit=credit+math.min(1,math.max(0,donated/rule.count))
+  if saved and saved.delivered and (saved.delivered[rule.id] or 0)>=rule.count then
+   credit=credit+1
+  else
+   local amounts=saved and saved.materials and saved.materials[rule.id] or {}
+   local requirements={{rule.item,rule.count}}
+   for _,part in ipairs(rule.supplies or {}) do requirements[#requirements+1]=part end
+   local fraction=0
+   for _,part in ipairs(requirements) do
+    fraction=fraction+math.min(1,(amounts[part[1]] or 0)/part[2])
+   end
+   credit=credit+fraction/#requirements
+  end
  end
  return credit/#M.stages
 end
@@ -406,6 +415,13 @@ function M.forces_merged(event)
  if not dest_index then return end
  local target=saved[dest_index] or {delivered={},victory=false}
  target.delivered=target.delivered or {}
+ target.materials=target.materials or {}
+ for id,parts in pairs(source.materials or {}) do
+  target.materials[id]=target.materials[id] or {}
+  for name,amount in pairs(parts) do
+   target.materials[id][name]=math.max(target.materials[id][name] or 0,amount)
+  end
+ end
  for _,rule in ipairs(M.stages) do
   target.delivered[rule.id]=math.min(rule.count,
    (target.delivered[rule.id] or 0)
@@ -766,6 +782,25 @@ function M.render(parent,player,options)
   state.style.font="default-bold"
   local carried=inventory and inventory.valid
    and inventory.get_item_count(rule.item) or 0
+  local cargo_available=false
+  local amounts=saved.materials and saved.materials[rule.id] or {}
+  local requirements={{rule.item,rule.count}}
+  for _,part in ipairs(rule.supplies or {}) do requirements[#requirements+1]=part end
+  for _,part in ipairs(requirements) do
+   local credited=amounts[part[1]] or 0
+   if part[1]==rule.item then
+    credited=math.max(credited,saved.delivered[rule.id] or 0)
+   end
+   local owned=inventory and inventory.valid
+    and inventory.get_item_count(part[1]) or 0
+   if owned>0 and credited<part[2] then cargo_available=true end
+   local row=card.add{type="label",caption={
+    "", "[item="..part[1].."] ",tostring(credited),"/",tostring(part[2]),
+    "  (",tostring(owned)," carried)"
+   }}
+   row.style.single_line=false
+   row.style.maximal_width=width
+  end
   line(card,"convergence-carried",width,tostring(carried))
   local recipe=force.recipes and force.recipes[rule.item]
   local recipe_state=not recipe and "convergence-recipe-unavailable"
@@ -815,7 +850,7 @@ function M.render(parent,player,options)
   local button=card.add{type="button",
    caption=L("convergence-submit"),
    tags={razi_ops_action="convergence-deliver",value=rule.id}}
-  button.enabled=i==next_index and carried>0 and where~=nil
+  button.enabled=i==next_index and cargo_available and where~=nil
    and (i<3 or sync.researched)
    and (i<5 or (ignition.researched and receiver_ready
      and ((not settings or not settings.startup
