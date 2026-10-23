@@ -1,29 +1,44 @@
 local lithium_battery = {}
 
--- Aquilo Overhaul: Lithium Battery 7.5.0 with Krastorio 2 Spaced Out, Planet Crucible and Maraxsis stops the game while it loads
--- at two places. Both come from the K2SO branch of Lithium Battery, which copies a science pack recipe, hands the copy's
--- ingredients to the Krastorio research data recipe and deletes the copy again.
+-- Aquilo Overhaul: Lithium Battery 7.5.0 and 7.5.1 with Krastorio 2 Spaced Out, Planet Crucible and Maraxsis stops the game while it
+-- loads at two places. Both come from the K2SO branch of Lithium Battery, which copies a science pack recipe and hands the copy's
+-- ingredients to the Krastorio research data recipe. Up to 7.5.0 it deleted the copy afterwards, 7.5.1 keeps it hidden and disabled.
 --
--- 1. Dead productivity effects. The copies are cryogenic-science-pack-clone and promethium-science-pack-clone
---    (prototypes/recipes-updates.lua:29-31, :132-134), deleted at the end of data-final-fixes.lua (:361-369). Planet Crucible makes one
+-- 1. Dead productivity effects (7.5.0 and older). The copies are cryogenic-science-pack-clone and promethium-science-pack-clone
+--    (prototypes/recipes-updates.lua:29-31, :132-134), deleted at the end of data-final-fixes.lua (:361-369 in 7.5.0). Planet Crucible makes one
 --    productivity technology per science pack from every recipe that produces the pack, copies included, in data-updates.lua (:610-690),
 --    so those technologies keep a change-recipe-productivity effect of a recipe that no longer exists:
 --    "recipe with name 'cryogenic-science-pack-clone' does not exist ... planet-crucible-cryogenic-science-pack-productivity".
---    The effects of recipes that do not exist are taken out; the effect of the real recipe stays.
--- 2. Doubled biter eggs. Lithium Battery writes the three ingredients of its promethium copy, biter-egg among them, into
---    kr-promethium-research-data (data-final-fixes.lua:365-368). Maraxsis (compat/krastorio-2-final-fixes.lua:5-12) then moves the
---    biter eggs of promethium-science-pack, which it doubles, into the same recipe by appending them, and the game stops with
---    "Duplicate item ingredients are not allowed (biter-egg exists 2 or more times)". Equal ingredients of the research data
---    recipes are added up into one.
+--    The effects of recipes that do not exist are taken out; the effect of the real recipe stays. 7.5.1 keeps the copies
+--    (recipes-updates.lua:31-32, :136-137), so the effects are no longer dead there and nothing is taken out.
+-- 2. Doubled biter eggs. Lithium Battery writes the ingredients of its promethium copy, biter-egg among them, into
+--    kr-promethium-research-data (data-final-fixes.lua:366-368 in 7.5.0, :365-367 in 7.5.1) and does not copy the list: the research
+--    data recipe and the copy hold the same Lua table. Maraxsis (compat/krastorio-2-final-fixes.lua:5-12) then moves the biter eggs
+--    of promethium-science-pack, which it doubles, into the research data recipe by appending them, and the game stops with
+--    "Duplicate item ingredients are not allowed (biter-egg exists 2 or more times)": in 7.5.0 on kr-promethium-research-data, in
+--    7.5.1 also on promethium-science-pack-clone, which still shares the list. Equal ingredients of the research data recipes and
+--    of the copies are added up into one, each recipe getting a list of its own, so that the sum does not reach the other recipe.
 -- 3. Belts without a machine. Razi hides the assembling machine 4 of Lithium Battery (compat/redundant_progression.lua, setting
 --    razi-hide-redundant-assembler-tiers), but the four promethium belt recipes of Lithium Battery (promethium-transport-belt,
 --    -underground-belt, -splitter, -loader) are in the category hea-am4-only, which only that machine and its Tenebris and Rabbasca
 --    copies have (prototypes/belt/recipe.lua, prototypes/hea-assembling-machine.lua). No machine the player has can make them.
 --    The category goes to Krastorio 2's advanced assembling machine, the tier that takes the place of the hidden one, and to its copies.
--- Remove this module when Lithium Battery stops deleting recipes that other mods have listed, when it or Maraxsis does not
--- add the biter egg a second time, and when Razi leaves the assembling machine 4 of Lithium Battery alone.
+-- Remove this module when Lithium Battery 7.5.0 and older are no longer supported, when it or Maraxsis does not add the biter egg
+-- a second time or keeps the lists apart, and when Razi leaves the assembling machine 4 of Lithium Battery alone.
 
-local RESEARCH_DATA = {"kr-cryogenic-research-data", "kr-promethium-research-data"}
+-- the research data recipes and the science pack copies whose ingredients they were given (7.5.1 keeps the copies)
+local MERGED_RECIPES = {
+	"kr-cryogenic-research-data", "kr-promethium-research-data",
+	"cryogenic-science-pack-clone", "promethium-science-pack-clone",
+}
+
+local function copy_ingredient(ingredient)
+	local copy = {}
+	for key, value in pairs(ingredient) do
+		copy[key] = value
+	end
+	return copy
+end
 
 local function sorted_keys(map)
 	local keys = {}
@@ -59,6 +74,7 @@ local function merge_equal_ingredients(name)
 		return
 	end
 
+	-- Lithium Battery hands the same list to two recipes: the sum goes into copies, never into the shared entries
 	local first_of = {}
 	local merged = {}
 	local changed = false
@@ -71,9 +87,10 @@ local function merge_equal_ingredients(name)
 			changed = true
 			log("razi-protocol: recipe " .. name .. " lists " .. ingredient.name .. " twice, the amounts are added up to " .. first.amount)
 		else
-			merged[#merged + 1] = ingredient
+			local entry = type(ingredient) == "table" and copy_ingredient(ingredient) or ingredient
+			merged[#merged + 1] = entry
 			if key then
-				first_of[key] = ingredient
+				first_of[key] = entry
 			end
 		end
 	end
@@ -117,7 +134,7 @@ function lithium_battery.data_final_fixes()
 	end
 
 	remove_dead_productivity_effects()
-	for _, name in ipairs(RESEARCH_DATA) do
+	for _, name in ipairs(MERGED_RECIPES) do
 		merge_equal_ingredients(name)
 	end
 	keep_belts_craftable()

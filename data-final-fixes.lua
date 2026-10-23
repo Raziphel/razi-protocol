@@ -232,9 +232,9 @@ require("prototypes.compat.carna_spire_copies").data_final_fixes()
 -- add a recipe, before the menu pass.
 require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
 
--- Lithium Battery deletes two recipe copies that Planet Crucible's productivity technologies still list, and doubles a biter egg
--- of the promethium research data with Maraxsis. After every pass that could add a recipe effect or ingredient, before the
--- menu pass.
+-- Lithium Battery (7.5.0 and older) deletes two recipe copies that Planet Crucible's productivity technologies still list, and
+-- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
+-- After every pass that could add a recipe effect or ingredient, before the menu pass.
 require("prototypes.compat.lithium_battery").data_final_fixes()
 
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
