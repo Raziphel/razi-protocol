@@ -11,6 +11,7 @@ local membership = {
 	["sye-calidus"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris", velora = "nyxaris", foliax = "nyxaris",
+	terrapalus = "nyxaris",
 	fulgora = "vibrant", cerys = "vibrant",
 	-- Solaris and Nyxaris.
 	["sye-solaris"] = "solaris", castra = "solaris", arig = "solaris", igrys = "solaris",
@@ -22,6 +23,7 @@ local membership = {
 	paracelsin = "vibrant", shchierbin = "vibrant",
 	["sye-vespera"] = "vespera", muria = "vespera", aquilo = "vespera",
 	rubia = "vespera", maraxsis = "vespera", athos = "vespera",
+	["bm-balack"] = "vespera",
 	-- Beetlejuice and Umbra.
 	["sye-beetlejuice"] = "beetlejuice", cubium = "beetlejuice", ferrum = "beetlejuice",
 	["linox-planet_linox"] = "beetlejuice", secretas = "beetlejuice",
