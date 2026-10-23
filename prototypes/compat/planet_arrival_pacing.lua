@@ -80,6 +80,17 @@ function M.data_final_fixes()
       gate(name, "planet-discovery-aquilo")
     end
   end
+  -- Khemia moved INSIDE the Vibrant asteroid belt alongside Ribbonia.
+  -- Preserve the alchemy mod's technology, native costs and effects, but
+  -- never require the outer Paracelsin/belt survey to visit an inner world.
+  if (data.raw.planet or {})["alchemy-planet"]
+    or (data.raw["space-location"] or {})["alchemy-planet"] then
+    for _, name in ipairs(discovering("alchemy-planet")) do
+      remove_parent(name, "planet-discovery-paracelsin")
+      remove_parent(name, "space-discovery-asteroid-belt")
+      gate(name, "planet-discovery-ribbonia")
+    end
+  end
   -- Aegis needs BOTH first-frontier sectors; deep Bellicos stays tier three.
   if mods["bellicos-and-aegis"] then
     remove_parent("discovery-aegis-outer", "stellar-discovery-solar-system-edge")
