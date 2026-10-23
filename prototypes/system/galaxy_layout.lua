@@ -65,9 +65,9 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  -- The real surveyed belt divides Fulgora/Ribbonia from the outer
-  -- Paracelsin, Khemia and Shchierbin arc. Keep real exit/return lanes
-  -- and distinct labels outside the physical rock annulus.
+  -- The rock annulus separates the inner electrical/alchemical worlds
+  -- (Fulgora, Ribbonia and Khemia) from Paracelsin and Shchierbin.
+  -- Razi's real crossing lies on the south-western part of the asteroid ring.
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.655},
   {"planet","paracelsin","vibrant",51,0.70},
@@ -106,10 +106,10 @@ local optional_orbits={
   -- directly from the exterior gateway without its rock crossing.
   {name="carna",star="umbra",radius=29,turn=0.7},
   {name="ferrum",star="beetlejuice",radius=43,turn=0.68},
-  -- Shchierbin moves into the outer-world arc alongside Paracelsin.
-  -- Both remain well beyond the 31/39-unit asteroid field.
+  -- Shchierbin stays outside with Paracelsin; Khemia becomes a distinctive
+  -- inner-orbit alchemy world, well inside the 31-39 rock annulus.
   {name="shchierbin",star="vibrant",radius=70,turn=0.64},
-  {name="alchemy-planet",star="vibrant",radius=67,turn=0.595},
+  {name="alchemy-planet",star="vibrant",radius=22,turn=0.81},
   {name="arcanyx",star="umbra",radius=27,turn=0.3},
   -- Balack is an optional outer-ice spur beside Aquilo.
   {name="bm-balack",star="vespera",radius=63,turn=0.70}
@@ -447,14 +447,14 @@ function M.data_final_fixes()
     ["crucible-orbit"]=0.75,["crucible"]=0.25,
     ["tenebris"]=0.75,["arcanyx"]=0.0,
     ["aquilo"]=0.75,
-    ["ferrum"]=0.75,["alchemy-planet"]=0.25,
+    ["ferrum"]=0.75,["alchemy-planet"]=0.0,
     ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.75,["abacayba"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
-    -- Outer text projects away from the star; inner text sits above the
-    -- waypoint rather than on the Ribbonia label or across the outer text.
-    ["asteroid-belt-inner-edge"]=0.0,
+    -- Opposing label quadrants keep two long rim captions distinct despite
+    -- the physically short rock crossing and Ribbonia's nearby orbit.
+    ["asteroid-belt-inner-edge"]=0.5,
     ["asteroid-belt-outer-edge"]=0.75,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.5,
     ["razi-umbra-belt-inner"]=0.25,
