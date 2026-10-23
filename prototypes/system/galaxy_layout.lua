@@ -471,8 +471,8 @@ function M.data_final_fixes()
     ["calidus-bellicos-stargate-calidus"]=0.75,
     -- The Bellicos locations are staggered in two dimensions. Opposing
     -- captions prevent Warden and the Aegis belt from sharing one baseline.
-    ["near-bellicos-orbit"]=0.25,
-    ["aegis-inner-edge"]=0.75,
+    ["near-bellicos-orbit"]=0.5,
+    ["aegis-inner-edge"]=0.0,
     ["point-warden"]=0.25,
     ["aegis-outer-edge"]=0.25,
     ["calidus-bellicos-stargate-bellicos"]=0.75
