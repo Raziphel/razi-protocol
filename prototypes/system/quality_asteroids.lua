@@ -4,6 +4,7 @@
 -- by real quality asteroids in control.lua, avoiding fake drop duplication.
 local M={}
 local engine=require("scripts.razi_asteroid_difficulty")
+local difficulty=require("scripts.razi_difficulty_presets")
 local PREFIX="razi-quality-asteroid-"
 M.prefix=PREFIX
 local registered={}
@@ -14,9 +15,7 @@ local function clone(x)
   return copy
 end
 local function settings_value(name,default)
-  local s=settings and settings.startup and settings.startup[name]
-  if s==nil or s.value==nil then return default end
-  return s.value
+  return difficulty.effective(name,default)
 end
 local function is_enemy(def,entities)
   return type(def)=="table" and (def.type==nil or def.type=="entity")

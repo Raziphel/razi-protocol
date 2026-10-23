@@ -2,6 +2,7 @@
 -- A native hidden carrier asteroid is immediately replaced by a real entity.
 local M={}
 local engine=require("scripts.razi_asteroid_difficulty")
+local levels=require("scripts.razi_difficulty_presets")
 local PREFIX="razi-quality-asteroid-"
 local length=#PREFIX
 -- Startup options are immutable while a Factorio save runs.
@@ -10,9 +11,8 @@ local length=#PREFIX
 local active_mode
 local function mode()
   if not active_mode then
-    local s=settings and settings.startup
-      and settings.startup["razi-asteroid-difficulty-scale"]
-    active_mode=s and s.value or "balanced"
+    active_mode=levels.effective("razi-asteroid-difficulty-scale",
+      "balanced")
   end
   return active_mode
 end

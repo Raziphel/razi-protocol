@@ -307,6 +307,14 @@ crossing,moon=routes.crossing.asteroid_spawn_definitions,routes.moon.asteroid_sp
 check(largest(crossing,"rock")=="medium",
   "Challenging lifts the crossing to medium hostiles: "..names(crossing))
 check(largest(moon,"scrap")=="medium","Challenging keeps Fulgora-Cerys below big")
+-- Hard selects the Challenging scale by itself.
+integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
+  {["razi-difficulty-preset"]={value="hard"},
+   ["razi-asteroid-difficulty-scale"]={value="balanced"}})
+integration.data_final_fixes()
+crossing=routes.crossing.asteroid_spawn_definitions
+check(largest(crossing,"rock")=="medium",
+  "Hard must apply the Challenging scale: "..names(crossing))
 integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
   {["razi-asteroid-difficulty-scale"]={value="relentless"}})
 integration.data_final_fixes()

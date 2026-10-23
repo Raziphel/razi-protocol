@@ -191,4 +191,34 @@ ok(probability(u_belt, "imersite-asteroid-chunk") == nil,
    "Belt generated a non-native modded asteroid without source data")
 util.spawn_definitions = old_spawn
 
+-- Difficulty levels move the asteroid factors; manual values still win.
+local function levelled(level, saved)
+  local startup={["razi-difficulty-preset"]={value=level}}
+  for name,value in pairs({["razi-asteroid-population"]="standard",
+    ["razi-belt-threats"]="standard",
+    ["razi-belt-resource-richness"]="standard"}) do
+    startup[name]={value=value}
+  end
+  for name,value in pairs(saved or {}) do startup[name]={value=value} end
+  rawset(_G,"settings",{startup=startup})
+end
+levelled("normal")
+ok(profiles.asteroid_factor()==1 and profiles.belt_factor()==1
+  and profiles.ore_factor()==1,"Normal must keep the standard factors")
+levelled("easy")
+ok(profiles.asteroid_factor()==.65 and profiles.belt_factor()==.5
+  and profiles.ore_factor()==1.5,"Easy must use sparse, relaxed and rich")
+levelled("hard")
+ok(profiles.asteroid_factor()==1.3 and profiles.belt_factor()==1.5
+  and profiles.ore_factor()==.6,"Hard must use dense, severe and scarce")
+levelled("nightmare")
+ok(profiles.asteroid_factor()==1.3,"Nightmare stops at dense, never swarm")
+levelled("hard",{["razi-asteroid-population"]="swarm"})
+ok(profiles.asteroid_factor()==1.6 and profiles.belt_factor()==1.5,
+  "A manual population must beat the level while the rest follows it")
+levelled("custom",{["razi-belt-threats"]="relaxed"})
+ok(profiles.asteroid_factor()==1 and profiles.belt_factor()==.5,
+  "Custom must use only the saved values")
+rawset(_G,"settings",nil)
+
 print("Tiered asteroid profiles and modded spawn preservation passed")
