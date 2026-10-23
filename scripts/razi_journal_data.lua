@@ -105,7 +105,7 @@ M.quests={
  {id="extreme-lattice",chapter="network",tech="razi-network-extreme-lattice",requires={"precision-matrix","rubia","tenebris"}},
  {id="outer-mastery",chapter="finale",tech="razi-outer-frontier-mastery",requires={"frozeta","vesta","linox","frontier-recovery-charter"}},
  {id="edge",chapter="finale",tech="stellar-discovery-solar-system-edge",requires={"outer-mastery","stable-singularity"}},
- {id="aegis",chapter="finale",tech="discovery-aegis-outer",requires={"edge"}},
+ {id="aegis",chapter="vespera",tech="discovery-aegis-outer",requires={"vespera-gate"}},
  {id="singularity-theory",chapter="finale",tech="razi-singularity-theory",requires={"outer-mastery"}},
  {id="test-fire",chapter="finale",tech="razi-singularity-test-fire",requires={"singularity-theory"}},
  {id="stable-singularity",chapter="finale",tech="razi-stable-intergalactic-singularity",requires={"test-fire"}},
