@@ -60,6 +60,8 @@ local anchors = {
   -- away from the gateway and Foliax across the quieter western arc.
   -- These are chart positions only; source production and climate are intact.
   {"planet","gleba","nyxaris",32,0.17},
+  -- Native Terra Palus joins Gleba as a quiet short-hop moon.
+  {"planet","terrapalus","gleba",8,0.43},
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
@@ -436,6 +438,7 @@ function M.data_final_fixes()
     ["apia"]=0.25,["carnova"]=0.75,
     -- Fan Gleba and its two source-owned moon labels in three directions.
     ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
+    ["terrapalus"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
     ["obsidiax"]=0.25,["carna"]=0.75,
