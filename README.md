@@ -390,13 +390,13 @@ I wanted a galaxy you can actually navigate, with different ways through it and 
 
 ## What's Different
 
-- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice, Umbra, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
+- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Vespera, Beetlejuice, Umbra, and Deep Space, with the Aegis/Bellicos pulsar expedition centered below Solaris and Nyxaris, reached from either of their Slip Streams.
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
 - Integrates Linox and Muria into the campaign without retaining redundant or unfinished planets.
 - Cleans up a large amount of route clutter from source mods that were not designed around one shared starmap.
-- Uses K2SO's real intergalactic transceiver as the **gateway into Deep Space**. The solar-system edge, Aegis/Bellicos, Shattered Planet, Nexus and other late expeditions remain for the proper final act.
+- Uses K2SO's real intergalactic transceiver as the **gateway into Deep Space**. The solar-system edge, Shattered Planet, Nexus and other Deep Space expeditions remain for the proper final act; Aegis opens from both first-frontier systems, with deeper Bellicos research in tier three.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
@@ -427,12 +427,12 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 | --- | --- | --- | --- |
 | Home | **Calidus** | Nauvis, Muluna, Calidus Slip Stream departure corridor | Familiar Space Age industry, the first system card |
 | Frontier 1 | **Solaris** | Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum; Igrys | Military and advanced industrial science |
-| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax and Rabbasca | Computation, exotic biology, environmental challenges |
-| Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; optional Cerys | Alien chemistry and galvanization |
-| Frontier 2 | **Vespera** | Muria, Aquilo, Rubia, Maraxsis; Obsidiax | Extreme environments, cryogenics, research-data production |
+| Frontier 1 | **Nyxaris** | Gleba, Moshine, Apia/Carnova, Panglia; Foliax, Rabbasca, Terra Palus and Pelagos | Computation, exotic biology, environmental challenges |
+| Frontier 2 | **Vibrant** | Fulgora, Ribbonia, Paracelsin; Cerys, Shchierbin and Khemia | Alien chemistry and galvanization |
+| Frontier 2 | **Vespera** | Muria, Rubia, Aquilo, Maraxsis; Athos and post-Aquilo Balack | Extreme environments, cryogenics, research-data production |
 | Frontier 3 | **Beetlejuice** | Cubium, Linox, Secretas, Frozeta | Outer-rim manufacturing and specialist resources |
 | Frontier 3 | **Umbra** | Tenebris, Crucible, Vesta; Carna | Unusual and dangerous late-game experimentation |
-| Gateway → Deep Space | **Solar System Edge** | Transceiver activation opens the Aegis/Bellicos and Shattered Planet expeditions, with Nexus/black-hole branches | Seven system cards, native K2SO transceiver; Deep Space science afterward |
+| Gateway → Deep Space | **Solar System Edge** | Transceiver activation opens the Shattered Planet, Nexus, Oort/Sol and black-hole expeditions | Seven system cards, native K2SO transceiver; Deep Space science afterward |
 
 ### The interstellar routes
 
@@ -445,7 +445,7 @@ Seven solar systems are arranged as three outward pairs after the Calidus home s
 
 This sketch represents **choices**, not all physical connections. Full interstellar route and local-spoke details are in [Seven-System Design](docs/SEVEN_SYSTEMS.md) and [Asteroid Hazard Guide](docs/ASTEROID_ROUTES.md).
 
-Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, while Fulgora anchors Vibrant. Solaris and Nyxaris are independent first-frontier entry choices. Vibrant and Vespera require mastery of both first-frontier systems; Beetlejuice and Umbra likewise require mastery of both second-frontier systems. An outer-frontier mastery technology gates the final edge journey.
+Aegis branches from **both** Solaris and Nyxaris after the initial discoveries; its heavy asteroid encounters prepare ships for the later Bellicos interior. Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, while Fulgora anchors Vibrant. Solaris and Nyxaris are independent first-frontier entry choices. Vibrant and Vespera require mastery of both first-frontier systems; Beetlejuice and Umbra likewise require mastery of both second-frontier systems. An outer-frontier mastery technology gates the final edge journey.
 
 ### Optional regions
 
@@ -453,7 +453,7 @@ Calidus keeps Nauvis and Muluna. Vulcanus and Gleba anchor the first frontier, w
 - **Dea Dia and Pelagos** remain optional Nyxaris expansions. The Dea Dia sub-system's native internal connections are preserved.
 - **Panglia** has direct Moshine and Apia/Carnova freight routes, a distinct Nyxaris orbit, new Chronicle research objectives, and guarded Moshine optical-cable / Panglite-glass production exchanges. Neither bonus recipe replaces native manufacturing.
 - **Nexus and Void-related endgame branches** remain beyond the transceiver gateway, not required for the seven-star arrival sequence.
-- Aegis/Bellicos is **required** by the current pack and retains its own internal pulsar and stargate routes.
+- **Aegis/Bellicos** retains its native pulsar and stargate routes. Twin researched departures from Solaris and Nyxaris converge on its southern Aegis gateway; tougher Bellicos science follows tier three.
 
 ### Progression principles
 
@@ -580,12 +580,12 @@ See [Required Worlds & Bridge Roadmap](docs/PLANETARY_BRIDGES_AND_MASTERY.md).
 
 Some world relationships need particular care:
 
-- **Muria** now serves as the entry point to Vespera: Muria -> Aquilo -> Rubia -> Maraxsis. It is no longer entered through Vibrant.
+- **Muria** now serves as the entry point to Vespera: Muria -> Rubia -> Aquilo / Maraxsis. It is no longer entered through Vibrant.
 - **Ribbonia -> Asteroid Belt -> Paracelsin** is Vibrant's core science chain.
 - **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
 - **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
 - **Moshine and Apia/Carnova** feed into **Panglia**, whose original Moshine data cells, DNA analysis, timewarp research and cloning remain essential. Pelagos and Dea Dia remain optional.
-- **Aegis and Bellicos** keep their complete internal pulsar/stargate expedition beyond the solar-system edge.
+- **Aegis and Bellicos** occupy a shared southern frontier beneath Solaris and Nyxaris, with two dangerous researched entry routes. Their source-owned pulsar, asteroid species and stargate technology remain intact.
 
 The last data-stage route pass removes unintended cross-chapter shortcuts among the systems Razi owns, without deleting internal source-mod networks.
 
