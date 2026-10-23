@@ -411,6 +411,7 @@ function bellicos.fortify_routes()
   for _,route in pairs(routes) do
     if points[route.from] or points[route.to] then
       local internal=points[route.from] and points[route.to]
+      if internal then asteroid.apply(route,"aegis_depths") end
       asteroid.apply_field(route,internal and 1.80 or 1.52)
     end
   end
