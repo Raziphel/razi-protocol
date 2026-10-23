@@ -12,7 +12,7 @@ local groups={
           "star-dea-dia",
           "dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},
-  aegis={"calidus-bellicos-stargate-calidus","calidus-bellicos-stargate-bellicos",
+  aegis={"calidus-bellicos-stargate-calidus",
          "aegis-inner-edge","aegis-outer-edge","point-warden",
          "near-bellicos-orbit","bellicos-near-orbit","near_bellicos_orbit"},
   vibrant={"sye-vibrant","fulgora","cerys","ribbonia",
