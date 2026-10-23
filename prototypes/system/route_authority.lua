@@ -19,7 +19,7 @@ local side_routes={
   {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
   {"ferrum","sye-beetlejuice",22500,"outer_industry"},
-  {"alchemy-planet","paracelsin",21000,"chemistry_deep"},
+  {"alchemy-planet","ribbonia",18000,"chemistry"},
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
   {"velora","gleba",14000,"biological"},
