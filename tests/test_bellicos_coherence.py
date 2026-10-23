@@ -56,7 +56,9 @@ class BellicosCoherence(unittest.TestCase):
         self.assertGreater(spread,.45,"Nearly parallel Aegis departures")
         self.assertGreater(gate[0],outer[0],"Gate should follow Outer Edge")
         self.assertGreater(gate[1],outer[1],"Gate should continue south")
-        self.assertLess(math.dist(gate,outer),25,"Gate is too remote")
+        self.assertLess(math.dist(gate,warden),35,"Bellicos gate must remain by Point Warden")
+        self.assertLess(outer[0],inner[0],"Outer Edge must face the entry gate")
+        self.assertLess(outer[1],inner[1],"Outer Edge must precede Inner Edge")
         self.assertNotIn('deleteRoutesBetween("aegis-inner-edge"',source)
 
     def test_native_repair_runs_after_general_galaxy_layout(self):
