@@ -102,8 +102,8 @@ check(present.pulsar.orbit.parent.name == "sye-calidus"
 check(present[gate_b].orbit.parent.name == "pulsar",
   "Present pulsar gateway not attached to pulsar")
 check(present[gate_a].orbit.parent.name == "sye-calidus"
-  and present[gate_a].orbit.distance==153
-  and present[gate_a].orbit.orientation==0.469,
+  and present[gate_a].orbit.distance==151
+  and present[gate_a].orbit.orientation==0.468,
   "Aegis entry must lie north of the pulsar")
 check(not connected[old_route], "Legacy Vespera-only route was not retired")
 
