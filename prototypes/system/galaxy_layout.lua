@@ -139,7 +139,6 @@ local deep_space_no_rings={
   ["oort-cloud"]=true,sol=true,pulsar=true,
   ["near-bellicos-orbit"]=true,
   ["calidus-bellicos-stargate-calidus"]=true,
-  ["calidus-bellicos-stargate-bellicos"]=true,
   ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true
 }
 
@@ -349,7 +348,6 @@ local function remove_baked_source_trails()
       or name=="near-bellicos-orbit" or name=="bellicos-near-orbit"
       or name=="near_bellicos_orbit" or name=="aegis-inner-edge"
       or name=="aegis-outer-edge" or name=="point-warden"
-      or name=="calidus-bellicos-stargate-bellicos"
       or name=="calidus-bellicos-stargate-calidus"
     if layer and layer.planetslib_orbit_shift
       and (name=="carna" or name=="velora"
@@ -475,7 +473,7 @@ function M.data_final_fixes()
     ["aegis-inner-edge"]=0.0,
     ["point-warden"]=0.25,
     ["aegis-outer-edge"]=0.25,
-    ["calidus-bellicos-stargate-bellicos"]=0.75
+    -- Point Warden is the far-side terminus; the unused gate is retired.
   }
   for name,direction in pairs(label_orientations) do
     local marker=exists("space-location",name) or exists("planet",name)
@@ -519,7 +517,7 @@ function M.data_final_fixes()
     "skewer_shattered_planet","skewer_lost_beyond",
     "black-hole-approach","black-hole","oort-cloud","sol",
     "pulsar","near-bellicos-orbit",
-    "calidus-bellicos-stargate-calidus","calidus-bellicos-stargate-bellicos",
+    "calidus-bellicos-stargate-calidus",
     "aegis-inner-edge","aegis-outer-edge","sye-calidus",
     "sye-solaris","sye-nyxaris",
     "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"
