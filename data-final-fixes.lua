@@ -223,9 +223,6 @@ require("prototypes.system.quality_asteroids").data_final_fixes()
 -- spawn scripts are left alone.
 require("prototypes.system.asteroid_performance").data_final_fixes()
 
--- Temporary, Factorio 2.1.22: old prototype fields of mods that are not updated yet. Runs after every prototype pass.
-require("prototypes.compat.factorio_2_1_22").data_final_fixes()
-
 -- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
 -- copy or add a prototype, as the last edit of created_effect.
 require("prototypes.compat.carna_spire_copies").data_final_fixes()

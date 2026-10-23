@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.8
+Date: 2026-10-23
+  Compatibility:
+    - PlanetsLib 2.2.1 and Muluna 2.7.41 are required: PlanetsLib now updates the fluid box temperatures and water textures that Factorio 2.1.22 removed, so Razi Protocol's own temporary conversion is gone
+---------------------------------------------------------------------------------------------------
 Version: 2.1.7
 Date: 2026-10-20
   Bugfixes:
