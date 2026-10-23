@@ -178,7 +178,7 @@ class SouthernAegis(unittest.TestCase):
         self.assertIn('{"ribbonia", "asteroid-belt-inner-edge",', routes)
         self.assertIn('{"asteroid-belt-outer-edge", "paracelsin",', routes)
         self.assertIn('{"ribbonia", "alchemy-planet", 18000, "chemistry"}', routes)
-        self.assertIn('["alchemy-planet"]=true, ["asteroid-belt-inner-edge"]=true', routes)
+        self.assertIn('["alchemy-planet"]=true,["asteroid-belt-inner-edge"]=true', routes)
 
     def test_aegis_route_spine_has_no_shortcut_chords(self):
         source = read("prototypes/system/bellicos.lua")
