@@ -33,4 +33,27 @@ check(file("prototypes/technology/campaign_weave.lua"):find(
   "not interdependence.enabled()",1,true),"Research mode off not respected")
 check(file("prototypes/technology/regional_research_bridges.lua"):find(
   "not interdependence.enabled()",1,true),"Bridges ignore the Off mode")
+-- Levels pick the exchange depth; a manual value still wins.
+for _,entry in ipairs({
+  {"easy","balanced"},{"normal","balanced"},{"hard","deep"},
+  {"nightmare","deep"}
+}) do
+  rawset(_G,"settings",{startup={
+    ["razi-difficulty-preset"]={value=entry[1]},
+    ["razi-planetary-interdependence"]={value="balanced"}
+  }})
+  check(mode.current()==entry[2],entry[1].." selects "..entry[2])
+end
+rawset(_G,"settings",{startup={
+  ["razi-difficulty-preset"]={value="hard"},
+  ["razi-planetary-interdependence"]={value="off"}
+}})
+check(mode.current()=="off" and not mode.enabled(),
+  "A manual Off must beat Hard")
+rawset(_G,"settings",{startup={
+  ["razi-difficulty-preset"]={value="custom"},
+  ["razi-planetary-interdependence"]={value="balanced"}
+}})
+check(mode.current()=="balanced","Custom must use the saved value")
+rawset(_G,"settings",nil)
 print("Interdependence startup modes passed")

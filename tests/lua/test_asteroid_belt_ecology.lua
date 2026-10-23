@@ -158,4 +158,20 @@ check(profiles.enrich_belt_crossing(plain,"umbra")==false and
 settings.startup["razi-belt-edge-harvesting"].value=true -- luacheck: ignore 122
 check(#profiles.belt_edge_resources(1,"umbra")==3,
  "Edge harvesting switched on must restore the rim ore")
+-- A difficulty level scales the belts like the matching saved setting.
+rawset(_G,"settings",{startup={
+ ["razi-difficulty-preset"]={value="hard"},
+ ["razi-belt-threats"]={value="standard"}}})
+package.loaded["prototypes.system.asteroid_profiles"]=nil
+do
+ local fresh=require("prototypes.system.asteroid_profiles")
+ local defs={{type="entity",asteroid="big-metallic-asteroid",
+  spawn_points={{distance=.2,probability=.004}}}}
+ local route={asteroid_spawn_definitions=defs}
+ fresh.apply(route,"belt_vibrant_crossing")
+ local standard=threat_peak("standard","belt_vibrant_crossing")
+ check(math.abs(lookup(route,"big-metallic-asteroid").spawn_points[1].probability
+  -standard[1].probability*1.5)<1e-9,"Hard must scale the belts as severe")
+end
+rawset(_G,"settings",nil)
 print("Two Razi native belt ecologies, route preservation and idempotence passed")

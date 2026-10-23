@@ -4,6 +4,7 @@
 local M = {}
 local catalog = require("scripts.galactic_catalog")
 local ladder = require("scripts.razi_asteroid_difficulty")
+local difficulty = require("scripts.razi_difficulty_presets")
 local profiles = require("prototypes.system.asteroid_profiles")
 
 local materials = {"uranium", "rock", "scrap", "organic", "chemical", "crystalline",
@@ -19,9 +20,7 @@ end
 -- The difficulty scale is read like the other route passes read it: an
 -- unset or undeclared setting means balanced.
 local function settings_value(name, default)
-  local s = settings and settings.startup and settings.startup[name]
-  if s == nil or s.value == nil then return default end
-  return s.value
+  return difficulty.effective(name, default)
 end
 
 -- Resource identity travels with the destinations, not the arbitrary

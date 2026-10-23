@@ -2,11 +2,11 @@
 -- and the interplanetary exchanges. Missing settings (including the small
 -- Lua fixture environment) use the balanced behavior rather than silently
 -- disabling progression.
+local difficulty = require("scripts.razi_difficulty_presets")
 local M = {}
 function M.current()
-  local setting = settings and settings.startup
-    and settings.startup["razi-planetary-interdependence"]
-  local value = setting and setting.value or "balanced"
+  local value = difficulty.effective("razi-planetary-interdependence",
+    "balanced")
   if value == "off" or value == "deep" then return value end
   return "balanced"
 end

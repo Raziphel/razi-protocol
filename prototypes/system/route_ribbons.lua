@@ -24,6 +24,7 @@ end
 M.compact=compact
 local sqrt,ceil,floor=math.sqrt,math.ceil,math.floor
 local ladder=require("scripts.razi_asteroid_difficulty")
+local difficulty=require("scripts.razi_difficulty_presets")
 local function angle(dy,dx)
   return (math.atan2 and math.atan2(dy,dx) or math.atan(dy,dx))%math.pi
 end
@@ -134,9 +135,7 @@ function M.data_final_fixes(owner)
   for _,sprite in ipairs(atlas.layers) do
     if sprite.filename==SHEET then return 0 end
   end
-  local difficulty=settings and settings.startup
-    and settings.startup["razi-asteroid-difficulty-scale"]
-  local difficulty_mode=difficulty and difficulty.value
+  local difficulty_mode=difficulty.effective("razi-asteroid-difficulty-scale")
   local routes,total={},0
   local is_compact=compact()
   local detail=selected("razi-route-detail","standard")

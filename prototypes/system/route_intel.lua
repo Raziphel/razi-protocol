@@ -5,6 +5,7 @@ local hazards=require("prototypes.system.route_hazards")
 local catalog=require("scripts.galactic_catalog")
 local dossiers=require("prototypes.system.route_dossiers")
 local quality_levels=require("scripts.razi_asteroid_difficulty")
+local difficulty=require("scripts.razi_difficulty_presets")
 local prefix="razi-route-intel."
 local function selected(name,default)
   local item=settings and settings.startup and settings.startup[name]
@@ -43,9 +44,8 @@ function M.annotate(route)
   -- Only one difficulty exists: the campaign's ten-level quality/route
   -- ladder. Physical asteroid sizes are separate descriptive facts.
   -- Preserve source-provided tooltip fields, names, and descriptions.
-  local mode=settings and settings.startup
-    and settings.startup["razi-asteroid-difficulty-scale"]
-  local lo,hi=quality_levels.route_range(route,mode and mode.value)
+  local mode=difficulty.effective("razi-asteroid-difficulty-scale")
+  local lo,hi=quality_levels.route_range(route,mode)
   local level_text=lo==hi and localise("quality-stage",tostring(hi))
     or localise("quality-stages",tostring(lo),tostring(hi))
   local hex=quality_levels.route_color_richtext(hi)

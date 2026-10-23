@@ -140,4 +140,22 @@ M.data_final_fixes()
 check(#before.technology["nuclear-power"].prerequisites==1 and
  #before.technology["nuclear-power"].unit.ingredients==3,
  "Legacy startup switch must preserve the original native tech tree")
+-- Difficulty levels: Hard and Nightmare turn the spread on by themselves.
+local function level_result(level,saved)
+ local tree=fixture()
+ data.raw=tree
+ rawset(_G,"settings",{startup={
+  ["razi-difficulty-preset"]={value=level},
+  ["razi-distributed-technology"]={value=saved}}})
+ M.data_final_fixes()
+ return #tree.technology["nuclear-power"].prerequisites>1
+end
+check(not level_result("easy",false),"Easy keeps the source unlocks")
+check(not level_result("normal",false),"Normal keeps the source unlocks")
+check(level_result("hard",false),"Hard must spread the nuclear unlock")
+check(level_result("nightmare",false),"Nightmare must spread the nuclear unlock")
+check(level_result("normal",true),"A manual tick on Normal must spread it")
+check(level_result("easy",true),"A manual tick on Easy must spread it")
+check(not level_result("custom",false),"Custom with the tick off keeps the source")
+check(level_result("custom",true),"Custom with the tick on spreads it")
 print("Distributed nuclear, Cerys and modded technologies passed")

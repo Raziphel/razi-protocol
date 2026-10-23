@@ -1,5 +1,13 @@
 data:extend({
 	{
+		type = "string-setting",
+		name = "razi-difficulty-preset",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"easy", "normal", "hard", "nightmare", "custom"},
+		order = "00[gameplay-difficulty]-a[preset]"
+	},
+	{
 		type = "bool-setting",
 		name = "razi-enable-enemy-routing",
 		setting_type = "startup",
@@ -26,6 +34,14 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		order = "ba[integration]-z[distance-repair]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-asteroid-difficulty-scale",
+		setting_type = "startup",
+		default_value = "balanced",
+		allowed_values = {"balanced", "challenging", "relentless"},
+		order = "aa[worlds]-c[asteroid-difficulty]"
 	},
 	{
 		type = "string-setting",

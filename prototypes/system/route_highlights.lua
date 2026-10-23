@@ -8,6 +8,7 @@ local hazards=require("prototypes.system.route_hazards")
 local layout=require("prototypes.system.galaxy_layout")
 local reconcile=require("prototypes.system.route_reconcile")
 local quality=require("scripts.razi_asteroid_difficulty")
+local difficulty=require("scripts.razi_difficulty_presets")
 
 local PI=math.pi
 local TAU=2*PI
@@ -15,9 +16,8 @@ local abs,sqrt,sin,cos=math.abs,math.sqrt,math.sin,math.cos
 
 -- This is the only visible difficulty scale: Level 1-10.
 function M.route_color_level(route)
-  local setting=settings and settings.startup
-    and settings.startup["razi-asteroid-difficulty-scale"]
-  local _,peak=quality.route_range(route,setting and setting.value)
+  local setting=difficulty.effective("razi-asteroid-difficulty-scale")
+  local _,peak=quality.route_range(route,setting)
   return peak
 end
 function M.color_for_route(route)

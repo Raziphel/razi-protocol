@@ -141,9 +141,11 @@ function M.apply(raw,rule)
 end
 
 function M.data_final_fixes()
-  local option=settings and settings.startup
-    and settings.startup["razi-distributed-technology"]
-  if option and option.value==false then return end
+  -- Off keeps the source unlocks; Hard and Nightmare turn this on by
+  -- themselves. An undeclared setting keeps the older default (apply).
+  local enabled=require("scripts.razi_difficulty_presets")
+    .effective("razi-distributed-technology",true)
+  if enabled==false then return end
   local raw=data.raw
   local count=0
   local function run(rule)
