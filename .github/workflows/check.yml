@@ -96,6 +96,8 @@ jobs:
         run: lua5.2 tests/lua/test_asteroid_belt_integration.lua
       - name: Test Bellicos optional pulsar and gateway compatibility
         run: lua5.2 tests/lua/test_bellicos_layout.lua
+      - name: Test curated Aegis corridors and retained source asteroid spawns
+        run: lua5.2 tests/lua/test_bellicos_routes.lua
       - name: Test post-Aquilo Balack and tier-two Aegis research compatibility
         run: lua5.2 tests/lua/test_planet_arrival_pacing.lua
       - name: Test Razi asteroid belts and surveys
