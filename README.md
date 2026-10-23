@@ -160,6 +160,7 @@ Razi Protocol is designed for a large content pack, not a tiny minimalist setup.
 Core content in the intended experience includes:
 
 - RAZI Library
+- Razi More Asteroids
 - Krastorio2 Spaced Out
 - PlanetsLib
 - Muluna
@@ -193,7 +194,7 @@ Recommended mods (`+` in `info.json`; the game offers them, nothing breaks witho
 For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
-- Install RAZI Library 1.2.0 or newer; it is now a required shared foundation used directly by Razi Protocol's data-stage compatibility code.
+- Install RAZI Library 1.3.1 or newer and Razi More Asteroids 1.1.0 or newer; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
 - Factorio 2.1 migration status and optional third-party compatibility gaps are tracked in [FACTORIO-2.1-COMPATIBILITY.md](FACTORIO-2.1-COMPATIBILITY.md). The required dependency path now consists entirely of native Factorio 2.1 releases.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
