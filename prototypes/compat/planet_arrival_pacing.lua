@@ -109,7 +109,7 @@ function M.data_final_fixes()
     for _, name in ipairs({"discovery-aegis-inner", "discovery-bellicos"}) do
       if tech(name) then gate(name, "beetlejuice-discovery") end
     end
-    for _, world in ipairs({"aegis-inner-edge", "calidus-bellicos-stargate-bellicos"}) do
+    for _, world in ipairs({"aegis-inner-edge", "point-warden"}) do
       for _, name in ipairs(discovering(world)) do
         if name ~= "discovery-aegis-outer" then gate(name, "beetlejuice-discovery") end
       end
