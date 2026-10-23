@@ -41,8 +41,7 @@ local exceptional={
   -- Shared first-frontier Aegis ramps from 8 at its entry to 10 by
   -- the late Bellicos interior. Legacy Calidus gate IDs never imply safety.
   ["calidus-bellicos-stargate-calidus"]=8,
-  ["calidus-bellicos-stargate-bellicos"]=10,
-  ["pulsar"]=9,["aegis-inner-edge"]=8,
+  ["pulsar"]=9,["aegis-inner-edge"]=9,
   ["aegis-outer-edge"]=9,["point-warden"]=9,
   ["near-bellicos-orbit"]=9,["bellicos-near-orbit"]=9,
   ["near_bellicos_orbit"]=9,
