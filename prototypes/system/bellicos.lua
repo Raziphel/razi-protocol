@@ -440,21 +440,6 @@ function bellicos.fortify_routes()
       end
     end
   end
-  -- Transfer only custom/source asteroid species from removed chords into
-  -- the closest surviving part of that native expedition.
-  for _,old in ipairs(discarded) do
-    local candidate
-    for _,k in ipairs(order) do
-      local spec=specs[k]
-      if spec.a==old.route.from or spec.b==old.route.from
-        or spec.a==old.route.to or spec.b==old.route.to then
-        candidate=kept[k]
-        if candidate then break end
-      end
-    end
-    if candidate then asteroid.preserve_custom(candidate,old.route) end
-    routes[old.name]=nil
-  end
   local added=0
   for _,k in ipairs(order) do
     local spec=specs[k]
@@ -472,6 +457,7 @@ function bellicos.fortify_routes()
       end
     end
     if route then
+      kept[k]=route
       route.length=math.max(route.length or 0,spec.km)
       route.shape="line"
       route.origin=nil
@@ -480,6 +466,21 @@ function bellicos.fortify_routes()
       asteroid.apply(route,spec.profile)
       asteroid.apply_field(route,spec.profile=="aegis_approach" and 1.5 or 1.8)
     end
+  end
+  -- Transfer only custom/source asteroid species from removed chords into
+  -- the closest surviving part of that native expedition.
+  for _,old in ipairs(discarded) do
+    local candidate
+    for _,k in ipairs(order) do
+      local spec=specs[k]
+      if spec.a==old.route.from or spec.b==old.route.from
+        or spec.a==old.route.to or spec.b==old.route.to then
+        candidate=kept[k]
+        if candidate then break end
+      end
+    end
+    if candidate then asteroid.preserve_custom(candidate,old.route) end
+    routes[old.name]=nil
   end
   if type(log)=="function" then
     log(("[Razi Protocol/Aegis] Expedition spine: %d new links, %d obsolete chords removed"):format(
