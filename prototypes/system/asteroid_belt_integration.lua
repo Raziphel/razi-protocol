@@ -5,10 +5,11 @@ local HOST="vibrant"
 local PIXELS=32
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local coords={
-  -- Both ends share a narrow SW corridor so no route cuts diagonally
-  -- through the field. The exterior node now faces Paracelsin and Khemia.
-  {"asteroid-belt-inner-edge",31,0.715},
-  {"asteroid-belt-outer-edge",39,0.725}
+  -- The old 8-unit line put two very long captions on top of each other.
+  -- Keep the Inner Rim within the 31-unit orbit and set the Outer Rim just
+  -- beyond the 39-unit band; a straight southwestern outward passage.
+  {"asteroid-belt-inner-edge",31,0.725},
+  {"asteroid-belt-outer-edge",46,0.74}
 }
 M.coords=coords
 function M.data_final_fixes()
