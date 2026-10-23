@@ -229,7 +229,7 @@ add_existing_prerequisites("solaris-discovery", {
 -- internal discovery chain and its requirement for Pulsar Science before
 -- Promethium research.
 set_prerequisites_if_exists("discovery-aegis-outer", {
-	"stellar-discovery-solar-system-edge"
+	"vespera-discovery"
 })
 add_existing_prerequisites("linox-technology_planet-discovery-linox", {"planet-discovery-cubium"})
 set_many_science_after({
