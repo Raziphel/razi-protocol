@@ -330,3 +330,7 @@ require("prototypes.compat.lithium_crucible_science").data_final_fixes()
 
 -- Final recipe validation: merge duplicate K2SO promethium biter eggs.
 require("prototypes.compat.k2so_promethium_ingredients").data_final_fixes()
+
+-- Final integrity guard: late third-party technology passes must not resurrect
+-- unlocks or routes for the removed, inaccessible far-side Bellicos stargate.
+require("prototypes.system.bellicos").retire_far_gate()
