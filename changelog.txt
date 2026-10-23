@@ -1,3 +1,13 @@
+Version: 2.1.138
+Date: 23. 10. 2026
+  Changes:
+    - Expand five Convergence chapters into a multi-industry cargo manifest with 34 distinct native products from Dyson, K2SO, planetary metallurgy, chemistry, biology and deep space.
+    - Deliver each native material incrementally with tracked progress and force-merge reconciliation; never invent intermediate recipes.
+    - Show all native supply requirements and carried quantities in the Convergence interface.
+  Notes:
+    - Newly added supply quotas apply to unfinished stages; already-completed old stages remain credited.
+    - Save backup recommended when updating a partially completed campaign.
+
 Version: 2.1.137
 Date: 23. 10. 2026
   Changes:
