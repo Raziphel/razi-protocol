@@ -15,11 +15,11 @@ local anchors = {
   {"space-location","vespera","star",118,0.75},
   {"space-location","beetlejuice","star",143,0.083333},
   {"space-location","umbra","star",143,0.916667},
-  -- Move the Deep Space parent anchor north: all its source-owned child
-  -- worlds, gates and Aegis/Pulsar outposts keep their original parents.
-  {"space-location","solar-system-edge","star",268,0},
-  -- Four spacious directions: Aegis north, Nexus/Oort/Sol east,
-  -- Shattered Planet southeast and the Black Hole west.
+  -- Deep Space is an independent northern campaign sector. With Aegis now
+  -- south of Solaris/Nyxaris its former northern space belongs to the
+  -- Nexus/Oort/Sol lane and the Black Hole western expedition.
+  {"space-location","solar-system-edge","star",250,0},
+  -- Spread the true Deep Space expeditions across the freed northern sky.
   -- These are visual positions only, not route lengths or travel unlocks.
   {"space-location","shattered-planet","solar-system-edge",140,0.33},
   -- This is just a 1,000 km hop. Place the real planet very close to the
@@ -28,11 +28,11 @@ local anchors = {
   -- lane away from the Nexus / Oort / Sol corridor. Route km are unchanged.
   {"planet","skewer_shattered_planet","shattered-planet",5.0,0.485},
   {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.14},
-  {"planet","nexus","solar-system-edge",94,0.18},
-  {"space-location","black-hole-approach","solar-system-edge",112,0.70},
-  {"space-location","black-hole","black-hole-approach",22,0.72},
-  {"space-location","oort-cloud","nexus",90,0.25},
-  {"space-location","sol","oort-cloud",106,0.15},
+  {"planet","nexus","solar-system-edge",116,0.15},
+  {"space-location","black-hole-approach","solar-system-edge",148,0.82},
+  {"space-location","black-hole","black-hole-approach",31,0.76},
+  {"space-location","oort-cloud","nexus",112,0.17},
+  {"space-location","sol","oort-cloud",94,0.13},
   {"space-location","sye-calidus","star",20,0.5},
   -- Clear west-northwest external gateway, just beyond the orbital rim.
   -- Three interstellar departures fan outward, while the northern arc
@@ -65,12 +65,12 @@ local anchors = {
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  -- Inner electrical worlds remain inside the belt. Paracelsin and
-  -- optional Khemia sit nearer its exterior edge, with a clear road
-  -- between them and no extra crossing of the asteroid field.
+  -- The real surveyed belt divides Fulgora/Ribbonia from the outer
+  -- Paracelsin, Khemia and Shchierbin arc. Keep real exit/return lanes
+  -- and distinct labels outside the physical rock annulus.
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.685},
-  {"planet","paracelsin","vibrant",48,0.68},
+  {"planet","paracelsin","vibrant",51,0.70},
   -- Belt-free Vespera: Muria opens Rubia, then branches to greenhouse
   -- ocean Maraxsis and icy outer Aquilo. All planets are true destinations.
   {"planet","muria","vespera",21,0.43},
@@ -108,8 +108,8 @@ local optional_orbits={
   {name="ferrum",star="beetlejuice",radius=43,turn=0.68},
   -- Shchierbin moves into the outer-world arc alongside Paracelsin.
   -- Both remain well beyond the 31/39-unit asteroid field.
-  {name="shchierbin",star="vibrant",radius=65,turn=0.675},
-  {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
+  {name="shchierbin",star="vibrant",radius=70,turn=0.64},
+  {name="alchemy-planet",star="vibrant",radius=67,turn=0.595},
   {name="arcanyx",star="umbra",radius=27,turn=0.3},
   -- Balack is an optional outer-ice spur beside Aquilo.
   {name="bm-balack",star="vespera",radius=63,turn=0.70}
