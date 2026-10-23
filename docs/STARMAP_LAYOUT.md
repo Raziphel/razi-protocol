@@ -42,6 +42,17 @@ tech unlocks, route lengths, world surfaces and old destination IDs remain.
 
 The Aegis network now uses a single connected spine: Frontier Gate → Outer Edge → Inner Edge → Point Warden, with Near Bellicos Orbit reachable as a short Inner Edge spur. Redundant author shortcuts are pruned, retaining each approved native route name and copying source-exclusive asteroid drops onto surviving paths. The colossal pulsar beam is dimmed without replacing source art. The first-frontier gateway and internal expedition now all remain east of the beam to avoid cutting through the native sprite. Nyxaris moon and twin-world captions are separated, while Vibrant's two long rim labels no longer collide.
 
+**One line per Aegis corridor:** Factorio's built-in route rendering is the
+only line drawn for native Aegis interior links, including Near Bellicos Orbit
+↔ Aegis Inner Edge. Razi's hazard-ribbon sprites are suppressed for these
+short native routes because they created two visibly offset orange/red
+tracks on top of each other. Normal travel, route hazard grades, custom
+asteroid spawns, and hover details are unchanged. The two long
+Solaris/Nyxaris approaches still receive coloured risk ribbons. An
+additional late-pass unordered-pair deduplicator preserves native route IDs
+and transfers custom asteroid resources before removing any connection
+re-added by another mod.
+
 **Far-side gateway retirement:** Remove only `calidus-bellicos-stargate-bellicos`, a legacy destination with no useful onward connection. Keep `calidus-bellicos-stargate-calidus` as the researched entry from Solaris and Nyxaris. The final data-stage pass removes native routes, unlock-space-location effects and PlanetsLib art for the retired marker. Preserve the original discovery technologies, recipes and custom asteroid species; source-exclusive asteroid drops are migrated to surviving Aegis lanes.
 
 Static route-geometry audits found no new line intersections. Verify the
