@@ -3,7 +3,7 @@
 The live seven-system design keeps the source-author Aegis/Bellicos pulsar,
 waypoints, asteroid art and special mechanics. The visible pulsar sits at
 **(0, 210)** on the galaxy chart, directly **south of Solaris and Nyxaris**,
-with its entry stargate at **(30, 170)**. These two positions are derived from
+with its entry stargate at **(30, 168)**. These two positions are derived from
 the existing Calidus Slip Stream coordinate, not duplicate prototype stars.
 Two **112,000 / 118,000 km** researched approaches connect the Solaris and
 Nyxaris Slip Streams independently to the native Aegis entry gate. This
