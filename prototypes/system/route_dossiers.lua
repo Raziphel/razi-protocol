@@ -65,7 +65,7 @@ local notes = {
   {"rabbasca","gleba","rabbasca-moon"},
   {"velora","gleba","velora-moon"},
   {"shchierbin","paracelsin","shchierbin-spur"},
-  {"alchemy-planet","paracelsin","alchemy-spur"},
+  {"alchemy-planet","ribbonia","alchemy-spur"},
   {"arcanyx","tenebris","arcanyx-spur"},
   {"carna","crucible-orbit","carna-spur"},
   {"bm-balack","aquilo","balack-spur"},
