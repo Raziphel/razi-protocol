@@ -116,6 +116,23 @@ for _,route in pairs(routes) do
   check(route.from~=deep and route.to~=deep,
     "A connection still references the deleted location")
 end
+-- A later source data pass can add a second reverse-direction connection
+-- with a different prototype ID. Retain the original/native route and
+-- rescue its exclusive asteroid drop before pruning the duplicate.
+local reverse=route("late-mirrored-near-inner",inner,near,15000,
+  "late-unique-asteroid-chunk")
+routes[reverse.name]=reverse
+check(bellicos.dedupe_internal_routes()==1,
+  "Mirrored Aegis route should be removed at final reconciliation")
+check(routes[reverse.name]==nil and routes["native-near-inner"],
+  "The duplicate survived or the original saved route ID was removed")
+local preserved=false
+for _,def in ipairs(routes["native-near-inner"].asteroid_spawn_definitions or {}) do
+  if def.asteroid=="late-unique-asteroid-chunk" then preserved=true end
+end
+check(preserved, "Late duplicate's source-only asteroid resources disappeared")
+check(bellicos.dedupe_internal_routes()==0,
+  "Repeated native route normalization must be idempotent")
 local next_added,next_removed=bellicos.fortify_routes()
 check(next_added==0 and next_removed==0,
   "Repeated pass must not recreate or double the Aegis routes")
