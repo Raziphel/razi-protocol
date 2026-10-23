@@ -434,10 +434,12 @@ function M.data_final_fixes()
     ["nauvis"]=0.25,["muluna"]=0.75,
     ["close-sun-orbit"]=0.75,["sun-orbit"]=0.25,
     ["sye-calidus"]=0.25,
-    ["apia-carnova-orbit"]=0.75,
-    ["apia"]=0.25,["carnova"]=0.75,
+    -- Move the barycenter caption above the twin-world icons, and fan
+    -- the two native planet labels apart vertically.
+    ["apia-carnova-orbit"]=0.0,
+    ["apia"]=0.25,["carnova"]=0.5,
     -- Fan Gleba and its two source-owned moon labels in three directions.
-    ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
+    ["gleba"]=0.25,["rabbasca"]=0.75,["velora"]=0.0,
     ["terrapalus"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
