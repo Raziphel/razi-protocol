@@ -389,7 +389,10 @@ function bellicos.fortify_routes()
   -- Restore missing native connections without overwriting a genuine
   -- author route or bridging directly around their original Aegis belt.
   local links={
-    {entry_gate,"aegis-inner-edge",56000,"aegis_approach"},
+    -- Start at the OUTER edge; never offer an extra skip around the author\'s
+    -- inner/outer Aegis crossing, even if one of its source routes is absent.
+    {entry_gate,"aegis-outer-edge",56000,"aegis_approach"},
+    {"aegis-outer-edge","aegis-inner-edge",35000,"aegis_depths"},
     {"aegis-outer-edge",bellicos_gate,38000,"aegis_depths"}
   }
   for _,name in ipairs(find_wardens()) do
