@@ -53,7 +53,7 @@ class BellicosCoherence(unittest.TestCase):
         departure2=(outer[0]-inner[0],outer[1]-inner[1])
         cross=abs(departure1[0]*departure2[1]-departure1[1]*departure2[0])
         spread=cross/(math.hypot(*departure1)*math.hypot(*departure2))
-        self.assertGreater(spread,.45,"Nearly parallel Aegis departures")
+        self.assertLess(spread,.25,"The deliberately contiguous Aegis spine is zig-zagging")
         self.assertGreater(gate[0],outer[0],"Gate should follow Outer Edge")
         self.assertGreater(gate[1],outer[1],"Gate should continue south")
         self.assertLess(math.dist(gate,warden),35,"Bellicos gate must remain by Point Warden")
