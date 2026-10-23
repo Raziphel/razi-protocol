@@ -31,7 +31,9 @@ local function planet_entity_settings(planet_name)
 	return map_gen_settings.autoplace_settings.entity.settings
 end
 
-function enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
+-- A zero override is what switches an enemy off on a planet: an entity missing from the planet's list is placed by
+-- default, and deleting the entry brings it back.
+function enemy_autoplace.zero_entities_on_planet(planet_name, entity_names)
 	if not enemy_autoplace.enabled() then
 		return
 	end
@@ -41,11 +43,8 @@ function enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 		return
 	end
 
-	for _, entity_name in pairs(vanilla_enemy_entities) do
-		if
-			(data.raw["unit-spawner"] and data.raw["unit-spawner"][entity_name]) or
-			(data.raw.turret and data.raw.turret[entity_name])
-		then
+	for _, entity_name in pairs(entity_names) do
+		if enemy_autoplace.enemy_entity_exists(entity_name) then
 			entity_settings[entity_name] = {
 				frequency = 0,
 				size = 0,
@@ -53,6 +52,10 @@ function enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 			}
 		end
 	end
+end
+
+function enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
+	enemy_autoplace.zero_entities_on_planet(planet_name, vanilla_enemy_entities)
 end
 
 function enemy_autoplace.existing_tiles(tile_names)

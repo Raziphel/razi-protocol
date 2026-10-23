@@ -110,16 +110,16 @@ Optional Void Processing is still supported, but it is treated as a late Deep Sp
 
 ## Enemy Routing
 
-Razi Protocol supports several optional enemy packs and places them where they fit best.
+Razi Protocol supports several optional enemy packs and places each one where its author or the planet's theme says it belongs. Nauvis keeps the vanilla enemies, and planets with enemies of their own (Gleba, Tellus, Lemures with Dea Dia, and so on) are not touched.
 
-- Arachnids: Arig, Nexus, Crucible
-- Armoured biters: Panglia, Hyarion, Nexus, Crucible
-- Cold biters: Aquilo, Paracelsin, Frozeta, optional Cerys, Nexus
-- Electric flying enemies: Corrundum, Ribbonia, Nexus, plus their native Fulgora theme
-- Explosive biters: Moshine, Nexus
-- Toxic biters: Cubium, Vesta, Nexus, Crucible
+- Arachnids: Arig
+- Armoured biters: Hyarion
+- Cold biters: Aquilo and Frozeta
+- Electric flying enemies: Fulgora (their own planet) and Ribbonia
+- Explosive biters: Moshine
+- Toxic biters: Cubium
 
-Where Razi Protocol assigns a themed enemy faction, it can also suppress vanilla biter and worm autoplace so the custom threat actually defines the planet. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
+The specialist nests (Armoured, Toxic, Arachnids) share the vanilla enemy control, so they are switched off by name on Nauvis, Terrapalus and every other planet that has that control and is not their home. Where Razi Protocol assigns a themed enemy faction, it also suppresses vanilla biter and worm autoplace so the custom threat actually defines the planet. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
 
 ## Crafting Cleanup
 
