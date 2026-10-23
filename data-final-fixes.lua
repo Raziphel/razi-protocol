@@ -29,6 +29,11 @@ require("prototypes.compat.furnace_result_slots").data_final_fixes()
 require("prototypes.compat.eneas_gantry").data_final_fixes()
 require("prototypes.compat.variant_surface_conditions").data_final_fixes()
 
+-- Lithium Battery (7.5.0 and older) deletes two recipe copies that Planet Crucible's productivity technologies still list, and
+-- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
+-- Its promethium belts need a machine once redundant_progression has hidden the assembling machine 4.
+require("prototypes.compat.lithium_battery").data_final_fixes()
+
 deleteRoute("crucible-maraxsis") -- FUCK THIS ROUTE JESUS CHRIST.
 deleteRoute("crucible-orbit-ribbonia") -- AND FUCK YOU 2
 deleteRoute("moshine-ribbonia") -- AND FUCK YOU 3
