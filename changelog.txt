@@ -1,3 +1,9 @@
+Version: 2.1.135
+Date: 23. 10. 2026
+  Bugfixes:
+    - Merge duplicate biter-egg ingredients in K2SO promethium research data while preserving total cost.
+    - Run the final recipe compatibility safeguard during data-final-fixes.
+
 Version: 2.1.134
 Date: 23. 10. 2026
   Bugfixes:
