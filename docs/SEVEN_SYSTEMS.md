@@ -1,143 +1,10 @@
-> **Current map policy (October 23, 2026):** Aegis/Bellicos now occupy
-> a Vespera-side frontier annex (Aegis tier two, Bellicos tier three),
-> rather than the older post-Deep-Space position described in historical
-> sections below. Balack is post-Aquilo, and Terra Palus is Gleba's moon.
-> See [current starmap policy](STARMAP_LAYOUT.md).
-
-## Vespera mineral expedition (October 2026)
-
-Athos now branches from Muria in Vespera, adding arid diamond/stone
-industry to its corrosive, industrial, oceanic and icy worlds.
-The former Vulcanus connection is removed, with native asteroid
-resources preserved on the relocated Muria route where present.
-Particulate Science and the source's machines remain unmodified.
-Shchierbin and Obsidiax received compact, obstacle-safe outer routes
-in Vibrant and Umbra respectively.
-
-## Vespera update: belt removed (October 2026)
-
-Vespera's former artificial asteroid rim waypoints and survey no
-longer exist. Muria links directly to Rubia, then Rubia opens
-Maraxsis and Aquilo. The original Vibrant and Umbra asteroid
-crossings are preserved. Older Vespera Debris Divide descriptions
-below document superseded builds, not current progression.
-
-## 2.1.60: A readable Deep Space frontier
-
-The real native routes are unchanged. Galactic Atlas now annotates
-five known, actual outer destinations with research-safe expedition
-dossiers. Players learn where Convergence freight can be handed
-over, how the source-owned Nexus combat branch relates to the
-separate engineering victory, and how to open the existing finale
-console. A nonexistent or unresearched location is not revealed.
-No extra route overlays, planets, star images or transit mechanisms
-are created in this pass.
-
-The Convergence array has colorful partial build meters and an
-explicit next-action diagnostic for genuine technology prerequisites,
-native recipe unlocks, and force-owned Dyson receivers. The graphical
-indicators measure saved physical freight, not assumed satellite
-energy. A research tree and item unlock audit against the actual
-enabled modpack remains necessary before stable release.
-
-## 2.1.59: The assembled signal
-
-Galactic Operations now presents a **five-segment Seven-Sun Array**.
-Each actual shipment fills a segment; the final module only becomes
-eligible after Ignition Protocol research and, when the native source
-exposes identifiable receiver entities, at least one force-owned,
-physically placed Dyson energy receiver. Its entity count is real,
-while satellite count and energy output remain unknown without an
-official source API.
-
-The last delivery accepts real cargo immediately, then launches a
-twelve-second, persisted transmission: carrier secured, Calidus Dyson
-coupling, pulsar synchronization, seven-sun alignment, and the native
-victory result. The signal resumes after reloading a save, does not
-need the original player online, and is moved safely when forces
-merge. No space surface, receiver, sound emitter, lab, transport route
-or cinematic camera is secretly created.
-
-## 2.1.58: Five physical phases and the final accord
-
-The Convergence now extends beyond the three original mandates.
-After Synchronization and the Deep-Space freight, craft and deliver
-**4 Pulsar Resonance Mandates**, drawing on Beetlejuice/Umbra/Deep
-Space cards, holmium and guarded native pulsar/antimatter suppliers.
-Then research **Convergence Ignition Protocol**, which can require
-the installed Calidus Dyson distribution and receiver upgrades, and
-deliver **1 Convergence Ignition Mandate** containing all seven star
-system cards and the Deep Space card.
-
-This fifth player-carried delivery is the ONLY new-game victory
-trigger. Source-owned Dyson systems and Nexus content remain original.
-No new laboratory, ship, surface, boss or secondary victory mechanism
-is created. Source-produced optional ingredients are only included
-where the installed mod supplies their item and recipe. A completed
-2.1.57 Convergence win remains complete when the extra phases are
-added; each force retains its existing shipment ledger.
-
-## 2.1.56: The Convergence, after the transceiver
-
-The physical K2SO transceiver is a **Deep Space access gate**.
-The actual endgame is now a three-phase, real-cargo megaproject:
-
-1. Reach Solar System Edge and research Convergence Commission. This
-   includes native Aegis discovery and the Calidus Dyson Sphere milestone
-   when those prototype technologies are available and safely upstream.
-2. Manufacture and deliver 8 Stellar Mandates, then 10 Industrial
-   Mandates using Calidus through Vespera cards, finished native
-   electronics and planetary materials.
-3. Research Deep-Space Synchronization and craft 6 Deep-Space Mandates
-   from Beetlejuice, Umbra and Deep Space cards, with additional
-   Promethium/singularity/pulsar materials when their producers exist.
-
-All three products are ordinary recipes for the existing crafting
-machines. They do not use new labs, planets or a substitute shipping
-network. The real cargo must be in a player's main inventory while her
-character is aboard her own force's platform at Solar System Edge or
-an allowed post-edge destination. The GUI never reads remote-view
-inventory to fabricate freight.
-
-Three stage counters are stored per force; partial deliveries are
-persistent, force merges combine only delivered quantities, and the
-last accepted physical cargo triggers the documented native Factorio
-victory screen with Continue. A genuine authorization technology, not
-the source transceiver, gates the final stage. The victory itself is
-deliberate; it is not a side effect of opening the last research.
-Razi suppresses the original K2SO transceiver victory and the
-Space Age Solar System Edge victory through their native, guarded
-`set_no_victory` remote interfaces, if provided.
-
-No automated gameplay polling, new surface generation, native
-transceiver edits or own laboratory prototypes are involved.
-
-## 2.1.55: Native labs and the transceiver threshold
-
-The four Razi-built 2.1.54 laboratory prototypes have been removed.
-Existing 2.1.54 saves migrate their lab entities and items to ordinary
-Labs. Tiered acceptance of Razi's eight system tech cards now reuses
-native K2SO, Moshine, Gleba and Nexus laboratories, including conditional
-science-combination exceptions where source packs require them.
-
-The transceiver's three Razi preparation technologies now use all
-seven pre-edge system cards, without post-edge Promethium science. A
-charged and activated original K2SO transceiver researches the native
-Razi Signal Lock, which becomes a guarded prerequisite to enter the
-Solar System Edge. The edge leads onward to Deep Space; it is no longer
-the conclusion. K2SO's native transceiver victory is suppressed via its
-documented remote interface when it exists. This does **not** invent
-a new victory condition: a larger post-edge finale has yet to be
-designed and tested.
-
-Settings order remains limited by Factorio's interface: the engine
-groups by mod before using individual setting order strings. Razi
-cannot reliably place its group above all other mods without changing
-its existing internal mod name and threatening save compatibility.
-
-> **2.1.42 Calidus layout:** Calidus Drift is retired. Any earlier
-> descriptions of that temporary destination below are historical; the
-> active home system uses Nauvis, Muluna, and Calidus Slip Stream.
+> **Current map policy (October 23, 2026):** The Aegis/Bellicos pulsar
+> sits **below Solaris and Nyxaris**, with a dangerous researched approach
+> from **each** first frontier. The native interior grows into tier three.
+> Vibrant's outer worlds sit beyond its SW asteroid crossing, and Deep Space's
+> northern destinations have been redistributed to fill the old pulsar gap.
+> Earlier Vespera-side and post-Deep-Space Aegis notes below are historical.
+> See [current map layout](STARMAP_LAYOUT.md).
 
 # Seven-System Revamp: Implementation notes
 
@@ -175,7 +42,7 @@ The route table itself lives in `prototypes/system/route_reconcile.lua`.
 Calidus sits at the center of a compact six-star hexagon (radius 104).
 Solaris/Nyxaris are the first frontiers to the south, Vibrant/Vespera
 form the middle pair, and Beetlejuice/Umbra lie to the north. Deep Space
-while the Bellicos/Aegis annex branches off Vespera.
+while Aegis/Bellicos is directly south of the first two stars.
 Star artwork and source-owned moons stay intact. Several planets now
 have climate-themed orbit radii, without gameplay temperature changes.
 The Calidus departure hub stays 20 map units south of home.
