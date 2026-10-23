@@ -1,3 +1,9 @@
+> **Current map policy (October 23, 2026):** Aegis/Bellicos now occupy
+> a Vespera-side frontier annex (Aegis tier two, Bellicos tier three),
+> rather than the older post-Deep-Space position described in historical
+> sections below. Balack is post-Aquilo, and Terra Palus is Gleba's moon.
+> See [current starmap policy](STARMAP_LAYOUT.md).
+
 ## Vespera mineral expedition (October 2026)
 
 Athos now branches from Muria in Vespera, adding arid diamond/stone
@@ -152,7 +158,7 @@ The galaxy has three parallel pairs surrounding Calidus and leading to Deep Spac
 
 * **Calidus:** Nauvis, Muluna, Calidus Drift orbital salvage stop
 * **Solaris:** Vulcanus, Castra, Arig, Hyarion, Tellus, Corrundum; recommended Igrys
-* **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax and Rabbasca (Gleba moon), optional Pelagos and Dea Dia
+* **Nyxaris:** Gleba, Moshine, Apia/Carnova, Panglia; recommended Foliax, Rabbasca and Terra Palus (Gleba moons), optional Pelagos and Dea Dia
 * **Vibrant:** Fulgora, Ribbonia, Paracelsin, optional Shchierbin and Cerys
 * **Vespera:** Muria, Aquilo, Rubia, Maraxsis, Balack
 * **Beetlejuice:** Cubium, Linox, Secretas, Frozeta, Ferrum
@@ -169,7 +175,7 @@ The route table itself lives in `prototypes/system/route_reconcile.lua`.
 Calidus sits at the center of a compact six-star hexagon (radius 104).
 Solaris/Nyxaris are the first frontiers to the south, Vibrant/Vespera
 form the middle pair, and Beetlejuice/Umbra lie to the north. Deep Space
-and the Bellicos/Aegis expedition sit beyond the constellation to the north.
+while the Bellicos/Aegis annex branches off Vespera.
 Star artwork and source-owned moons stay intact. Several planets now
 have climate-themed orbit radii, without gameplay temperature changes.
 The Calidus departure hub stays 20 map units south of home.
@@ -200,7 +206,8 @@ Local branches remain connected inside their own systems, including:
                                      \-> Aquilo (optional Balack)
     Umbra: Slip Stream -> Tenebris -> Crucible Orbit -> Belt Inner -> Belt Outer -> Vesta
            Carna from Slip Stream; Arcanyx from Tenebris (optional); Crucible landfall native
-    Outer edge: Secretas/Vesta -> Solar System Edge -> Aegis/Bellicos
+    Vespera: Slip Stream -> Aegis survey -> Bellicos interior (tier three)
+    Outer edge: Secretas/Vesta -> Solar System Edge -> Deep Space
 
 The only extra cross-system connections are Solaris ↔ Nyxaris and
 Beetlejuice ↔ Umbra. Destination hubs still require the corresponding
