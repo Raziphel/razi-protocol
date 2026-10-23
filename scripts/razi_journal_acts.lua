@@ -25,7 +25,7 @@ M.chapters={
     {id="belt",missions={"ribbonia","asteroid-belt","paracelsin"}},
   },
   ["vespera"]={
-    {id="frontier",missions={"vespera-gate","muria","athos","athos-particulate","rubia"}},
+    {id="frontier",missions={"vespera-gate","muria","athos","athos-particulate","rubia","aegis"}},
     {id="cold",missions={"aquilo","nulla","nulla-electromagnetic","nulla-robotic-science"}},
     {id="depths",missions={"maraxsis","seadragon"}},
   },
@@ -47,7 +47,7 @@ M.chapters={
     {id="lattice",missions={"extreme-lattice","frontier-recovery-charter"}},
   },
   ["finale"]={
-    {id="frontier",missions={"outer-mastery","edge","aegis"}},
+    {id="frontier",missions={"outer-mastery","edge"}},
     {id="singularity",missions={"singularity-theory","test-fire","stable-singularity"}},
     {id="mandates",missions={"convergence-commission","convergence-stellar","convergence-industry","convergence-synchronization","convergence-deep-space","convergence-resonance"}},
     {id="ignition",missions={"convergence-ignition-research","convergence-ignition","convergence-victory"}},
@@ -67,8 +67,8 @@ M.chapters={
     {id="redistribution",missions={"rocket-salvage-network"}},
   },
   ["outposts"]={
-    {id="settlement",missions={"igrys","foliax","rabbasca","velora","pelagos","dea-dia","lemures","prosephina"}},
-    {id="expeditions",missions={"khemia","ferrum","obsidiax","balack"}},
+    {id="settlement",missions={"igrys","foliax","rabbasca","terrapalus","velora","pelagos","dea-dia","lemures","prosephina"}},
+    {id="expeditions",missions={"khemia","shchierbin","ferrum","obsidiax","balack"}},
     {id="beyond",missions={"carna","arcanyx","nexus"}},
   },
   ["sciences"]={
