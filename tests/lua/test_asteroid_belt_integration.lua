@@ -3,7 +3,7 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 local layout=require("prototypes.system.galaxy_layout")
 local cx,cy=layout.anchor_position("vibrant")
-check(cx and math.abs(cx-104)<.01,"Vibrant sun missing")
+check(cx and math.abs(cx-118)<.01,"Vibrant sun missing or wrong chart radius")
 local inner={name="asteroid-belt-inner-edge"}
 local outer={name="asteroid-belt-outer-edge"}
 local layers={{filename="unrelated",shift={2,4}},
