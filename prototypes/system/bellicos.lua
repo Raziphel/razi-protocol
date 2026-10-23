@@ -8,8 +8,8 @@ local old_calidus_entry_route = "sye-calidus-bellicos-stargate"
 local root_parent = "sye-calidus"
 -- Compact southern system; a sideways arrival prevents the pulsar beam
 -- from running straight through the entrance and other space connections.
-local pulsar_radius, pulsar_turn = 208, .5
-local entry_radius, entry_turn = 185, .55
+local pulsar_radius, pulsar_turn = 190, .5
+local entry_radius, entry_turn = 153, .53
 
 local function remove_stock_entry_routes()
 	deleteRoute("nauvis-stargate-connection")
