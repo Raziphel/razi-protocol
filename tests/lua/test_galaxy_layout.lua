@@ -108,7 +108,7 @@ check(math.abs(math.sqrt((px-nx)^2+(py-ny)^2)-40)<.01,
   "Panglia must have its own Nyxaris orbital lane")
 local vx,vy=layout.anchor_position("vibrant")
 for _,pair in ipairs({{"fulgora",24},{"ribbonia",26},
-    {"paracelsin",48}}) do
+    {"paracelsin",51}}) do
   local px,py=layout.anchor_position(pair[1])
   check(math.abs(math.sqrt((px-vx)^2+(py-vy)^2)-pair[2])<.01,
     "Vibrant climate radius mismatch: "..pair[1])
@@ -143,8 +143,8 @@ places["alchemy-planet"]=nil
 check(planets["alchemy-planet"].origin and
   math.abs(planets["alchemy-planet"].origin.x-vx)<.01 and
   math.abs(planets["alchemy-planet"].origin.y-vy)<.01 and
-  math.abs(planets["alchemy-planet"].distance-52)<.01 and
-  math.abs(planets["alchemy-planet"].orientation-.625)<.001,
+  math.abs(planets["alchemy-planet"].distance-67)<.01 and
+  math.abs(planets["alchemy-planet"].orientation-.595)<.001,
   "Pre-render Khemia artwork did not follow its new Vibrant orbit")
 -- A star missing its data-updates placement caused all earlier screenshots:
 -- assert its real native coordinates before PlanetsLib renders its art.
