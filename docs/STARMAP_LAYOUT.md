@@ -1,35 +1,48 @@
-## October 23, 2026: optional worlds and research-tier correction
+## October 23, 2026: twin-frontier Aegis relocation and restored Deep Space
 
-This is the current map policy and supersedes historical Aegis placement
-notes further down the file.
+The live seven-system design keeps the source-author Aegis/Bellicos pulsar,
+waypoints, asteroid art and special mechanics. The visible pulsar sits at
+**(0, 246)** on the galaxy chart, directly **south of Solaris and Nyxaris**,
+with its entry stargate at **(0, 186)**. These two positions are derived from
+the existing Calidus Slip Stream coordinate, not duplicate prototype stars.
+Two **112,000 / 118,000 km** researched approaches connect the Solaris and
+Nyxaris Slip Streams independently to the native Aegis entry gate. This
+requires *both* early-system discoveries, not Vespera or Deep Space. The
+advanced Bellicos survey remains tied to Beetlejuice's third-tier research.
 
-**Aegis/Bellicos:** The existing pulsar, Warden nodes, asteroid field art,
-and source-owned inner routes now sit in a separate northwest annex of
-Vespera. The entrance route departs from Vespera Slip Stream in the middle
-(tier-two) frontier rather than from Deep Space. Aegis's entrance science
-requires Vespera; deeper Bellicos discovery requires outer-tier Beetlejuice.
-The incoming stargate route remains **250,000 km** and retains its original
-asteroid spawn definitions. It does not grant early access to Deep Space.
+Both entries use the Aegis high-density hostile asteroid profile with
+guaranteed big (and rare huge) asteroid encounters where their prototypes
+exist. All native Aegis custom asteroid species, original science technologies
+and special inner routes remain owned by the upstream mod. Missing internal
+connection pairs are repaired only when a source connection is actually absent.
+The ten-level danger ladder now grades the entry at 8, inner region 8–9 and
+deep Bellicos gate at 10, rather than treating the whole expedition as either
+Calidus-safe or post-finale.
 
-**Balack:** An optional branch off Aquilo, researched after Aquilo, with
-native Cryogenic Science in place of any Promethium Science requirement
-on the discovery tech. Its source machines, biochemistry, asteroid content
-and native planet mechanics are untouched. This does not change the global
-Promethium progression.
+**Important baked-art fix:** The cinematic background previously drew a
+secondary "Bellicos" halo at the old hardcoded north-of-Deep-Space coordinate.
+That stale halo caused the disconnected blue graphic shown in screenshots.
+The background now uses `bellicos.pulsar_position()` from the **same**
+authoritative position plan as native locations, original PlanetsLib sprite
+shifts and the final Warden synchronization pass. No source sprites were
+recreated or replaced.
 
-**Linox:** Intentionally retains its Beetlejuice placement and post-Cubium
-third-tier research. This is later than its standalone post-Vulcanus point.
+**Vibrant:** The sole physical asteroid crossing is moved around the
+southwestern rim (Inner Rim 31 / turn .715, Outer Rim 39 / turn .725). It now
+points directly at the actual exterior Paracelsin/Khemia/Shchierbin planets.
+The outer planets occupy distinct 51/67/70-unit lanes, while Fulgora,
+Ribbonia and their native Cerys moon remain interior. Only the original
+edge-to-edge crossing traverses the dangerous rock belt.
 
-**Terra Palus:** The upstream planet `terrapalus` is placed as a moon of
-Gleba in Nyxaris, using the mod's existing Gleba connection and native
-Gleba discovery prerequisite. Pelagos, Dea Dia and Shchierbin remain
-their established Nyxaris, Nyxaris and outer-Vibrant locations. All four
-appear in the atlas and mission journal; Shchierbin's discovery follows
-Paracelsin and the real asteroid-belt passage.
+**Deep Space:** The solar-system edge is closer to the six-star galaxy
+(radius 250), while the Nexus, Oort, Sol and Black Hole branches fill out
+the newly available northern sky. Shattered Planet's distinct approach,
+real final planet and Lost Beyond expedition remain separate. All original
+tech unlocks, route lengths, world surfaces and old destination IDs remain.
 
-No replacement planets, custom expedition crafting recipes, or duplicate
-source science packs are introduced. Live Factorio 2.1 startup and
-existing-save platform schedules should be checked before a release.
+Static route-geometry audits found no new line intersections. Verify the
+actual Factorio 2.1 rendered coordinates, saved platform schedules and
+the native Aegis tech effects before releasing.
 
 ## October 2026: Vesta's optional infestation moon and an outer Obsidiax arc
 
