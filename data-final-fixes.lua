@@ -323,3 +323,6 @@ require("prototypes.compat.xy_inflation_difficulty").data_final_fixes()
 
 -- Repair Crucible's dangling legacy cryogenic recipe after LithiumBattery removes it.
 require("prototypes.compat.lithium_crucible_science").data_final_fixes()
+
+-- Final recipe validation: merge duplicate K2SO promethium biter eggs.
+require("prototypes.compat.k2so_promethium_ingredients").data_final_fixes()
