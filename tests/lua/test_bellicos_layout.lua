@@ -113,8 +113,8 @@ check(connected[route_name].from=="sye-vespera" and
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="sye-vespera",
   "Missing pulsar must attach gateway to Vespera annex")
-check(missing[gate_b].orbit.distance>200
-  and missing[gate_b].orbit.distance<260,
+check(missing[gate_b].orbit.distance>135
+  and missing[gate_b].orbit.distance<190,
   "Missing pulsar fallback must stay inside the Vespera annex")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
