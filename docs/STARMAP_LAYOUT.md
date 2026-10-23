@@ -15,9 +15,9 @@ guaranteed big (and rare huge) asteroid encounters where their prototypes
 exist. All native Aegis custom asteroid species, original science technologies
 and special inner routes remain owned by the upstream mod. Missing internal
 connection pairs are repaired only when a source connection is actually absent.
-The ten-level danger ladder now grades the entry at 8, inner region 8–9 and
-deep Bellicos gate at 10, rather than treating the whole expedition as either
-Calidus-safe or post-finale.
+The ten-level danger ladder still grades the surviving entry and Aegis
+interior at 8–9. The obsolete, unreachable far-side Bellicos stargate has
+been retired without removing native Bellicos science or the pulsar artwork.
 
 **Important baked-art fix:** The cinematic background previously drew a
 secondary "Bellicos" halo at the old hardcoded north-of-Deep-Space coordinate.
@@ -40,7 +40,9 @@ the newly available northern sky. Shattered Planet's distinct approach,
 real final planet and Lost Beyond expedition remain separate. All original
 tech unlocks, route lengths, world surfaces and old destination IDs remain.
 
-The Aegis network now uses a single connected spine: Frontier Gate → Outer Edge → Inner Edge → Point Warden → Bellicos Gate, with Near Bellicos Orbit reachable as a short Inner Edge spur. Redundant author shortcuts are pruned, retaining each approved native route name and copying source-exclusive asteroid drops onto surviving paths. The colossal pulsar beam is dimmed without replacing source art. The first-frontier gateway and internal expedition now all remain east of the beam to avoid cutting through the native sprite. Nyxaris moon and twin-world captions are separated, while Vibrant's two long rim labels no longer collide.
+The Aegis network now uses a single connected spine: Frontier Gate → Outer Edge → Inner Edge → Point Warden, with Near Bellicos Orbit reachable as a short Inner Edge spur. Redundant author shortcuts are pruned, retaining each approved native route name and copying source-exclusive asteroid drops onto surviving paths. The colossal pulsar beam is dimmed without replacing source art. The first-frontier gateway and internal expedition now all remain east of the beam to avoid cutting through the native sprite. Nyxaris moon and twin-world captions are separated, while Vibrant's two long rim labels no longer collide.
+
+**Far-side gateway retirement:** Remove only `calidus-bellicos-stargate-bellicos`, a legacy destination with no useful onward connection. Keep `calidus-bellicos-stargate-calidus` as the researched entry from Solaris and Nyxaris. The final data-stage pass removes native routes, unlock-space-location effects and PlanetsLib art for the retired marker. Preserve the original discovery technologies, recipes and custom asteroid species; source-exclusive asteroid drops are migrated to surviving Aegis lanes.
 
 Static route-geometry audits found no new line intersections. Verify the
 actual Factorio 2.1 rendered coordinates, saved platform schedules and
