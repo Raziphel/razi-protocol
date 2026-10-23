@@ -10,6 +10,8 @@ require("prototypes.compat.nulla_guard").data_updates()
 require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.compat.science_tab").data_updates()
 require("prototypes.compat.k2so_tweaks").data_updates()
+-- Module Category Defaults reads its list of ordinary categories in its own data-final-fixes.
+require("prototypes.compat.module_category_defaults").data_updates()
 
 local function clear_invalid_place_result(item_prototypes)
 	for _, prototype in pairs(item_prototypes or {}) do
