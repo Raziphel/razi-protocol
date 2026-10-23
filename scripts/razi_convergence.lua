@@ -296,18 +296,35 @@ function M.deliver(player,id)
   return "convergence-no-cargo",0
  end
  local saved=M.record(force)
- local needed=rule.count-(saved.delivered[id] or 0)
- if needed<=0 then return "convergence-wrong-stage",0 end
- local offered=math.min(needed,inv.get_item_count(rule.item))
- if offered<=0 then return "convergence-no-cargo",0 end
- -- Inventory removal returns the actual removed count. Nothing is ever
- -- credited merely because an item was expected or a GUI was opened.
- local removed=inv.remove{name=rule.item,count=offered}
- if removed<=0 then return "convergence-no-cargo",0 end
- saved.delivered[id]=math.min(rule.count,
-  (saved.delivered[id] or 0)+removed)
- if saved.delivered[id]>=rule.count then
-  -- Explicitly accepted physical freight, not a research notification.
+ saved.materials=saved.materials or {}
+ local amounts=saved.materials[id] or {}
+ saved.materials[id]=amounts
+ local supplies={{rule.item,rule.count}}
+ for _,part in ipairs(rule.supplies or {}) do supplies[#supplies+1]=part end
+ local removed_total=0
+ -- Complete batches may be delivered across multiple visits. Each
+ -- source-native ingredient is credited once and consumed only on receipt.
+ for _,part in ipairs(supplies) do
+  local name,required=part[1],part[2]
+  local previous=amounts[name] or 0
+  -- Existing save progress predates the multi-industry supply manifest.
+  if name==rule.item then previous=math.max(previous,saved.delivered[id] or 0) end
+  local offered=math.min(required-previous,inv.get_item_count(name))
+  if offered>0 then
+   local removed=inv.remove{name=name,count=offered}
+   amounts[name]=previous+removed
+   removed_total=removed_total+removed
+  else
+   amounts[name]=previous
+  end
+ end
+ if removed_total<=0 then return "convergence-no-cargo",0 end
+ local all=true
+ for _,part in ipairs(supplies) do
+  if (amounts[part[1]] or 0)<part[2] then all=false break end
+ end
+ if all then
+  saved.delivered[id]=rule.count
   story_dispatch.shipment(force,id)
  end
  if index==#M.stages and M.current(force)>#M.stages then
@@ -321,9 +338,9 @@ function M.deliver(player,id)
   if force.print then
    force.print({"razi-ops."..M.transmission_beats[1].key})
   end
-  return "convergence-transmission-started",removed
+  return "convergence-transmission-started",removed_total
  end
- return "convergence-delivered",removed
+ return "convergence-delivered",removed_total
 end
 -- Only restore newly introduced recipe unlocks on an existing save.
 -- Never reset the whole science tree or change another mod's research.
