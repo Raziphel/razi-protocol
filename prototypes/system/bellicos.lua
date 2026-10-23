@@ -537,6 +537,18 @@ function bellicos.fortify_routes()
         if candidate then break end
       end
     end
+    -- Even if a source release connects its obsolete gateway to a
+    -- location we do not recognise, preserve its exclusive asteroid drops
+    -- on the dangerous surviving inner expedition instead of discarding them.
+    if not candidate and (old.route.from==retired_gate
+      or old.route.to==retired_gate) then
+      if #wardens>0 then
+        candidate=kept[key("aegis-inner-edge",wardens[1])]
+      end
+      candidate=candidate
+        or kept[key("aegis-outer-edge","aegis-inner-edge")]
+        or kept[key(entry_gate,"aegis-outer-edge")]
+    end
     if candidate then asteroid.preserve_custom(candidate,old.route) end
     routes[old.name]=nil
   end
