@@ -92,6 +92,9 @@ require("prototypes.technology.seven_system_gates").data_final_fixes()
 -- Ferrum's robotics science and magnets stay out of the research that Ferrum itself needs; otherwise the next pass takes
 -- two packs out of the Vibrant card to break a cycle, and the cryogenic plant waits for the planet.
 require("prototypes.compat.ferrum_progression_guard").data_final_fixes()
+-- The stack inserter, the toolbelt equipment and the two belt capacity technologies are taken off Gleba's science and carbon fiber
+-- research; before the gate links, which would tie a technology priced in agricultural science to the pack.
+require("prototypes.technology.nauvis_comforts").data_final_fixes()
 require("prototypes.technology.system_gate_links").data_final_fixes()
 
 -- Transceiver activation opens the Solar System Edge and Deep Space.
