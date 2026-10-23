@@ -13,12 +13,13 @@ package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"] = {
 
 local gate_a = "calidus-bellicos-stargate-calidus"
 local gate_b = "calidus-bellicos-stargate-bellicos"
-local route_name = "solar-system-edge-aegis-stargate"
+local route_name = "razi-vespera-aegis-stargate"
 
 local function run(options)
   options = options or {}
   local places = {
     ["solar-system-edge"] = {name="solar-system-edge"},
+    ["sye-vespera"] = {name="sye-vespera"},
     [gate_a] = {name=gate_a},
     [gate_b] = {name=gate_b}
   }
@@ -94,27 +95,27 @@ local check_module=require("prototypes.system.bellicos")
 check_module.data_updates()
 check(good_pulsar.orbit.sprite==pulsar_image,
   "Bellicos pre-render reparenting removed its preserved source sprite")
-check(present.pulsar.orbit.parent.name == "solar-system-edge"
-  and present.pulsar.orbit.distance==170,
+check(present.pulsar.orbit.parent.name == "sye-vespera"
+  and present.pulsar.orbit.distance==132,
   "Present native pulsar did not join deep-space annex")
 check(present[gate_b].orbit.parent.name == "pulsar",
   "Present pulsar gateway not attached to pulsar")
-check(present[gate_a].orbit.parent.name == "solar-system-edge"
-  and present[gate_a].orbit.distance==62
-  and present[gate_a].orbit.orientation==0.035,
+check(present[gate_a].orbit.parent.name == "sye-vespera"
+  and present[gate_a].orbit.distance==45
+  and present[gate_a].orbit.orientation==0.94,
   "Aegis entry must have a separate northern lane")
 check(connected[route_name] and connected[route_name].length==250000,
   "Original expedition route gameplay length changed")
-check(connected[route_name].from=="solar-system-edge" and
+check(connected[route_name].from=="sye-vespera" and
   connected[route_name].to==gate_a,
-  "Bellicos/Aegis gateway must start at Deep Space, not Calidus")
+  "Aegis gateway must start at Vespera")
 
 local _, missing, _, fallback = run()
-check(missing[gate_b].orbit.parent.name=="solar-system-edge",
-  "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance>120
-  and missing[gate_b].orbit.distance<180,
-  "Missing pulsar fallback must stay within the same Deep Space annex")
+check(missing[gate_b].orbit.parent.name=="sye-vespera",
+  "Missing pulsar must attach gateway to Vespera annex")
+check(missing[gate_b].orbit.distance>110
+  and missing[gate_b].orbit.distance<150,
+  "Missing pulsar fallback must stay inside the Vespera annex")
 check(fallback[route_name], "Missing pulsar must not remove expedition route")
 
 -- Exercise the REAL data-final-fixes path, including the near/pulsar drift
@@ -126,11 +127,11 @@ check(ok, "Bellicos near-orbit must load without nil-Y crash: "..
 check(near_locations["near-bellicos-orbit"].orbit.sprite
   and near_locations["near-bellicos-orbit"].orbit.sprite.filename=="__aegis_graphics__/belt-visual.png",
   "Bellicos relocation erased source asteroid-belt art")
-check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
+check(near_locations["near-bellicos-orbit"].orbit.parent.name=="sye-vespera",
   "Visible Bellicos orbit should be detached from the central galaxy")
-check(near_locations["near-bellicos-orbit"].orbit.distance>170
-  and near_locations["near-bellicos-orbit"].orbit.distance<173,
-  "Visible Bellicos orbit was not moved north of Deep Space")
+check(near_locations["near-bellicos-orbit"].orbit.distance>130
+  and near_locations["near-bellicos-orbit"].orbit.distance<135,
+  "Visible Bellicos orbit was not moved northwest of Vespera")
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
   "Native Aegis belt nodes were left behind")
@@ -188,7 +189,7 @@ check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
 
 
 local _, alt_locations, alt_planets = run({pulsar="planet"})
-check(alt_planets.pulsar.orbit.parent.name=="solar-system-edge",
+check(alt_planets.pulsar.orbit.parent.name=="sye-vespera",
   "Retyped native pulsar was not found in data.raw.planet")
 check(alt_locations[gate_b].orbit.parent.type=="planet",
   "Gateway orbit does not use the actual pulsar prototype type")
@@ -202,7 +203,7 @@ check(not absent[gate_a] and not no_route[route_name],
 local disappearing, disappearing_locations = run({pulsar="space-location"})
 disappearing_locations.pulsar = nil
 disappearing.data_final_fixes()
-check(disappearing_locations[gate_b].orbit.parent.name=="solar-system-edge",
+check(disappearing_locations[gate_b].orbit.parent.name=="sye-vespera",
   "Final-stage removed pulsar still referenced as orbit parent")
 
 -- Late gateway removal also invalidates the route Razi registered in data.lua.
@@ -221,9 +222,9 @@ math.atan=function(value) return lua_atan(value) end
 math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end
 local no_pulsar,orbit_locations=run({near=true})
 local layout=require("prototypes.system.galaxy_layout")
-local edge_x,edge_y=layout.anchor_position("solar-system-edge")
-local p_x=edge_x+170*math.sin(2*math.pi*.055)
-local p_y=edge_y-170*math.cos(2*math.pi*.055)
+local edge_x,edge_y=layout.anchor_position("sye-vespera")
+local p_x=edge_x+132*math.sin(2*math.pi*.93)
+local p_y=edge_y-132*math.cos(2*math.pi*.93)
 local function absolute(name)
   local body=orbit_locations[name]
   check(body and body.origin,"Expected native Aegis prototype: "..name)
@@ -235,8 +236,8 @@ end
 local near_px,near_py=absolute("near-bellicos-orbit")
 check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
   "Missing pulsar sent Near Bellicos Orbit sideways toward Nexus")
-check(near_py<edge_y-155 and near_px>edge_x+45,
-  "Near Bellicos Orbit must be north-east of Deep Space, not due east")
+check(near_py<edge_y-90 and near_px<edge_x-40,
+  "Near Bellicos Orbit must sit northwest of Vespera")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
     "aegis-outer-edge",gate_b}) do
   local cx,cy=absolute(name)
@@ -313,9 +314,9 @@ for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]})
     "A Warden native prototype is still marooned near Secretas")
 end
 local edge_x,edge_y=require("prototypes.system.galaxy_layout")
-  .anchor_position("solar-system-edge")
-local source_x=edge_x+170*math.sin(2*math.pi*.055)
-local source_y=edge_y-170*math.cos(2*math.pi*.055)
+  .anchor_position("sye-vespera")
+local source_x=edge_x+132*math.sin(2*math.pi*.93)
+local source_y=edge_y-132*math.cos(2*math.pi*.93)
 check(math.abs(original_art.shift[1]-(16+source_x*32))<.01
   and math.abs(original_art.shift[2]-(-8+source_y*32))<.01,
   "Aegis belt art abandoned the native pulsar when the parent was deleted")
