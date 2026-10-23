@@ -235,6 +235,8 @@ require("prototypes.compat.frontier_recovery").data_final_fixes()
 -- Defer only the three vanilla endgame breakthroughs, not cryogenic
 -- science, initial planetary survival tools, planet discoveries or recipes.
 require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+-- Final optional arrival pacing after shared research and science integrations.
+require("prototypes.compat.planet_arrival_pacing").data_final_fixes()
 
 -- All Razi technology passes have now run. Repeat the narrow Secretas
 -- bootstrap repair so a later weave cannot reintroduce the golden/recycler
