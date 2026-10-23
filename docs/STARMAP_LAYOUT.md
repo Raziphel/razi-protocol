@@ -27,12 +27,19 @@ authoritative position plan as native locations, original PlanetsLib sprite
 shifts and the final Warden synchronization pass. No source sprites were
 recreated or replaced.
 
-**Vibrant:** The sole physical asteroid crossing is moved around the
-southwestern rim (Inner Rim 31 / turn .725, Outer Rim 46 / turn .74). It now
-points directly at the actual exterior Paracelsin/Khemia/Shchierbin planets.
-The outer planets occupy distinct 51/67/70-unit lanes, while Fulgora,
-Ribbonia and their native Cerys moon remain interior. Only the original
-edge-to-edge crossing traverses the dangerous rock belt.
+**Vibrant (revised October 24):** The Inner Rim is at radius **30 / turn
+0.670** and the Outer Rim at radius **40 / turn 0.690**, immediately beside
+the actual **31–39-unit** asteroid artwork. Both markers are on the
+southwestern crossing between Ribbonia and Paracelsin, rather than the
+former 46-unit Outer Rim floating in empty space. Their short ~11-unit
+traverse is separated from the captions by opposing label quadrants.
+Khemia now occupies **radius 22 / turn 0.810**, inside the belt near
+Ribbonia and Fulgora. Its 18,000 km Ribbonia link replaces the old
+Paracelsin shortcut, with any source-exclusive asteroid drops migrated.
+Khemia's discovery follows Ribbonia rather than the mandatory exterior
+belt survey. The native alchemy research costs, machinery, surfaces and
+science effects are unchanged. Paracelsin and Shchierbin remain outside.
+No additional route bypasses the required asteroid crossing.
 
 **Deep Space:** The solar-system edge is closer to the six-star galaxy
 (radius 250), while the Nexus, Oort, Sol and Black Hole branches fill out
@@ -55,7 +62,7 @@ re-added by another mod.
 
 **Far-side gateway retirement:** Remove only `calidus-bellicos-stargate-bellicos`, a legacy destination with no useful onward connection. Keep `calidus-bellicos-stargate-calidus` as the researched entry from Solaris and Nyxaris. The final data-stage pass removes native routes, unlock-space-location effects and PlanetsLib art for the retired marker. Preserve the original discovery technologies, recipes and custom asteroid species; source-exclusive asteroid drops are migrated to surviving Aegis lanes.
 
-Static route-geometry audits found no new line intersections. Verify the
+The October 24 Vibrant correction was audited for accidental crossings and belt bypasses. Static route-geometry audits found no new line intersections. Verify the
 actual Factorio 2.1 rendered coordinates, saved platform schedules and
 the native Aegis tech effects before releasing.
 
