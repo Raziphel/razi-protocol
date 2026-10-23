@@ -46,6 +46,9 @@ local native_pairs={
   {"crucible-orbit","crucible"},
   {"fulgora","cerys"},
   {"gleba","rabbasca"},
+  {"gleba","terrapalus"},
+  -- Only Aegis arrival moves; all its inner source connections remain untouched.
+  {"sye-vespera","calidus-bellicos-stargate-calidus"},
   {"gleba","velora"}
 }
 local function exists(name)
