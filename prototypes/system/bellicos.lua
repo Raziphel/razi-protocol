@@ -6,10 +6,11 @@ local old_calidus_entry_route = "sye-calidus-bellicos-stargate"
 -- This is a shared frontier BELOW the two starter stars. These native IDs
 -- must remain stable even though their upstream names say "calidus".
 local root_parent = "sye-calidus"
--- Compact southern system; a sideways arrival prevents the pulsar beam
--- from running straight through the entrance and other space connections.
+-- Compact southern system. The entry and every inhabited waypoint sit on
+-- the EAST side of the pulsar beam, leaving the native star art untouched
+-- and preventing the Nyxaris route from crossing Panglia freight.
 local pulsar_radius, pulsar_turn = 190, .5
-local entry_radius, entry_turn = 153, .53
+local entry_radius, entry_turn = 153, .469
 
 local function remove_stock_entry_routes()
 	deleteRoute("nauvis-stargate-connection")
@@ -140,9 +141,9 @@ local function plan_expedition()
     for _,name in ipairs(find_wardens()) do
       append(name,near,virtual_near,48,.32)
     end
-    -- Outer Edge turns southeast, then the Bellicos-side stargate follows
+    -- The outer rim approaches from the north east, then Bellicos follows
     -- on a short almost-vertical exit instead of doubling back to the west.
-    append("aegis-outer-edge",near,virtual_near,35,.88)
+    append("aegis-outer-edge",near,virtual_near,32,.10)
     append(bellicos_gate,near,virtual_near,74,.345,true)
   elseif pulsar then
     append(bellicos_gate,pulsar,virtual_pulsar,74,.345,true)
