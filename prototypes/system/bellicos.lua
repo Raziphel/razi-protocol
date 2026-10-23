@@ -99,7 +99,7 @@ local function plan_expedition()
   local ex,ey=layout.anchor_position(arrival_hub)
   if not ex then return nil end
   local edge={x=ex,y=ey}
-  local sx,sy=offset(ex,ey,132,.93)
+  local sx,sy=offset(ex,ey,225,.80)
   local virtual_pulsar={x=sx,y=sy}
   local nx,ny=offset(sx,sy,3,.25)
   local virtual_near={x=nx,y=ny}
@@ -114,7 +114,7 @@ local function plan_expedition()
       radius=r,turn=turn,x=x,y=y,gate=gate
     }
   end
-  if pulsar then append(pulsar,arrival_hub,edge,132,.93) end
+  if pulsar then append(pulsar,arrival_hub,edge,225,.80) end
   if near then
     if pulsar then
       append(near,pulsar,virtual_pulsar,3,.25)
