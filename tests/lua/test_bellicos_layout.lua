@@ -97,21 +97,21 @@ check_module.data_updates()
 check(good_pulsar.orbit.sprite==pulsar_image,
   "Bellicos pre-render reparenting removed its preserved source sprite")
 check(present.pulsar.orbit.parent.name == "sye-calidus"
-  and present.pulsar.orbit.distance==208,
+  and present.pulsar.orbit.distance==190,
   "Pulsar did not join shared southern frontier")
 check(present[gate_b].orbit.parent.name == "pulsar",
   "Present pulsar gateway not attached to pulsar")
 check(present[gate_a].orbit.parent.name == "sye-calidus"
-  and present[gate_a].orbit.distance==185
-  and present[gate_a].orbit.orientation==0.55,
+  and present[gate_a].orbit.distance==153
+  and present[gate_a].orbit.orientation==0.53,
   "Aegis entry must lie north of the pulsar")
 check(not connected[old_route], "Legacy Vespera-only route was not retired")
 
 local _, missing, _, fallback = run()
 check(missing[gate_b].orbit.parent.name=="sye-calidus",
   "Missing pulsar must attach gateway to southern frontier")
-check(missing[gate_b].orbit.distance>245
-  and missing[gate_b].orbit.distance<275,
+check(missing[gate_b].orbit.distance>225
+  and missing[gate_b].orbit.distance<260,
   "Missing pulsar fallback must stay in southern frontier")
 check(not fallback[old_route], "Legacy route resurfaced on pulsar fallback")
 
@@ -126,8 +126,8 @@ check(near_locations["near-bellicos-orbit"].orbit.sprite
   "Bellicos relocation erased source asteroid-belt art")
 check(near_locations["near-bellicos-orbit"].orbit.parent.name=="sye-calidus",
   "Visible Bellicos orbit should be detached from the central galaxy")
-check(near_locations["near-bellicos-orbit"].orbit.distance>207
-  and near_locations["near-bellicos-orbit"].orbit.distance<212,
+check(near_locations["near-bellicos-orbit"].orbit.distance>189
+  and near_locations["near-bellicos-orbit"].orbit.distance<194,
   "Visible Aegis belt was not moved below initial pair")
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
@@ -218,8 +218,8 @@ math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end
 local no_pulsar,orbit_locations=run({near=true})
 local layout=require("prototypes.system.galaxy_layout")
 local edge_x,edge_y=layout.anchor_position("sye-calidus")
-local p_x=edge_x+208*math.sin(2*math.pi*.5)
-local p_y=edge_y-208*math.cos(2*math.pi*.5)
+local p_x=edge_x+190*math.sin(2*math.pi*.5)
+local p_y=edge_y-190*math.cos(2*math.pi*.5)
 local function absolute(name)
   local body=orbit_locations[name]
   check(body and body.origin,"Expected native Aegis prototype: "..name)
@@ -231,7 +231,7 @@ end
 local near_px,near_py=absolute("near-bellicos-orbit")
 check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
   "Missing pulsar sent Near Bellicos Orbit sideways from southern frontier")
-check(near_py>edge_y+205 and math.abs(near_px-edge_x)<5,
+check(near_py>edge_y+188 and math.abs(near_px-edge_x)<5,
   "Near Bellicos Orbit must be south of two starter stars")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
     "aegis-outer-edge",gate_b}) do
@@ -310,8 +310,8 @@ for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]})
 end
 local edge_x,edge_y=require("prototypes.system.galaxy_layout")
   .anchor_position("sye-calidus")
-local source_x=edge_x+208*math.sin(2*math.pi*.5)
-local source_y=edge_y-208*math.cos(2*math.pi*.5)
+local source_x=edge_x+190*math.sin(2*math.pi*.5)
+local source_y=edge_y-190*math.cos(2*math.pi*.5)
 check(math.abs(original_art.shift[1]-(16+source_x*32))<.01
   and math.abs(original_art.shift[2]-(-8+source_y*32))<.01,
   "Aegis belt art abandoned the native pulsar when the parent was deleted")
