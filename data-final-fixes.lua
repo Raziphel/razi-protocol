@@ -176,6 +176,9 @@ require("prototypes.compat.calidus_dyson").fortify_routes()
 -- Only existing source-mod asteroid families are distributed on the final
 -- approved routes, before hover analysis and the quality-asteroid proxy.
 require("prototypes.system.modded_asteroid_distribution").data_final_fixes()
+-- Guard against later integrations adding a second named connection between
+-- the same Aegis waypoints before route colouring and hazard inspection.
+require("prototypes.system.bellicos").dedupe_internal_routes()
 
 -- Resolve difficulty stages for ALL finalized connected worlds, including
 -- mod-provided outer expeditions with unknown location IDs. This is after
@@ -334,3 +337,4 @@ require("prototypes.compat.k2so_promethium_ingredients").data_final_fixes()
 -- Final integrity guard: late third-party technology passes must not resurrect
 -- unlocks or routes for the removed, inaccessible far-side Bellicos stargate.
 require("prototypes.system.bellicos").retire_far_gate()
+require("prototypes.system.bellicos").dedupe_internal_routes()
