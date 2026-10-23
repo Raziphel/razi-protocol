@@ -1,3 +1,9 @@
+Version: 2.1.134
+Date: 23. 10. 2026
+  Bugfixes:
+    - Generalize LithiumBattery/Crucible cleanup to all missing recipe targets on Crucible productivity research, including promethium science clones.
+    - Retain valid research effects and leave source recipes untouched.
+
 Version: 2.1.133
 Date: 23. 10. 2026
   Bugfixes:
