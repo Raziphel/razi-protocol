@@ -80,10 +80,32 @@ function M.data_final_fixes()
       gate(name, "planet-discovery-aquilo")
     end
   end
-  -- Aegis opens from Vespera. Deep Bellicos content belongs to tier three.
+  -- Aegis needs BOTH first-frontier sectors; deep Bellicos stays tier three.
   if mods["bellicos-and-aegis"] then
     remove_parent("discovery-aegis-outer", "stellar-discovery-solar-system-edge")
-    gate("discovery-aegis-outer", "vespera-discovery")
+    remove_parent("discovery-aegis-outer", "vespera-discovery")
+    gate("discovery-aegis-outer", "solaris-discovery")
+    gate("discovery-aegis-outer", "nyxaris-discovery")
+    -- The old Calidus-side stargate prototype is now the twin-frontier
+    -- entry. Grant its native location in the source Aegis survey, without
+    -- inventing an unlock technology or bypassing Bellicos interior research.
+    local survey=tech("discovery-aegis-outer")
+    if survey and (data.raw["space-location"] or {})["calidus-bellicos-stargate-calidus"] then
+      local found=false
+      survey.effects=survey.effects or {}
+      for _,effect in ipairs(survey.effects) do
+        if effect.type=="unlock-space-location"
+          and effect.space_location=="calidus-bellicos-stargate-calidus" then
+          found=true
+          break
+        end
+      end
+      if not found then
+        survey.effects[#survey.effects+1]={type="unlock-space-location",
+          space_location="calidus-bellicos-stargate-calidus",
+          use_icon_overlay_constant=true}
+      end
+    end
     for _, name in ipairs({"discovery-aegis-inner", "discovery-bellicos"}) do
       if tech(name) then gate(name, "beetlejuice-discovery") end
     end
