@@ -581,7 +581,7 @@ See [Required Worlds & Bridge Roadmap](docs/PLANETARY_BRIDGES_AND_MASTERY.md).
 Some world relationships need particular care:
 
 - **Muria** now serves as the entry point to Vespera: Muria -> Rubia -> Aquilo / Maraxsis. It is no longer entered through Vibrant.
-- **Ribbonia -> Asteroid Belt -> Paracelsin** is Vibrant's core science chain.
+- **Ribbonia → Asteroid Belt → Paracelsin** remains Vibrant's mandatory outer-world science chain. The Inner and Outer Rim waypoints now hug the actual 31–39-unit rock belt. **Khemia is an inner-system alchemy world off Ribbonia**, not a shortcut from outer Paracelsin.
 - **Cubium -> Linox / Secretas -> Frozeta** stays in Beetlejuice, while **Tenebris -> Crucible Orbit -> Vesta** is now in Umbra. Crucible's native landing route is preserved.
 - **Castra** branches into Arig and Hyarion, converging again at Tellus and Corrundum.
 - **Moshine and Apia/Carnova** feed into **Panglia**, whose original Moshine data cells, DNA analysis, timewarp research and cloning remain essential. Pelagos and Dea Dia remain optional.
