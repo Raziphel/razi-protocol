@@ -1,6 +1,8 @@
--- Append campaign context to source-mod planet and space-location descriptions.
--- Keep the original author's wording, including translated descriptions and
--- gameplay rules. Optional worlds are touched only when their prototype exists.
+-- Append campaign context to source-mod planets and space locations.
+-- Preserve source wording and gameplay rules except for moved Aegis waypoints
+-- whose old travel directions are now wrong. Their geographic sentences use
+-- Razi's current chart; prototype mechanics are never altered here.
+-- Optional worlds are touched only when their prototype actually exists.
 local descriptions = {}
 local configured = setmetatable({}, {__mode = "k"})
 
