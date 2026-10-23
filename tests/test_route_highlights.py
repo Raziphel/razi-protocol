@@ -27,6 +27,24 @@ class RouteArtTests(unittest.TestCase):
         self.assertNotIn("script.on_event",ribbons)
 
 
+    def test_native_aegis_links_have_only_one_visible_line(self):
+        ribbons=source("prototypes/system/route_ribbons.lua")
+        bellicos=source("prototypes/system/bellicos.lua")
+        self.assertIn("local function native_aegis_corridor(route)",ribbons)
+        self.assertIn('["near-bellicos-orbit"]=true',ribbons)
+        self.assertIn('["aegis-inner-edge"]=true',ribbons)
+        self.assertIn("or native_aegis_corridor(route)",ribbons)
+        self.assertIn("M.native_aegis_corridor=native_aegis_corridor",ribbons)
+        self.assertIn("function bellicos.dedupe_internal_routes()",bellicos)
+        self.assertIn("asteroid.preserve_custom(kept[key],route)",bellicos)
+        final=source("data-final-fixes.lua")
+        self.assertLess(
+            final.index('require("prototypes.system.bellicos").dedupe_internal_routes()'),
+            final.index('require("prototypes.system.route_highlights").data_final_fixes()'))
+        self.assertIn(
+            'require("prototypes.system.bellicos").dedupe_internal_routes()',
+            final.split('require("prototypes.system.bellicos").retire_far_gate()')[-1])
+
     def test_route_markers_use_ten_stage_quality_colors(self):
         overlay=source("prototypes/system/route_highlights.lua")
         ladder=source("scripts/razi_asteroid_difficulty.lua")
