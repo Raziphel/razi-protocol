@@ -20,11 +20,11 @@ The minimum versions below are now recorded in `info.json`.
 
 ### Required
 
-- `PlanetsLib >= 2.0.0`
+- `PlanetsLib >= 2.2.1`
 - `bellicos-and-aegis >= 0.4.0`
 - `Krastorio2-spaced-out >= 2.0.17`
 - `Krastorio2Assets >= 2.1.0`
-- `planet-muluna >= 2.7.25`
+- `planet-muluna >= 2.7.41`
 - `planetaris-unbounded >= 1.9.1`
 - `planetaris-tellus >= 1.1.11`
 - `planetaris-hyarion >= 1.3.23`
