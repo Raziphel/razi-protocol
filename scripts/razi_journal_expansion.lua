@@ -41,7 +41,7 @@ return {
   {id="carna",chapter="outposts",world="carna",requires={"umbra-gate"}},
   {id="arcanyx",chapter="outposts",world="arcanyx",requires={"umbra-gate"}},
   {id="pelagos",chapter="outposts",world="pelagos",requires={"nyxaris-gate"}},
-  {id="dea-dia",chapter="outposts",world="dea-dia",requires={"nyxaris-gate"}},
+  {id="dea-dia",chapter="outposts",tech="system-discovery-dea-dia",requires={"nyxaris-gate"}},
   {id="lemures",chapter="outposts",world="lemures",requires={"dea-dia"}},
   {id="prosephina",chapter="outposts",world="prosephina",requires={"dea-dia"}},
   {id="nexus",chapter="outposts",world="nexus",requires={"edge"}},
