@@ -19,7 +19,23 @@ local locations = {
 }
 rawset(_G, "data", {raw = {planet = planet, ["space-location"] = locations}})
 package.loaded["prototypes.system.planet_descriptions"] = nil
+local story = require("scripts.razi_story")
 local descriptions = require("prototypes.system.planet_descriptions")
+
+-- The briefings and headings are story text: the story is off by default, and
+-- while it is off no description is touched and no story key is referenced.
+check(story.enabled() == false, "The story text must be off by default")
+descriptions.data_final_fixes()
+check(planet.nauvis.localised_description == native, "Story off still changed a native description")
+for _, proto in ipairs({planet.maraxsis, planet.carna, planet.skewer_shattered_planet,
+  locations.vespera, locations["sye-calidus"], locations["apia-carnova-orbit"],
+  locations.skewer_lost_beyond}) do
+  check(rawget(proto, "localised_description") == nil, "Story off still added a description")
+end
+check(planet.rabbasca.localised_description == "A native moon description.",
+  "Story off changed a native moon description")
+
+story.configure(true)
 descriptions.data_final_fixes()
 
 local function check_context(proto, expected_region, key)
@@ -93,4 +109,12 @@ for _, lang in ipairs({"en", "ru"}) do
     end
   end
 end
-print("Native descriptions, optional guards, locale and final-stage wiring passed")
+
+-- Switching the story back off leaves later worlds untouched again.
+story.configure(false)
+planet.nulla = {localised_description = "Original Vespera outpost text"}
+descriptions.data_final_fixes()
+check(planet.nulla.localised_description == "Original Vespera outpost text",
+  "Story off still overwrote a description after the story had been on")
+story.configure(false)
+print("Native descriptions, story switch, optional guards, locale and final-stage wiring passed")

@@ -1,6 +1,9 @@
 -- Append campaign context to source-mod planet and space-location descriptions.
 -- Keep the original author's wording, including translated descriptions and
 -- gameplay rules. Optional worlds are touched only when their prototype exists.
+-- The context is story text: nothing is appended while the story is off
+-- (scripts/razi_story.lua).
+local story = require("scripts.razi_story")
 local descriptions = {}
 local configured = setmetatable({}, {__mode = "k"})
 
@@ -25,6 +28,7 @@ local function original_description(prototype, name)
 end
 
 function descriptions.data_final_fixes()
+  if not story.enabled() then return end
   local preference = settings and settings.startup
     and settings.startup["razi-enable-expedition-briefings"]
   if preference and preference.value == false then return end
