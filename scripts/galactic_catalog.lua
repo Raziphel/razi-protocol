@@ -1,7 +1,7 @@
 -- Planet groups used by the Atlas and other UI.
 -- Unknown destinations go into Unassigned rather than disappearing.
 local M={}
-M.groups={"calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra","deep-space","unassigned"}
+M.groups={"calidus","solaris","nyxaris","aegis","vibrant","vespera","beetlejuice","umbra","deep-space","unassigned"}
 local members={}
 local groups={
   calidus={"nauvis","muluna","sye-calidus"},
@@ -12,6 +12,9 @@ local groups={
           "star-dea-dia",
           "dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},
+  aegis={"calidus-bellicos-stargate-calidus","calidus-bellicos-stargate-bellicos",
+         "aegis-inner-edge","aegis-outer-edge","point-warden",
+         "near-bellicos-orbit","bellicos-near-orbit","near_bellicos_orbit"},
   vibrant={"sye-vibrant","fulgora","cerys","ribbonia",
            "paracelsin","shchierbin","alchemy-planet",
            "asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
