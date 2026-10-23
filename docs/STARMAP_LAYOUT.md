@@ -1,3 +1,24 @@
+## October 24, 2026: map descriptions follow real location topology
+
+Location tooltips now distinguish the **Aegis / Shared Frontier** south of
+Solaris and Nyxaris from **Deep Space / Beyond the Charter** to the north.
+The living Aegis entry gate describes the path **Frontier Gate → Outer Edge
+→ Inner Edge → Point Warden**, with Near Bellicos Orbit as a side stop.
+The retired far-side Bellicos stargate is no longer described as an onward
+destination. Only moved Aegis waypoints replace stale source-mod geographic
+sentences; native conditions and mechanical descriptions on unrelated planets
+are preserved. English and Russian briefings have matching source-primary
+overrides for the relocated Aegis markers.
+
+Vibrant's chart descriptions now identify the **30/40-unit** southwest rim
+markers relative to the **31–39-unit** asteroid artwork. Fulgora, Ribbonia
+and Khemia remain **inside** the belt, Paracelsin and Shchierbin **outside**,
+and the Khemia dossier belongs to **Ribbonia ↔ Khemia**, not its former
+Paracelsin shortcut. Deep Space annotations refer only to the actual
+Nexus–Oort–Sol, Black Hole, and Shattered Planet branches. Regression
+fixtures check locale coverage, preserved source descriptions and no stale
+Bellicos gate wording.
+
 ## October 23, 2026: twin-frontier Aegis relocation and restored Deep Space
 
 The live seven-system design keeps the source-author Aegis/Bellicos pulsar,
