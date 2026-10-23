@@ -61,8 +61,8 @@ local route_specifications = {
   -- and a late-game crosslink. They avoid diagonals through Calidus.
   {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
-  -- Only the exterior Slip Stream reaches the Outer Rim; Ribbonia is
-  -- reachable from the Inner Rim. Keep Ribbonia's original link ID.
+  -- The exterior Slip Stream reaches the Outer Rim; Ribbonia connects to
+  -- the Inner Rim. Khemia sits INSIDE the band, not across its outer gap.
   {"sye-vibrant", "asteroid-belt-outer-edge", 36000, "chemistry"},
   {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
@@ -98,6 +98,7 @@ local route_specifications = {
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
 	-- Inner-world industry stays linked without an outer belt bypass.
 	{"fulgora", "ribbonia", 19500, "electrical"},
+	{"ribbonia", "alchemy-planet", 18000, "chemistry"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
 	-- A post-crossing outer-side return leg. It never connects an inner
 	-- Vibrant world directly to an outer one.
@@ -179,11 +180,11 @@ end
 -- reconciliation. Optional source moons within the inner region stay inside.
 local vibrant_inner = {
   fulgora=true, ribbonia=true, cerys=true,
-  ["asteroid-belt-inner-edge"]=true
+  ["alchemy-planet"]=true, ["asteroid-belt-inner-edge"]=true
 }
 local vibrant_outer = {
   ["sye-vibrant"]=true, paracelsin=true, shchierbin=true,
-  ["alchemy-planet"]=true, ["asteroid-belt-outer-edge"]=true
+  ["asteroid-belt-outer-edge"]=true
 }
 -- Localized obstacle fields; the first Calidus routes remain untouched.
 local route_fields={
@@ -327,12 +328,15 @@ function route_reconcile.data_final_fixes()
     -- rescue its original custom asteroid resources onto the Muria spur.
     local migrating_athos=route_pair==key_for("athos","vulcanus")
       or route_pair==key_for("athos","nauvis")
+    -- Preserve Khemia's former exterior source link for asteroid-drop
+    -- migration by the final route authority. It must not stay playable.
+    local migrating_khemia=route_pair==key_for("alchemy-planet","paracelsin")
     -- Rescue Abacayba's original custom asteroid drops during final route
     -- authority; these old Nauvis/Aquilo links are not kept playable.
     local migrating_abacayba=connection.from=="abacayba"
       or connection.to=="abacayba"
     if not migrating_ferrum and not migrating_athos
-      and not migrating_abacayba and (
+      and not migrating_abacayba and not migrating_khemia and (
       bypasses_vibrant_belt(connection.from,connection.to)
       or (from_system and to_system and from_system~=to_system
         and not allowed[route_pair])) then
