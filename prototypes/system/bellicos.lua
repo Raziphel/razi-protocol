@@ -5,19 +5,23 @@ local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-de
 local entry_gate = "calidus-bellicos-stargate-calidus"
 local bellicos_gate = "calidus-bellicos-stargate-bellicos"
 local old_calidus_entry_route = "sye-calidus-bellicos-stargate"
-local deep_space_entry_route = "solar-system-edge-aegis-stargate"
+local deep_space_entry_route = "razi-vespera-aegis-stargate"
+local retired_deep_space_route = "solar-system-edge-aegis-stargate"
+local arrival_hub = "sye-vespera"
 
 local function remove_stock_entry_routes()
 	deleteRoute("nauvis-stargate-connection")
 	deleteRoute("fulgora-stargate-connection")
 	deleteRoute(old_calidus_entry_route)
+	deleteRoute(retired_deep_space_route)
 	deleteRoutesBetween("nauvis", entry_gate)
 	deleteRoutesBetween("fulgora", entry_gate)
 	deleteRoutesBetween("sye-calidus", entry_gate)
 end
 
--- Preserve the source pulsar artwork in a distinct northern annex,
--- beyond Nexus/Oort/Sol. Guard missing or retyped source prototypes.
+-- Preserve the source pulsar artwork in a distinct northwest Vespera annex.
+-- Aegis opens in tier two; deeper Bellicos access is reserved for tier three.
+-- Guard missing or retyped source prototypes.
 -- Set real Factorio origin/distance/orientation in addition to orbit
 -- metadata: PlanetsLib's sprite-baking and prototype cleanup stages can
 -- otherwise leave old horizontal native marker positions behind.
@@ -90,12 +94,12 @@ end
 bellicos.find_wardens=find_wardens
 
 local function plan_expedition()
-  if not endpoint_type("solar-system-edge") then return nil end
+  if not endpoint_type(arrival_hub) then return nil end
   local layout=require("prototypes.system.galaxy_layout")
-  local ex,ey=layout.anchor_position("solar-system-edge")
+  local ex,ey=layout.anchor_position(arrival_hub)
   if not ex then return nil end
   local edge={x=ex,y=ey}
-  local sx,sy=offset(ex,ey,170,.055)
+  local sx,sy=offset(ex,ey,132,.93)
   local virtual_pulsar={x=sx,y=sy}
   local nx,ny=offset(sx,sy,3,.25)
   local virtual_near={x=nx,y=ny}
@@ -110,7 +114,7 @@ local function plan_expedition()
       radius=r,turn=turn,x=x,y=y,gate=gate
     }
   end
-  if pulsar then append(pulsar,"solar-system-edge",edge,170,.055) end
+  if pulsar then append(pulsar,arrival_hub,edge,132,.93) end
   if near then
     if pulsar then
       append(near,pulsar,virtual_pulsar,3,.25)
@@ -119,10 +123,10 @@ local function plan_expedition()
       -- by converting the virtual pulsar offset into the Edge's native
       -- polar coordinates, using quadrant-aware atan2 (Lua 5.2).
       local r,t=parent_polar(nx,ny,edge)
-      append(near,"solar-system-edge",edge,r,t)
+      append(near,arrival_hub,edge,r,t)
     end
   end
-  append(entry_gate,"solar-system-edge",edge,62,.035,true)
+  append(entry_gate,arrival_hub,edge,45,.94,true)
   if near then
     -- Fan the Warden spur apart from the Inner -> Outer belt crossing.
     -- The older bearings drew two nearly parallel routes across Aegis.
@@ -144,7 +148,7 @@ local function plan_expedition()
     -- prototype nor the Near Bellicos parent. Keep the gateway near the
     -- missing pulsar rather than projecting it toward the central stars.
     local r,t=parent_polar(gx,gy,edge)
-    append(bellicos_gate,"solar-system-edge",edge,r,t,true)
+    append(bellicos_gate,arrival_hub,edge,r,t,true)
   end
   return entries,virtual_pulsar
 end
@@ -172,7 +176,7 @@ local function position_expedition(pre_render)
         if parent then
           orbit.parent={type=parent,name=target.parent}
         elseif target.parent=="pulsar" then
-          orbit.parent={type="space-location",name="solar-system-edge"}
+          orbit.parent={type="space-location",name=arrival_hub}
         end
         orbit.distance=target.radius
         orbit.orientation=target.turn
@@ -210,7 +214,7 @@ local function reconcile_baked_art()
   for _,target in ipairs(plan) do by_name[target.name]=target end
   -- Sprite-only pulsar no longer exists, but its artwork still has a tag.
   local ex,ey=require("prototypes.system.galaxy_layout")
-    .anchor_position("solar-system-edge")
+    .anchor_position(arrival_hub)
   if ex and ey then by_name.pulsar={parent_position={x=ex,y=ey}} end
   local ui=(data.raw["utility-sprites"] or {}).default
   local layers=ui and ui.starmap_star and ui.starmap_star.layers
@@ -323,7 +327,7 @@ function bellicos.data()
 
 	-- When a different Aegis version omits the gateway, do not register a
 	-- space connection with nonexistent endpoints.
-	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then
+	if not endpoint_type(arrival_hub) or not endpoint_type(entry_gate) then
 		return
 	end
 
@@ -331,7 +335,7 @@ function bellicos.data()
 		{
 			type = "space-connection",
 			name = deep_space_entry_route,
-			from = "solar-system-edge",
+			from = arrival_hub,
 			to = entry_gate,
 			length = 250000,
 			asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
@@ -367,7 +371,7 @@ function bellicos.data_final_fixes()
 	end
 
 	-- Other route compatibility passes can run after the source mod. Keep only
-	-- Razi Protocol's deep-space entrance while preserving every route inside Aegis.
+	-- Razi Protocol's tier-two Vespera entrance while preserving every route inside Aegis.
 	remove_stock_entry_routes()
 	-- After PlanetsLib has baked the source artwork, change native fields
 	-- and tagged-layer shifts only. Never re-enter PlanetsLib:update here.
@@ -377,7 +381,7 @@ function bellicos.data_final_fixes()
 	if not glare or glare.value~=false then soften_pulsar_art() end
 	-- A gateway removed by a later dependency pass must not leave our
 	-- replacement deep-space route pointing to an invalid endpoint.
-	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then
+	if not endpoint_type(arrival_hub) or not endpoint_type(entry_gate) then
 		deleteRoute(deep_space_entry_route)
 	end
 end
