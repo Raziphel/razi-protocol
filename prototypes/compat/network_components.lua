@@ -339,7 +339,6 @@ local function register_part(part,index)
     energy_required=part.energy,main_product=part.name,
     icons=table.deepcopy(icons),
     localised_name={"recipe-name."..part.name},
-    localised_description={"recipe-description."..part.name},
     allow_productivity=false,maximum_productivity=0,
     auto_recycle=false,allow_decomposition=false
   }
@@ -347,7 +346,6 @@ local function register_part(part,index)
     type="technology",name=part.name,
     icons=table.deepcopy(icons),
     localised_name={"technology-name."..part.name},
-    localised_description={"technology-description."..part.name},
     prerequisites=prerequisites,
     effects={{type="unlock-recipe",recipe=part.name}},
     unit={count=research_count(part.count,prerequisites),
