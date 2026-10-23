@@ -162,20 +162,23 @@ class SouthernAegis(unittest.TestCase):
         def radius(n):
             x, y = point(n, data)
             return math.hypot(x - vx, y - vy)
-        for n in ("ribbonia", "fulgora"):
+        for n in ("ribbonia", "fulgora", "alchemy-planet"):
             self.assertLess(radius(n), 31)
-        for n in ("paracelsin", "shchierbin", "alchemy-planet", "sye-vibrant"):
+        for n in ("paracelsin", "shchierbin", "sye-vibrant"):
             self.assertGreater(radius(n), 39)
-        self.assertAlmostEqual(radius("asteroid-belt-inner-edge"), 31, places=3)
-        self.assertAlmostEqual(radius("asteroid-belt-outer-edge"), 46, places=3)
+        self.assertAlmostEqual(radius("asteroid-belt-inner-edge"), 30, places=3)
+        self.assertAlmostEqual(radius("asteroid-belt-outer-edge"), 40, places=3)
         inner = point("asteroid-belt-inner-edge", data)
         outer = point("asteroid-belt-outer-edge", data)
-        self.assertGreater(math.dist(inner, outer), 14)
-        self.assertLess(math.dist(inner, outer), 22)
+        self.assertGreater(math.dist(inner, outer), 10)
+        self.assertLess(math.dist(inner, outer), 12)
+        self.assertAlmostEqual(inner[1], outer[1], delta=2)
         self.assertLess(math.dist(outer, point("paracelsin", data)), 15)
         routes = read("prototypes/system/route_reconcile.lua")
         self.assertIn('{"ribbonia", "asteroid-belt-inner-edge",', routes)
         self.assertIn('{"asteroid-belt-outer-edge", "paracelsin",', routes)
+        self.assertIn('{"ribbonia", "alchemy-planet", 18000, "chemistry"}', routes)
+        self.assertIn('["alchemy-planet"]=true, ["asteroid-belt-inner-edge"]=true', routes)
 
     def test_aegis_route_spine_has_no_shortcut_chords(self):
         source = read("prototypes/system/bellicos.lua")
