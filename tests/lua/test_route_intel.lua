@@ -162,4 +162,22 @@ local shown={from="sye-calidus",to="sye-solaris",length=120000,
 intel.annotate(shown)
 check(row(shown,"danger")~=nil and row(shown,"sector")==nil,
   "Only the switched-on row should appear")
+-- Every route note listed in the dossiers has its text in both languages
+-- (the notes are shown only while the story text is on).
+local dossier_file=assert(io.open("prototypes/system/route_dossiers.lua","r"))
+local dossier_source=dossier_file:read("*a")
+dossier_file:close()
+local note_count=0
+for _,lang in ipairs({"en","ru"}) do
+  local locale_file=assert(io.open("locale/"..lang.."/routes.cfg","r"))
+  local locale=locale_file:read("*a")
+  locale_file:close()
+  note_count=0
+  for id in dossier_source:gmatch('{"[^"]+","[^"]+","([%w%-]+)"}') do
+    note_count=note_count+1
+    check(locale:find("\ndispatch-"..id.."=",1,true),lang..": no route note "..id)
+  end
+  check(locale:find("\ndispatch=",1,true),lang..": no route note label")
+end
+check(note_count>60,"The route note list was not read")
 print("Razi route tooltip and hazard fixtures passed")

@@ -117,4 +117,28 @@ descriptions.data_final_fixes()
 check(planet.nulla.localised_description == "Original Vespera outpost text",
   "Story off still overwrote a description after the story had been on")
 story.configure(false)
+
+-- With the story on, every listed location has a briefing, and every region a
+-- heading, in both languages.
+local list_start = assert(module_source:find("local destinations", 1, true))
+local list_end = assert(module_source:find("local function original_description", 1, true))
+local listed = module_source:sub(list_start, list_end - 1)
+for _, lang in ipairs({"en", "ru"}) do
+  local file = assert(io.open("locale/" .. lang .. "/names.cfg", "r"))
+  local locale = file:read("*a")
+  file:close()
+  local section = assert((locale .. "\n["):match("%[razi%-location%-briefing%]\n(.-)\n%["),
+    lang .. ": no briefing section")
+  local count = 0
+  for id in listed:gmatch('"([%w_%-]+)"') do
+    count = count + 1
+    check(("\n" .. section):find("\n" .. id .. "=", 1, true),
+      lang .. ": no briefing for " .. id)
+  end
+  check(count > 70, "The location list was not read")
+  for _, region in ipairs({"calidus", "solaris", "nyxaris", "vibrant", "vespera",
+    "beetlejuice", "umbra", "deep-space"}) do
+    check(locale:find("\n" .. region .. "=", 1, true), lang .. ": no heading for " .. region)
+  end
+end
 print("Native descriptions, story switch, optional guards, locale and final-stage wiring passed")
