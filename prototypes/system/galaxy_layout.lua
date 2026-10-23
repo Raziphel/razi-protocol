@@ -69,7 +69,7 @@ local anchors = {
   -- Paracelsin, Khemia and Shchierbin arc. Keep real exit/return lanes
   -- and distinct labels outside the physical rock annulus.
   {"planet","fulgora","vibrant",24,0.57},
-  {"planet","ribbonia","vibrant",26,0.685},
+  {"planet","ribbonia","vibrant",26,0.655},
   {"planet","paracelsin","vibrant",51,0.70},
   -- Belt-free Vespera: Muria opens Rubia, then branches to greenhouse
   -- ocean Maraxsis and icy outer Aquilo. All planets are true destinations.
@@ -452,8 +452,10 @@ function M.data_final_fixes()
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
-    ["asteroid-belt-inner-edge"]=0.75,
-    ["asteroid-belt-outer-edge"]=0.25,
+    -- Outer text projects away from the star; inner text sits above the
+    -- waypoint rather than on the Ribbonia label or across the outer text.
+    ["asteroid-belt-inner-edge"]=0.0,
+    ["asteroid-belt-outer-edge"]=0.75,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.5,
     ["razi-umbra-belt-inner"]=0.25,
     ["razi-umbra-belt-outer"]=0.25,
