@@ -42,10 +42,14 @@ end
 M.sheet=SHEET
 M.obsolete=obsolete
 
--- Aegis's compact native corridors already have Factorio-rendered paths.
--- Adding coloured atlas ribbons over them produces two offset orange/red
--- tracks (especially Near Bellicos Orbit <-> Aegis Inner Edge). Keep the
--- actual route, its hazard profile and hover text; draw only its native line.
+-- Near Bellicos Orbit has a native source connection whose atlas ribbon
+-- diverges from Factorio's line: that causes the doubled red track. Only
+-- paint the Gate -> Outer and Outer -> Inner crossings, which otherwise
+-- stay grey; retain the native line for every other Aegis interior link.
+local aegis_ribbon_pairs={
+  ["aegis-outer-edge|calidus-bellicos-stargate-calidus"]=true,
+  ["aegis-inner-edge|aegis-outer-edge"]=true
+}
 local aegis_nodes={
   ["calidus-bellicos-stargate-calidus"]=true,
   ["near-bellicos-orbit"]=true,
@@ -56,10 +60,23 @@ local aegis_nodes={
   ["point-warden"]=true,
   ["aegis-point-warden"]=true
 }
+local function is_aegis_node(name)
+  if aegis_nodes[name] then return true end
+  if type(name)~="string" then return false end
+  -- Source mods can rename the near-pulsar orbit or Warden. Still avoid
+  -- a second offset overlay through those native interior connections.
+  local lower=name:lower()
+  return (lower:find("bellicos",1,true)
+      and lower:find("orbit",1,true)
+      and not lower:find("stargate",1,true)) ~= nil
+    or lower:find("warden",1,true) ~= nil
+end
 local function native_aegis_corridor(route)
   if type(route)~="table" then return false end
   local a,b=route.from,route.to
-  return aegis_nodes[a]==true and aegis_nodes[b]==true
+  if not (is_aegis_node(a) and is_aegis_node(b)) then return false end
+  local key=a<b and (a.."|"..b) or (b.."|"..a)
+  return not aegis_ribbon_pairs[key]
 end
 M.native_aegis_corridor=native_aegis_corridor
 
