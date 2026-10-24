@@ -121,4 +121,32 @@ check(count.factories==6 and count.defenses==0,"Only the lever that was set appl
 selected("hard")
 check(engine.apply({},resolver).factories==0,"No machines at all")
 check(engine.apply(nil,resolver).defenses==0,"No data.raw at all")
+
+-- Balack's bio fabricator: its own setting covers Easy, Hard and Nightmare
+-- when Balack is installed; Custom and the lever by hand still scale it.
+local function with_cube()
+ local r=raw()
+ r.item.cube={place_result="cube"}
+ r["assembling-machine"].cube={crafting_speed=1,crafting_categories={"bm-bio-cube"}}
+ return r
+end
+rawset(_G,"mods",{["biological-machines-planet-balack"]="1.1.2"})
+selected("hard")
+data_raw=with_cube()
+engine.apply(data_raw,resolver)
+check(data_raw["assembling-machine"].cube.crafting_speed==1,
+ "Hard: the bio fabricator follows Balack's setting only")
+check(near(data_raw["assembling-machine"].k2.crafting_speed,2.76),"Hard: other machines still scale")
+selected("custom",{["razi-factory-throughput"]="strained"})
+data_raw=with_cube()
+engine.apply(data_raw,resolver)
+check(near(data_raw["assembling-machine"].cube.crafting_speed,.82),
+ "Custom: the lever by hand scales the bio fabricator")
+rawset(_G,"mods",{})
+selected("hard")
+data_raw=with_cube()
+engine.apply(data_raw,resolver)
+check(near(data_raw["assembling-machine"].cube.crafting_speed,.92),
+ "Without Balack the machine is an ordinary factory")
+rawset(_G,"mods",nil)
 print("Factory speed and wall strength passed")

@@ -1,3 +1,8 @@
+-- Difficulty level: from here until Razi's data-final-fixes.lua puts them back, a few numeric settings of Muluna and Rubia have the
+-- value of the level for the data-updates.lua and data-final-fixes.lua of those mods (the saved settings are not changed). Normal and
+-- Custom write nothing.
+require("prototypes.compat.foreign_difficulty_settings").apply()
+
 require "prototypes.system.calidus"
 require("prototypes.system.bellicos").data()
 require "prototypes.system.eneas"
