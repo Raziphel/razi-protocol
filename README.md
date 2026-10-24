@@ -114,7 +114,7 @@ Razi Protocol supports several optional enemy packs and places each one where it
 
 - Arachnids: Arig
 - Armoured biters: Hyarion
-- Cold biters: Aquilo and Frozeta
+- Cold biters: Frozeta
 - Electric flying enemies: Fulgora (their own planet) and Ribbonia
 - Explosive biters: Moshine
 - Toxic biters: Cubium

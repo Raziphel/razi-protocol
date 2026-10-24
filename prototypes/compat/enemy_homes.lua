@@ -3,7 +3,7 @@ local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
 -- Where each themed enemy family lives. One list for the six enemy modules, so that a planet is added to a family (or
 -- taken from it) in one place. The list is the authors' design (each mod was made for one or two places) plus the
 -- planets whose theme fits the family: Armoured Biters on Hyarion, Arachnids on Arig, Explosive Biters on Moshine, Toxic
--- Biters on Cubium, Cold Biters on Aquilo and Frozeta, Electric Flying Enemies on Fulgora and Ribbonia. Nauvis keeps the
+-- Biters on Cubium, Cold Biters on Frozeta, Electric Flying Enemies on Fulgora and Ribbonia. Nauvis keeps the
 -- vanilla enemies; planets with enemies of their own authors (Gleba, Tellus, Lemures with Dea Dia, ...) are not touched.
 --
 -- `native` planets are placed by the enemy mod itself, so Razi Protocol only counts them as homes.
@@ -15,7 +15,8 @@ local families = {
 	arachnids = {planets = {"arig"}, control = "enemy-base"},
 	toxic = {planets = {"cubium"}, control = "enemy-base"},
 	explosive = {planets = {"moshine"}, control = "hot_enemy_base"},
-	cold = {planets = {"aquilo", "frozeta"}, control = "frost_enemy_base"},
+	-- Aquilo is not a home: about 97% of it is ocean, so cold nests found no land there.
+	cold = {planets = {"frozeta"}, control = "frost_enemy_base"},
 	electric = {planets = {"fulgora", "ribbonia"}, native = {fulgora = true}, control = "electric_enemies"}
 }
 
