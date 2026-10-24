@@ -60,6 +60,18 @@ check(odd_groups.max_unit_group_size==500
  and odd_groups.min_group_gathering_time==90000
  and odd_groups.max_group_gathering_time==60000,
  "Normal changed raid values outside the usual limits")
+-- A cap does not lower a source value that is above it (the game's own
+-- limit of 30 gathering groups) when a level raises the count.
+local hard=tuning.profile("hard",presets,{active=function()return "hard" end,
+ effective=function(name,default)
+  if name=="razi-raid-coordination" then return "organized" end
+  return default
+ end})
+local high={}
+tuning.unit_groups(high,{max_gathering_unit_groups=30,max_unit_group_size=200},hard)
+check(high.max_gathering_unit_groups==30,
+ "Hard lowered the source count of gathering groups")
+check(high.max_unit_group_size==200,"Hard exceeded the group size cap")
 -- A profile without expansion numbers is left without them.
 local bare=tuning.profile("normal",{normal={}},resolver)
 check(bare.expansion==nil,"A missing expansion must stay missing")

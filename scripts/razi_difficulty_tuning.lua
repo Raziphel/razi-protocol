@@ -105,8 +105,9 @@ function M.unit_groups(target,baseline,spec)
   local value=baseline[field]
   if type(value)=="number" then
    -- Never unexpectedly lower a source mod's limits in Normal mode.
+   -- The cap never lowers a value that is already above it.
    target[field]=rule[1]==1 and value
-     or math.min(rule[2],rounded(value*rule[1]))
+     or math.min(math.max(rule[2],value),rounded(value*rule[1]))
   end
  end
  if (mode.wait~=1) and target.min_group_gathering_time
