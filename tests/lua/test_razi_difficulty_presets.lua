@@ -96,6 +96,34 @@ for level,row in pairs(expected) do
   end
 end
 
+-- Map and combat levers by level. The ore, research and evolution levers are
+-- read only when changed by hand (the map profile of the level holds them).
+local map_levers={
+  ["razi-pollution-pressure"]={"gentle","normal","heavy","toxic"},
+  ["razi-raid-coordination"]={"small","normal","organized","siege"},
+  ["razi-colony-expansion"]={"slow","normal","rapid","invasive"},
+  ["razi-spoilage-pressure"]={"forgiving","normal","fast","brutal"},
+  ["razi-resource-frequency"]={"abundant","normal","scarce","desolate"},
+  ["razi-resource-patch-size"]={"expansive","normal","small","tiny"},
+  ["razi-resource-richness"]={"generous","normal","poor","meager"},
+  ["razi-science-demand"]={"light","normal","intensive","grueling"},
+  ["razi-evolution-speed"]={"slow","normal","accelerated","runaway"},
+}
+for name,row in pairs(map_levers) do
+  for i,level in ipairs(LEVELS) do
+    startup(level)
+    check(P.active()==level and P.effective(name)==row[i],
+      level..": "..name.." is "..tostring(P.effective(name)))
+  end
+  check(declared[name].default_value=="normal","Default of "..name)
+  startup("hard",{[name]="normal"})
+  check(P.active()=="hard" and P.effective(name)==row[3],
+    "A lever left at its default follows the level: "..name)
+end
+startup("normal",{["razi-pollution-pressure"]="toxic"})
+check(P.active()=="custom" and P.effective("razi-pollution-pressure")=="toxic",
+  "A map lever changed by hand reports Custom and keeps its value")
+
 -- Spread technology unlocks: four levels, left alone or ticked by hand.
 for _,level in ipairs(LEVELS) do
   local auto=(level=="hard" or level=="nightmare")
@@ -157,7 +185,12 @@ local function text(path)
 end
 for _,lang in ipairs({"en","ru"}) do
   local cfg=text("locale/"..lang.."/settings.cfg")
-  local keys={"razi-difficulty-preset","razi-asteroid-difficulty-scale"}
+  local keys={"razi-difficulty-preset","razi-asteroid-difficulty-scale",
+    "razi-default-new-game-map"}
+  for name,values in pairs(map_levers) do
+    keys[#keys+1]=name
+    for _,v in ipairs(values) do keys[#keys+1]=name.."-"..v end
+  end
   for _,v in ipairs(setting.allowed_values) do
     keys[#keys+1]="razi-difficulty-preset-"..v
   end
@@ -170,6 +203,12 @@ for _,lang in ipairs({"en","ru"}) do
   local description=cfg:match("\n%[mod%-setting%-description%].*")
   check(description:find("\nrazi-difficulty-preset=",1,true),
     lang.." misses the level description")
+  for name in pairs(map_levers) do
+    check(description:find("\n"..name.."=",1,true),
+      lang.." misses the description of "..name)
+  end
+  check(description:find("\nrazi-default-new-game-map=",1,true),
+    lang.." misses the description of the map option")
   for line in cfg:gmatch("[^\n]+") do
     check(#line<1500,lang.." locale line too long: "..line:sub(1,40))
   end
