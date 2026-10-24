@@ -13,7 +13,8 @@ local rules = {
 -- No pathological science here: its research asks for Fulgora's science, a later system than Corrundum.
 {"planet-discovery-corrundum", {}, {{"planetaris-bioengineering-science-pack", "planet-discovery-tellus"}}},
 -- No thermodynamic science here: its research needs natrocarbonatite, which pulls Dea Dia, Lemures and
--- Prosephina into the research of every later system. Those worlds stay optional.
+-- Prosephina into the research of every later system. Dea Dia reaches the gateways through the Nyxaris card
+-- and regional_research_bridges.lua.
 {"planet-discovery-apia-carnova", {"planet-discovery-gleba", "planet-discovery-moshine"}, {{"agricultural-science-pack", "planet-discovery-gleba"}}},
 -- Link Panglia to actual upstream industries while keeping source-authored
 -- Moshine data cells, DNA triggers, cloning and timewarp machines unchanged.

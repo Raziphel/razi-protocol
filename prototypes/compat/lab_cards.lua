@@ -52,7 +52,9 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/nyxaris-tech-card.png",
 		order = "s[system]-c[nyxaris]",
 		craft_time = 12, regional_science_amount = 1,
-		-- Never put optional Dea Dia / Pelagos science into a mandatory card.
+		-- Dea Dia's insulation and thermodynamic packs are added here when that mod is installed, so its
+		-- discovery is on the path in every mode (regional_research_bridges.lua lists it as a Nyxaris world).
+		-- Pelagos science is not in a card.
 		unlock_technology_candidates = {
 			"planet-discovery-moshine",
 			"planet-discovery-apia-carnova",
