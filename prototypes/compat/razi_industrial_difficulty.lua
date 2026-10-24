@@ -2,12 +2,14 @@
 -- and walls of every installed mod. One data stage pass, from the values the
 -- source mods defined; Normal (x1) writes nothing.
 --
--- Only what a player builds is scaled. These are left alone:
---   * hidden prototypes (internal machines and removed duplicates);
+-- Only what a player builds is scaled: a prototype that an item places, or
+-- that gives back such an item when mined (the variants that mods put in
+-- place of a machine on some surfaces). Left alone:
 --   * assembling machines with a fixed recipe: scanners, construction
 --     stages, towers, gas miners, wrecks and other machines whose speed is
 --     part of a mechanic of their mod;
---   * prototypes that no item can place: map objects and script helpers.
+--   * prototypes that no item places and no mining returns: map objects,
+--     fluid filters and other script helpers.
 -- Enemy units, turrets and weapons are never touched.
 local M={}
 local preset=require("scripts.razi_difficulty_presets")
@@ -21,26 +23,47 @@ M.factors=factors
 -- The first value a prototype had, so a second call never compounds.
 local originals=setmetatable({},{__mode="k"})
 
--- Names of the entities some item places (place_result) or that name their
--- item themselves (placeable_by).
+-- The entities some item places (place_result) or that name their item
+-- themselves (placeable_by), and the items that place something.
 local function placeable(raw)
- local names={}
+ local entities,items={},{}
  for _,group in pairs(raw or {}) do
   if type(group)=="table" then
    for name,proto in pairs(group) do
     if type(proto)=="table" then
-     if type(proto.place_result)=="string" then names[proto.place_result]=true end
+     if type(proto.place_result)=="string" then
+      entities[proto.place_result]=true
+      items[name]=true
+     end
      local by=proto.placeable_by
-     if type(by)=="table" and (by.item or by[1]) then names[name]=true end
+     if type(by)=="table" and (by.item or by[1]) then entities[name]=true end
     end
    end
   end
  end
- return names
+ return entities,items
 end
 
-local function is_player_built(proto,name,placed)
- return not proto.hidden and placed[name]==true
+local function mined_items(proto)
+ local minable=proto.minable
+ local found={}
+ if type(minable)~="table" then return found end
+ if type(minable.result)=="string" then found[#found+1]=minable.result end
+ for _,result in pairs(type(minable.results)=="table" and minable.results or {}) do
+  if type(result)=="table" and (result.type==nil or result.type=="item")
+     and type(result.name)=="string" then
+   found[#found+1]=result.name
+  end
+ end
+ return found
+end
+
+local function is_player_built(proto,name,entities,items)
+ if entities[name] then return true end
+ for _,item in ipairs(mined_items(proto)) do
+  if items[item] then return true end
+ end
+ return false
 end
 
 local function scale_group(group,field,factor,round,filter)
@@ -78,13 +101,14 @@ function M.apply(raw,resolver)
  local count={factories=0,defenses=0,skipped=0}
  raw=raw or {}
  if speed~=1 or health~=1 then
-  local placed=placeable(raw)
+  local entities,items=placeable(raw)
   if speed~=1 then
    for _,type_name in ipairs({"assembling-machine","furnace"}) do
     local changed,skipped=scale_group(raw[type_name],"crafting_speed",speed,
      function(value) return math.max(.001,value) end,
      function(proto,name)
-      return not proto.fixed_recipe and is_player_built(proto,name,placed)
+      return not proto.fixed_recipe
+       and is_player_built(proto,name,entities,items)
      end)
     count.factories=count.factories+changed
     count.skipped=count.skipped+skipped
@@ -94,13 +118,15 @@ function M.apply(raw,resolver)
    for _,type_name in ipairs({"wall","gate"}) do
     local changed=scale_group(raw[type_name],"max_health",health,
      function(value) return math.max(1,math.floor(value+.5)) end,
-     function(proto,name) return is_player_built(proto,name,placed) end)
+     function(proto,name)
+      return is_player_built(proto,name,entities,items)
+     end)
     count.defenses=count.defenses+changed
    end
   end
   log("razi-protocol: factory throughput x"..speed.." changed "
-   ..count.factories.." machines ("..count.skipped.." hidden, fixed-recipe or "
-   .."unplaceable machines left out), fortification durability x"..health
+   ..count.factories.." machines ("..count.skipped.." fixed-recipe or unbuildable machines "
+   .."left out), fortification durability x"..health
    .." changed "..count.defenses.." walls and gates")
  end
  return count

@@ -11,7 +11,8 @@ local function selected(mode,overrides)
  for name,value in pairs(overrides or {}) do startup[name]={value=value} end
  rawset(_G,"settings",{startup=startup})
 end
--- Items that place the buildable entities; "scripted" and the wreck have none.
+-- Items that place the buildable entities. "scripted", "helper" and the wreck
+-- have no item; "variant" and "variant2" are mined into the item of a machine.
 local function raw()
  return {
   item={
@@ -19,18 +20,24 @@ local function raw()
    k2={place_result="k2"},
    scanner={place_result="scanner"},
    hidden={place_result="hidden"},
+   broken={place_result="broken"},
    kiln={place_result="kiln"},
    ["stone-wall"]={place_result="stone-wall"},
    hardened={place_result="hardened"},
    gate={place_result="gate"},
    bridge={place_result="bridge"},
+   ["iron-plate"]={stack_size=100},
   },
   ["assembling-machine"]={
    assembler={crafting_speed=1.25,max_health=300},
    k2={crafting_speed=3,max_health=700},
    scanner={crafting_speed=1,fixed_recipe="scan"},
    hidden={crafting_speed=1,hidden=true},
+   variant={crafting_speed=1,hidden=true,minable={result="assembler"}},
+   variant2={crafting_speed=2,hidden=true,
+    minable={results={{type="item",name="k2",amount=1}}}},
    scripted={crafting_speed=1},
+   helper={crafting_speed=1,hidden=true,minable={result="iron-plate"}},
    wreck={crafting_speed=1,fixed_recipe="repair"},
    broken={crafting_speed=0},
   },
@@ -57,10 +64,16 @@ check(data_raw.wall.hardened.max_health==1000,"Normal changed a wall")
 selected("easy")
 data_raw=raw()
 count=engine.apply(data_raw,resolver)
-check(count.factories==3 and count.defenses==3,
- "Easy: 3 machines, 3 walls and gates, got "..count.factories.."/"..count.defenses)
+check(count.factories==6 and count.defenses==4,
+ "Easy: 6 machines, 4 walls and gates, got "..count.factories.."/"..count.defenses)
 check(near(data_raw["assembling-machine"].k2.crafting_speed,3.45),"Easy: k2 speed")
 check(near(data_raw.furnace.kiln.crafting_speed,2.3),"Easy: furnace speed")
+check(near(data_raw["assembling-machine"].hidden.crafting_speed,1.15),
+ "Easy: a hidden machine that an item places is built by players")
+check(near(data_raw["assembling-machine"].variant.crafting_speed,1.15),
+ "Easy: a variant mined into a machine item")
+check(near(data_raw["assembling-machine"].variant2.crafting_speed,2.3),
+ "Easy: a variant with a result list")
 check(data_raw.wall.hardened.max_health==1250,"Easy: modded wall")
 check(data_raw.gate.gate.max_health==438,"Easy: gate health is rounded")
 check(data_raw["assembling-machine"].assembler.max_health==300,
@@ -74,11 +87,10 @@ for _,level in ipairs({"easy","hard","nightmare"}) do
  local m=data_raw["assembling-machine"]
  check(m.scanner.crafting_speed==1,level..": fixed recipe machine scaled")
  check(m.wreck.crafting_speed==1,level..": wreck scaled")
- check(m.hidden.crafting_speed==1,level..": hidden machine scaled")
  check(m.scripted.crafting_speed==1,level..": machine no item places scaled")
+ check(m.helper.crafting_speed==1,level..": helper mined into a plate scaled")
  check(m.broken.crafting_speed==0,level..": zero speed changed")
  check(data_raw.wall.unplaced.max_health==500,level..": unplaced wall scaled")
- check(data_raw.gate.bridge.max_health==1000,level..": hidden gate scaled")
  check(data_raw.unit.biter.max_health==100 and data_raw.unit.biter.crafting_speed==7,
   level..": enemy units are never edited")
  check(data_raw.turret.gun.max_health==400,level..": turrets are never edited")
@@ -93,6 +105,7 @@ data_raw=raw()
 engine.apply(data_raw,resolver)
 check(near(data_raw["assembling-machine"].k2.crafting_speed,2.76),"Hard: k2 speed")
 check(data_raw.wall.hardened.max_health==900,"Hard: modded wall")
+check(data_raw.gate.bridge.max_health==900,"Hard: a hidden gate that an item places")
 count=engine.apply(data_raw,resolver)
 check(count.factories==0 and count.defenses==0,"A second call must not compound")
 selected("nightmare")
@@ -104,7 +117,7 @@ check(near(data_raw.furnace.kiln.crafting_speed,1.64),"Nightmare reads the first
 selected("normal",{["razi-factory-throughput"]="strained"})
 data_raw=raw()
 count=engine.apply(data_raw,resolver)
-check(count.factories==3 and count.defenses==0,"Only the lever that was set applies")
+check(count.factories==6 and count.defenses==0,"Only the lever that was set applies")
 selected("hard")
 check(engine.apply({},resolver).factories==0,"No machines at all")
 check(engine.apply(nil,resolver).defenses==0,"No data.raw at all")
