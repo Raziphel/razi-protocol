@@ -273,6 +273,14 @@ require("prototypes.compat.razi_industrial_difficulty").data_final_fixes()
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
 
+-- Difficulty level, settings of other mods: every reader after Razi's data.lua has seen the values of the level, so the saved values
+-- come back now. Then the finished prototypes of the settings that Muluna, Cerys and Biological Machines read in their own data.lua
+-- are scaled from the saved value to the value of the level. Normal and Custom write nothing.
+require("prototypes.compat.foreign_difficulty_settings").restore()
+require("prototypes.compat.foreign_numeric_stage_effects").data_final_fixes()
+require("prototypes.compat.muluna_power_difficulty").data_final_fixes()
+require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
+
 -- New Game map profiles and the global map settings of the difficulty level (evolution, expansion, pollution, raids, spoilage,
 -- research price, ore controls of every planet). Normal writes nothing. After every pass that adds or edits a planet or a control,
 -- so no planet escapes the scaling and no later pass sees half-scaled controls.
