@@ -576,7 +576,7 @@ function bellicos.fortify_routes()
       -- A route created above already carries the profile; applying it
       -- again would square its density and size weights.
       if not fresh then asteroid.apply(route,spec.profile) end
-      asteroid.apply_field(route,spec.profile=="aegis_approach" and 1.5 or 1.8)
+      asteroid.apply_field(route,spec.profile=="aegis_approach" and 1.5 or 1.6)
     end
   end
   -- Transfer only custom/source asteroid species from removed chords into

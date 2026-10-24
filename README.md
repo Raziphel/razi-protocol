@@ -41,7 +41,7 @@ Calidus is the early foundation chapter. It covers the base Space Age setup and 
 
 ### Aegis and Bellicos
 
-Aegis and Bellicos sit south of Solaris and Nyxaris. The Aegis survey research (`discovery-aegis-outer`) needs both first-frontier discoveries and opens the Aegis Frontier Gate; one route leads to it from each Slip Stream (112,000 km from Solaris, 118,000 km from Nyxaris). The routes carry big asteroids but no huge ones. The inner Aegis and Bellicos research needs the Beetlejuice discovery. The complete source route inside Aegis remains, and the far-side Bellicos stargate is removed. Lightweight and Pulsar Science still contribute to Deep Space mastery.
+Aegis and Bellicos sit south of Solaris and Nyxaris. The Aegis survey research (`discovery-aegis-outer`) needs both first-frontier discoveries and opens the Aegis Frontier Gate; one route leads to it from each Slip Stream (112,000 km from Solaris, 118,000 km from Nyxaris). The routes and the links inside Aegis carry big asteroids but no huge ones, and the danger tops out at 8. The inner Aegis and Bellicos research needs the Beetlejuice discovery. The complete source route inside Aegis remains, and the far-side Bellicos stargate is removed. Lightweight and Pulsar Science still contribute to Deep Space mastery.
 
 ### Solaris
 

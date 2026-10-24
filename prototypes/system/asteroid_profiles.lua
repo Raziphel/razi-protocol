@@ -45,10 +45,11 @@ local presets = {
   deep_edge={"aquilo_solar_system_edge",1.40,"gleba_aquilo"},
   -- Aegis is a difficult SHARED first-frontier expedition, not a Deep Space bypass.
   -- Use real high-density vanilla families so More Asteroids can enrich them.
-  -- The approach uses "middle_deep" sizes (no huge asteroids): only railguns
-  -- stop huge ones, and the first frontier has no railgun.
+  -- The approach and the depths use "middle_deep" sizes (no huge asteroids):
+  -- only railguns stop huge ones, and a fleet that opens the inner Aegis
+  -- (third system gate) is not guaranteed to have one.
   aegis_approach={"aquilo_solar_system_edge",1.65,"fulgora_aquilo","metallic"},
-  aegis_depths={"aquilo_solar_system_edge",1.85,"gleba_aquilo","carbonic"},
+  aegis_depths={"aquilo_solar_system_edge",1.20,"gleba_aquilo","carbonic"},
   belt_vibrant_crossing={"gleba_aquilo",1.32,"fulgora_aquilo","metallic"},
   belt_umbra_approach={"aquilo_solar_system_edge",1.42,"fulgora_aquilo","carbonic"},
   belt_umbra_crossing={"aquilo_solar_system_edge",1.72,"fulgora_aquilo","carbonic"},
@@ -68,7 +69,7 @@ local size_tiers = {
   outer_ring_crosslink="outer_deep",
   outer_industry="outer", outer_void="outer",
   outer_industry_deep="outer_deep", outer_void_deep="outer_deep",
-  deep_edge="edge",aegis_approach="middle_deep",aegis_depths="edge",
+  deep_edge="edge",aegis_approach="middle_deep",aegis_depths="middle_deep",
   belt_vibrant_crossing="belt_middle",
   belt_umbra_approach="outer_deep",
   belt_umbra_crossing="belt_outer",
@@ -134,12 +135,14 @@ end
 local belt_escalations = {
   belt_vibrant_crossing={big=0.0035},
   belt_umbra_crossing={big=0.010, huge=0.0008},
-  -- Guarantee native big (approach) and big/huge (depths) asteroid encounters
-  -- even if an upstream Aegis release provides only small asteroids. The
-  -- approach has no huge asteroids (see its size tier). Never duplicate a
-  -- source species.
+  -- Guarantee native big asteroid encounters on the approach and in the
+  -- depths even if an upstream Aegis release provides only small asteroids.
+  -- Neither has huge asteroids (see their size tier). The upstream's own
+  -- depths links carry no vanilla big asteroids, so there this IS their big
+  -- supply: tuned to the density of the generated links, far below the
+  -- approach's guarantee. Never duplicate a source species.
   aegis_approach={big=0.0075},
-  aegis_depths={big=0.014,huge=0.0021}
+  aegis_depths={big=0.0008}
 }
 local function add_belt_size_encounters(definitions, profile)
   local wanted = belt_escalations[profile]
