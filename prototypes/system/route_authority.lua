@@ -19,7 +19,7 @@ local side_routes={
   {"carna","crucible-orbit",20500,"outer_void"},
   {"rabbasca","gleba",13000,"biological"},
   {"ferrum","sye-beetlejuice",22500,"outer_industry"},
-  {"alchemy-planet","paracelsin",21000,"chemistry_deep"},
+  {"alchemy-planet","ribbonia",18000,"chemistry"},
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
   {"velora","gleba",14000,"biological"},
@@ -31,6 +31,10 @@ local side_routes={
   {"eneas","nauvis",9000,"starter"},
   -- Shchierbin is deliberately OUTSIDE Vibrant's asteroid band.
   {"shchierbin","paracelsin",18000,"chemistry_deep"},
+  -- Two independent first-frontier approaches to the same native Aegis gate.
+  -- The source Bellicos interior remains native; there is no Deep Space bypass.
+  {"sye-solaris","calidus-bellicos-stargate-calidus",112000,"aegis_approach"},
+  {"sye-nyxaris","calidus-bellicos-stargate-calidus",118000,"aegis_approach"},
   -- Both optional Umbra worlds have one interior connection. A
   -- Carna-to-Slip-Stream line would bypass the real belt passage.
 }
@@ -48,6 +52,8 @@ local native_pairs={
   {"crucible-orbit","crucible"},
   {"fulgora","cerys"},
   {"gleba","rabbasca"},
+  {"gleba","terrapalus"},
+  -- Keep all source-owned Aegis internal connections untouched.
   {"gleba","velora"}
 }
 local function exists(name)
@@ -238,7 +244,10 @@ function M.data_final_fixes()
   -- Never copy another system's vanilla asteroid size/density curve.
   for _,spec in ipairs(side_routes) do
     local world,hub=spec[1],spec[2]
-    if exists(world) and exists(hub) then
+    -- The Solaris/Nyxaris hub approaches are *not* optional-world spurs.
+    -- Never import unrelated first-frontier custom asteroids onto Aegis.
+    if world~="sye-solaris" and world~="sye-nyxaris"
+      and exists(world) and exists(hub) then
       local target
       for _,route in pairs(routes) do
         if route.from and route.to

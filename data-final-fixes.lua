@@ -167,6 +167,8 @@ require("prototypes.system.abacayba_integration").gate()
 -- Native moon links, the original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.system.route_authority").data_final_fixes()
+-- Native Aegis links and asteroid fields settle after the two curated entries.
+require("prototypes.system.bellicos").fortify_routes()
 
 -- Harvest-rich native asteroid belts get final spawn curves only after the approved crossings
 -- and route IDs have been reconciled.
@@ -179,6 +181,9 @@ require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()
 require("prototypes.system.route_distance_balance").data_final_fixes()
 -- Only existing source-mod asteroid families are distributed on the final approved routes.
 require("prototypes.system.modded_asteroid_distribution").data_final_fixes()
+-- Guard against later integrations adding a second named connection between
+-- the same Aegis waypoints before route colouring and hazard inspection.
+require("prototypes.system.bellicos").dedupe_internal_routes()
 
 -- Resolve difficulty stages for all finalized connected worlds, including
 -- mod-provided outer expeditions with unknown location IDs.
@@ -251,6 +256,11 @@ require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
 -- remnant-beacon. The copies take the already normalized native recipe, so running after the passes above is safe; before the menu pass.
 require("prototypes.compat.rocket_salvage").data_final_fixes()
+
+-- Final integrity guard: late third-party technology passes must not resurrect
+-- unlocks or routes for the removed, inaccessible far-side Bellicos stargate.
+require("prototypes.system.bellicos").retire_far_gate()
+require("prototypes.system.bellicos").dedupe_internal_routes()
 
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.

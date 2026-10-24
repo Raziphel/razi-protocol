@@ -5,8 +5,12 @@ local HOST="vibrant"
 local PIXELS=32
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local coords={
-  {"asteroid-belt-inner-edge",31,0.77},
-  {"asteroid-belt-outer-edge",39,0.775}
+  -- Put BOTH navigable markers at the visible rock band's actual boundary.
+  -- The earlier 46-unit Outer Rim sat far beyond a 31-39 unit rock belt
+  -- and stretched an ugly empty corridor across the west of the system.
+  -- This southwest passage lies directly between Ribbonia and Paracelsin.
+  {"asteroid-belt-inner-edge",30,0.670},
+  {"asteroid-belt-outer-edge",40,0.690}
 }
 M.coords=coords
 function M.data_final_fixes()
@@ -19,7 +23,7 @@ function M.data_final_fixes()
       local radians=entry[3]*2*math.pi
       local x=cx+entry[2]*math.sin(radians)
       local y=cy-entry[2]*math.cos(radians)
-      if x>=cx or x<0 or math.abs(y-cy)>10 then
+      if x>=cx or x<0 or math.abs(y-cy)>20 then
         error("Razi: Vibrant belt entries are no longer on the western rim")
       end
       local distance=math.sqrt(x*x+y*y)

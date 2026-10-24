@@ -43,15 +43,33 @@ local expected={
   aquilo=7,athos=7,["sye-beetlejuice"]=7,
   secretas=8,["sye-umbra"]=8,["crucible-orbit"]=9,vesta=9,
   obsidiax=9,["solar-system-edge"]=10,
-  ["calidus-bellicos-stargate-calidus"]=9,
-  ["calidus-bellicos-stargate-bellicos"]=10,
-  ["aegis-inner-edge"]=10,["point-warden"]=10,
+  ["calidus-bellicos-stargate-calidus"]=6,
+  ["aegis-inner-edge"]=9,["aegis-warden"]=9,["bellicos-orbit"]=9,
   ["skewer_lost_beyond"]=10,["black-hole-approach"]=10
 }
 for name,level in pairs(expected) do
   ok(difficulty.location_level(name)==level,
     name.." should be level "..level.." not a low fallback")
 end
+-- The Aegis approach from the first frontier ends at the gate's level 6 (not
+-- above Rubia) and grows monotonically; inside Aegis the danger keeps rising.
+for _,origin in ipairs({"sye-solaris","sye-nyxaris"}) do
+  local approach={from=origin,to="calidus-bellicos-stargate-calidus",
+    length=origin=="sye-solaris" and 112000 or 118000}
+  local peak=0
+  for _,t in ipairs({0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1}) do
+    peak=math.max(peak,difficulty.route_level(approach,t,"balanced"))
+  end
+  ok(difficulty.route_level(approach,0,"balanced")==2,
+    origin.." approach must start at the Solaris/Nyxaris level")
+  ok(difficulty.route_level(approach,1,"balanced")==6 and peak<=6,
+    origin.." approach must end at level 6 and never exceed it")
+end
+ok(difficulty.route_level({from="calidus-bellicos-stargate-calidus",
+  to="aegis-outer-edge",length=56000},0,"balanced")==6
+  and difficulty.route_level({from="calidus-bellicos-stargate-calidus",
+  to="aegis-outer-edge",length=56000},1,"balanced")==9,
+  "Aegis gate to outer edge must still ramp from 6 to 9")
 local unknown={
   a={from="sye-umbra",to="modded-late-moon"},
   b={from="modded-late-moon",to="modded-final-outpost"},

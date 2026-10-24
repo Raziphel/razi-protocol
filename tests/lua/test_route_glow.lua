@@ -53,9 +53,42 @@ check(#m.strokes_for_connection(near,"danger","all")==0,
  "A 1,000 km local hop should keep its native line without extra ribbons")
 check(#m.strokes_for_connection(belt,"danger","all")>=2,
  "A nearby belt crossing must not lose its critical hazard marker")
+-- Regression: this specific Aegis route was drawn twice in the starmap:
+-- Factorio's native connection PLUS a slightly shifted orange/red ribbon.
+-- Aegis internal links keep one native line; long external approaches still
+-- receive Razi's coloured hazard ribbons.
+raw["space-location"]["near-bellicos-orbit"]={distance=45,orientation=.20}
+raw["space-location"]["aegis-inner-edge"]={distance=85,orientation=.22}
+raw["space-location"]["aegis-outer-edge"]={distance=95,orientation=.24}
+raw["space-location"]["calidus-bellicos-stargate-calidus"]={
+  distance=115,orientation=.26}
+raw["space-location"]["sye-solaris"]={distance=60,orientation=.31}
+local near_to_inner={
+  from="near-bellicos-orbit",to="aegis-inner-edge",shape="line",
+  length=12000,asteroid_spawn_definitions={}}
+local inner_to_near={
+  from="aegis-inner-edge",to="near-bellicos-orbit",shape="line",
+  length=12000,asteroid_spawn_definitions={}}
+local inner_to_outer={
+  from="aegis-inner-edge",to="aegis-outer-edge",shape="line",
+  length=45000,asteroid_spawn_definitions={}}
+local stellar_entry={
+  from="sye-solaris",to="calidus-bellicos-stargate-calidus",
+  shape="line",length=112000,asteroid_spawn_definitions={}}
+local ribbon_module=require("prototypes.system.route_ribbons")
+check(ribbon_module.native_aegis_corridor(near_to_inner)
+  and ribbon_module.native_aegis_corridor(inner_to_near)
+  and ribbon_module.native_aegis_corridor(inner_to_outer),
+  "Aegis's native one-line corridors must be identified in both directions")
+check(#m.strokes_for_connection(near_to_inner,"danger","all")==0
+  and #m.strokes_for_connection(inner_to_near,"danger","all")==0
+  and #m.strokes_for_connection(inner_to_outer,"danger","major")==0,
+  "Aegis native lines must not receive a second coloured ribbon")
+check(not ribbon_module.native_aegis_corridor(stellar_entry)
+  and #m.strokes_for_connection(stellar_entry,"danger","all")>0,
+  "The long Solaris-Aegis entry should retain its hazard gradient")
 local ribbons=m.strokes_for_connection(safe,"danger","all")
 local first=ribbons[1]
-local ribbon_module=require("prototypes.system.route_ribbons")
 check(first.filename==ribbon_module.sheet
   and first.size[1]==64 and first.x<1024 and first.y<512
   and first.tint.b>first.tint.r,
@@ -92,7 +125,8 @@ local arc={from="c",to="d",shape="arc",
  asteroid_spawn_definitions={{asteroid="huge-metallic-asteroid",probability=.2}}}
 check(#m.strokes_for_connection(arc,"danger","all")>0,
  "Default Factorio arc geometry must be rendered, not silently omitted")
-raw["space-connection"]={safe=safe,medium=medium,huge=huge,belt=belt}
+raw["space-connection"]={safe=safe,medium=medium,huge=huge,belt=belt,
+  aegis_native=near_to_inner,aegis_outer=inner_to_outer,stellar=stellar_entry}
 local layers=raw["utility-sprites"].default.starmap_star.layers
 check(m.data_final_fixes()>20,
  "Map renderer must emit enough connected colored strokes to cover routes")

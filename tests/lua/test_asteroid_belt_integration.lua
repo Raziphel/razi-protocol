@@ -5,7 +5,7 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 local layout=require("prototypes.system.galaxy_layout")
 local cx,cy=layout.anchor_position("vibrant")
-check(cx and math.abs(cx-118)<.01,"Vibrant sun missing")
+check(cx and math.abs(cx-118)<.01,"Vibrant sun missing or wrong chart radius")
 local inner={name="asteroid-belt-inner-edge"}
 local outer={name="asteroid-belt-outer-edge"}
 local layers={{filename="unrelated",shift={2,4}},
@@ -22,7 +22,7 @@ local function xy(location)
   return location.distance*math.sin(theta),
     -location.distance*math.cos(theta)
 end
-for _,entry in ipairs({{inner,31,.77},{outer,39,.775}}) do
+for _,entry in ipairs({{inner,30,.670},{outer,40,.690}}) do
   local loc,radius=entry[1],entry[2]
   check(loc.orbit.parent.name=="star" and not loc.draw_orbit,
     "Vibrant belt must use a native root-star orbit")
@@ -33,6 +33,18 @@ for _,entry in ipairs({{inner,31,.77},{outer,39,.775}}) do
   check(math.abs(y-(cy-radius*math.cos(entry[3]*2*math.pi)))<.01,
     "Belt rim Y coordinate changed")
 end
+local ix,iy=xy(inner)
+local ox,oy=xy(outer)
+check(math.sqrt((ix-ox)^2+(iy-oy)^2)>10,
+  "Vibrant Inner and Outer markers must not pile labels together")
+check(math.sqrt((ix-ox)^2+(iy-oy)^2)<12,
+  "Vibrant markers must straddle the actual rock band, not empty space")
+local vinner=math.sqrt((ix-cx)^2+(iy-cy)^2)
+local vouter=math.sqrt((ox-cx)^2+(oy-cy)^2)
+check(vinner<31 and vinner>=29 and vouter>39 and vouter<=41,
+  "Both rim markers must be immediately beside the 31–39 chart-unit debris")
+check(math.abs(iy-oy)<2,
+  "The surveyed passage should cross the southwest rim without a long diagonal")
 check(#layers==5,"Expected three restrained Vibrant belt layers")
 for i=1,3 do
   local layer=layers[i]

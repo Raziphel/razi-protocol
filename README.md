@@ -18,7 +18,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 
 ## What It Changes
 
-- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
+- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition south of Solaris and Nyxaris, reached from the Slip Streams of both.
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
@@ -41,7 +41,7 @@ Calidus is the early foundation chapter. It covers the base Space Age setup and 
 
 ### Aegis and Bellicos
 
-The Aegis expedition no longer crowds the inner campaign map. Its precursor stargate sits beyond the solar-system edge, and the enormous Bellicos pulsar occupies a remote, otherwise unused deep-space bearing. The complete Aegis route remains intact, while Lightweight and Pulsar Science now contribute to Deep Space mastery.
+Aegis and Bellicos sit south of Solaris and Nyxaris. The Aegis survey research (`discovery-aegis-outer`) needs both first-frontier discoveries and opens the Aegis Frontier Gate; one route leads to it from each Slip Stream (112,000 km from Solaris, 118,000 km from Nyxaris). The routes carry big asteroids but no huge ones. The inner Aegis and Bellicos research needs the Beetlejuice discovery. The complete source route inside Aegis remains, and the far-side Bellicos stargate is removed. Lightweight and Pulsar Science still contribute to Deep Space mastery.
 
 ### Solaris
 
@@ -82,7 +82,7 @@ That keeps the tree readable while still preserving the feeling that every chapt
 
 Several planets are not just "supported"; they are deliberately placed into the campaign.
 
-- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign beyond the solar-system edge. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
+- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign from Solaris and Nyxaris. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
 
 - Eneas stays an optional early Calidus moon branch when installed.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.

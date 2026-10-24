@@ -39,9 +39,30 @@ end
 M.sheet=SHEET
 M.obsolete=obsolete
 
+-- Aegis's compact native corridors already have Factorio-rendered paths.
+-- Adding coloured atlas ribbons over them produces two offset orange/red
+-- tracks (especially Near Bellicos Orbit <-> Aegis Inner Edge). Keep the
+-- actual route, its hazard profile and hover text; draw only its native line.
+local aegis_nodes={
+  ["calidus-bellicos-stargate-calidus"]=true,
+  ["near-bellicos-orbit"]=true,
+  ["bellicos-near-orbit"]=true,
+  ["near_bellicos_orbit"]=true,["bellicos-orbit"]=true,
+  ["aegis-inner-edge"]=true,
+  ["aegis-outer-edge"]=true,
+  ["aegis-warden"]=true,["point-warden"]=true,
+  ["aegis-point-warden"]=true
+}
+local function native_aegis_corridor(route)
+  if type(route)~="table" then return false end
+  local a,b=route.from,route.to
+  return aegis_nodes[a]==true and aegis_nodes[b]==true
+end
+M.native_aegis_corridor=native_aegis_corridor
+
 local function candidate(owner,route,mode,scope)
-  if not route or mode=="off" or not owner.is_navigation_highlight(route,scope)
-    then return nil end
+  if not route or mode=="off" or native_aegis_corridor(route)
+    or not owner.is_navigation_highlight(route,scope) then return nil end
   local a,b=owner.position(route.from),owner.position(route.to)
   if not a or not b then return nil end
   local span=sqrt((a.x-b.x)^2+(a.y-b.y)^2)
