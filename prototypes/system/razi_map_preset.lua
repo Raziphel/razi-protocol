@@ -103,9 +103,11 @@ local function control_kind(id,proto)
  end
  return nil
 end
+-- Oil controls (crude-oil, offshore-oil, aquilo_crude_oil, heavy-oil-geyser)
+-- but not rich-soil.
 local function multiplier(spec,kind,key,id)
  if kind=="resource" then
-   if key=="richness" and (id=="crude-oil" or id:find("oil",1,true)) then
+   if key=="richness" and (id:find("^oil") or id:find("[^%a]oil")) then
      return spec.oil
    end
    return spec.resource[key]

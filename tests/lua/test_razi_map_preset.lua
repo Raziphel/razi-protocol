@@ -180,6 +180,8 @@ for _,spec in ipairs(specs) do
  check(geyser.richness>6,"A steam geyser richness above the cap was cut down")
  check(worlds.prosephina.map_gen_settings.autoplace_controls["rich-soil"]
    .frequency>6,"A frequency above the cap was cut down")
+ check(near(worlds.prosephina.map_gen_settings.autoplace_controls
+   ["rich-soil"].richness,richness),"rich-soil must not take the oil factor")
  check(worlds.nauvis.map_gen_settings.autoplace_controls
    ["planet-temperature"].frequency==.4,
    "Biome-specific climate must not be overwritten")
