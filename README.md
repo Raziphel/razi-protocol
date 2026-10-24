@@ -49,7 +49,7 @@ Solaris is the first major custom-system branch. It brings Castra Prime, Arig, H
 
 ### Nyxaris
 
-Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia and Pelagos progression when either is installed.
+Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia, Pelagos and Terra Palus progression when they are installed.
 
 ### Vibrant
 
@@ -85,6 +85,7 @@ Several planets are not just "supported"; they are deliberately placed into the 
 - Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign from Solaris and Nyxaris. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
 
 - Eneas stays an optional early Calidus moon branch when installed.
+- Every installed world is researched before the gateways of the next system, unless Planetary interdependence is Off: worlds of Solaris and Nyxaris (Igrys, Foliax, Velora, Rabbasca, Pelagos, Terra Palus) before Vibrant and Vespera, worlds of Vibrant and Vespera (Cerys, Khemia, Shchierbin, Athos, Nulla) before Beetlejuice and Umbra, worlds of Beetlejuice and Umbra (Ferrum, Carna, Arcanyx, Obsidiax) and Bellicos before Outer Frontier Mastery. Balack, Skewer Shattered, Rabbasca Underground, Eneas and Nexus stay off the required path.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
 - Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
 - Linox is moved into Beetlejuice as a later Cubium-side branch.
