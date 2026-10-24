@@ -1,4 +1,5 @@
--- Difficulty economy: Custom overrides of ore, research price and evolution.
+-- Difficulty economy: Custom overrides of ore, research price and evolution,
+-- and the rocket launch cost of each level.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 local source=require("scripts.razi_economy_difficulty")
@@ -48,4 +49,15 @@ local only=source.profile(spec(),resolver)
 check(only.research==.8 and only.resource.frequency==1.05
  and only.evolution.time_factor==.000004,
  "A lever left at its default must not scale")
-print("Resource, research and evolution Custom overrides passed")
+-- The rocket launch cost follows the level, with no Custom detour.
+for _,row in ipairs({{"easy",.70},{"normal",1},{"hard",1.30},{"nightmare",1.65}}) do
+ selected(row[1])
+ check(math.abs(source.rocket_factor(resolver)-row[2])<.00001,
+  "Rocket launch cost of "..row[1])
+end
+selected("normal",{["razi-rocket-launch-cost"]="costly"})
+check(resolver.active()=="custom" and source.rocket_factor(resolver)==1.30,
+ "A launch cost set by hand keeps its value")
+selected("hard",{["razi-rocket-launch-cost"]="economical"})
+check(source.rocket_factor(resolver)==.70,"A launch cost set by hand beats the level")
+print("Resource, research, evolution and launch cost levers passed")

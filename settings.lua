@@ -455,5 +455,29 @@ data:extend({
 		default_value = "normal",
 		allowed_values = {"slow", "normal", "accelerated", "runaway"},
 		order = "aa[worlds]-i9[enemy-evolution]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-rocket-launch-cost",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"economical", "normal", "costly", "punishing"},
+		order = "aa[worlds]-j1[rocket-launch-cost]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-factory-throughput",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"boosted", "normal", "constrained", "strained"},
+		order = "aa[worlds]-j2[factory-throughput]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-fortification-durability",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"reinforced", "normal", "fragile", "brittle"},
+		order = "aa[worlds]-j3[fortification-durability]"
 	}
 })
