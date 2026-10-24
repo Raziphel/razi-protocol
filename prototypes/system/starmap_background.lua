@@ -58,9 +58,8 @@ function M.tint_star_art(layers)
 end
 -- Four individually seeded 1024px indexed PNG textures. Mostly single-pixel
 -- dots, rare three-pixel diffraction sparkles, no large blurred white blobs.
--- Six tiles per axis plus one NORTHERN fringe row cover the relocated
--- Bellicos pulsar at roughly y=-427 chart units. The earlier 6x6 sky ended
--- at y=-384 and left the entire Aegis annex unnaturally pitch-black.
+-- Six tiles per axis plus a northern fringe cover the rebalanced deep-space
+-- expeditions; the pulsar now lives SOUTH of the initial star pair.
 local sky_tiles={
   {1,3,2,4,1,2},
   {4,2,3,1,4,3},
@@ -125,12 +124,8 @@ local function anchor(name)
   if name=="calidus" then return 0,0 end
   if name=="bellicos" then
     if not (mods and mods["bellicos-and-aegis"]) then return nil end
-    local x,y=layout.anchor_position("solar-system-edge")
-    if not x then return nil end
-    -- The native pulsar is sprite-only and removed by PlanetsLib. Follow
-    -- its real Razi pre-render orbit, not a stale source-world coordinate.
-    return x+170*math.sin(2*math.pi*.055),
-      y-170*math.cos(2*math.pi*.055)
+    -- One source of truth for native location, baked art and atmosphere.
+    return require("prototypes.system.bellicos").pulsar_position()
   end
   return layout.anchor_position(name=="deep-space"
     and "solar-system-edge" or name)

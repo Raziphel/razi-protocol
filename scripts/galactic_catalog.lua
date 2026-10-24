@@ -1,15 +1,21 @@
 -- Planet groups used by the Atlas and other UI.
 -- Unknown destinations go into Unassigned rather than disappearing.
 local M={}
-M.groups={"calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra","deep-space","unassigned"}
+M.groups={"calidus","solaris","nyxaris","aegis","vibrant","vespera","beetlejuice","umbra","deep-space","unassigned"}
 local members={}
 local groups={
   calidus={"nauvis","muluna","sye-calidus"},
   solaris={"sye-solaris","vulcanus","castra","arig","hyarion","tellus","corrundum",
            "igrys","igrys-orbit"},
   nyxaris={"sye-nyxaris","gleba","rabbasca","moshine","panglia","apia","carnova",
-           "apia-carnova-orbit","pelagos","foliax","dea-dia-system-edge",
+           "apia-carnova-orbit","pelagos","foliax","terrapalus","dea-dia",
+          "star-dea-dia",
+          "dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},
+  aegis={"calidus-bellicos-stargate-calidus",
+         "aegis-inner-edge","aegis-outer-edge","aegis-warden",
+         "bellicos-orbit",
+         "near-bellicos-orbit","bellicos-near-orbit","near_bellicos_orbit"},
   vibrant={"sye-vibrant","fulgora","cerys","ribbonia",
            "paracelsin","shchierbin","alchemy-planet",
            "asteroid-belt-inner-edge","asteroid-belt-outer-edge"},

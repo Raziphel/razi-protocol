@@ -25,7 +25,7 @@ M.rules = {
 		unlock = "planet-discovery-vesta",
 		freight = {{"chitosan", 4}, {"supermagnet", 3}, {"rare-earth-powder", 3}}},
 	{name = "razi-deep-space-multiplex-cards", card = "deep-space-tech-card",
-		unlock = "discovery-aegis-outer",
+		unlock = "razi-singularity-theory",
 		freight = {{"space-logistic-science-pack", 2}, {"pulsar-science-pack", 2}}}
 }
 

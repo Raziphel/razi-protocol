@@ -15,7 +15,9 @@ local destinations = {
   vespera = {"muria", "aquilo", "nulla", "rubia", "maraxsis", "bm-balack", "athos", "vespera", "sye-vespera"},
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "ferrum", "beetlejuice", "sye-beetlejuice", "planet-ferrum"},
   umbra = {"tenebris", "crucible", "vesta", "abacayba", "carna", "arcanyx", "obsidiax", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
-  deep_space = {"nexus", "shattered-planet", "skewer_shattered_planet", "skewer_lost_beyond", "solar-system-edge", "pulsar", "calidus-bellicos-stargate-calidus", "calidus-bellicos-stargate-bellicos", "black-hole-approach", "black-hole", "oort-cloud", "sol", "razi-deep-space-edge"}
+  -- The shared frontier below Solaris and Nyxaris; the far-side stargate is retired.
+  aegis = {"pulsar", "calidus-bellicos-stargate-calidus"},
+  deep_space = {"nexus", "shattered-planet", "skewer_shattered_planet", "skewer_lost_beyond", "solar-system-edge", "black-hole-approach", "black-hole", "oort-cloud", "sol", "razi-deep-space-edge"}
 }
 
 local function original_description(prototype, name)

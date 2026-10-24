@@ -8,7 +8,7 @@ package.loaded["prototypes.system.galaxy_layout"]={
     local points={
       solaris={59,102.19},nyxaris={-59,102.19},vibrant={118,0},
       vespera={-118,0},beetlejuice={71.5,-123.84},umbra={-71.5,-123.84},
-      ["solar-system-edge"]={0,-268},
+      ["solar-system-edge"]={0,-268},["sye-calidus"]={0,20},
     }
     local p=points[name];if p then return p[1],p[2] end
   end
@@ -16,7 +16,8 @@ package.loaded["prototypes.system.galaxy_layout"]={
 local bg=require("prototypes.system.starmap_background")
 local native={filename="__native__/starmap-star.png",size=512}
 local sprites={layers={native}}
-rawset(_G,"data",{raw={["utility-sprites"]={default={starmap_star=sprites}}}})
+rawset(_G,"data",{raw={["utility-sprites"]={default={starmap_star=sprites}},
+  ["space-location"]={["sye-calidus"]={}}}})
 rawset(_G,"settings",{startup={
   ["razi-starmap-background-style"]={value="subtle"},
   ["razi-starmap-system-halos"]={value=true},
@@ -143,14 +144,16 @@ mods["Better_Starmap_Background"]=true
 bg.data_final_fixes()
 ok(#sprites.layers==1,"External artwork conflict")
 mods["Better_Starmap_Background"]=nil
--- Pulsar now lives far north of Deep Space. Cover the entire system with
--- reuse-only starfield tiles, without drawing a fake replacement star.
+-- The Aegis pulsar lives below Solaris and Nyxaris, 190 chart units south of
+-- the Calidus slip stream. Cover it with reuse-only starfield tiles, without
+-- drawing a fake replacement star.
 local without_bellicos=#bg.make_layers("subtle",true,true,true,false)
 mods["bellicos-and-aegis"]="0.4.2"
 local with_bellicos=bg.make_layers("subtle",true,true,true,false)
 ok(#with_bellicos==without_bellicos+1,"Bellicos needs one understated local halo")
-local bx,by=0+170*math.sin(2*math.pi*.055),
-  -268-170*math.cos(2*math.pi*.055)
+local bx,by=0+190*math.sin(2*math.pi*.5),
+  20-190*math.cos(2*math.pi*.5)
+ok(math.abs(by-210)<.001,"The pulsar must sit at (0, 210)")
 local sky_at_pulsar=false
 local halo_at_pulsar=false
 for _,layer in ipairs(with_bellicos) do

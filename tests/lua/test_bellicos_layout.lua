@@ -1,4 +1,5 @@
----@diagnostic disable: missing-fields, need-check-nil, undefined-field
+---@diagnostic disable: missing-fields, need-check-nil, undefined-field, assign-type-mismatch, inject-field
+-- luacheck: ignore 122 211 212 411
 -- Guards against optional Aegis & Bellicos prototype changes between stages.
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
@@ -12,15 +13,17 @@ package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"] = {
 }
 
 local gate_a = "calidus-bellicos-stargate-calidus"
-local gate_b = "calidus-bellicos-stargate-bellicos"
-local route_name = "solar-system-edge-aegis-stargate"
+local retired_gate = "calidus-bellicos-stargate-bellicos"
+local old_route = "razi-vespera-aegis-stargate"
 
 local function run(options)
   options = options or {}
   local places = {
     ["solar-system-edge"] = {name="solar-system-edge"},
+    ["sye-vespera"] = {name="sye-vespera"},
+    ["sye-calidus"] = {name="sye-calidus"},
     [gate_a] = {name=gate_a},
-    [gate_b] = {name=gate_b}
+    [retired_gate] = {name=retired_gate}
   }
   local planets = {}
   if options.pulsar == "space-location" then
@@ -47,7 +50,7 @@ local function run(options)
   rawset(_G, "data", {
     raw = {["space-location"]=places, planet=planets,
       ["space-connection"]=routes},
-    extend = function(_, entries)
+    extend = function(self, entries)
       for _, entry in ipairs(entries) do
         check(not routes[entry.name], "Duplicate expedition route")
         routes[entry.name] = entry
@@ -79,6 +82,8 @@ local function run(options)
   local module = require("prototypes.system.bellicos")
   module.data()
   module.data_final_fixes()
+  -- In the real data-final-fixes pipeline, fortify_routes runs after source
+  -- route registration. Test retirement independently in its route fixture.
   return module, places, planets, routes, updates
 end
 
@@ -94,49 +99,37 @@ local check_module=require("prototypes.system.bellicos")
 check_module.data_updates()
 check(good_pulsar.orbit.sprite==pulsar_image,
   "Bellicos pre-render reparenting removed its preserved source sprite")
-check(present.pulsar.orbit.parent.name == "solar-system-edge"
-  and present.pulsar.orbit.distance==170,
-  "Present native pulsar did not join deep-space annex")
-check(present[gate_b].orbit.parent.name == "pulsar",
-  "Present pulsar gateway not attached to pulsar")
-check(present[gate_a].orbit.parent.name == "solar-system-edge"
-  and present[gate_a].orbit.distance==62
-  and present[gate_a].orbit.orientation==0.035,
-  "Aegis entry must have a separate northern lane")
-check(connected[route_name] and connected[route_name].length==250000,
-  "Original expedition route gameplay length changed")
-check(connected[route_name].from=="solar-system-edge" and
-  connected[route_name].to==gate_a,
-  "Bellicos/Aegis gateway must start at Deep Space, not Calidus")
+check(present[retired_gate] and not present[retired_gate].orbit,
+  "The retired gate must not receive a new orbit placement")
+check(present.pulsar.orbit.parent.name == "sye-calidus"
+  and present.pulsar.orbit.distance==190,
+  "Pulsar did not join shared southern frontier")
+check(present[gate_a].orbit.parent.name == "sye-calidus"
+  and present[gate_a].orbit.distance==151
+  and present[gate_a].orbit.orientation==0.468,
+  "Aegis entry must lie north of the pulsar")
+check(not connected[old_route], "Legacy Vespera-only route was not retired")
 
 local _, missing, _, fallback = run()
-check(missing[gate_b].orbit.parent.name=="solar-system-edge",
-  "Missing pulsar must attach gateway to existing annex instead")
-check(missing[gate_b].orbit.distance>120
-  and missing[gate_b].orbit.distance<180,
-  "Missing pulsar fallback must stay within the same Deep Space annex")
-check(fallback[route_name], "Missing pulsar must not remove expedition route")
+check(not fallback[old_route], "Legacy route resurfaced on pulsar fallback")
 
 -- Exercise the REAL data-final-fixes path, including the near/pulsar drift
 -- diagnostic. An 'and native_point(near)' expression discarded the Y return,
 -- making this fixture crash with 'arithmetic on local ny (a nil value)'.
-local loaded=table.pack(pcall(run,{near=true})) --[[@as any]]
-local ok, near_mod_or_error, near_locations=loaded[1],loaded[2],loaded[3]
+local ok, near_mod_or_error, near_locations=pcall(run,{near=true})
 check(ok, "Bellicos near-orbit must load without nil-Y crash: "..
   tostring(near_mod_or_error))
 check(near_locations["near-bellicos-orbit"].orbit.sprite
   and near_locations["near-bellicos-orbit"].orbit.sprite.filename=="__aegis_graphics__/belt-visual.png",
   "Bellicos relocation erased source asteroid-belt art")
-check(near_locations["near-bellicos-orbit"].orbit.parent.name=="solar-system-edge",
+check(near_locations["near-bellicos-orbit"].orbit.parent.name=="sye-calidus",
   "Visible Bellicos orbit should be detached from the central galaxy")
-check(near_locations["near-bellicos-orbit"].orbit.distance>170
-  and near_locations["near-bellicos-orbit"].orbit.distance<173,
-  "Visible Bellicos orbit was not moved north of Deep Space")
+check(near_locations["near-bellicos-orbit"].orbit.distance>189
+  and near_locations["near-bellicos-orbit"].orbit.distance<194,
+  "Visible Aegis belt was not moved below initial pair")
 check(near_locations["aegis-inner-edge"].orbit.parent.name=="near-bellicos-orbit"
   and near_locations["aegis-outer-edge"].orbit.parent.name=="near-bellicos-orbit",
   "Native Aegis belt nodes were left behind")
-check(near_locations[gate_b].orbit.parent.name=="near-bellicos-orbit",
-  "Remote Bellicos stargate is detached from its destination")
 -- Prevent a regression to the flat row of "Aegis Point Warden" labels.
 -- The native fields must agree with the PlanetsLib source orbit angles.
 local function actual_position(name)
@@ -146,30 +139,24 @@ local function actual_position(name)
   return center.x+body.distance*math.sin(angle),
     center.y-body.distance*math.cos(angle)
 end
-local _,near_y=actual_position("near-bellicos-orbit")
+local near_x,near_y=actual_position("near-bellicos-orbit")
 local inner_x,inner_y=actual_position("aegis-inner-edge")
 local point_x,point_y=actual_position("point-warden")
 local outer_x,outer_y=actual_position("aegis-outer-edge")
-local gate_x,gate_y=actual_position(gate_b)
-check(inner_y<near_y-7 and point_y>near_y
-  and point_y<near_y+5 and outer_y>point_y+25
-  and gate_y>outer_y+14,
-  "Bellicos labels or Warden branch collapsed back onto a shared line")
-check(inner_x<point_x and point_x<outer_x
-  and gate_x>outer_x and gate_x<outer_x+10,
-  "Bellicos stargate doubles back away from the Outer Edge")
+check(outer_y<inner_y-10 and inner_y<near_y
+  and point_y>inner_y+20,
+  "Aegis route spine is overlapping or running back into its source belt")
+check(outer_x<inner_x and inner_x<point_x,
+  "Aegis waypoints no longer advance from outer rim toward Point Warden")
 -- Two long nearly coincident Inner-Edge departures looked like a doubled
 -- route. Require distinct bearings WITHOUT removing any source game route.
 local wx,wy=point_x-inner_x,point_y-inner_y
 local ox,oy=outer_x-inner_x,outer_y-inner_y
 local spread=math.abs(wx*oy-wy*ox)/
   (math.sqrt(wx*wx+wy*wy)*math.sqrt(ox*ox+oy*oy))
-check(spread>0.45,"Aegis Inner Edge routes became nearly parallel again")
-local gate_dx,gate_dy=gate_x-outer_x,gate_y-outer_y
-check(math.sqrt(gate_dx*gate_dx+gate_dy*gate_dy)<25,
-  "Bellicos stargate is too far from the Outer Edge")
+check(spread<0.25,"The single Aegis route spine started zig-zagging again")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
-   "aegis-outer-edge",gate_b}) do
+   "aegis-outer-edge"}) do
   local body=near_locations[name]
   local orbit=body.orbit
   check(type(body.distance)=="number"
@@ -183,19 +170,18 @@ end
 -- Local radii are stored in orbit metadata; native fields are absolute.
 check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
   and math.abs(near_locations["point-warden"].orbit.distance-48)<.001
-  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-66)<.001
-  and math.abs(near_locations[gate_b].orbit.distance-81)<.001,
+  and math.abs(near_locations["aegis-outer-edge"].orbit.distance-32)<.001,
   "Aegis sector local radii drifted")
 
 
 local _, alt_locations, alt_planets = run({pulsar="planet"})
-check(alt_planets.pulsar.orbit.parent.name=="solar-system-edge",
+check(alt_planets.pulsar.orbit.parent.name=="sye-calidus",
   "Retyped native pulsar was not found in data.raw.planet")
-check(alt_locations[gate_b].orbit.parent.type=="planet",
-  "Gateway orbit does not use the actual pulsar prototype type")
+check(alt_locations["near-bellicos-orbit"]==nil,
+  "Optional near-orbit unexpectedly created during pulsar-only test")
 
 local _, absent, _, no_route = run({no_entry_gate=true})
-check(not absent[gate_a] and not no_route[route_name],
+check(not absent[gate_a] and not no_route[old_route],
   "Razi created a route with a missing native entry gateway")
 
 -- Simulate the exact crash: an upstream data-final-fixes removes the pulsar
@@ -203,28 +189,28 @@ check(not absent[gate_a] and not no_route[route_name],
 local disappearing, disappearing_locations = run({pulsar="space-location"})
 disappearing_locations.pulsar = nil
 disappearing.data_final_fixes()
-check(disappearing_locations[gate_b].orbit.parent.name=="solar-system-edge",
-  "Final-stage removed pulsar still referenced as orbit parent")
+check(disappearing_locations[gate_a].orbit.parent.name=="sye-calidus",
+  "Final-stage removed pulsar displaced the surviving entry gate")
 
--- Late gateway removal also invalidates the route Razi registered in data.lua.
+-- Late ENTRY-gate removal must not resurrect a legacy approach route.
 local no_longer_present, late_locations, _, late_routes =
   run({pulsar="space-location"})
 late_locations[gate_a] = nil
 no_longer_present.data_final_fixes()
-check(not late_routes[route_name],
+check(not late_routes[old_route],
   "Final-stage removed gateway left an invalid space connection")
 
 -- Factorio's Lua 5.2 math.atan(y,x) ignores the x argument. Simulate the
 -- old one-argument-only behavior in any standalone Lua test version so the
 -- missing-pulsar fallback cannot accidentally rely on two-arg math.atan.
 local lua_atan,lua_atan2=math.atan,math.atan2
-math.atan=function(value) return lua_atan(value) end -- luacheck: ignore 122
-math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end -- luacheck: ignore 122
+math.atan=function(value) return lua_atan(value) end
+math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end
 local no_pulsar,orbit_locations=run({near=true})
 local layout=require("prototypes.system.galaxy_layout")
-local edge_x,edge_y=layout.anchor_position("solar-system-edge")
-local p_x=edge_x+170*math.sin(2*math.pi*.055)
-local p_y=edge_y-170*math.cos(2*math.pi*.055)
+local edge_x,edge_y=layout.anchor_position("sye-calidus")
+local p_x=edge_x+190*math.sin(2*math.pi*.5)
+local p_y=edge_y-190*math.cos(2*math.pi*.5)
 local function absolute(name)
   local body=orbit_locations[name]
   check(body and body.origin,"Expected native Aegis prototype: "..name)
@@ -235,14 +221,14 @@ local function absolute(name)
 end
 local near_px,near_py=absolute("near-bellicos-orbit")
 check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
-  "Missing pulsar sent Near Bellicos Orbit sideways toward Nexus")
-check(near_py<edge_y-155 and near_px>edge_x+45,
-  "Near Bellicos Orbit must be north-east of Deep Space, not due east")
+  "Missing pulsar sent Near Bellicos Orbit sideways from southern frontier")
+check(near_py>edge_y+188 and math.abs(near_px-edge_x)<5,
+  "Near Bellicos Orbit must be south of two starter stars")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
-    "aegis-outer-edge",gate_b}) do
+    "aegis-outer-edge"}) do
   local cx,cy=absolute(name)
   local distance=math.sqrt((cx-near_px)^2+(cy-near_py)^2)
-  check(distance<=82,"Aegis location outside its pulsar system: "..name)
+  check(distance<=75,"Aegis location outside its pulsar system: "..name)
 end
 local w_x,w_y=absolute("point-warden")
 check(math.sqrt((w_x-near_px)^2+(w_y-near_py)^2)>40
@@ -253,7 +239,7 @@ no_pulsar.reconcile_final_positions()
 local again_x,again_y=absolute("near-bellicos-orbit")
 check(math.abs(again_x-near_px)<.01 and math.abs(again_y-near_py)<.01,
   "Repeated final pass moved the Aegis sector away from its pulsar")
-math.atan,math.atan2=lua_atan,lua_atan2 -- luacheck: ignore 122
+math.atan,math.atan2=lua_atan,lua_atan2
 
 -- Source releases can rename Warden without changing the UI label.
 -- Check the discovered native prototype and not only the old literal ID.
@@ -286,8 +272,8 @@ check(math.abs(repeat_x-ax)<.001 and math.abs(repeat_y-ay)<.001,
 local dual,dual_places,dual_planets=run({
   near=true,pulsar="space-location",dual_warden=true})
 dual_places.pulsar=nil -- sprite-only parent removed by PlanetsLib
-for _,item in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
-  local body=item --[[@as table]]
+local near=dual_places["near-bellicos-orbit"]
+for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
   body.origin={x=83,y=-160} -- old Beetlejuice/Secretas chart vicinity
   body.distance=14
   body.orientation=.25
@@ -297,52 +283,30 @@ end
 local original_art={filename="__bellicos-graphics__/aegis-debris.png",
   planetslib_orbit_name="near-bellicos-orbit",
   planetslib_orbit_shift={16,-8},shift={0,0}}
-data.raw["utility-sprites"]=({default={starmap_star={
-  layers={original_art}}}}) --[[@as any]]
+data.raw["utility-sprites"]={default={starmap_star={
+  layers={original_art}}}}
 -- Any accidental late PlanetsLib:update is forbidden after pulsar deletion.
-PlanetsLib.update=function() -- luacheck: ignore 122
+PlanetsLib.update=function()
   error("Late PlanetsLib:update would displace Bellicos child locations")
 end
 local n,art=dual.reconcile_final_positions()
 check(n>=5 and art==1,"Bellicos reconciliation failed or lost source art")
+local near_x,near_y=actual_position("near-bellicos-orbit")
 for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
   check(body.origin.x==0 and body.origin.y==0
     and math.abs(body.orbit.distance-48)<.001
-    and math.abs(body.orbit.orientation-.255)<.001
+    and math.abs(body.orbit.orientation-.32)<.001
     and body.orbit.parent.name=="near-bellicos-orbit",
     "A Warden native prototype is still marooned near Secretas")
 end
-edge_x,edge_y=require("prototypes.system.galaxy_layout")
-  .anchor_position("solar-system-edge")
-local source_x=edge_x+170*math.sin(2*math.pi*.055)
-local source_y=edge_y-170*math.cos(2*math.pi*.055)
+local edge_x,edge_y=require("prototypes.system.galaxy_layout")
+  .anchor_position("sye-calidus")
+local source_x=edge_x+190*math.sin(2*math.pi*.5)
+local source_y=edge_y-190*math.cos(2*math.pi*.5)
 check(math.abs(original_art.shift[1]-(16+source_x*32))<.01
   and math.abs(original_art.shift[2]-(-8+source_y*32))<.01,
   "Aegis belt art abandoned the native pulsar when the parent was deleted")
 check(dual.reconcile_final_positions()>=5
   and math.abs(original_art.shift[1]-(16+source_x*32))<.01,
   "Repeated final reconciliation must not move artwork or Warden again")
--- razi-starmap-soften-bellicos dims the pulsar artwork only while it is on
--- (the missing setting counts as on).
-local soften_module=run({pulsar="space-location"})
-local function pulsar_layers()
-  return {{filename="__bellicos-and-aegis-assets__/pulsar.png",
-      planetslib_orbit_name="pulsar",tint={r=1,g=1,b=1,a=1}},
-    {filename="__other__/star.png",tint={r=1,g=1,b=1,a=1}}}
-end
-local function soften_case(value)
-  local layers=pulsar_layers()
-  data.raw["utility-sprites"]=({default={starmap_star={layers=layers}}}) --[[@as any]]
-  rawset(_G,"settings",value~=nil and {startup={
-    ["razi-starmap-soften-bellicos"]={value=value}}} or {startup={}})
-  soften_module.data_final_fixes()
-  return layers
-end
-check(soften_case(true)[1].tint.a<.9 and soften_case(true)[2].tint.a==1,
-  "Soften Bellicos did not dim only the pulsar layer")
-check(soften_case(nil)[1].tint.a<.9,
-  "A missing Soften Bellicos setting must act as on")
-check(soften_case(false)[1].tint.a==1,
-  "Soften Bellicos off must leave the pulsar artwork untouched")
-rawset(_G,"settings",nil)
 print("Bellicos late-stage Warden, duplicate-prototype and sprite tests passed")

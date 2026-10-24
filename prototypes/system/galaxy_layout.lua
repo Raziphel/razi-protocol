@@ -15,11 +15,11 @@ local anchors = {
   {"space-location","vespera","star",118,0.75},
   {"space-location","beetlejuice","star",143,0.083333},
   {"space-location","umbra","star",143,0.916667},
-  -- Move the Deep Space parent anchor north: all its source-owned child
-  -- worlds, gates and Aegis/Pulsar outposts keep their original parents.
-  {"space-location","solar-system-edge","star",268,0},
-  -- Four spacious directions: Aegis north, Nexus/Oort/Sol east,
-  -- Shattered Planet southeast and the Black Hole west.
+  -- Deep Space is an independent northern campaign sector. With Aegis now
+  -- south of Solaris/Nyxaris its former northern space belongs to the
+  -- Nexus/Oort/Sol lane and the Black Hole western expedition.
+  {"space-location","solar-system-edge","star",250,0},
+  -- Spread the true Deep Space expeditions across the freed northern sky.
   -- These are visual positions only, not route lengths or travel unlocks.
   {"space-location","shattered-planet","solar-system-edge",140,0.33},
   -- This is just a 1,000 km hop. Place the real planet very close to the
@@ -28,11 +28,11 @@ local anchors = {
   -- lane away from the Nexus / Oort / Sol corridor. Route km are unchanged.
   {"planet","skewer_shattered_planet","shattered-planet",5.0,0.485},
   {"space-location","skewer_lost_beyond","skewer_shattered_planet",145,0.14},
-  {"planet","nexus","solar-system-edge",94,0.18},
-  {"space-location","black-hole-approach","solar-system-edge",112,0.70},
-  {"space-location","black-hole","black-hole-approach",22,0.72},
-  {"space-location","oort-cloud","nexus",90,0.25},
-  {"space-location","sol","oort-cloud",106,0.15},
+  {"planet","nexus","solar-system-edge",116,0.15},
+  {"space-location","black-hole-approach","solar-system-edge",148,0.82},
+  {"space-location","black-hole","black-hole-approach",31,0.76},
+  {"space-location","oort-cloud","nexus",112,0.17},
+  {"space-location","sol","oort-cloud",94,0.13},
   {"space-location","sye-calidus","star",20,0.5},
   -- Clear west-northwest external gateway, just beyond the orbital rim.
   -- Three interstellar departures fan outward, while the northern arc
@@ -60,15 +60,17 @@ local anchors = {
   -- away from the gateway and Foliax across the quieter western arc.
   -- These are chart positions only; source production and climate are intact.
   {"planet","gleba","nyxaris",32,0.17},
+  -- Native Terra Palus joins Gleba as a quiet short-hop moon.
+  {"planet","terrapalus","gleba",8,0.43},
   {"planet","moshine","nyxaris",22,0.29},
   {"space-location","apia-carnova-orbit","nyxaris",39,0.35},
   {"planet","panglia","nyxaris",40,0.49},
-  -- Inner electrical worlds remain inside the belt. Paracelsin and
-  -- optional Khemia sit nearer its exterior edge, with a clear road
-  -- between them and no extra crossing of the asteroid field.
+  -- The rock annulus separates the inner electrical/alchemical worlds
+  -- (Fulgora, Ribbonia and Khemia) from Paracelsin and Shchierbin.
+  -- Razi's real crossing lies on the south-western part of the asteroid ring.
   {"planet","fulgora","vibrant",24,0.57},
-  {"planet","ribbonia","vibrant",26,0.685},
-  {"planet","paracelsin","vibrant",48,0.68},
+  {"planet","ribbonia","vibrant",26,0.655},
+  {"planet","paracelsin","vibrant",51,0.70},
   -- Belt-free Vespera: Muria opens Rubia, then branches to greenhouse
   -- ocean Maraxsis and icy outer Aquilo. All planets are true destinations.
   {"planet","muria","vespera",21,0.43},
@@ -104,10 +106,10 @@ local optional_orbits={
   -- directly from the exterior gateway without its rock crossing.
   {name="carna",star="umbra",radius=29,turn=0.7},
   {name="ferrum",star="beetlejuice",radius=43,turn=0.68},
-  -- Shchierbin moves into the outer-world arc alongside Paracelsin.
-  -- Both remain well beyond the 31/39-unit asteroid field.
-  {name="shchierbin",star="vibrant",radius=65,turn=0.675},
-  {name="alchemy-planet",star="vibrant",radius=52,turn=0.625},
+  -- Shchierbin stays outside with Paracelsin; Khemia becomes a distinctive
+  -- inner-orbit alchemy world, well inside the 31-39 rock annulus.
+  {name="shchierbin",star="vibrant",radius=70,turn=0.64},
+  {name="alchemy-planet",star="vibrant",radius=22,turn=0.81},
   {name="arcanyx",star="umbra",radius=27,turn=0.3},
   -- Balack is an optional outer-ice spur beside Aquilo.
   {name="bm-balack",star="vespera",radius=63,turn=0.70}
@@ -135,9 +137,8 @@ local deep_space_no_rings={
   ["skewer_shattered_planet"]=true,["skewer_lost_beyond"]=true,
   ["black-hole-approach"]=true,["black-hole"]=true,
   ["oort-cloud"]=true,sol=true,pulsar=true,
-  ["near-bellicos-orbit"]=true,
+  ["near-bellicos-orbit"]=true,["bellicos-orbit"]=true,
   ["calidus-bellicos-stargate-calidus"]=true,
-  ["calidus-bellicos-stargate-bellicos"]=true,
   ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true
 }
 
@@ -345,9 +346,9 @@ local function remove_baked_source_trails()
     -- hidden separately via draw_orbit=false, without deleting source art.
     local bellicos_art=name=="pulsar"
       or name=="near-bellicos-orbit" or name=="bellicos-near-orbit"
-      or name=="near_bellicos_orbit" or name=="aegis-inner-edge"
-      or name=="aegis-outer-edge" or name=="point-warden"
-      or name=="calidus-bellicos-stargate-bellicos"
+      or name=="near_bellicos_orbit" or name=="bellicos-orbit"
+      or name=="aegis-inner-edge"
+      or name=="aegis-outer-edge" or name=="aegis-warden"
       or name=="calidus-bellicos-stargate-calidus"
     if layer and layer.planetslib_orbit_shift
       and (name=="carna" or name=="velora"
@@ -432,10 +433,13 @@ function M.data_final_fixes()
     ["nauvis"]=0.25,["muluna"]=0.75,
     ["close-sun-orbit"]=0.75,["sun-orbit"]=0.25,
     ["sye-calidus"]=0.25,
-    ["apia-carnova-orbit"]=0.75,
-    ["apia"]=0.25,["carnova"]=0.75,
+    -- Move the barycenter caption above the twin-world icons, and fan
+    -- the two native planet labels apart vertically.
+    ["apia-carnova-orbit"]=0.0,
+    ["apia"]=0.25,["carnova"]=0.5,
     -- Fan Gleba and its two source-owned moon labels in three directions.
-    ["gleba"]=0.5,["rabbasca"]=0.75,["velora"]=0.25,
+    ["gleba"]=0.25,["rabbasca"]=0.75,["velora"]=0.0,
+    ["terrapalus"]=0.25,
     ["frozeta"]=0.25,
     ["igrys"]=0.25,["foliax"]=0.25,
     ["carna"]=0.75,
@@ -444,13 +448,15 @@ function M.data_final_fixes()
     ["crucible-orbit"]=0.75,["crucible"]=0.25,
     ["tenebris"]=0.75,
     ["aquilo"]=0.75,
-    ["ferrum"]=0.75,["alchemy-planet"]=0.25,
+    ["ferrum"]=0.75,["alchemy-planet"]=0.0,
     ["athos"]=0.75,["shchierbin"]=0.75,["obsidiax"]=0.75,["abacayba"]=0.25,
     ["arcanyx"]=0.25,["bm-balack"]=0.75,
     ["sye-solaris"]=0.75, ["sye-nyxaris"]=0.75,
     ["sye-vibrant"]=0.75, ["sye-vespera"]=0.25,
-    ["asteroid-belt-inner-edge"]=0.75,
-    ["asteroid-belt-outer-edge"]=0.25,
+    -- Opposing label quadrants keep two long rim captions distinct despite
+    -- the physically short rock crossing and Ribbonia's nearby orbit.
+    ["asteroid-belt-inner-edge"]=0.5,
+    ["asteroid-belt-outer-edge"]=0.75,
     ["sye-beetlejuice"]=0.75, ["sye-umbra"]=0.5,
     ["razi-umbra-belt-inner"]=0.25,
     ["razi-umbra-belt-outer"]=0.25,
@@ -464,11 +470,11 @@ function M.data_final_fixes()
     ["calidus-bellicos-stargate-calidus"]=0.75,
     -- The Bellicos locations are staggered in two dimensions. Opposing
     -- captions prevent Warden and the Aegis belt from sharing one baseline.
-    ["near-bellicos-orbit"]=0.25,
-    ["aegis-inner-edge"]=0.75,
-    ["point-warden"]=0.25,
+    ["near-bellicos-orbit"]=0.5,["bellicos-orbit"]=0.5,
+    ["aegis-inner-edge"]=0.0,
+    ["aegis-warden"]=0.25,
     ["aegis-outer-edge"]=0.25,
-    ["calidus-bellicos-stargate-bellicos"]=0.75
+    -- Point Warden is the far-side terminus; the unused gate is retired.
   }
   for name,direction in pairs(label_orientations) do
     local marker=exists("space-location",name) or exists("planet",name)
@@ -512,8 +518,8 @@ function M.data_final_fixes()
     "solar-system-edge","shattered-planet","nexus",
     "skewer_shattered_planet","skewer_lost_beyond",
     "black-hole-approach","black-hole","oort-cloud","sol",
-    "pulsar","near-bellicos-orbit",
-    "calidus-bellicos-stargate-calidus","calidus-bellicos-stargate-bellicos",
+    "pulsar","near-bellicos-orbit","bellicos-orbit",
+    "calidus-bellicos-stargate-calidus",
     "aegis-inner-edge","aegis-outer-edge","sye-calidus",
     "sye-solaris","sye-nyxaris",
     "sye-vibrant","sye-vespera","sye-beetlejuice","sye-umbra"

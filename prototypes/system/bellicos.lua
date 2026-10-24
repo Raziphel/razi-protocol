@@ -1,23 +1,34 @@
 local bellicos = {}
 
-local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-definitions")
-
 local entry_gate = "calidus-bellicos-stargate-calidus"
-local bellicos_gate = "calidus-bellicos-stargate-bellicos"
+-- Native source prototype was an unreachable, obsolete return gateway.
+-- Retire only this far-side destination; keep the real Aegis entry gate.
+local retired_gate = "calidus-bellicos-stargate-bellicos"
 local old_calidus_entry_route = "sye-calidus-bellicos-stargate"
-local deep_space_entry_route = "solar-system-edge-aegis-stargate"
+-- This is a shared frontier BELOW the two starter stars. These native IDs
+-- must remain stable even though their upstream names say "calidus".
+local root_parent = "sye-calidus"
+-- Compact southern system. The entry and every inhabited waypoint sit on
+-- the EAST side of the pulsar beam, leaving the native star art untouched
+-- and preventing the Nyxaris route from crossing Panglia freight.
+local pulsar_radius, pulsar_turn = 190, .5
+local entry_radius, entry_turn = 151, .468
 
 local function remove_stock_entry_routes()
 	deleteRoute("nauvis-stargate-connection")
 	deleteRoute("fulgora-stargate-connection")
 	deleteRoute(old_calidus_entry_route)
+	deleteRoute("solar-system-edge-aegis-stargate")
+	deleteRoute("razi-vespera-aegis-stargate")
 	deleteRoutesBetween("nauvis", entry_gate)
 	deleteRoutesBetween("fulgora", entry_gate)
 	deleteRoutesBetween("sye-calidus", entry_gate)
+	deleteRoutesBetween("sye-vespera", entry_gate)
 end
 
--- Preserve the source pulsar artwork in a distinct northern annex,
--- beyond Nexus/Oort/Sol. Guard missing or retyped source prototypes.
+-- Preserve the source pulsar artwork below Solaris and Nyxaris.
+-- Both first-frontier gates converge here; deeper Bellicos remains tier three.
+-- Guard missing or retyped source prototypes.
 -- Set real Factorio origin/distance/orientation in addition to orbit
 -- metadata: PlanetsLib's sprite-baking and prototype cleanup stages can
 -- otherwise leave old horizontal native marker positions behind.
@@ -76,7 +87,7 @@ local function find_wardens()
       result[#result+1]=name
     end
   end
-  include("point-warden")
+  include("aegis-warden")
   for _,kind in ipairs({"space-location","planet"}) do
     for name in pairs(data.raw[kind] or {}) do include(name) end
   end
@@ -90,12 +101,12 @@ end
 bellicos.find_wardens=find_wardens
 
 local function plan_expedition()
-  if not endpoint_type("solar-system-edge") then return nil end
+  if not endpoint_type(root_parent) then return nil end
   local layout=require("prototypes.system.galaxy_layout")
-  local ex,ey=layout.anchor_position("solar-system-edge")
+  local ex,ey=layout.anchor_position(root_parent)
   if not ex then return nil end
   local edge={x=ex,y=ey}
-  local sx,sy=offset(ex,ey,170,.055)
+  local sx,sy=offset(ex,ey,pulsar_radius,pulsar_turn)
   local virtual_pulsar={x=sx,y=sy}
   local nx,ny=offset(sx,sy,3,.25)
   local virtual_near={x=nx,y=ny}
@@ -110,7 +121,7 @@ local function plan_expedition()
       radius=r,turn=turn,x=x,y=y,gate=gate
     }
   end
-  if pulsar then append(pulsar,"solar-system-edge",edge,170,.055) end
+  if pulsar then append(pulsar,root_parent,edge,pulsar_radius,pulsar_turn) end
   if near then
     if pulsar then
       append(near,pulsar,virtual_pulsar,3,.25)
@@ -119,36 +130,32 @@ local function plan_expedition()
       -- by converting the virtual pulsar offset into the Edge's native
       -- polar coordinates, using quadrant-aware atan2 (Lua 5.2).
       local r,t=parent_polar(nx,ny,edge)
-      append(near,"solar-system-edge",edge,r,t)
+      append(near,root_parent,edge,r,t)
     end
   end
-  append(entry_gate,"solar-system-edge",edge,62,.035,true)
+  append(entry_gate,root_parent,edge,entry_radius,entry_turn,true)
   if near then
     -- Fan the Warden spur apart from the Inner -> Outer belt crossing.
     -- The older bearings drew two nearly parallel routes across Aegis.
-    -- Keep all SOURCE connections and asteroid encounters unchanged;
-    -- only the visual native destination positions are reshaped.
-    append("aegis-inner-edge",near,virtual_near,29,.205)
+    -- The final route pass picks one source-compatible spine and preserves
+    -- the author-provided custom asteroid resources before pruning shortcuts.
+    append("aegis-inner-edge",near,virtual_near,29,.21)
     for _,name in ipairs(find_wardens()) do
-      append(name,near,virtual_near,48,.255)
+      append(name,near,virtual_near,48,.32)
     end
-    -- Outer Edge turns southeast, then the Bellicos-side stargate follows
-    -- on a short almost-vertical exit instead of doubling back to the west.
-    append("aegis-outer-edge",near,virtual_near,66,.345)
-    append(bellicos_gate,near,virtual_near,81,.37,true)
-  elseif pulsar then
-    append(bellicos_gate,pulsar,virtual_pulsar,81,.37,true)
-  else
-    local gx,gy=offset(sx,sy,81,.37)
-    -- Also used when the source supplies neither a persistent pulsar
-    -- prototype nor the Near Bellicos parent. Keep the gateway near the
-    -- missing pulsar rather than projecting it toward the central stars.
-    local r,t=parent_polar(gx,gy,edge)
-    append(bellicos_gate,"solar-system-edge",edge,r,t,true)
+    -- The exterior crossing leads to the real inner rim and Point Warden.
+    -- Do not position or draw the source's dead-end Bellicos stargate.
+    append("aegis-outer-edge",near,virtual_near,32,.10)
   end
   return entries,virtual_pulsar
 end
 bellicos.plan_expedition=plan_expedition
+-- The decorative background and native starmap MUST share this one anchor.
+-- Read the plan, never duplicate a stale static coordinate in another module.
+function bellicos.pulsar_position()
+  local _,position=plan_expedition()
+  return position and position.x,position and position.y
+end
 
 -- The same single plan drives (1) pre-render PlanetsLib orbit placement and
 -- (2) the post-render native coordinates. Never call PlanetsLib:update in the
@@ -172,7 +179,7 @@ local function position_expedition(pre_render)
         if parent then
           orbit.parent={type=parent,name=target.parent}
         elseif target.parent=="pulsar" then
-          orbit.parent={type="space-location",name="solar-system-edge"}
+          orbit.parent={type="space-location",name=root_parent}
         end
         orbit.distance=target.radius
         orbit.orientation=target.turn
@@ -210,7 +217,7 @@ local function reconcile_baked_art()
   for _,target in ipairs(plan) do by_name[target.name]=target end
   -- Sprite-only pulsar no longer exists, but its artwork still has a tag.
   local ex,ey=require("prototypes.system.galaxy_layout")
-    .anchor_position("solar-system-edge")
+    .anchor_position(root_parent)
   if ex and ey then by_name.pulsar={parent_position={x=ex,y=ey}} end
   local ui=(data.raw["utility-sprites"] or {}).default
   local layers=ui and ui.starmap_star and ui.starmap_star.layers
@@ -224,10 +231,9 @@ local function reconcile_baked_art()
     if target and type(delta)=="table"
       and type(delta[1])=="number" and type(delta[2])=="number" then
       -- When PlanetsLib deletes the sprite-only pulsar, Near Bellicos
-      -- gets a native parent fallback to Solar System Edge. Its orbit
-      -- artwork was ALREADY BAKED around the pulsar, however. Keep that
-      -- original art anchor instead of snapping the Aegis belt back to
-      -- Deep Space whenever final reconciliation runs a second time.
+      -- gets a native parent fallback to the Calidus slip stream. Its orbit
+      -- artwork is already baked around the pulsar. Keep the virtual pulsar
+      -- position even after PlanetsLib removes the sprite-only prototype.
       local origin=target.parent_position
       if target.name==near and virtual_pulsar then
         origin=virtual_pulsar
@@ -314,30 +320,11 @@ function bellicos.data_updates()
 end
 
 function bellicos.data()
-	if not mods["bellicos-and-aegis"] then
-		return
-	end
-
-	position_expedition(true)
-	remove_stock_entry_routes()
-	deleteRoute(deep_space_entry_route)
-
-	-- When a different Aegis version omits the gateway, do not register a
-	-- space connection with nonexistent endpoints.
-	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then
-		return
-	end
-
-	data:extend({
-		{
-			type = "space-connection",
-			name = deep_space_entry_route,
-			from = "solar-system-edge",
-			to = entry_gate,
-			length = 250000,
-			asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
-		}
-	})
+  if not (mods and mods["bellicos-and-aegis"]) then return end
+  position_expedition(true)
+  -- Only the final route authority installs the two researched approaches.
+  -- Avoid another unapproved data-stage link which it would later remove.
+  remove_stock_entry_routes()
 end
 
 local function soften_pulsar_art()
@@ -354,7 +341,7 @@ local function soften_pulsar_art()
     if tagged or source_file then
       local tint=layer.tint or {r=1,g=1,b=1,a=1}
       layer.tint={r=tint.r or 1,g=tint.g or 1,b=tint.b or 1,
-        a=math.min(tint.a or 1,.82)}
+        a=math.min(tint.a or 1,.50)}
       touched=touched+1
     end
   end
@@ -364,24 +351,267 @@ local function soften_pulsar_art()
 end
 
 function bellicos.data_final_fixes()
-	if not mods["bellicos-and-aegis"] then
-		return
-	end
+  if not (mods and mods["bellicos-and-aegis"]) then return end
+  remove_stock_entry_routes()
+  bellicos.reconcile_final_positions()
+  local glare=settings and settings.startup
+    and settings.startup["razi-starmap-soften-bellicos"]
+  if not glare or glare.value~=false then soften_pulsar_art() end
+end
 
-	-- Other route compatibility passes can run after the source mod. Keep only
-	-- Razi Protocol's deep-space entrance while preserving every route inside Aegis.
-	remove_stock_entry_routes()
-	-- After PlanetsLib has baked the source artwork, change native fields
-	-- and tagged-layer shifts only. Never re-enter PlanetsLib:update here.
-	bellicos.reconcile_final_positions()
-	local glare=settings and settings.startup
-	  and settings.startup["razi-starmap-soften-bellicos"]
-	if not glare or glare.value~=false then soften_pulsar_art() end
-	-- A gateway removed by a later dependency pass must not leave our
-	-- replacement deep-space route pointing to an invalid endpoint.
-	if not endpoint_type("solar-system-edge") or not endpoint_type(entry_gate) then
-		deleteRoute(deep_space_entry_route)
-	end
+-- Delete the obsolete far-side marker only AFTER source mods have read it.
+-- Research itself survives for native progression; only effects that unlock
+-- a nonexistent location are removed. Repeat safely after late research passes.
+function bellicos.retire_far_gate()
+  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
+  local removed=0
+  local routes=data.raw["space-connection"] or {}
+  for name,route in pairs(routes) do
+    if route.from==retired_gate or route.to==retired_gate then
+      routes[name]=nil
+      removed=removed+1
+    end
+  end
+  for _,technology in pairs(data.raw.technology or {}) do
+    if type(technology.effects)=="table" then
+      for i=#technology.effects,1,-1 do
+        local effect=technology.effects[i]
+        if effect.type=="unlock-space-location"
+          and effect.space_location==retired_gate then
+          table.remove(technology.effects,i)
+        end
+      end
+    end
+  end
+  -- Upstream versions may parent another native waypoint to the old gate.
+  -- Keep that waypoint at its already-rendered absolute position, then
+  -- reparent its metadata to the surviving Aegis inner system.
+  local parent=near_orbit() or root_parent
+  for _,kind in ipairs({"planet","space-location"}) do
+    for name,body in pairs(data.raw[kind] or {}) do
+      local orbit=body.orbit
+      if name~=retired_gate and type(orbit)=="table"
+        and type(orbit.parent)=="table"
+        and orbit.parent.name==retired_gate then
+        local px,py=native_point(name)
+        local cx,cy=native_point(parent)
+        if type(px)=="number" and type(py)=="number"
+          and type(cx)=="number" and type(cy)=="number" then
+          orbit.distance,orbit.orientation=
+            parent_polar(px,py,{x=cx,y=cy})
+        end
+        orbit.parent={type=endpoint_type(parent) or "space-location",name=parent}
+        body.draw_orbit=false
+      end
+    end
+    local bucket=data.raw[kind]
+    if bucket and bucket[retired_gate] then
+      bucket[retired_gate]=nil
+      removed=removed+1
+    end
+  end
+  local ui=(data.raw["utility-sprites"] or {}).default
+  local layers=ui and ui.starmap_star and ui.starmap_star.layers
+  if type(layers)=="table" then
+    for i=#layers,1,-1 do
+      if (layers[i] --[[@as table]]).planetslib_orbit_name==retired_gate then
+        table.remove(layers,i)
+      end
+    end
+  end
+  return removed
+end
+
+-- Late compatibility passes may register a second route under a different
+-- ID after the main Aegis spine was curated. Keep one connection per unordered
+-- pair, preferring native names, and merge only exclusive custom asteroid
+-- materials before dropping the duplicate. Does not create or reroute travel.
+function bellicos.dedupe_internal_routes()
+  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
+  local routes=data.raw["space-connection"] or {}
+  local nodes={
+    [entry_gate]=true,
+    ["aegis-outer-edge"]=true,["aegis-inner-edge"]=true,
+    ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
+    ["near_bellicos_orbit"]=true
+  }
+  for _,name in ipairs(find_wardens()) do nodes[name]=true end
+  local names={}
+  for name in pairs(routes) do names[#names+1]=name end
+  table.sort(names,function(a,b)
+    local a_razi=a:sub(1,5)=="razi-"
+    local b_razi=b:sub(1,5)=="razi-"
+    if a_razi~=b_razi then return not a_razi end
+    return a<b
+  end)
+  local kept,removed={},0
+  local asteroid=require("prototypes.system.asteroid_profiles")
+  for _,name in ipairs(names) do
+    local route=routes[name]
+    if route and nodes[route.from] and nodes[route.to]
+      and route.from~=route.to then
+      local a,b=route.from,route.to
+      if a>b then a,b=b,a end
+      local key=a.."|"..b
+      if kept[key] then
+        asteroid.preserve_custom(kept[key],route)
+        routes[name]=nil
+        removed=removed+1
+      else
+        kept[key]=route
+      end
+    end
+  end
+  if removed>0 and type(log)=="function" then
+    log(("[Razi Protocol/Aegis] Removed %d late duplicate native corridors"):format(removed))
+  end
+  return removed
+end
+
+-- Run after final route ownership and asteroid-family integration. Keep the
+-- author's native species/curves; harden vanilla asteroid mid-route encounters.
+-- Protect one readable route spine. The former fallback algorithm appended
+-- more lines atop the source's multiple direct chords and bypassed the ring.
+-- Preserve native IDs and custom asteroid drops on the surviving connections.
+function bellicos.fortify_routes()
+  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
+  local routes=data.raw["space-connection"] or {}
+  local asteroid=require("prototypes.system.asteroid_profiles")
+  local icons=require("prototypes.system.route_icons")
+  local wardens=find_wardens()
+  table.sort(wardens,function(a,b)
+    if a=="aegis-warden" then return true end
+    if b=="aegis-warden" then return false end
+    return a<b
+  end)
+  local near=near_orbit()
+  local points={
+    [entry_gate]=true,[retired_gate]=true,
+    ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true,
+    ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
+    ["near_bellicos_orbit"]=true
+  }
+  for _,name in ipairs(wardens) do points[name]=true end
+  local function key(a,b)
+    if a>b then a,b=b,a end
+    return a.."|"..b
+  end
+  ---@type table<string,{a:string,b:string,km:number,profile:string}>
+  local specs={}
+  local order={}
+  local function connect(a,b,km,profile)
+    if not (endpoint_type(a) and endpoint_type(b)) then return end
+    local k=key(a,b)
+    if not specs[k] then
+      specs[k]={a=a,b=b,km=km,profile=profile}
+      order[#order+1]=k
+    end
+  end
+  -- The incoming Aegis gate first approaches the OUTER rim, crosses inward,
+  -- then follows the Warden and Bellicos stargate. No long diagonal jumps.
+  connect(entry_gate,"aegis-outer-edge",56000,"aegis_approach")
+  connect("aegis-outer-edge","aegis-inner-edge",45000,"aegis_depths")
+  if near then connect(near,"aegis-inner-edge",12000,"aegis_depths") end
+  -- Point Warden is the meaningful final destination. When the source
+  -- renames the Warden, use its real prototype instead of a dummy terminus.
+  if #wardens>0 then
+    connect("aegis-inner-edge",wardens[1],38000,"aegis_depths")
+    -- Variant/extra Wardens remain side discoveries, not shortcut chords.
+    for i=2,#wardens do
+      connect("aegis-inner-edge",wardens[i],33000,"aegis_depths")
+    end
+  end
+  -- Choose a native route first for each pair so saved platform schedules
+  -- remain valid whenever possible. Repeated runs must be idempotent.
+  local names={}
+  for name in pairs(routes) do names[#names+1]=name end
+  table.sort(names,function(a,b)
+    local an,bn=a:sub(1,5)=="razi-",b:sub(1,5)=="razi-"
+    if an~=bn then return not an end
+    return a<b
+  end)
+  local kept,discarded={},{}
+  for _,name in ipairs(names) do
+    local route=routes[name]
+    if route and type(route.from)=="string" and type(route.to)=="string" then
+      local k=key(route.from,route.to)
+      -- Remove even source links from the old stargate into an unknown
+      -- system; those would become dangling when its prototype is deleted.
+      if route.from==retired_gate or route.to==retired_gate then
+        discarded[#discarded+1]={name=name,route=route}
+      elseif points[route.from] and points[route.to] then
+        if specs[k] and not kept[k] then
+          kept[k]=route
+        else
+          discarded[#discarded+1]={name=name,route=route}
+        end
+      end
+    end
+  end
+  local added=0
+  for _,k in ipairs(order) do
+    local spec=specs[k]
+    local route=kept[k]
+    local fresh=false
+    if not route then
+      local name="razi-aegis-"..spec.a.."-"..spec.b
+      if not routes[name] then
+        fresh=true
+        route=icons.assign({
+          type="space-connection",name=name,from=spec.a,to=spec.b,
+          length=spec.km,shape="line",
+          asteroid_spawn_definitions=asteroid.create(spec.profile)
+        },spec.profile)
+        data:extend({route})
+        added=added+1
+      end
+    end
+    if route then
+      kept[k]=route
+      route.length=math.max(route.length or 0,spec.km)
+      route.shape="line"
+      route.origin=nil
+      -- Native exotic spawns survive; only ordinary hostile asteroids are
+      -- raised to a genuinely dangerous encounter level.
+      -- A route created above already carries the profile; applying it
+      -- again would square its density and size weights.
+      if not fresh then asteroid.apply(route,spec.profile) end
+      asteroid.apply_field(route,spec.profile=="aegis_approach" and 1.5 or 1.8)
+    end
+  end
+  -- Transfer only custom/source asteroid species from removed chords into
+  -- the closest surviving part of that native expedition.
+  for _,old in ipairs(discarded) do
+    local candidate
+    for _,k in ipairs(order) do
+      local spec=specs[k]
+      if spec.a==old.route.from or spec.b==old.route.from
+        or spec.a==old.route.to or spec.b==old.route.to then
+        candidate=kept[k]
+        if candidate then break end
+      end
+    end
+    -- Even if a source release connects its obsolete gateway to a
+    -- location we do not recognise, preserve its exclusive asteroid drops
+    -- on the dangerous surviving inner expedition instead of discarding them.
+    if not candidate and (old.route.from==retired_gate
+      or old.route.to==retired_gate) then
+      if #wardens>0 then
+        candidate=kept[key("aegis-inner-edge",wardens[1])]
+      end
+      candidate=candidate
+        or kept[key("aegis-outer-edge","aegis-inner-edge")]
+        or kept[key(entry_gate,"aegis-outer-edge")]
+    end
+    if candidate then asteroid.preserve_custom(candidate,old.route) end
+    routes[old.name]=nil
+  end
+  local retired=bellicos.retire_far_gate()
+  if type(log)=="function" then
+    log(("[Razi Protocol/Aegis] Expedition spine: %d new links, %d obsolete chords, %d retired gateway prototypes/routes"):format(
+      added,#discarded,retired))
+  end
+  return added,#discarded
 end
 
 return bellicos
