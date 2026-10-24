@@ -1,5 +1,6 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
 local enemy_homes = require("prototypes.compat.enemy_homes")
+local nest_names = require("prototypes.compat.enemy_nest_names")
 
 if not enemy_autoplace.enabled() or not mods["Arachnids_enemy"] then
 	return
@@ -37,7 +38,7 @@ end
 
 -- Without a naturally placeable nest, keep the planets' vanilla enemies.
 if enemy_autoplace.has_valid_autoplace(arachnid_spawner) then
-	enemy_homes.claim("arachnids", {"arachnid-spawner-unitspawner"})
+	enemy_homes.claim("arachnids", nest_names.arachnids)
 	for _, planet_name in pairs(enemy_homes.planets("arachnids")) do
 		add_arachnids_to_planet(planet_name)
 	end

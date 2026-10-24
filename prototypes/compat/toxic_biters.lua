@@ -1,5 +1,6 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
 local enemy_homes = require("prototypes.compat.enemy_homes")
+local nest_names = require("prototypes.compat.enemy_nest_names")
 
 if not enemy_autoplace.enabled() or not mods["Toxic_biters"] then
 	return
@@ -7,15 +8,7 @@ end
 
 local toxic_enemy_control = "enemy-base"
 
-local toxic_enemy_entities = {
-	"toxic-biter-spawner",
-	"small-toxic-worm-turret",
-	"medium-toxic-worm-turret",
-	"big-toxic-worm-turret",
-	"behemoth-toxic-worm-turret",
-	"leviathan-toxic-worm-turret",
-	"mother-toxic-worm-turret"
-}
+local toxic_enemy_entities = nest_names.toxic
 
 local toxic_source_planets = {
 	"nauvis",

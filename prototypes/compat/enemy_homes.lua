@@ -11,8 +11,8 @@ local difficulty = require("scripts.razi_difficulty_presets")
 --   none    no home (Easy): the enemy mods' own placement on Fulgora and Aquilo is switched off too
 --   normal  Hyarion (Armoured), Arig (Arachnids), Moshine (Explosive), Cubium (Toxic), Frozeta (Cold),
 --           Fulgora and Ribbonia (Electric)
---   wide    + Panglia (Armoured), Athos (Arachnids), Cubium (Explosive), Vesta (Toxic), Paracelsin (Cold)
---   widest  + Crucible (Armoured and Arachnids), Vesta and Obsidiax (Cold)
+--   wide    + Panglia (Armoured), Athos (Arachnids), Cubium (Explosive), Paracelsin (Cold)
+--   widest  + Crucible (Armoured and Arachnids)
 -- `auto` (the default) follows the difficulty level; the level sets the step itself, so `auto` is only seen on Normal
 -- and Custom and means `normal`.
 --
@@ -142,14 +142,6 @@ local planet_tiles = {
 		"sand-2",
 		"sand-3"
 	},
-	vesta = {
-		"dust-flat-vesta",
-		"dust-crests-vesta",
-		"dust-lumpy-vesta",
-		"dust-patchy-vesta",
-		"ice-rough-vesta",
-		"ice-smooth-vesta"
-	},
 	crucible = {
 		"planet-crucible-dirt-1",
 		"planet-crucible-dirt-2",
@@ -160,9 +152,6 @@ local planet_tiles = {
 		"planet-crucible-rock-3",
 		"planet-crucible-rock-4",
 		"planet-crucible-sand-1"
-	},
-	obsidiax = {
-		"obsidiax-tile"
 	}
 }
 
@@ -177,7 +166,8 @@ local families = {
 	},
 	toxic = {
 		control = "enemy-base",
-		homes = {{planet = "cubium", step = steps.normal}, {planet = "vesta", step = steps.wide}}
+		-- Vesta is not a home: about 2% of it is land (Toxic nests found 1 to 3 places there).
+		homes = {{planet = "cubium", step = steps.normal}}
 	},
 	explosive = {
 		control = "hot_enemy_base",
@@ -187,12 +177,8 @@ local families = {
 		control = "frost_enemy_base",
 		-- Aquilo is not a home: about 97% of it is ocean, so cold nests found no land there.
 		native_planets = {"aquilo"},
-		homes = {
-			{planet = "frozeta", step = steps.normal},
-			{planet = "paracelsin", step = steps.wide},
-			{planet = "vesta", step = steps.widest},
-			{planet = "obsidiax", step = steps.widest}
-		}
+		-- Vesta (about 2% land) and Obsidiax (0.9% land) are not homes: Cold nests found 0 to 31 places there.
+		homes = {{planet = "frozeta", step = steps.normal}, {planet = "paracelsin", step = steps.wide}}
 	},
 	electric = {
 		control = "electric_enemies",

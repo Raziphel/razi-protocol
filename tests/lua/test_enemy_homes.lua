@@ -175,12 +175,12 @@ local steps = {
 	},
 	wide = {
 		armoured = {"hyarion", "panglia"}, arachnids = {"arig", "athos"}, explosive = {"moshine", "cubium"},
-		toxic = {"cubium", "vesta"}, cold = {"frozeta", "paracelsin"}, electric = {"ribbonia"}
+		toxic = {"cubium"}, cold = {"frozeta", "paracelsin"}, electric = {"ribbonia"}
 	},
 	widest = {
 		armoured = {"hyarion", "panglia", "crucible"}, arachnids = {"arig", "athos", "crucible"},
-		explosive = {"moshine", "cubium"}, toxic = {"cubium", "vesta"},
-		cold = {"frozeta", "paracelsin", "vesta", "obsidiax"}, electric = {"ribbonia"}
+		explosive = {"moshine", "cubium"}, toxic = {"cubium"},
+		cold = {"frozeta", "paracelsin"}, electric = {"ribbonia"}
 	}
 }
 local family_names = {"armoured", "arachnids", "explosive", "toxic", "cold", "electric"}
@@ -321,16 +321,16 @@ check(arachnid_wide["arig-sand"] and arachnid_wide["dirt-1"] and arachnid_wide["
 local toxic_normal = tile_set("normal", "toxic")
 check(toxic_normal["cubium-folds"] and not toxic_normal["dust-flat-vesta"] and not toxic_normal["planet-crucible-dirt-1"],
 	"Toxic nests only on Cubium's tiles")
-check(tile_set("wide", "toxic")["dust-flat-vesta"], "Toxic nests on Vesta's tiles")
+-- Vesta and Obsidiax are no home on any step: they are nearly all ocean and lava.
+check(not tile_set("widest", "toxic")["dust-flat-vesta"], "Toxic nests not on Vesta's tiles")
 check(tile_set("normal", "explosive")["moshine-rock"] and not tile_set("normal", "explosive")["cubium-folds"], "Explosive nests only on Moshine's tiles")
 check(tile_set("wide", "explosive")["cubium-folds"], "Explosive nests on Cubium's tiles")
 local cold_normal = tile_set("normal", "cold")
 check(cold_normal["snow-flat"] and not cold_normal["volcanic-soil-dark"] and not cold_normal["obsidiax-tile"], "Cold nests on snow and ice")
 local cold_wide = tile_set("wide", "cold")
-check(cold_wide["snow-flat"] and cold_wide["volcanic-soil-dark"] and not cold_wide["obsidiax-tile"] and not cold_wide["ice-rough-vesta"],
-	"Cold nests also on Paracelsin's tiles")
+check(cold_wide["snow-flat"] and cold_wide["volcanic-soil-dark"], "Cold nests also on Paracelsin's tiles")
 local cold_widest = tile_set("widest", "cold")
-check(cold_widest["obsidiax-tile"] and cold_widest["ice-rough-vesta"], "Cold nests also on Vesta's and Obsidiax' tiles")
+check(not cold_widest["obsidiax-tile"] and not cold_widest["ice-rough-vesta"], "Cold nests not on Vesta's and Obsidiax' tiles")
 -- Without homes the restriction is the one of the first step: Dea Dia's cold nests stand on Lemures.
 local cold_none = tile_set("none", "cold")
 for tile_name in pairs(cold_normal) do
@@ -344,7 +344,7 @@ check(tile_set("none", "armoured")["hyarion-soil-dark"], "no homes, Armoured kee
 
 check(#logged > 0, "the nests that were switched off are logged")
 
--- Pollution absorption of the tiles of the homes: Panglia's plant tiles and Obsidiax' tile have none of their own.
+-- Pollution absorption of the tiles of the homes: Panglia's plant tiles have none of their own.
 local function absorbs(tile_name)
 	local absorptions = data.raw.tile[tile_name].absorptions_per_second
 	return absorptions and absorptions.pollution
@@ -352,16 +352,12 @@ end
 setup(all_mods, {["razi-enemy-habitats"] = {value = "widest"}})
 run_all()
 require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
-check(absorbs("panglia-midland-turquoise-bark") == 0.00003 and absorbs("obsidiax-tile") == 0.00003, "the tiles of the wide homes absorb pollution")
-setup(all_mods, {["razi-enemy-habitats"] = {value = "wide"}})
-run_all()
-require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
-check(absorbs("panglia-midland-turquoise-bark") == 0.00003, "Panglia's tiles absorb pollution on the wide step")
-check(absorbs("obsidiax-tile") == nil, "Obsidiax is no home on the wide step, its tile stays")
+check(absorbs("panglia-midland-turquoise-bark") == 0.00003, "the tiles of Panglia absorb pollution when it is a home")
+check(absorbs("obsidiax-tile") == nil, "Obsidiax is no home, its tile stays")
 setup(all_mods)
 run_all()
 require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
-check(absorbs("panglia-midland-turquoise-bark") == nil and absorbs("obsidiax-tile") == nil, "no home, no change to the tiles")
+check(absorbs("panglia-midland-turquoise-bark") == nil, "no home, no change to the tiles")
 
 -- Without the enemy mods nothing is placed or switched off.
 setup({})

@@ -3,17 +3,16 @@ local enemy_homes = require("prototypes.compat.enemy_homes")
 
 local enemy_planet_pollution = {}
 
--- Arig, Hyarion, Panglia and Obsidiax had no enemies before Razi Protocol routed Arachnids, Armoured Biters and Cold
--- Biters there, and some of their tiles absorb no pollution: Arig's tiles have no absorptions_per_second at all, Hyarion's
--- read a lava value that the base tile-pollution table does not have, three of Panglia's plant tiles have none and
--- Obsidiax' only land tile has none. Pollution then never fades, spreads over the whole map and every nest it reaches
--- attacks. Give each tile without a pollution value the absorption of its vanilla counterpart. Only the planets that
--- are a home of that family at the selected step carry pollution, so only they need it.
+-- Arig, Hyarion and Panglia had no enemies before Razi Protocol routed Arachnids and Armoured Biters there, and some
+-- of their tiles absorb no pollution: Arig's tiles have no absorptions_per_second at all, Hyarion's read a lava value
+-- that the base tile-pollution table does not have and three of Panglia's plant tiles have none. Pollution then never
+-- fades, spreads over the whole map and every nest it reaches attacks. Give each tile without a pollution value the
+-- absorption of its vanilla counterpart. Only the planets that are a home of that family at the selected step carry
+-- pollution, so only they need it.
 local planets = {
 	{planet = "arig", family = "arachnids", enemy_mods = {"Arachnids_enemy"}, like_tile = "sand-1", fallback = 0.000015},
 	{planet = "hyarion", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003},
-	{planet = "panglia", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003},
-	{planet = "obsidiax", family = "cold", enemy_mods = {"Cold_biters"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
+	{planet = "panglia", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
 }
 
 local function planet_tile_names(planet_name)
