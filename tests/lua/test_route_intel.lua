@@ -123,4 +123,18 @@ for _,f in ipairs(nexus.custom_tooltip_fields) do
 end
 check(danger_count==1,"Deep Space can have only one rating")
 check(not intel.annotate(nexus),"Second route inspection should be idempotent")
+-- Field dispatch notes are story text: present only with the story on.
+local story=require("scripts.razi_story")
+local function dispatch_key(route)
+  for _,f in ipairs(route.custom_tooltip_fields or {}) do
+    if f.name[1]=="razi-route-intel.dispatch" then return f.value[1] end
+  end
+end
+check(dispatch_key(regional)==nil,"Dispatch note must be absent while the story is off")
+story.configure(true)
+local noted={from="vulcanus",to="arig",length=19500,shape="arc"}
+check(intel.annotate(noted) and #noted.custom_tooltip_fields==4
+  and dispatch_key(noted)=="razi-route-intel.dispatch-furnace-desert",
+  "Dispatch note must return with the story on")
+story.configure(false)
 print("Razi route tooltip and hazard fixtures passed")

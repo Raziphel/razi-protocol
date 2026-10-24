@@ -4,6 +4,9 @@ package.path = "./?.lua;./?/init.lua;" .. package.path
 local function check(ok, why)
   if not ok then error(why, 2) end
 end
+-- The headings and briefings are story text: these checks run with it on.
+local story = require("scripts.razi_story")
+story.configure(true)
 local native = {"source-mod.planet-description", "native-parameter"}
 local planet = {
   nauvis = {localised_description = native},
@@ -112,4 +115,31 @@ for _, lang in ipairs({"en", "ru"}) do
     end
   end
 end
+-- Story off: no heading or briefing. Only the corrected geography of the
+-- moved Aegis waypoints is written; all other worlds keep the source text.
+story.configure(false)
+local plain_planet = {
+  nauvis = {localised_description = native},
+  maraxsis = {}
+}
+local plain_locations = {
+  vespera = {localised_description = "Source Vespera text"},
+  ["aegis-inner-edge"] = {localised_description = "Old Aegis corridor"},
+  ["point-warden"] = {localised_description = "Obsolete source return route"}
+}
+rawset(_G, "data", {raw = {planet = plain_planet,
+  ["space-location"] = plain_locations}})
+package.loaded["prototypes.system.planet_descriptions"] = nil
+require("prototypes.system.planet_descriptions").data_final_fixes()
+check(plain_planet.nauvis.localised_description == native
+  and plain_planet.maraxsis.localised_description == nil
+  and plain_locations.vespera.localised_description == "Source Vespera text",
+  "Story-off descriptions must stay as the source mods wrote them")
+for _, name in ipairs({"aegis-inner-edge", "point-warden"}) do
+  local value = plain_locations[name].localised_description
+  check(type(value) == "table" and #value == 1
+    and value[1] == "razi-location-primary." .. name,
+    name .. ": moved waypoint must show its corrected geography only")
+end
+story.configure(true)
 print("Native descriptions, optional guards, locale and final-stage wiring passed")

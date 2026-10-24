@@ -196,7 +196,13 @@ context=M.context(force)
 check(M.state(force,defs.by_id["igrys"],context)=="complete",
   "Side-world quest should complete from the real installed unlock research")
 local a,b=M.unlocked_records(force,context)
-check(b==15 and a>=0,"Recovered transmission count mismatch")
+check(a==0 and b==0,"The Archive must be empty while the story is off")
+local story=require("scripts.razi_story")
+story.configure(true)
+a,b=M.unlocked_records(force,context)
+check(b==#require("scripts.razi_journal_records") and a>=0,
+  "Recovered transmission count mismatch")
+story.configure(false)
 check(not M.show_in_filter(force,defs.by_id["igrys"],"ready",context)
   and M.show_in_filter(force,defs.by_id["igrys"],"done",context),
   "Quest status filtering is inconsistent")

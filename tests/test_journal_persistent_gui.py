@@ -52,7 +52,7 @@ class PersistentJournalTests(unittest.TestCase):
 
     def test_saved_view_identity_and_tab_name(self):
         src=self.journal
-        self.assertIn('archive=true,systems=true',src)
+        self.assertIn('archive=story.enabled()',src)
         loc=read("locale/en/razi_journal_interface.cfg")
         self.assertIn("view-archive=Archive",loc)
         self.assertIn("view-quests=Quests",loc)

@@ -3,6 +3,7 @@
 -- whose old travel directions are now wrong. Their geographic sentences use
 -- Razi's current chart; prototype mechanics are never altered here.
 -- Optional worlds are touched only when their prototype actually exists.
+local story = require("scripts.razi_story")
 local descriptions = {}
 local configured = setmetatable({}, {__mode = "k"})
 
@@ -52,6 +53,23 @@ function descriptions.data_final_fixes()
   local preference = settings and settings.startup
     and settings.startup["razi-enable-expedition-briefings"]
   if preference and preference.value == false then return end
+
+  -- The headings and briefings are story text. Without the story only the
+  -- corrected geography of the moved Aegis waypoints is written; every other
+  -- description stays exactly as the source mod wrote it.
+  if not story.enabled() then
+    for name in pairs(relocated_source_briefs) do
+      for _, kind in ipairs({"planet", "space-location"}) do
+        local bucket = data.raw[kind]
+        local location = bucket and bucket[name]
+        if location and not configured[location] then
+          location.localised_description = {"razi-location-primary." .. name}
+          configured[location] = true
+        end
+      end
+    end
+    return
+  end
 
   for region, names in pairs(destinations) do
     local heading = region == "deep_space" and "deep-space" or region

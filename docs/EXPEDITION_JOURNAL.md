@@ -1,3 +1,14 @@
+## Storyline switch (3.0)
+
+`scripts/razi_story.lua` holds the one switch for the storyline (`ENABLED`, off by default). While it is off:
+
+- The Archive tab, story paragraphs, chapter cover prose, project context, record notices in chat, the Archive Array project (and its relay, recipe and technology), planet and place briefings, route "field dispatch" notes, Convergence witness and black-box texts and the story victory screen are not created or shown. Plain functional texts from `locale/en/razi_story_off.cfg` replace the welcome message and the Convergence victory screen.
+- Quests, chapters, acts, Projects, Cargo Network, Convergence and HELIOS work as before. Quest titles, tips, charters and weather notes stay.
+- Save data is untouched: quest, chapter, act and record IDs, the `story_*` player fields and `razi_story_*` storage are kept, so turning the story on later needs no migration. The welcome message stores the version of the text a player has read.
+- The story locale files stay in the repository; they are only not read.
+
+To enable the story, set `ENABLED=true` in `scripts/razi_story.lua`. Test both states with `tests/lua/test_razi_story.lua`.
+
 ## Adaptive Mission Plan layout (October 2026)
 
 A source audit exposed two practical defects after introducing full mission

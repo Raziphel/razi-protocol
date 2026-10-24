@@ -3,7 +3,7 @@
 local M={}
 local journal_button_cleanup=require("scripts.razi_journal_button_cleanup")
 local defs=require("scripts.razi_journal_data")
-local records=require("scripts.razi_journal_records")
+local story=require("scripts.razi_story")
 local industrial_briefs=require("scripts.razi_planet_briefs")
 local catapults=require("scripts.razi_catapult_network")
 local freight_orders=require("scripts.razi_freight_orders")
@@ -29,6 +29,11 @@ local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
 local L=function(key,...) return {"journal-ui."..key,...} end
+-- Clicks that only exist inside the story Archive tab.
+local ARCHIVE_ACTIONS={
+  ["array-record"]=true,["story-alerts"]=true,["record-next-unread"]=true,
+  ["archive-filter"]=true,["archive-source"]=true,record=true
+}
 local themes=require("scripts.razi_journal_themes")
 local icons=require("scripts.razi_journal_icons")
 -- A field-manual palette: chapter hues are restrained accents, not the ink.
@@ -83,7 +88,8 @@ local function pref(index)
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
-  value.view=({quests=true,projects=true,archive=true,systems=true})[value.view] and value.view or "quests"
+  value.view=({quests=true,projects=true,archive=story.enabled(),
+    systems=true})[value.view] and value.view or "quests"
   value.project=(projects.valid(value.project) or value.project=="cargo")
     and value.project or "platform"
   value.query=value.query or ""
@@ -724,7 +730,7 @@ local function render_details(parent,player,quest,p,context,size,view)
     stamp.style.font_color=COLOR.green
     stamp.tooltip=L("milestone-time-explanation")
   end
-  if not size.compact then
+  if not size.compact and story.enabled() then
     local mood=wrap(hero_text,{"journal-mood."..quest.chapter},inner-68)
     mood.style.font_color=COLOR.muted
   end
@@ -891,7 +897,9 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- A journal is primarily a story. After the live objective and its
   -- immediate blockers, let the player read the entry before secondary
   -- route previews, industry notes or production analytics.
-  section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
+  if story.enabled() then
+    section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
+  end
   -- Direct campaign handoffs share the force snapshot with the chapter rail.
   local next_steps=guidance.followups(quest.id,view and view.states,3)
   if #next_steps>0 then
@@ -1019,7 +1027,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- completed, not just buried in the Archive's growing collection.
   -- No link or future title is shown before source quest completion.
   if M.complete(player.force,quest,context) then
-    for _,record in ipairs(records) do
+    for _,record in ipairs(story.records()) do
       if record.series=="field" and record.unlock==quest.id then
         local letter=prose.add{type="flow",direction="vertical"}
         letter.style.vertical_spacing=5
@@ -1124,9 +1132,11 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   cover_title.style.font="heading-2"
   cover_title.style.font_color=COLOR.ink
   accent_rule(panel,theme,math.min(112,inner),2)
-  local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
-  mood.style.font="default-bold"
-  mood.style.font_color=theme.soft
+  if story.enabled() then
+    local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
+    mood.style.font="default-bold"
+    mood.style.font_color=theme.soft
+  end
   local line=panel.add{type="flow",direction="horizontal"}
   line.style.horizontal_spacing=9
   local count=label(line,L("chapter-progress-short",
@@ -1154,19 +1164,21 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   local text_width=inner-18
   body.style.width=text_width
   body.style.vertical_spacing=12
-  section(body,"chapter-cover-story",
-    {"journal-chapter-summary."..p.chapter},text_width,theme)
-  -- The seven founding systems get distinct operating identities, kept
-  -- inside the already-unlocked cover instead of leaking future names.
-  local star=industrial_briefs.star_charter(p.chapter)
-  if star then
-    section(body,"star-charter-heading",
-      {"razi-star-signature."..star},text_width,theme)
+  if story.enabled() then
+    section(body,"chapter-cover-story",
+      {"journal-chapter-summary."..p.chapter},text_width,theme)
+    -- The seven founding systems get distinct operating identities, kept
+    -- inside the already-unlocked cover instead of leaking future names.
+    local star=industrial_briefs.star_charter(p.chapter)
+    if star then
+      section(body,"star-charter-heading",
+        {"razi-star-signature."..star},text_width,theme)
+    end
+    section(body,"chapter-cover-dispatch",
+      {"journal-chapter-dispatch."..p.chapter},text_width,theme)
+    section(body,"chapter-context",
+      {"journal-chapter-story."..p.chapter},text_width,theme)
   end
-  section(body,"chapter-cover-dispatch",
-    {"journal-chapter-dispatch."..p.chapter},text_width,theme)
-  section(body,"chapter-context",
-    {"journal-chapter-story."..p.chapter},text_width,theme)
   dossier_heading(body,"chapter-cover-entries",theme,text_width)
 
   local next_entry
@@ -1461,11 +1473,11 @@ end
 function M.unlocked_records(force,context)
   context=context or M.context(force)
   local unlocked=0
-  for _,record in ipairs(records) do
+  for _,record in ipairs(story.records()) do
     local q=defs.by_id[record.unlock]
     if q and M.complete(force,q,context) then unlocked=unlocked+1 end
   end
-  return unlocked,#records
+  return unlocked,#story.records()
 end
 local function render_archive(parent,player,p,context,size)
   local rail=parent.add{type="frame",name="razi_journal_archive_index",
@@ -1478,7 +1490,7 @@ local function render_archive(parent,player,p,context,size)
   -- Recovery ledger is derived solely from completed source milestones.
   -- Sealed titles remain concealed; only aggregate counts are shown.
   local counts={legacy={0,0},corporate={0,0},field={0,0}}
-  for _,record in ipairs(records) do
+  for _,record in ipairs(story.records()) do
     local category=record.id:sub(1,5)~="corp-" and "legacy"
       or record.series=="field" and "field" or "corporate"
     local entry=counts[category]
@@ -1512,7 +1524,7 @@ local function render_archive(parent,player,p,context,size)
   local chosen,focus
   local sealed=0
   local corporate_heading=false
-  for _,record in ipairs(records) do
+  for _,record in ipairs(story.records()) do
     local quest=defs.by_id[record.unlock]
     local opened=quest and M.complete(player.force,quest,context)
     if not opened then sealed=sealed+1 end
@@ -1872,7 +1884,9 @@ local function draw(player,focus_search)
     or size.compact and 15 or 24
   toolbar.style.vertical_align="bottom"
   -- The three folios use typographic navigation and a slender active rule.
-  for _,view in ipairs({"quests","projects","archive","systems"}) do
+  for _,view in ipairs(story.enabled()
+      and {"quests","projects","archive","systems"}
+      or {"quests","projects","systems"}) do
     local active=p.view==view
     local folio=toolbar.add{type="flow",direction="vertical"}
     folio.style.vertical_spacing=3
@@ -1906,7 +1920,7 @@ local function draw(player,focus_search)
     tint(label(filterbar,L("archive-progress",
       tostring(unlocked),tostring(all))),themes.get("echoes").primary)
     local unread=0
-    for _,record in ipairs(records) do
+    for _,record in ipairs(story.records()) do
       local q=defs.by_id[record.unlock]
       if p.story_unread and p.story_unread[record.id]
         and q and M.complete(player.force,q,context) then
@@ -2720,6 +2734,7 @@ function M.gui_click(event)
   end
   local p=pref(player.index)
   local old_view=p.view
+  if ARCHIVE_ACTIONS[action] and not story.enabled() then return end
   if (action=="select" or action=="guidance-select") and
     defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
@@ -2804,7 +2819,8 @@ function M.gui_click(event)
       if not exposed then return end
     end
     p.chapter=p.chapter==tags.id and false or tags.id
-  elseif action=="view" and ({quests=true,projects=true,archive=true,systems=true})[tags.id] then
+  elseif action=="view" and ({quests=true,projects=true,
+      archive=story.enabled(),systems=true})[tags.id] then
     p.view=tags.id
   elseif action=="field-project" and
     projects.visible(player.force,tags.id) then
@@ -2843,7 +2859,7 @@ function M.gui_click(event)
   elseif action=="record-next-unread" and p.view=="archive" then
     local context=M.context(player.force)
     local found=false
-    for _,record in ipairs(records) do
+    for _,record in ipairs(story.records()) do
       local quest=defs.by_id[record.unlock]
       if p.story_unread and p.story_unread[record.id]
         and quest and M.complete(player.force,quest,context) then
@@ -2873,7 +2889,7 @@ function M.gui_click(event)
     p.reveal_selection=false
   elseif action=="record" then
     local context=M.context(player.force)
-    for _,record in ipairs(records) do
+    for _,record in ipairs(story.records()) do
       if record.id==tags.id then
         local quest=defs.by_id[record.unlock]
         if quest and M.complete(player.force,quest,context) then

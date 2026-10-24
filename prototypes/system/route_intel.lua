@@ -4,6 +4,7 @@ local M={}
 local hazards=require("prototypes.system.route_hazards")
 local catalog=require("scripts.galactic_catalog")
 local dossiers=require("prototypes.system.route_dossiers")
+local story=require("scripts.razi_story")
 local quality_levels=require("scripts.razi_asteroid_difficulty")
 local prefix="razi-route-intel."
 local function selected(name,default)
@@ -100,7 +101,8 @@ function M.annotate(route)
   end
   -- A single concise, route-specific field note. No claim of ownership
   -- over source mod descriptions and no guessed notes on unknown routes.
-  local dossier=dossiers.note_for(route)
+  -- The notes are story text and are skipped while the story is off.
+  local dossier=story.enabled() and dossiers.note_for(route) or nil
   if dossier then
     additions[#additions+1]=field("dispatch",localise("dispatch-"..dossier),231)
   end

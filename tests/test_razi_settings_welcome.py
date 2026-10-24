@@ -68,7 +68,7 @@ class WelcomeAndSettingsTests(unittest.TestCase):
         self.assertIn("if early and game.tick<=NEW_MAP_LIMIT",lua)
         self.assertIn('option(player,"razi-clean-startup-chat")',lua)
         self.assertIn('option(player,"razi-show-welcome")',lua)
-        self.assertIn("if s.seen[player.index] then return end",lua)
+        self.assertIn("if has_seen(s,player.index) then return end",lua)
         self.assertIn("function M.command(event)",lua)
         self.assertNotIn("game.print(",lua)
         self.assertNotIn("on_tick",lua)

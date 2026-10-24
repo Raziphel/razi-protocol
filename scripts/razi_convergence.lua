@@ -7,7 +7,7 @@ local helios_operations=require("scripts.razi_helios_operations")
 local galactic_catalog=require("scripts.galactic_catalog")
 local deep_expedition=require("scripts.razi_deep_space_expedition")
 local nexus_trials=require("scripts.razi_nexus_trials")
-local story_dispatch=require("scripts.razi_story_dispatch")
+local story=require("scripts.razi_story")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.
 M.transmission_beats={
@@ -17,6 +17,15 @@ M.transmission_beats={
  {tick=5400,key="convergence-transmission-alignment"}
 }
 M.transmission_duration=7200
+-- The beat captions are story text. Without the story each beat is just
+-- its number in the sequence.
+local function beat_text(index)
+ if story.enabled() then
+  return {"razi-ops."..M.transmission_beats[index].key}
+ end
+ return {"razi-story-off.transmission-stage",tostring(index),
+  tostring(#M.transmission_beats)}
+end
 M.module_colors={
  stellar={r=.98,g=.72,b=.39},
  industry={r=.43,g=.75,b=.92},
@@ -260,7 +269,7 @@ local function finish(force,player)
   or saved.completed_site
  -- The epilogue is earned only by the actual victory state, never
  -- by researching Ignition or loading a previously completed save.
- story_dispatch.shipment(force,"victory")
+ story.dispatch.shipment(force,"victory")
  if game.print then
   game.print({"razi-ops.convergence-broadcast",force.name})
  end
@@ -271,17 +280,18 @@ local function finish(force,player)
   game.reset_game_state()
  end
  do
+  local section=story.enabled() and "razi-ops" or "razi-story-off"
   game.set_win_ending_info{
-   title={"razi-ops.convergence-victory-title"},
-   message={"razi-ops.convergence-victory-message"},
+   title={section..".convergence-victory-title"},
+   message={section..".convergence-victory-message"},
    bullet_points={
-    {"razi-ops.convergence-victory-stellar"},
-    {"razi-ops.convergence-victory-industry"},
-    {"razi-ops.convergence-victory-deep"},
-    {"razi-ops.convergence-victory-resonance"},
-    {"razi-ops.convergence-victory-ignition"}
+    {section..".convergence-victory-stellar"},
+    {section..".convergence-victory-industry"},
+    {section..".convergence-victory-deep"},
+    {section..".convergence-victory-resonance"},
+    {section..".convergence-victory-ignition"}
    },
-   final_message={"razi-ops.convergence-victory-final"}
+   final_message={section..".convergence-victory-final"}
   }
   game.set_game_state{game_finished=true,player_won=true,
    can_continue=true}
@@ -334,7 +344,7 @@ function M.deliver(player,id)
  end
  if all then
   saved.delivered[id]=rule.count
-  story_dispatch.shipment(force,id)
+  story.dispatch.shipment(force,id)
  end
  if index==#M.stages and M.current(force)>#M.stages then
   -- Consumed cargo has been accepted. Keep the finale in save storage,
@@ -345,7 +355,7 @@ function M.deliver(player,id)
   storage.razi_convergence_pending=storage.razi_convergence_pending or {}
   storage.razi_convergence_pending[force.index]=true
   if force.print then
-   force.print({"razi-ops."..M.transmission_beats[1].key})
+   force.print(beat_text(1))
   end
   return "convergence-transmission-started",removed_total
  end
@@ -384,7 +394,7 @@ function M.advance(tick)
       and elapsed>=M.transmission_beats[next_beat].tick do
      sequence.beat=next_beat
      if force.print then
-      force.print({"razi-ops."..M.transmission_beats[next_beat].key})
+      force.print(beat_text(next_beat))
      end
      updated=true
      next_beat=next_beat+1
@@ -534,14 +544,24 @@ function M.render(parent,player,options)
     or {r=.92,g=.74,b=.50}
  end
  if won then
-  local win=line(scroll,"convergence-won",width)
+  local win=story.enabled() and line(scroll,"convergence-won",width)
+   or scroll.add{type="label",caption={"razi-story-off.convergence-won"}}
+  win.style.single_line=false
+  win.style.maximal_width=width
   win.style.font_color={r=.48,g=.9,b=.72}
   local archive=scroll.add{type="frame",
    style="inside_shallow_frame",direction="vertical"}
   archive.style.horizontally_stretchable=true
   local title=line(archive,"convergence-archive-title",width)
   title.style.font="heading-2"
-  line(archive,"convergence-archive-message",width)
+  if story.enabled() then
+   line(archive,"convergence-archive-message",width)
+  else
+   local note=archive.add{type="label",
+    caption={"razi-story-off.convergence-archive-message"}}
+   note.style.single_line=false
+   note.style.maximal_width=width
+  end
   if saved.completed_by then
    line(archive,"convergence-archive-operator",width,saved.completed_by)
   end
@@ -597,7 +617,7 @@ function M.render(parent,player,options)
   line(network,site.planet and "convergence-witness-online"
    or "convergence-witness-offline",width,
    {"razi-ops.convergence-system-"..site.system})
-  if site.planet then
+  if site.planet and story.enabled() then
    local testimony=line(network,
      "convergence-witness-testimony-"..site.system,width)
    testimony.style.font_color={r=.73,g=.77,b=.82}
@@ -608,7 +628,7 @@ function M.render(parent,player,options)
    or "convergence-core-missing",width)
  -- Black-box recovery is shipment-gated; the reveal has tangible evidence.
  local blackbox=M.blackbox(force)
- if blackbox>0 then
+ if blackbox>0 and story.enabled() then
   local archive=scroll.add{type="frame",
     style="inside_shallow_frame",direction="vertical"}
   archive.style.horizontally_stretchable=true
@@ -681,7 +701,7 @@ function M.render(parent,player,options)
    local label=line(panel,
     i<=(sequence.beat or 1) and "convergence-transmission-beat-done"
      or "convergence-transmission-beat-pending",width,
-    {"razi-ops."..beat.key})
+    beat_text(i))
    if i==sequence.beat then label.style.font="default-bold" end
   end
  end
