@@ -242,6 +242,11 @@ require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
 -- After every pass that could add a recipe effect or ingredient, before the menu pass.
 require("prototypes.compat.lithium_battery").data_final_fixes()
 
+-- The stack inserter and the toolbelt equipment, which technology/nauvis_comforts.lua researches on Nauvis, are made of low density
+-- structure and plastic instead of Gleba's carbon fiber and jelly; their recycling and crushing return the same. After every pass that
+-- could copy these recipes, before the menu pass.
+require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()
+
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
 -- remnant-beacon. The copies take the already normalized native recipe, so running after the passes above is safe; before the menu pass.

@@ -3,8 +3,7 @@
 -- Krastorio 2 Spaced Out conveniences would wait for a trip off Nauvis. They stay on Nauvis: the order of the planets is
 -- unchanged, and the four technologies lose Gleba's science and the carbon fiber research.
 -- Runs before technology/system_gate_links.lua, which would otherwise tie a technology priced in agricultural science to its pack.
--- The recipes that the stack inserter and the toolbelt equipment unlock still name carbon fiber (and jelly); this pass does not
--- touch recipes.
+-- The recipes that the stack inserter and the toolbelt equipment unlock are changed in compat/nauvis_comfort_recipes.lua.
 local TechnologyGraph = require("__razi_lib__/lib/technology_graph")
 
 local nauvis_comforts = {}
