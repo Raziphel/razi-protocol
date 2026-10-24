@@ -548,9 +548,11 @@ function bellicos.fortify_routes()
   for _,k in ipairs(order) do
     local spec=specs[k]
     local route=kept[k]
+    local fresh=false
     if not route then
       local name="razi-aegis-"..spec.a.."-"..spec.b
       if not routes[name] then
+        fresh=true
         route=icons.assign({
           type="space-connection",name=name,from=spec.a,to=spec.b,
           length=spec.km,shape="line",
@@ -567,7 +569,9 @@ function bellicos.fortify_routes()
       route.origin=nil
       -- Native exotic spawns survive; only ordinary hostile asteroids are
       -- raised to a genuinely dangerous encounter level.
-      asteroid.apply(route,spec.profile)
+      -- A route created above already carries the profile; applying it
+      -- again would square its density and size weights.
+      if not fresh then asteroid.apply(route,spec.profile) end
       asteroid.apply_field(route,spec.profile=="aegis_approach" and 1.5 or 1.8)
     end
   end
