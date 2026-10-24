@@ -44,7 +44,8 @@ planet-level stages and dynamically infers optional worlds from their
 use the same deterministic logic.
 
 Suggested chapter ranges: Calidus 1; Solaris/Nyxaris 2-4; Vibrant 4-6;
-Vespera 5-7; Beetlejuice 7-8; Umbra 8-9; Deep Space and Aegis 9-10.
+Vespera 5-7; Beetlejuice 7-8; Umbra 8-9; Aegis 6-8 (outer edge 7, inside 8);
+Deep Space 9-10.
 Solar System Edge, Oort, Sol, Nexus, Shattered and Black Hole reach 10.
 Both the starmap overlay and route tooltips obtain levels from this
 single source. Longer corridors now shift through route stages as the

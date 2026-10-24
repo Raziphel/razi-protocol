@@ -47,7 +47,7 @@ local progression = {
   {"belt_vibrant_crossing", true, true, false},
   {"outer_crossing", true, true, true},
   {"aegis_approach", true, true, false},
-  {"aegis_depths", true, true, true},
+  {"aegis_depths", true, true, false},
   {"belt_umbra_crossing", true, true, true},
   {"deep_edge", true, true, true}
 }
@@ -191,16 +191,23 @@ ok(probability(u_belt, "huge-metallic-asteroid") > 0,
    "Umbra belt lacks an intentional huge asteroid challenge")
 ok(probability(u_belt, "imersite-asteroid-chunk") == nil,
    "Belt generated a non-native modded asteroid without source data")
--- The Aegis approach never gets a guaranteed huge asteroid, because only a
--- railgun stops one; the depths still do.
+-- Neither the Aegis approach nor the depths get a huge asteroid: only a
+-- railgun stops one, and the fleet that opens the inner Aegis has none.
 local a_approach = profiles.create("aegis_approach")
 ok(probability(a_approach, "big-metallic-asteroid") > 0,
    "Aegis approach lacks a guaranteed big asteroid challenge")
 ok(probability(a_approach, "huge-metallic-asteroid") == nil,
    "Aegis approach must not add a huge asteroid")
 local a_depths = profiles.create("aegis_depths")
-ok(probability(a_depths, "huge-metallic-asteroid") > 0,
-   "Aegis depths lost their guaranteed huge asteroid")
+ok(probability(a_depths, "big-metallic-asteroid") > 0,
+   "Aegis depths lack a guaranteed big asteroid challenge")
+ok(probability(a_depths, "huge-metallic-asteroid") == nil,
+   "Aegis depths must not add a huge asteroid")
+-- On the upstream's own depths links the guarantee is the whole big supply,
+-- so it must stay well below the approach's one.
+ok(probability(a_depths, "big-metallic-asteroid")
+   < probability(a_approach, "big-metallic-asteroid") / 4,
+   "Aegis depths guarantee is as dense as the approach's")
 util.spawn_definitions = old_spawn
 
 print("Tiered asteroid profiles and modded spawn preservation passed")
