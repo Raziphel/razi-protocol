@@ -202,7 +202,11 @@ class SouthernAegis(unittest.TestCase):
         self.assertIn('aegis_approach={"aquilo_solar_system_edge",1.65', profile)
         self.assertIn('aegis_depths={big=0.014,huge=0.0021}', profile)
         self.assertIn('asteroid.apply_field(route,spec.profile=="aegis_approach"', bel)
-        self.assertIn('["calidus-bellicos-stargate-calidus"]=8', level)
+        self.assertIn('["calidus-bellicos-stargate-calidus"]=6', level)
+        # The approach has big asteroids only: huge ones need a railgun.
+        self.assertIn('aegis_approach="middle_deep"', profile)
+        self.assertIn('aegis_approach={big=0.0075}', profile)
+        self.assertNotIn('aegis_approach={big=0.0075,huge', profile)
         self.assertNotIn('["calidus-bellicos-stargate-bellicos"]=10', level)
         self.assertIn('gate("discovery-aegis-outer", "solaris-discovery")', tech)
         self.assertIn('gate("discovery-aegis-outer", "nyxaris-discovery")', tech)

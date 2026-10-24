@@ -98,6 +98,8 @@ jobs:
         run: lua5.2 tests/lua/test_bellicos_layout.lua
       - name: Test curated Aegis corridors and retained source asteroid spawns
         run: lua5.2 tests/lua/test_bellicos_routes.lua
+      - name: Test fortified Aegis routes carry their asteroid profile once
+        run: lua5.2 tests/lua/test_aegis_fortify_density.lua
       - name: Test post-Aquilo Balack and tier-two Aegis research compatibility
         run: lua5.2 tests/lua/test_planet_arrival_pacing.lua
       - name: Test Razi asteroid belts and surveys

@@ -32,12 +32,15 @@ requires *both* early-system discoveries, not Vespera or Deep Space. The
 advanced Bellicos survey remains tied to Beetlejuice's third-tier research.
 
 Both entries use the Aegis high-density hostile asteroid profile with
-guaranteed big (and rare huge) asteroid encounters where their prototypes
-exist. All native Aegis custom asteroid species, original science technologies
-and special inner routes remain owned by the upstream mod. Missing internal
-connection pairs are repaired only when a source connection is actually absent.
-The ten-level danger ladder still grades the surviving entry and Aegis
-interior at 8–9. The obsolete, unreachable far-side Bellicos stargate has
+big asteroids only (guaranteed where their prototype exists): huge asteroids
+are stopped only by railguns, which the first frontier does not have. The
+Aegis depths keep guaranteed big and rare huge encounters. All native Aegis
+custom asteroid species, original science technologies and special inner
+routes remain owned by the upstream mod. Missing internal connection pairs
+are repaired only when a source connection is actually absent.
+The ten-level danger ladder grades the entry gate at 6, so the approach ramps
+from level 2 to 6; the link to the outer edge ramps from 6 to 9 and the Aegis
+interior stays at 9. The obsolete, unreachable far-side Bellicos stargate has
 been retired without removing native Bellicos science or the pulsar artwork.
 
 **Important baked-art fix:** The cinematic background previously drew a
