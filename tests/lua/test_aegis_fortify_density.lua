@@ -52,6 +52,15 @@ local expected={
   [near.."|"..inner]="aegis_depths",
   [inner.."|"..warden]="aegis_depths"
 }
+local function centre(defs,name)
+  for _,def in ipairs(defs) do
+    if def.asteroid==name then
+      for _,point in ipairs(def.spawn_points) do
+        if math.abs(point.distance-0.5)<.001 then return point.probability end
+      end
+    end
+  end
+end
 local found=0
 for _,route in pairs(routes) do
   local a,b=route.from,route.to
@@ -59,6 +68,17 @@ for _,route in pairs(routes) do
   if profile then
     found=found+1
     local single=profiles.create(profile)
+    -- The depths carry no huge asteroids, and their mid-route field is
+    -- milder than the one a wide first-frontier link used to get.
+    local want_field=profile=="aegis_approach" and 1.5 or 1.6
+    local base=probability(single,"big-metallic-asteroid")
+    local mid=centre(route.asteroid_spawn_definitions,"big-metallic-asteroid")
+    check(mid and math.abs(mid/base-want_field)<1e-9,
+      route.name.." big asteroid field is not "..want_field)
+    if profile=="aegis_depths" then
+      check(centre(route.asteroid_spawn_definitions,"huge-metallic-asteroid")==0,
+        route.name.." must carry no huge asteroids")
+    end
     for _,name in ipairs({"big-metallic-asteroid","huge-metallic-asteroid"}) do
       -- The distance-0.1 point is outside the 0.3-0.7 route field.
       local want=probability(single,name)

@@ -44,7 +44,8 @@ local expected={
   secretas=8,["sye-umbra"]=8,["crucible-orbit"]=9,vesta=9,
   obsidiax=9,["solar-system-edge"]=10,
   ["calidus-bellicos-stargate-calidus"]=6,
-  ["aegis-inner-edge"]=9,["aegis-warden"]=9,["bellicos-orbit"]=9,
+  ["aegis-outer-edge"]=7,["aegis-inner-edge"]=8,["aegis-warden"]=8,
+  ["near-bellicos-orbit"]=8,["bellicos-orbit"]=8,
   ["skewer_lost_beyond"]=10,["black-hole-approach"]=10
 }
 for name,level in pairs(expected) do
@@ -68,8 +69,30 @@ end
 ok(difficulty.route_level({from="calidus-bellicos-stargate-calidus",
   to="aegis-outer-edge",length=56000},0,"balanced")==6
   and difficulty.route_level({from="calidus-bellicos-stargate-calidus",
-  to="aegis-outer-edge",length=56000},1,"balanced")==9,
-  "Aegis gate to outer edge must still ramp from 6 to 9")
+  to="aegis-outer-edge",length=56000},1,"balanced")==7,
+  "Aegis gate to outer edge must ramp from 6 to 7")
+-- Inside Aegis the danger stays at 8: the inner edge opens at the third
+-- system gate, before a railgun is guaranteed. Only the mid-journey bump of
+-- a long link may rise above that, by less than one level.
+for _,link in ipairs({
+  {"aegis-outer-edge","aegis-inner-edge",45000,7,8},
+  {"bellicos-orbit","aegis-inner-edge",12000,8,8},
+  {"aegis-inner-edge","aegis-warden",40000,8,8}
+}) do
+  local route={from=link[1],to=link[2],length=link[3]}
+  local peak=0
+  for _,t in ipairs({0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1}) do
+    peak=math.max(peak,difficulty.route_level(route,t,"balanced"))
+  end
+  ok(difficulty.route_level(route,0,"balanced")==link[4]
+    and difficulty.route_level(route,1,"balanced")==link[5],
+    link[1].." to "..link[2].." must run from level "..link[4].." to "..link[5])
+  ok(peak<=9,link[1].." to "..link[2].." must stay below danger 9")
+end
+for _,name in ipairs({"point-warden","aegis-pulsar-variant"}) do
+  ok(difficulty.location_level(name)==8,
+    name.." must fall back to the inner Aegis level 8")
+end
 local unknown={
   a={from="sye-umbra",to="modded-late-moon"},
   b={from="modded-late-moon",to="modded-final-outpost"},
