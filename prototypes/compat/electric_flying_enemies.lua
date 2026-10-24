@@ -132,3 +132,11 @@ end
 for _, planet_name in pairs(enemy_homes.planets("electric")) do
 	add_electric_enemies_to_planet(planet_name, electric_spawners)
 end
+
+-- Without homes (Easy) the Electric mod's own nests on Fulgora are switched off as well.
+local electric_spawner_names = {}
+for entity_name in pairs(electric_spawners) do
+	electric_spawner_names[#electric_spawner_names + 1] = entity_name
+end
+table.sort(electric_spawner_names)
+enemy_homes.switch_off_native("electric", electric_spawner_names)

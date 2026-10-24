@@ -34,6 +34,8 @@ M.baseline={
  ["razi-rocket-launch-cost"]="normal",
  ["razi-factory-throughput"]="normal",
  ["razi-fortification-durability"]="normal",
+ -- "auto" is the step of the level: the planets that carry the themed enemy families (compat/enemy_homes.lua).
+ ["razi-enemy-habitats"]="auto",
 }
 
 -- Declaration order; the one list every loop walks, so results are stable.
@@ -56,6 +58,7 @@ M.managed={
  "razi-rocket-launch-cost",
  "razi-factory-throughput",
  "razi-fortification-durability",
+ "razi-enemy-habitats",
 }
 
 local function copy(source)
@@ -86,6 +89,7 @@ M.presets={
   ["razi-rocket-launch-cost"]="economical",
   ["razi-factory-throughput"]="boosted",
   ["razi-fortification-durability"]="reinforced",
+  ["razi-enemy-habitats"]="none",
  },
  normal=copy(M.baseline),
  hard={
@@ -107,6 +111,7 @@ M.presets={
   ["razi-rocket-launch-cost"]="costly",
   ["razi-factory-throughput"]="constrained",
   ["razi-fortification-durability"]="fragile",
+  ["razi-enemy-habitats"]="wide",
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -127,6 +132,7 @@ M.presets={
   ["razi-rocket-launch-cost"]="punishing",
   ["razi-factory-throughput"]="strained",
   ["razi-fortification-durability"]="brittle",
+  ["razi-enemy-habitats"]="widest",
  },
 }
 

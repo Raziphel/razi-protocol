@@ -86,7 +86,7 @@ Optional Void Processing is supported as a Deep Space branch rather than forced 
 
 Supported optional enemy mods can be reassigned to planets that fit their identity, with vanilla biter/worm autoplace suppressed where needed so the custom faction actually defines the planet.
 
-The `razi-enable-enemy-routing` startup setting can disable this behavior if you want the source mods' original enemy placement instead.
+The `razi-enemy-habitats` startup setting, which the difficulty level sets, chooses how many planets carry them: none on Easy, seven on Normal, eleven on Hard and thirteen on Nightmare. The `razi-enable-enemy-routing` startup setting can disable this behavior if you want the source mods' original enemy placement instead.
 
 ## Crafting and UI Cleanup
 

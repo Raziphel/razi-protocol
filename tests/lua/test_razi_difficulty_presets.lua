@@ -128,6 +128,23 @@ startup("normal",{["razi-pollution-pressure"]="toxic"})
 check(P.active()=="custom" and P.effective("razi-pollution-pressure")=="toxic",
   "A map lever changed by hand reports Custom and keeps its value")
 
+-- Enemy homes: the level sets the step of the planets with themed enemies. The setting itself defaults to "auto",
+-- which stands for the step of the level, so a step picked by hand is an override and keeps its value.
+local habitats={"none","auto","wide","widest"}
+check(declared["razi-enemy-habitats"].default_value=="auto","Default of razi-enemy-habitats")
+for i,level in ipairs(LEVELS) do
+  startup(level)
+  check(P.active()==level and P.effective("razi-enemy-habitats")==habitats[i],
+    level..": razi-enemy-habitats is "..tostring(P.effective("razi-enemy-habitats")))
+end
+startup("hard",{["razi-enemy-habitats"]="normal"})
+check(P.active()=="custom" and P.effective("razi-enemy-habitats")=="normal"
+  and P.effective("razi-asteroid-population")=="dense","A step picked on Hard keeps its value, the rest follows Hard")
+startup("normal",{["razi-enemy-habitats"]="widest"})
+check(P.active()=="custom" and P.effective("razi-enemy-habitats")=="widest","A step picked on Normal is used")
+startup("custom")
+check(P.effective("razi-enemy-habitats")=="auto","Custom keeps the saved value")
+
 -- Spread technology unlocks: four levels, left alone or ticked by hand.
 for _,level in ipairs(LEVELS) do
   local auto=(level=="hard" or level=="nightmare")
@@ -205,6 +222,11 @@ for _,lang in ipairs({"en","ru"}) do
     check(cfg:find("\n"..key.."=",1,true),lang.." locale misses "..key)
   end
   local description=cfg:match("\n%[mod%-setting%-description%].*")
+  check(cfg:find("\nrazi-enemy-habitats=",1,true),lang.." misses the name of the enemy homes")
+  check(description:find("\nrazi-enemy-habitats=",1,true),lang.." misses the description of the enemy homes")
+  for _,v in ipairs(declared["razi-enemy-habitats"].allowed_values) do
+    check(cfg:find("\nrazi-enemy-habitats-"..v.."=",1,true),lang.." misses razi-enemy-habitats-"..v)
+  end
   check(description:find("\nrazi-difficulty-preset=",1,true),
     lang.." misses the level description")
   for name in pairs(map_levers) do

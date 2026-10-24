@@ -31,26 +31,6 @@ local armoured_enemy_entities = {
 	"armoured-biter-spawner"
 }
 
-local armoured_biter_tiles = {
-	"hyarion-jagged-ground",
-	"hyarion-cracks-hot",
-	"hyarion-cracks-warm",
-	"hyarion-cracks",
-	"hyarion-folds-flat",
-	"hyarion-crystal-light",
-	"hyarion-crystal-dark",
-	"hyarion-crystal-flats",
-	"hyarion-pumice-stones",
-	"hyarion-smooth-stone",
-	"hyarion-smooth-stone-warm",
-	"hyarion-crystal-cracks",
-	"hyarion-folds",
-	"hyarion-folds-warm",
-	"hyarion-soil-dark",
-	"hyarion-soil-light",
-	"hyarion-crystal-soil"
-}
-
 local function remove_armoured_units_from_spawner(spawner)
 	if not spawner or not spawner.result_units then
 		return
@@ -77,7 +57,7 @@ local armoured_spawner = enemy_autoplace.entity_exists("unit-spawner", "armoured
 -- they are meant to come out of the vanilla biter-spawner.
 if enemy_autoplace.has_valid_autoplace(armoured_spawner) then
 	remove_armoured_units_from_spawner(enemy_autoplace.entity_exists("unit-spawner", "biter-spawner"))
-	armoured_spawner.autoplace.tile_restriction = enemy_autoplace.existing_tiles(armoured_biter_tiles)
+	armoured_spawner.autoplace.tile_restriction = enemy_homes.tiles("armoured")
 
 	enemy_homes.claim("armoured", armoured_enemy_entities)
 	for _, planet_name in pairs(enemy_homes.planets("armoured")) do

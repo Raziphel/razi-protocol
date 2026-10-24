@@ -24,9 +24,9 @@ local pinned_bool_settings = {
 	-- concrete instead of the planetaris-* items) and adds a second set of colored concrete recipes and dyes.
 	["s6x-colored-concrete"] = false,
 	-- Default true: Balack removes the armoured biters' own nest from the map generator and hides the armoured biters
-	-- (or, with the nest setting off, takes them out of the vanilla nests). Razi Protocol places that nest on Hyarion,
-	-- Nexus, Crucible and Panglia (compat/armoured_biters.lua), which would then have no enemies at all. With false the
-	-- nest stays; its tile restriction there keeps it off Nauvis.
+	-- (or, with the nest setting off, takes them out of the vanilla nests). Razi Protocol places that nest on Hyarion
+	-- and, on the wider steps of the enemy homes, Panglia and Crucible (compat/armoured_biters.lua), which would then
+	-- have no enemies at all. With false the nest stays; switching it off by name keeps it off Nauvis.
 	["bm-armored-biters-override"] = false,
 	-- Default true: Nulla adds robotic-science-pack to the price and prerequisites of follower-robot-count-5, which is
 	-- first-system research; it would wait for Nulla's discovery in Vespera. The other two Nulla science settings only

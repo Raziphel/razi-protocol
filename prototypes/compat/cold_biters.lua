@@ -31,19 +31,7 @@ local cold_source_planets = {
 	"nauvis"
 }
 
-local cold_planet_tiles = {
-	"snow-flat",
-	"snow-crests",
-	"snow-lumpy",
-	"snow-patchy",
-	"ice-rough",
-	"ice-smooth",
-	"ammoniacal-ocean",
-	"ammoniacal-ocean-2",
-	"brash-ice"
-}
-
-local existing_cold_planet_tiles = enemy_autoplace.existing_tiles(cold_planet_tiles)
+local cold_planet_tiles = enemy_homes.tiles("cold")
 
 local function cold_autoplace_expression(distance, worm)
 	local expression = "cb_enemy_autoplace_base(" .. distance .. ", " .. (42000 + distance) .. ")"
@@ -63,7 +51,7 @@ local function restrict_entity_to_cold_tiles(entity_type, entity_name, distance,
 		entity.autoplace.force = "enemy"
 		entity.autoplace.probability_expression = cold_autoplace_expression(distance, worm)
 		entity.autoplace.richness_expression = 1
-		entity.autoplace.tile_restriction = existing_cold_planet_tiles
+		entity.autoplace.tile_restriction = cold_planet_tiles
 	end
 end
 
@@ -85,3 +73,5 @@ end
 for _, planet_name in pairs(enemy_homes.planets("cold")) do
 	enemy_autoplace.add_entities_to_planet(planet_name, cold_enemy_entities, cold_enemy_control, cold_entity_exists)
 end
+
+enemy_homes.switch_off_native("cold", cold_enemy_entities)

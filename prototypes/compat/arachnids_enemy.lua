@@ -7,14 +7,7 @@ end
 
 local arachnid_spawner = data.raw["unit-spawner"]["arachnid-spawner-unitspawner"]
 
-local arachnid_tiles = {
-	"arig-sand",
-	"arig-deep-sand",
-	"arig-stable-sand",
-	"planetaris-sandstone-1",
-	"planetaris-sandstone-2",
-	"planetaris-sandstone-3"
-}
+local arachnid_tiles = enemy_homes.tiles("arachnids")
 
 local function add_arachnids_to_planet(planet_name)
 	local planet = data.raw.planet[planet_name]

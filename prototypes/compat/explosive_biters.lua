@@ -32,19 +32,10 @@ local explosive_enemy_autoplace = {
 	["mother-explosive-worm-turret"] = "turret"
 }
 
-local explosive_planet_tiles = {
-	"moshine-rock",
-	"moshine-hot-swamp",
-	"moshine-lava",
-	"moshine-dust",
-	"moshine-sand",
-	"moshine-dunes"
-}
-
-local existing_explosive_planet_tiles = enemy_autoplace.existing_tiles(explosive_planet_tiles)
+local explosive_planet_tiles = enemy_homes.tiles("explosive")
 
 for entity_name, entity_type in pairs(explosive_enemy_autoplace) do
-	enemy_autoplace.restrict_entity_to_tiles(entity_type, entity_name, existing_explosive_planet_tiles)
+	enemy_autoplace.restrict_entity_to_tiles(entity_type, entity_name, explosive_planet_tiles)
 end
 
 for _, planet_name in pairs(explosive_source_planets) do

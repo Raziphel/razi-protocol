@@ -111,16 +111,18 @@ Optional Void Processing is still supported, but it is treated as a late Deep Sp
 
 ## Enemy Routing
 
-Razi Protocol supports several optional enemy packs and places each one where its author or the planet's theme says it belongs. Nauvis keeps the vanilla enemies, and planets with enemies of their own (Gleba, Tellus, Lemures with Dea Dia, and so on) are not touched.
+Razi Protocol supports several optional enemy packs and places each one where its author or the planet's theme says it belongs. Nauvis keeps the vanilla enemies on every difficulty, and planets with enemies of their own (Gleba, Tellus, Lemures with Dea Dia, and so on) are not touched.
 
-- Arachnids: Arig
-- Armoured biters: Hyarion
-- Cold biters: Frozeta
-- Electric flying enemies: Fulgora (their own planet) and Ribbonia
-- Explosive biters: Moshine
-- Toxic biters: Cubium
+How many planets carry the themed families is the `razi-enemy-habitats` startup setting. Automatic, the default, takes the step of the difficulty level; the steps add up:
 
-The specialist nests (Armoured, Toxic, Arachnids) share the vanilla enemy control, so they are switched off by name on Nauvis, Terrapalus and every other planet that has that control and is not their home. Where Razi Protocol assigns a themed enemy faction, it also suppresses vanilla biter and worm autoplace so the custom threat actually defines the planet. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
+| Step | Difficulty | Planets |
+| --- | --- | --- |
+| None | Easy | No planet. The Electric nests that their mod places on Fulgora and the Cold nests it places on Aquilo are switched off too |
+| Normal | Normal, Custom | Hyarion: Armoured. Arig: Arachnids. Moshine: Explosive. Cubium: Toxic. Frozeta: Cold. Fulgora (their own planet) and Ribbonia: Electric |
+| Wide | Hard | Adds Panglia: Armoured. Athos: Arachnids. Cubium: Explosive. Vesta: Toxic. Paracelsin: Cold |
+| Widest | Nightmare | Adds Crucible: Armoured and Arachnids. Vesta and Obsidiax: Cold |
+
+A step reaches the planets that have no surface yet when it is chosen; nests that already stand stay. The specialist nests (Armoured, Toxic, Arachnids) share the vanilla enemy control, so they are switched off by name on Nauvis, Terrapalus and every other planet that has that control and is not their home, on every step. A family's nests stand on the land tiles of its homes. Where Razi Protocol assigns a themed enemy faction, it also suppresses vanilla biter and worm autoplace so the custom threat actually defines the planet, and the planet carries pollution so that the nests take part in attacks. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
 
 ## Crafting Cleanup
 
