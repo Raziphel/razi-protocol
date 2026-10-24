@@ -52,11 +52,21 @@ local function crafts_cubes(machine)
  end
  return false
 end
+M.crafts_cubes=crafts_cubes
 local function ratio(startup,setting,target)
  local saved=startup and startup[setting]
  local value=saved and saved.value
  if not positive(value) or not positive(target) then return nil end
  return target/value
+end
+
+-- True when apply() sets the speed of the bio fabricators for this level.
+-- The factory speed of the level (razi_industrial_difficulty.lua) then
+-- leaves them alone, so the two never multiply.
+function M.covers_speed(startup,enabled)
+ local selected=startup and startup["razi-difficulty-preset"]
+ return M.profiles[selected and selected.value]~=nil
+    and (enabled or {})["biological-machines-planet-balack"]~=nil
 end
 
 function M.apply(raw,startup,enabled)

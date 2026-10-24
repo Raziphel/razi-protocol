@@ -9,10 +9,13 @@
 --     stages, towers, gas miners, wrecks and other machines whose speed is
 --     part of a mechanic of their mod;
 --   * prototypes that no item places and no mining returns: map objects,
---     fluid filters and other script helpers.
+--     fluid filters and other script helpers;
+--   * Balack's bio fabricators on Easy, Hard and Nightmare: their speed
+--     follows Balack's own setting (biological_machines_difficulty.lua).
 -- Enemy units, turrets and weapons are never touched.
 local M={}
 local preset=require("scripts.razi_difficulty_presets")
+local balack=require("prototypes.compat.biological_machines_difficulty")
 
 local factors={
  throughput={boosted=1.15,normal=1,constrained=.92,strained=.82},
@@ -103,11 +106,14 @@ function M.apply(raw,resolver)
  if speed~=1 or health~=1 then
   local entities,items=placeable(raw)
   if speed~=1 then
+   local own_speed=balack.covers_speed(settings and settings.startup,
+    rawget(_G,"mods"))
    for _,type_name in ipairs({"assembling-machine","furnace"}) do
     local changed,skipped=scale_group(raw[type_name],"crafting_speed",speed,
      function(value) return math.max(.001,value) end,
      function(proto,name)
       return not proto.fixed_recipe
+       and not (own_speed and balack.crafts_cubes(proto))
        and is_player_built(proto,name,entities,items)
      end)
     count.factories=count.factories+changed
