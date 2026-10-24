@@ -45,8 +45,25 @@ local function row(route,key)
     end
   end
 end
-check(#regional.custom_tooltip_fields==4,
-  "Regional tooltip must contain only route, ten-level danger, system and dispatch note")
+-- The route note is story text: the story is off by default and the tooltip
+-- then holds only facts (route, ten-level danger, system).
+local story=require("scripts.razi_story")
+check(story.enabled()==false,"The story text must be off by default")
+check(#regional.custom_tooltip_fields==3,
+  "Regional tooltip must contain only route, ten-level danger and system")
+check(row(regional,"dispatch")==nil,"Story off still shows a route note")
+for _,f in ipairs(regional.custom_tooltip_fields) do
+  local text=tostring(f.name[1])..tostring(type(f.value)=="table" and f.value[1] or f.value)
+  check(not text:find("dispatch",1,true),"Story off still references a route note key")
+end
+story.configure(true)
+local noted={from="vulcanus",to="arig",length=19500,shape="arc"}
+check(intel.annotate(noted),"Known regional route should be annotated")
+check(#noted.custom_tooltip_fields==4,
+  "With the story on the tooltip adds the route note")
+check(row(noted,"dispatch").value[1]=="razi-route-intel.dispatch-furnace-desert",
+  "Wrong route note key")
+story.configure(false)
 check(row(regional,"danger")~=nil and row(regional,"quality-hazard")==nil,
   "Only the unified ten-level asteroid danger may be shown")
 local quality=require("scripts.razi_asteroid_difficulty")
@@ -145,4 +162,22 @@ local shown={from="sye-calidus",to="sye-solaris",length=120000,
 intel.annotate(shown)
 check(row(shown,"danger")~=nil and row(shown,"sector")==nil,
   "Only the switched-on row should appear")
+-- Every route note listed in the dossiers has its text in both languages
+-- (the notes are shown only while the story text is on).
+local dossier_file=assert(io.open("prototypes/system/route_dossiers.lua","r"))
+local dossier_source=dossier_file:read("*a")
+dossier_file:close()
+local note_count=0
+for _,lang in ipairs({"en","ru"}) do
+  local locale_file=assert(io.open("locale/"..lang.."/routes.cfg","r"))
+  local locale=locale_file:read("*a")
+  locale_file:close()
+  note_count=0
+  for id in dossier_source:gmatch('{"[^"]+","[^"]+","([%w%-]+)"}') do
+    note_count=note_count+1
+    check(locale:find("\ndispatch-"..id.."=",1,true),lang..": no route note "..id)
+  end
+  check(locale:find("\ndispatch=",1,true),lang..": no route note label")
+end
+check(note_count>60,"The route note list was not read")
 print("Razi route tooltip and hazard fixtures passed")
