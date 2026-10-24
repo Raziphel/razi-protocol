@@ -92,6 +92,9 @@ require("prototypes.technology.seven_system_gates").data_final_fixes()
 -- Ferrum's robotics science and magnets stay out of the research that Ferrum itself needs; otherwise the next pass takes
 -- two packs out of the Vibrant card to break a cycle, and the cryogenic plant waits for the planet.
 require("prototypes.compat.ferrum_progression_guard").data_final_fixes()
+-- The stack inserter, the toolbelt equipment and the two belt capacity technologies are taken off Gleba's science and carbon fiber
+-- research; before the gate links, which would tie a technology priced in agricultural science to the pack.
+require("prototypes.technology.nauvis_comforts").data_final_fixes()
 require("prototypes.technology.system_gate_links").data_final_fixes()
 
 -- Transceiver activation opens the Solar System Edge and Deep Space.
@@ -238,6 +241,11 @@ require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
 -- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
 -- After every pass that could add a recipe effect or ingredient, before the menu pass.
 require("prototypes.compat.lithium_battery").data_final_fixes()
+
+-- The stack inserter and the toolbelt equipment, which technology/nauvis_comforts.lua researches on Nauvis, are made of low density
+-- structure and plastic instead of Gleba's carbon fiber and jelly; their recycling and crushing return the same. After every pass that
+-- could copy these recipes, before the menu pass.
+require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()
 
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
