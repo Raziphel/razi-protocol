@@ -266,3 +266,8 @@ require("prototypes.system.bellicos").dedupe_internal_routes()
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
+
+-- New Game map profiles and the global map settings of the difficulty level (evolution, expansion, pollution, raids, spoilage,
+-- research price, ore controls of every planet). Normal writes nothing. After every pass that adds or edits a planet or a control,
+-- so no planet escapes the scaling and no later pass sees half-scaled controls.
+require("prototypes.system.razi_map_preset").data_final_fixes()
