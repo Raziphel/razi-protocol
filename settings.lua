@@ -376,5 +376,84 @@ data:extend({
 		setting_type = "startup",
 		default_value = false,
 		order = "ad[asteroid-performance]-e[explosion-smoke]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-default-new-game-map",
+		setting_type = "startup",
+		default_value = true,
+		order = "00[gameplay-difficulty]-b[map-generator]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-pollution-pressure",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"gentle", "normal", "heavy", "toxic"},
+		order = "aa[worlds]-i1[pollution-pressure]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-raid-coordination",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"small", "normal", "organized", "siege"},
+		order = "aa[worlds]-i2[raid-coordination]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-colony-expansion",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"slow", "normal", "rapid", "invasive"},
+		order = "aa[worlds]-i3[colony-expansion]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-spoilage-pressure",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"forgiving", "normal", "fast", "brutal"},
+		order = "aa[worlds]-i4[spoilage]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-resource-frequency",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"abundant", "normal", "scarce", "desolate"},
+		order = "aa[worlds]-i5[ore-frequency]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-resource-patch-size",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"expansive", "normal", "small", "tiny"},
+		order = "aa[worlds]-i6[ore-patch-size]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-resource-richness",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"generous", "normal", "poor", "meager"},
+		order = "aa[worlds]-i7[ore-richness]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-science-demand",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"light", "normal", "intensive", "grueling"},
+		order = "aa[worlds]-i8[science-cost]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-evolution-speed",
+		setting_type = "startup",
+		default_value = "normal",
+		allowed_values = {"slow", "normal", "accelerated", "runaway"},
+		order = "aa[worlds]-i9[enemy-evolution]"
 	}
 })
