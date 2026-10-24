@@ -1,6 +1,7 @@
 require("util")
 local Collections = require("__razi_lib__/lib/collections")
 
+require("prototypes.compat.removed_fuel_category").data_final_fixes()
 require("prototypes.compat.lab_cards").data_final_fixes()
 require("prototypes.compat.cerys_cards").data_final_fixes()
 require("prototypes.compat.moshine_datacells").data_final_fixes()
