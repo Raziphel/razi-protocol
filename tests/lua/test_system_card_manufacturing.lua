@@ -45,7 +45,7 @@ items["bioflux"] = nil
 local capsules = {bioflux = {type = "capsule", name = "bioflux"}}
 for _, tech in ipairs({"planet-discovery-corrundum", "planet-discovery-apia-carnova",
 	"planet-discovery-paracelsin", "planet-discovery-rubia", "planet-discovery-secretas",
-	"planet-discovery-vesta", "discovery-aegis-outer"}) do
+	"planet-discovery-vesta", "razi-singularity-theory"}) do
 	technologies[tech] = {type = "technology", name = tech, effects = {}, prerequisites = {"base-unlock"}}
 end
 -- Every ordinary card is unlocked by an earlier technology; Vespera's configured technology
@@ -60,7 +60,7 @@ technologies["planet-discovery-apia-carnova"].prerequisites = {"unlock-nyxaris-t
 technologies["planet-discovery-paracelsin"].prerequisites = {"unlock-vibrant-tech-card"}
 technologies["planet-discovery-secretas"].prerequisites = {"unlock-beetlejuice-tech-card"}
 technologies["planet-discovery-vesta"].prerequisites = {"unlock-umbra-tech-card"}
-technologies["discovery-aegis-outer"].prerequisites = {"unlock-deep-space-tech-card"}
+technologies["razi-singularity-theory"].prerequisites = {"unlock-deep-space-tech-card"}
 -- planet-discovery-rubia keeps only base-unlock: it does not follow unlock-vespera-tech-card.
 rawset(_G, "data", {raw = {recipe = raw_recipes, technology = technologies, tool = tools, item = items, capsule = capsules,
 	["assembling-machine"] = {large = {crafting_categories = {"crafting"}, ingredient_count = 16}}}})
