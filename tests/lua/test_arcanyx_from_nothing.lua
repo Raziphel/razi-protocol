@@ -1,8 +1,8 @@
 ---@diagnostic disable: missing-fields, assign-type-mismatch, need-check-nil
--- Arcanyx's Voidcraft restriction is extended to the Astral voidforge, the inverse recipes and the out-of-nothing recipes of
--- Iridescent Industry and Arcanyx (compat/arcanyx_voidcraft_gaps.lua) on a mocked data.raw.
+-- The out-of-nothing recipes of Iridescent Industry and Arcanyx are kept on Arcanyx (compat/arcanyx_from_nothing.lua)
+-- on a mocked data.raw.
 -- Run from the mod root with the library bootstrap:
---   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_arcanyx_voidcraft_gaps.lua
+--   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_arcanyx_from_nothing.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local function check(ok, message)
@@ -32,16 +32,17 @@ local function count_magic(prototype)
 	return count_property(prototype, "magic")
 end
 
--- Startup settings by name; mod_list is the mods table.
 local NOTHING_RECIPES = {
 	"s6x-prismite-deep-mine", "s6x-prismite-deep-mine-advanced", "s6x-prismite-deep-mining", "s6x-prismite-deeper-mining",
 	"s6x-entropic-creation", "s6x-entropic-creation-crushed",
 }
 local NOTHING_MACHINES = {"s6x-prismite-deep-mine", "s6x-prismite-deep-mine-advanced"}
 
-local function setup(mod_list, startup, with_forge, with_nothing)
+-- Startup settings by name; mod_list is the mods table; with_nothing false leaves the Iridescent Industry prototypes out.
+local function setup(mod_list, startup, with_nothing)
 	local data_raw = {
 		["assembling-machine"] = {
+			-- a voidcrafter: Arcanyx closes it itself, this module does not look at it
 			["s6x-voidworks-nuke"] = {type = "assembling-machine", name = "s6x-voidworks-nuke", surface_conditions = {magic()}},
 		},
 		furnace = {
@@ -49,15 +50,9 @@ local function setup(mod_list, startup, with_forge, with_nothing)
 			["s6x-cursed-furnace"] = {type = "furnace", name = "s6x-cursed-furnace", surface_conditions = {{property = "pressure", min = 10}}},
 		},
 		recipe = {
-			-- Factorio 2.1: the list of categories
 			["s6xvcinv-a"] = {type = "recipe", name = "s6xvcinv-a", categories = {"voidcrafting-inverse"}},
-			["s6xvcinv-b"] = {type = "recipe", name = "s6xvcinv-b", categories = {"crafting", "voidcrafting-inverse"}},
-			-- the old single field
-			["s6xvcinv-old"] = {type = "recipe", name = "s6xvcinv-old", category = "voidcrafting-inverse"},
-			-- Arcanyx's own condition is already there
-			["s6xvcinv-done"] = {type = "recipe", name = "s6xvcinv-done", categories = {"voidcrafting-inverse"},
-				surface_conditions = {{property = "pressure", min = 10}, magic()}},
 			["s6xvc-other"] = {type = "recipe", name = "s6xvc-other", categories = {"voidcrafting"}},
+			["s6x-voidworks-fusion"] = {type = "recipe", name = "s6x-voidworks-fusion", categories = {"crafting"}},
 			["iron-plate"] = {type = "recipe", name = "iron-plate", categories = {"smelting"}},
 			["broken"] = true,
 		},
@@ -79,46 +74,25 @@ local function setup(mod_list, startup, with_forge, with_nothing)
 			name = "bioluminescent-s6x-prismite-deep-mine", surface_conditions = {{property = "pressure", min = 3000, max = 3000}}}
 		data_raw["assembling-machine"]["harene-infused-s6x-voidworks"] = {type = "assembling-machine", name = "harene-infused-s6x-voidworks"}
 	end
-	if with_forge ~= false then
-		data_raw["assembling-machine"]["s6x-voidworks-fusion"] = {type = "assembling-machine", name = "s6x-voidworks-fusion"}
-		data_raw.recipe["s6x-voidworks-fusion"] = {type = "recipe", name = "s6x-voidworks-fusion", categories = {"crafting"}}
-	end
 	rawset(_G, "mods", mod_list)
 	rawset(_G, "settings", {startup = startup})
 	rawset(_G, "data", {raw = data_raw})
 	logged = {}
-	package.loaded["prototypes.compat.arcanyx_voidcraft_gaps"] = nil
-	return data_raw, require("prototypes.compat.arcanyx_voidcraft_gaps")
+	package.loaded["prototypes.compat.arcanyx_from_nothing"] = nil
+	return data_raw, require("prototypes.compat.arcanyx_from_nothing")
 end
 
 local function on(name)
 	return {[name] = {value = true}}
 end
 
--- The setting is on: the voidforge, its recipe and the inverse recipes are closed.
-local raw, compat = setup({Arcanyx = "1.1.5"}, on("s6x-arcanyx-voidcraft"))
+-- The setting is on: the deep mines, their recipes, the entropic creation and the Rabbasca copies of the mines are closed;
+-- the cursed furnaces, the Tenebris copy, the copies of other machines and everything Arcanyx closes itself are not touched.
+local raw, compat = setup({Arcanyx = "1.1.6"}, on("s6x-arcanyx-voidcraft"))
 compat.data_final_fixes()
-local forge = raw["assembling-machine"]["s6x-voidworks-fusion"]
-check(count_magic(forge) == 1 and forge.surface_conditions[1].min == 100 and forge.surface_conditions[1].max == 100,
-	"the voidforge gets magic = 100")
-check(count_magic(raw.recipe["s6x-voidworks-fusion"]) == 1, "the voidforge recipe gets magic")
-check(count_magic(raw.recipe["s6xvcinv-a"]) == 1, "an inverse recipe found through categories gets magic")
-check(count_magic(raw.recipe["s6xvcinv-b"]) == 1, "an inverse recipe with another category too gets magic")
-check(count_magic(raw.recipe["s6xvcinv-old"]) == 1, "an inverse recipe found through category gets magic")
-check(#raw.recipe["s6xvcinv-done"].surface_conditions == 2 and count_magic(raw.recipe["s6xvcinv-done"]) == 1,
-	"a recipe that has magic already is not changed")
-check(raw.recipe["s6xvc-other"].surface_conditions == nil and raw.recipe["iron-plate"].surface_conditions == nil,
-	"other recipes are not touched")
-check(#raw["assembling-machine"]["s6x-voidworks-nuke"].surface_conditions == 1, "an already closed machine is not changed")
-check(#logged == 17, "five forge and inverse changes, ten out-of-nothing changes and two summaries are logged, got " .. #logged)
 local text = table.concat(logged, "\n")
+check(#logged == 11, "ten changes and a summary are logged, got " .. #logged)
 check(text:find("razi-protocol: ", 1, true) == 1, "the log lines start with razi-protocol")
-check(text:find("s6xvcinv-a", 1, true) and text:find("s6xvcinv-old", 1, true) and text:find("s6x-voidworks-fusion", 1, true),
-	"the log names the changed prototypes")
-check(not text:find("s6xvcinv-done", 1, true) and not text:find("s6xvc-other", 1, true), "the log does not name the unchanged ones")
-
--- The deep mines, their recipes, the entropic creation and the Rabbasca copies of the mines are closed too; the cursed furnaces,
--- the Tenebris copy and the copies of other machines are not touched.
 for _, name in ipairs(NOTHING_RECIPES) do
 	check(count_magic(raw.recipe[name]) == 1 and raw.recipe[name].surface_conditions[1].min == 100
 		and raw.recipe[name].surface_conditions[1].max == 100, "the recipe " .. name .. " gets magic = 100")
@@ -139,21 +113,22 @@ check(raw["assembling-machine"]["harene-infused-s6x-voidworks"].surface_conditio
 check(raw.recipe["s6x-cursed-furnace"].surface_conditions == nil and raw.recipe["s6x-cursed-smelting"].surface_conditions == nil,
 	"the cursed furnace recipes are not touched")
 check(#raw.furnace["s6x-cursed-furnace"].surface_conditions == 1, "the cursed furnace is not touched")
-check(text:find("out-of-nothing production reaches 4 machine(s) and 6 recipe(s)", 1, true), "the summary counts the out-of-nothing changes")
+check(#raw["assembling-machine"]["s6x-voidworks-nuke"].surface_conditions == 1, "a voidcrafter is not changed")
+check(raw.recipe["s6xvcinv-a"].surface_conditions == nil and raw.recipe["s6xvc-other"].surface_conditions == nil
+	and raw.recipe["s6x-voidworks-fusion"].surface_conditions == nil and raw.recipe["iron-plate"].surface_conditions == nil,
+	"the voidcrafting and inverse recipes are Arcanyx's, other recipes are not touched")
+check(text:find("out-of-nothing production reaches 4 machine(s) and 6 recipe(s)", 1, true), "the summary counts the changes")
 
 -- A second pass changes nothing: no second condition.
 logged = {}
 compat.data_final_fixes()
-check(#logged == 0 and count_magic(forge) == 1 and count_magic(raw.recipe["s6xvcinv-a"]) == 1, "the second pass is idempotent")
+check(#logged == 0, "the second pass is idempotent")
 check(count_magic(raw.recipe["s6x-prismite-deep-mining"]) == 1 and count_magic(raw["assembling-machine"]["s6x-prismite-deep-mine"]) == 1,
-	"the second pass adds no second condition to the out-of-nothing prototypes")
+	"the second pass adds no second condition")
 
--- Both settings off: nothing changes.
-raw, compat = setup({Arcanyx = "1.1.5"}, {["s6x-arcanyx-voidcraft"] = {value = false}})
+-- The setting off: nothing changes.
+raw, compat = setup({Arcanyx = "1.1.6"}, {["s6x-arcanyx-voidcraft"] = {value = false}})
 compat.data_final_fixes()
-check(raw["assembling-machine"]["s6x-voidworks-fusion"].surface_conditions == nil, "no change with the setting off")
-check(raw.recipe["s6x-voidworks-fusion"].surface_conditions == nil and raw.recipe["s6xvcinv-a"].surface_conditions == nil,
-	"no recipe changes with the setting off")
 check(#logged == 0, "nothing is logged with the setting off")
 for _, name in ipairs(NOTHING_RECIPES) do
 	check(raw.recipe[name].surface_conditions == nil, "the recipe " .. name .. " stays open with the setting off")
@@ -163,31 +138,25 @@ for _, name in ipairs(NOTHING_MACHINES) do
 end
 
 -- A missing setting counts as off.
-raw, compat = setup({Arcanyx = "1.1.5"}, {})
+raw, compat = setup({Arcanyx = "1.1.6"}, {})
 compat.data_final_fixes()
-check(raw.recipe["s6xvcinv-a"].surface_conditions == nil and #logged == 0, "no change without the setting")
+check(#logged == 0, "no change without the setting")
 check(raw.recipe["s6x-prismite-deep-mining"].surface_conditions == nil and raw.recipe["s6x-entropic-creation"].surface_conditions == nil,
 	"the out-of-nothing recipes stay open without the setting")
 
--- With ArcanyxContainment and its voidcraft setting off, only the construction is restricted: the forge recipe.
-raw, compat = setup({Arcanyx = "1.1.5", ArcanyxContainment = "1.0.0"}, {["s6x-ac-arcanyx-voidcraft"] = {value = false}})
+-- With ArcanyxContainment the setting is its own: off keeps everything open, on closes it, Arcanyx's own setting does not count.
+raw, compat = setup({Arcanyx = "1.1.6", ArcanyxContainment = "1.0.0"}, {["s6x-ac-arcanyx-voidcraft"] = {value = false}})
 compat.data_final_fixes()
-check(count_magic(raw.recipe["s6x-voidworks-fusion"]) == 1, "the voidforge recipe is closed with Containment")
-check(raw["assembling-machine"]["s6x-voidworks-fusion"].surface_conditions == nil, "the voidforge itself stays open with the Containment setting off")
-check(raw.recipe["s6xvcinv-a"].surface_conditions == nil and raw.recipe["s6xvcinv-old"].surface_conditions == nil,
-	"inverse recipes stay open with the Containment setting off")
-check(#logged == 2, "one change and a summary are logged, got " .. #logged)
+check(#logged == 0, "nothing is logged with the Containment setting off")
 check(raw.recipe["s6x-prismite-deep-mining"].surface_conditions == nil and raw.recipe["s6x-entropic-creation"].surface_conditions == nil
 	and count_magic(raw["assembling-machine"]["s6x-prismite-deep-mine"]) == 0, "the out-of-nothing prototypes stay open with the Containment setting off")
-
--- With ArcanyxContainment and its setting on, everything is closed; Arcanyx's own setting is ignored.
-raw, compat = setup({Arcanyx = "1.1.5", ArcanyxContainment = "1.0.0"}, on("s6x-ac-arcanyx-voidcraft"))
+raw, compat = setup({Arcanyx = "1.1.6", ArcanyxContainment = "1.0.0"}, on("s6x-ac-arcanyx-voidcraft"))
 compat.data_final_fixes()
-check(count_magic(raw["assembling-machine"]["s6x-voidworks-fusion"]) == 1 and count_magic(raw.recipe["s6xvcinv-b"]) == 1,
-	"the Containment setting closes the voidforge and the inverse recipes")
-raw, compat = setup({Arcanyx = "1.1.5", ArcanyxContainment = "1.0.0"}, on("s6x-arcanyx-voidcraft"))
+check(count_magic(raw.recipe["s6x-prismite-deep-mining"]) == 1 and count_magic(raw["assembling-machine"]["s6x-prismite-deep-mine"]) == 1,
+	"the Containment setting closes the out-of-nothing prototypes")
+raw, compat = setup({Arcanyx = "1.1.6", ArcanyxContainment = "1.0.0"}, on("s6x-arcanyx-voidcraft"))
 compat.data_final_fixes()
-check(raw.recipe["s6xvcinv-a"].surface_conditions == nil, "Arcanyx's own setting does not count under Containment")
+check(raw.recipe["s6x-prismite-deep-mining"].surface_conditions == nil, "Arcanyx's own setting does not count under Containment")
 
 -- ArcanyxContainment has closed its six prototypes before this module runs: no second condition on them, the rest is closed as before.
 local function containment_pass(raw_data)
@@ -205,7 +174,7 @@ local function containment_pass(raw_data)
 		table.insert(raw_data["assembling-machine"]["harene-infused-" .. name].surface_conditions, magic())
 	end
 end
-raw, compat = setup({Arcanyx = "1.1.5", ArcanyxContainment = "1.0.0"}, on("s6x-ac-arcanyx-voidcraft"))
+raw, compat = setup({Arcanyx = "1.1.6", ArcanyxContainment = "1.0.0"}, on("s6x-ac-arcanyx-voidcraft"))
 containment_pass(raw)
 compat.data_final_fixes()
 for _, name in ipairs({"s6x-entropic-creation", "s6x-entropic-creation-crushed", "s6x-prismite-deep-mine", "s6x-prismite-deep-mine-advanced"}) do
@@ -224,7 +193,7 @@ check(raw.recipe["s6x-cursed-furnace"].surface_conditions ~= nil and count_magic
 check(not table.concat(logged, "\n"):find("recipe s6x-entropic-creation ", 1, true), "nothing is logged for what Containment closed")
 
 -- With Containment and its setting off, Containment's six stay closed and this module changes none of the out-of-nothing prototypes.
-raw, compat = setup({Arcanyx = "1.1.5", ArcanyxContainment = "1.0.0"}, {["s6x-ac-arcanyx-voidcraft"] = {value = false}})
+raw, compat = setup({Arcanyx = "1.1.6", ArcanyxContainment = "1.0.0"}, {["s6x-ac-arcanyx-voidcraft"] = {value = false}})
 containment_pass(raw)
 compat.data_final_fixes()
 check(raw.recipe["s6x-prismite-deep-mining"].surface_conditions == nil, "the mining recipes stay open with the Containment setting off")
@@ -233,20 +202,13 @@ check(count_magic(raw.recipe["s6x-entropic-creation"]) == 1, "Containment's cond
 -- Without Arcanyx nothing changes.
 raw, compat = setup({}, on("s6x-arcanyx-voidcraft"))
 compat.data_final_fixes()
-check(raw.recipe["s6xvcinv-a"].surface_conditions == nil and #logged == 0, "no change without Arcanyx")
-
--- Without the voidforge (no Space Age, or Voidcraft before 2.10.0) the rest still works and nothing fails.
-raw, compat = setup({Arcanyx = "1.1.5"}, on("s6x-arcanyx-voidcraft"), false)
-compat.data_final_fixes()
-check(count_magic(raw.recipe["s6xvcinv-a"]) == 1, "inverse recipes are closed without the voidforge")
-check(raw["assembling-machine"]["s6x-voidworks-fusion"] == nil and raw.recipe["s6x-voidworks-fusion"] == nil, "nothing is created")
+check(raw.recipe["s6x-prismite-deep-mining"].surface_conditions == nil and #logged == 0, "no change without Arcanyx")
 
 -- Without Iridescent Industry and Arcanyx's recipes (older versions, or renamed) nothing fails and nothing is created.
-raw, compat = setup({Arcanyx = "1.1.5"}, on("s6x-arcanyx-voidcraft"), true, false)
+raw, compat = setup({Arcanyx = "1.1.6"}, on("s6x-arcanyx-voidcraft"), false)
 compat.data_final_fixes()
-check(count_magic(raw.recipe["s6xvcinv-a"]) == 1, "the rest still works without the out-of-nothing prototypes")
 check(raw.recipe["s6x-prismite-deep-mining"] == nil and raw["assembling-machine"]["s6x-prismite-deep-mine"] == nil, "nothing is created")
-check(not table.concat(logged, "\n"):find("out of nothing", 1, true), "nothing about out-of-nothing is logged")
+check(#logged == 0, "nothing is logged")
 
 -- Empty data.raw does not fail.
 rawset(_G, "data", {raw = {}})
@@ -257,8 +219,8 @@ local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
 local asteroids = assert(source:find('require("prototypes.system.asteroid_performance").data_final_fixes()', 1, true))
-local own = assert(source:find('require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()', 1, true))
+local own = assert(source:find('require("prototypes.compat.arcanyx_from_nothing").data_final_fixes()', 1, true))
 local navigation = assert(source:find('require("prototypes.compat.crafting_navigation").data_final_fixes()', 1, true))
 check(asteroids < own and own < navigation, "the pass runs after the asteroid passes and before the menu pass")
 
-print("arcanyx_voidcraft_gaps: ok")
+print("arcanyx_from_nothing: ok")

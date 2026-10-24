@@ -2,6 +2,7 @@ local Events = require("__razi_lib__/runtime/events")
 local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local razi_prepared_2x = require("scripts.razi_prepared_2x")
 local quality_asteroids = require("scripts.razi_quality_asteroids")
+local voidcraft_variants = require("scripts.compat.voidcraft_variants")
 
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -163,6 +164,9 @@ end)
 events:on_event(defines.events.on_player_removed, function(event)
 	razi_safe_cheat.on_player_removed(event.player_index)
 end)
+
+-- Voidcraft 2.11.1 hands the unlock of its recipe variants to this interface instead of walking every recipe on each research.
+voidcraft_variants.register()
 
 events:install()
 

@@ -239,10 +239,9 @@ require("prototypes.system.asteroid_performance").data_final_fixes()
 -- copy or add a prototype, as the last edit of created_effect.
 require("prototypes.compat.carna_spire_copies").data_final_fixes()
 
--- Arcanyx's keep-Voidcraft-on-Arcanyx condition misses the Astral voidforge and, in 2.1, every inverse recipe; the deep mines and
--- the entropic creation of Iridescent Industry and Arcanyx make ore out of nothing on any surface. After every pass that could
--- add a recipe, before the menu pass.
-require("prototypes.compat.arcanyx_voidcraft_gaps").data_final_fixes()
+-- The deep mines and the entropic creation of Iridescent Industry and Arcanyx make ore out of nothing on any surface; Arcanyx's
+-- keep-Voidcraft-on-Arcanyx condition does not reach them. After every pass that could add a recipe, before the menu pass.
+require("prototypes.compat.arcanyx_from_nothing").data_final_fixes()
 
 -- Lithium Battery (7.5.0 and older) deletes two recipe copies that Planet Crucible's productivity technologies still list, and
 -- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
