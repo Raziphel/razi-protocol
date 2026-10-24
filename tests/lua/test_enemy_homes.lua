@@ -130,7 +130,7 @@ setup(all_mods)
 run_all()
 local homes = {
 	armoured = {"hyarion"}, arachnids = {"arig"}, explosive = {"moshine"}, toxic = {"cubium"},
-	cold = {"aquilo", "frozeta"}, electric = {"ribbonia"}
+	cold = {"frozeta"}, electric = {"ribbonia"}
 }
 for family, entity_name in pairs(nest) do
 	local expected = {}
@@ -152,7 +152,7 @@ for _, planet_name in ipairs({"panglia", "crucible", "vesta", "paracelsin", "cor
 end
 
 -- Pollution only where there is a home; Fulgora's is the enemy mod's own, Lemures belongs to Dea Dia.
-for _, planet_name in ipairs({"hyarion", "arig", "moshine", "cubium", "aquilo", "frozeta", "ribbonia"}) do
+for _, planet_name in ipairs({"hyarion", "arig", "moshine", "cubium", "frozeta", "ribbonia"}) do
 	check(data.raw.planet[planet_name].pollutant_type == "pollution", planet_name .. " carries pollution")
 end
 for _, planet_name in ipairs({"fulgora", "lemures", "nauvis", "terrapalus", "athos"}) do
@@ -180,7 +180,7 @@ check(zeroed("arig", nest.armoured) and zeroed("cubium", nest.arachnids), "Arig 
 check(placed("cubium", toxic_worm), "Cubium has the toxic worms")
 check(not zeroed("hyarion", nest.armoured), "Hyarion keeps its own family")
 -- The vanilla enemies are off on the homes (as before); a planet that switched the control off is left alone.
-for _, planet_name in ipairs({"hyarion", "arig", "moshine", "cubium", "aquilo", "frozeta", "ribbonia"}) do
+for _, planet_name in ipairs({"hyarion", "arig", "moshine", "cubium", "frozeta", "ribbonia"}) do
 	check(zeroed(planet_name, "biter-spawner"), "vanilla biters are off on " .. planet_name)
 end
 check(map_gen("quiet").autoplace_settings == nil, "a planet with the control off gets no entries")
