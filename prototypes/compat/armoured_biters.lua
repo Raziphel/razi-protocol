@@ -1,7 +1,21 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
--- ArmouredBiters21Compat is the 2.1 fork of Armoured Biters with the same prototype names.
-if not enemy_autoplace.enabled() or not (mods["ArmouredBiters"] or mods["ArmouredBiters21Compat"]) then
+-- ArmouredBiters21Compat and ArmouredBiters-2_1-update (the one Balack requires) are 2.1 forks of Armoured Biters with
+-- the same prototype names; with both installed the one that loads last owns them.
+local armoured_biter_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}
+
+local function armoured_biters_installed()
+	for _, mod_name in ipairs(armoured_biter_mods) do
+		if mods[mod_name] then
+			return true
+		end
+	end
+
+	return false
+end
+
+if not enemy_autoplace.enabled() or not armoured_biters_installed() then
 	return
 end
 
@@ -13,40 +27,11 @@ local armoured_biter_units = {
 	["leviathan-armoured-biter"] = true
 }
 
-local armoured_planets = {
-	"panglia",
-	"hyarion",
-	"nexus",
-	"crucible"
-}
-
 local armoured_enemy_entities = {
 	"armoured-biter-spawner"
 }
 
 local armoured_biter_tiles = {
-	"panglia-volcanic-soil-dark",
-	"panglia-volcanic-soil-light",
-	"panglia-volcanic-ash-soil",
-	"panglia-volcanic-ash-flats",
-	"panglia-volcanic-ash-light",
-	"panglia-volcanic-ash-dark",
-	"panglia-volcanic-cracks",
-	"panglia-volcanic-cracks-warm",
-	"panglia-volcanic-folds",
-	"panglia-volcanic-folds-flat",
-	"panglia-volcanic-folds-warm",
-	"panglia-volcanic-pumice-stones",
-	"panglia-volcanic-cracks-hot",
-	"panglia-volcanic-jagged-ground",
-	"panglia-volcanic-smooth-stone",
-	"panglia-volcanic-smooth-stone-warm",
-	"panglia-volcanic-ash-cracks",
-	"panglia-midland-turquoise-bark",
-	"panglia-midland-turquoise-bark-2",
-	"panglia-wetland-light-dead-skin",
-	"panglia-wetland-dead-skin",
-	"panglia-midland-cracked-lichen-dark",
 	"hyarion-jagged-ground",
 	"hyarion-cracks-hot",
 	"hyarion-cracks-warm",
@@ -63,33 +48,7 @@ local armoured_biter_tiles = {
 	"hyarion-folds-warm",
 	"hyarion-soil-dark",
 	"hyarion-soil-light",
-	"hyarion-crystal-soil",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks",
-	"planet-crucible-dirt-1",
-	"planet-crucible-dirt-2",
-	"planet-crucible-dirt-3",
-	"planet-crucible-dirt-4",
-	"planet-crucible-rock-1",
-	"planet-crucible-rock-2",
-	"planet-crucible-rock-3",
-	"planet-crucible-rock-4",
-	"planet-crucible-sand-1"
+	"hyarion-crystal-soil"
 }
 
 local function remove_armoured_units_from_spawner(spawner)
@@ -120,7 +79,8 @@ if enemy_autoplace.has_valid_autoplace(armoured_spawner) then
 	remove_armoured_units_from_spawner(enemy_autoplace.entity_exists("unit-spawner", "biter-spawner"))
 	armoured_spawner.autoplace.tile_restriction = enemy_autoplace.existing_tiles(armoured_biter_tiles)
 
-	for _, planet_name in pairs(armoured_planets) do
+	enemy_homes.claim("armoured", armoured_enemy_entities)
+	for _, planet_name in pairs(enemy_homes.planets("armoured")) do
 		enemy_autoplace.add_entities_to_planet(planet_name, armoured_enemy_entities, "enemy-base", armoured_spawner_exists)
 	end
 end

@@ -1,5 +1,18 @@
+local Events = require("__razi_lib__/runtime/events")
+local razi_safe_cheat = require("scripts.razi_safe_cheat")
+local razi_prepared_2x = require("scripts.razi_prepared_2x")
+local quality_asteroids = require("scripts.razi_quality_asteroids")
+
+local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
+local transceiver_build_events = {
+	defines.events.on_built_entity,
+	defines.events.on_robot_built_entity,
+	defines.events.on_entity_cloned,
+	defines.events.script_raised_built,
+	defines.events.script_raised_revive
+}
 local nexus_visibility_technologies = {
 	"element882",
 	"ionit-liquefaction",
@@ -84,7 +97,11 @@ local function check_existing_transceivers()
 
 	-- get_entity_count is O(1): the engine keeps the counts, so no surface search.
 	for _, force in pairs(game.forces) do
-		if force.get_entity_count(active_transceiver_name) > 0 then
+		local technology = force.technologies[transceiver_gate_technology]
+		-- Most forces already have the gate. Skip even the O(1) count
+		-- after research, including the 10-minute safeguard poll.
+		if technology and not technology.researched
+			and force.get_entity_count(active_transceiver_name) > 0 then
 			unlock_transceiver_gate(force)
 		end
 	end
@@ -122,16 +139,37 @@ end
 
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
-script.on_init(check_existing_transceivers)
-script.on_configuration_changed(function(event)
+events:on_init(check_existing_transceivers)
+events:on_configuration_changed(function(event)
 	check_existing_transceivers()
 	repair_nexus_technology_visibility(event)
+	razi_prepared_2x.on_configuration_changed(event)
 end)
-script.on_nth_tick(600, check_existing_transceivers)
-script.on_event({
-	defines.events.on_built_entity,
-	defines.events.on_robot_built_entity,
-	defines.events.on_entity_cloned,
-	defines.events.script_raised_built,
-	defines.events.script_raised_revive
-}, on_entity_built)
+events:on_nth_tick(600, check_existing_transceivers)
+events:on_event(transceiver_build_events, on_entity_built)
+
+-- Spread debug research across ticks instead of freezing the whole modpack.
+commands.add_command("razi-cheat", {"razi-cheat.help"}, razi_safe_cheat.command)
+-- Exits at once while no staged research is running.
+events:on_nth_tick(6, razi_safe_cheat.tick)
+-- Only the quality carrier asteroids raise this effect: no scanning and no ticking.
+events:on_event(defines.events.on_script_trigger_effect, quality_asteroids.on_script_trigger_effect)
+-- /cheat is a built-in command and cannot be replaced. This notification
+-- runs only if the engine gets far enough to emit its console event.
+events:on_event(defines.events.on_console_command, razi_safe_cheat.warn_builtin)
+events:on_event(defines.events.on_player_joined_game, function(event)
+	razi_safe_cheat.admin_tip(game.get_player(event.player_index))
+end)
+events:on_event(defines.events.on_player_removed, function(event)
+	razi_safe_cheat.on_player_removed(event.player_index)
+end)
+
+events:install()
+
+-- Filters must be set after the registration they belong to. They apply to
+-- every handler on these events, so a feature that needs other built
+-- entities must widen this filter rather than add its own registration.
+local transceiver_filter = {{filter = "name", name = active_transceiver_name}}
+for _, event_id in ipairs(transceiver_build_events) do
+	script.set_event_filter(event_id, transceiver_filter)
+end

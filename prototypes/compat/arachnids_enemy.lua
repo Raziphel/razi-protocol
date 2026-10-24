@@ -1,4 +1,5 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
 if not enemy_autoplace.enabled() or not mods["Arachnids_enemy"] then
 	return
@@ -12,33 +13,7 @@ local arachnid_tiles = {
 	"arig-stable-sand",
 	"planetaris-sandstone-1",
 	"planetaris-sandstone-2",
-	"planetaris-sandstone-3",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks",
-	"planet-crucible-dirt-1",
-	"planet-crucible-dirt-2",
-	"planet-crucible-dirt-3",
-	"planet-crucible-dirt-4",
-	"planet-crucible-rock-1",
-	"planet-crucible-rock-2",
-	"planet-crucible-rock-3",
-	"planet-crucible-rock-4",
-	"planet-crucible-sand-1"
+	"planetaris-sandstone-3"
 }
 
 local function add_arachnids_to_planet(planet_name)
@@ -69,7 +44,8 @@ end
 
 -- Without a naturally placeable nest, keep the planets' vanilla enemies.
 if enemy_autoplace.has_valid_autoplace(arachnid_spawner) then
-	add_arachnids_to_planet("arig")
-	add_arachnids_to_planet("nexus")
-	add_arachnids_to_planet("crucible")
+	enemy_homes.claim("arachnids", {"arachnid-spawner-unitspawner"})
+	for _, planet_name in pairs(enemy_homes.planets("arachnids")) do
+		add_arachnids_to_planet(planet_name)
+	end
 end

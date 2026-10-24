@@ -90,19 +90,17 @@ local nyxaris_locations = {
             orientation = 0.91,
         },
     },
-    {
-        type = "planet",
-        name = "panglia",
-        orbit = {
-            parent = {
-                type = "space-location",
-                name = "nyxaris",
-            },
-            distance = 18,
-            orientation = 0.72,
-        },
-    },
 }
+
+-- Panglia follows Moshine in its original source technology chain.
+-- Global galaxy_layout remains the final authority on orbit placement.
+if mods["panglia_planet"] and data.raw.planet and data.raw.planet["panglia"] then
+    table.insert(nyxaris_locations, {
+        type = "planet", name = "panglia",
+        orbit = {parent = {type = "space-location", name = "nyxaris"},
+                 distance = 44, orientation = 0.44}
+    })
+end
 
 if mods["pelagos"] then
     table.insert(nyxaris_locations, {
@@ -158,14 +156,6 @@ local connections = {
 		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
 	},
-	{
-		type = "space-connection",
-		name = "sye-nyxaris-panglia",
-		from = "sye-nyxaris",
-		to = "panglia",
-		length = 25000,
-		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
-	},
 }
 
 local function location_exists(name)
@@ -178,6 +168,18 @@ local function add_connection_if_locations_exist(connection)
 		table.insert(connections, connection)
 	end
 end
+
+-- Panglia's routes are set in data-final-fixes (route_reconcile). This early link only exists, and only
+-- when Panglia does, so mods that measure distances at this stage (Muluna's telescope recipes) still reach it.
+-- route_authority removes it again.
+add_connection_if_locations_exist({
+	type = "space-connection",
+	name = "sye-nyxaris-panglia",
+	from = "sye-nyxaris",
+	to = "panglia",
+	length = 25000,
+	asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)
+})
 
 if mods["dea-dia-system"] then
 	add_connection_if_locations_exist({
@@ -201,8 +203,8 @@ end
 if mods["pelagos"] then
 	add_connection_if_locations_exist({
 		type = "space-connection",
-		name = "panglia-pelagos",
-		from = "panglia",
+		name = "moshine-pelagos",
+		from = "moshine",
 		to = "pelagos",
 		length = 15000,
 		asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_fulgora)

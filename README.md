@@ -110,16 +110,16 @@ Optional Void Processing is still supported, but it is treated as a late Deep Sp
 
 ## Enemy Routing
 
-Razi Protocol supports several optional enemy packs and places them where they fit best.
+Razi Protocol supports several optional enemy packs and places each one where its author or the planet's theme says it belongs. Nauvis keeps the vanilla enemies, and planets with enemies of their own (Gleba, Tellus, Lemures with Dea Dia, and so on) are not touched.
 
-- Arachnids: Arig, Nexus, Crucible
-- Armoured biters: Panglia, Hyarion, Nexus, Crucible
-- Cold biters: Aquilo, Paracelsin, Frozeta, optional Cerys, Nexus
-- Electric flying enemies: Corrundum, Ribbonia, Nexus, plus their native Fulgora theme
-- Explosive biters: Moshine, Nexus
-- Toxic biters: Cubium, Vesta, Nexus, Crucible
+- Arachnids: Arig
+- Armoured biters: Hyarion
+- Cold biters: Frozeta
+- Electric flying enemies: Fulgora (their own planet) and Ribbonia
+- Explosive biters: Moshine
+- Toxic biters: Cubium
 
-Where Razi Protocol assigns a themed enemy faction, it can also suppress vanilla biter and worm autoplace so the custom threat actually defines the planet. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
+The specialist nests (Armoured, Toxic, Arachnids) share the vanilla enemy control, so they are switched off by name on Nauvis, Terrapalus and every other planet that has that control and is not their home. Where Razi Protocol assigns a themed enemy faction, it also suppresses vanilla biter and worm autoplace so the custom threat actually defines the planet. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
 
 ## Crafting Cleanup
 
@@ -133,6 +133,10 @@ Razi Protocol keeps Logistics focused on the normal logistic core, then adds a d
 - Floors, landfill, scaffolding, foundations, and platform pieces
 
 It also includes a few narrow balance passes for overlapping unlocks where two planets solve a similar problem in nearly the same way.
+
+## Orbital Salvage
+
+[Razi Rocket Reusability](https://mods.factorio.com/mod/razi-rocket-reusability) (1.1.5 or newer) is a required mod: after a rocket launch a used rocket can drift in next to a space platform, its chunks are crushed back into rocket parts, and the Remnant Beacon draws the wrecks in. Razi Protocol leaves that mod's recipes, research and settings as they are and adds up to three optional bulk-crushing technologies on top: Precision Rocket Reclamation (Remnant Beacon and Fulgora), Cryogenic Rocket Reclamation (Aquilo) and Network Rocket Reclamation (the Precision Control Matrix and Planet Express' interplanetary trade logistics). Network Rocket Reclamation appears only when the Precision Control Matrix research exists (the Planetary interdependence startup setting is not Off) and Planet Express is installed. Each technology processes several chunks per craft, copies the native salvage outputs of the installed pack with a small handling bonus and allows no productivity. Native Rocket Chunk Processing stays available, and none of this gates a planet.
 
 ## Compatibility Focus
 
@@ -160,6 +164,8 @@ Razi Protocol is designed for a large content pack, not a tiny minimalist setup.
 Core content in the intended experience includes:
 
 - RAZI Library
+- Razi More Asteroids
+- Razi Rocket Reusability
 - Krastorio2 Spaced Out
 - PlanetsLib
 - Muluna
@@ -186,12 +192,15 @@ Core content in the intended experience includes:
 
 Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
+Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground and Secretas Orbit Patch.
+
 ## Modpack Guidance
 
 For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
-- Install RAZI Library 1.0.0 or newer; it is now a required shared foundation used directly by Razi Protocol's data-stage compatibility code.
+- Install RAZI Library 1.3.1 or newer and Razi More Asteroids 1.1.0 or newer; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
+- Install Razi Rocket Reusability 1.1.5 or newer; it is a required mod now, and the original Rocket Reusability is incompatible with it.
 - Factorio 2.1 migration status and optional third-party compatibility gaps are tracked in [FACTORIO-2.1-COMPATIBILITY.md](FACTORIO-2.1-COMPATIBILITY.md). The required dependency path now consists entirely of native Factorio 2.1 releases.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
@@ -207,6 +216,8 @@ Releases are made by CI from `main` ([.github/workflows/release.yml](.github/wor
 - Do not edit the version in `info.json` or `changelog.txt` by hand, and do not upload zips to the portal: CI does both.
 - Files that stay out of the zip are marked `export-ignore` in [.gitattributes](.gitattributes).
 - The portal page (title, summary, description, tags) comes from [tools/portal/](tools/portal/): edit it there and run `gh workflow run portal.yml`.
+
+How to work on the mod: [contributing.md](contributing.md).
 
 ## Support
 

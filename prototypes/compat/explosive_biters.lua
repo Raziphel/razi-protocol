@@ -1,4 +1,5 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
 if not enemy_autoplace.enabled() or not mods["Explosive_biters"] then
 	return
@@ -14,11 +15,6 @@ local explosive_enemy_entities = {
 	"behemoth-explosive-worm-turret",
 	"leviathan-explosive-worm-turret",
 	"mother-explosive-worm-turret"
-}
-
-local explosive_planets = {
-	"moshine",
-	"nexus"
 }
 
 local explosive_source_planets = {
@@ -42,24 +38,7 @@ local explosive_planet_tiles = {
 	"moshine-lava",
 	"moshine-dust",
 	"moshine-sand",
-	"moshine-dunes",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
+	"moshine-dunes"
 }
 
 local existing_explosive_planet_tiles = enemy_autoplace.existing_tiles(explosive_planet_tiles)
@@ -72,6 +51,6 @@ for _, planet_name in pairs(explosive_source_planets) do
 	enemy_autoplace.remove_entities_from_planet(planet_name, explosive_enemy_entities, explosive_enemy_control)
 end
 
-for _, planet_name in pairs(explosive_planets) do
+for _, planet_name in pairs(enemy_homes.planets("explosive")) do
 	enemy_autoplace.add_entities_to_planet(planet_name, explosive_enemy_entities, explosive_enemy_control)
 end

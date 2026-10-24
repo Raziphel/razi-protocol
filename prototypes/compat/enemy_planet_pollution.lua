@@ -10,7 +10,7 @@ local enemy_planet_pollution = {}
 -- a pollution value the absorption of its vanilla counterpart.
 local planets = {
 	{planet = "arig", enemy_mods = {"Arachnids_enemy"}, like_tile = "sand-1", fallback = 0.000015},
-	{planet = "hyarion", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
+	{planet = "hyarion", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
 }
 
 local function planet_tile_names(planet_name)

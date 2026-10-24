@@ -1,4 +1,5 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
 if not enemy_autoplace.enabled() or not mods["Cold_biters"] then
 	return
@@ -26,13 +27,6 @@ local cold_enemy_autoplace = {
 	["mother-cold-worm-turret"] = {type = "turret", distance = 14, worm = true}
 }
 
-local cold_planets = {
-	"aquilo",
-	"paracelsin",
-	"frozeta",
-	"nexus"
-}
-
 local cold_source_planets = {
 	"nauvis"
 }
@@ -46,23 +40,7 @@ local cold_planet_tiles = {
 	"ice-smooth",
 	"ammoniacal-ocean",
 	"ammoniacal-ocean-2",
-	"brash-ice",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
+	"brash-ice"
 }
 
 local existing_cold_planet_tiles = enemy_autoplace.existing_tiles(cold_planet_tiles)
@@ -104,6 +82,6 @@ for _, planet_name in pairs(cold_source_planets) do
 	enemy_autoplace.remove_entities_from_planet(planet_name, cold_enemy_entities, cold_enemy_control)
 end
 
-for _, planet_name in pairs(cold_planets) do
+for _, planet_name in pairs(enemy_homes.planets("cold")) do
 	enemy_autoplace.add_entities_to_planet(planet_name, cold_enemy_entities, cold_enemy_control, cold_entity_exists)
 end

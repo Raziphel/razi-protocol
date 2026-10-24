@@ -1,4 +1,5 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
 if not enemy_autoplace.enabled() or not mods["Electric_flying_enemies"] then
 	return
@@ -42,27 +43,7 @@ local electric_enemy_tiles = {
 	"dry-dirt",
 	"sand-1",
 	"sand-2",
-	"sand-3",
-	"corrundum-dunes",
-	"corrundum-sand",
-	"petroleum-tile",
-	"volcanic-soil-dark",
-	"volcanic-soil-light",
-	"volcanic-ash-soil",
-	"volcanic-ash-flats",
-	"volcanic-ash-light",
-	"volcanic-ash-dark",
-	"volcanic-cracks",
-	"volcanic-cracks-warm",
-	"volcanic-folds",
-	"volcanic-folds-flat",
-	"volcanic-folds-warm",
-	"volcanic-pumice-stones",
-	"volcanic-cracks-hot",
-	"volcanic-jagged-ground",
-	"volcanic-smooth-stone",
-	"volcanic-smooth-stone-warm",
-	"volcanic-ash-cracks"
+	"sand-3"
 }
 
 local explicit_electric_spawners = {
@@ -75,12 +56,6 @@ local explicit_electric_spawners = {
 	"electric-flying-enemies-spawner",
 	"electric-enemy-spawner",
 	"unit-replicator"
-}
-
-local electric_planets = {
-	"corrundum",
-	"ribbonia",
-	"nexus"
 }
 
 local function entity_exists(entity_name)
@@ -154,6 +129,6 @@ for _, spawner in pairs(electric_spawners) do
 	extend_tile_restriction(spawner)
 end
 
-for _, planet_name in pairs(electric_planets) do
+for _, planet_name in pairs(enemy_homes.planets("electric")) do
 	add_electric_enemies_to_planet(planet_name, electric_spawners)
 end
