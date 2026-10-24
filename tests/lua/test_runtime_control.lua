@@ -75,7 +75,16 @@ local forces = {
 	enemy = force("enemy", false, 0),
 	done = force("done", true, 1)
 }
-rawset(_G, "game", {tick = 0, forces = forces, players = {}, get_player = function() return nil end})
+-- One surface whose planet switches the Arachnid nest off: init and configuration changes put that into the surface.
+local surface_writes = 0
+local surface_settings = {autoplace_settings = {entity = {settings = {}}}}
+local surface = {name = "nauvis", planet = {prototype = {map_gen_settings = {autoplace_settings = {entity = {settings = {
+	["arachnid-spawner-unitspawner"] = {frequency = 0, size = 0, richness = 0}}}}}}}}
+setmetatable(surface, {
+	__index = function(_, key) if key == "map_gen_settings" then return surface_settings end end,
+	__newindex = function(_, key, value) if key == "map_gen_settings" then surface_writes = surface_writes + 1; surface_settings = value end end
+})
+rawset(_G, "game", {tick = 0, forces = forces, players = {}, surfaces = {nauvis = surface}, get_player = function() return nil end})
 rawset(_G, "storage", {})
 
 require("control")
@@ -103,6 +112,15 @@ check(forces.player.technologies[gate].researched and forces.player.technologies
 	"A force with an active transceiver should get the gate")
 check(not forces.enemy.technologies[gate].researched, "A force without a transceiver keeps the gate closed")
 check(not counted.done, "A force with the gate already researched should not be counted")
+
+-- Surfaces that exist get the nests their planet switches off, once (the second call finds nothing to change).
+local arachnid_entry = surface_settings.autoplace_settings.entity.settings["arachnid-spawner-unitspawner"] or {}
+check(surface_writes == 1 and arachnid_entry.frequency == 0, "Init should switch the planet's nests off on an existing surface")
+lifecycle.changed({mod_changes = {}})
+check(surface_writes == 1, "A configuration change finds nothing more to switch off")
+surface_settings.autoplace_settings.entity.settings["arachnid-spawner-unitspawner"] = nil
+lifecycle.changed({mod_changes = {}})
+check(surface_writes == 2, "A configuration change puts a missing entry back")
 
 -- A build event opens the gate as well.
 forces.enemy.technologies[gate] = technology(false, false)

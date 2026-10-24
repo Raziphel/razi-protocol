@@ -3,6 +3,7 @@ local razi_safe_cheat = require("scripts.razi_safe_cheat")
 local razi_prepared_2x = require("scripts.razi_prepared_2x")
 local quality_asteroids = require("scripts.razi_quality_asteroids")
 local voidcraft_variants = require("scripts.compat.voidcraft_variants")
+local enemy_surfaces = require("scripts.razi_enemy_surfaces")
 
 local events = Events.new()
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -141,8 +142,11 @@ end
 -- K2SO raises a build event when the charged transceiver becomes the active one.
 -- The periodic check covers old saves and any weird script ordering.
 events:on_init(check_existing_transceivers)
+-- Surfaces that exist already get the switched-off nests of their planet for their new chunks.
+events:on_init(enemy_surfaces.apply)
 events:on_configuration_changed(function(event)
 	check_existing_transceivers()
+	enemy_surfaces.apply()
 	repair_nexus_technology_visibility(event)
 	razi_prepared_2x.on_configuration_changed(event)
 end)

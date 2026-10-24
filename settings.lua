@@ -15,6 +15,14 @@ data:extend({
 		order = "a[compat]-a[enemy-routing]"
 	},
 	{
+		type = "string-setting",
+		name = "razi-enemy-habitats",
+		setting_type = "startup",
+		default_value = "auto",
+		allowed_values = {"auto", "none", "normal", "wide", "widest"},
+		order = "a[compat]-a2[enemy-habitats]"
+	},
+	{
 		type = "bool-setting",
 		name = "razi-hide-redundant-assembler-tiers",
 		setting_type = "startup",
