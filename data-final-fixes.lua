@@ -137,6 +137,8 @@ require("prototypes.compat.network_components").register_premium()
 -- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
 -- the cycle check sees the final graph) and before the lab inputs are deduplicated.
 require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+-- Final optional arrival pacing after shared research and science integrations.
+require("prototypes.compat.planet_arrival_pacing").data_final_fixes()
 
 -- The bridges and the staged Aquilo upgrades add prerequisites after the first pass of the arrival
 -- guards; repeat them so the final prerequisite graph is clean.

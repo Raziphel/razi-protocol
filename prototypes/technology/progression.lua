@@ -237,12 +237,11 @@ add_existing_prerequisites("solaris-discovery", {
 	"planet-discovery-muluna"
 })
 
--- Aegis and Bellicos form a self-contained expedition beyond the solar-system
--- edge. Gate the entrance on reaching the edge, then retain the source mod's
--- internal discovery chain and its requirement for Pulsar Science before
--- Promethium research.
+-- Aegis is the shared difficult expedition below the first two stars.
+-- Neither Vespera nor post-finale Deep Space must be required to reach it;
+-- original source pulsar industries and deep Bellicos research stay intact.
 set_prerequisites_if_exists("discovery-aegis-outer", {
-	"stellar-discovery-solar-system-edge"
+	"solaris-discovery", "nyxaris-discovery"
 })
 add_existing_prerequisites("linox-technology_planet-discovery-linox", {"planet-discovery-cubium"})
 set_many_science_after({
