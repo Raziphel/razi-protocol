@@ -31,6 +31,9 @@ M.baseline={
  ["razi-resource-richness"]="normal",
  ["razi-science-demand"]="normal",
  ["razi-evolution-speed"]="normal",
+ ["razi-rocket-launch-cost"]="normal",
+ ["razi-factory-throughput"]="normal",
+ ["razi-fortification-durability"]="normal",
 }
 
 -- Declaration order; the one list every loop walks, so results are stable.
@@ -50,6 +53,9 @@ M.managed={
  "razi-resource-richness",
  "razi-science-demand",
  "razi-evolution-speed",
+ "razi-rocket-launch-cost",
+ "razi-factory-throughput",
+ "razi-fortification-durability",
 }
 
 local function copy(source)
@@ -77,6 +83,9 @@ M.presets={
   ["razi-resource-richness"]="generous",
   ["razi-science-demand"]="light",
   ["razi-evolution-speed"]="slow",
+  ["razi-rocket-launch-cost"]="economical",
+  ["razi-factory-throughput"]="boosted",
+  ["razi-fortification-durability"]="reinforced",
  },
  normal=copy(M.baseline),
  hard={
@@ -95,6 +104,9 @@ M.presets={
   ["razi-resource-richness"]="poor",
   ["razi-science-demand"]="intensive",
   ["razi-evolution-speed"]="accelerated",
+  ["razi-rocket-launch-cost"]="costly",
+  ["razi-factory-throughput"]="constrained",
+  ["razi-fortification-durability"]="fragile",
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -112,6 +124,9 @@ M.presets={
   ["razi-resource-richness"]="meager",
   ["razi-science-demand"]="grueling",
   ["razi-evolution-speed"]="runaway",
+  ["razi-rocket-launch-cost"]="punishing",
+  ["razi-factory-throughput"]="strained",
+  ["razi-fortification-durability"]="brittle",
  },
 }
 

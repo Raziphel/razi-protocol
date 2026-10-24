@@ -96,8 +96,9 @@ for level,row in pairs(expected) do
   end
 end
 
--- Map and combat levers by level. The ore, research and evolution levers are
--- read only when changed by hand (the map profile of the level holds them).
+-- Map, combat and industry levers by level. The ore, research and evolution
+-- levers are read only when changed by hand (the map profile of the level
+-- holds them); launch cost, factory speed and wall strength follow the level.
 local map_levers={
   ["razi-pollution-pressure"]={"gentle","normal","heavy","toxic"},
   ["razi-raid-coordination"]={"small","normal","organized","siege"},
@@ -108,6 +109,9 @@ local map_levers={
   ["razi-resource-richness"]={"generous","normal","poor","meager"},
   ["razi-science-demand"]={"light","normal","intensive","grueling"},
   ["razi-evolution-speed"]={"slow","normal","accelerated","runaway"},
+  ["razi-rocket-launch-cost"]={"economical","normal","costly","punishing"},
+  ["razi-factory-throughput"]={"boosted","normal","constrained","strained"},
+  ["razi-fortification-durability"]={"reinforced","normal","fragile","brittle"},
 }
 for name,row in pairs(map_levers) do
   for i,level in ipairs(LEVELS) do
