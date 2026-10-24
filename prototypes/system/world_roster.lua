@@ -1,12 +1,14 @@
 -- Every world of the pack, grouped by star system. Worlds of mods that are not installed are
--- skipped by the readers, so the list can name more than one pack ever contains.
+-- skipped by the readers, so the list can name more than one pack ever contains. A name is the planet
+-- or space location that the world's discovery technology unlocks, not the name of its mod.
 local M = {}
 
 M.systems = {
 	calidus = {"muluna"},
 	solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys"},
-	nyxaris = {"gleba", "moshine", "apia-carnova-orbit", "panglia", "foliax", "rabbasca", "velora"},
-	vibrant = {"fulgora", "cerys", "ribbonia", "paracelsin", "alchemy-planet"},
+	nyxaris = {"gleba", "moshine", "apia-carnova-orbit", "panglia", "foliax", "rabbasca", "velora",
+		"terrapalus", "pelagos", "planet-dea-dia"},
+	vibrant = {"fulgora", "cerys", "ribbonia", "paracelsin", "alchemy-planet", "shchierbin"},
 	vespera = {"muria", "athos", "aquilo", "nulla", "rubia", "maraxsis", "bm-balack"},
 	beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "ferrum"},
 	umbra = {"tenebris", "crucible", "vesta", "carna", "arcanyx", "obsidiax"},

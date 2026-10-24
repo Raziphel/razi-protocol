@@ -198,7 +198,8 @@ function gates.data_final_fixes()
 	replace_requirements("planet-discovery-corrundum", {"planet-discovery-tellus"}, calidus, 950)
 
 	-- Gleba anchors Nyxaris's biological progression, alongside the two
-	-- existing research destinations. Optional Dea Dia/Pelagos stay optional.
+	-- existing research destinations. Dea Dia and Pelagos open after Nyxaris too; regional_research_bridges.lua
+	-- weaves them into the next gateways.
 	replace_requirements("planet-discovery-gleba", {"nyxaris-discovery"}, calidus, 600)
 	for _, name in ipairs({
 		"planet-discovery-apia-carnova",

@@ -1,6 +1,7 @@
 ---@diagnostic disable: missing-fields
--- The list of worlds the required path must not depend on (prototypes/system/optional_worlds.lua): well formed, plain
--- data, and every mod in it is a dependency in info.json. The path itself is checked on the real prototypes of the full
+-- The list of worlds and packs the required path must not depend on (prototypes/system/optional_worlds.lua): well
+-- formed, plain data with a reason for every entry, and every mod in it is a dependency in info.json. The worlds that
+-- are woven into the path (regional_research_bridges.lua) are not in it, apart from their packs. The path itself is checked on the real prototypes of the full
 -- pack by the in-game tests of my-razi-fixes (tests/data_raw.lua).
 -- Run from the mod root:
 --   lua5.2 tests/lua/test_optional_worlds.lua
@@ -25,19 +26,44 @@ for entry in info:match('"dependencies"%s*:%s*(%b[])'):gmatch('"([^"]+)"') do
 end
 
 check(roster.final_technology == "razi-stable-intergalactic-singularity", "the final technology changed")
-check(#roster.worlds >= 5, "the list lost worlds")
+check(#roster.worlds >= 7, "the list lost worlds")
 
 local seen = {}
 for _, world in ipairs(roster.worlds) do
 	check(type(world.mod) == "string" and not seen[world.mod], "every world has its own mod: " .. tostring(world.mod))
 	seen[world.mod] = true
 	check(dependencies[world.mod], world.mod .. " is not a dependency in info.json")
-	check(type(world.locations) == "table" and #world.locations > 0, world.mod .. " names no location")
+	check(type(world.locations) == "table", world.mod .. " has no locations table")
 	check(type(world.packs) == "table", world.mod .. " has no packs table")
+	check(#world.locations + #world.packs > 0, world.mod .. " keeps nothing off the path")
+	check(type(world.reason) == "string" and #world.reason > 0, world.mod .. " names no reason")
 end
 
--- the optional dependencies that add a world (Ferrum, Rabbasca, Rabbasca Underground, Skewer) are all in the list
-for _, mod in ipairs({"planet-ferrum", "planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet"}) do
+-- the worlds that stay off the path: their discovery is excluded from the weave
+local excluded = {}
+for _, world in ipairs(roster.worlds) do
+	for _, location in ipairs(world.locations) do
+		excluded[location] = world.mod
+	end
+end
+for location, mod in pairs({["rabbasca-underground"] = "rabbasca-underground",
+	skewer_shattered_planet = "skewer_shattered_planet", skewer_lost_beyond = "skewer_shattered_planet",
+	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus-Updated"}) do
+	check(excluded[location] == mod, location .. " must stay off the path")
+end
+-- Ferrum and Rabbasca are woven: only their packs stay out
+for _, mod in ipairs({"planet-ferrum", "planet-rabbasca"}) do
+	for _, world in ipairs(roster.worlds) do
+		if world.mod == mod then
+			check(#world.locations == 0 and #world.packs > 0, mod .. " is woven: no location, but its packs stay out")
+		end
+	end
+end
+
+-- the optional dependencies that add a world (Ferrum, Rabbasca, Rabbasca Underground, Skewer, Eneas, Nexus) are all in
+-- the list
+for _, mod in ipairs({"planet-ferrum", "planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet",
+	"moon-eneas", "Nexus-Updated"}) do
 	check(seen[mod], mod .. " is missing from the list")
 	check(dependencies[mod]:match("^[%?%+]"), mod .. " is no longer an optional dependency")
 end

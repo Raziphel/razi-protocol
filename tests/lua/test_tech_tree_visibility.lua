@@ -40,5 +40,5 @@ for _,world in ipairs(roster.worlds) do
  check(not seen[world],"Duplicate world in the roster: "..world)
  seen[world]=true
 end
-check(#roster.order==7 and #roster.worlds==38,"Roster lost a system or a world")
+check(#roster.order==7 and #roster.worlds==42,"Roster lost a system or a world")
 print("Native essential-research view includes Razi milestones")
