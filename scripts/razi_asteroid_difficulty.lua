@@ -40,14 +40,15 @@ local exceptional={
   ["oort-cloud"]=10,["sol"]=10,
   -- Shared first-frontier Aegis: the entry gate is level 6 (like Rubia and
   -- the outer belt edge), so the long approach from Solaris and Nyxaris
-  -- (level 2) stays survivable with rocket turrets. Danger then ramps to 9 at
-  -- the outer edge and 10 at Bellicos. Legacy Calidus gate IDs never imply
-  -- safety.
+  -- (level 2) stays survivable with rocket turrets. Danger then ramps to 7 at
+  -- the outer edge and 8 inside, up to Bellicos: the inner Aegis opens at the
+  -- third system gate, before any railgun is guaranteed. Legacy Calidus gate
+  -- IDs never imply safety.
   ["calidus-bellicos-stargate-calidus"]=6,
-  ["pulsar"]=9,["aegis-inner-edge"]=9,
-  ["aegis-outer-edge"]=9,["point-warden"]=9,
-  ["near-bellicos-orbit"]=9,["bellicos-near-orbit"]=9,
-  ["near_bellicos_orbit"]=9,
+  ["pulsar"]=8,["aegis-inner-edge"]=8,
+  ["aegis-outer-edge"]=7,["point-warden"]=8,
+  ["near-bellicos-orbit"]=8,["bellicos-near-orbit"]=8,
+  ["near_bellicos_orbit"]=8,
   -- Source-owned fractured routes branching from Shattered Planet.
   ["skewer_shattered_planet"]=10,
   ["skewer_lost_beyond"]=10,
@@ -231,9 +232,9 @@ function M.location_level(name)
   -- Source variants retain difficult Aegis interior levels without being
   -- mislabeled as deep-space routes simply because of their old names.
   local n=name:lower()
-  if n:find("warden",1,true) then return 9 end
+  if n:find("warden",1,true) then return 8 end
   if n:find("bellicos",1,true) or n:find("aegis",1,true)
-    or n:find("pulsar",1,true) then return 9 end
+    or n:find("pulsar",1,true) then return 8 end
   if n:find("skewer_",1,true)
     or n:find("black-hole",1,true) then return 10 end
   return base[members.system(name)] or 4
