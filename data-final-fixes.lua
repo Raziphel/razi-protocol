@@ -263,6 +263,12 @@ require("prototypes.compat.rocket_salvage").data_final_fixes()
 require("prototypes.system.bellicos").retire_far_gate()
 require("prototypes.system.bellicos").dedupe_internal_routes()
 
+-- Difficulty level: rocket parts per launch on every rocket silo, crafting speed of the machines and furnaces players build, and
+-- health of walls and gates, from the values the source mods defined. Normal (x1) writes nothing. Nothing after this adds a
+-- machine, silo or wall; the menu pass below only reads them.
+require("prototypes.compat.razi_launch_economy").data_final_fixes()
+require("prototypes.compat.razi_industrial_difficulty").data_final_fixes()
+
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
 require("prototypes.compat.crafting_navigation").data_final_fixes()
