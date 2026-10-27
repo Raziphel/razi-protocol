@@ -364,5 +364,8 @@ data:extend({
   {type="string-setting",name="razi-map-star-intensity",setting_type="startup",default_value="standard",allowed_values={"dim","standard","bright"},order="cb[starmap]-f[stars]"},
   {type="string-setting",name="razi-map-halo-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-g[halos]"},
   {type="string-setting",name="razi-map-belt-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-h[belt]"},
-  {type="string-setting",name="razi-map-dust-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-i[dust]"}
+  {type="string-setting",name="razi-map-dust-intensity",setting_type="startup",default_value="standard",allowed_values={"faint","standard","strong"},order="cb[starmap]-i[dust]"},
+  -- Science converters can be disabled for established save layouts.
+  {type="bool-setting",name="razi-auto-tech-cards",setting_type="startup",default_value=true,
+    order="ca[quality-of-life]-b4[auto-tech-cards]"}
 })
