@@ -67,7 +67,7 @@ local function generate(name)
   card.name=card_name
   card.subgroup="razi-planet-tech-card"
   card.order="c[card]-"..name
-  card.localised_name=readable_name(name).." Tech Card"
+  card.localised_name={"",readable_name(name)," Tech Card"}
   card.localised_description={"","Refined from ",
     original.localised_name or {"item-name."..name},
     ". The source science pack remains available."}
