@@ -131,7 +131,10 @@ function M.data_final_fixes()
   local mapping,n={},0
   for _,name in ipairs(names) do
     local card=generate(name)
-    if card then mapping[name]=card n=n+1 end
+    if card then
+      mapping[name]=card
+      n=n+1
+    end
   end
   register_native_labs(mapping)
   local references=change_research(mapping)
