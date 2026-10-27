@@ -56,6 +56,8 @@ jobs:
         run: lua5.2 tests/lua/test_razi_journal_layout.lua
       - name: Verify Journal translations and responsive UI contract
         run: python -m unittest tests/test_razi_journal.py
+      - name: Check automatic science cards with synthetic labs and spoiled science
+        run: lua5.2 tests/lua/test_auto_tech_cards.lua
       - name: Check seven-system galaxy and research fixtures
         run: lua5.2 tests/lua/test_galaxy.lua
       - name: Check required route icons and external icon preservation

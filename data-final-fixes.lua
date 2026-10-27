@@ -338,3 +338,7 @@ require("prototypes.compat.k2so_promethium_ingredients").data_final_fixes()
 -- unlocks or routes for the removed, inaccessible far-side Bellicos stargate.
 require("prototypes.system.bellicos").retire_far_gate()
 require("prototypes.system.bellicos").dedupe_internal_routes()
+
+-- Scan final research and existing native lab inputs after every Razi edit.
+-- Only source science with genuine research and lab use gains a card.
+require("prototypes.compat.auto_tech_cards").data_final_fixes()
