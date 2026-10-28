@@ -1,3 +1,4 @@
+---------------------------------------------------------------------------------------------------
 Version: 2.1.138
 Date: 23. 10. 2026
   Changes:
@@ -8,6 +9,7 @@ Date: 23. 10. 2026
     - Newly added supply quotas apply to unfinished stages; already-completed old stages remain credited.
     - Save backup recommended when updating a partially completed campaign.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.137
 Date: 23. 10. 2026
   Changes:
@@ -17,30 +19,35 @@ Date: 23. 10. 2026
   Note:
     - Existing saves with partial Convergence deliveries should be reviewed because shipment materials and quantities changed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.136
 Date: 23. 10. 2026
   Changes:
     - Rework HELIOS research to use SLP Dyson Sphere's existing projects, satellite recipes, repeaters and technologies rather than fabricated Razi-only frame, shield, relay, lattice or grid-anchor crafting chains.
     - Keep guarded Dyson prerequisites and native project manufacturing ownership.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.135
 Date: 23. 10. 2026
   Bugfixes:
     - Merge duplicate biter-egg ingredients in K2SO promethium research data while preserving total cost.
     - Run the final recipe compatibility safeguard during data-final-fixes.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.134
 Date: 23. 10. 2026
   Bugfixes:
     - Generalize LithiumBattery/Crucible cleanup to all missing recipe targets on Crucible productivity research, including promethium science clones.
     - Retain valid research effects and leave source recipes untouched.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.133
 Date: 23. 10. 2026
   Bugfixes:
     - Ignore Crucible's obsolete cryogenic science productivity recipe effect when LithiumBattery has removed the legacy clone recipe.
     - Preserve Crucible research and all remaining valid productivity effects.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.121
 Date: 19. 10. 2026
   Restore the original Expedition Journal button:
@@ -49,6 +56,7 @@ Date: 19. 10. 2026
     - Preserve Ctrl+Shift+J, click-to-toggle and saved journal state.
     - Migrate older saves without deleting the restored top-left button.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.120
 Date: 19. 10. 2026
   Expedition Journal native shortcut reliability:
@@ -60,6 +68,7 @@ Date: 19. 10. 2026
       not accessible through Factorio's public modding API.
     - Clean old UI on mod migration, player join and display changes.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.119
 Date: 19. 10. 2026
   Expedition Journal right-side GUI migration:
@@ -70,6 +79,7 @@ Date: 19. 10. 2026
     - Bump version so Factorio invokes the GUI migration on older saves.
     - Preserve the Ctrl+Shift+J shortcut and existing Journal click handler.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.118
 Date: 15. 10. 2026
   Improve journal scrolling and Dyson dossier readability:
@@ -77,6 +87,7 @@ Date: 15. 10. 2026
     - Tighten Dyson hero artwork and source research timeline rows.
     - Add clear completed/pending markers without inventing progress.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.117
 Date: 15. 10. 2026
   Expedition Journal readability:
@@ -90,6 +101,7 @@ Date: 15. 10. 2026
       manufacturing world labels, without changing gameplay or research.
     - Add regression checks for scroll, labels and item-card density.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.116
 Date: 15. 10. 2026
   Expand asteroid belt risk/reward player choice:
@@ -100,6 +112,7 @@ Date: 15. 10. 2026
     - Preserve original resource and gameplay balance at all defaults.
     - No dynamic runtime work; settings apply at mod loading.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.115
 Date: 15. 10. 2026
   Settings menu title and regression stability:
@@ -108,6 +121,7 @@ Date: 15. 10. 2026
       of Factorio's engine-owned asteroid spawn module.
     - Internal mod ID stays unchanged; engine sorting is not guaranteed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.114
 Date: 15. 10. 2026
   Gameplay choice and settings discovery:
@@ -120,6 +134,7 @@ Date: 15. 10. 2026
       settings sort experiment. Internal 'razi-protocol' ID stays unchanged.
     - Requires restarting the game for startup settings to take effect.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.113
 Date: 15. 10. 2026
   Player choice and starmap customisation:
@@ -130,6 +145,7 @@ Date: 15. 10. 2026
     - Keep all previous defaults and gameplay progression unchanged.
     - No new runtime event handlers or GitHub Actions workflows.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.112
 Date: 15. 10. 2026
   Polish Aegis crossing and shorten Skewer's approach hop:
@@ -145,6 +161,7 @@ Date: 15. 10. 2026
     - Add route-angle, gate-proximity and Skewer-offset regression checks.
     - No new data-stage libraries, runtime timers or CI workflows.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.111
 Date: 15. 10. 2026
   Repair detached Point Warden and incoherent Bellicos map:
@@ -161,6 +178,7 @@ Date: 15. 10. 2026
     - Preserve original routes, kilometre lengths, asteroid spawns, tech,
       source icons, IDs and save data. Full in-game test remains required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.110
 Date: 15. 10. 2026
   Performance refinement and seventh opt-in switch:
@@ -174,6 +192,7 @@ Date: 15. 10. 2026
     - Add quality-trigger safety and cached-render regression coverage.
     - No new runtime timers or gameplay-changing default behavior.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.109
 Date: 15. 10. 2026
   Fix startup crash in Bellicos final position diagnostics:
@@ -187,6 +206,7 @@ Date: 15. 10. 2026
     - Preserve existing saved destinations, orbit artwork, travel routes,
       distances and tech. Factorio full-pack startup still needs testing.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.108
 Date: 15. 10. 2026
   Extend optional performance controls and reduce mod runtime overhead:
@@ -201,6 +221,7 @@ Date: 15. 10. 2026
     - Add settings, effect preservation, geometry and runtime-cache tests.
     - Performance improvements require in-game FPS/UPS benchmarking.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.107
 Date: 15. 10. 2026
   Two early-loading planet lava crashes (Rabbasca and Crucible):
@@ -213,6 +234,7 @@ Date: 15. 10. 2026
     - Keep all source planets and the intended science/endgame intact.
     - Full Factorio startup validation still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.106
 Date: 15. 10. 2026
   Four independent asteroid-performance experiments, all OFF by default:
@@ -230,6 +252,7 @@ Date: 15. 10. 2026
     - Add opt-in regression tests and a compatibility/performance guide.
     - Needs in-game Factorio 2.1 testing and real UPS/FPS benchmarks.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.105
 Date: 15. 10. 2026
   Tune source-owned asteroid encounters near Vibrant and Secretas:
@@ -244,6 +267,7 @@ Date: 15. 10. 2026
     - Preserve native route geometry, source mining recipes and the
       ten-level quality difficulty system; in-game testing pending.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.104
 Date: 15. 10. 2026
   Startup recovery for Rabbasca's upstream lava shader error:
@@ -258,6 +282,7 @@ Date: 15. 10. 2026
       and that Razi data.lua cannot fix an earlier source data.lua crash.
     - No background modifications to installed mods or extra CI runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.103
 Date: 15. 10. 2026
   Integrate source-owned custom asteroids into Razi's route network:
@@ -274,6 +299,7 @@ Date: 15. 10. 2026
     - Run after route authority and before Quality Asteroids conversion.
     - Requires full Factorio playtest with both source mods installed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.102
 Date: 15. 10. 2026
   Unify asteroid difficulty information across routes:
@@ -291,6 +317,7 @@ Date: 15. 10. 2026
       No route IDs, asteroid spawns or physics were changed.
     - Add a Level 10 Deep Space tooltip regression and one-scale tests.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.101
 Date: 15. 10. 2026
   Fix Bellicos/Nexus geometry split caused by Lua 5.2 atan:
@@ -306,6 +333,7 @@ Date: 15. 10. 2026
       and chapter setting IDs. No new runtime tick jobs.
     - Full Factorio starmap re-render still required for visual verification.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.100
 Date: 15. 10. 2026
   Quality route overlay contrast and readability:
@@ -321,6 +349,7 @@ Date: 15. 10. 2026
     - Leave all route IDs, planetary positions, enemy spawning and
       platform travel logic unchanged.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.99
 Date: 15. 10. 2026
   Full ten-level route difficulty and colored overlay correction:
@@ -343,6 +372,7 @@ Date: 15. 10. 2026
     - Real Factorio modpack inspection is required to validate the
       final layout, sprite alignment, and cross-mod startup.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.98
 Date: 15. 10. 2026
   Restore visible colored paths to the galaxy starmap:
@@ -359,6 +389,7 @@ Date: 15. 10. 2026
     - Add generated image, geometric coverage and settings regression
       fixtures. Full Factorio starmap playtesting is still needed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.97
 Date: 15. 10. 2026
   Repair detached Bellicos Point Warden and inconsistent pulsar artwork:
@@ -378,6 +409,7 @@ Date: 15. 10. 2026
       plus Aegis artwork across repeated final passes.
     - In-game screenshots and full modpack verification still necessary.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.96
 Date: 15. 10. 2026
   Expedition Journal stability and Bellicos/Beetlejuice starmap repair:
@@ -393,6 +425,7 @@ Date: 15. 10. 2026
     - Add fixture coverage and retain route positions, source asteroids,
       technologies and progression. Full Factorio startup still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.95
 Date: 15. 10. 2026
   Ten-color quality asteroid route navigation:
@@ -408,6 +441,7 @@ Date: 15. 10. 2026
     - Update color, safety and regression fixtures. Visual verification
       in the full Factorio 2.1 modpack remains recommended.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.94
 Date: 15. 10. 2026
   Route-distance coherence across the revised seven-system starmap:
@@ -422,6 +456,7 @@ Date: 15. 10. 2026
     - Add Lua and offline source/prototype-audit regression coverage.
     - Full Factorio startup and travel-time gameplay test still needed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.93
 Date: 15. 10. 2026
   Ten-level first-party quality asteroid progression:
@@ -438,6 +473,7 @@ Date: 15. 10. 2026
     - Include deterministic runtime/data regression fixtures. A full
       Factorio 2.1 modpack launch remains required for final validation.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.92
 Date: 15. 10. 2026
   Starmap label clearance and accurate short-hop placement:
@@ -454,6 +490,7 @@ Date: 15. 10. 2026
       real travel kilometers, source pulsar artwork and existing saves.
     - No CI runs; actual Factorio zoom validation remains recommended.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.91
 Date: 15. 10. 2026
   Route map clarity and rectangular green-artifact repair:
@@ -467,6 +504,7 @@ Date: 15. 10. 2026
       existing setting IDs unchanged. No added tick work or automatic CI.
     - Static regressions updated; requires in-game zoom validation.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.90
 Date: 15. 10. 2026
   Projects-tab crash, Shattered expedition labels and victory ownership:
@@ -484,6 +522,7 @@ Date: 15. 10. 2026
       Convergence's existing five physical delivery stages.
     - Add read-only fixtures; real full-pack in-game validation remains needed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.89
 Date: 15. 10. 2026
   Move reusable foundations to Razi Lib 1.2.0:
@@ -495,6 +534,7 @@ Date: 15. 10. 2026
     - Only offline structural validation performed; full Factorio startup and test fixtures remain to be run.
     - GitHub Actions remains manual only.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.88
 Date: 15. 10. 2026
   Eradicate red dotted starmap trails:
@@ -505,6 +545,7 @@ Date: 15. 10. 2026
     - Preserve all real space connections, Catapult link data, planet icons and gameplay; add targeted regression fixtures.
     - Source verification only; full in-game visual test still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.87
 Date: 15. 10. 2026
   Outer-system visual and connectivity pass:
@@ -518,6 +559,7 @@ Date: 15. 10. 2026
     - Synchronize native research gates, Journal, Atlas, singularity grouping, and route safety fixtures.
     - No additional planet dependencies or extra mandatory belts. Full in-game graphics validation still needed.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.86
 Date: 15. 10. 2026
   Secretas Golden Science / steam recycler prerequisite cycle:
@@ -528,6 +570,7 @@ Date: 15. 10. 2026
     - Recheck at the final research stage and add source-aware regression fixtures; preserve Athos, Nulla and all native science content.
     - Local fixture tests and full in-game startup are still required; CI stays manual only.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.85
 Date: 15. 10. 2026
   Fix original 2.1.83 Planet Athos stack-overflow crash:
@@ -538,6 +581,7 @@ Date: 15. 10. 2026
     - Add local simulation fixtures and a crash-graph validation note; real full-pack Factorio startup verification remains outstanding.
     - Keep original Athos, Nulla, journal milestones, save IDs, and manual-only CI.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.84
 Date: 15. 10. 2026
   Settings title cleanup:
@@ -546,6 +590,7 @@ Date: 15. 10. 2026
     - Update the display-name regression test and record the reverted sort-order experiment.
     - No automatic CI runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.83
 Date: 15. 10. 2026
   Planet Athos startup recursion repair:
@@ -556,6 +601,7 @@ Date: 15. 10. 2026
     - Add source-phase regression coverage and fixture for Athos-owned cycles. Full Factorio 2.1 engine verification still required.
     - Keep Athos and Nulla required, the established five Project dossiers, and CI manual-only.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.82
 Date: 15. 10. 2026
   Curated galaxy cleanup:
@@ -566,6 +612,7 @@ Date: 15. 10. 2026
     - 50 required, 23 recommended, 1 optional, 1 hidden optional, 20 incompatible dependencies. Manual-only CI remains.
     - Older saves may reference now-absent source worlds. Back up and disable externally installed retired mods separately.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.81
 Date: 15. 10. 2026
   Full core-world science and Journal integration:
@@ -576,6 +623,7 @@ Date: 15. 10. 2026
     - Preserve source compatibility guards and existing-save tech IDs; complete Factorio smoke tests remain mandatory.
     - Keep CI manual-only.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.80
 Date: 15. 10. 2026
   Experimental planet-compatibility rescue:
@@ -585,6 +633,7 @@ Date: 15. 10. 2026
     - Give Athos a quiet Solaris orbit and one source-preserving Vulcanus side link; keep Nulla's native Aquilo moon relationship.
     - Preserve the entire K2SO progression and previous route/graphics work; require in-game verification, manual-only CI.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.79
 Date: 15. 10. 2026
   Staff dependency recommendations and optional world integration:
@@ -595,6 +644,7 @@ Date: 15. 10. 2026
     - Retain exclusions for crashing Nulla and Planet Athos and all 48 required campaign modules.
     - Update regression checks and documentation without automatic CI.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.78
 Date: 15. 10. 2026
   Star chart and route-art cleanup:
@@ -603,6 +653,7 @@ Date: 15. 10. 2026
     - Move Beetlejuice and Umbra modestly outward from radius 104 to 112 while preserving orbital directions, moon placements and star-system progression.
     - Update Lua/Python regressions for the exterior star tier and forbidden floating decorations; manual-only CI.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.77
 Date: 15. 10. 2026
   Curated modpack visual cleanup:
@@ -612,6 +663,7 @@ Date: 15. 10. 2026
     - An existing Hephaestus installation must still be disabled from Factorio's mod manager.
     - Preserve manual-only CI.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.76
 Date: 15. 10. 2026
   Armoured Biters and optional enemy spawn repair:
@@ -620,6 +672,7 @@ Date: 15. 10. 2026
     - Refuse incomplete natural spawning rules for other optional enemy packs and repair known malformed late-stage spawners before Factorio prototype validation.
     - Keep all 2.1.75 dependency conflict corrections and existing save data untouched. Add Lua regression cases for malformed and valid source spawners, with no automatic CI.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.75
 Date: 15. 10. 2026
   Dependency and modpack conflict repair:
@@ -628,6 +681,7 @@ Date: 15. 10. 2026
     - Withdraw the weather additions recommendation after installed 1.6.0 reports incompatibility with Celestial Weather Updated; preserve the core weather recommendation and guarded guide.
     - Keep source progression and all save records unchanged; improve policy and regression tests. No automatic GitHub Actions.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.74
 Date: 15. 10. 2026
   Expedition Journal and orbital companion integration:
@@ -641,6 +695,7 @@ Date: 15. 10. 2026
     - Add matched dependency policy, compatibility tests, in-game release matrix and startup rollback controls. Full Factorio 2.1/K2SO runtime validation remains required before publication.
     - Keep CI manual-only; no automatic GitHub Actions runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.73
 Date: 14. 10. 2026
   Planet-distributed technology research:
@@ -654,6 +709,7 @@ Date: 14. 10. 2026
     - Move original reactor/robot quests to the planetary science Codex and report actual installed distribution in the science audit.
     - Add focused Lua/Python source fixtures, manually requested validation and documented rollback. No new labs, tick loops or automatic Actions runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.72
 Date: 14. 10. 2026
   Quiet Galaxy interface and artwork:
@@ -665,6 +721,7 @@ Date: 14. 10. 2026
     - Extend static and Lua fixtures for minimal render layer counts, hazard warning clarity, real research progress and native compatibility.
     - No new graphics binaries, labs, extra map routes, runtime animations, or automatic CI runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.71
 Date: 14. 10. 2026
   Static starmap artwork polish:
@@ -676,6 +733,7 @@ Date: 14. 10. 2026
     - Respect Off, belt-atmosphere and external-background preferences for every belt drawing layer.
     - Update art fixtures, source audits and visual validation instructions. No startup asset downloads, per-tick visual updates, or automatic CI runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.70
 Date: 14. 10. 2026
   First-party asteroid belt ecology:
@@ -686,6 +744,7 @@ Date: 14. 10. 2026
     - Add original resource-table and modded asteroid preservation fixtures, exact-crossing checks, and post-load resource audit.
     - No per-tick asteroid entities, duplicate belts, added labs, forced source technologies or GitHub Actions runs.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.69
 Date: 14. 10. 2026
   Mod settings discoverability:
@@ -693,6 +752,7 @@ Date: 14. 10. 2026
     - Preserve the internal razi-protocol mod ID, published title, setting prototype names, order, defaults and existing saves.
     - Document the Factorio engine limitation: no supported per-mod sort-order override; confirm actual behavior in the settings screen.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.68
 Date: 14. 10. 2026
   Science production and early progression:
@@ -704,6 +764,7 @@ Date: 14. 10. 2026
     - Report direct Calidus-card spending by mandatory first-frontier branch without pretending to measure native Panglia complexity.
     - Add focused source regressions and manual full-pack validation steps; do not trigger Actions.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.67
 Date: 14. 10. 2026
   Science, industry and planet polish:
@@ -715,6 +776,7 @@ Date: 14. 10. 2026
     - Expand the read-only Python and Lua regression fixtures and in-game validation checklist. No new labs, worlds or mandatory recipes; no automatic CI.
     - The full Factorio 2.1 pack and saved-game performance tests have not yet been run.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.66
 Date: 14. 10. 2026
   Full upstream dependency review:
@@ -726,6 +788,7 @@ Date: 14. 10. 2026
     - Direct list: 48 required, 9 recommended, 14 optional and 22 incompatible (93 total).
     - The full live API traversal and Factorio engine tests were not run in this environment.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.65
 Date: 14. 10. 2026
   Dependency classification audit:
@@ -738,6 +801,7 @@ Date: 14. 10. 2026
     - Add a complete machine-readable policy ledger, matching human audit and offline regression tests.
     - Full Factorio 2.1 engine loading, transitive minimum-version resolution and old-save toggling remain to be verified. GitHub Actions stays manual-only.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.64
 Date: 14. 10. 2026
   Recommended optional companions:
@@ -746,6 +810,7 @@ Date: 14. 10. 2026
     - Keep 2.0-only Dea Dia / Pelagos and potentially conflicting Outer Rim / Secretas orbit choices optional instead of recommending incompatible installs.
     - Add focused manifest regression coverage; no game-engine or GitHub Actions workflow automatically run.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.63
 Date: 14. 10. 2026
   Research tree and science economy:
@@ -758,6 +823,7 @@ Date: 14. 10. 2026
     - Update targeted research, science weave, audit, and manufacturing tier regression fixtures. Existing native laboratories, first-discovery source science, technology IDs, save progress, Convergence shipments and manual-only CI are retained.
     - Full Factorio game-engine loading, enabled-modpack recipe reachability, measured performance and existing-save testing are still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.62
 Date: 14. 10. 2026
   Original Mandate art and endgame construction:
@@ -769,6 +835,7 @@ Date: 14. 10. 2026
     - Extend the opt-in, read-only /razi-audit and regression fixtures to cover all eight real recipes, lab compatibility, existing machine input limits, and old-save migration.
     - Full Factorio gameplay testing and benchmarks are still needed. No automatic GitHub Actions checks were triggered.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.61
 Date: 14. 10. 2026
   Runtime validation and performance pass:
@@ -779,6 +846,7 @@ Date: 14. 10. 2026
     - Add new pure Lua mock regressions for /razi-audit's labs, recipes, cycles and save-state safety and for the Atlas's indexed prerequisite links. Include these and the existing Convergence save/multiplayer tests in the opt-in manual workflow.
     - No extra mandatory mod, lab, route, entity or automatic GitHub Actions run. Actual full modpack load, post-load recipe reachability, in-engine save recovery and before/after performance benchmarks are NOT performed in this environment.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.60
 Date: 14. 10. 2026
   Seven-Sun Array, Codex, Atlas and save-safety polish:
@@ -790,6 +858,7 @@ Date: 14. 10. 2026
     - Skip idle Convergence work when no transmission is pending. Existing physical cargo, source Dyson/Nexus behaviors and 2.1.57 or later victories remain unchanged.
     - Full Factorio 2.1 modpack loading, real source recipe unlocks, hardware UI scale testing and in-game force-merge saves remain mandatory release checks. No automatic GitHub Actions runs requested.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.59
 Date: 14. 10. 2026
   Convergence: Seven-Sun Array and transmission finale:
@@ -800,6 +869,7 @@ Date: 14. 10. 2026
     - Existing winners retain their victory without a replay. Expand regression fixtures for receiver readiness, event timing, persistent stages and single native victory.
     - Confirm Factorio API contracts at the source level. Full modpack startup and in-game new/old save tests remain necessary; no GitHub Actions runs requested.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.58
 Date: 14. 10. 2026
   The Convergence: Pulsar Resonance and Final Ignition:
@@ -811,6 +881,7 @@ Date: 14. 10. 2026
     - Targeted mod-update recipe repair never resets another mod's research. Update Lua and structural regression fixtures.
     - Real Factorio 2.1 complete-pack startup, native lab/cargo access, source optional materials and existing-save validation are release blockers. No CI workflows were requested.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.57
 Date: 14. 10. 2026
   The Convergence: phase-gated manufacturing and cargo UX:
@@ -820,6 +891,7 @@ Date: 14. 10. 2026
     - Update prototype and structural tests; leave the delivery ledger, route network, multiplayer progress and original transceiver untouched.
     - Live Factorio 2.1 load, existing-save migration and in-game deliveries remain to be validated.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.56
 Date: 14. 10. 2026
   The Convergence, Razi Protocol's post-transceiver ending:
@@ -830,6 +902,7 @@ Date: 14. 10. 2026
     - Add an interactive Convergence tab to Galactic Operations, linked Codex milestones, force merge safeguards, new localization and Lua/static test fixtures.
     - Full Factorio 2.1 modpack startup, native source reachability, real platform submissions and old-save validation remain required. No Actions runs triggered.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.55
 Date: 14. 10. 2026
   Native labs, transceiver threshold, and endgame direction:
@@ -842,6 +915,7 @@ Date: 14. 10. 2026
     - Document Factorio's grouped mod-setting sort: order can prioritize settings inside Razi Protocol, never force Razi ahead of other mods without renaming its internal mod identity.
     - Full Factorio 2.1 startup, source-lab and old-save tests are still required; no extra GitHub Actions run requested.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.54
 Date: 14. 10. 2026
   System tech-card factories and tiered laboratories:
@@ -852,6 +926,7 @@ Date: 14. 10. 2026
     - Add four optional Codex research milestones to guide laboratory upgrades, bringing the conditional catalog to 223 entries.
     - Add English names, source-checked registrations, Lua fixtures, a structural test, docs and manual validation steps. Full Factorio 2.1 startup/old-save verification is still mandatory.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.53
 Date: 14. 10. 2026
   Native interplanetary coordination:
@@ -862,6 +937,7 @@ Date: 14. 10. 2026
     - Document Orbital Catapult and other 2.1 candidates as deferred: their player/item links need proven unlock safety before being enabled.
     - Add Lua and structural regression tests. Full loaded-mod and old-save engine tests still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.52
 Date: 14. 10. 2026
   Middle frontier reciprocal industry and meaningful industrial handoffs:
@@ -871,6 +947,7 @@ Date: 14. 10. 2026
     - Suppress individual requirements when missing, disabled, unsafe or dependent on the future gate; preserve Off mode, native factories, first visits and save technology identifiers.
     - Add four Codex milestones, stories, workshop hints, recipe names and tests. Full Factorio 2.1 native-load and old-save validation still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.51
 Date: 14. 10. 2026
   First-frontier manufacturing triangle:
@@ -880,6 +957,7 @@ Date: 14. 10. 2026
     - Keep all first-star system discoveries, research gates and base production unchanged; test the rules and their registration without running Github Actions.
     - Test the full installed 2.1 pack and old saves before release.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.50
 Date: 14. 10. 2026
   Frontier freight, Codex campaign handoffs and native route intelligence:
@@ -888,6 +966,7 @@ Date: 14. 10. 2026
     - Categorize actual native route lengths and hostile asteroid size mixtures with no runtime event work.
     - Extend regression fixtures. Full Factorio 2.1 and existing-save testing remains required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.49
 Date: 14. 10. 2026
   Quest and journal GUI icon correction:
@@ -898,6 +977,7 @@ Date: 14. 10. 2026
     - Add Lua GUI mock and Python structural checks for sprite resizing and fixed dimensions across the entire Codex.
     - Validate real Factorio 2.1 rendering and modded giant technology sprites in-game before final release.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.48
 Date: 14. 10. 2026
   Complete the Solaris ring and replace oversized background stars:
@@ -909,6 +989,7 @@ Date: 14. 10. 2026
     - Add regression checks for interstellar departure crossings, Solaris ring spacing, native route geometry and art-layer safety.
     - Real Factorio 2.1 startup, rendering and existing platform-schedule validation remains pending.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.47
 Date: 14. 10. 2026
   Authoritative Razi travel graph:
@@ -920,6 +1001,7 @@ Date: 14. 10. 2026
     - Provide a default-on route authority setting, detailed startup log counts and regression fixtures for duplicates, dangerous belt bypasses, asteroid resources and optional world lifelines.
     - Startup and end-to-end in-game planet, platform and research validation remains pending.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.46
 Date: 14. 10. 2026
   Compact Solaris and quiet first-frontier starmap:
@@ -931,6 +1013,7 @@ Date: 14. 10. 2026
     - Extend fixture coverage for planet separation, route clearance, old route cleanup, native orbit toggles and atlas layer counts.
     - In-game full modpack render, GUI label clearance and old save platform schedules remain to be checked.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.45
 Date: 13. 10. 2026
   Rebuild Razi's original space-route overlay in the dev pack:
@@ -942,6 +1025,7 @@ Date: 13. 10. 2026
     - Keep the Solaris direct connection layout introduced in 2.1.44 and preserve all gameplay routes, hazards, science, and travel times.
     - Run static regression checks for idempotence, line and arc geometry and no external dependency; in-game graphics still require testing.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.44
 Date: 13. 10. 2026
   Correct Solaris path geometry and retire custom route sprites:
@@ -953,6 +1037,7 @@ Date: 13. 10. 2026
     - Replace renderer regression checks with explicit no-overdraw and native Solaris path checks.
     - In-game Factorio 2.1 rendering and old-save platform schedules still require verification.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.43
 Date: 13. 10. 2026
   Solaris orbital chart and local freight routes:
@@ -964,6 +1049,7 @@ Date: 13. 10. 2026
     - Soften Solaris background glow without replacing its high-resolution source star artwork.
     - Add geometry, research-safe route and legacy cleanup regression fixtures; full Factorio 2.1 startup and old-save traffic checks are still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.42
 Date: 13. 10. 2026
   Calidus retirement and star-chart legibility:
@@ -974,6 +1060,7 @@ Date: 13. 10. 2026
     - Require Rubia Krastorio Compatibility+ 1.3.1 for the current Factorio 2.1 bridge.
     - Update the retirement and background fixtures. Real Factorio engine/saved-game testing is still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.41
 Date: 13. 10. 2026
   K2SO compatibility curation:
@@ -982,6 +1069,7 @@ Date: 13. 10. 2026
     - Leave the Factorio 2.0-only Secretas/Frozeta K2SO Compatibility+ out of the 2.1 required stack.
     - Document upstream science ownership, progression safeguards and pending Factorio 2.1 smoke tests.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.40
 Date: 13. 10. 2026
   Original galactic starfield:
@@ -990,6 +1078,7 @@ Date: 13. 10. 2026
     - Preserve existing Calidus sun and halo polish, graphics presets and compatibility guard.
     - Update asset and Lua regression tests; in-engine visual validation is still required.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.33
 Date: 13. 10. 2026
   Safe research command guidance:
@@ -999,6 +1088,7 @@ Date: 13. 10. 2026
     - Never override the core cheat command, change ordinary gameplay research or advertise a pre-command intercept Factorio does not support.
     - Add localized English help and alert text, safety coverage, and documentation.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.32
 Date: 13. 10. 2026
   Cheat-command stability and testing:
@@ -1008,6 +1098,7 @@ Date: 13. 10. 2026
     - Keep the Protocol Codex redraw deferred until the staged unlocks settle; guard each technology operation and report failures without flooding logs.
     - Add offline regression checks and document the distinction from Factorio's built-in /cheat.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.31
 Date: 13. 10. 2026
   Planetary science and research integration:
@@ -1018,6 +1109,7 @@ Date: 13. 10. 2026
     - Expand the science audit to detect own-world science required before discovery and report native packs actually reused by Razi industry.
     - Add Lua and Python regression fixtures, research documentation and complete modpack verification guidance.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.30
 Date: 13. 10. 2026
   Grand technology tree integration and pacing:
@@ -1028,6 +1120,7 @@ Date: 13. 10. 2026
     - Add a full post-load research audit for paired system independence, native lab combinations, missing science items and disproportionate research costs.
     - Integrate research pacing into the full campaign audit; extend Lua and Python regression fixtures and document a safe first-arrival philosophy.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.29
 Date: 13. 10. 2026
   Intelligent Protocol Codex expedition guidance:
@@ -1039,6 +1132,7 @@ Date: 13. 10. 2026
     - Reuse the current 210-quest view and a static dependency index to avoid redundant per-redraw state scans.
     - Add synthetic planner tests, GUI navigation regression checks and documentation.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.28
 Date: 13. 10. 2026
   Codex and Cargo Network navigation:
@@ -1049,6 +1143,7 @@ Date: 13. 10. 2026
     - Restore direct Cargo on GUI scale changes; retain existing bookmarks, mission roles, progress and research.
     - Expand Lua and Python regression coverage and update UI documentation.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.27
 Date: 13. 10. 2026
   Cargo Network command centre:
@@ -1059,6 +1154,7 @@ Date: 13. 10. 2026
     - Avoid new runtime polling and technology-wide scans; preserve platform schedules, research progression and existing per-player settings.
     - Add UI and catalogue regression coverage for absent optional mods, Deep-only components and narrow screens.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.26
 Date: 13. 10. 2026
   Galactic Operations visual and usability overhaul:
@@ -1068,6 +1164,7 @@ Date: 13. 10. 2026
     - Search planet names as translated for each player, with per-locale caching, a single coalesced refresh and a Clear action. Keep internal-ID and system searches.
     - Preserve map-only entry, destination safety, favourites, notes, platform roles and save preferences; add Lua and Python regressions.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.25
 Date: 13. 10. 2026
   Interplanetary production balance:
@@ -1078,6 +1175,7 @@ Date: 13. 10. 2026
     - Correct Factorio's implicit 0.5-second native craft time and reduce the 30% legacy time penalty to 15%.
     - Add source recipe, throughput, freight-cost and anti-exploit checks to the complete post-load campaign audit.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.24
 Date: 13. 10. 2026
   Galactic factory return cargo:
@@ -1087,6 +1185,7 @@ Date: 13. 10. 2026
     - Keep the new freight branches independent of unrelated factory components.
     - Expand the Protocol Codex to 210 milestones across 18 chapters, adding six connected industry objectives and source-backed localisation.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.23
 Date: 13. 10. 2026
   Progression audit:
@@ -1096,6 +1195,7 @@ Date: 13. 10. 2026
     - Protect Linox discovery when its own science was the only ingredient, and repeat late-arrival science guards after final integration passes.
     - Expand synthetic regression fixtures for multi-unlocker worlds, late research rewrites, missing materials and surface restrictions.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.22
 Date: 13. 10. 2026
   Campaign stability:
@@ -1105,6 +1205,7 @@ Date: 13. 10. 2026
     - Avoid creating player Codex preferences for unrelated players during force research refreshes.
     - Add progression and research-storm regression coverage without changing quest IDs, planet routes, or source research recipes.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.21
 Date: 13. 10. 2026
   Startup performance:
@@ -1114,6 +1215,7 @@ Date: 13. 10. 2026
     - Preserve native crafting restrictions, planet surfaces, recipes, research prerequisites, starmap visuals and save data.
     - Add data-stage cache and research-guard regression checks.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.20
 Date: 13. 10. 2026
   Runtime performance:
@@ -1123,6 +1225,7 @@ Date: 13. 10. 2026
     - Cache unlocked-planet checks within route planning and normalize Atlas search, recent filters and sorting keys once per redraw.
     - Keep research status live and preserve all chapter art, routes, gameplay, and saved progress.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.19
 Date: 13. 10. 2026
   Maintenance:
@@ -1132,6 +1235,7 @@ Date: 13. 10. 2026
     - Simplify the Codex's chapter color lookup.
     - No changes to planet research, recipe definitions, route data or saved quest progress.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.18
 Date: 13. 10. 2026
   Protocol Codex art direction:
@@ -1141,6 +1245,7 @@ Date: 13. 10. 2026
     - Keep compact chapter progress bars below their captions to avoid horizontal overflow.
     - Preserve all quest milestones, research completion logic, save preferences and event-driven rendering.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.17
 Date: 13. 10. 2026
   Interplanetary campaign integration:
@@ -1150,6 +1255,7 @@ Date: 13. 10. 2026
     - Respect Off interdependence for regional research links; screen known science producer recipes unlocked only behind future chapter gateways.
     - Preserve source planet mechanics, native recipes, existing save IDs, Research-all coalescing, and optional Deep recipe availability.
 
+---------------------------------------------------------------------------------------------------
 Version: 2.1.16
 Date: 13. 10. 2026
   Protocol Codex UI:
