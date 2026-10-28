@@ -70,7 +70,11 @@ local anchors = {
   -- Razi's real crossing lies on the south-western part of the asteroid ring.
   {"planet","fulgora","vibrant",24,0.57},
   {"planet","ribbonia","vibrant",26,0.655},
-  {"planet","paracelsin","vibrant",51,0.70},
+  -- Keep the frozen outer world below the busy west-rim crossing: the
+  -- previous .70 bearing shared almost the same label baseline as Outer Rim.
+  -- .65 places the marker southeast of the rim while staying outside the
+  -- 31-39 unit rock annulus and near the Shchierbin return leg.
+  {"planet","paracelsin","vibrant",51,0.65},
   -- Belt-free Vespera: Muria opens Rubia, then branches to greenhouse
   -- ocean Maraxsis and icy outer Aquilo. All planets are true destinations.
   {"planet","muria","vespera",21,0.43},
