@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.1.11
+Date: 2026-10-28
+  Bugfixes:
+    - [starmap] deduplicate Aegis expedition routes without changing hazards
+    - [starmap] set Paracelsin orbit orientation to 0.75
+---------------------------------------------------------------------------------------------------
 Version: 2.1.10
 Date: 2026-10-28
   Bugfixes:
