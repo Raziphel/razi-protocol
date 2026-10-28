@@ -87,6 +87,18 @@ local function major_waypoint(name)
       or name=="asteroid-belt-outer-edge"
       or name=="solar-system-edge")
 end
+-- Aegis's two rim crossings are major campaign corridors even though they
+-- use native Bellicos names instead of the sye-* system gateway prefix.
+local aegis_rim_pairs={
+  ["aegis-outer-edge|calidus-bellicos-stargate-calidus"]=true,
+  ["aegis-inner-edge|aegis-outer-edge"]=true
+}
+local function aegis_rim(route)
+  local a,b=route.from,route.to
+  if type(a)~="string" or type(b)~="string" then return false end
+  local key=a<b and (a.."|"..b) or (b.."|"..a)
+  return aegis_rim_pairs[key]==true
+end
 function M.is_navigation_highlight(route,scope)
   if type(route)~="table" or type(route.from)~="string"
     or type(route.to)~="string" or route.hidden
@@ -98,7 +110,7 @@ function M.is_navigation_highlight(route,scope)
     (unsafe_endpoint[route.from] or unsafe_endpoint[route.to]) then
     return false
   end
-  if hazards.is_belt_crossing(route) then return true end
+  if aegis_rim(route) or hazards.is_belt_crossing(route) then return true end
   if scope=="all" then return true end
   return major_waypoint(route.from) and major_waypoint(route.to)
     and reconcile.allowed_pairs[
@@ -139,7 +151,8 @@ local function route_path(route,a,b)
 end
 
 local function is_major(route,a,b)
-  return hazards.is_belt_crossing(route) or magnitude(a,b)>=54
+  return aegis_rim(route) or hazards.is_belt_crossing(route)
+    or magnitude(a,b)>=54
     or (route.shape=="line" and magnitude(a,b)>=38)
 end
 
