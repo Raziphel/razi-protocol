@@ -27,16 +27,28 @@ class RouteArtTests(unittest.TestCase):
         self.assertNotIn("script.on_event",ribbons)
 
 
-    def test_native_aegis_links_have_only_one_visible_line(self):
+    def test_aegis_inner_routes_are_colored_without_duplicate_travel_links(self):
+        overlay=source("prototypes/system/route_highlights.lua")
         ribbons=source("prototypes/system/route_ribbons.lua")
         bellicos=source("prototypes/system/bellicos.lua")
-        self.assertIn("local function native_aegis_corridor(route)",ribbons)
-        self.assertIn('["near-bellicos-orbit"]=true',ribbons)
-        self.assertIn('["aegis-inner-edge"]=true',ribbons)
-        self.assertIn("or native_aegis_corridor(route)",ribbons)
-        self.assertIn("M.native_aegis_corridor=native_aegis_corridor",ribbons)
+
+        # Regression: the old blanket native_aegis_corridor filter was
+        # responsible for the two grey connections in the user's starmap.
+        self.assertNotIn("native_aegis_corridor(route)",ribbons)
+        self.assertIn("local function aegis_spine(route)",overlay)
+        self.assertIn('normalized=="nearbellicosorbit"',overlay)
+        self.assertIn('normalized=="bellicosnearorbit"',overlay)
+        self.assertIn('normalized:find("warden",1,true)',overlay)
+        self.assertIn("if aegis_rim(route) or aegis_spine(route)",overlay)
+        self.assertIn("or aegis_rim(route) or aegis_spine(route)",overlay)
+        self.assertIn("or owner.is_aegis_spine(route)",ribbons)
+
+        # Uses the single retained native straight-line connection.
+        self.assertIn('route.shape="line"',bellicos)
+        self.assertIn('local sample,length=owner.route_path(route,a,b)',ribbons)
+        self.assertIn('if sprite.filename==SHEET then return 0 end',ribbons)
         self.assertIn("function bellicos.dedupe_internal_routes()",bellicos)
-        self.assertIn("asteroid.preserve_custom(kept[key],route)",bellicos)
+        self.assertIn("preserved.preserve_custom(keeper.route,duplicate.route)",bellicos)
         final=source("data-final-fixes.lua")
         self.assertLess(
             final.index('require("prototypes.system.bellicos").dedupe_internal_routes()'),
