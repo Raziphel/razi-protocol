@@ -75,57 +75,6 @@ function bellicos.data()
 	})
 end
 
--- Aegis & Bellicos (and compatibility mods) may define parallel connections
--- between the same two expedition locations under different prototype names.
--- Keep the route with the most complete asteroid data so that the journey
--- stays challenging and route-overlay mods can classify its actual hazards.
--- Never replace the source mod's asteroid patterns with artificial ones.
-local function is_aegis_location(name)
-	return type(name) == "string" and (
-		name == "pulsar" or
-		name == entry_gate or
-		name == bellicos_gate or
-		name:find("aegis", 1, true) ~= nil or
-		name:find("bellicos", 1, true) ~= nil or
-		name:find("warden", 1, true) ~= nil
-	)
-end
-
-local function deduplicate_aegis_connections()
-	local connections = data.raw["space-connection"] or {}
-	local names = {}
-	for name in pairs(connections) do
-		names[#names + 1] = name
-	end
-	table.sort(names)
-
-	local kept_by_pair = {}
-	for _, name in ipairs(names) do
-		local route = connections[name]
-		if route and is_aegis_location(route.from) and is_aegis_location(route.to) then
-			local a, b = route.from, route.to
-			if a > b then
-				a, b = b, a
-			end
-			local pair = a .. "\0" .. b
-			local kept_name = kept_by_pair[pair]
-			if not kept_name then
-				kept_by_pair[pair] = name
-			else
-				local kept = connections[kept_name]
-				local current_count = #(route.asteroid_spawn_definitions or {})
-				local kept_count = #(kept.asteroid_spawn_definitions or {})
-				if current_count > kept_count then
-					connections[kept_name] = nil
-					kept_by_pair[pair] = name
-				else
-					connections[name] = nil
-				end
-			end
-		end
-	end
-end
-
 function bellicos.data_final_fixes()
 	if not mods["bellicos-and-aegis"] then
 		return
@@ -134,7 +83,6 @@ function bellicos.data_final_fixes()
 	-- Other route compatibility passes can run after the source mod. Keep only
 	-- Razi Protocol's deep-space entrance while preserving every route inside Aegis.
 	remove_stock_entry_routes()
-	deduplicate_aegis_connections()
 end
 
 return bellicos
