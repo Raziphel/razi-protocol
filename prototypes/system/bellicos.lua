@@ -423,44 +423,124 @@ end
 -- ID after the main Aegis spine was curated. Keep one connection per unordered
 -- pair, preferring native names, and merge only exclusive custom asteroid
 -- materials before dropping the duplicate. Does not create or reroute travel.
-function bellicos.dedupe_internal_routes()
-  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
-  local routes=data.raw["space-connection"] or {}
-  local nodes={
-    [entry_gate]=true,
-    ["aegis-outer-edge"]=true,["aegis-inner-edge"]=true,
-    ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
-    ["near_bellicos_orbit"]=true
+-- Normalise source-version aliases before comparing connections. Aegis can
+-- expose multiple prototype IDs for the same on-screen waypoint, so comparing
+-- only the literal from/to strings leaves two nearly parallel lines on the map.
+local function aegis_node_identity(name, near, wardens)
+  if type(name)~="string" or not endpoint_type(name) then return nil end
+  if name==entry_gate then return "gate" end
+  if name==retired_gate then return "retired" end
+  local compact=name:lower():gsub("[^%w]","")
+  if compact=="aegisinneredge" then return "inner" end
+  if compact=="aegisouteredge" then return "outer" end
+  if name==near or compact=="nearbellicosorbit"
+    or compact=="bellicosnearorbit" then return "near" end
+  for _,warden in ipairs(wardens) do
+    if name==warden then return "warden:"..warden end
+  end
+
+  -- Coordinate aliases are accepted ONLY for Aegis-named waypoints. Never
+  -- collapse unrelated planets just because the layout places them nearby.
+  if not (compact:find("aegis",1,true)
+    or compact:find("bellicos",1,true)
+    or compact:find("warden",1,true)) then return nil end
+  local x,y=native_point(name)
+  if type(x)~="number" or type(y)~="number" then return nil end
+  local targets={
+    {"inner","aegis-inner-edge"},
+    {"outer","aegis-outer-edge"},
+    {"near",near},
+    {"gate",entry_gate}
   }
-  for _,name in ipairs(find_wardens()) do nodes[name]=true end
-  local names={}
-  for name in pairs(routes) do names[#names+1]=name end
-  table.sort(names,function(a,b)
-    local a_razi=a:sub(1,5)=="razi-"
-    local b_razi=b:sub(1,5)=="razi-"
-    if a_razi~=b_razi then return not a_razi end
-    return a<b
-  end)
-  local kept,removed={},0
-  local asteroid=require("prototypes.system.asteroid_profiles")
-  for _,name in ipairs(names) do
-    local route=routes[name]
-    if route and nodes[route.from] and nodes[route.to]
-      and route.from~=route.to then
-      local a,b=route.from,route.to
-      if a>b then a,b=b,a end
-      local key=a.."|"..b
-      if kept[key] then
-        asteroid.preserve_custom(kept[key],route)
-        routes[name]=nil
-        removed=removed+1
-      else
-        kept[key]=route
+  for _,warden in ipairs(wardens) do
+    targets[#targets+1]={"warden:"..warden,warden}
+  end
+  for _,target in ipairs(targets) do
+    if target[2] then
+      local tx,ty=native_point(target[2])
+      if type(tx)=="number" and type(ty)=="number"
+        and (x-tx)^2+(y-ty)^2<1 then
+        return target[1]
       end
     end
   end
-  if removed>0 and type(log)=="function" then
-    log(("[Razi Protocol/Aegis] Removed %d late duplicate native corridors"):format(removed))
+end
+
+local function same_canonical_endpoints(route, identity, near, wardens)
+  local expected={
+    gate=entry_gate,
+    inner="aegis-inner-edge",
+    outer="aegis-outer-edge",
+    near=near
+  }
+  local function exact(name,key)
+    local id=expected[key]
+    if not id and key:sub(1,7)=="warden:" then
+      id=key:sub(8)
+    end
+    return id and name==id
+  end
+  return (exact(route.from,identity[1]) and exact(route.to,identity[2]))
+      or (exact(route.from,identity[2]) and exact(route.to,identity[1]))
+end
+
+function bellicos.dedupe_internal_routes()
+  if not (mods and mods["bellicos-and-aegis"]) then return 0 end
+  local routes=data.raw["space-connection"] or {}
+  local near=near_orbit()
+  local wardens=find_wardens()
+  local groups={}
+  for name,route in pairs(routes) do
+    if type(route)=="table" then
+      local a=aegis_node_identity(route.from,near,wardens)
+      local b=aegis_node_identity(route.to,near,wardens)
+      if a and b and a~=b then
+        local identity={a,b}
+        if a>b then identity={b,a} end
+        local key=identity[1].."|"..identity[2]
+        local group=groups[key] or {}
+        group[#group+1]={name=name,route=route,
+          canonical=same_canonical_endpoints(route,identity,near,wardens)}
+        groups[key]=group
+      end
+    end
+  end
+
+  local preserved=require("prototypes.system.asteroid_profiles")
+  local removed=0
+  for _,group in pairs(groups) do
+    table.sort(group,function(a,b)
+      -- Exact, playable source waypoints win over coordinate aliases;
+      -- retain source IDs before Razi-generated alternatives for saves.
+      if a.canonical~=b.canonical then return a.canonical end
+      local an=a.name:sub(1,5)=="razi-"
+      local bn=b.name:sub(1,5)=="razi-"
+      if an~=bn then return not an end
+      return a.name<b.name
+    end)
+    local keeper=group[1]
+    for i=2,#group do
+      local duplicate=group[i]
+      preserved.preserve_custom(keeper.route,duplicate.route)
+      routes[duplicate.name]=nil
+      removed=removed+1
+    end
+  end
+
+  -- Report the exact corridor from the screenshot at load time, including
+  -- the final prototype ID. A doubled route now becomes a detectable warning
+  -- rather than silently surviving several cleanup passes.
+  local near_pair=groups["inner|near"]
+  if type(log)=="function" then
+    if removed>0 then
+      log(("[Razi Protocol/Aegis] Removed %d parallel/aliased corridors"):format(removed))
+    end
+    if near_pair then
+      log(("[Razi Protocol/Aegis] Near orbit -> Inner edge: %d original route(s), keeping %s"):format(
+        #near_pair,near_pair[1].name))
+    else
+      log("[Razi Protocol/Aegis] WARNING: no Near orbit -> Inner edge corridor found")
+    end
   end
   return removed
 end
