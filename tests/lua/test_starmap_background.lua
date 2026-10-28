@@ -126,8 +126,42 @@ ok(#bg.make_layers("subtle",true,true,false,false)==51,
 ok(#bg.make_layers("subtle",true,true,true,true)==60,
   "Cartography adds only a single distant dust pocket")
 local cine=bg.make_layers("cinematic",true,true,true,false)
-ok(#cine==#parts and cine[1].tint.a>parts[1].tint.a,
-  "Cinematic should be brighter without extra clutter")
+ok(#cine==#parts+28 and cine[1].tint.a>parts[1].tint.a,
+  "Cinematic must have distinct stellar clusters, two-depth coronas and nebulae")
+local cinematic_counts={clusters=0,corona=0,nebulae=0}
+for i=#parts+1,#cine do
+  local layer=cine[i]
+  if layer.filename:find("atlas%-starfield%-") then
+    cinematic_counts.clusters=cinematic_counts.clusters+1
+  elseif layer.filename:find("atlas%-dust%-") then
+    cinematic_counts.nebulae=cinematic_counts.nebulae+1
+  else
+    cinematic_counts.corona=cinematic_counts.corona+1
+  end
+end
+ok(cinematic_counts.clusters==8 and cinematic_counts.corona==14
+  and cinematic_counts.nebulae==6,"Cinematic visual tiers are incomplete")
+settings.startup["razi-starmap-cinematic-extras"]={value=false}
+ok(#bg.make_layers("cinematic",true,true,true,false)==#parts,
+  "Cinematic extra toggle must restore original lightweight layer count")
+settings.startup["razi-starmap-cinematic-extras"].value=true
+local without_halos=bg.make_layers("cinematic",false,true,true,false)
+ok(#without_halos==#parts-8+14,
+  "Turning off halos must remove native and cinematic corona layers")
+-- Disable only cluster pockets, then only nebulae; both are optional.
+settings.startup["razi-starmap-micro-details"].value=false
+ok(#bg.make_layers("cinematic",true,true,true,false)==#parts-4+20,
+  "Disabling micro details must remove the eight cinematic star clusters")
+settings.startup["razi-starmap-micro-details"].value=true
+settings.startup["razi-starmap-galactic-ornaments"].value=false
+ok(#bg.make_layers("cinematic",true,true,true,false)==#parts-4+22,
+  "Disabling ornaments must remove the four subtle and six cinematic pockets")
+settings.startup["razi-starmap-galactic-ornaments"].value=true
+local without_details=bg.make_layers("cinematic",true,true,false,false)
+ok(#without_details==42+8+1+14,
+  "Turning off fine details must remove all extra cinematic dust and clusters")
+ok(#bg.make_layers("cinematic",false,false,false,false)==42,
+  "All atmosphere/details toggles off must leave only the sky atlas")
 settings.startup["razi-starmap-galactic-ornaments"].value=false
 ok(#bg.make_layers("subtle",true,true,true,false)==55,
   "Turning off ornaments removes four star pockets")

@@ -306,6 +306,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-starmap-cinematic-extras",
+		setting_type = "startup",
+		default_value = true,
+		order = "cb[starmap]-d4[cinematic-extras]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-starmap-cartography",
 		setting_type = "startup",
 		default_value = false,
