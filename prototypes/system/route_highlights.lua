@@ -98,6 +98,26 @@ local function aegis_rim(route)
   local key=a<b and (a.."|"..b) or (b.."|"..a)
   return aegis_rim_pairs[key]==true
 end
+
+-- The native Aegis spine also includes Near Bellicos Orbit -> Inner Edge
+-- and Inner Edge -> Point Warden. Its resolved routes are straight lines;
+-- both must receive the same hazard colors as the two rim connections.
+-- Accept the source mod's known orbit/Warden ID variants without drawing
+-- any additional links or inventing asteroid profiles.
+local function aegis_spine(route)
+  local a,b=route.from,route.to
+  if type(a)~="string" or type(b)~="string" then return false end
+  if a~="aegis-inner-edge" and b~="aegis-inner-edge" then return false end
+  local other=a=="aegis-inner-edge" and b or a
+  local normalized=other:lower():gsub("[^%w]","")
+  local is_near=normalized=="nearbellicosorbit"
+    or normalized=="bellicosnearorbit"
+  local is_warden=normalized:find("warden",1,true)~=nil
+    and (normalized:find("point",1,true)~=nil
+      or normalized:find("aegis",1,true)~=nil)
+  return is_near or is_warden
+end
+M.is_aegis_spine=aegis_spine
 function M.is_navigation_highlight(route,scope)
   if type(route)~="table" or type(route.from)~="string"
     or type(route.to)~="string" or route.hidden
@@ -109,7 +129,8 @@ function M.is_navigation_highlight(route,scope)
     (unsafe_endpoint[route.from] or unsafe_endpoint[route.to]) then
     return false
   end
-  if aegis_rim(route) or hazards.is_belt_crossing(route) then return true end
+  if aegis_rim(route) or aegis_spine(route)
+    or hazards.is_belt_crossing(route) then return true end
   -- High-risk solar expeditions must be visible even in Major Routes mode.
   local kind=hazards.kind(route)
   if kind=="stellar-approach" or kind=="stellar-inner" then return true end
@@ -155,7 +176,8 @@ end
 local function is_major(route,a,b)
   local kind=hazards.kind(route)
   return kind=="stellar-approach" or kind=="stellar-inner"
-    or aegis_rim(route) or hazards.is_belt_crossing(route) or magnitude(a,b)>=54
+    or aegis_rim(route) or aegis_spine(route)
+    or hazards.is_belt_crossing(route) or magnitude(a,b)>=54
     or (route.shape=="line" and magnitude(a,b)>=38)
 end
 
