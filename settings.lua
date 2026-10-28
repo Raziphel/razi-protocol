@@ -12,7 +12,7 @@ data:extend({
 		name = "razi-enable-enemy-routing",
 		setting_type = "startup",
 		default_value = true,
-		order = "a[compat]-a[enemy-routing]"
+		order = "ac[habitats]-01[enable-enemy-routing]"
 	},
 	{
 		type = "string-setting",
@@ -20,14 +20,14 @@ data:extend({
 		setting_type = "startup",
 		default_value = "auto",
 		allowed_values = {"auto", "none", "normal", "wide", "widest"},
-		order = "a[compat]-a2[enemy-habitats]"
+		order = "ac[habitats]-02[enemy-habitats]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-hide-redundant-assembler-tiers",
 		setting_type = "startup",
 		default_value = true,
-		order = "a[compat]-b[redundant-assemblers]"
+		order = "ca[quality-of-life]-a[redundant-assemblers]"
 	},
 	{
 		type = "bool-setting",
@@ -49,7 +49,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "balanced",
 		allowed_values = {"balanced", "challenging", "relentless"},
-		order = "aa[worlds]-c[asteroid-difficulty]"
+		order = "ad[asteroids]-02[asteroid-difficulty-scale]"
 	},
 	{
 		type = "string-setting",
@@ -57,7 +57,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "standard",
 		allowed_values = {"sparse", "standard", "dense", "swarm"},
-		order = "aa[worlds]-d[asteroid-population]"
+		order = "ad[asteroids]-03[asteroid-population]"
 	},
 	{
 		type = "string-setting",
@@ -65,7 +65,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "standard",
 		allowed_values = {"relaxed", "standard", "severe"},
-		order = "aa[worlds]-e[belt-threats]"
+		order = "ad[asteroids]-04[belt-threats]"
 	},
 	{
 		type = "string-setting",
@@ -73,21 +73,21 @@ data:extend({
 		setting_type = "startup",
 		default_value = "standard",
 		allowed_values = {"scarce", "standard", "rich"},
-		order = "aa[worlds]-f[belt-ore-richness]"
+		order = "ad[asteroids]-05[belt-resource-richness]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-belt-midsection-salvage",
 		setting_type = "startup",
 		default_value = true,
-		order = "aa[worlds]-g[belt-midsection-salvage]"
+		order = "ad[asteroids]-06[belt-midsection-salvage]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-belt-edge-harvesting",
 		setting_type = "startup",
 		default_value = true,
-		order = "aa[worlds]-h[belt-edge-harvesting]"
+		order = "ad[asteroids]-07[belt-edge-harvesting]"
 	},
 	{
 		type = "string-setting",
@@ -95,7 +95,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "full",
 		allowed_values = {"full", "balanced", "clean", "off"},
-		order = "cb[starmap]-a2[orbit-density]"
+		order = "cb[starmap]-b0[orbit-density]"
 	},
 	{
 		type = "bool-setting",
@@ -164,7 +164,7 @@ data:extend({
 		name = "razi-performance-compact-route-overlays",
 		setting_type = "startup",
 		default_value = false,
-		order = "ad[asteroid-performance]-f[route-art-budget]"
+		order = "ae[performance]-07[performance-compact-route-overlays]"
 	},
 	{
 		type = "string-setting",
@@ -306,6 +306,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-starmap-cinematic-extras",
+		setting_type = "startup",
+		default_value = true,
+		order = "cb[starmap]-d4[cinematic-extras]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-starmap-cartography",
 		setting_type = "startup",
 		default_value = false,
@@ -348,42 +355,42 @@ data:extend({
 		name = "razi-quality-asteroids",
 		setting_type = "startup",
 		default_value = true,
-		order = "aa[worlds]-b[quality-asteroids]"
+		order = "ad[asteroids]-01[quality-asteroids]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-performance-asteroid-particles",
 		setting_type = "startup",
 		default_value = false,
-		order = "ad[asteroid-performance]-a[debris-effects]"
+		order = "ae[performance]-01[performance-asteroid-particles]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-performance-weapon-particles",
 		setting_type = "startup",
 		default_value = false,
-		order = "ad[asteroid-performance]-b[weapon-effects]"
+		order = "ae[performance]-02[performance-weapon-particles]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-performance-reduced-fragments",
 		setting_type = "startup",
 		default_value = false,
-		order = "ad[asteroid-performance]-c[fragment-count]"
+		order = "ae[performance]-03[performance-reduced-fragments]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-performance-outer-hostile-density",
 		setting_type = "startup",
 		default_value = false,
-		order = "ad[asteroid-performance]-d[outer-hostiles]"
+		order = "ae[performance]-04[performance-outer-hostile-density]"
 	},
 	{
 		type = "bool-setting",
 		name = "razi-performance-space-explosion-smoke",
 		setting_type = "startup",
 		default_value = false,
-		order = "ad[asteroid-performance]-e[explosion-smoke]"
+		order = "ae[performance]-05[performance-space-explosion-smoke]"
 	},
 	{
 		type = "bool-setting",
@@ -398,7 +405,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"gentle", "normal", "heavy", "toxic"},
-		order = "aa[worlds]-i1[pollution-pressure]"
+		order = "aa[combat]-04[pollution-pressure]"
 	},
 	{
 		type = "string-setting",
@@ -406,7 +413,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"small", "normal", "organized", "siege"},
-		order = "aa[worlds]-i2[raid-coordination]"
+		order = "aa[combat]-05[raid-coordination]"
 	},
 	{
 		type = "string-setting",
@@ -414,7 +421,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"slow", "normal", "rapid", "invasive"},
-		order = "aa[worlds]-i3[colony-expansion]"
+		order = "aa[combat]-06[colony-expansion]"
 	},
 	{
 		type = "string-setting",
@@ -422,7 +429,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"forgiving", "normal", "fast", "brutal"},
-		order = "aa[worlds]-i4[spoilage]"
+		order = "ab[resources]-04[spoilage-pressure]"
 	},
 	{
 		type = "string-setting",
@@ -430,7 +437,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"abundant", "normal", "scarce", "desolate"},
-		order = "aa[worlds]-i5[ore-frequency]"
+		order = "ab[resources]-01[resource-frequency]"
 	},
 	{
 		type = "string-setting",
@@ -438,7 +445,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"expansive", "normal", "small", "tiny"},
-		order = "aa[worlds]-i6[ore-patch-size]"
+		order = "ab[resources]-02[resource-patch-size]"
 	},
 	{
 		type = "string-setting",
@@ -446,7 +453,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"generous", "normal", "poor", "meager"},
-		order = "aa[worlds]-i7[ore-richness]"
+		order = "ab[resources]-03[resource-richness]"
 	},
 	{
 		type = "string-setting",
@@ -454,7 +461,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"light", "normal", "intensive", "grueling"},
-		order = "aa[worlds]-i8[science-cost]"
+		order = "ab[resources]-05[science-demand]"
 	},
 	{
 		type = "string-setting",
@@ -462,7 +469,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"slow", "normal", "accelerated", "runaway"},
-		order = "aa[worlds]-i9[enemy-evolution]"
+		order = "aa[combat]-07[evolution-speed]"
 	},
 	{
 		type = "string-setting",
@@ -470,7 +477,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"economical", "normal", "costly", "punishing"},
-		order = "aa[worlds]-j1[rocket-launch-cost]"
+		order = "ab[resources]-06[rocket-launch-cost]"
 	},
 	{
 		type = "string-setting",
@@ -478,7 +485,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"boosted", "normal", "constrained", "strained"},
-		order = "aa[worlds]-j2[factory-throughput]"
+		order = "ab[resources]-07[factory-throughput]"
 	},
 	{
 		type = "string-setting",
@@ -486,6 +493,6 @@ data:extend({
 		setting_type = "startup",
 		default_value = "normal",
 		allowed_values = {"reinforced", "normal", "fragile", "brittle"},
-		order = "aa[worlds]-j3[fortification-durability]"
+		order = "aa[combat]-08[fortification-durability]"
 	}
 })

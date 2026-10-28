@@ -139,6 +139,88 @@ local function insert_asset(layers,file,scale,x,y,color,alpha)
     tint={r=color.r,g=color.g,b=color.b,a=alpha}
   }
 end
+-- Cinematic is its own *static* art direction, not just a brighter Subtle.
+-- Reuse the existing small, indexed assets to keep download/VRAM costs
+-- flat. Sparse nearby stars, two-depth real stellar coronas and remote
+-- mineral-dust pockets are all underneath actual starmap destinations.
+-- No fake orbital rings, route strokes, invented stars or simulation ticks.
+local cinematic_clusters={
+  {"calidus",-30,-46,1,1.32,{r=1,g=.82,b=.59},.78},
+  {"solaris",48,-30,2,1.35,{r=1,g=.72,b=.51},.79},
+  {"nyxaris",-48,-22,3,1.28,{r=.62,g=.77,b=1},.80},
+  {"vibrant",40,-50,4,1.25,{r=.83,g=.66,b=1},.81},
+  {"vespera",-40,53,1,1.22,{r=1,g=.95,b=.79},.77},
+  {"beetlejuice",53,-32,2,1.18,{r=.62,g=1,b=.71},.78},
+  {"umbra",45,57,3,1.18,{r=1,g=.76,b=.56},.76},
+  {"deep-space",-65,-20,4,1.26,{r=.70,g=.82,b=1},.75}
+}
+local cinematic_nebulae={
+  {"solaris",-65,39,1,2.45,{r=1,g=.62,b=.42},.28},
+  {"nyxaris",66,48,2,2.35,{r=.43,g=.65,b=1},.30},
+  {"vibrant",-50,-64,3,2.20,{r=.74,g=.52,b=1},.30},
+  {"vespera",58,-51,2,2.40,{r=.97,g=.90,b=.77},.26},
+  {"umbra",-70,31,1,2.20,{r=.86,g=.53,b=.36},.28},
+  {"deep-space",86,58,3,2.40,{r=.39,g=.63,b=.83},.30}
+}
+local function add_cluster(layers,spec)
+  local x,y=anchor(spec[1])
+  if not x then return end
+  local tint=spec[6]
+  -- 1024px source at a much smaller scale than the 4x deep starfield.
+  -- It reads as locally denser distant star clusters, not large blobs.
+  layers[#layers+1]={
+    type="sprite",filename=ASSET.."atlas-starfield-"..spec[4]..".png",
+    size={1024,1024},scale=spec[5],
+    shift={(x+spec[2])*32,(y+spec[3])*32},
+    priority="extra-high-no-scale",flags={"gui-icon"},
+    blend_mode="normal",
+    tint={r=tint.r,g=tint.g,b=tint.b,
+      a=math.min(.94,spec[7]*
+        strength("razi-map-star-intensity",{dim=.6,standard=1,bright=1.3}))}
+  }
+end
+local function cinematic_composition(layers,halos,details)
+  if halos~=false then
+    for _,system in ipairs(systems) do
+      -- Deep Space is a geographic parent, not another literal star.
+      if system.name~="deep-space" then
+        local x,y=anchor(system.name)
+        if x and y then
+          local intensity=strength("razi-map-halo-intensity",
+            {faint=.5,standard=1,strong=1.45})
+          -- Broad, softly colored corona behind the existing source glow.
+          insert_asset(layers,system.art or "atlas-halo.png",
+            system.radius*1.85,x,y,system.tint,
+            math.min(.55,.21*system.strength*intensity))
+          -- Compact white-hot core visually anchors the original star art.
+          insert_asset(layers,"atlas-halo.png",.77,x,y,system.tint,
+            math.min(.60,.44*system.strength*intensity))
+        end
+      end
+    end
+  end
+  if details~=false then
+    if option("razi-starmap-micro-details",true) then
+      for _,cluster in ipairs(cinematic_clusters) do
+        add_cluster(layers,cluster)
+      end
+    end
+    if option("razi-starmap-galactic-ornaments",true) then
+      for _,cloud in ipairs(cinematic_nebulae) do
+        local x,y=anchor(cloud[1])
+        if x and y then
+          insert_asset(layers,"atlas-dust-"..cloud[4]..".png",
+            cloud[5],x+cloud[2],y+cloud[3],cloud[6],
+            math.min(.48,cloud[7]*
+              strength("razi-map-dust-intensity",
+                {faint=.5,standard=1,strong=1.4})))
+        end
+      end
+    end
+  end
+end
+M.cinematic_clusters=cinematic_clusters
+M.cinematic_nebulae=cinematic_nebulae
 function M.make_layers(mode,halos,atmosphere,details,cartography)
   if mode~="subtle" and mode~="cinematic" then return {} end
   local cinematic=mode=="cinematic"
@@ -205,6 +287,9 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
         end
       end
     end
+  end
+  if cinematic and option("razi-starmap-cinematic-extras",true) then
+    cinematic_composition(layers,halos,details)
   end
   if cartography==true then
     -- An optional star pocket, never another fake orbit/connection.

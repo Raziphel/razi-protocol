@@ -78,12 +78,12 @@ local stellar_entry={
 local ribbon_module=require("prototypes.system.route_ribbons")
 check(ribbon_module.native_aegis_corridor(near_to_inner)
   and ribbon_module.native_aegis_corridor(inner_to_near)
-  and ribbon_module.native_aegis_corridor(inner_to_outer),
-  "Aegis's native one-line corridors must be identified in both directions")
+  and not ribbon_module.native_aegis_corridor(inner_to_outer),
+  "Only the two Aegis rim crossings are excluded from the native overlay")
 check(#m.strokes_for_connection(near_to_inner,"danger","all")==0
   and #m.strokes_for_connection(inner_to_near,"danger","all")==0
-  and #m.strokes_for_connection(inner_to_outer,"danger","major")==0,
-  "Aegis native lines must not receive a second coloured ribbon")
+  and #m.strokes_for_connection(inner_to_outer,"danger","major")>0,
+  "The outer-to-inner Aegis rim crossing must receive a coloured ribbon")
 check(not ribbon_module.native_aegis_corridor(stellar_entry)
   and #m.strokes_for_connection(stellar_entry,"danger","all")>0,
   "The long Solaris-Aegis entry should retain its hazard gradient")
