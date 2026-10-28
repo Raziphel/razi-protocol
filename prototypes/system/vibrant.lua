@@ -57,7 +57,7 @@ PlanetsLib:update({
 				name = "vibrant",
 			},
 			distance = 22,
-			orientation = 0.75,
+			orientation = 0.9,
 		},
 	},
 	{
