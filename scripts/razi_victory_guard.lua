@@ -154,4 +154,26 @@ function M.recoveries()
   local state=storage and storage.razi_victory_guard
   return state and state.stray_finishes or 0
 end
+-- /razi-victory-audit: explicit and read-only, never toggles a mod endpoint.
+function M.command(event)
+  local player=event.player_index and game.get_player(event.player_index)
+  if player and not player.admin then
+    player.print({"razi-audit.admin-only"})
+    return
+  end
+  local output=player or game
+  output.print({"razi-audit.victory-header"})
+  for _,row in ipairs(M.inspect()) do
+    if row.error then
+      output.print({"razi-audit.victory-error",row.interface,
+        {"razi-audit.state-"..row.state},row.error})
+    else
+      output.print({"razi-audit.victory-interface",row.interface,
+        {"razi-audit.state-"..row.state}})
+    end
+  end
+  output.print({"razi-audit.victory-recovered",tostring(M.recoveries())})
+  output.print({"razi-audit.victory-unmanaged"})
+  output.print({"razi-audit.victory-note"})
+end
 return M

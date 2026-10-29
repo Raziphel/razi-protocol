@@ -246,32 +246,7 @@ end)
 commands.add_command("razi-welcome", welcome.help(), welcome.command)
 commands.add_command("razi-audit", {"razi-audit.help"}, convergence_audit.command)
 -- Explicit diagnostic only. Never scans recipes, labs or source mods on ticks.
-commands.add_command("razi-victory-audit",
-	"Display the supported external victory opt-outs and any recovered stray victories.",
-	function(event)
-		local player = event.player_index and game.get_player(event.player_index)
-		if player and not player.admin then
-			player.print("[RAZI] This diagnostic requires administrator access.")
-			return
-		end
-		-- An audit is explicitly read-only: do not toggle mod endpoints here.
-		local lines = {"[RAZI] Only Convergence should set the campaign victory."}
-		for _, row in ipairs(victory_guard.inspect()) do
-			lines[#lines + 1] = "  " .. row.interface .. ": " .. row.state
-				.. (row.error and (" (" .. row.error .. ")") or "")
-		end
-		lines[#lines + 1] = "  Recovered stray game endings: " .. tostring(victory_guard.recoveries())
-		lines[#lines + 1] = "  Unmanaged: another mod exposes a victory opt-out,"
-			.. " but Razi will not call an unverified API."
-		lines[#lines + 1] = "  Note: unknown mods calling game.set_game_state"
-			.. " directly cannot be universally vetoed."
-		local output = table.concat(lines, "\n")
-		if player then
-			player.print(output)
-		else
-			game.print(output)
-		end
-	end)
+commands.add_command("razi-victory-audit", {"razi-audit.victory-help"}, victory_guard.command)
 
 -- An idle Convergence has no pending work. Active force transmissions
 -- advance once per second and only redraw their open final panels.
