@@ -90,8 +90,32 @@ local function literal_keys()
       end
     end
     local prefix=LITERAL_PREFIX[path]
-    for key in source:gmatch('[^%w]L%("([%w%-]+)"') do
-      if prefix and not key:match("%-$") then found[#found+1]=prefix.."."..key end
+    if prefix then
+      -- The first argument of L(...) may hold several literals, e.g.
+      -- L(a and "key-one" or "key-two"): read up to its first top-level comma.
+      for start in source:gmatch('[^%w_]L%(()') do
+        local depth,stop=0,start
+        while stop<=#source do
+          local char=source:sub(stop,stop)
+          if char=="(" then depth=depth+1
+          elseif char==")" then
+            if depth==0 then break end
+            depth=depth-1
+          elseif char=="," and depth==0 then break end
+          stop=stop+1
+        end
+        local argument=source:sub(start,stop-1)
+        for position,key in argument:gmatch('()"([%w%-]+)"') do
+          local before=argument:sub(1,position-1)
+          -- The key itself, or an `and`/`or` branch; not a compared value.
+          -- A piece that starts or ends with a dash is joined at run time.
+          if (before:match("^%s*$") or before:match("%f[%w]and%s*$")
+            or before:match("%f[%w]or%s*$"))
+            and not key:match("^%-") and not key:match("%-$") then
+            found[#found+1]=prefix.."."..key
+          end
+        end
+      end
     end
   end
   handle:close()
