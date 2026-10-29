@@ -1,3 +1,4 @@
+---@diagnostic disable: assign-type-mismatch
 -- Event-driven physical project regression fixture. No Factorio save required.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(v,message) if not v then error(message,2) end end

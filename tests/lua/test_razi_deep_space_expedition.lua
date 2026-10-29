@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields, assign-type-mismatch
 -- Contract: Convergence requires REAL crewed visits to all installed
 -- connected Deep Space destinations, with no research or autopilot bypass.
 package.path="./?.lua;./?/init.lua;"..package.path

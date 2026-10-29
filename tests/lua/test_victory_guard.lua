@@ -1,3 +1,4 @@
+---@diagnostic disable: unnecessary-assert
 -- Only Razi Convergence calls set_game_state; all known external
 -- endpoints expose opt-out APIs that must be reasserted safely.
 package.path="./?.lua;./?/init.lua;"..package.path

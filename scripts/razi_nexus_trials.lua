@@ -17,6 +17,7 @@ function M.snapshot(force)
   if not (force and remote and remote.interfaces
     and remote.interfaces["nexus-bosses"]
     and remote.interfaces["nexus-bosses"].get_state) then return nil end
+  ---@diagnostic disable-next-line: param-type-mismatch
   local ok,snapshot=pcall(remote.call,"nexus-bosses","get_state")
   if not ok or type(snapshot)~="table"
     or type(snapshot.defeated)~="table" then return nil end
@@ -36,6 +37,7 @@ function M.open_codex(player,id)
     and remote.interfaces["nexus-bosses"]
     and remote.interfaces["nexus-bosses"].open_codex) then return false end
   -- Explicit player interaction only; the source mod renders its own Codex.
+  ---@diagnostic disable-next-line: param-type-mismatch
   local ok=pcall(remote.call,"nexus-bosses","open_codex",player.index,id)
   return ok
 end

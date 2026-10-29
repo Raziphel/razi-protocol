@@ -21,6 +21,7 @@ M.candidates=candidates
 local targets_cache
 local function location(name)
   return prototypes and ((prototypes.space_location or {})[name]
+    ---@diagnostic disable-next-line: undefined-field
     or (prototypes.planet or {})[name])
 end
 local function endpoint_name(value)

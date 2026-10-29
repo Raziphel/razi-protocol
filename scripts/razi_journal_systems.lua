@@ -66,6 +66,7 @@ end
 function M.storm()
   local api=remote and remote.interfaces and remote.interfaces["nexus-threat"]
   if not (api and api.get_state) then return {available=false} end
+  ---@diagnostic disable-next-line: param-type-mismatch
   local ok,data=pcall(remote.call,"nexus-threat","get_state")
   if not (ok and type(data)=="table") then return {available=false} end
   return {available=true,instability=number(data.instability),
@@ -106,6 +107,7 @@ local function meter(panel,name,color,width)
 end
 
 function M.render(parent,player,size)
+  ---@diagnostic disable-next-line: assign-type-mismatch
   local width=math.max(285,size.width-66)
   local scroll=parent.add{type="scroll-pane",name=ROOT,direction="vertical",
     horizontal_scroll_policy="never",vertical_scroll_policy="auto"}

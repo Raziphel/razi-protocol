@@ -77,6 +77,7 @@ function M.witness_status(force)
    for _,entity in pairs(surface.find_entities_filtered{
      name="radar",force=force}) do
     if entity.valid and (entity.energy or 0)>0 then
+     ---@diagnostic disable-next-line: need-check-nil
      found[system]=planet.name
      break
     end
@@ -229,6 +230,7 @@ function M.assembly_fraction(force)
   if saved and saved.delivered and (saved.delivered[rule.id] or 0)>=rule.count then
    credit=credit+1
   else
+   ---@diagnostic disable-next-line: undefined-field
    local amounts=saved and saved.materials and saved.materials[rule.id] or {}
    local requirements={{rule.item,rule.count}}
    for _,part in ipairs(rule.supplies or {}) do requirements[#requirements+1]=part end
@@ -236,6 +238,7 @@ function M.assembly_fraction(force)
    for _,part in ipairs(requirements) do
     fraction=fraction+math.min(1,(amounts[part[1]] or 0)/part[2])
    end
+   ---@diagnostic disable-next-line: assign-type-mismatch
    credit=credit+fraction/#requirements
   end
  end
@@ -419,6 +422,7 @@ function M.forces_merged(event)
  local target=saved[dest_index] or {delivered={},victory=false}
  target.delivered=target.delivered or {}
  target.materials=target.materials or {}
+ ---@diagnostic disable-next-line: undefined-field
  for id,parts in pairs(source.materials or {}) do
   target.materials[id]=target.materials[id] or {}
   for name,amount in pairs(parts) do
@@ -433,6 +437,7 @@ function M.forces_merged(event)
  target.victory=target.victory or source.victory
  target.victory_tick=target.victory_tick or source.victory_tick
  target.completed_by=target.completed_by or source.completed_by
+ ---@diagnostic disable-next-line: undefined-field
  target.completed_site=target.completed_site or source.completed_site
  if not target.victory then
   local a,b=target.transmission,source.transmission
@@ -511,6 +516,7 @@ function M.render(parent,player,options)
  tiles.style.vertical_spacing=6
  for _,rule in ipairs(M.stages) do
   local donated=won and rule.count or
+   ---@diagnostic disable-next-line: param-type-mismatch
    math.max(0,math.min(rule.count,saved.delivered[rule.id] or 0))
   local completed=donated==rule.count
   local shade=M.module_colors[rule.id]
@@ -676,6 +682,7 @@ function M.render(parent,player,options)
   panel.style.horizontally_stretchable=true
   local title=line(panel,"convergence-transmission-heading",width)
   title.style.font="heading-2"
+  ---@diagnostic disable-next-line: assign-type-mismatch
   local elapsed=math.max(0,game.tick-sequence.started)
   local meter=panel.add{type="progressbar",
    value=math.min(1,elapsed/M.transmission_duration)}
@@ -770,6 +777,7 @@ function M.render(parent,player,options)
     "convergence-stage-"..rule.id)}
   display.style.font="heading-2"
   local donated=won and rule.count
+   ---@diagnostic disable-next-line: param-type-mismatch
    or math.min(rule.count,saved.delivered[rule.id] or 0)
   local amount=line(card,"convergence-stage-progress",width,
    tostring(donated),tostring(rule.count))

@@ -29,6 +29,7 @@ end
 local function setting(name,group,default)
   local current=settings and settings[group] and settings[group][name]
   if current==nil then return default end
+  ---@diagnostic disable-next-line: undefined-field
   return current.value==true
 end
 function M.snapshot(force,options)

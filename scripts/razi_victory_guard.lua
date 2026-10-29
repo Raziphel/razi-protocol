@@ -40,6 +40,7 @@ local function check(interface)
   if not api[getter] then
     return {interface=interface,state="unverified"}
   end
+  ---@diagnostic disable-next-line: param-type-mismatch
   local ok,value=pcall(remote.call,interface,getter)
   if not ok then
     return {interface=interface,state="error",error=tostring(value)}
@@ -83,6 +84,7 @@ function M.enforce()
     if api and api[setter] then
       local already_disabled=false
       if api[getter] then
+        ---@diagnostic disable-next-line: param-type-mismatch
         local ok,value=pcall(remote.call,interface,getter)
         already_disabled=ok and value==desired
         if not ok then
@@ -91,6 +93,7 @@ function M.enforce()
         end
       end
       if not already_disabled then
+        ---@diagnostic disable-next-line: param-type-mismatch
         local ok,err=pcall(remote.call,interface,setter,desired)
         if ok then
           changed=changed+1

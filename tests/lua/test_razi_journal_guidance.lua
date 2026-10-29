@@ -1,3 +1,4 @@
+---@diagnostic disable: need-check-nil, undefined-field
 -- Deterministic, in-memory Codex guidance regression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end

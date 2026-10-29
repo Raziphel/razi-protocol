@@ -1,3 +1,4 @@
+---@diagnostic disable: need-check-nil
 -- Vespera freight is source-backed, discovery-aware and spoiler-safe.
 -- Read-only: never inferred shipments or automatic Orbital Catapult activity.
 package.path="./?.lua;./?/init.lua;"..package.path

@@ -1,3 +1,4 @@
+---@diagnostic disable: need-check-nil
 -- Truthful, fully source-derived Mission Plan regression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(value,message) if not value then error(message,2) end end

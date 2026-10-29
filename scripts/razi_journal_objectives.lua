@@ -76,6 +76,7 @@ function M.snapshot(quest,technology,status,options)
   local percent
   if current and technology and current.name==technology.name
     and not technology.researched and type(options.research_progress)=="number" then
+    ---@diagnostic disable-next-line: assign-type-mismatch
     local value=math.max(0,math.min(1,options.research_progress))
     percent=math.floor(value*100+.5)
   end

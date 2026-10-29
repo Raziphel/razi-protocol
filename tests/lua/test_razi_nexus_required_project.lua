@@ -1,3 +1,4 @@
+---@diagnostic disable: need-check-nil
 -- The source Nexus Bosses remote.get_state API is the only
 -- authoritative evidence for all nine force-owned victories.
 package.path="./?.lua;./?/init.lua;"..package.path

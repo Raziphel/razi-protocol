@@ -32,6 +32,7 @@ M.SIZES=SIZES
 
 function M.size(role)
   local value=SIZES[role]
+  ---@diagnostic disable-next-line: unnecessary-assert
   assert(value,"Unknown journal icon role: "..tostring(role))
   return value
 end
