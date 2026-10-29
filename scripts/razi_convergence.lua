@@ -97,16 +97,6 @@ end
 function M.nexus_status(force)
  return nexus_trials.snapshot(force)
 end
-function M.core_status(player)
- if not M.location(player) then return false end
- local surface=player.character.surface
- if not (surface and surface.find_entities_filtered) then return false end
- for _,entity in pairs(surface.find_entities_filtered{
-  name="razi-convergence-array-core",force=player.force}) do
-  if entity.valid and (entity.energy or 0)>0 then return true end
- end
- return false
-end
 -- Actual recovered evidence, not unlocked by an early research tooltip.
 function M.blackbox(force)
  local saved=storage and storage.razi_convergence
@@ -622,9 +612,6 @@ function M.render(parent,player,options)
    testimony.style.font_color={r=.73,g=.77,b=.82}
   end
  end
- line(network,M.core_status(player)
-   and "convergence-core-ready"
-   or "convergence-core-missing",width)
  -- Black-box recovery is shipment-gated; the reveal has tangible evidence.
  local blackbox=M.blackbox(force)
  if blackbox>0 and story.enabled() then
@@ -727,13 +714,14 @@ function M.render(parent,player,options)
    local researched=commission.researched
     and (next_index<3 or sync.researched)
     and (next_index<5 or ignition.researched)
-   local required=not researched and (not commission.researched -- luacheck: ignore 421
+   -- Not `required`: that name already holds the Deep Space stop count.
+   local pending=not researched and (not commission.researched
      and commission or (not sync.researched and sync or ignition))
-   if required then
+   if pending then
     line(advice,"convergence-next-action-research",width,
-     required.localised_name)
+     pending.localised_name)
     local shown=0
-    for _,prior in pairs(required.prerequisites or {}) do
+    for _,prior in pairs(pending.prerequisites or {}) do
      if not prior.researched and shown<3 then
       line(advice,"convergence-next-action-prereq",width,
        prior.localised_name)
@@ -749,8 +737,6 @@ function M.render(parent,player,options)
     line(advice,"convergence-next-action-witnesses",width)
    elseif next_index==5 and (not chart_ready or landed<required) then
     line(advice,"convergence-next-action-deep-tour",width)
-   elseif next_index==5 and not M.core_status(player) then
-    line(advice,"convergence-next-action-core",width)
    elseif next_index==5 and not receiver_ready then
     line(advice,"convergence-next-action-receiver",width)
    elseif not (force.recipes and force.recipes[next_rule.item]
@@ -822,41 +808,6 @@ function M.render(parent,player,options)
    or "convergence-recipe-locked")
   line(card,recipe_state,width)
   line(card,"convergence-stage-description-"..rule.id,width)
-  if i==#M.stages then
-   local part_title=line(card,"convergence-component-heading",width)
-   part_title.style.font="default-bold"
-   for _,part in ipairs(defs.assemblies or {}) do
-    local owned=inventory and inventory.valid
-     and inventory.get_item_count(part.item) or 0
-    local part_recipe=force.recipes and force.recipes[part.item]
-    local row=card.add{type="flow",direction="horizontal"}
-    row.style.horizontal_spacing=7
-    local picture=row.add{type="sprite",sprite="item/"..part.item}
-    picture.style.width=25
-    picture.style.height=25
-    local status=line(row,"convergence-component-line",width-44, -- luacheck: ignore 421
-     {"item-name."..part.item},tostring(owned),
-     part_recipe and part_recipe.enabled
-       and {"razi-ops.convergence-component-craftable"}
-       or {"razi-ops.convergence-component-research"})
-    status.style.single_line=false
-    status.style.font_color=owned>0 and {r=.49,g=.87,b=.71}
-     or {r=.89,g=.76,b=.94}
-    -- Read the force's ACTUAL installed recipe, including its optional
-    -- source-material choices. No guessed shopping list or tick polling.
-    if part_recipe and part_recipe.enabled then
-     local ingredients={"",L("convergence-component-inputs")}
-     for j,input in ipairs(part_recipe.ingredients or {}) do
-      if j>1 then ingredients[#ingredients+1]="   " end
-      ingredients[#ingredients+1]="[item="..input.name.."] "..
-       tostring(input.amount or 1)
-     end
-     local detail=card.add{type="label",caption=ingredients}
-     detail.style.single_line=false
-     detail.style.maximal_width=width
-    end
-   end
-  end
   local build=card.add{type="label",caption=L(
     "convergence-build-"..rule.id)}
   build.style.single_line=false

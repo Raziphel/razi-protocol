@@ -33,7 +33,6 @@ M.shipments = {
     {"vespera-tech-card",80},{"beetlejuice-tech-card",80},
     {"umbra-tech-card",80},{"antimatter-science-pack",80}}}
 }
-M.assemblies = {}
 
 local function active(name)
   local tech = (data.raw.technology or {})[name]

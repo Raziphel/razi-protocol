@@ -552,7 +552,6 @@ local function next_action(force,id,status)
     if not receivers_ready then
       return L("project-next-convergence-receiver")
     end
-    return L("project-next-convergence-core")
   end
   local stage=convergence.stages[current]
   if not stage then return L("project-next-unavailable") end

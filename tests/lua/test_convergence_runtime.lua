@@ -31,7 +31,7 @@ rawset(_G,"game",{
 })
 local function fixture(index)
  local force={index=index,name="Test Force "..index,
-  receiver_count=0,core_powered=false,transmissions={},technologies={
+  receiver_count=0,transmissions={},technologies={
   ["razi-convergence-witness-network"]={researched=false},
   [mods.commission]={researched=true},
   [mods.authorization]={researched=true},
@@ -61,12 +61,7 @@ local function fixture(index)
  local character={valid=true,surface={
   platform={valid=true,force=force,hub={valid=true},
    completed_trips=2,space_location={name="solar-system-edge"}},
-  find_entities_filtered=function(filter)
-   if filter.name=="razi-convergence-array-core" and force.core_powered then
-    return {{valid=true,energy=100000000}}
-   end
-   return {}
-  end}}
+  find_entities_filtered=function() return {} end}}
  local player={force=force,character=character,name="Engineer",
   valid=true,controller_type=1,
   get_main_inventory=function() return inventory end}
