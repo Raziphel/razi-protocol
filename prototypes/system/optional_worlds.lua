@@ -14,14 +14,14 @@
 --   reason     why the world is not woven (or why its packs are not)
 -- Woven worlds, with or without a mod of their own, are not listed unless a pack of theirs stays out.
 -- Cerys and Dea Dia are woven (and so are Igrys, Foliax, Pelagos, Terra Palus, Shchierbin, Bellicos and the rest);
+-- so is Ferrum, and the path may need its robotics pack, which the mod adds to research priced in Vulcanus, Fulgora and
+-- Gleba science (the research Ferrum's discovery needs keeps it out: compat/ferrum_progression_guard.lua);
 -- Secretas is a required dependency whose discovery and golden science are on the path anyway.
 local M = {}
 
 M.final_technology = "razi-stable-intergalactic-singularity"
 
 M.worlds = {
-	{mod = "planet-ferrum", locations = {}, packs = {"ferrum-robotics-science-pack"},
-		reason = "the world opens before Outer Frontier Mastery; its robotics pack is made only on Ferrum"},
 	{mod = "planet-rabbasca", locations = {}, packs = {"athletic-science-pack"},
 		reason = "the world opens before Vibrant and Vespera; its athletic pack is made only on Rabbasca"},
 	{mod = "rabbasca-underground", locations = {"rabbasca-underground"},
