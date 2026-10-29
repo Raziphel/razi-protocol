@@ -729,7 +729,6 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- permanently stealing vertical space at small resolutions.
   local content_height=size.body-(size.compact and 124 or 148)
   local scroll=wheel_pane(panel,"razi_journal_reading",inner,content_height)
-  scroll.tags={razi_scroll_context=quest.id}
   local text_width=inner-18
   local prose=scroll.add{type="flow",name="razi_journal_prose",direction="vertical"}
   prose.style.width=text_width
@@ -1438,7 +1437,6 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   if selected_element and p.query=="" then
     pcall(function() scroll.scroll_to_element(selected_element) end)
   end
-  p.reveal_selection=nil
   return search
 end
 -- The archive is not another quest chain. Each story entry opens only
@@ -1594,7 +1592,6 @@ local function render_archive(parent,player,p,context,size)
     title.style.font_color=COLOR.ink
     local prose=wheel_pane(paper,"razi_journal_archive_reading",
       size.reader-38,size.body-140)
-    prose.tags={razi_scroll_context=p.record}
     wrap(prose,L("archive-array-record-"..array_page),size.reader-67)
     return
   end
@@ -1633,7 +1630,6 @@ local function render_archive(parent,player,p,context,size)
   paper.add{type="line",direction="horizontal"}
   local reading=wheel_pane(paper,"razi_journal_archive_reading",
     size.reader-38,size.body-179)
-  reading.tags={razi_scroll_context=chosen.id}
   local page=reading.add{type="flow",direction="vertical"}
   page.style.width=size.reader-67
   page.style.vertical_spacing=12
@@ -2174,7 +2170,6 @@ function M.open_quest(player,id)
   p.view="quests"
   p.chapter_cover=false
   p.compact_index_open=false
-  p.reveal_selection=true
   open(player)
   return true
 end
@@ -2422,16 +2417,14 @@ function M.gui_click(event)
   if native then
     local p=pref(player.index)
     if not (player.gui.screen[FRAME] and p.view=="projects") then return end
-    ---@diagnostic disable-next-line: invert-if
-    if native=="convergence-deliver" and p.project=="convergence" then
-      local known=false
-      for _,stage in ipairs(convergence.stages) do
-        if stage.id==tags.value then known=true;break end
-      end
-      if not known or not convergence.available(player.force) then return end
-      local message,amount=convergence.deliver(player,tags.value)
-      player.print({"razi-ops."..message,tostring(amount)})
-    else return end
+    if not (native=="convergence-deliver" and p.project=="convergence") then return end
+    local known=false
+    for _,stage in ipairs(convergence.stages) do
+      if stage.id==tags.value then known=true;break end
+    end
+    if not known or not convergence.available(player.force) then return end
+    local message,amount=convergence.deliver(player,tags.value)
+    player.print({"razi-ops."..message,tostring(amount)})
     draw(player)
     return
   end
@@ -2488,7 +2481,6 @@ function M.gui_click(event)
     p.view="quests"
     p.chapter_cover=false
     p.compact_index_open=false
-    p.reveal_selection=false
   elseif action=="mission-details" and p.view=="quests"
     and p.selected==tags.id then
     p.goal_expanded=p.goal_expanded_quest~=tags.id
@@ -2531,7 +2523,6 @@ function M.gui_click(event)
     p.compact_index_open=false
     p.filter="all"
     p.query=""
-    p.reveal_selection=false
   elseif action=="chapter" then
     if M.hide_spoilers() then
       local exposed=false
@@ -2606,7 +2597,6 @@ function M.gui_click(event)
     p.compact_index_open=false
     p.filter="all"
     p.query=""
-    p.reveal_selection=false
   elseif action=="record" then
     local context=M.context(player.force)
     for _,record in ipairs(story.records()) do
@@ -2642,7 +2632,6 @@ function M.gui_click(event)
       p.selected=target.id
       p.chapter=target.chapter
       p.compact_index_open=false
-      p.reveal_selection=false
     end
   elseif action=="filter" and ({all=true,ready=true,unfinished=true,
       done=true})[tags.id] then
@@ -2656,7 +2645,6 @@ function M.gui_click(event)
       p.filter="all"
       p.view="quests"
       p.query=""
-      p.reveal_selection=false
       p.chapter_cover=false
     end
   elseif action=="next-in-chapter" or action=="previous-in-chapter" then
@@ -2720,7 +2708,6 @@ end
 function M.text_changed(event)
   local element=event and event.element
   if not (element and element.valid) then return end
-  local tags=element.tags -- luacheck: ignore 211
   if element.name~="razi_journal_search" then return end
   local player=game.get_player(event.player_index)
   if not (player and player.valid) then return end
@@ -2757,7 +2744,6 @@ function M.selection_changed(event)
   p.chapter=chapter.id
   p.filter="all"
   p.query=""
-  p.reveal_selection=false
   p.chapter_cover=true
   local context=M.context(player.force)
   for _,quest in ipairs(defs.quests) do
