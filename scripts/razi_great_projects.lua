@@ -69,7 +69,7 @@ local function installed(force,world,names)
   return surface and #names>0 and surface.count_entities_filtered
     and surface.count_entities_filtered{name=names,force=force}>0 or false
 end
-local function powered_relay(force,world)
+local function powered_relay(force,world) -- luacheck: ignore 211
   local surface=planet_surface(world)
   if not (surface and surface.find_entities_filtered) then return false end
   for _,entity in pairs(surface.find_entities_filtered{

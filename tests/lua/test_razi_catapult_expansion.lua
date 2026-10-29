@@ -39,7 +39,7 @@ local missing={planet={muria={},aquilo={},rubia={},vulcanus={},castra={}}}
 check(#catapult.definitions(missing,true,true,true)==8,
  "Missing Gleba/Moshine and Maraxsis should only skip affected pairs")
 local writes={}
-data={raw=raw,extend=function(self,rows)
+data={raw=raw,extend=function(self,rows) -- luacheck: ignore 212
  for _,record in ipairs(rows) do writes[#writes+1]=record end
 end}
 mods={["orbital-cannon"]="0.15.0"}

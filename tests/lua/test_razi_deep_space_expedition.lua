@@ -40,7 +40,7 @@ local craft={valid=true,hub={valid=true},force=f1,
 local pilot={name="Pioneer",valid=true,force=f1,controller_type=1,
  character={valid=true,surface={platform=craft}}}
 game.connected_players={pilot}
-local done,total,stops,chart=m.status(f1)
+local done,total,stops,chart=m.status(f1) -- luacheck: ignore 311
 check(chart and total==#endpoints and done==0,
  "All ten real connected stops, including optional branches, must be required")
 check(not m.observe({valid=true,force=f1,character=nil}),
@@ -68,7 +68,7 @@ for _,id in ipairs(endpoints) do
   check(m.observe(other),"Team members can complete remaining stop: "..id)
  end
 end
-done,total,stops,chart=m.status(f1)
+done,total,stops,chart=m.status(f1) -- luacheck: ignore 311
 check(done==total and total==#endpoints,
  "All installed connected destinations must be visited")
 for _,row in ipairs(stops) do

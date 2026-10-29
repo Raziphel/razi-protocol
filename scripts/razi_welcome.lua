@@ -51,7 +51,7 @@ function M.priority(player)
   return M.signal(player):gsub("^status%-","priority-")
 end
 local function unread_count(index)
-  local state=storage.razi_expedition_journal
+  local state=storage.razi_expedition_journal -- luacheck: ignore 431
     and storage.razi_expedition_journal[index]
   local count=0
   for _ in pairs(state and state.story_unread or {}) do

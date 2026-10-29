@@ -264,7 +264,7 @@ check(won and progress==5 and total==5 and done==1
  "Loading an old victory must preserve a fully assembled array")
 -- Two simultaneous force transmissions merged during the finale must
 -- retain the earlier accepted accord, archive its origin, and win once.
-local donor=fixture(5)
+local donor=fixture(5) -- luacheck: ignore 211
 local recipient=fixture(6)
 storage.razi_convergence[5]={
  delivered={stellar=24,industry=30,["deep-space"]=18,

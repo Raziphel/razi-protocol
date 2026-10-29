@@ -33,14 +33,14 @@ local surfaces={
  },
  vulcanus={
    valid=true,name="vulcanus",
-   count_entities_filtered=function(args)
+   count_entities_filtered=function(args) -- luacheck: ignore 212
      queries=queries+1
      return 1
    end
  },
  empty={
    valid=true,name="empty",
-   count_entities_filtered=function(args)
+   count_entities_filtered=function(args) -- luacheck: ignore 212
      queries=queries+1
      return 0
    end

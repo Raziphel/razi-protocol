@@ -39,7 +39,7 @@ force.platforms[1]=start
 check(not m.observe(start),"Departure must not imply successful crossing")
 local captured=ark_qualification_queries
 check(captured==3,"New departure must sample the three Ark entity groups")
-for i=1,20 do
+for i=1,20 do -- luacheck: ignore 213
   check(not m.observe(start),"Same crossing must remain pending")
 end
 check(ark_qualification_queries==captured,

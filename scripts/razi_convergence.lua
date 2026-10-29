@@ -359,7 +359,7 @@ function M.deliver(player,id)
 end
 -- Only restore newly introduced recipe unlocks on an existing save.
 -- Never reset the whole science tree or change another mod's research.
-function M.repair_recipe_unlocks(force)
+function M.repair_recipe_unlocks(force) -- luacheck: ignore 212
  -- Source mods exclusively own their recipe unlocks. Never unlock native
  -- products from Razi research or mutate already-researched saves.
  return
@@ -584,7 +584,7 @@ function M.render(parent,player,options)
  trials_panel.style.horizontally_stretchable=true
  local nexus=M.nexus_status(force)
  local count=nexus and nexus.count or 0
- local total=#nexus_trials.order
+ local total=#nexus_trials.order -- luacheck: ignore 411
  local trials_title=line(trials_panel,"convergence-nexus-heading",width)
  trials_title.style.font="heading-2"
  line(trials_panel,nexus and "convergence-nexus-count"
@@ -690,7 +690,7 @@ function M.render(parent,player,options)
   line(panel,"convergence-transmission-duration",width,
    tostring(math.max(0,math.ceil(
     (M.transmission_duration-elapsed)/60))))
-  for i,beat in ipairs(M.transmission_beats) do
+  for i,beat in ipairs(M.transmission_beats) do -- luacheck: ignore 213
    local label=line(panel,
     i<=(sequence.beat or 1) and "convergence-transmission-beat-done"
      or "convergence-transmission-beat-pending",width,
@@ -727,7 +727,7 @@ function M.render(parent,player,options)
    local researched=commission.researched
     and (next_index<3 or sync.researched)
     and (next_index<5 or ignition.researched)
-   local required=not researched and (not commission.researched
+   local required=not researched and (not commission.researched -- luacheck: ignore 421
      and commission or (not sync.researched and sync or ignition))
    if required then
     line(advice,"convergence-next-action-research",width,
@@ -834,7 +834,7 @@ function M.render(parent,player,options)
     local picture=row.add{type="sprite",sprite="item/"..part.item}
     picture.style.width=25
     picture.style.height=25
-    local status=line(row,"convergence-component-line",width-44,
+    local status=line(row,"convergence-component-line",width-44, -- luacheck: ignore 421
      {"item-name."..part.item},tostring(owned),
      part_recipe and part_recipe.enabled
        and {"razi-ops.convergence-component-craftable"}

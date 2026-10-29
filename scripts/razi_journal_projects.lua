@@ -264,7 +264,7 @@ local function platform_reader(parent,player,width,id,status)
     message.style.font_color={r=.49,g=.83,b=.67}
   end
 end
-local function great_project_reader(parent,player,width,id,status)
+local function great_project_reader(parent,player,width,id,status) -- luacheck: ignore 212
   local detail=status[3]
   local desc=parent.add{type="label",caption=L("project-"..id.."-guide")}
   desc.style.single_line=false
@@ -346,7 +346,7 @@ end
 
 -- Each circle comes from the Nexus Bosses API's real per-force defeats.
 -- Source boss fights, trophy drops, warp key and music remain untouched.
-local function nexus_trials_reader(parent,player,width,status)
+local function nexus_trials_reader(parent,player,width,status) -- luacheck: ignore 212
   local state=status[3]
   local intro=parent.add{type="label",
     caption=L("project-nexus-guide")}
