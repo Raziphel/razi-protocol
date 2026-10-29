@@ -107,6 +107,9 @@ d.data_final_fixes()
 check(#disabled.technology["slp-dyson-sphere"].prerequisites==0
  and disabled["space-location"]["slp-solar-orbit-outer"].distance==nil,
  "Disabling Razi Dyson rework changed source orbital research/layout")
+check(not has(disabled.technology["razi-singularity-test-fire"],
+ "slp-dyson-sphere-grounded"),
+ "Disabling Dyson research links retained the endgame prerequisite")
 local missing,n=setup({missing=true})
 n.data_final_fixes()
 check(#missing.technology["slp-dyson-sphere"].prerequisites==0,
