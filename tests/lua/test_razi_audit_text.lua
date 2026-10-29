@@ -1,3 +1,4 @@
+---@diagnostic disable: param-type-mismatch, need-check-nil
 -- The audit commands print localisable tables whose keys are defined in the locale.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
