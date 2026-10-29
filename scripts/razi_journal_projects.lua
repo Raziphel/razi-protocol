@@ -5,6 +5,7 @@ local dyson=require("scripts.galactic_dyson")
 local convergence=require("scripts.razi_convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
+local marks=require("scripts.razi_journal_marks")
 local story=require("scripts.razi_story")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local objectives=require("scripts.razi_journal_data")
@@ -222,7 +223,7 @@ local function platform_reader(parent,player,width,id,status)
     if step.available then
       local row=parent.add{type="flow",direction="horizontal"}
       row.style.horizontal_spacing=8
-      local mark=row.add{type="label",caption=step.done and "✓" or "○"}
+      local mark=row.add{type="label",caption=step.done and marks.done or marks.pending}
       mark.style.font_color=step.done and HUES.green or HUES.gold
       local text=row.add{type="label",caption=L(step.key)}
       text.style.single_line=false

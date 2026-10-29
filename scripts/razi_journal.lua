@@ -17,6 +17,7 @@ local objectives=require("scripts.razi_journal_objectives")
 local chapter_timing=require("scripts.razi_chapter_timing")
 local journal_acts=require("scripts.razi_journal_acts")
 local preview=require("scripts.razi_journal_recipe_preview")
+local marks=require("scripts.razi_journal_marks")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -852,7 +853,7 @@ local function render_details(parent,player,quest,p,context,size,view)
     local item=checklist.add{type="flow",direction="horizontal"}
     item.style.horizontal_spacing=8
     item.style.vertical_align="center"
-    local marker=label(item,row.done and "✓" or "○")
+    local marker=label(item,row.done and marks.done or marks.pending)
     marker.style.font_color=row.done and COLOR.green
       or row.kind=="goal" and theme.primary or COLOR.amber
     marker.tooltip=L(row.done and "mission-goal-status-done"
@@ -1192,8 +1193,8 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     row.style.horizontal_spacing=9
     row.style.vertical_align="center"
     icons.sprite(row,quest_art(player.force,quest,context),"quest_row")
-    local marker=label(row,state=="complete" and "✓"
-      or state=="active" and "●" or "○")
+    local marker=label(row,state=="complete" and marks.done
+      or state=="active" and marks.active or marks.pending)
     marker.style.font_color=state=="complete" and COLOR.green
       or state=="active" and COLOR.amber or COLOR.quiet
     local link=row.add{type="label",style="clickable_label",
@@ -1257,7 +1258,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     text=p.query or "",tooltip=L("search-tooltip")}
   search.style.width=inner-44
   local clear=find_row.add{type="button",style="tool_button",
-    caption="×",tooltip=L("clear-search"),
+    caption=marks.close,tooltip=L("clear-search"),
     tags={razi_journal_action="clear-search"}}
   clear.style.width=28
   clear.style.height=28
@@ -1330,7 +1331,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       icons.sprite(head,themes.icon(chapter.id),"chapter_button",
         {"journal-chapter."..chapter.id})
       local toggle=head.add{type="button",name="razi_journal_chapter_toggle",style="tool_button",
-        caption=open and "▾" or "▸",
+        caption=open and marks.expanded or marks.collapsed,
         tags={razi_journal_action="chapter",id=chapter.id},
         tooltip={"journal-chapter."..chapter.id}}
       toggle.style.width=20
@@ -1405,8 +1406,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           icons.sprite(item,quest_art(player.force,quest,context),
             "quest_row")
           local control=item.add{type="button",name="razi_journal_item_control",style="tool_button",
-            caption=state=="complete" and "✓"
-              or state=="active" and "●" or "○",
+            caption=state=="complete" and marks.done
+              or state=="active" and marks.active or marks.pending,
             tags={razi_journal_action="select",id=quest.id},
             tooltip=milestone_tooltip}
           control.style.width=21
@@ -1539,7 +1540,7 @@ local function render_archive(parent,player,p,context,size)
         {"journal-record-title."..record.id})
     else
       mark=row.add{type="button",style="tool_button",
-        caption="◇",enabled=false,
+        caption=marks.pending,enabled=false,
         tooltip=concealed and L("spoiler-sealed-record")
           or {"journal-record-title."..record.id}}
       mark.style.font_color={r=.59,g=.62,b=.68}
@@ -1549,7 +1550,7 @@ local function render_archive(parent,player,p,context,size)
     local choice=row.add{type="label",
       style=opened and "clickable_label" or nil,
       caption={"",opened and p.story_unread and p.story_unread[record.id]
-        and "● " or "",concealed and L("spoiler-sealed-record")
+        and marks.active.." " or "",concealed and L("spoiler-sealed-record")
         or {"journal-record-title."..record.id}},
       tags=opened and {razi_journal_action="record",id=record.id} or nil}
     choice.style.single_line=false
@@ -1740,12 +1741,12 @@ local function draw(player,focus_search)
   compact_switch.visible=p.view=="quests" and size.single_column
   focus.style.minimal_width=size.compact and 55 or 94
   local refresh=head.add{type="button",style="tool_button",
-    caption="↻",tooltip=L("refresh"),
+    caption=marks.refresh,tooltip=L("refresh"),
     tags={razi_journal_action="refresh"}}
   refresh.style.width=30
   refresh.style.height=30
   local dismiss=head.add{type="button",style="tool_button",
-    caption="×",tooltip=L("close"),
+    caption=marks.close,tooltip=L("close"),
     tags={razi_journal_action="close"}}
   dismiss.style.width=30
   dismiss.style.height=30
@@ -2012,8 +2013,8 @@ local function update_reader(player,preserve_reader)
               or state=="active" and themes.get(ch.id).soft or COLOR.muted
           end
           if marker then
-            marker.caption=state=="complete" and "✓"
-              or state=="active" and "●" or "○"
+            marker.caption=state=="complete" and marks.done
+              or state=="active" and marks.active or marks.pending
             marker.style.font_color=chosen and themes.get(ch.id).primary
               or state=="complete" and COLOR.green
               or state=="active" and COLOR.amber or COLOR.quiet
@@ -2049,7 +2050,7 @@ local function update_reader(player,preserve_reader)
       end
       local expanded=shown>0 and (p.chapter==ch.id or p.query~="")
       if entries then entries.visible=expanded end
-      if toggle then toggle.caption=expanded and "▾" or "▸" end
+      if toggle then toggle.caption=expanded and marks.expanded or marks.collapsed end
       if count then
         count.caption=L("chapter-progress-short",
           ---@diagnostic disable-next-line: need-check-nil

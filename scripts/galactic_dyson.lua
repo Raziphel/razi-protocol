@@ -3,6 +3,7 @@
 local M={}
 local L=function(name,...) return {"razi-ops."..name,...} end
 local runtime=require("scripts.galactic_dyson_runtime")
+local marks=require("scripts.razi_journal_marks")
 M.stages={
  {"planet-discovery-sunorbit","dyson-outer"},
  {"slp-solar-system-sun2","dyson-inner"},
@@ -113,7 +114,7 @@ function M.render(parent,player,options)
    local h=frame.add{type="flow",direction="horizontal"}
    h.style.horizontal_spacing=8
    h.style.vertical_align="center"
-   local marker=label(h,stage.tech.researched and "✓" or "○")
+   local marker=label(h,stage.tech.researched and marks.done or marks.pending)
    marker.style.font_color=stage.tech.researched
       and {r=.55,g=.83,b=.68} or {r=.85,g=.70,b=.46}
    local caption=label(h,L(stage.heading))
