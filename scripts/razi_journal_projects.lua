@@ -325,7 +325,8 @@ local function great_project_reader(parent,player,width,id,status) -- luacheck: 
       row.style.single_line=false
       row.style.maximal_width=width
     end
-    for i=1,math.min(3,status[1]) do
+    -- The recovered fragments are story text.
+    for i=1,story.enabled() and math.min(3,status[1]) or 0 do
       local evidence=parent.add{type="label",caption=L("project-array-record-"..i)}
       evidence.style.single_line=false
       evidence.style.maximal_width=width
