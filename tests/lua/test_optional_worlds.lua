@@ -26,7 +26,7 @@ for entry in info:match('"dependencies"%s*:%s*(%b[])'):gmatch('"([^"]+)"') do
 end
 
 check(roster.final_technology == "razi-stable-intergalactic-singularity", "the final technology changed")
-check(#roster.worlds >= 7, "the list lost worlds")
+check(#roster.worlds >= 6, "the list lost worlds")
 
 local seen = {}
 for _, world in ipairs(roster.worlds) do
@@ -51,8 +51,8 @@ for location, mod in pairs({["rabbasca-underground"] = "rabbasca-underground",
 	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus-Updated"}) do
 	check(excluded[location] == mod, location .. " must stay off the path")
 end
--- Ferrum and Rabbasca are woven: only their packs stay out
-for _, mod in ipairs({"planet-ferrum", "planet-rabbasca"}) do
+-- Rabbasca is woven: only its packs stay out
+for _, mod in ipairs({"planet-rabbasca"}) do
 	for _, world in ipairs(roster.worlds) do
 		if world.mod == mod then
 			check(#world.locations == 0 and #world.packs > 0, mod .. " is woven: no location, but its packs stay out")
@@ -60,13 +60,15 @@ for _, mod in ipairs({"planet-ferrum", "planet-rabbasca"}) do
 	end
 end
 
--- the optional dependencies that add a world (Ferrum, Rabbasca, Rabbasca Underground, Skewer, Eneas, Nexus) are all in
--- the list
-for _, mod in ipairs({"planet-ferrum", "planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet",
+-- the optional dependencies that add a world (Rabbasca, Rabbasca Underground, Skewer, Eneas, Nexus) are all in the list
+for _, mod in ipairs({"planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet",
 	"moon-eneas", "Nexus-Updated"}) do
 	check(seen[mod], mod .. " is missing from the list")
 	check(dependencies[mod]:match("^[%?%+]"), mod .. " is no longer an optional dependency")
 end
+-- Ferrum stays optional, but once installed it is woven and the path may need its pack
+check(dependencies["planet-ferrum"]:match("^[%?%+]"), "planet-ferrum is no longer an optional dependency")
+check(not seen["planet-ferrum"], "Ferrum and its pack are on the path and stay out of the list")
 -- Secretas is required and on the path to the final technology
 check(not seen["secretas"], "Secretas is a required dependency and stays out of the list")
 
