@@ -1,6 +1,7 @@
 -- Source-backed mission checklist; never adds progression state or invented goals.
 -- The Journal passes the SAME force research and campaign snapshot as its
 -- existing objective evaluation. No remote calls, world scans or storage.
+local data=require("scripts.razi_journal_data")
 local M={}
 
 local function sorted_prerequisites(technology)
@@ -39,7 +40,7 @@ function M.snapshot(quest,technology,status,options)
       seen[id]=true
       local tech_name=options.tech_for_quest and options.tech_for_quest(id)
       if tech_name then native_covered_by_campaign[tech_name]=true end
-      add("campaign",id,{"journal-title."..id},
+      add("campaign",id,data.quest_title(data.by_id[id] or {id=id}),
         options.complete and options.complete(id),id)
     end
   end
@@ -62,7 +63,7 @@ function M.snapshot(quest,technology,status,options)
   if quest.boss then
     target={"nexus-bosses.boss-"..quest.boss}
   elseif quest.convergence then
-    target={"journal-title."..quest.id}
+    target=data.quest_title(quest)
   else
     target=technology and technology.localised_name
       or quest.world or quest.tech or quest.id

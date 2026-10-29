@@ -162,4 +162,32 @@ if script and script.active_mods
 end
 M.by_id={}
 for _,quest in ipairs(M.quests) do M.by_id[quest.id]=quest end
+-- The story module loads razi_story_dispatch, which reads this module while
+-- the story switches on. Publish the finished table first so that read finds
+-- it instead of starting a second load.
+package.loaded["scripts.razi_journal_data"]=M
+local story=require("scripts.razi_story")
+
+-- The name shown for a quest. Without the story it is the game's own name for
+-- what the quest is about: the technology, the world's space location, the
+-- boss's name from nexus-bosses, or for Convergence stages (which share the
+-- technology of another quest) the plain name from journal-plain-title, which
+-- is also the fallback for worlds and bosses. With the story the authored
+-- title wins and the plain name is the fallback.
+function M.quest_title(quest)
+  local plain={"journal-plain-title."..quest.id}
+  if quest.tech and not quest.boss and not quest.convergence then
+    local technology=prototypes and prototypes.technology
+      and prototypes.technology[quest.tech]
+    plain=technology and technology.localised_name or {"?",plain,quest.tech}
+  elseif quest.world and not quest.tech then
+    plain={"?",{"space-location-name."..quest.world},plain}
+  elseif quest.boss then
+    plain={"?",{"nexus-bosses.boss-"..quest.boss},plain}
+  end
+  if story.enabled() then
+    return {"?",{"journal-title."..quest.id},plain}
+  end
+  return plain
+end
 return M
