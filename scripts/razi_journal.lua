@@ -623,7 +623,7 @@ local function render_tracker(player)
   line.style.horizontal_spacing=7
   icons.sprite(line,quest_art(player.force,quest,context),"tracker_quest")
   local heading=line.add{type="label",style="clickable_label",
-    caption={"journal-title."..quest.id},
+    caption=defs.quest_title(quest),
     tags={razi_journal_action="tracker-open"}}
   heading.style.single_line=false
   heading.style.maximal_width=195
@@ -705,7 +705,7 @@ local function render_details(parent,player,quest,p,context,size,view)
   icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
   local hero_text=hero.add{type="flow",direction="vertical"}
   hero_text.style.vertical_spacing=2
-  local hero_title=wrap(hero_text,{"journal-title."..quest.id},inner-68)
+  local hero_title=wrap(hero_text,defs.quest_title(quest),inner-68)
   hero_title.style.font="heading-2"
   hero_title.style.font_color=COLOR.ink
   local milestone_time=completion_caption(
@@ -898,7 +898,7 @@ local function render_details(parent,player,quest,p,context,size,view)
       local note=line.add{type="flow",direction="vertical"}
       note.style.vertical_spacing=1
       local link=note.add{type="label",style="clickable_label",
-        caption={"journal-title."..step.quest.id},
+        caption=defs.quest_title(step.quest),
         tags={razi_journal_action="guidance-select",id=step.quest.id}}
       link.style.single_line=false
       link.style.maximal_width=text_width-80
@@ -918,53 +918,60 @@ local function render_details(parent,player,quest,p,context,size,view)
   end
   -- Source-backed operational context; not an extra research requirement.
   local brief=industrial_briefs.for_quest(quest)
-  if brief then
+  if brief and story.enabled() then
     section(prose,"industrial-brief-heading",
       {"razi-industries-brief."..brief},text_width,theme)
   end
   -- Field assignments are advisory, not research, physical exploration or
   -- shipment completion. Follow-ups must be actual, spoiler-visible Codex IDs.
+  -- Only the charter text is story; the follow-up milestones, the project
+  -- button and the advisory line are navigation and always shown.
   local charter=industrial_briefs.charter_for_quest(quest)
   if charter then
-    local field=prose.add{type="flow",direction="vertical"}
-    field.style.width=text_width
-    field.style.vertical_spacing=5
-    subtitle(field,"field-assignment-heading",text_width-26,theme)
-    wrap(field,{"razi-planet-charter."..charter},text_width-26)
     local handoffs=industrial_briefs.visible_related(quest,defs.by_id,
       function(target)
         return M.journal_visible(force,target,context)
       end,2)
-    if #handoffs>0 then
-      local heading=wrap(field,L("field-assignment-followups"),
-        ---@diagnostic disable-next-line: redundant-parameter
-        text_width-26,true)
-      heading.style.font_color=theme.soft
-      for _,target in ipairs(handoffs) do
-        local state=M.state(force,target,context)
-        local next_link=field.add{type="label",style="clickable_label",
-          caption={"",{"journal-title."..target.id},"  /  ",
-            L("next-step-"..state)},
-          tooltip=L("open-prerequisite"),
-          tags={razi_journal_action="guidance-select",id=target.id}}
-        next_link.style.single_line=false
-        next_link.style.maximal_width=text_width-26
-        next_link.style.font_color=state=="complete" and COLOR.green
-          or theme.soft
-      end
-    end
     -- Real build/travel/delivery tasks live in Projects, where physical
     -- evidence is verified. Only show a supported, spoiler-visible project.
     local project=industrial_briefs.project_for_quest(quest)
-    if project and projects.visible(force,project) then
-      local jump=field.add{type="button",
-        caption=L("field-assignment-project"),
-        tooltip=L("field-assignment-project-help"),
-        tags={razi_journal_action="field-project",id=project}}
-      jump.style.font_color=theme.soft
+    if not (project and projects.visible(force,project)) then project=nil end
+    if story.enabled() or #handoffs>0 or project then
+      local field=prose.add{type="flow",direction="vertical"}
+      field.style.width=text_width
+      field.style.vertical_spacing=5
+      subtitle(field,"field-assignment-heading",text_width-26,theme)
+      if story.enabled() then
+        wrap(field,{"razi-planet-charter."..charter},text_width-26)
+      end
+      if #handoffs>0 then
+        local heading=wrap(field,L("field-assignment-followups"),
+          ---@diagnostic disable-next-line: redundant-parameter
+          text_width-26,true)
+        heading.style.font_color=theme.soft
+        for _,target in ipairs(handoffs) do
+          local state=M.state(force,target,context)
+          local next_link=field.add{type="label",style="clickable_label",
+            caption={"",defs.quest_title(target),"  /  ",
+              L("next-step-"..state)},
+            tooltip=L("open-prerequisite"),
+            tags={razi_journal_action="guidance-select",id=target.id}}
+          next_link.style.single_line=false
+          next_link.style.maximal_width=text_width-26
+          next_link.style.font_color=state=="complete" and COLOR.green
+            or theme.soft
+        end
+      end
+      if project then
+        local jump=field.add{type="button",
+          caption=L("field-assignment-project"),
+          tooltip=L("field-assignment-project-help"),
+          tags={razi_journal_action="field-project",id=project}}
+        jump.style.font_color=theme.soft
+      end
+      local advice=wrap(field,L("field-assignment-advisory"),text_width-26)
+      advice.style.font_color=COLOR.quiet
     end
-    local advice=wrap(field,L("field-assignment-advisory"),text_width-26)
-    advice.style.font_color=COLOR.quiet
   end
   -- Existing Vespera dossiers can discuss actually configured neighboring
   -- lanes. The shared snapshot hides undiscovered neighbors when spoiler
@@ -991,9 +998,10 @@ local function render_details(parent,player,quest,p,context,size,view)
       end
     end
   end
-  -- The practical guidance complements the chapter's individual account;
-  -- shared background still lives on the chapter briefing page.
-  section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
+  -- Field notes are authored text: story layer only.
+  if story.enabled() then
+    section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
+  end
   -- The human accounts are useful where their actual milestone was
   -- completed, not just buried in the Archive's growing collection.
   -- No link or future title is shown before source quest completion.
@@ -1189,7 +1197,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     marker.style.font_color=state=="complete" and COLOR.green
       or state=="active" and COLOR.amber or COLOR.quiet
     local link=row.add{type="label",style="clickable_label",
-      caption={"journal-title."..quest.id},
+      caption=defs.quest_title(quest),
       tooltip=L("select-objective"),
       tags={razi_journal_action="select",id=quest.id}}
     link.style.single_line=false
@@ -1213,7 +1221,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
       caption=L(view.states[next_entry.id]=="complete"
         and "chapter-cover-review" or "chapter-cover-continue"),
       tags={razi_journal_action="chapter-continue",id=next_entry.id}}
-    call.tooltip={"journal-title."..next_entry.id}
+    call.tooltip=defs.quest_title(next_entry)
   else
     wrap(panel,L("chapter-cover-unavailable"),inner)
   end
@@ -1284,7 +1292,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     title.style.font="default-bold"
     title.style.font_color=COLOR.amber
     local entry=lead.add{type="label",name="razi_journal_lead_link",style="clickable_label",
-      caption={"journal-title."..plan.primary.quest.id},
+      caption=defs.quest_title(plan.primary.quest),
       tags={razi_journal_action="guidance-select",id=plan.primary.quest.id}}
     entry.style.maximal_width=inner-24
     entry.style.single_line=false
@@ -1376,8 +1384,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           local milestone_time=completion_caption(
             chapter_timing.get(player.force,"milestones",quest.id),"milestone")
           local milestone_tooltip=milestone_time
-            and {"",{"journal-title."..quest.id},"\n",milestone_time}
-            or {"journal-title."..quest.id}
+            and {"",defs.quest_title(quest),"\n",milestone_time}
+            or defs.quest_title(quest)
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
           local chosen=quest.id==p.selected and not p.chapter_cover
@@ -1408,7 +1416,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             or {r=.58,g=.61,b=.68}
           control.style.font_color=color
           local choice=item.add{type="label",name="razi_journal_item_choice",style="clickable_label",
-            caption={"journal-title."..quest.id},
+            caption=defs.quest_title(quest),
             tags={razi_journal_action="select",id=quest.id},
             tooltip=milestone_tooltip}
           choice.style.single_line=false
@@ -1622,7 +1630,7 @@ local function render_archive(parent,player,p,context,size)
   if chosen_quest then
     local source=paper.add{type="button",
       caption=L("archive-open-source",
-        {"journal-title."..chosen_quest.id}),
+        defs.quest_title(chosen_quest)),
       tags={razi_journal_action="archive-source",id=chosen_quest.id},
       tooltip=L("archive-source-tooltip")}
     source.style.minimal_width=math.min(220,size.reader-58)
@@ -1992,8 +2000,8 @@ local function update_reader(player,preserve_reader)
           local milestone_time=completion_caption(
             chapter_timing.get(player.force,"milestones",quest.id),"milestone")
           local milestone_tooltip=milestone_time
-            and {"",{"journal-title."..quest.id},"\n",milestone_time}
-            or {"journal-title."..quest.id}
+            and {"",defs.quest_title(quest),"\n",milestone_time}
+            or defs.quest_title(quest)
           if choice then choice.tooltip=milestone_tooltip end
           if marker then marker.tooltip=milestone_tooltip end
           local selection=row["razi_journal_item_rule"]
@@ -2079,7 +2087,7 @@ local function update_reader(player,preserve_reader)
     local next_quest=plan.primary and plan.primary.quest
     lead.visible=next_quest~=nil and p.query=="" and p.filter=="all"
     if next_quest then
-      lead_link.caption={"journal-title."..next_quest.id}
+      lead_link.caption=defs.quest_title(next_quest)
       lead_link.tags={razi_journal_action="guidance-select",id=next_quest.id}
     end
   end
