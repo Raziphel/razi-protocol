@@ -177,5 +177,7 @@ end
 check(#missing==0,"Keys shown with the story on are not in locale/en: "
   ..W.brief(missing))
 check(W.flat(on)["journal-story.first-signal"],"The story walk showed no story text")
+check(W.flat(on)["journal-ui.project-array-record-1"],
+  "The Archive Array shows no recovered fragment with the story on")
 story.configure(false)
 print("Journal locale: every key shown resolves; none is authored while the story is off")

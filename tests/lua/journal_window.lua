@@ -1,4 +1,4 @@
----@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil, inject-field
+---@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil, inject-field, missing-fields, assign-type-mismatch, redundant-parameter
 -- Shared by the journal tests: a minimal GUI mock, a walk through every
 -- journal window, and the list of keys that belong to the story layer.
 -- Callers set package.path first. Not a test itself.
@@ -177,6 +177,19 @@ function M.setup()
       p.view="projects";p.project=id
       journal.draw(player);absorb()
     end
+    -- Archive Array with three powered relays in three star systems: the
+    -- recovered fragments are part of the page.
+    local count,surfaces=force.get_entity_count,game.surfaces
+    force.get_entity_count=function() return 3 end
+    game.surfaces={}
+    for _,world in ipairs({"nauvis","vulcanus","gleba"}) do
+      game.surfaces[#game.surfaces+1]={valid=true,planet={name=world},
+        find_entities_filtered=function() return {{valid=true,energy=1}} end}
+    end
+    p.view="projects";p.project="array"
+    journal.draw(player);absorb()
+    force.get_entity_count,game.surfaces=count,surfaces
+    storage.razi_great_projects=nil
     -- Convergence finale states: transmission running, then victory.
     p.view="projects";p.project="convergence"
     storage.razi_convergence={[1]={delivered={},victory=false,

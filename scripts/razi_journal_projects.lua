@@ -5,6 +5,7 @@ local dyson=require("scripts.galactic_dyson")
 local convergence=require("scripts.razi_convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
+local marks=require("scripts.razi_journal_marks")
 local story=require("scripts.razi_story")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local objectives=require("scripts.razi_journal_data")
@@ -222,7 +223,7 @@ local function platform_reader(parent,player,width,id,status)
     if step.available then
       local row=parent.add{type="flow",direction="horizontal"}
       row.style.horizontal_spacing=8
-      local mark=row.add{type="label",caption=step.done and "✓" or "○"}
+      local mark=row.add{type="label",caption=step.done and marks.done or marks.pending}
       mark.style.font_color=step.done and HUES.green or HUES.gold
       local text=row.add{type="label",caption=L(step.key)}
       text.style.single_line=false
@@ -324,7 +325,8 @@ local function great_project_reader(parent,player,width,id,status) -- luacheck: 
       row.style.single_line=false
       row.style.maximal_width=width
     end
-    for i=1,math.min(3,status[1]) do
+    -- The recovered fragments are story text.
+    for i=1,story.enabled() and math.min(3,status[1]) or 0 do
       local evidence=parent.add{type="label",caption=L("project-array-record-"..i)}
       evidence.style.single_line=false
       evidence.style.maximal_width=width
@@ -551,7 +553,6 @@ local function next_action(force,id,status)
     if not receivers_ready then
       return L("project-next-convergence-receiver")
     end
-    return L("project-next-convergence-core")
   end
   local stage=convergence.stages[current]
   if not stage then return L("project-next-unavailable") end
