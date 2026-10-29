@@ -38,6 +38,7 @@ for _, name in ipairs({
 	"slp-dyson-sphere",
 	"discovery-aegis-outer",
 	"promethium-science-pack",
+	"razi-network-extreme-lattice",
 	"slp-dyson-sphere-grounded",
 	"ds-energy-loader-mk2",
 	"radar",
@@ -93,6 +94,7 @@ check(has(commission.prerequisites, "slp-dyson-sphere"), "commission needs the D
 check(has(commission.prerequisites, "discovery-aegis-outer"), "commission needs the Aegis prerequisite")
 check(has(synchronization.prerequisites, convergence.commission), "synchronization must follow commission")
 check(has(synchronization.prerequisites, "promethium-science-pack"), "synchronization needs Promethium research")
+check(has(synchronization.prerequisites, "razi-network-extreme-lattice"), "synchronization needs the native extreme lattice when available")
 check(has(ignition.prerequisites, convergence.authorization), "ignition must follow synchronization")
 check(has(ignition.prerequisites, "slp-dyson-sphere-grounded"), "ignition needs grounded Dyson research")
 check(has(ignition.prerequisites, "ds-energy-loader-mk2"), "ignition needs the native energy loader")

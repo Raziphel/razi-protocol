@@ -60,14 +60,19 @@ local function science_unit(source, count)
   unit.count_formula=nil
   return unit
 end
-local function tech(prototype,source,count)
+local function tech(name,source,prereqs,count)
   local unit=science_unit(source,count)
     or science_unit("slp-dyson-sphere",count)
     or science_unit("planet-discovery-aquilo",count)
   local art=icon_from("promethium-science-pack")
   if not (unit and art) then return end
-  local result=table.deepcopy(prototype)
-  result.unit=unit
+  local result={
+    type="technology",name=name,
+    localised_name={"technology-name."..name},
+    localised_description={"technology-description."..name},
+    prerequisites=prereqs,unit=unit,effects={},essential=true,
+    order="zz[razi-convergence]-"..name
+  }
   for key,value in pairs(art) do result[key]=value end
   return result
 end
@@ -91,33 +96,20 @@ function M.data_final_fixes()
       end
     end
   end
-  local begin=tech({
-    type="technology",name="razi-convergence-commission",
-    localised_name={"technology-name.razi-convergence-commission"},
-    localised_description={"technology-description.razi-convergence-commission"},
-    prerequisites={"stellar-discovery-solar-system-edge"},
-    effects={},essential=true,order="zz[razi-convergence]-commission"
-  },"stellar-discovery-solar-system-edge",2400)
-  local sync=tech({
-    type="technology",name="razi-convergence-synchronization",
-    localised_name={"technology-name.razi-convergence-synchronization"},
-    localised_description={"technology-description.razi-convergence-synchronization"},
-    prerequisites={"razi-convergence-commission"},
-    effects={},essential=true,order="zz[razi-convergence]-synchronization"
-  },"stellar-discovery-solar-system-edge",4200)
-  local ignition=tech({
-    type="technology",name="razi-convergence-ignition",
-    localised_name={"technology-name.razi-convergence-ignition"},
-    localised_description={"technology-description.razi-convergence-ignition"},
-    prerequisites={"razi-convergence-synchronization"},
-    effects={},essential=true,order="zz[razi-convergence]-ignition"
-  },"stellar-discovery-solar-system-edge",5000)
+  local begin=tech(M.commission,"stellar-discovery-solar-system-edge",
+    {"stellar-discovery-solar-system-edge"},2400)
+  local sync=tech(M.authorization,"stellar-discovery-solar-system-edge",
+    {M.commission},4200)
+  local ignition=tech(M.ignition,"stellar-discovery-solar-system-edge",
+    {M.authorization},5000)
   if not (begin and sync and ignition) then return end
   data:extend({begin,sync,ignition})
   for _,prereq in ipairs({"slp-dyson-sphere","discovery-aegis-outer"}) do
     link(M.commission,prereq)
   end
-  link(M.authorization,"promethium-science-pack")
+  for _,prereq in ipairs({"promethium-science-pack","razi-network-extreme-lattice"}) do
+    link(M.authorization,prereq)
+  end
   for _,prereq in ipairs({"slp-dyson-sphere-grounded","ds-energy-loader-mk2"}) do
     link(M.ignition,prereq)
   end
