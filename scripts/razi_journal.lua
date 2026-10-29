@@ -981,10 +981,8 @@ local function render_details(parent,player,quest,p,context,size,view)
         subtitle(lanes,"catapult-local-heading",text_width-26,theme)
         for _,link in ipairs(local_lanes) do
           local neighbor=link.source==quest.id and link.target or link.source
-          local world=prototypes and (
-            (prototypes.space_location and prototypes.space_location[neighbor])
-            ---@diagnostic disable-next-line: undefined-field
-            or (prototypes.planet and prototypes.planet[neighbor]))
+          local world=prototypes and prototypes.space_location
+            and prototypes.space_location[neighbor]
           wrap(lanes,L("catapult-local-neighbor",
             world and world.localised_name or neighbor,
             L(link.state=="researched" and "catapult-local-surveyed"

@@ -19,10 +19,9 @@ local candidates={
 M.candidates=candidates
 
 local targets_cache
+-- Planets are space locations; LuaPrototypes has no separate planet table.
 local function location(name)
-  return prototypes and ((prototypes.space_location or {})[name]
-    ---@diagnostic disable-next-line: undefined-field
-    or (prototypes.planet or {})[name])
+  return prototypes and (prototypes.space_location or {})[name]
 end
 local function endpoint_name(value)
   if type(value)=="string" then return value end
