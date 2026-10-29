@@ -56,8 +56,10 @@ PlanetsLib:update({
 				type = "space-location",
 				name = "vibrant",
 			},
-			distance = 22,
-			orientation = 0.9,
+			-- Match galaxy_layout's authoritative final position so early
+			-- PlanetsLib stages never bake the old overlapped marker.
+			distance = 51,
+			orientation = 0.65,
 		},
 	},
 	{

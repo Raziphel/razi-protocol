@@ -39,46 +39,14 @@ end
 M.sheet=SHEET
 M.obsolete=obsolete
 
--- Near Bellicos Orbit has a native source connection whose atlas ribbon
--- diverges from Factorio's line: that causes the doubled red track. Only
--- paint the Gate -> Outer and Outer -> Inner crossings, which otherwise
--- stay grey; retain the native line for every other Aegis interior link.
-local aegis_ribbon_pairs={
-  ["aegis-outer-edge|calidus-bellicos-stargate-calidus"]=true,
-  ["aegis-inner-edge|aegis-outer-edge"]=true
-}
-local aegis_nodes={
-  ["calidus-bellicos-stargate-calidus"]=true,
-  ["near-bellicos-orbit"]=true,
-  ["bellicos-near-orbit"]=true,
-  ["near_bellicos_orbit"]=true,["bellicos-orbit"]=true,
-  ["aegis-inner-edge"]=true,
-  ["aegis-outer-edge"]=true,
-  ["aegis-warden"]=true,["point-warden"]=true,
-  ["aegis-point-warden"]=true
-}
-local function is_aegis_node(name)
-  if aegis_nodes[name] then return true end
-  if type(name)~="string" then return false end
-  -- Source mods can rename the near-pulsar orbit or Warden. Still avoid
-  -- a second offset overlay through those native interior connections.
-  local lower=name:lower()
-  return (lower:find("bellicos",1,true)
-      and lower:find("orbit",1,true)
-      and not lower:find("stargate",1,true)) ~= nil
-    or lower:find("warden",1,true) ~= nil
-end
-local function native_aegis_corridor(route)
-  if type(route)~="table" then return false end
-  local a,b=route.from,route.to
-  if not (is_aegis_node(a) and is_aegis_node(b)) then return false end
-  local key=a<b and (a.."|"..b) or (b.."|"..a)
-  return not aegis_ribbon_pairs[key]
-end
-M.native_aegis_corridor=native_aegis_corridor
-
+-- All four real Aegis spine connections receive a ribbon. The previous
+-- native_aegis_corridor exclusion accidentally skipped the surviving
+-- Near Bellicos Orbit -> Inner Edge and Inner Edge -> Point Warden links.
+-- bellicos.fortify_routes() makes those native connections shape="line";
+-- owner.route_path() now traces that exact geometry. Never add a second
+-- travel edge or a separate decorative Aegis route here.
 local function candidate(owner,route,mode,scope)
-  if not route or mode=="off" or native_aegis_corridor(route)
+  if not route or mode=="off"
     or not owner.is_navigation_highlight(route,scope) then return nil end
   local a,b=owner.position(route.from),owner.position(route.to)
   if not a or not b then return nil end

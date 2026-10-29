@@ -53,10 +53,9 @@ check(#m.strokes_for_connection(near,"danger","all")==0,
  "A 1,000 km local hop should keep its native line without extra ribbons")
 check(#m.strokes_for_connection(belt,"danger","all")>=2,
  "A nearby belt crossing must not lose its critical hazard marker")
--- Regression: this specific Aegis route was drawn twice in the starmap:
--- Factorio's native connection PLUS a slightly shifted orange/red ribbon.
--- Aegis internal links keep one native line; long external approaches still
--- receive Razi's coloured hazard ribbons.
+-- Regression: the Aegis interior corridors (Near orbit -> Inner edge and
+-- Inner edge -> Warden) used to stay grey. Every Aegis spine route is painted
+-- like the rim crossings, in both directions.
 raw["space-location"]["near-bellicos-orbit"]={distance=45,orientation=.20}
 raw["space-location"]["aegis-inner-edge"]={distance=85,orientation=.22}
 raw["space-location"]["aegis-outer-edge"]={distance=95,orientation=.24}
@@ -76,16 +75,14 @@ local stellar_entry={
   from="sye-solaris",to="calidus-bellicos-stargate-calidus",
   shape="line",length=112000,asteroid_spawn_definitions={}}
 local ribbon_module=require("prototypes.system.route_ribbons")
-check(ribbon_module.native_aegis_corridor(near_to_inner)
-  and ribbon_module.native_aegis_corridor(inner_to_near)
-  and not ribbon_module.native_aegis_corridor(inner_to_outer),
-  "Only the two Aegis rim crossings are excluded from the native overlay")
-check(#m.strokes_for_connection(near_to_inner,"danger","all")==0
-  and #m.strokes_for_connection(inner_to_near,"danger","all")==0
+check(ribbon_module.native_aegis_corridor==nil,
+  "The Aegis native-corridor exclusion must not return")
+check(#m.strokes_for_connection(near_to_inner,"danger","all")>0
+  and #m.strokes_for_connection(inner_to_near,"danger","all")>0
+  and #m.strokes_for_connection(near_to_inner,"danger","major")>0
   and #m.strokes_for_connection(inner_to_outer,"danger","major")>0,
-  "The outer-to-inner Aegis rim crossing must receive a coloured ribbon")
-check(not ribbon_module.native_aegis_corridor(stellar_entry)
-  and #m.strokes_for_connection(stellar_entry,"danger","all")>0,
+  "Every Aegis spine route must receive a coloured ribbon")
+check(#m.strokes_for_connection(stellar_entry,"danger","all")>0,
   "The long Solaris-Aegis entry should retain its hazard gradient")
 local ribbons=m.strokes_for_connection(safe,"danger","all")
 local first=ribbons[1]
