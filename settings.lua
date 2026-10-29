@@ -137,6 +137,20 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-orbital-catapult-local-links",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-e[catapult-links]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-orbital-catapult-regional-links",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-e2[regional-catapult-links]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-group-barreling-recipes",
 		setting_type = "startup",
 		default_value = true,
@@ -398,6 +412,49 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		order = "00[gameplay-difficulty]-b[map-generator]"
+	},
+	-- Research visibility is shared by the whole map and changes immediately.
+	{
+		type = "bool-setting",
+		name = "razi-hide-spoilers",
+		setting_type = "runtime-global",
+		default_value = false,
+		order = "a0[quality-of-life]-a[hide-spoilers]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-hide-other-tech-spoilers",
+		setting_type = "runtime-global",
+		default_value = false,
+		order = "a0[quality-of-life]-b[other-mod-technologies]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-clean-startup-chat",
+		setting_type = "runtime-per-user",
+		default_value = true,
+		order = "a1[welcome]-a[compact-console]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-show-welcome",
+		setting_type = "runtime-per-user",
+		default_value = true,
+		order = "a1[welcome]-b[welcome-message]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-journal-show-button",
+		setting_type = "runtime-per-user",
+		default_value = true,
+		order = "a1[welcome]-c[journal-shortcut]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-journal-show-tracker",
+		setting_type = "runtime-per-user",
+		default_value = true,
+		order = "a1[welcome]-d[pinned-tracker]"
 	},
 	{
 		type = "string-setting",

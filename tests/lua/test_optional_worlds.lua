@@ -60,15 +60,17 @@ for _, mod in ipairs({"planet-rabbasca"}) do
 	end
 end
 
--- the optional dependencies that add a world (Rabbasca, Rabbasca Underground, Skewer, Eneas, Nexus) are all in the list
-for _, mod in ipairs({"planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet",
-	"moon-eneas", "Nexus-Updated"}) do
+-- the optional dependencies that add a world (Rabbasca, Rabbasca Underground, Skewer, Eneas) are all in the list
+for _, mod in ipairs({"planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet", "moon-eneas"}) do
 	check(seen[mod], mod .. " is missing from the list")
 	check(dependencies[mod]:match("^[%?%+]"), mod .. " is no longer an optional dependency")
 end
 -- Ferrum stays optional, but once installed it is woven and the path may need its pack
 check(dependencies["planet-ferrum"]:match("^[%?%+]"), "planet-ferrum is no longer an optional dependency")
 check(not seen["planet-ferrum"], "Ferrum and its pack are on the path and stay out of the list")
+check(dependencies["Nexus-Updated"] == "Nexus-Updated >= 1.4.1", "Nexus-Updated must be a required dependency")
+check(dependencies["nexus-bosses"] == "~ nexus-bosses >= 2.4.0",
+	"`nexus-bosses` is required without a load order (`~`)")
 -- Secretas is required and on the path to the final technology
 check(not seen["secretas"], "Secretas is a required dependency and stays out of the list")
 

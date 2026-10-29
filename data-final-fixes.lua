@@ -127,6 +127,7 @@ require("prototypes.technology.galactic_mod_research").data_final_fixes()
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
+require("prototypes.compat.calidus_dyson").data_final_fixes()
 
 -- Castra's exchange, then the exchanges that return component cargo; they run
 -- after the other research passes so that the research links see the final tree.
@@ -169,6 +170,7 @@ require("prototypes.system.abacayba_integration").gate()
 -- Native moon links, the original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.system.route_authority").data_final_fixes()
+require("prototypes.compat.calidus_dyson").connect_calidus()
 -- Native Aegis links and asteroid fields settle after the two curated entries.
 require("prototypes.system.bellicos").fortify_routes()
 
@@ -217,6 +219,9 @@ require("prototypes.compat.corrundum_compat_plus").data_final_fixes()
 -- then tier the system cards across the EXISTING laboratories of other mods (no new labs).
 require("prototypes.compat.system_card_manufacturing").data_final_fixes()
 require("prototypes.compat.system_card_laboratories").data_final_fixes()
+
+require("prototypes.technology.convergence").data_final_fixes()
+require("prototypes.technology.convergence_witness").data_final_fixes()
 
 -- Optional, off by default: a few robot and nuclear technologies (and Planet Express' trade research) are tied to the
 -- science of the first planets. Runs after every research and lab pass, so the lab check sees the final labs.
