@@ -265,7 +265,7 @@ function M.state(force,quest,context)
   end
   return "active"
 end
--- One shared runtime map setting, on by default in the actual mod settings.
+-- One shared runtime map setting, off by default.
 -- Tests without Factorio settings retain the legacy visibility model.
 function M.hide_spoilers()
   local option=settings and settings.global
