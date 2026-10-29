@@ -18,6 +18,11 @@ require "prototypes.system.asteroid_belts"
 require "prototypes.technology"
 require "prototypes.technology.asteroid_belts"
 
+require("prototypes.ui.dyson_stages")
+require("prototypes.ui.razi_journal")
+require("prototypes.technology.razi_great_projects").data()
+require("prototypes.compat.orbital_catapult").data()
+
 -- Factorio runs every data.lua before any data-updates.lua. Razi Protocol requires PlanetAthos, so Athos's
 -- data-updates.lua runs before ours, and its recursive GetAllDescendants cannot walk a cyclic prerequisite graph.
 -- Break the cycles Athos owns (or the two known bootstrap loops) now, after our technologies are registered.
