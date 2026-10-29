@@ -1,0 +1,39 @@
+-- Extra Codex missions for cross-planet factory research.
+-- Missing optional techs are handled by the journal when it builds the list.
+return {
+ chapters={{id="alliances",title="journal-chapter.alliances",
+   intro="journal-chapter-story.alliances"}},
+ quests={
+  {id="alliance-middle-fulgora",chapter="alliances",tech="razi-middle-fulgora-resilient-capacitors",site="fulgora",requires={"fulgora","aquilo","moshine"},optional=true},
+  {id="alliance-middle-aquilo",chapter="alliances",tech="razi-middle-aquilo-capacitor-controls",site="aquilo",requires={"aquilo","fulgora","moshine"},optional=true},
+  {id="alliance-middle-paracelsin",chapter="alliances",tech="razi-middle-paracelsin-shielded-coils",site="paracelsin",requires={"paracelsin","rubia","fulgora"}},
+  {id="alliance-middle-rubia",chapter="alliances",tech="razi-middle-rubia-conductive-frames",site="rubia",requires={"rubia","paracelsin","fulgora"}},
+  {id="alliance-frontier-moshine-silicon",chapter="alliances",tech="razi-frontier-moshine-biometal-silicon",site="moshine",requires={"moshine","gleba","vulcanus"},optional=true},
+  {id="alliance-frontier-gleba-carbon",chapter="alliances",tech="razi-frontier-gleba-photofiber",site="gleba",requires={"gleba","moshine","vulcanus"},optional=true},
+  {id="alliance-frontier-castra-ballistics",chapter="alliances",tech="razi-frontier-castra-composite-rounds",site="castra",requires={"castra","gleba","moshine"},optional=true},
+  {id="alliance-bio-metals",chapter="alliances",tech="razi-bio-rare-metal-casting",site="vulcanus",requires={"vulcanus","gleba"}},
+  {id="alliance-holmium-circuits",chapter="alliances",tech="razi-electrobiological-components",site="fulgora",requires={"fulgora","gleba"}},
+  {id="alliance-optical-coils",chapter="alliances",tech="razi-modded-paracelsin-optical-coils",site="paracelsin",requires={"paracelsin","moshine"}},
+  {id="alliance-zinc-silicon",chapter="alliances",tech="razi-modded-moshine-zinc-silicon",site="moshine",requires={"moshine","paracelsin"}},
+  {id="alliance-rubia-composites",chapter="alliances",tech="razi-modded-rubia-craptonite-composites",site="rubia",requires={"rubia","paracelsin","moshine"}},
+  {id="alliance-tenebris-chitosan",chapter="alliances",tech="razi-modded-tenebris-galvanized-chitosan",site="tenebris",requires={"tenebris","paracelsin"}},
+  {id="alliance-linox-refining",chapter="alliances",tech="razi-modded-linox-precision-refining",site="linox-planet_linox",requires={"linox","moshine","paracelsin"}},
+  {id="alliance-vesta-magnets",chapter="alliances",tech="razi-modded-vesta-rare-earth-supermagnets",site="vesta",requires={"vesta","linox","moshine"}},
+  {id="alliance-cryo-control",chapter="alliances",tech="razi-cryo-energy-control",site="aquilo",requires={"aquilo","fulgora","gleba"}},
+  {id="alliance-photonic-coils",chapter="alliances",tech="razi-network-photonic-coils",site="paracelsin",requires={"paracelsin","fulgora","moshine"}},
+  {id="alliance-network-cubium",chapter="alliances",tech="razi-network-golden-cubium-alloys",site="cubium",requires={"cubium","secretas","linox"}},
+  {id="alliance-balack-shield",chapter="alliances",tech="razi-balack-rubia-chitosan-shielding",site="bm-balack",requires={"balack","rubia","tenebris"}},
+  {id="alliance-matrix-rubia",chapter="alliances",tech="razi-network-matrix-rubia-logistics",site="rubia",requires={"precision-matrix","rubia"}},
+  {id="alliance-matrix-aquilo",chapter="alliances",tech="razi-network-matrix-cryo-controllers",site="aquilo",requires={"precision-matrix","aquilo"}},
+  {id="alliance-lattice-vesta",chapter="alliances",tech="razi-network-lattice-vesta-magnets",site="vesta",requires={"extreme-lattice","vesta"}},
+  {id="alliance-vesta-foundations",chapter="alliances",tech="razi-network-vesta-biofoundations",site="vesta",requires={"vesta","rubia","tenebris"}},
+  {id="alliance-balack-vesta",chapter="alliances",tech="razi-network-balack-vesta-shielding",site="bm-balack",requires={"balack","vesta","rubia"}},
+  {id="alliance-aquilo-outer",chapter="alliances",tech="razi-network-aquilo-outer-controllers",site="aquilo",requires={"aquilo","vesta","rubia"}},
+  {id="alliance-panglia-bond",chapter="alliances",tech="razi-network-panglia-optic-bond",site="panglia",requires={"panglia-glass","moshine","fulgora"}},
+  {id="alliance-bond-paracelsin",chapter="alliances",tech="razi-network-bond-paracelsin-coils",site="paracelsin",requires={"alliance-panglia-bond","paracelsin"}},
+  {id="alliance-bond-linox",chapter="alliances",tech="razi-network-bond-linox-refining",site="linox-planet_linox",requires={"alliance-panglia-bond","linox"}},
+  {id="alliance-pressure-frame",chapter="alliances",tech="razi-network-umbra-pressure-frame",site="crucible",requires={"alliance-panglia-bond","crucible","vesta","linox"}},
+  {id="alliance-pressure-vesta",chapter="alliances",tech="razi-network-frame-vesta-foundations",site="vesta",requires={"alliance-pressure-frame","vesta"}},
+  {id="alliance-pressure-aquilo",chapter="alliances",tech="razi-network-frame-aquilo-controllers",site="aquilo",requires={"alliance-pressure-frame","aquilo"}}
+ }
+}
