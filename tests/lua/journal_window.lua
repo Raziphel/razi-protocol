@@ -125,7 +125,8 @@ function M.setup()
     end
   end
   local inventory={valid=true,get_item_count=function() return 0 end}
-  local player={valid=true,index=1,force=force,name="Tester",
+  local player={valid=true,index=1,force=force,name="Tester",locale="en",
+    request_translations=function() return {} end,
     get_main_inventory=function() return inventory end,
     display_resolution={width=1920,height=1080},display_scale=1,
     gui={screen={},left={},top={}}}

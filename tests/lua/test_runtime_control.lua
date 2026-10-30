@@ -27,7 +27,8 @@ local events = {
 	on_gui_selection_state_changed = 15,
 	on_gui_closed = 16,
 	on_research_finished = 17,
-	on_player_created = 18
+	on_player_created = 18,
+	on_string_translated = 19
 }
 local handlers, nth, filters, registrations = {}, {}, {}, {}
 local lifecycle = {}
@@ -133,7 +134,7 @@ check(registrations[events.on_console_command] == 1 and registrations[events.on_
 check(nth[600] and nth[6], "The transceiver poll and the staged research tick should be registered")
 -- The Journal, Projects and Convergence are wired once each.
 for _, id in ipairs({events.on_gui_click, events.on_gui_text_changed, events.on_gui_selection_state_changed,
-	events.on_gui_closed, events.on_research_finished, events.on_player_created}) do
+	events.on_gui_closed, events.on_research_finished, events.on_player_created, events.on_string_translated}) do
 	check(registrations[id] == 1, "Each Journal event should be registered once")
 end
 check(handlers["razi-journal-toggle"], "The Journal hotkey should be wired")

@@ -32,6 +32,7 @@ local ARCHIVE_ACTIONS={
 }
 local themes=require("scripts.razi_journal_themes")
 local icons=require("scripts.razi_journal_icons")
+local search_names=require("scripts.razi_journal_search_names")
 -- A field-manual palette: chapter hues are restrained accents, not the ink.
 -- Midnight Archive: soft parchment, antique brass and spectral teal.
 -- Chapter pigments are used as signposts, never as entire text surfaces.
@@ -519,12 +520,10 @@ local function quest_art(force,quest,context)
   return tech and sprite_if_valid("technology/"..tech.name)
     or "razi-journal-book-icon"
 end
-local function matches_query(quest,query)
+local function matches_query(quest,query,names)
   if not query or query=="" then return true end
-  local corpus=(quest.id.." "..quest.chapter.." "..(quest.tech or "")
-    .." "..(quest.world or "").." "..(quest.site or "")
-    .." "..(quest.recipe or "").." "..(quest.machine or "")):lower():gsub("[-_]"," ")
-  for word in query:lower():gsub("[-_]"," "):gmatch("%S+") do
+  local corpus=search_names.corpus(quest).." "..(names and names[quest.id] or "")
+  for word in search_names.fold(query):gmatch("%S+") do
     if not corpus:find(word,1,true) then return false end
   end
   return true
@@ -1338,6 +1337,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     entry.style.font_color=COLOR.ink
   end
   local found=false
+  local translated=search_names.names(player.index)
 
   for index,chapter in ipairs(defs.chapters) do
     local theme=themes.get(chapter.id)
@@ -1349,7 +1349,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     local visible_count=0
     for _,quest in ipairs(available) do
       if state_matches_filter(view.states[quest.id],p.filter)
-        and matches_query(quest,p.query) then
+        and matches_query(quest,p.query,translated) then
         visible_count=visible_count+1
       end
     end
@@ -1432,7 +1432,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             direction="horizontal"}
           item.style.width=inner-34
           item.visible=state_matches_filter(state,p.filter)
-            and matches_query(quest,p.query)
+            and matches_query(quest,p.query,translated)
           item.style.padding=2
           item.style.horizontal_spacing=5
           local select_rule=item.add{type="progressbar",
@@ -1711,6 +1711,7 @@ local function draw(player,focus_search)
   local frame=player.gui.screen[FRAME]
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
+  search_names.request(player,defs.quests,defs.quest_title)
   -- Retired and uninstalled optional chapters must never leave the reader
   -- stranded on an old chapter ID when an existing save is reopened.
   if p.chapter then
@@ -1988,6 +1989,7 @@ local function update_reader(player,preserve_reader)
     return
   end
   local p=pref(player.index)
+  local translated=search_names.names(player.index)
   local context=M.context(player.force)
   local size=M.layout(player.display_resolution,player.display_scale)
   if p.reader_focus or size.single_column then size.reader=size.width-43 end
@@ -2035,7 +2037,7 @@ local function update_reader(player,preserve_reader)
         if row then
           local state=view.states[quest.id]
           local matching=state_matches_filter(state,p.filter)
-            and matches_query(quest,p.query)
+            and matches_query(quest,p.query,translated)
           row.visible=matching
           if matching then
             shown=shown+1
@@ -2788,6 +2790,25 @@ function M.gui_click(event)
   end
   draw(player)
 end
+-- Select the first matching visible milestone so the reader follows search.
+local function follow_search(player,p)
+  local prior=p.selected
+  local prior_cover=p.chapter_cover
+  if p.query~="" then
+    local context=M.context(player.force)
+    local translated=search_names.names(player.index)
+    for _,quest in ipairs(defs.quests) do
+      if M.show_in_filter(player.force,quest,p.filter,context)
+        and matches_query(quest,p.query,translated) then
+        p.selected=quest.id
+        p.chapter=quest.chapter
+        p.chapter_cover=false
+        break
+      end
+    end
+  end
+  update_reader(player,p.selected==prior and p.chapter_cover==prior_cover)
+end
 function M.text_changed(event)
   local element=event and event.element
   if not (element and element.valid) then return end
@@ -2797,23 +2818,18 @@ function M.text_changed(event)
   local p=pref(player.index)
   local query=(element.text or ""):sub(1,80)
   if p.query==query then return end
-  local prior=p.selected
-  local prior_cover=p.chapter_cover
   p.query=query
-  -- Select the first matching visible milestone so the reader follows search.
-  if query~="" then
-    local context=M.context(player.force)
-    for _,quest in ipairs(defs.quests) do
-      if M.show_in_filter(player.force,quest,p.filter,context)
-        and matches_query(quest,query) then
-        p.selected=quest.id
-        p.chapter=quest.chapter
-        p.chapter_cover=false
-        break
-      end
-    end
-  end
-  update_reader(player,p.selected==prior and p.chapter_cover==prior_cover)
+  follow_search(player,p)
+end
+-- All translated names arrived: a typed query may match more now.
+function M.search_names_ready(player_index)
+  local player=game.get_player(player_index)
+  if not (player and player.valid) then return end
+  local frame=player.gui.screen[FRAME]
+  if not (frame and frame.valid) then return end
+  local p=pref(player.index)
+  if p.query=="" then return end
+  follow_search(player,p)
 end
 function M.selection_changed(event)
   local element=event and event.element
