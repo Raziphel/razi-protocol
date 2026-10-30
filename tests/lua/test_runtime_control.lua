@@ -17,7 +17,17 @@ local events = {
 	script_raised_revive = 5,
 	on_console_command = 6,
 	on_player_joined_game = 7,
-	on_player_removed = 8
+	on_player_removed = 8,
+	on_player_mined_entity = 9,
+	on_robot_mined_entity = 10,
+	on_entity_died = 11,
+	script_raised_destroy = 12,
+	on_gui_click = 13,
+	on_gui_text_changed = 14,
+	on_gui_selection_state_changed = 15,
+	on_gui_closed = 16,
+	on_research_finished = 17,
+	on_player_created = 18
 }
 local handlers, nth, filters, registrations = {}, {}, {}, {}
 local lifecycle = {}
@@ -54,8 +64,10 @@ local function technology(researched, enabled, prototype)
 end
 
 local counted = {}
+local force_count = 0
 local function force(name, gate_researched, transceivers)
-	local self = {name = name, valid = true}
+	force_count = force_count + 1
+	local self = {name = name, valid = true, index = force_count}
 	self.technologies = {
 		["razi-intergalactic-transceiver-signal"] = technology(gate_researched, gate_researched),
 		["element882"] = technology(false, false),
@@ -85,22 +97,50 @@ setmetatable(surface, {
 	__newindex = function(_, key, value) if key == "map_gen_settings" then surface_writes = surface_writes + 1; surface_settings = value end end
 })
 rawset(_G, "game", {tick = 0, forces = forces, players = {}, surfaces = {nauvis = surface}, get_player = function() return nil end})
-rawset(_G, "storage", {})
+-- Loading control.lua runs on every load of a save, where save data is read-only:
+-- nothing may read or write it before a lifecycle or game event.
+local storage_touched
+rawset(_G, "storage", setmetatable({}, {
+	__index = function() storage_touched = true end,
+	__newindex = function() storage_touched = true end
+}))
 
 require("control")
 
--- One registration per event, filtered to the active transceiver.
+check(not storage_touched, "Loading control.lua must not touch save data")
+rawset(_G, "storage", {})
+
+-- One registration per event, filtered to the active transceiver and the Archive relay.
 for _, id in ipairs({events.on_built_entity, events.on_robot_built_entity, events.on_entity_cloned,
 	events.script_raised_built, events.script_raised_revive}) do
 	check(registrations[id] == 1, "Each build event should be registered once")
 	local filter = filters[id]
-	check(filter and #filter == 1 and filter[1].filter == "name"
-		and filter[1].name == "kr-activated-intergalactic-transceiver",
-		"Build events should be filtered by the transceiver name")
+	check(filter and #filter == 2 and filter[1].filter == "name"
+		and filter[1].name == "kr-activated-intergalactic-transceiver"
+		and filter[2].filter == "name" and filter[2].name == "razi-archive-relay",
+		"Build events should be filtered by the transceiver and relay names")
+end
+-- Removal events only matter for the Archive relay.
+for _, id in ipairs({events.on_player_mined_entity, events.on_robot_mined_entity,
+	events.on_entity_died, events.script_raised_destroy}) do
+	check(registrations[id] == 1, "Each removal event should be registered once")
+	local filter = filters[id]
+	check(filter and #filter == 1 and filter[1].name == "razi-archive-relay",
+		"Removal events should be filtered by the relay name")
 end
 check(registrations[events.on_console_command] == 1 and registrations[events.on_player_joined_game] == 1
 	and registrations[events.on_player_removed] == 1, "The cheat helpers should be wired")
 check(nth[600] and nth[6], "The transceiver poll and the staged research tick should be registered")
+-- The Journal, Projects and Convergence are wired once each.
+for _, id in ipairs({events.on_gui_click, events.on_gui_text_changed, events.on_gui_selection_state_changed,
+	events.on_gui_closed, events.on_research_finished, events.on_player_created}) do
+	check(registrations[id] == 1, "Each Journal event should be registered once")
+end
+check(handlers["razi-journal-toggle"], "The Journal hotkey should be wired")
+check(nth[30] and nth[60] and nth[120] and nth[300], "The Journal and Convergence ticks should be registered")
+for _, name in ipairs({"razi-welcome", "razi-audit", "razi-victory-audit"}) do
+	check(registered_commands[name], "/" .. name .. " should be registered")
+end
 check(registered_commands["razi-cheat"] and registered_commands["razi-cheat"].help[1] == "razi-cheat.help",
 	"/razi-cheat should be registered with localized help")
 check(lifecycle.init and lifecycle.changed and not lifecycle.load, "Only init and configuration hooks are needed")
