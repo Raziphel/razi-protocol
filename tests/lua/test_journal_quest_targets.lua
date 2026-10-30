@@ -16,8 +16,7 @@ local expected={
  ["nuclear-science"]="cerysian-science-pack",
 }
 for id,tech in pairs(expected) do
- local quest=data.by_id[id]
- check(quest,id.." is missing")
+ local quest=assert(data.by_id[id],id.." is missing")
  check(quest.tech==tech,id.." must open with "..tech..", not "..tostring(quest.tech))
 end
 local frozeta=data.by_id["frozeta"]

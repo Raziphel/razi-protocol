@@ -108,9 +108,9 @@ check(M.apply(world(),startup,enabled)==0,"a wrong type is not coerced")
 -- Muluna 2.9 and later: the satellite radar is a radar prototype with a 1 MW
 -- passive draw, a scan energy in mod-data and the buffer of three scans.
 local function radar_world()
- local raw=world()
- raw.accumulator=nil
- raw.radar={
+ local result=world()
+ result.accumulator=nil
+ result.radar={
   ["muluna-satellite-radar"]={
    energy_usage="1MW",energy_per_sector="1TJ",energy_per_nearby_scan="1kJ",
    energy_source={type="electric",buffer_capacity="390MJ",input_flow_limit="390MW",output_flow_limit="0MW"},
@@ -120,7 +120,7 @@ local function radar_world()
    }
   }
  }
- return raw
+ return result
 end
 local both=radar_world()
 both.accumulator={["muluna-satellite-radar"]={energy_usage="130MW"}}
