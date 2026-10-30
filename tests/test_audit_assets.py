@@ -43,6 +43,12 @@ class TestAssetAudit(unittest.TestCase):
         self.assertEqual(references[0].source, Path("example.lua"))
         self.assertEqual(references[0].line, 2)
 
+    def test_mod_portal_thumbnail_is_native_144_square(self):
+        # Factorio's bundled thumbnail is not an in-game transparent sprite.
+        root = Path(__file__).resolve().parents[1]
+        width, height, _ = AUDIT.png_info(root / "thumbnail.png")
+        self.assertEqual((width, height), (144, 144))
+
     def test_repository_asset_contract(self):
         root = Path(__file__).resolve().parents[1]
         self.assertEqual(AUDIT.audit_repository(root), [])

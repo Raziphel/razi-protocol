@@ -223,13 +223,15 @@ def audit_repository(root: Path) -> list[str]:
             errors.append(f"unreferenced required asset: {relative}")
 
     # The mod portal and README consume these directly, outside Lua prototypes.
-    for relative, expected in {
-        "thumbnail.png": (256, 256),
-        "graphics/branding/razi-protocol-lockup.png": (900, 300),
-    }.items():
+    # Factorio's bundled Mod Portal thumbnail is 144x144 and may be opaque.
+    # The separate transparent lockup is a Razi branding requirement.
+    for relative, expected, requires_alpha in (
+        ("thumbnail.png", (144, 144), False),
+        ("graphics/branding/razi-protocol-lockup.png", (900, 300), True),
+    ):
         try:
             width, height, alpha = png_info(root / relative)
-            if (width, height) != expected or not alpha:
+            if (width, height) != expected or (requires_alpha and not alpha):
                 errors.append(f"invalid branding asset: {relative}")
         except (OSError, ValueError) as exc:
             errors.append(f"invalid branding asset: {relative}: {exc}")
