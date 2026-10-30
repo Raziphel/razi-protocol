@@ -18,7 +18,19 @@ class ExpeditionCopyTests(unittest.TestCase):
         ru=section(read("locale/ru/names.cfg"),"razi-location-briefing")
         self.assertGreaterEqual(len(en),80)
         self.assertEqual(set(en),set(ru))
-        self.assertEqual(len(set(en.values())),len(en))
+        # Multiple source mods expose aliases for the same Aegis waypoint.
+        # Preserve identical field notes for aliases, but require unique
+        # descriptions across distinct physical destinations.
+        aliases = {
+            "near_bellicos_orbit": "bellicos-near-orbit",
+            "aegis-point-warden": "point-warden",
+        }
+        for alias, canonical in aliases.items():
+            self.assertEqual(en[alias], en[canonical])
+            self.assertEqual(ru[alias], ru[canonical])
+        distinct = {key: value for key, value in en.items()
+                    if key not in aliases}
+        self.assertEqual(len(set(distinct.values())), len(distinct))
         self.assertTrue(all(45<=len(v)<=300 for v in en.values()))
         for key in ("nauvis","muluna","panglia","rubia","athos",
                     "razi-umbra-belt-outer","asteroid-belt-inner-edge",
@@ -35,13 +47,16 @@ class ExpeditionCopyTests(unittest.TestCase):
                      'for _, kind in ipairs({"planet", "space-location"})'):
             self.assertIn(text,source)
         self.assertNotIn("data:extend",source)
-        rows=re.findall(r'^  (?:calidus|solaris|nyxaris|vibrant|vespera|beetlejuice|umbra|deep_space) = \{([^\n]+)\}',source,re.M)
-        mapped=set(re.findall(r'"([^"]+)"',"\n".join(rows)))
+        # Parse the whole authored destination table, including multiline
+        # Aegis and Deep Space entries, rather than relying on line layout.
+        table = source.split("local destinations = {", 1)[1].split("\n}\n", 1)[0]
+        mapped = set(re.findall(r'"([^"]+)"', table))
         self.assertTrue(mapped)
         for language in ("en","ru"):
             localized=section(read(f"locale/{language}/names.cfg"),"razi-location-briefing")
             self.assertTrue(mapped.issubset(localized),mapped-set(localized))
-        self.assertIn('"sol", "razi-deep-space-edge"',source)
+        self.assertIn("sol", mapped)
+        self.assertIn("razi-deep-space-edge", mapped)
 
     def test_route_notes_are_native_tooltip_only(self):
         notes=read("prototypes/system/route_dossiers.lua")
