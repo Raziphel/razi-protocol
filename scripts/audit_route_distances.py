@@ -43,7 +43,7 @@ DEEP_EDGES = (
     ("vesta", "solar-system-edge"),
 )
 BELT_BYPASSES = (
-    ("aquilo", "rubia"),
+    # Vespera is belt-free; Rubia -> Aquilo is an intended local branch.
     ("crucible-orbit", "vesta"),
     ("vesta", "secretas"),
     ("sye-vibrant", "sye-vespera"),
@@ -91,16 +91,21 @@ def visual_minimum(span):
     return math.floor(amount / 500 + 0.5) * 500
 
 
+def exempt_teleport(route):
+    a, b = route.get("from") or "", route.get("to") or ""
+    return any(word in part.lower()
+               for part in (a, b, route.get("name") or "")
+               for word in ("stargate", "wormhole", "teleport",
+                            "portal", "dyson"))
+
+
 def exempt_native(route):
     a, b = route.get("from") or "", route.get("to") or ""
     if a == b or {a, b} == {"nauvis", "muluna"}:
         return True
     if "belt" in a and "belt" in b:
         return True
-    return any(word in part.lower()
-               for part in (a, b, route.get("name") or "")
-               for word in ("stargate", "wormhole", "teleport",
-                            "portal", "dyson"))
+    return exempt_teleport(route)
 
 
 def positions(raw):
@@ -213,7 +218,10 @@ def audit(raw):
     coords = positions(raw)
     links = defaultdict(list)
     for name, route in routes.items():
-        if isinstance(route, dict) and route.get("from") and route.get("to"):
+        # Teleports are overlays, not additional physical corridors.
+        # Keep native asteroid-belt crossings in the physical graph.
+        if (isinstance(route, dict) and route.get("from")
+                and route.get("to") and not exempt_teleport(route)):
             links[key(route["from"], route["to"])].append((name, route))
     issues = belt_ecology_issues(raw, links)
     # This also audits final installed source-mod routes, not just Razi's
@@ -258,7 +266,10 @@ def audit(raw):
         span = math.dist(coords[a], coords[b])
         if span < 1:
             continue
-        density = length / span
+        # A projected chart can put nearby markers less than five units
+        # apart. Floor the denominator to avoid false high-density alerts
+        # without exempting genuinely excessive route lengths.
+        density = length / max(span, 5.0)
         if density < 300:
             issues.add(f"Too-short interstellar route: {a} <-> {b}, "
                        f"{length:,.0f} km across {span:.0f} map units")
