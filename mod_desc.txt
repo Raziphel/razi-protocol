@@ -13,6 +13,10 @@ Instead of leaving every mod on its own disconnected branch, Razi Protocol:
 - Routes optional custom enemy factions onto planets that actually fit their theme.
 - Cleans up Science Tab groupings, overloaded crafting tabs, and several late compatibility seams.
 
+## Updating from 2.x
+
+Your 2.x save keeps working in 3.0. Before updating, type `/razi-prepare-3` in the chat and save. Step by step: [Updating a 2.x save](https://github.com/Raziphel/razi-protocol/blob/main/docs/updating-from-2x.md).
+
 ## Chapter Flow
 
 ### Calidus

@@ -202,6 +202,7 @@ Recommended mods (`+` in `info.json`; the game offers them, nothing breaks witho
 For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
+- Updating a save made with 2.x: [docs/updating-from-2x.md](docs/updating-from-2x.md).
 - Install RAZI Library 1.3.1 or newer and Razi More Asteroids 1.1.0 or newer; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
 - Install Razi Rocket Reusability 1.1.5 or newer; it is a required mod now, and the original Rocket Reusability is incompatible with it.
 - Factorio 2.1 migration status and optional third-party compatibility gaps are tracked in [FACTORIO-2.1-COMPATIBILITY.md](FACTORIO-2.1-COMPATIBILITY.md). The required dependency path now consists entirely of native Factorio 2.1 releases.
