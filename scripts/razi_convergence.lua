@@ -10,17 +10,20 @@ local story=require("scripts.razi_story")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.
 M.transmission_beats={
- {tick=0,key="convergence-transmission-sealed"},
- {tick=1800,key="convergence-transmission-dyson"},
- {tick=3600,key="convergence-transmission-resonance"},
- {tick=5400,key="convergence-transmission-alignment"}
+ {tick=0,id="sealed",key="convergence-transmission-sealed"},
+ {tick=1800,id="dyson",key="convergence-transmission-dyson"},
+ {tick=3600,id="resonance",key="convergence-transmission-resonance"},
+ {tick=5400,id="alignment",key="convergence-transmission-alignment"}
 }
 M.transmission_duration=7200
 -- The beat captions are story text. Without the story each beat is just
 -- its number in the sequence.
-local function beat_text(index)
- if story.enabled() then
-  return {"razi-ops."..M.transmission_beats[index].key}
+-- `player` is the one who reads it; chat lines for a whole force pass none.
+local function beat_text(index,player)
+ local key=M.transmission_beats[index].key
+ if story.visible(player) then
+  return story.text(player,"finale-beat",M.transmission_beats[index].id,
+   {"razi-ops."..key})
  end
  return {"razi-story-off.transmission-stage",tostring(index),
   tostring(#M.transmission_beats)}
@@ -533,8 +536,14 @@ function M.render(parent,player,options)
     or {r=.92,g=.74,b=.50}
  end
  if won then
-  local win=story.enabled() and line(scroll,"convergence-won",width)
-   or scroll.add{type="label",caption={"razi-story-off.convergence-won"}}
+  local win
+  if story.visible(player) then
+   win=scroll.add{type="label",caption=story.text(player,"finale","won",
+    {"razi-ops.convergence-won"}),
+    tooltip=story.key_tooltip(player,"finale","won")}
+  else
+   win=scroll.add{type="label",caption={"razi-story-off.convergence-won"}}
+  end
   win.style.single_line=false
   win.style.maximal_width=width
   win.style.font_color={r=.48,g=.9,b=.72}
@@ -543,8 +552,13 @@ function M.render(parent,player,options)
   archive.style.horizontally_stretchable=true
   local title=line(archive,"convergence-archive-title",width)
   title.style.font="heading-2"
-  if story.enabled() then
-   line(archive,"convergence-archive-message",width)
+  if story.visible(player) then
+   local message=archive.add{type="label",
+    caption=story.text(player,"finale","archive-message",
+     {"razi-ops.convergence-archive-message"}),
+    tooltip=story.key_tooltip(player,"finale","archive-message")}
+   message.style.single_line=false
+   message.style.maximal_width=width
   else
    local note=archive.add{type="label",
     caption={"razi-story-off.convergence-archive-message"}}
@@ -606,22 +620,36 @@ function M.render(parent,player,options)
   line(network,site.planet and "convergence-witness-online"
    or "convergence-witness-offline",width,
    {"razi-ops.convergence-system-"..site.system})
-  if site.planet and story.enabled() then
-   local testimony=line(network,
-     "convergence-witness-testimony-"..site.system,width)
+  if site.planet and story.visible(player) then
+   local testimony=network.add{type="label",
+    caption=story.text(player,"finale-testimony",site.system,
+     {"razi-ops.convergence-witness-testimony-"..site.system}),
+    tooltip=story.key_tooltip(player,"finale-testimony",site.system)}
+   testimony.style.single_line=false
+   testimony.style.maximal_width=width
    testimony.style.font_color={r=.73,g=.77,b=.82}
   end
  end
  -- Black-box recovery is shipment-gated; the reveal has tangible evidence.
  local blackbox=M.blackbox(force)
- if blackbox>0 and story.enabled() then
+ if blackbox>0 and story.visible(player) then
   local archive=scroll.add{type="frame",
     style="inside_shallow_frame",direction="vertical"}
   archive.style.horizontally_stretchable=true
-  local label=line(archive,"convergence-blackbox-heading",width)
+  local label=archive.add{type="label",
+    caption=story.text(player,"finale","blackbox-heading",
+     {"razi-ops.convergence-blackbox-heading"}),
+    tooltip=story.key_tooltip(player,"finale","blackbox-heading")}
+  label.style.single_line=false
+  label.style.maximal_width=width
   label.style.font="heading-2"
   for i=1,blackbox do
-    line(archive,"convergence-blackbox-"..i,width)
+    local note=archive.add{type="label",
+     caption=story.text(player,"finale-blackbox",tostring(i),
+      {"razi-ops.convergence-blackbox-"..i}),
+     tooltip=story.key_tooltip(player,"finale-blackbox",tostring(i))}
+    note.style.single_line=false
+    note.style.maximal_width=width
   end
  end
  -- Complete personal landings, not technology research or an empty
@@ -681,7 +709,7 @@ function M.render(parent,player,options)
    local label=line(panel,
     i<=(sequence.beat or 1) and "convergence-transmission-beat-done"
      or "convergence-transmission-beat-pending",width,
-    beat_text(i))
+    beat_text(i,player))
    if i==sequence.beat then label.style.font="default-bold" end
   end
  end

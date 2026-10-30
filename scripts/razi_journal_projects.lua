@@ -30,6 +30,8 @@ end
 local function project_ids()
   return story.enabled() and ids or plain_ids
 end
+-- The projects every player has, with or without the story.
+M.plain_ids=plain_ids
 local project_technologies={
   dyson="slp-dyson-sphere",
   array="razi-archive-array",
@@ -739,9 +741,11 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   perspective.style.single_line=false
   perspective.style.maximal_width=math.max(100,width-98)
   perspective.style.font_color=HUES.quiet
-  if story.enabled() then
+  if story.visible(player) then
     local context=content.add{type="label",
-      caption=L("project-context-"..p.project)}
+      caption=story.text(player,"project-context",p.project,
+        L("project-context-"..p.project)),
+      tooltip=story.key_tooltip(player,"project-context",p.project)}
     context.style.single_line=false
     context.style.maximal_width=math.max(115,width-72)
     context.style.font_color=HUES.quiet
