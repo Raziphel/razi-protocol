@@ -135,6 +135,9 @@ require("prototypes.compat.calidus_dyson").data_final_fixes()
 require("prototypes.compat.first_frontier_industry").data_final_fixes()
 require("prototypes.compat.network_components").register_premium()
 
+-- Partnership gates need the premium exchanges registered above; Aquilo's cycle check must see the final prerequisites.
+require("prototypes.technology.industrial_partnership_gates").data_final_fixes()
+
 -- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
 -- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
 -- the cycle check sees the final graph) and before the lab inputs are deduplicated.
