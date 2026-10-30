@@ -28,12 +28,14 @@ game.tick=181
 module.flush()
 check(cleared==1 and #received==8,
  "An admin should see one eight-line spoiler-safe operations welcome")
-check(received[1][1]=="razi-welcome.header"
- and received[3][1]=="razi-welcome.status-initial"
- and received[5][1]=="razi-welcome.priority-initial"
- and received[6][1]=="razi-welcome.journal"
- and received[6][3][1]=="razi-welcome.spoilers-on"
- and received[8][1]=="razi-welcome.admin",
+-- Each line is a slot: the writer's own text first, the repository text after.
+check(received[1][1]=="?" and received[1][2][1]=="razi-story-welcome.header"
+ and received[1][3][1]=="razi-welcome.header"
+ and received[3][3][1]=="razi-welcome.status-initial"
+ and received[5][3][1]=="razi-welcome.priority-initial"
+ and received[6][3][1]=="razi-welcome.journal"
+ and received[6][3][3][1]=="razi-welcome.spoilers-on"
+ and received[8][3][1]=="razi-welcome.admin",
  "Localized welcome should use genuine locale keys")
 module.on_player_joined(player)
 game.tick=250
@@ -86,7 +88,7 @@ check(module.spoiler_status()=="spoilers-off",
   "Current spoiler setting OFF must be reflected in the welcome")
 received={}
 module.command{player_index=1}
-check(received[6][3][1]=="razi-welcome.spoilers-off",
+check(received[6][3][3][1]=="razi-welcome.spoilers-off",
   "Replay must display the actual current spoiler state")
 settings.global["razi-hide-spoilers"].value=true
 player.force.technologies["space-platform"].researched=true
@@ -131,7 +133,7 @@ received={}
 module.on_player_joined(player)
 game.tick=4500
 module.flush()
-check(#received>=7 and received[1][1]=="razi-welcome.header",
+check(#received>=7 and received[1][3][1]=="razi-welcome.header",
   "Story briefing must follow once the story is on")
 check(storage.razi_welcome.seen[1]==2,"Story text version is stored")
 -- Saves from before text versions store true, which was the story text.

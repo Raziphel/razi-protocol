@@ -8,7 +8,9 @@ local razi_journal = require("scripts.razi_journal")
 local platform_projects = require("scripts.razi_platform_projects")
 local great_projects = require("scripts.razi_great_projects")
 local deep_expedition = require("scripts.razi_deep_space_expedition")
-local story_dispatch = require("scripts.razi_story").dispatch
+local story = require("scripts.razi_story")
+local story_dispatch = story.dispatch
+local writer = require("scripts.razi_writer")
 local spoiler_fog = require("scripts.razi_spoiler_fog")
 local welcome = require("scripts.razi_welcome")
 local convergence = require("scripts.razi_convergence")
@@ -241,9 +243,11 @@ events:on_event(defines.events.on_player_removed, function(event)
 	razi_journal.on_removed(event.player_index)
 	razi_safe_cheat.on_player_removed(event.player_index)
 	welcome.on_player_removed(event.player_index)
+	story.on_removed(event.player_index)
 end)
 
 commands.add_command("razi-welcome", welcome.help(), welcome.command)
+commands.add_command("razi-writer", {"razi-writer.command-help"}, writer.command)
 commands.add_command("razi-audit", {"razi-audit.help"}, convergence_audit.command)
 -- Explicit diagnostic only. Never scans recipes, labs or source mods on ticks.
 commands.add_command("razi-victory-audit", {"razi-audit.victory-help"}, victory_guard.command)

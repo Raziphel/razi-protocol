@@ -4,6 +4,9 @@ local M={}
 local journal_button_cleanup=require("scripts.razi_journal_button_cleanup")
 local defs=require("scripts.razi_journal_data")
 local story=require("scripts.razi_story")
+-- The Archive records and the record notices, loaded here for the story.
+story.attach(require("scripts.razi_journal_records"),
+  require("scripts.razi_story_dispatch"))
 local industrial_briefs=require("scripts.razi_planet_briefs")
 local catapults=require("scripts.razi_catapult_network")
 local trials=require("scripts.razi_nexus_trials")
@@ -81,7 +84,7 @@ local function pref(index)
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
-  value.view=({quests=true,projects=true,archive=story.enabled(),
+  value.view=({quests=true,projects=true,archive=story.visible(index),
     systems=true})[value.view] and value.view or "quests"
   value.project=projects.valid(value.project) and value.project or "platform"
   value.query=value.query or ""
@@ -444,7 +447,7 @@ local function dossier_heading(parent,key,theme,width) -- luacheck: ignore 212
   title.style.font_color=COLOR.muted
   return heading
 end
-local function section(parent,key,caption,width,theme)
+local function section(parent,key,caption,width,theme,tip)
   local block=parent.add{type="flow",direction="vertical"}
   block.style.horizontally_stretchable=true
   block.style.vertical_spacing=5
@@ -452,8 +455,22 @@ local function section(parent,key,caption,width,theme)
   if caption then
     local copy=wrap(block,caption,width)
     copy.style.font_color=COLOR.ink
+    copy.tooltip=tip
   end
   return block
+end
+-- An Archive record's title. Writer mode lists the record by its id until
+-- the writer's own title exists.
+local function record_title(player,id)
+  if story.writer(player) then
+    return story.text(player,"record-title",id,id)
+  end
+  return story.text(player,"record-title",id,{"journal-record-title."..id})
+end
+-- Whether an Archive record is open to this player: its quest is complete,
+-- or writer mode opens every record.
+local function record_open(player,quest,complete)
+  return story.writer_records(player) or (quest~=nil and complete)
 end
 local function wheel_pane(parent,name,width,height)
   local pane=parent.add{type="scroll-pane",name=name,
@@ -624,7 +641,7 @@ local function render_tracker(player)
   line.style.horizontal_spacing=7
   icons.sprite(line,quest_art(player.force,quest,context),"tracker_quest")
   local heading=line.add{type="label",style="clickable_label",
-    caption=defs.quest_title(quest),
+    caption=defs.quest_title(quest,player),
     tags={razi_journal_action="tracker-open"}}
   heading.style.single_line=false
   heading.style.maximal_width=195
@@ -706,7 +723,8 @@ local function render_details(parent,player,quest,p,context,size,view)
   icons.sprite(hero,quest_art(player.force,quest,context),"quest_hero")
   local hero_text=hero.add{type="flow",direction="vertical"}
   hero_text.style.vertical_spacing=2
-  local hero_title=wrap(hero_text,defs.quest_title(quest),inner-68)
+  local hero_title=wrap(hero_text,defs.quest_title(quest,player),inner-68)
+  hero_title.tooltip=story.key_tooltip(player,"quest-title",quest.id)
   hero_title.style.font="heading-2"
   hero_title.style.font_color=COLOR.ink
   local milestone_time=completion_caption(
@@ -716,9 +734,11 @@ local function render_details(parent,player,quest,p,context,size,view)
     stamp.style.font_color=COLOR.green
     stamp.tooltip=L("milestone-time-explanation")
   end
-  if not size.compact and story.enabled() then
-    local mood=wrap(hero_text,{"journal-mood."..quest.chapter},inner-68)
+  if not size.compact and story.visible(player) then
+    local mood=wrap(hero_text,story.text(player,"chapter-mood",quest.chapter,
+      {"journal-mood."..quest.chapter}),inner-68)
     mood.style.font_color=COLOR.muted
+    mood.tooltip=story.key_tooltip(player,"chapter-mood",quest.chapter)
   end
   local folio_link=panel.add{type="label",style="clickable_label",
     caption=L("chapter-cover-open"),
@@ -882,8 +902,10 @@ local function render_details(parent,player,quest,p,context,size,view)
   -- A journal is primarily a story. After the live objective and its
   -- immediate blockers, let the player read the entry before secondary
   -- route previews, industry notes or production analytics.
-  if story.enabled() then
-    section(prose,"story-heading",{"journal-story."..quest.id},text_width,theme)
+  if story.visible(player) then
+    section(prose,"story-heading",story.text(player,"quest-story",quest.id,
+      {"journal-story."..quest.id}),text_width,theme,
+      story.key_tooltip(player,"quest-story",quest.id))
   end
   -- Direct campaign handoffs share the force snapshot with the chapter rail.
   local next_steps=guidance.followups(quest.id,view and view.states,3)
@@ -899,7 +921,7 @@ local function render_details(parent,player,quest,p,context,size,view)
       local note=line.add{type="flow",direction="vertical"}
       note.style.vertical_spacing=1
       local link=note.add{type="label",style="clickable_label",
-        caption=defs.quest_title(step.quest),
+        caption=defs.quest_title(step.quest,player),
         tags={razi_journal_action="guidance-select",id=step.quest.id}}
       link.style.single_line=false
       link.style.maximal_width=text_width-80
@@ -919,9 +941,11 @@ local function render_details(parent,player,quest,p,context,size,view)
   end
   -- Source-backed operational context; not an extra research requirement.
   local brief=industrial_briefs.for_quest(quest)
-  if brief and story.enabled() then
+  if brief and story.visible(player) then
     section(prose,"industrial-brief-heading",
-      {"razi-industries-brief."..brief},text_width,theme)
+      story.text(player,"quest-brief",brief,
+        {"razi-industries-brief."..brief}),text_width,theme,
+      story.key_tooltip(player,"quest-brief",brief))
   end
   -- Field assignments are advisory, not research, physical exploration or
   -- shipment completion. Follow-ups must be actual, spoiler-visible Codex IDs.
@@ -937,13 +961,15 @@ local function render_details(parent,player,quest,p,context,size,view)
     -- evidence is verified. Only show a supported, spoiler-visible project.
     local project=industrial_briefs.project_for_quest(quest)
     if not (project and projects.visible(force,project)) then project=nil end
-    if story.enabled() or #handoffs>0 or project then
+    if story.visible(player) or #handoffs>0 or project then
       local field=prose.add{type="flow",direction="vertical"}
       field.style.width=text_width
       field.style.vertical_spacing=5
       subtitle(field,"field-assignment-heading",text_width-26,theme)
-      if story.enabled() then
-        wrap(field,{"razi-planet-charter."..charter},text_width-26)
+      if story.visible(player) then
+        local charter_text=wrap(field,story.text(player,"quest-charter",charter,
+          {"razi-planet-charter."..charter}),text_width-26)
+        charter_text.tooltip=story.key_tooltip(player,"quest-charter",charter)
       end
       if #handoffs>0 then
         local heading=wrap(field,L("field-assignment-followups"),
@@ -953,7 +979,7 @@ local function render_details(parent,player,quest,p,context,size,view)
         for _,target in ipairs(handoffs) do
           local state=M.state(force,target,context)
           local next_link=field.add{type="label",style="clickable_label",
-            caption={"",defs.quest_title(target),"  /  ",
+            caption={"",defs.quest_title(target,player),"  /  ",
               L("next-step-"..state)},
             tooltip=L("open-prerequisite"),
             tags={razi_journal_action="guidance-select",id=target.id}}
@@ -1000,20 +1026,22 @@ local function render_details(parent,player,quest,p,context,size,view)
     end
   end
   -- Field notes are authored text: story layer only.
-  if story.enabled() then
-    section(prose,"tip-heading",{"journal-tip."..quest.id},text_width,theme)
+  if story.visible(player) then
+    section(prose,"tip-heading",story.text(player,"quest-tip",quest.id,
+      {"journal-tip."..quest.id}),text_width,theme,
+      story.key_tooltip(player,"quest-tip",quest.id))
   end
   -- The human accounts are useful where their actual milestone was
   -- completed, not just buried in the Archive's growing collection.
   -- No link or future title is shown before source quest completion.
   if M.complete(player.force,quest,context) then
-    for _,record in ipairs(story.records()) do
+    for _,record in ipairs(story.records(player)) do
       if record.series=="field" and record.unlock==quest.id then
         local letter=prose.add{type="flow",direction="vertical"}
         letter.style.vertical_spacing=5
         subtitle(letter,"field-citation-heading",text_width-26,theme)
         local button=letter.add{type="button",
-          caption={"journal-record-title."..record.id},
+          caption=record_title(player,record.id),
           tooltip=L("field-citation-tooltip"),
           tags={razi_journal_action="record",id=record.id}}
         button.style.minimal_width=math.min(210,text_width-26)
@@ -1112,10 +1140,12 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   cover_title.style.font="heading-2"
   cover_title.style.font_color=COLOR.ink
   accent_rule(panel,theme,math.min(112,inner),2)
-  if story.enabled() then
-    local mood=wrap(panel,{"journal-mood."..p.chapter},inner)
+  if story.visible(player) then
+    local mood=wrap(panel,story.text(player,"chapter-mood",p.chapter,
+      {"journal-mood."..p.chapter}),inner)
     mood.style.font="default-bold"
     mood.style.font_color=theme.soft
+    mood.tooltip=story.key_tooltip(player,"chapter-mood",p.chapter)
   end
   local line=panel.add{type="flow",direction="horizontal"}
   line.style.horizontal_spacing=9
@@ -1144,20 +1174,28 @@ local function render_chapter_cover(parent,player,p,context,size,view)
   local text_width=inner-18
   body.style.width=text_width
   body.style.vertical_spacing=12
-  if story.enabled() then
+  if story.visible(player) then
     section(body,"chapter-cover-story",
-      {"journal-chapter-summary."..p.chapter},text_width,theme)
+      story.text(player,"chapter-summary",p.chapter,
+        {"journal-chapter-summary."..p.chapter}),text_width,theme,
+      story.key_tooltip(player,"chapter-summary",p.chapter))
     -- The seven founding systems get distinct operating identities, kept
     -- inside the already-unlocked cover instead of leaking future names.
     local star=industrial_briefs.star_charter(p.chapter)
     if star then
       section(body,"star-charter-heading",
-        {"razi-star-signature."..star},text_width,theme)
+        story.text(player,"chapter-star",star,
+          {"razi-star-signature."..star}),text_width,theme,
+        story.key_tooltip(player,"chapter-star",star))
     end
     section(body,"chapter-cover-dispatch",
-      {"journal-chapter-dispatch."..p.chapter},text_width,theme)
+      story.text(player,"chapter-dispatch",p.chapter,
+        {"journal-chapter-dispatch."..p.chapter}),text_width,theme,
+      story.key_tooltip(player,"chapter-dispatch",p.chapter))
     section(body,"chapter-context",
-      {"journal-chapter-story."..p.chapter},text_width,theme)
+      story.text(player,"chapter-context",p.chapter,
+        {"journal-chapter-story."..p.chapter}),text_width,theme,
+      story.key_tooltip(player,"chapter-context",p.chapter))
   end
   dossier_heading(body,"chapter-cover-entries",theme,text_width)
 
@@ -1198,7 +1236,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
     marker.style.font_color=state=="complete" and COLOR.green
       or state=="active" and COLOR.amber or COLOR.quiet
     local link=row.add{type="label",style="clickable_label",
-      caption=defs.quest_title(quest),
+      caption=defs.quest_title(quest,player),
       tooltip=L("select-objective"),
       tags={razi_journal_action="select",id=quest.id}}
     link.style.single_line=false
@@ -1222,7 +1260,7 @@ local function render_chapter_cover(parent,player,p,context,size,view)
       caption=L(view.states[next_entry.id]=="complete"
         and "chapter-cover-review" or "chapter-cover-continue"),
       tags={razi_journal_action="chapter-continue",id=next_entry.id}}
-    call.tooltip=defs.quest_title(next_entry)
+    call.tooltip=defs.quest_title(next_entry,player)
   else
     wrap(panel,L("chapter-cover-unavailable"),inner)
   end
@@ -1293,7 +1331,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     title.style.font="default-bold"
     title.style.font_color=COLOR.amber
     local entry=lead.add{type="label",name="razi_journal_lead_link",style="clickable_label",
-      caption=defs.quest_title(plan.primary.quest),
+      caption=defs.quest_title(plan.primary.quest,player),
       tags={razi_journal_action="guidance-select",id=plan.primary.quest.id}}
     entry.style.maximal_width=inner-24
     entry.style.single_line=false
@@ -1385,8 +1423,8 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           local milestone_time=completion_caption(
             chapter_timing.get(player.force,"milestones",quest.id),"milestone")
           local milestone_tooltip=milestone_time
-            and {"",defs.quest_title(quest),"\n",milestone_time}
-            or defs.quest_title(quest)
+            and {"",defs.quest_title(quest,player),"\n",milestone_time}
+            or defs.quest_title(quest,player)
           -- A selected entry is a single subtly raised row, not another
           -- full-width button. The native technology image stays bounded.
           local chosen=quest.id==p.selected and not p.chapter_cover
@@ -1417,7 +1455,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
             or {r=.58,g=.61,b=.68}
           control.style.font_color=color
           local choice=item.add{type="label",name="razi_journal_item_choice",style="clickable_label",
-            caption=defs.quest_title(quest),
+            caption=defs.quest_title(quest,player),
             tags={razi_journal_action="select",id=quest.id},
             tooltip=milestone_tooltip}
           choice.style.single_line=false
@@ -1450,14 +1488,16 @@ local function render_chapters(parent,player,p,context,size,view,plan)
 end
 -- The archive is not another quest chain. Each story entry opens only
 -- when its source-backed research milestone is actually completed.
-function M.unlocked_records(force,context)
+function M.unlocked_records(force,context,player)
   context=context or M.context(force)
   local unlocked=0
-  for _,record in ipairs(story.records()) do
+  for _,record in ipairs(story.records(player)) do
     local q=defs.by_id[record.unlock]
-    if q and M.complete(force,q,context) then unlocked=unlocked+1 end
+    if record_open(player,q,q and M.complete(force,q,context)) then
+      unlocked=unlocked+1
+    end
   end
-  return unlocked,#story.records()
+  return unlocked,#story.records(player)
 end
 local function render_archive(parent,player,p,context,size)
   local rail=parent.add{type="frame",name="razi_journal_archive_index",
@@ -1470,13 +1510,14 @@ local function render_archive(parent,player,p,context,size)
   -- Recovery ledger is derived solely from completed source milestones.
   -- Sealed titles remain concealed; only aggregate counts are shown.
   local counts={legacy={0,0},corporate={0,0},field={0,0}}
-  for _,record in ipairs(story.records()) do
+  for _,record in ipairs(story.records(player)) do
     local category=record.id:sub(1,5)~="corp-" and "legacy"
       or record.series=="field" and "field" or "corporate"
     local entry=counts[category]
     entry[2]=entry[2]+1
     local quest=defs.by_id[record.unlock]
-    if quest and M.complete(player.force,quest,context) then
+    if record_open(player,quest,
+      quest and M.complete(player.force,quest,context)) then
       entry[1]=entry[1]+1
     end
   end
@@ -1504,9 +1545,10 @@ local function render_archive(parent,player,p,context,size)
   local chosen,focus
   local sealed=0
   local corporate_heading=false
-  for _,record in ipairs(story.records()) do
+  for _,record in ipairs(story.records(player)) do
     local quest=defs.by_id[record.unlock]
-    local opened=quest and M.complete(player.force,quest,context)
+    local opened=record_open(player,quest,
+      quest and M.complete(player.force,quest,context))
     if not opened then sealed=sealed+1 end
     -- Hide sealed pages entirely in spoiler mode. A counter replaces
     -- dozens of identical encrypted rows, without leaking future titles.
@@ -1537,12 +1579,12 @@ local function render_archive(parent,player,p,context,size)
     if opened then
       mark=icons.button(row,quest_art(player.force,quest,context),
         "archive_button",{razi_journal_action="record",id=record.id},
-        {"journal-record-title."..record.id})
+        record_title(player,record.id))
     else
       mark=row.add{type="button",style="tool_button",
         caption=marks.pending,enabled=false,
         tooltip=concealed and L("spoiler-sealed-record")
-          or {"journal-record-title."..record.id}}
+          or record_title(player,record.id)}
       mark.style.font_color={r=.59,g=.62,b=.68}
     end
     mark.style.width=icons.size("archive_button")
@@ -1551,7 +1593,7 @@ local function render_archive(parent,player,p,context,size)
       style=opened and "clickable_label" or nil,
       caption={"",opened and p.story_unread and p.story_unread[record.id]
         and marks.active.." " or "",concealed and L("spoiler-sealed-record")
-        or {"journal-record-title."..record.id}},
+        or record_title(player,record.id)},
       tags=opened and {razi_journal_action="record",id=record.id} or nil}
     choice.style.single_line=false
     choice.style.maximal_width=size.rail-105
@@ -1623,15 +1665,18 @@ local function render_archive(parent,player,p,context,size)
     icons.sprite(cover,quest_art(player.force,entry_quest,context),
       "archive_cover")
   end
-  local title=wrap(cover,{"journal-record-title."..chosen.id},size.reader-94)
+  local title=wrap(cover,record_title(player,chosen.id),size.reader-94)
   title.style.font="heading-2"
   title.style.font_color=COLOR.ink
-  local origin=label(paper,{"journal-record-origin."..chosen.id})
+  title.tooltip=story.key_tooltip(player,"record-title",chosen.id)
+  local origin=label(paper,story.text(player,"record-origin",chosen.id,
+    {"journal-record-origin."..chosen.id}))
   origin.style.font_color=COLOR.muted
+  origin.tooltip=story.key_tooltip(player,"record-origin",chosen.id)
   if chosen_quest then
     local source=paper.add{type="button",
       caption=L("archive-open-source",
-        defs.quest_title(chosen_quest)),
+        defs.quest_title(chosen_quest,player)),
       tags={razi_journal_action="archive-source",id=chosen_quest.id},
       tooltip=L("archive-source-tooltip")}
     source.style.minimal_width=math.min(220,size.reader-58)
@@ -1642,7 +1687,9 @@ local function render_archive(parent,player,p,context,size)
   local page=reading.add{type="flow",direction="vertical"}
   page.style.width=size.reader-67
   page.style.vertical_spacing=12
-  wrap(page,{"journal-record-body."..chosen.id},size.reader-67)
+  local body=wrap(page,story.text(player,"record-body",chosen.id,
+    {"journal-record-body."..chosen.id}),size.reader-67)
+  body.tooltip=story.key_tooltip(player,"record-body",chosen.id)
   wrap(paper,L("archive-disclaimer"),size.reader-48)
 end
 
@@ -1801,7 +1848,7 @@ local function draw(player,focus_search)
     or size.compact and 15 or 24
   toolbar.style.vertical_align="bottom"
   -- The three folios use typographic navigation and a slender active rule.
-  for _,view in ipairs(story.enabled() -- luacheck: ignore 421
+  for _,view in ipairs(story.visible(player) -- luacheck: ignore 421
       and {"quests","projects","archive","systems"}
       or {"quests","projects","systems"}) do
     local active=p.view==view
@@ -1833,14 +1880,14 @@ local function draw(player,focus_search)
   filterbar.style.horizontal_spacing=6
   filterbar.style.vertical_align="center"
   if p.view=="archive" then
-    local unlocked,all=M.unlocked_records(player.force,context)
+    local unlocked,all=M.unlocked_records(player.force,context,player)
     tint(label(filterbar,L("archive-progress",
       tostring(unlocked),tostring(all))),themes.get("echoes").primary)
     local unread=0
-    for _,record in ipairs(story.records()) do
+    for _,record in ipairs(story.records(player)) do
       local q=defs.by_id[record.unlock]
       if p.story_unread and p.story_unread[record.id]
-        and q and M.complete(player.force,q,context) then
+        and record_open(player,q,q and M.complete(player.force,q,context)) then
         unread=unread+1
       end
     end
@@ -2001,8 +2048,8 @@ local function update_reader(player,preserve_reader)
           local milestone_time=completion_caption(
             chapter_timing.get(player.force,"milestones",quest.id),"milestone")
           local milestone_tooltip=milestone_time
-            and {"",defs.quest_title(quest),"\n",milestone_time}
-            or defs.quest_title(quest)
+            and {"",defs.quest_title(quest,player),"\n",milestone_time}
+            or defs.quest_title(quest,player)
           if choice then choice.tooltip=milestone_tooltip end
           if marker then marker.tooltip=milestone_tooltip end
           local selection=row["razi_journal_item_rule"]
@@ -2088,7 +2135,7 @@ local function update_reader(player,preserve_reader)
     local next_quest=plan.primary and plan.primary.quest
     lead.visible=next_quest~=nil and p.query=="" and p.filter=="all"
     if next_quest then
-      lead_link.caption=defs.quest_title(next_quest)
+      lead_link.caption=defs.quest_title(next_quest,player)
       lead_link.tags={razi_journal_action="guidance-select",id=next_quest.id}
     end
   end
@@ -2179,6 +2226,31 @@ function M.open_quest(player,id)
   p.view="quests"
   p.chapter_cover=false
   p.compact_index_open=false
+  open(player)
+  return true
+end
+-- Opens the cover of one chapter. False for an unknown chapter.
+function M.open_chapter(player,id)
+  if not (player and player.valid) then return false end
+  local known=false
+  for _,chapter in ipairs(defs.chapters) do
+    if chapter.id==id then known=true;break end
+  end
+  if not known then return false end
+  local p=pref(player.index)
+  p.view="quests"
+  p.chapter=id
+  p.chapter_cover=true
+  p.filter="all"
+  p.query=""
+  p.compact_index_open=false
+  open(player)
+  return true
+end
+-- Opens the Archive tab. False while the player cannot see the story.
+function M.open_archive(player)
+  if not (player and player.valid and story.visible(player)) then return false end
+  pref(player.index).view="archive"
   open(player)
   return true
 end
@@ -2476,7 +2548,7 @@ function M.gui_click(event)
   end
   local p=pref(player.index)
   local old_view=p.view
-  if ARCHIVE_ACTIONS[action] and not story.enabled() then return end
+  if ARCHIVE_ACTIONS[action] and not story.visible(player) then return end
   if (action=="select" or action=="guidance-select") and
     defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
     p.selected=tags.id
@@ -2545,7 +2617,7 @@ function M.gui_click(event)
     end
     p.chapter=p.chapter==tags.id and false or tags.id
   elseif action=="view" and ({quests=true,projects=true,
-      archive=story.enabled(),systems=true})[tags.id] then
+      archive=story.visible(player),systems=true})[tags.id] then
     p.view=tags.id
   elseif action=="field-project" and
     projects.visible(player.force,tags.id) then
@@ -2579,10 +2651,11 @@ function M.gui_click(event)
   elseif action=="record-next-unread" and p.view=="archive" then
     local context=M.context(player.force)
     local found=false
-    for _,record in ipairs(story.records()) do
+    for _,record in ipairs(story.records(player)) do
       local quest=defs.by_id[record.unlock]
       if p.story_unread and p.story_unread[record.id]
-        and quest and M.complete(player.force,quest,context) then
+        and record_open(player,quest,
+          quest and M.complete(player.force,quest,context)) then
         p.record=record.id
         p.archive_filter="all"
         p.story_unread[record.id]=nil
@@ -2608,10 +2681,11 @@ function M.gui_click(event)
     p.query=""
   elseif action=="record" then
     local context=M.context(player.force)
-    for _,record in ipairs(story.records()) do
+    for _,record in ipairs(story.records(player)) do
       if record.id==tags.id then
         local quest=defs.by_id[record.unlock]
-        if quest and M.complete(player.force,quest,context) then
+        if record_open(player,quest,
+          quest and M.complete(player.force,quest,context)) then
           p.record=record.id
           p.archive_filter="all"
           p.view="archive"

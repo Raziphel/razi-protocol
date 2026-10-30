@@ -25,15 +25,20 @@ local function researched(player,name)
   local tech=force and force.technologies and force.technologies[name]
   return tech and tech.researched==true or false
 end
+-- The stages of the briefing, the latest first: the research that starts a
+-- stage and the key of its status line. The priority line has the same stage.
+M.stages={
+  {research="razi-convergence-commission",status="status-commission"},
+  {research="interplanetary-trade-logistics",status="status-network"},
+  {research="space-platform",status="status-flight"},
+  {research="automation",status="status-local"},
+  {status="status-initial"}
+}
 function M.signal(player)
-  if researched(player,"razi-convergence-commission") then
-    return "status-commission"
-  elseif researched(player,"interplanetary-trade-logistics") then
-    return "status-network"
-  elseif researched(player,"space-platform") then
-    return "status-flight"
-  elseif researched(player,"automation") then
-    return "status-local"
+  for _,stage in ipairs(M.stages) do
+    if not stage.research or researched(player,stage.research) then
+      return stage.status
+    end
   end
   return "status-initial"
 end
@@ -64,13 +69,13 @@ end
 -- once it is switched on. Older saves hold `true`, which was the story text.
 local PLAIN_VERSION=1
 local STORY_VERSION=2
-local function version()
-  return story.enabled() and STORY_VERSION or PLAIN_VERSION
+local function version(index)
+  return story.visible(index) and STORY_VERSION or PLAIN_VERSION
 end
 local function has_seen(s,index)
   local seen=s.seen[index]
   if seen==true then seen=STORY_VERSION end
-  return type(seen)=="number" and seen>=version()
+  return type(seen)=="number" and seen>=version(index)
 end
 function M.help()
   return story.enabled() and {"razi-welcome.command-help"}
@@ -84,23 +89,30 @@ local function plain_briefing(player)
   if player.admin then player.print({"razi-welcome-plain.admin"}) end
 end
 local function briefing(player)
-  if not story.enabled() then return plain_briefing(player) end
-  player.print({"razi-welcome.header"})
-  player.print({"razi-welcome.identification"})
-  player.print({"razi-welcome."..M.signal(player)})
-  player.print({"razi-welcome.intro"})
-  player.print({"razi-welcome."..M.priority(player)})
-  player.print({"razi-welcome.journal",
+  if not story.visible(player) then return plain_briefing(player) end
+  -- One slot per line; the status and priority lines are named by their key.
+  local function say(id,...)
+    player.print(story.text(player,"welcome",id,{"razi-welcome."..id,...}))
+  end
+  say("header")
+  say("identification")
+  say(M.signal(player))
+  say("intro")
+  say(M.priority(player))
+  -- The writer's own line gets the plain spoiler wording, not the story one.
+  player.print(story.text(player,"welcome","journal",
+    {"razi-welcome.journal",tostring(unread_count(player.index)),
+      {"razi-welcome."..M.spoiler_status()}},
     tostring(unread_count(player.index)),
-    {"razi-welcome."..M.spoiler_status()}})
-  player.print({"razi-welcome.links"})
-  if player.admin then player.print({"razi-welcome.admin"}) end
+    {"razi-welcome-plain."..M.spoiler_status()}))
+  say("links")
+  if player.admin then say("admin") end
 end
 function M.deliver(player,early)
   if not (player and player.valid) then return end
   local s=state()
   if has_seen(s,player.index) then return end
-  s.seen[player.index]=version()
+  s.seen[player.index]=version(player.index)
   s.pending[player.index]=nil
   -- This API clears all chat lines, not only third-party startup banners.
   -- Never use it after the first ten seconds of a newly created map.

@@ -2,6 +2,7 @@
 secrets.txt
 tools/*
 !tools/portal/
+!tools/story_slots.lua
 /.agents
 __pycache__/*
 *.pyc

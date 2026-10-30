@@ -14,13 +14,17 @@ story.dispatch.flush()
 story.dispatch.forces_merged{source_index=1,destination_index=2}
 story.dispatch.shipment({index=1},"victory")
 check(rawget(_G,"storage")==nil,"Record notices touched save data while off")
-check(package.loaded["scripts.razi_story_dispatch"]==nil
-  and package.loaded["scripts.razi_journal_records"]==nil,
-  "Story modules must not be loaded while the story is off")
+check(story.text(nil,"quest-story","first-signal",{"x"})==nil,
+  "A story slot must have no text while the story is off")
 
 -- Minimal GUI mock and the walk through every window are shared.
 local W=require("tests.lua.journal_window")
 local ctx=W.setup()
+-- The journal loads the records and the notices either way (Factorio forbids
+-- require() in events); the switch and writer mode decide what a player sees.
+check(package.loaded["scripts.razi_story_dispatch"]~=nil
+  and package.loaded["scripts.razi_journal_records"]~=nil,
+  "Story modules must be loaded even while the story is off")
 local projects,journal,force=ctx.projects,ctx.journal,ctx.force
 local function open_everything()
   local all,p=ctx.open_everything()

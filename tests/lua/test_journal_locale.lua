@@ -172,7 +172,9 @@ local on=everything("razi-ops")
 local STORY_GAPS={["journal-mood.salvage"]=true}
 missing=unresolved(on)
 for index=#missing,1,-1 do
-  if STORY_GAPS[missing[index]] then table.remove(missing,index) end
+  for gap in pairs(STORY_GAPS) do
+    if missing[index]:find(gap,1,true) then table.remove(missing,index);break end
+  end
 end
 check(#missing==0,"Keys shown with the story on are not in locale/en: "
   ..W.brief(missing))
