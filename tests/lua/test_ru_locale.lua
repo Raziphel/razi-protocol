@@ -52,7 +52,7 @@ local function read(path)
 end
 
 local function files(directory)
-  local handle=assert(io.popen("ls "..directory.."/*.cfg 2>/dev/null"))
+  local handle=io.popen("ls "..directory.."/*.cfg 2>/dev/null")
   local result={}
   for path in handle:lines() do result[#result+1]=path end
   handle:close()
