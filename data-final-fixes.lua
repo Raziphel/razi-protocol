@@ -294,3 +294,6 @@ require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
 -- research price, ore controls of every planet). Normal writes nothing. After every pass that adds or edits a planet or a control,
 -- so no planet escapes the scaling and no later pass sees half-scaled controls.
 require("prototypes.system.razi_map_preset").data_final_fixes()
+
+-- Convert eligible science packs after all research and recipes have settled.
+require("prototypes.compat.auto_tech_cards").data_final_fixes()
