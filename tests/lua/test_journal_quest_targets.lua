@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 -- Journal quests that opened with technologies the installed packs do not
 -- define now point at the technology that unlocks the quest's key recipe,
 -- or at the world discovery for a planet.
