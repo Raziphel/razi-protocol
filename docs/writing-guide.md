@@ -4,54 +4,48 @@ This guide is for a writer who adds story text to Razi Protocol and wants to see
 
 The story text lives in six files in `locale/en/`. They start empty. Every text has its own place, called a slot. The list of all slots is in [story-slots.md](story-slots.md).
 
-## Setup
+## Setup (Windows 10)
 
-You need Factorio 2.1, GitHub Desktop and the Razi Protocol repository cloned on your computer (File > Clone repository, `Raziphel/razi-protocol`).
+You need Factorio 2.1 (Steam or the installer from factorio.com) and [GitHub Desktop](https://desktop.github.com/).
 
-### 1. Link the repository into the Factorio mods folder
+### 1. Clone the repository and switch to `dev`
 
-Factorio loads mods from its `mods` folder. Instead of copying the repository there, make a link to it. Then every edit you make is in the game at once.
+1. In GitHub Desktop: File > Clone repository > URL, enter `Raziphel/razi-protocol`. Keep the suggested local path, usually `C:\Users\<your name>\Documents\GitHub\razi-protocol`. Click Clone.
+2. Click Current Branch and choose `dev`. Writer mode exists only on `dev`; the default branch is the released version without it.
+3. Click Fetch origin. If the button then says Pull origin, click it.
 
-The `mods` folder is here:
+### 2. Install Razi Protocol and its mods once
 
-| System | Folder |
-| --- | --- |
-| Windows | `%APPDATA%\Factorio\mods` |
-| macOS | `~/Library/Application Support/factorio/mods` |
-| Linux | `~/.factorio/mods` |
+1. Start Factorio, open Mods > Install, find Razi Protocol and install it. The game also installs the mods it needs.
+2. Restart the game when it asks, then quit Factorio.
 
-Windows: open Command Prompt and run (change the second path to where your clone is):
+### 3. Replace the installed copy with your clone
 
-```
-mklink /J "%APPDATA%\Factorio\mods\razi-protocol" "C:\Users\you\Documents\GitHub\razi-protocol"
-```
+Factorio must see only one copy of the mod: your clone.
 
-macOS and Linux: open a terminal and run (change the first path to where your clone is):
+1. Press Win+R, type `%APPDATA%\Factorio\mods` and press Enter. The mods folder opens.
+2. Delete the file `razi-protocol_<version>.zip` there. Leave the other files.
+3. Press Win+R, type `cmd` and press Enter. In the black window paste this line and press Enter:
 
-```
-ln -s ~/Documents/GitHub/razi-protocol "$HOME/Library/Application Support/factorio/mods/razi-protocol"
-```
+   ```
+   mklink /J "%APPDATA%\Factorio\mods\razi-protocol" "%USERPROFILE%\Documents\GitHub\razi-protocol"
+   ```
 
-On Linux use `$HOME/.factorio/mods/razi-protocol` as the second path.
+   The second path is your clone; change it if you cloned somewhere else. The answer is `Junction created for …`. This needs no administrator rights.
 
-The link must be called `razi-protocol`.
+The mods folder now has a folder `razi-protocol` that is your clone: every edit you make in the clone is in the game, and switching branches in GitHub Desktop switches the mod.
 
-### 2. Get the other mods
+If you use the zip version of Factorio, the mods folder is `mods` inside the Factorio folder instead.
 
-Razi Protocol needs many other mods. Start Factorio and open Mods. If Razi Protocol shows missing mods, install each of them by name in the Install tab, then restart the game. If a mod cannot be found or the game still refuses to load, ask in the dev chat.
+### 4. Install what the `dev` version needs
 
-### 3. Start from the right branch
-
-New work starts from the `dev` branch. In GitHub Desktop:
-
-1. Click Current Branch and choose `dev`.
-2. Click Fetch origin. If the button says Pull origin, click it.
+Start Factorio and open Mods. The `dev` version needs some mods the released one does not. If Razi Protocol shows missing mods, install each of them by name in the Install tab and restart the game. If a mod cannot be found or the game still refuses to load, ask in the dev chat.
 
 ## Writer mode
 
 Writer mode shows the story slots to you only. Other players see nothing of it. You switch it on in the game chat. You must be an admin; in a single-player game you always are.
 
-Open the chat (Enter) and type:
+Open the console with the key under Esc (`` ` ``, the same key as `~`) and type a command, then press Enter. If the key does nothing, look up Toggle console in Settings > Controls.
 
 | Command | What it does |
 | --- | --- |
@@ -80,7 +74,7 @@ The journal opens with the button at the top left of the screen or with Ctrl+Shi
 
 ## Where text goes
 
-The files are in `locale/en/`. Open them with any text editor that saves UTF-8 (Notepad, VS Code).
+The files are in `locale\en` of your clone (`Documents\GitHub\razi-protocol\locale\en`). Windows may hide the `.cfg` ending and show them as `story-quests` and so on. Open one with right-click > Open with > Notepad (or VS Code). In Notepad keep the encoding UTF-8 (File > Save as shows it at the bottom).
 
 | File | What is in it |
 | --- | --- |
