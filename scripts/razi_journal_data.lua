@@ -17,7 +17,7 @@ M.quests={
  -- The four Nauvis acts follow existing research, not scripted tasks.
  -- Every ID is stable; absent K2 technologies are safely omitted.
  {id="first-signal",chapter="calidus",tech="automation",phase="machines",requires={}},
- {id="nauvis-power",chapter="calidus",tech="electricity",phase="machines",requires={}},
+ {id="nauvis-power",chapter="calidus",tech="steam-power",phase="machines",requires={}},
  {id="nauvis-logistics",chapter="calidus",tech="logistics",phase="machines",requires={"first-signal"}},
  {id="nauvis-electronics",chapter="calidus",tech="electronics",phase="machines",requires={"nauvis-power"}},
  {id="nauvis-radar",chapter="calidus",tech="radar",phase="machines",requires={"nauvis-power"}},
@@ -30,7 +30,7 @@ M.quests={
  {id="oil",chapter="calidus",tech="oil-processing",phase="chemistry",requires={"steel"}},
  {id="nauvis-fluid-handling",chapter="calidus",tech="fluid-handling",phase="chemistry",requires={"oil"}},
  {id="nauvis-plastics",chapter="calidus",tech="plastics",phase="chemistry",requires={"oil"}},
- {id="nauvis-advanced-electronics",chapter="calidus",tech="advanced-electronics",phase="chemistry",requires={"nauvis-plastics","nauvis-electronics"}},
+ {id="nauvis-advanced-electronics",chapter="calidus",tech="advanced-circuit",phase="chemistry",requires={"nauvis-plastics","nauvis-electronics"}},
  {id="chemical-science",chapter="calidus",tech="chemical-science-pack",phase="chemistry",requires={"oil","nauvis-advanced-electronics"}},
  {id="space-science",chapter="calidus",tech="space-science-pack",phase="departure",requires={"chemical-science"}},
  {id="muluna",chapter="calidus",tech="planet-discovery-muluna",phase="departure",requires={"space-science"}},
@@ -82,7 +82,7 @@ M.quests={
  {id="cubium",chapter="beetlejuice",tech="planet-discovery-cubium",requires={"beetlejuice-gate"}},
  {id="linox",chapter="beetlejuice",tech="linox-technology_planet-discovery-linox",requires={"cubium"}},
  {id="secretas",chapter="beetlejuice",tech="planet-discovery-secretas",requires={"cubium"}},
- {id="frozeta",chapter="beetlejuice",tech="planet-discovery-frozeta",requires={"secretas"}},
+ {id="frozeta",chapter="beetlejuice",world="frozeta",requires={"secretas"}},
  {id="umbra-gate",chapter="umbra",tech="umbra-discovery",requires={"paracelsin","maraxsis"}},
  -- Surveying the outer entrance comes before landing on inner worlds.
  {id="umbra-belt",chapter="umbra",tech="razi-umbra-belt-survey",requires={"umbra-gate"}},
