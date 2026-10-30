@@ -18,7 +18,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 
 ## What It Changes
 
-- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition isolated far beyond the solar-system edge.
+- Rebuilds the starmap into named progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space, with the Aegis/Bellicos pulsar expedition south of Solaris and Nyxaris, reached from the Slip Streams of both.
 - Adds system discovery technologies for the major custom systems.
 - Adds system tech cards so later progression can ask for chapter mastery instead of giant science-pack soups.
 - Rehomes many planets so they sit in a cleaner route and unlock order.
@@ -41,7 +41,7 @@ Calidus is the early foundation chapter. It covers the base Space Age setup and 
 
 ### Aegis and Bellicos
 
-The Aegis expedition no longer crowds the inner campaign map. Its precursor stargate sits beyond the solar-system edge, and the enormous Bellicos pulsar occupies a remote, otherwise unused deep-space bearing. The complete Aegis route remains intact, while Lightweight and Pulsar Science now contribute to Deep Space mastery.
+Aegis and Bellicos sit south of Solaris and Nyxaris. The Aegis survey research (`discovery-aegis-outer`) needs both first-frontier discoveries and opens the Aegis Frontier Gate; one route leads to it from each Slip Stream (112,000 km from Solaris, 118,000 km from Nyxaris). The routes and the links inside Aegis carry big asteroids but no huge ones, and the danger tops out at 8. The inner Aegis and Bellicos research needs the Beetlejuice discovery. The complete source route inside Aegis remains, and the far-side Bellicos stargate is removed. Lightweight and Pulsar Science still contribute to Deep Space mastery.
 
 ### Solaris
 
@@ -49,7 +49,7 @@ Solaris is the first major custom-system branch. It brings Castra Prime, Arig, H
 
 ### Nyxaris
 
-Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia and Pelagos progression when either is installed.
+Nyxaris is the shared mid-tier chapter. It groups Nyxaris, Apia Carnova, Moshine, and Panglia into one broader progression stage, and absorbs optional Dea Dia, Pelagos and Terra Palus progression when they are installed.
 
 ### Vibrant
 
@@ -82,9 +82,10 @@ That keeps the tree readable while still preserving the feeling that every chapt
 
 Several planets are not just "supported"; they are deliberately placed into the campaign.
 
-- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign beyond the solar-system edge. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
+- Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign from Solaris and Nyxaris. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
 
 - Eneas stays an optional early Calidus moon branch when installed.
+- Every installed world is researched before the gateways of the next system, unless Planetary interdependence is Off: worlds of Solaris and Nyxaris (Igrys, Foliax, Velora, Rabbasca, Pelagos, Terra Palus) before Vibrant and Vespera, worlds of Vibrant and Vespera (Cerys, Khemia, Shchierbin, Athos, Nulla) before Beetlejuice and Umbra, worlds of Beetlejuice and Umbra (Ferrum, Carna, Arcanyx, Obsidiax) and Bellicos before Outer Frontier Mastery. Balack, Skewer Shattered, Rabbasca Underground, Eneas and Nexus stay off the required path.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
 - Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
 - Linox is moved into Beetlejuice as a later Cubium-side branch.
@@ -110,16 +111,18 @@ Optional Void Processing is still supported, but it is treated as a late Deep Sp
 
 ## Enemy Routing
 
-Razi Protocol supports several optional enemy packs and places them where they fit best.
+Razi Protocol supports several optional enemy packs and places each one where its author or the planet's theme says it belongs. Nauvis keeps the vanilla enemies on every difficulty, and planets with enemies of their own (Gleba, Tellus, Lemures with Dea Dia, and so on) are not touched.
 
-- Arachnids: Arig, Nexus, Crucible
-- Armoured biters: Panglia, Hyarion, Nexus, Crucible
-- Cold biters: Aquilo, Paracelsin, Frozeta, optional Cerys, Nexus
-- Electric flying enemies: Corrundum, Ribbonia, Nexus, plus their native Fulgora theme
-- Explosive biters: Moshine, Nexus
-- Toxic biters: Cubium, Vesta, Nexus, Crucible
+How many planets carry the themed families is the `razi-enemy-habitats` startup setting. Automatic, the default, takes the step of the difficulty level; the steps add up:
 
-Where Razi Protocol assigns a themed enemy faction, it can also suppress vanilla biter and worm autoplace so the custom threat actually defines the planet. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
+| Step | Difficulty | Planets |
+| --- | --- | --- |
+| None | Easy | No planet. The Electric nests that their mod places on Fulgora and the Cold nests it places on Aquilo are switched off too |
+| Normal | Normal, Custom | Hyarion: Armoured. Arig: Arachnids. Moshine: Explosive. Cubium: Toxic. Frozeta: Cold. Fulgora (their own planet) and Ribbonia: Electric |
+| Wide | Hard | Adds Panglia: Armoured. Athos: Arachnids. Cubium: Explosive. Paracelsin: Cold |
+| Widest | Nightmare | Adds Crucible: Armoured and Arachnids |
+
+A step gives its homes to the planets that have no surface yet when it is chosen; nests that already stand stay, and on the surfaces that exist the new chunks stay free of the Armoured, Toxic and Arachnid nests of planets where they are not at home. The specialist nests (Armoured, Toxic, Arachnids) share the vanilla enemy control, so they are switched off by name on Nauvis, Terrapalus and every other planet that has that control and is not their home, on every step. A family's nests stand on the land tiles of its homes. Where Razi Protocol assigns a themed enemy faction, it also suppresses vanilla biter and worm autoplace so the custom threat actually defines the planet, and the planet carries pollution so that the nests take part in attacks. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
 
 ## Crafting Cleanup
 
@@ -133,6 +136,10 @@ Razi Protocol keeps Logistics focused on the normal logistic core, then adds a d
 - Floors, landfill, scaffolding, foundations, and platform pieces
 
 It also includes a few narrow balance passes for overlapping unlocks where two planets solve a similar problem in nearly the same way.
+
+## Orbital Salvage
+
+[Razi Rocket Reusability](https://mods.factorio.com/mod/razi-rocket-reusability) (1.1.5 or newer) is a required mod: after a rocket launch a used rocket can drift in next to a space platform, its chunks are crushed back into rocket parts, and the Remnant Beacon draws the wrecks in. Razi Protocol leaves that mod's recipes, research and settings as they are and adds up to three optional bulk-crushing technologies on top: Precision Rocket Reclamation (Remnant Beacon and Fulgora), Cryogenic Rocket Reclamation (Aquilo) and Network Rocket Reclamation (the Precision Control Matrix and Planet Express' interplanetary trade logistics). Network Rocket Reclamation appears only when the Precision Control Matrix research exists (the Planetary interdependence startup setting is not Off) and Planet Express is installed. Each technology processes several chunks per craft, copies the native salvage outputs of the installed pack with a small handling bonus and allows no productivity. Native Rocket Chunk Processing stays available, and none of this gates a planet.
 
 ## Compatibility Focus
 
@@ -160,6 +167,8 @@ Razi Protocol is designed for a large content pack, not a tiny minimalist setup.
 Core content in the intended experience includes:
 
 - RAZI Library
+- Razi More Asteroids
+- Razi Rocket Reusability
 - Krastorio2 Spaced Out
 - PlanetsLib
 - Muluna
@@ -186,12 +195,15 @@ Core content in the intended experience includes:
 
 Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
+Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground and Secretas Orbit Patch.
+
 ## Modpack Guidance
 
 For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
-- Install RAZI Library 1.0.0 or newer; it is now a required shared foundation used directly by Razi Protocol's data-stage compatibility code.
+- Install RAZI Library 1.3.1 or newer and Razi More Asteroids 1.1.0 or newer; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
+- Install Razi Rocket Reusability 1.1.5 or newer; it is a required mod now, and the original Rocket Reusability is incompatible with it.
 - Factorio 2.1 migration status and optional third-party compatibility gaps are tracked in [FACTORIO-2.1-COMPATIBILITY.md](FACTORIO-2.1-COMPATIBILITY.md). The required dependency path now consists entirely of native Factorio 2.1 releases.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
@@ -207,6 +219,8 @@ Releases are made by CI from `main` ([.github/workflows/release.yml](.github/wor
 - Do not edit the version in `info.json` or `changelog.txt` by hand, and do not upload zips to the portal: CI does both.
 - Files that stay out of the zip are marked `export-ignore` in [.gitattributes](.gitattributes).
 - The portal page (title, summary, description, tags) comes from [tools/portal/](tools/portal/): edit it there and run `gh workflow run portal.yml`.
+
+How to work on the mod: [contributing.md](contributing.md).
 
 ## Support
 

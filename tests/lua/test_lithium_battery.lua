@@ -2,8 +2,8 @@
 -- Lithium Battery in the pack (compat/lithium_battery.lua) on a mocked data.raw: the productivity effects of the recipe copies it
 -- deletes (7.5.0 and older) are taken out of Planet Crucible's technologies, and equal ingredients of the research data recipes and
 -- of the copies it keeps (7.5.1), which share one list with them, are added up.
--- Run from the mod root:
---   lua5.2 tests/lua/test_lithium_battery.lua
+-- Run from the mod root with the library bootstrap:
+--   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_lithium_battery.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local function check(ok, message)

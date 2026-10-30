@@ -1,16 +1,18 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_homes = require("prototypes.compat.enemy_homes")
 
 local enemy_planet_pollution = {}
 
--- Arig and Hyarion had no enemies before Razi Protocol routed Arachnids and
--- Armoured Biters there, and their tiles absorb no pollution: Arig's tiles have
--- no absorptions_per_second at all, and Hyarion's read a lava value that the
--- base tile-pollution table does not have. Pollution then never fades, spreads
--- over the whole map and every nest it reaches attacks. Give each tile without
--- a pollution value the absorption of its vanilla counterpart.
+-- Arig, Hyarion and Panglia had no enemies before Razi Protocol routed Arachnids and Armoured Biters there, and some
+-- of their tiles absorb no pollution: Arig's tiles have no absorptions_per_second at all, Hyarion's read a lava value
+-- that the base tile-pollution table does not have and three of Panglia's plant tiles have none. Pollution then never
+-- fades, spreads over the whole map and every nest it reaches attacks. Give each tile without a pollution value the
+-- absorption of its vanilla counterpart. Only the planets that are a home of that family at the selected step carry
+-- pollution, so only they need it.
 local planets = {
-	{planet = "arig", enemy_mods = {"Arachnids_enemy"}, like_tile = "sand-1", fallback = 0.000015},
-	{planet = "hyarion", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
+	{planet = "arig", family = "arachnids", enemy_mods = {"Arachnids_enemy"}, like_tile = "sand-1", fallback = 0.000015},
+	{planet = "hyarion", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003},
+	{planet = "panglia", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
 }
 
 local function planet_tile_names(planet_name)
@@ -49,7 +51,7 @@ function enemy_planet_pollution.data_final_fixes()
 	end
 
 	for _, entry in ipairs(planets) do
-		if any_mod_active(entry.enemy_mods) then
+		if any_mod_active(entry.enemy_mods) and enemy_homes.is_home(entry.family, entry.planet) then
 			local pollution = vanilla_absorption(entry)
 
 			for _, tile_name in ipairs(planet_tile_names(entry.planet)) do

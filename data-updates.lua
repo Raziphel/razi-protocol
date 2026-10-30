@@ -5,8 +5,13 @@ require("prototypes.compat.cold_biters")
 require("prototypes.compat.electric_flying_enemies")
 require("prototypes.compat.explosive_biters")
 require("prototypes.compat.toxic_biters")
+-- Run source shims before the optional mods' data-final-fixes scripts.
+require("prototypes.compat.nulla_guard").data_updates()
+require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.compat.science_tab").data_updates()
 require("prototypes.compat.k2so_tweaks").data_updates()
+-- Module Category Defaults reads its list of ordinary categories in its own data-final-fixes.
+require("prototypes.compat.module_category_defaults").data_updates()
 
 local function clear_invalid_place_result(item_prototypes)
 	for _, prototype in pairs(item_prototypes or {}) do
@@ -85,3 +90,12 @@ clear_invalid_bioluminescent_next_upgrade(data.raw["locomotive"])
 clear_invalid_bioluminescent_next_upgrade(data.raw["cargo-wagon"])
 clear_invalid_bioluminescent_next_upgrade(data.raw["fluid-wagon"])
 clear_invalid_bioluminescent_next_upgrade(data.raw["transport-belt"])
+
+-- Star images are rendered and sprite_only parents deleted during PlanetsLib
+-- data-final-fixes. Position them BEFORE that irreversible rendering pass.
+require("prototypes.system.calidus_sun").data_updates()
+require("prototypes.system.abacayba_integration").data_updates()
+require("prototypes.system.galaxy_layout").data_updates()
+-- Source starfields must be positioned before PlanetsLib's irreversible
+-- sprite-only star cleanup; the Aegis and pulsar orbit artwork is kept.
+require("prototypes.system.bellicos").data_updates()

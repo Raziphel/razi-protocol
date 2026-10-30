@@ -95,7 +95,9 @@ local system_tech_cards = {
 	"solaris-tech-card",
 	"nyxaris-tech-card",
 	"vibrant-tech-card",
-	"beetlejuice-tech-card"
+	"vespera-tech-card",
+	"beetlejuice-tech-card",
+	"umbra-tech-card"
 }
 
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
@@ -235,12 +237,11 @@ add_existing_prerequisites("solaris-discovery", {
 	"planet-discovery-muluna"
 })
 
--- Aegis and Bellicos form a self-contained expedition beyond the solar-system
--- edge. Gate the entrance on reaching the edge, then retain the source mod's
--- internal discovery chain and its requirement for Pulsar Science before
--- Promethium research.
+-- Aegis is the shared difficult expedition below the first two stars.
+-- Neither Vespera nor post-finale Deep Space must be required to reach it;
+-- original source pulsar industries and deep Bellicos research stay intact.
 set_prerequisites_if_exists("discovery-aegis-outer", {
-	"stellar-discovery-solar-system-edge"
+	"solaris-discovery", "nyxaris-discovery"
 })
 add_existing_prerequisites("linox-technology_planet-discovery-linox", {"planet-discovery-cubium"})
 set_many_science_after({
@@ -329,9 +330,11 @@ set_first_existing_prerequisite("planet-discovery-maraxsis", {
 	"planet-discovery-aquilo",
 	"vibrant-discovery"
 })
+-- Beetlejuice and Umbra cards are made from Vespera cards, whose recipe Muria unlocks.
 add_existing_prerequisites("beetlejuice-discovery", {
 	"planet-discovery-ribbonia",
 	"planet-discovery-paracelsin",
+	"planet-discovery-muria",
 	"planet-discovery-aquilo",
 	"planet-discovery-rubia",
 	"planet-discovery-maraxsis"
