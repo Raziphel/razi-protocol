@@ -61,6 +61,37 @@ def world():
     return raw
 
 class RouteTests(unittest.TestCase):
+    def test_top_level_orbits_without_origin_match_native_starmap(self):
+        raw = {"planet": {
+            "plain": {"distance": 80, "orientation": 0.25},
+            "offset": {"distance": 80, "orientation": 0.25,
+                       "origin": {"x": 20, "y": -10}},
+            "nested": {"orbit": {"parent": {"name": "plain"},
+                                "distance": 10, "orientation": 0.5}},
+        }}
+        coords = routes_audit.positions(raw)
+        self.assertAlmostEqual(coords["plain"][0], 80)
+        self.assertAlmostEqual(coords["plain"][1], 0)
+        self.assertAlmostEqual(coords["offset"][0], 100)
+        self.assertAlmostEqual(coords["offset"][1], -10)
+        self.assertAlmostEqual(coords["nested"][0], 80)
+        self.assertAlmostEqual(coords["nested"][1], 10)
+
+    def test_short_route_between_native_top_level_orbits_is_audited(self):
+        raw = {
+            "planet": {
+                "left": {"distance": 100, "orientation": 0.25},
+                "right": {"distance": 100, "orientation": 0.75},
+            },
+            "space-connection": {
+                "short": {"from": "left", "to": "right", "length": 1000},
+            },
+        }
+        self.assertTrue(any(
+            "Visual distance mismatch: left <-> right" in issue
+            for issue in routes_audit.audit(raw)
+        ))
+
     def test_first_party_belt_replacement_and_route_fields(self):
         import json
         info=json.loads((ROOT / "info.json").read_text())
