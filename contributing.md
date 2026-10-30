@@ -27,6 +27,10 @@ See [Releases in the README](README.md#releases):
 - The description is a short list of what changes.
 - CI (`check`: Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API, `changelog.txt` format) must be green before merging.
 
+## Story text
+
+Story text is written in `locale/en/story-*.cfg` and tried in the game in writer mode. See [docs/writing-guide.md](docs/writing-guide.md); the list of slots is [docs/story-slots.md](docs/story-slots.md), built by `lua tools/story_slots.lua --write`.
+
 ## Design rules
 
 1. **Source mods own their content.** Use their real prototype IDs and mechanics; patch them only on purpose, with a comment saying why.
