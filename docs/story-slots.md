@@ -18,7 +18,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
 | story-quests.cfg `[razi-story-quest-title]` | `first-signal` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `automation` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `nauvis-power` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `electricity` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `nauvis-power` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `steam-power` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-logistics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `logistics`, after quests `first-signal` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-electronics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `electronics`, after quests `nauvis-power` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-radar` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `radar`, after quests `nauvis-power` | 60 |
@@ -31,7 +31,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `oil` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `oil-processing`, after quests `steel` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-fluid-handling` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `fluid-handling`, after quests `oil` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-plastics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `plastics`, after quests `oil` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `nauvis-advanced-electronics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `advanced-electronics`, after quests `nauvis-plastics`, `nauvis-electronics` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `nauvis-advanced-electronics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `advanced-circuit`, after quests `nauvis-plastics`, `nauvis-electronics` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `chemical-science` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `chemical-science-pack`, after quests `oil`, `nauvis-advanced-electronics` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `space-science` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `space-science-pack`, after quests `chemical-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `muluna` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `planet-discovery-muluna`, after quests `space-science` | 60 |
@@ -81,7 +81,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `cubium` | quest name in the list and the dossier heading; chapter `beetlejuice` | quest opens with research `planet-discovery-cubium`, after quests `beetlejuice-gate` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `linox` | quest name in the list and the dossier heading; chapter `beetlejuice` | quest opens with research `linox-technology_planet-discovery-linox`, after quests `cubium` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `secretas` | quest name in the list and the dossier heading; chapter `beetlejuice` | quest opens with research `planet-discovery-secretas`, after quests `cubium` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `frozeta` | quest name in the list and the dossier heading; chapter `beetlejuice` | quest opens with research `planet-discovery-frozeta`, after quests `secretas` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `frozeta` | quest name in the list and the dossier heading; chapter `beetlejuice` | quest opens with discovery of `frozeta`, after quests `secretas` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `umbra-gate` | quest name in the list and the dossier heading; chapter `umbra` | quest opens with research `umbra-discovery`, after quests `paracelsin`, `maraxsis` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `umbra-belt` | quest name in the list and the dossier heading; chapter `umbra` | quest opens with research `razi-umbra-belt-survey`, after quests `umbra-gate` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `tenebris` | quest name in the list and the dossier heading; chapter `umbra` | quest opens with research `planet-discovery-tenebris`, after quests `umbra-belt` | 60 |
@@ -156,7 +156,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `cryogenic` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `cryogenic-science-pack`, after quests `aquilo` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `lunar` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `lunar-science-pack`, after quests `muluna` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `battlefield` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `battlefield-science-pack`, after quests `castra` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `compression` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-compression-science-pack`, after quests `arig` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `compression` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-compression-science`, after quests `arig` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `polishing` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-polishing-science-pack`, after quests `hyarion` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `bioengineering` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-bioengineering-science-pack`, after quests `tellus` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `pathological` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-pathological-science-pack`, after quests `tellus` | 60 |
@@ -165,17 +165,17 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `insulation` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `insulation-science-pack`, after quests `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `thermodynamic` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `thermodynamic-science-pack`, after quests `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `apicultural` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `apicultural-science-pack`, after quests `apia` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `nuclear-science` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `nuclear-science-pack`, after quests `cerys` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `nuclear-science` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `cerysian-science-pack`, after quests `cerys` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `aerospace` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `aerospace-science-pack`, after quests `apia` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alien` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `ribbonia-alien-science-pack`, after quests `ribbonia` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `biorecycling` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `biorecycling-science-pack`, after quests `rubia` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `alien` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `ribbonia-tech-rocket-part`, after quests `ribbonia` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `biorecycling` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `craptonite-processing`, after quests `rubia` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `biofusion` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `rubia-biofusion-science-pack`, after quests `rubia` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `galvanization` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `paracelsin-galvanization-science-pack`, after quests `paracelsin` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `galvanization` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `galvanization-science-pack`, after quests `paracelsin` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `hydraulic` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `hydraulic-science-pack`, after quests `maraxsis` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `bioluminescent` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `bioluminescent-science-pack`, after quests `tenebris` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `crucible-science` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planet-crucible-science-pack`, after quests `crucible` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `golden` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `golden-science-pack`, after quests `cubium` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `gas-manipulation` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `gas-manipulation-science-pack`, after quests `vesta` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `gas-manipulation` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `s1_gas_manipulation_science_pack`, after quests `vesta` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `promethium` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `promethium-science-pack`, after quests `outer-mastery` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `antimatter` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `antimatter-science-pack`, after quests `singularity-theory` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `matter-card` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `kr-matter-tech-card`, after quests `outer-mastery` | 60 |
@@ -223,7 +223,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `antimatter-production` | quest name in the list and the dossier heading; chapter `deepworks` | quest opens with research `antimatter-produktion`, after quests `antimatter` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `transceiver` | quest name in the list and the dossier heading; chapter `deepworks` | quest opens with research `kr-intergalactic-transceiver`, after quests `stable-singularity` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `fragment-1` | quest name in the list and the dossier heading; chapter `echoes` | quest opens with research `uranium-processing`, after quests `nuclear-power` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `fragment-2` | quest name in the list and the dossier heading; chapter `echoes` | quest opens with research `advanced-electronics-2`, after quests `moshine` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `fragment-2` | quest name in the list and the dossier heading; chapter `echoes` | quest opens with research `processing-unit`, after quests `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `fragment-3` | quest name in the list and the dossier heading; chapter `echoes` | quest opens with research `processing-unit`, after quests `fulgora` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `fragment-4` | quest name in the list and the dossier heading; chapter `echoes` | quest opens with research `automation-3`, after quests `production-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `fragment-5` | quest name in the list and the dossier heading; chapter `echoes` | quest opens with research `fusion-reactor`, after quests `cerys` | 60 |
@@ -276,7 +276,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
 | story-quests.cfg `[razi-story-quest]` | `first-signal` | quest dossier, story block; chapter `calidus` | quest opens with research `automation` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `nauvis-power` | quest dossier, story block; chapter `calidus` | quest opens with research `electricity` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `nauvis-power` | quest dossier, story block; chapter `calidus` | quest opens with research `steam-power` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-logistics` | quest dossier, story block; chapter `calidus` | quest opens with research `logistics`, after quests `first-signal` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-electronics` | quest dossier, story block; chapter `calidus` | quest opens with research `electronics`, after quests `nauvis-power` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-radar` | quest dossier, story block; chapter `calidus` | quest opens with research `radar`, after quests `nauvis-power` | 900 |
@@ -289,7 +289,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `oil` | quest dossier, story block; chapter `calidus` | quest opens with research `oil-processing`, after quests `steel` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-fluid-handling` | quest dossier, story block; chapter `calidus` | quest opens with research `fluid-handling`, after quests `oil` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-plastics` | quest dossier, story block; chapter `calidus` | quest opens with research `plastics`, after quests `oil` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `nauvis-advanced-electronics` | quest dossier, story block; chapter `calidus` | quest opens with research `advanced-electronics`, after quests `nauvis-plastics`, `nauvis-electronics` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `nauvis-advanced-electronics` | quest dossier, story block; chapter `calidus` | quest opens with research `advanced-circuit`, after quests `nauvis-plastics`, `nauvis-electronics` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `chemical-science` | quest dossier, story block; chapter `calidus` | quest opens with research `chemical-science-pack`, after quests `oil`, `nauvis-advanced-electronics` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `space-science` | quest dossier, story block; chapter `calidus` | quest opens with research `space-science-pack`, after quests `chemical-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `muluna` | quest dossier, story block; chapter `calidus` | quest opens with research `planet-discovery-muluna`, after quests `space-science` | 900 |
@@ -339,7 +339,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `cubium` | quest dossier, story block; chapter `beetlejuice` | quest opens with research `planet-discovery-cubium`, after quests `beetlejuice-gate` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `linox` | quest dossier, story block; chapter `beetlejuice` | quest opens with research `linox-technology_planet-discovery-linox`, after quests `cubium` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `secretas` | quest dossier, story block; chapter `beetlejuice` | quest opens with research `planet-discovery-secretas`, after quests `cubium` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `frozeta` | quest dossier, story block; chapter `beetlejuice` | quest opens with research `planet-discovery-frozeta`, after quests `secretas` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `frozeta` | quest dossier, story block; chapter `beetlejuice` | quest opens with discovery of `frozeta`, after quests `secretas` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `umbra-gate` | quest dossier, story block; chapter `umbra` | quest opens with research `umbra-discovery`, after quests `paracelsin`, `maraxsis` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `umbra-belt` | quest dossier, story block; chapter `umbra` | quest opens with research `razi-umbra-belt-survey`, after quests `umbra-gate` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `tenebris` | quest dossier, story block; chapter `umbra` | quest opens with research `planet-discovery-tenebris`, after quests `umbra-belt` | 900 |
@@ -414,7 +414,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `cryogenic` | quest dossier, story block; chapter `sciences` | quest opens with research `cryogenic-science-pack`, after quests `aquilo` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `lunar` | quest dossier, story block; chapter `sciences` | quest opens with research `lunar-science-pack`, after quests `muluna` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `battlefield` | quest dossier, story block; chapter `sciences` | quest opens with research `battlefield-science-pack`, after quests `castra` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `compression` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-compression-science-pack`, after quests `arig` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `compression` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-compression-science`, after quests `arig` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `polishing` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-polishing-science-pack`, after quests `hyarion` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `bioengineering` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-bioengineering-science-pack`, after quests `tellus` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `pathological` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-pathological-science-pack`, after quests `tellus` | 900 |
@@ -423,17 +423,17 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `insulation` | quest dossier, story block; chapter `sciences` | quest opens with research `insulation-science-pack`, after quests `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `thermodynamic` | quest dossier, story block; chapter `sciences` | quest opens with research `thermodynamic-science-pack`, after quests `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `apicultural` | quest dossier, story block; chapter `sciences` | quest opens with research `apicultural-science-pack`, after quests `apia` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `nuclear-science` | quest dossier, story block; chapter `sciences` | quest opens with research `nuclear-science-pack`, after quests `cerys` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `nuclear-science` | quest dossier, story block; chapter `sciences` | quest opens with research `cerysian-science-pack`, after quests `cerys` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `aerospace` | quest dossier, story block; chapter `sciences` | quest opens with research `aerospace-science-pack`, after quests `apia` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alien` | quest dossier, story block; chapter `sciences` | quest opens with research `ribbonia-alien-science-pack`, after quests `ribbonia` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `biorecycling` | quest dossier, story block; chapter `sciences` | quest opens with research `biorecycling-science-pack`, after quests `rubia` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `alien` | quest dossier, story block; chapter `sciences` | quest opens with research `ribbonia-tech-rocket-part`, after quests `ribbonia` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `biorecycling` | quest dossier, story block; chapter `sciences` | quest opens with research `craptonite-processing`, after quests `rubia` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `biofusion` | quest dossier, story block; chapter `sciences` | quest opens with research `rubia-biofusion-science-pack`, after quests `rubia` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `galvanization` | quest dossier, story block; chapter `sciences` | quest opens with research `paracelsin-galvanization-science-pack`, after quests `paracelsin` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `galvanization` | quest dossier, story block; chapter `sciences` | quest opens with research `galvanization-science-pack`, after quests `paracelsin` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `hydraulic` | quest dossier, story block; chapter `sciences` | quest opens with research `hydraulic-science-pack`, after quests `maraxsis` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `bioluminescent` | quest dossier, story block; chapter `sciences` | quest opens with research `bioluminescent-science-pack`, after quests `tenebris` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `crucible-science` | quest dossier, story block; chapter `sciences` | quest opens with research `planet-crucible-science-pack`, after quests `crucible` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `golden` | quest dossier, story block; chapter `sciences` | quest opens with research `golden-science-pack`, after quests `cubium` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `gas-manipulation` | quest dossier, story block; chapter `sciences` | quest opens with research `gas-manipulation-science-pack`, after quests `vesta` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `gas-manipulation` | quest dossier, story block; chapter `sciences` | quest opens with research `s1_gas_manipulation_science_pack`, after quests `vesta` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `promethium` | quest dossier, story block; chapter `sciences` | quest opens with research `promethium-science-pack`, after quests `outer-mastery` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `antimatter` | quest dossier, story block; chapter `sciences` | quest opens with research `antimatter-science-pack`, after quests `singularity-theory` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `matter-card` | quest dossier, story block; chapter `sciences` | quest opens with research `kr-matter-tech-card`, after quests `outer-mastery` | 900 |
@@ -481,7 +481,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `antimatter-production` | quest dossier, story block; chapter `deepworks` | quest opens with research `antimatter-produktion`, after quests `antimatter` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `transceiver` | quest dossier, story block; chapter `deepworks` | quest opens with research `kr-intergalactic-transceiver`, after quests `stable-singularity` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `fragment-1` | quest dossier, story block; chapter `echoes` | quest opens with research `uranium-processing`, after quests `nuclear-power` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `fragment-2` | quest dossier, story block; chapter `echoes` | quest opens with research `advanced-electronics-2`, after quests `moshine` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `fragment-2` | quest dossier, story block; chapter `echoes` | quest opens with research `processing-unit`, after quests `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `fragment-3` | quest dossier, story block; chapter `echoes` | quest opens with research `processing-unit`, after quests `fulgora` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `fragment-4` | quest dossier, story block; chapter `echoes` | quest opens with research `automation-3`, after quests `production-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `fragment-5` | quest dossier, story block; chapter `echoes` | quest opens with research `fusion-reactor`, after quests `cerys` | 900 |
@@ -534,7 +534,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
 | story-quests.cfg `[razi-story-quest-tip]` | `first-signal` | quest dossier, field note; chapter `calidus` | quest opens with research `automation` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `nauvis-power` | quest dossier, field note; chapter `calidus` | quest opens with research `electricity` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `nauvis-power` | quest dossier, field note; chapter `calidus` | quest opens with research `steam-power` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-logistics` | quest dossier, field note; chapter `calidus` | quest opens with research `logistics`, after quests `first-signal` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-electronics` | quest dossier, field note; chapter `calidus` | quest opens with research `electronics`, after quests `nauvis-power` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-radar` | quest dossier, field note; chapter `calidus` | quest opens with research `radar`, after quests `nauvis-power` | 400 |
@@ -547,7 +547,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `oil` | quest dossier, field note; chapter `calidus` | quest opens with research `oil-processing`, after quests `steel` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-fluid-handling` | quest dossier, field note; chapter `calidus` | quest opens with research `fluid-handling`, after quests `oil` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-plastics` | quest dossier, field note; chapter `calidus` | quest opens with research `plastics`, after quests `oil` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `nauvis-advanced-electronics` | quest dossier, field note; chapter `calidus` | quest opens with research `advanced-electronics`, after quests `nauvis-plastics`, `nauvis-electronics` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `nauvis-advanced-electronics` | quest dossier, field note; chapter `calidus` | quest opens with research `advanced-circuit`, after quests `nauvis-plastics`, `nauvis-electronics` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `chemical-science` | quest dossier, field note; chapter `calidus` | quest opens with research `chemical-science-pack`, after quests `oil`, `nauvis-advanced-electronics` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `space-science` | quest dossier, field note; chapter `calidus` | quest opens with research `space-science-pack`, after quests `chemical-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `muluna` | quest dossier, field note; chapter `calidus` | quest opens with research `planet-discovery-muluna`, after quests `space-science` | 400 |
@@ -597,7 +597,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `cubium` | quest dossier, field note; chapter `beetlejuice` | quest opens with research `planet-discovery-cubium`, after quests `beetlejuice-gate` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `linox` | quest dossier, field note; chapter `beetlejuice` | quest opens with research `linox-technology_planet-discovery-linox`, after quests `cubium` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `secretas` | quest dossier, field note; chapter `beetlejuice` | quest opens with research `planet-discovery-secretas`, after quests `cubium` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `frozeta` | quest dossier, field note; chapter `beetlejuice` | quest opens with research `planet-discovery-frozeta`, after quests `secretas` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `frozeta` | quest dossier, field note; chapter `beetlejuice` | quest opens with discovery of `frozeta`, after quests `secretas` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `umbra-gate` | quest dossier, field note; chapter `umbra` | quest opens with research `umbra-discovery`, after quests `paracelsin`, `maraxsis` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `umbra-belt` | quest dossier, field note; chapter `umbra` | quest opens with research `razi-umbra-belt-survey`, after quests `umbra-gate` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `tenebris` | quest dossier, field note; chapter `umbra` | quest opens with research `planet-discovery-tenebris`, after quests `umbra-belt` | 400 |
@@ -672,7 +672,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `cryogenic` | quest dossier, field note; chapter `sciences` | quest opens with research `cryogenic-science-pack`, after quests `aquilo` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `lunar` | quest dossier, field note; chapter `sciences` | quest opens with research `lunar-science-pack`, after quests `muluna` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `battlefield` | quest dossier, field note; chapter `sciences` | quest opens with research `battlefield-science-pack`, after quests `castra` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `compression` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-compression-science-pack`, after quests `arig` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `compression` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-compression-science`, after quests `arig` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `polishing` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-polishing-science-pack`, after quests `hyarion` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `bioengineering` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-bioengineering-science-pack`, after quests `tellus` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `pathological` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-pathological-science-pack`, after quests `tellus` | 400 |
@@ -681,17 +681,17 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `insulation` | quest dossier, field note; chapter `sciences` | quest opens with research `insulation-science-pack`, after quests `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `thermodynamic` | quest dossier, field note; chapter `sciences` | quest opens with research `thermodynamic-science-pack`, after quests `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `apicultural` | quest dossier, field note; chapter `sciences` | quest opens with research `apicultural-science-pack`, after quests `apia` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `nuclear-science` | quest dossier, field note; chapter `sciences` | quest opens with research `nuclear-science-pack`, after quests `cerys` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `nuclear-science` | quest dossier, field note; chapter `sciences` | quest opens with research `cerysian-science-pack`, after quests `cerys` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `aerospace` | quest dossier, field note; chapter `sciences` | quest opens with research `aerospace-science-pack`, after quests `apia` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alien` | quest dossier, field note; chapter `sciences` | quest opens with research `ribbonia-alien-science-pack`, after quests `ribbonia` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `biorecycling` | quest dossier, field note; chapter `sciences` | quest opens with research `biorecycling-science-pack`, after quests `rubia` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `alien` | quest dossier, field note; chapter `sciences` | quest opens with research `ribbonia-tech-rocket-part`, after quests `ribbonia` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `biorecycling` | quest dossier, field note; chapter `sciences` | quest opens with research `craptonite-processing`, after quests `rubia` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `biofusion` | quest dossier, field note; chapter `sciences` | quest opens with research `rubia-biofusion-science-pack`, after quests `rubia` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `galvanization` | quest dossier, field note; chapter `sciences` | quest opens with research `paracelsin-galvanization-science-pack`, after quests `paracelsin` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `galvanization` | quest dossier, field note; chapter `sciences` | quest opens with research `galvanization-science-pack`, after quests `paracelsin` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `hydraulic` | quest dossier, field note; chapter `sciences` | quest opens with research `hydraulic-science-pack`, after quests `maraxsis` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `bioluminescent` | quest dossier, field note; chapter `sciences` | quest opens with research `bioluminescent-science-pack`, after quests `tenebris` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `crucible-science` | quest dossier, field note; chapter `sciences` | quest opens with research `planet-crucible-science-pack`, after quests `crucible` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `golden` | quest dossier, field note; chapter `sciences` | quest opens with research `golden-science-pack`, after quests `cubium` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `gas-manipulation` | quest dossier, field note; chapter `sciences` | quest opens with research `gas-manipulation-science-pack`, after quests `vesta` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `gas-manipulation` | quest dossier, field note; chapter `sciences` | quest opens with research `s1_gas_manipulation_science_pack`, after quests `vesta` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `promethium` | quest dossier, field note; chapter `sciences` | quest opens with research `promethium-science-pack`, after quests `outer-mastery` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `antimatter` | quest dossier, field note; chapter `sciences` | quest opens with research `antimatter-science-pack`, after quests `singularity-theory` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `matter-card` | quest dossier, field note; chapter `sciences` | quest opens with research `kr-matter-tech-card`, after quests `outer-mastery` | 400 |
@@ -739,7 +739,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `antimatter-production` | quest dossier, field note; chapter `deepworks` | quest opens with research `antimatter-produktion`, after quests `antimatter` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `transceiver` | quest dossier, field note; chapter `deepworks` | quest opens with research `kr-intergalactic-transceiver`, after quests `stable-singularity` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `fragment-1` | quest dossier, field note; chapter `echoes` | quest opens with research `uranium-processing`, after quests `nuclear-power` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `fragment-2` | quest dossier, field note; chapter `echoes` | quest opens with research `advanced-electronics-2`, after quests `moshine` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `fragment-2` | quest dossier, field note; chapter `echoes` | quest opens with research `processing-unit`, after quests `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `fragment-3` | quest dossier, field note; chapter `echoes` | quest opens with research `processing-unit`, after quests `fulgora` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `fragment-4` | quest dossier, field note; chapter `echoes` | quest opens with research `automation-3`, after quests `production-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `fragment-5` | quest dossier, field note; chapter `echoes` | quest opens with research `fusion-reactor`, after quests `cerys` | 400 |

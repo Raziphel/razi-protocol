@@ -125,12 +125,12 @@ check(M.journal_visible(force,defs.by_id["green-science"]),
 rawset(_G,"settings",nil)
 -- Older and variant modpacks can omit K2 Electricity/Electronics:
 -- such missing research must never become an invisible campaign wall.
-local electricity=force.technologies.electricity
-force.technologies.electricity=nil
+local steam_power=force.technologies["steam-power"]
+force.technologies["steam-power"]=nil
 check(M.state(force,defs.by_id["nauvis-power"])=="unavailable"
   and M.state(force,defs.by_id["nauvis-electronics"])=="active",
-  "Missing K2 electricity must not strand Nauvis electronics")
-force.technologies.electricity=electricity
+  "Missing K2 steam power must not strand Nauvis electronics")
+force.technologies["steam-power"]=steam_power
 force.technologies.automation.researched=true
 force.technologies.logistics.researched=true
 check(M.state(force,defs.by_id["green-science"])=="active",

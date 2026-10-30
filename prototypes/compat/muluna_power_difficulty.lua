@@ -4,12 +4,15 @@
 -- it emits, the scan energy of its mod-data and the scan energy in its
 -- tooltip, together. Scan area, quality
 -- bonuses and every other field stay. Normal and Custom write nothing.
+-- Muluna up to 2.8 makes the radar an accumulator, 2.9 and later a radar
+-- (which also gets the sector and nearby scan energy scaled).
 --
 -- platform-power-consumption is a double of 0.3..1000 (MW); the values below
 -- stay inside.
 local M={}
 M.values={easy=75,hard=125,nightmare=170}
 M.entity="muluna-satellite-radar"
+M.types={"accumulator","radar"}
 local TOOLTIP="tooltip-value.muluna-satellite-radar-scan-energy"
 
 -- The first value a field had, so a second call never compounds.
@@ -94,7 +97,11 @@ function M.apply(raw,startup,enabled)
  local saved=startup["platform-power-consumption"]
  local original=saved and saved.value
  if not positive(original) then return 0 end
- local beacon=raw.accumulator and raw.accumulator[M.entity]
+ local beacon,kind
+ for _,t in ipairs(M.types) do
+  local found=raw[t] and raw[t][M.entity]
+  if found then beacon,kind=found,t;break end
+ end
  local mod=raw["mod-data"] and raw["mod-data"][M.entity]
  local entity=mod and mod.data and mod.data.entities and
     mod.data.entities[M.entity]
@@ -102,6 +109,10 @@ function M.apply(raw,startup,enabled)
  local ratio=target/original
  local count=0
  if energy(beacon,"energy_usage",ratio) then count=count+1 end
+ if kind=="radar" then
+  if energy(beacon,"energy_per_sector",ratio) then count=count+1 end
+  if energy(beacon,"energy_per_nearby_scan",ratio) then count=count+1 end
+ end
  local source=beacon.energy_source
  if energy(source,"buffer_capacity",ratio) then count=count+1 end
  if energy(source,"input_flow_limit",ratio) then count=count+1 end
