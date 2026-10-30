@@ -74,19 +74,20 @@ end
 -- Table of levers by level.
 local expected={
   easy={scale="balanced",population="sparse",belts="relaxed",ore="rich",
-    interdependence="balanced",distributed=false},
+    interdependence="balanced",distributed=false,auto_cards=false},
   normal={scale="balanced",population="standard",belts="standard",
-    ore="standard",interdependence="balanced",distributed=false},
+    ore="standard",interdependence="balanced",distributed=false,auto_cards=false},
   hard={scale="challenging",population="dense",belts="severe",
-    ore="scarce",interdependence="deep",distributed=true},
+    ore="scarce",interdependence="deep",distributed=true,auto_cards=true},
   nightmare={scale="relentless",population="dense",belts="severe",
-    ore="scarce",interdependence="deep",distributed=true},
+    ore="scarce",interdependence="deep",distributed=true,auto_cards=true},
 }
 local names={scale="razi-asteroid-difficulty-scale",
   population="razi-asteroid-population",belts="razi-belt-threats",
   ore="razi-belt-resource-richness",
   interdependence="razi-planetary-interdependence",
-  distributed="razi-distributed-technology"}
+  distributed="razi-distributed-technology",
+  auto_cards="razi-auto-tech-cards"}
 for level,row in pairs(expected) do
   startup(level)
   check(P.active()==level,level.." must be active with default controls")
@@ -163,6 +164,25 @@ check(P.effective("razi-distributed-technology")==false,"Custom keeps the saved 
 startup("custom",{["razi-distributed-technology"]=true})
 check(P.effective("razi-distributed-technology")==true,"Custom keeps a ticked value")
 
+-- Automatic science cards: four levels, left alone or ticked by hand.
+for _,level in ipairs(LEVELS) do
+  local enabled=(level=="hard" or level=="nightmare")
+  startup(level)
+  check(P.effective("razi-auto-tech-cards",false)==enabled,
+    level..": default automatic science cards")
+  startup(level,{["razi-auto-tech-cards"]=true})
+  check(P.effective("razi-auto-tech-cards",false)==true,
+    level..": manually enabled science cards must stay on")
+end
+startup("hard")
+check(P.effective("razi-auto-tech-cards")==true,"Hard enables science cards")
+startup("custom")
+check(P.effective("razi-auto-tech-cards")==false,
+  "Custom keeps automatic science cards off")
+startup("custom",{["razi-auto-tech-cards"]=true})
+check(P.effective("razi-auto-tech-cards")==true,
+  "Custom keeps manually enabled science cards")
+
 -- Ticking it on Normal makes the session Custom but still honours the tick.
 startup("normal",{["razi-distributed-technology"]=true})
 check(P.active()=="custom","A manual change reports Custom")
@@ -206,7 +226,9 @@ local function text(path)
 end
 for _,lang in ipairs({"en","ru"}) do
   local cfg=text("locale/"..lang.."/settings.cfg")
+  local names_cfg=text("locale/"..lang.."/names.cfg")
   local keys={"razi-difficulty-preset","razi-asteroid-difficulty-scale",
+    "razi-auto-tech-cards",
     "razi-default-new-game-map"}
   for name,values in pairs(map_levers) do
     keys[#keys+1]=name
@@ -229,6 +251,12 @@ for _,lang in ipairs({"en","ru"}) do
   end
   check(description:find("\nrazi-difficulty-preset=",1,true),
     lang.." misses the level description")
+  check(description:find("\nrazi-auto-tech-cards=",1,true),
+    lang.." misses the automatic science cards description")
+  local card_section=names_cfg:match("\n%[razi%-auto%-card%]\n(.*)")
+  check(card_section and card_section:find("name=",1,true)
+    and card_section:find("\ndescription=",1,true),
+    lang.." misses automatic card names and descriptions")
   for name in pairs(map_levers) do
     check(description:find("\n"..name.."=",1,true),
       lang.." misses the description of "..name)
