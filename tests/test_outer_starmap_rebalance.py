@@ -81,8 +81,12 @@ class OuterMap(unittest.TestCase):
         layout=read("prototypes/system/galaxy_layout.lua")
         self.assertIn('for _,name in ipairs({"carna","velora"})',layout)
         self.assertIn("remove_baked_source_trails()",layout)
-        self.assertIn('layer.planetslib_orbit_name=="carna"',layout)
-        self.assertIn('layer.planetslib_orbit_name=="velora"',layout)
+        # The shared layer-name guard replaced two hardcoded comparisons.
+        # Verify both trails are removed without deleting source-owned art.
+        self.assertIn('local name=layer and layer.planetslib_orbit_name',layout)
+        self.assertIn('name=="carna" or name=="velora"',layout)
+        self.assertIn('table.remove(layers,index)',layout)
+        self.assertIn('and not bellicos_art',layout)
         highlights=read("prototypes/system/route_highlights.lua")
         # Keep source-art removal while allowing *validated native* Carna
         # and Gleba connections in the All quality-colored route scope.
