@@ -105,4 +105,57 @@ broken["mod-data"]=nil
 check(M.apply(broken,startup,enabled)==0,"no mod-data: nothing, no crash")
 startup["platform-power-consumption"].value="x"
 check(M.apply(world(),startup,enabled)==0,"a wrong type is not coerced")
+-- Muluna 2.9 and later: the satellite radar is a radar prototype with a 1 MW
+-- passive draw, a scan energy in mod-data and the buffer of three scans.
+local function radar_world()
+ local raw=world()
+ raw.accumulator=nil
+ raw.radar={
+  ["muluna-satellite-radar"]={
+   energy_usage="1MW",energy_per_sector="1TJ",energy_per_nearby_scan="1kJ",
+   energy_source={type="electric",buffer_capacity="390MJ",input_flow_limit="390MW",output_flow_limit="0MW"},
+   custom_tooltip_fields={
+    {value={TIP,"130"},quality_values={normal={TIP,"130"},uncommon={TIP,"81"}}},
+    {value={SIZE,"100"},quality_values={normal={SIZE,"100"}}}
+   }
+  }
+ }
+ return raw
+end
+local both=radar_world()
+both.accumulator={["muluna-satellite-radar"]={energy_usage="130MW"}}
+local radar_startup={
+ ["razi-difficulty-preset"]={value="normal"},
+ ["platform-power-consumption"]={value=130}
+}
+check(M.apply(both,radar_startup,enabled)==0,"radar: Normal must not write")
+radar_startup["razi-difficulty-preset"].value="hard"
+M.apply(both,radar_startup,enabled)
+check(both.accumulator["muluna-satellite-radar"].energy_usage=="125MW","an accumulator wins when both exist")
+check(both.radar["muluna-satellite-radar"].energy_per_sector=="1TJ","the radar is untouched when an accumulator exists")
+
+raw=radar_world()
+local radar=raw.radar["muluna-satellite-radar"]
+entity=raw["mod-data"]["muluna-satellite-radar"].data.entities["muluna-satellite-radar"]
+check(M.apply(raw,radar_startup,enabled)>0,"radar: Hard writes")
+check(radar.energy_source.buffer_capacity=="375MJ","radar Hard: buffer")
+check(radar.energy_source.input_flow_limit=="375MW","radar Hard: input limit")
+check(radar.energy_source.output_flow_limit=="0MW","radar Hard: output limit stays")
+check(radar.energy_usage==string.format("%.8gMW",1*125/130),"radar Hard: power")
+check(radar.energy_per_sector==string.format("%.8gTJ",1*125/130),"radar Hard: sector energy")
+check(radar.energy_per_nearby_scan==string.format("%.8gkJ",1*125/130),"radar Hard: nearby scan energy")
+check(entity.energy_per_scan==125 and entity.scan_area==100,"radar Hard: scan energy, scan area stays")
+check(radar.custom_tooltip_fields[1].value[2]=="125","radar Hard: tooltip scan energy")
+check(radar.custom_tooltip_fields[2].value[2]=="100","radar: the scan size line changed")
+check(M.apply(raw,radar_startup,enabled)==0,"radar: a second call must write nothing")
+radar_startup["razi-difficulty-preset"].value="nightmare"
+M.apply(raw,radar_startup,enabled)
+check(radar.energy_source.buffer_capacity=="510MJ" and entity.energy_per_scan==170,"radar Nightmare from the first value")
+radar_startup["razi-difficulty-preset"].value="normal"
+check(M.apply(raw,radar_startup,enabled)==0,"radar: Normal writes nothing after a level")
+-- A radar without an energy source table does not crash.
+local bare=radar_world()
+bare.radar["muluna-satellite-radar"].energy_source=nil
+radar_startup["razi-difficulty-preset"].value="hard"
+check(M.apply(bare,radar_startup,enabled)>0,"radar without an energy source")
 print("PASS test_muluna_power_difficulty")
