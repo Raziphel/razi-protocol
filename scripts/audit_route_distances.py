@@ -119,10 +119,17 @@ def positions(raw):
         distance, direction = place.get("distance"), place.get("orientation")
         origin = obj(place.get("origin"))
         ox, oy = origin.get("x"), origin.get("y")
-        if isinstance(ox, (int, float)) and isinstance(oy, (int, float)) and (
-                isinstance(distance, (int, float)) and isinstance(
-                    direction, (int, float))):
-            start = (ox, oy)
+        # Factorio's native orbit coordinates may omit origin entirely.
+        # Match the in-game starmap: a valid top-level distance/orientation
+        # is relative to (0, 0) unless a complete explicit origin exists.
+        # Do not fall through to parent-orbit lookup for these locations.
+        if (isinstance(distance, (int, float)) and math.isfinite(distance)
+                and isinstance(direction, (int, float))
+                and math.isfinite(direction)):
+            start = (ox, oy) if (
+                isinstance(ox, (int, float)) and math.isfinite(ox)
+                and isinstance(oy, (int, float)) and math.isfinite(oy)
+            ) else (0.0, 0.0)
         else:
             distance, direction = orbit.get("distance"), orbit.get("orientation")
             if not parent or not isinstance(distance, (int, float)) or not isinstance(
