@@ -92,6 +92,58 @@ class RouteTests(unittest.TestCase):
             for issue in routes_audit.audit(raw)
         ))
 
+    def test_belt_free_vespera_branch_is_not_an_outer_belt_bypass(self):
+        raw = world()
+        self.assertTrue(any(
+            routes_audit.key(route["from"], route["to"]) ==
+            routes_audit.key("rubia", "aquilo")
+            for route in raw["space-connection"].values()
+        ))
+        self.assertFalse(any(
+            "Unsafe belt bypass remains: aquilo -> rubia" in issue
+            for issue in routes_audit.audit(raw)
+        ))
+        raw["space-connection"]["bad-outer-bypass"] = {
+            "from": "vesta", "to": "secretas", "length": 23000}
+        self.assertTrue(any(
+            "Unsafe belt bypass remains: vesta -> secretas" in issue
+            for issue in routes_audit.audit(raw)
+        ))
+
+    def test_close_belt_approach_avoids_false_density_but_flags_long_route(self):
+        import math
+        raw = world()
+        a, b = "ribbonia", "asteroid-belt-inner-edge"
+        positions = routes_audit.positions(raw)
+        self.assertLess(math.dist(positions[a], positions[b]), 5)
+        self.assertFalse(any(
+            "Disproportionate interstellar route: " in issue
+            for issue in routes_audit.audit(raw)
+        ))
+        matching = next(route for route in raw["space-connection"].values()
+                        if routes_audit.key(route["from"], route["to"]) ==
+                        routes_audit.key(a, b))
+        matching["length"] = 50000
+        self.assertTrue(any(
+            "Disproportionate interstellar route: " in issue and
+            "ribbonia" in issue
+            for issue in routes_audit.audit(raw)
+        ))
+
+    def test_wormhole_overlay_does_not_duplicate_physical_corridor(self):
+        raw = world()
+        raw["space-connection"]["special-gate"] = {
+            "name": "special-wormhole", "from": "vesta",
+            "to": "solar-system-edge", "length": 1000}
+        self.assertEqual(routes_audit.audit(raw), [])
+        raw["space-connection"]["physical-duplicate"] = {
+            "name": "physical-duplicate", "from": "vesta",
+            "to": "solar-system-edge", "length": 185000}
+        self.assertTrue(any(
+            "Duplicate interstellar route: vesta <-> solar-system-edge" in issue
+            for issue in routes_audit.audit(raw)
+        ))
+
     def test_first_party_belt_replacement_and_route_fields(self):
         import json
         info=json.loads((ROOT / "info.json").read_text())
