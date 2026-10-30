@@ -44,7 +44,7 @@ end
 
 -- One string per quest; a missing key gives an empty part, not "Unknown key".
 local function quest_string(quest,player,title_fn)
-  local text={""}
+  local text={""} ---@type table
   local function add(part)
     if not part then return end
     if #text>1 then text[#text+1]=" " end

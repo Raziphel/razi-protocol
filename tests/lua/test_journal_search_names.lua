@@ -1,4 +1,4 @@
----@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil, inject-field, missing-fields
+---@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil, inject-field, missing-fields, undefined-field
 -- Journal search by translated names: the case folding, the per-player
 -- request cache, the answers of on_string_translated and the match itself.
 package.path="./?.lua;./?/init.lua;"..package.path
