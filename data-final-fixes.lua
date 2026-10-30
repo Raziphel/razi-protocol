@@ -123,6 +123,7 @@ require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
 -- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
 require("prototypes.technology.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.galactic_mod_research").data_final_fixes()
+require("prototypes.compat.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.compat.athos_cycle_guard").repair()
