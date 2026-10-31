@@ -143,12 +143,37 @@ def inspect_card_recipes(raw, issues):
         parents=sorted({name for name,_ in inputs if name in card_set})
         native=sorted({name for name,_ in inputs if name not in card_set})
         edges[card]=parents
+
+        # An ordinary regional recipe can require more distinct item slots
+        # than any installed assembler supports. Check the actual loaded
+        # prototype set, not a guessed vanilla assembler capacity.
+        machines=raw.get("assembling-machine") or {}
+        machine_names=[]
+        if isinstance(machines,dict):
+            for name,machine in machines.items():
+                if (isinstance(machine,dict)
+                    and not machine.get("fixed_recipe")
+                    and "crafting" in (machine.get("crafting_categories") or [])
+                    and (machine.get("ingredient_count") is None
+                         or machine["ingredient_count"]>=len(inputs))):
+                    machine_names.append(name)
+        machine_names.sort()
+        if isinstance(machines,dict) and machines and not machine_names:
+            issues.append({
+                "severity":"error","code":"system-card-no-crafting-machine",
+                "targets":[card],
+                "detail":(
+                    "No installed crafting-category assembler supports all "
+                    +str(len(inputs))+" item ingredients of this system card."),
+            })
         rows.append({
             "card":card,
             "required_cards":parents,
             "other_inputs":native,
             "craft_seconds":recipe.get("energy_required"),
             "input_stacks":len(inputs),
+            "compatible_crafting_machines":machine_names,
+            "machine_coverage_verified":bool(machines) and isinstance(machines,dict),
             "total_ingredient_items":sum(
                 amount for _,amount in inputs
                 if isinstance(amount,(int,float))),
