@@ -1,3 +1,44 @@
+## 3.0 development branch: regional science consolidation (October 31, 2026)
+
+Each of the seven inhabited star systems has **one canonical system tech card**.
+Deep Space has a separate eighth card for the post-edge chapter. Native planet
+science remains produced by the planets that own it. The system cards combine
+those sources into the primary Razi-owned research currency at the **next
+chapter gateway**, without replacing the native mods' science technologies or
+inventing a separate card for every named planet.
+
+| Card | Preferred last core discovery that unlocks its recipe | Regional research represented |
+| --- | --- | --- |
+| Calidus | Existing space-science entry (bootstrap preserved) | Nauvis research and space science; Muluna remains a world milestone |
+| Solaris | Corrundum (Castra fallback) | Vulcanus metallurgy, Castra battlefield, Planetaris research |
+| Nyxaris | Panglia (Apia/Carnova or Moshine fallback) | Gleba agriculture, Moshine thermal/insulation, Apia sciences |
+| Vibrant | Paracelsin (Ribbonia fallback) | Fulgora, Ribbonia and Paracelsin electrochemistry |
+| Vespera | Maraxsis (Rubia or Muria fallback) | Muria, Aquilo, Rubia and Maraxsis hydraulics |
+| Beetlejuice | Linox (Secretas or Cubium fallback) | Secretas golden and Linox science |
+| Umbra | Vesta (Crucible or Tenebris fallback) | Tenebris, Crucible and Vesta sciences |
+| Deep Space | Existing singularity/promethium entry | Pre-edge outer cards and promethium |
+
+The core middle-to-outer research gate explicitly includes **Fulgora,
+Paracelsin, Aquilo and Maraxsis** as installed-world milestones, not just
+Fulgora and Maraxsis. Optional moons and side planets remain playable without
+adding a new mandatory science bottleneck. Existing precursor system cards
+remain at quantity 1 per recipe; outer regional packs still use quantity 2
+where already configured. System-card recipe identifiers and item identifiers
+remain unchanged.
+
+**Important distinction:** The optional automatic planetary-card converter
+(`razi-auto-tech-cards`) separately creates 1:1 cards for usable source science
+to keep the wider K2SO/Space Age/modded research network compatible. These
+individual conversions are *not* additional system cards and do not replace
+the eight authored chapter milestones.
+
+**Validation status:** This is prototype/data-stage code, not a verified
+full-modpack playthrough. Re-run the loaded-prototype science/recipe/lab
+audits and test a fresh and existing save before release. In particular,
+check that the final required-world science is craftable without its own
+system card and that existing machines accept the largest regional recipe;
+delaying a recipe's unlock can change legacy-save research expectations.
+
 ## 2.1.73: Deliberate planetary technology distribution
 
 Razi now moves selected *existing* technologies instead of making
