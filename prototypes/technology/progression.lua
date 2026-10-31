@@ -26,7 +26,7 @@ local science_tiers = {
 		"planetaris-pathological-science-pack",
 		"planetaris-refraction-science-pack"
 	},
-	dea_dia_nyxaris = {
+	nyxaris = {
 		"aerospace-science-pack",
 		"dea-dia-science-pack",
 		"insulation-science-pack",
@@ -78,7 +78,7 @@ local tier_order = {
 	"base",
 	"inner_system",
 	"solaris",
-	"dea_dia_nyxaris",
+	"nyxaris",
 	"vibrant",
 	"vespera",
 	"beetlejuice",
@@ -92,7 +92,7 @@ local system_card_by_tier = {
 	base = "calidus-tech-card",
 	inner_system = "calidus-tech-card",
 	solaris = "solaris-tech-card",
-	dea_dia_nyxaris = "nyxaris-tech-card",
+	nyxaris = "nyxaris-tech-card",
 	vibrant = "vibrant-tech-card",
 	vespera = "vespera-tech-card",
 	beetlejuice = "beetlejuice-tech-card",
@@ -210,7 +210,7 @@ local function add_science_to_labs(science_packs)
 	end
 end
 
--- System discoveries always inherit every science pack produced by earlier systems.
+-- System discoveries inherit prior chapter cards, not every earlier science pack.
 set_prerequisites_if_exists("solaris-discovery", {
 	"planet-discovery-vulcanus",
 	"planet-discovery-fulgora",
@@ -225,7 +225,7 @@ set_prerequisites_if_exists("nyxaris-discovery", {"planet-discovery-corrundum"})
 set_science_after("nyxaris-discovery", "solaris")
 
 set_prerequisites_if_exists("vibrant-discovery", {"nyxaris-discovery"})
-set_science_after("vibrant-discovery", "dea_dia_nyxaris")
+set_science_after("vibrant-discovery", "nyxaris")
 
 set_prerequisites_if_exists("beetlejuice-discovery", {"vibrant-discovery"})
 set_science_after("beetlejuice-discovery", "vibrant")
@@ -321,7 +321,7 @@ set_prerequisites_if_exists("muriatic-science-pack", {"planet-discovery-muria"})
 -- Vibrant chapter; avoid requiring either middle card to unlock it.
 set_many_science_after({
 	"muriatic-science-pack",
-}, "dea_dia_nyxaris")
+}, "nyxaris")
 set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
 set_first_existing_prerequisite("planet-discovery-maraxsis", {
 	"planet-discovery-rubia",
@@ -359,7 +359,7 @@ if ribbonia_discovery then
 	ribbonia_discovery.research_trigger = nil
 	ribbonia_discovery.unit = {
 		count = 1500,
-		ingredients = build_science_after("dea_dia_nyxaris"),
+		ingredients = build_science_after("nyxaris"),
 		time = 60
 	}
 end
