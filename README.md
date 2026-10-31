@@ -463,6 +463,15 @@ Changes to existing discovery technology effects, route placement and science ca
 
 ## System Cards
 
+**The original Razi Protocol science philosophy is still the rule for 3.0:**
+players develop the native science of each planet while exploring its system,
+then manufacture **one system tech card to represent that whole chapter**.
+Research in the following chapters prefers those consolidated cards instead
+of repeatedly demanding the same long list of old planetary science packs.
+Razi does not remove the source mods' science recipes or replace their worlds
+with a single generic research factory. The goal is simpler research without
+losing each planet's industrial identity.
+
 Eight cards now connect the scientific ladder:
 
 1. Calidus Tech Card
@@ -474,7 +483,9 @@ Eight cards now connect the scientific ladder:
 7. Umbra Tech Card
 8. Deep Space Tech Card
 
-The first pair of frontiers uses Calidus science. The second pair consumes Solaris and Nyxaris cards. The third pair uses Vibrant and Vespera cards. **Beetlejuice and Umbra** cards converge at Outer Frontier Mastery, enabling the transceiver expedition gateway rather than ending the game.
+The first pair of frontiers uses Calidus science. The second pair consumes Solaris and Nyxaris cards. The third pair uses Vibrant and Vespera cards. **Beetlejuice and Umbra** cards converge at Outer Frontier Mastery, enabling the transceiver expedition gateway rather than ending the game. The pre-edge Promethium and post-outer research paths also inherit **all seven** earlier regional cards, including the Vespera and Umbra cards missing from the inherited six-system science mapping.
+
+The separate automatic 1:1 science-to-tech-card conversion setting remains available for players who prefer card-form research across the entire modpack. Those conversions do not replace the eight curated regional cards, and the local source science is still used to manufacture them.
 
 Vespera and Umbra currently tint existing icon assets, rather than introducing unsupported or unapproved new artwork. Dedicated star and card art are a separate polish pass. The card recipes contain only science expected from their required core planets, rather than injecting science from optional integrations.
 
