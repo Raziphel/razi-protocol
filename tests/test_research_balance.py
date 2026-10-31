@@ -287,7 +287,7 @@ class ResearchBalanceTests(unittest.TestCase):
         self.assertTrue(any(issue["code"]=="system-card-no-crafting-machine"
                             and "solaris-tech-card" in issue["targets"]
                             for issue in report["errors"]))
-        row=next(r for r in report["system_card_recipes"]
+        row=next(r for r in report["system_card_manufacturing"]
                  if r["card"]=="solaris-tech-card")
         self.assertEqual(row["input_stacks"],3)
         self.assertEqual(row["compatible_crafting_machines"],[])
@@ -295,7 +295,7 @@ class ResearchBalanceTests(unittest.TestCase):
         report=audit.examine(raw)
         self.assertFalse(any(issue["code"]=="system-card-no-crafting-machine"
                              for issue in report["errors"]))
-        row=next(r for r in report["system_card_recipes"]
+        row=next(r for r in report["system_card_manufacturing"]
                  if r["card"]=="solaris-tech-card")
         self.assertEqual(row["compatible_crafting_machines"],["ordinary"])
 
