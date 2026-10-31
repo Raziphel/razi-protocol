@@ -1,8 +1,38 @@
-# Razi Protocol
+**Status:** Razi Protocol 3.0 is in development  
+**Requires:** Factorio 2.1, Space Age and Krastorio 2 Spaced Out  
+**Recommended:** Start a new game for the full campaign  
+**Links:** [Source code](https://github.com/Raziphel/razi-protocol) · [Discord](https://razisrealm.com/discord) · [Website](https://razisrealm.com)
 
-**One galaxy. One connected expedition.**
+# Welcome to Razi Protocol 3.0
 
-Razi Protocol brings sprawling **Factorio 2.1 + Krastorio 2 Spaced Out** planet packs together into a coherent campaign. Instead of a collection of isolated worlds, discoveries, science and manufacturing build on each other across seven star systems.
+**One galaxy. Seven star systems. One connected expedition.**
+
+Razi Protocol brings a huge collection of Space Age planets, industries, enemies and endgame mods into a single campaign. Instead of jumping between unrelated destinations, you'll work your way through a galaxy where the next discovery builds on what you've already made.
+
+The journey begins in Calidus and spreads through Solaris, Nyxaris, Vibrant, Vespera, Umbra and Beetlejuice before reaching the expeditions beyond the familiar systems. Each system has its own Tech Card, bringing the research of its planets together and giving you a reason to keep their factories running. These worlds aren't disposable stops on a checklist. Their resources, science and production chains feed the rest of the campaign.
+
+You'll also have more to do than research the next destination. The **Expedition Journal** tracks quests, factory projects, milestones and the systems supporting your expedition. Build your first space platform, take on increasingly demanding logistics, pursue the Dyson Sphere and the transceiver, then prepare for the deep-space challenges that lead to **Convergence**.
+
+Razi Protocol connects the original mods rather than trying to replace them. Their planets, machines and mechanics remain the foundation; Razi provides the progression, routes and shared objectives that make them work together.
+
+# Please Read Before Starting
+
+- **Razi Protocol is a large modpack integration**, not a small collection of extra planets. Its required dependencies form the intended campaign.
+- **A new save is strongly recommended**, especially for 3.0's progression, routes and research changes. Back up existing saves before experimenting.
+- **Normal is the intended starting difficulty.** Easy, Hard and Nightmare provide different levels of challenge, alongside more specific controls.
+- **Startup settings require a restart.** Some changes to world generation and progression work best before creating a map.
+- **The Expedition Journal is there to help.** Quests, project dossiers and system readouts give you ways to follow the campaign without memorizing every mod.
+- **The original mods still matter.** Keep their dependencies installed and expect to build real infrastructure across multiple worlds.
+- **3.0 is still in development.** Features, balance and compatibility may change before its public release.
+
+# Razi Protocol Is for You If
+
+- You want a long Space Age campaign with a clear route through a genuinely enormous modpack.
+- You enjoy complex science trees where a system's planets contribute to a shared research milestone.
+- You want old factories to stay useful as you explore farther from home.
+- You enjoy designing interplanetary freight routes, specialized industries and space platforms.
+- You prefer practical projects, dangerous expeditions and a physical endgame over a simple final research unlock.
+- You want the freedom to adjust combat, asteroid hazards, research, galaxy visuals and performance to suit your playthrough.
 
 ## Explore the galaxy
 
