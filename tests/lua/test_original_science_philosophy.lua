@@ -30,7 +30,8 @@ for _,native in ipairs({
 }) do tools[native]={} end
 local technologies={}
 for _,name in ipairs({
-  "planet-discovery-castra","linox-technology_planet-discovery-linox",
+  "planet-discovery-muluna","planet-discovery-castra",
+  "linox-technology_planet-discovery-linox",
   "muriatic-science-pack","promethium-science-pack",
   "promethium-882-research","black-hole-discovery",
   "planet-discovery-nexus","antimatter-science-pack"
@@ -63,6 +64,26 @@ function science_pack_is_lab_protected() return false end
 dofile("prototypes/technology/progression.lua")
 local function research(name)
   return assert(technologies[name],"Missing fixture technology: "..name).unit.ingredients
+end
+-- A new Calidus run must be able to research its first moon before
+-- reaching any other Razi star system. Source science from the first
+-- frontier may never be needed for this bootstrap discovery.
+local muluna=research("planet-discovery-muluna")
+check(nitems(muluna)==7,"Muluna must use the seven pre-frontier sciences")
+for _,pack in ipairs({
+  "automation-science-pack","logistic-science-pack","military-science-pack",
+  "chemical-science-pack","production-science-pack",
+  "utility-science-pack","space-science-pack"
+}) do
+  check(contains(muluna,pack),"Muluna missing native bootstrap "..pack)
+end
+for _,pack in ipairs({
+  "metallurgic-science-pack","electromagnetic-science-pack",
+  "agricultural-science-pack","tungsten-science-pack",
+  "calidus-tech-card"
+}) do
+  check(not contains(muluna,pack),
+    "Calidus bootstrap depends on unavailable science: "..pack)
 end
 -- Original intent: exploring Solaris consumes Calidus, not other future cards.
 check(nitems(research("planet-discovery-castra"))==1
