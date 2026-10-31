@@ -15,7 +15,9 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/calidus-tech-card.png",
 		order = "s[system]-a[calidus]",
 		craft_time = 10, regional_science_amount = 1,
-		unlock_technology_candidates = {"space-science-pack", "planet-discovery-muluna"},
+		-- Muluna is the first Calidus milestone. Keep space research as a
+		-- fallback only for unusual mod configurations without its discovery.
+		unlock_technology_candidates = {"planet-discovery-muluna", "space-science-pack"},
 		ingredients = {
 			"automation-science-pack", "logistic-science-pack",
 			"military-science-pack", "chemical-science-pack",
