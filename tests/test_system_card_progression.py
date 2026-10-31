@@ -1,6 +1,8 @@
 """Guard native lab tiers and preserved card recipes without inventing labs."""
 import json
 import re
+import shutil
+import subprocess
 import unittest
 from tools.journal_locale import load_journal_locale
 from pathlib import Path
@@ -81,6 +83,15 @@ class SystemCardProgressionTests(unittest.TestCase):
         section=gates.split("local exotic_mastery = {",1)[1].split("}",1)[0]
         for name in ("fulgora","paracelsin","aquilo","maraxsis"):
             self.assertIn('"planet-discovery-'+name+'"',section)
+
+    def test_original_science_philosophy_with_lua(self):
+        lua=shutil.which("lua5.2") or shutil.which("lua")
+        if not lua:
+            self.skipTest("Lua interpreter unavailable; CI installs lua5.2")
+        fixture=ROOT/"tests/lua/test_original_science_philosophy.lua"
+        result=subprocess.run([lua,str(fixture)],cwd=ROOT,
+                              capture_output=True,text=True,timeout=15)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
 
     def test_eight_card_manufacturing_tiers(self):
         source=read("prototypes/compat/lab_cards.lua")
