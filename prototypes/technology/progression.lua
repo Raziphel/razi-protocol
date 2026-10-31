@@ -24,8 +24,7 @@ local science_tiers = {
 		"planetaris-polishing-science-pack",
 		"planetaris-bioengineering-science-pack",
 		"planetaris-pathological-science-pack",
-		"planetaris-refraction-science-pack",
-		"electrochemical-science-pack"
+		"planetaris-refraction-science-pack"
 	},
 	dea_dia_nyxaris = {
 		"aerospace-science-pack",
@@ -36,21 +35,29 @@ local science_tiers = {
 		"apicultural-science-pack",
 		"pelagos-science-pack",
 	},
+	-- Planet sciences stay local until a regional card represents mastery.
 	vibrant = {
+		"electromagnetic-science-pack",
 		"ribbonia-alien-science-pack",
+		"electrochemical-science-pack",
+		"galvanization-science-pack",
+		"paracelsin-galvanization-science-pack"
+	},
+	vespera = {
+		"muriatic-science-pack",
+		"cryogenic-science-pack",
 		"biorecycling-science-pack",
 		"rubia-biofusion-science-pack",
-		"galvanization-science-pack",
-		"paracelsin-galvanization-science-pack",
 		"hydraulic-science-pack"
 	},
 	beetlejuice = {
-		"bioluminescent-science-pack",
-		"cryogenic-science-pack",
-		"gas-manipulation-science-pack",
-		"planet-crucible-science-pack",
 		"golden-science-pack",
-		"promethium-science-pack"
+		"linox-item_linox-science-pack"
+	},
+	umbra = {
+		"bioluminescent-science-pack",
+		"gas-manipulation-science-pack",
+		"planet-crucible-science-pack"
 	},
 	nexus_early = {
 		"deep-space-tech-card",
@@ -73,7 +80,9 @@ local tier_order = {
 	"solaris",
 	"dea_dia_nyxaris",
 	"vibrant",
+	"vespera",
 	"beetlejuice",
+	"umbra",
 	"nexus_early",
 	"nexus",
 	"deep_space"
@@ -85,7 +94,9 @@ local system_card_by_tier = {
 	solaris = "solaris-tech-card",
 	dea_dia_nyxaris = "nyxaris-tech-card",
 	vibrant = "vibrant-tech-card",
+	vespera = "vespera-tech-card",
 	beetlejuice = "beetlejuice-tech-card",
+	umbra = "umbra-tech-card",
 	nexus_early = "deep-space-tech-card"
 }
 
@@ -136,7 +147,9 @@ local function build_science_after(tier_name)
 end
 
 local function build_solar_system_edge_science()
-	return build_science_after("beetlejuice")
+	-- Both final stars now contribute, keeping the original chapter
+	-- compression principle across all seven regional tech cards.
+	return build_science_after("umbra")
 end
 
 local function set_science_through(technology_name, tier_name)
@@ -234,7 +247,7 @@ add_existing_prerequisites("linox-technology_planet-discovery-linox", {"planet-d
 set_many_science_after({
 	"linox-technology_planet-discovery-linox",
 	"linox-technology_exploring-linox-landing-site"
-}, "vibrant")
+}, "vespera")
 
 -- Solaris branch.
 set_prerequisites_if_exists("planet-discovery-castra", {"solaris-discovery"})
@@ -304,9 +317,11 @@ set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
 set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
 set_prerequisites_if_exists("muriatic-science-pack", {"planet-discovery-muria"})
+-- Muria's science belongs to Vespera, not to the parallel
+-- Vibrant chapter; avoid requiring either middle card to unlock it.
 set_many_science_after({
 	"muriatic-science-pack",
-}, "vibrant")
+}, "dea_dia_nyxaris")
 set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})
 set_first_existing_prerequisite("planet-discovery-maraxsis", {
 	"planet-discovery-rubia",
@@ -369,12 +384,12 @@ add_existing_prerequisites("kr-intergalactic-transceiver", {"planet-discovery-cr
 add_existing_prerequisites("planet-nexus-scanning", {transceiver_gate_technology})
 add_existing_prerequisites("planet-nexus-scanning-Krastorio2-space-out", {transceiver_gate_technology})
 add_existing_prerequisites("planet-discovery-nexus", {transceiver_gate_technology})
-set_many_science_after(nexus_discovery_technologies, "beetlejuice")
+set_many_science_after(nexus_discovery_technologies, "umbra")
 
 add_existing_prerequisites("promethium-science-pack", {"planet-discovery-frozeta"})
 add_existing_prerequisites("promethium-science-pack", {"planet-discovery-crucible"})
 set_technology_unit_ingredients_if_exists("promethium-science-pack", build_solar_system_edge_science())
-set_science_after("promethium-882-research", "beetlejuice")
+set_science_after("promethium-882-research", "umbra")
 set_science_after("antimatter-science-pack", "nexus_early")
 add_existing_prerequisites("starmap-mapping", {transceiver_gate_technology})
 
@@ -392,7 +407,7 @@ set_first_existing_prerequisite("black-hole-discovery", {
 if mods["Nexus"] or mods["Nexus-Updated"] then
 	set_science_through("black-hole-discovery", "nexus")
 else
-	set_science_after("black-hole-discovery", "beetlejuice")
+	set_science_after("black-hole-discovery", "umbra")
 end
 -- Only the compressed system cards need to be added by this mod.
 -- Adding every science pack found in technologies makes all labs universal.
