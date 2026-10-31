@@ -32,11 +32,21 @@ to keep the wider K2SO/Space Age/modded research network compatible. These
 individual conversions are *not* additional system cards and do not replace
 the eight authored chapter milestones.
 
+**Calidus/Muluna nuance:** Muluna supplies the opening space-science
+economy, which already contributes to the Calidus card. Muluna's later
+Exploration science is designed to require return trips from other planets;
+putting that late science in the *opening* Calidus card would deadlock the
+Solaris/Nyxaris departures.
+
 **Validation status:** This is prototype/data-stage code, not a verified
-full-modpack playthrough. Re-run the loaded-prototype science/recipe/lab
-audits and test a fresh and existing save before release. In particular,
-check that the final required-world science is craftable without its own
-system card and that existing machines accept the largest regional recipe;
+full-modpack playthrough. `scripts/audit_research_balance.py` now reports
+`system-card-no-crafting-machine` when a loaded ordinary card recipe
+has more distinct item ingredients than every installed crafting-category
+assembler supports (using each machine's real `ingredient_count`).
+Re-run the loaded-prototype science/recipe/lab audits and test a fresh and
+existing save before release. In particular, check that the final
+required-world science is craftable without its own system card and
+that the first accessible compatible assembler has actually been unlocked;
 delaying a recipe's unlock can change legacy-save research expectations.
 
 ## 2.1.73: Deliberate planetary technology distribution
