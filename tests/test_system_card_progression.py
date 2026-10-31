@@ -15,7 +15,7 @@ class SystemCardProgressionTests(unittest.TestCase):
         for card,forbidden in (
             ("solaris-tech-card","electrochemical-science-pack"),
             ("vibrant-tech-card","paracelsin-galvanization-science-pack"),
-            ("vespera-tech-card","hydraulic-science-pack"),
+            ("vespera-tech-card","planet-crucible-science-pack"),
             ("deep-space-tech-card","space-logistic-science-pack")):
             body=re.search(r'\bname = "'+re.escape(card)+
                 r'".*?fallback_ingredients',source,re.S)
@@ -24,6 +24,67 @@ class SystemCardProgressionTests(unittest.TestCase):
             self.assertNotIn('"'+forbidden+'"',items)
         self.assertIn('upsert_system_card(card)',source)
         self.assertIn('system_card_definitions',source)
+
+    def test_system_cards_use_chapter_completion_unlocks(self):
+        source=read("prototypes/compat/lab_cards.lua")
+        expected={
+            "solaris":"planet-discovery-corrundum",
+            "nyxaris":"panglia_planet_discovery_panglia",
+            "vibrant":"planet-discovery-paracelsin",
+            "vespera":"planet-discovery-maraxsis",
+            "beetlejuice":"linox-technology_planet-discovery-linox",
+            "umbra":"planet-discovery-vesta",
+        }
+        for system,completion in expected.items():
+            block=re.search(r'name = "'+system+
+                r'-tech-card".*?(?=\\n\\t\\{\\n\\t\\tname = "|\\n\\}\\n\\nlocal modded_science_ids)',
+                source,re.S)
+            self.assertIsNotNone(block,system)
+            self.assertRegex(block.group(),
+                r'unlock_technology_candidates = \\{[\\s\\S]*?"'+
+                re.escape(completion)+r'"')
+            self.assertLess(block.group().find('"'+completion+'"'),
+                block.group().find('fallback_ingredients'))
+        # Optional Frozeta must not become the sole gate to the core card.
+        self.assertNotIn('unlock_technology_candidates = {"planet-discovery-frozeta"',
+                         source)
+
+    def test_system_cards_combine_native_chapter_sciences(self):
+        source=read("prototypes/compat/lab_cards.lua")
+        expected={
+            "solaris":("battlefield-science-pack",
+                       "planetaris-compression-science-pack",
+                       "planetaris-polishing-science-pack"),
+            "nyxaris":("agricultural-science-pack",
+                       "thermodynamic-science-pack",
+                       "apicultural-science-pack",
+                       "aerospace-science-pack"),
+            "vibrant":("electromagnetic-science-pack",
+                       "ribbonia-alien-science-pack",
+                       "electrochemical-science-pack"),
+            "vespera":("muriatic-science-pack",
+                       "cryogenic-science-pack",
+                       "rubia-biofusion-science-pack",
+                       "hydraulic-science-pack"),
+            "beetlejuice":("golden-science-pack",
+                           "linox-item_linox-science-pack"),
+            "umbra":("bioluminescent-science-pack",
+                     "planet-crucible-science-pack",
+                     "gas-manipulation-science-pack"),
+        }
+        for system,packs in expected.items():
+            block=re.search(r'name = "'+system+
+                r'-tech-card".*?fallback_ingredients',source,re.S)
+            self.assertIsNotNone(block,system)
+            ingredients=block.group().split("ingredients = {",1)[1].split("}",1)[0]
+            for pack in packs:
+                self.assertIn('"'+pack+'"',ingredients,(system,pack))
+
+    def test_middle_frontier_science_cannot_be_skipped(self):
+        gates=read("prototypes/technology/seven_system_gates.lua")
+        section=gates.split("local exotic_mastery = {",1)[1].split("}",1)[0]
+        for name in ("fulgora","paracelsin","aquilo","maraxsis"):
+            self.assertIn('"planet-discovery-'+name+'"',section)
 
     def test_eight_card_manufacturing_tiers(self):
         source=read("prototypes/compat/lab_cards.lua")
