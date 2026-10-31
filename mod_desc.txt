@@ -1,3 +1,5 @@
+![Razi Protocol 3.0 Banner](PASTE_DIRECT_BANNER_IMAGE_URL_HERE)
+
 **Status:** Razi Protocol 3.0 is in development  
 **Requires:** Factorio 2.1, Space Age and Krastorio 2 Spaced Out  
 **Save:** A new game is strongly recommended  
