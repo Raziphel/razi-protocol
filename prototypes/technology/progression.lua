@@ -1,4 +1,7 @@
 local science_tiers = {
+	-- Calidus is the departure/bootstrap chapter. Its first moon and
+	-- card cannot ask for metallurgy, Fulgora electronics, Gleba biology,
+	-- or tungsten science made after the initial interstellar expedition.
 	base = {
 		"automation-science-pack",
 		"logistic-science-pack",
@@ -6,11 +9,7 @@ local science_tiers = {
 		"chemical-science-pack",
 		"production-science-pack",
 		"utility-science-pack",
-		"space-science-pack",
-		"metallurgic-science-pack",
-		"electromagnetic-science-pack",
-		"agricultural-science-pack",
-		"tungsten-science-pack"
+		"space-science-pack"
 	},
 	inner_system = {
 		"lunar-science-pack",
