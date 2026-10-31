@@ -149,6 +149,55 @@ Later research supports the campaign's largest projects, from the Dyson Sphere a
 
 Razi Protocol builds on the original mods' research rather than stripping away what makes each one different. The science tree should give you a reason to explore the galaxy, and a reason to keep the worlds you've already explored working together.
 
-# Community & Credits
+![](PASTE_DIRECT_WIKI_BANNER_URL_HERE)
 
-Razi Protocol depends on the work of the original planet, technology, machine, enemy, and art creators. Their contributions make this campaign possible. See the [full credits](https://github.com/Raziphel/razi-protocol/blob/feat/razi-3.0/Credits.txt) and join the [Razi's Realm Discord](https://razisrealm.com/discord) for discussion and development updates.
+# The Razi Protocol Expedition Wiki
+
+A galaxy this large deserves a proper field guide.
+
+The [Razi Protocol Wiki](https://wiki.razisrealm.com/factorio) is a companion to your expedition, with practical information for finding your next destination, understanding the research behind it, and keeping a complex modpack running smoothly.
+
+* **Getting Started:** Installation, dependencies, save compatibility, and what to expect from the campaign.
+* **Galaxy Atlas:** The seven star systems, their planets, major routes, and the journey toward Deep Space.
+* **Science & Tech Cards:** How planetary discoveries fit into the system-wide research progression.
+* **Projects & Logistics:** Guidance for major construction goals, factory networks, and the infrastructure you'll need later in the campaign.
+* **Settings & Survival:** Difficulty, world hazards, asteroid travel, customization, and performance options.
+* **Field Guides & Troubleshooting:** Help with progression blockers, missing worlds, mod compatibility, and safe updates.
+* **Expedition Notebook:** A personal checklist for keeping track of your plans. Notebook notes are stored in your browser; they don't read or change your Factorio save.
+
+The in-game **Expedition Journal** tracks what your factory has actually accomplished. The wiki is where you can read ahead, look something up, or figure out why a plan isn't working.
+
+**[Open the Razi Protocol Wiki](https://wiki.razisrealm.com/factorio)**
+
+**3.0 development note:** Wiki articles are being updated alongside the mod. Some published guides may still describe an earlier release or source snapshot, so check the version information before following progression or upgrade instructions.
+
+# Community & Support
+
+Questions, suggestions, bug reports, and discoveries are always welcome.
+
+* **[Discord - Razi's Realm](https://razisrealm.com/discord):** Talk with other players, share your factories, and follow development.
+* **[GitHub - Razi Protocol](https://github.com/Raziphel/razi-protocol):** Source code, issues, and development changes.
+* **[Razi's Realm Website](https://razisrealm.com):** Find the rest of the community.
+* **[Razi Protocol Wiki](https://wiki.razisrealm.com/factorio):** Guides, research information, and troubleshooting.
+
+# Credits & Acknowledgements
+
+Razi Protocol is built on the work of Factorio's modding community. It connects worlds, technologies, enemies, and engineering systems made by many different developers. Those original creators deserve credit for their own mods, assets, mechanics, and ideas.
+
+Special thanks to:
+
+* **Wube Software** for Factorio and Space Age.
+* **Krastorio 2 Spaced Out, PlanetsLib, RAZI Library, and Science Tab** for important foundations and integration work.
+* **The creators of Muluna, Bellicos & Aegis, the Planetaris worlds, Cerys, Rubia, Maraxsis, Corrundum, and the many other planet mods** that make this galaxy possible.
+* **The authors of the Dyson Sphere, Nexus, enemy, asteroid, logistics, and compatibility mods** whose work adds depth to exploration, combat, and industry.
+* **The maintainers, translators, testers, and players** who report problems, share ideas, and help keep a large modpack playable.
+
+**[Read the full credits and acknowledgements](https://github.com/Raziphel/razi-protocol/blob/feat/razi-3.0/Credits.txt)** for the longer list of original projects and contributors. If a credit is missing or needs correcting, please reach out on Discord.
+
+# Thanks for Joining the Expedition
+
+Razi Protocol is a long-term project, and 3.0 is still being developed. There are more worlds to explore, factories to connect, and challenges to solve before the journey is finished.
+
+Whether you're building your first orbital platform or preparing for Convergence, I hope the galaxy gives you plenty of reasons to keep building.
+
+**See you among the stars.**
