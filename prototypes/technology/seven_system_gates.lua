@@ -161,7 +161,10 @@ local frontier_mastery = {
 	"panglia_planet_discovery_panglia"
 }
 local exotic_mastery = {
+	-- Both middle branches must be completed before the outer stars.
 	"planet-discovery-fulgora",
+	"planet-discovery-paracelsin",
+	"planet-discovery-aquilo",
 	"planet-discovery-maraxsis"
 }
 local outer_mastery = {
