@@ -267,6 +267,38 @@ class ResearchBalanceTests(unittest.TestCase):
         self.assertTrue(any(item["code"]=="multiplex-economy-invalid"
                             for item in report["errors"]))
 
+    def test_ordinary_system_card_requires_a_real_assembler(self):
+        raw=fixture()
+        raw["recipe"]={
+            "solaris-tech-card":{
+                "ingredients":[
+                    {"name":"calidus-tech-card","amount":1},
+                    {"name":"metallurgic-science-pack","amount":1},
+                    {"name":"battlefield-science-pack","amount":1},
+                ],
+                "results":[{"name":"solaris-tech-card","amount":1}],
+            },
+        }
+        raw["assembling-machine"]={
+            "ordinary":{"crafting_categories":["crafting"],"ingredient_count":2},
+            "chemistry":{"crafting_categories":["chemistry"],"ingredient_count":10},
+        }
+        report=audit.examine(raw)
+        self.assertTrue(any(issue["code"]=="system-card-no-crafting-machine"
+                            and "solaris-tech-card" in issue["targets"]
+                            for issue in report["errors"]))
+        row=next(r for r in report["system_card_recipes"]
+                 if r["card"]=="solaris-tech-card")
+        self.assertEqual(row["input_stacks"],3)
+        self.assertEqual(row["compatible_crafting_machines"],[])
+        raw["assembling-machine"]["ordinary"]["ingredient_count"]=4
+        report=audit.examine(raw)
+        self.assertFalse(any(issue["code"]=="system-card-no-crafting-machine"
+                             for issue in report["errors"]))
+        row=next(r for r in report["system_card_recipes"]
+                 if r["card"]=="solaris-tech-card")
+        self.assertEqual(row["compatible_crafting_machines"],["ordinary"])
+
     def test_card_manufacturing_cycle_is_a_hard_error(self):
         raw=fixture()
         raw["recipe"]={
