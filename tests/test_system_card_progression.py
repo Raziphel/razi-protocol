@@ -37,15 +37,11 @@ class SystemCardProgressionTests(unittest.TestCase):
         }
         for system,completion in expected.items():
             block=re.search(r'name = "'+system+
-                r'-tech-card".*?(?=\\n\\t\\{\\n\\t\\tname = "|\\n\\}\\n\\nlocal modded_science_ids)',
-                source,re.S)
+                r'-tech-card".*?fallback_ingredients',source,re.S)
             self.assertIsNotNone(block,system)
-            self.assertRegex(block.group(),
-                r'unlock_technology_candidates = \\{[\\s\\S]*?"'+
-                re.escape(completion)+r'"')
-            self.assertLess(block.group().find('"'+completion+'"'),
-                block.group().find('fallback_ingredients'))
-        # Optional Frozeta must not become the sole gate to the core card.
+            unlocks=block.group().split("unlock_technology_candidates =",1)[1]
+            self.assertIn('"'+completion+'"',unlocks)
+        # Optional Frozeta must not be the only unlock for the core card.
         self.assertNotIn('unlock_technology_candidates = {"planet-discovery-frozeta"',
                          source)
 
