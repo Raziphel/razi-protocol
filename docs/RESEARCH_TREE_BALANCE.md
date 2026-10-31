@@ -9,7 +9,7 @@ inventing a separate card for every named planet.
 
 | Card | Preferred last core discovery that unlocks its recipe | Regional research represented |
 | --- | --- | --- |
-| Calidus | Existing space-science entry (bootstrap preserved) | Nauvis research and space science; Muluna remains a world milestone |
+| Calidus | Muluna discovery (space-science fallback) | Seven pre-frontier sciences including space science; no off-world science required |
 | Solaris | Corrundum (Castra fallback) | Vulcanus metallurgy, Castra battlefield, Planetaris research |
 | Nyxaris | Panglia (Apia/Carnova or Moshine fallback) | Gleba agriculture, Moshine thermal/insulation, Apia sciences |
 | Vibrant | Paracelsin (Ribbonia fallback) | Fulgora, Ribbonia and Paracelsin electrochemistry |
@@ -32,11 +32,17 @@ to keep the wider K2SO/Space Age/modded research network compatible. These
 individual conversions are *not* additional system cards and do not replace
 the eight authored chapter milestones.
 
-**Calidus/Muluna nuance:** Muluna supplies the opening space-science
-economy, which already contributes to the Calidus card. Muluna's later
-Exploration science is designed to require return trips from other planets;
-putting that late science in the *opening* Calidus card would deadlock the
-Solaris/Nyxaris departures.
+**Calidus/Muluna bootstrap:** The original Razi Protocol preferred
+Muluna discovery as the Calidus card unlock. Razi 3.0 restores that
+ordering but first corrects the old `base` research tier: Muluna now
+needs only automation, logistic, military, chemical, production, utility
+and space sciences. It never asks for Vulcanus metallurgy, Fulgora
+electromagnetism, Gleba agriculture or tungsten science before the
+first star departure. The Calidus recipe then combines these seven
+pre-frontier sciences, retaining `space-science-pack` as a fallback
+unlock only when the Muluna discovery prototype is unavailable.
+Muluna's later Exploration science is a return-trip industry and must
+not gate the initial Calidus card or departure.
 
 **Validation status:** This is prototype/data-stage code, not a verified
 full-modpack playthrough. `scripts/audit_research_balance.py` now reports
