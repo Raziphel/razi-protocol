@@ -48,7 +48,10 @@ not gate the initial Calidus card or departure.
 full-modpack playthrough. `scripts/audit_research_balance.py` now reports
 `system-card-no-crafting-machine` when a loaded ordinary card recipe
 has more distinct item ingredients than every installed crafting-category
-assembler supports (using each machine's real `ingredient_count`).
+assembler supports (using each machine's real `ingredient_count`). The
+`calidus-bootstrap-offworld-science` audit also checks Muluna discovery against
+future-system packs, recognising both the native items and their optional
+1:1 automatically converted tech-card forms.
 Re-run the loaded-prototype science/recipe/lab audits and test a fresh and
 existing save before release. In particular, check that the final
 required-world science is craftable without its own system card and
