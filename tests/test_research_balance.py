@@ -267,6 +267,27 @@ class ResearchBalanceTests(unittest.TestCase):
         self.assertTrue(any(item["code"]=="multiplex-economy-invalid"
                             for item in report["errors"]))
 
+    def test_calidus_bootstrap_detects_native_and_converted_late_science(self):
+        raw=fixture()
+        raw["technology"]["planet-discovery-muluna"]={
+            "unit":{"count":150,"ingredients":[
+                ["automation-science-pack",1],
+                ["razi-metallurgic-science-pack-tech-card",1],
+                ["agricultural-science-pack",1],
+            ]}}
+        report=audit.examine(raw)
+        violations=[x for x in report["errors"] if
+                    x["code"]=="calidus-bootstrap-offworld-science"]
+        self.assertEqual(len(violations),1)
+        self.assertEqual(set(violations[0]["packs"]),
+                         {"metallurgic-science-pack",
+                          "agricultural-science-pack"})
+        raw["technology"]["planet-discovery-muluna"]["unit"]["ingredients"]=[
+            ["automation-science-pack",1],["space-science-pack",1]]
+        report=audit.examine(raw)
+        self.assertFalse(any(x["code"]=="calidus-bootstrap-offworld-science"
+                             for x in report["errors"]))
+
     def test_ordinary_system_card_requires_a_real_assembler(self):
         raw=fixture()
         raw["recipe"]={
