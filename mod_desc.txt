@@ -1,42 +1,44 @@
-![Razi Protocol 3.0 Banner](PASTE_DIRECT_BANNER_IMAGE_URL_HERE)
+![](PASTE_BANNER_IMAGE_URL_HERE)
 
-**Status:** Razi Protocol 3.0 is in development  
-**Requires:** Factorio 2.1, Space Age and Krastorio 2 Spaced Out  
-**Save:** A new game is strongly recommended  
+**Status:** 3.0 In Development  
+**Requires:** Space Age, Krastorio 2 Spaced Out, and the listed dependencies  
+**Recommended:** A new save  
 **Source:** [GitHub](https://github.com/Raziphel/razi-protocol)  
 **Discord:** [Razi's Realm](https://razisrealm.com/discord)  
-**Community:** [Website](https://razisrealm.com)
+**Website:** [Razi's Realm](https://razisrealm.com)
 
-## Welcome to Razi Protocol 3.0
+# Welcome to Razi Protocol 3.0
 
-Razi Protocol turns a huge collection of Space Age planet mods into one connected expedition. It's built around interstellar exploration, meaningful planetary research, specialized factories and the logistics needed to keep them all working together.
+Razi Protocol is a large Space Age campaign built around connected star systems, planetary progression, interstellar logistics, and the technologies needed to push ever farther into space.
 
-Your journey starts in Calidus and grows into six more star systems. Each system has a central **Tech Card** that ties its planets and their research together. Discovering another world isn't the end of the previous one: its materials, technology and industry remain part of the wider campaign.
+The journey begins on Nauvis and grows across seven star systems. Each system brings together several distinct worlds and their own industries, with a shared Tech Card linking their research. Instead of treating each planet as a one-time science stop, Razi Protocol makes older factories, materials, and production networks valuable throughout the campaign.
 
-There is plenty to do between launches. The **Expedition Journal** follows your quests, milestones and construction projects, while curated space routes give the galaxy a structure you can plan around. Eventually, the Dyson Sphere, the transceiver and the challenges of Deep Space lead to a real, construction-driven finale at **Convergence**.
+A built-in Expedition Journal tracks quests, milestones, construction projects, and your progress through the galaxy. Curated space routes give exploration a clear direction while leaving you choices about where to travel, what to build, and how to move resources between worlds.
 
-Razi Protocol doesn't try to replace the mods it brings together. Their unique planets and mechanics remain intact. The goal is to make them feel like parts of the same journey.
+Eventually, your expedition moves beyond the familiar systems. The Dyson Sphere, the Transceiver, dangerous deep-space destinations, and the Convergence finale all demand more than another research unlock. You'll need working factories, real infrastructure, and a supply network capable of supporting the journey.
 
-## Please Read Before Starting
+Razi Protocol builds on the original planet and content mods rather than replacing their unique mechanics. The goal is to make an enormous collection of worlds feel like one cohesive adventure.
 
-- Razi Protocol changes progression from the beginning of the game, not just after Space Age's usual endgame.
-- **Start a new save for the intended 3.0 experience.** Back up existing saves before testing major updates.
-- Space Age, Krastorio 2 Spaced Out and the required companion mods form the campaign. Check the Dependencies tab before installing.
-- **Normal** is the designed starting difficulty. Easy, Hard and Nightmare offer different challenges, with additional settings for finer control.
-- Some options change research, recipes or world generation. Startup-setting changes require a game restart, and existing terrain is not regenerated.
-- Every system has a role beyond its first discovery. Expect to ship materials and maintain factories across multiple worlds.
-- The built-in **Expedition Journal** helps track objectives, projects and your next steps. Open it with **Ctrl + Shift + J**.
-- Razi Protocol 3.0 is actively being developed. Progression, balance and compatibility may change before release.
+# Please Read Before Starting
 
-## Razi Protocol Is for You If
+* Razi Protocol changes progression from the beginning of the game, not just after the usual Space Age endgame.
+* A new save is strongly recommended for the intended 3.0 experience.
+* Space Age, Krastorio 2 Spaced Out, and the required companion mods are part of the campaign. Check the Dependencies tab before installing.
+* Normal difficulty is the intended experience. Easy, Hard, and Nightmare are also available.
+* Many aspects of the experience can be adjusted in the settings, including threats, resource balance, asteroids, research, navigation, and visuals.
+* Some settings require restarting Factorio. Changes to world generation do not regenerate existing terrain.
+* Older planets remain part of the wider progression after their first research milestones are complete.
+* The Expedition Journal helps explain your next objectives and projects. Open it with Ctrl + Shift + J.
+* Razi Protocol 3.0 is in active development. Progression, balance, and compatibility may change between versions.
 
-- You want a much larger, more interconnected Space Age campaign.
-- You enjoy complex science trees where planets contribute to shared system-wide research.
-- You want factories on older worlds to stay useful long after you move on.
-- You like planning dangerous routes, cargo networks and specialized interplanetary industries.
-- You want actual projects to build, not just another technology to research.
-- You enjoy adjusting enemies, asteroid hazards, research, visuals and performance to your playstyle.
-- You want an expedition with a beginning, a middle and an end worth working toward.
+# Razi Protocol Is for You If
+
+* You want a much larger and more interconnected Space Age playthrough.
+* You enjoy complex technology trees and system-wide science progression.
+* You like building specialized factories across multiple planets instead of abandoning each one after unlocking its science.
+* You want interplanetary logistics, hazardous routes, and meaningful industrial dependencies.
+* You enjoy long-term construction goals, dangerous expeditions, and a physical endgame.
+* You want to customize difficulty, combat, resources, space travel, and galaxy visuals to suit your playstyle.
 
 ## Explore the galaxy
 
