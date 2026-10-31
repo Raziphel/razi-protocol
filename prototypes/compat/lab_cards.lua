@@ -32,7 +32,7 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/solaris-tech-card.png",
 		order = "s[system]-b[solaris]",
 		craft_time = 12, regional_science_amount = 1,
-		unlock_technology_candidates = {"planet-discovery-castra"},
+		unlock_technology_candidates = {"planet-discovery-corrundum", "planet-discovery-castra"},
 		ingredients = {
 			"calidus-tech-card", "metallurgic-science-pack",
 			"tungsten-science-pack", "battlefield-science-pack",
@@ -53,15 +53,17 @@ local system_card_definitions = {
 		order = "s[system]-c[nyxaris]",
 		craft_time = 12, regional_science_amount = 1,
 		-- Never put optional Dea Dia / Pelagos science into a mandatory card.
+		-- Panglia is the last core Nyxaris discovery.
 		unlock_technology_candidates = {
-			"planet-discovery-moshine",
+			"panglia_planet_discovery_panglia",
 			"planet-discovery-apia-carnova",
-			"panglia_planet_discovery_panglia"
+			"planet-discovery-moshine"
 		},
 		ingredients = {
 			"calidus-tech-card", "agricultural-science-pack",
 			"insulation-science-pack",
-			"thermodynamic-science-pack", "apicultural-science-pack"
+			"thermodynamic-science-pack", "apicultural-science-pack",
+			"aerospace-science-pack"
 		},
 		fallback_ingredients = {"calidus-tech-card", "space-science-pack"}
 	},
@@ -71,12 +73,13 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vibrant-tech-card.png",
 		order = "s[system]-d[vibrant]",
 		craft_time = 16, regional_science_amount = 1,
-		unlock_technology_candidates = {"planet-discovery-ribbonia"},
+		unlock_technology_candidates = {"planet-discovery-paracelsin", "planet-discovery-ribbonia"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
-			"electromagnetic-science-pack", "ribbonia-alien-science-pack"
-            -- Keep Paracelsin and Ferrum galvanisation for later industry
-            -- rather than requiring it for the first Vibrant card.
+			"electromagnetic-science-pack", "ribbonia-alien-science-pack",
+			"electrochemical-science-pack"
+			-- Paracelsin chemistry now contributes to Vibrant completion.
+			-- Optional side-world science is not a mandatory gate.
 		},
 		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
@@ -86,12 +89,13 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/vespera-tech-card.png",
 		order = "s[system]-e[vespera]",
 		craft_time = 16, regional_science_amount = 1,
-		unlock_technology_candidates = {"planet-discovery-muria"},
+		unlock_technology_candidates = {"planet-discovery-maraxsis", "planet-discovery-rubia", "planet-discovery-muria"},
 		ingredients = {
 			"solaris-tech-card", "nyxaris-tech-card",
 			"muriatic-science-pack", "cryogenic-science-pack",
-			"biorecycling-science-pack", "rubia-biofusion-science-pack"
-            -- Maraxsis hydraulics remain a late Vespera specialty.
+			"biorecycling-science-pack", "rubia-biofusion-science-pack",
+			"hydraulic-science-pack"
+			-- Maraxsis industry completes Vespera, not its entry.
 		},
 		fallback_ingredients = {"solaris-tech-card", "nyxaris-tech-card"}
 	},
@@ -101,10 +105,10 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
 		order = "s[system]-f[beetlejuice]",
 		craft_time = 22, regional_science_amount = 2,
-		unlock_technology_candidates = {"planet-discovery-cubium"},
+		unlock_technology_candidates = {"planet-discovery-frozeta", "linox-technology_planet-discovery-linox", "planet-discovery-secretas", "planet-discovery-cubium"},
 		ingredients = {
 			"vibrant-tech-card", "vespera-tech-card",
-			"golden-science-pack"
+			"golden-science-pack", "linox-item_linox-science-pack"
 		},
 		fallback_ingredients = {"vibrant-tech-card", "vespera-tech-card"}
 	},
@@ -114,7 +118,7 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/umbra-tech-card.png",
 		order = "s[system]-g[umbra]",
 		craft_time = 22, regional_science_amount = 2,
-		unlock_technology_candidates = {"planet-discovery-tenebris"},
+		unlock_technology_candidates = {"planet-discovery-vesta", "planet-discovery-crucible", "planet-discovery-tenebris"},
 		ingredients = {
 			"vibrant-tech-card", "vespera-tech-card",
 			"bioluminescent-science-pack", "gas-manipulation-science-pack",
@@ -209,6 +213,8 @@ local function science_pack_exists(name)
 	return Science.exists(name)
 end
 
+-- Mandatory cards now unlock at a chapter completion milestone,
+-- rather than the first planet. Optional side-world sciences stay optional.
 -- Native frontier sciences become more demanding at the outer edge;
 -- predecessor SYSTEM cards always stay at one per recipe to avoid
 -- multiplying the entire campaign's earlier factories recursively.
