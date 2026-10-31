@@ -105,7 +105,7 @@ local system_card_definitions = {
 		icon = "__razi-protocol__/graphics/icons/tech-cards/beetlejuice-tech-card.png",
 		order = "s[system]-f[beetlejuice]",
 		craft_time = 22, regional_science_amount = 2,
-		unlock_technology_candidates = {"planet-discovery-frozeta", "linox-technology_planet-discovery-linox", "planet-discovery-secretas", "planet-discovery-cubium"},
+		unlock_technology_candidates = {"linox-technology_planet-discovery-linox", "planet-discovery-secretas", "planet-discovery-cubium"},
 		ingredients = {
 			"vibrant-tech-card", "vespera-tech-card",
 			"golden-science-pack", "linox-item_linox-science-pack"
