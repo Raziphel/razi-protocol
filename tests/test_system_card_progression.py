@@ -27,6 +27,29 @@ class SystemCardProgressionTests(unittest.TestCase):
         self.assertIn('upsert_system_card(card)',source)
         self.assertIn('system_card_definitions',source)
 
+    def test_calidus_bootstrap_preserves_original_moon_first_design(self):
+        progression=read("prototypes/technology/progression.lua")
+        base=progression.split("base = {",1)[1].split("}",1)[0]
+        for name in ("automation-science-pack","logistic-science-pack",
+                     "chemical-science-pack","production-science-pack",
+                     "utility-science-pack","space-science-pack"):
+            self.assertIn('"'+name+'"',base)
+        for later in ("metallurgic-science-pack",
+                      "electromagnetic-science-pack",
+                      "agricultural-science-pack",
+                      "tungsten-science-pack",
+                      "calidus-tech-card"):
+            self.assertNotIn('"'+later+'"',base)
+        self.assertIn('set_science_through("planet-discovery-muluna", "base")',
+                      progression)
+        cards=read("prototypes/compat/lab_cards.lua")
+        block=cards.split('name = "calidus-tech-card"',1)[1].split(
+            'fallback_ingredients',1)[0]
+        self.assertIn('{"planet-discovery-muluna", "space-science-pack"}',
+                      block)
+        self.assertLess(block.find('"planet-discovery-muluna"'),
+                        block.find('"space-science-pack"'))
+
     def test_system_cards_use_chapter_completion_unlocks(self):
         source=read("prototypes/compat/lab_cards.lua")
         expected={
