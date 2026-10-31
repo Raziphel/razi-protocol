@@ -356,6 +356,31 @@ def examine(raw):
         return visited
     world_science_checks=[]
     native_arrival_errors=[]
+    # The first Calidus moon is reached BEFORE Solaris/Nyxaris. Catch
+    # return-trip science accidentally inherited from the old six-system
+    # base tier. Detect both source packs and optional auto-converted
+    # 1:1 tech cards, since the converter runs last in data-final-fixes.
+    bootstrap=techs.get("planet-discovery-muluna")
+    if isinstance(bootstrap,dict) and bootstrap.get("enabled") is not False:
+        offworld={
+            "metallurgic-science-pack",
+            "electromagnetic-science-pack",
+            "agricultural-science-pack",
+            "tungsten-science-pack",
+            "calidus-tech-card",
+        }
+        actual=set(science_ingredients(bootstrap))
+        foreign=sorted(name for name in offworld
+                       if name in actual or
+                       "razi-"+name+"-tech-card" in actual)
+        if foreign:
+            issues.append({
+                "severity":"error","code":"calidus-bootstrap-offworld-science",
+                "targets":["planet-discovery-muluna"],
+                "packs":foreign,
+                "detail":"Muluna cannot require future-system science "
+                         "or the Calidus card unlocked by its discovery.",
+            })
     for owner,pack in WORLD_SCIENCE:
         if owner not in techs: continue
         path=sorted(ancestors(owner)|{owner})
