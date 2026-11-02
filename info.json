@@ -104,7 +104,6 @@
     "? UPSFriendlyNixieTubeDisplay >= 0.4.1",
     "? BetterAquilo >= 7.3.0",
     "+ LithiumBattery >= 7.3.0",
-    "? CircularColliderLab >= 7.3.0",
     "? Quality-Asteroids-Expanded >= 1.2.5",
     "? spiderbots",
     "? Tenebris_plants_retexture",
