@@ -15,7 +15,6 @@
 tools export-ignore
 # repository documents
 README.md export-ignore
-FACTORIO-2.1-COMPATIBILITY.md export-ignore
 mod_desc.txt export-ignore
 contributing.md export-ignore
 # tests and development documents of 3.0
