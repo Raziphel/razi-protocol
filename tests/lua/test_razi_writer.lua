@@ -25,6 +25,14 @@ check(story.writer(1) and story.visible(1) and not story.visible(2),
   "Writer mode is per player")
 check(story.visible({index=1}) and not story.visible({index=2}),
   "A player object works like its index")
+-- The game passes userdata, not a table.
+local function player_object(index)
+  local object=assert(io.tmpfile())
+  debug.setmetatable(object,{__index={index=index}})
+  return object
+end
+check(story.writer(player_object(1)) and not story.writer(player_object(2)),
+  "A game object works like its index")
 local text=story.text(1,"quest-story","first-signal",{"donor.key"})
 local flat=keys_of(text)
 check(text[1]=="?" and flat["razi-story-quest.first-signal"] and flat["razi-writer.slot"],
