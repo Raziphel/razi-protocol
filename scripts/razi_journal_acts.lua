@@ -44,7 +44,7 @@ M.chapters={
   ["network"]={
     {id="trade",missions={"interplanetary-trade","signal-network","first-frontier-relay","panglia-biooptic-trade","panglia-optical-return","aegis"}},
     {id="precision",missions={"precision-matrix"}},
-    {id="lattice",missions={"extreme-lattice","frontier-recovery-charter"}},
+    {id="lattice",missions={"extreme-lattice"}},
   },
   ["finale"]={
     {id="frontier",missions={"outer-mastery","edge"}},
@@ -72,7 +72,7 @@ M.chapters={
     {id="beyond",missions={"carna","arcanyx","nexus"}},
   },
   ["sciences"]={
-    {id="breakthroughs",missions={"metallurgic","electromagnetic","agricultural","cryogenic","lunar","battlefield","compression","polishing","bioengineering","pathological","refraction","electrochemical","insulation","thermodynamic","apicultural","nuclear-science","aerospace","alien"}},
+    {id="breakthroughs",missions={"metallurgic","electromagnetic","agricultural","cryogenic","battlefield","compression","polishing","bioengineering","pathological","refraction","electrochemical","insulation","thermodynamic","apicultural","nuclear-science","aerospace","alien"}},
     {id="fusion",missions={"nuclear-power","kovarex","robots","robot-logistics","biorecycling","biofusion","galvanization","hydraulic","bioluminescent","crucible-science","golden","gas-manipulation"}},
     {id="transcendence",missions={"promethium","antimatter","matter-card","singularity-card"}},
   },
@@ -92,10 +92,10 @@ M.chapters={
     {id="signal",missions={"fragment-6","fragment-7","fragment-8","fragment-9","fragment-10"}},
   },
   ["alliances"]={
-    {id="frontier",missions={"alliance-middle-fulgora","alliance-middle-aquilo","alliance-middle-paracelsin","alliance-middle-rubia","alliance-frontier-moshine-silicon","alliance-frontier-gleba-carbon","alliance-frontier-castra-ballistics","alliance-bio-metals","alliance-holmium-circuits"}},
-    {id="specialties",missions={"alliance-optical-coils","alliance-zinc-silicon","alliance-rubia-composites","alliance-tenebris-chitosan","alliance-linox-refining","alliance-vesta-magnets","alliance-cryo-control"}},
-    {id="networks",missions={"alliance-photonic-coils","alliance-network-cubium","alliance-balack-shield","alliance-matrix-rubia","alliance-matrix-aquilo","alliance-lattice-vesta","alliance-vesta-foundations","alliance-balack-vesta","alliance-aquilo-outer"}},
-    {id="convergence",missions={"alliance-panglia-bond","alliance-bond-paracelsin","alliance-bond-linox","alliance-pressure-frame","alliance-pressure-vesta","alliance-pressure-aquilo"}},
+    {id="frontier",missions={"alliance-frontier-castra-ballistics","alliance-bio-metals","alliance-holmium-circuits"}},
+    {id="specialties",missions={"alliance-zinc-silicon","alliance-vesta-magnets"}},
+    {id="networks",missions={"alliance-matrix-aquilo","alliance-lattice-vesta"}},
+    {id="convergence",missions={"alliance-panglia-bond","alliance-bond-paracelsin","alliance-bond-linox","alliance-pressure-frame","alliance-pressure-vesta"}},
   },
 }
 local by_quest={}

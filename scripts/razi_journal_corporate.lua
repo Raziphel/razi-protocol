@@ -46,7 +46,6 @@ return {
   {id="corp-first-relay",unlock="first-frontier-relay",series="field"},
   {id="corp-dyson",unlock="dyson-build"},
   {id="corp-solar-orbit-watch",unlock="solar-orbit",series="field"},
-  {id="corp-frontier-charter",unlock="frontier-recovery-charter",series="field"},
   {id="corp-audit",unlock="stable-singularity"},
   {id="corp-lattice-accord",unlock="extreme-lattice",series="field"},
   {id="corp-outer",unlock="outer-mastery"},

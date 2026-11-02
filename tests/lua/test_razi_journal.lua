@@ -5,7 +5,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.razi_journal_data")
 local M=require("scripts.razi_journal")
 check(#defs.chapters==19,"Nineteen expedition chapters expected")
-check(#defs.quests==251,"Protocol Codex must include 251 source-backed expedition milestones")
+check(#defs.quests==230,"Protocol Codex must include 230 source-backed expedition milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true
@@ -26,11 +26,9 @@ for _,q in ipairs(defs.quests) do
 end
 -- Industry missions are tied to existing optional research, not new
 -- recipe-count flags, planets or scripted completion conditions.
-for _,id in ipairs({"alliance-optical-coils","alliance-vesta-magnets",
-  "alliance-aquilo-outer","alliance-panglia-bond",
+for _,id in ipairs({"alliance-vesta-magnets","alliance-panglia-bond",
   "alliance-bond-paracelsin","alliance-bond-linox",
-  "alliance-pressure-frame","alliance-pressure-vesta",
-  "alliance-pressure-aquilo"}) do
+  "alliance-pressure-frame","alliance-pressure-vesta"}) do
   local quest=defs.by_id[id]
   check(quest and quest.chapter=="alliances" and quest.site,
     "Industrial partnership missing prototype-backed guidance: "..id)
@@ -170,11 +168,11 @@ end
 check(counted==view.total,"Chapter totals disagree with the campaign")
 -- A disabled upstream alternative disappears instead of creating a
 -- phantom objective or blocking the main campaign.
-local guarded=force.technologies["razi-network-aquilo-outer-controllers"]
-force.technologies["razi-network-aquilo-outer-controllers"]=nil
-check(M.state(force,defs.by_id["alliance-aquilo-outer"])=="unavailable",
+local guarded=force.technologies["razi-network-umbra-pressure-frame"]
+force.technologies["razi-network-umbra-pressure-frame"]=nil
+check(M.state(force,defs.by_id["alliance-pressure-frame"])=="unavailable",
   "Deep-only trade must not appear in Balanced mode")
-force.technologies["razi-network-aquilo-outer-controllers"]=guarded
+force.technologies["razi-network-umbra-pressure-frame"]=guarded
 local a=defs.by_id["solaris-gate"]
 local b=defs.by_id["nyxaris-gate"]
 force.technologies["space-science-pack"].researched=true
@@ -365,4 +363,51 @@ force.technologies["discovery-native-igrys"].researched=true
 check(M.discovery_index(force).igrys.researched,
   "The Codex should follow new research without refreshing its catalog")
 rawset(_G,"prototypes",nil)
+-- The Relay Fragments chapter is story only: without the story nobody sees it
+-- or counts it, and writer mode still opens it for the one writer.
+rawset(_G,"settings",{global={["razi-hide-spoilers"]={value=false}}})
+for _,q in ipairs(defs.quests) do
+  if q.tech then
+    force.technologies[q.tech]={name=q.tech,researched=false,
+      prototype={hidden=false},localised_name=q.tech}
+  end
+end
+local fragment=defs.by_id["fragment-1"]
+check(fragment and fragment.story_only,"Relay Fragments quests must be story only")
+local fragment_count=0
+for _,q in ipairs(defs.quests) do
+  if q.chapter=="echoes" then
+    fragment_count=fragment_count+1
+    check(q.story_only,"Every Relay Fragments quest must be story only: "..q.id)
+  end
+end
+check(fragment_count==10,"Ten Relay Fragments quests expected")
+local writer={index=7,valid=true,force=force}
+local reader={index=8,valid=true,force=force}
+rawset(_G,"storage",{razi_writer={[7]={on=true}}})
+story.configure(false)
+check(not M.available(force,fragment),"Fragments must be hidden while the story is off")
+check(M.state(force,fragment)=="unavailable","Hidden fragments report no state")
+check(not M.journal_visible(force,fragment),"Hidden fragments are not listed")
+local off_view=M.view_status(force)
+check(#off_view.chapters.echoes.quests==0 and off_view.chapters.echoes.total==0,
+  "The Relay Fragments chapter must be empty while the story is off")
+local _,off_total=M.summary(force)
+check(off_total==off_view.total,"Totals must agree while the story is off")
+check(not M.journal_visible(force,fragment,M.context(force,reader)),
+  "A reader without writer mode must not see fragments")
+check(M.available(force,fragment,M.context(force,writer)),
+  "Writer mode must open fragments while the story is off")
+local writer_view=M.view_status(force,M.context(force,writer))
+check(#writer_view.chapters.echoes.quests==10,
+  "Writer mode must list all ten fragments")
+check(M.next_quest(force) and M.next_quest(force).chapter~="echoes",
+  "A pinned or suggested quest must never fall on a hidden fragment")
+story.configure(true)
+check(M.available(force,fragment),"Fragments appear when the story is on")
+local on_view=M.view_status(force)
+check(#on_view.chapters.echoes.quests==10 and on_view.total==off_view.total+10,
+  "The story adds the ten fragments to the totals")
+story.configure(false)
+rawset(_G,"storage",nil)
 print("Expedition Journal: chapters, branches, skipped content and save backfill passed")

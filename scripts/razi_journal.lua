@@ -166,8 +166,12 @@ function M.discovery_index(force)
   end
   return indexed
 end
-function M.context(force)
-  return {discoveries=M.discovery_index(force),nexus=trials.snapshot(force)}
+-- With a player, the context carries the writer mark: a story-only quest is
+-- shown to a writer even while the story is off. Calls without a player
+-- (totals, chapter timing) never carry it.
+function M.context(force,player)
+  return {discoveries=M.discovery_index(force),nexus=trials.snapshot(force),
+    writer=player~=nil and story.writer(player) or nil}
 end
 local function technology(force,quest,context)
   local t
@@ -188,6 +192,8 @@ local function technology(force,quest,context)
 end
 function M.available(force,quest,context)
   if not technology(force,quest,context) then return false end
+  if quest.story_only and not story.enabled()
+    and not (context and context.writer) then return false end
   if quest.boss then
     return (context or M.context(force)).nexus~=nil
   end
@@ -617,7 +623,7 @@ local function render_tracker(player)
   if old and old.valid then old.destroy() end
   local p=pref(player.index)
   if not p.tracker or not show_player_option(player,"razi-journal-show-tracker") then return end
-  local context=M.context(player.force)
+  local context=M.context(player.force,player)
   local quest=p.pinned and defs.by_id[p.pinned]
   if not quest or not M.journal_visible(player.force,quest,context) then
     quest=M.next_quest(player.force,context)
@@ -1726,7 +1732,7 @@ local function draw(player,focus_search)
   end
   if p.selected and not defs.by_id[p.selected] then p.selected=nil end
   if p.pinned and not defs.by_id[p.pinned] then p.pinned=nil end
-  local context=M.context(player.force)
+  local context=M.context(player.force,player)
   if M.hide_spoilers() then
     local quest=p.selected and defs.by_id[p.selected]
     if quest and not M.journal_visible(player.force,quest,context) then
@@ -1990,7 +1996,7 @@ local function update_reader(player,preserve_reader)
   end
   local p=pref(player.index)
   local translated=search_names.names(player.index)
-  local context=M.context(player.force)
+  local context=M.context(player.force,player)
   local size=M.layout(player.display_resolution,player.display_scale)
   if p.reader_focus or size.single_column then size.reader=size.width-43 end
   local view=M.view_status(player.force,context)
@@ -2205,8 +2211,7 @@ function M.open_project(player,id)
   if not (player and player.valid) then return false end
   if id=="recovery" then
     -- The old project ID now points to its actual research milestones.
-    return M.open_quest(player,"frontier-recovery-charter")
-      or M.open_quest(player,"athos")
+    return M.open_quest(player,"athos")
   elseif id and not projects.visible(player.force,id) then
     return false
   end
@@ -2219,7 +2224,8 @@ end
 function M.open_quest(player,id)
   local quest=defs.by_id[id]
   if not (player and player.valid and quest
-    and M.journal_visible(player.force,quest)) then return false end
+    and M.journal_visible(player.force,quest,M.context(player.force,player)))
+  then return false end
   local p=pref(player.index)
   p.selected=quest.id
   p.chapter=quest.chapter
@@ -2536,7 +2542,7 @@ function M.gui_click(event)
   end
   if action=="open-convergence" then
     local quest=defs.by_id[tags.id]
-    if quest and M.available(player.force,quest)
+    if quest and M.available(player.force,quest,M.context(player.force,player))
       and convergence.available(player.force) then
       M.open_project(player,"convergence")
     end
@@ -2552,7 +2558,8 @@ function M.gui_click(event)
   local old_view=p.view
   if ARCHIVE_ACTIONS[action] and not story.visible(player) then return end
   if (action=="select" or action=="guidance-select") and
-    defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id]) then
+    defs.by_id[tags.id] and M.journal_visible(player.force,defs.by_id[tags.id],
+      M.context(player.force,player)) then
     p.selected=tags.id
     p.chapter=defs.by_id[tags.id].chapter
     -- Keep a clicked search/filter result in its original list.
@@ -2583,9 +2590,10 @@ function M.gui_click(event)
     if not known then return end
     if M.hide_spoilers() then
       local exposed=false
+      local context=M.context(player.force,player)
       for _,candidate in ipairs(defs.quests) do
         if candidate.chapter==tags.id
-          and M.journal_visible(player.force,candidate) then
+          and M.journal_visible(player.force,candidate,context) then
           exposed=true;break
         end
       end
@@ -2599,7 +2607,8 @@ function M.gui_click(event)
     p.query=""
   elseif action=="chapter-continue" then
     local target=defs.by_id[tags.id]
-    if not (target and M.journal_visible(player.force,target)) then return end
+    if not (target and M.journal_visible(player.force,target,
+        M.context(player.force,player))) then return end
     p.selected=target.id
     p.chapter=target.chapter
     p.chapter_cover=false
@@ -2609,9 +2618,10 @@ function M.gui_click(event)
   elseif action=="chapter" then
     if M.hide_spoilers() then
       local exposed=false
+      local context=M.context(player.force,player)
       for _,candidate in ipairs(defs.quests) do
         if candidate.chapter==tags.id
-          and M.journal_visible(player.force,candidate) then
+          and M.journal_visible(player.force,candidate,context) then
           exposed=true;break
         end
       end
@@ -2651,7 +2661,7 @@ function M.gui_click(event)
   elseif action=="story-alerts" and p.view=="archive" then
     p.story_alerts=not p.story_alerts
   elseif action=="record-next-unread" and p.view=="archive" then
-    local context=M.context(player.force)
+    local context=M.context(player.force,player)
     local found=false
     for _,record in ipairs(story.records(player)) do
       local quest=defs.by_id[record.unlock]
@@ -2673,7 +2683,8 @@ function M.gui_click(event)
     p.record=nil
   elseif action=="archive-source" then
     local quest=defs.by_id[tags.id]
-    if not (quest and M.complete(player.force,quest)) then return end
+    if not (quest and M.complete(player.force,quest,
+        M.context(player.force,player))) then return end
     p.selected=quest.id
     p.chapter=quest.chapter
     p.chapter_cover=false
@@ -2682,7 +2693,7 @@ function M.gui_click(event)
     p.filter="all"
     p.query=""
   elseif action=="record" then
-    local context=M.context(player.force)
+    local context=M.context(player.force,player)
     for _,record in ipairs(story.records(player)) do
       if record.id==tags.id then
         local quest=defs.by_id[record.unlock]
@@ -2702,7 +2713,7 @@ function M.gui_click(event)
     p.query=""
     -- The counter is an actual navigation shortcut: open a ready entry
     -- rather than keeping a stale selection from another chapter.
-    local context=M.context(player.force)
+    local context=M.context(player.force,player)
     local target=M.next_quest(player.force,context)
     if not (target and M.state(player.force,target,context)=="active") then
       target=nil
@@ -2722,7 +2733,7 @@ function M.gui_click(event)
       done=true})[tags.id] then
     p.filter=tags.id
   elseif action=="next" then
-    local next=M.next_quest(player.force)
+    local next=M.next_quest(player.force,M.context(player.force,player))
     if next then
       p.compact_index_open=false
       p.selected=next.id
@@ -2733,7 +2744,7 @@ function M.gui_click(event)
       p.chapter_cover=false
     end
   elseif action=="next-in-chapter" or action=="previous-in-chapter" then
-    local context=M.context(player.force)
+    local context=M.context(player.force,player)
     local choices={}
     for _,quest in ipairs(defs.quests) do
       if quest.chapter==p.chapter and M.journal_visible(player.force,quest,context)
@@ -2795,7 +2806,7 @@ local function follow_search(player,p)
   local prior=p.selected
   local prior_cover=p.chapter_cover
   if p.query~="" then
-    local context=M.context(player.force)
+    local context=M.context(player.force,player)
     local translated=search_names.names(player.index)
     for _,quest in ipairs(defs.quests) do
       if M.show_in_filter(player.force,quest,p.filter,context)
@@ -2844,7 +2855,7 @@ function M.selection_changed(event)
   p.filter="all"
   p.query=""
   p.chapter_cover=true
-  local context=M.context(player.force)
+  local context=M.context(player.force,player)
   for _,quest in ipairs(defs.quests) do
     if quest.chapter==chapter.id
       and M.journal_visible(player.force,quest,context) then

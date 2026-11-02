@@ -103,7 +103,7 @@ M.quests={
  {id="first-frontier-relay",chapter="network",tech="razi-first-frontier-relay-components",site="nauvis",requires={"vulcanus","gleba","moshine"},optional=true},
  {id="precision-matrix",chapter="network",tech="razi-network-precision-matrix",requires={"fulgora","moshine"}},
  {id="extreme-lattice",chapter="network",tech="razi-network-extreme-lattice",requires={"precision-matrix","rubia","tenebris"}},
- {id="outer-mastery",chapter="finale",tech="razi-outer-frontier-mastery",requires={"frozeta","vesta","linox","frontier-recovery-charter"}},
+ {id="outer-mastery",chapter="finale",tech="razi-outer-frontier-mastery",requires={"frozeta","vesta","linox"}},
  {id="edge",chapter="finale",tech="stellar-discovery-solar-system-edge",requires={"outer-mastery","stable-singularity"}},
  {id="aegis",chapter="network",tech="discovery-aegis-outer",requires={"solaris-gate","nyxaris-gate"}},
  {id="singularity-theory",chapter="finale",tech="razi-singularity-theory",requires={"outer-mastery"}},
