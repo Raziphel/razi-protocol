@@ -36,7 +36,8 @@ local EMPTY={}
 function M.enabled() return enabled_flag end
 
 local function state(player)
-  local index=type(player)=="table" and player.index or player
+  -- Game objects are userdata, so anything that isn't a number is a player.
+  local index=type(player)=="number" and player or (player and player.index)
   local all=rawget(_G,"storage") and storage.razi_writer
   return index and all and all[index] or nil
 end
