@@ -49,7 +49,6 @@ return {
   {id="electromagnetic",chapter="sciences",tech="electromagnetic-science-pack",requires={"fulgora"}},
   {id="agricultural",chapter="sciences",tech="agricultural-science-pack",requires={"gleba"}},
   {id="cryogenic",chapter="sciences",tech="cryogenic-science-pack",requires={"aquilo"}},
-  {id="lunar",chapter="sciences",tech="lunar-science-pack",requires={"muluna"}},
   {id="battlefield",chapter="sciences",tech="battlefield-science-pack",requires={"castra"}},
   {id="compression",chapter="sciences",tech="planetaris-compression-science",requires={"arig"}},
   {id="polishing",chapter="sciences",tech="planetaris-polishing-science-pack",requires={"hyarion"}},

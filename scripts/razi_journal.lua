@@ -2205,8 +2205,7 @@ function M.open_project(player,id)
   if not (player and player.valid) then return false end
   if id=="recovery" then
     -- The old project ID now points to its actual research milestones.
-    return M.open_quest(player,"frontier-recovery-charter")
-      or M.open_quest(player,"athos")
+    return M.open_quest(player,"athos")
   elseif id and not projects.visible(player.force,id) then
     return false
   end

@@ -13,7 +13,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## quest-title
 
-`locale/en/story-quests.cfg`, section `[razi-story-quest-title]`: quest name in the list and the dossier heading. 251 slots.
+`locale/en/story-quests.cfg`, section `[razi-story-quest-title]`: quest name in the list and the dossier heading. 230 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -99,7 +99,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `first-frontier-relay` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-first-frontier-relay-components`, after quests `vulcanus`, `gleba`, `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `precision-matrix` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-network-precision-matrix`, after quests `fulgora`, `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `extreme-lattice` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-network-extreme-lattice`, after quests `precision-matrix`, `rubia`, `tenebris` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `outer-mastery` | quest name in the list and the dossier heading; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox`, `frontier-recovery-charter` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `outer-mastery` | quest name in the list and the dossier heading; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `edge` | quest name in the list and the dossier heading; chapter `finale` | quest opens with research `stellar-discovery-solar-system-edge`, after quests `outer-mastery`, `stable-singularity` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `aegis` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `discovery-aegis-outer`, after quests `solaris-gate`, `nyxaris-gate` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `singularity-theory` | quest name in the list and the dossier heading; chapter `finale` | quest opens with research `razi-singularity-theory`, after quests `outer-mastery` | 60 |
@@ -115,7 +115,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `convergence-ignition` | quest name in the list and the dossier heading; chapter `finale` | quest opens with Convergence stage `ignition`, after quests `convergence-ignition-research` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `convergence-victory` | quest name in the list and the dossier heading; chapter `finale` | quest opens with Convergence stage `victory`, after quests `convergence-ignition` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `athos-particulate` | quest name in the list and the dossier heading; chapter `vespera` | quest opens with research `particulate-science-pack`, after quests `athos` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `frontier-recovery-charter` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-frontier-recovery-charter`, after quests `athos-particulate`, `nulla-robotic-science`, `interplanetary-trade` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `production-science` | quest name in the list and the dossier heading; chapter `foundations` | quest opens with research `production-science-pack`, after quests `chemical-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `utility-science` | quest name in the list and the dossier heading; chapter `foundations` | quest opens with research `utility-science-pack`, after quests `production-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nuclear-power` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `nuclear-power`, after quests `metallurgic`, `agricultural` | 60 |
@@ -154,7 +153,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `electromagnetic` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `electromagnetic-science-pack`, after quests `fulgora` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `agricultural` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `agricultural-science-pack`, after quests `gleba` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `cryogenic` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `cryogenic-science-pack`, after quests `aquilo` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `lunar` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `lunar-science-pack`, after quests `muluna` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `battlefield` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `battlefield-science-pack`, after quests `castra` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `compression` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-compression-science`, after quests `arig` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `polishing` | quest name in the list and the dossier heading; chapter `sciences` | quest opens with research `planetaris-polishing-science-pack`, after quests `hyarion` | 60 |
@@ -237,41 +235,22 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `rocket-salvage-precision` | quest name in the list and the dossier heading; chapter `salvage` | quest opens with research `razi-rocket-salvage-precision`, after quests `rocket-salvage-beacon`, `fulgora` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `rocket-salvage-cryogenic` | quest name in the list and the dossier heading; chapter `salvage` | quest opens with research `razi-rocket-salvage-cryogenic`, after quests `rocket-salvage-precision`, `aquilo` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `rocket-salvage-network` | quest name in the list and the dossier heading; chapter `salvage` | quest opens with research `razi-rocket-salvage-network`, after quests `rocket-salvage-cryogenic`, `interplanetary-trade`, `precision-matrix` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-middle-fulgora` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-middle-fulgora-resilient-capacitors`, after quests `fulgora`, `aquilo`, `moshine` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-middle-aquilo` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-middle-aquilo-capacitor-controls`, after quests `aquilo`, `fulgora`, `moshine` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-middle-paracelsin` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-middle-paracelsin-shielded-coils`, after quests `paracelsin`, `rubia`, `fulgora` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-middle-rubia` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-middle-rubia-conductive-frames`, after quests `rubia`, `paracelsin`, `fulgora` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-frontier-moshine-silicon` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-frontier-moshine-biometal-silicon`, after quests `moshine`, `gleba`, `vulcanus` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-frontier-gleba-carbon` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-frontier-gleba-photofiber`, after quests `gleba`, `moshine`, `vulcanus` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-frontier-castra-ballistics` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-frontier-castra-composite-rounds`, after quests `castra`, `gleba`, `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-bio-metals` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-bio-rare-metal-casting`, after quests `vulcanus`, `gleba` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-holmium-circuits` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-electrobiological-components`, after quests `fulgora`, `gleba` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-optical-coils` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-modded-paracelsin-optical-coils`, after quests `paracelsin`, `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-zinc-silicon` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-modded-moshine-zinc-silicon`, after quests `moshine`, `paracelsin` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-rubia-composites` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-modded-rubia-craptonite-composites`, after quests `rubia`, `paracelsin`, `moshine` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-tenebris-chitosan` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-modded-tenebris-galvanized-chitosan`, after quests `tenebris`, `paracelsin` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-linox-refining` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-modded-linox-precision-refining`, after quests `linox`, `moshine`, `paracelsin` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-vesta-magnets` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-modded-vesta-rare-earth-supermagnets`, after quests `vesta`, `linox`, `moshine` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-cryo-control` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-cryo-energy-control`, after quests `aquilo`, `fulgora`, `gleba` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-photonic-coils` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-photonic-coils`, after quests `paracelsin`, `fulgora`, `moshine` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-network-cubium` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-golden-cubium-alloys`, after quests `cubium`, `secretas`, `linox` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-balack-shield` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-balack-rubia-chitosan-shielding`, after quests `balack`, `rubia`, `tenebris` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-matrix-rubia` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-matrix-rubia-logistics`, after quests `precision-matrix`, `rubia` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-matrix-aquilo` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-matrix-cryo-controllers`, after quests `precision-matrix`, `aquilo` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-lattice-vesta` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-lattice-vesta-magnets`, after quests `extreme-lattice`, `vesta` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-vesta-foundations` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-vesta-biofoundations`, after quests `vesta`, `rubia`, `tenebris` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-balack-vesta` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-balack-vesta-shielding`, after quests `balack`, `vesta`, `rubia` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-aquilo-outer` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-aquilo-outer-controllers`, after quests `aquilo`, `vesta`, `rubia` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-panglia-bond` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-panglia-optic-bond`, after quests `panglia-glass`, `moshine`, `fulgora` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-bond-paracelsin` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-bond-paracelsin-coils`, after quests `alliance-panglia-bond`, `paracelsin` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-bond-linox` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-bond-linox-refining`, after quests `alliance-panglia-bond`, `linox` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-pressure-frame` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-umbra-pressure-frame`, after quests `alliance-panglia-bond`, `crucible`, `vesta`, `linox` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `alliance-pressure-vesta` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-frame-vesta-foundations`, after quests `alliance-pressure-frame`, `vesta` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `alliance-pressure-aquilo` | quest name in the list and the dossier heading; chapter `alliances` | quest opens with research `razi-network-frame-aquilo-controllers`, after quests `alliance-pressure-frame`, `aquilo` | 60 |
 
 ## quest-story
 
-`locale/en/story-quests.cfg`, section `[razi-story-quest]`: quest dossier, story block. 251 slots.
+`locale/en/story-quests.cfg`, section `[razi-story-quest]`: quest dossier, story block. 230 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -357,7 +336,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `first-frontier-relay` | quest dossier, story block; chapter `network` | quest opens with research `razi-first-frontier-relay-components`, after quests `vulcanus`, `gleba`, `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `precision-matrix` | quest dossier, story block; chapter `network` | quest opens with research `razi-network-precision-matrix`, after quests `fulgora`, `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `extreme-lattice` | quest dossier, story block; chapter `network` | quest opens with research `razi-network-extreme-lattice`, after quests `precision-matrix`, `rubia`, `tenebris` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `outer-mastery` | quest dossier, story block; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox`, `frontier-recovery-charter` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `outer-mastery` | quest dossier, story block; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `edge` | quest dossier, story block; chapter `finale` | quest opens with research `stellar-discovery-solar-system-edge`, after quests `outer-mastery`, `stable-singularity` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `aegis` | quest dossier, story block; chapter `network` | quest opens with research `discovery-aegis-outer`, after quests `solaris-gate`, `nyxaris-gate` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `singularity-theory` | quest dossier, story block; chapter `finale` | quest opens with research `razi-singularity-theory`, after quests `outer-mastery` | 900 |
@@ -373,7 +352,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `convergence-ignition` | quest dossier, story block; chapter `finale` | quest opens with Convergence stage `ignition`, after quests `convergence-ignition-research` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `convergence-victory` | quest dossier, story block; chapter `finale` | quest opens with Convergence stage `victory`, after quests `convergence-ignition` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `athos-particulate` | quest dossier, story block; chapter `vespera` | quest opens with research `particulate-science-pack`, after quests `athos` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `frontier-recovery-charter` | quest dossier, story block; chapter `network` | quest opens with research `razi-frontier-recovery-charter`, after quests `athos-particulate`, `nulla-robotic-science`, `interplanetary-trade` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `production-science` | quest dossier, story block; chapter `foundations` | quest opens with research `production-science-pack`, after quests `chemical-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `utility-science` | quest dossier, story block; chapter `foundations` | quest opens with research `utility-science-pack`, after quests `production-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nuclear-power` | quest dossier, story block; chapter `sciences` | quest opens with research `nuclear-power`, after quests `metallurgic`, `agricultural` | 900 |
@@ -412,7 +390,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `electromagnetic` | quest dossier, story block; chapter `sciences` | quest opens with research `electromagnetic-science-pack`, after quests `fulgora` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `agricultural` | quest dossier, story block; chapter `sciences` | quest opens with research `agricultural-science-pack`, after quests `gleba` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `cryogenic` | quest dossier, story block; chapter `sciences` | quest opens with research `cryogenic-science-pack`, after quests `aquilo` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `lunar` | quest dossier, story block; chapter `sciences` | quest opens with research `lunar-science-pack`, after quests `muluna` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `battlefield` | quest dossier, story block; chapter `sciences` | quest opens with research `battlefield-science-pack`, after quests `castra` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `compression` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-compression-science`, after quests `arig` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `polishing` | quest dossier, story block; chapter `sciences` | quest opens with research `planetaris-polishing-science-pack`, after quests `hyarion` | 900 |
@@ -495,41 +472,22 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `rocket-salvage-precision` | quest dossier, story block; chapter `salvage` | quest opens with research `razi-rocket-salvage-precision`, after quests `rocket-salvage-beacon`, `fulgora` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `rocket-salvage-cryogenic` | quest dossier, story block; chapter `salvage` | quest opens with research `razi-rocket-salvage-cryogenic`, after quests `rocket-salvage-precision`, `aquilo` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `rocket-salvage-network` | quest dossier, story block; chapter `salvage` | quest opens with research `razi-rocket-salvage-network`, after quests `rocket-salvage-cryogenic`, `interplanetary-trade`, `precision-matrix` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-middle-fulgora` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-middle-fulgora-resilient-capacitors`, after quests `fulgora`, `aquilo`, `moshine` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-middle-aquilo` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-middle-aquilo-capacitor-controls`, after quests `aquilo`, `fulgora`, `moshine` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-middle-paracelsin` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-middle-paracelsin-shielded-coils`, after quests `paracelsin`, `rubia`, `fulgora` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-middle-rubia` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-middle-rubia-conductive-frames`, after quests `rubia`, `paracelsin`, `fulgora` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-frontier-moshine-silicon` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-frontier-moshine-biometal-silicon`, after quests `moshine`, `gleba`, `vulcanus` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-frontier-gleba-carbon` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-frontier-gleba-photofiber`, after quests `gleba`, `moshine`, `vulcanus` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-frontier-castra-ballistics` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-frontier-castra-composite-rounds`, after quests `castra`, `gleba`, `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-bio-metals` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-bio-rare-metal-casting`, after quests `vulcanus`, `gleba` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-holmium-circuits` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-electrobiological-components`, after quests `fulgora`, `gleba` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-optical-coils` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-modded-paracelsin-optical-coils`, after quests `paracelsin`, `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-zinc-silicon` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-modded-moshine-zinc-silicon`, after quests `moshine`, `paracelsin` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-rubia-composites` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-modded-rubia-craptonite-composites`, after quests `rubia`, `paracelsin`, `moshine` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-tenebris-chitosan` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-modded-tenebris-galvanized-chitosan`, after quests `tenebris`, `paracelsin` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-linox-refining` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-modded-linox-precision-refining`, after quests `linox`, `moshine`, `paracelsin` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-vesta-magnets` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-modded-vesta-rare-earth-supermagnets`, after quests `vesta`, `linox`, `moshine` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-cryo-control` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-cryo-energy-control`, after quests `aquilo`, `fulgora`, `gleba` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-photonic-coils` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-photonic-coils`, after quests `paracelsin`, `fulgora`, `moshine` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-network-cubium` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-golden-cubium-alloys`, after quests `cubium`, `secretas`, `linox` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-balack-shield` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-balack-rubia-chitosan-shielding`, after quests `balack`, `rubia`, `tenebris` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-matrix-rubia` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-matrix-rubia-logistics`, after quests `precision-matrix`, `rubia` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-matrix-aquilo` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-matrix-cryo-controllers`, after quests `precision-matrix`, `aquilo` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-lattice-vesta` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-lattice-vesta-magnets`, after quests `extreme-lattice`, `vesta` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-vesta-foundations` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-vesta-biofoundations`, after quests `vesta`, `rubia`, `tenebris` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-balack-vesta` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-balack-vesta-shielding`, after quests `balack`, `vesta`, `rubia` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-aquilo-outer` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-aquilo-outer-controllers`, after quests `aquilo`, `vesta`, `rubia` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-panglia-bond` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-panglia-optic-bond`, after quests `panglia-glass`, `moshine`, `fulgora` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-bond-paracelsin` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-bond-paracelsin-coils`, after quests `alliance-panglia-bond`, `paracelsin` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-bond-linox` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-bond-linox-refining`, after quests `alliance-panglia-bond`, `linox` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-pressure-frame` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-umbra-pressure-frame`, after quests `alliance-panglia-bond`, `crucible`, `vesta`, `linox` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `alliance-pressure-vesta` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-frame-vesta-foundations`, after quests `alliance-pressure-frame`, `vesta` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `alliance-pressure-aquilo` | quest dossier, story block; chapter `alliances` | quest opens with research `razi-network-frame-aquilo-controllers`, after quests `alliance-pressure-frame`, `aquilo` | 900 |
 
 ## quest-tip
 
-`locale/en/story-quests.cfg`, section `[razi-story-quest-tip]`: quest dossier, field note. 251 slots.
+`locale/en/story-quests.cfg`, section `[razi-story-quest-tip]`: quest dossier, field note. 230 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -615,7 +573,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `first-frontier-relay` | quest dossier, field note; chapter `network` | quest opens with research `razi-first-frontier-relay-components`, after quests `vulcanus`, `gleba`, `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `precision-matrix` | quest dossier, field note; chapter `network` | quest opens with research `razi-network-precision-matrix`, after quests `fulgora`, `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `extreme-lattice` | quest dossier, field note; chapter `network` | quest opens with research `razi-network-extreme-lattice`, after quests `precision-matrix`, `rubia`, `tenebris` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `outer-mastery` | quest dossier, field note; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox`, `frontier-recovery-charter` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `outer-mastery` | quest dossier, field note; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `edge` | quest dossier, field note; chapter `finale` | quest opens with research `stellar-discovery-solar-system-edge`, after quests `outer-mastery`, `stable-singularity` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `aegis` | quest dossier, field note; chapter `network` | quest opens with research `discovery-aegis-outer`, after quests `solaris-gate`, `nyxaris-gate` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `singularity-theory` | quest dossier, field note; chapter `finale` | quest opens with research `razi-singularity-theory`, after quests `outer-mastery` | 400 |
@@ -631,7 +589,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `convergence-ignition` | quest dossier, field note; chapter `finale` | quest opens with Convergence stage `ignition`, after quests `convergence-ignition-research` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `convergence-victory` | quest dossier, field note; chapter `finale` | quest opens with Convergence stage `victory`, after quests `convergence-ignition` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `athos-particulate` | quest dossier, field note; chapter `vespera` | quest opens with research `particulate-science-pack`, after quests `athos` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `frontier-recovery-charter` | quest dossier, field note; chapter `network` | quest opens with research `razi-frontier-recovery-charter`, after quests `athos-particulate`, `nulla-robotic-science`, `interplanetary-trade` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `production-science` | quest dossier, field note; chapter `foundations` | quest opens with research `production-science-pack`, after quests `chemical-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `utility-science` | quest dossier, field note; chapter `foundations` | quest opens with research `utility-science-pack`, after quests `production-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nuclear-power` | quest dossier, field note; chapter `sciences` | quest opens with research `nuclear-power`, after quests `metallurgic`, `agricultural` | 400 |
@@ -670,7 +627,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `electromagnetic` | quest dossier, field note; chapter `sciences` | quest opens with research `electromagnetic-science-pack`, after quests `fulgora` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `agricultural` | quest dossier, field note; chapter `sciences` | quest opens with research `agricultural-science-pack`, after quests `gleba` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `cryogenic` | quest dossier, field note; chapter `sciences` | quest opens with research `cryogenic-science-pack`, after quests `aquilo` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `lunar` | quest dossier, field note; chapter `sciences` | quest opens with research `lunar-science-pack`, after quests `muluna` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `battlefield` | quest dossier, field note; chapter `sciences` | quest opens with research `battlefield-science-pack`, after quests `castra` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `compression` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-compression-science`, after quests `arig` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `polishing` | quest dossier, field note; chapter `sciences` | quest opens with research `planetaris-polishing-science-pack`, after quests `hyarion` | 400 |
@@ -753,37 +709,18 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `rocket-salvage-precision` | quest dossier, field note; chapter `salvage` | quest opens with research `razi-rocket-salvage-precision`, after quests `rocket-salvage-beacon`, `fulgora` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `rocket-salvage-cryogenic` | quest dossier, field note; chapter `salvage` | quest opens with research `razi-rocket-salvage-cryogenic`, after quests `rocket-salvage-precision`, `aquilo` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `rocket-salvage-network` | quest dossier, field note; chapter `salvage` | quest opens with research `razi-rocket-salvage-network`, after quests `rocket-salvage-cryogenic`, `interplanetary-trade`, `precision-matrix` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-middle-fulgora` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-middle-fulgora-resilient-capacitors`, after quests `fulgora`, `aquilo`, `moshine` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-middle-aquilo` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-middle-aquilo-capacitor-controls`, after quests `aquilo`, `fulgora`, `moshine` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-middle-paracelsin` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-middle-paracelsin-shielded-coils`, after quests `paracelsin`, `rubia`, `fulgora` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-middle-rubia` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-middle-rubia-conductive-frames`, after quests `rubia`, `paracelsin`, `fulgora` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-frontier-moshine-silicon` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-frontier-moshine-biometal-silicon`, after quests `moshine`, `gleba`, `vulcanus` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-frontier-gleba-carbon` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-frontier-gleba-photofiber`, after quests `gleba`, `moshine`, `vulcanus` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-frontier-castra-ballistics` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-frontier-castra-composite-rounds`, after quests `castra`, `gleba`, `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-bio-metals` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-bio-rare-metal-casting`, after quests `vulcanus`, `gleba` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-holmium-circuits` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-electrobiological-components`, after quests `fulgora`, `gleba` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-optical-coils` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-modded-paracelsin-optical-coils`, after quests `paracelsin`, `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-zinc-silicon` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-modded-moshine-zinc-silicon`, after quests `moshine`, `paracelsin` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-rubia-composites` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-modded-rubia-craptonite-composites`, after quests `rubia`, `paracelsin`, `moshine` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-tenebris-chitosan` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-modded-tenebris-galvanized-chitosan`, after quests `tenebris`, `paracelsin` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-linox-refining` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-modded-linox-precision-refining`, after quests `linox`, `moshine`, `paracelsin` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-vesta-magnets` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-modded-vesta-rare-earth-supermagnets`, after quests `vesta`, `linox`, `moshine` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-cryo-control` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-cryo-energy-control`, after quests `aquilo`, `fulgora`, `gleba` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-photonic-coils` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-photonic-coils`, after quests `paracelsin`, `fulgora`, `moshine` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-network-cubium` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-golden-cubium-alloys`, after quests `cubium`, `secretas`, `linox` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-balack-shield` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-balack-rubia-chitosan-shielding`, after quests `balack`, `rubia`, `tenebris` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-matrix-rubia` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-matrix-rubia-logistics`, after quests `precision-matrix`, `rubia` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-matrix-aquilo` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-matrix-cryo-controllers`, after quests `precision-matrix`, `aquilo` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-lattice-vesta` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-lattice-vesta-magnets`, after quests `extreme-lattice`, `vesta` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-vesta-foundations` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-vesta-biofoundations`, after quests `vesta`, `rubia`, `tenebris` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-balack-vesta` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-balack-vesta-shielding`, after quests `balack`, `vesta`, `rubia` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-aquilo-outer` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-aquilo-outer-controllers`, after quests `aquilo`, `vesta`, `rubia` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-panglia-bond` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-panglia-optic-bond`, after quests `panglia-glass`, `moshine`, `fulgora` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-bond-paracelsin` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-bond-paracelsin-coils`, after quests `alliance-panglia-bond`, `paracelsin` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-bond-linox` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-bond-linox-refining`, after quests `alliance-panglia-bond`, `linox` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-pressure-frame` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-umbra-pressure-frame`, after quests `alliance-panglia-bond`, `crucible`, `vesta`, `linox` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `alliance-pressure-vesta` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-frame-vesta-foundations`, after quests `alliance-pressure-frame`, `vesta` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `alliance-pressure-aquilo` | quest dossier, field note; chapter `alliances` | quest opens with research `razi-network-frame-aquilo-controllers`, after quests `alliance-pressure-frame`, `aquilo` | 400 |
 
 ## quest-brief
 
@@ -963,7 +900,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## record-title
 
-`locale/en/story-records.cfg`, section `[razi-story-record-title]`: Archive list and record heading. 74 slots.
+`locale/en/story-records.cfg`, section `[razi-story-record-title]`: Archive list and record heading. 73 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -1025,7 +962,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-records.cfg `[razi-story-record-title]` | `corp-first-relay` | Archive list and record heading; field record | quest `first-frontier-relay` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-dyson` | Archive list and record heading; corporate record | quest `dyson-build` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-solar-orbit-watch` | Archive list and record heading; field record | quest `solar-orbit` is complete | 60 |
-| story-records.cfg `[razi-story-record-title]` | `corp-frontier-charter` | Archive list and record heading; field record | quest `frontier-recovery-charter` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-audit` | Archive list and record heading; corporate record | quest `stable-singularity` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-lattice-accord` | Archive list and record heading; field record | quest `extreme-lattice` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-outer` | Archive list and record heading; corporate record | quest `outer-mastery` is complete | 60 |
@@ -1044,7 +980,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## record-origin
 
-`locale/en/story-records.cfg`, section `[razi-story-record-origin]`: Archive record, line under the heading. 74 slots.
+`locale/en/story-records.cfg`, section `[razi-story-record-origin]`: Archive record, line under the heading. 73 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -1106,7 +1042,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-records.cfg `[razi-story-record-origin]` | `corp-first-relay` | Archive record, line under the heading; field record | quest `first-frontier-relay` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-dyson` | Archive record, line under the heading; corporate record | quest `dyson-build` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-solar-orbit-watch` | Archive record, line under the heading; field record | quest `solar-orbit` is complete | 80 |
-| story-records.cfg `[razi-story-record-origin]` | `corp-frontier-charter` | Archive record, line under the heading; field record | quest `frontier-recovery-charter` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-audit` | Archive record, line under the heading; corporate record | quest `stable-singularity` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-lattice-accord` | Archive record, line under the heading; field record | quest `extreme-lattice` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-outer` | Archive record, line under the heading; corporate record | quest `outer-mastery` is complete | 80 |
@@ -1125,7 +1060,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## record-body
 
-`locale/en/story-records.cfg`, section `[razi-story-record]`: Archive record, text. 74 slots.
+`locale/en/story-records.cfg`, section `[razi-story-record]`: Archive record, text. 73 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -1187,7 +1122,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-records.cfg `[razi-story-record]` | `corp-first-relay` | Archive record, text; field record | quest `first-frontier-relay` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-dyson` | Archive record, text; corporate record | quest `dyson-build` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-solar-orbit-watch` | Archive record, text; field record | quest `solar-orbit` is complete | 2500 |
-| story-records.cfg `[razi-story-record]` | `corp-frontier-charter` | Archive record, text; field record | quest `frontier-recovery-charter` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-audit` | Archive record, text; corporate record | quest `stable-singularity` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-lattice-accord` | Archive record, text; field record | quest `extreme-lattice` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-outer` | Archive record, text; corporate record | quest `outer-mastery` is complete | 2500 |

@@ -17,9 +17,6 @@ end
 M.quests={
   {id="athos-particulate",chapter="vespera",
    tech=M.unlocking("particulate-science-pack") or "particulate-science-pack",
-   requires={"athos"}},
-  {id="frontier-recovery-charter",chapter="network",
-   tech="razi-frontier-recovery-charter",
-   requires={"athos-particulate","nulla-robotic-science","interplanetary-trade"}}
+   requires={"athos"}}
 }
 return M
