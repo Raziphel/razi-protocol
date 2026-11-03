@@ -125,4 +125,38 @@ raw["fuel-category"] = {["kr-vehicle-fuel"] = {}}
 vehicle_fuel.data_final_fixes()
 check(next(raw.car or {}) == nil and #logs == 0, "Something changed without cars")
 
+-- moon-eneas recycling_enabled
+local recycling_enabled = require("prototypes.fixes.moon-eneas.recycling_enabled")
+raw = fresh()
+raw.technology = {
+	{effects = {{type = "unlock-recipe", recipe = "nuclear-scrap-recycling"},
+		{type = "unlock-recipe", recipe = "cube-recycling"}, {type = "nothing"}}},
+	{effects = {{type = "unlock-recipe", recipe = "plain-recycling"}, {type = "unlock-recipe", recipe = "hand-only"}}},
+	{},
+}
+raw.recipe = {
+	["nuclear-scrap-recycling"] = {categories = {"recycling", "hand-crafting"}, enabled = true},
+	["cube-recycling"] = {categories = {"recycling", "hand-crafting"}},
+	["plain-recycling"] = {categories = {"recycling"}, enabled = true},
+	["hand-only"] = {categories = {"hand-crafting"}, enabled = true},
+	["no-technology-recycling"] = {categories = {"recycling", "hand-crafting"}, enabled = true},
+	["already-closed-recycling"] = {categories = {"recycling", "hand-crafting"}, enabled = false},
+	["no-categories"] = {enabled = true},
+}
+local recycling_before = deepcopy(raw.recipe)
+recycling_enabled.data_final_fixes()
+check(raw.recipe["nuclear-scrap-recycling"].enabled == false and raw.recipe["cube-recycling"].enabled == false,
+	"A recycling recipe that can be hand-crafted and that a technology unlocks stays enabled")
+for _, name in ipairs({"plain-recycling", "hand-only", "no-technology-recycling", "already-closed-recycling",
+	"no-categories"}) do
+	check(same(raw.recipe[name], recycling_before[name]), "A recipe that has to stay as it is was changed: " .. name)
+end
+check(logged("razi-protocol: nuclear-scrap-recycling is disabled") == 1
+	and logged("razi-protocol: cube-recycling is disabled") == 1 and #logs == 2, "Expected one line for each recipe")
+recycling_enabled.data_final_fixes()
+check(#logs == 2, "The repeated run logged again")
+raw = fresh()
+recycling_enabled.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without recipes")
+
 print("mod fixes (optional mods): ok")
