@@ -341,3 +341,44 @@ check(#logs == 0, "Something changed without the poles")
 raw = fresh()
 hidden_poles.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without electric poles")
+
+-- common factoriopedia_enemies
+local factoriopedia_enemies = require("prototypes.fixes.common.factoriopedia_enemies")
+local function simulation(...)
+	local creations = {}
+	for _, name in ipairs({...}) do
+		creations[#creations + 1] = 'enemy = game.surfaces[1].create_entity{name = "' .. name .. '", position = {0, 0}}'
+	end
+
+	return {init = "game.simulation.camera_zoom = 1.8\n" .. table.concat(creations, "\n"), mods = {"base"}}
+end
+raw = fresh()
+local shared = simulation("small-biter")
+raw.unit = {
+	["small-biter"] = {factoriopedia_simulation = simulation("small-biter")},
+	["medium-biter"] = {factoriopedia_simulation = simulation("medium-biter")},
+	["arachnid-drone"] = {factoriopedia_simulation = shared},
+	["fake-human"] = {factoriopedia_simulation = shared},
+	["wriggler-100%"] = {factoriopedia_simulation = simulation("medium-biter")},
+	["two-creations"] = {factoriopedia_simulation = simulation("small-biter", "medium-biter")},
+	["modded-creation"] = {factoriopedia_simulation = simulation("not-a-unit")},
+	["no-simulation"] = {},
+	["not-a-string"] = {factoriopedia_simulation = {init = 1}},
+}
+factoriopedia_enemies.data_final_fixes()
+check(raw.unit["small-biter"].factoriopedia_simulation.init:find('name = "small-biter"', 1, true), "A unit that shows itself was changed")
+check(raw.unit["arachnid-drone"].factoriopedia_simulation.init:find('name = "arachnid-drone"', 1, true), "The drone still shows a biter")
+check(raw.unit["fake-human"].factoriopedia_simulation.init:find('name = "fake-human"', 1, true), "The fake human shows the drone or a biter")
+check(raw.unit["arachnid-drone"].factoriopedia_simulation ~= raw.unit["fake-human"].factoriopedia_simulation, "Two units share one simulation")
+check(shared.init:find('name = "small-biter"', 1, true), "The simulation that was shared was changed in place")
+check(raw.unit["arachnid-drone"].factoriopedia_simulation.mods[1] == "base", "The other fields of the simulation went")
+check(raw.unit["wriggler-100%"].factoriopedia_simulation.init:find('name = "wriggler-100%"', 1, true), "A name with a percent sign was not written as it is")
+check(raw.unit["two-creations"].factoriopedia_simulation.init:find('name = "small-biter"', 1, true), "A simulation with two creations was changed")
+check(raw.unit["modded-creation"].factoriopedia_simulation.init:find('name = "not-a-unit"', 1, true), "A simulation that creates something else than a unit was changed")
+check(raw.unit["not-a-string"].factoriopedia_simulation.init == 1, "A simulation that is not a string was changed")
+check(logged("now show their own: 3") == 1 and logs[1]:find("^razi%-protocol: "), "Expected one line with the number of the units that were changed")
+factoriopedia_enemies.data_final_fixes()
+check(#logs == 1, "The repeated run changed the simulations again")
+raw = fresh()
+factoriopedia_enemies.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without units")
