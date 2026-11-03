@@ -1,6 +1,6 @@
 -- The Protocol Codex reads research progress from each force.
 -- Player storage is just UI preferences, so an older save can reopen it.
-local M={}
+local M=require("scripts.journal.api")
 local journal_button_cleanup=require("scripts.journal.button_cleanup")
 local defs=require("scripts.journal.data")
 local story=require("lib.story")
@@ -21,10 +21,6 @@ local chapter_timing=require("scripts.journal.chapter_timing")
 local journal_acts=require("scripts.journal.acts")
 local preview=require("scripts.journal.recipe_preview")
 local marks=require("scripts.journal.marks")
-local FRAME="razi_expedition_journal"
-local TOP="razi_expedition_journal_button"
-local TRACKER="razi_expedition_objective_tracker"
-local L=function(key,...) return {"journal-ui."..key,...} end
 -- Clicks that only exist inside the story Archive tab.
 local ARCHIVE_ACTIONS={
   ["array-record"]=true,["story-alerts"]=true,["record-next-unread"]=true,
@@ -33,14 +29,22 @@ local ARCHIVE_ACTIONS={
 local themes=require("scripts.journal.themes")
 local icons=require("scripts.journal.icons")
 local search_names=require("scripts.journal.search_names")
--- A field-manual palette: chapter hues are restrained accents, not the ink.
--- Midnight Archive: soft parchment, antique brass and spectral teal.
--- Chapter pigments are used as signposts, never as entire text surfaces.
-local COLOR={
-  ink={r=.933,g=.890,b=.808}, muted={r=.72,g=.73,b=.71},
-  quiet={r=.52,g=.58,b=.58}, green={r=.58,g=.80,b=.66},
-  amber={r=.82,g=.69,b=.48}, teal={r=.52,g=.78,b=.76}
-}
+local widgets=require("scripts.journal.widgets")
+local FRAME=widgets.FRAME
+local TOP=widgets.TOP
+local TRACKER=widgets.TRACKER
+local L=widgets.L
+local COLOR=widgets.COLOR
+local label=widgets.label
+local wrap=widgets.wrap
+local tint=widgets.tint
+local subtitle=widgets.subtitle
+local accent_rule=widgets.accent_rule
+local dossier_heading=widgets.dossier_heading
+local section=widgets.section
+local wheel_pane=widgets.wheel_pane
+local chapter_index=widgets.chapter_index
+local show_player_option=widgets.show_player_option
 M.chapter_theme=themes.get
 M.chapter_icon=themes.icon
 
@@ -414,58 +418,6 @@ function M.layout(resolution,scale)
     body=math.max(200,height-(compact and 183 or 204)),
     compact=compact,single_column=single_column}
 end
-local function label(parent,caption)
-  return parent.add{type="label",caption=caption}
-end
-local function wrap(parent,caption,width)
-  local element=label(parent,caption)
-  element.style.single_line=false
-  element.style.horizontally_stretchable=true
-  if width then element.style.maximal_width=width end
-  return element
-end
-local function tint(element,color)
-  element.style.font_color=color
-  return element
-end
-local function subtitle(parent,key,width,theme)
-  local item=label(parent,L(key))
-  item.style.font="default-bold"
-  item.style.font_color=theme and theme.soft or COLOR.muted
-  if width then item.style.maximal_width=width end
-  return item
-end
--- A fine, chapter-colored rule that uses Factorio's built-in progressbar
--- texture. This needs no texture atlas or custom rendering on each tick.
-local function accent_rule(parent,theme,width,thickness)
-  local rule=parent.add{type="progressbar",value=1}
-  rule.style.width=math.max(50,width)
-  rule.style.height=thickness or 3
-  rule.style.color=theme.primary
-  return rule
-end
--- Dense but legible folio section heads: a small number of native GUI
--- strokes make the chapter distinct without new atlases or paint events.
-local function dossier_heading(parent,key,theme,width) -- luacheck: ignore 212
-  local heading=parent.add{type="flow",direction="horizontal"}
-  heading.style.horizontal_spacing=9
-  heading.style.vertical_align="center"
-  local title=subtitle(heading,key,width)
-  title.style.font_color=COLOR.muted
-  return heading
-end
-local function section(parent,key,caption,width,theme,tip)
-  local block=parent.add{type="flow",direction="vertical"}
-  block.style.horizontally_stretchable=true
-  block.style.vertical_spacing=5
-  dossier_heading(block,key,theme,width)
-  if caption then
-    local copy=wrap(block,caption,width)
-    copy.style.font_color=COLOR.ink
-    copy.tooltip=tip
-  end
-  return block
-end
 -- An Archive record's title. Writer mode lists the record by its id until
 -- the writer's own title exists.
 local function record_title(player,id)
@@ -478,23 +430,6 @@ end
 -- or writer mode opens every record.
 local function record_open(player,quest,complete)
   return story.writer_records(player) or (quest~=nil and complete)
-end
-local function wheel_pane(parent,name,width,height)
-  local pane=parent.add{type="scroll-pane",name=name,
-    horizontal_scroll_policy="never",
-    vertical_scroll_policy=name=="razi_journal_navigation"
-      and "auto" or "dont-show-but-allow-scrolling"}
-  pane.style.width=width
-  pane.style.height=math.max(120,height)
-  pane.style.horizontally_squashable=true
-  pane.style.vertically_squashable=true
-  return pane
-end
-local function chapter_index(id)
-  for i,chapter in ipairs(defs.chapters) do
-    if chapter.id==id then return i end
-  end
-  return 1
 end
 local function select_quest(force,p,context,plan)
   local selected=p.selected and defs.by_id[p.selected]
@@ -610,12 +545,6 @@ local function recipe_gallery(parent,quest,native,width,theme)
     or "factory-source-owned"),width-26)
 end
 
-local function show_player_option(player,name)
-  local personal=settings and settings.get_player_settings
-    and settings.get_player_settings(player)
-  local entry=personal and personal[name]
-  return not entry or entry.value~=false
-end
 
 local function render_tracker(player)
   local area=player.gui.left

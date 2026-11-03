@@ -74,12 +74,14 @@ end
 -- lane, a failed delivery), so read the keys the code names directly.
 local LITERAL_PREFIX={
   ["scripts/journal/journal.lua"]="journal-ui",
+  ["scripts/journal/widgets.lua"]="journal-ui",
   ["scripts/journal/projects.lua"]="journal-ui",
   ["scripts/journal/systems.lua"]="journal-systems"
 }
 local function literal_keys()
   local found={}
   local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/acts.lua "
+    .."scripts/journal/api.lua scripts/journal/widgets.lua "
     .."scripts/journal/button_cleanup.lua scripts/journal/data.lua scripts/journal/expansion.lua "
     .."scripts/journal/frontier.lua scripts/journal/guidance.lua scripts/journal/icons.lua "
     .."scripts/journal/industry.lua scripts/journal/marks.lua scripts/journal/objectives.lua "
