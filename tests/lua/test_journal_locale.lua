@@ -79,6 +79,7 @@ local LITERAL_PREFIX={
   ["scripts/journal/quest_art.lua"]="journal-ui",
   ["scripts/journal/tracker.lua"]="journal-ui",
   ["scripts/journal/archive_view.lua"]="journal-ui",
+  ["scripts/journal/dossier.lua"]="journal-ui",
   ["scripts/journal/projects.lua"]="journal-ui",
   ["scripts/journal/systems.lua"]="journal-systems"
 }
@@ -88,6 +89,7 @@ local function literal_keys()
     .."scripts/journal/api.lua scripts/journal/widgets.lua scripts/journal/preferences.lua "
     .."scripts/journal/quest_state.lua scripts/journal/quest_art.lua "
     .."scripts/journal/tracker.lua scripts/journal/archive_view.lua "
+    .."scripts/journal/dossier.lua "
     .."scripts/journal/button_cleanup.lua scripts/journal/data.lua scripts/journal/expansion.lua "
     .."scripts/journal/frontier.lua scripts/journal/guidance.lua scripts/journal/icons.lua "
     .."scripts/journal/industry.lua scripts/journal/marks.lua scripts/journal/objectives.lua "
