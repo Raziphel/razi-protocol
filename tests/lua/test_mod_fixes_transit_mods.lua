@@ -140,3 +140,37 @@ check(#logs == 2, "The repeated run touched the recipes again")
 raw = fresh()
 recycling_hidden.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without recipes")
+
+-- RenaiTransportation hardcoded_localization
+local hardcoded_localization = require("prototypes.fixes.RenaiTransportation.hardcoded_localization")
+local renai_name = {"?", {"", {"thrower-gen.name", {"entity-name.inserter"}}}, {"", {"thrower-gen.name", "inserter"}}}
+raw = fresh()
+defines.prototypes.entity = {inserter = 1, ["assembling-machine"] = 2}
+defines.prototypes.item = {item = 1, capsule = 2}
+raw.inserter = {
+	["RTThrower-inserter"] = {localised_name = deepcopy(renai_name)},
+	["RTThrower-fast-inserter"] = {localised_name = {"entity-name.somebody-else"}},
+	["RTThrower-stack-inserter"] = {},
+	["RTThrower-diesel-inserter"] = {localised_name = deepcopy(renai_name)},
+}
+raw.item = {["RTThrower-inserter-Item"] = {localised_name = deepcopy(renai_name)}}
+raw.recipe = {["RTThrower-long-handed-inserter-Recipe"] = {localised_name = deepcopy(renai_name)}}
+hardcoded_localization.data_final_fixes()
+---@type any
+local thrower_name = raw.inserter["RTThrower-inserter"].localised_name
+check(thrower_name[1] == "?" and thrower_name[2][1] == "entity-name.RTThrower-inserter",
+	"The thrower did not read its locale key first")
+check(thrower_name[3][1] == "?" and thrower_name[3][2][2][1] == "thrower-gen.name", "The thrower lost the name Renai built")
+check(raw.item["RTThrower-inserter-Item"].localised_name[2][1] == "item-name.RTThrower-inserter-Item", "The item did not point to its locale key")
+check(raw.recipe["RTThrower-long-handed-inserter-Recipe"].localised_name[2][1] == "recipe-name.RTThrower-long-handed-inserter-Recipe",
+	"The recipe did not point to its locale key")
+check(raw.inserter["RTThrower-fast-inserter"].localised_name[1] == "entity-name.somebody-else", "A name another mod set was replaced")
+check(raw.inserter["RTThrower-stack-inserter"].localised_name == nil, "A thrower without a name got one")
+check(raw.inserter["RTThrower-diesel-inserter"].localised_name[1] == "?", "A thrower of a modded inserter was renamed")
+check(logged("before the name Renai built") == 3 and logs[1]:find("^razi%-protocol: "), "Expected one line for each of the three names that were replaced")
+hardcoded_localization.data_final_fixes()
+check(logged("before the name Renai built") == 3, "The repeated run touched the names again")
+raw = fresh()
+defines.prototypes.entity = {inserter = 1}
+hardcoded_localization.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without the prototypes")
