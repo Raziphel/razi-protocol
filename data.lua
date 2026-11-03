@@ -19,7 +19,7 @@ require "prototypes.technology"
 require "prototypes.technology.asteroid_belts"
 
 require("prototypes.ui.dyson_stages")
-require("prototypes.ui.razi_journal")
+require("prototypes.ui.journal")
 require("prototypes.industry.great_projects").data()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data()
 

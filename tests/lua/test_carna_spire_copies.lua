@@ -146,7 +146,7 @@ local source = file:read("*a")
 file:close()
 local asteroids = assert(source:find('require("prototypes.system.asteroid_performance").data_final_fixes()', 1, true))
 local own = assert(source:find('require("prototypes.fixes.carna.carna_spire_copies").data_final_fixes()', 1, true))
-local navigation = assert(source:find('require("prototypes.compat.crafting_navigation").data_final_fixes()', 1, true))
+local navigation = assert(source:find('require("prototypes.ui.crafting_navigation").data_final_fixes()', 1, true))
 check(asteroids < own and own < navigation, "the pass runs late, after the asteroid passes")
 
 print("carna_spire_copies: ok")

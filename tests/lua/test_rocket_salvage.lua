@@ -353,7 +353,7 @@ local source = file:read("*a")
 file:close()
 local lithium = assert(source:find('require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()', 1, true))
 local own = assert(source:find('require("prototypes.industry.rocket_salvage").data_final_fixes()', 1, true))
-local navigation = assert(source:find('require("prototypes.compat.crafting_navigation").data_final_fixes()', 1, true))
+local navigation = assert(source:find('require("prototypes.ui.crafting_navigation").data_final_fixes()', 1, true))
 check(lithium < own and own < navigation, "the pass runs late, after Lithium Battery and before the menu pass")
 
 -- Every created recipe and technology has a name and a description in both languages, and the two files list the same keys

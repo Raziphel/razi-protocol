@@ -1,6 +1,6 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(x,msg) if not x then error(msg,2) end end
-local r=require("prototypes.technology.tech_tree_visibility")
+local r=require("prototypes.ui.tech_tree_visibility")
 local techs={
  ["solaris-discovery"]={order="original"},
  ["razi-outer-frontier-mastery"]={order="original"},

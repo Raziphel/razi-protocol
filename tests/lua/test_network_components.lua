@@ -314,7 +314,7 @@ local parts=position('require("prototypes.industry.components.network_components
 check(parts<position('require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()')
   and parts<position('require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()'),
   "Components must be created before their exchange recipes")
-local visibility=position('require("prototypes.technology.tech_tree_visibility").data_final_fixes()')
+local visibility=position('require("prototypes.ui.tech_tree_visibility").data_final_fixes()')
 check(position('require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixes()')>visibility
   and position('require("prototypes.industry.components.network_components").register_premium()')>visibility,
   "Return-cargo exchanges must run after the research passes")

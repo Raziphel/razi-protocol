@@ -26,7 +26,7 @@ require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
 require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compatibility.common.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
-require("prototypes.compat.logistics_cleanup").data_final_fixes()
+require("prototypes.ui.logistics_cleanup").data_final_fixes()
 require("prototypes.fixes.common.furnace_result_slots").data_final_fixes()
 require("prototypes.fixes.moon-eneas.eneas_gantry").data_final_fixes()
 require("prototypes.fixes.common.variant_surface_conditions").data_final_fixes()
@@ -127,7 +127,7 @@ require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_f
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
-require("prototypes.technology.tech_tree_visibility").data_final_fixes()
+require("prototypes.ui.tech_tree_visibility").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").data_final_fixes()
 
 -- Castra's exchange, then the exchanges that return component cargo; they run
@@ -280,7 +280,7 @@ require("prototypes.difficulty.razi_industrial_difficulty").data_final_fixes()
 
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
-require("prototypes.compat.crafting_navigation").data_final_fixes()
+require("prototypes.ui.crafting_navigation").data_final_fixes()
 
 -- Difficulty level, settings of other mods: every reader after Razi's data.lua has seen the values of the level, so the saved values
 -- come back now. Then the finished prototypes of the settings that Muluna, Cerys and Biological Machines read in their own data.lua
