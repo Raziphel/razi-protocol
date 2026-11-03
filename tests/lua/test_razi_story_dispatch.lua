@@ -10,7 +10,7 @@ package.loaded["scripts.journal.data"]={by_id={
   ["convergence-stellar"]={id="convergence-stellar",tech="razi-commission",
     convergence="stellar"}
 }}
-package.loaded["scripts.razi_journal_corporate"]={
+package.loaded["scripts.story.corporate"]={
   {id="corp-welcome",unlock="first-signal"},
   {id="corp-shift-roster",unlock="green-science",series="field"},
   {id="corp-castra",unlock="castra"},
@@ -23,7 +23,7 @@ local one={index=1,print=function(msg) a[#a+1]=msg end}
 local two={index=2,print=function(msg) b[#b+1]=msg end}
 local force={index=9,connected_players={one,two}}
 game={tick=100,forces={[9]=force}}
-local notices=require("scripts.razi_story_dispatch")
+local notices=require("scripts.story.dispatch")
 notices.on_research{research={name="automation",force=force}}
 game.tick=160;notices.flush()
 check(#a==0,"Research notification was not throttled")

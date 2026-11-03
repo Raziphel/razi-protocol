@@ -1,5 +1,5 @@
 ---@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil, inject-field
--- Writer mode (scripts/razi_writer.lua, lib/story.lua): one player
+-- Writer mode (scripts/story/writer.lua, lib/story.lua): one player
 -- sees the story slots while the story is off for everyone else, the text of
 -- the repository is never shown to the writer, and the commands work.
 package.path="./?.lua;./?/init.lua;"..package.path
@@ -7,7 +7,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 
 local story=require("lib.story")
 require("scripts.journal.journal") -- hands the Archive records to the story
-local slots=require("scripts.razi_story_slots")
+local slots=require("scripts.story.slots")
 local W=require("tests.lua.journal_window")
 
 -- The first key of a collected string chain, flattened.
@@ -118,7 +118,7 @@ check(keys["razi-story-finale.won"] and keys["razi-story-finale.archive-message"
   "The final panel slots must show in writer mode")
 
 -- The commands.
-local writer=require("scripts.razi_writer")
+local writer=require("scripts.story.writer")
 local said={}
 player.admin=true
 player.print=function(message) said[#said+1]=message end
@@ -151,7 +151,7 @@ check(run("on")=="razi-writer.admin-only" and not story.writer(1),
 player.admin=true
 
 -- Welcome in writer mode.
-local welcome=require("scripts.razi_welcome")
+local welcome=require("scripts.story.welcome")
 storage.razi_writer={[1]={on=true}}
 said={}
 welcome.command{player_index=1}

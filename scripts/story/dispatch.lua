@@ -3,7 +3,7 @@
 -- or invented quest completion. Batched research sends ONE concise notice.
 local M={}
 local definitions=require("scripts.journal.data")
-local records=require("scripts.razi_journal_corporate")
+local records=require("scripts.story.corporate")
 local by_id={}
 for _,record in ipairs(records) do by_id[record.id]=record end
 local by_research={}

@@ -17,7 +17,7 @@ local records={
  {id="nexus-silence-record",unlock="nexus-silence",origin="NEXUS ARCHIVE / THE SILENCED TRANSMISSION"},
 }
 -- Preserve legacy IDs; append independent source-milestone-gated records.
-for _,entry in ipairs(require("scripts.razi_journal_corporate")) do
+for _,entry in ipairs(require("scripts.story.corporate")) do
   records[#records+1]=entry
 end
 return records

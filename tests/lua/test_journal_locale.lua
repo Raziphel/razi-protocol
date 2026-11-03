@@ -51,7 +51,7 @@ local function welcome_keys()
   ctx.player.connected=true
   rawset(_G,"settings",{get_player_settings=function() return {} end,
     global={["razi-hide-spoilers"]={value=true}}})
-  local welcome=require("scripts.razi_welcome")
+  local welcome=require("scripts.story.welcome")
   welcome.command{player_index=1}
   W.collect(welcome.help(),printed)
   rawset(_G,"settings",nil)
@@ -80,7 +80,7 @@ local LITERAL_PREFIX={
 local function literal_keys()
   local found={}
   local handle=assert(io.popen("ls scripts/razi_journal*.lua "
-    .."scripts/razi_convergence*.lua scripts/razi_welcome.lua scripts/razi_story*.lua"))
+    .."scripts/razi_convergence*.lua scripts/story/welcome.lua scripts/razi_story*.lua"))
   for path in handle:lines() do
     local source=read(path)
     for section,key in source:gmatch('{"([%w%-]+)%.([%w%-]+)"') do

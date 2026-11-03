@@ -5,8 +5,8 @@ local journal_button_cleanup=require("scripts.journal.button_cleanup")
 local defs=require("scripts.journal.data")
 local story=require("lib.story")
 -- The Archive records and the record notices, loaded here for the story.
-story.attach(require("scripts.razi_journal_records"),
-  require("scripts.razi_story_dispatch"))
+story.attach(require("scripts.story.records"),
+  require("scripts.story.dispatch"))
 local industrial_briefs=require("scripts.journal.planet_briefs")
 local catapults=require("scripts.compatibility.orbital-cannon.catapult_network")
 local trials=require("scripts.compatibility.nexus-bosses.trials")

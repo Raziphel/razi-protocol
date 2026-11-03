@@ -202,7 +202,7 @@ check(a==0 and b==0,"The Archive must be empty while the story is off")
 local story=require("lib.story")
 story.configure(true)
 a,b=M.unlocked_records(force,context)
-check(b==#require("scripts.razi_journal_records") and a>=0,
+check(b==#require("scripts.story.records") and a>=0,
   "Recovered transmission count mismatch")
 story.configure(false)
 check(not M.show_in_filter(force,defs.by_id["igrys"],"ready",context)

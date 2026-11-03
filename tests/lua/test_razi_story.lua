@@ -22,8 +22,8 @@ local W=require("tests.lua.journal_window")
 local ctx=W.setup()
 -- The journal loads the records and the notices either way (Factorio forbids
 -- require() in events); the switch and writer mode decide what a player sees.
-check(package.loaded["scripts.razi_story_dispatch"]~=nil
-  and package.loaded["scripts.razi_journal_records"]~=nil,
+check(package.loaded["scripts.story.dispatch"]~=nil
+  and package.loaded["scripts.story.records"]~=nil,
   "Story modules must be loaded even while the story is off")
 local projects,journal,force=ctx.projects,ctx.journal,ctx.force
 local function open_everything()
@@ -105,7 +105,7 @@ local function defined(section,key)
   local nextsection=locale:find("\n%[",start+1) or #locale
   return locale:sub(start,nextsection):find("\n"..key.."=",1,true)~=nil
 end
-for _,path in ipairs({"scripts/razi_welcome.lua","scripts/convergence/convergence.lua"}) do
+for _,path in ipairs({"scripts/story/welcome.lua","scripts/convergence/convergence.lua"}) do
   local source=read(path)
   for section,key in source:gmatch('"(razi%-welcome%-plain)%.([%w%-]+)"') do
     check(defined(section,key),path..": missing plain key "..section.."."..key)
@@ -125,8 +125,8 @@ end
 -- Shipping with the story on loads razi_story_dispatch from inside the quest
 -- data module's require chain; that must not recurse.
 do
-  local names={"lib.story","scripts.razi_story_dispatch",
-    "scripts.journal.data","scripts.razi_journal_records"}
+  local names={"lib.story","scripts.story.dispatch",
+    "scripts.journal.data","scripts.story.records"}
   local saved={}
   for _,name in ipairs(names) do saved[name]=package.loaded[name];package.loaded[name]=nil end
   local source=assert(io.open("lib/story.lua","r")):read("*a")
