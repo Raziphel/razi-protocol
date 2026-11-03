@@ -119,14 +119,14 @@ M.quests={
  {id="convergence-ignition",chapter="finale",tech="razi-convergence-ignition",convergence="ignition",requires={"convergence-ignition-research"}},
  {id="convergence-victory",chapter="finale",tech="razi-convergence-ignition",convergence="victory",requires={"convergence-ignition"}},
 }
-local frontier=require("scripts.razi_journal_frontier")
+local frontier=require("scripts.journal.frontier")
 for _,quest in ipairs(frontier.quests) do M.quests[#M.quests+1]=quest end
-local extended=require("scripts.razi_journal_expansion")
+local extended=require("scripts.journal.expansion")
 for _,chapter in ipairs(extended.chapters) do M.chapters[#M.chapters+1]=chapter end
 for _,quest in ipairs(extended.quests) do M.quests[#M.quests+1]=quest end
 -- Recovering launches is part of the expedition, not a replacement for
 -- source-owned rocket tech. Optional improved crushing follows real planets.
-local salvage=require("scripts.razi_journal_salvage")
+local salvage=require("scripts.journal.salvage")
 for _,chapter in ipairs(salvage.chapters) do
   local position=#M.chapters+1
   for i,current in ipairs(M.chapters) do
@@ -135,7 +135,7 @@ for _,chapter in ipairs(salvage.chapters) do
   table.insert(M.chapters,position,chapter)
 end
 for _,quest in ipairs(salvage.quests) do M.quests[#M.quests+1]=quest end
-local industry=require("scripts.razi_journal_industry")
+local industry=require("scripts.journal.industry")
 -- Place the industrial atlas next to the existing supply-network chapter,
 -- not after the final intergalactic signal.
 for _,chapter in ipairs(industry.chapters) do

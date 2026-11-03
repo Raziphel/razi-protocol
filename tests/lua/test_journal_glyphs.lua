@@ -28,7 +28,7 @@ end
 handle:close()
 check(#found==0,"Glyphs missing from the game fonts: "..table.concat(found,", "))
 
-local marks=require("scripts.razi_journal_marks")
+local marks=require("scripts.journal.marks")
 for name,mark in pairs(marks) do
   check(mark:match("^%[img=utility/[%w_]+%]$"),"Mark is not a utility sprite: "..name)
 end

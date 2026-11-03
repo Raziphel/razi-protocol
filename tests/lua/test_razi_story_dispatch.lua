@@ -2,7 +2,7 @@
 -- rate limiting, per-player muting and old-save-safe storage.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
-package.loaded["scripts.razi_journal_data"]={by_id={
+package.loaded["scripts.journal.data"]={by_id={
   ["first-signal"]={id="first-signal",tech="automation"},
   ["green-science"]={id="green-science",tech="logistic-science-pack"},
   castra={id="castra",tech="planet-discovery-castra"},

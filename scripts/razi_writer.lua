@@ -7,7 +7,7 @@
 --   /razi-writer chapter <id>    open the journal on a chapter cover
 --   /razi-writer records [off]   open every Archive record, studied or not
 local story=require("lib.story")
-local journal=require("scripts.razi_journal")
+local journal=require("scripts.journal.journal")
 
 local M={}
 

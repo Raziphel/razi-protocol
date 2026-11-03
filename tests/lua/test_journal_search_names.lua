@@ -7,7 +7,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local W=require("tests.lua.journal_window")
 local ctx=W.setup()
 local journal,defs,player=ctx.journal,ctx.defs,ctx.player
-local names=require("scripts.razi_journal_search_names")
+local names=require("scripts.journal.search_names")
 
 -- Cyrillic and Latin-1 capitals fold like ASCII ones; Ё becomes е.
 check(names.fold("Наувис ЁЖ")=="наувис еж","Cyrillic capitals should fold")

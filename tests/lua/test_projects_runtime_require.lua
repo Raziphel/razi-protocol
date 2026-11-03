@@ -1,6 +1,6 @@
 package.path="./?.lua;./?/init.lua;"..package.path
-package.loaded["scripts.razi_journal_data"]={quests={},by_id={}}
-local projects=require("scripts.razi_journal_projects")
+package.loaded["scripts.journal.data"]={quests={},by_id={}}
+local projects=require("scripts.journal.projects")
 local tracker=require("scripts.razi_platform_projects")
 local original=require
 require=function(name) error("Illegal GUI-time require: "..name,2) end

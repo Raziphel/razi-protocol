@@ -1,7 +1,7 @@
 -- Deterministic research guidance. No mutable storage or recipe scans.
 -- The caller supplies the Codex's existing research/quest snapshot.
 local M={}
-local data=require("scripts.razi_journal_data")
+local data=require("scripts.journal.data")
 local dependents,downstream={},{}
 for _,quest in ipairs(data.quests) do
   for _,required in ipairs(quest.requires or {}) do

@@ -126,14 +126,14 @@ end
 -- data module's require chain; that must not recurse.
 do
   local names={"lib.story","scripts.razi_story_dispatch",
-    "scripts.razi_journal_data","scripts.razi_journal_records"}
+    "scripts.journal.data","scripts.razi_journal_records"}
   local saved={}
   for _,name in ipairs(names) do saved[name]=package.loaded[name];package.loaded[name]=nil end
   local source=assert(io.open("lib/story.lua","r")):read("*a")
   local patched,count=source:gsub("local ENABLED=false","local ENABLED=true")
   check(count==1,"Story switch declaration not found")
   package.preload["lib.story"]=assert(load(patched,"@lib/story.lua"))
-  local ok,loaded=pcall(require,"scripts.razi_journal_data")
+  local ok,loaded=pcall(require,"scripts.journal.data")
   package.preload["lib.story"]=nil
   ---@type table
   local fresh=package.loaded["lib.story"]

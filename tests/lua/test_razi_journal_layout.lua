@@ -4,9 +4,9 @@
 -- and navigation callbacks. Full visual rendering still needs a game test.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local journal=require("scripts.razi_journal")
-local defs=require("scripts.razi_journal_data")
-local themes=require("scripts.razi_journal_themes")
+local journal=require("scripts.journal.journal")
+local defs=require("scripts.journal.data")
+local themes=require("scripts.journal.themes")
 local created={}
 -- The real Factorio GUI throws if a FrameStyle receives FlowStyle spacing.
 -- Keep the mock strict enough to catch this regression before game startup.
@@ -180,7 +180,7 @@ for _,phase in ipairs({"machines","growth","chemistry","departure"}) do
 end
 -- Native sprite art can be larger than the requested GUI box. All Codex
 -- widgets must ignore intrinsic dimensions, even on heavily modded packs.
-local roles=require("scripts.razi_journal_icons")
+local roles=require("scripts.journal.icons")
 local icon_count=0
 for _,entry in ipairs(live_elements()) do
   if entry.sprite then

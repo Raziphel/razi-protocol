@@ -1,7 +1,7 @@
 -- ru mirrors the player-facing mechanics. Story text is shown only with the
 -- story on or in writer mode, and authored text will replace it; its ru comes
 -- after that. The list comes from story.text() calls in
--- scripts/razi_journal*.lua, scripts/razi_journal_projects.lua,
+-- scripts/razi_journal*.lua, scripts/journal/projects.lua,
 -- scripts/razi_convergence.lua and scripts/razi_welcome.lua (project contexts
 -- are journal-ui keys, the Convergence slots razi-ops keys), plus the archive
 -- notices of scripts/razi_story_dispatch.lua, which run only with the story on.

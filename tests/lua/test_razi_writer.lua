@@ -6,7 +6,7 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
 local story=require("lib.story")
-require("scripts.razi_journal") -- hands the Archive records to the story
+require("scripts.journal.journal") -- hands the Archive records to the story
 local slots=require("scripts.razi_story_slots")
 local W=require("tests.lua.journal_window")
 

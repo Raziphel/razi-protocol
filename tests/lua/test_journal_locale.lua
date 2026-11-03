@@ -73,9 +73,9 @@ end
 -- Literal keys in the sources: the walk cannot reach every state (a catapult
 -- lane, a failed delivery), so read the keys the code names directly.
 local LITERAL_PREFIX={
-  ["scripts/razi_journal.lua"]="journal-ui",
-  ["scripts/razi_journal_projects.lua"]="journal-ui",
-  ["scripts/razi_journal_systems.lua"]="journal-systems"
+  ["scripts/journal/journal.lua"]="journal-ui",
+  ["scripts/journal/projects.lua"]="journal-ui",
+  ["scripts/journal/systems.lua"]="journal-systems"
 }
 local function literal_keys()
   local found={}

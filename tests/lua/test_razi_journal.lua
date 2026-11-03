@@ -2,8 +2,8 @@
 -- Read-only quest progression and missing-content safety regression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local defs=require("scripts.razi_journal_data")
-local M=require("scripts.razi_journal")
+local defs=require("scripts.journal.data")
+local M=require("scripts.journal.journal")
 check(#defs.chapters==19,"Nineteen expedition chapters expected")
 check(#defs.quests==230,"Protocol Codex must include 230 source-backed expedition milestones")
 local seen={}
@@ -267,7 +267,7 @@ check(require("scripts.compatibility.nexus-bosses.trials").open_codex(
 check(calls==2,"Codex must open only on explicit user interaction")
 rawset(_G,"remote",nil)
 
-local weather=require("scripts.razi_weather_guide")
+local weather=require("scripts.journal.weather_guide")
 rawset(_G,"script",{active_mods={
   ["celestial-weather-additions-updated"]="1.3.1"
 }})

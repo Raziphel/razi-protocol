@@ -19,7 +19,7 @@
 -- Mode state is `storage.razi_writer[player_index]` = {on, keys, records}.
 --
 -- Factorio forbids require() inside events, so the story modules are loaded
--- once at load time, whether or not the story is on: scripts/razi_journal.lua
+-- once at load time, whether or not the story is on: scripts/journal/journal.lua
 -- loads them and hands them over with attach(). They need the quest data,
 -- which needs this module, so this module cannot load them itself.
 local ENABLED=false

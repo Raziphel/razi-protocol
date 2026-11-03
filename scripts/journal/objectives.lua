@@ -1,7 +1,7 @@
 -- Source-backed mission checklist; never adds progression state or invented goals.
 -- The Journal passes the SAME force research and campaign snapshot as its
 -- existing objective evaluation. No remote calls, world scans or storage.
-local data=require("scripts.razi_journal_data")
+local data=require("scripts.journal.data")
 local M={}
 
 local function sorted_prerequisites(technology)

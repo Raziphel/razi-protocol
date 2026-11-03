@@ -1,26 +1,26 @@
 -- The Protocol Codex reads research progress from each force.
 -- Player storage is just UI preferences, so an older save can reopen it.
 local M={}
-local journal_button_cleanup=require("scripts.razi_journal_button_cleanup")
-local defs=require("scripts.razi_journal_data")
+local journal_button_cleanup=require("scripts.journal.button_cleanup")
+local defs=require("scripts.journal.data")
 local story=require("lib.story")
 -- The Archive records and the record notices, loaded here for the story.
 story.attach(require("scripts.razi_journal_records"),
   require("scripts.razi_story_dispatch"))
-local industrial_briefs=require("scripts.razi_planet_briefs")
+local industrial_briefs=require("scripts.journal.planet_briefs")
 local catapults=require("scripts.compatibility.orbital-cannon.catapult_network")
 local trials=require("scripts.compatibility.nexus-bosses.trials")
-local weather=require("scripts.razi_weather_guide")
+local weather=require("scripts.journal.weather_guide")
 local convergence=require("scripts.razi_convergence")
-local projects=require("scripts.razi_journal_projects")
-local systems=require("scripts.razi_journal_systems")
+local projects=require("scripts.journal.projects")
+local systems=require("scripts.journal.systems")
 local great_projects=require("scripts.razi_great_projects")
-local guidance=require("scripts.razi_journal_guidance")
-local objectives=require("scripts.razi_journal_objectives")
-local chapter_timing=require("scripts.razi_chapter_timing")
-local journal_acts=require("scripts.razi_journal_acts")
-local preview=require("scripts.razi_journal_recipe_preview")
-local marks=require("scripts.razi_journal_marks")
+local guidance=require("scripts.journal.guidance")
+local objectives=require("scripts.journal.objectives")
+local chapter_timing=require("scripts.journal.chapter_timing")
+local journal_acts=require("scripts.journal.acts")
+local preview=require("scripts.journal.recipe_preview")
+local marks=require("scripts.journal.marks")
 local FRAME="razi_expedition_journal"
 local TOP="razi_expedition_journal_button"
 local TRACKER="razi_expedition_objective_tracker"
@@ -30,9 +30,9 @@ local ARCHIVE_ACTIONS={
   ["array-record"]=true,["story-alerts"]=true,["record-next-unread"]=true,
   ["archive-filter"]=true,["archive-source"]=true,record=true
 }
-local themes=require("scripts.razi_journal_themes")
-local icons=require("scripts.razi_journal_icons")
-local search_names=require("scripts.razi_journal_search_names")
+local themes=require("scripts.journal.themes")
+local icons=require("scripts.journal.icons")
+local search_names=require("scripts.journal.search_names")
 -- A field-manual palette: chapter hues are restrained accents, not the ink.
 -- Midnight Archive: soft parchment, antique brass and spectral teal.
 -- Chapter pigments are used as signposts, never as entire text surfaces.

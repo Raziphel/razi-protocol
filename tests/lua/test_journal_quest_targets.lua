@@ -4,7 +4,7 @@
 -- or at the world discovery for a planet.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
-local data=require("scripts.razi_journal_data")
+local data=require("scripts.journal.data")
 local expected={
  ["nauvis-power"]="steam-power",
  ["nauvis-advanced-electronics"]="advanced-circuit",

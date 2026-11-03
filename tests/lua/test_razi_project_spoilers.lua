@@ -2,10 +2,10 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(v,msg) if not v then error(msg,2) end end
 for _,n in ipairs({"scripts.dyson.dyson",
 "scripts.razi_convergence",
-"scripts.dyson.runtime","scripts.razi_journal_icons"}) do
+"scripts.dyson.runtime","scripts.journal.icons"}) do
   package.loaded[n]={stages={}}
 end
-package.loaded["scripts.razi_journal_data"]={quests={},by_id={}}
+package.loaded["scripts.journal.data"]={quests={},by_id={}}
 storage={}
 settings={global={["razi-hide-spoilers"]={value=true}}}
 local waiting={researched=false}
@@ -14,7 +14,7 @@ local f={index=5,platforms={},technologies={
   ["razi-convergence-commission"]={researched=false,enabled=true,prerequisites={waiting}},
   ["razi-intergalactic-transceiver-signal"]={researched=true,enabled=true,prerequisites={}}
 }}
-local p=require("scripts.razi_journal_projects")
+local p=require("scripts.journal.projects")
 check(p.visible(f,"platform"),"First project must always be visible")
 check(not p.visible(f,"voyage"),"First voyage requires a built platform")
 check(p.visible(f,"dyson") and p.visible(f,"transceiver"),"Unblocked projects visible")

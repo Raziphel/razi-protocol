@@ -11,11 +11,11 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 
 local slots=require("scripts.razi_story_slots")
-local defs=require("scripts.razi_journal_data")
+local defs=require("scripts.journal.data")
 ---@type table[]
 local records=require("scripts.razi_journal_records")
-local briefs=require("scripts.razi_planet_briefs")
-local projects=require("scripts.razi_journal_projects")
+local briefs=require("scripts.journal.planet_briefs")
+local projects=require("scripts.journal.projects")
 local welcome=require("scripts.razi_welcome")
 local convergence=require("scripts.razi_convergence")
 
