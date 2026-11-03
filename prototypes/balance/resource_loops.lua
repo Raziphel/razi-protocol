@@ -18,6 +18,7 @@ local entries = {
 	{ level = "closed", run = require("prototypes.balance.common.container_pairs").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.shchierbin.crusher_productivity").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.skewer_planet_vesta.h2o_water").data_final_fixes },
+	{ level = "closed", run = require("prototypes.balance.planet-crucible.hydrogen").data_final_fixes },
 }
 
 function resource_loops.level()
