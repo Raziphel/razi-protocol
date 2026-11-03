@@ -297,3 +297,6 @@ require("prototypes.system.razi_map_preset").data_final_fixes()
 
 -- Convert eligible science packs after all research and recipes have settled.
 require("prototypes.compat.auto_tech_cards").data_final_fixes()
+
+-- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
+require("prototypes.compat.mod_fixes").data_final_fixes()
