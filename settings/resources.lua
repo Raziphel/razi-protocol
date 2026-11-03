@@ -54,5 +54,13 @@ data:extend({
 		default_value = "normal",
 		allowed_values = {"boosted", "normal", "constrained", "strained"},
 		order = "ab[resources]-07[factory-throughput]"
+	},
+	{
+		type = "string-setting",
+		name = "razi-resource-loops",
+		setting_type = "startup",
+		default_value = "closed",
+		allowed_values = {"open", "closed", "strict"},
+		order = "ab[resources]-08[resource-loops]"
 	}
 })
