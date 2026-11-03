@@ -9,7 +9,7 @@
 --   Beetlejuice, Umbra      -> Outer Frontier Mastery
 -- A world is left out, with a line in the log, when its research would wait for the gateway it should open.
 local M={}
-local interdependence=require("prototypes.compat.interdependence_mode")
+local interdependence=require("prototypes.industry.exchanges.interdependence_mode")
 local roster=require("prototypes.system.world_roster")
 local optional=require("prototypes.system.optional_worlds")
 M.bridges={

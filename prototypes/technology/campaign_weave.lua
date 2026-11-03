@@ -3,7 +3,7 @@
 -- Every rule must agree with the gate order: the science of a planet is only asked for by planets
 -- that come after it, and never by planets whose own research needs the target in turn.
 local M = {}
-local interdependence = require("prototypes.compat.interdependence_mode")
+local interdependence = require("prototypes.industry.exchanges.interdependence_mode")
 local Science = require("__razi_lib__/lib/science")
 local rules = {
 {"planet-discovery-castra", {}, {{"metallurgic-science-pack", "planet-discovery-vulcanus"}}},

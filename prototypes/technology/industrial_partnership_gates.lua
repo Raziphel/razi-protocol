@@ -1,6 +1,6 @@
 -- Interplanetary partnerships become milestones for the next system frontier.
 local M = {}
-local mode = require("prototypes.compat.interdependence_mode")
+local mode = require("prototypes.industry.exchanges.interdependence_mode")
 local Graph = require("__razi_lib__/lib/technology_graph")
 local optional = require("prototypes.system.optional_worlds")
 

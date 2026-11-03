@@ -1,7 +1,7 @@
 -- Early cross-star factory. An optional alternative to existing production,
 -- never a new requirement for reaching a planet. Keep the native recipe and
 -- its source technology in charge.
-local production=require("prototypes.compat.planet_production_exchanges")
+local production=require("prototypes.industry.exchanges.planet_production_exchanges")
 local M={}
 
 -- Castra's piercing magazines use castra-crafting in the current pack.

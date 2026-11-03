@@ -20,7 +20,7 @@ require "prototypes.technology.asteroid_belts"
 
 require("prototypes.ui.dyson_stages")
 require("prototypes.ui.razi_journal")
-require("prototypes.technology.razi_great_projects").data()
+require("prototypes.industry.great_projects").data()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data()
 
 -- Factorio runs every data.lua before any data-updates.lua. Razi Protocol requires PlanetAthos, so Athos's

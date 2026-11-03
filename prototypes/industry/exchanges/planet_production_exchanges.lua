@@ -1,8 +1,8 @@
 -- Optional cross-planet production recipes.
 -- Each alternative has to respect the original recipe's research unlock.
 local M = {}
-local interdependence = require("prototypes.compat.interdependence_mode")
-local portfolio = require("prototypes.compat.industry_portfolio")
+local interdependence = require("prototypes.industry.exchanges.interdependence_mode")
+local portfolio = require("prototypes.industry.exchanges.industry_portfolio")
 
 local exchanges = {
   {

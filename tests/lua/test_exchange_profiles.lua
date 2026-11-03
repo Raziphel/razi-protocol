@@ -1,7 +1,7 @@
 -- Real industrial differences: saved inputs, faster throughput and
 -- bounded high-volume alternatives, without rewriting source-mod recipes.
 package.path="./?.lua;./?/init.lua;"..package.path
-local p=require("prototypes.compat.industry_portfolio")
+local p=require("prototypes.industry.exchanges.industry_portfolio")
 local function check(value,message) if not value then error(message,2) end end
 local counts={catalytic=0,accelerated=0,bulk=0}
 local total=0

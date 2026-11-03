@@ -174,8 +174,8 @@ local function setup(options)
   rawset(_G,"mods",options.no_k2 and {} or {
     ["Krastorio2-spaced-out"]="2.0.17"
   })
-  package.loaded["prototypes.compat.planet_production_exchanges"]=nil
-  return raw,require("prototypes.compat.planet_production_exchanges")
+  package.loaded["prototypes.industry.exchanges.planet_production_exchanges"]=nil
+  return raw,require("prototypes.industry.exchanges.planet_production_exchanges")
 end
 
 local function ingredient(recipe, name)
@@ -218,7 +218,7 @@ local names={
   "razi-electrobiological-components"
 }
 for _,name in ipairs(names) do
-  local rule=require("prototypes.compat.industry_portfolio")
+  local rule=require("prototypes.industry.exchanges.industry_portfolio")
   check(rule.keep(name),"A core cross-world exchange must be curated")
 end
 for _, name in ipairs(names) do
@@ -402,7 +402,7 @@ rawset(_G, "settings", nil)
 -- Fixture-only alternative names must be opted into the curated policy so
 -- the production arithmetic can still be tested independently of the
 -- shipping portfolio without enabling these names in a real modpack.
-local portfolio=require("prototypes.compat.industry_portfolio")
+local portfolio=require("prototypes.industry.exchanges.industry_portfolio")
 for _,name in ipairs({
   "razi-fixture-bulk-electronics","razi-fixture-default-energy",
   "razi-fixture-legacy-economy","razi-fixture-paced-economy",
@@ -633,7 +633,7 @@ f:close()
 local integration=assert(source:find(
   'require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()',1,true))
 local production=assert(source:find(
-  'require("prototypes.compat.planet_production_exchanges").data_final_fixes()',1,true))
+  'require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()',1,true))
 check(production>integration,
   "K2SO material reconciliation must precede production exchanges")
 print("Cross-planet K2SO industrial exchange, safety and progression passed")

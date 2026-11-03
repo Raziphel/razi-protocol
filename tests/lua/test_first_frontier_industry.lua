@@ -8,10 +8,10 @@ data={raw={recipe={
   ["piercing-rounds-magazine"]={
     name="piercing-rounds-magazine",category="castra-crafting"}
 }}}
-package.loaded["prototypes.compat.planet_production_exchanges"]={
+package.loaded["prototypes.industry.exchanges.planet_production_exchanges"]={
   register_additional=function(rules) captured=rules end
 }
-local frontier=require("prototypes.compat.first_frontier_industry")
+local frontier=require("prototypes.industry.exchanges.first_frontier_industry")
 frontier.data_final_fixes()
 check(#captured==1,"Expected one optional frontier production alternative")
 local recipe=captured[1]
@@ -47,8 +47,8 @@ check(imported["carbon-fiber"] and imported["silicon-cell"],
 check(#recipe.planets>=3,"This must genuinely connect several worlds")
 -- A different source-mod version can change the category again.
 data.raw.recipe["piercing-rounds-magazine"].category="castra-special-assembly"
-package.loaded["prototypes.compat.first_frontier_industry"]=nil
-require("prototypes.compat.first_frontier_industry").data_final_fixes()
+package.loaded["prototypes.industry.exchanges.first_frontier_industry"]=nil
+require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixes()
 check(captured[1].category=="castra-special-assembly",
   "Castra bridge must use the current source category, not a hardcoded guess")
 print("First-frontier manufacturing rules and provenance passed")

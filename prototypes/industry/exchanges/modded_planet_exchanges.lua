@@ -1,6 +1,6 @@
 -- Bonus recipes for trading materials between the planet mods.
 -- Keep these separate from their normal production chains.
-local production = require("prototypes.compat.planet_production_exchanges")
+local production = require("prototypes.industry.exchanges.planet_production_exchanges")
 
 local rules = {
   {

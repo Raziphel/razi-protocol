@@ -2,7 +2,7 @@
 -- factory research. AAI continues to own all transmitters, channels and
 -- circuit behavior; Razi never copies its code or changes its prototypes.
 local M={}
-local mode=require("prototypes.compat.interdependence_mode")
+local mode=require("prototypes.industry.exchanges.interdependence_mode")
 
 -- Use the native source technology if present. AAI forks historically
 -- rename the research; candidates are deliberately narrow.

@@ -90,8 +90,8 @@ local function setup(options)
 	end})
 	rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 	rawset(_G, "mods", options.mods or {["razi-rocket-reusability"] = "1.1.9"})
-	package.loaded["prototypes.compat.rocket_salvage"] = nil
-	return data_raw, require("prototypes.compat.rocket_salvage"), extended
+	package.loaded["prototypes.industry.rocket_salvage"] = nil
+	return data_raw, require("prototypes.industry.rocket_salvage"), extended
 end
 
 local function near(value, expected)
@@ -344,15 +344,15 @@ end
 -- a pack without technologies, recipes or items does not fail
 rawset(_G, "mods", {["razi-rocket-reusability"] = "1.1.9"})
 rawset(_G, "data", {raw = {}, extend = function() error("extended on an empty pack") end})
-package.loaded["prototypes.compat.rocket_salvage"] = nil
-require("prototypes.compat.rocket_salvage").data_final_fixes()
+package.loaded["prototypes.industry.rocket_salvage"] = nil
+require("prototypes.industry.rocket_salvage").data_final_fixes()
 
 -- It runs after the last pass that edits recipes and technology prices (Lithium Battery), before the menu pass.
 local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
 local lithium = assert(source:find('require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()', 1, true))
-local own = assert(source:find('require("prototypes.compat.rocket_salvage").data_final_fixes()', 1, true))
+local own = assert(source:find('require("prototypes.industry.rocket_salvage").data_final_fixes()', 1, true))
 local navigation = assert(source:find('require("prototypes.compat.crafting_navigation").data_final_fixes()', 1, true))
 check(lithium < own and own < navigation, "the pass runs late, after Lithium Battery and before the menu pass")
 

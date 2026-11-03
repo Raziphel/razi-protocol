@@ -2,7 +2,7 @@ require("util")
 local Collections = require("__razi_lib__/lib/collections")
 
 require("prototypes.fixes.common.removed_fuel_category").data_final_fixes()
-require("prototypes.compat.lab_cards").data_final_fixes()
+require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
 require("prototypes.fixes.tenebris-prime.tenebris_void_towers").data_final_fixes()
@@ -116,9 +116,9 @@ require("prototypes.compatibility.common.outer_science_arrival_guard").data_fina
 
 -- Interplanetary exchanges: the shared components first, then the exchange
 -- recipes that consume them (K2SO recipe names are settled by now).
-require("prototypes.compat.network_components").data_final_fixes()
-require("prototypes.compat.planet_production_exchanges").data_final_fixes()
-require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
+require("prototypes.industry.components.network_components").data_final_fixes()
+require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()
+require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()
 
 -- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
 require("prototypes.technology.regional_research_bridges").data_final_fixes()
@@ -132,8 +132,8 @@ require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson")
 
 -- Castra's exchange, then the exchanges that return component cargo; they run
 -- after the other research passes so that the research links see the final tree.
-require("prototypes.compat.first_frontier_industry").data_final_fixes()
-require("prototypes.compat.network_components").register_premium()
+require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixes()
+require("prototypes.industry.components.network_components").register_premium()
 
 -- Partnership gates need the premium exchanges registered above; Aquilo's cycle check must see the final prerequisites.
 require("prototypes.technology.industrial_partnership_gates").data_final_fixes()
@@ -221,8 +221,8 @@ require("prototypes.fixes.corrundum-krastorio-compatibility-plus.corrundum_compa
 
 -- Late-stage source recipes and research are final now. Keep optional bulk card manufacture,
 -- then tier the system cards across the EXISTING laboratories of other mods (no new labs).
-require("prototypes.compat.system_card_manufacturing").data_final_fixes()
-require("prototypes.compat.system_card_laboratories").data_final_fixes()
+require("prototypes.industry.cards.system_card_manufacturing").data_final_fixes()
+require("prototypes.industry.cards.system_card_laboratories").data_final_fixes()
 
 require("prototypes.technology.convergence").data_final_fixes()
 require("prototypes.technology.convergence_witness").data_final_fixes()
@@ -265,7 +265,7 @@ require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
 -- remnant-beacon. The copies take the already normalized native recipe, so running after the passes above is safe; before the menu pass.
-require("prototypes.compat.rocket_salvage").data_final_fixes()
+require("prototypes.industry.rocket_salvage").data_final_fixes()
 
 -- Final integrity guard: late third-party technology passes must not resurrect
 -- unlocks or routes for the removed, inaccessible far-side Bellicos stargate.
@@ -296,7 +296,7 @@ require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
 require("prototypes.system.razi_map_preset").data_final_fixes()
 
 -- Convert eligible science packs after all research and recipes have settled.
-require("prototypes.compat.auto_tech_cards").data_final_fixes()
+require("prototypes.industry.cards.auto_tech_cards").data_final_fixes()
 
 -- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
 require("prototypes.fixes.init").data_final_fixes()

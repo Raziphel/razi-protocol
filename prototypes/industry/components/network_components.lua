@@ -1,9 +1,9 @@
 -- Components assembled from several planetary supply chains.
 -- Skip registration when a material, machine or research unlock is missing.
 local M={}
-local mode=require("prototypes.compat.interdependence_mode")
-local portfolio=require("prototypes.compat.industry_portfolio")
-local factory=require("prototypes.compat.planet_production_exchanges")
+local mode=require("prototypes.industry.exchanges.interdependence_mode")
+local portfolio=require("prototypes.industry.exchanges.industry_portfolio")
+local factory=require("prototypes.industry.exchanges.planet_production_exchanges")
 local Graph=require("__razi_lib__/lib/technology_graph")
 local function raw(kind,id) return (data.raw[kind] or {})[id] end
 local function entry_name(entry) return entry.name or entry[1] end

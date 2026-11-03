@@ -67,7 +67,7 @@ end
 
 ---@type table<string, table>
 local labs = build(true)
-local module = require("prototypes.compat.system_card_laboratories")
+local module = require("prototypes.industry.cards.system_card_laboratories")
 module.data_final_fixes()
 
 check(not contains(labs.lab, "solaris-tech-card"), "Basic laboratory must stop at Calidus")

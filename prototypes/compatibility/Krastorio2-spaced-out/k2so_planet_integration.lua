@@ -145,7 +145,7 @@ function integration.data_final_fixes()
   reconcile_mining()
   -- Cross-world research-data deliveries are optional interdependence,
   -- unlike the K2SO alias reconciliation needed by every mode.
-  if require("prototypes.compat.interdependence_mode").enabled() then
+  if require("prototypes.industry.exchanges.interdependence_mode").enabled() then
     add_existing_research_data()
   end
 end
