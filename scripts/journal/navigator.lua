@@ -73,6 +73,11 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   local filters=frame.add{type="flow",name="razi_journal_filterbar",
     direction="horizontal"}
   filters.style.horizontal_spacing=9
+  -- Without room of its own the row is pressed against the list and loses the
+  -- bottom of its letters.
+  filters.style.minimal_height=24
+  filters.style.vertical_align="center"
+  filters.style.bottom_padding=4
   for _,filter in ipairs({"all","ready","unfinished","done"}) do
     local active=p.filter==filter
     local item=filters.add{type="label",style="clickable_label",
@@ -83,7 +88,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
     item.style.font_color=active and COLOR.ink or COLOR.quiet
   end
   local scroll=wheel_pane(frame,"razi_journal_navigation",
-    inner,size.body-164)
+    inner,size.body-172)
   local column=scroll.add{type="flow",name="razi_journal_chapter_column",direction="vertical"}
   column.style.width=inner-13
   column.style.vertical_spacing=9
