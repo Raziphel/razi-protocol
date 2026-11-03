@@ -75,6 +75,36 @@ raw = fresh()
 hard_drive_time.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without the recipe")
 
+-- planet-muluna burner_roboport_minable
+local burner_minable = require("prototypes.fixes.planet-muluna.burner_roboport_minable")
+raw = fresh()
+raw.item = {["muluna-burner-roboport"] = {}}
+raw["assembling-machine"] = {
+	["muluna-burner-roboport"] = {minable = {result = "muluna-burner-roboport"}},
+	["muluna-burner-roboport-logistic-mode"] = {minable = {mining_time = 0.1, result = "roboport"}},
+	["muluna-burner-roboport-construction-mode"] = {minable = {result = "muluna-burner-roboport"}},
+}
+raw.roboport = {
+	["muluna-burner-roboport-logistic-mode-roboport"] = {minable = {result = "roboport"}},
+	["muluna-burner-roboport-construction-mode-roboport"] = {},
+	["roboport"] = {minable = {result = "roboport"}},
+}
+burner_minable.data_final_fixes()
+check(raw["assembling-machine"]["muluna-burner-roboport-logistic-mode"].minable.result == "muluna-burner-roboport"
+	and raw["assembling-machine"]["muluna-burner-roboport-logistic-mode"].minable.mining_time == 0.1, "The mode did not mine into the burner roboport")
+check(raw.roboport["muluna-burner-roboport-logistic-mode-roboport"].minable.result == "muluna-burner-roboport", "The hidden roboport did not mine into the burner roboport")
+check(raw["assembling-machine"]["muluna-burner-roboport-construction-mode"].minable.result == "muluna-burner-roboport", "A result that was right was changed")
+check(raw.roboport["roboport"].minable.result == "roboport", "The vanilla roboport was changed")
+check(raw.roboport["muluna-burner-roboport-construction-mode-roboport"].minable == nil, "A roboport without minable got one")
+check(logged("mines into the burner roboport") == 2 and logs[1]:find("^razi%-protocol: "), "Expected a line for each of the two entities that were wrong")
+burner_minable.data_final_fixes()
+check(logged("mines into the burner roboport") == 2, "The repeated run touched the entities again")
+raw = fresh()
+raw["assembling-machine"] = {["muluna-burner-roboport-logistic-mode"] = {minable = {result = "roboport"}}}
+burner_minable.data_final_fixes()
+check(raw["assembling-machine"]["muluna-burner-roboport-logistic-mode"].minable.result == "roboport" and #logs == 0,
+	"The result changed to an item that does not exist")
+
 -- planetaris-arig rail_support_description
 local rail_description = require("prototypes.fixes.planetaris-arig.rail_support_description")
 raw = fresh()

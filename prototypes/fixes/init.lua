@@ -20,6 +20,7 @@ local repairs = {
 	require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority"),
 	require("prototypes.fixes.planet-muluna.hard_drive_time"),
 	require("prototypes.fixes.planetaris-arig.rail_support_description"),
+	require("prototypes.fixes.planet-muluna.burner_roboport_minable"),
 }
 
 function mod_fixes.data_final_fixes()
