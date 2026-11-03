@@ -2,11 +2,11 @@
 -- Built during the data stage, not during play.
 local M={}
 local hazards=require("prototypes.world.routes.route_hazards")
-local catalog=require("scripts.galactic_catalog")
+local catalog=require("lib.galactic_catalog")
 local dossiers=require("prototypes.world.routes.route_dossiers")
-local story=require("scripts.razi_story")
-local quality_levels=require("scripts.razi_asteroid_difficulty")
-local difficulty=require("scripts.razi_difficulty_presets")
+local story=require("lib.story")
+local quality_levels=require("lib.difficulty.asteroids")
+local difficulty=require("lib.difficulty.presets")
 local prefix="razi-route-intel."
 local function selected(name,default)
   local item=settings and settings.startup and settings.startup[name]

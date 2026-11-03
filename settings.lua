@@ -103,7 +103,7 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		-- The briefings are story text; the setting has no effect while the story is off.
-		hidden = not require("scripts.razi_story").enabled(),
+		hidden = not require("lib.story").enabled(),
 		order = "ca[quality-of-life]-b[expedition-briefings]"
 	},
 	{

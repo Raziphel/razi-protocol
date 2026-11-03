@@ -129,11 +129,11 @@ expect(group["small-auric-asteroid"].dying_trigger_effect[1].probability==nil,
   "Never silently alter custom Auric asteroid fragmentation")
 settings.startup["razi-performance-reduced-fragments"].value=false
 settings.startup["razi-performance-outer-hostile-density"]={value=true}
-package.loaded["scripts.galactic_catalog"]={system=function(name)
+package.loaded["lib.galactic_catalog"]={system=function(name)
  if name=="nauvis" or name=="muluna" then return "calidus" end
  return "unassigned"
 end}
-package.loaded["scripts.razi_asteroid_difficulty"]=nil
+package.loaded["lib.difficulty.asteroids"]=nil
 perf=reload()
 expect(perf.data_final_fixes()>0,"Late hostile density option should apply")
 expect(math.abs(routes.endgame.asteroid_spawn_definitions[1]

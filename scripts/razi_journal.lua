@@ -3,7 +3,7 @@
 local M={}
 local journal_button_cleanup=require("scripts.razi_journal_button_cleanup")
 local defs=require("scripts.razi_journal_data")
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 -- The Archive records and the record notices, loaded here for the story.
 story.attach(require("scripts.razi_journal_records"),
   require("scripts.razi_story_dispatch"))

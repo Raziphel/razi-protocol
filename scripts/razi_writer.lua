@@ -1,4 +1,4 @@
--- /razi-writer: writer mode for the storyline (see scripts/razi_story.lua).
+-- /razi-writer: writer mode for the storyline (see lib/story.lua).
 -- Admin only. The mode is per player and needs no restart.
 --
 --   /razi-writer on|off          the mode
@@ -6,7 +6,7 @@
 --   /razi-writer quest <id>      open the journal on a quest
 --   /razi-writer chapter <id>    open the journal on a chapter cover
 --   /razi-writer records [off]   open every Archive record, studied or not
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 local journal=require("scripts.razi_journal")
 
 local M={}

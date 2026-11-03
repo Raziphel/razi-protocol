@@ -3,7 +3,7 @@
 -- Standalone regression: run with lua5.2 tests/lua/test_quality_asteroids.lua
 package.path="./?.lua;./?/init.lua;"..package.path
 local function ok(condition,message) if not condition then error(message,2) end end
-package.loaded["scripts.galactic_catalog"]={
+package.loaded["lib.galactic_catalog"]={
   system=function(name)
     if name=="nauvis" or name=="muluna" then return "calidus" end
     if name=="sye-vibrant" then return "vibrant" end
@@ -12,7 +12,7 @@ package.loaded["scripts.galactic_catalog"]={
     return "unassigned"
   end
 }
-local difficulty=require("scripts.razi_asteroid_difficulty")
+local difficulty=require("lib.difficulty.asteroids")
 ok(difficulty.location_level("nauvis")==1,"Nauvis must remain level 1")
 ok(difficulty.location_level("solar-system-edge")==10,"Deep Space must be level 10")
 ok(difficulty.roll(1,.999)=="normal","Level 1 is always normal")

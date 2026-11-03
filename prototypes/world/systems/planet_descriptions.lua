@@ -2,8 +2,8 @@
 -- Keep the original author's wording, including translated descriptions and
 -- gameplay rules. Optional worlds are touched only when their prototype exists.
 -- The context is story text: nothing is appended while the story is off
--- (scripts/razi_story.lua).
-local story = require("scripts.razi_story")
+-- (lib/story.lua).
+local story = require("lib.story")
 local descriptions = {}
 local configured = setmetatable({}, {__mode = "k"})
 

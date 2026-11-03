@@ -7,8 +7,8 @@ local M={}
 local hazards=require("prototypes.world.routes.route_hazards")
 local layout=require("prototypes.world.starmap.galaxy_layout")
 local reconcile=require("prototypes.world.routes.route_reconcile")
-local quality=require("scripts.razi_asteroid_difficulty")
-local difficulty=require("scripts.razi_difficulty_presets")
+local quality=require("lib.difficulty.asteroids")
+local difficulty=require("lib.difficulty.presets")
 
 local PI=math.pi
 local TAU=2*PI

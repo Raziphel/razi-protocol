@@ -158,7 +158,7 @@ local function trim_fragments()
 end
 local function reduce_outer_hostiles()
   local changed=0
-  local ladder=require("scripts.razi_asteroid_difficulty")
+  local ladder=require("lib.difficulty.asteroids")
   local asteroid=data.raw.asteroid or {}
   local function apply(target)
     local source=target.asteroid_spawn_definitions

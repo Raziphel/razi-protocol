@@ -2,7 +2,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,why) if not ok then error(why,2) end end
 -- The original briefing is the story text; its own checks run with the story on.
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 story.configure(true)
 storage={}
 local settings_map={

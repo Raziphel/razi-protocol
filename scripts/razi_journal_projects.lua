@@ -6,7 +6,7 @@ local convergence=require("scripts.razi_convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local icons=require("scripts.razi_journal_icons")
 local marks=require("scripts.razi_journal_marks")
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local objectives=require("scripts.razi_journal_data")
 local platform_projects=require("scripts.razi_platform_projects")

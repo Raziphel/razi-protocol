@@ -64,12 +64,12 @@ local function planet(controls, tile_names)
 	return {type = "planet", map_gen_settings = map_gen_settings}
 end
 
--- `startup` holds the saved values of the settings; the difficulty is resolved by the real scripts.razi_difficulty_presets.
+-- `startup` holds the saved values of the settings; the difficulty is resolved by the real lib.difficulty.presets.
 local function setup(active_mods, startup)
 	for _, name in ipairs(module_names) do
 		package.loaded["prototypes." .. name] = nil
 	end
-	package.loaded["scripts.razi_difficulty_presets"] = nil
+	package.loaded["lib.difficulty.presets"] = nil
 	rawset(_G, "mods", active_mods)
 	rawset(_G, "settings", {startup = startup or {}})
 

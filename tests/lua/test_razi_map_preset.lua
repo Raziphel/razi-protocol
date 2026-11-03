@@ -83,7 +83,7 @@ local function make(mode,enabled,manual)
  rawset(_G,"settings",{startup=startup})
  rawset(_G,"data",{raw=fixture()})
  package.loaded["prototypes.difficulty.razi_map_preset"]=nil
- package.loaded["scripts.razi_difficulty_presets"]=nil
+ package.loaded["lib.difficulty.presets"]=nil
  return require("prototypes.difficulty.razi_map_preset")
 end
 

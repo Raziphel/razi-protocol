@@ -47,7 +47,7 @@ local function row(route,key)
 end
 -- The route note is story text: the story is off by default and the tooltip
 -- then holds only facts (route, ten-level danger, system).
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 check(story.enabled()==false,"The story text must be off by default")
 check(#regional.custom_tooltip_fields==3,
   "Regional tooltip must contain only route, ten-level danger and system")
@@ -66,7 +66,7 @@ check(row(noted,"dispatch").value[1]=="razi-route-intel.dispatch-furnace-desert"
 story.configure(false)
 check(row(regional,"danger")~=nil and row(regional,"quality-hazard")==nil,
   "Only the unified ten-level asteroid danger may be shown")
-local quality=require("scripts.razi_asteroid_difficulty")
+local quality=require("lib.difficulty.asteroids")
 local _,regional_stage=quality.route_range(regional)
 local quality_field=row(regional,"danger")
 check(quality_field and quality_field.value[2]

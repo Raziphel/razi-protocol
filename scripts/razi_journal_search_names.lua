@@ -1,7 +1,7 @@
 -- Journal search by the names a player sees. The game translates the names
 -- (only for a connected player, in that player's locale), so the result is
 -- cached per player and the search falls back to ids until it arrives.
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 local M={}
 
 -- Lower case that also covers Cyrillic and Latin-1 letters (string.lower

@@ -9,7 +9,7 @@
 -- real values are placed in the game/planet prototype defaults at data stage.
 -- Other profiles carry fully editable MapGenPreset fields.
 local M={}
-local difficulty=require("scripts.razi_difficulty_presets")
+local difficulty=require("lib.difficulty.presets")
 local tuning=require("scripts.razi_difficulty_tuning")
 local economy=require("scripts.razi_economy_difficulty")
 -- Profile order in the New Game list.

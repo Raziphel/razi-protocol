@@ -5,7 +5,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 local W=require("tests.lua.journal_window")
 local defs=require("prototypes.technology.endgame.convergence")
 local convergence=require("scripts.razi_convergence")

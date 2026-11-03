@@ -162,7 +162,7 @@ if script and script.active_mods
 end
 M.by_id={}
 for _,quest in ipairs(M.quests) do M.by_id[quest.id]=quest end
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 
 -- The name shown for a quest. Without the story it is the game's own name for
 -- what the quest is about: the technology, the world's space location, the

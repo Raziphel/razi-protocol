@@ -1,11 +1,11 @@
 ---@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil, inject-field
--- Writer mode (scripts/razi_writer.lua, scripts/razi_story.lua): one player
+-- Writer mode (scripts/razi_writer.lua, lib/story.lua): one player
 -- sees the story slots while the story is off for everyone else, the text of
 -- the repository is never shown to the writer, and the commands work.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 require("scripts.razi_journal") -- hands the Archive records to the story
 local slots=require("scripts.razi_story_slots")
 local W=require("tests.lua.journal_window")

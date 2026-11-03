@@ -1,8 +1,8 @@
 -- One event, one real asteroid; no scanning, timers or extra child chains.
 -- A native hidden carrier asteroid is immediately replaced by a real entity.
 local M={}
-local engine=require("scripts.razi_asteroid_difficulty")
-local levels=require("scripts.razi_difficulty_presets")
+local engine=require("lib.difficulty.asteroids")
+local levels=require("lib.difficulty.presets")
 local PREFIX="razi-quality-asteroid-"
 local length=#PREFIX
 -- Startup options are immutable while a Factorio save runs.

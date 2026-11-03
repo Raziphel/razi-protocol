@@ -8,7 +8,7 @@
 --
 -- Source-owned spawn curves always win, and modded entries are untouched.
 local M={}
-local levels=require("scripts.razi_asteroid_difficulty")
+local levels=require("lib.difficulty.asteroids")
 local vanilla={metallic=true,carbonic=true,oxide=true,promethium=true}
 local done=setmetatable({},{__mode="k"})
 local installed={}

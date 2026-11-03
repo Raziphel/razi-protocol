@@ -199,7 +199,7 @@ check(M.state(force,defs.by_id["igrys"],context)=="complete",
   "Side-world quest should complete from the real installed unlock research")
 local a,b=M.unlocked_records(force,context) -- luacheck: ignore 411
 check(a==0 and b==0,"The Archive must be empty while the story is off")
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 story.configure(true)
 a,b=M.unlocked_records(force,context)
 check(b==#require("scripts.razi_journal_records") and a>=0,

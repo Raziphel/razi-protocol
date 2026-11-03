@@ -11,7 +11,7 @@ check(done==2 and total==6 and #pending==6,
 local empty_done,empty_total,empty=m.status({technologies={}})
 check(empty_done==0 and empty_total==0 and #empty==0,
  "Missing source mod must yield an empty but safe UI")
-local catalog=require("scripts.galactic_catalog")
+local catalog=require("lib.galactic_catalog")
 check(catalog.system("nauvis")=="calidus","Native Nauvis classification changed")
 print("Read-only Dyson UI progress and missing-source fallback passed")
 

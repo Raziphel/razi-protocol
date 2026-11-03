@@ -1,11 +1,11 @@
 ---@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil
--- The storyline switch (scripts/razi_story.lua): with the story off nothing
+-- The storyline switch (lib/story.lua): with the story off nothing
 -- story-related is created, called or shown, and the mechanics still work.
 -- With the story on the original behaviour is unchanged.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 check(story.enabled()==false,"The story must ship switched off")
 check(#story.records()==0,"No archive records while the story is off")
 -- Notices are no-ops even without any game state.
@@ -125,18 +125,18 @@ end
 -- Shipping with the story on loads razi_story_dispatch from inside the quest
 -- data module's require chain; that must not recurse.
 do
-  local names={"scripts.razi_story","scripts.razi_story_dispatch",
+  local names={"lib.story","scripts.razi_story_dispatch",
     "scripts.razi_journal_data","scripts.razi_journal_records"}
   local saved={}
   for _,name in ipairs(names) do saved[name]=package.loaded[name];package.loaded[name]=nil end
-  local source=assert(io.open("scripts/razi_story.lua","r")):read("*a")
+  local source=assert(io.open("lib/story.lua","r")):read("*a")
   local patched,count=source:gsub("local ENABLED=false","local ENABLED=true")
   check(count==1,"Story switch declaration not found")
-  package.preload["scripts.razi_story"]=assert(load(patched,"@scripts/razi_story.lua"))
+  package.preload["lib.story"]=assert(load(patched,"@lib/story.lua"))
   local ok,loaded=pcall(require,"scripts.razi_journal_data")
-  package.preload["scripts.razi_story"]=nil
+  package.preload["lib.story"]=nil
   ---@type table
-  local fresh=package.loaded["scripts.razi_story"]
+  local fresh=package.loaded["lib.story"]
   ---@type table
   local title=ok and loaded.quest_title(loaded.by_id["first-signal"]) or {}
   for _,name in ipairs(names) do package.loaded[name]=saved[name] end

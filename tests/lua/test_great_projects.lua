@@ -6,7 +6,7 @@ storage={}
 local catalog={
   nauvis="calidus",fulgora="vibrant",gleba="nyxaris"
 }
-package.loaded["scripts.galactic_catalog"]={
+package.loaded["lib.galactic_catalog"]={
   system=function(name) return catalog[name] or "unassigned" end
 }
 package.loaded["scripts.compatibility.orbital-cannon.catapult_network"]={

@@ -1,7 +1,7 @@
 -- Create cards for science packs used by research at prototype load.
 local M = {}
 
-local Difficulty = require("scripts.razi_difficulty_presets")
+local Difficulty = require("lib.difficulty.presets")
 local Graph = require("__razi_lib__/lib/technology_graph")
 
 local function is_science(name)
