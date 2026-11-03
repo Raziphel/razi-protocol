@@ -15,6 +15,7 @@ local repairs = {
 	require("prototypes.fixes.moon-eneas.recycling_enabled"),
 	require("prototypes.fixes.RenaiTransportation.recycling_hidden"),
 	require("prototypes.fixes.moon-eneas.pristine_filter"),
+	require("prototypes.fixes.Cerys-Moon-of-Fulgora.roboport_pressure"),
 	require("prototypes.fixes.Krastorio2.loader_insert_limits"),
 	require("prototypes.fixes.planetaris-arig.surface_conditions"),
 	require("prototypes.fixes.Krastorio2-spaced-out.void_crushing"),

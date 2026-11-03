@@ -65,6 +65,23 @@ local function fresh()
 	return raw
 end
 
+-- The prototype `name` of the type `kind` in the current mock, without the type inference of the editor.
+---@return any
+local function proto(kind, name)
+	---@type any
+	local list = _G.data.raw[kind]
+	return list and list[name]
+end
+
+---@param kind string
+---@param name string
+---@param value any
+local function set_proto(kind, name, value)
+	---@type any
+	local list = _G.data.raw[kind]
+	list[name] = value
+end
+
 local fixes = require("prototypes.fixes.init")
 
 -- Nothing of the mods is installed: every repair is quiet and does not fail.
@@ -181,21 +198,21 @@ raw["mod-data"] = {rigor_module_mod_recipe_table = {data = {["filter-heavy-oil-p
 	"filter-heavy-oil-pristine__rigor_module_mod__3", "missing-copy"}}}}
 local filter_before = deepcopy(raw.recipe)
 pristine_filter.data_final_fixes()
-local pristine = raw.recipe["filter-heavy-oil-pristine"].results[2]
+local pristine = proto("recipe", "filter-heavy-oil-pristine").results[2]
 check(pristine.amount_min == 1 and pristine.amount_max == 5, "The coal range of the pristine filter was not turned")
-pristine = raw.recipe["filter-heavy-oil-pristine__rigor_module_mod__2"].results[2]
+pristine = proto("recipe", "filter-heavy-oil-pristine__rigor_module_mod__2").results[2]
 check(pristine.amount_min == 1 and pristine.amount_max == 5, "The coal range of the rigor copy was not turned")
 check(same(raw.recipe["filter-heavy-oil-pristine__rigor_module_mod__3"], filter_before["filter-heavy-oil-pristine__rigor_module_mod__3"])
 	and same(raw.recipe["filter-heavy-oil"], filter_before["filter-heavy-oil"])
 	and same(raw.recipe["filter-heavy-oil-pristine-other"], filter_before["filter-heavy-oil-pristine-other"]),
 	"A recipe that was right or that is not the pristine filter was changed")
 ---@type any
-local servofish_effects = raw.technology["pristine-servofish"].effects
+local servofish_effects = proto("technology", "pristine-servofish").effects
 check(#servofish_effects == 4 and servofish_effects[2].recipe == "filter-heavy-oil-pristine"
 	and not servofish_effects[2].hidden and servofish_effects[3].recipe == "filter-heavy-oil-pristine__rigor_module_mod__2"
 	and servofish_effects[3].hidden and servofish_effects[4].recipe == "filter-heavy-oil-pristine__rigor_module_mod__3"
 	and servofish_effects[4].hidden, "The pristine filter and its rigor copies are not unlocked by pristine-servofish")
-check(#raw.technology["water-advanced"].effects == 1, "Another technology was changed")
+check(#proto("technology", "water-advanced").effects == 1, "Another technology was changed")
 check(logged("razi-protocol: filter-heavy-oil-pristine makes 1 to 5 coal") == 1
 	and logged("razi-protocol: filter-heavy-oil-pristine__rigor_module_mod__2 makes 1 to 5 coal") == 1
 	and logged("razi-protocol: filter-heavy-oil-pristine is unlocked by pristine-servofish (+2 rigor copies)") == 1
@@ -211,7 +228,7 @@ raw = fresh()
 raw.recipe = {["filter-heavy-oil-pristine"] = filter_recipe({name = "coal", amount_min = 1, amount_max = 5})}
 raw.technology = {["water-advanced"] = {effects = {{type = "unlock-recipe", recipe = "filter-heavy-oil-pristine"}}}}
 pristine_filter.data_final_fixes()
-check(#logs == 0 and #raw.technology["water-advanced"].effects == 1, "An unlocked recipe was unlocked again")
+check(#logs == 0 and #proto("technology", "water-advanced").effects == 1, "An unlocked recipe was unlocked again")
 raw = fresh()
 pristine_filter.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without recipes")
@@ -271,10 +288,10 @@ raw = gates_data()
 pelagos_recipe_gates.data_final_fixes()
 check(raw.recipe["pelagos-electronic-components"].enabled == false, "The recipe is still enabled from the start")
 ---@type any
-local circuit_effects = raw.technology["advanced-circuit"].effects
+local circuit_effects = proto("technology", "advanced-circuit").effects
 check(#circuit_effects == 1 and circuit_effects[1].recipe == "other-recipe", "The unlock stayed with advanced-circuit")
 ---@type any
-local coconut_effects = raw.technology["coconut-processing-technology"].effects
+local coconut_effects = proto("technology", "coconut-processing-technology").effects
 check(#coconut_effects == 2 and coconut_effects[2].recipe == "pelagos-electronic-components",
 	"The recipe is not unlocked by the technology of the coconuts")
 check(raw.recipe["other-recipe"].enabled == true, "Another recipe was disabled")
@@ -283,17 +300,93 @@ check(logged("razi-protocol: pelagos-electronic-components is unlocked by coconu
 pelagos_recipe_gates.data_final_fixes()
 check(#logs == 1 and #coconut_effects == 2 and #circuit_effects == 1, "The repeated run changed things again")
 raw = gates_data()
-raw.technology["coconut-processing-technology"] = nil
+set_proto("technology", "coconut-processing-technology", nil)
 pelagos_recipe_gates.data_final_fixes()
-check(raw.recipe["pelagos-electronic-components"].enabled == true and #raw.technology["advanced-circuit"].effects == 2
+check(raw.recipe["pelagos-electronic-components"].enabled == true and #proto("technology", "advanced-circuit").effects == 2
 	and #logs == 0, "The recipe lost its only unlock without the technology of the coconuts")
 raw = gates_data()
 raw.recipe["pelagos-electronic-components"] = nil
 pelagos_recipe_gates.data_final_fixes()
-check(#raw.technology["advanced-circuit"].effects == 2 and #raw.technology["coconut-processing-technology"].effects == 1
+check(#proto("technology", "advanced-circuit").effects == 2 and #proto("technology", "coconut-processing-technology").effects == 1
 	and #logs == 0, "A technology was changed without the recipe")
 raw = fresh()
 pelagos_recipe_gates.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without Pelagos")
+
+-- Cerys-Moon-of-Fulgora roboport_pressure
+local roboport_pressure = require("prototypes.fixes.Cerys-Moon-of-Fulgora.roboport_pressure")
+local function roboport(min, max, extra)
+	local conditions = {{property = "pressure", min = min, max = max}}
+	for _, condition in ipairs(extra or {}) do
+		conditions[#conditions + 1] = condition
+	end
+
+	return {surface_conditions = conditions}
+end
+local function pressure_data()
+	local result = fresh()
+	result["mod-data"] = {["maraxsis-constants"] = {data = {PRESSURE_DOMES = {
+		["maraxsis-pressure-dome"] = {lamp = "maraxsis-lamp", pressure_dome = "maraxsis-pressure-dome",
+			regulator = "maraxsis-regulator"},
+		["no-lamp-dome"] = {lamp = "missing-lamp", pressure_dome = "no-lamp-dome", regulator = "no-lamp-regulator"},
+	}}}}
+	result.lamp = {["maraxsis-lamp"] = roboport(200000, 800000)}
+	result.roboport = {
+		["maraxsis-pressure-dome"] = roboport(5, nil),
+		["maraxsis-pressure-dome-logistic-mode"] = roboport(5, nil),
+		["maraxsis-pressure-dome-construction-mode"] = roboport(5, nil),
+		["maraxsis-regulator"] = roboport(5, nil, {{property = "dust", max = 0}}),
+		["maraxsis-regulator-logistic-mode"] = roboport(5, nil),
+		["maraxsis-regulator-construction-mode"] = roboport(200000, 800000),
+		["no-lamp-dome"] = roboport(5, nil),
+		["no-lamp-regulator"] = roboport(5, nil),
+		["roboport"] = roboport(5, nil),
+		["bioluminescent-roboport"] = roboport(5, 3000),
+		["bioluminescent-kr-big-roboport"] = roboport(3000, 3000),
+		["bioluminescent-no-pressure"] = {surface_conditions = {{property = "gravity", min = 1}}},
+	}
+	result.roboport["bioluminescent-roboport"].bioluminescent = true
+	result.roboport["bioluminescent-kr-big-roboport"].bioluminescent = true
+	result.roboport["bioluminescent-no-pressure"].bioluminescent = true
+	result.roboport["bioluminescent-no-max"] = roboport(5, nil)
+	result.roboport["bioluminescent-no-max"].bioluminescent = true
+
+	return result
+end
+raw = pressure_data()
+local pressure_before = deepcopy(raw.roboport)
+roboport_pressure.data_final_fixes()
+for _, name in ipairs({"maraxsis-pressure-dome", "maraxsis-pressure-dome-logistic-mode",
+	"maraxsis-pressure-dome-construction-mode", "maraxsis-regulator", "maraxsis-regulator-logistic-mode"}) do
+	check(raw.roboport[name].surface_conditions[1].min == 200000, "The dome roboport did not get the pressure of the lamp: " .. name)
+	check(logged("razi-protocol: " .. name .. " pressure min 5 -> 200000") == 1, "Expected one line for " .. name)
+end
+check(raw.roboport["maraxsis-regulator"].surface_conditions[2].property == "dust", "The other condition was changed")
+check(raw.roboport["bioluminescent-roboport"].surface_conditions[1].min == 3000
+	and logged("razi-protocol: bioluminescent-roboport pressure min 5 -> 3000") == 1, "The bioluminescent roboport is relaxed")
+check(same(raw.roboport["maraxsis-regulator-construction-mode"], pressure_before["maraxsis-regulator-construction-mode"])
+	and same(raw.roboport["no-lamp-dome"], pressure_before["no-lamp-dome"])
+	and same(raw.roboport["no-lamp-regulator"], pressure_before["no-lamp-regulator"])
+	and same(raw.roboport.roboport, pressure_before.roboport)
+	and same(raw.roboport["bioluminescent-kr-big-roboport"], pressure_before["bioluminescent-kr-big-roboport"])
+	and same(raw.roboport["bioluminescent-no-pressure"], pressure_before["bioluminescent-no-pressure"])
+	and same(raw.roboport["bioluminescent-no-max"], pressure_before["bioluminescent-no-max"]),
+	"A roboport that has to stay as it is was changed")
+check(#logs == 6, "A roboport that was not changed was logged")
+roboport_pressure.data_final_fixes()
+check(#logs == 6, "The repeated run logged again")
+raw = pressure_data()
+raw["mod-data"] = nil
+roboport_pressure.data_final_fixes()
+check(raw.roboport["maraxsis-pressure-dome"].surface_conditions[1].min == 5
+	and raw.roboport["bioluminescent-roboport"].surface_conditions[1].min == 3000 and #logs == 1,
+	"Without Maraxsis only the bioluminescent roboports are expected to change")
+raw = pressure_data()
+raw.roboport = nil
+roboport_pressure.data_final_fixes()
+check(#logs == 0, "Something was logged without roboports")
+raw = fresh()
+roboport_pressure.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without roboports")
 
 print("mod fixes (optional mods): ok")
