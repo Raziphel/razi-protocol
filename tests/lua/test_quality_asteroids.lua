@@ -194,7 +194,7 @@ source.destroy=function() removed=true;source.valid=false end
 rawset(_G,"prototypes",{quality={
   normal={},uncommon={},rare={},epic={},legendary={}
 }})
-local runtime=require("scripts.razi_quality_asteroids")
+local runtime=require("scripts.asteroids.quality")
 local info=runtime.route_metadata(platform.space_connection)
 ok(info.from=="solar-system-edge" and info.to=="nexus"
   and runtime.route_metadata(platform.space_connection)==info,
