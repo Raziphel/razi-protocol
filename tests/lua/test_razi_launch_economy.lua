@@ -3,7 +3,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 rawset(_G,"log",function() end)
-local rocket=require("prototypes.compat.razi_launch_economy")
+local rocket=require("prototypes.difficulty.razi_launch_economy")
 local resolver=require("scripts.razi_difficulty_presets")
 local function selected(mode,overrides)
  local startup={["razi-difficulty-preset"]={value=mode}}

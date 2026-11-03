@@ -275,8 +275,8 @@ require("prototypes.system.bellicos").dedupe_internal_routes()
 -- Difficulty level: rocket parts per launch on every rocket silo, crafting speed of the machines and furnaces players build, and
 -- health of walls and gates, from the values the source mods defined. Normal (x1) writes nothing. Nothing after this adds a
 -- machine, silo or wall; the menu pass below only reads them.
-require("prototypes.compat.razi_launch_economy").data_final_fixes()
-require("prototypes.compat.razi_industrial_difficulty").data_final_fixes()
+require("prototypes.difficulty.razi_launch_economy").data_final_fixes()
+require("prototypes.difficulty.razi_industrial_difficulty").data_final_fixes()
 
 -- Run only after all Razi, partner-mod and temporary recipes have settled.
 -- This is a menu-only pass. No recipe is disabled or re-categorized for machines.
@@ -285,15 +285,15 @@ require("prototypes.compat.crafting_navigation").data_final_fixes()
 -- Difficulty level, settings of other mods: every reader after Razi's data.lua has seen the values of the level, so the saved values
 -- come back now. Then the finished prototypes of the settings that Muluna, Cerys and Biological Machines read in their own data.lua
 -- are scaled from the saved value to the value of the level. Normal and Custom write nothing.
-require("prototypes.compat.foreign_difficulty_settings").restore()
-require("prototypes.compat.foreign_numeric_stage_effects").data_final_fixes()
-require("prototypes.compat.muluna_power_difficulty").data_final_fixes()
-require("prototypes.compat.biological_machines_difficulty").data_final_fixes()
+require("prototypes.difficulty.foreign_difficulty_settings").restore()
+require("prototypes.difficulty.foreign_numeric_stage_effects").data_final_fixes()
+require("prototypes.difficulty.muluna_power_difficulty").data_final_fixes()
+require("prototypes.difficulty.biological_machines_difficulty").data_final_fixes()
 
 -- New Game map profiles and the global map settings of the difficulty level (evolution, expansion, pollution, raids, spoilage,
 -- research price, ore controls of every planet). Normal writes nothing. After every pass that adds or edits a planet or a control,
 -- so no planet escapes the scaling and no later pass sees half-scaled controls.
-require("prototypes.system.razi_map_preset").data_final_fixes()
+require("prototypes.difficulty.razi_map_preset").data_final_fixes()
 
 -- Convert eligible science packs after all research and recipes have settled.
 require("prototypes.industry.cards.auto_tech_cards").data_final_fixes()

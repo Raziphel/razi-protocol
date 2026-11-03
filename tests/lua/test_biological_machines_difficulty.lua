@@ -4,7 +4,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 rawset(_G,"log",function() end)
-local bridge=require("prototypes.compat.biological_machines_difficulty")
+local bridge=require("prototypes.difficulty.biological_machines_difficulty")
 ---@type table<string,any>
 local startup={
  ["razi-difficulty-preset"]={value="normal"},

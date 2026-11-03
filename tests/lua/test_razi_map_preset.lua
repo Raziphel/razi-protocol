@@ -82,9 +82,9 @@ local function make(mode,enabled,manual)
  for name,value in pairs(manual or {}) do startup[name]={value=value} end
  rawset(_G,"settings",{startup=startup})
  rawset(_G,"data",{raw=fixture()})
- package.loaded["prototypes.system.razi_map_preset"]=nil
+ package.loaded["prototypes.difficulty.razi_map_preset"]=nil
  package.loaded["scripts.razi_difficulty_presets"]=nil
- return require("prototypes.system.razi_map_preset")
+ return require("prototypes.difficulty.razi_map_preset")
 end
 
 -- The cap: only a value that would newly cross it is held at 6.

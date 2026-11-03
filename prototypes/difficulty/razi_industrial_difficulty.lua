@@ -15,7 +15,7 @@
 -- Enemy units, turrets and weapons are never touched.
 local M={}
 local preset=require("scripts.razi_difficulty_presets")
-local balack=require("prototypes.compat.biological_machines_difficulty")
+local balack=require("prototypes.difficulty.biological_machines_difficulty")
 
 local factors={
  throughput={boosted=1.15,normal=1,constrained=.92,strained=.82},

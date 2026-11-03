@@ -4,7 +4,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 rawset(_G,"log",function() end)
-local M=require("prototypes.compat.muluna_power_difficulty")
+local M=require("prototypes.difficulty.muluna_power_difficulty")
 local TIP="tooltip-value.muluna-satellite-radar-scan-energy"
 local SIZE="tooltip-value.muluna-satellite-radar-scan-size"
 ---@return table<string,any>
