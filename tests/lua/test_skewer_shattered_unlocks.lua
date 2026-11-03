@@ -29,8 +29,8 @@ local function setup(mod_list, slurry_ingredient)
 	}
 	rawset(_G, "mods", mod_list)
 	rawset(_G, "data", {raw = raw})
-	package.loaded["prototypes.compat.skewer_shattered_unlocks"] = nil
-	return raw, require("prototypes.compat.skewer_shattered_unlocks")
+	package.loaded["prototypes.fixes.skewer_shattered_planet.skewer_shattered_unlocks"] = nil
+	return raw, require("prototypes.fixes.skewer_shattered_planet.skewer_shattered_unlocks")
 end
 
 local function unlocks(technology, recipe_name)
@@ -83,13 +83,13 @@ end
 -- Missing prototypes do not crash.
 rawset(_G, "mods", both)
 rawset(_G, "data", {raw = {}})
-package.loaded["prototypes.compat.skewer_shattered_unlocks"] = nil
-require("prototypes.compat.skewer_shattered_unlocks").data_final_fixes()
+package.loaded["prototypes.fixes.skewer_shattered_planet.skewer_shattered_unlocks"] = nil
+require("prototypes.fixes.skewer_shattered_planet.skewer_shattered_unlocks").data_final_fixes()
 
 -- The entrypoint runs it.
 local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
-check(source:find('require("prototypes.compat.skewer_shattered_unlocks").data_final_fixes()', 1, true), "data-final-fixes.lua calls the unlocks")
+check(source:find('require("prototypes.fixes.skewer_shattered_planet.skewer_shattered_unlocks").data_final_fixes()', 1, true), "data-final-fixes.lua calls the unlocks")
 
 print("skewer_shattered_unlocks: ok")

@@ -78,8 +78,8 @@ local function setup(mod_list, startup, with_nothing)
 	rawset(_G, "settings", {startup = startup})
 	rawset(_G, "data", {raw = data_raw})
 	logged = {}
-	package.loaded["prototypes.compat.arcanyx_from_nothing"] = nil
-	return data_raw, require("prototypes.compat.arcanyx_from_nothing")
+	package.loaded["prototypes.fixes.Arcanyx.arcanyx_from_nothing"] = nil
+	return data_raw, require("prototypes.fixes.Arcanyx.arcanyx_from_nothing")
 end
 
 local function on(name)
@@ -219,7 +219,7 @@ local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
 local asteroids = assert(source:find('require("prototypes.system.asteroid_performance").data_final_fixes()', 1, true))
-local own = assert(source:find('require("prototypes.compat.arcanyx_from_nothing").data_final_fixes()', 1, true))
+local own = assert(source:find('require("prototypes.fixes.Arcanyx.arcanyx_from_nothing").data_final_fixes()', 1, true))
 local navigation = assert(source:find('require("prototypes.compat.crafting_navigation").data_final_fixes()', 1, true))
 check(asteroids < own and own < navigation, "the pass runs after the asteroid passes and before the menu pass")
 

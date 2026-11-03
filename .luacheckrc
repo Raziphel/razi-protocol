@@ -3,5 +3,5 @@
 
 -- PlanetsLib (a dependency) sets it in its data stage
 read_globals[#read_globals + 1] = "PlanetsLib"
--- prototypes/compat/k2so_tweaks.lua sets it for xy-k2so-enhancements, which reads it as a global
+-- prototypes/fixes/common/k2so_tweaks.lua sets it for xy-k2so-enhancements, which reads it as a global
 globals[#globals + 1] = "sounds"

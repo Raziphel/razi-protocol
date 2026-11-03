@@ -21,7 +21,7 @@ local function fresh()
   return raw
 end
 
-local fixes = require("prototypes.compat.mod_fixes")
+local fixes = require("prototypes.fixes.init")
 
 -- Nothing of Krastorio 2 is installed: every repair is quiet and does not fail.
 ---@type any

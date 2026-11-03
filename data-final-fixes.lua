@@ -1,35 +1,35 @@
 require("util")
 local Collections = require("__razi_lib__/lib/collections")
 
-require("prototypes.compat.removed_fuel_category").data_final_fixes()
+require("prototypes.fixes.common.removed_fuel_category").data_final_fixes()
 require("prototypes.compat.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
-require("prototypes.compat.moshine_datacells").data_final_fixes()
-require("prototypes.compat.tenebris_void_towers").data_final_fixes()
+require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
+require("prototypes.fixes.tenebris-prime.tenebris_void_towers").data_final_fixes()
 require("prototypes.technology.progression")
 require("prototypes.compatibility.Krastorio2-spaced-out.transceiver_endgame").data_final_fixes()
 require("prototypes.compatibility.Nexus-Updated.nexus_endgame").data_final_fixes()
 require("prototypes.compatibility.Nexus-Updated.nexus_hyarion_conditions").data_final_fixes()
 require("prototypes.compatibility.science-tab.science_tab").data_final_fixes()
-require("prototypes.compat.renamed_research_triggers").data_final_fixes()
-require("prototypes.compat.k2so_tweaks").data_final_fixes()
-require("prototypes.compat.skewer_shattered_unlocks").data_final_fixes()
-require("prototypes.compat.k2so_tech_card_cooling").data_final_fixes()
-require("prototypes.compat.maraxsis_k2so_collision").data_final_fixes()
-require("prototypes.compat.maraxsis_trench_wind").data_final_fixes()
-require("prototypes.compat.progression_polish").data_final_fixes()
+require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers").data_final_fixes()
+require("prototypes.fixes.common.k2so_tweaks").data_final_fixes()
+require("prototypes.fixes.skewer_shattered_planet.skewer_shattered_unlocks").data_final_fixes()
+require("prototypes.fixes.Krastorio2-spaced-out.k2so_tech_card_cooling").data_final_fixes()
+require("prototypes.fixes.maraxsis.maraxsis_k2so_collision").data_final_fixes()
+require("prototypes.fixes.maraxsis.maraxsis_trench_wind").data_final_fixes()
+require("prototypes.fixes.common.progression_polish").data_final_fixes()
 require("prototypes.compat.vibrant_discovery_guard").data_final_fixes()
 require("prototypes.compat.prototype_identity").data_final_fixes()
-require("prototypes.compat.prototype_sanity").data_final_fixes()
-require("prototypes.compat.research_data_surfaces").data_final_fixes()
+require("prototypes.fixes.common.prototype_sanity").data_final_fixes()
+require("prototypes.fixes.common.research_data_surfaces").data_final_fixes()
 require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
 require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compatibility.common.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
-require("prototypes.compat.furnace_result_slots").data_final_fixes()
-require("prototypes.compat.eneas_gantry").data_final_fixes()
-require("prototypes.compat.variant_surface_conditions").data_final_fixes()
+require("prototypes.fixes.common.furnace_result_slots").data_final_fixes()
+require("prototypes.fixes.moon-eneas.eneas_gantry").data_final_fixes()
+require("prototypes.fixes.common.variant_surface_conditions").data_final_fixes()
 
 -- Old interstellar shortcuts cut across the revised map.
 -- Muria's routes are handled by seven_systems and route_reconcile.
@@ -84,7 +84,7 @@ require("prototypes.system.planet_descriptions").data_final_fixes()
 -- K2SO material names and research data settle before the gates read the system cards.
 require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()
 -- The integration renames recipe products; repoint the research triggers that still name the old ones.
-require("prototypes.compat.renamed_research_triggers").data_final_fixes()
+require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers").data_final_fixes()
 
 -- Set the campaign gates after the earlier compatibility passes: each system's discovery follows the
 -- previous tier and costs its cards.
@@ -126,7 +126,7 @@ require("prototypes.technology.galactic_mod_research").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
-require("prototypes.compat.athos_cycle_guard").repair()
+require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").data_final_fixes()
 
@@ -151,7 +151,7 @@ require("prototypes.compatibility.linox.linox_science_guard").data_final_fixes()
 require("prototypes.compatibility.common.outer_science_arrival_guard").data_final_fixes()
 
 -- All technology passes have run; report any cycle that is left and remove only the ones Athos owns.
-require("prototypes.compat.athos_cycle_guard").repair("after-all-razi-technology")
+require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair("after-all-razi-technology")
 
 -- Planet packs frequently append their science inputs without checking whether
 -- another compatibility pass already added the same pack. Duplicate lab inputs
@@ -216,8 +216,8 @@ require("prototypes.system.route_highlights").data_final_fixes()
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
-require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
-require("prototypes.compat.corrundum_compat_plus").data_final_fixes()
+require("prototypes.fixes.corrundum-krastorio-compatibility-plus.corrundum_k2so_lab_inputs").data_final_fixes()
+require("prototypes.fixes.corrundum-krastorio-compatibility-plus.corrundum_compat_plus").data_final_fixes()
 
 -- Late-stage source recipes and research are final now. Keep optional bulk card manufacture,
 -- then tier the system cards across the EXISTING laboratories of other mods (no new labs).
@@ -246,16 +246,16 @@ require("prototypes.system.asteroid_performance").data_final_fixes()
 
 -- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
 -- copy or add a prototype, as the last edit of created_effect.
-require("prototypes.compat.carna_spire_copies").data_final_fixes()
+require("prototypes.fixes.carna.carna_spire_copies").data_final_fixes()
 
 -- The deep mines and the entropic creation of Iridescent Industry and Arcanyx make ore out of nothing on any surface; Arcanyx's
 -- keep-Voidcraft-on-Arcanyx condition does not reach them. After every pass that could add a recipe, before the menu pass.
-require("prototypes.compat.arcanyx_from_nothing").data_final_fixes()
+require("prototypes.fixes.Arcanyx.arcanyx_from_nothing").data_final_fixes()
 
 -- Lithium Battery (7.5.0 and older) deletes two recipe copies that Planet Crucible's productivity technologies still list, and
 -- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
 -- After every pass that could add a recipe effect or ingredient, before the menu pass.
-require("prototypes.compat.lithium_battery").data_final_fixes()
+require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 
 -- The stack inserter and the toolbelt equipment, which technology/nauvis_comforts.lua researches on Nauvis, are made of low density
 -- structure and plastic instead of Gleba's carbon fiber and jelly; their recycling and crushing return the same. After every pass that
@@ -299,4 +299,4 @@ require("prototypes.system.razi_map_preset").data_final_fixes()
 require("prototypes.compat.auto_tech_cards").data_final_fixes()
 
 -- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
-require("prototypes.compat.mod_fixes").data_final_fixes()
+require("prototypes.fixes.init").data_final_fixes()

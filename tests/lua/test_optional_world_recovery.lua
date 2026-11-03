@@ -18,8 +18,8 @@ local source = {
 }
 package.loaded["lib"] = source
 package.preload["__nulla__/lib"] = function() return source end
-package.loaded["prototypes.compat.nulla_guard"] = nil
-local nulla = require("prototypes.compat.nulla_guard")
+package.loaded["prototypes.fixes.nulla.nulla_guard"] = nil
+local nulla = require("prototypes.fixes.nulla.nulla_guard")
 check(nulla.data_updates(), "Nulla source helper was not guarded")
 source.add_radio_interference_energy(nil, 2)
 local energy = { energy_source = { emissions_per_minute = {} } }
@@ -41,8 +41,8 @@ package.loaded["lib"] = nil
 package.preload["__nulla__/lib"] = nil
 
 -- PlanetAthos walks every descendant of a technology recursively and cannot cope with a cycle.
-package.loaded["prototypes.compat.athos_cycle_guard"] = nil
-local athos = require("prototypes.compat.athos_cycle_guard")
+package.loaded["prototypes.fixes.PlanetAthos.athos_cycle_guard"] = nil
+local athos = require("prototypes.fixes.PlanetAthos.athos_cycle_guard")
 
 -- Athos is not installed: the guard leaves the graph alone.
 rawset(_G, "data", { raw = { technology = {

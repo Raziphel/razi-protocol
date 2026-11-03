@@ -15,7 +15,7 @@ rawset(_G, "log", function(_) logged = logged + 1 end)
 local function run(recipe, planet)
 	rawset(_G, "data", {raw = {recipe = recipe and {["electrochemical-research-data"] = recipe} or {},
 		planet = planet and {corrundum = planet} or {}}})
-	require("prototypes.compat.corrundum_compat_plus").data_final_fixes()
+	require("prototypes.fixes.corrundum-krastorio-compatibility-plus.corrundum_compat_plus").data_final_fixes()
 	local result = data.raw.recipe["electrochemical-research-data"]
 	return result and (result.surface_conditions or {}) or nil
 end

@@ -47,8 +47,8 @@ local function setup(k2)
   return raw,require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration")
 end
 local raw,mod=setup(true)
-package.loaded["prototypes.compat.renamed_research_triggers"]=nil
-local triggers=require("prototypes.compat.renamed_research_triggers")
+package.loaded["prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers"]=nil
+local triggers=require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers")
 triggers.data_final_fixes()
 check(raw.technology["planet-oxygen-trigger"].research_trigger.fluid=="oxygen",
   "Early scan wrongly rewrote a still-producible native oxygen output")
@@ -158,7 +158,7 @@ local layout=assert(source:find('require("prototypes.system.galaxy_layout").data
 local integration=assert(source:find('require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()',1,true))
 check(integration>layout,"K2SO reconciliation should run after planet layout")
 local late=assert(source:find(
-  'require("prototypes.compat.renamed_research_triggers").data_final_fixes()',
+  'require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers").data_final_fixes()',
   integration+1,true))
 check(late>integration,"The last research trigger repair must follow material normalization")
 print("K2SO science-data backbone, planet materials and upstream ownership passed")

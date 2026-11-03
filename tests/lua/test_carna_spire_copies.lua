@@ -58,8 +58,8 @@ local function setup(mod_list)
 	}
 	rawset(_G, "mods", mod_list)
 	rawset(_G, "data", {raw = data_raw})
-	package.loaded["prototypes.compat.carna_spire_copies"] = nil
-	return data_raw, require("prototypes.compat.carna_spire_copies")
+	package.loaded["prototypes.fixes.carna.carna_spire_copies"] = nil
+	return data_raw, require("prototypes.fixes.carna.carna_spire_copies")
 end
 
 local function has_mark(value)
@@ -145,7 +145,7 @@ local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
 local asteroids = assert(source:find('require("prototypes.system.asteroid_performance").data_final_fixes()', 1, true))
-local own = assert(source:find('require("prototypes.compat.carna_spire_copies").data_final_fixes()', 1, true))
+local own = assert(source:find('require("prototypes.fixes.carna.carna_spire_copies").data_final_fixes()', 1, true))
 local navigation = assert(source:find('require("prototypes.compat.crafting_navigation").data_final_fixes()', 1, true))
 check(asteroids < own and own < navigation, "the pass runs late, after the asteroid passes")
 

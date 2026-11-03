@@ -6,12 +6,12 @@ require("prototypes.compatibility.Electric_flying_enemies.electric_flying_enemie
 require("prototypes.compatibility.Explosive_biters.explosive_biters")
 require("prototypes.compatibility.Toxic_biters.toxic_biters")
 -- Run source shims before the optional mods' data-final-fixes scripts.
-require("prototypes.compat.nulla_guard").data_updates()
-require("prototypes.compat.athos_cycle_guard").repair()
+require("prototypes.fixes.nulla.nulla_guard").data_updates()
+require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
 require("prototypes.compatibility.science-tab.science_tab").data_updates()
-require("prototypes.compat.k2so_tweaks").data_updates()
+require("prototypes.fixes.common.k2so_tweaks").data_updates()
 -- Module Category Defaults reads its list of ordinary categories in its own data-final-fixes.
-require("prototypes.compat.module_category_defaults").data_updates()
+require("prototypes.fixes.Voidcraft.module_category_defaults").data_updates()
 
 local function clear_invalid_place_result(item_prototypes)
 	for _, prototype in pairs(item_prototypes or {}) do
