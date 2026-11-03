@@ -54,8 +54,8 @@ local function setup(mod_list)
 				{type = "item", name = "ferrum-rare-earth-magnet", amount = 200}}},
 		},
 	}})
-	package.loaded["prototypes.compat.ferrum_progression_guard"] = nil
-	return technologies, require("prototypes.compat.ferrum_progression_guard")
+	package.loaded["prototypes.compatibility.planet-ferrum.ferrum_progression_guard"] = nil
+	return technologies, require("prototypes.compatibility.planet-ferrum.ferrum_progression_guard")
 end
 
 local function prices(technology, name)
@@ -124,7 +124,7 @@ local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
 local gates = assert(source:find('require("prototypes.technology.seven_system_gates").data_final_fixes()', 1, true))
-local guard = assert(source:find('require("prototypes.compat.ferrum_progression_guard").data_final_fixes()', 1, true))
+local guard = assert(source:find('require("prototypes.compatibility.planet-ferrum.ferrum_progression_guard").data_final_fixes()', 1, true))
 local breaker = assert(source:find('require("prototypes.technology.system_gate_links").data_final_fixes()', 1, true))
 check(gates < guard and guard < breaker, "the guard runs between the gates and the cycle breaker")
 

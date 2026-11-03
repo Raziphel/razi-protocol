@@ -1,4 +1,4 @@
-local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
+local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace")
 local difficulty = require("scripts.razi_difficulty_presets")
 
 -- Where each themed enemy family lives. One list for the six enemy modules, so that a planet is added to a family (or

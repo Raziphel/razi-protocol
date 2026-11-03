@@ -21,7 +21,7 @@ function M.data_final_fixes()
   node.unit.count=3200
   node.unit.count_formula=nil
   data:extend({node})
-  local dyson=require("prototypes.compat.calidus_dyson")
+  local dyson=require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson")
   dyson.safe_link("razi-convergence-ignition",node.name)
   return true
 end

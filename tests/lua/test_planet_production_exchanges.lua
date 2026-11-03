@@ -631,7 +631,7 @@ local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
 local integration=assert(source:find(
-  'require("prototypes.compat.k2so_planet_integration").data_final_fixes()',1,true))
+  'require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()',1,true))
 local production=assert(source:find(
   'require("prototypes.compat.planet_production_exchanges").data_final_fixes()',1,true))
 check(production>integration,

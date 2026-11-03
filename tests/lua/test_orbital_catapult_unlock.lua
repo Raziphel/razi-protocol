@@ -1,7 +1,7 @@
 -- The orbital catapult recipe is opened by Razi's technology, only when the mod is there.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local catapult=require("prototypes.compat.orbital_catapult")
+local catapult=require("prototypes.compatibility.orbital-cannon.orbital_catapult")
 
 local function raw()
   local cards={{"calidus-tech-card",1},{"solaris-tech-card",1},{"nyxaris-tech-card",1}}

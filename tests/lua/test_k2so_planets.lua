@@ -43,8 +43,8 @@ local function setup(k2)
   }
   rawset(_G,"data",{raw=raw})
   rawset(_G,"mods",k2 and {["Krastorio2-spaced-out"]="2.0.17"} or {})
-  package.loaded["prototypes.compat.k2so_planet_integration"]=nil
-  return raw,require("prototypes.compat.k2so_planet_integration")
+  package.loaded["prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration"]=nil
+  return raw,require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration")
 end
 local raw,mod=setup(true)
 package.loaded["prototypes.compat.renamed_research_triggers"]=nil
@@ -155,7 +155,7 @@ local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
 local layout=assert(source:find('require("prototypes.system.galaxy_layout").data_final_fixes()',1,true))
-local integration=assert(source:find('require("prototypes.compat.k2so_planet_integration").data_final_fixes()',1,true))
+local integration=assert(source:find('require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()',1,true))
 check(integration>layout,"K2SO reconciliation should run after planet layout")
 local late=assert(source:find(
   'require("prototypes.compat.renamed_research_triggers").data_final_fixes()',

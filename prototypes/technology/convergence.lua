@@ -39,7 +39,7 @@ local function active(name)
   return tech and tech.enabled~=false and tech.hidden~=true
 end
 local function link(target, parent)
-  local dyson=require("prototypes.compat.calidus_dyson")
+  local dyson=require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson")
   dyson.safe_link(target,parent)
 end
 local function icon_from(name)

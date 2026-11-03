@@ -2,7 +2,7 @@
 -- route manifest is the prototype module; do not duplicate route IDs here.
 -- No saved progress, shipments, inventory manipulation or on-tick work.
 local M={}
-local manifest=require("prototypes.compat.orbital_catapult")
+local manifest=require("prototypes.compatibility.orbital-cannon.orbital_catapult")
 local discovery={
   muria="planet-discovery-muria",
   rubia="planet-discovery-rubia",

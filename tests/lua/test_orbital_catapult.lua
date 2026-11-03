@@ -1,7 +1,7 @@
 -- Source Orbital Catapult API fixtures, with required dependency semantics.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local catapult=require("prototypes.compat.orbital_catapult")
+local catapult=require("prototypes.compatibility.orbital-cannon.orbital_catapult")
 local planets={muria={},rubia={},aquilo={}}
 local full={planet=planets,["space-connection"]={
   ["muria-aquilo"]={name="muria-aquilo",from="muria",to="aquilo"}

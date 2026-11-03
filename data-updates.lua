@@ -1,14 +1,14 @@
 
-require("prototypes.compat.arachnids_enemy")
-require("prototypes.compat.armoured_biters")
-require("prototypes.compat.cold_biters")
-require("prototypes.compat.electric_flying_enemies")
-require("prototypes.compat.explosive_biters")
-require("prototypes.compat.toxic_biters")
+require("prototypes.compatibility.Arachnids_enemy.arachnids_enemy")
+require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
+require("prototypes.compatibility.Cold_biters.cold_biters")
+require("prototypes.compatibility.Electric_flying_enemies.electric_flying_enemies")
+require("prototypes.compatibility.Explosive_biters.explosive_biters")
+require("prototypes.compatibility.Toxic_biters.toxic_biters")
 -- Run source shims before the optional mods' data-final-fixes scripts.
 require("prototypes.compat.nulla_guard").data_updates()
 require("prototypes.compat.athos_cycle_guard").repair()
-require("prototypes.compat.science_tab").data_updates()
+require("prototypes.compatibility.science-tab.science_tab").data_updates()
 require("prototypes.compat.k2so_tweaks").data_updates()
 -- Module Category Defaults reads its list of ordinary categories in its own data-final-fixes.
 require("prototypes.compat.module_category_defaults").data_updates()

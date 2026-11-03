@@ -41,8 +41,8 @@ local function setup(enabled)
     ["planet-crucible-science-pack"]={},
     ["gas-manipulation-science-pack"]={}
   },lab={standard={inputs={"calidus-tech-card"}}}}})
-  package.loaded["prototypes.compat.outer_science_arrival_guard"]=nil
-  return tech,require("prototypes.compat.outer_science_arrival_guard")
+  package.loaded["prototypes.compatibility.common.outer_science_arrival_guard"]=nil
+  return tech,require("prototypes.compatibility.common.outer_science_arrival_guard")
 end
 local t,guard=setup(true)
 guard.data_final_fixes()
@@ -81,7 +81,7 @@ local f=assert(io.open("data-final-fixes.lua","r"))
 local src=f:read("*a")
 f:close()
 local final=assert(src:find(
-  'require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()',1,true))
+  'require("prototypes.compatibility.common.outer_science_arrival_guard").data_final_fixes()',1,true))
 local gate=assert(src:find(
   'require("prototypes.technology.seven_system_gates").data_final_fixes()',1,true))
 check(final>gate,"Outer science compatibility should run after final discovery gates")

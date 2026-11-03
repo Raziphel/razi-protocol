@@ -3,14 +3,14 @@ local Collections = require("__razi_lib__/lib/collections")
 
 require("prototypes.compat.removed_fuel_category").data_final_fixes()
 require("prototypes.compat.lab_cards").data_final_fixes()
-require("prototypes.compat.cerys_cards").data_final_fixes()
+require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.compat.moshine_datacells").data_final_fixes()
 require("prototypes.compat.tenebris_void_towers").data_final_fixes()
 require("prototypes.technology.progression")
-require("prototypes.compat.transceiver_endgame").data_final_fixes()
-require("prototypes.compat.nexus_endgame").data_final_fixes()
-require("prototypes.compat.nexus_hyarion_conditions").data_final_fixes()
-require("prototypes.compat.science_tab").data_final_fixes()
+require("prototypes.compatibility.Krastorio2-spaced-out.transceiver_endgame").data_final_fixes()
+require("prototypes.compatibility.Nexus-Updated.nexus_endgame").data_final_fixes()
+require("prototypes.compatibility.Nexus-Updated.nexus_hyarion_conditions").data_final_fixes()
+require("prototypes.compatibility.science-tab.science_tab").data_final_fixes()
 require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 require("prototypes.compat.k2so_tweaks").data_final_fixes()
 require("prototypes.compat.skewer_shattered_unlocks").data_final_fixes()
@@ -22,9 +22,9 @@ require("prototypes.compat.vibrant_discovery_guard").data_final_fixes()
 require("prototypes.compat.prototype_identity").data_final_fixes()
 require("prototypes.compat.prototype_sanity").data_final_fixes()
 require("prototypes.compat.research_data_surfaces").data_final_fixes()
-require("prototypes.compat.enemy_homes").data_final_fixes()
-require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
-require("prototypes.compat.redundant_progression").data_final_fixes()
+require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
+require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
+require("prototypes.compatibility.common.redundant_progression").data_final_fixes()
 require("prototypes.compat.water_loop").data_final_fixes()
 require("prototypes.compat.logistics_cleanup").data_final_fixes()
 require("prototypes.compat.furnace_result_slots").data_final_fixes()
@@ -82,7 +82,7 @@ require("prototypes.system.bellicos").data_final_fixes()
 require("prototypes.system.planet_descriptions").data_final_fixes()
 
 -- K2SO material names and research data settle before the gates read the system cards.
-require("prototypes.compat.k2so_planet_integration").data_final_fixes()
+require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()
 -- The integration renames recipe products; repoint the research triggers that still name the old ones.
 require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 
@@ -91,7 +91,7 @@ require("prototypes.compat.renamed_research_triggers").data_final_fixes()
 require("prototypes.technology.seven_system_gates").data_final_fixes()
 -- Ferrum's robotics science and magnets stay out of the research that Ferrum itself needs; otherwise the next pass takes
 -- two packs out of the Vibrant card to break a cycle, and the cryogenic plant waits for the planet.
-require("prototypes.compat.ferrum_progression_guard").data_final_fixes()
+require("prototypes.compatibility.planet-ferrum.ferrum_progression_guard").data_final_fixes()
 -- The stack inserter, the toolbelt equipment and the two belt capacity technologies are taken off Gleba's science and carbon fiber
 -- research; before the gate links, which would tie a technology priced in agricultural science to the pack.
 require("prototypes.technology.nauvis_comforts").data_final_fixes()
@@ -111,8 +111,8 @@ require("prototypes.technology.campaign_weave").data_final_fixes()
 
 -- Linox, Crucible and Vesta must not need their own late science to be reached; the weave above adds
 -- ancestors, so the arrival chains are cleaned after it.
-require("prototypes.compat.linox_science_guard").data_final_fixes()
-require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
+require("prototypes.compatibility.linox.linox_science_guard").data_final_fixes()
+require("prototypes.compatibility.common.outer_science_arrival_guard").data_final_fixes()
 
 -- Interplanetary exchanges: the shared components first, then the exchange
 -- recipes that consume them (K2SO recipe names are settled by now).
@@ -123,12 +123,12 @@ require("prototypes.compat.modded_planet_exchanges").data_final_fixes()
 -- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
 require("prototypes.technology.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.galactic_mod_research").data_final_fixes()
-require("prototypes.compat.orbital_catapult").data_final_fixes()
+require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.compat.athos_cycle_guard").repair()
 require("prototypes.technology.tech_tree_visibility").data_final_fixes()
-require("prototypes.compat.calidus_dyson").data_final_fixes()
+require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").data_final_fixes()
 
 -- Castra's exchange, then the exchanges that return component cargo; they run
 -- after the other research passes so that the research links see the final tree.
@@ -147,8 +147,8 @@ require("prototypes.compat.planet_arrival_pacing").data_final_fixes()
 
 -- The bridges and the staged Aquilo upgrades add prerequisites after the first pass of the arrival
 -- guards; repeat them so the final prerequisite graph is clean.
-require("prototypes.compat.linox_science_guard").data_final_fixes()
-require("prototypes.compat.outer_science_arrival_guard").data_final_fixes()
+require("prototypes.compatibility.linox.linox_science_guard").data_final_fixes()
+require("prototypes.compatibility.common.outer_science_arrival_guard").data_final_fixes()
 
 -- All technology passes have run; report any cycle that is left and remove only the ones Athos owns.
 require("prototypes.compat.athos_cycle_guard").repair("after-all-razi-technology")
@@ -174,7 +174,7 @@ require("prototypes.system.abacayba_integration").gate()
 -- Native moon links, the original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.system.route_authority").data_final_fixes()
-require("prototypes.compat.calidus_dyson").connect_calidus()
+require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").connect_calidus()
 -- Native Aegis links and asteroid fields settle after the two curated entries.
 require("prototypes.system.bellicos").fortify_routes()
 
@@ -183,7 +183,7 @@ require("prototypes.system.bellicos").fortify_routes()
 require("prototypes.system.belt_expeditions").data_final_fixes()
 
 -- Imersite-Asteroids' belt on routes to Aquilo: after the last route deletion.
-require("prototypes.compat.imersite_aquilo_routes").data_final_fixes()
+require("prototypes.compatibility.Imersite-Asteroids.imersite_aquilo_routes").data_final_fixes()
 
 -- Calibrate severe source-native 1,000 km shortcuts after the route reconciliation.
 require("prototypes.system.route_distance_balance").data_final_fixes()

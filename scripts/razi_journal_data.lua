@@ -152,7 +152,7 @@ for _,quest in ipairs(industry.quests) do M.quests[#M.quests+1]=quest end
 if script and script.active_mods
   and script.active_mods["aai-signal-transmission"] and prototypes
   and prototypes.technology then
-  local signal_id=require("prototypes.compat.aai_signal_partnerships")
+  local signal_id=require("prototypes.compatibility.aai-signal-transmission.aai_signal_partnerships")
     .source_technology(prototypes.technology)
   if signal_id then
     for _,quest in ipairs(M.quests) do

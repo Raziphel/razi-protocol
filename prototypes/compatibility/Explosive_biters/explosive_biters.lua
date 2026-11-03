@@ -1,5 +1,5 @@
-local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
-local enemy_homes = require("prototypes.compat.enemy_homes")
+local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace")
+local enemy_homes = require("prototypes.compatibility.common.enemy_homes")
 
 if not enemy_autoplace.enabled() or not mods["Explosive_biters"] then
 	return

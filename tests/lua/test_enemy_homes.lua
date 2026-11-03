@@ -29,8 +29,8 @@ local logged = {}
 rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
 local module_names = {
-	"enemy_autoplace", "enemy_homes", "enemy_planet_pollution", "armoured_biters", "arachnids_enemy",
-	"explosive_biters", "toxic_biters", "cold_biters", "electric_flying_enemies"
+	"compatibility.common.enemy_autoplace", "compatibility.common.enemy_homes", "compatibility.common.enemy_planet_pollution", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Arachnids_enemy.arachnids_enemy",
+	"compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies"
 }
 
 local all_mods = {
@@ -67,7 +67,7 @@ end
 -- `startup` holds the saved values of the settings; the difficulty is resolved by the real scripts.razi_difficulty_presets.
 local function setup(active_mods, startup)
 	for _, name in ipairs(module_names) do
-		package.loaded["prototypes.compat." .. name] = nil
+		package.loaded["prototypes." .. name] = nil
 	end
 	package.loaded["scripts.razi_difficulty_presets"] = nil
 	rawset(_G, "mods", active_mods)
@@ -122,10 +122,10 @@ local function setup(active_mods, startup)
 end
 
 local function run_all()
-	for _, name in ipairs({"arachnids_enemy", "armoured_biters", "cold_biters", "electric_flying_enemies", "explosive_biters", "toxic_biters"}) do
-		require("prototypes.compat." .. name)
+	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters"}) do
+		require("prototypes." .. name)
 	end
-	require("prototypes.compat.enemy_homes").data_final_fixes()
+	require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
 end
 
 local function map_gen(planet_name)
@@ -351,12 +351,12 @@ local function absorbs(tile_name)
 end
 setup(all_mods, {["razi-enemy-habitats"] = {value = "widest"}})
 run_all()
-require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
+require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 check(absorbs("panglia-midland-turquoise-bark") == 0.00003, "the tiles of Panglia absorb pollution when it is a home")
 check(absorbs("obsidiax-tile") == nil, "Obsidiax is no home, its tile stays")
 setup(all_mods)
 run_all()
-require("prototypes.compat.enemy_planet_pollution").data_final_fixes()
+require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 check(absorbs("panglia-midland-turquoise-bark") == nil, "no home, no change to the tiles")
 
 -- Without the enemy mods nothing is placed or switched off.
