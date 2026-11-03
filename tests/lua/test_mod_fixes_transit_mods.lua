@@ -113,3 +113,30 @@ check(raw["mod-data"] == nil and logged("has no thrower range to copy") == 1, "A
 raw = fresh()
 thrower_ranges.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without inserters")
+
+-- RenaiTransportation recycling_hidden
+local recycling_hidden = require("prototypes.fixes.RenaiTransportation.recycling_hidden")
+raw = fresh()
+raw.recipe = {
+	["OpenContainer-recycle"] = {categories = {"recycling"}},
+	["iron-plate-recycling"] = {categories = {"recycling"}, hidden = true},
+	["mixed"] = {categories = {"recycling", "crafting"}},
+	["crafted"] = {categories = {"crafting"}},
+	["shown-on-purpose"] = {categories = {"recycling"}, hidden = false, hide_from_player_crafting = true},
+	["out-of-menu"] = {categories = {"recycling"}, hide_from_player_crafting = true},
+	["no-categories"] = {},
+	["empty-categories"] = {categories = {}},
+}
+recycling_hidden.data_final_fixes()
+check(raw.recipe["OpenContainer-recycle"].hidden == true, "The open chest recycling stayed in the crafting menu")
+check(raw.recipe["mixed"].hidden == nil and raw.recipe["crafted"].hidden == nil and raw.recipe["no-categories"].hidden == nil
+	and raw.recipe["empty-categories"].hidden == nil, "A recipe that something else can make was hidden")
+check(raw.recipe["shown-on-purpose"].hidden == false, "A recipe that its mod set to hidden = false was hidden")
+check(raw.recipe["out-of-menu"].hidden == true, "A recipe that is only out of the crafting menu stayed visible elsewhere")
+check(logged("is hidden, only a recycler makes it") == 2 and logs[1]:find("^razi%-protocol: .* is hidden, only a recycler makes it"),
+	"Expected one line for each of the two recipes that were hidden")
+recycling_hidden.data_final_fixes()
+check(#logs == 2, "The repeated run touched the recipes again")
+raw = fresh()
+recycling_hidden.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without recipes")
