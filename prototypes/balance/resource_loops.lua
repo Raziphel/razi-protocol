@@ -22,6 +22,7 @@ local entries = {
 	{ level = "closed", run = require("prototypes.balance.nulls-k2so-tweaks.matter_to_bones").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.wood_coal_stone").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.planetaris-hyarion.quartz_and_calcite").data_final_fixes },
+	{ level = "closed", run = require("prototypes.balance.corrundum.sulfuric_acid").data_final_fixes },
 }
 
 function resource_loops.level()
