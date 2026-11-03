@@ -43,6 +43,8 @@ local function fresh()
 	logs = {}
 	local raw = {}
 	rawset(_G, "data", {raw = raw})
+	rawset(_G, "mods", {})
+	rawset(_G, "defines", {prototypes = {item = {}}})
 	return raw
 end
 

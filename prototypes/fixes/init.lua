@@ -14,6 +14,7 @@ local repairs = {
 	require("prototypes.fixes.tenebris-prime.bioluminescent_copies"),
 	require("prototypes.fixes.Krastorio2.construction_roboport"),
 	require("prototypes.fixes.Krastorio2.artillery_range"),
+	require("prototypes.fixes.apia.nutrients_refresh"),
 }
 
 function mod_fixes.data_final_fixes()
