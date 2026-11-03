@@ -243,4 +243,63 @@ raw.planet = {tenebris = {}}
 copies.data_final_fixes()
 check(#logs == 0 and next(raw) == "planet", "A repair logged or created a table on a map without copies")
 
+-- variant_surface_conditions: copies take the conditions of their bases
+local variants = require("prototypes.fixes.common.variant_surface_conditions")
+raw = fresh()
+variants.data_final_fixes()
+check(#logs == 0 and next(raw) == nil, "The pass logged or created a table without prototypes")
+
+raw = fresh()
+local mad_ai = {{property = "mad-ai", max = 0}}
+raw.furnace = {
+	recycler = {name = "recycler", surface_conditions = mad_ai},
+	["steam-recycler"] = {name = "steam-recycler", surface_conditions = {{property = "mad-ai", max = 0}, {property = "pressure", min = 2}}},
+}
+raw["assembling-machine"] = {
+	["recycler__rigor-module"] = {name = "recycler__rigor-module", surface_conditions = {{property = "pressure", min = 5}}},
+	["steam-recycler__rigor-module"] = {name = "steam-recycler__rigor-module",
+		surface_conditions = {{property = "mad-ai", max = 0}, {property = "pressure", min = 2}}},
+}
+raw["straight-rail"] = {
+	["straight-rail"] = {name = "straight-rail", surface_conditions = {{property = "gravity", min = 1}}},
+	["straight-rail-minimal"] = {name = "straight-rail-minimal", surface_conditions = {{property = "gravity", min = 0.1}}},
+	["lonely-rail-minimal"] = {name = "lonely-rail-minimal", surface_conditions = {{property = "gravity", min = 0.1}}},
+	-- a base without conditions leaves its copy alone
+	["free-rail"] = {name = "free-rail"},
+	["free-rail-minimal"] = {name = "free-rail-minimal", surface_conditions = {{property = "gravity", min = 0.1}}},
+}
+variants.data_final_fixes()
+---@type any
+local recycler = raw["assembling-machine"]["recycler__rigor-module"].surface_conditions
+check(#recycler == 2 and recycler[1].property == "mad-ai" and recycler[1].max == 0 and recycler[2].property == "pressure"
+	and recycler[2].min == 5, "The recycler copy did not take the ban, or lost a condition of its own")
+check(raw["assembling-machine"]["steam-recycler__rigor-module"].surface_conditions[1].max == 0
+	and #raw["assembling-machine"]["steam-recycler__rigor-module"].surface_conditions == 2,
+	"A copy that has the conditions of its base was rebuilt")
+---@type any
+local rail = raw["straight-rail"]["straight-rail-minimal"].surface_conditions
+check(#rail == 1 and rail[1].property == "gravity" and rail[1].min == 1, "The minimal rail did not take the gravity of the vanilla rail")
+check(raw["straight-rail"]["lonely-rail-minimal"].surface_conditions[1].min == 0.1, "A copy without a base was changed")
+check(raw["straight-rail"]["free-rail-minimal"].surface_conditions[1].min == 0.1, "A base without conditions changed its copy")
+check(logged("recycler__rigor-module takes the surface conditions of recycler") == 1
+	and logged("straight-rail-minimal takes the surface conditions of straight-rail") == 1
+	and logged("takes the surface conditions") == 2, "Expected a line for each of the two copies that were behind, got " .. logged("takes the surface conditions"))
+check(logs[1]:find("^razi%-protocol: "), "The line does not start with the mod name")
+variants.data_final_fixes()
+check(logged("takes the surface conditions") == 2, "The repeated run touched the copies again")
+
+raw = fresh()
+raw.roboport = {
+	["roboport"] = {name = "roboport", surface_conditions = {{property = "dust", max = 50}}},
+	["roboport-logistic-mode"] = {name = "roboport-logistic-mode", surface_conditions = {{property = "pressure", min = 3}}},
+	["tellus-roboport-2"] = {name = "tellus-roboport-2"},
+	["other-roboport"] = {name = "other-roboport", surface_conditions = {{property = "dust", max = 9}}},
+	["other-roboport-logistic-mode"] = {name = "other-roboport-logistic-mode"},
+}
+variants.data_final_fixes()
+check(#raw.roboport["roboport-logistic-mode"].surface_conditions == 2, "The roboport mode did not take the conditions of its base")
+check(raw.roboport["tellus-roboport-2"].surface_conditions[1].max == 50, "The Tellus roboport did not take the conditions of the roboport")
+check(raw.roboport["other-roboport-logistic-mode"].surface_conditions == nil, "A roboport that is not in the list was changed")
+check(logged("takes the surface conditions of roboport") == 2, "Expected a line for each of the two roboport copies")
+
 print("test_mod_fixes_copies_conditions: ok")
