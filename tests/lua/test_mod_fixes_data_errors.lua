@@ -55,6 +55,25 @@ end
 fixes.data_final_fixes()
 check(#logs == 0, "A repair logged on empty prototype tables")
 
+-- slp-dyson-sphere-reworked-fork connector_priority
+local connector_priority = require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority")
+raw = fresh()
+raw["electric-energy-interface"] = {
+	["ds-energy-small-loader"] = {energy_source = {usage_priority = "tertiary"}},
+	["ds-energy-loader-mk1"] = {energy_source = {usage_priority = "tertiary"}},
+	["ds-energy-loader-mk2"] = {energy_source = {usage_priority = "secondary-output"}},
+	["other-interface"] = {energy_source = {usage_priority = "tertiary"}},
+	["ds-energy-no-source"] = {},
+}
+connector_priority.data_final_fixes()
+check(raw["electric-energy-interface"]["ds-energy-small-loader"].energy_source.usage_priority == "primary-output", "The small loader kept the accumulator priority")
+check(raw["electric-energy-interface"]["ds-energy-loader-mk1"].energy_source.usage_priority == "primary-output", "A connector kept the accumulator priority")
+check(raw["electric-energy-interface"]["ds-energy-loader-mk2"].energy_source.usage_priority == "secondary-output", "A priority that was set was changed")
+check(raw["electric-energy-interface"]["other-interface"].energy_source.usage_priority == "tertiary", "An interface of another mod was changed")
+check(logged("usage_priority = primary-output") == 2 and logs[1]:find("^razi%-protocol: "), "Expected a line for each of the two connectors")
+connector_priority.data_final_fixes()
+check(logged("usage_priority = primary-output") == 2, "The repeated run touched the connectors again")
+
 -- xy-k2so-enhancements-nulls-fork upgrade_chain
 local upgrade_chain = require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.upgrade_chain")
 raw = fresh()
