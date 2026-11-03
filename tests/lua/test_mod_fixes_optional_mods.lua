@@ -159,4 +159,61 @@ raw = fresh()
 recycling_enabled.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without recipes")
 
+-- moon-eneas pristine_filter
+local pristine_filter = require("prototypes.fixes.moon-eneas.pristine_filter")
+local function filter_recipe(coal)
+	return {results = {{name = "servofish"}, coal, {name = "stone", amount_min = 20, amount_max = 25}}}
+end
+raw = fresh()
+raw.recipe = {
+	["filter-heavy-oil-pristine"] = filter_recipe({name = "coal", amount_min = 5, amount_max = 1}),
+	["filter-heavy-oil-pristine__rigor_module_mod__2"] = filter_recipe({name = "coal", amount_min = 5, amount_max = 1}),
+	["filter-heavy-oil-pristine__rigor_module_mod__3"] = filter_recipe({name = "coal", amount_min = 1, amount_max = 5}),
+	["filter-heavy-oil"] = filter_recipe({name = "coal", amount_min = 9, amount_max = 2}),
+	["filter-heavy-oil-pristine-other"] = filter_recipe({name = "coal", amount_min = 9, amount_max = 2}),
+}
+raw.technology = {
+	["pristine-servofish"] = {effects = {{type = "unlock-recipe", recipe = "pristine-servofish"}}},
+	["water-advanced"] = {effects = {{type = "unlock-recipe", recipe = "filter-heavy-oil"}}},
+}
+raw["mod-data"] = {rigor_module_mod_recipe_table = {data = {["filter-heavy-oil-pristine"] = {
+	"filter-heavy-oil-pristine", "filter-heavy-oil-pristine__rigor_module_mod__2",
+	"filter-heavy-oil-pristine__rigor_module_mod__3", "missing-copy"}}}}
+local filter_before = deepcopy(raw.recipe)
+pristine_filter.data_final_fixes()
+local pristine = raw.recipe["filter-heavy-oil-pristine"].results[2]
+check(pristine.amount_min == 1 and pristine.amount_max == 5, "The coal range of the pristine filter was not turned")
+pristine = raw.recipe["filter-heavy-oil-pristine__rigor_module_mod__2"].results[2]
+check(pristine.amount_min == 1 and pristine.amount_max == 5, "The coal range of the rigor copy was not turned")
+check(same(raw.recipe["filter-heavy-oil-pristine__rigor_module_mod__3"], filter_before["filter-heavy-oil-pristine__rigor_module_mod__3"])
+	and same(raw.recipe["filter-heavy-oil"], filter_before["filter-heavy-oil"])
+	and same(raw.recipe["filter-heavy-oil-pristine-other"], filter_before["filter-heavy-oil-pristine-other"]),
+	"A recipe that was right or that is not the pristine filter was changed")
+---@type any
+local servofish_effects = raw.technology["pristine-servofish"].effects
+check(#servofish_effects == 4 and servofish_effects[2].recipe == "filter-heavy-oil-pristine"
+	and not servofish_effects[2].hidden and servofish_effects[3].recipe == "filter-heavy-oil-pristine__rigor_module_mod__2"
+	and servofish_effects[3].hidden and servofish_effects[4].recipe == "filter-heavy-oil-pristine__rigor_module_mod__3"
+	and servofish_effects[4].hidden, "The pristine filter and its rigor copies are not unlocked by pristine-servofish")
+check(#raw.technology["water-advanced"].effects == 1, "Another technology was changed")
+check(logged("razi-protocol: filter-heavy-oil-pristine makes 1 to 5 coal") == 1
+	and logged("razi-protocol: filter-heavy-oil-pristine__rigor_module_mod__2 makes 1 to 5 coal") == 1
+	and logged("razi-protocol: filter-heavy-oil-pristine is unlocked by pristine-servofish (+2 rigor copies)") == 1
+	and #logs == 3, "Expected three lines")
+pristine_filter.data_final_fixes()
+check(#logs == 3 and #servofish_effects == 4, "The repeated run changed things again")
+raw = fresh()
+raw.recipe = {["filter-heavy-oil-pristine"] = filter_recipe({name = "coal", amount_min = 5, amount_max = 1})}
+pristine_filter.data_final_fixes()
+check(raw.recipe["filter-heavy-oil-pristine"].results[2].amount_min == 1 and #logs == 2
+	and logged("technology pristine-servofish does not exist") == 1, "A missing technology was not reported")
+raw = fresh()
+raw.recipe = {["filter-heavy-oil-pristine"] = filter_recipe({name = "coal", amount_min = 1, amount_max = 5})}
+raw.technology = {["water-advanced"] = {effects = {{type = "unlock-recipe", recipe = "filter-heavy-oil-pristine"}}}}
+pristine_filter.data_final_fixes()
+check(#logs == 0 and #raw.technology["water-advanced"].effects == 1, "An unlocked recipe was unlocked again")
+raw = fresh()
+pristine_filter.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without recipes")
+
 print("mod fixes (optional mods): ok")
