@@ -1,6 +1,6 @@
 local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace")
 local enemy_homes = require("prototypes.compatibility.common.enemy_homes")
-local nest_names = require("prototypes.compat.enemy_nest_names")
+local nest_names = require("lib.enemy_nest_names")
 
 -- ArmouredBiters21Compat and ArmouredBiters-2_1-update (the one Balack requires) are 2.1 forks of Armoured Biters with
 -- the same prototype names; with both installed the one that loads last owns them.

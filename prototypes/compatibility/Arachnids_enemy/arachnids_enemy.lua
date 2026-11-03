@@ -1,6 +1,6 @@
 local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace")
 local enemy_homes = require("prototypes.compatibility.common.enemy_homes")
-local nest_names = require("prototypes.compat.enemy_nest_names")
+local nest_names = require("lib.enemy_nest_names")
 
 if not enemy_autoplace.enabled() or not mods["Arachnids_enemy"] then
 	return

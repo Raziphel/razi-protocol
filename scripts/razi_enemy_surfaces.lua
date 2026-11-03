@@ -4,7 +4,7 @@
 -- missing, and Arachnids on Athos' tiles, which are Nauvis' tiles, would turn up in the new chunks of Nauvis.
 -- This puts the entries the planet prototype has switched off into the settings of the surfaces that already exist.
 -- It writes nothing else, nothing where the surface already has them, and it only affects chunks made afterwards.
-local nest_names = require("prototypes.compat.enemy_nest_names")
+local nest_names = require("lib.enemy_nest_names")
 
 local M = {}
 
