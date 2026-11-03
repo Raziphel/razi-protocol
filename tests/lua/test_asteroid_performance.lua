@@ -4,7 +4,7 @@
 -- lua tests/lua/test_asteroid_performance.lua
 package.path="./?.lua;./?/init.lua;"..package.path
 local function expect(cond,reason) if not cond then error(reason,2) end end
-local source=require("prototypes.system.asteroid_performance")
+local source=require("prototypes.world.asteroids.asteroid_performance")
 local function copy(value)
   if type(value)~="table" then return value end
   local out={}
@@ -90,8 +90,8 @@ local all={
 rawset(_G,"data",{raw=all})
 rawset(_G,"settings",{startup={}})
 local function reload()
-  package.loaded["prototypes.system.asteroid_performance"]=nil
-  return require("prototypes.system.asteroid_performance")
+  package.loaded["prototypes.world.asteroids.asteroid_performance"]=nil
+  return require("prototypes.world.asteroids.asteroid_performance")
 end
 expect(reload().data_final_fixes()==0,"Everything off must do nothing")
 expect(group["big-metallic-asteroid"].dying_trigger_effect[1].type

@@ -23,8 +23,8 @@ local util={
   spawn_definitions=function() return {} end
 }
 package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]=util
-package.loaded["prototypes.system.asteroid_profiles"]=nil
-package.loaded["prototypes.system.asteroid_belts"]=nil
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=nil
+package.loaded["prototypes.world.asteroids.asteroid_belts"]=nil
 local moves={}
 rawset(_G,"PlanetsLib",{extend=function(_,locations)
   for _, loc in ipairs(locations) do
@@ -34,7 +34,7 @@ rawset(_G,"PlanetsLib",{extend=function(_,locations)
     moves[#moves+1] = loc.name
   end
 end})
-require("prototypes.system.asteroid_belts")
+require("prototypes.world.asteroids.asteroid_belts")
 check(#moves == 4, "Vibrant and Umbra should each have two belt rims")
 for _,side in ipairs({"inner","outer"}) do
   local name="asteroid-belt-"..side.."-edge"
@@ -66,7 +66,7 @@ for _, side in ipairs({"inner","outer"}) do
     "Belt edges must provide metallic/carbonic/oxide ore chunks")
   check(loc.draw_orbit == false, "Extra orbit ring would clutter system")
 end
-require("prototypes.technology.asteroid_belts")
+require("prototypes.technology.systems.asteroid_belts")
 local vibrant_tech=raw.technology["space-discovery-asteroid-belt"]
 check(vibrant_tech and vibrant_tech.prerequisites[1]=="vibrant-discovery",
   "Vibrant belt must be discoverable before reaching Ribbonia")

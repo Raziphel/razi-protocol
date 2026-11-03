@@ -1,10 +1,10 @@
 -- Armoured, Toxic and Arachnids nests share the vanilla enemy control. The data stage switches them off by name on the
--- planets that are not their home (prototypes/compat/enemy_homes.lua), but a surface keeps the generation settings it was
+-- planets that are not their home (prototypes/compatibility/common/enemy_homes.lua), but a surface keeps the generation settings it was
 -- made with, so on a surface made before that (an old save, or a save whose level changed to Hard) the entries are
 -- missing, and Arachnids on Athos' tiles, which are Nauvis' tiles, would turn up in the new chunks of Nauvis.
 -- This puts the entries the planet prototype has switched off into the settings of the surfaces that already exist.
 -- It writes nothing else, nothing where the surface already has them, and it only affects chunks made afterwards.
-local nest_names = require("prototypes.compat.enemy_nest_names")
+local nest_names = require("lib.enemy_nest_names")
 
 local M = {}
 

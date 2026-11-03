@@ -18,9 +18,9 @@ local locations = {
   ["apia-carnova-orbit"] = {}, skewer_lost_beyond = {},
 }
 rawset(_G, "data", {raw = {planet = planet, ["space-location"] = locations}})
-package.loaded["prototypes.system.planet_descriptions"] = nil
+package.loaded["prototypes.world.systems.planet_descriptions"] = nil
 local story = require("scripts.razi_story")
-local descriptions = require("prototypes.system.planet_descriptions")
+local descriptions = require("prototypes.world.systems.planet_descriptions")
 
 -- The briefings and headings are story text: the story is off by default, and
 -- while it is off no description is touched and no story key is referenced.
@@ -89,12 +89,12 @@ rawset(_G, "settings", nil)
 local f = assert(io.open("data-final-fixes.lua", "r"))
 local source = f:read("*a")
 f:close()
-local layout = assert(source:find('require("prototypes.system.galaxy_layout").data_final_fixes()', 1, true))
-local text = assert(source:find('require("prototypes.system.planet_descriptions").data_final_fixes()', 1, true))
+local layout = assert(source:find('require("prototypes.world.starmap.galaxy_layout").data_final_fixes()', 1, true))
+local text = assert(source:find('require("prototypes.world.systems.planet_descriptions").data_final_fixes()', 1, true))
 check(text > layout, "Planet descriptions run before final layout")
 
 -- All declared locale keys should exist in both supported languages.
-local mod = assert(io.open("prototypes/system/planet_descriptions.lua", "r"))
+local mod = assert(io.open("prototypes/world/systems/planet_descriptions.lua", "r"))
 local module_source = mod:read("*a")
 mod:close()
 for _, lang in ipairs({"en", "ru"}) do

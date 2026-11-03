@@ -15,7 +15,7 @@ local raw={
   ["utility-constants"]={default={}}
 }
 rawset(_G,"data",{raw=raw})
-local fix=require("prototypes.compat.removed_fuel_category")
+local fix=require("prototypes.fixes.common.removed_fuel_category")
 fix.data_final_fixes()
 local crystal=raw.item["kausimatic-crystal"]
 check(crystal.fuel_category==nil,"fuel_category is left on the item")

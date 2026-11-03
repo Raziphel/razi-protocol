@@ -1,7 +1,7 @@
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local Graph = require("__razi_lib__/lib/technology_graph")
-local module_name = "prototypes.technology.industrial_partnership_gates"
+local module_name = "prototypes.technology.gates.industrial_partnership_gates"
 local logs = {}
 
 local function check(ok, message)

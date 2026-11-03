@@ -1,7 +1,7 @@
 -- Standalone Factorio 2.1 data-stage fixtures. Never modify a real save.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
-local M=require("prototypes.technology.distributed_industry")
+local M=require("prototypes.technology.gates.distributed_industry")
 local extra={"metallurgic-science-pack","agricultural-science-pack",
  "electromagnetic-science-pack","nuclear-science-pack"}
 local function node(parents)

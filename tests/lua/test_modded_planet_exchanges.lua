@@ -140,9 +140,9 @@ local function setup(opts)
     end
   end})
   rawset(_G,"mods",flags)
-  package.loaded["prototypes.compat.planet_production_exchanges"]=nil
-  package.loaded["prototypes.compat.modded_planet_exchanges"]=nil
-  return raw,require("prototypes.compat.modded_planet_exchanges")
+  package.loaded["prototypes.industry.exchanges.planet_production_exchanges"]=nil
+  package.loaded["prototypes.industry.exchanges.modded_planet_exchanges"]=nil
+  return raw,require("prototypes.industry.exchanges.modded_planet_exchanges")
 end
 
 local function amount_of(recipe,list_name,name)
@@ -151,7 +151,7 @@ local function amount_of(recipe,list_name,name)
   end
   return nil
 end
-local portfolio=require("prototypes.compat.industry_portfolio")
+local portfolio=require("prototypes.industry.exchanges.industry_portfolio")
 local raw,mod=setup()
 local original=clone(raw.recipe)
 mod.data_final_fixes()
@@ -226,7 +226,7 @@ check(has_unlock,
 -- A bonus above a quarter of the native batch is refused by the engine:
 -- one extra magnet per three native ones would be +33%.
 local third=setup()
-local engine=require("prototypes.compat.planet_production_exchanges")
+local engine=require("prototypes.industry.exchanges.planet_production_exchanges")
 engine.register_additional({{
   name="razi-modded-vesta-rare-earth-supermagnets",
   source_mod="skewer_planet_vesta",source="supermagnet",
@@ -299,6 +299,6 @@ local file=assert(io.open("data-final-fixes.lua","r"))
 local loaded=file:read("*a")
 file:close()
 check(loaded:find(
-  'require("prototypes.compat.modded_planet_exchanges").data_final_fixes()',1,true),
+  'require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()',1,true),
   "Cross-mod planet exchanges are not registered in data-final-fixes")
 print("Two modded-planet industrial exchanges and fail-closed guards passed")

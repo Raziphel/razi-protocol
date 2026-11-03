@@ -4,7 +4,7 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(value,message)
   if not value then error(message,2) end
 end
-local M=require("prototypes.system.starmap_trail_cleanup")
+local M=require("prototypes.world.starmap.starmap_trail_cleanup")
 local assets={
   {filename="__orbital-cannon__/graphics/starmap/route.png"},
   {stripes={{filename="__orbital-cannon__/graphics/dotted-tail.png"}}},

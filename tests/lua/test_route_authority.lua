@@ -24,7 +24,7 @@ for _,two in ipairs({
   {"nauvis","sye-calidus"},{"sye-calidus","sye-solaris"},
   {"sye-solaris","vulcanus"},{"vulcanus","castra"}
 }) do approved[key(two[1],two[2])]=true end
-package.loaded["prototypes.system.route_reconcile"]={
+package.loaded["prototypes.world.routes.route_reconcile"]={
   membership=members,pair_key=key,allowed_pairs=approved,
   specifications={
     {"nauvis","sye-calidus",25000,"starter"},
@@ -52,8 +52,8 @@ local profiles={
     end
   end
 }
-package.loaded["prototypes.system.asteroid_profiles"]=profiles
-package.loaded["prototypes.system.route_icons"]={
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=profiles
+package.loaded["prototypes.world.routes.route_icons"]={
   assign=function(route) return route end
 }
 local planets={}
@@ -133,7 +133,7 @@ rawset(_G,"mods",{Abacayba_Moon_of_Nauvis="0.0.42"})
 rawset(_G,"settings",{startup={
   ["razi-curated-space-routes"]={value=true}
 }})
-local manager=require("prototypes.system.route_authority")
+local manager=require("prototypes.world.routes.route_authority")
 local removed=manager.data_final_fixes()
 check(removed>=5,"Unmanaged routes and duplicates were not removed")
 for _,id in ipairs({"rogue-nauvis-vulcanus","rogue-solar-orbit-vulcanus",

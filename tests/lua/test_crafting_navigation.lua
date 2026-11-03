@@ -1,6 +1,6 @@
 ---@diagnostic disable: missing-fields
 -- Recipe-visibility smoke tests, including source-mod and character categories.
-local navigation = dofile("prototypes/compat/crafting_navigation.lua")
+local navigation = dofile("prototypes/ui/crafting_navigation.lua")
 local function check(predicate, message)
   if not predicate then error(message,2) end
 end

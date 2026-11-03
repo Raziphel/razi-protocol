@@ -30,8 +30,8 @@ local util = {
   end
 }
 package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"] = util
-package.loaded["prototypes.system.asteroid_profiles"] = nil
-local profiles = require("prototypes.system.asteroid_profiles")
+package.loaded["prototypes.world.asteroids.asteroid_profiles"] = nil
+local profiles = require("prototypes.world.asteroids.asteroid_profiles")
 
 local function probability(defs, name)
   for _, def in ipairs(defs) do

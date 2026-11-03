@@ -28,7 +28,7 @@ local techs={
 }
 rawset(_G,"data",{raw={technology=techs,
  planet={igrys={},foliax={},cerys={},obsidiax={}},["space-location"]={}}})
-local module=require("prototypes.technology.regional_research_bridges")
+local module=require("prototypes.technology.gates.regional_research_bridges")
 local function parent(node,want)
  for _,p in ipairs(techs[node].prerequisites or {}) do
    if p==want then return true end

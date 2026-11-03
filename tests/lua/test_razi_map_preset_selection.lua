@@ -32,8 +32,8 @@ for _,mode in ipairs({"easy","normal","hard","nightmare","custom"}) do
    ["razi-difficulty-preset"]={value=mode},
    ["razi-default-new-game-map"]={value=enabled}}})
   package.loaded["scripts.razi_difficulty_presets"]=nil
-  package.loaded["prototypes.system.razi_map_preset"]=nil
-  local gen=require("prototypes.system.razi_map_preset")
+  package.loaded["prototypes.difficulty.razi_map_preset"]=nil
+  local gen=require("prototypes.difficulty.razi_map_preset")
   local group=fixture()
   rawset(_G,"data",{raw={
     ["map-gen-presets"]={default=group},

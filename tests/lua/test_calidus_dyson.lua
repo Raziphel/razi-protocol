@@ -50,12 +50,12 @@ local function setup(options)
   ["razi-dyson-milestone-weave"]={value=not options.no_research},
   ["razi-dyson-calidus-layout"]={value=not options.no_layout}
  }})
- package.loaded["prototypes.compat.calidus_dyson"]=nil
- package.loaded["prototypes.system.route_icons"]={
+ package.loaded["prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson"]=nil
+ package.loaded["prototypes.world.routes.route_icons"]={
    assign=function(route)route.icon="__razi-protocol__/graphics/icons/routes/planetary-route.png"
      route.icon_size=64;return route end
  }
- return raw,require("prototypes.compat.calidus_dyson"),registered
+ return raw,require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson"),registered
 end
 local function has(t,name)
  for _,id in ipairs(t.prerequisites or {}) do

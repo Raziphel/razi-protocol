@@ -1,17 +1,17 @@
 
-require("prototypes.compat.arachnids_enemy")
-require("prototypes.compat.armoured_biters")
-require("prototypes.compat.cold_biters")
-require("prototypes.compat.electric_flying_enemies")
-require("prototypes.compat.explosive_biters")
-require("prototypes.compat.toxic_biters")
+require("prototypes.compatibility.Arachnids_enemy.arachnids_enemy")
+require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
+require("prototypes.compatibility.Cold_biters.cold_biters")
+require("prototypes.compatibility.Electric_flying_enemies.electric_flying_enemies")
+require("prototypes.compatibility.Explosive_biters.explosive_biters")
+require("prototypes.compatibility.Toxic_biters.toxic_biters")
 -- Run source shims before the optional mods' data-final-fixes scripts.
-require("prototypes.compat.nulla_guard").data_updates()
-require("prototypes.compat.athos_cycle_guard").repair()
-require("prototypes.compat.science_tab").data_updates()
-require("prototypes.compat.k2so_tweaks").data_updates()
+require("prototypes.fixes.nulla.nulla_guard").data_updates()
+require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
+require("prototypes.compatibility.science-tab.science_tab").data_updates()
+require("prototypes.fixes.common.k2so_tweaks").data_updates()
 -- Module Category Defaults reads its list of ordinary categories in its own data-final-fixes.
-require("prototypes.compat.module_category_defaults").data_updates()
+require("prototypes.fixes.Voidcraft.module_category_defaults").data_updates()
 
 local function clear_invalid_place_result(item_prototypes)
 	for _, prototype in pairs(item_prototypes or {}) do
@@ -93,9 +93,9 @@ clear_invalid_bioluminescent_next_upgrade(data.raw["transport-belt"])
 
 -- Star images are rendered and sprite_only parents deleted during PlanetsLib
 -- data-final-fixes. Position them BEFORE that irreversible rendering pass.
-require("prototypes.system.calidus_sun").data_updates()
-require("prototypes.system.abacayba_integration").data_updates()
-require("prototypes.system.galaxy_layout").data_updates()
+require("prototypes.world.systems.calidus_sun").data_updates()
+require("prototypes.world.systems.abacayba_integration").data_updates()
+require("prototypes.world.starmap.galaxy_layout").data_updates()
 -- Source starfields must be positioned before PlanetsLib's irreversible
 -- sprite-only star cleanup; the Aegis and pulsar orbit artwork is kept.
-require("prototypes.system.bellicos").data_updates()
+require("prototypes.world.systems.bellicos").data_updates()

@@ -17,14 +17,14 @@ local util={
  end
 }
 package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]=util
-package.loaded["prototypes.system.asteroid_profiles"]=nil
-package.loaded["prototypes.system.belt_expeditions"]=nil
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=nil
+package.loaded["prototypes.world.asteroids.belt_expeditions"]=nil
 local raw={["asteroid-chunk"]={
  ["metallic-asteroid-chunk"]={},["oxide-asteroid-chunk"]={},
  ["carbonic-asteroid-chunk"]={}},["space-location"]={},
  ["space-connection"]={},planet={},asteroid={}}
 rawset(_G,"data",{raw=raw})
-local profiles=require("prototypes.system.asteroid_profiles")
+local profiles=require("prototypes.world.asteroids.asteroid_profiles")
 local all={}
 for _,system in ipairs({"vibrant","umbra"}) do
  local rim=profiles.belt_edge_resources(1.3,system)
@@ -84,7 +84,7 @@ local function pair(a,b)
  if a>b then a,b=b,a end
  return a.."|"..b
 end
-package.loaded["prototypes.system.route_reconcile"]={pair_key=pair}
+package.loaded["prototypes.world.routes.route_reconcile"]={pair_key=pair}
 local names={
  {"vibrant","asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
  {"umbra","razi-umbra-belt-inner","razi-umbra-belt-outer"}
@@ -97,7 +97,7 @@ for _,entry in ipairs(names) do
   asteroid_spawn_definitions=util.spawn_definitions()
  }
 end
-local finale=require("prototypes.system.belt_expeditions")
+local finale=require("prototypes.world.asteroids.belt_expeditions")
 local status=finale.data_final_fixes()
 for _,entry in ipairs(names) do
  check(status[entry[1]],"Missing final curated crossing for "..entry[1])
@@ -122,8 +122,8 @@ check(finale.data_final_fixes().umbra==false,
 -- Belt threats scale the big and huge asteroids a crossing already carries.
 local function threat_peak(setting, profile)
  rawset(_G,"settings",{startup={["razi-belt-threats"]={value=setting}}})
- package.loaded["prototypes.system.asteroid_profiles"]=nil
- local fresh=require("prototypes.system.asteroid_profiles")
+ package.loaded["prototypes.world.asteroids.asteroid_profiles"]=nil
+ local fresh=require("prototypes.world.asteroids.asteroid_profiles")
  local defs={{type="entity",asteroid="big-metallic-asteroid",
   spawn_points={{distance=.2,probability=.004},{distance=.8,probability=.002}}}}
  local route={asteroid_spawn_definitions=defs}
@@ -162,9 +162,9 @@ check(#profiles.belt_edge_resources(1,"umbra")==3,
 rawset(_G,"settings",{startup={
  ["razi-difficulty-preset"]={value="hard"},
  ["razi-belt-threats"]={value="standard"}}})
-package.loaded["prototypes.system.asteroid_profiles"]=nil
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=nil
 do
- local fresh=require("prototypes.system.asteroid_profiles")
+ local fresh=require("prototypes.world.asteroids.asteroid_profiles")
  local defs={{type="entity",asteroid="big-metallic-asteroid",
   spawn_points={{distance=.2,probability=.004}}}}
  local route={asteroid_spawn_definitions=defs}

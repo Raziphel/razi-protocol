@@ -1,6 +1,6 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(x,msg) if not x then error(msg,2) end end
-local r=require("prototypes.technology.tech_tree_visibility")
+local r=require("prototypes.ui.tech_tree_visibility")
 local techs={
  ["solaris-discovery"]={order="original"},
  ["razi-outer-frontier-mastery"]={order="original"},
@@ -34,7 +34,7 @@ check(techs["razi-outer-frontier-mastery"].order==
  "Outer mastery should appear after its outer-system survey")
 check(techs["native-planet-tech"].order=="native",
  "Native research ordering changed unexpectedly")
-local roster=require("prototypes.system.world_roster")
+local roster=require("prototypes.world.systems.world_roster")
 local seen={}
 for _,world in ipairs(roster.worlds) do
  check(not seen[world],"Duplicate world in the roster: "..world)

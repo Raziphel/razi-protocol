@@ -244,8 +244,8 @@ do
 	end
 	check(sections == 1, "one migration type")
 
-	local reconcile = read("prototypes/system/route_reconcile.lua")
-	local authority = read("prototypes/system/route_authority.lua")
+	local reconcile = read("prototypes/world/routes/route_reconcile.lua")
+	local authority = read("prototypes/world/routes/route_authority.lua")
 	local pairs_found = 0
 	for old, new in json:gmatch('%[%s*"([^"]+)"%s*,%s*"([^"]+)"%s*%]') do
 		pairs_found = pairs_found + 1

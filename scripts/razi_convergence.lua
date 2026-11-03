@@ -1,7 +1,7 @@
 -- Real cargo, real destination, shared multiplayer progress.
 -- This module is event/UI driven. No global platform or inventory scans.
 local M={}
-local defs=require("prototypes.technology.convergence")
+local defs=require("prototypes.technology.endgame.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local galactic_catalog=require("scripts.galactic_catalog")
 local deep_expedition=require("scripts.razi_deep_space_expedition")

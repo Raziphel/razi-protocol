@@ -1,7 +1,7 @@
 ---@diagnostic disable: missing-fields
 package.path = "./?.lua;./?/init.lua;" .. package.path
 local function check(ok,why) if not ok then error(why,2) end end
-local mode = require("prototypes.compat.interdependence_mode")
+local mode = require("prototypes.industry.exchanges.interdependence_mode")
 rawset(_G,"settings",nil)
 check(mode.current()=="balanced" and mode.enabled() and not mode.deep(),
   "Missing setting should retain established behavior")
@@ -26,12 +26,12 @@ end
 local setting=file("settings.lua")
 check(setting:find('allowed_values = {"off", "balanced", "deep"}',1,true),
   "The interdependence setting must offer Off, Balanced and Deep")
-local industry=file("prototypes/compat/planet_production_exchanges.lua")
+local industry=file("prototypes/industry/exchanges/planet_production_exchanges.lua")
 check(industry:find("alternative.allow_productivity = false",1,true),
   "Bonus production must not stack productivity")
-check(file("prototypes/technology/campaign_weave.lua"):find(
+check(file("prototypes/technology/gates/campaign_weave.lua"):find(
   "not interdependence.enabled()",1,true),"Research mode off not respected")
-check(file("prototypes/technology/regional_research_bridges.lua"):find(
+check(file("prototypes/technology/gates/regional_research_bridges.lua"):find(
   "not interdependence.enabled()",1,true),"Bridges ignore the Off mode")
 -- Levels pick the exchange depth; a manual value still wins.
 for _,entry in ipairs({

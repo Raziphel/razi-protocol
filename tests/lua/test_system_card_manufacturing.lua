@@ -71,7 +71,7 @@ function data:extend(objects)
 	end
 end
 
-local mod = require("prototypes.compat.system_card_manufacturing")
+local mod = require("prototypes.industry.cards.system_card_manufacturing")
 mod.data_final_fixes()
 for _, rule in ipairs(mod.rules) do
 	local recipe = raw_recipes[rule.name] or error("Missing bulk recipe " .. rule.name)

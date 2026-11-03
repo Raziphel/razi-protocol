@@ -28,8 +28,8 @@ local function setup(nulla)
   local lib=nulla_lib()
   package.preload["__nulla__/lib"]=function() return lib end
   package.loaded["__nulla__/lib"]=nil
-  package.loaded["prototypes.compat.nulla_guard"]=nil
-  return lib,require("prototypes.compat.nulla_guard")
+  package.loaded["prototypes.fixes.nulla.nulla_guard"]=nil
+  return lib,require("prototypes.fixes.nulla.nulla_guard")
 end
 
 local lib,guard=setup(true)

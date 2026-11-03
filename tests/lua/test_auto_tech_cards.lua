@@ -109,7 +109,7 @@ settings={startup={
 }}
 log=function(message) messages[#messages+1]=message end
 local Difficulty=require("scripts.razi_difficulty_presets")
-local auto=require("prototypes.compat.auto_tech_cards")
+local auto=require("prototypes.industry.cards.auto_tech_cards")
 check(Difficulty.effective("razi-auto-tech-cards",false)==false,
   "Normal must leave automatic cards off")
 auto.data_final_fixes()

@@ -59,8 +59,8 @@ local function setup(mod_list, with_defaults, with_categories)
 	end
 	rawset(_G, "ModuleCategoryDefaults", defaults)
 	logged = {}
-	package.loaded["prototypes.compat.module_category_defaults"] = nil
-	return data_raw, defaults, require("prototypes.compat.module_category_defaults")
+	package.loaded["prototypes.fixes.Voidcraft.module_category_defaults"] = nil
+	return data_raw, defaults, require("prototypes.fixes.Voidcraft.module_category_defaults")
 end
 
 local function has(list, value)
@@ -163,8 +163,8 @@ do
 	rawset(_G, "mods", {["module-category-defaults"] = "2.2.0"})
 	rawset(_G, "data", {raw = {}})
 	rawset(_G, "ModuleCategoryDefaults", empty_defaults)
-	package.loaded["prototypes.compat.module_category_defaults"] = nil
-	require("prototypes.compat.module_category_defaults").data_updates()
+	package.loaded["prototypes.fixes.Voidcraft.module_category_defaults"] = nil
+	require("prototypes.fixes.Voidcraft.module_category_defaults").data_updates()
 	check(#empty_defaults.default_categories == 1, "registered in an empty pack")
 end
 

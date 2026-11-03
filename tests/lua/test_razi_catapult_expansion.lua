@@ -2,7 +2,7 @@
 -- No off-system shortcuts, no research rewrites, no imaginary shipments.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,why) if not ok then error(why,2) end end
-local catapult=require("prototypes.compat.orbital_catapult")
+local catapult=require("prototypes.compatibility.orbital-cannon.orbital_catapult")
 local planets={muria={},aquilo={},rubia={},maraxsis={},
   vulcanus={},castra={},gleba={},moshine={}}
 local raw={planet=planets,["orbital-cannon-link"]={}}

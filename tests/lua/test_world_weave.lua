@@ -85,7 +85,7 @@ local function requires(techs, node, parent)
 end
 
 rawset(_G, "mods", {})
-local weave = require("prototypes.technology.regional_research_bridges")
+local weave = require("prototypes.technology.gates.regional_research_bridges")
 
 -- the phases follow the roster: worlds of two systems, one pair of gateways
 local function phase_of(gate)

@@ -34,8 +34,8 @@ local function reload(raw,installed,startup)
   rawset(_G,"data",{raw=raw})
   rawset(_G,"mods",installed)
   rawset(_G,"settings",{startup=startup or {}})
-  package.loaded["prototypes.system.more_asteroids_integration"]=nil
-  return require("prototypes.system.more_asteroids_integration")
+  package.loaded["prototypes.world.asteroids.more_asteroids_integration"]=nil
+  return require("prototypes.world.asteroids.more_asteroids_integration")
 end
 local function names(list)
   local out={}
@@ -151,7 +151,7 @@ raw={
 }
 local integration=reload(raw,{["razi-more-asteroids"]="1.1.1"})
 local ladder=require("scripts.razi_asteroid_difficulty")
-local profiles=require("prototypes.system.asteroid_profiles")
+local profiles=require("prototypes.world.asteroids.asteroid_profiles")
 local nauvis_original=raw.planet.nauvis.asteroid_spawn_definitions
 local approved={"home","crossing","moon","belt","vib","five","eight","nine","deep"}
 check(integration.data_final_fixes()==#approved,"Only the nine approved routes qualify")

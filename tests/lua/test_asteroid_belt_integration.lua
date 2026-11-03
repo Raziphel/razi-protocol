@@ -3,7 +3,7 @@
 -- Razi-owned Vibrant belt geometry, original art and repeated-pass safety.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
-local layout=require("prototypes.system.galaxy_layout")
+local layout=require("prototypes.world.starmap.galaxy_layout")
 local cx,cy=layout.anchor_position("vibrant")
 check(cx and math.abs(cx-118)<.01,"Vibrant sun missing or wrong chart radius")
 local inner={name="asteroid-belt-inner-edge"}
@@ -14,8 +14,8 @@ rawset(_G,"data",{raw={["space-location"]={
   [inner.name]=inner,[outer.name]=outer
 },["utility-sprites"]={default={starmap_star={layers=layers}}}}})
 rawset(_G,"mods",{})
-package.loaded["prototypes.system.asteroid_belt_integration"]=nil
-local belt=require("prototypes.system.asteroid_belt_integration")
+package.loaded["prototypes.world.asteroids.asteroid_belt_integration"]=nil
+local belt=require("prototypes.world.asteroids.asteroid_belt_integration")
 belt.data_final_fixes()
 local function xy(location)
   local theta=location.orientation*2*math.pi

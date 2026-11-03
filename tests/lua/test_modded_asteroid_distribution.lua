@@ -61,8 +61,8 @@ package.loaded["scripts.galactic_catalog"]={system=function(name)
   return "unassigned"
 end}
 package.loaded["scripts.razi_asteroid_difficulty"]=nil
-package.loaded["prototypes.system.modded_asteroid_distribution"]=nil
-local distribution=require("prototypes.system.modded_asteroid_distribution")
+package.loaded["prototypes.world.asteroids.modded_asteroid_distribution"]=nil
+local distribution=require("prototypes.world.asteroids.modded_asteroid_distribution")
 local function def(route,name)
   for _,row in ipairs(route.asteroid_spawn_definitions or {}) do
     if row.asteroid==name then return row end
@@ -143,8 +143,8 @@ check(used==1,"Auric enemy definition was duplicated")
 -- Simulate a new install without either mod. Must gracefully do nothing.
 chunks["imersite-asteroid-chunk"]=nil
 chunks["auric-asteroid-chunk"]=nil
-package.loaded["prototypes.system.modded_asteroid_distribution"]=nil
-local no_sources=require("prototypes.system.modded_asteroid_distribution")
+package.loaded["prototypes.world.asteroids.modded_asteroid_distribution"]=nil
+local no_sources=require("prototypes.world.asteroids.modded_asteroid_distribution")
 local other={from="sye-nyxaris",to="sye-vibrant"}
 routes.new=other
 check(no_sources.data_final_fixes()==0,

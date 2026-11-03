@@ -38,8 +38,8 @@ local function setup(linox)
     technology=tech,
     tool={["linox-item_linox-science-pack"]={}}
   }})
-  package.loaded["prototypes.compat.linox_science_guard"]=nil
-  return tech,require("prototypes.compat.linox_science_guard")
+  package.loaded["prototypes.compatibility.linox.linox_science_guard"]=nil
+  return tech,require("prototypes.compatibility.linox.linox_science_guard")
 end
 local function contains(t)
   for _, ingredient in ipairs(t.unit.ingredients or {}) do
@@ -83,8 +83,8 @@ local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
 local a=assert(source:find(
-  'require("prototypes.technology.seven_system_gates").data_final_fixes()',1,true))
+  'require("prototypes.technology.gates.seven_system_gates").data_final_fixes()',1,true))
 local b=assert(source:find(
-  'require("prototypes.compat.linox_science_guard").data_final_fixes()',1,true))
+  'require("prototypes.compatibility.linox.linox_science_guard").data_final_fixes()',1,true))
 check(b>a,"Linox safeguard ran before the final campaign gates")
 print("Linox pre-arrival hard mode science safeguard passed")

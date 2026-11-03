@@ -45,7 +45,7 @@ rawset(_G,"settings",{startup={
   ["razi-quality-asteroids"]={value=true}}})
 
 -- Highlight rules
-local highlights=require("prototypes.system.route_highlights")
+local highlights=require("prototypes.world.routes.route_highlights")
 local function spine(a,b) return highlights.is_aegis_spine({from=a,to=b}) end
 check(spine("bellicos-orbit","aegis-inner-edge")
   and spine("aegis-inner-edge","bellicos-orbit"),
@@ -76,11 +76,11 @@ routes["native-near-inner"]=nil
 routes["native-inner-warden"]=nil
 
 -- Corridor dedupe
-package.loaded["prototypes.system.asteroid_profiles"]={
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]={
   preserve_custom=function() end}
-package.loaded["prototypes.system.route_icons"]={assign=function(r) return r end}
-package.loaded["prototypes.system.bellicos"]=nil
-local bellicos=require("prototypes.system.bellicos")
+package.loaded["prototypes.world.routes.route_icons"]={assign=function(r) return r end}
+package.loaded["prototypes.world.systems.bellicos"]=nil
+local bellicos=require("prototypes.world.systems.bellicos")
 local function count()
   local n=0
   for _ in pairs(routes) do n=n+1 end

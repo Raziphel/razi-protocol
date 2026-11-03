@@ -41,8 +41,8 @@ local function setup(mod_list)
 	rawset(_G, "mods", mod_list)
 	rawset(_G, "data", {raw = data_raw})
 	logged = {}
-	package.loaded["prototypes.compat.lithium_battery"] = nil
-	return data_raw, require("prototypes.compat.lithium_battery")
+	package.loaded["prototypes.fixes.LithiumBattery.lithium_battery"] = nil
+	return data_raw, require("prototypes.fixes.LithiumBattery.lithium_battery")
 end
 
 local function recipes_of(technology)
@@ -186,7 +186,7 @@ check(not has_category(machines["kr-advanced-assembling-machine"]), "belt catego
 -- a pack without technologies or recipes does not fail
 rawset(_G, "mods", {LithiumBattery = true})
 rawset(_G, "data", {raw = {}})
-package.loaded["prototypes.compat.lithium_battery"] = nil
-require("prototypes.compat.lithium_battery").data_final_fixes()
+package.loaded["prototypes.fixes.LithiumBattery.lithium_battery"] = nil
+require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 
 print("lithium battery: ok")

@@ -2,7 +2,7 @@
 -- science card prerequisites or dozens of overlapping optional recipes.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local p=require("prototypes.compat.industry_portfolio")
+local p=require("prototypes.industry.exchanges.industry_portfolio")
 local count=0
 for name,enabled in pairs(p.retained) do
   check(enabled==true,"Portfolio must use explicit enabled entries")

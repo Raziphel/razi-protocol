@@ -6,10 +6,10 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 local logged={}
 rawset(_G,"log",function(line) logged[#logged+1]=line end)
-local bridge=require("prototypes.compat.foreign_difficulty_settings")
-local stage=require("prototypes.compat.foreign_numeric_stage_effects")
-local power=require("prototypes.compat.muluna_power_difficulty")
-local bio=require("prototypes.compat.biological_machines_difficulty")
+local bridge=require("prototypes.difficulty.foreign_difficulty_settings")
+local stage=require("prototypes.difficulty.foreign_numeric_stage_effects")
+local power=require("prototypes.difficulty.muluna_power_difficulty")
+local bio=require("prototypes.difficulty.biological_machines_difficulty")
 
 -- Limits the owning mods declare in their settings.lua (Muluna 2.7.44,
 -- Rubia 0.69.161, Cerys 4.24.18, Balack 1.1.2).

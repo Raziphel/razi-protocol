@@ -73,8 +73,8 @@ t["planet-discovery-arig"].effects={{
 -- a science technology which itself demands Frozeta discovery.
 t["bioluminescent-science-pack"].prerequisites={"planet-discovery-frozeta"}
 rawset(_G,"data",{raw=raw})
-package.loaded["prototypes.technology.campaign_weave"]=nil
-local M=require("prototypes.technology.campaign_weave")
+package.loaded["prototypes.technology.gates.campaign_weave"]=nil
+local M=require("prototypes.technology.gates.campaign_weave")
 -- A large unrelated recipe catalogue should not alter actual source-pack
 -- eligibility: only native target-science producers may affect this weave.
 for i=1,600 do
@@ -91,7 +91,7 @@ M.data_final_fixes()
 check(lab_scans==1,"Campaign weave rebuilt its lab inputs for each science check")
 -- The deliverability check and the later ingredient insertion must both
 -- evaluate the same owner, not silently relax the provenance rule.
-local source=assert(io.open("prototypes/technology/campaign_weave.lua","r"))
+local source=assert(io.open("prototypes/technology/gates/campaign_weave.lua","r"))
 local body=source:read("*a")
 source:close()
 check(body:find("add_science(target,pack,owner)",1,true)
@@ -173,7 +173,7 @@ end
 local f=assert(io.open("data-final-fixes.lua","r"))
 local src=f:read("*a")
 f:close()
-local a=assert(src:find('require("prototypes.technology.seven_system_gates").data_final_fixes()',1,true))
-local b=assert(src:find('require("prototypes.technology.campaign_weave").data_final_fixes()',1,true))
+local a=assert(src:find('require("prototypes.technology.gates.seven_system_gates").data_final_fixes()',1,true))
+local b=assert(src:find('require("prototypes.technology.gates.campaign_weave").data_final_fixes()',1,true))
 check(b>a,"Weave not wired after final system research gates")
 print("Cross-planet research, optional guards, lab safety and cycles passed")

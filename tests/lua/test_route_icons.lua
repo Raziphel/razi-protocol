@@ -16,8 +16,8 @@ rawset(_G, "data", {raw = {['space-connection'] = {
 	layered = {icons = external_layers}
 }}})
 
-package.loaded["prototypes.system.route_icons"] = nil
-local route_icons = require("prototypes.system.route_icons")
+package.loaded["prototypes.world.routes.route_icons"] = nil
+local route_icons = require("prototypes.world.routes.route_icons")
 route_icons.data_final_fixes()
 local routes = data.raw["space-connection"]
 

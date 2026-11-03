@@ -106,7 +106,7 @@ local function setup(options)
     }})
   else rawset(_G,"settings",nil) end
   local calls={k2=0,modded=0,deep=0}
-  package.loaded["prototypes.compat.planet_production_exchanges"]={
+  package.loaded["prototypes.industry.exchanges.planet_production_exchanges"]={
     register_k2so_balanced=function(rules)
       calls.k2=calls.k2+#rules
     end,
@@ -116,8 +116,8 @@ local function setup(options)
       else calls.modded=calls.modded+#rules end
     end
   }
-  package.loaded["prototypes.compat.network_components"]=nil
-  return raw,require("prototypes.compat.network_components"),calls
+  package.loaded["prototypes.industry.components.network_components"]=nil
+  return raw,require("prototypes.industry.components.network_components"),calls
 end
 local raw,module,calls=setup({lock_optics=true})
 module.data_final_fixes()
@@ -310,12 +310,12 @@ handle:close()
 local function position(call)
   return assert(source:find(call,1,true),"Not wired in data-final-fixes: "..call)
 end
-local parts=position('require("prototypes.compat.network_components").data_final_fixes()')
-check(parts<position('require("prototypes.compat.planet_production_exchanges").data_final_fixes()')
-  and parts<position('require("prototypes.compat.modded_planet_exchanges").data_final_fixes()'),
+local parts=position('require("prototypes.industry.components.network_components").data_final_fixes()')
+check(parts<position('require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()')
+  and parts<position('require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()'),
   "Components must be created before their exchange recipes")
-local visibility=position('require("prototypes.technology.tech_tree_visibility").data_final_fixes()')
-check(position('require("prototypes.compat.first_frontier_industry").data_final_fixes()')>visibility
-  and position('require("prototypes.compat.network_components").register_premium()')>visibility,
+local visibility=position('require("prototypes.ui.tech_tree_visibility").data_final_fixes()')
+check(position('require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixes()')>visibility
+  and position('require("prototypes.industry.components.network_components").register_premium()')>visibility,
   "Return-cargo exchanges must run after the research passes")
 print("Shared factory parts, guarded return cargo and premium sinks passed")

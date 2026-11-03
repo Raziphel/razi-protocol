@@ -4,7 +4,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 rawset(_G,"log",function() end)
-local M=require("prototypes.compat.foreign_numeric_stage_effects")
+local M=require("prototypes.difficulty.foreign_numeric_stage_effects")
 local function fresh()
  return {recipe={
   ["space-science-pack"]={energy_required=7},

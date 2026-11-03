@@ -38,8 +38,8 @@ local function build(options)
 		raw["item-group"].science = {type = "item-group", name = "science"}
 	end
 
-	package.loaded["prototypes.compat.lab_cards"] = nil
-	require("prototypes.compat.lab_cards").data_final_fixes()
+	package.loaded["prototypes.industry.cards.lab_cards"] = nil
+	require("prototypes.industry.cards.lab_cards").data_final_fixes()
 	return raw
 end
 
