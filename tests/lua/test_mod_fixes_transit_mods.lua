@@ -174,3 +174,37 @@ raw = fresh()
 defines.prototypes.entity = {inserter = 1}
 hardcoded_localization.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without the prototypes")
+
+-- planetaris-dyes refined_concrete
+local refined_concrete = require("prototypes.fixes.planetaris-dyes.refined_concrete")
+raw = fresh()
+raw.item = {
+	["planetaris-red-refined-concrete"] = {place_as_tile = {result = "red-refined-concrete"}},
+	["planetaris-magenta-refined-concrete"] = {place_as_tile = {result = "purple-refined-concrete"}},
+	["planetaris-blue-refined-concrete"] = {place_as_tile = {result = "blue-refined-concrete"}},
+	["planetaris-green-refined-concrete"] = {place_as_tile = {result = "green-refined-concrete"}},
+	["planetaris-gone-refined-concrete"] = {place_as_tile = {result = "gone-refined-concrete"}},
+	["planetaris-no-tile-refined-concrete"] = {},
+	["refined-concrete"] = {place_as_tile = {result = "yellow-refined-concrete"}},
+}
+raw.tile = {
+	["red-refined-concrete"] = {},
+	["purple-refined-concrete"] = {},
+	["blue-refined-concrete"] = {minable = {mining_time = 0.5, result = "refined-concrete"}},
+	["green-refined-concrete"] = {},
+	["yellow-refined-concrete"] = {},
+}
+refined_concrete.data_final_fixes()
+check(raw.tile["red-refined-concrete"].minable.result == "planetaris-red-refined-concrete"
+	and raw.tile["red-refined-concrete"].minable.mining_time == 0.1, "The red tile was not made minable")
+check(raw.tile["purple-refined-concrete"].minable.result == "planetaris-magenta-refined-concrete", "The magenta item was taken by name")
+check(raw.tile["blue-refined-concrete"].minable.result == "refined-concrete" and raw.tile["blue-refined-concrete"].minable.mining_time == 0.5,
+	"A minable tile was changed")
+check(raw.tile["yellow-refined-concrete"].minable == nil, "A tile of another item was made minable")
+check(logged("is mined into") == 3 and logs[1]:find("^razi%-protocol: tile "), "Expected one line for each of the three tiles that were changed")
+refined_concrete.data_final_fixes()
+check(logged("is mined into") == 3, "The repeated run touched the tiles again")
+raw = fresh()
+raw.item = {["planetaris-red-refined-concrete"] = {place_as_tile = {result = "red-refined-concrete"}}}
+refined_concrete.data_final_fixes()
+check(next(raw) == "item" and next(raw, "item") == nil and #logs == 0, "Something changed without the tile table")
