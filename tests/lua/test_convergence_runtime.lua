@@ -158,7 +158,7 @@ rawset(_G,"remote",{
 message,used=m.deliver(player,"ignition")
 check(message=="convergence-need-nexus-trials" and used==0,
  "Nexus Silence research or warp keys cannot substitute for nine boss victories")
-local boss_bridge=require("scripts.razi_nexus_trials")
+local boss_bridge=require("scripts.compatibility.nexus-bosses.trials")
 for _,boss in ipairs(boss_bridge.order) do boss_defeats[boss]=true end
 check(boss_bridge.snapshot(force).count==9,
  "All nine authentic source boss defeat flags satisfy the victory requirement")

@@ -3,7 +3,7 @@
 -- authoritative evidence for all nine force-owned victories.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local bridge=require("scripts.razi_nexus_trials")
+local bridge=require("scripts.compatibility.nexus-bosses.trials")
 check(#bridge.order==9 and #bridge.circles==3,"Three real stages, nine bosses")
 local force={name="Frontier",index=5,technologies={
  ["planet-discovery-nexus"]={researched=true}

@@ -1,5 +1,5 @@
 ---@diagnostic disable: missing-fields, assign-type-mismatch, need-check-nil, param-type-mismatch
--- Voidcraft's recipe variant unlock through the remote interface (scripts/compat/voidcraft_variants.lua) on mocked prototypes
+-- Voidcraft's recipe variant unlock through the remote interface (scripts/compatibility/Voidcraft/variants.lua) on mocked prototypes
 -- and forces, compared with Voidcraft's own loop over every recipe (Voidcraft 2.11.0 control.lua:10-75).
 -- Run from the mod root:
 --   lua5.2 tests/lua/test_voidcraft_variants.lua
@@ -126,8 +126,8 @@ end
 
 local function load_module(prototype_recipes)
 	rawset(_G, "prototypes", {recipe = prototype_recipes})
-	package.loaded["scripts.compat.voidcraft_variants"] = nil
-	return require("scripts.compat.voidcraft_variants")
+	package.loaded["scripts.compatibility.Voidcraft.variants"] = nil
+	return require("scripts.compatibility.Voidcraft.variants")
 end
 
 local function enabled_list(force)
@@ -279,8 +279,8 @@ do
 			return next, force.prototype_recipes, nil
 		end,
 	})})
-	package.loaded["scripts.compat.voidcraft_variants"] = nil
-	local mod = require("scripts.compat.voidcraft_variants")
+	package.loaded["scripts.compatibility.Voidcraft.variants"] = nil
+	local mod = require("scripts.compatibility.Voidcraft.variants")
 	for _ = 1, 3 do
 		mod.unlock_variants(COH_ALSO, false, force, {research = technology("x", {"vc-a"})})
 	end

@@ -9,7 +9,7 @@ local catalog={
 package.loaded["scripts.galactic_catalog"]={
   system=function(name) return catalog[name] or "unassigned" end
 }
-package.loaded["scripts.razi_catapult_network"]={
+package.loaded["scripts.compatibility.orbital-cannon.catapult_network"]={
   snapshot=function()
     return {installed=true,enabled=true,entries={{
       id="razi-test-link",source="nauvis",target="fulgora",

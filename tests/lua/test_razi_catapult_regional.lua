@@ -18,7 +18,7 @@ settings={startup={
   global={["razi-hide-spoilers"]={value=true}}}
 script={active_mods={["orbital-cannon"]="0.15.0"}}
 local force={technologies=technologies}
-local network=require("scripts.razi_catapult_network")
+local network=require("scripts.compatibility.orbital-cannon.catapult_network")
 local state=network.snapshot(force)
 check(state.total==6 and state.visible==0 and state.concealed==6,
   "Hide Spoilers ON should conceal all six undiscovered corridors")

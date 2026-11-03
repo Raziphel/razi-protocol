@@ -5,7 +5,7 @@ local defs=require("prototypes.technology.endgame.convergence")
 local dyson_runtime=require("scripts.galactic_dyson_runtime")
 local galactic_catalog=require("scripts.galactic_catalog")
 local deep_expedition=require("scripts.razi_deep_space_expedition")
-local nexus_trials=require("scripts.razi_nexus_trials")
+local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")
 local story=require("scripts.razi_story")
 M.stages=defs.shipments
 -- Native factory delivery starts a short, persistent transmission sequence.

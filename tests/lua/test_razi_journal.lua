@@ -262,7 +262,7 @@ check(M.complete(force,boss,ctx),"Native boss victory not detected")
 check(not M.complete(force,defs.by_id["nexus-watcher"],ctx),
   "One boss victory should not complete its whole circle")
 check(calls==1,"Repeated quest status must reuse the snapshot")
-check(require("scripts.razi_nexus_trials").open_codex(
+check(require("scripts.compatibility.nexus-bosses.trials").open_codex(
   {index=42},"arachnid-queen"),"Native codex cannot open")
 check(calls==2,"Codex must open only on explicit user interaction")
 rawset(_G,"remote",nil)

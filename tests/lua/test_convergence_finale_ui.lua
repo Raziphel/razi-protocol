@@ -26,7 +26,7 @@ for index=1,4 do delivered[convergence.stages[index].id]=convergence.stages[inde
 storage.razi_convergence={[1]={delivered=delivered,victory=false}}
 -- All nine Nexus bosses are defeated.
 local defeated={}
-for _,id in ipairs(require("scripts.razi_nexus_trials").order) do defeated[id]=true end
+for _,id in ipairs(require("scripts.compatibility.nexus-bosses.trials").order) do defeated[id]=true end
 rawset(_G,"remote",{interfaces={["nexus-bosses"]={get_state=true}},
   call=function() return {defeated={[force.name]=defeated}} end})
 -- A powered radar in each of the seven star systems.

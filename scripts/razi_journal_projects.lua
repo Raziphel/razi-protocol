@@ -11,7 +11,7 @@ local story=require("scripts.razi_story")
 local objectives=require("scripts.razi_journal_data")
 local platform_projects=require("scripts.razi_platform_projects")
 local great_projects=require("scripts.razi_great_projects")
-local nexus_trials=require("scripts.razi_nexus_trials")
+local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")
 local quest_by_technology={}
 for _,quest in ipairs(objectives.quests or {}) do
   if quest.tech and not quest.convergence and
