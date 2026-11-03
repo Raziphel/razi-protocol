@@ -1,5 +1,7 @@
--- Built and removed entities: the active transceiver opens the transceiver gate, the Archive relay refreshes the Journal.
+-- Built and removed entities: the active transceiver opens the transceiver gate, the Archive relay refreshes the Journal,
+-- a removed Cerys radiative tower takes its lamp with it.
 local razi_journal = require("scripts.journal.journal")
+local cerys_tower_lamp = require("scripts.compatibility.Cerys-Moon-of-Fulgora.tower_lamp")
 
 local entities = {}
 
@@ -76,6 +78,11 @@ function entities.register(events)
 	events:on_nth_tick(600, entities.check_existing_transceivers)
 	events:on_event(transceiver_build_events, on_entity_built)
 	events:on_event(relay_removed_events, on_archive_relay_removed)
+	-- Without Cerys no tower filters exist and nothing is registered.
+	if #cerys_tower_lamp.filters() > 0 then
+		events:on_event(relay_removed_events, cerys_tower_lamp.on_tower_removed)
+		events:on_event(defines.events.on_space_platform_mined_entity, cerys_tower_lamp.on_tower_removed)
+	end
 end
 
 -- Filters must be set after the registration they belong to. They apply to
@@ -90,8 +97,15 @@ function entities.set_filters()
 		script.set_event_filter(event_id, build_filter)
 	end
 	local relay_filter = {{filter = "name", name = archive_relay_name}}
+	local tower_filters = cerys_tower_lamp.filters()
+	for _, tower_filter in ipairs(tower_filters) do
+		relay_filter[#relay_filter + 1] = tower_filter
+	end
 	for _, event_id in ipairs(relay_removed_events) do
 		script.set_event_filter(event_id, relay_filter)
+	end
+	if #tower_filters > 0 then
+		script.set_event_filter(defines.events.on_space_platform_mined_entity, tower_filters)
 	end
 end
 

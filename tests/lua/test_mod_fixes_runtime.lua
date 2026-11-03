@@ -1,5 +1,5 @@
 -- Runtime repairs of other mods, without a Factorio binary: the radiation of Krastorio 2 that hurts the vehicle of a
--- player. Run from the mod root with the library bootstrap:
+-- player, and the lamp that Cerys leaves behind a radiative tower. Run from the mod root with the library bootstrap:
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_mod_fixes_runtime.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
@@ -22,7 +22,7 @@ for index, name in ipairs(event_names) do
 end
 
 local handlers, filters, registrations = {}, {}, {}
-local active_mods = {Krastorio2 = "2.1.4"}
+local active_mods = {Krastorio2 = "2.1.4", ["Cerys-Moon-of-Fulgora"] = "4.25.0"}
 local fake_script = {
 	active_mods = active_mods,
 	on_event = function(id, handler)
@@ -46,7 +46,8 @@ rawset(_G, "commands", {add_command = function() end})
 local logged = {}
 rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
-rawset(_G, "prototypes", {damage = {["kr-radioactive"] = {}}})
+local towers = {["cerys-fulgoran-radiative-tower"] = {}, ["cerys-radiative-heater"] = {}}
+rawset(_G, "prototypes", {damage = {["kr-radioactive"] = {}}, entity = towers})
 rawset(_G, "game", {tick = 0, forces = {}, players = {}, surfaces = {}, get_player = function() return nil end})
 -- Loading control.lua runs on every load of a save, where save data is read-only.
 local storage_touched
@@ -55,17 +56,35 @@ rawset(_G, "storage", setmetatable({}, {
 	__newindex = function() storage_touched = true end
 }))
 
-local Events = require("__razi_lib__/runtime/events")
 require("control")
 check(not storage_touched, "Loading control.lua must not touch save data")
 rawset(_G, "storage", {})
 
--- With Krastorio 2: the event is registered once and filtered.
+local function names(filter)
+	local found = {}
+	for _, entry in ipairs(filter) do
+		found[#found + 1] = entry.name
+	end
+	return table.concat(found, ",")
+end
+
+-- With both mods: each event is registered once and filtered.
 local damaged = filters[events.on_entity_damaged]
 check(registrations[events.on_entity_damaged] == 1, "on_entity_damaged should be registered once")
 check(damaged and #damaged == 2 and damaged[1].filter == "vehicle" and damaged[1].mode == nil
 	and damaged[2].filter == "damage-type" and damaged[2].type == "kr-radioactive" and damaged[2].mode == "and",
 	"on_entity_damaged should see vehicles hit by kr-radioactive only")
+for _, id in ipairs({events.on_player_mined_entity, events.on_robot_mined_entity, events.on_entity_died,
+	events.script_raised_destroy}) do
+	check(registrations[id] == 1, "Each removal event should be registered once")
+	check(filters[id] and #filters[id] == 3 and filters[id][1].name == "razi-archive-relay"
+		and names(filters[id]) == "razi-archive-relay,cerys-fulgoran-radiative-tower,cerys-radiative-heater",
+		"Removal events should be filtered by the relay and the two towers")
+end
+check(registrations[events.on_space_platform_mined_entity] == 1
+	and names(filters[events.on_space_platform_mined_entity]) == "cerys-fulgoran-radiative-tower,cerys-radiative-heater",
+	"The platform mining event should be filtered by the two towers")
+
 -- Radiation: the vehicle gets the damage back.
 local function vehicle(health)
 	return {valid = true, name = "car", health = health}
@@ -90,29 +109,92 @@ local no_health = {valid = true, name = "wagon"}
 handlers[events.on_entity_damaged]({entity = no_health, final_damage_amount = 7.25})
 check(no_health.health == nil, "An entity without health should be left alone")
 
--- Without Krastorio 2 nothing is registered or filtered.
+-- Lamp: it goes with its tower, other lamps stay.
+local function lamp(name)
+	local self = {name = name, destroyed = false}
+	self.destroy = function() self.destroyed = true end
+	return self
+end
+local searches = {}
+local near = {lamp("radiative-tower-lamp-7"), lamp("small-lamp"), lamp("radiative-tower-lamp-12")}
+local function tower(name)
+	return {valid = true, name = name, position = {x = 4, y = 5}, surface = {
+		find_entities_filtered = function(filter)
+			searches[#searches + 1] = filter
+			return near
+		end
+	}}
+end
+for _, name in ipairs({"cerys-fulgoran-radiative-tower", "cerys-radiative-heater"}) do
+	for _, id in ipairs({events.on_player_mined_entity, events.on_robot_mined_entity, events.on_entity_died,
+		events.script_raised_destroy, events.on_space_platform_mined_entity}) do
+		near = {lamp("radiative-tower-lamp-7"), lamp("small-lamp"), lamp("radiative-tower-lamp-12")}
+		searches = {}
+		logged = {}
+		handlers[id]({entity = tower(name)})
+		check(#searches == 1 and searches[1].type == "lamp" and searches[1].radius == 1
+			and searches[1].position.x == 4 and searches[1].position.y == 5, "The lamp should be searched within a tile")
+		check(near[1].destroyed and near[3].destroyed, "The lamps of the tower should be destroyed")
+		check(not near[2].destroyed, "Another lamp should stay")
+		check(#logged == 2, "Each removed lamp should be logged")
+	end
+end
+-- The relay and an invalid tower are not towers.
+searches = {}
+handlers[events.on_entity_died]({entity = {valid = true, name = "razi-archive-relay", position = {x = 0, y = 0},
+	surface = {find_entities_filtered = function(filter) searches[#searches + 1] = filter; return {} end}}})
+handlers[events.on_entity_died]({entity = {valid = false, name = "cerys-radiative-heater"}})
+handlers[events.on_entity_died]({})
+check(#searches == 0, "Only a valid tower starts a search")
+
+-- Without the mods nothing is registered for them.
+local Events = require("__razi_lib__/runtime/events")
+local entities = require("scripts.events.entities")
 local damage = require("scripts.events.damage")
 local function wiring()
 	local registry = Events.new()
 	damage.register(registry)
+	entities.register(registry)
+	for id in pairs(registry.events) do
+		check(id ~= events.on_entity_damaged and id ~= events.on_space_platform_mined_entity,
+			"Event " .. id .. " should stay free")
+	end
 	return registry
+end
+local function reset_filters()
+	for id in pairs(filters) do
+		filters[id] = nil
+	end
+	for _, id in ipairs({events.on_entity_damaged, events.on_space_platform_mined_entity,
+		events.on_player_mined_entity, events.on_entity_died}) do
+		handlers[id] = handlers[id] or function() end
+	end
 end
 
 rawset(fake_script, "active_mods", {})
-check(next(wiring().events) == nil, "Without Krastorio 2 no event should be registered")
-filters[events.on_entity_damaged] = nil
+reset_filters()
+local registry = wiring()
+check(#registry.events[events.on_entity_died] == 1, "Without Cerys the relay is the only remover")
 damage.set_filters()
-check(filters[events.on_entity_damaged] == nil, "Without Krastorio 2 no filter should be set")
+entities.set_filters()
+check(filters[events.on_entity_damaged] == nil and filters[events.on_space_platform_mined_entity] == nil,
+	"Without the mods no filter is set for them")
+check(#filters[events.on_entity_died] == 1 and filters[events.on_entity_died][1].name == "razi-archive-relay",
+	"Without Cerys the removal filter is the relay alone")
 
--- Krastorio 2 without its damage type.
-rawset(fake_script, "active_mods", {Krastorio2 = "2.1.4"})
-rawset(_G, "prototypes", {damage = {}})
-check(next(wiring().events) == nil, "Without the damage type no event should be registered")
+-- Krastorio2 without its damage type, Cerys without its towers.
+rawset(fake_script, "active_mods", {Krastorio2 = "2.1.4", ["Cerys-Moon-of-Fulgora"] = "4.25.0"})
+rawset(_G, "prototypes", {damage = {}, entity = {}})
+reset_filters()
+wiring()
 damage.set_filters()
-check(filters[events.on_entity_damaged] == nil, "Without the damage type no filter should be set")
+entities.set_filters()
+check(filters[events.on_entity_damaged] == nil and filters[events.on_space_platform_mined_entity] == nil
+	and #filters[events.on_entity_died] == 1, "Missing prototypes should switch the repairs off")
 
--- The damage type without the mod: a stray prototype does not register anything.
+-- Prototypes without the mods: a stray prototype does not register anything.
 rawset(fake_script, "active_mods", {})
-rawset(_G, "prototypes", {damage = {["kr-radioactive"] = {}}})
-check(next(wiring().events) == nil, "A damage type alone should not register anything")
-print("runtime mod fixes: Krastorio 2 radiation passed")
+rawset(_G, "prototypes", {damage = {["kr-radioactive"] = {}}, entity = towers})
+reset_filters()
+wiring()
+print("runtime mod fixes: Krastorio 2 radiation and Cerys tower lamp passed")
