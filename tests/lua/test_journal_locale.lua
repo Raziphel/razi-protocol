@@ -81,7 +81,7 @@ local LITERAL_PREFIX={
 local function literal_keys()
   local found={}
   local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/acts.lua "
-    .."scripts/journal/api.lua scripts/journal/widgets.lua "
+    .."scripts/journal/api.lua scripts/journal/widgets.lua scripts/journal/preferences.lua "
     .."scripts/journal/button_cleanup.lua scripts/journal/data.lua scripts/journal/expansion.lua "
     .."scripts/journal/frontier.lua scripts/journal/guidance.lua scripts/journal/icons.lua "
     .."scripts/journal/industry.lua scripts/journal/marks.lua scripts/journal/objectives.lua "
