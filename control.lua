@@ -1,6 +1,7 @@
 local Events = require("__razi_lib__/runtime/events")
 local voidcraft_variants = require("scripts.compatibility.Voidcraft.variants")
 local entities = require("scripts.events.entities")
+local damage = require("scripts.events.damage")
 
 local events = Events.new()
 
@@ -8,6 +9,7 @@ local events = Events.new()
 -- poll comes before the Journal upkeep on the 600-tick timer, the cheat helper before the Journal on a player joining.
 require("scripts.events.lifecycle").register(events)
 entities.register(events)
+damage.register(events)
 require("scripts.events.cheat").register(events)
 require("scripts.events.asteroids").register(events)
 require("scripts.events.players").register(events)
@@ -24,3 +26,4 @@ voidcraft_variants.register()
 events:install()
 
 entities.set_filters()
+damage.set_filters()
