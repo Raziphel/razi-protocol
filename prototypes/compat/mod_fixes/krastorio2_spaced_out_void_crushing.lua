@@ -1,9 +1,10 @@
 local void_crushing = {}
 
 -- The Krastorio 2 crusher is a furnace with two categories, kr-crushing and kr-void-crushing, and picks the recipe by
--- what goes in. Four items have both a real crushing recipe and a void one that destroys them: Planetaris wasp eggs,
--- fossil larvae, bones and Crucible skarn. The crusher may take the void recipe and quietly destroy its input. The void
--- recipe of an item that has a real crushing recipe is removed, with every technology effect that names it.
+-- what goes in. Some items have both a real crushing recipe and a void one that destroys them: Planetaris wasp eggs,
+-- fossil larvae, bones, Crucible skarn, rocket chunks and asteroid chunks. The crusher may take the void recipe and
+-- quietly destroy its input. The void recipe of an item that has a real crushing recipe is removed, with every
+-- technology effect that names it.
 -- Only a crushing recipe that takes that one item counts: a recipe with several ingredients (the rocket salvage tiers
 -- take rocket chunks with holmium plates, ice or processing units) does not crush its ingredients, so the void recipe
 -- of holmium plate, ice and processing unit stays.
