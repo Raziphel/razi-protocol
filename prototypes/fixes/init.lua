@@ -11,6 +11,7 @@ local repairs = {
 	require("prototypes.fixes.planetaris-arig.surface_conditions"),
 	require("prototypes.fixes.Krastorio2-spaced-out.void_crushing"),
 	require("prototypes.fixes.Krastorio2-spaced-out.piercing_shotgun"),
+	require("prototypes.fixes.tenebris-prime.bioluminescent_copies"),
 	require("prototypes.fixes.Krastorio2.construction_roboport"),
 	require("prototypes.fixes.Krastorio2.artillery_range"),
 }

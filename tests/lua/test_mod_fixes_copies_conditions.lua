@@ -106,4 +106,141 @@ arig.data_final_fixes()
 check(raw.explosion["nuke-effects-aquilo"].surface_conditions == nil, "An explosion without conditions got some")
 check(raw.recipe["quantum-processor"] == nil and logged("needs " .. dust) == 1, "Expected one line for the one recipe that exists")
 
+-- bioluminescent_copies
+local copies = require("prototypes.fixes.tenebris-prime.bioluminescent_copies")
+local function tenebris_world()
+	local world = fresh()
+	world.planet = {tenebris = {surface_properties = {pressure = 3000}}}
+	world["surface-property"] = {pressure = {default_value = 101}, gravity = {default_value = 10}}
+	world.recipe = {}
+	world.technology = {}
+	world.item = {}
+	return world
+end
+local function infusion(ingredients)
+	return {categories = {"bioinfusion"}, ingredients = ingredients or {{type = "item", name = "iron-plate", amount = 1}}}
+end
+
+raw = tenebris_world()
+raw["assembling-machine"] = {
+	["chemical-plant"] = {crafting_categories = {"chemistry", "vulcanization"}},
+	["bioluminescent-chemical-plant"] = {bioluminescent = true, crafting_categories = {"chemistry"}},
+	["furnace"] = {crafting_categories = {"smelting"}},
+	["bioluminescent-furnace"] = {bioluminescent = true, crafting_categories = {"smelting"}},
+	["bioluminescent-orphan"] = {bioluminescent = true, crafting_categories = {"smelting"}},
+	["plain"] = {crafting_categories = {"crafting"}},
+	["bioluminescent-plain"] = {crafting_categories = {"crafting", "extra"}},
+}
+copies.data_final_fixes()
+---@type any
+local plant = raw["assembling-machine"]
+check(plant["bioluminescent-chemical-plant"].crafting_categories[2] == "vulcanization"
+	and #plant["bioluminescent-chemical-plant"].crafting_categories == 2, "The copy did not take the categories of its base")
+check(plant["bioluminescent-chemical-plant"].crafting_categories ~= plant["chemical-plant"].crafting_categories,
+	"The copy shares the list of its base")
+check(plant["bioluminescent-orphan"].crafting_categories[1] == "smelting", "A copy without a base was changed")
+check(#plant["bioluminescent-plain"].crafting_categories == 2, "A prototype that is not a Tenebris copy was changed")
+check(logged("bioluminescent-chemical-plant takes the crafting categories of chemical-plant") == 1
+	and logged("takes the crafting categories") == 1, "Expected one line, for the one copy that was behind")
+check(logs[1]:find("^razi%-protocol: "), "The line does not start with the mod name")
+copies.data_final_fixes()
+check(logged("takes the crafting categories") == 1, "The repeated run touched the copy again")
+
+-- hidden bioinfusion recipes
+raw = tenebris_world()
+raw["assembling-machine"] = {
+	["bound"] = {surface_conditions = {{property = "pressure", min = 800000}}},
+	["bioluminescent-bound"] = {bioluminescent = true},
+	["gravity-bound"] = {surface_conditions = {{property = "gravity", min = 8, max = 9}}},
+	["bioluminescent-gravity-bound"] = {bioluminescent = true},
+	["near"] = {surface_conditions = {{property = "pressure", min = 1000, max = 4000}}},
+	["bioluminescent-near"] = {bioluminescent = true},
+	["free"] = {},
+	["bioluminescent-free"] = {bioluminescent = true},
+	["agricultural"] = {surface_conditions = {{property = "gravity", min = 8, max = 9}}},
+	["bioluminescent-agricultural"] = {bioluminescent = true},
+	["done"] = {surface_conditions = {{property = "pressure", min = 800000}}},
+	["bioluminescent-done"] = {bioluminescent = true},
+}
+raw.recipe = {
+	["bioluminescent-bound"] = infusion(),
+	["bioluminescent-gravity-bound"] = infusion(),
+	["bioluminescent-near"] = infusion(),
+	["bioluminescent-free"] = infusion(),
+	-- written by hand by Tenebris for the copy, not the bioinfusion of it
+	["bio-agricultural"] = {categories = {"crafting"}, ingredients = {}},
+	["bioluminescent-agricultural"] = {categories = {"crafting"}, ingredients = {}},
+	["bioluminescent-done"] = {categories = {"bioinfusion"}, hidden = true, ingredients = {}},
+}
+raw.technology = {
+	["bio-tech"] = {effects = {
+		{type = "unlock-recipe", recipe = "bioluminescent-bound"},
+		{type = "unlock-recipe", recipe = "bioluminescent-free"},
+		{type = "unlock-recipe", recipe = "bioluminescent-gravity-bound"},
+		{type = "unlock-recipe", recipe = "bioluminescent-agricultural"},
+		{type = "nothing"},
+	}},
+	["no-effects"] = {},
+}
+copies.data_final_fixes()
+---@type any
+local recipes = raw.recipe
+check(recipes["bioluminescent-bound"].hidden == true and recipes["bioluminescent-bound"].enabled == false,
+	"The recipe of a copy whose base needs another pressure was not hidden")
+check(recipes["bioluminescent-gravity-bound"].hidden == true, "The recipe of a copy whose base needs another gravity stayed")
+check(recipes["bioluminescent-near"].hidden == nil, "A copy whose base works on Tenebris was hidden")
+check(recipes["bioluminescent-free"].hidden == nil, "A copy whose base has no conditions was hidden")
+check(recipes["bioluminescent-agricultural"].hidden == nil, "A recipe written by hand for a copy was hidden")
+---@type any
+local effects = raw.technology["bio-tech"].effects
+check(#effects == 3 and effects[1].recipe == "bioluminescent-free" and effects[2].recipe == "bioluminescent-agricultural"
+	and effects[3].type == "nothing", "The unlocks of the hidden recipes were not removed, or others were")
+check(logged("can no longer be made: its base cannot work on Tenebris") == 2, "Expected a line for each of the two hidden recipes")
+check(logged("bioluminescent-done") == 0, "A recipe that was hidden already was logged")
+
+-- ingredients nothing makes
+raw = tenebris_world()
+raw["assembling-machine"] = {
+	["gone"] = {}, ["bioluminescent-gone"] = {bioluminescent = true},
+	["made"] = {}, ["bioluminescent-made"] = {bioluminescent = true},
+	["shown"] = {}, ["bioluminescent-shown"] = {bioluminescent = true},
+	["wet"] = {}, ["bioluminescent-wet"] = {bioluminescent = true},
+}
+raw.item = {
+	gone = {hidden = true}, made = {hidden = true}, shown = {}, wet = {hidden = true},
+}
+raw.recipe = {
+	["bioluminescent-gone"] = infusion({{type = "item", name = "gone", amount = 1}}),
+	["bioluminescent-made"] = infusion({{type = "item", name = "made", amount = 1}}),
+	["bioluminescent-shown"] = infusion({{type = "item", name = "shown", amount = 1}}),
+	["bioluminescent-wet"] = infusion({{type = "fluid", name = "wet", amount = 1}}),
+	["make-made"] = {results = {{type = "item", name = "made", amount = 1}}},
+	["hidden-make-gone"] = {hidden = true, results = {{type = "item", name = "gone", amount = 1}}},
+	["fluid-gone"] = {results = {{type = "fluid", name = "gone", amount = 1}}},
+}
+raw.technology = {["t"] = {effects = {{type = "unlock-recipe", recipe = "bioluminescent-gone"}}}}
+copies.data_final_fixes()
+recipes = raw.recipe
+check(recipes["bioluminescent-gone"].hidden == true and recipes["bioluminescent-gone"].enabled == false,
+	"The recipe asking for an item nothing makes was not hidden")
+check(#raw.technology["t"].effects == 0, "The unlock of the hidden recipe stayed")
+check(recipes["bioluminescent-made"].hidden == nil, "An item that a visible recipe makes counted as lost")
+check(recipes["bioluminescent-shown"].hidden == nil, "An item that is not hidden counted as lost")
+check(recipes["bioluminescent-wet"].hidden == nil, "A fluid ingredient counted as lost")
+check(logged("its ingredient gone is hidden and no recipe makes it") == 1, "Expected one line for the lost ingredient")
+
+-- no Tenebris, no copies, no tables
+raw = fresh()
+raw["assembling-machine"] = {
+	["chemical-plant"] = {crafting_categories = {"chemistry", "vulcanization"}},
+	["bioluminescent-chemical-plant"] = {bioluminescent = true, crafting_categories = {"chemistry"}},
+}
+copies.data_final_fixes()
+check(#raw["assembling-machine"]["bioluminescent-chemical-plant"].crafting_categories == 1 and #logs == 0,
+	"The copies were changed on a map without Tenebris")
+raw = fresh()
+raw.planet = {tenebris = {}}
+copies.data_final_fixes()
+check(#logs == 0 and next(raw) == "planet", "A repair logged or created a table on a map without copies")
+
 print("test_mod_fixes_copies_conditions: ok")
