@@ -49,7 +49,7 @@ rawset(_G, "storage", state)
 rawset(_G, "game", world)
 rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
-local M = require("scripts.razi_safe_cheat")
+local M = require("scripts.commands.safe_cheat")
 local function command(parameter)
 	M.command({player_index = 1, parameter = parameter})
 end
@@ -101,9 +101,9 @@ command("start")
 check(#state.razi_cheat_jobs.player.names == 1,
 	"Resuming should only include the remaining technology")
 -- Jobs live in storage; re-requiring the helper does not erase them.
-package.loaded["scripts.razi_safe_cheat"] = nil
+package.loaded["scripts.commands.safe_cheat"] = nil
 ---@diagnostic disable-next-line: duplicate-require
-local resumed = require("scripts.razi_safe_cheat")
+local resumed = require("scripts.commands.safe_cheat")
 resumed.tick()
 check(technologies.network.researched and not state.razi_cheat_jobs,
 	"Resumed run should complete and clear its saved job")

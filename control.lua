@@ -1,5 +1,5 @@
 local Events = require("__razi_lib__/runtime/events")
-local razi_safe_cheat = require("scripts.razi_safe_cheat")
+local razi_safe_cheat = require("scripts.commands.safe_cheat")
 local razi_prepared_2x = require("scripts.migration.prepared_2x")
 local quality_asteroids = require("scripts.asteroids.quality")
 local voidcraft_variants = require("scripts.compatibility.Voidcraft.variants")
