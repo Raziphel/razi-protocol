@@ -6,7 +6,7 @@ local catalysts = {}
 -- - through productivity modules where the recipe allows them (pulsar science gives back its electric engines,
 --   helium circuits their helium);
 -- - through the base productivity of a machine even where the recipe does not allow productivity: the base effect
---   applies anyway (see balance/shchierbin/crusher_and_steam.lua). The electrochemical plant (+50 %) gave about 2500
+--   applies anyway (see balance/shchierbin/crusher_productivity.lua). The electrochemical plant (+50 %) gave about 2500
 --   tritium a craft on the helium recipe (5000 in, 4995 back), the biocomputer (+50 %) five science packs a craft on
 --   the artisan science of moon-eneas (10 in, 10 back), the clarifier (+20 %) servofish on its filters; also biter
 --   eggs, the vanadium catalyst, the Eneas upgrades, void bacteria.

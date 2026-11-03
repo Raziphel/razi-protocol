@@ -40,6 +40,7 @@ local repairs = {
 	require("prototypes.fixes.common.recycling_sources"),
 	require("prototypes.fixes.Mini_Trains.entity_data_items"),
 	require("prototypes.fixes.corrundum.bioflux_stack"),
+	require("prototypes.fixes.shchierbin.vanadium_acid_steam"),
 }
 
 function mod_fixes.data_final_fixes()
