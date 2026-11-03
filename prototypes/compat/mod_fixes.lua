@@ -11,6 +11,7 @@ local repairs = {
 	require("prototypes.compat.mod_fixes.krastorio2_spaced_out_void_crushing"),
 	require("prototypes.compat.mod_fixes.krastorio2_spaced_out_piercing_shotgun"),
 	require("prototypes.compat.mod_fixes.krastorio2_construction_roboport"),
+	require("prototypes.compat.mod_fixes.krastorio2_artillery_range"),
 }
 
 function mod_fixes.data_final_fixes()

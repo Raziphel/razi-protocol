@@ -182,5 +182,33 @@ check(raw.roboport["idle-roboport-construction-mode"].logistics_radius == 0, "A 
 check(raw.roboport["roboport-logistic-mode"].logistics_radius == 0, "A logistic mode was changed")
 check(logged("has logistics_radius = 1") == 2, "Expected two changed construction roboports")
 
+-- artillery_range
+local function artillery(effects)
+  return {technology = {["artillery-shell-range-1"] = {effects = effects}}}
+end
+raw = fresh()
+raw.technology = artillery({
+  {type = "unlock-recipe", recipe = "x"},
+  {type = "artillery-range", modifier = 0.3},
+  {type = "artillery-range", modifier = 0.4},
+}).technology
+fixes.data_final_fixes()
+---@type any
+local effects = raw.technology["artillery-shell-range-1"].effects
+check(#effects == 2 and effects[2].modifier == 0.4 and effects[1].type == "unlock-recipe",
+  "The vanilla +0.3 was not removed")
+check(logged("keeps only the +0.4 range") == 1, "No line for the artillery range")
+logs = {}
+fixes.data_final_fixes()
+check(#effects == 2 and #logs == 0, "A single range effect was touched")
+raw = fresh()
+raw.technology = artillery({{type = "artillery-range", modifier = 0.35}, {type = "artillery-range", modifier = 0.5}}).technology
+fixes.data_final_fixes()
+check(#raw.technology["artillery-shell-range-1"].effects == 2 and #logs == 0, "Effects with another value were changed")
+raw = fresh()
+raw.technology = {["artillery-shell-range-1"] = {}}
+fixes.data_final_fixes()
+check(#logs == 0, "A technology without effects was touched")
+
 
 print("test_mod_fixes_krastorio2: ok")
