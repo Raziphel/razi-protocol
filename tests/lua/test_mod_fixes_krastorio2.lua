@@ -165,5 +165,22 @@ fixes.data_final_fixes()
 check(raw.ammo["piercing-shotgun-shell"].ammo_type.action[1].action_delivery.projectile == "shotgun-pellet" and #logs == 0,
   "The shell was changed although the piercing pellet does not exist")
 
+-- construction_roboport
+raw = fresh()
+raw.roboport = {
+  ["roboport-construction-mode"] = {logistics_radius = 0, construction_radius = 55},
+  ["big-roboport-construction-mode"] = {construction_radius = 100},
+  ["spare-roboport-construction-mode"] = {logistics_radius = 4, construction_radius = 55},
+  ["idle-roboport-construction-mode"] = {logistics_radius = 0, construction_radius = 0},
+  ["roboport-logistic-mode"] = {logistics_radius = 0, construction_radius = 55},
+}
+fixes.data_final_fixes()
+check(raw.roboport["roboport-construction-mode"].logistics_radius == 1, "A construction roboport kept the zero radius")
+check(raw.roboport["big-roboport-construction-mode"].logistics_radius == 1, "A missing radius counts as zero")
+check(raw.roboport["spare-roboport-construction-mode"].logistics_radius == 4, "A changed radius was overwritten")
+check(raw.roboport["idle-roboport-construction-mode"].logistics_radius == 0, "A roboport that does not build was changed")
+check(raw.roboport["roboport-logistic-mode"].logistics_radius == 0, "A logistic mode was changed")
+check(logged("has logistics_radius = 1") == 2, "Expected two changed construction roboports")
+
 
 print("test_mod_fixes_krastorio2: ok")
