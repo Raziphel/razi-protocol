@@ -141,6 +141,8 @@ local function setup(opts)
   end})
   rawset(_G,"mods",flags)
   package.loaded["prototypes.industry.exchanges.planet_production_exchanges"]=nil
+  package.loaded["prototypes.industry.exchanges.exchange_rules"]=nil
+  package.loaded["prototypes.industry.exchanges.exchange_support"]=nil
   package.loaded["prototypes.industry.exchanges.modded_planet_exchanges"]=nil
   return raw,require("prototypes.industry.exchanges.modded_planet_exchanges")
 end
