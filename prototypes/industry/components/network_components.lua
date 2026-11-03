@@ -179,108 +179,16 @@ local function icon_layers(source)
     return {{icon=source.icon,icon_size=source.icon_size or 64}}
   end
 end
-local parts={
-  {
-    name="razi-network-precision-matrix",
-    source_icon="holmium-plate",accent_icon="optical-cable",
-    required_mods={"Moshine","Paracelsin"},
-    ingredients={
-      {type="item",name="optical-cable",amount=3},
-      {type="item",name="zinc-plate",amount=2},
-      {type="item",name="holmium-plate",amount=1},
-      {type="item",name="kr-rare-metals",amount=2}
-    },
-    suppliers={
-      {recipe="optical-cable",product="optical-cable"},
-      {recipe="zinc-plate",product="zinc-plate"},
-      {recipe="holmium-plate",product="holmium-plate"},
-      {recipe="kr-casting-rare-metals",product="kr-rare-metals"}
-    },
-    planets={
-      "planet-discovery-vulcanus","planet-discovery-moshine",
-      "planet-discovery-fulgora","planet-discovery-paracelsin"
-    },
-    science={"solaris-tech-card","nyxaris-tech-card"},
-    count=420,energy=8,output=2
-  },
-  {
-    name="razi-network-extreme-lattice",
-    source_icon="craptonite-frame",accent_icon="chitosan",
-    required_mods={"rubia","tenebris-prime","linox"},
-    ingredients={
-      {type="item",name="razi-network-precision-matrix",amount=1},
-      {type="item",name="craptonite-frame",amount=2},
-      {type="item",name="chitosan",amount=2},
-      {type="item",name="rare-earth-powder",amount=2},
-      {type="item",name="carbon-fiber",amount=2}
-    },
-    suppliers={
-      {recipe="razi-network-precision-matrix",product="razi-network-precision-matrix"},
-      {recipe="craptonite-casting",product="craptonite-frame"},
-      {recipe="chitosan",product="chitosan"},
-      {recipe="linox-recipe_rare-earth-refining",product="rare-earth-powder"},
-      {recipe="carbon-fiber",product="carbon-fiber"}
-    },
-    planets={
-      "planet-discovery-rubia","planet-discovery-tenebris",
-      "linox-technology_planet-discovery-linox","planet-discovery-gleba"
-    },
-    science={"vibrant-tech-card","vespera-tech-card"},
-    count=680,energy=12,output=2
-  },
-  {
-    name="razi-network-panglia-optic-bond",
-    source_icon="panglia_panglite_glass",accent_icon="optical-cable",
-    required_mods={"panglia_planet","Moshine"},
-    ingredients={
-      {type="item",name="panglia_panglite_glass",amount=2},
-      {type="item",name="optical-cable",amount=2},
-      {type="item",name="holmium-plate",amount=1}
-    },
-    suppliers={
-      {recipe="panglia_panglite_glass",product="panglia_panglite_glass"},
-      {recipe="optical-cable",product="optical-cable"},
-      {recipe="holmium-plate",product="holmium-plate"}
-    },
-    planets={"panglia_planet_discovery_panglia",
-      "planet-discovery-moshine","planet-discovery-fulgora"},
-    science={"solaris-tech-card","nyxaris-tech-card"},
-    -- Eight bonds amortise the three imported materials over four
-    -- boosted native batches instead of spending one glass per bonus.
-    count=360,energy=10,output=8
-  },
-  {
-    -- This is a late framework built from completed planetary industries.
-    -- No unstable hydrogen plates or altered Crucible production loops.
-    -- Only Deep has a recipe that consumes it, so only Deep creates it.
-    name="razi-network-umbra-pressure-frame",
-    deep_only=true,
-    source_icon="supermagnet",accent_icon="holmium-plate",
-    required_mods={"planet-crucible","skewer_planet_vesta",
-      "linox","panglia_planet"},
-    ingredients={
-      {type="item",name="razi-network-panglia-optic-bond",amount=1},
-      {type="item",name="holmium-plate",amount=2},
-      {type="item",name="supermagnet",amount=2},
-      {type="item",name="rare-earth-powder",amount=2}
-    },
-    suppliers={
-      {recipe="razi-network-panglia-optic-bond",
-        product="razi-network-panglia-optic-bond"},
-      {recipe="holmium-plate",product="holmium-plate"},
-      {recipe="supermagnet",product="supermagnet"},
-      {recipe="linox-recipe_rare-earth-refining",product="rare-earth-powder"}
-    },
-    planets={"panglia_planet_discovery_panglia",
-      "linox-technology_planet-discovery-linox",
-      "planet-discovery-crucible","planet-discovery-vesta",
-      "planet-discovery-fulgora"},
-    science={"beetlejuice-tech-card","umbra-tech-card"},
-    -- Fully material-driven late framework. The source Crucible milestone
-    -- remains a gate, but no science pack is consumed as machine feedstock.
-    count=980,energy=20,output=8
-  }
-}
+local parts_data=require("prototypes.industry.components.network_parts")
+local parts=parts_data.parts
+local precision=parts_data.precision
+local lattice=parts_data.lattice
+local bond=parts_data.bond
+local frame=parts_data.frame
+local balanced_links=parts_data.balanced_links
+local deep_links=parts_data.deep_links
+local families=parts_data.families
+local essential=parts_data.essential
 M.parts=parts
 local function register_part(part,index)
   if part.deep_only and not mode.deep() then return false end
@@ -359,103 +267,16 @@ local function register_part(part,index)
   index[part.name]={part.name}
   return true
 end
-
-local function upgrade(name,source,product,category,world,planet_names,
-  component,mod_name,options)
-  options=options or {}
-  local rule={
-    name=name,source=source,product=product,category=category,
-    working_world=world,source_mod=mod_name,
-    planets=planet_names,science={"vibrant-tech-card","vespera-tech-card"},
-    supplier_recipes={{recipe=component,product=component}},
-    additional={{type="item",name=component,amount=1}},
-    batch=options.batch or 4,bonus=options.bonus or 1,
-    target_bonus_fraction=options.target_bonus_fraction,
-    count=options.count or 900,time=60,
-    bonus_icon=component,require_supplier_provenance=true,
-    max_bonus_fraction=0.25,
-    time_multiplier=options.time_multiplier or
-      (options.deep and 1.2 or 1.15),
-    deep_only=options.deep or nil,
-    keep_native_category=options.native or nil,
-    surface_source=options.surface_source,
-    surface_world=options.surface_world
-  }
-  return rule
-end
-
-local precision="razi-network-precision-matrix"
-local lattice="razi-network-extreme-lattice"
-local bond="razi-network-panglia-optic-bond"
-local frame="razi-network-umbra-pressure-frame"
-local balanced_k2={
-  upgrade("razi-network-matrix-cryo-controllers","kr-energy-control-unit",
-    "kr-energy-control-unit","cryogenics","aquilo",
-    {"planet-discovery-aquilo","planet-discovery-moshine",
-     "planet-discovery-paracelsin","planet-discovery-fulgora"},precision,nil,
-    {surface_source="kr-cryogenic-research-data",surface_world="aquilo"})
-}
-local balanced_modded={
-  upgrade("razi-network-lattice-vesta-magnets","supermagnet",
-    "supermagnet","electromagnetics","vesta",
-    {"planet-discovery-vesta","planet-discovery-rubia",
-     "planet-discovery-tenebris","linox-technology_planet-discovery-linox"},
-     lattice,"skewer_planet_vesta",{native=true,count=1150})
-}
-local return_modded={
-  upgrade("razi-network-bond-paracelsin-coils","electric-coil",
-    "electric-coil","mechanics","paracelsin",
-    {"planet-discovery-paracelsin","panglia_planet_discovery_panglia",
-     "planet-discovery-moshine","planet-discovery-fulgora"},
-    bond,"Paracelsin",{native=true,count=520,
-      target_bonus_fraction=0.20,time_multiplier=1.10}),
-  upgrade("razi-network-bond-linox-refining","linox-recipe_rare-earth-refining",
-    "rare-earth-powder","chemistry","linox-planet_linox",
-    {"linox-technology_planet-discovery-linox",
-     "panglia_planet_discovery_panglia",
-     "planet-discovery-moshine","planet-discovery-fulgora"},
-    bond,"linox",{native=true,count=650,
-      target_bonus_fraction=0.20,time_multiplier=1.10})
-}
-local pressure_modded={
-  upgrade("razi-network-frame-vesta-foundations","vesta-foundation",
-    "vesta-foundation","metallurgy","vesta",
-    {"planet-discovery-vesta","planet-discovery-crucible",
-     "linox-technology_planet-discovery-linox",
-     "panglia_planet_discovery_panglia"},
-    frame,"skewer_planet_vesta",{deep=true,count=960,
-      target_bonus_fraction=0.20,time_multiplier=1.12})
-}
+local premium=require("prototypes.industry.components.network_premium")
+local balanced_k2=premium.k2
+local balanced_modded=premium.modded
+local return_modded=premium.return_modded
+local pressure_modded=premium.pressure_modded
 M.premium={
   k2=balanced_k2,modded=balanced_modded,
   return_modded=return_modded,pressure_modded=pressure_modded
 }
 
--- Research tree: the exchanges that return cargo to a component's planet
--- follow that planet's own research, Deep asks the component networks to
--- cooperate. Components and their exchanges sit together in the menu, and
--- the components are marked essential. Native technologies are not touched.
-local balanced_links={
-  {"razi-network-bond-paracelsin-coils","panglia_advanced_optics_nanotech"},
-  {"razi-network-bond-linox-refining","panglia_advanced_optics_nanotech"}
-}
-local deep_links={
-  {frame,lattice},
-  {"razi-network-lattice-vesta-magnets",bond},
-  {"razi-network-frame-vesta-foundations","razi-network-lattice-vesta-magnets"}
-}
-local families={
-  {precision,"f[razi-industry]-a[precision]"},
-  {"razi-network-matrix-cryo-controllers","f[razi-industry]-a[precision]-a[aquilo]"},
-  {bond,"f[razi-industry]-b[panglia]"},
-  {"razi-network-bond-paracelsin-coils","f[razi-industry]-b[panglia]-a[paracelsin]"},
-  {"razi-network-bond-linox-refining","f[razi-industry]-b[panglia]-b[linox]"},
-  {lattice,"f[razi-industry]-c[lattice]"},
-  {"razi-network-lattice-vesta-magnets","f[razi-industry]-c[lattice]-a[magnets]"},
-  {frame,"f[razi-industry]-d[pressure]"},
-  {"razi-network-frame-vesta-foundations","f[razi-industry]-d[pressure]-a[vesta]"}
-}
-local essential={[precision]=true,[bond]=true,[lattice]=true,[frame]=true}
 local function active(name)
   local node=raw("technology",name)
   return node and node.enabled~=false and not node.hidden

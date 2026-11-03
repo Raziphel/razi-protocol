@@ -117,6 +117,8 @@ local function setup(options)
     end
   }
   package.loaded["prototypes.industry.components.network_components"]=nil
+  package.loaded["prototypes.industry.components.network_parts"]=nil
+  package.loaded["prototypes.industry.components.network_premium"]=nil
   return raw,require("prototypes.industry.components.network_components"),calls
 end
 local raw,module,calls=setup({lock_optics=true})
