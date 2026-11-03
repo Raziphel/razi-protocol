@@ -5,7 +5,7 @@ if data.raw.technology and data.raw.technology[gate_technology] then
 end
 
 -- This is our "phone home" gate. K2SO handles the giant power sink and swaps
--- the entity when it fires; control.lua backs it up for old saves/script weirdness.
+-- the entity when it fires; scripts/events/entities.lua backs it up for old saves/script weirdness.
 data:extend({
 	{
 		type = "technology",

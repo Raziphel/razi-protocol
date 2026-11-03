@@ -23,7 +23,7 @@ local function file(path)
   local f=assert(io.open(path,"r"))
   local contents=f:read("*a"); f:close(); return contents
 end
-local setting=file("settings.lua")
+local setting=file("settings/integration.lua")
 check(setting:find('allowed_values = {"off", "balanced", "deep"}',1,true),
   "The interdependence setting must offer Off, Balanced and Deep")
 local industry=file("prototypes/industry/exchanges/planet_production_exchanges.lua")
