@@ -195,7 +195,7 @@ require("prototypes.world.systems.bellicos").dedupe_internal_routes()
 
 -- Resolve difficulty stages for all finalized connected worlds, including
 -- mod-provided outer expeditions with unknown location IDs.
-require("scripts.razi_asteroid_difficulty").prepare_routes(data.raw["space-connection"])
+require("lib.difficulty.asteroids").prepare_routes(data.raw["space-connection"])
 
 -- Razi More Asteroids owns the eight material families and K2SO recipes.
 -- Reprofile the final surviving RP3 connections, including both Razi belts,

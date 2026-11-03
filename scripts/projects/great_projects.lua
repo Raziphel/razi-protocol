@@ -2,8 +2,8 @@
 -- machines, visited routes or explicitly registered freight. One-time force
 -- records are persisted; there is no periodic all-surface polling.
 local M={}
-local catapult=require("scripts.razi_catapult_network")
-local catalog=require("scripts.galactic_catalog")
+local catapult=require("scripts.compatibility.orbital-cannon.catapult_network")
+local catalog=require("lib.galactic_catalog")
 local valid_crossings={
   vibrant={"asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
   umbra={"razi-umbra-belt-inner","razi-umbra-belt-outer"}

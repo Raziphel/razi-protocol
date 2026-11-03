@@ -2,7 +2,7 @@
 -- Deterministic, in-memory Codex guidance regression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local guidance=require("scripts.razi_journal_guidance")
+local guidance=require("scripts.journal.guidance")
 local states={
   ["solaris-gate"]="active",["nyxaris-gate"]="active",
   fulgora="active",aquilo="active",crucible="active",

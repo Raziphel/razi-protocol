@@ -2,7 +2,7 @@
 -- Rank is a ten-stage *hazard* scale, NOT ten new Factorio quality prototypes.
 -- Level 10 is legendary for every eligible hostile asteroid.
 local M={}
-local members=require("scripts.galactic_catalog")
+local members=require("lib.galactic_catalog")
 -- System floors only. Specific planets grow substantially *within* each
 -- chapter; one flat system tier left late worlds stuck around level 5.
 local base={calidus=1,solaris=2,nyxaris=2,vibrant=4,vespera=5,

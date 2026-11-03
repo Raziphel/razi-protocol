@@ -32,7 +32,7 @@ local connections={
 for i,pair in ipairs(connections) do
  prototypes.space_connection[i]={from=pair[1],to=pair[2]}
 end
-local m=require("scripts.razi_deep_space_expedition")
+local m=require("scripts.convergence.deep_space_expedition")
 local f1={index=1}
 local craft={valid=true,hub={valid=true},force=f1,
  name="Witness Ark",completed_trips=4,

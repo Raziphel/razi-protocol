@@ -6,10 +6,10 @@ storage={}
 local catalog={
   nauvis="calidus",fulgora="vibrant",gleba="nyxaris"
 }
-package.loaded["scripts.galactic_catalog"]={
+package.loaded["lib.galactic_catalog"]={
   system=function(name) return catalog[name] or "unassigned" end
 }
-package.loaded["scripts.razi_catapult_network"]={
+package.loaded["scripts.compatibility.orbital-cannon.catapult_network"]={
   snapshot=function()
     return {installed=true,enabled=true,entries={{
       id="razi-test-link",source="nauvis",target="fulgora",
@@ -29,7 +29,7 @@ function surface.count_entities_filtered(q)
 end
 local force={index=1,platforms={}}
 game={planets={nauvis={surface=surface},fulgora={surface=surface}},surfaces={}}
-local m=require("scripts.razi_great_projects")
+local m=require("scripts.projects.great_projects")
 local start={valid=true,hub={valid=true},index=101,force=force,name="Beltwright",
   scheduled_for_deletion=0,weight=1250000,surface=surface,
   completed_trips=5,last_visited_space_location={name="asteroid-belt-inner-edge"},

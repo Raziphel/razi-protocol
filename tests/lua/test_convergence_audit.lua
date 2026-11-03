@@ -2,7 +2,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("prototypes.technology.endgame.convergence")
-local audit=require("scripts.razi_convergence_audit")
+local audit=require("scripts.convergence.audit")
 local registry={item={},recipe={},entity={}}
 for _,stage in ipairs(defs.shipments) do
  registry.item[stage.item]={name=stage.item}

@@ -13,19 +13,19 @@
 -- Turn the story on for everyone by changing ENABLED below.
 --
 -- Writer mode shows the story layer to one player. An admin switches it on
--- with /razi-writer (scripts/razi_writer.lua). In it every text slot shows
+-- with /razi-writer (scripts/story/writer.lua). In it every text slot shows
 -- the text from locale/en/story-*.cfg, or a stub with the slot's key where
 -- there is none; the text that came with the repository is never shown.
 -- Mode state is `storage.razi_writer[player_index]` = {on, keys, records}.
 --
 -- Factorio forbids require() inside events, so the story modules are loaded
--- once at load time, whether or not the story is on: scripts/razi_journal.lua
+-- once at load time, whether or not the story is on: scripts/journal/journal.lua
 -- loads them and hands them over with attach(). They need the quest data,
 -- which needs this module, so this module cannot load them itself.
 local ENABLED=false
 
 local M={}
-local slots=require("scripts.razi_story_slots")
+local slots=require("scripts.story.slots")
 local enabled_flag=false
 local record_list={}
 local dispatch_impl
@@ -83,7 +83,7 @@ function M.on_removed(player_index)
 end
 
 -- The text of one slot, as a localised string, or nil where it is not shown.
--- `kind` and `id` name the slot (scripts/razi_story_slots.lua), `donor_key`
+-- `kind` and `id` name the slot (scripts/story/slots.lua), `donor_key`
 -- is the localised string the story shows when the repository text is on.
 -- Extra arguments go to the writer's own text as __1__, __2__.
 --   writer mode: the writer's text, else a stub that names the slot;

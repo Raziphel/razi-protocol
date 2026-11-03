@@ -2,7 +2,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,why) if not ok then error(why,2) end end
 -- The original briefing is the story text; its own checks run with the story on.
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 story.configure(true)
 storage={}
 local settings_map={
@@ -16,7 +16,7 @@ local player={valid=true,connected=true,index=1,admin=true,
  clear_console=function() cleared=cleared+1 end}
 game={tick=1,get_player=function(index)
  if index==1 then return player end end}
-local module=require("scripts.razi_welcome")
+local module=require("scripts.story.welcome")
 module.on_player_created(player)
 module.on_player_joined(player)
 check(#received==0 and cleared==0,

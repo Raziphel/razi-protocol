@@ -4,7 +4,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
-local slots=require("scripts.razi_story_slots")
+local slots=require("scripts.story.slots")
 local generator=dofile("tools/story_slots.lua")
 
 local function read(path)

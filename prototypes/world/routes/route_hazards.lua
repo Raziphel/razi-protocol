@@ -3,7 +3,7 @@
 local M = {}
 -- This module inspects physical asteroid sizes and resource chunks only.
 -- All Level 1-10 danger calculations and colors belong exclusively to
--- scripts.razi_asteroid_difficulty. No second severity scale lives here.
+-- lib.difficulty.asteroids. No second severity scale lives here.
 local function max_probability(def)
   local maximum = (type(def.probability)=="number" and def.probability) or 0
   for _,point in ipairs(def.spawn_points or {}) do

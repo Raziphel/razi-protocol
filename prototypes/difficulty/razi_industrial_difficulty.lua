@@ -14,7 +14,7 @@
 --     follows Balack's own setting (biological_machines_difficulty.lua).
 -- Enemy units, turrets and weapons are never touched.
 local M={}
-local preset=require("scripts.razi_difficulty_presets")
+local preset=require("lib.difficulty.presets")
 local balack=require("prototypes.difficulty.biological_machines_difficulty")
 
 local factors={
@@ -93,7 +93,7 @@ local function scale_group(group,field,factor,round,filter)
  return changed,skipped
 end
 
--- raw: data.raw; resolver: scripts.razi_difficulty_presets.
+-- raw: data.raw; resolver: lib.difficulty.presets.
 -- Returns the number of changed machines (factories), walls and gates
 -- (defenses) and the machines left out (skipped).
 function M.apply(raw,resolver)

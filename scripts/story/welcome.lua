@@ -1,7 +1,7 @@
 -- One compact, localized welcome per player. Optional new-map console
 -- cleanup is a one-shot: Factorio does NOT let us selectively delete
 -- another mod's messages. Never clear console on an existing save.
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 local M={}
 local WAIT=180
 local NEW_MAP_LIMIT=600

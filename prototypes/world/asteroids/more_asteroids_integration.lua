@@ -2,9 +2,9 @@
 -- eight families, processing recipes, graphics, and its vanilla Space Age map.
 -- Apply RP3-specific geography only after the FINAL route authority pass.
 local M = {}
-local catalog = require("scripts.galactic_catalog")
-local ladder = require("scripts.razi_asteroid_difficulty")
-local difficulty = require("scripts.razi_difficulty_presets")
+local catalog = require("lib.galactic_catalog")
+local ladder = require("lib.difficulty.asteroids")
+local difficulty = require("lib.difficulty.presets")
 local profiles = require("prototypes.world.asteroids.asteroid_profiles")
 
 local materials = {"uranium", "rock", "scrap", "organic", "chemical", "crystalline",

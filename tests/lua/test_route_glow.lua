@@ -96,7 +96,7 @@ check(m.marker_for_connection==nil and m.threat_tier==nil,
  "Retired dot badges and five-tier danger must not return")
 check(#m.strokes_for_connection(safe,"chapter","all")>10,
  "Chapter view must preserve continuous ten-grade lines")
-local palette=require("scripts.razi_asteroid_difficulty")
+local palette=require("lib.difficulty.asteroids")
 check(#palette.route_colors==10 and #palette.route_color_hex==10,
   "Ten independent quality colors are required")
 for i=1,10 do

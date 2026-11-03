@@ -11,13 +11,13 @@ local logged={}
 rawset(_G,"log",function(message) logged[#logged+1]=tostring(message) end)
 -- At runtime the catalog files the Dyson sphere's orbits under Calidus; the
 -- integration must still leave them alone. Everything else is the real catalog.
-local real_catalog=require("scripts.galactic_catalog")
+local real_catalog=require("lib.galactic_catalog")
 local suns={["sun-orbit"]=true,["slp-dyson-dummy"]=true,["slp-solar-system-sun"]=true}
-package.loaded["scripts.galactic_catalog"]={system=function(name)
+package.loaded["lib.galactic_catalog"]={system=function(name)
   if suns[name] then return "calidus" end
   return real_catalog.system(name)
 end}
-package.loaded["scripts.razi_asteroid_difficulty"]=nil
+package.loaded["lib.difficulty.asteroids"]=nil
 local families={"uranium","rock","scrap","organic","chemical",
   "crystalline","halide","electrostatic"}
 local function prototypes()
@@ -150,7 +150,7 @@ raw={
   ["space-connection"]=routes
 }
 local integration=reload(raw,{["razi-more-asteroids"]="1.1.1"})
-local ladder=require("scripts.razi_asteroid_difficulty")
+local ladder=require("lib.difficulty.asteroids")
 local profiles=require("prototypes.world.asteroids.asteroid_profiles")
 local nauvis_original=raw.planet.nauvis.asteroid_spawn_definitions
 local approved={"home","crossing","moon","belt","vib","five","eight","nine","deep"}

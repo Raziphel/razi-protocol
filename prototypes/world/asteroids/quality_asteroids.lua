@@ -3,8 +3,8 @@
 -- Resource chunks are never altered. The carriers are immediately replaced
 -- by real quality asteroids in control.lua, avoiding fake drop duplication.
 local M={}
-local engine=require("scripts.razi_asteroid_difficulty")
-local difficulty=require("scripts.razi_difficulty_presets")
+local engine=require("lib.difficulty.asteroids")
+local difficulty=require("lib.difficulty.presets")
 local PREFIX="razi-quality-asteroid-"
 M.prefix=PREFIX
 local registered={}

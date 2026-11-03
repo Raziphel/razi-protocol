@@ -4,8 +4,8 @@
 -- One data stage pass. Normal (x1) writes nothing. No tick handlers, no
 -- entity replacements.
 local M={}
-local economy=require("scripts.razi_economy_difficulty")
-local difficulty=require("scripts.razi_difficulty_presets")
+local economy=require("prototypes.difficulty.economy")
+local difficulty=require("lib.difficulty.presets")
 -- The first value a silo had, so a second call never compounds the factor.
 local originals=setmetatable({},{__mode="k"})
 

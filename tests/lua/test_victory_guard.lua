@@ -2,7 +2,7 @@
 -- Only Razi Convergence calls set_game_state; all known external
 -- endpoints expose opt-out APIs that must be reasserted safely.
 package.path="./?.lua;./?/init.lua;"..package.path
-local guard=require("scripts.razi_victory_guard")
+local guard=require("scripts.convergence.victory_guard")
 local seen={}
 local state={}
 rawset(_G,"remote",{interfaces={

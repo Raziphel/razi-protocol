@@ -5,7 +5,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 local W=require("tests.lua.journal_window")
 local ctx=W.setup()
 local defined,sections=W.locale_keys()
@@ -51,7 +51,7 @@ local function welcome_keys()
   ctx.player.connected=true
   rawset(_G,"settings",{get_player_settings=function() return {} end,
     global={["razi-hide-spoilers"]={value=true}}})
-  local welcome=require("scripts.razi_welcome")
+  local welcome=require("scripts.story.welcome")
   welcome.command{player_index=1}
   W.collect(welcome.help(),printed)
   rawset(_G,"settings",nil)
@@ -62,7 +62,7 @@ end
 -- name, so read the suffixes from the source.
 local function victory_keys(section)
   local found={singles={},chains={}}
-  local source=read("scripts/razi_convergence.lua")
+  local source=read("scripts/convergence/convergence.lua")
   for suffix in source:gmatch('section%.%.%"%.([%w%-]+)"') do
     found.singles[section.."."..suffix]=true
   end
@@ -73,14 +73,21 @@ end
 -- Literal keys in the sources: the walk cannot reach every state (a catapult
 -- lane, a failed delivery), so read the keys the code names directly.
 local LITERAL_PREFIX={
-  ["scripts/razi_journal.lua"]="journal-ui",
-  ["scripts/razi_journal_projects.lua"]="journal-ui",
-  ["scripts/razi_journal_systems.lua"]="journal-systems"
+  ["scripts/journal/journal.lua"]="journal-ui",
+  ["scripts/journal/projects.lua"]="journal-ui",
+  ["scripts/journal/systems.lua"]="journal-systems"
 }
 local function literal_keys()
   local found={}
-  local handle=assert(io.popen("ls scripts/razi_journal*.lua "
-    .."scripts/razi_convergence*.lua scripts/razi_welcome.lua scripts/razi_story*.lua"))
+  local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/acts.lua "
+    .."scripts/journal/button_cleanup.lua scripts/journal/data.lua scripts/journal/expansion.lua "
+    .."scripts/journal/frontier.lua scripts/journal/guidance.lua scripts/journal/icons.lua "
+    .."scripts/journal/industry.lua scripts/journal/marks.lua scripts/journal/objectives.lua "
+    .."scripts/journal/projects.lua scripts/journal/recipe_preview.lua scripts/journal/salvage.lua "
+    .."scripts/journal/search_names.lua scripts/journal/systems.lua scripts/journal/themes.lua "
+    .."scripts/story/corporate.lua scripts/story/records.lua scripts/convergence/convergence.lua "
+    .."scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
+    .."scripts/story/dispatch.lua scripts/story/slots.lua"))
   for path in handle:lines() do
     local source=read(path)
     for section,key in source:gmatch('{"([%w%-]+)%.([%w%-]+)"') do

@@ -14,8 +14,15 @@ local function read(path)
   return text
 end
 
-local handle=assert(io.popen("ls scripts/razi_journal*.lua scripts/galactic_dyson.lua "
-  .."scripts/razi_convergence*.lua scripts/razi_welcome.lua scripts/razi_story*.lua "
+local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/acts.lua scripts/journal/button_cleanup.lua "
+  .."scripts/journal/data.lua scripts/journal/expansion.lua scripts/journal/frontier.lua "
+  .."scripts/journal/guidance.lua scripts/journal/icons.lua scripts/journal/industry.lua "
+  .."scripts/journal/marks.lua scripts/journal/objectives.lua scripts/journal/projects.lua "
+  .."scripts/journal/recipe_preview.lua scripts/journal/salvage.lua scripts/journal/search_names.lua "
+  .."scripts/journal/systems.lua scripts/journal/themes.lua scripts/story/corporate.lua "
+  .."scripts/story/records.lua scripts/dyson/dyson.lua scripts/convergence/convergence.lua "
+  .."scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
+  .."scripts/story/dispatch.lua scripts/story/slots.lua "
   .."locale/en/razi_journal*.cfg locale/en/galactic_operations.cfg "
   .."locale/en/razi_story_off.cfg locale/en/razi_audit.cfg"))
 local found={}
@@ -28,7 +35,7 @@ end
 handle:close()
 check(#found==0,"Glyphs missing from the game fonts: "..table.concat(found,", "))
 
-local marks=require("scripts.razi_journal_marks")
+local marks=require("scripts.journal.marks")
 for name,mark in pairs(marks) do
   check(mark:match("^%[img=utility/[%w_]+%]$"),"Mark is not a utility sprite: "..name)
 end

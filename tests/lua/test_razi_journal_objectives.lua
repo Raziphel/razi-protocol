@@ -2,7 +2,7 @@
 -- Truthful, fully source-derived Mission Plan regression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(value,message) if not value then error(message,2) end end
-local plans=require("scripts.razi_journal_objectives")
+local plans=require("scripts.journal.objectives")
 local required={
   {name="stone",localised_name="Stone science",researched=true},
   {name="steel",localised_name="Steel processing",researched=false},

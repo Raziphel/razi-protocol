@@ -16,7 +16,7 @@ prototypes=setmetatable({}, {__index=function(_,key)
  error("Unexpected LuaPrototypes field: "..tostring(key))
 end})
 game={planets={muria={},rubia={},aquilo={}}}
-local network=require("scripts.razi_catapult_network")
+local network=require("scripts.compatibility.orbital-cannon.catapult_network")
 local report=network.snapshot(force)
 check(report.installed and report.enabled and report.total==3,
  "Three configured Vespera corridors expected")

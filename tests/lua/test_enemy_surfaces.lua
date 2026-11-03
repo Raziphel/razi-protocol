@@ -1,5 +1,5 @@
 -- Runtime: the nests that a planet's prototype switches off are switched off in the settings of surfaces that exist
--- already (scripts/razi_enemy_surfaces.lua), on a mocked game.
+-- already (scripts/enemies/surfaces.lua), on a mocked game.
 -- Run from the mod root:
 --   lua5.2 tests/lua/test_enemy_surfaces.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -99,7 +99,7 @@ local bare_entity = surface("bare-entity", {map_gen_settings = {autoplace_settin
 rawset(_G, "game", {surfaces = {nauvis = nauvis, terrapalus = terrapalus, settled = settled, athos = athos, platform = platform,
 	bare = bare, bare_entity = bare_entity}})
 
-local surfaces = require("scripts.razi_enemy_surfaces")
+local surfaces = require("scripts.enemies.surfaces")
 local changed = surfaces.apply()
 table.sort(changed)
 check(#changed == 2 and changed[1] == "nauvis" and changed[2] == "terrapalus", "Nauvis and Terrapalus are changed: " .. table.concat(changed, ","))

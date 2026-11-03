@@ -56,11 +56,11 @@ local map={
 }
 rawset(_G,"data",{raw=map})
 rawset(_G,"log",function()end)
-package.loaded["scripts.galactic_catalog"]={system=function(name)
+package.loaded["lib.galactic_catalog"]={system=function(name)
   if name=="nauvis" or name=="muluna" then return "calidus" end
   return "unassigned"
 end}
-package.loaded["scripts.razi_asteroid_difficulty"]=nil
+package.loaded["lib.difficulty.asteroids"]=nil
 package.loaded["prototypes.world.asteroids.modded_asteroid_distribution"]=nil
 local distribution=require("prototypes.world.asteroids.modded_asteroid_distribution")
 local function def(route,name)

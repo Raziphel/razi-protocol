@@ -2,8 +2,8 @@
 -- and the rocket launch cost of each level.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
-local source=require("scripts.razi_economy_difficulty")
-local resolver=require("scripts.razi_difficulty_presets")
+local source=require("prototypes.difficulty.economy")
+local resolver=require("lib.difficulty.presets")
 local function selected(mode,overrides)
  local startup={["razi-difficulty-preset"]={value=mode}}
  for name,value in pairs(resolver.baseline) do startup[name]={value=value} end

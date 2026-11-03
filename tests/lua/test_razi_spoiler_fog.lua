@@ -27,7 +27,7 @@ local force={index=3,technologies={
   ["razi-source-disabled"]=intentionally_disabled,
   ["razi-already-done"]=completed}}
 game={forces={[3]=force}}
-local fog=require("scripts.razi_spoiler_fog")
+local fog=require("scripts.journal.spoiler_fog")
 fog.sync_all()
 check(not stage.enabled and not stage.visible_when_disabled,
   "Unresearched future Razi tech must be concealed")

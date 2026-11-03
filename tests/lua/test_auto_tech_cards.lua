@@ -108,7 +108,7 @@ settings={startup={
   ["razi-auto-tech-cards"]={value=false}
 }}
 log=function(message) messages[#messages+1]=message end
-local Difficulty=require("scripts.razi_difficulty_presets")
+local Difficulty=require("lib.difficulty.presets")
 local auto=require("prototypes.industry.cards.auto_tech_cards")
 check(Difficulty.effective("razi-auto-tech-cards",false)==false,
   "Normal must leave automatic cards off")

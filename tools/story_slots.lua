@@ -5,19 +5,19 @@
 --
 -- Run it from the repository root. It reads the ids from the scripts that
 -- show the text (quests, chapters, records, projects, welcome, Convergence)
--- and the slot kinds from scripts/razi_story_slots.lua. It never reads a
+-- and the slot kinds from scripts/story/slots.lua. It never reads a
 -- locale file: the list holds no text, only where text goes.
 -- tests/lua/test_story_slots.lua fails when docs/story-slots.md is out of date.
 package.path="./?.lua;./?/init.lua;"..package.path
 
-local slots=require("scripts.razi_story_slots")
-local defs=require("scripts.razi_journal_data")
+local slots=require("scripts.story.slots")
+local defs=require("scripts.journal.data")
 ---@type table[]
-local records=require("scripts.razi_journal_records")
-local briefs=require("scripts.razi_planet_briefs")
-local projects=require("scripts.razi_journal_projects")
-local welcome=require("scripts.razi_welcome")
-local convergence=require("scripts.razi_convergence")
+local records=require("scripts.story.records")
+local briefs=require("scripts.journal.planet_briefs")
+local projects=require("scripts.journal.projects")
+local welcome=require("scripts.story.welcome")
+local convergence=require("scripts.convergence.convergence")
 
 local M={}
 

@@ -25,7 +25,7 @@ force.technologies[starter.name]=starter
 force.technologies[reached.name]=reached
 for _,tech in pairs(force.technologies) do tech.force=force end
 game={tick=0,forces={[7]=force}}
-local fog=require("scripts.razi_spoiler_fog")
+local fog=require("scripts.journal.spoiler_fog")
 check(fog.is_rubia_placeholder(phantom),"Rubia placeholder prefix is not detected")
 check(not fog.is_rubia_placeholder(original),"Rubia's real tech is not a ? marker")
 fog.sync_all()

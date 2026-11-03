@@ -1,11 +1,11 @@
 ---@diagnostic disable: unnecessary-assert, param-type-mismatch, need-check-nil
--- The storyline switch (scripts/razi_story.lua): with the story off nothing
+-- The storyline switch (lib/story.lua): with the story off nothing
 -- story-related is created, called or shown, and the mechanics still work.
 -- With the story on the original behaviour is unchanged.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
 
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 check(story.enabled()==false,"The story must ship switched off")
 check(#story.records()==0,"No archive records while the story is off")
 -- Notices are no-ops even without any game state.
@@ -22,8 +22,8 @@ local W=require("tests.lua.journal_window")
 local ctx=W.setup()
 -- The journal loads the records and the notices either way (Factorio forbids
 -- require() in events); the switch and writer mode decide what a player sees.
-check(package.loaded["scripts.razi_story_dispatch"]~=nil
-  and package.loaded["scripts.razi_journal_records"]~=nil,
+check(package.loaded["scripts.story.dispatch"]~=nil
+  and package.loaded["scripts.story.records"]~=nil,
   "Story modules must be loaded even while the story is off")
 local projects,journal,force=ctx.projects,ctx.journal,ctx.force
 local function open_everything()
@@ -105,7 +105,7 @@ local function defined(section,key)
   local nextsection=locale:find("\n%[",start+1) or #locale
   return locale:sub(start,nextsection):find("\n"..key.."=",1,true)~=nil
 end
-for _,path in ipairs({"scripts/razi_welcome.lua","scripts/razi_convergence.lua"}) do
+for _,path in ipairs({"scripts/story/welcome.lua","scripts/convergence/convergence.lua"}) do
   local source=read(path)
   for section,key in source:gmatch('"(razi%-welcome%-plain)%.([%w%-]+)"') do
     check(defined(section,key),path..": missing plain key "..section.."."..key)
@@ -125,18 +125,18 @@ end
 -- Shipping with the story on loads razi_story_dispatch from inside the quest
 -- data module's require chain; that must not recurse.
 do
-  local names={"scripts.razi_story","scripts.razi_story_dispatch",
-    "scripts.razi_journal_data","scripts.razi_journal_records"}
+  local names={"lib.story","scripts.story.dispatch",
+    "scripts.journal.data","scripts.story.records"}
   local saved={}
   for _,name in ipairs(names) do saved[name]=package.loaded[name];package.loaded[name]=nil end
-  local source=assert(io.open("scripts/razi_story.lua","r")):read("*a")
+  local source=assert(io.open("lib/story.lua","r")):read("*a")
   local patched,count=source:gsub("local ENABLED=false","local ENABLED=true")
   check(count==1,"Story switch declaration not found")
-  package.preload["scripts.razi_story"]=assert(load(patched,"@scripts/razi_story.lua"))
-  local ok,loaded=pcall(require,"scripts.razi_journal_data")
-  package.preload["scripts.razi_story"]=nil
+  package.preload["lib.story"]=assert(load(patched,"@lib/story.lua"))
+  local ok,loaded=pcall(require,"scripts.journal.data")
+  package.preload["lib.story"]=nil
   ---@type table
-  local fresh=package.loaded["scripts.razi_story"]
+  local fresh=package.loaded["lib.story"]
   ---@type table
   local title=ok and loaded.quest_title(loaded.by_id["first-signal"]) or {}
   for _,name in ipairs(names) do package.loaded[name]=saved[name] end

@@ -2,8 +2,8 @@
 -- are unknown until the source mod exposes an official telemetry API.
 local M={}
 local L=function(name,...) return {"razi-ops."..name,...} end
-local runtime=require("scripts.galactic_dyson_runtime")
-local marks=require("scripts.razi_journal_marks")
+local runtime=require("scripts.dyson.runtime")
+local marks=require("scripts.journal.marks")
 M.stages={
  {"planet-discovery-sunorbit","dyson-outer"},
  {"slp-solar-system-sun2","dyson-inner"},

@@ -4,7 +4,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 ---@type table<string,any>
-local P=require("scripts.razi_difficulty_presets")
+local P=require("lib.difficulty.presets")
 
 -- Collect the real declarations from settings.lua.
 ---@type table<string,any>

@@ -2,7 +2,7 @@
 -- and the interplanetary exchanges. Missing settings (including the small
 -- Lua fixture environment) use the balanced behavior rather than silently
 -- disabling progression.
-local difficulty = require("scripts.razi_difficulty_presets")
+local difficulty = require("lib.difficulty.presets")
 local M = {}
 function M.current()
   local value = difficulty.effective("razi-planetary-interdependence",

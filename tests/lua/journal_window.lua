@@ -104,10 +104,10 @@ end
 function M.setup()
   local ctx={}
   local created={}
-  local journal=require("scripts.razi_journal")
-  local defs=require("scripts.razi_journal_data")
+  local journal=require("scripts.journal.journal")
+  local defs=require("scripts.journal.data")
   ctx.journal,ctx.defs=journal,defs
-  ctx.projects=require("scripts.razi_journal_projects")
+  ctx.projects=require("scripts.journal.projects")
   local force={name="player",index=1,technologies={},
     get_entity_count=function() return 0 end,
     find_entities_filtered=function() return {} end,

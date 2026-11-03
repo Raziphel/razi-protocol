@@ -1,6 +1,6 @@
 -- Asteroid spawn profiles for Razi's routes and belt crossings.
 local M = {}
-local difficulty=require("scripts.razi_difficulty_presets")
+local difficulty=require("lib.difficulty.presets")
 local function preference(name,default)
   return difficulty.effective(name,default)
 end

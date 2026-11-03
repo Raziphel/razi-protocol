@@ -2,8 +2,8 @@
 -- Read-only quest progression and missing-content safety regression.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local defs=require("scripts.razi_journal_data")
-local M=require("scripts.razi_journal")
+local defs=require("scripts.journal.data")
+local M=require("scripts.journal.journal")
 check(#defs.chapters==19,"Nineteen expedition chapters expected")
 check(#defs.quests==230,"Protocol Codex must include 230 source-backed expedition milestones")
 local seen={}
@@ -199,10 +199,10 @@ check(M.state(force,defs.by_id["igrys"],context)=="complete",
   "Side-world quest should complete from the real installed unlock research")
 local a,b=M.unlocked_records(force,context) -- luacheck: ignore 411
 check(a==0 and b==0,"The Archive must be empty while the story is off")
-local story=require("scripts.razi_story")
+local story=require("lib.story")
 story.configure(true)
 a,b=M.unlocked_records(force,context)
-check(b==#require("scripts.razi_journal_records") and a>=0,
+check(b==#require("scripts.story.records") and a>=0,
   "Recovered transmission count mismatch")
 story.configure(false)
 check(not M.show_in_filter(force,defs.by_id["igrys"],"ready",context)
@@ -262,12 +262,12 @@ check(M.complete(force,boss,ctx),"Native boss victory not detected")
 check(not M.complete(force,defs.by_id["nexus-watcher"],ctx),
   "One boss victory should not complete its whole circle")
 check(calls==1,"Repeated quest status must reuse the snapshot")
-check(require("scripts.razi_nexus_trials").open_codex(
+check(require("scripts.compatibility.nexus-bosses.trials").open_codex(
   {index=42},"arachnid-queen"),"Native codex cannot open")
 check(calls==2,"Codex must open only on explicit user interaction")
 rawset(_G,"remote",nil)
 
-local weather=require("scripts.razi_weather_guide")
+local weather=require("scripts.journal.weather_guide")
 rawset(_G,"script",{active_mods={
   ["celestial-weather-additions-updated"]="1.3.1"
 }})

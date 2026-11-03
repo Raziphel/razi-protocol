@@ -1,17 +1,17 @@
 -- Project dashboards share the Expedition Journal window.
 -- Research, receivers, shipments and victory remain owned by source systems.
 local M={}
-local dyson=require("scripts.galactic_dyson")
-local convergence=require("scripts.razi_convergence")
-local dyson_runtime=require("scripts.galactic_dyson_runtime")
-local icons=require("scripts.razi_journal_icons")
-local marks=require("scripts.razi_journal_marks")
-local story=require("scripts.razi_story")
+local dyson=require("scripts.dyson.dyson")
+local convergence=require("scripts.convergence.convergence")
+local dyson_runtime=require("scripts.dyson.runtime")
+local icons=require("scripts.journal.icons")
+local marks=require("scripts.journal.marks")
+local story=require("lib.story")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
-local objectives=require("scripts.razi_journal_data")
-local platform_projects=require("scripts.razi_platform_projects")
-local great_projects=require("scripts.razi_great_projects")
-local nexus_trials=require("scripts.razi_nexus_trials")
+local objectives=require("scripts.journal.data")
+local platform_projects=require("scripts.projects.platform_projects")
+local great_projects=require("scripts.projects.great_projects")
+local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")
 local quest_by_technology={}
 for _,quest in ipairs(objectives.quests or {}) do
   if quest.tech and not quest.convergence and

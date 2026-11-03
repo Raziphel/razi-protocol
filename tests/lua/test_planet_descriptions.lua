@@ -19,7 +19,7 @@ local locations = {
 }
 rawset(_G, "data", {raw = {planet = planet, ["space-location"] = locations}})
 package.loaded["prototypes.world.systems.planet_descriptions"] = nil
-local story = require("scripts.razi_story")
+local story = require("lib.story")
 local descriptions = require("prototypes.world.systems.planet_descriptions")
 
 -- The briefings and headings are story text: the story is off by default, and

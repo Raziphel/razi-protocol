@@ -1,7 +1,7 @@
 -- Exclusive endgame policy: opt-outs, foreign native wins and migration.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(actual,why) if not actual then error(why,2) end end
-local guard=require("scripts.razi_victory_guard")
+local guard=require("scripts.convergence.victory_guard")
 local state={}
 local issued={}
 local loglines={}

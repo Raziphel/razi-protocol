@@ -93,7 +93,7 @@ local function researched(force, name)
 	return force.technologies[name] and force.technologies[name].researched
 end
 
-local M = require("scripts.razi_migration_3")
+local M = require("scripts.migration.migration_3")
 
 -- The transceiver chain: its new ancestors come with it.
 do

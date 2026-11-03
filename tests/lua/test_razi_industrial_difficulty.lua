@@ -4,7 +4,7 @@ package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 rawset(_G,"log",function() end)
 local engine=require("prototypes.difficulty.razi_industrial_difficulty")
-local resolver=require("scripts.razi_difficulty_presets")
+local resolver=require("lib.difficulty.presets")
 local function selected(mode,overrides)
  local startup={["razi-difficulty-preset"]={value=mode}}
  for name,value in pairs(resolver.baseline) do startup[name]={value=value} end

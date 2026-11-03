@@ -143,7 +143,7 @@ end
 function M.data_final_fixes()
   -- Off keeps the source unlocks; Hard and Nightmare turn this on by
   -- themselves. An undeclared setting keeps the older default (apply).
-  local enabled=require("scripts.razi_difficulty_presets")
+  local enabled=require("lib.difficulty.presets")
     .effective("razi-distributed-technology",true)
   if enabled==false then return end
   local raw=data.raw

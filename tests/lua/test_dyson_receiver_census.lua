@@ -1,6 +1,6 @@
 -- Stated physical data must remain explicitly unknown without a
 -- documented source-mod satellite and energy telemetry API.
-local runtime=require("scripts.galactic_dyson_runtime")
+local runtime=require("scripts.dyson.runtime")
 local function ok(v,message) if not v then error(message,2) end end
 local items={
  ["ds-energy-loader-mk1"]={place_result={name="source-energy-relay"}},
