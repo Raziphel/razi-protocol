@@ -266,3 +266,6 @@ require("prototypes.industry.cards.auto_tech_cards").data_final_fixes()
 
 -- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
 require("prototypes.fixes.init").data_final_fixes()
+
+-- The biochamber stays needed: after the repairs, which see the categories every mod left on the plant.
+require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
