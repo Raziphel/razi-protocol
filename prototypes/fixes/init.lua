@@ -26,6 +26,7 @@ local repairs = {
 	require("prototypes.fixes.planetaris-arig.rail_support_description"),
 	require("prototypes.fixes.RenaiTransportation.thrower_ranges"),
 	require("prototypes.fixes.planet-muluna.burner_roboport_minable"),
+	require("prototypes.fixes.Mini_Trains.entity_data_items"),
 	require("prototypes.fixes.corrundum.bioflux_stack"),
 }
 

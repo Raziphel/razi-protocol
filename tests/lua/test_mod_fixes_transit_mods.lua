@@ -232,3 +232,32 @@ check(logged("takes no passengers") == 2, "The repeated run touched the bosses a
 raw = fresh()
 boss_spidertrons.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without spider vehicles")
+
+-- Mini_Trains entity_data_items
+local entity_data_items = require("prototypes.fixes.Mini_Trains.entity_data_items")
+raw = fresh()
+raw.item = {
+	["mini-locomotive"] = {type = "item", name = "mini-locomotive", stack_size = 5},
+	["mini-cargo-wagon"] = {type = "item", name = "mini-cargo-wagon", stack_size = 5},
+	["mini-fluid-wagon"] = {type = "item", name = "mini-fluid-wagon", stack_size = 5},
+	["locomotive"] = {type = "item", name = "locomotive", stack_size = 5},
+}
+raw["item-with-entity-data"] = {["mini-fluid-wagon"] = {type = "item-with-entity-data", name = "mini-fluid-wagon", stack_size = 1}}
+entity_data_items.data_final_fixes()
+check(raw.item["mini-locomotive"] == nil and raw.item["mini-cargo-wagon"] == nil, "The items stayed plain")
+check(raw["item-with-entity-data"]["mini-locomotive"].type == "item-with-entity-data"
+	and raw["item-with-entity-data"]["mini-locomotive"].stack_size == 5, "The locomotive did not move with its fields")
+check(raw["item-with-entity-data"]["mini-cargo-wagon"].type == "item-with-entity-data", "The cargo wagon did not move")
+check(raw.item["mini-fluid-wagon"] ~= nil and raw["item-with-entity-data"]["mini-fluid-wagon"].stack_size == 1,
+	"An item that already exists as item-with-entity-data was replaced")
+check(raw.item["locomotive"] ~= nil, "Another item was moved")
+check(logged("is an item-with-entity-data") == 2 and logs[1]:find("^razi%-protocol: "), "Expected one line for each of the two items that moved")
+entity_data_items.data_final_fixes()
+check(logged("is an item-with-entity-data") == 2, "The repeated run moved the items again")
+raw = fresh()
+raw.item = {["mini-locomotive"] = {type = "item", name = "mini-locomotive"}}
+entity_data_items.data_final_fixes()
+check(raw.item["mini-locomotive"] ~= nil and #logs == 0, "An item moved without the table of item-with-entity-data")
+raw = fresh()
+entity_data_items.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without items")
