@@ -310,3 +310,34 @@ check(#logs == 1, "The repeated run touched the lane splitters again")
 raw = fresh()
 hidden_splitters.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without lane splitters")
+
+-- minimalist-rails hidden_poles
+local hidden_poles = require("prototypes.fixes.minimalist-rails.hidden_poles")
+raw = fresh()
+raw["damage-type"] = {physical = {}, fire = {}}
+raw["electric-pole"] = {
+	["hidden-rail-pole"] = {corpse = "small-electric-pole-remnants", dying_explosion = "small-electric-pole-explosion",
+		flags = {"not-on-map"}, resistances = {{type = "fire", percent = 50}}},
+	["hidden-rail-pole-invisible"] = {flags = {"not-repairable"}, resistances = {{type = "physical", percent = 100}, {type = "fire", percent = 100}}},
+	["small-electric-pole"] = {corpse = "small-electric-pole-remnants"},
+}
+hidden_poles.data_final_fixes()
+---@type any
+local pole = raw["electric-pole"]["hidden-rail-pole"]
+check(pole.corpse == nil and pole.dying_explosion == nil, "The pole still leaves a corpse or an explosion")
+check(#pole.flags == 2 and pole.flags[1] == "not-on-map" and pole.flags[2] == "not-repairable", "The pole did not get the flag next to its own")
+check(#pole.resistances == 2, "The pole has a resistance for each damage type only once")
+for _, resistance in ipairs(pole.resistances) do
+	check(resistance.percent == 100 and raw["damage-type"][resistance.type], "A resistance is not 100 % of a damage type")
+end
+check(raw["electric-pole"]["small-electric-pole"].corpse ~= nil, "The small electric pole was changed")
+check(logged("is indestructible, without corpse") == 1 and logs[1]:find("^razi%-protocol: hidden%-rail%-pole "), "Expected one line, for the pole that was destructible")
+hidden_poles.data_final_fixes()
+check(#logs == 1 and #pole.flags == 2, "The repeated run touched the poles again")
+raw = fresh()
+raw["electric-pole"] = {}
+hidden_poles.data_final_fixes()
+check(#logs == 0, "Something changed without the poles")
+raw = fresh()
+hidden_poles.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without electric poles")
