@@ -15,6 +15,7 @@ local ranks = { open = 0, closed = 1, strict = 2 }
 local entries = {
 	{ level = "closed", run = require("prototypes.balance.plasma_crafter.fluoroketone_catalyst").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.catalysts").data_final_fixes },
+	{ level = "closed", run = require("prototypes.balance.common.container_pairs").data_final_fixes },
 }
 
 function resource_loops.level()
