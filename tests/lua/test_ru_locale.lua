@@ -2,7 +2,7 @@
 -- story on or in writer mode, and authored text will replace it; its ru comes
 -- after that. The list comes from story.text() calls in
 -- scripts/journal/*.lua, scripts/story/corporate.lua, scripts/story/records.lua,
--- scripts/convergence/convergence.lua and scripts/story/welcome.lua (project contexts
+-- scripts/convergence/convergence.lua, panel.lua and scripts/story/welcome.lua (project contexts
 -- are journal-ui keys, the Convergence slots razi-ops keys), plus the archive
 -- notices of scripts/story/dispatch.lua, which run only with the story on.
 local STORY_REPLACED_PREFIXES={

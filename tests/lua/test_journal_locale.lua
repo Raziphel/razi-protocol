@@ -105,7 +105,7 @@ local function literal_keys()
     .."scripts/journal/projects.lua scripts/journal/recipe_preview.lua scripts/journal/salvage.lua "
     .."scripts/journal/search_names.lua scripts/journal/systems.lua scripts/journal/themes.lua "
     .."scripts/story/corporate.lua scripts/story/records.lua scripts/convergence/convergence.lua "
-    .."scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
+    .."scripts/convergence/api.lua scripts/convergence/panel.lua scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
     .."scripts/story/dispatch.lua scripts/story/slots.lua"))
   for path in handle:lines() do
     local source=read(path)

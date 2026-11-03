@@ -28,7 +28,7 @@ local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/act
   .."scripts/journal/recipe_preview.lua scripts/journal/salvage.lua scripts/journal/search_names.lua "
   .."scripts/journal/systems.lua scripts/journal/themes.lua scripts/story/corporate.lua "
   .."scripts/story/records.lua scripts/dyson/dyson.lua scripts/convergence/convergence.lua "
-  .."scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
+  .."scripts/convergence/api.lua scripts/convergence/panel.lua scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
   .."scripts/story/dispatch.lua scripts/story/slots.lua "
   .."locale/en/razi_journal*.cfg locale/en/galactic_operations.cfg "
   .."locale/en/razi_story_off.cfg locale/en/razi_audit.cfg"))

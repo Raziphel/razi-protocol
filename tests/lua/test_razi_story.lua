@@ -105,7 +105,8 @@ local function defined(section,key)
   local nextsection=locale:find("\n%[",start+1) or #locale
   return locale:sub(start,nextsection):find("\n"..key.."=",1,true)~=nil
 end
-for _,path in ipairs({"scripts/story/welcome.lua","scripts/convergence/convergence.lua"}) do
+for _,path in ipairs({"scripts/story/welcome.lua","scripts/convergence/convergence.lua",
+  "scripts/convergence/panel.lua"}) do
   local source=read(path)
   for section,key in source:gmatch('"(razi%-welcome%-plain)%.([%w%-]+)"') do
     check(defined(section,key),path..": missing plain key "..section.."."..key)
