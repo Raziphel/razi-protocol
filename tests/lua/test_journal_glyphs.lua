@@ -20,6 +20,7 @@ local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/act
   .."scripts/journal/tracker.lua scripts/journal/archive_view.lua "
   .."scripts/journal/dossier.lua scripts/journal/chapter_cover.lua "
   .."scripts/journal/navigator.lua scripts/journal/window.lua "
+  .."scripts/journal/reader_update.lua "
   .."scripts/journal/data.lua scripts/journal/expansion.lua scripts/journal/frontier.lua "
   .."scripts/journal/guidance.lua scripts/journal/icons.lua scripts/journal/industry.lua "
   .."scripts/journal/marks.lua scripts/journal/objectives.lua scripts/journal/projects.lua "
