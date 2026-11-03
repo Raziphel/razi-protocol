@@ -21,6 +21,24 @@ See [Releases in the README](README.md#releases):
 3. Change the English locale, translations and tests together with the code.
 4. Run the tests. For changes to prototypes, the tech tree, the starmap or the UI, also load the game with the full mod set and an existing save.
 
+## Where a file goes
+
+| Folder | What goes there |
+| --- | --- |
+| `prototypes/fixes/<mod>/` | A mistake of another mod: a crash, a wrong value, a typo, missing data. `common/` when it spans several mods. The order is in `prototypes/fixes/init.lua` |
+| `prototypes/compatibility/<mod>/` | Mods working together as they are meant to: homes of enemies, cards in the labs of other mods, gates |
+| `prototypes/balance/<mod>/` | Amounts, prices, productivity. A recipe loop goes under `razi-resource-loops` (`prototypes/balance/resource_loops.lua`) |
+| `prototypes/world/`, `technology/`, `industry/`, `difficulty/`, `ui/` | What this mod adds itself |
+| `scripts/<topic>/` | The control stage, by topic. `scripts/compatibility/<mod>/` for another mod. Handlers register in `scripts/events/` |
+| `lib/` | Read by both the data and the control stage |
+| `settings/` | Settings, one file per group |
+
+`<mod>` is the name from the `info.json` of that mod. `control.lua`, `settings.lua` and the `data*.lua` files hold only the order of calls.
+
+A fix says what is broken and where, with `file:line` of the other mod. If the author did it on purpose, it is a balance decision of this mod: it goes to `balance/`, and its comment says so. A name that replaces a translated one keeps the original as a fallback, so other languages do not fall back to English.
+
+Past about 500 lines a file is split by meaning. Moves and splits go in their own commits, without changes to the logic, and a data dump before and after has to be identical.
+
 ## Pull requests
 
 - The title is a conventional commit.
