@@ -52,5 +52,52 @@ check(raw["loader-1x1"]["hidden-loader"].respect_insert_limits == true, "loader-
 check(logged("respects the insertion limit") == 3, "Expected one line for each of the three changed loaders, got " .. logged("respects the insertion limit"))
 check(logs[1]:find("^razi%-protocol: "), "The line does not start with the mod name")
 
+-- roboport_mode_names
+raw = fresh()
+local function roboport(name, localised_name, localised_description)
+  return {type = "roboport", name = name, localised_name = localised_name, localised_description = localised_description,
+    logistics_radius = 25, construction_radius = 55}
+end
+local function variant(name, mode)
+  return {type = "roboport", name = name .. "-" .. mode .. "-mode",
+    localised_name = {"entity-name.kr-" .. mode .. "-roboport", {"entity-name." .. name}},
+    localised_description = {"entity-description." .. name},
+    logistics_radius = mode == "construction" and 0 or 31, construction_radius = mode == "construction" and 69 or 0}
+end
+raw.roboport = {}
+for _, name in ipairs({"roboport", "bio-roboport"}) do
+  raw.roboport[name] = roboport(name)
+  for _, mode in ipairs({"logistic", "construction"}) do
+    raw.roboport[name .. "-" .. mode .. "-mode"] = variant(name, mode)
+  end
+end
+raw.roboport["bio-roboport"].localised_name = {"", "Bioluminescent ", "x"}
+raw.roboport["bio-roboport"].localised_description = {"entity-description.bio"}
+raw.roboport["custom-roboport"] = roboport("custom-roboport", {"entity-name.shown"})
+raw.roboport["custom-roboport-logistic-mode"] = variant("custom-roboport", "logistic")
+raw.roboport["custom-roboport-logistic-mode"].localised_name = {"entity-name.chosen-by-the-mod"}
+raw.roboport["custom-roboport-logistic-mode"].localised_description = {"entity-description.chosen-by-the-mod"}
+fixes.data_final_fixes()
+---@type any
+local named = raw.roboport["bio-roboport-logistic-mode"]
+check(named.localised_name[1] == "entity-name.kr-logistic-roboport" and named.localised_name[2][1] == "",
+  "The mode did not take the shown name of its roboport")
+check(raw.roboport["bio-roboport-construction-mode"].localised_description[1] == "entity-description.bio",
+  "The mode did not take the description of its roboport")
+---@type any
+local plain = raw.roboport["roboport-logistic-mode"]
+check(plain.localised_name[2][1] == "entity-name.roboport", "A roboport without a name was renamed")
+check(plain.localised_description[1] == "?" and plain.localised_description[2][1] == "entity-description.roboport"
+  and plain.localised_description[3] == "", "A roboport without a description key did not fall back to nothing")
+check(raw.roboport["custom-roboport-logistic-mode"].localised_name[1] == "entity-name.chosen-by-the-mod",
+  "A name that the source mod did not write was changed")
+check(raw.roboport["custom-roboport-logistic-mode"].localised_description[1] == "entity-description.chosen-by-the-mod",
+  "A description that the source mod did not write was changed")
+check(logged("takes the shown name and description") == 4, "Expected a line for each of the four modes, got "
+  .. logged("takes the shown name and description"))
+logs = {}
+fixes.data_final_fixes()
+check(logged("takes the shown name and description") == 0, "The repeated run touched the modes again")
+
 
 print("test_mod_fixes_krastorio2: ok")

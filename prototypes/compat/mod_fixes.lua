@@ -6,6 +6,7 @@
 local mod_fixes = {}
 
 local repairs = {
+	require("prototypes.compat.mod_fixes.krastorio2_roboport_mode_names"),
 	require("prototypes.compat.mod_fixes.krastorio2_loader_insert_limits"),
 }
 
