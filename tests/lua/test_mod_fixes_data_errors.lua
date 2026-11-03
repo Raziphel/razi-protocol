@@ -55,6 +55,29 @@ end
 fixes.data_final_fixes()
 check(#logs == 0, "A repair logged on empty prototype tables")
 
+-- k2so-cubium-compatibility-fork galvanization_notes
+local galvanization_notes = require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes")
+raw = fresh()
+raw.recipe = {["galvanization-science-pack-cubic"] = {results = {
+	{type = "item", name = "galvanization-science-pack", amount = 1},
+	{type = "item", name = "kr-note-1", amount = 1000},
+	{type = "item", name = "dormant-microcube", amount = 1},
+}}}
+galvanization_notes.data_final_fixes()
+---@type any
+local results = raw.recipe["galvanization-science-pack-cubic"].results
+check(#results == 2 and results[1].name == "galvanization-science-pack" and results[2].name == "dormant-microcube", "The notes were not removed, or something else was")
+check(logged("no longer returns kr-note-1") == 1 and logs[1]:find("^razi%-protocol: "), "Expected one line that starts with the mod name")
+galvanization_notes.data_final_fixes()
+check(logged("no longer returns") == 1, "The repeated run touched the recipe again")
+raw.recipe["galvanization-science-pack-cubic"].results = {{type = "item", name = "kr-note-1", amount = 5}}
+galvanization_notes.data_final_fixes()
+check(#raw.recipe["galvanization-science-pack-cubic"].results == 1, "A different number of notes was removed")
+raw = fresh()
+raw.recipe = {}
+galvanization_notes.data_final_fixes()
+check(#logs == 0, "Something changed without the recipe")
+
 -- apia nutrients_refresh
 local nutrients_refresh = require("prototypes.fixes.apia.nutrients_refresh")
 raw = fresh()

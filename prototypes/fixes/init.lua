@@ -15,6 +15,7 @@ local repairs = {
 	require("prototypes.fixes.Krastorio2.construction_roboport"),
 	require("prototypes.fixes.Krastorio2.artillery_range"),
 	require("prototypes.fixes.apia.nutrients_refresh"),
+	require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes"),
 }
 
 function mod_fixes.data_final_fixes()
