@@ -8,6 +8,7 @@ local mod_fixes = {}
 local repairs = {
 	require("prototypes.fixes.Krastorio2.roboport_mode_names"),
 	require("prototypes.fixes.Krastorio2.loader_insert_limits"),
+	require("prototypes.fixes.planetaris-arig.surface_conditions"),
 	require("prototypes.fixes.Krastorio2-spaced-out.void_crushing"),
 	require("prototypes.fixes.Krastorio2-spaced-out.piercing_shotgun"),
 	require("prototypes.fixes.Krastorio2.construction_roboport"),
