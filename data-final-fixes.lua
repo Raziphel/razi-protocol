@@ -1,5 +1,4 @@
 require("util")
-local Collections = require("__razi_lib__/lib/collections")
 
 require("prototypes.fixes.common.removed_fuel_category").data_final_fixes()
 require("prototypes.industry.cards.lab_cards").data_final_fixes()
@@ -31,35 +30,13 @@ require("prototypes.fixes.common.furnace_result_slots").data_final_fixes()
 require("prototypes.fixes.moon-eneas.eneas_gantry").data_final_fixes()
 require("prototypes.fixes.common.variant_surface_conditions").data_final_fixes()
 
--- Old interstellar shortcuts cut across the revised map.
--- Muria's routes are handled by seven_systems and route_reconcile.
-deleteRoute("crucible-maraxsis")
-deleteRoute("crucible-orbit-ribbonia")
-deleteRoute("moshine-ribbonia")
-deleteRoute("igrys-orbit-ribbonia")
-
-deleteRoutesBetween("linox-planet_linox", "ribbonia")
-deleteRoutesBetween("linox-planet_linox", "rubia")
+-- Old interstellar shortcuts go before the route reconciler runs.
+require("prototypes.world.routes.legacy_routes").data_final_fixes()
 
 -- Razi's own route network: planned routes, lengths, asteroid profiles and danger levels.
 require("prototypes.world.routes.route_reconcile").data_final_fixes()
 
-local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
-if ribbonia then
-	ribbonia.starmap_icon = "__ribbonia__/graphics/starmap/ribbonia2048.png"
-	ribbonia.starmap_icon_size = 2048
-end
-
-local default_sprites = data.raw["utility-sprites"] and data.raw["utility-sprites"]["default"]
-local starmap_star = default_sprites and default_sprites["starmap_star"]
-if starmap_star and starmap_star.layers then
-	for index = #starmap_star.layers, 1, -1 do
-		local layer = starmap_star.layers[index]
-		if layer and layer.filename == "__ribbonia__/graphics/starmap/ribbonia2048.png" then
-			table.remove(starmap_star.layers, index)
-		end
-	end
-end
+require("prototypes.fixes.ribbonia.ribbonia_starmap_icon").data_final_fixes()
 
 -- Additional planet mods join their star systems and local hubs. Runs after the route
 -- reconciler and before the layout, which positions the orbits they register.
@@ -153,19 +130,8 @@ require("prototypes.compatibility.common.outer_science_arrival_guard").data_fina
 -- All technology passes have run; report any cycle that is left and remove only the ones Athos owns.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair("after-all-razi-technology")
 
--- Planet packs frequently append their science inputs without checking whether
--- another compatibility pass already added the same pack. Duplicate lab inputs
--- are invalid in Factorio 2.1, so normalize them after every Razi compatibility
--- module has finished.
-for _, lab in pairs(data.raw.lab or {}) do
-	if lab.inputs then
-		local unique_inputs = {}
-		for _, input in ipairs(lab.inputs) do
-			Collections.append_unique(unique_inputs, input)
-		end
-		lab.inputs = unique_inputs
-	end
-end
+-- Duplicate lab inputs are normalized after every Razi compatibility module has finished.
+require("prototypes.fixes.common.lab_input_dedup").data_final_fixes()
 
 -- Recheck Abacayba's discovery gate after the late research passes; no cycles are introduced.
 require("prototypes.world.systems.abacayba_integration").gate()
