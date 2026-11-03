@@ -29,7 +29,7 @@ function surface.count_entities_filtered(q)
 end
 local force={index=1,platforms={}}
 game={planets={nauvis={surface=surface},fulgora={surface=surface}},surfaces={}}
-local m=require("scripts.razi_great_projects")
+local m=require("scripts.projects.great_projects")
 local start={valid=true,hub={valid=true},index=101,force=force,name="Beltwright",
   scheduled_for_deletion=0,weight=1250000,surface=surface,
   completed_trips=5,last_visited_space_location={name="asteroid-belt-inner-edge"},

@@ -9,8 +9,8 @@ local marks=require("scripts.journal.marks")
 local story=require("lib.story")
 -- Factorio prohibits require() inside GUI events; resolve this at control load.
 local objectives=require("scripts.journal.data")
-local platform_projects=require("scripts.razi_platform_projects")
-local great_projects=require("scripts.razi_great_projects")
+local platform_projects=require("scripts.projects.platform_projects")
+local great_projects=require("scripts.projects.great_projects")
 local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")
 local quest_by_technology={}
 for _,quest in ipairs(objectives.quests or {}) do

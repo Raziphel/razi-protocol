@@ -1,7 +1,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(v,msg) if not v then error(msg,2) end end
 storage={}
-local m=require("scripts.razi_platform_projects")
+local m=require("scripts.projects.platform_projects")
 local f={index=1,platforms={}}
 check(not m.snapshot(f).platform,"Empty force must not complete a project")
 local ghost={valid=true,hub=nil,force=f,name="Blueprint",scheduled_for_deletion=0,completed_trips=0}
