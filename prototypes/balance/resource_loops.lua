@@ -17,6 +17,7 @@ local entries = {
 	{ level = "closed", run = require("prototypes.balance.plasma_crafter.fluoroketone_catalyst").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.catalysts").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.container_pairs").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.secretas.fuel_liquefaction").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.shchierbin.crusher_productivity").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.skewer_planet_vesta.h2o_water").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.planet-crucible.hydrogen").data_final_fixes },
