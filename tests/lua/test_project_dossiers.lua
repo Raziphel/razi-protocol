@@ -2,8 +2,8 @@
 -- Read-only: no research, inventory or game state is modified.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,message) if not ok then error(message,2) end end
-local dyson=require("scripts.galactic_dyson")
-local runtime=require("scripts.galactic_dyson_runtime")
+local dyson=require("scripts.dyson.dyson")
+local runtime=require("scripts.dyson.runtime")
 local technology=dyson.stages[1][1]
 local force={technologies={
   [technology]={name=technology,enabled=false,researched=false,

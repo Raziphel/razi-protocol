@@ -1,9 +1,9 @@
 -- Project dashboards share the Expedition Journal window.
 -- Research, receivers, shipments and victory remain owned by source systems.
 local M={}
-local dyson=require("scripts.galactic_dyson")
+local dyson=require("scripts.dyson.dyson")
 local convergence=require("scripts.razi_convergence")
-local dyson_runtime=require("scripts.galactic_dyson_runtime")
+local dyson_runtime=require("scripts.dyson.runtime")
 local icons=require("scripts.razi_journal_icons")
 local marks=require("scripts.razi_journal_marks")
 local story=require("lib.story")

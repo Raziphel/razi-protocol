@@ -14,7 +14,7 @@ local function read(path)
   return text
 end
 
-local handle=assert(io.popen("ls scripts/razi_journal*.lua scripts/galactic_dyson.lua "
+local handle=assert(io.popen("ls scripts/razi_journal*.lua scripts/dyson/dyson.lua "
   .."scripts/razi_convergence*.lua scripts/razi_welcome.lua scripts/razi_story*.lua "
   .."locale/en/razi_journal*.cfg locale/en/galactic_operations.cfg "
   .."locale/en/razi_story_off.cfg locale/en/razi_audit.cfg"))

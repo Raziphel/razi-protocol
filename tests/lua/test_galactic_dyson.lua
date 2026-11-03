@@ -1,6 +1,6 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(x,m) if not x then error(m,2) end end
-local m=require("scripts.galactic_dyson")
+local m=require("scripts.dyson.dyson")
 local t={}
 for i,v in ipairs(m.stages) do
  t[v[1]]={researched=i<3,name=v[1],localised_name=v[1]}

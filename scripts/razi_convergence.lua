@@ -2,7 +2,7 @@
 -- This module is event/UI driven. No global platform or inventory scans.
 local M={}
 local defs=require("prototypes.technology.endgame.convergence")
-local dyson_runtime=require("scripts.galactic_dyson_runtime")
+local dyson_runtime=require("scripts.dyson.runtime")
 local galactic_catalog=require("lib.galactic_catalog")
 local deep_expedition=require("scripts.razi_deep_space_expedition")
 local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")

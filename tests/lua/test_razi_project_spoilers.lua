@@ -1,8 +1,8 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(v,msg) if not v then error(msg,2) end end
-for _,n in ipairs({"scripts.galactic_dyson",
+for _,n in ipairs({"scripts.dyson.dyson",
 "scripts.razi_convergence",
-"scripts.galactic_dyson_runtime","scripts.razi_journal_icons"}) do
+"scripts.dyson.runtime","scripts.razi_journal_icons"}) do
   package.loaded[n]={stages={}}
 end
 package.loaded["scripts.razi_journal_data"]={quests={},by_id={}}
