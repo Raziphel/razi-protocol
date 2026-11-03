@@ -6,7 +6,9 @@
 local mod_fixes = {}
 
 local repairs = {
+	require("prototypes.fixes.RenaiTransportation.hardcoded_localization"),
 	require("prototypes.fixes.Krastorio2.roboport_mode_names"),
+	require("prototypes.fixes.RenaiTransportation.recycling_hidden"),
 	require("prototypes.fixes.Krastorio2.loader_insert_limits"),
 	require("prototypes.fixes.planetaris-arig.surface_conditions"),
 	require("prototypes.fixes.Krastorio2-spaced-out.void_crushing"),
@@ -15,12 +17,19 @@ local repairs = {
 	require("prototypes.fixes.Krastorio2.construction_roboport"),
 	require("prototypes.fixes.Krastorio2.artillery_range"),
 	require("prototypes.fixes.apia.nutrients_refresh"),
+	require("prototypes.fixes.Big-Monsters.boss_spidertrons"),
+	require("prototypes.fixes.planetaris-dyes.refined_concrete"),
+	require("prototypes.fixes.minimalist-rails.hidden_poles"),
 	require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes"),
 	require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.upgrade_chain"),
 	require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority"),
+	require("prototypes.fixes.lane-balancers.hidden_splitters"),
 	require("prototypes.fixes.planet-muluna.hard_drive_time"),
 	require("prototypes.fixes.planetaris-arig.rail_support_description"),
+	require("prototypes.fixes.common.factoriopedia_enemies"),
+	require("prototypes.fixes.RenaiTransportation.thrower_ranges"),
 	require("prototypes.fixes.planet-muluna.burner_roboport_minable"),
+	require("prototypes.fixes.Mini_Trains.entity_data_items"),
 	require("prototypes.fixes.corrundum.bioflux_stack"),
 }
 
