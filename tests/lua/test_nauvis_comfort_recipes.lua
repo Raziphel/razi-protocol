@@ -47,8 +47,8 @@ local function setup()
 		items[name] = {name = name}
 	end
 	rawset(_G, "data", {raw = {recipe = recipes, item = items}})
-	package.loaded["prototypes.compat.nauvis_comfort_recipes"] = nil
-	return recipes, require("prototypes.compat.nauvis_comfort_recipes")
+	package.loaded["prototypes.balance.space-age.nauvis_comfort_recipes"] = nil
+	return recipes, require("prototypes.balance.space-age.nauvis_comfort_recipes")
 end
 
 local function find(list, name)
@@ -163,15 +163,15 @@ recipes["toolbelt-equipment-recycling"] = nil
 module.data_final_fixes()
 check(find(recipes["toolbelt-equipment"].ingredients, "low-density-structure"), "without the stack inserter the toolbelt equipment is changed")
 rawset(_G, "data", {raw = {}})
-package.loaded["prototypes.compat.nauvis_comfort_recipes"] = nil
-require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()
+package.loaded["prototypes.balance.space-age.nauvis_comfort_recipes"] = nil
+require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()
 
 -- It is wired in, after the last pass that adds recipes and before the menu pass.
 local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
 local battery = assert(source:find('require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()', 1, true))
-local pass = assert(source:find('require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()', 1, true))
+local pass = assert(source:find('require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()', 1, true))
 local menu = assert(source:find('require("prototypes.ui.crafting_navigation").data_final_fixes()', 1, true))
 check(battery < pass and pass < menu, "the pass runs after the late recipe passes and before the menu pass")
 

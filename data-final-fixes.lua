@@ -19,13 +19,13 @@ require("prototypes.fixes.maraxsis.maraxsis_k2so_collision").data_final_fixes()
 require("prototypes.fixes.maraxsis.maraxsis_trench_wind").data_final_fixes()
 require("prototypes.fixes.common.progression_polish").data_final_fixes()
 require("prototypes.compat.vibrant_discovery_guard").data_final_fixes()
-require("prototypes.compat.prototype_identity").data_final_fixes()
+require("prototypes.balance.common.prototype_identity").data_final_fixes()
 require("prototypes.fixes.common.prototype_sanity").data_final_fixes()
 require("prototypes.fixes.common.research_data_surfaces").data_final_fixes()
 require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
 require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compatibility.common.redundant_progression").data_final_fixes()
-require("prototypes.compat.water_loop").data_final_fixes()
+require("prototypes.balance.common.water_loop").data_final_fixes()
 require("prototypes.ui.logistics_cleanup").data_final_fixes()
 require("prototypes.fixes.common.furnace_result_slots").data_final_fixes()
 require("prototypes.fixes.moon-eneas.eneas_gantry").data_final_fixes()
@@ -260,7 +260,7 @@ require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 -- The stack inserter and the toolbelt equipment, which technology/nauvis_comforts.lua researches on Nauvis, are made of low density
 -- structure and plastic instead of Gleba's carbon fiber and jelly; their recycling and crushing return the same. After every pass that
 -- could copy these recipes, before the menu pass.
-require("prototypes.compat.nauvis_comfort_recipes").data_final_fixes()
+require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()
 
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
