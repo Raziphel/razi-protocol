@@ -13,10 +13,13 @@
 --   packs      science packs the mod adds that the path must not need
 --   reason     why the world is not woven (or why its packs are not)
 -- Woven worlds, with or without a mod of their own, are not listed unless a pack of theirs stays out.
--- Cerys and Dea Dia are woven (and so are Igrys, Foliax, Pelagos, Terra Palus, Shchierbin, Bellicos and the rest);
--- so is Ferrum, and the path may need its robotics pack, which the mod adds to research priced in Vulcanus, Fulgora and
--- Gleba science (the research Ferrum's discovery needs keeps it out: compat/ferrum_progression_guard.lua);
--- Secretas is a required dependency whose discovery and golden science are on the path anyway.
+-- Cerys is woven (and so are Igrys, Foliax, Pelagos, Terra Palus, Shchierbin, Bellicos and the rest);
+-- Dea Dia is not woven but stays on the path: the Nyxaris card takes its insulation and thermodynamic packs
+-- (prototypes/industry/cards/lab_cards.lua);
+-- Ferrum is woven, and the path may need its robotics pack, which the mod adds to research priced in Vulcanus, Fulgora
+-- and Gleba science (the research Ferrum's discovery needs keeps it out:
+-- prototypes/compatibility/planet-ferrum/ferrum_progression_guard.lua);
+-- Secretas is on the path through golden science, which the Beetlejuice card takes (lab_cards.lua).
 local M = {}
 
 M.final_technology = "razi-stable-intergalactic-singularity"
