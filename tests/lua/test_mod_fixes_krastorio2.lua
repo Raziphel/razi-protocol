@@ -136,5 +136,34 @@ local tech_effects = raw.technology["kr-tech"].effects
 check(#tech_effects == 1 and tech_effects[1].recipe == "kr-void-ice", "The effects of the removed recipe stayed")
 check(logged("removed void crushing recipe kr-void-bones") == 1 and logged("removed void crushing recipe") == 1,
   "Expected one line for the removed recipe")
+-- piercing_shotgun
+local function shell(projectile)
+  return {["piercing-shotgun-shell"] = {ammo_type = {action = {
+    {action_delivery = {type = "projectile", projectile = "shotgun-pellet"}},
+    {action_delivery = {type = "projectile", projectile = projectile}},
+  }}}}
+end
+raw = fresh()
+raw.ammo = shell("shotgun-pellet")
+raw.projectile = {["piercing-shotgun-pellet"] = {}}
+fixes.data_final_fixes()
+---@type any
+local actions = raw.ammo["piercing-shotgun-shell"].ammo_type.action
+check(actions[1].action_delivery.projectile == "piercing-shotgun-pellet" and actions[2].action_delivery.projectile == "piercing-shotgun-pellet",
+  "The shell still fires plain pellets")
+check(logged("fires piercing-shotgun-pellet") == 2, "Expected a line for each changed action")
+raw = fresh()
+raw.ammo = shell("custom-pellet")
+raw.projectile = {["piercing-shotgun-pellet"] = {}}
+fixes.data_final_fixes()
+check(raw.ammo["piercing-shotgun-shell"].ammo_type.action[2].action_delivery.projectile == "custom-pellet",
+  "A projectile the source mod did not write was changed")
+raw = fresh()
+raw.ammo = shell("shotgun-pellet")
+raw.projectile = {}
+fixes.data_final_fixes()
+check(raw.ammo["piercing-shotgun-shell"].ammo_type.action[1].action_delivery.projectile == "shotgun-pellet" and #logs == 0,
+  "The shell was changed although the piercing pellet does not exist")
+
 
 print("test_mod_fixes_krastorio2: ok")
