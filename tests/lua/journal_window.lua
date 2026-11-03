@@ -109,12 +109,20 @@ function M.setup()
   ctx.journal,ctx.defs=journal,defs
   ctx.projects=require("scripts.journal.projects")
   local force={name="player",index=1,technologies={},
-    get_entity_count=function() return 0 end,
+    -- As in the game, asking about an entity that does not exist is an error.
+    get_entity_count=function(name)
+      assert(prototypes.entity[name],"Unknown entity name: "..name)
+      return 0
+    end,
     find_entities_filtered=function() return {} end,
     platforms={},players={},connected_players={}}
   local technologies={}
   rawset(_G,"helpers",{is_valid_sprite_path=function() return true end})
-  rawset(_G,"prototypes",{item={},recipe={},technology=technologies})
+  -- The relay is the one entity that exists only while the storyline is on.
+  rawset(_G,"prototypes",{item={},recipe={},technology=technologies,
+    entity=setmetatable({},{__index=function(_,name)
+      return name~="razi-archive-relay" or nil
+    end})})
   for _,quest in ipairs(defs.quests) do
     if quest.tech then
       force.technologies[quest.tech]={name=quest.tech,researched=true,
@@ -182,6 +190,8 @@ function M.setup()
     -- recovered fragments are part of the page.
     local count,surfaces=force.get_entity_count,game.surfaces
     force.get_entity_count=function() return 3 end
+    local entities=prototypes.entity
+    prototypes.entity={["razi-archive-relay"]=true}
     game.surfaces={}
     for _,world in ipairs({"nauvis","vulcanus","gleba"}) do
       game.surfaces[#game.surfaces+1]={valid=true,planet={name=world},
@@ -190,6 +200,7 @@ function M.setup()
     p.view="projects";p.project="array"
     journal.draw(player);absorb()
     force.get_entity_count,game.surfaces=count,surfaces
+    prototypes.entity=entities
     storage.razi_great_projects=nil
     -- Convergence finale states: transmission running, then victory.
     p.view="projects";p.project="convergence"

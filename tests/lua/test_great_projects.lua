@@ -17,7 +17,8 @@ package.loaded["scripts.compatibility.orbital-cannon.catapult_network"]={
     }}}
   end
 }
-prototypes={entity={["orbital-cannon-launcher"]={type="assembling-machine"}}}
+prototypes={entity={["orbital-cannon-launcher"]={type="assembling-machine"},
+  ["razi-archive-relay"]={type="radar"}}}
 local surface={}
 local ark_qualification_queries=0
 function surface.count_entities_filtered(q)
@@ -102,6 +103,15 @@ end
 game.surfaces={relay("nauvis",100),relay("fulgora",100),relay("gleba",100)}
 check(select(1,m.array(force))==3 and m.recovered(force)==3,
   "Three powered systems unlock all three archive messages")
+-- With the storyline off the relay does not exist: nothing is asked, the
+-- recovered records stay.
+local relay_prototype=prototypes.entity["razi-archive-relay"]
+prototypes.entity["razi-archive-relay"]=nil
+check(select(1,m.array({index=2,platforms={},get_entity_count=function()
+  error("Unknown entity name")
+end}))==0,"The Archive Array must not ask about a relay that does not exist")
+check(m.recovered(force)==3,"Recovered records must survive")
+prototypes.entity["razi-archive-relay"]=relay_prototype
 game.surfaces={}
 check(m.recovered(force)==3,"Recovered stories survive relay removal")
 local destination_force={index=2,platforms={}}
