@@ -55,6 +55,26 @@ end
 fixes.data_final_fixes()
 check(#logs == 0, "A repair logged on empty prototype tables")
 
+-- planet-muluna hard_drive_time
+local hard_drive_time = require("prototypes.fixes.planet-muluna.hard_drive_time")
+raw = fresh()
+raw.recipe = {["muluna-basic-hard-drive"] = {energy_require = 5}}
+hard_drive_time.data_final_fixes()
+check(raw.recipe["muluna-basic-hard-drive"].energy_required == 5 and raw.recipe["muluna-basic-hard-drive"].energy_require == nil,
+	"The craft time was not moved to energy_required")
+check(logged("muluna-basic-hard-drive takes 5 s") == 1 and logs[1]:find("^razi%-protocol: "), "Expected one line that starts with the mod name")
+hard_drive_time.data_final_fixes()
+check(logged("takes 5 s") == 1, "The repeated run touched the recipe again")
+raw.recipe["muluna-basic-hard-drive"] = {energy_require = 5, energy_required = 2}
+hard_drive_time.data_final_fixes()
+check(raw.recipe["muluna-basic-hard-drive"].energy_required == 2, "A craft time that Muluna fixed was changed")
+raw.recipe["muluna-basic-hard-drive"] = {energy_require = 8}
+hard_drive_time.data_final_fixes()
+check(raw.recipe["muluna-basic-hard-drive"].energy_required == nil, "Another typo value was changed")
+raw = fresh()
+hard_drive_time.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without the recipe")
+
 -- slp-dyson-sphere-reworked-fork connector_priority
 local connector_priority = require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority")
 raw = fresh()
