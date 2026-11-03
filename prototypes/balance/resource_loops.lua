@@ -31,6 +31,7 @@ local entries = {
 	{ level = "closed", run = require("prototypes.balance.corrundum.sulfuric_acid").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.corrundum.dry_ice").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.Krastorio2.recycling_returns").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.common.productivity_caps").data_final_fixes },
 }
 
 function resource_loops.level()
