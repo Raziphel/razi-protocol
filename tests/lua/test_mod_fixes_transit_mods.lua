@@ -261,3 +261,52 @@ check(raw.item["mini-locomotive"] ~= nil and #logs == 0, "An item moved without 
 raw = fresh()
 entity_data_items.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without items")
+
+-- lane-balancers hidden_splitters
+local hidden_splitters = require("prototypes.fixes.lane-balancers.hidden_splitters")
+raw = fresh()
+raw["lane-splitter"] = {
+	["lane-splitter"] = {next_upgrade = "fast-lane-splitter"},
+	["fast-lane-splitter"] = {next_upgrade = "kr-advanced-lane-splitter"},
+	["kr-advanced-lane-splitter"] = {next_upgrade = "kr-superior-lane-splitter"},
+	["kr-superior-lane-splitter"] = {},
+	["plain-lane-splitter"] = {},
+}
+raw.item = {
+	["fast-splitter"] = {},
+	["kr-advanced-splitter"] = {hidden = true},
+	["kr-superior-splitter"] = {},
+	["splitter"] = {hidden = false},
+}
+raw.recipe = {
+	["lane-splitter"] = {ingredients = {{type = "item", name = "splitter", amount = 1}}, enabled = true},
+	["fast-lane-splitter"] = {ingredients = {{type = "item", name = "fast-splitter", amount = 1}}},
+	["kr-advanced-lane-splitter"] = {ingredients = {{type = "item", name = "kr-advanced-splitter", amount = 1}}},
+	["kr-superior-lane-splitter"] = {ingredients = {{type = "item", name = "kr-superior-splitter", amount = 1}, {type = "item", name = "iron-plate", amount = 1}}},
+}
+raw.technology = {
+	["logistics-4"] = {effects = {
+		{type = "unlock-recipe", recipe = "kr-advanced-lane-splitter"},
+		{type = "unlock-recipe", recipe = "kr-superior-lane-splitter"},
+		{type = "give-item", item = "kr-advanced-lane-splitter"},
+	}},
+	["logistics-5"] = {effects = {{type = "unlock-recipe", recipe = "kr-advanced-lane-splitter"}}},
+	["no-effects"] = {},
+}
+hidden_splitters.data_final_fixes()
+check(raw.recipe["kr-advanced-lane-splitter"].hidden == true and raw.recipe["kr-advanced-lane-splitter"].enabled == false,
+	"The lane splitter of the hidden splitter stayed visible")
+check(raw.recipe["lane-splitter"].hidden == nil and raw.recipe["fast-lane-splitter"].hidden == nil
+	and raw.recipe["kr-superior-lane-splitter"].hidden == nil, "A lane splitter of a visible splitter was hidden")
+check(raw["lane-splitter"]["fast-lane-splitter"].next_upgrade == "kr-superior-lane-splitter", "The upgrade planner still stops at the hidden lane splitter")
+check(raw["lane-splitter"]["kr-advanced-lane-splitter"] ~= nil and raw.item["kr-advanced-splitter"].hidden == true, "The entity or the item was removed")
+check(#raw.technology["logistics-4"].effects == 2 and raw.technology["logistics-4"].effects[1].recipe == "kr-superior-lane-splitter"
+	and raw.technology["logistics-4"].effects[2].type == "give-item", "The unlock stayed in the technology or another effect went too")
+check(#raw.technology["logistics-5"].effects == 0, "The unlock stayed in the second technology")
+check(#logs == 1 and logs[1]:find("^razi%-protocol: kr%-advanced%-lane%-splitter hidden: its splitter kr%-advanced%-splitter is hidden, 2 unlocks removed"),
+	"Expected one line for the lane splitter that was hidden, with the number of unlocks removed")
+hidden_splitters.data_final_fixes()
+check(#logs == 1, "The repeated run touched the lane splitters again")
+raw = fresh()
+hidden_splitters.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without lane splitters")

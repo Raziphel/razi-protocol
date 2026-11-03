@@ -22,6 +22,7 @@ local repairs = {
 	require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes"),
 	require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.upgrade_chain"),
 	require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority"),
+	require("prototypes.fixes.lane-balancers.hidden_splitters"),
 	require("prototypes.fixes.planet-muluna.hard_drive_time"),
 	require("prototypes.fixes.planetaris-arig.rail_support_description"),
 	require("prototypes.fixes.RenaiTransportation.thrower_ranges"),
