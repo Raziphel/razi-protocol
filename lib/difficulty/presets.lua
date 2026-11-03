@@ -37,6 +37,8 @@ M.baseline={
  ["razi-fortification-durability"]="normal",
  -- "auto" is the step of the level: the planets that carry the themed enemy families (compat/enemy_homes.lua).
  ["razi-enemy-habitats"]="auto",
+ -- Normal closes the recipe loops that run on the base productivity of a machine (prototypes/balance/resource_loops.lua).
+ ["razi-resource-loops"]="closed",
 }
 
 -- Declaration order; the one list every loop walks, so results are stable.
@@ -61,6 +63,7 @@ M.managed={
  "razi-factory-throughput",
  "razi-fortification-durability",
  "razi-enemy-habitats",
+ "razi-resource-loops",
 }
 
 local function copy(source)
@@ -93,6 +96,7 @@ M.presets={
   ["razi-factory-throughput"]="boosted",
   ["razi-fortification-durability"]="reinforced",
   ["razi-enemy-habitats"]="none",
+  ["razi-resource-loops"]="open",
  },
  normal=copy(M.baseline),
  hard={
@@ -116,6 +120,7 @@ M.presets={
   ["razi-factory-throughput"]="constrained",
   ["razi-fortification-durability"]="fragile",
   ["razi-enemy-habitats"]="wide",
+  ["razi-resource-loops"]="strict",
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
@@ -138,6 +143,7 @@ M.presets={
   ["razi-factory-throughput"]="strained",
   ["razi-fortification-durability"]="brittle",
   ["razi-enemy-habitats"]="widest",
+  ["razi-resource-loops"]="strict",
  },
 }
 

@@ -146,6 +146,32 @@ check(P.active()=="custom" and P.effective("razi-enemy-habitats")=="widest","A s
 startup("custom")
 check(P.effective("razi-enemy-habitats")=="auto","Custom keeps the saved value")
 
+-- Recipe loops: Easy leaves them open, Normal closes the ones that run on the base productivity of a machine, Hard and
+-- Nightmare close the strict ones too. The setting defaults to closed, so a value picked by hand differs from it.
+local loops=declared["razi-resource-loops"]
+check(loops and loops.setting_type=="startup" and loops.default_value=="closed","Default of razi-resource-loops")
+check(#loops.allowed_values==3 and loops.allowed_values[1]=="open" and loops.allowed_values[2]=="closed"
+  and loops.allowed_values[3]=="strict","Values of razi-resource-loops")
+local loop_levels={easy="open",normal="closed",hard="strict",nightmare="strict"}
+for level,value in pairs(loop_levels) do
+  startup(level)
+  check(P.active()==level and P.effective("razi-resource-loops")==value,
+    level..": razi-resource-loops is "..tostring(P.effective("razi-resource-loops")))
+end
+startup("normal",{["razi-resource-loops"]="open"})
+check(P.active()=="custom" and P.effective("razi-resource-loops")=="open","Open picked on Normal is used")
+startup("hard",{["razi-resource-loops"]="open"})
+check(P.active()=="custom" and P.effective("razi-resource-loops")=="open"
+  and P.effective("razi-asteroid-population")=="dense","Open picked on Hard keeps its value, the rest follows Hard")
+startup("hard",{["razi-resource-loops"]="closed"})
+check(P.effective("razi-resource-loops")=="strict","A lever left at its default follows the level")
+startup("custom",{["razi-resource-loops"]="strict"})
+check(P.effective("razi-resource-loops")=="strict","Custom keeps the saved value")
+startup("custom")
+check(P.effective("razi-resource-loops")=="closed","Custom keeps the default")
+rawset(_G,"settings",nil)
+check(P.effective("razi-resource-loops","closed")=="closed","Missing settings keep the fallback")
+
 -- Spread technology unlocks: four levels, left alone or ticked by hand.
 for _,level in ipairs(LEVELS) do
   local auto=(level=="hard" or level=="nightmare")
@@ -230,6 +256,10 @@ for _,lang in ipairs({"en","ru"}) do
   local keys={"razi-difficulty-preset","razi-asteroid-difficulty-scale",
     "razi-auto-tech-cards",
     "razi-default-new-game-map"}
+  for _,v in ipairs(declared["razi-resource-loops"].allowed_values) do
+    keys[#keys+1]="razi-resource-loops-"..v
+  end
+  keys[#keys+1]="razi-resource-loops"
   for name,values in pairs(map_levers) do
     keys[#keys+1]=name
     for _,v in ipairs(values) do keys[#keys+1]=name.."-"..v end
@@ -251,6 +281,8 @@ for _,lang in ipairs({"en","ru"}) do
   end
   check(description:find("\nrazi-difficulty-preset=",1,true),
     lang.." misses the level description")
+  check(description:find("\nrazi-resource-loops=",1,true),
+    lang.." misses the description of the recipe loops")
   check(description:find("\nrazi-auto-tech-cards=",1,true),
     lang.." misses the automatic science cards description")
   local card_section=names_cfg:match("\n%[razi%-auto%-card%]\n(.*)")
