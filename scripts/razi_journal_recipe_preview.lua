@@ -23,8 +23,8 @@ function M.quantity(entry)
   end
   if amount==nil then return "" end
   local result=" ×"..tostring(amount)
-  if entry.probability and entry.probability<1 then
-    result=result.." ("..tostring(math.floor(entry.probability*100+0.5)).."%)"
+  if entry.independent_probability and entry.independent_probability<1 then
+    result=result.." ("..tostring(math.floor(entry.independent_probability*100+0.5)).."%)"
   end
   return result
 end

@@ -92,7 +92,7 @@ check(structure.amount == 0 and structure.extra_count_fraction == 0.75, "three q
 back = recipes["kr-crush-stack-inserter"].results
 check(not find(back, "carbon-fiber"), "the crushing gives no carbon fiber")
 structure = find(back, "low-density-structure")
-check(structure.amount == 1 and structure.probability == 0.5, "the crushing gives a low density structure by chance")
+check(structure.amount == 1 and structure.independent_probability == 0.5 and structure.probability == nil, "the crushing gives a low density structure by chance")
 check(#back == 3 and find(back, "kr-electronic-components").amount == 4, "the rest of the crushing stays")
 check(recipes["kr-crush-toolbelt-equipment"].results == nil, "the void crushing of the toolbelt equipment is untouched")
 

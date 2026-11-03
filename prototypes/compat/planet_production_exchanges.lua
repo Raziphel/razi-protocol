@@ -366,7 +366,7 @@ local function safe_template(base, output)
   -- Never attempt arithmetic on one of those templates.
   for _, result in ipairs(base.results) do
     if type(result.amount)~="number" or result.amount<=0
-      or result.probability~=nil
+      or result.independent_probability~=nil or result.shared_probability~=nil
       or result.amount_min~=nil or result.amount_max~=nil then
       return false
     end
