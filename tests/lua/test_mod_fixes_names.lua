@@ -1,6 +1,6 @@
 ---@diagnostic disable: missing-fields
--- Repairs of names and tooltips of other mods (prototypes/fixes/): the freshness restoration recipes of Apia, on a
--- mocked data.raw.
+-- Repairs of names and tooltips of other mods (prototypes/fixes/): the freshness restoration recipes of Apia and the
+-- corpses of Arachnids_enemy, on a mocked data.raw.
 -- Run from the mod root with the library bootstrap:
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_mod_fixes_names.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -132,5 +132,53 @@ raw.recipe = {["spawner-item-refresh-freshness"] = {localised_name = apia_name("
 refresh_freshness_names.data_final_fixes()
 check(raw.recipe["spawner-item-refresh-freshness"].localised_name[2][1] == "item-name.spawner-item" and #logs == 0,
 	"A recipe was changed without its item")
+
+-- Arachnids_enemy corpse_names
+local corpse_names = require("prototypes.fixes.Arachnids_enemy.corpse_names")
+local copied = {"entity-name.arachnid-royalwarrior-corpse"}
+raw = fresh()
+raw.corpse = {
+	["arachnid-royalwarrior-corpse"] = {name = "arachnid-royalwarrior-corpse", localised_name = deepcopy(copied)},
+	["arachnid-leviathan-corpse"] = {name = "arachnid-leviathan-corpse", localised_name = deepcopy(copied)},
+	["corpse-maf-boss-arachnid-biter-1"] = {name = "corpse-maf-boss-arachnid-biter-1", localised_name = deepcopy(copied)},
+	["corpse-maf-boss-arachnid-biter-10"] = {name = "corpse-maf-boss-arachnid-biter-10", localised_name = deepcopy(copied)},
+	["corpse-maf-boss-arachnid-biter-2"] = {name = "corpse-maf-boss-arachnid-biter-2",
+		localised_name = {"entity-name.somebody-else"}},
+	["corpse-maf-boss-arachnid-biter-3"] = {name = "corpse-maf-boss-arachnid-biter-3"},
+	["small-biter-corpse"] = {name = "small-biter-corpse", localised_name = deepcopy(copied)},
+}
+corpse_names.data_final_fixes()
+check(raw.corpse["arachnid-leviathan-corpse"].localised_name[1] == "entity-name.arachnid-leviathan-corpse",
+	"The leviathan corpse kept the name of the royal warrior")
+check(raw.corpse["corpse-maf-boss-arachnid-biter-1"].localised_name[1] == "entity-name.maf-boss-arachnid-corpse"
+	and raw.corpse["corpse-maf-boss-arachnid-biter-10"].localised_name[1] == "entity-name.maf-boss-arachnid-corpse",
+	"A boss corpse kept the name of the royal warrior")
+check(raw.corpse["arachnid-royalwarrior-corpse"].localised_name[1] == copied[1], "The royal warrior corpse was renamed")
+check(raw.corpse["corpse-maf-boss-arachnid-biter-2"].localised_name[1] == "entity-name.somebody-else",
+	"A name that another mod set was replaced")
+check(raw.corpse["corpse-maf-boss-arachnid-biter-3"].localised_name == nil, "A corpse without a name got one")
+check(raw.corpse["small-biter-corpse"].localised_name[1] == copied[1], "A corpse of another mod was renamed")
+check(logged("reads entity-name.") == 3 and logs[1]:find("^razi%-protocol: "), "Expected one line for each of the three corpses")
+corpse_names.data_final_fixes()
+check(#logs == 3, "The repeated run renamed the corpses again")
+raw = fresh()
+corpse_names.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without corpses")
+
+-- The keys that Arachnids_enemy uses for its nine corpses and never defines are in the locale of this mod.
+local function read(path)
+	local file = assert(io.open(path, "r"))
+	local text = file:read("*a")
+	file:close()
+	return text
+end
+for _, language in ipairs({"en", "ru"}) do
+	local text = read("locale/" .. language .. "/arachnids.cfg")
+	for _, name in ipairs({"behemothspitter", "bigspitter", "drone", "mediumspitter", "royalwarrior", "smallspitter", "tiger",
+		"unitspawner", "warrior"}) do
+		check(text:find("\narachnid-" .. name .. "-corpse=", 1, true) or text:find("^arachnid%-" .. name .. "%-corpse="),
+			language .. " has no name for the corpse arachnid-" .. name .. "-corpse")
+	end
+end
 
 print("mod fixes (names): ok")

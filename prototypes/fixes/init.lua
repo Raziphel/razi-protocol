@@ -7,6 +7,7 @@ local mod_fixes = {}
 
 local repairs = {
 	require("prototypes.fixes.RenaiTransportation.hardcoded_localization"),
+	require("prototypes.fixes.Arachnids_enemy.corpse_names"),
 	require("prototypes.fixes.Krastorio2.roboport_mode_names"),
 	require("prototypes.fixes.apia.refresh_freshness_names"),
 	require("prototypes.fixes.RenaiTransportation.recycling_hidden"),
