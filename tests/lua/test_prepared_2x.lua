@@ -103,7 +103,7 @@ local function where(platform)
 	return type(location) == "table" and location.name or location
 end
 
-local M = require("scripts.razi_prepared_2x")
+local M = require("scripts.migration.prepared_2x")
 
 -- Accepted cards go into the lab, the rest into a steel chest next to it; quality is kept.
 do
