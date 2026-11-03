@@ -175,6 +175,8 @@ local function setup(options)
     ["Krastorio2-spaced-out"]="2.0.17"
   })
   package.loaded["prototypes.industry.exchanges.planet_production_exchanges"]=nil
+  package.loaded["prototypes.industry.exchanges.exchange_rules"]=nil
+  package.loaded["prototypes.industry.exchanges.exchange_support"]=nil
   return raw,require("prototypes.industry.exchanges.planet_production_exchanges")
 end
 
