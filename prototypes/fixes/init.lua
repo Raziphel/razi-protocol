@@ -37,6 +37,7 @@ local repairs = {
 	require("prototypes.fixes.common.factoriopedia_enemies"),
 	require("prototypes.fixes.RenaiTransportation.thrower_ranges"),
 	require("prototypes.fixes.planet-muluna.burner_roboport_minable"),
+	require("prototypes.fixes.common.recycling_sources"),
 	require("prototypes.fixes.Mini_Trains.entity_data_items"),
 	require("prototypes.fixes.corrundum.bioflux_stack"),
 }
