@@ -93,9 +93,9 @@ clear_invalid_bioluminescent_next_upgrade(data.raw["transport-belt"])
 
 -- Star images are rendered and sprite_only parents deleted during PlanetsLib
 -- data-final-fixes. Position them BEFORE that irreversible rendering pass.
-require("prototypes.system.calidus_sun").data_updates()
-require("prototypes.system.abacayba_integration").data_updates()
-require("prototypes.system.galaxy_layout").data_updates()
+require("prototypes.world.systems.calidus_sun").data_updates()
+require("prototypes.world.systems.abacayba_integration").data_updates()
+require("prototypes.world.starmap.galaxy_layout").data_updates()
 -- Source starfields must be positioned before PlanetsLib's irreversible
 -- sprite-only star cleanup; the Aegis and pulsar orbit artwork is kept.
-require("prototypes.system.bellicos").data_updates()
+require("prototypes.world.systems.bellicos").data_updates()

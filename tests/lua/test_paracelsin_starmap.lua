@@ -21,7 +21,7 @@ package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]={
   fulgora_aquilo={},spawn_definitions=function() return {} end
 }
 package.loaded["util"]=package.loaded["util"] or {}
-dofile("prototypes/system/vibrant.lua")
+dofile("prototypes/world/systems/vibrant.lua")
 local early
 for _,item in ipairs(updates) do
   if item.name=="paracelsin" then early=item.orbit end
@@ -30,7 +30,7 @@ check(early and early.parent.name=="vibrant",
   "vibrant.lua no longer sets Paracelsin's early orbit around Vibrant")
 
 -- Final position: the layout owns the absolute coordinates.
-local layout=require("prototypes.system.galaxy_layout")
+local layout=require("prototypes.world.starmap.galaxy_layout")
 local vx,vy=layout.anchor_position("vibrant")
 local px,py=layout.anchor_position("paracelsin")
 local sx,sy=layout.anchor_position("shchierbin")
@@ -46,7 +46,7 @@ check(math.abs(early.distance-51)<1e-9 and math.abs(early.orientation-0.65)<1e-9
   "Paracelsin must sit at radius 51, turn 0.65 around Vibrant")
 
 -- Outer Rim marker, taken from the belt integration's own coordinates.
-local belt=require("prototypes.system.asteroid_belt_integration")
+local belt=require("prototypes.world.asteroids.asteroid_belt_integration")
 local rim
 for _,entry in ipairs(belt.coords) do
   if entry[1]=="asteroid-belt-outer-edge" then rim=entry end

@@ -1,6 +1,6 @@
 ---@diagnostic disable: need-check-nil, undefined-field
 package.path="./?.lua;./?/init.lua;"..package.path
-local M=require("prototypes.system.location_icons")
+local M=require("prototypes.world.starmap.location_icons")
 local function assert_ok(v,m) if not v then error(m,2) end end
 local locations,filenames={},{}
 local count=0

@@ -2,7 +2,7 @@
 local M = {}
 local mode = require("prototypes.industry.exchanges.interdependence_mode")
 local Graph = require("__razi_lib__/lib/technology_graph")
-local optional = require("prototypes.system.optional_worlds")
+local optional = require("prototypes.world.systems.optional_worlds")
 
 M.phases = {
 	-- One cross-system workshop before the middle stars.

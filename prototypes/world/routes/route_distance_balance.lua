@@ -2,7 +2,7 @@
 -- astronomy. Visual chart coordinates are a stylized projection.
 -- Reprice only grossly underpriced RETAINED routes with known endpoints.
 local M={}
-local layout=require("prototypes.system.galaxy_layout")
+local layout=require("prototypes.world.starmap.galaxy_layout")
 local function pos(name,seen)
   if name=="star" then return 0,0 end
   local x,y=layout.anchor_position(name)

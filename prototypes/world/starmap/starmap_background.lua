@@ -2,7 +2,7 @@
 -- Pinpoint Milky Way atlas: tiny colored stars and rare restrained sparkles;
 -- no repeating portals, giant fog banks, or false navigation features.
 local M={}
-local layout=require("prototypes.system.galaxy_layout")
+local layout=require("prototypes.world.starmap.galaxy_layout")
 local ASSET="__razi-protocol__/graphics/starmap/razi/"
 local ATMOSPHERE_SIZE=512
 -- One low-alpha halo per system, each using its existing dedicated
@@ -125,7 +125,7 @@ local function anchor(name)
   if name=="bellicos" then
     if not (mods and mods["bellicos-and-aegis"]) then return nil end
     -- One source of truth for native location, baked art and atmosphere.
-    return require("prototypes.system.bellicos").pulsar_position()
+    return require("prototypes.world.systems.bellicos").pulsar_position()
   end
   return layout.anchor_position(name=="deep-space"
     and "solar-system-edge" or name)

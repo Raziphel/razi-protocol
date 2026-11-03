@@ -102,7 +102,7 @@ bellicos.find_wardens=find_wardens
 
 local function plan_expedition()
   if not endpoint_type(root_parent) then return nil end
-  local layout=require("prototypes.system.galaxy_layout")
+  local layout=require("prototypes.world.starmap.galaxy_layout")
   local ex,ey=layout.anchor_position(root_parent)
   if not ex then return nil end
   local edge={x=ex,y=ey}
@@ -216,7 +216,7 @@ local function reconcile_baked_art()
   local by_name={}
   for _,target in ipairs(plan) do by_name[target.name]=target end
   -- Sprite-only pulsar no longer exists, but its artwork still has a tag.
-  local ex,ey=require("prototypes.system.galaxy_layout")
+  local ex,ey=require("prototypes.world.starmap.galaxy_layout")
     .anchor_position(root_parent)
   if ex and ey then by_name.pulsar={parent_position={x=ex,y=ey}} end
   local ui=(data.raw["utility-sprites"] or {}).default
@@ -511,7 +511,7 @@ function bellicos.dedupe_internal_routes()
     end
   end
 
-  local preserved=require("prototypes.system.asteroid_profiles")
+  local preserved=require("prototypes.world.asteroids.asteroid_profiles")
   local removed=0
   for _,group in pairs(groups) do
     table.sort(group,function(a,b)
@@ -558,8 +558,8 @@ end
 function bellicos.fortify_routes()
   if not (mods and mods["bellicos-and-aegis"]) then return 0 end
   local routes=data.raw["space-connection"] or {}
-  local asteroid=require("prototypes.system.asteroid_profiles")
-  local icons=require("prototypes.system.route_icons")
+  local asteroid=require("prototypes.world.asteroids.asteroid_profiles")
+  local icons=require("prototypes.world.routes.route_icons")
   local wardens=find_wardens()
   table.sort(wardens,function(a,b)
     if a=="aegis-warden" then return true end

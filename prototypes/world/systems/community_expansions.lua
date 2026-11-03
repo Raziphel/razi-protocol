@@ -2,8 +2,8 @@
 -- community expansion. Do not imitate a source planet's special progression.
 -- Discovered worlds join Razi's galaxy; sealed sub-surfaces stay sealed.
 local M = {}
-local hazard = require("prototypes.system.asteroid_profiles")
-local route_icons = require("prototypes.system.route_icons")
+local hazard = require("prototypes.world.asteroids.asteroid_profiles")
+local route_icons = require("prototypes.world.routes.route_icons")
 
 -- Native orbital moons and event-driven surfaces must not be reparented.
 -- A side branch never contributes science to required seven-system milestones.

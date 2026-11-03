@@ -128,7 +128,7 @@ function M.connect_calidus()
    from=first,to=second,length=10500,shape="arc",
    asteroid_spawn_definitions={}
  }
- local icons=require("prototypes.system.route_icons")
+ local icons=require("prototypes.world.routes.route_icons")
  icons.assign(route,"starter")
  data:extend({route})
 end

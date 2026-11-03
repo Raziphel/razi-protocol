@@ -4,9 +4,9 @@
 -- replace native travel edges, make new routes, or invoke runtime drawing.
 -- Space Route Overlay inspires the risk categories, not this implementation.
 local M={}
-local hazards=require("prototypes.system.route_hazards")
-local layout=require("prototypes.system.galaxy_layout")
-local reconcile=require("prototypes.system.route_reconcile")
+local hazards=require("prototypes.world.routes.route_hazards")
+local layout=require("prototypes.world.starmap.galaxy_layout")
+local reconcile=require("prototypes.world.routes.route_reconcile")
 local quality=require("scripts.razi_asteroid_difficulty")
 local difficulty=require("scripts.razi_difficulty_presets")
 
@@ -185,10 +185,10 @@ M.is_major=is_major
 -- The ribbon renderer colors actual native route geometry; no duplicate
 -- route badges or competing hazard scales are drawn.
 function M.strokes_for_connection(route,mode,scope)
-  return require("prototypes.system.route_ribbons").strokes_for_connection(
+  return require("prototypes.world.routes.route_ribbons").strokes_for_connection(
     M,route,mode,scope)
 end
 function M.data_final_fixes()
-  return require("prototypes.system.route_ribbons").data_final_fixes(M)
+  return require("prototypes.world.routes.route_ribbons").data_final_fixes(M)
 end
 return M

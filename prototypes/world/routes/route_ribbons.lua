@@ -3,7 +3,7 @@
 -- One shared 128-bearing antialiased sheet; no runtime script or route edits.
 -- Keep ribbon shifts exactly on the path (NOT beside it as in the old overlay).
 local M={}
-local hz=require("prototypes.system.route_hazards")
+local hz=require("prototypes.world.routes.route_hazards")
 local SHEET="__razi-protocol__/graphics/route-highlights/route-ribbons.png"
 local OLD="__razi-protocol__/graphics/route-highlights/"
 local ANGLES,CELL,COLS=128,64,16

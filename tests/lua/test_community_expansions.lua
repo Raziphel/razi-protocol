@@ -5,7 +5,7 @@ local function check(cond, why)
   if not cond then error(why,2) end
 end
 
-package.loaded["prototypes.system.asteroid_profiles"]={
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]={
   create=function(name)
     return {{asteroid="test-" .. name, probability=.001}}
   end
@@ -115,8 +115,8 @@ local function run(options)
       moved[entry.name]=true
     end
   end})
-  package.loaded["prototypes.system.community_expansions"]=nil
-  local module=require("prototypes.system.community_expansions")
+  package.loaded["prototypes.world.systems.community_expansions"]=nil
+  local module=require("prototypes.world.systems.community_expansions")
   module.data_final_fixes()
   return module,raw,native,moved
 end
@@ -219,11 +219,11 @@ local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
 local route=assert(source:find(
-  'require("prototypes.system.route_reconcile").data_final_fixes()',1,true))
+  'require("prototypes.world.routes.route_reconcile").data_final_fixes()',1,true))
 local expansion=assert(source:find(
-  'require("prototypes.system.community_expansions").data_final_fixes()',1,true))
+  'require("prototypes.world.systems.community_expansions").data_final_fixes()',1,true))
 local layout=assert(source:find(
-  'require("prototypes.system.galaxy_layout").data_final_fixes()',1,true))
+  'require("prototypes.world.starmap.galaxy_layout").data_final_fixes()',1,true))
 check(route<expansion and expansion<layout,
   "Optional integrations must follow route reconciliation and precede layout")
 print("Community expansion routes, science safeguards and special surfaces passed")

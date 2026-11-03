@@ -12,7 +12,7 @@ end
 
 -- The data-stage atlas and final native positions share one source of truth.
 -- Missing upstream locations or parent types are skipped safely.
-local layout=require("prototypes.system.galaxy_layout")
+local layout=require("prototypes.world.starmap.galaxy_layout")
 local deep_space_updates={}
 for _,entry in ipairs(layout.deep_space_orbits) do
   local kind,name,parent,radius,turn=

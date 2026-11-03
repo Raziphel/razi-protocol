@@ -34,7 +34,7 @@ check(techs["razi-outer-frontier-mastery"].order==
  "Outer mastery should appear after its outer-system survey")
 check(techs["native-planet-tech"].order=="native",
  "Native research ordering changed unexpectedly")
-local roster=require("prototypes.system.world_roster")
+local roster=require("prototypes.world.systems.world_roster")
 local seen={}
 for _,world in ipairs(roster.worlds) do
  check(not seen[world],"Duplicate world in the roster: "..world)

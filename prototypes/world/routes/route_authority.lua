@@ -3,9 +3,9 @@
 -- only Razi's approved pairs, not every source mod's built-in shortcuts.
 -- Critical native sub-networks remain reachable instead of being erased.
 local M={}
-local reconcile=require("prototypes.system.route_reconcile")
-local profiles=require("prototypes.system.asteroid_profiles")
-local icons=require("prototypes.system.route_icons")
+local reconcile=require("prototypes.world.routes.route_reconcile")
+local profiles=require("prototypes.world.asteroids.asteroid_profiles")
+local icons=require("prototypes.world.routes.route_icons")
 local member=reconcile.membership
 local pair=reconcile.pair_key
 local allowed=reconcile.allowed_pairs
@@ -39,7 +39,7 @@ local side_routes={
   -- Carna-to-Slip-Stream line would bypass the real belt passage.
 }
 -- Source-owned Vesta satellite. Only installed Abacayba gets a route.
-local abacayba=require("prototypes.system.abacayba_integration")
+local abacayba=require("prototypes.world.systems.abacayba_integration")
 local moon_id=abacayba.planet_name()
 if moon_id and (data.raw.planet or {}).vesta then
   member[moon_id]="umbra"

@@ -68,11 +68,11 @@ local profile={
     end
   end
 }
-package.loaded["prototypes.system.asteroid_profiles"]=profile
-package.loaded["prototypes.system.route_icons"]={
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=profile
+package.loaded["prototypes.world.routes.route_icons"]={
   assign=function(r) return r end}
-package.loaded["prototypes.system.bellicos"]=nil
-local bellicos=require("prototypes.system.bellicos")
+package.loaded["prototypes.world.systems.bellicos"]=nil
+local bellicos=require("prototypes.world.systems.bellicos")
 local added,removed=bellicos.fortify_routes()
 check(added==1 and removed==3,
   "Route director should replace exactly one missing entry and two shortcuts")

@@ -155,7 +155,7 @@ rawset(_G,"settings",{startup={
   ["razi-asteroid-difficulty-scale"]={value="balanced"}
 }})
 rawset(_G,"mods",{})
-local conversion=require("prototypes.system.quality_asteroids")
+local conversion=require("prototypes.world.asteroids.quality_asteroids")
 -- A disabled setting must stay disabled: no carriers and no rewritten spawns.
 settings.startup["razi-quality-asteroids"].value=false
 ok(conversion.data_final_fixes()==0,"Disabled setting must not convert anything")

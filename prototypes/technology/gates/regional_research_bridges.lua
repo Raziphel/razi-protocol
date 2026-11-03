@@ -2,16 +2,16 @@
 -- Discovery techs are found from their unlock effects.
 --
 -- The rule: a world of system N is researched before the gateways of system N+1. Worlds come from
--- prototypes/system/world_roster.lua, the ones the path must never need are listed in
--- prototypes/system/optional_worlds.lua. A world of a mod that is not installed has nothing to weave.
+-- prototypes/world/systems/world_roster.lua, the ones the path must never need are listed in
+-- prototypes/world/systems/optional_worlds.lua. A world of a mod that is not installed has nothing to weave.
 --   Solaris, Nyxaris        -> Vibrant and Vespera
 --   Vibrant, Vespera        -> Beetlejuice and Umbra
 --   Beetlejuice, Umbra      -> Outer Frontier Mastery
 -- A world is left out, with a line in the log, when its research would wait for the gateway it should open.
 local M={}
 local interdependence=require("prototypes.industry.exchanges.interdependence_mode")
-local roster=require("prototypes.system.world_roster")
-local optional=require("prototypes.system.optional_worlds")
+local roster=require("prototypes.world.systems.world_roster")
+local optional=require("prototypes.world.systems.optional_worlds")
 M.bridges={
   {"planet-discovery-corrundum","planet-discovery-apia-carnova"},
   {"planet-discovery-secretas","planet-discovery-tenebris"},

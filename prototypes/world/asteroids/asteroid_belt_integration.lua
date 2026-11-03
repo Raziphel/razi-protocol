@@ -14,7 +14,7 @@ local coords={
 }
 M.coords=coords
 function M.data_final_fixes()
-  local layout=require("prototypes.system.galaxy_layout")
+  local layout=require("prototypes.world.starmap.galaxy_layout")
   local cx,cy=layout.anchor_position(HOST)
   if not cx or not cy then return end
   for _,entry in ipairs(coords) do

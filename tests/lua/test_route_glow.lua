@@ -26,7 +26,7 @@ rawset(_G,"settings",{startup={
  ["razi-route-overlay-mode"]={value="danger"},
  ["razi-route-overlay-scope"]={value="all"},
  ["razi-quality-asteroids"]={value=true}}})
-local m=require("prototypes.system.route_highlights")
+local m=require("prototypes.world.routes.route_highlights")
 local safe={from="a",to="b",shape="line",asteroid_spawn_definitions={}}
 local medium={from="c",to="d",shape="line",
  asteroid_spawn_definitions={{asteroid="medium-metallic-asteroid",probability=.2}}}
@@ -74,7 +74,7 @@ local inner_to_outer={
 local stellar_entry={
   from="sye-solaris",to="calidus-bellicos-stargate-calidus",
   shape="line",length=112000,asteroid_spawn_definitions={}}
-local ribbon_module=require("prototypes.system.route_ribbons")
+local ribbon_module=require("prototypes.world.routes.route_ribbons")
 check(ribbon_module.native_aegis_corridor==nil,
   "The Aegis native-corridor exclusion must not return")
 check(#m.strokes_for_connection(near_to_inner,"danger","all")>0

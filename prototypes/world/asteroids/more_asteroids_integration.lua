@@ -5,7 +5,7 @@ local M = {}
 local catalog = require("scripts.galactic_catalog")
 local ladder = require("scripts.razi_asteroid_difficulty")
 local difficulty = require("scripts.razi_difficulty_presets")
-local profiles = require("prototypes.system.asteroid_profiles")
+local profiles = require("prototypes.world.asteroids.asteroid_profiles")
 
 local materials = {"uranium", "rock", "scrap", "organic", "chemical", "crystalline",
                    "halide", "electrostatic"}

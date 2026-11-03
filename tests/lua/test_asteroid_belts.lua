@@ -23,8 +23,8 @@ local util={
   spawn_definitions=function() return {} end
 }
 package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]=util
-package.loaded["prototypes.system.asteroid_profiles"]=nil
-package.loaded["prototypes.system.asteroid_belts"]=nil
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=nil
+package.loaded["prototypes.world.asteroids.asteroid_belts"]=nil
 local moves={}
 rawset(_G,"PlanetsLib",{extend=function(_,locations)
   for _, loc in ipairs(locations) do
@@ -34,7 +34,7 @@ rawset(_G,"PlanetsLib",{extend=function(_,locations)
     moves[#moves+1] = loc.name
   end
 end})
-require("prototypes.system.asteroid_belts")
+require("prototypes.world.asteroids.asteroid_belts")
 check(#moves == 4, "Vibrant and Umbra should each have two belt rims")
 for _,side in ipairs({"inner","outer"}) do
   local name="asteroid-belt-"..side.."-edge"

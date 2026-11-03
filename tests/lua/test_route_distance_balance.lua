@@ -30,7 +30,7 @@ local routes={
 }
 rawset(_G,"data",{raw={planet=planet,["space-location"]=space,
   ["space-connection"]=routes}})
-local M=require("prototypes.system.route_distance_balance")
+local M=require("prototypes.world.routes.route_distance_balance")
 check(M.minimum_for_span(19)==0,"Genuine tiny routes must remain short")
 check(M.minimum_for_span(145)>=100000,"Remote route minimum too small")
 local changed=M.data_final_fixes()

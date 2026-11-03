@@ -34,11 +34,11 @@ local util={
   end
 }
 package.loaded["__space-age__.prototypes.planet.asteroid-spawn-definitions"]=util
-package.loaded["prototypes.system.asteroid_profiles"]=nil
-package.loaded["prototypes.system.route_icons"]={assign=function(r) return r end}
-package.loaded["prototypes.system.bellicos"]=nil
-local profiles=require("prototypes.system.asteroid_profiles")
-local bellicos=require("prototypes.system.bellicos")
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]=nil
+package.loaded["prototypes.world.routes.route_icons"]={assign=function(r) return r end}
+package.loaded["prototypes.world.systems.bellicos"]=nil
+local profiles=require("prototypes.world.asteroids.asteroid_profiles")
+local bellicos=require("prototypes.world.systems.bellicos")
 local function probability(defs,name)
   for _,def in ipairs(defs) do
     if def.asteroid==name then return def.spawn_points[1].probability end

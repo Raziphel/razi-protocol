@@ -78,8 +78,8 @@ local function run(options)
       updates[#updates + 1] = entry.name
     end
   end})
-  package.loaded["prototypes.system.bellicos"] = nil
-  local module = require("prototypes.system.bellicos")
+  package.loaded["prototypes.world.systems.bellicos"] = nil
+  local module = require("prototypes.world.systems.bellicos")
   module.data()
   module.data_final_fixes()
   -- In the real data-final-fixes pipeline, fortify_routes runs after source
@@ -95,7 +95,7 @@ local pulsar_image=present.pulsar.orbit.sprite
 local good_pulsar=present.pulsar
 -- Verify the dedicated data-updates recovery does not clear artwork if
 -- another mod's data-updates temporarily touched the pulsar placement.
-local check_module=require("prototypes.system.bellicos")
+local check_module=require("prototypes.world.systems.bellicos")
 check_module.data_updates()
 check(good_pulsar.orbit.sprite==pulsar_image,
   "Bellicos pre-render reparenting removed its preserved source sprite")
@@ -207,7 +207,7 @@ local lua_atan,lua_atan2=math.atan,math.atan2
 math.atan=function(value) return lua_atan(value) end
 math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end
 local no_pulsar,orbit_locations=run({near=true})
-local layout=require("prototypes.system.galaxy_layout")
+local layout=require("prototypes.world.starmap.galaxy_layout")
 local edge_x,edge_y=layout.anchor_position("sye-calidus")
 local p_x=edge_x+190*math.sin(2*math.pi*.5)
 local p_y=edge_y-190*math.cos(2*math.pi*.5)
@@ -299,7 +299,7 @@ for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]})
     and body.orbit.parent.name=="near-bellicos-orbit",
     "A Warden native prototype is still marooned near Secretas")
 end
-local edge_x,edge_y=require("prototypes.system.galaxy_layout")
+local edge_x,edge_y=require("prototypes.world.starmap.galaxy_layout")
   .anchor_position("sye-calidus")
 local source_x=edge_x+190*math.sin(2*math.pi*.5)
 local source_y=edge_y-190*math.cos(2*math.pi*.5)

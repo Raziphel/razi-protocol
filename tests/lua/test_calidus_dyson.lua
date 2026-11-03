@@ -51,7 +51,7 @@ local function setup(options)
   ["razi-dyson-calidus-layout"]={value=not options.no_layout}
  }})
  package.loaded["prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson"]=nil
- package.loaded["prototypes.system.route_icons"]={
+ package.loaded["prototypes.world.routes.route_icons"]={
    assign=function(route)route.icon="__razi-protocol__/graphics/icons/routes/planetary-route.png"
      route.icon_size=64;return route end
  }

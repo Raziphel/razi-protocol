@@ -26,7 +26,7 @@ M.chapters=chapters
 -- Show all native world-discovery research in the essential-tech filter.
 -- Unlike the Razi-owned chapters, do NOT rename or reorder source nodes.
 -- This keeps a massive modpack navigable without hiding native branches.
-local roster=require("prototypes.system.world_roster")
+local roster=require("prototypes.world.systems.world_roster")
 local tracked={}
 for _,world in ipairs(roster.worlds) do tracked[world]=true end
 local function native_discovery(node)

@@ -2,8 +2,8 @@
 -- These are ordinary Space Age locations/connections, not simulated entities.
 -- Reuse the route authority's approved physical crossings after its pruning.
 local M={}
-local profiles=require("prototypes.system.asteroid_profiles")
-local reconcile=require("prototypes.system.route_reconcile")
+local profiles=require("prototypes.world.asteroids.asteroid_profiles")
+local reconcile=require("prototypes.world.routes.route_reconcile")
 
 M.crossings={
   {system="vibrant",inner="asteroid-belt-inner-edge",

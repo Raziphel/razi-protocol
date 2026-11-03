@@ -42,7 +42,7 @@ deleteRoutesBetween("linox-planet_linox", "ribbonia")
 deleteRoutesBetween("linox-planet_linox", "rubia")
 
 -- Razi's own route network: planned routes, lengths, asteroid profiles and danger levels.
-require("prototypes.system.route_reconcile").data_final_fixes()
+require("prototypes.world.routes.route_reconcile").data_final_fixes()
 
 local ribbonia = data.raw.planet and data.raw.planet["ribbonia"]
 if ribbonia then
@@ -63,23 +63,23 @@ end
 
 -- Additional planet mods join their star systems and local hubs. Runs after the route
 -- reconciler and before the layout, which positions the orbits they register.
-require("prototypes.system.optional_planets").data_final_fixes()
-require("prototypes.system.community_expansions").data_final_fixes()
-require("prototypes.system.abacayba_integration").data_final_fixes()
+require("prototypes.world.systems.optional_planets").data_final_fixes()
+require("prototypes.world.systems.community_expansions").data_final_fixes()
+require("prototypes.world.systems.abacayba_integration").data_final_fixes()
 
 -- Vibrant's belt rims sit on the western edge of the system; place them before the layout reads the orbits.
-require("prototypes.system.asteroid_belt_integration").data_final_fixes()
+require("prototypes.world.asteroids.asteroid_belt_integration").data_final_fixes()
 
 -- Star map layout: six systems around Calidus, Deep Space to the north. Visual only (orbits, origins, ring drawing);
 -- routes and unlocks are not touched. Only the Bellicos expedition is reconciled after it.
-require("prototypes.system.galaxy_layout").data_final_fixes()
+require("prototypes.world.starmap.galaxy_layout").data_final_fixes()
 
 -- Bellicos reconciles its native positions after the general layout pass, so the
 -- Aegis expedition is not moved twice.
-require("prototypes.system.bellicos").data_final_fixes()
+require("prototypes.world.systems.bellicos").data_final_fixes()
 
 -- Expedition briefings are appended to the final set of planet and location descriptions.
-require("prototypes.system.planet_descriptions").data_final_fixes()
+require("prototypes.world.systems.planet_descriptions").data_final_fixes()
 
 -- K2SO material names and research data settle before the gates read the system cards.
 require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()
@@ -168,30 +168,30 @@ for _, lab in pairs(data.raw.lab or {}) do
 end
 
 -- Recheck Abacayba's discovery gate after the late research passes; no cycles are introduced.
-require("prototypes.system.abacayba_integration").gate()
+require("prototypes.world.systems.abacayba_integration").gate()
 
 -- One authoritative seven-system graph, after all planet modules have run.
 -- Native moon links, the original belt crossing and special source subsystems
 -- have documented exceptions and are never indiscriminately wiped.
-require("prototypes.system.route_authority").data_final_fixes()
+require("prototypes.world.routes.route_authority").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").connect_calidus()
 -- Native Aegis links and asteroid fields settle after the two curated entries.
-require("prototypes.system.bellicos").fortify_routes()
+require("prototypes.world.systems.bellicos").fortify_routes()
 
 -- Harvest-rich native asteroid belts get final spawn curves only after the approved crossings
 -- and route IDs have been reconciled.
-require("prototypes.system.belt_expeditions").data_final_fixes()
+require("prototypes.world.asteroids.belt_expeditions").data_final_fixes()
 
 -- Imersite-Asteroids' belt on routes to Aquilo: after the last route deletion.
 require("prototypes.compatibility.Imersite-Asteroids.imersite_aquilo_routes").data_final_fixes()
 
 -- Calibrate severe source-native 1,000 km shortcuts after the route reconciliation.
-require("prototypes.system.route_distance_balance").data_final_fixes()
+require("prototypes.world.routes.route_distance_balance").data_final_fixes()
 -- Only existing source-mod asteroid families are distributed on the final approved routes.
-require("prototypes.system.modded_asteroid_distribution").data_final_fixes()
+require("prototypes.world.asteroids.modded_asteroid_distribution").data_final_fixes()
 -- Guard against later integrations adding a second named connection between
 -- the same Aegis waypoints before route colouring and hazard inspection.
-require("prototypes.system.bellicos").dedupe_internal_routes()
+require("prototypes.world.systems.bellicos").dedupe_internal_routes()
 
 -- Resolve difficulty stages for all finalized connected worlds, including
 -- mod-provided outer expeditions with unknown location IDs.
@@ -200,19 +200,19 @@ require("scripts.razi_asteroid_difficulty").prepare_routes(data.raw["space-conne
 -- Razi More Asteroids owns the eight material families and K2SO recipes.
 -- Reprofile the final surviving RP3 connections, including both Razi belts,
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
-require("prototypes.system.more_asteroids_integration").data_final_fixes()
+require("prototypes.world.asteroids.more_asteroids_integration").data_final_fixes()
 
-require("prototypes.system.route_icons").data_final_fixes()
+require("prototypes.world.routes.route_icons").data_final_fixes()
 
 -- Route tooltips and the star map backdrop read the final routes and orbits.
-require("prototypes.system.route_intel").data_final_fixes()
-require("prototypes.system.starmap_background").data_final_fixes()
+require("prototypes.world.routes.route_intel").data_final_fixes()
+require("prototypes.world.starmap.starmap_background").data_final_fixes()
 
 -- Re-assert Khemia's position in case a compatibility pass above moved it.
-require("prototypes.system.galaxy_layout").confirm_critical_positions()
+require("prototypes.world.starmap.galaxy_layout").confirm_critical_positions()
 
 -- Colored route lines follow the final positions; they never change travel data.
-require("prototypes.system.route_highlights").data_final_fixes()
+require("prototypes.world.routes.route_highlights").data_final_fixes()
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
@@ -233,16 +233,16 @@ require("prototypes.technology.gates.distributed_industry").data_final_fixes()
 
 -- Last starmap art passes: drop stray trail sprites left by other mods, then
 -- put Razi's gate and belt-rim markers on top.
-require("prototypes.system.starmap_trail_cleanup").data_final_fixes()
-require("prototypes.system.location_icons").data_final_fixes()
+require("prototypes.world.starmap.starmap_trail_cleanup").data_final_fixes()
+require("prototypes.world.starmap.location_icons").data_final_fixes()
 
 -- Optional, off by default: hostile asteroids on the routes can spawn with quality. Runs after every
 -- route and spawn-table edit so the carriers replace the final hostile entries. Resource chunks are untouched.
-require("prototypes.system.quality_asteroids").data_final_fixes()
+require("prototypes.world.asteroids.quality_asteroids").data_final_fixes()
 
 -- Optional, off by default: asteroid and weapon effect reductions. After the quality carriers so their
 -- spawn scripts are left alone.
-require("prototypes.system.asteroid_performance").data_final_fixes()
+require("prototypes.world.asteroids.asteroid_performance").data_final_fixes()
 
 -- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
 -- copy or add a prototype, as the last edit of created_effect.
@@ -269,8 +269,8 @@ require("prototypes.industry.rocket_salvage").data_final_fixes()
 
 -- Final integrity guard: late third-party technology passes must not resurrect
 -- unlocks or routes for the removed, inaccessible far-side Bellicos stargate.
-require("prototypes.system.bellicos").retire_far_gate()
-require("prototypes.system.bellicos").dedupe_internal_routes()
+require("prototypes.world.systems.bellicos").retire_far_gate()
+require("prototypes.world.systems.bellicos").dedupe_internal_routes()
 
 -- Difficulty level: rocket parts per launch on every rocket silo, crafting speed of the machines and furnaces players build, and
 -- health of walls and gates, from the values the source mods defined. Normal (x1) writes nothing. Nothing after this adds a

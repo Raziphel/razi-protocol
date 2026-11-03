@@ -1,6 +1,6 @@
 -- Physical asteroid belts for Vibrant and Umbra only.
 -- Keep the old Vibrant IDs so existing saves still find their waypoints.
-local hazards=require("prototypes.system.asteroid_profiles")
+local hazards=require("prototypes.world.asteroids.asteroid_profiles")
 local icon="__space-age__/graphics/icons/solar-system-edge.png"
 local belts={
   {system="vibrant",solar=35,intensity=1.18,legacy=true},

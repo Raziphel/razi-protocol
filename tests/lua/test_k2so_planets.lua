@@ -154,7 +154,7 @@ check(off.recipe["planet-sand"].ingredients[1].name=="kr-sand",
 local f=assert(io.open("data-final-fixes.lua","r"))
 local source=f:read("*a")
 f:close()
-local layout=assert(source:find('require("prototypes.system.galaxy_layout").data_final_fixes()',1,true))
+local layout=assert(source:find('require("prototypes.world.starmap.galaxy_layout").data_final_fixes()',1,true))
 local integration=assert(source:find('require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()',1,true))
 check(integration>layout,"K2SO reconciliation should run after planet layout")
 local late=assert(source:find(

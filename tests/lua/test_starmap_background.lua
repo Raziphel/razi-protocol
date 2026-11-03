@@ -3,7 +3,7 @@
 -- New Razi atlas fixture. No Factorio process required.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function ok(v,msg) if not v then error(msg,2) end end
-package.loaded["prototypes.system.galaxy_layout"]={
+package.loaded["prototypes.world.starmap.galaxy_layout"]={
   anchor_position=function(name)
     local points={
       solaris={59,102.19},nyxaris={-59,102.19},vibrant={118,0},
@@ -13,7 +13,7 @@ package.loaded["prototypes.system.galaxy_layout"]={
     local p=points[name];if p then return p[1],p[2] end
   end
 }
-local bg=require("prototypes.system.starmap_background")
+local bg=require("prototypes.world.starmap.starmap_background")
 local native={filename="__native__/starmap-star.png",size=512}
 local sprites={layers={native}}
 rawset(_G,"data",{raw={["utility-sprites"]={default={starmap_star=sprites}},

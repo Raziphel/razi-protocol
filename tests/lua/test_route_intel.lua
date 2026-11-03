@@ -3,8 +3,8 @@
 -- Razi route tooltip and hazard inspection fixtures.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(x,msg) if not x then error(msg,2) end end
-local hz=require("prototypes.system.route_hazards")
-local intel=require("prototypes.system.route_intel")
+local hz=require("prototypes.world.routes.route_hazards")
+local intel=require("prototypes.world.routes.route_intel")
 local function def(name, probability)
   return {asteroid=name,spawn_points={{distance=0.5,probability=probability}}}
 end
@@ -164,7 +164,7 @@ check(row(shown,"danger")~=nil and row(shown,"sector")==nil,
   "Only the switched-on row should appear")
 -- Every route note listed in the dossiers has its text in both languages
 -- (the notes are shown only while the story text is on).
-local dossier_file=assert(io.open("prototypes/system/route_dossiers.lua","r"))
+local dossier_file=assert(io.open("prototypes/world/routes/route_dossiers.lua","r"))
 local dossier_source=dossier_file:read("*a")
 dossier_file:close()
 local note_count=0

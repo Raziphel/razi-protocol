@@ -79,8 +79,8 @@ local function run_fixture(enabled, cycle)
 		nauvis_fulgora = {}, fulgora_aquilo = {},
 		spawn_definitions = function() return {{type = "asteroid"}} end
 	}
-	package.loaded["prototypes.system.optional_planets"] = nil
-	local integration = require("prototypes.system.optional_planets")
+	package.loaded["prototypes.world.systems.optional_planets"] = nil
+	local integration = require("prototypes.world.systems.optional_planets")
 	integration.data_final_fixes()
 	return integration, planets, routes, techs, recolored, original_moon, native_moon, unknown_carna
 end

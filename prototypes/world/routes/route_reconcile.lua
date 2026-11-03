@@ -1,9 +1,9 @@
 -- Final route pass, after the individual planet and star-system mods.
 -- Keep local planet connections while cleaning up the interstellar graph.
 local route_reconcile = {}
-local hazard_profiles = require("prototypes.system.asteroid_profiles")
-local route_icons = require("prototypes.system.route_icons")
-local layout = require("prototypes.system.galaxy_layout")
+local hazard_profiles = require("prototypes.world.asteroids.asteroid_profiles")
+local route_icons = require("prototypes.world.routes.route_icons")
+local layout = require("prototypes.world.starmap.galaxy_layout")
 
 local membership = {
 	-- Main game and Calidus.

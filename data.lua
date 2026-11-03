@@ -3,18 +3,18 @@
 -- Custom write nothing.
 require("prototypes.difficulty.foreign_difficulty_settings").apply()
 
-require "prototypes.system.calidus"
-require("prototypes.system.bellicos").data()
-require "prototypes.system.eneas"
-require "prototypes.system.solaris"
-require "prototypes.system.nyxaris"
-require "prototypes.system.vibrant"
-require "prototypes.system.beetlejuice"
-require "prototypes.system.linox"
-require "prototypes.system.deep_space"
+require "prototypes.world.systems.calidus"
+require("prototypes.world.systems.bellicos").data()
+require "prototypes.world.systems.eneas"
+require "prototypes.world.systems.solaris"
+require "prototypes.world.systems.nyxaris"
+require "prototypes.world.systems.vibrant"
+require "prototypes.world.systems.beetlejuice"
+require "prototypes.world.systems.linox"
+require "prototypes.world.systems.deep_space"
 require("prototypes.fixes.common.k2so_tweaks").data()
-require "prototypes.system.seven_systems"
-require "prototypes.system.asteroid_belts"
+require "prototypes.world.systems.seven_systems"
+require "prototypes.world.asteroids.asteroid_belts"
 require "prototypes.technology.load"
 require "prototypes.technology.systems.asteroid_belts"
 

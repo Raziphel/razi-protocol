@@ -1,9 +1,9 @@
 -- Extra route details for the native starmap tooltip.
 -- Built during the data stage, not during play.
 local M={}
-local hazards=require("prototypes.system.route_hazards")
+local hazards=require("prototypes.world.routes.route_hazards")
 local catalog=require("scripts.galactic_catalog")
-local dossiers=require("prototypes.system.route_dossiers")
+local dossiers=require("prototypes.world.routes.route_dossiers")
 local story=require("scripts.razi_story")
 local quality_levels=require("scripts.razi_asteroid_difficulty")
 local difficulty=require("scripts.razi_difficulty_presets")

@@ -1,5 +1,5 @@
 ---@diagnostic disable: missing-fields
--- The list of worlds and packs the required path must not depend on (prototypes/system/optional_worlds.lua): well
+-- The list of worlds and packs the required path must not depend on (prototypes/world/systems/optional_worlds.lua): well
 -- formed, plain data with a reason for every entry, and every mod in it is a dependency in info.json. The worlds that
 -- are woven into the path (regional_research_bridges.lua) are not in it, apart from their packs. The path itself is checked on the real prototypes of the full
 -- pack by the in-game tests of my-razi-fixes (tests/data_raw.lua).
@@ -16,7 +16,7 @@ end
 -- no data, mods or settings: the in-game tests load the list from the control stage
 rawset(_G, "data", nil)
 rawset(_G, "mods", nil)
-local roster = require("prototypes.system.optional_worlds")
+local roster = require("prototypes.world.systems.optional_worlds")
 
 local info = assert(io.open("info.json", "r")):read("*a")
 local dependencies = {}
