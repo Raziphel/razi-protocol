@@ -11,6 +11,7 @@ local repairs = {
 	require("prototypes.fixes.Krastorio2.roboport_mode_names"),
 	require("prototypes.fixes.apia.refresh_freshness_names"),
 	require("prototypes.fixes.moon-eneas.aquilo_data_card"),
+	require("prototypes.fixes.pelagos.recipe_gates"),
 	require("prototypes.fixes.moon-eneas.recycling_enabled"),
 	require("prototypes.fixes.RenaiTransportation.recycling_hidden"),
 	require("prototypes.fixes.moon-eneas.pristine_filter"),

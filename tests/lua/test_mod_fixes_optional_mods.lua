@@ -255,4 +255,45 @@ raw = fresh()
 aquilo_data_card.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without items")
 
+-- pelagos recipe_gates
+local pelagos_recipe_gates = require("prototypes.fixes.pelagos.recipe_gates")
+local function gates_data()
+	local result = fresh()
+	result.recipe = {["pelagos-electronic-components"] = {enabled = true}, ["other-recipe"] = {enabled = true}}
+	result.technology = {
+		["advanced-circuit"] = {effects = {{type = "unlock-recipe", recipe = "pelagos-electronic-components"},
+			{type = "unlock-recipe", recipe = "other-recipe"}}},
+		["coconut-processing-technology"] = {effects = {{type = "unlock-recipe", recipe = "coconut-sealant"}}},
+	}
+	return result
+end
+raw = gates_data()
+pelagos_recipe_gates.data_final_fixes()
+check(raw.recipe["pelagos-electronic-components"].enabled == false, "The recipe is still enabled from the start")
+---@type any
+local circuit_effects = raw.technology["advanced-circuit"].effects
+check(#circuit_effects == 1 and circuit_effects[1].recipe == "other-recipe", "The unlock stayed with advanced-circuit")
+---@type any
+local coconut_effects = raw.technology["coconut-processing-technology"].effects
+check(#coconut_effects == 2 and coconut_effects[2].recipe == "pelagos-electronic-components",
+	"The recipe is not unlocked by the technology of the coconuts")
+check(raw.recipe["other-recipe"].enabled == true, "Another recipe was disabled")
+check(logged("razi-protocol: pelagos-electronic-components is unlocked by coconut-processing-technology, not by "
+	.. "advanced-circuit") == 1 and #logs == 1, "Expected one line")
+pelagos_recipe_gates.data_final_fixes()
+check(#logs == 1 and #coconut_effects == 2 and #circuit_effects == 1, "The repeated run changed things again")
+raw = gates_data()
+raw.technology["coconut-processing-technology"] = nil
+pelagos_recipe_gates.data_final_fixes()
+check(raw.recipe["pelagos-electronic-components"].enabled == true and #raw.technology["advanced-circuit"].effects == 2
+	and #logs == 0, "The recipe lost its only unlock without the technology of the coconuts")
+raw = gates_data()
+raw.recipe["pelagos-electronic-components"] = nil
+pelagos_recipe_gates.data_final_fixes()
+check(#raw.technology["advanced-circuit"].effects == 2 and #raw.technology["coconut-processing-technology"].effects == 1
+	and #logs == 0, "A technology was changed without the recipe")
+raw = fresh()
+pelagos_recipe_gates.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without Pelagos")
+
 print("mod fixes (optional mods): ok")
