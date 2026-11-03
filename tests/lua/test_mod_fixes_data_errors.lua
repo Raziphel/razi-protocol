@@ -75,6 +75,25 @@ raw = fresh()
 hard_drive_time.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without the recipe")
 
+-- planetaris-arig rail_support_description
+local rail_description = require("prototypes.fixes.planetaris-arig.rail_support_description")
+raw = fresh()
+local arig_line = {"", {"technology-description.rail-support-foundations"}, "", {"technology-description.rail-support-foundations-addon"}}
+raw.technology = {["rail-support-foundations"] = {localized_description = arig_line}}
+rail_description.data_final_fixes()
+check(raw.technology["rail-support-foundations"].localised_description == arig_line, "The description was not moved")
+check(raw.technology["rail-support-foundations"].localized_description == nil, "The misspelt key stayed")
+check(logged("rail-support-foundations shows the Arig line") == 1 and logs[1]:find("^razi%-protocol: "), "Expected one line that starts with the mod name")
+rail_description.data_final_fixes()
+check(logged("rail-support-foundations") == 1, "The repeated run touched the technology again")
+raw.technology = {["rail-support-foundations"] = {localized_description = arig_line, localised_description = {"mine"}}}
+rail_description.data_final_fixes()
+check(raw.technology["rail-support-foundations"].localised_description[1] == "mine", "A description that was set was replaced")
+raw = fresh()
+raw.technology = {}
+rail_description.data_final_fixes()
+check(next(raw.technology) == nil and #logs == 0, "Something changed without the technology")
+
 -- slp-dyson-sphere-reworked-fork connector_priority
 local connector_priority = require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority")
 raw = fresh()
