@@ -71,13 +71,15 @@ function support.level(preset, saved)
 end
 
 -- Runs the group on a fresh fixture at every level. Open (Easy, or open picked by hand) must change nothing and log
--- nothing; closed and strict (Normal, Hard, Nightmare, or picked by hand) must satisfy applied(raw).
+-- nothing. A fix of the closed group must satisfy applied(raw) at closed and strict (Normal, Hard, Nightmare, or picked
+-- by hand); a fix of the strict group (group = "strict") only at strict (Hard, Nightmare, or picked by hand) and must
+-- leave the recipes alone at closed.
 -- fixture() returns the recipes, and the technologies if it has them.
-function support.gate(loops, fixture, applied)
+function support.gate(loops, fixture, applied, group)
 	local rows = {
-		{ "easy", "closed", false }, { "custom", "open", false }, { "normal", "open", false },
-		{ "normal", "closed", true }, { "hard", "closed", true }, { "nightmare", "closed", true },
-		{ "custom", "closed", true }, { "custom", "strict", true }, { "easy", "strict", true },
+		{ "easy", "closed", false, false }, { "custom", "open", false, false }, { "normal", "open", false, false },
+		{ "normal", "closed", true, false }, { "hard", "closed", true, true }, { "nightmare", "closed", true, true },
+		{ "custom", "closed", true, false }, { "custom", "strict", true, true }, { "easy", "strict", true, true },
 	}
 	for _, row in ipairs(rows) do
 		support.level(row[1], row[2])
@@ -86,11 +88,14 @@ function support.gate(loops, fixture, applied)
 		local before = support.copy(raw)
 		loops.data_final_fixes()
 		local label = row[1] .. " with " .. row[2]
-		if row[3] then
-			support.check(applied(raw), label .. ": the loop must be closed")
-		else
+		if not row[3] then
 			support.check(support.same(raw, before) and #support.logs == 0,
 				label .. ": the loop must stay open, nothing changed and nothing logged")
+		elseif group == "strict" and not row[4] then
+			-- the fixes of the closed group run here and log their counts; the strict ones must not touch the recipes
+			support.check(support.same(raw, before), label .. ": the strict loop must stay open, nothing changed")
+		else
+			support.check(applied(raw), label .. ": the loop must be closed")
 		end
 	end
 end

@@ -13,10 +13,16 @@ local presets = require("lib.difficulty.presets")
 local ranks = { open = 0, closed = 1, strict = 2 }
 
 local entries = {
+	{ level = "strict", run = require("prototypes.balance.panglia_planet.panglite_recycling").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.plasma_crafter.fluoroketone_catalyst").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.catalysts").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.container_pairs").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.secretas.fuel_liquefaction").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.shchierbin.crusher_productivity").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.Krastorio2-spaced-out.loops").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.Krastorio2.crush_productivity").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.planetaris-hyarion.particle_manipulation").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.corrundum.recrystallization").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.skewer_planet_vesta.h2o_water").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.planet-crucible.hydrogen").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.nulls-k2so-tweaks.matter_to_bones").data_final_fixes },
@@ -25,6 +31,8 @@ local entries = {
 	{ level = "closed", run = require("prototypes.balance.corrundum.sulfuric_acid").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.corrundum.dry_ice").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.Krastorio2.recycling_returns").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.common.productivity_caps").data_final_fixes },
+	{ level = "strict", run = require("prototypes.balance.cubium.latent_recovery_quality").data_final_fixes },
 }
 
 function resource_loops.level()
