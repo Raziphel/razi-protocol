@@ -8,7 +8,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local story=require("lib.story")
 local W=require("tests.lua.journal_window")
 local defs=require("prototypes.technology.endgame.convergence")
-local convergence=require("scripts.razi_convergence")
+local convergence=require("scripts.convergence.convergence")
 local ctx=W.setup()
 local force,player=ctx.force,ctx.player
 story.configure(false)

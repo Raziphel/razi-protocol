@@ -62,7 +62,7 @@ end
 -- name, so read the suffixes from the source.
 local function victory_keys(section)
   local found={singles={},chains={}}
-  local source=read("scripts/razi_convergence.lua")
+  local source=read("scripts/convergence/convergence.lua")
   for suffix in source:gmatch('section%.%.%"%.([%w%-]+)"') do
     found.singles[section.."."..suffix]=true
   end

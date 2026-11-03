@@ -2,7 +2,7 @@
 -- Research, receivers, shipments and victory remain owned by source systems.
 local M={}
 local dyson=require("scripts.dyson.dyson")
-local convergence=require("scripts.razi_convergence")
+local convergence=require("scripts.convergence.convergence")
 local dyson_runtime=require("scripts.dyson.runtime")
 local icons=require("scripts.journal.icons")
 local marks=require("scripts.journal.marks")

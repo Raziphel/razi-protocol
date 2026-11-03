@@ -33,8 +33,8 @@ local function check_all(where)
 end
 
 local defs=require("prototypes.technology.endgame.convergence")
-local audit=require("scripts.razi_convergence_audit")
-local guard=require("scripts.razi_victory_guard")
+local audit=require("scripts.convergence.audit")
+local guard=require("scripts.convergence.victory_guard")
 local registry={item={},recipe={},entity={}}
 rawset(_G,"prototypes",registry)
 rawset(_G,"storage",{})

@@ -2,7 +2,7 @@
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
 local mods=require("prototypes.technology.endgame.convergence")
-local m=require("scripts.razi_convergence")
+local m=require("scripts.convergence.convergence")
 rawset(_G,"storage",{})
 rawset(_G,"prototypes",{item={
  ["ds-energy-loader-mk1"]={place_result={name="test-dyson-receiver"}}
@@ -185,7 +185,7 @@ check(select(1,m.witness_status(force))==7,
 message,used=m.deliver(player,"ignition")
 check(message=="convergence-need-deep-expedition" and used==0,
  "The final Mandate cannot be submitted without in-person travel to every reachable deep-space stop")
-local expedition=require("scripts.razi_deep_space_expedition")
+local expedition=require("scripts.convergence.deep_space_expedition")
 local _,required,stops,chart_ready=expedition.status(force)
 check(chart_ready and required==5,
  "Connected mandatory destinations include distant Oort and Sol routes")

@@ -17,7 +17,7 @@ local records=require("scripts.razi_journal_records")
 local briefs=require("scripts.journal.planet_briefs")
 local projects=require("scripts.journal.projects")
 local welcome=require("scripts.razi_welcome")
-local convergence=require("scripts.razi_convergence")
+local convergence=require("scripts.convergence.convergence")
 
 local M={}
 
