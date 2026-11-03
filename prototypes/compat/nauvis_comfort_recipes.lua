@@ -16,7 +16,7 @@ local swaps = {
 		},
 		-- what the crushing gives back of the carbon fiber: half of it, as a chance since there is one piece
 		crushing = {recipe = "kr-crush-stack-inserter", from = "carbon-fiber", amount = 1,
-			to = "low-density-structure", to_amount = 1, probability = 0.5}
+			to = "low-density-structure", to_amount = 1, independent_probability = 0.5}
 	},
 	{
 		recipe = "toolbelt-equipment",
@@ -74,7 +74,7 @@ local function recycling_matches(recycling, changes)
 			return false
 		end
 		local whole, fraction = quarter(change.amount)
-		if (entry.amount or 0) ~= whole or not same(entry.extra_count_fraction or 0, fraction) or entry.probability then
+		if (entry.amount or 0) ~= whole or not same(entry.extra_count_fraction or 0, fraction) or entry.independent_probability then
 			return false
 		end
 	end
@@ -138,7 +138,7 @@ local function swap_crushing(crushing)
 		return
 	end
 	local _, entry = find(recipe.results, crushing.from)
-	if not entry or entry.amount ~= crushing.amount or entry.probability or entry.amount_min or not item_exists(crushing.to) then
+	if not entry or entry.amount ~= crushing.amount or entry.independent_probability or entry.amount_min or not item_exists(crushing.to) then
 		return
 	end
 	if find(recipe.results, crushing.to) then
@@ -146,7 +146,7 @@ local function swap_crushing(crushing)
 	end
 	entry.name = crushing.to
 	entry.amount = crushing.to_amount
-	entry.probability = crushing.probability
+	entry.independent_probability = crushing.independent_probability
 	log("razi-protocol: " .. crushing.recipe .. " returns " .. crushing.to .. " instead of " .. crushing.from)
 end
 
