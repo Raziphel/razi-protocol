@@ -208,3 +208,27 @@ raw = fresh()
 raw.item = {["planetaris-red-refined-concrete"] = {place_as_tile = {result = "red-refined-concrete"}}}
 refined_concrete.data_final_fixes()
 check(next(raw) == "item" and next(raw, "item") == nil and #logs == 0, "Something changed without the tile table")
+
+-- Big-Monsters boss_spidertrons
+local boss_spidertrons = require("prototypes.fixes.Big-Monsters.boss_spidertrons")
+raw = fresh()
+raw["spider-vehicle"] = {
+	["bm-spidertron_1"] = {allow_passengers = true, minable = {mining_time = 1, result = "spidertron"}},
+	["bm-spidertron_5"] = {minable = {mining_time = 1, result = "spidertron"}},
+	["bm-spidertron_2"] = {allow_passengers = false},
+	["spidertron"] = {minable = {mining_time = 1, result = "spidertron"}},
+	["bm-spidertron_x"] = {minable = {mining_time = 1, result = "spidertron"}},
+}
+boss_spidertrons.data_final_fixes()
+check(raw["spider-vehicle"]["bm-spidertron_1"].allow_passengers == false and raw["spider-vehicle"]["bm-spidertron_1"].minable == nil,
+	"The first boss still takes passengers or can be mined")
+check(raw["spider-vehicle"]["bm-spidertron_5"].allow_passengers == false and raw["spider-vehicle"]["bm-spidertron_5"].minable == nil,
+	"The fifth boss still takes passengers or can be mined")
+check(raw["spider-vehicle"]["spidertron"].minable ~= nil and raw["spider-vehicle"]["spidertron"].allow_passengers == nil, "The spidertron of the player was changed")
+check(raw["spider-vehicle"]["bm-spidertron_x"].minable ~= nil, "A name that is not a numbered boss was changed")
+check(logged("takes no passengers and cannot be mined") == 2 and logs[1]:find("^razi%-protocol: "), "Expected one line for each of the two bosses that were open")
+boss_spidertrons.data_final_fixes()
+check(logged("takes no passengers") == 2, "The repeated run touched the bosses again")
+raw = fresh()
+boss_spidertrons.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without spider vehicles")
