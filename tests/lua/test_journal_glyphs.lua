@@ -25,6 +25,8 @@ local handle=assert(io.popen("ls scripts/journal/journal.lua scripts/journal/act
   .."scripts/journal/data.lua scripts/journal/expansion.lua scripts/journal/frontier.lua "
   .."scripts/journal/guidance.lua scripts/journal/icons.lua scripts/journal/industry.lua "
   .."scripts/journal/marks.lua scripts/journal/objectives.lua scripts/journal/projects.lua "
+  .."scripts/journal/project_api.lua scripts/journal/project_state.lua scripts/journal/project_style.lua "
+  .."scripts/journal/project_next.lua scripts/journal/project_readers.lua scripts/journal/project_views.lua "
   .."scripts/journal/recipe_preview.lua scripts/journal/salvage.lua scripts/journal/search_names.lua "
   .."scripts/journal/systems.lua scripts/journal/themes.lua scripts/story/corporate.lua "
   .."scripts/story/records.lua scripts/dyson/dyson.lua scripts/convergence/convergence.lua "

@@ -87,6 +87,9 @@ local LITERAL_PREFIX={
   ["scripts/journal/refresh.lua"]="journal-ui",
   ["scripts/journal/gui_events.lua"]="journal-ui",
   ["scripts/journal/projects.lua"]="journal-ui",
+  ["scripts/journal/project_next.lua"]="journal-ui",
+  ["scripts/journal/project_readers.lua"]="journal-ui",
+  ["scripts/journal/project_views.lua"]="journal-ui",
   ["scripts/journal/systems.lua"]="journal-systems"
 }
 local function literal_keys()
@@ -102,7 +105,9 @@ local function literal_keys()
     .."scripts/journal/button_cleanup.lua scripts/journal/data.lua scripts/journal/expansion.lua "
     .."scripts/journal/frontier.lua scripts/journal/guidance.lua scripts/journal/icons.lua "
     .."scripts/journal/industry.lua scripts/journal/marks.lua scripts/journal/objectives.lua "
-    .."scripts/journal/projects.lua scripts/journal/recipe_preview.lua scripts/journal/salvage.lua "
+    .."scripts/journal/projects.lua scripts/journal/project_api.lua scripts/journal/project_state.lua "
+    .."scripts/journal/project_style.lua scripts/journal/project_next.lua scripts/journal/project_readers.lua "
+    .."scripts/journal/project_views.lua scripts/journal/recipe_preview.lua scripts/journal/salvage.lua "
     .."scripts/journal/search_names.lua scripts/journal/systems.lua scripts/journal/themes.lua "
     .."scripts/story/corporate.lua scripts/story/records.lua scripts/convergence/convergence.lua "
     .."scripts/convergence/audit.lua scripts/story/welcome.lua lib/story.lua "
