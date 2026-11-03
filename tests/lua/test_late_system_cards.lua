@@ -36,9 +36,9 @@ local function build(mod_list)
 	raw.lab.lab = {type = "lab", name = "lab", inputs = {"automation-science-pack"}}
 
 	package.loaded["util"] = nil
-	package.loaded["prototypes.technology.progression"] = nil
+	package.loaded["prototypes.technology.systems.progression"] = nil
 	require("util")
-	require("prototypes.technology.progression")
+	require("prototypes.technology.systems.progression")
 	return raw
 end
 

@@ -50,11 +50,11 @@ local function build(list, recipes)
 	rawset(_G, "mods", {})
 	logged = {}
 	rawset(_G, "log", function(message) logged[#logged + 1] = message end)
-	for _, module in ipairs({"prototypes.technology.seven_system_gates", "prototypes.technology.system_gate_links"}) do
+	for _, module in ipairs({"prototypes.technology.gates.seven_system_gates", "prototypes.technology.gates.system_gate_links"}) do
 		package.loaded[module] = nil
 	end
-	require("prototypes.technology.seven_system_gates").data_final_fixes()
-	require("prototypes.technology.system_gate_links").data_final_fixes()
+	require("prototypes.technology.gates.seven_system_gates").data_final_fixes()
+	require("prototypes.technology.gates.system_gate_links").data_final_fixes()
 	return raw.technology
 end
 

@@ -28,8 +28,8 @@ local function setup(late)
   "nyxaris-tech-card","vibrant-tech-card","vespera-tech-card",
   "beetlejuice-tech-card","umbra-tech-card"}) do tools[name]={} end
  rawset(_G,"data",{raw={technology=techs,tool=tools}})
- package.loaded["prototypes.technology.deep_space_arrival"]=nil
- return techs,require("prototypes.technology.deep_space_arrival")
+ package.loaded["prototypes.technology.endgame.deep_space_arrival"]=nil
+ return techs,require("prototypes.technology.endgame.deep_space_arrival")
 end
 local function has(tech,name)
  for _,item in ipairs(tech.prerequisites or {}) do

@@ -1,7 +1,7 @@
 ---@diagnostic disable: missing-fields, need-check-nil, assign-type-mismatch
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
-local mods=require("prototypes.technology.convergence")
+local mods=require("prototypes.technology.endgame.convergence")
 local m=require("scripts.razi_convergence")
 rawset(_G,"storage",{})
 rawset(_G,"prototypes",{item={

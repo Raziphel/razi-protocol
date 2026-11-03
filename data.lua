@@ -15,8 +15,8 @@ require "prototypes.system.deep_space"
 require("prototypes.fixes.common.k2so_tweaks").data()
 require "prototypes.system.seven_systems"
 require "prototypes.system.asteroid_belts"
-require "prototypes.technology"
-require "prototypes.technology.asteroid_belts"
+require "prototypes.technology.load"
+require "prototypes.technology.systems.asteroid_belts"
 
 require("prototypes.ui.dyson_stages")
 require("prototypes.ui.journal")

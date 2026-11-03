@@ -48,8 +48,8 @@ rawset(_G,"data",{raw={technology=tech,planet={["bm-balack"]={},shchierbin={},["
   tool={["cryogenic-science-pack"]={}}}})
 rawset(_G,"mods",{["Krastorio2-spaced-out"]="2.1.0",
   ["bellicos-and-aegis"]="0.4.1"})
-package.loaded["prototypes.compat.planet_arrival_pacing"]=nil
-local module=require("prototypes.compat.planet_arrival_pacing")
+package.loaded["prototypes.technology.gates.planet_arrival_pacing"]=nil
+local module=require("prototypes.technology.gates.planet_arrival_pacing")
 module.data_final_fixes()
 local function has(name,parent)
   for _, candidate in ipairs(tech[name].prerequisites or {}) do

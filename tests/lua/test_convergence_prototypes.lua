@@ -70,9 +70,9 @@ function data:extend(prototypes)
 	end
 end
 
-local convergence = require("prototypes.technology.convergence")
+local convergence = require("prototypes.technology.endgame.convergence")
 convergence.data_final_fixes()
-require("prototypes.technology.convergence_witness").data_final_fixes()
+require("prototypes.technology.endgame.convergence_witness").data_final_fixes()
 
 local commission = assert(technologies[convergence.commission], "missing first Convergence technology")
 local synchronization = assert(technologies[convergence.authorization], "missing second Convergence technology")
@@ -113,7 +113,7 @@ for _ in pairs(technologies) do
 	technology_count = technology_count + 1
 end
 convergence.data_final_fixes()
-require("prototypes.technology.convergence_witness").data_final_fixes()
+require("prototypes.technology.endgame.convergence_witness").data_final_fixes()
 local after_repeat = 0
 for _ in pairs(technologies) do
 	after_repeat = after_repeat + 1

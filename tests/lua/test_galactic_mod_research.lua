@@ -19,7 +19,7 @@ local techs={
 }
 rawset(_G,"data",{raw={technology=techs}})
 rawset(_G,"mods",{["planet-express"]=true,["upgraded-rocket-turrets"]=true})
-local mod=require("prototypes.technology.galactic_mod_research")
+local mod=require("prototypes.technology.gates.galactic_mod_research")
 local function has(name,id)
  for _,p in ipairs(techs[name].prerequisites or {}) do
   if p==id then return true end

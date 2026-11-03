@@ -6,7 +6,7 @@ require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
 require("prototypes.fixes.tenebris-prime.tenebris_void_towers").data_final_fixes()
-require("prototypes.technology.progression")
+require("prototypes.technology.systems.progression")
 require("prototypes.compatibility.Krastorio2-spaced-out.transceiver_endgame").data_final_fixes()
 require("prototypes.compatibility.Nexus-Updated.nexus_endgame").data_final_fixes()
 require("prototypes.compatibility.Nexus-Updated.nexus_hyarion_conditions").data_final_fixes()
@@ -18,7 +18,7 @@ require("prototypes.fixes.Krastorio2-spaced-out.k2so_tech_card_cooling").data_fi
 require("prototypes.fixes.maraxsis.maraxsis_k2so_collision").data_final_fixes()
 require("prototypes.fixes.maraxsis.maraxsis_trench_wind").data_final_fixes()
 require("prototypes.fixes.common.progression_polish").data_final_fixes()
-require("prototypes.compat.vibrant_discovery_guard").data_final_fixes()
+require("prototypes.technology.gates.vibrant_discovery_guard").data_final_fixes()
 require("prototypes.balance.common.prototype_identity").data_final_fixes()
 require("prototypes.fixes.common.prototype_sanity").data_final_fixes()
 require("prototypes.fixes.common.research_data_surfaces").data_final_fixes()
@@ -88,26 +88,26 @@ require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers").data
 
 -- Set the campaign gates after the earlier compatibility passes: each system's discovery follows the
 -- previous tier and costs its cards.
-require("prototypes.technology.seven_system_gates").data_final_fixes()
+require("prototypes.technology.gates.seven_system_gates").data_final_fixes()
 -- Ferrum's robotics science and magnets stay out of the research that Ferrum itself needs; otherwise the next pass takes
 -- two packs out of the Vibrant card to break a cycle, and the cryogenic plant waits for the planet.
 require("prototypes.compatibility.planet-ferrum.ferrum_progression_guard").data_final_fixes()
 -- The stack inserter, the toolbelt equipment and the two belt capacity technologies are taken off Gleba's science and carbon fiber
 -- research; before the gate links, which would tie a technology priced in agricultural science to the pack.
-require("prototypes.technology.nauvis_comforts").data_final_fixes()
-require("prototypes.technology.system_gate_links").data_final_fixes()
+require("prototypes.technology.gates.nauvis_comforts").data_final_fixes()
+require("prototypes.technology.gates.system_gate_links").data_final_fixes()
 
 -- Transceiver activation opens the Solar System Edge and Deep Space.
 -- Runs after the system cards (lab_cards) and the transceiver unlocks exist and after the
 -- other compatibility passes have settled the prerequisites, before the lab inputs are deduplicated.
-require("prototypes.technology.deep_space_arrival").data_final_fixes()
+require("prototypes.technology.endgame.deep_space_arrival").data_final_fixes()
 
 -- Make sure every system card in the price of the new gates is unlocked before the gate.
-require("prototypes.technology.seven_systems").data_final_fixes()
+require("prototypes.technology.systems.seven_systems").data_final_fixes()
 
 -- Planet branches of one system require each other's science. After the gates and their links, so the
 -- opening choices of every system stay free.
-require("prototypes.technology.campaign_weave").data_final_fixes()
+require("prototypes.technology.gates.campaign_weave").data_final_fixes()
 
 -- Linox, Crucible and Vesta must not need their own late science to be reached; the weave above adds
 -- ancestors, so the arrival chains are cleaned after it.
@@ -121,8 +121,8 @@ require("prototypes.industry.exchanges.planet_production_exchanges").data_final_
 require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()
 
 -- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
-require("prototypes.technology.regional_research_bridges").data_final_fixes()
-require("prototypes.technology.galactic_mod_research").data_final_fixes()
+require("prototypes.technology.gates.regional_research_bridges").data_final_fixes()
+require("prototypes.technology.gates.galactic_mod_research").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
@@ -136,14 +136,14 @@ require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixe
 require("prototypes.industry.components.network_components").register_premium()
 
 -- Partnership gates need the premium exchanges registered above; Aquilo's cycle check must see the final prerequisites.
-require("prototypes.technology.industrial_partnership_gates").data_final_fixes()
+require("prototypes.technology.gates.industrial_partnership_gates").data_final_fixes()
 
 -- Move Aquilo's foundation, fusion-reactor and legendary-quality research behind later milestones.
 -- Runs after every pass that edits technology prerequisites (including the seven-systems gates, so
 -- the cycle check sees the final graph) and before the lab inputs are deduplicated.
-require("prototypes.technology.aquilo_breakthroughs").data_final_fixes()
+require("prototypes.technology.gates.aquilo_breakthroughs").data_final_fixes()
 -- Final optional arrival pacing after shared research and science integrations.
-require("prototypes.compat.planet_arrival_pacing").data_final_fixes()
+require("prototypes.technology.gates.planet_arrival_pacing").data_final_fixes()
 
 -- The bridges and the staged Aquilo upgrades add prerequisites after the first pass of the arrival
 -- guards; repeat them so the final prerequisite graph is clean.
@@ -224,12 +224,12 @@ require("prototypes.fixes.corrundum-krastorio-compatibility-plus.corrundum_compa
 require("prototypes.industry.cards.system_card_manufacturing").data_final_fixes()
 require("prototypes.industry.cards.system_card_laboratories").data_final_fixes()
 
-require("prototypes.technology.convergence").data_final_fixes()
-require("prototypes.technology.convergence_witness").data_final_fixes()
+require("prototypes.technology.endgame.convergence").data_final_fixes()
+require("prototypes.technology.endgame.convergence_witness").data_final_fixes()
 
 -- Optional, off by default: a few robot and nuclear technologies (and Planet Express' trade research) are tied to the
 -- science of the first planets. Runs after every research and lab pass, so the lab check sees the final labs.
-require("prototypes.technology.distributed_industry").data_final_fixes()
+require("prototypes.technology.gates.distributed_industry").data_final_fixes()
 
 -- Last starmap art passes: drop stray trail sprites left by other mods, then
 -- put Razi's gate and belt-rim markers on top.

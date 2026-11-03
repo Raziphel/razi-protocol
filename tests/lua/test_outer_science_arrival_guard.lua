@@ -83,6 +83,6 @@ f:close()
 local final=assert(src:find(
   'require("prototypes.compatibility.common.outer_science_arrival_guard").data_final_fixes()',1,true))
 local gate=assert(src:find(
-  'require("prototypes.technology.seven_system_gates").data_final_fixes()',1,true))
+  'require("prototypes.technology.gates.seven_system_gates").data_final_fixes()',1,true))
 check(final>gate,"Outer science compatibility should run after final discovery gates")
 print("Late Crucible and Vesta science cannot block their own arrival")

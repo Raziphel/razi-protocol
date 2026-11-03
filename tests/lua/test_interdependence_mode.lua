@@ -29,9 +29,9 @@ check(setting:find('allowed_values = {"off", "balanced", "deep"}',1,true),
 local industry=file("prototypes/industry/exchanges/planet_production_exchanges.lua")
 check(industry:find("alternative.allow_productivity = false",1,true),
   "Bonus production must not stack productivity")
-check(file("prototypes/technology/campaign_weave.lua"):find(
+check(file("prototypes/technology/gates/campaign_weave.lua"):find(
   "not interdependence.enabled()",1,true),"Research mode off not respected")
-check(file("prototypes/technology/regional_research_bridges.lua"):find(
+check(file("prototypes/technology/gates/regional_research_bridges.lua"):find(
   "not interdependence.enabled()",1,true),"Bridges ignore the Off mode")
 -- Levels pick the exchange depth; a manual value still wins.
 for _,entry in ipairs({

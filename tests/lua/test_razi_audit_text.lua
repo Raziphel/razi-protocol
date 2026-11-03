@@ -32,7 +32,7 @@ local function check_all(where)
   for _,message in ipairs(printed) do check_localised(message,where) end
 end
 
-local defs=require("prototypes.technology.convergence")
+local defs=require("prototypes.technology.endgame.convergence")
 local audit=require("scripts.razi_convergence_audit")
 local guard=require("scripts.razi_victory_guard")
 local registry={item={},recipe={},entity={}}

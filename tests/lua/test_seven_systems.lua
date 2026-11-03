@@ -44,8 +44,8 @@ local function build(technologies)
 	logged = {}
 	rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
-	package.loaded["prototypes.technology.seven_systems"] = nil
-	local module = require("prototypes.technology.seven_systems")
+	package.loaded["prototypes.technology.systems.seven_systems"] = nil
+	local module = require("prototypes.technology.systems.seven_systems")
 	-- The module also defines the three gates; replace them with the scenario.
 	raw.technology = {}
 	for _, definition in ipairs(technologies) do

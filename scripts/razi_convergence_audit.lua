@@ -1,6 +1,6 @@
 -- Lightweight, read-only audit of existing native Convergence cargo.
 local M={}
-local defs=require("prototypes.technology.convergence")
+local defs=require("prototypes.technology.endgame.convergence")
 function M.inspect(force,registry)
  local report={errors={},notes={},labs=0,stages=0,components=0,
   missing_producers=0,locked_sources=0,unlocked=0}

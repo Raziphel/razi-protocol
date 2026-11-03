@@ -66,7 +66,7 @@ for _, side in ipairs({"inner","outer"}) do
     "Belt edges must provide metallic/carbonic/oxide ore chunks")
   check(loc.draw_orbit == false, "Extra orbit ring would clutter system")
 end
-require("prototypes.technology.asteroid_belts")
+require("prototypes.technology.systems.asteroid_belts")
 local vibrant_tech=raw.technology["space-discovery-asteroid-belt"]
 check(vibrant_tech and vibrant_tech.prerequisites[1]=="vibrant-discovery",
   "Vibrant belt must be discoverable before reaching Ribbonia")

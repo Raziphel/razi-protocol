@@ -69,8 +69,8 @@ local function setup()
 			["rocket-turret"] = {ingredients = {{"carbon-fiber", 20}}},
 		},
 	}})
-	package.loaded["prototypes.technology.nauvis_comforts"] = nil
-	return technologies, require("prototypes.technology.nauvis_comforts")
+	package.loaded["prototypes.technology.gates.nauvis_comforts"] = nil
+	return technologies, require("prototypes.technology.gates.nauvis_comforts")
 end
 
 local function prices(technology, name)
@@ -161,16 +161,16 @@ technologies["transport-belt-capacity-2"].unit = nil
 module.data_final_fixes()
 check(not prices(technologies["stack-inserter"], "agricultural-science-pack"), "the others are still changed")
 rawset(_G, "data", {raw = {}})
-package.loaded["prototypes.technology.nauvis_comforts"] = nil
-require("prototypes.technology.nauvis_comforts").data_final_fixes()
+package.loaded["prototypes.technology.gates.nauvis_comforts"] = nil
+require("prototypes.technology.gates.nauvis_comforts").data_final_fixes()
 
 -- It runs after the gates and before the gate links.
 local file = assert(io.open("data-final-fixes.lua", "r"))
 local source = file:read("*a")
 file:close()
-local gates = assert(source:find('require("prototypes.technology.seven_system_gates").data_final_fixes()', 1, true))
-local pass = assert(source:find('require("prototypes.technology.nauvis_comforts").data_final_fixes()', 1, true))
-local links = assert(source:find('require("prototypes.technology.system_gate_links").data_final_fixes()', 1, true))
+local gates = assert(source:find('require("prototypes.technology.gates.seven_system_gates").data_final_fixes()', 1, true))
+local pass = assert(source:find('require("prototypes.technology.gates.nauvis_comforts").data_final_fixes()', 1, true))
+local links = assert(source:find('require("prototypes.technology.gates.system_gate_links").data_final_fixes()', 1, true))
 check(gates < pass and pass < links, "the pass runs between the gates and the gate links")
 
 print("nauvis_comforts: ok")
