@@ -216,4 +216,43 @@ raw = fresh()
 pristine_filter.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without recipes")
 
+-- moon-eneas aquilo_data_card
+local aquilo_data_card = require("prototypes.fixes.moon-eneas.aquilo_data_card")
+raw = fresh()
+raw.item = {
+	["aquilo-data-card"] = {},
+	["cargo-crate-aquilo-data-card"] = {},
+	["gleba-data-card"] = {},
+	["cargo-crate-gleba-data-card"] = {},
+}
+raw.recipe = {
+	["cargo-crate-aquilo-data-card"] = {},
+	["unpack-cargo-crate-aquilo-data-card"] = {hidden = false},
+	["cargo-crate-gleba-data-card"] = {},
+}
+aquilo_data_card.data_final_fixes()
+check(raw.item["aquilo-data-card"].hidden and raw.item["cargo-crate-aquilo-data-card"].hidden
+	and raw.recipe["cargo-crate-aquilo-data-card"].hidden and raw.recipe["unpack-cargo-crate-aquilo-data-card"].hidden,
+	"The Aquilo card, its crate or their recipes are not hidden")
+check(raw.item["gleba-data-card"].hidden == nil and raw.item["cargo-crate-gleba-data-card"].hidden == nil
+	and raw.recipe["cargo-crate-gleba-data-card"].hidden == nil, "The card of another planet was hidden")
+check(logged("razi-protocol: aquilo-data-card is hidden") == 1
+	and logged("razi-protocol: cargo-crate-aquilo-data-card is hidden") == 2
+	and logged("razi-protocol: unpack-cargo-crate-aquilo-data-card is hidden") == 1 and #logs == 4,
+	"Expected one line for each of the four hidden prototypes")
+aquilo_data_card.data_final_fixes()
+check(#logs == 4, "The repeated run logged again")
+raw = fresh()
+raw.item = {["aquilo-data-card"] = {}}
+aquilo_data_card.data_final_fixes()
+check(raw.item["aquilo-data-card"].hidden and #logs == 1, "The card was not hidden without Cargo Crates")
+raw = fresh()
+raw.item = {["gleba-data-card"] = {}}
+raw.recipe = {["cargo-crate-aquilo-data-card"] = {}}
+aquilo_data_card.data_final_fixes()
+check(raw.recipe["cargo-crate-aquilo-data-card"].hidden == nil and #logs == 0, "Something was hidden without the card")
+raw = fresh()
+aquilo_data_card.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without items")
+
 print("mod fixes (optional mods): ok")
