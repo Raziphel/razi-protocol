@@ -99,5 +99,42 @@ logs = {}
 fixes.data_final_fixes()
 check(logged("takes the shown name and description") == 0, "The repeated run touched the modes again")
 
+-- void_crushing
+local function recipe(categories, ingredients)
+  local list = {}
+  for _, ingredient in ipairs(ingredients) do
+    list[#list + 1] = {type = ingredient.type or "item", name = ingredient.name, amount = 1}
+  end
+  return {categories = categories, ingredients = list}
+end
+raw = fresh()
+raw.recipe = {
+  ["kr-crush-bones"] = recipe({"kr-crushing"}, {{name = "bones"}}),
+  ["kr-void-bones"] = recipe({"kr-void-crushing"}, {{name = "bones"}}),
+  ["salvage-ice"] = recipe({"kr-crushing"}, {{name = "rocket-chunk"}, {name = "ice"}}),
+  ["kr-void-ice"] = recipe({"kr-void-crushing"}, {{name = "ice"}}),
+  ["kr-crush-water"] = recipe({"kr-crushing"}, {{name = "water", type = "fluid"}}),
+  ["kr-void-water"] = recipe({"kr-void-crushing"}, {{name = "water"}}),
+  ["kr-void-slag"] = recipe({"kr-void-crushing"}, {{name = "slag"}}),
+}
+raw.technology = {
+  ["kr-tech"] = {effects = {
+    {type = "unlock-recipe", recipe = "kr-void-bones"},
+    {type = "unlock-recipe", recipe = "kr-void-ice"},
+    {type = "unlock-recipe", recipe = "kr-void-bones"},
+  }},
+  ["no-effects"] = {},
+}
+fixes.data_final_fixes()
+check(raw.recipe["kr-void-bones"] == nil, "The void recipe of a crushed item stayed")
+check(raw.recipe["kr-crush-bones"] ~= nil, "The real crushing recipe was removed")
+check(raw.recipe["kr-void-ice"] ~= nil, "The void recipe of an item crushed only among several ingredients was removed")
+check(raw.recipe["kr-void-slag"] ~= nil, "The void recipe of an item without a crushing recipe was removed")
+check(raw.recipe["kr-void-water"] ~= nil, "A fluid ingredient counted as crushed")
+---@type any
+local tech_effects = raw.technology["kr-tech"].effects
+check(#tech_effects == 1 and tech_effects[1].recipe == "kr-void-ice", "The effects of the removed recipe stayed")
+check(logged("removed void crushing recipe kr-void-bones") == 1 and logged("removed void crushing recipe") == 1,
+  "Expected one line for the removed recipe")
 
 print("test_mod_fixes_krastorio2: ok")
