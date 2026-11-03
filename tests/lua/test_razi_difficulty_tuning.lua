@@ -2,7 +2,7 @@
 -- A multiplier of 1 leaves the source numbers alone.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(x,msg) if not x then error(msg,2) end end
-local tuning=require("scripts.razi_difficulty_tuning")
+local tuning=require("prototypes.difficulty.tuning")
 local presets={
  easy={expansion={settler_group_min_size=3,settler_group_max_size=8,
    min_expansion_cooldown=36000,max_expansion_cooldown=300000}},
