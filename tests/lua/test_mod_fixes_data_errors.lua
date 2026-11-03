@@ -55,6 +55,38 @@ end
 fixes.data_final_fixes()
 check(#logs == 0, "A repair logged on empty prototype tables")
 
+-- xy-k2so-enhancements-nulls-fork upgrade_chain
+local upgrade_chain = require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.upgrade_chain")
+raw = fresh()
+raw["loader-1x1"] = {
+	["kr-advanced-loader"] = {next_upgrade = "kr-superior-loader", fast_replaceable_group = "loader"},
+	["kr-hyper-loader"] = {fast_replaceable_group = "loader"},
+}
+raw["transport-belt"] = {
+	["planetaris-hyper-transport-belt"] = {fast_replaceable_group = "transport-belt"},
+	["kr-superior-transport-belt"] = {fast_replaceable_group = "transport-belt"},
+}
+raw["underground-belt"] = {
+	["planetaris-hyper-underground-belt"] = {next_upgrade = "kr-superior-underground-belt", fast_replaceable_group = "underground-belt"},
+	["kr-superior-underground-belt"] = {fast_replaceable_group = "underground-belt"},
+}
+raw.splitter = {
+	["planetaris-hyper-splitter"] = {fast_replaceable_group = "splitter"},
+	["kr-superior-splitter"] = {fast_replaceable_group = "other-group"},
+}
+upgrade_chain.data_final_fixes()
+check(raw["loader-1x1"]["kr-advanced-loader"].next_upgrade == "kr-hyper-loader", "The advanced loader does not upgrade to the hyper loader")
+check(raw["transport-belt"]["planetaris-hyper-transport-belt"].next_upgrade == "kr-superior-transport-belt", "The hyper belt does not upgrade to superior")
+check(raw["underground-belt"]["planetaris-hyper-underground-belt"].next_upgrade == "kr-superior-underground-belt", "A correct link was rewritten")
+check(raw.splitter["planetaris-hyper-splitter"].next_upgrade == nil, "A link between different replace groups was made")
+check(logged("upgrades to") == 2 and logs[1]:find("^razi%-protocol: "), "Expected a line for each of the two links that were wrong, got " .. logged("upgrades to"))
+upgrade_chain.data_final_fixes()
+check(logged("upgrades to") == 2, "The repeated run touched the links again")
+raw = fresh()
+raw["transport-belt"] = {["planetaris-hyper-transport-belt"] = {}}
+upgrade_chain.data_final_fixes()
+check(raw["transport-belt"]["planetaris-hyper-transport-belt"].next_upgrade == nil and #logs == 0, "A link was made to a belt that does not exist")
+
 -- k2so-cubium-compatibility-fork galvanization_notes
 local galvanization_notes = require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes")
 raw = fresh()

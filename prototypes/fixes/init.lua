@@ -16,6 +16,7 @@ local repairs = {
 	require("prototypes.fixes.Krastorio2.artillery_range"),
 	require("prototypes.fixes.apia.nutrients_refresh"),
 	require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes"),
+	require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.upgrade_chain"),
 }
 
 function mod_fixes.data_final_fixes()
