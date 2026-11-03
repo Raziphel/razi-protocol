@@ -1,7 +1,7 @@
 ---@diagnostic disable: missing-fields
 -- Repairs of mistakes in the data of required mods (prototypes/fixes/): the ice box of Corrundum, the Muluna hard drive
 -- and burner roboport, the description of an Arig technology, the connectors of the Dyson sphere, the upgrade chain of the
--- hyper belts, the galvanization pack of Cubium, the nutrients of Apia and the electrochemical plant, on a mocked data.raw.
+-- hyper belts, the galvanization pack of Cubium and the nutrients of Apia, on a mocked data.raw.
 -- Run from the mod root with the library bootstrap:
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_mod_fixes_data_errors.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -54,6 +54,26 @@ for _, name in ipairs({"recipe", "technology", "capsule", "item", "roboport", "a
 end
 fixes.data_final_fixes()
 check(#logs == 0, "A repair logged on empty prototype tables")
+
+-- corrundum bioflux_stack
+local bioflux_stack = require("prototypes.fixes.corrundum.bioflux_stack")
+raw = fresh()
+raw.capsule = {bioflux = {stack_size = 200}}
+bioflux_stack.data_final_fixes()
+check(raw.capsule.bioflux.stack_size == 200 and #logs == 0, "Bioflux changed without Corrundum")
+mod_list["corrundum"] = "1.0.51"
+bioflux_stack.data_final_fixes()
+check(raw.capsule.bioflux.stack_size == 100, "Bioflux did not return to the stack of the ice box")
+check(logged("bioflux stack_size = 100") == 1 and logs[1]:find("^razi%-protocol: "), "Expected one line that starts with the mod name")
+bioflux_stack.data_final_fixes()
+check(logged("bioflux stack_size") == 1, "The repeated run touched bioflux again")
+raw.capsule.bioflux.stack_size = 50
+bioflux_stack.data_final_fixes()
+check(raw.capsule.bioflux.stack_size == 50, "A smaller stack was changed")
+raw = fresh()
+bioflux_stack.data_final_fixes()
+check(next(raw) == nil and #logs == 0, "Something changed without the bioflux capsule")
+mod_list["corrundum"] = nil
 
 -- planet-muluna hard_drive_time
 local hard_drive_time = require("prototypes.fixes.planet-muluna.hard_drive_time")
