@@ -32,7 +32,7 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
   - the bioluminescent copies of Tenebris: copies of machines that cannot work on Tenebris can no longer be made, and the copies you have built keep working.
 - **System tech cards** now also need Krastorio 2 research data. Start making it.
 - **Asteroid collectors** without a filter also pick up the new kinds of asteroid chunks. Set filters.
-- **Difficulty.** Your save plays on Normal, which plays like 2.x. On Hard and Nightmare, research uses cards made from science packs, so labs wait until you make the cards.
+- **Difficulty.** Your save plays on Normal, which adds no scaling to prices, enemies or machines. Unlike 2.x, Recipe loops is on Closed: some recipes get no productivity and a few are hidden (see Recipes above). The setting can be changed. On Hard and Nightmare, research uses cards made from science packs, so labs wait until you make the cards.
 - **New: the Expedition Journal.** Open it with the button at the top left or with Ctrl+Shift+J. It has quests and Projects and counts what you have already done.
 
 ## What the update does for you
