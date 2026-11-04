@@ -44,7 +44,7 @@ Past about 500 lines a file is split by meaning. Moves and splits go in their ow
 - The title is a conventional commit.
 - The description is a short list of what changes.
 - CI (`check`: Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API, `changelog.txt` format, Lua tests) must be green before merging.
-- `Load` (`.github/workflows/load.yml`) loads the mod with its dependencies in a headless game on Normal and Nightmare when a pull request changes code, data, settings or locale; a pull request from a fork gets no mod download and skips it. `tests/load/run.sh` runs the same check locally.
+- `Load` (`.github/workflows/load.yml`) loads the mod with its dependencies in a headless game on Normal and Nightmare when a pull request changes code, data, settings or locale; a pull request from a fork gets no mod download and skips it. It then runs the tests of `tests/funit/`. `tests/load/run.sh` runs the same checks locally.
 
 ## Story text
 
@@ -57,6 +57,7 @@ Story text is written in `locale/en/story-*.cfg` and tried in the game in writer
 - Check what the game does before writing it into a test: the [API docs](https://lua-api.factorio.com/latest/) or a run in the game.
 - Expected values come from the design, not from the function under test.
 - Never weaken, skip or delete a test to make a fix pass. A failing test may be wrong: check its setup first, and say in the pull request if you change it.
+- What only the running game shows (a real player and GUI, the prototypes as loaded) goes in `tests/funit/`, written for the FUnit mod; `tests/load/run.sh` runs it after the load check (`--no-funit` skips it).
 
 ## Design rules
 

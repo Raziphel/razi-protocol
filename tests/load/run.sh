@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Loads razi-protocol and the mods it needs in a real headless game, as a player gets it: a new map, then some ticks,
 # for each difficulty. A prototype error, a Lua error at start or a bad number in the data (see check-mod/) fails it.
+# Then the tests of tests/funit run in the same game with the FUnit mod; a failed test, a missing report or a suite that
+# ran no test fails it too.
 # Optional dependencies ("?") stay off. Needs bash, python3 and curl; downloading the game needs Linux x64.
 #
 #   FACTORIO_USERNAME=<account> FACTORIO_TOKEN=<player token> tests/load/run.sh
@@ -14,9 +16,12 @@
 #   --work DIR            working folder, default .load in the repository
 #   --resolved            <work>/mods.lock was made by the caller (mods.py resolve): do not resolve again
 #   --tree                load the working tree; by default the committed tree as `git archive` packs it, like a release
+#   --no-funit            do not run the FUnit tests (tests/funit); the load check alone
 #
 # The mods are resolved with tests/load/mods.py (portal API, newest release for the game version), cached in
-# <work>/mods-cache and linked into one folder per difficulty. Exit code 0 means every difficulty loaded.
+# <work>/mods-cache and linked into one folder per difficulty. FUnit is resolved with them, but only the folder of the
+# tests has it, so the load check runs without it. With --pool, FUnit has to be in one of the folders too. Exit code 0
+# means every difficulty loaded and passed its tests.
 set -uo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -28,6 +33,7 @@ levels="normal nightmare"
 ticks=60
 tree=0
 resolved=0
+funit=1
 pools=()
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -39,6 +45,7 @@ while [ $# -gt 0 ]; do
     --work) work="$2"; shift 2 ;;
     --resolved) resolved=1; shift ;;
     --tree) tree=1; shift ;;
+    --no-funit) funit=0; shift ;;
     -h|--help) sed -n '2,/^set -uo/p' "$0" | sed '$d' | cut -c3-; exit 0 ;;
     *) echo "error: unknown argument $1" >&2; exit 2 ;;
   esac
@@ -78,10 +85,14 @@ echo "Factorio $game"
 
 # --- the mods ---------------------------------------------------------------------------------------------------
 if [ "$resolved" -eq 0 ]; then
-  py mods.py resolve --info "$root/info.json" --game "$game" --out "$work/mods.lock" ${pools[@]+"${pools[@]}"} || exit 1
+  py mods.py resolve --info "$root/info.json" --game "$game" --out "$work/mods.lock" --extra-mod funit ${pools[@]+"${pools[@]}"} || exit 1
 fi
 if [ ${#pools[@]} -eq 0 ]; then
   py mods.py fetch --lock "$work/mods.lock" --dir "$work/mods-cache" || exit 1
+fi
+
+if [ "$funit" -eq 1 ] && ! grep -q '"name": "funit"' "$work/mods.lock"; then
+  echo "error: funit is not in $work/mods.lock; resolve with --extra-mod funit (or pass --no-funit)" >&2; exit 2
 fi
 
 # the mod as a release packs it (files marked export-ignore left out), or the working tree
@@ -127,6 +138,34 @@ run_level() {
     summary="$summary| $level | $step | ok | $(( $(date +%s) - started )) s |"$'\n'
   done
   grep -h "razi-load-check:" "$dir/create.txt" | sed 's/^ *[0-9.]* Script @[^ ]* //' | head -1
+  [ "$funit" -eq 1 ] && { run_funit "$level" || return 1; }
+  return 0
+}
+
+# The tests of tests/funit: the scenario starts a new map with a player, runs the tests and ends the game with exit code
+# 0 only when all passed (--test-scenario). --test-ticks is not used: it ends a stuck run with 0. The report is read as well.
+run_funit() {
+  local level="$1" dir="$work/run-$1" started code
+  rm -rf "$dir/test-mods" "$dir/script-output"
+  py mods.py link --lock "$work/mods.lock" --dir "$work/mods-cache" --out "$dir/test-mods" ${razi[@]+"${razi[@]}"} --extra "$root/tests/funit" --with-extra-mods > /dev/null || return 1
+  py mod_settings.py write "$dir/test-mods/mod-settings.dat" --game "$game" "razi-difficulty-preset=$level" || return 1
+  started=$(date +%s)
+  limit 1500 "$bin" -c "$dir/config.ini" --mod-directory "$dir/test-mods" --test-scenario zzz-razi-funit/funit-razi < /dev/null > "$dir/test.txt" 2>&1
+  code=$?
+  # the game can end with 0 and leave no usable report (a suite that did not start); the report decides
+  if [ $code -eq 0 ] && ! py funit_report.py "$dir/script-output/funit-report-razi.json" > "$dir/test-report.txt" 2>&1; then
+    code=1
+    cat "$dir/test-report.txt"
+  elif [ $code -ne 0 ]; then
+    { grep -hE "__FUNIT__.*(FAILURE|ERROR)__|No tests found|non-recoverable| Error " "$dir/test.txt" || tail -20 "$dir/test.txt"; } | head -20 | cut -c1-700
+  fi
+  if [ $code -ne 0 ]; then
+    echo "::error title=FUnit tests failed ($level)::exit code $code; see above"
+    summary="$summary| $level | tests | FAILED, exit code $code |  |"$'\n'
+    return 1
+  fi
+  echo "ok   $level tests, $(cat "$dir/test-report.txt") ($(( $(date +%s) - started )) s)"
+  summary="$summary| $level | tests | ok, $(cat "$dir/test-report.txt") | $(( $(date +%s) - started )) s |"$'\n'
 }
 
 for level in $levels; do
