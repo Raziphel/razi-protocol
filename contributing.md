@@ -19,7 +19,7 @@ See [Releases in the README](README.md#releases):
 1. Use the real prototype IDs, dependencies and callers of the source mods.
 2. Keep saves working: no renamed settings, quest IDs, technologies or locations without a migration.
 3. Change the English locale, translations and tests together with the code.
-4. Run the tests. For changes to prototypes, the tech tree, the starmap or the UI, also load the game with the full mod set and an existing save.
+4. Run the tests: `tests/run.sh`, with RaziLib next to this folder and Lua 5.2 from `lua/setup.sh` of [factorio-mod-tools](https://github.com/GreenTech-Solutions/factorio-mod-tools). For changes to prototypes, the tech tree, the starmap or the UI, also load the game with the full mod set and an existing save.
 
 ## Where a file goes
 
@@ -43,7 +43,7 @@ Past about 500 lines a file is split by meaning. Moves and splits go in their ow
 
 - The title is a conventional commit.
 - The description is a short list of what changes.
-- CI (`check`: Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API, `changelog.txt` format) must be green before merging.
+- CI (`check`: Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API, `changelog.txt` format, Lua tests) must be green before merging.
 
 ## Story text
 
