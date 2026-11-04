@@ -146,6 +146,15 @@ check(M.state(force,defs.by_id["nauvis-power"])=="unavailable"
   and M.state(force,defs.by_id["nauvis-electronics"])=="active",
   "Missing K2 steam power must not strand Nauvis electronics")
 force.technologies["steam-power"]=steam_power
+steam_power.enabled=false
+check(M.state(force,defs.by_id["nauvis-power"])=="unavailable"
+  and M.state(force,defs.by_id["nauvis-electronics"])=="active",
+  "Disabled installed research must be skipped without blocking other goals")
+steam_power.researched=true
+check(M.state(force,defs.by_id["nauvis-power"])=="complete",
+  "Researched but now disabled technology must retain its saved completion")
+steam_power.researched=false
+steam_power.enabled=nil
 force.technologies["kr-automation-core"].researched=true
 force.technologies.logistics.researched=true
 check(M.state(force,defs.by_id["green-science"])=="active",
@@ -205,6 +214,10 @@ force.technologies["discovery-native-igrys"]={
     type="unlock-space-location",space_location="igrys"
   }}}
 }
+force.technologies["discovery-native-igrys"].enabled=false
+check(not M.discovery_index(force).igrys,
+  "Disabled world-discovery research must not become a valid Journal goal")
+force.technologies["discovery-native-igrys"].enabled=nil
 local context=M.context(force)
 check(M.available(force,defs.by_id["igrys"],context),
   "Side-world discovery should be dynamically indexed")
