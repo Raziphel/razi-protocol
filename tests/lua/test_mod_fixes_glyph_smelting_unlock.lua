@@ -30,8 +30,12 @@ fix.data_final_fixes()
 check(recipes["glyph-smelt-glyph-1x1-pipe"].enabled == false and recipes["glyph-smelt-glyph-1x3-pipe"].enabled == false,
 	"The recipes must not be open from the start")
 check(recipes["iron-plate"].enabled == true, "A recipe of another kind stays open")
-check(#technology.effects == 3 and technology.effects[1].recipe == "basic-glyph-production", "The research keeps its effects")
-check(technology.effects[2].recipe == "glyph-smelt-glyph-1x1-pipe" and technology.effects[3].recipe == "glyph-smelt-glyph-1x3-pipe",
+local opened = {}
+for _, effect in ipairs(technology.effects) do
+	opened[#opened + 1] = effect.recipe
+end
+check(#opened == 3 and opened[1] == "basic-glyph-production", "The research keeps its effects")
+check(opened[2] == "glyph-smelt-glyph-1x1-pipe" and opened[3] == "glyph-smelt-glyph-1x3-pipe",
 	"The research opens them, in a stable order")
 check(#logs == 2, "Every change is logged")
 
