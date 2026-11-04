@@ -172,6 +172,7 @@ def cmd_resolve(args):
     if missing:
         fail("no release for game %s of: %s" % (args.game, ", ".join(sorted(missing))))
     mods = [{key: value for key, value in chosen[name].items() if key != "dependencies"} for name in sorted(chosen)]
+    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w") as file:
         json.dump({"game": args.game, "mods": mods}, file, indent=1)
         file.write("\n")
