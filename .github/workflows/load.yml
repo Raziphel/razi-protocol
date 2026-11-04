@@ -2,7 +2,8 @@ name: Load
 
 # Loads razi-protocol and the mods it needs in a real headless Factorio (tests/load/run.sh): a new map and some ticks
 # on Normal and on Nightmare, so a prototype error or a bad number in the data stops a pull request before it reaches
-# a player. It runs apart from `check` (release.yml) because the mods are about 7 GB to download.
+# a player. Then the in-game tests of tests/funit run in the same game (the FUnit mod is one more mod of the cache).
+# It runs apart from `check` (release.yml) because the mods are about 7 GB to download.
 #
 # The mods come from the mod portal with the secret FACTORIO_PLAYER_TOKEN (a player token, not the API key of the
 # release) and the account it belongs to, Raziphel unless the variable FACTORIO_USERNAME says otherwise. A pull request from a fork gets no
@@ -28,6 +29,7 @@ on:
       - scripts/**
       - settings*.lua
       - settings/**
+      - tests/funit/**
       - tests/load/**
       - util.lua
   push:
@@ -47,6 +49,7 @@ on:
       - scripts/**
       - settings*.lua
       - settings/**
+      - tests/funit/**
       - tests/load/**
       - util.lua
   workflow_dispatch:
@@ -102,7 +105,7 @@ jobs:
       - name: Resolve the mods
         id: mods
         run: |
-          python3 -I tests/load/mods.py resolve --info info.json --game "$GAME_VERSION" --out .load/mods.lock
+          python3 -I tests/load/mods.py resolve --info info.json --game "$GAME_VERSION" --out .load/mods.lock --extra-mod funit
           echo "key=$(python3 -I tests/load/mods.py key --lock .load/mods.lock)" >> "$GITHUB_OUTPUT"
       # The key is built from the resolved versions: with no new version nothing is downloaded. After a change the
       # newest older cache is restored, only the new versions are downloaded, and the result is saved under the new key.

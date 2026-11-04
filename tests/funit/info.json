@@ -1,0 +1,9 @@
+{
+  "name": "zzz-razi-funit",
+  "version": "1.0.0",
+  "title": "Razi FUnit tests",
+  "author": "Raziphel",
+  "description": "In-game tests for razi-protocol, run by tests/load/run.sh with the FUnit mod. Not part of the mod.",
+  "factorio_version": "2.1",
+  "dependencies": ["base", "razi-protocol", "funit >= 2.1.0"]
+}

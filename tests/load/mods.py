@@ -2,15 +2,18 @@
 """Mod and game versions for the load check (tests/load/run.sh). Standard library only.
 
   mods.py versions                          game versions of the stable and experimental headless builds, as a CI matrix
-  mods.py resolve --info info.json --game 2.1.24 --out mods.lock [--pool DIR ...]
+  mods.py resolve --info info.json --game 2.1.24 --out mods.lock [--pool DIR ...] [--extra-mod NAME ...]
   mods.py fetch   --lock mods.lock --dir CACHE          download what CACHE lacks (needs the portal account, see below)
   mods.py key     --lock mods.lock                       hash of the resolved versions, for the cache key
-  mods.py link    --lock mods.lock --dir CACHE --out MODS --razi-zip FILE|--razi-dir DIR [--extra DIR ...]
+  mods.py link    --lock mods.lock --dir CACHE --out MODS --razi-zip FILE|--razi-dir DIR [--extra DIR ...] [--with-extra-mods]
 
 resolve follows the dependencies of info.json (required, "~" and "+", recursively; "?" and "!" are off) to the newest
 portal release built for the game's major.minor version. With --pool the mods come from zips in those folders instead
 of the portal (newest of each name), which needs no account. The lock file lists name, version and sha1 of every mod; a
 cache keyed by its hash downloads nothing when no version changed.
+
+--extra-mod NAME adds a mod that the game does not need (the test framework funit) and what it needs besides. The lock
+marks them "extra": link leaves them out unless --with-extra-mods is given, so the load check runs without them.
 
 fetch reads the account from FACTORIO_USERNAME and FACTORIO_TOKEN (the player token of that account). They never appear
 in the output.
@@ -155,20 +158,28 @@ def cmd_resolve(args):
         info = json.load(file)
     source = Pool(args.pool) if args.pool else Portal(args.game)
     chosen, missing = {}, set()
-    wave = {name for prefix, name, _, _ in dependencies_of(info) if prefix not in ("!", "?", "(?)") and name not in BUILTIN}
-    while wave:
-        # one wave at a time so the portal can be asked in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
-            found = dict(zip(sorted(wave), pool.map(source.newest, sorted(wave))))
-        wave = set()
-        for name, release in found.items():
-            if release is None:
-                missing.add(name)
-                continue
-            chosen[name] = release
-            for prefix, dependency, _, _ in dependencies_of({"dependencies": release["dependencies"]}):
-                if prefix not in ("!", "?", "(?)") and dependency not in BUILTIN and dependency not in chosen and dependency not in missing:
-                    wave.add(dependency)
+
+    def walk(wave):
+        while wave:
+            # one wave at a time so the portal can be asked in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+                found = dict(zip(sorted(wave), pool.map(source.newest, sorted(wave))))
+            wave = set()
+            for name, release in found.items():
+                if release is None:
+                    missing.add(name)
+                    continue
+                chosen[name] = release
+                for prefix, dependency, _, _ in dependencies_of({"dependencies": release["dependencies"]}):
+                    if prefix not in ("!", "?", "(?)") and dependency not in BUILTIN and dependency not in chosen and dependency not in missing:
+                        wave.add(dependency)
+
+    walk({name for prefix, name, _, _ in dependencies_of(info) if prefix not in ("!", "?", "(?)") and name not in BUILTIN})
+    needed = set(chosen)
+    walk({name for name in args.extra_mod or [] if name not in chosen})
+    for name in chosen:
+        if name not in needed:
+            chosen[name]["extra"] = True
     if missing:
         fail("no release for game %s of: %s" % (args.game, ", ".join(sorted(missing))))
     mods = [{key: value for key, value in chosen[name].items() if key != "dependencies"} for name in sorted(chosen)]
@@ -274,6 +285,8 @@ def cmd_link(args):
             os.remove(path)
     names = []
     for entry in lock["mods"]:
+        if entry.get("extra") and not args.with_extra_mods:
+            continue
         source = entry.get("path") or os.path.join(args.dir, entry["file_name"])
         if not os.path.exists(source):
             fail("%s is missing; run fetch first" % source)
@@ -304,6 +317,7 @@ def main():
     resolve.add_argument("--game", required=True)
     resolve.add_argument("--out", required=True)
     resolve.add_argument("--pool", action="append")
+    resolve.add_argument("--extra-mod", action="append")
     resolve.set_defaults(run=cmd_resolve)
     fetch = sub.add_parser("fetch")
     fetch.add_argument("--lock", required=True)
@@ -319,6 +333,7 @@ def main():
     link.add_argument("--razi-zip")
     link.add_argument("--razi-dir")
     link.add_argument("--extra", action="append")
+    link.add_argument("--with-extra-mods", action="store_true")
     link.set_defaults(run=cmd_link)
     args = parser.parse_args()
     sys.exit(args.run(args))
