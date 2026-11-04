@@ -49,14 +49,10 @@ local function ensure_subgroup()
   data:extend({{type="item-subgroup",name="razi-planet-tech-card",
     group=group,order="1[planet-tech-cards]"}})
 end
+-- Keep the native science artwork unobstructed on both cards and recipes.
 local function icon_layers(original)
-  local icons=original.icons and table.deepcopy(original.icons)
+  return original.icons and table.deepcopy(original.icons)
     or {{icon=original.icon,icon_size=original.icon_size or 64}}
-  icons[#icons+1]={
-    icon="__base__/graphics/icons/lab.png",
-    icon_size=64,scale=0.25,shift={8,8}
-  }
-  return icons
 end
 local function generate(name)
   local original,kind=science_source(name)
