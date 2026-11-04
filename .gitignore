@@ -16,3 +16,4 @@ _*
 config/secret.toml
 .venv
 .idea
+/.load
