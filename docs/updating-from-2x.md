@@ -9,6 +9,7 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
 3. Turn off Asteroid Belt, Better Asteroid Belt and Space Route Overlay if you use them: 3.0 doesn't work with them.
 4. Get your space platforms ready. Asteroids on dangerous routes can now be epic or legendary and hit much harder. Strengthen the defenses, or turn off Quality asteroids in the mod settings.
 5. Take Rigor modules out of machines that make recipes from other mods: they no longer work there.
+6. Take quality modules out of machines that only convert or preserve things (preserved goods, matter conversion, datacells, particle manipulation, isotope recipes of Vesta): these recipes no longer accept quality, and the update removes such modules from the machine. Productivity modules in asteroid reprocessing and rocket salvage machines stay but give no bonus any more; in the space electrolysis of Crucible they are removed.
 
 ## Installing
 
