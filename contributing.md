@@ -49,6 +49,14 @@ Past about 500 lines a file is split by meaning. Moves and splits go in their ow
 
 Story text is written in `locale/en/story-*.cfg` and tried in the game in writer mode. See [docs/writing-guide.md](docs/writing-guide.md); the list of slots is [docs/story-slots.md](docs/story-slots.md), built by `lua tools/story_slots.lua --write`.
 
+## Writing a test
+
+- A test must be able to fail. Run a new test without the change first and see it fail.
+- A mock refuses what the game refuses. If the game raises on an unknown entity, the mock raises too; a mock that answers anything hides the crash.
+- Check what the game does before writing it into a test: the [API docs](https://lua-api.factorio.com/latest/) or a run in the game.
+- Expected values come from the design, not from the function under test.
+- Never weaken, skip or delete a test to make a fix pass. A failing test may be wrong: check its setup first, and say in the pull request if you change it.
+
 ## Design rules
 
 1. **Source mods own their content.** Use their real prototype IDs and mechanics; patch them only on purpose, with a comment saying why.
