@@ -40,41 +40,58 @@ for _,q in ipairs(defs.quests) do
       prototype={hidden=false},localised_name=q.tech}
   end
 end
--- Fresh saves must always show the source-owned opening quest, even
--- when a modpack starts with Automation hidden or prerequisite-gated.
+-- K2SO has a craft-triggered Automation Core before native Automation.
+-- The Journal must never advertise disabled vanilla research as its opener.
 local bootstrap={name="automation",researched=false,enabled=false,
-  prototype={hidden=true},
-  prerequisites={{researched=false}}}
-local fresh={technologies={automation=bootstrap}}
+  prototype={hidden=true},prerequisites={{researched=false}}}
+local core={name="kr-automation-core",researched=false,enabled=true,
+  localised_name="Automation core",prototype={hidden=false},prerequisites={}}
+local fresh={technologies={automation=bootstrap,["kr-automation-core"]=core}}
 rawset(_G,"settings",{global={
   ["razi-hide-spoilers"]={value=true}
 }})
 local opener=defs.by_id["first-signal"]
-check(opener and M.available(fresh,opener),
-  "Opening quest must remain source-backed and available for onboarding")
-check(M.state(fresh,opener)=="locked",
-  "Source-disabled opening research must not be falsely marked ready")
+local tech_lookup=require("scripts.journal.quest_state").technology
+check(opener.tech=="kr-automation-core" and M.available(fresh,opener),
+  "Opening quest must use source-owned K2SO Automation Core")
+check(tech_lookup(fresh,opener)==core and M.state(fresh,opener)=="active",
+  "Available Automation Core must replace disabled native Automation")
 check(M.journal_visible(fresh,opener),
-  "Spoiler fog must not conceal the first journal quest")
+  "Spoiler fog must not conceal the real opening research")
 local fresh_view=M.view_status(fresh)
-check(fresh_view.total==1 and fresh_view.ready==0,
-  "Fresh-save index must show one locked opening objective, not 0/0")
+check(fresh_view.total==1 and fresh_view.ready==1,
+  "Fresh K2SO save must show one research-ready opening objective")
 check(#fresh_view.chapters.calidus.quests==1 and
   fresh_view.chapters.calidus.quests[1].id=="first-signal",
   "Calidus must show the opening mission in the chapter index")
 check(M.next_quest(fresh) and M.next_quest(fresh).id=="first-signal",
-  "Fresh-save reader must open the Automation mission by default")
+  "Fresh-save reader must open the Automation Core mission")
+core.enabled=false
+check(not M.available(fresh,opener) and M.view_status(fresh).total==0,
+  "Both disabled research options must be omitted, not called ready")
 bootstrap.prototype.hidden=false
 bootstrap.enabled=true
 bootstrap.prerequisites={}
-check(M.state(fresh,opener)=="active",
-  "Opening quest becomes ready only when native research is truly ready")
-check(M.view_status(fresh).ready==1,
-  "A research-ready opener must contribute one ready mission")
+check(tech_lookup(fresh,opener)==bootstrap and M.state(fresh,opener)=="active",
+  "Vanilla Automation must be used when K2SO Core is disabled or absent")
 bootstrap.researched=true
 check(M.state(fresh,opener)=="complete",
-  "Completion must come from native Factorio research")
+  "Completed fallback research must survive technology substitution")
 bootstrap.researched=false
+bootstrap.enabled=false
+bootstrap.prototype.hidden=true
+core.enabled=true
+core.prerequisites={{name="iron-handling",researched=false}}
+check(M.state(fresh,opener)=="locked" and M.view_status(fresh).ready==0,
+  "Unresearched native prerequisites must not count as ready")
+core.prerequisites={}
+check(M.state(fresh,opener)=="active",
+  "Craft-triggered research without prerequisites is genuinely ready")
+core.researched=true
+check(M.state(fresh,opener)=="complete",
+  "K2SO completion must close the same stable quest ID")
+core.researched=false
+fresh.technologies["kr-automation-core"]=nil
 fresh.technologies.automation=nil
 check(M.view_status(fresh).total==0,
   "Absent source research must not create fictitious quest completion")
@@ -129,11 +146,11 @@ check(M.state(force,defs.by_id["nauvis-power"])=="unavailable"
   and M.state(force,defs.by_id["nauvis-electronics"])=="active",
   "Missing K2 steam power must not strand Nauvis electronics")
 force.technologies["steam-power"]=steam_power
-force.technologies.automation.researched=true
+force.technologies["kr-automation-core"].researched=true
 force.technologies.logistics.researched=true
 check(M.state(force,defs.by_id["green-science"])=="active",
   "Nauvis green science must follow already researched early machines")
-force.technologies.automation.researched=false
+force.technologies["kr-automation-core"].researched=false
 force.technologies.logistics.researched=false
 -- Legacy save research auto-completes moved milestones; no migration or
 -- parallel objective completion flags should be introduced.
@@ -288,7 +305,9 @@ rawset(_G,"script",nil)
 rawset(_G,"settings",nil)
 rawset(_G,"game",{tick=0,connected_players={},forces={player=force}})
 check(M.research_affects_journal({name="automation"}),
-  "Direct quest research must refresh the journal")
+  "Vanilla fallback research must refresh the journal")
+check(M.research_affects_journal({name="kr-automation-core"}),
+  "K2SO Automation Core completion must refresh the journal")
 check(M.research_affects_journal({name="native-igrys",prototype={effects={{
   type="unlock-space-location",space_location="igrys"
 }}}}),"Native world-unlock research must refresh the journal")

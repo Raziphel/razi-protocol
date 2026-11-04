@@ -40,7 +40,9 @@ function M.snapshot(quest,technology,status,options)
       seen[id]=true
       local tech_name=options.tech_for_quest and options.tech_for_quest(id)
       if tech_name then native_covered_by_campaign[tech_name]=true end
-      add("campaign",id,data.quest_title(data.by_id[id] or {id=id}),
+      local caption=options.title_for_quest and options.title_for_quest(id)
+        or data.quest_title(data.by_id[id] or {id=id})
+      add("campaign",id,caption,
         options.complete and options.complete(id),id)
     end
   end

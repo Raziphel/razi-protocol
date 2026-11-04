@@ -318,8 +318,8 @@ local function draw(player,focus_search)
       local empty=reader.add{type="frame",
         style="inside_shallow_frame_with_padding"}
       empty.style.width=size.reader
-      local missing_start=not (player.force.technologies
-        and player.force.technologies["automation"])
+      local missing_start=not M.available(player.force,
+        defs.by_id["first-signal"],context)
       wrap(empty,missing_start and L("bootstrap-research-missing")
         or L("missing-quest"),size.reader-40)
     end

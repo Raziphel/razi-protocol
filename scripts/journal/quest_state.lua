@@ -19,13 +19,20 @@ local L=widgets.L
 local research_goals,world_goals,quests_for_technology={},{},{}
 for _,quest in ipairs(defs.quests) do
   if quest.tech then
-    research_goals[quest.tech]=true
-    local entries=quests_for_technology[quest.tech]
-    if not entries then
-      entries={}
-      quests_for_technology[quest.tech]=entries
+    -- Both native and replacement technology refresh this milestone.
+    local names={quest.tech}
+    for _,name in ipairs(quest.alternative_techs or {}) do
+      names[#names+1]=name
     end
-    entries[#entries+1]=quest
+    for _,name in ipairs(names) do
+      research_goals[name]=true
+      local entries=quests_for_technology[name]
+      if not entries then
+        entries={}
+        quests_for_technology[name]=entries
+      end
+      entries[#entries+1]=quest
+    end
   end
   if quest.world then world_goals[quest.world]=true end
 end
@@ -79,7 +86,9 @@ function M.discovery_index(force)
     for world,names in pairs(catalog) do
       for _,name in ipairs(names) do
         local tech=technologies[name]
-        if tech and tech.prototype and not tech.prototype.hidden then
+        if tech and (tech.researched or
+          (tech.enabled~=false and tech.prototype
+            and not tech.prototype.hidden)) then
           local previous=indexed[world]
           if not previous or (tech.researched and not previous.researched) then
             indexed[world]=tech
@@ -90,7 +99,8 @@ function M.discovery_index(force)
   else
     for _,tech in pairs(technologies) do
       local proto=tech.prototype
-      if proto and not proto.hidden then
+      if proto and not proto.hidden
+        and (tech.researched or tech.enabled~=false) then
         for _,effect in pairs(proto.effects or {}) do
           if effect.type=="unlock-space-location" and effect.space_location then
             local previous=indexed[effect.space_location]
@@ -117,15 +127,13 @@ local function technology(force,quest,context)
     local index=context and context.discoveries or M.discovery_index(force)
     t=index[quest.world]
   else
-    t=force and force.technologies and force.technologies[quest.tech]
+    t=defs.resolve_technology(force,quest)
   end
   if not t then return nil end
-  local proto=t.prototype
-  -- The opener is the one spoiler-safe signpost a fresh save MUST retain.
-  -- Other mods can hide or delay Automation's research prototype on startup.
-  -- Keep that source technology inspectable without inventing completion.
-  if quest.id~="first-signal" and proto and proto.hidden
-    and not t.researched then return nil end
+  -- A technology's presence does not imply it can be researched.
+  -- Retain completed research on old saves, but never offer disabled goals.
+  if not t.researched and (t.enabled==false
+    or (t.prototype and t.prototype.hidden)) then return nil end
   return t
 end
 function M.available(force,quest,context)
@@ -192,15 +200,11 @@ end
 function M.state(force,quest,context)
   if not M.available(force,quest,context) then return "unavailable" end
   if M.complete(force,quest,context) then return "complete" end
-  if quest.id=="first-signal" then
+  -- Respect native prerequisites of ALL research goals. A milestone is
+  -- upcoming until its actual source research can be started.
+  if not quest.boss and not quest.convergence then
     local native=technology(force,quest,context)
-    -- Always SHOW the bootstrap mission, but don't mark it "ready"
-    -- if a source mod actually disabled or prerequisite-gated its research.
-    if not native or native.enabled==false
-      or (native.prototype and native.prototype.hidden) then
-      return "locked"
-    end
-    for _,required in pairs(native.prerequisites or {}) do
+    for _,required in pairs(native and native.prerequisites or {}) do
       if not required.researched then return "locked" end
     end
   end

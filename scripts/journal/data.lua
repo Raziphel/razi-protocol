@@ -16,7 +16,10 @@ M.chapters={
 M.quests={
  -- The four Nauvis acts follow existing research, not scripted tasks.
  -- Every ID is stable; absent K2 technologies are safely omitted.
- {id="first-signal",chapter="calidus",tech="automation",phase="machines",requires={}},
+ -- K2SO begins with craft-triggered Automation Core; vanilla Automation is
+ -- the fallback for modpacks without that source research.
+ {id="first-signal",chapter="calidus",tech="kr-automation-core",
+  alternative_techs={"automation"},phase="machines",requires={}},
  {id="nauvis-power",chapter="calidus",tech="steam-power",phase="machines",requires={}},
  {id="nauvis-logistics",chapter="calidus",tech="logistics",phase="machines",requires={"first-signal"}},
  {id="nauvis-electronics",chapter="calidus",tech="electronics",phase="machines",requires={"nauvis-power"}},
@@ -160,6 +163,27 @@ if script and script.active_mods
     end
   end
 end
+-- Quest identities stay stable when an installed overhaul replaces research.
+-- Prefer already researched technology for migrated saves, then active sources.
+local function usable_technology(tech)
+  return tech and (tech.researched==true or
+    (tech.enabled~=false and not (tech.prototype and tech.prototype.hidden)))
+end
+function M.resolve_technology(force,quest)
+  local technologies=force and force.technologies
+  if not technologies or not quest or not quest.tech then return nil end
+  local primary=technologies[quest.tech]
+  if primary and primary.researched then return primary end
+  for _,name in ipairs(quest.alternative_techs or {}) do
+    local candidate=technologies[name]
+    if candidate and candidate.researched then return candidate end
+  end
+  if usable_technology(primary) then return primary end
+  for _,name in ipairs(quest.alternative_techs or {}) do
+    local candidate=technologies[name]
+    if usable_technology(candidate) then return candidate end
+  end
+end
 M.by_id={}
 for _,quest in ipairs(M.quests) do M.by_id[quest.id]=quest end
 local story=require("lib.story")
@@ -174,9 +198,14 @@ local story=require("lib.story")
 function M.quest_title(quest,player)
   local plain={"journal-plain-title."..quest.id}
   if quest.tech and not quest.boss and not quest.convergence then
+    local resolved=player and player.force
+      and M.resolve_technology(player.force,quest)
+    local name=resolved and resolved.name or quest.tech
     local technology=prototypes and prototypes.technology
-      and prototypes.technology[quest.tech]
-    plain=technology and technology.localised_name or {"?",plain,quest.tech}
+      and prototypes.technology[name]
+    plain=(resolved and resolved.localised_name)
+      or (technology and technology.localised_name)
+      or {"?",plain,name}
   elseif quest.world and not quest.tech then
     plain={"?",{"space-location-name."..quest.world},plain}
   elseif quest.boss then

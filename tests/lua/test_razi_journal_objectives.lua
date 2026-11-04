@@ -11,6 +11,9 @@ local native={name="space-platform",localised_name="Space Platform",
   researched=false,enabled=true,prerequisites=required}
 local state={first=true,second=false,secret=false}
 local callbacks={
+  title_for_quest=function(id)
+    if id=="second" then return "Live replacement technology" end
+  end,
   available=function(id)return id~="gone" end,
   visible=function(id)return id~="secret" end,
   complete=function(id)return state[id] end,
@@ -27,8 +30,9 @@ check(#snapshot.rows==4 and snapshot.rows[#snapshot.rows].kind=="goal",
   "Final completion criterion must appear after all source requirements")
 check(snapshot.rows[1].done and not snapshot.rows[2].done,
   "Real campaign prerequisite status should be carried through")
-check(snapshot.next_step.id=="second",
-  "The very next missing milestone must come first")
+check(snapshot.next_step.id=="second"
+  and snapshot.next_step.name=="Live replacement technology",
+  "Native technology replacements must update prerequisite titles")
 check(snapshot.research_percent==38,
   "Actual ongoing research progress should be shown")
 local short=plans.visible_rows(snapshot,false,2)
