@@ -85,6 +85,7 @@ check(themes.icon("solaris")=="razi-journal-book-icon",
   "Removed mod artwork must fall back to the Codex emblem")
 helpers.is_valid_sprite_path=original_sprite_check -- luacheck: ignore 122
 rawset(_G,"prototypes",{
+ entity={},
  item={
    bioflux={localised_name="Bioflux"},
    ["kr-rare-metals"]={localised_name="Rare metals"},

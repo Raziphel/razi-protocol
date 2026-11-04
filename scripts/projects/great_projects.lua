@@ -81,6 +81,9 @@ end
 function M.array(force)
   local systems={}
   local sites={}
+  -- The relay is created only while the storyline is on, and writer mode opens
+  -- the Archive with it off. Asking about an unknown entity is an error.
+  if not prototypes.entity["razi-archive-relay"] then return 0,3,sites end
   -- The Factorio engine maintains this count; most saves have no relays.
   -- Avoid scanning every generated planet when the project is untouched.
   local known=force and force.get_entity_count and
