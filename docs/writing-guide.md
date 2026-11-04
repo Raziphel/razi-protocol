@@ -66,6 +66,14 @@ In writer mode a slot with no text shows a grey stub:
 
 It tells you the section and key to write, where the text appears, and how many characters fit. When you have written the text, the stub is replaced by your text. The text that came with the repository is never shown in writer mode.
 
+The stubs are what you should see before you write anything: the files start empty, and writer mode alone shows no story. In a stub the part before the dot is the section and the part after it is the key. To try it once, add this line under `[razi-story-quest]` in `story-quests.cfg`, close and start the game, and run `/razi-writer quest first-signal`:
+
+```
+first-signal=My first text.
+```
+
+The story block of that quest now shows your line instead of the stub.
+
 Quest titles and Archive record titles are different. Without your text they show the name the game gives the quest (or the record id), so the lists stay readable.
 
 To see later quests and chapters, research everything with `/razi-cheat`. It unlocks research in stages. `/razi-cheat status` shows how far it is, and `/razi-cheat cancel` stops it. Use a save you do not need.
