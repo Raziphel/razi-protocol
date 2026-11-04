@@ -41,6 +41,7 @@ local repairs = {
 	require("prototypes.fixes.Mini_Trains.entity_data_items"),
 	require("prototypes.fixes.corrundum.bioflux_stack"),
 	require("prototypes.fixes.shchierbin.vanadium_acid_steam"),
+	require("prototypes.fixes.alchemy-khemia.glyph_smelting_unlock"),
 }
 
 function mod_fixes.data_final_fixes()
