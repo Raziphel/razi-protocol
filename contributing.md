@@ -44,6 +44,7 @@ Past about 500 lines a file is split by meaning. Moves and splits go in their ow
 - The title is a conventional commit.
 - The description is a short list of what changes.
 - CI (`check`: Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API, `changelog.txt` format, Lua tests) must be green before merging.
+- `Load` (`.github/workflows/load.yml`) loads the mod with its dependencies in a headless game on Normal and Nightmare when a pull request changes code, data, settings or locale; a pull request from a fork gets no mod download and skips it. `tests/load/run.sh` runs the same check locally.
 
 ## Story text
 
