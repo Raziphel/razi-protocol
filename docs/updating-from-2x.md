@@ -22,6 +22,7 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
 - **Labs.** Each lab accepts only some of the system tech cards. Cards a lab no longer accepts are put into a chest next to it.
 - **New planets on the main path.** Igrys, Foliax, Obsidiax, Carna, Velora, Khemia, Arcanyx, Nulla, Athos and Balack are now part of the game. Before you can go to the next star system, you research the planets of the current one and one or two partnership technologies (recipes that combine goods from several planets).
 - **End game.** The transceiver takes more research than before.
+- **Researched technologies** stay researched when 3.0 gives them a prerequisite you have not researched, for example the discovery of a new planet. The technology tree shows the missing prerequisite; you research it only if you want a technology that follows it.
 - **Research in progress** keeps its percentage.
 - **Recipes.** When the save loads, the game checks every recipe against your research again. A recipe that now belongs to a technology you have not researched is closed, even if it was open before. A machine set to a closed or hidden recipe keeps it and does not work until the recipe opens (its status reads "Recipe not researched"). A recipe that was removed, or that the machine or the planet no longer allows, is taken out of the machine; the items in the machine stay. This applies to:
   - the electrochemical plant, which no longer makes biochamber recipes: use a biochamber;
