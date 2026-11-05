@@ -149,6 +149,14 @@ for _,chapter in ipairs(industry.chapters) do
   table.insert(M.chapters,position or #M.chapters+1,chapter)
 end
 for _,quest in ipairs(industry.quests) do M.quests[#M.quests+1]=quest end
+
+-- Reorganize presentation without replacing any quest ID, technology or
+-- completion record. Old chapter IDs remain available as GUI aliases.
+local volumes=require("scripts.journal.volumes")
+volumes.apply(M.quests)
+M.chapters=volumes.chapters
+M.volumes=volumes.volumes
+M.chapter_catalog=volumes
 -- In 2.1 the native AAI technology has its own research ID. Use the
 -- installed research prototype rather than creating a duplicate or
 -- misreporting completion when a compatible AAI fork renamed the ID.
