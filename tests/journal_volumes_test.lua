@@ -85,4 +85,33 @@ assert(timing.get(force,"chapters","calidus")==900)
 assert(timing.get(force,"chapters","first-signal")==false)
 assert(timing.get(force,"phases","machines")==600)
 assert(timing.get(force,"milestones","first-signal")==500)
+-- A fully known 3.x milestone history can establish an authentic completion
+-- time for a newly split chapter. Use the final required milestone's time.
+local old={}
+for index,quest in ipairs(sample) do old[quest.id]=100*index end
+storage.razi_chapter_completion_times[2]={
+  chapters={calidus=650},phases={},milestones=old}
+local force2={index=2}
+timing.observe(force2,sample,function() return true end,
+  function() return true end,true,2000,
+  function(quest) return acts.for_quest(quest).key end)
+assert(timing.get(force2,"chapters","first-signal")==500)
+assert(timing.get(force2,"chapters","calidus")==650)
+-- A save with partly unknown history which finishes a chapter only after
+-- the update gets the genuine NEW completion time, not an invented old one.
+local later={}
+for _,quest in ipairs(sample) do
+  if quest.id~="nauvis-radar" then later[quest.id]=false end
+end
+storage.razi_chapter_completion_times[3]={
+  chapters={},phases={},milestones=later}
+local force3={index=3}
+timing.observe(force3,sample,function() return true end,
+  function(quest) return quest.id~="nauvis-radar" end,true,2000,
+  function(quest) return acts.for_quest(quest).key end)
+assert(timing.get(force3,"chapters","first-signal")==nil)
+timing.observe(force3,sample,function() return true end,
+  function() return true end,false,2500,
+  function(quest) return acts.for_quest(quest).key end)
+assert(timing.get(force3,"chapters","first-signal")==2500)
 print("journal_volumes_test: OK (5 volumes, 42 chapters, 230 objectives)")
