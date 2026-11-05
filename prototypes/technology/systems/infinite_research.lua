@@ -2,7 +2,7 @@
 -- lab-specific science is deliberately kept instead of guessed.
 local M = {}
 local PREFIX = "razi-system-infinite-"
-local EARLY_LEVELS = 8
+local EARLY_LEVELS = 5
 local cards = {
   base = "calidus-tech-card",
   solaris = "solaris-tech-card",

@@ -1,8 +1,9 @@
--- Infinite research changes inputs after eight levels, never the original
+-- Infinite research changes inputs after five levels, never the original
 -- technology identifier. That lets existing saves retain their research.
 local M = {}
 local PREFIX = "razi-system-infinite-"
-local EARLY_LEVELS = 8
+local EARLY_LEVELS = 5
+local PREVIOUS_EARLY_LEVELS = 8
 local cards = {
   ["calidus-tech-card"] = true, ["solaris-tech-card"] = true,
   ["nyxaris-tech-card"] = true, ["vibrant-tech-card"] = true,
@@ -57,11 +58,17 @@ function M.sync_force(force)
             -- Writing 'level' applies the completed technology effects.
             -- Subtract from the native tier before crediting the same levels
             -- on the continuation so old saves do not double their bonuses.
+            local legacy_handoff = already_continued
+              and original.level == first + PREVIOUS_EARLY_LEVELS
             original.level = cutoff
-            -- Force merges may already have continuation progress from
-            -- another player force. Preserve the higher level, never sum
-            -- the same bonuses twice.
-            continuation.level = math.max(continuation.level, 1 + extra)
+            -- Saves consolidated after eight native levels retain three
+            -- extra completed native levels. Transfer those to the system
+            -- continuation once before standard force-merge reconciliation.
+            if legacy_handoff then
+              continuation.level = continuation.level + extra
+            else
+              continuation.level = math.max(continuation.level, 1 + extra)
+            end
             if force.reset_technology_effects then
               force.reset_technology_effects()
             end

@@ -1,4 +1,4 @@
--- Standalone fixture for the eight-level system-science transition.
+-- Standalone fixture for the five-level system-science transition.
 package.path = "./?.lua;./?/init.lua;" .. package.path
 local function copy(v)
   if type(v) ~= "table" then return v end
@@ -59,12 +59,12 @@ check(continued.unit.ingredients[1][1] == "calidus-tech-card"
   and continued.unit.ingredients[2][2] == 2
   and continued.unit.ingredients[3][1] == "research-data",
   "Composite card must replace only known source packs, preserving special data")
-check(continued.unit.count_formula == "1000*1.5^(L+8)",
+check(continued.unit.count_formula == "1000*1.5^(L+5)",
   "Unnumbered research must preserve the native per-level price")
 check(data.raw.technology[prefix .. "physical-projectile-damage-7-cards"].name:sub(-6)
   == "-cards", "Numbered source tech must yield a level-one continuation")
 check(data.raw.technology[prefix .. "physical-projectile-damage-7-cards"].unit.count_formula
-  == "2^((L+14)-7)*1000", "Numbered upgrade must not reset exponential prices")
+  == "2^((L+11)-7)*1000", "Numbered upgrade must not reset exponential prices")
 check(data.raw.technology[prefix .. "late-solaris-cards"].unit.ingredients[1][1]
   == "solaris-tech-card", "Regional sources must use their own system card")
 check(not data.raw.technology[prefix .. "never-map-cards"]
@@ -98,34 +98,60 @@ check(native_force.level == 30 and continued_force.enabled == false
   "No transition may happen before the card recipe is unlocked")
 force.recipes["calidus-tech-card"].enabled = true
 runtime.sync_force(force)
-check(native_force.level == 9 and continued_force.level == 22,
+check(native_force.level == 6 and continued_force.level == 25,
   "Save at native level 30 must carry over all completed levels")
 check(not native_force.enabled and continued_force.enabled,
   "Only the consolidated stage should remain researchable")
 check(force.research_queue[1] == name and force.research_queue[2] == other.name,
   "Current research queue must point at the new technology")
 check(resets == 1, "Existing-save effects must be recalculated once")
--- Merging another force with old level 35 must not add those 26 levels
+-- Merging another force with old level 35 must not add those 29 levels
 -- on top of progress already credited on the continuation.
 native_force.level = 35
 runtime.sync_force(force)
-check(native_force.level == 9 and continued_force.level == 27
+check(native_force.level == 6 and continued_force.level == 30
   and resets == 2, "Merged progress must use the higher reached level")
 runtime.sync_force(force)
-check(native_force.level == 9 and continued_force.level == 27 and resets == 2,
+check(native_force.level == 6 and continued_force.level == 30 and resets == 2,
   "Re-entering the save migration must be idempotent")
 -- If the card becomes unavailable before the first continuation level,
 -- do not leave an existing world with neither research path enabled.
-local starting = {name = native.name, level = 9, enabled = true}
+local starting = {name = native.name, level = 6, enabled = true}
 local waiting = {name = name, level = 1, enabled = false,
   research_unit_ingredients = {{name = "calidus-tech-card"}}}
 local fresh = {technologies = {[native.name] = starting, [name] = waiting},
   recipes = {["calidus-tech-card"] = {enabled = true}}, research_queue = {}}
+-- Four completed levels must not switch, but five completed must.
+starting.level = 5
+runtime.sync_force(fresh)
+check(starting.enabled and not waiting.enabled,
+  "Four original-science levels must not trigger a handoff")
+starting.level = 6
 runtime.sync_force(fresh)
 check(not starting.enabled and waiting.enabled,
-  "The first eight native levels should open the system-card continuation")
+  "Exactly five original-science levels must trigger a handoff")
+check(not starting.enabled and waiting.enabled,
+  "The first five native levels should open the system-card continuation")
 fresh.recipes["calidus-tech-card"].enabled = false
 runtime.sync_force(fresh)
 check(starting.enabled and not waiting.enabled,
   "Missing cards must restore the original research until they return")
-print("infinite system research: science mapping and existing-save transition passed")
+-- Existing saves from the prior eight-level behavior must not lose the
+-- three levels now assigned to the system card. A repeated sync is harmless.
+local old_native = {name = native.name, level = 9, enabled = false}
+local old_cards = {name = name, level = 22, enabled = true,
+  research_unit_ingredients = {{name = "calidus-tech-card"}}}
+local old_resets = 0
+local old_force = {
+  technologies = {[native.name] = old_native, [name] = old_cards},
+  recipes = {["calidus-tech-card"] = {enabled = true}},
+  research_queue = {},
+  reset_technology_effects = function() old_resets = old_resets + 1 end
+}
+runtime.sync_force(old_force)
+check(old_native.level == 6 and old_cards.level == 25 and old_resets == 1,
+  "Changing the original-science threshold must retain old save progress")
+runtime.sync_force(old_force)
+check(old_native.level == 6 and old_cards.level == 25 and old_resets == 1,
+  "Legacy threshold migration must apply only once")
+print("infinite system research: five-level science mapping and existing-save transition passed")
