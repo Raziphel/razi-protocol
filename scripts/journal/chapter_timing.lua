@@ -45,21 +45,34 @@ end
 function M.observe(force,quests,available,complete,historical,tick,act_for)
   local chapters,acts={},{}
   local changed=false
-  -- One completion rule for every chapter. Optional missions are timed but
-  -- only block a section that contains no required missions.
-  local function add(group,quest,done)
+  -- A completion previously earned in a 2.x/3.x save may already have a
+  -- milestone timestamp. Only reconstruct a new chapter timestamp when ALL
+  -- required milestones have genuine recorded times. Unknown history stays
+  -- unknown; the save's older chapter keys are retained untouched.
+  local function bucket(collection,id)
+    if not collection[id] then
+      collection[id]={total=0,done=0,required=0,done_required=0}
+    end
+    return collection[id]
+  end
+  local function add(group,quest,done,recorded)
     group.total=group.total+1
     if done then group.done=group.done+1 end
     if not quest.optional then
       group.required=group.required+1
       if done then group.done_required=group.done_required+1 end
     end
-  end
-  local function bucket(collection,id)
-    if not collection[id] then
-      collection[id]={total=0,done=0,required=0,done_required=0}
+    if done then
+      if type(recorded)=="number" then
+        group.latest=math.max(group.latest or recorded,recorded)
+        if not quest.optional then
+          group.required_latest=math.max(group.required_latest or recorded,recorded)
+        end
+      else
+        group.unknown=true
+        if not quest.optional then group.required_unknown=true end
+      end
     end
-    return collection[id]
   end
   for _,quest in ipairs(quests) do
     if available(quest) then
@@ -67,21 +80,32 @@ function M.observe(force,quests,available,complete,historical,tick,act_for)
       if done and M.mark(force,"milestones",quest.id,tick,historical) then
         changed=true
       end
-      add(bucket(chapters,quest.chapter),quest,done)
+      local recorded=done and M.get(force,"milestones",quest.id) or nil
+      add(bucket(chapters,quest.chapter),quest,done,recorded)
       local act_id=act_for and act_for(quest) or quest.phase
-      if act_id then add(bucket(acts,act_id),quest,done) end
+      if act_id then add(bucket(acts,act_id),quest,done,recorded) end
     end
   end
   local function finished(state)
     if state.required>0 then return state.done_required==state.required end
     return state.total>0 and state.done==state.total
   end
-  -- "phases" remains the legacy save key, protecting old Calidus records.
+  local function historical_completion(state)
+    if state.required>0 then
+      return not state.required_unknown and state.required_latest or nil
+    end
+    return not state.unknown and state.latest or nil
+  end
+  -- "phases" remains the legacy storage key. Neither original act keys nor
+  -- original chapter records are renamed to the new catalog identifiers.
   for _,kind in ipairs({"chapters","phases"}) do
     local buckets=kind=="chapters" and chapters or acts
     for id,state in pairs(buckets) do
-      if finished(state) and M.mark(force,kind,id,tick,historical) then
-        changed=true
+      if finished(state) then
+        local recorded=historical and historical_completion(state) or nil
+        if M.mark(force,kind,id,recorded or tick,historical and recorded==nil) then
+          changed=true
+        end
       end
     end
   end
