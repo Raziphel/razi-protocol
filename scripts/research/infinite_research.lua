@@ -58,7 +58,10 @@ function M.sync_force(force)
             -- Subtract from the native tier before crediting the same levels
             -- on the continuation so old saves do not double their bonuses.
             original.level = cutoff
-            continuation.level = continuation.level + extra
+            -- Force merges may already have continuation progress from
+            -- another player force. Preserve the higher level, never sum
+            -- the same bonuses twice.
+            continuation.level = math.max(continuation.level, 1 + extra)
             if force.reset_technology_effects then
               force.reset_technology_effects()
             end

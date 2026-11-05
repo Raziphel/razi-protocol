@@ -104,7 +104,13 @@ check(not native_force.enabled and continued_force.enabled,
 check(force.research_queue[1] == name and force.research_queue[2] == other.name,
   "Current research queue must point at the new technology")
 check(resets == 1, "Existing-save effects must be recalculated once")
+-- Merging another force with old level 35 must not add those 26 levels
+-- on top of progress already credited on the continuation.
+native_force.level = 35
 runtime.sync_force(force)
-check(native_force.level == 9 and continued_force.level == 22 and resets == 1,
+check(native_force.level == 9 and continued_force.level == 27
+  and resets == 2, "Merged progress must use the higher reached level")
+runtime.sync_force(force)
+check(native_force.level == 9 and continued_force.level == 27 and resets == 2,
   "Re-entering the save migration must be idempotent")
 print("infinite system research: science mapping and existing-save transition passed")
