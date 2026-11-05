@@ -114,8 +114,20 @@ local function render_chapters(parent,player,p,context,size,view,plan)
   end
   local found=false
   local translated=search_names.names(player.index)
+  local previous_volume,volume_heading
 
   for index,chapter in ipairs(defs.chapters) do
+    if chapter.volume~=previous_volume then
+      volume_heading=column.add{
+        type="label",name="razi_journal_volume_"..chapter.volume,
+        caption={"journal-volume."..chapter.volume}}
+      volume_heading.style.font="default-bold"
+      volume_heading.style.font_color=COLOR.amber
+      volume_heading.style.top_padding=9
+      volume_heading.style.bottom_padding=2
+      volume_heading.visible=false
+      previous_volume=chapter.volume
+    end
     local theme=themes.get(chapter.id)
     local data=view.chapters[chapter.id]
     local completed,total=data.completed,data.total
@@ -130,6 +142,7 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       end
     end
     if #available>0 then
+      if visible_count>0 then volume_heading.visible=true end
       found=found or visible_count>0
       local open=p.query~="" or p.chapter==chapter.id
       -- Each chapter gets its own quiet inset surface. Separation remains
