@@ -272,3 +272,7 @@ require("prototypes.balance.resource_loops").data_final_fixes()
 
 -- The biochamber stays needed: after the repairs, which see the categories every mod left on the plant.
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
+
+-- Last research pass: preserve native infinite levels, and offer composite-card
+-- continuations only where the final labs can research them.
+require("prototypes.technology.systems.infinite_research").data_final_fixes()

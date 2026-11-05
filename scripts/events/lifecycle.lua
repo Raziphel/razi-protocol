@@ -11,6 +11,8 @@ local convergence = require("scripts.convergence.convergence")
 local victory_guard = require("scripts.convergence.victory_guard")
 local nexus_technology_visibility = require("scripts.compatibility.Nexus-Updated.technology_visibility")
 
+local infinite_research = require("scripts.research.infinite_research")
+
 local lifecycle = {}
 
 -- The Journal reads research and the state of the force; its own tables in
@@ -39,6 +41,7 @@ function lifecycle.register(events)
 	-- Surfaces that exist already get the switched-off nests of their planet for their new chunks.
 	events:on_init(enemy_surfaces.apply)
 	events:on_init(start_journal)
+	events:on_init(infinite_research.sync_all)
 	events:on_configuration_changed(function(event)
 		prepare_journal_state()
 		entities.check_existing_transceivers()
@@ -58,6 +61,7 @@ function lifecycle.register(events)
 		razi_prepared_2x.on_configuration_changed(event)
 		-- Names may have changed with the mods; the journal asks again when drawn.
 		search_names.reset()
+		infinite_research.sync_all()
 		razi_journal.initialize_chapter_completions()
 		razi_journal.sync_all()
 	end)

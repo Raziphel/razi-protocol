@@ -8,6 +8,8 @@ local story_dispatch = story.dispatch
 local spoiler_fog = require("scripts.journal.spoiler_fog")
 local convergence = require("scripts.convergence.convergence")
 
+local infinite_research = require("scripts.research.infinite_research")
+
 local forces = {}
 
 function forces.register(events)
@@ -15,10 +17,12 @@ function forces.register(events)
 		spoiler_fog.on_research(event)
 		razi_journal.on_research(event)
 		story_dispatch.on_research(event)
+		infinite_research.sync_force(event.research.force)
 	end)
 	events:on_event(defines.events.on_research_reversed, function(event)
 		spoiler_fog.sync_force(event.research.force)
 		spoiler_fog.defer(event.research.force)
+		infinite_research.sync_force(event.research.force)
 	end)
 	events:on_event(defines.events.on_technology_effects_reset, function()
 		-- Rubia may reset its own placeholder technologies in this event,
@@ -33,11 +37,13 @@ function forces.register(events)
 		story_dispatch.forces_merged(event)
 		spoiler_fog.on_forces_merged(event)
 		razi_journal.forces_merged(event)
+		infinite_research.sync_all()
 	end)
 	-- Razi-owned future techs are concealed per-force; gameplay progression
 	-- remains based on the original technology prerequisites and research.
 	events:on_event(defines.events.on_force_created, function(event)
 		if event and event.force then
+			infinite_research.sync_force(event.force)
 			spoiler_fog.sync_force(event.force)
 			razi_journal.record_chapter_completions(event.force, (game.tick or 0) > 0)
 		end
