@@ -18,14 +18,16 @@ _G.data = {
 		tree = {["ribbonia-tree"] = {}, ["tree-01"] = {}},
 		["simple-entity"] = {
 			["hyarion-crystal"] = {minable = {results = {{type = "item", name = "quartz", amount = 2}}}},
-			["safe-sign"] = {minable = {result = "safe-sign"}}
+			["safe-sign"] = {minable = {result = "safe-sign"}},
+			["maraxsis-coral"] = {minable = {result = "coral"}}
 		},
 		item = {
 			["ribbonia-tree-item"] = {place_result = "ribbonia-tree", subgroup = "trees"},
 			["tree-01"] = {place_result = "tree-01", subgroup = "trees"},
 			["hyarion-crystal-item"] = {place_result = "hyarion-crystal"},
 			["safe-sign"] = {place_result = "safe-sign"},
-			["rock-item"] = {place_result = "big-rock", subgroup = "grass"}
+			["rock-item"] = {place_result = "big-rock", subgroup = "grass"},
+			["maraxsis-coral-item"] = {place_result = "maraxsis-coral"}
 		},
 		recipe = {
 			["wood"] = recipe("wood", "kr-growing", "wood"),
@@ -35,6 +37,7 @@ _G.data = {
 			["tree-01"] = recipe("tree-01", "crafting", "tree-01"),
 			["hyarion-crystal"] = recipe("hyarion-crystal", "crafting", "hyarion-crystal-item"),
 			["big-rock"] = recipe("big-rock", "crafting", "rock-item"),
+			["maraxsis-coral"] = recipe("maraxsis-coral", "crafting", "maraxsis-coral-item"),
 			["kr-jellynut"] = recipe("kr-jellynut", "kr-growing", "jellynut"),
 			["kr-yumako"] = recipe("kr-yumako", "kr-growing", "yumako"),
 			["yumako"] = recipe("yumako", "agriculture", "yumako"),
@@ -72,7 +75,7 @@ local function banned(name)
 end
 for _, name in ipairs({
 	"ribbonia-tree", "tree-01", "hyarion-crystal", "big-rock",
-	"kr-jellynut", "kr-yumako"
+	"kr-jellynut", "kr-yumako", "maraxsis-coral"
 }) do banned(name) end
 
 for _, name in ipairs({"wood", "kr-wood-with-fertilizer", "tree-seed", "yumako", "safe-sign"}) do
@@ -87,7 +90,7 @@ assert(#effects == 2 and effects[1].recipe == "safe-sign" and effects[2].recipe 
 assert(data.raw["recipe-category"][disabled_category])
 assert(#log_messages == 1)
 
--- Idempotent when the final pass is re-run: no duplicate tech unlocks or logs.
+-- Re-running does not restore a banned recipe or any removed technology unlock.
 fix.data_final_fixes()
 assert(#log_messages == 2)
 print("natural_decorations_test: OK")
