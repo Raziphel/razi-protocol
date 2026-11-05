@@ -66,6 +66,13 @@ local function draw(player,focus_search)
   if not (frame and frame.valid) then return end
   local p=pref(player.index)
   search_names.request(player,defs.quests,defs.quest_title)
+  -- The old 19-chapter Journal stored the selected chapter ID per player.
+  -- Resolve that UI preference to the chapter holding their selected quest;
+  -- do not touch the saved milestone or completion-time history.
+  if p.chapter then
+    p.chapter=defs.chapter_catalog.resolve_chapter(
+      p.chapter,p.selected and defs.by_id[p.selected]) or p.chapter
+  end
   -- Retired and uninstalled optional chapters must never leave the reader
   -- stranded on an old chapter ID when an existing save is reopened.
   if p.chapter then
@@ -376,6 +383,7 @@ end
 -- Opens the cover of one chapter. False for an unknown chapter.
 function M.open_chapter(player,id)
   if not (player and player.valid) then return false end
+  id=defs.chapter_catalog.resolve_chapter(id) or id
   local known=false
   for _,chapter in ipairs(defs.chapters) do
     if chapter.id==id then known=true;break end
