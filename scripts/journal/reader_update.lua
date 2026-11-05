@@ -166,15 +166,19 @@ local function update_reader(player,preserve_reader)
       end
     end
   end
-  local empty=column["razi_journal_no_results"]
-  if empty then
-    local any=false
-    for index,_ in ipairs(defs.chapters) do
-      local card=column["razi_journal_chapter_"..index]
-      if card and card.visible then any=true;break end
-    end
-    empty.visible=not any
+  -- The five volume dividers reflect the same search/filter visibility as
+  -- their chapters. Keep this light until the collapsible index of Phase 2.
+  local visible_volumes={}
+  for index,ch in ipairs(defs.chapters) do
+    local card=column["razi_journal_chapter_"..index]
+    if card and card.visible then visible_volumes[ch.volume]=true end
   end
+  for _,volume in ipairs(defs.volumes or {}) do
+    local heading=column["razi_journal_volume_"..volume.id]
+    if heading then heading.visible=visible_volumes[volume.id]==true end
+  end
+  local empty=column["razi_journal_no_results"]
+  if empty then empty.visible=next(visible_volumes)==nil end
   local lead=column["razi_journal_lead"]
   local lead_link=lead and lead["razi_journal_lead_link"]
   if lead_link then
