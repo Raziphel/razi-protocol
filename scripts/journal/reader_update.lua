@@ -127,7 +127,7 @@ local function update_reader(player,preserve_reader)
       card.visible=shown>0
       if entries then
         for _,act in ipairs(journal_acts.chapters[ch.id] or {}) do
-          local divider=entries["razi_journal_act_"..ch.id.."_"..act.id]
+          local divider=entries["razi_journal_act_"..act.chapter.."_"..act.id]
           if divider then
             divider.visible=matching_acts[act.key]==true
             local stamp=divider["razi_journal_act_stamp"]
