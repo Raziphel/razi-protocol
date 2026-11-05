@@ -49,7 +49,7 @@ data.raw.technology["hidden-research"] = technology("hidden-research",
 local base = require("prototypes.technology.systems.infinite_research")
 base.data_final_fixes()
 local prefix = base.prefix
-local name = prefix .. "processing-unit-productivity"
+local name = prefix .. "processing-unit-productivity-cards"
 local native = data.raw.technology["processing-unit-productivity"]
 local continued = data.raw.technology[name]
 check(continued and continued.enabled == false, "Continuation must start locked")
@@ -61,13 +61,15 @@ check(continued.unit.ingredients[1][1] == "calidus-tech-card"
   "Composite card must replace only known source packs, preserving special data")
 check(continued.unit.count_formula == "1000*1.5^(L+8)",
   "Unnumbered research must preserve the native per-level price")
-check(data.raw.technology[prefix .. "physical-projectile-damage-7"].unit.count_formula
+check(data.raw.technology[prefix .. "physical-projectile-damage-7-cards"].name:sub(-6)
+  == "-cards", "Numbered source tech must yield a level-one continuation")
+check(data.raw.technology[prefix .. "physical-projectile-damage-7-cards"].unit.count_formula
   == "2^((L+14)-7)*1000", "Numbered upgrade must not reset exponential prices")
-check(data.raw.technology[prefix .. "late-solaris"].unit.ingredients[1][1]
+check(data.raw.technology[prefix .. "late-solaris-cards"].unit.ingredients[1][1]
   == "solaris-tech-card", "Regional sources must use their own system card")
-check(not data.raw.technology[prefix .. "never-map"]
-  and not data.raw.technology[prefix .. "scripted-research"]
-  and not data.raw.technology[prefix .. "hidden-research"],
+check(not data.raw.technology[prefix .. "never-map-cards"]
+  and not data.raw.technology[prefix .. "scripted-research-cards"]
+  and not data.raw.technology[prefix .. "hidden-research-cards"],
   "Unsupported and scripted research must be unchanged")
 base.data_final_fixes()
 local n = 0

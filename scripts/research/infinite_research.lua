@@ -38,8 +38,8 @@ function M.sync_force(force)
   if not (force and force.technologies and force.recipes) then return end
   local research = force.technologies
   for name, continuation in pairs(research) do
-    if name:sub(1, #PREFIX) == PREFIX then
-      local original_name = name:sub(#PREFIX + 1)
+    if name:sub(1, #PREFIX) == PREFIX and name:sub(-6) == "-cards" then
+      local original_name = name:sub(#PREFIX + 1, -7)
       local original = research[original_name]
       if original then
         local first = tonumber(original_name:match("%-(%d+)$")) or 1

@@ -142,17 +142,18 @@ function M.data_final_fixes()
       and source.upgrade == true and source.enabled ~= false
       and not source.hidden and not source.research_trigger
       and source.unit and source.unit.ingredients and safe_effects(source.effects)
-      and not technology[PREFIX .. name] then
+      and #(PREFIX .. name .. "-cards") <= 200
+      and not technology[PREFIX .. name .. "-cards"] then
       local ingredients = ingredients_for(source.unit.ingredients)
       if ingredients and lab_accepts(ingredients) then
         local clone = table.deepcopy(source)
-        clone.name = PREFIX .. name
+        -- A -7 suffix starts Factorio research at level seven, so append a
+        -- nonnumeric suffix: every continuation must begin at level one.
+        clone.name = PREFIX .. name .. "-cards"
         clone.localised_name = source.localised_name
           or {"technology-name." .. name:gsub("%-%d+$", "")}
-        clone.localised_description = {
-          "", {"technology-description." .. name:gsub("%-%d+$", "")},
-          "\n", {"razi-infinite-research.consolidated"}
-        }
+        clone.localised_description = source.localised_description
+          or {"razi-infinite-research.consolidated"}
         clone.unit.ingredients = ingredients
         if clone.unit.count_formula then
           clone.unit.count_formula = shifted_formula(
@@ -163,7 +164,7 @@ function M.data_final_fixes()
         clone.prerequisites = table.deepcopy(source.prerequisites or {})
         clone.enabled = false
         clone.visible_when_disabled = false
-        clone.order = (source.order or "z") .. "-razi-system"
+        clone.order = (source.order or "z"):sub(1, 176) .. "-razi-system"
         clone.max_level = "infinite"
         clone.upgrade = true
         data:extend({clone})
