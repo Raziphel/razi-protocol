@@ -59,9 +59,6 @@ local pack_to_card = {}
 for tier, names in pairs(tiers) do
   for _, name in ipairs(names) do pack_to_card[name] = cards[tier] end
 end
-local system_cards = {}
-for _, card in pairs(cards) do system_cards[card] = true end
-
 local function name_of(ingredient)
   return ingredient.name or ingredient[1]
 end
@@ -121,60 +118,120 @@ local function shifted_formula(formula, amount)
   -- L/l is Factorio's research level; keep the native exponential growth.
   return (formula:gsub("%f[%w][Ll]%f[^%w]", "(L+" .. amount .. ")"))
 end
+-- Only effects that provide a repeatable bonus may be cloned. Other
+-- infinite researches sometimes gate a recipe, planet or other one-off event.
+-- Factorio 2.1's Modifier type list is authoritative for these identifiers.
+local repeatable_effects = {
+  ["ammo-damage"] = true, ["gun-speed"] = true, ["turret-attack"] = true,
+  ["artillery-range"] = true, ["mining-drill-productivity-bonus"] = true,
+  ["change-recipe-productivity"] = true, ["laboratory-productivity"] = true,
+  ["laboratory-speed"] = true, ["worker-robot-speed"] = true,
+  ["worker-robot-storage"] = true, ["worker-robot-battery"] = true,
+  ["maximum-following-robots-count"] = true,
+  ["follower-robot-lifetime"] = true, ["train-braking-force-bonus"] = true,
+  ["inserter-stack-size-bonus"] = true,
+  ["bulk-inserter-capacity-bonus"] = true,
+  ["belt-stack-size-bonus"] = true, ["character-health-bonus"] = true,
+  ["character-crafting-speed"] = true, ["character-mining-speed"] = true,
+  ["character-running-speed"] = true, ["character-build-distance"] = true,
+  ["character-item-drop-distance"] = true,
+  ["character-reach-distance"] = true,
+  ["character-resource-reach-distance"] = true,
+  ["character-item-pickup-distance"] = true,
+  ["character-loot-pickup-distance"] = true,
+  ["character-inventory-slots-bonus"] = true,
+  ["character-logistic-trash-slots"] = true
+}
+
 local function safe_effects(effects)
   if not effects or #effects == 0 then return false end
   for _, effect in ipairs(effects) do
-    -- Never duplicate technology unlocks, scripted milestones or location gates.
-    if effect.type == "unlock-recipe" or effect.type == "unlock-space-location"
-      or effect.type == "give-item" or effect.type == "nothing" then return false end
+    if not repeatable_effects[effect.type] then return false end
   end
   return true
 end
+-- Do not use 'upgrade' for eligibility. In the prototype it only changes
+-- research-screen presentation, and valid infinite technologies can omit it.
+local function reason_to_skip(source)
+  if source.max_level ~= "infinite" then return "not-infinite" end
+  if source.enabled == false or source.hidden then return "disabled-or-hidden" end
+  if source.research_trigger then return "research-trigger" end
+  if not source.unit or not source.unit.ingredients or #source.unit.ingredients == 0
+    or not (source.unit.count_formula or source.unit.count) then
+    return "no-research-units"
+  end
+  if not safe_effects(source.effects) then return "one-time-or-unknown-effects" end
+  return nil
+end
+
 function M.data_final_fixes()
   local technology = data.raw.technology or {}
   local names = {}
   for name in pairs(technology) do names[#names + 1] = name end
   table.sort(names)
-  local created = 0
+  local created, considered, skipped = 0, 0, {}
+  local function skip(reason, name)
+    skipped[reason] = skipped[reason] or {}
+    skipped[reason][#skipped[reason] + 1] = name
+  end
   for _, name in ipairs(names) do
     local source = technology[name]
-    if name:sub(1, #PREFIX) ~= PREFIX and source.max_level == "infinite"
-      and source.upgrade == true and source.enabled ~= false
-      and not source.hidden and not source.research_trigger
-      and source.unit and source.unit.ingredients and safe_effects(source.effects)
-      and #(PREFIX .. name .. "-cards") <= 200
-      and not technology[PREFIX .. name .. "-cards"] then
-      local ingredients = ingredients_for(source.unit.ingredients)
-      if ingredients and lab_accepts(ingredients) then
+    if source.max_level == "infinite" and name:sub(1, #PREFIX) ~= PREFIX then
+      considered = considered + 1
+      local next_name = PREFIX .. name .. "-cards"
+      local reason = reason_to_skip(source)
+      if not reason and #next_name > 200 then reason = "name-too-long" end
+      if not reason and technology[next_name] then reason = "already-generated" end
+      local ingredients = not reason and ingredients_for(source.unit.ingredients)
+      if not reason and not ingredients then reason = "no-mapped-system-science" end
+      if not reason and not lab_accepts(ingredients) then
+        reason = "no-compatible-lab"
+      end
+      if reason then
+        skip(reason, name)
+      else
         local clone = table.deepcopy(source)
-        -- A -7 suffix starts Factorio research at level seven, so append a
-        -- nonnumeric suffix: every continuation must begin at level one.
-        clone.name = PREFIX .. name .. "-cards"
-        clone.localised_name = source.localised_name
-          or {"technology-name." .. name:gsub("%-%d+$", "")}
-        clone.localised_description = source.localised_description
-          or {"razi-infinite-research.consolidated"}
+        -- A name ending -7 would start at level seven, not level one.
+        -- Keep this ID stable for saves made by previous 3.x builds.
+        clone.name = next_name
+        clone.localised_name = {"",
+          source.localised_name
+            or {"technology-name." .. name:gsub("%-%d+$", "")},
+          " ", {"razi-infinite-research.suffix"}
+        }
+        clone.localised_description = {"",
+          source.localised_description
+            or {"razi-infinite-research.consolidated"},
+          "\n", {"razi-infinite-research.consolidated"}
+        }
         clone.unit.ingredients = ingredients
         if clone.unit.count_formula then
           clone.unit.count_formula = shifted_formula(
             clone.unit.count_formula, start_level(name) + EARLY_LEVELS - 1)
         end
-        -- Do not use the original infinite tech as a prerequisite: it can never
-        -- be completed. Force-level switching makes the new tier available.
+        -- The original infinite source cannot be a prerequisite: it never
+        -- finishes. Runtime switches the force between its two research paths.
         clone.prerequisites = table.deepcopy(source.prerequisites or {})
         clone.enabled = false
         clone.visible_when_disabled = false
         clone.order = (source.order or "z"):sub(1, 176) .. "-razi-system"
         clone.max_level = "infinite"
-        clone.upgrade = true
+        clone.upgrade = source.upgrade
         data:extend({clone})
         created = created + 1
       end
     end
   end
   if log then
-    log("[Razi Protocol/infinite-research] " .. created
-      .. " compatible infinite research continuations")
+    log("[Razi Protocol/infinite-research] " .. created .. " of " ..
+      considered .. " infinite technologies have system-card continuations")
+    local reasons = {}
+    for reason in pairs(skipped) do reasons[#reasons + 1] = reason end
+    table.sort(reasons)
+    for _, reason in ipairs(reasons) do
+      log("[Razi Protocol/infinite-research] skipped " .. reason ..
+        ": " .. table.concat(skipped[reason], ", "))
+    end
   end
 end
 M.prefix = PREFIX

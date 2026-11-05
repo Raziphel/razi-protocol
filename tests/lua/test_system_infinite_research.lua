@@ -39,6 +39,29 @@ data.raw.technology["physical-projectile-damage-7"] = technology(
     ingredients = {{"automation-science-pack", 1}, {"space-science-pack", 1}}}})
 data.raw.technology["late-solaris"] = technology("late-solaris", {
   {"battlefield-science-pack", 2}, {"automation-science-pack", 1}})
+-- No-upgrade-flag and upgrade=false researches still repeat indefinitely.
+data.raw.technology["artillery-shell-range"] = technology(
+  "artillery-shell-range", {{"automation-science-pack", 1}},
+  {upgrade = false, effects = {{type = "artillery-range", modifier = 0.1}}})
+data.raw.technology["mining-productivity-no-upgrade"] = technology(
+  "mining-productivity-no-upgrade", {{"automation-science-pack", 1}},
+  {upgrade = nil, effects = {{type = "mining-drill-productivity-bonus", modifier = 0.1}}})
+data.raw.technology["constant-count"] = technology(
+  "constant-count", {{"automation-science-pack", 1}},
+  {unit = {count = 250, time = 30,
+    ingredients = {{"automation-science-pack", 1}}}})
+data.raw.technology["one-time-quality"] = technology(
+  "one-time-quality", {{"automation-science-pack", 1}},
+  {effects = {{type = "unlock-quality", quality = "legendary"}}})
+data.raw.technology["one-time-platform"] = technology(
+  "one-time-platform", {{"automation-science-pack", 1}},
+  {effects = {{type = "unlock-space-platforms"}}})
+data.raw.technology["unknown-effect"] = technology(
+  "unknown-effect", {{"automation-science-pack", 1}},
+  {effects = {{type = "third-party-scripted-bonus"}}})
+data.raw.technology["no-compatible-lab"] = technology(
+  "no-compatible-lab", {{"automation-science-pack", 1},
+    {"incompatible-unique-data", 1}})
 data.raw.technology["never-map"] = technology("never-map",
   {{"other-science-pack", 1}})
 data.raw.technology["scripted-research"] = technology("scripted-research",
@@ -67,6 +90,18 @@ check(data.raw.technology[prefix .. "physical-projectile-damage-7-cards"].unit.c
   == "2^((L+11)-7)*1000", "Numbered upgrade must not reset exponential prices")
 check(data.raw.technology[prefix .. "late-solaris-cards"].unit.ingredients[1][1]
   == "solaris-tech-card", "Regional sources must use their own system card")
+check(data.raw.technology[prefix .. "artillery-shell-range-cards"]
+  and data.raw.technology[prefix .. "artillery-shell-range-cards"].upgrade == false,
+  "Artillery infinite research with upgrade=false must be included")
+check(data.raw.technology[prefix .. "mining-productivity-no-upgrade-cards"],
+  "Infinite research without upgrade property must be included")
+check(data.raw.technology[prefix .. "constant-count-cards"].unit.count == 250,
+  "Infinite research with a fixed unit count must keep the native cost")
+check(not data.raw.technology[prefix .. "one-time-quality-cards"]
+  and not data.raw.technology[prefix .. "one-time-platform-cards"]
+  and not data.raw.technology[prefix .. "unknown-effect-cards"]
+  and not data.raw.technology[prefix .. "no-compatible-lab-cards"],
+  "One-time or unknown effects and impossible lab combinations must be skipped")
 check(not data.raw.technology[prefix .. "never-map-cards"]
   and not data.raw.technology[prefix .. "scripted-research-cards"]
   and not data.raw.technology[prefix .. "hidden-research-cards"],
@@ -76,7 +111,7 @@ local n = 0
 for k in pairs(data.raw.technology) do
   if k:sub(1, #prefix) == prefix then n = n + 1 end
 end
-check(n == 3, "Final pass must not duplicate the continuations")
+check(n == 6, "Final pass must not duplicate the six safe continuations")
 
 local runtime = require("scripts.research.infinite_research")
 local native_force = {name = native.name, level = 30, enabled = true}
