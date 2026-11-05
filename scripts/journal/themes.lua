@@ -2,6 +2,7 @@
 -- Neutral parchment and ink remain constant for readable narrative text.
 -- Use the installed game's sprites, falling back to our route emblem.
 local M={}
+local volumes=require("scripts.journal.volumes")
 M.themes={
   calidus={primary={r=1,g=0.75,b=0.43},soft={r=0.77,g=0.64,b=0.47},
     icons={"technology/automation","item/automation-science-pack"}},
@@ -44,7 +45,8 @@ M.themes={
 }
 M.default=M.themes.calidus
 function M.get(id)
-  return M.themes[id] or M.default
+  local chapter=volumes.by_chapter[id]
+  return M.themes[id] or (chapter and M.themes[chapter.theme]) or M.default
 end
 function M.icon(id)
   for _,candidate in ipairs(M.get(id).icons) do
