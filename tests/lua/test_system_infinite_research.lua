@@ -93,7 +93,8 @@ local force = {technologies = {[native.name] = native_force, [name] = continued_
   current_research = native_force, research_progress = 0.35,
   reset_technology_effects = function() resets = resets + 1 end}
 runtime.sync_force(force)
-check(native_force.level == 30 and continued_force.enabled == false,
+check(native_force.level == 30 and continued_force.enabled == false
+  and native_force.enabled == true,
   "No transition may happen before the card recipe is unlocked")
 force.recipes["calidus-tech-card"].enabled = true
 runtime.sync_force(force)
@@ -113,4 +114,18 @@ check(native_force.level == 9 and continued_force.level == 27
 runtime.sync_force(force)
 check(native_force.level == 9 and continued_force.level == 27 and resets == 2,
   "Re-entering the save migration must be idempotent")
+-- If the card becomes unavailable before the first continuation level,
+-- do not leave an existing world with neither research path enabled.
+local starting = {name = native.name, level = 9, enabled = true}
+local waiting = {name = name, level = 1, enabled = false,
+  research_unit_ingredients = {{name = "calidus-tech-card"}}}
+local fresh = {technologies = {[native.name] = starting, [name] = waiting},
+  recipes = {["calidus-tech-card"] = {enabled = true}}, research_queue = {}}
+runtime.sync_force(fresh)
+check(not starting.enabled and waiting.enabled,
+  "The first eight native levels should open the system-card continuation")
+fresh.recipes["calidus-tech-card"].enabled = false
+runtime.sync_force(fresh)
+check(starting.enabled and not waiting.enabled,
+  "Missing cards must restore the original research until they return")
 print("infinite system research: science mapping and existing-save transition passed")
