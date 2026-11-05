@@ -276,3 +276,7 @@ require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plan
 -- Last research pass: preserve native infinite levels, and offer composite-card
 -- continuations only where the final labs can research them.
 require("prototypes.technology.systems.infinite_research").data_final_fixes()
+
+-- Final recipe authority: no craftable trees, harvestable rocks or exotic greenhouse crops.
+-- Isolate them in a category no machine can use, including in older researched saves.
+require("prototypes.balance.Krastorio2-spaced-out.natural_decorations").data_final_fixes()
