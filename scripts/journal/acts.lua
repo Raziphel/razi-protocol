@@ -115,7 +115,26 @@ for chapter,sections in pairs(M.chapters) do
 end
 function M.for_quest(quest)
   if not quest then return nil end
-  return by_quest[quest.id] or fallbacks[quest.chapter]
+  return by_quest[quest.id] or fallbacks[quest.legacy_chapter or quest.chapter]
+end
+-- New display chapters reuse the original act objects and their immutable
+-- historical keys. Some old acts span several new chapters, by design.
+local old_chapters=M.chapters
+M.legacy_chapters=old_chapters
+M.chapters={}
+local defs=require("scripts.journal.data")
+for _,chapter in ipairs(defs.chapters) do
+  local sections,seen={},{}
+  for _,quest in ipairs(defs.quests) do
+    if quest.chapter==chapter.id then
+      local act=M.for_quest(quest)
+      if act and not seen[act.key] then
+        sections[#sections+1]=act
+        seen[act.key]=true
+      end
+    end
+  end
+  M.chapters[chapter.id]=sections
 end
 function M.order(quest)
   local act=M.for_quest(quest)
