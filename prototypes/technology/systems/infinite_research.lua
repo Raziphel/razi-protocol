@@ -140,7 +140,12 @@ local repeatable_effects = {
   ["character-item-pickup-distance"] = true,
   ["character-loot-pickup-distance"] = true,
   ["character-inventory-slots-bonus"] = true,
-  ["character-logistic-trash-slots"] = true
+  ["character-logistic-trash-slots"] = true,
+  ["deconstruction-time-to-live"] = true,
+  ["max-failed-attempts-per-tick-per-construction-queue"] = true,
+  ["max-successful-attempts-per-tick-per-construction-queue"] = true,
+  ["beacon-distribution"] = true, ["cargo-landing-pad-count"] = true,
+  ["max-cargo-bay-unloading-distance"] = true
 }
 
 local function safe_effects(effects)
@@ -199,11 +204,13 @@ function M.data_final_fixes()
             or {"technology-name." .. name:gsub("%-%d+$", "")},
           " ", {"razi-infinite-research.suffix"}
         }
-        clone.localised_description = {"",
-          source.localised_description
-            or {"razi-infinite-research.consolidated"},
-          "\n", {"razi-infinite-research.consolidated"}
-        }
+        -- Do not print the same line twice when a source has no description.
+        if source.localised_description then
+          clone.localised_description = {"", source.localised_description,
+            "\n", {"razi-infinite-research.consolidated"}}
+        else
+          clone.localised_description = {"razi-infinite-research.consolidated"}
+        end
         clone.unit.ingredients = ingredients
         if clone.unit.count_formula then
           clone.unit.count_formula = shifted_formula(

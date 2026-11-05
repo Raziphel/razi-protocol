@@ -139,6 +139,8 @@ check(not native_force.enabled and continued_force.enabled,
   "Only the consolidated stage should remain researchable")
 check(force.research_queue[1] == name and force.research_queue[2] == other.name,
   "Current research queue must point at the new technology")
+check(continued_force.saved_progress == 0.35,
+  "The switch must preserve unfinished research work")
 check(resets == 1, "Existing-save effects must be recalculated once")
 -- Merging another force with old level 35 must not add those 29 levels
 -- on top of progress already credited on the continuation.
@@ -171,6 +173,20 @@ fresh.recipes["calidus-tech-card"].enabled = false
 runtime.sync_force(fresh)
 check(starting.enabled and not waiting.enabled,
   "Missing cards must restore the original research until they return")
+-- The active research must survive switching even when no queue is enabled.
+local no_queue_original = {name = native.name, level = 6, enabled = true}
+local no_queue_cards = {name = name, level = 1, enabled = false,
+  research_unit_ingredients = {{name = "calidus-tech-card"}}}
+local no_queue_force = {
+  technologies = {[native.name] = no_queue_original, [name] = no_queue_cards},
+  recipes = {["calidus-tech-card"] = {enabled = true}},
+  research_queue = {}, current_research = no_queue_original,
+  research_progress = 0.42
+}
+runtime.sync_force(no_queue_force)
+check(no_queue_force.research_queue[1] == name
+  and no_queue_cards.saved_progress == 0.42,
+  "Active research without a queue must survive the transition")
 -- Existing saves from the prior eight-level behavior must not lose the
 -- three levels now assigned to the system card. A repeated sync is harmless.
 local old_native = {name = native.name, level = 9, enabled = false}

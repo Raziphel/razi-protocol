@@ -23,15 +23,21 @@ local function ready(force, continuation)
   return true
 end
 local function transfer_queue(force, original, continuation)
-  local queue = force.research_queue
   local next_queue, changed = {}, false
-  for _, research in ipairs(queue or {}) do
+  for _, research in ipairs(force.research_queue or {}) do
     local name = type(research) == "string" and research or research.name
     if name == original then
       name = continuation
       changed = true
     end
     next_queue[#next_queue + 1] = name
+  end
+  -- With the research queue disabled, the active research may not be in
+  -- the queue array. Do not silently cancel the player's ongoing research.
+  if not changed and force.current_research
+    and force.current_research.name == original then
+    table.insert(next_queue, 1, continuation)
+    changed = true
   end
   return changed and next_queue or nil
 end
@@ -74,6 +80,12 @@ function M.sync_force(force)
             end
           end
           continuation.enabled = true
+          -- Keep partial work even if the source research disappears from
+          -- the active queue before it can be replaced.
+          if progress and progress > 0 then
+            continuation.saved_progress = math.max(
+              continuation.saved_progress or 0, progress)
+          end
           original.enabled = false
           if queue then
             force.research_queue = queue
