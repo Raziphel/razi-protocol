@@ -69,6 +69,9 @@ data.raw.technology["scripted-research"] = technology("scripted-research",
   {effects = {{type = "unlock-recipe", recipe = "danger"}}})
 data.raw.technology["hidden-research"] = technology("hidden-research",
   {{"automation-science-pack", 1}}, {hidden = true})
+local config = require("lib.research.infinite_config")
+check(config.early_levels == 5 and config.previous_early_levels == 8,
+  "Prototype and runtime must share the exact transition threshold")
 local base = require("prototypes.technology.systems.infinite_research")
 base.data_final_fixes()
 local prefix = base.prefix

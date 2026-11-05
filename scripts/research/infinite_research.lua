@@ -1,15 +1,12 @@
 -- Infinite research changes inputs after five levels, never the original
 -- technology identifier. That lets existing saves retain their research.
 local M = {}
-local PREFIX = "razi-system-infinite-"
-local EARLY_LEVELS = 5
-local PREVIOUS_EARLY_LEVELS = 8
-local cards = {
-  ["calidus-tech-card"] = true, ["solaris-tech-card"] = true,
-  ["nyxaris-tech-card"] = true, ["vibrant-tech-card"] = true,
-  ["vespera-tech-card"] = true, ["beetlejuice-tech-card"] = true,
-  ["umbra-tech-card"] = true, ["deep-space-tech-card"] = true
-}
+local config = require("lib.research.infinite_config")
+local PREFIX = config.prefix
+local EARLY_LEVELS = config.early_levels
+local PREVIOUS_EARLY_LEVELS = config.previous_early_levels
+local cards = {}
+for _, card in pairs(config.cards) do cards[card] = true end
 local function ready(force, continuation)
   for _, entry in ipairs(continuation.research_unit_ingredients or {}) do
     local name = entry.name or entry[1]

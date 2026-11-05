@@ -1,18 +1,10 @@
 -- Mapping follows the tiers in technology/systems/progression.lua. Unknown or
 -- lab-specific science is deliberately kept instead of guessed.
 local M = {}
-local PREFIX = "razi-system-infinite-"
-local EARLY_LEVELS = 5
-local cards = {
-  base = "calidus-tech-card",
-  solaris = "solaris-tech-card",
-  nyxaris = "nyxaris-tech-card",
-  vibrant = "vibrant-tech-card",
-  vespera = "vespera-tech-card",
-  beetlejuice = "beetlejuice-tech-card",
-  umbra = "umbra-tech-card",
-  deep_space = "deep-space-tech-card"
-}
+local config = require("lib.research.infinite_config")
+local PREFIX = config.prefix
+local EARLY_LEVELS = config.early_levels
+local cards = config.cards
 local tiers = {
   base = {
     "automation-science-pack", "logistic-science-pack", "military-science-pack",
