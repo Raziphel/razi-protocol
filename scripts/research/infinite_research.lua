@@ -78,7 +78,7 @@ function M.sync_force(force)
         elseif not already_continued then
           -- Keep (or restore) the native path until all cards are craftable.
           -- A settings/mod change can temporarily remove a card recipe.
-          original.enabled = true
+          if original.level >= cutoff then original.enabled = true end
           continuation.enabled = false
         else
           -- A completed transition is permanent, even if later mod changes
