@@ -38,7 +38,7 @@ M.worlds = {
 		reason = "a side trip behind Aquilo; its discovery takes the Ferrum, interstellar and particulate packs"},
 	{mod = "moon-eneas", locations = {"eneas"}, packs = {},
 		reason = "its discovery is a chain of eight build and craft triggers"},
-	{mod = "Nexus-Updated", locations = {"nexus"}, packs = {},
+	{mod = "Nexus", locations = {"nexus"}, packs = {},
 		reason = "its discovery waits for the transceiver signal"},
 }
 
