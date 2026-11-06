@@ -1,7 +1,6 @@
 local enemy_autoplace = require("prototypes.compat.enemy_autoplace")
 
--- ArmouredBiters21Compat is the 2.1 fork of Armoured Biters with the same prototype names.
-if not enemy_autoplace.enabled() or not (mods["ArmouredBiters"] or mods["ArmouredBiters21Compat"]) then
+if not enemy_autoplace.enabled() or not mods["ArmouredBiters"] then
 	return
 end
 

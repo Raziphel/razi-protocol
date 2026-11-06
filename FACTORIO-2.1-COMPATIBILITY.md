@@ -117,7 +117,6 @@ These declarations intentionally remain in `info.json` without invented 2.1 vers
 
 | Mod | Latest portal release | Declared Factorio version |
 | --- | ---: | ---: |
-| `ArmouredBiters` | 2.0.2 | 2.0 |
 | `castra-prime-k2-turret-ammo-fix` | 1.0.0 | 2.0 |
 | `kr-air-purifier-helper` | 2.0.6 | 2.0 |
 | `Noxys_Swimming` | 0.5.3 | 2.0 |
