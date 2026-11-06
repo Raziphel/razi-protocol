@@ -19,7 +19,7 @@ I started this because I wanted to play with a lot of planet mods at once, and i
 * **It is big.** With the required and recommended mods you load 183 mods, about 6.5 GB of downloads.
 * **It changes the game early.** Technologies unlock in a different order from regular Space Age, and later research costs system cards.
 * **Some mods do not work with it:** other route and asteroid belt overhauls (Asteroid Belt, Space Route Overlay, Redrawn Space Connections), the Krastorio 2 extended endgame mods, Lignumis, Factorio+ and the others marked incompatible in the Dependencies tab.
-* **2.x saves can be updated.** Make a backup and read [the update guide](https://github.com/Raziphel/razi-protocol/blob/dev/docs/updating-from-2x.md) first: some recipes stop accepting modules, and some researched technologies get new prerequisites.
+* **2.x saves can be updated.** Make a backup. Before updating, load the save in the latest 2.x, type `/razi-prepare-3` in the chat and save. Then read [the update guide](https://github.com/Raziphel/razi-protocol/blob/dev/docs/updating-from-2x.md): some recipes stop accepting modules, and some researched technologies get new prerequisites.
 * **3.0 is still being tested.** Please report broken recipes, missing technologies and progression problems.
 
 ## Razi Protocol is for you if
