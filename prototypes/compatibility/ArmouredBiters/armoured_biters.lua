@@ -2,9 +2,9 @@ local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace
 local enemy_homes = require("prototypes.compatibility.common.enemy_homes")
 local nest_names = require("lib.enemy_nest_names")
 
--- ArmouredBiters21Compat and ArmouredBiters-2_1-update (the one Balack requires) are 2.1 forks of Armoured Biters with
--- the same prototype names; with both installed the one that loads last owns them.
-local armoured_biter_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}
+-- ArmouredBiters-2_1-update (the one Balack requires) is a 2.1 fork of Armoured Biters with the same prototype names;
+-- with both installed the one that loads last owns them.
+local armoured_biter_mods = {"ArmouredBiters", "ArmouredBiters-2_1-update"}
 
 local function armoured_biters_installed()
 	for _, mod_name in ipairs(armoured_biter_mods) do

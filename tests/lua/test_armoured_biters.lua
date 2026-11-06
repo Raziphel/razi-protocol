@@ -1,5 +1,5 @@
 -- Armoured Biters placement (compat/armoured_biters.lua) and Hyarion's pollution absorption (compat/enemy_planet_pollution.lua)
--- with each of the three Armoured Biters mods, on a mocked data.raw.
+-- with each of the two Armoured Biters mods, on a mocked data.raw.
 -- Run from the mod root:
 --   lua5.2 tests/lua/test_armoured_biters.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -26,7 +26,7 @@ if not table.deepcopy then
 end
 
 local function setup(active_mods)
-	package.loaded["prototypes.compatibility.ArmouredBiters21Compat.armoured_biters"] = nil
+	package.loaded["prototypes.compatibility.ArmouredBiters.armoured_biters"] = nil
 	package.loaded["prototypes.compatibility.common.enemy_autoplace"] = nil
 	package.loaded["prototypes.compatibility.common.enemy_homes"] = nil
 	package.loaded["prototypes.compatibility.common.enemy_planet_pollution"] = nil
@@ -62,10 +62,10 @@ local function placed_on(planet_name)
 		and entity_settings.entity.settings["armoured-biter-spawner"]
 end
 
--- Each of the three mods sets the nest on Hyarion and takes the armoured units out of the vanilla nest.
-for _, mod_name in ipairs({"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}) do
+-- Each of the two mods sets the nest on Hyarion and takes the armoured units out of the vanilla nest.
+for _, mod_name in ipairs({"ArmouredBiters", "ArmouredBiters-2_1-update"}) do
 	setup({[mod_name] = "1.0.0"})
-	require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
+	require("prototypes.compatibility.ArmouredBiters.armoured_biters")
 	check(placed_on("hyarion") ~= nil, mod_name .. ": the armoured nest is placed on Hyarion")
 	check(placed_on("nauvis") == nil, mod_name .. ": the armoured nest is not placed on Nauvis")
 	local units = data.raw["unit-spawner"]["biter-spawner"].result_units
@@ -83,7 +83,7 @@ end
 
 -- None of them: nothing is touched.
 setup({})
-require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
+require("prototypes.compatibility.ArmouredBiters.armoured_biters")
 check(placed_on("hyarion") == nil, "no Armoured Biters mod, no nest")
 check(#data.raw["unit-spawner"]["biter-spawner"].result_units == 3, "no Armoured Biters mod, the vanilla nest stays")
 require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
@@ -92,13 +92,13 @@ check(data.raw.tile["hyarion-soil-dark"].absorptions_per_second == nil, "no Armo
 -- Enemy routing off: nothing is touched.
 setup({["ArmouredBiters-2_1-update"] = "2.0.4"})
 settings.startup["razi-enable-enemy-routing"] = {value = false} -- luacheck: ignore 122
-require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
+require("prototypes.compatibility.ArmouredBiters.armoured_biters")
 check(placed_on("hyarion") == nil, "routing off, no nest")
 
 -- Armoured Biters with the dedicated nest off (no armoured-biter-spawner): the vanilla nest keeps its armoured units.
 setup({["ArmouredBiters-2_1-update"] = "2.0.4"})
 data.raw["unit-spawner"]["armoured-biter-spawner"] = nil
-require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
+require("prototypes.compatibility.ArmouredBiters.armoured_biters")
 check(placed_on("hyarion") == nil, "no dedicated nest, nothing placed")
 check(#data.raw["unit-spawner"]["biter-spawner"].result_units == 3, "no dedicated nest, the vanilla nest keeps its units")
 
