@@ -170,15 +170,15 @@ handlers[events.script_raised_built]({entity = {valid = true, name = "kr-activat
 check(forces.enemy.technologies[gate].researched, "Building the active transceiver should open the gate")
 
 -- The Nexus repair runs only when Nexus itself changes.
-active_mods["Nexus-Updated"] = "1.4.2"
+active_mods["Nexus"] = "1.3.7"
 lifecycle.changed({mod_changes = {["razi-protocol"] = {old_version = "2.1.5", new_version = "2.1.6"}}})
 check(not forces.player.technologies["element882"].enabled, "A Razi-only update must not touch Nexus gates")
-lifecycle.changed({mod_changes = {["Nexus-Updated"] = {old_version = "1.4.1", new_version = "1.4.2"}}})
+lifecycle.changed({mod_changes = {["Nexus"] = {old_version = "1.3.6", new_version = "1.3.7"}}})
 check(forces.player.technologies["element882"].enabled, "A Nexus update should re-enable its hidden-by-migration gates")
 check(not forces.player.technologies["atomacer"].enabled, "Hidden prototypes must stay disabled")
 
-active_mods["Nexus-Updated"] = nil
+active_mods["Nexus"] = nil
 forces.enemy.technologies["element882"] = technology(false, false)
-lifecycle.changed({mod_changes = {["Nexus-Updated"] = {old_version = "1.4.2"}}})
+lifecycle.changed({mod_changes = {["Nexus"] = {old_version = "1.3.7"}}})
 check(not forces.enemy.technologies["element882"].enabled, "Removing Nexus must not enable anything")
 print("runtime control: registry wiring, transceiver gate and the Nexus repair passed")

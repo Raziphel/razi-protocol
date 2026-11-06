@@ -9,7 +9,7 @@ local deep_expedition = require("scripts.convergence.deep_space_expedition")
 local spoiler_fog = require("scripts.journal.spoiler_fog")
 local convergence = require("scripts.convergence.convergence")
 local victory_guard = require("scripts.convergence.victory_guard")
-local nexus_technology_visibility = require("scripts.compatibility.Nexus-Updated.technology_visibility")
+local nexus_technology_visibility = require("scripts.compatibility.Nexus.technology_visibility")
 
 local lifecycle = {}
 

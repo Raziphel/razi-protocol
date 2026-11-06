@@ -99,7 +99,7 @@ for _, name in ipairs({"linox-technology_planet-discovery-linox",
 end
 
 -- With Nexus the Void Processing gate also spends the Deep Space card on top of the seven.
-raw = build({["Nexus-Updated"] = "1.0.0"})
+raw = build({["Nexus"] = "1.3.6"})
 local nexus_set = cards(raw, "black-hole-discovery")
 check(has_all(nexus_set, seven), "With Nexus black-hole-discovery keeps the seven system cards")
 check(nexus_set["deep-space-tech-card"], "With Nexus black-hole-discovery spends the Deep Space card")

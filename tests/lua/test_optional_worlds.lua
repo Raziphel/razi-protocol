@@ -48,7 +48,7 @@ for _, world in ipairs(roster.worlds) do
 end
 for location, mod in pairs({["rabbasca-underground"] = "rabbasca-underground",
 	skewer_shattered_planet = "skewer_shattered_planet", skewer_lost_beyond = "skewer_shattered_planet",
-	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus-Updated"}) do
+	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus"}) do
 	check(excluded[location] == mod, location .. " must stay off the path")
 end
 -- Rabbasca is woven: only its packs stay out
@@ -68,9 +68,9 @@ end
 -- Ferrum stays optional, but once installed it is woven and the path may need its pack
 check(dependencies["planet-ferrum"]:match("^[%?%+]"), "planet-ferrum is no longer an optional dependency")
 check(not seen["planet-ferrum"], "Ferrum and its pack are on the path and stay out of the list")
-check(dependencies["Nexus-Updated"] == "Nexus-Updated >= 1.4.1", "Nexus-Updated must be a required dependency")
+check(dependencies["Nexus"] == "Nexus >= 1.3.6", "Nexus must be a required dependency")
 -- `nexus-bosses` is required without a load order (`~`).
-check(dependencies["nexus-bosses"] == "~ nexus-bosses >= 2.4.0",
+check(dependencies["nexus-bosses"] == "~ nexus-bosses >= 2.5.1",
 	"`nexus-bosses` is required without a load order (`~`)")
 -- Secretas is required and on the path to the final technology
 check(not seen["secretas"], "Secretas is a required dependency and stays out of the list")
