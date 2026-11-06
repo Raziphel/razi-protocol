@@ -4,9 +4,9 @@ local removed_vehicle_fields = {}
 -- ignores the old fields. Mods that still write them on a copy of a vanilla car keep the numbers of the vanilla car:
 -- - the tank of Krastorio2 2.1.4 (prototypes/updates/base/entities.lua:96, "1.75MW") brakes with the 800 kW of the vanilla
 --   tank, its braking distance is 1.9 times too long;
--- - the rocket buggy of planet-muluna 2.9.9 (prototypes/entity/lunar-buggy.lua:11 and :53) brakes 3.75 times too weakly;
--- - RTPropCar of RenaiTransportation 2.3.4 (prototypes/TrainGoBrrrr/PropHunt.lua:18), the hidden stand-in of a flying
---   train, loses speed.
+-- - RTPropCar of RenaiTransportation 2.3.4 and older (prototypes/TrainGoBrrrr/PropHunt.lua:18), the hidden stand-in of
+--   a flying train, loses speed; 2.3.5 writes friction_force, and Renai is not a dependency, so older versions still come.
+-- The rocket buggy of planet-muluna writes the new fields since 2.9.14, the version this mod requires.
 -- The old value is moved to the new field by the conversion the game itself uses (power / 60), on every car that has one,
 -- so the copies of other mods follow, and the repair does nothing once a mod writes the new field.
 -- Only cars: a spider vehicle ignores the field either way (measured on the Maraxsis submarines).
