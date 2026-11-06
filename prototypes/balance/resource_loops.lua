@@ -20,6 +20,7 @@ local entries = {
 	{ level = "strict", run = require("prototypes.balance.secretas.fuel_liquefaction").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.shchierbin.crusher_productivity").data_final_fixes },
 	{ level = "strict", run = require("prototypes.balance.Krastorio2-spaced-out.loops").data_final_fixes },
+	{ level = "closed", run = require("prototypes.balance.Krastorio2-spaced-out.loops").decorations_data_final_fixes },
 	{ level = "strict", run = require("prototypes.balance.Krastorio2.crush_productivity").data_final_fixes },
 	{ level = "strict", run = require("prototypes.balance.planetaris-hyarion.particle_manipulation").data_final_fixes },
 	{ level = "strict", run = require("prototypes.balance.corrundum.recrystallization").data_final_fixes },

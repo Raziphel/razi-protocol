@@ -53,10 +53,13 @@ function support.same(left, right)
 	return true
 end
 
--- Installs a data.raw with the given recipes and technologies and clears the log.
-function support.install(recipes, technologies)
+-- Installs a data.raw with the given recipes and technologies, and the other prototypes by type, and clears the log.
+function support.install(recipes, technologies, others)
 	support.logs = {}
 	local raw = { recipe = recipes or {}, technology = technologies or {} }
+	for prototype_type, prototypes in pairs(others or {}) do
+		raw[prototype_type] = prototypes
+	end
 	rawset(_G, "data", { raw = raw })
 
 	return raw
@@ -74,7 +77,7 @@ end
 -- nothing. A fix of the closed group must satisfy applied(raw) at closed and strict (Normal, Hard, Nightmare, or picked
 -- by hand); a fix of the strict group (group = "strict") only at strict (Hard, Nightmare, or picked by hand) and must
 -- leave the recipes alone at closed.
--- fixture() returns the recipes, and the technologies if it has them.
+-- fixture() returns the recipes, and the technologies and the other prototypes by type if it has them.
 function support.gate(loops, fixture, applied, group)
 	local rows = {
 		{ "easy", "closed", false, false }, { "custom", "open", false, false }, { "normal", "open", false, false },
@@ -83,8 +86,7 @@ function support.gate(loops, fixture, applied, group)
 	}
 	for _, row in ipairs(rows) do
 		support.level(row[1], row[2])
-		local recipes, technologies = fixture()
-		local raw = support.install(recipes, technologies)
+		local raw = support.install(fixture())
 		local before = support.copy(raw)
 		loops.data_final_fixes()
 		local label = row[1] .. " with " .. row[2]
