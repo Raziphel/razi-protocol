@@ -11,8 +11,8 @@ local enemy_planet_pollution = {}
 -- pollution, so only they need it.
 local planets = {
 	{planet = "arig", family = "arachnids", enemy_mods = {"Arachnids_enemy"}, like_tile = "sand-1", fallback = 0.000015},
-	{planet = "hyarion", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003},
-	{planet = "panglia", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters21Compat", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
+	{planet = "hyarion", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003},
+	{planet = "panglia", family = "armoured", enemy_mods = {"ArmouredBiters", "ArmouredBiters-2_1-update"}, like_tile = "volcanic-soil-dark", fallback = 0.00003}
 }
 
 local function planet_tile_names(planet_name)

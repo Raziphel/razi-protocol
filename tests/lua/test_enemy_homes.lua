@@ -29,7 +29,7 @@ local logged = {}
 rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
 local module_names = {
-	"compatibility.common.enemy_autoplace", "compatibility.common.enemy_homes", "compatibility.common.enemy_planet_pollution", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Arachnids_enemy.arachnids_enemy",
+	"compatibility.common.enemy_autoplace", "compatibility.common.enemy_homes", "compatibility.common.enemy_planet_pollution", "compatibility.ArmouredBiters.armoured_biters", "compatibility.Arachnids_enemy.arachnids_enemy",
 	"compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies"
 }
 
@@ -122,7 +122,7 @@ local function setup(active_mods, startup)
 end
 
 local function run_all()
-	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters"}) do
+	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters"}) do
 		require("prototypes." .. name)
 	end
 	require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
