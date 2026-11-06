@@ -97,3 +97,7 @@ end
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
 require("prototypes.compat.corrundum_k2so_lab_inputs").data_final_fixes()
+
+-- Krastorio 2's greenhouse recipes of rocks and trees cost twice what mining them drops, so planting and mining
+-- makes nothing. After every other pass, which may add species to kr-decorations.
+require("prototypes.compat.k2so_decoration_prices").data_final_fixes()
