@@ -20,6 +20,8 @@ local loops = {}
 --    A greenhouse takes at most 4 item ingredients (ingredient_count) and the artificial trees drop 9 kinds of items
 --    besides wood, so a recipe gets only as many new ingredients as the machines that craft it have slots left, the
 --    most valuable drops first, and their amounts grow by the price of the drops left out.
+--    This loop needs no productivity, so it closes from the closed level on (loops.decorations_data_final_fixes);
+--    1 and 2 only open with productivity and close at strict (loops.data_final_fixes).
 local cheap_drops = { wood = true, stone = true, coal = true, spoilage = true }
 
 local function drops(entity)
@@ -253,6 +255,9 @@ end
 function loops.data_final_fixes()
 	close_bio_circuit()
 	close_quartz_to_matter()
+end
+
+function loops.decorations_data_final_fixes()
 	price_decorations()
 end
 

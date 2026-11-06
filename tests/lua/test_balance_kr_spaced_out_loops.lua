@@ -10,6 +10,12 @@ local loops = require("prototypes.balance.resource_loops")
 
 local fix = require("prototypes.balance.Krastorio2-spaced-out.loops")
 
+-- Both parts of the file: the loops that close at strict and the price of the decorations, which closes at closed.
+local function run()
+	fix.data_final_fixes()
+	fix.decorations_data_final_fixes()
+end
+
 local function ingredient(name, amount, kind)
 	return { type = kind or "item", name = name, amount = amount }
 end
@@ -103,7 +109,7 @@ end
 
 local raw = support.install(fixture())
 entities(raw)
-fix.data_final_fixes()
+run()
 local recipes = raw.recipe
 
 -- 1. The circuit and the matter.
@@ -153,7 +159,7 @@ end
 raw = support.install({ ["rock-a"] = growing("rock-a", { ingredient("coal", 50) }) },
 	{ ["kr-decorations"] = { effects = { unlock("rock-a") } } })
 raw["simple-entity"] = { ["rock-a"] = rock({ { type = "item", name = "tungsten-ore", amount = 10, probability = 0.1 } }) }
-fix.data_final_fixes()
+run()
 check(names(raw.recipe["rock-a"]) == "50 coal, 20 tungsten-ore", "The old probability is not read")
 
 -- 3. What the authors changed stays: a lower cap, a matter that is no more than 0.48, a circuit without productivity.
@@ -161,34 +167,47 @@ recipes = fixture()
 recipes["kr-bio-processing-circuit"].maximum_productivity = 0.25
 recipes["kr-kr-quartz-to-matter"].results[1].amount = 0.4
 raw = support.install(recipes, {})
-fix.data_final_fixes()
+run()
 check(raw.recipe["kr-bio-processing-circuit"].maximum_productivity == 0.25 and raw.recipe["kr-kr-quartz-to-matter"].results[1].amount == 0.4
 	and #support.logs == 1, "A lower cap and a lower amount stay; only the empty summary is logged")
 recipes = fixture()
 recipes["kr-bio-processing-circuit"].allow_productivity = false
 raw = support.install(recipes, {})
-fix.data_final_fixes()
+run()
 check(raw.recipe["kr-bio-processing-circuit"].maximum_productivity == nil, "A circuit without productivity needs no cap")
 recipes = fixture()
 recipes["kr-bio-processing-circuit"].maximum_productivity = 3
 raw = support.install(recipes, {})
-fix.data_final_fixes()
+run()
 check(raw.recipe["kr-bio-processing-circuit"].maximum_productivity == 0.5, "A higher cap goes down")
 
 -- 4. Without the recipes, the technology or the machines nothing fails.
 support.install({})
-fix.data_final_fixes()
+run()
 raw = support.install({ ["rock-a"] = growing("rock-a", { ingredient("coal", 50) }) }, { ["kr-decorations"] = { effects = { unlock("rock-a") } } })
 raw["simple-entity"] = { ["rock-a"] = rock({ { type = "item", name = "tungsten-ore", amount = 10 } }) }
-fix.data_final_fixes()
+run()
 check(names(raw.recipe["rock-a"]) == "50 coal, 20 tungsten-ore", "Without machines there is no limit")
 support.install({ ["rock-a"] = { results = {} } }, { ["kr-decorations"] = { effects = { unlock("rock-a") } } })
-fix.data_final_fixes()
+run()
 
--- Through the level: open and closed leave the recipes, strict prices them.
-support.gate(loops, fixture, function(data_raw)
+-- Through the level: open and closed leave the circuit and the matter, strict closes them.
+support.gate(loops, function()
+	local recipes = fixture()
+	return { ["kr-bio-processing-circuit"] = recipes["kr-bio-processing-circuit"],
+		["kr-kr-quartz-to-matter"] = recipes["kr-kr-quartz-to-matter"] }
+end, function(data_raw)
 	return data_raw.recipe["kr-kr-quartz-to-matter"].results[1].amount == 0.48
 		and data_raw.recipe["kr-bio-processing-circuit"].maximum_productivity == 0.5
 end, "strict")
+
+-- Planting and mining a decoration needs no productivity: open leaves the recipes, closed and strict price them.
+support.gate(loops, function()
+	local recipes = { ["rock-d"] = growing("rock-d", { ingredient("coal", 50), ingredient("stone", 75), ingredient("tungsten-ore", 20) }) }
+	local technologies = { ["kr-decorations"] = { effects = { unlock("rock-d") } } }
+	return recipes, technologies, { ["simple-entity"] = { ["rock-d"] = rock({ { type = "item", name = "tungsten-ore", amount = 20 } }) } }
+end, function(data_raw)
+	return names(data_raw.recipe["rock-d"]) == "50 coal, 75 stone, 60 tungsten-ore"
+end)
 
 print("test_balance_kr_spaced_out_loops: ok")
