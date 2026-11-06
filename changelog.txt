@@ -1,4 +1,30 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.2.0
+Date: 2026-11-06
+  Features:
+    - /razi-prepare-3 saves lab cards and platform positions for the update to 3.0
+---------------------------------------------------------------------------------------------------
+Version: 2.1.13
+Date: 2026-11-06
+  Bugfixes:
+    - [compat] Armoured Biters 2.1.0 replaces the fork ArmouredBiters21Compat
+---------------------------------------------------------------------------------------------------
+Version: 2.1.12
+Date: 2026-11-06
+  Compatibility:
+    - Loads after the original Nexus too, which has a 2.1 release since 1.3.5
+---------------------------------------------------------------------------------------------------
+Version: 2.1.11
+Date: 2026-10-28
+  Bugfixes:
+    - [starmap] deduplicate Aegis expedition routes without changing hazards
+    - [starmap] set Paracelsin orbit orientation to 0.75
+---------------------------------------------------------------------------------------------------
+Version: 2.1.10
+Date: 2026-10-28
+  Bugfixes:
+    - [starmap] move Paracelsin clear of Vibrant belt labels
+---------------------------------------------------------------------------------------------------
 Version: 2.1.9
 Date: 2026-10-24
   Bugfixes:
