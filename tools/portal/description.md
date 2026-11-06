@@ -1,118 +1,162 @@
-# DESCRIPTION UPDATE COMING SOON.
+![Razi Protocol](https://assets-mod.factorio.com/assets/163ee6c5629ef7393b519aa30620d932f3a24df3.png)
 
-# Razi Protocol
+**This page describes 3.0, which is coming soon, so settings and features below may not be in your game yet.**
 
-Razi Protocol is a progression and starmap overhaul for giant *Factorio: Space Age* + Krastorio 2 Spaced Out planet packs. It is built to turn a huge stack of planets, science packs, enemy mods, and endgame add-ons into one clean multi-system campaign.
+**Requires:** Factorio 2.1, Space Age, Krastorio 2 Spaced Out and the mods in the Dependencies tab  
+**GitHub:** [Source Code](https://github.com/Raziphel/razi-protocol)  
+**Discord:** [Razi's Realm](https://razisrealm.com/discord)  
+**Wiki:** [Razi Protocol Wiki](https://wiki.razisrealm.com/factorio)
 
-Instead of leaving every mod on its own disconnected branch, Razi Protocol:
+# Razi Protocol 3.0
 
-- Rebuilds the galaxy into progression chapters: Calidus, Solaris, Nyxaris, Vibrant, Beetlejuice, and Deep Space.
-- Adds system discovery technologies and system milestone cards.
-- Rehomes many planets so the starmap and tech tree follow one readable route.
-- Integrates Eneas, Linox, Muria, and Shchierbin into that route instead of leaving them as awkward side content.
-- Replaces Nexus omega-science clutter with a cleaner Deep Space card-driven endgame.
-- Pushes the Krastorio intergalactic transceiver into a longer singularity-based finale.
-- Routes optional custom enemy factions onto planets that actually fit their theme.
-- Cleans up Science Tab groupings, overloaded crafting tabs, and several late compatibility seams.
+You start on Nauvis with Krastorio 2 Spaced Out. From there the game goes through seven star systems and more than 35 worlds from other planet mods, and it ends in Deep Space with five shipments and a final transmission. Each system has its own tech card, and late research spends the cards of every system, so the factories on your first planets keep running until the end. Space routes have danger levels from 1 to 10, and two asteroid belts stand between you and the outer systems.
 
-## Updating from 2.x
+I started this because I wanted to play with a lot of planet mods at once, and in a normal game they felt like separate additions. Once a planet's research was done there was no reason to go back, and some planets barely touched the rest of the tech tree. Razi Protocol puts them on one route. The planets, machines and recipes still come from their own mods.
 
-Your 2.x save keeps working in 3.0. Before updating, type `/razi-prepare-3` in the chat and save. Step by step: [Updating a 2.x save](https://github.com/Raziphel/razi-protocol/blob/main/docs/updating-from-2x.md).
+## Please read before you start
 
-## Chapter Flow
+* **It is long.** More than 35 worlds on top of Space Age. Nobody has finished a 3.0 game yet, so there is no real playtime figure; plan for hundreds of hours.
+* **It is big.** With the required and recommended mods you load 183 mods, about 6.5 GB of downloads.
+* **It changes the game early.** Technologies unlock in a different order from regular Space Age, and later research costs system cards.
+* **Some mods do not work with it:** other route and asteroid belt overhauls (Asteroid Belt, Space Route Overlay, Redrawn Space Connections), the Krastorio 2 extended endgame mods, Lignumis, Factorio+ and the others marked incompatible in the Dependencies tab.
+* **2.x saves can be updated.** Make a backup and read [the update guide](https://github.com/Raziphel/razi-protocol/blob/dev/docs/updating-from-2x.md) first: some recipes stop accepting modules, and some researched technologies get new prerequisites.
+* **3.0 is still being tested.** Please report broken recipes, missing technologies and progression problems.
 
-### Calidus
+## Razi Protocol is for you if
 
-The early inner-system foundation. This is where Muluna, optional Cerys, and Eneas sit, and where the campaign starts building toward Calidus Tech Card.
+* You want many planet mods in one game, and you want them to depend on each other.
+* You like long supply lines between planets, with old bases that stay useful.
+* You want your platforms to be at risk on the way.
 
-### Solaris
+If you want a short mod list or a game you can finish in a few weekends, this is not that.
 
-The first major custom-system chapter. It connects Castra Prime, Arig, Hyarion, Tellus, and Corrundum into a single structured progression region.
+# How a game goes
 
-### Nyxaris
+![The star map: Nyxaris and Solaris, Vespera, Calidus and Vibrant, Aegis and Bellicos, Umbra, Beetlejuice](https://assets-mod.factorio.com/assets/984fd9f0d2d0a3316c6d8aded1adf2fedea387df.png)
 
-The mid-tier science chapter that also absorbs Dea Dia-style progression. Apia Carnova, Moshine, Panglia, and Pelagos all feed into this stage.
+**Calidus.** Nauvis and Muluna. You reach space, settle Muluna and make the first system card.
 
-### Vibrant
+**Solaris and Nyxaris.** You can open them in either order. Vulcanus, Gleba and their neighbours bring the first big industries, and you research every world of the pair before the next systems open.
 
-The exotic science chapter. Ribbonia, Paracelsin, Muria, Aquilo, Rubia, Maraxsis, and Shchierbin all live here. Muria and Shchierbin are integrated directly into this route instead of being left on vanilla-style offshoots.
+**Vibrant and Vespera.** Fulgora, Aquilo and their neighbours. The gateway needs partnership technologies that use goods from several planets. To reach Paracelsin and Beetlejuice you survey the Vibrant asteroid belt and fly through it.
 
-### Beetlejuice
+**Beetlejuice and Umbra.** The outer systems. Umbra's Shattered Divide is the second belt, in front of Tenebris.
 
-The harsh outer-system chapter. Cubium, Tenebris, Crucible, Vesta, Secretas, Frozeta, and the road to the solar-system edge live here. Linox now also sits in this later chapter as a Cubium-side branch.
+**Aegis and Bellicos.** The Aegis survey opens after Solaris and Nyxaris. Bellicos is a long flight, and you need it for Outer Frontier Mastery.
 
-### Deep Space
+**Deep Space.** Singularity research and the Krastorio 2 intergalactic transceiver open it. The game ends with the Convergence.
 
-The final chapter. Nexus, the black-hole chain, Oort Cloud, Sol, optional Void Processing, antimatter, promethium, and the transceiver finale all converge here.
+# Star systems
 
-## System Cards
+Worlds marked * need an optional or recommended mod.
 
-Razi Protocol uses system cards to keep late research readable.
+* **Calidus:** Nauvis, Muluna, Eneas*
+* **Solaris:** Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum, Igrys
+* **Nyxaris:** Gleba, Moshine, Apia and Carnova, Panglia, Foliax, Velora, Rabbasca*, Terra Palus*, Pelagos*, Dea Dia*
+* **Vibrant:** Fulgora, Cerys*, Ribbonia, Paracelsin, Khemia, Shchierbin*
+* **Vespera:** Muria, Athos, Aquilo, Nulla, Rubia, Maraxsis, Balack
+* **Beetlejuice:** Cubium, Linox, Secretas, Frozeta, Ferrum*
+* **Umbra:** Tenebris, Crucible, Vesta, Carna, Arcanyx, Obsidiax
+* **Aegis and Bellicos:** the Aegis edges, the Warden, Bellicos
+* **Deep Space:** Solar System Edge, Nexus, Shattered Planet, Black Hole, Oort Cloud, Sol, Skewer Shattered Planet*
 
-Instead of requiring giant walls of individual science packs on every late technology, the mod compresses chapter mastery into:
+# System Tech Cards
 
-- Calidus Tech Card
-- Solaris Tech Card
-- Nyxaris Tech Card
-- Vibrant Tech Card
-- Beetlejuice Tech Card
-- Deep Space Tech Card
+![Technology trees built around the system cards](https://assets-mod.factorio.com/assets/7ad0746adeb2dfefccbcd5bf1f5ef45be0512259.png)
 
-That preserves the scale of the pack without turning the technology screen into a mess.
+There are eight cards, one for each system and one for Deep Space. Each is made from the cards before it and the science packs of its system, and late research spends all seven system cards.
 
-## Planet Integrations
+Stronger labs accept later cards:
 
-Several supported planets are deliberately placed inside the campaign structure:
+* **Lab:** Calidus
+* **Biolab, Krastorio 2 advanced lab:** Solaris, Nyxaris
+* **Moshine thermodynamics lab:** Vibrant, Vespera
+* **Corrundum pressure laboratory, Krastorio 2 singularity lab:** Beetlejuice, Umbra
+* **Omega lab:** Deep Space
 
-- Eneas stays in the early Calidus phase.
-- Muria becomes part of the Vibrant route ahead of Aquilo.
-- Shchierbin now branches from Paracelsin.
-- Linox is moved into Beetlejuice instead of hanging off Vulcanus or Solaris.
+# Routes and asteroids
 
-These placements are reflected in both the starmap and the related discovery progression.
+Every route has a danger level from 1 to 10, and the star map colors it. A route's tooltip shows the largest asteroid, harvestable chunks, distance and suggested defenses, so you can see what a platform needs before it leaves. On dangerous routes asteroids can come in higher quality; on danger 10 they are all legendary. The Quality asteroids setting turns that off.
 
-## Endgame
+The two belts are crossings of their own: you survey a belt before you can fly through it, and belts have their own ore and salvage.
 
-Razi Protocol provides its own late-game shape.
+# Planets that need each other
 
-Nexus omega sciences are hidden behind a cleaner Deep Space card route. The solar-system edge becomes the bridge into the final chapter. The transceiver is moved later and wrapped in a singularity research chain:
+A planet discovery can need the science of its neighbours. Partnership technologies unlock exchange recipes, which take an item from another planet and give more than the original recipe. The original stays available. Set Planetary interdependence to Deep for imports 50% larger, or to Off to remove all of this.
 
-- Intergalactic Singularity Theory
-- Intergalactic Singularity Test Fire
-- Stable Intergalactic Singularity
-- Intergalactic Signal Lock
+Recipes that made items from nothing by going in a circle are closed by default. For example, filling and emptying a container no longer gains from productivity. This is new in 3.0 and applies on Normal too. The Recipe loops setting can open them again or make the rule stricter.
 
-Optional Void Processing is supported as a Deep Space branch rather than forced as mandatory core progression.
+Supported enemy mods get homes on planets that suit them, more of them at higher difficulty. Nauvis keeps vanilla enemies.
 
-## Enemy Routing
+# Projects and the Convergence
 
-Supported optional enemy mods can be reassigned to planets that fit their identity, with vanilla biter/worm autoplace suppressed where needed so the custom faction actually defines the planet.
+Projects are large goals that you build and fly, not only research. The Journal tracks them:
 
-The `razi-enemy-habitats` startup setting, which the difficulty level sets, chooses how many planets carry them: none on Easy, seven on Normal, ten on Hard and eleven on Nightmare. The `razi-enable-enemy-routing` startup setting can disable this behavior if you want the source mods' original enemy placement instead.
+* **First Space Platform** and **First Voyage:** build a working platform hub, then fly it between two space locations.
+* **Skybridge:** build orbital catapults at both ends of a corridor and carry a signed consignment between the two worlds.
+* **Beltbreaker:** cross the Vibrant and Umbra belts by platform.
+* **Dyson Sphere:** research the Dyson stages, then build satellites and receivers. The research needs Crucible science, so this comes late.
+* **Transceiver:** research and activate the Krastorio 2 transceiver to open Deep Space.
+* **Nexus Trials:** defeat all nine Nexus bosses.
+* **Ark:** send a heavy platform with at least 3 thrusters, 4 ammo turrets and 2 assembling machines to Deep Space.
+* **Convergence:** the victory.
 
-## Crafting and UI Cleanup
+The **Convergence** is five shipments to Deep Space, each with supplies from many planets on top of its main cargo:
 
-Razi Protocol also includes quality-of-life cleanup for large modpacks:
+* **Stellar:** 24 Dyson satellites
+* **Industry:** 600 rare metals
+* **Deep Space:** 180 promethium science packs
+* **Resonance:** 400 superconductors
+* **Ignition:** 120 singularity tech cards and 80 of each system card
 
-- A `Vehicles & Infrastructure` crafting tab
-- Science Tab grouping for system cards and planet research items
-- Narrow balance cleanup for overlapping unlocks
-- Compatibility fixes for K2SO tweak/enhancement layers and several prototype edge cases
+Before the last shipment you keep a powered radar in each of the seven systems, and Ignition waits until all nine Nexus bosses are defeated. Then the final transmission ends the game.
 
-## Dependency Philosophy
+# Expedition Journal
 
-Razi Protocol is designed for a large dependency stack and expects a big campaign-style setup. Some content is core to the intended route, while other branches remain optional and are treated that way in `info.json`.
+![The Quests, Projects and Systems views of the Journal](https://assets-mod.factorio.com/assets/ecac2c815226fab622595b40021033d997298357.png)
 
-If you want the intended experience, use the dependency list in `info.json` as the source of truth and be careful with additional collision-layer-heavy mods.
+Open it with **Ctrl + Shift + J**. It shows what you have done and what comes next.
 
-## Support
+**Quests** track research, exploration and construction by chapter, and you can pin one to the screen. **Projects** show the goals above with their progress. **Systems** shows information from supported mods, such as Planet Express and Nexus. If you would rather not see what is ahead, turn on Hide future discoveries.
 
-- Discord: https://discord.gg/fTEtu64whV
-- Patreon: https://www.patreon.com/cw/Raziphel
-- Foundry community: https://discord.gg/Dn5p7GZpKu
+# Difficulty and settings
 
-## Credits
+![The mod settings and the map presets](https://assets-mod.factorio.com/assets/675e5d1006a24e4608c4be97a58b5684c61b66bd.png)
 
-Razi Protocol depends on the wider Factorio modding community. Planet content, enemies, mechanics, art, and audio remain the work of their original authors and contributors.
+Normal is recommended and leaves the map settings unchanged. The Difficulty setting needs a restart. A value you change by hand stays, Custom uses only your own values, and changes to world generation only reach new areas. The map generator has a matching Razi Protocol preset for each level.
 
-Please see `Credits.txt` for the full acknowledgement list.
+| | Easy | Normal | Hard | Nightmare |
+| --- | --- | --- | --- | --- |
+| Asteroid population | 65% | 100% | 130% | 130% |
+| Asteroid danger | base | base | +0.75 levels | +1.5 levels |
+| Research price | 100% | 100% | 125% | 175% |
+| Spoilage time | 140% | 100% | 82% | 65% |
+| Rocket launch cost | 70% | 100% | 130% | 165% |
+| Factory speed | 115% | 100% | 92% | 82% |
+| Wall strength | 125% | 100% | 90% | 78% |
+| Planets with themed enemies | none | 7 | 10 | 11 |
+| Recipe loops | Open | Closed | Strict | Strict |
+
+Hard and Nightmare also turn each science pack into a card before it reaches a lab, and put nuclear power behind Vulcanus and Gleba science.
+
+Other settings cover the star map look, route lines and tooltips, crafting menu cleanup, and fewer particles for slower computers.
+
+# Wiki
+
+![Pages of the wiki](https://assets-mod.factorio.com/assets/1a1a3c9e1ad8512e612b3dc42c7cbd170bed58b9.png)
+
+[The Razi Protocol Wiki](https://wiki.razisrealm.com/factorio) covers installation, routes, cards, projects and settings, and has an Expedition Notebook for keeping a checklist in your browser. It is still being updated for 3.0, so some pages may be out of date.
+
+( The wiki was made with the help of AI.  I'm not good at website development.  Just a warning! )
+
+# Feedback
+
+Report broken recipes, missing technologies and compatibility problems on [Discord](https://razisrealm.com/discord) or [GitHub](https://github.com/Raziphel/razi-protocol). Feedback on progression and balance helps most.
+
+# Credits
+
+**Development:** Razi, Alex Green.
+
+The planets, machines, enemies and art you play with come from the authors of the mods in the Dependencies tab. Thanks to them, to Wube Software for Factorio and Space Age, and to everyone who tested and reported problems.
+
+Full list: [Credits.txt](https://github.com/Raziphel/razi-protocol/blob/main/Credits.txt). If someone is missing or wrongly credited, please contact me.
