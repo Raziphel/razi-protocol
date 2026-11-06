@@ -1,6 +1,7 @@
 ![Razi Protocol](https://assets-mod.factorio.com/assets/163ee6c5629ef7393b519aa30620d932f3a24df3.png)
 
-**Status:** 3.0 is in testing. This page describes 3.0; the current release is 2.1.11, so some settings and features below are not in your game yet. The story is not in 3.0 and will come in a later update.  
+**This page describes 3.0, which is coming soon, so settings and features below may not be in your game yet.**
+
 **Requires:** Factorio 2.1, Space Age, Krastorio 2 Spaced Out and the mods in the Dependencies tab  
 **GitHub:** [Source Code](https://github.com/Raziphel/razi-protocol)  
 **Discord:** [Razi's Realm](https://razisrealm.com/discord)  
