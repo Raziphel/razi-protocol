@@ -193,9 +193,9 @@ run()
 
 -- Through the level: open and closed leave the circuit and the matter, strict closes them.
 support.gate(loops, function()
-	local recipes = fixture()
-	return { ["kr-bio-processing-circuit"] = recipes["kr-bio-processing-circuit"],
-		["kr-kr-quartz-to-matter"] = recipes["kr-kr-quartz-to-matter"] }
+	local all = fixture()
+	return { ["kr-bio-processing-circuit"] = all["kr-bio-processing-circuit"],
+		["kr-kr-quartz-to-matter"] = all["kr-kr-quartz-to-matter"] }
 end, function(data_raw)
 	return data_raw.recipe["kr-kr-quartz-to-matter"].results[1].amount == 0.48
 		and data_raw.recipe["kr-bio-processing-circuit"].maximum_productivity == 0.5
@@ -203,9 +203,9 @@ end, "strict")
 
 -- Planting and mining a decoration needs no productivity: open leaves the recipes, closed and strict price them.
 support.gate(loops, function()
-	local recipes = { ["rock-d"] = growing("rock-d", { ingredient("coal", 50), ingredient("stone", 75), ingredient("tungsten-ore", 20) }) }
+	local rock_d = { ["rock-d"] = growing("rock-d", { ingredient("coal", 50), ingredient("stone", 75), ingredient("tungsten-ore", 20) }) }
 	local technologies = { ["kr-decorations"] = { effects = { unlock("rock-d") } } }
-	return recipes, technologies, { ["simple-entity"] = { ["rock-d"] = rock({ { type = "item", name = "tungsten-ore", amount = 20 } }) } }
+	return rock_d, technologies, { ["simple-entity"] = { ["rock-d"] = rock({ { type = "item", name = "tungsten-ore", amount = 20 } }) } }
 end, function(data_raw)
 	return names(data_raw.recipe["rock-d"]) == "50 coal, 75 stone, 60 tungsten-ore"
 end)
