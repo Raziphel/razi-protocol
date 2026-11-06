@@ -1,7 +1,5 @@
 ![Razi Protocol](https://assets-mod.factorio.com/assets/163ee6c5629ef7393b519aa30620d932f3a24df3.png)
 
-**This page describes 3.0, which is coming soon, so settings and features below may not be in your game yet.**
-
 **Requires:** Factorio 2.1, Space Age, Krastorio 2 Spaced Out and the mods in the Dependencies tab  
 **GitHub:** [Source Code](https://github.com/Raziphel/razi-protocol)  
 **Discord:** [Razi's Realm](https://razisrealm.com/discord)  
@@ -19,8 +17,7 @@ I started this because I wanted to play with a lot of planet mods at once, and i
 * **It is big.** With the required and recommended mods you load 183 mods, about 6.5 GB of downloads.
 * **It changes the game early.** Technologies unlock in a different order from regular Space Age, and later research costs system cards.
 * **Some mods do not work with it:** other route and asteroid belt overhauls (Asteroid Belt, Space Route Overlay, Redrawn Space Connections), the Krastorio 2 extended endgame mods, Lignumis, Factorio+ and the others marked incompatible in the Dependencies tab.
-* **2.x saves can be updated.** Make a backup. Before updating, load the save in the latest 2.x, type `/razi-prepare-3` in the chat and save. Then read [the update guide](https://github.com/Raziphel/razi-protocol/blob/dev/docs/updating-from-2x.md): some recipes stop accepting modules, and some researched technologies get new prerequisites.
-* **3.0 is still being tested.** Please report broken recipes, missing technologies and progression problems.
+* **2.x saves can be updated.** Make a backup. Before updating, load the save in the latest 2.x, type `/razi-prepare-3` in the chat and save. Then read [the update guide](https://github.com/Raziphel/razi-protocol/blob/main/docs/updating-from-2x.md): some recipes stop accepting modules, and some researched technologies get new prerequisites.
 
 ## Razi Protocol is for you if
 
