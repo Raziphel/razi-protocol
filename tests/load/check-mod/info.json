@@ -1,0 +1,9 @@
+{
+  "name": "zzz-razi-load-check",
+  "version": "1.0.0",
+  "title": "Razi load check",
+  "author": "Raziphel",
+  "description": "Loaded last by tests/load/run.sh: checks the finished prototypes of razi-protocol and the mods around it. Not part of the mod.",
+  "factorio_version": "2.1",
+  "dependencies": ["base", "razi-protocol"]
+}

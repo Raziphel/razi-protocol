@@ -11,6 +11,7 @@ Core foundation
 - PlanetsLib for making large custom planet and system setups practical.
 - Krastorio2 Spaced Out for the overhaul foundation that this modpack progression is built around.
 - Science Tab for the science organization concept and compatibility target.
+- Razi Rocket Reusability (Rocket Reusability by redplasticstraw, continued by Raziphel) for the rocket wrecks, chunks and the Remnant Beacon that Orbital Salvage builds on.
 
 
 Planet and system mods
@@ -83,8 +84,8 @@ Quality of life and optional modpack support
 Thanks also to the authors of optional utility and quality-of-life mods that this modpack is commonly used around, including 
 visible-planets, StatsGui, shield-projector, turret-activation-delay, LogisticTrainNetwork, LTN_Combinator_Modernized, LtnManager, 
 NapalmArtillery, Noxys_Swimming, bullet-trails, even-distribution, squeak-through-2, robot_attrition, CleanedConcrete, better-victory-screen, 
-Aircraft-space-age, aai-signal-transmission, aai-industry, assembler-group, AutoDeconstruct, combat-mechanics-overhaul, enemy-alert, UPSFriendlyNixieTubeDisplay, 
-rocket-reusability, and CircularColliderLab.
+Aircraft-space-age, aai-signal-transmission, aai-industry, assembler-group, AutoDeconstruct, combat-mechanics-overhaul, enemy-alert,
+and UPSFriendlyNixieTubeDisplay.
 
 
 Final note

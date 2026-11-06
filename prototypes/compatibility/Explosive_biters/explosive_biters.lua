@@ -1,0 +1,47 @@
+local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace")
+local enemy_homes = require("prototypes.compatibility.common.enemy_homes")
+
+if not enemy_autoplace.enabled() or not mods["Explosive_biters"] then
+	return
+end
+
+local explosive_enemy_control = "hot_enemy_base"
+
+local explosive_enemy_entities = {
+	"explosive-biter-spawner",
+	"small-explosive-worm-turret",
+	"medium-explosive-worm-turret",
+	"big-explosive-worm-turret",
+	"behemoth-explosive-worm-turret",
+	"leviathan-explosive-worm-turret",
+	"mother-explosive-worm-turret"
+}
+
+local explosive_source_planets = {
+	"nauvis",
+	"vulcanus"
+}
+
+local explosive_enemy_autoplace = {
+	["explosive-biter-spawner"] = "unit-spawner",
+	["small-explosive-worm-turret"] = "turret",
+	["medium-explosive-worm-turret"] = "turret",
+	["big-explosive-worm-turret"] = "turret",
+	["behemoth-explosive-worm-turret"] = "turret",
+	["leviathan-explosive-worm-turret"] = "turret",
+	["mother-explosive-worm-turret"] = "turret"
+}
+
+local explosive_planet_tiles = enemy_homes.tiles("explosive")
+
+for entity_name, entity_type in pairs(explosive_enemy_autoplace) do
+	enemy_autoplace.restrict_entity_to_tiles(entity_type, entity_name, explosive_planet_tiles)
+end
+
+for _, planet_name in pairs(explosive_source_planets) do
+	enemy_autoplace.remove_entities_from_planet(planet_name, explosive_enemy_entities, explosive_enemy_control)
+end
+
+for _, planet_name in pairs(enemy_homes.planets("explosive")) do
+	enemy_autoplace.add_entities_to_planet(planet_name, explosive_enemy_entities, explosive_enemy_control)
+end
