@@ -84,6 +84,28 @@ check(#m.strokes_for_connection(near_to_inner,"danger","all")>0
   "Every Aegis spine route must receive a coloured ribbon")
 check(#m.strokes_for_connection(stellar_entry,"danger","all")>0,
   "The long Solaris-Aegis entry should retain its hazard gradient")
+-- A screenshot regression: the SLP Dyson route into Close Sun Orbit
+-- used a starter-blue stripe, while the nearby solar access road was grey.
+-- Both are native connections and must be coloured even in Major mode.
+raw.planet.nauvis={distance=33,orientation=.25}
+raw["space-location"]["sun-orbit"]={distance=10,orientation=.38}
+raw["space-location"]["close-sun-orbit"]={distance=5,orientation=.68}
+local solar_access={from="nauvis",to="sun-orbit",shape="arc",
+ length=16000,asteroid_spawn_definitions={}}
+local solar_inner={from="sun-orbit",to="close-sun-orbit",shape="arc",
+ length=12000,asteroid_spawn_definitions={}}
+check(m.is_solar_route(solar_access) and m.is_solar_route(solar_inner),
+ "The native Dyson solar corridors must be identified")
+check(m.route_color_level(solar_access)>=7
+ and m.route_color_level(solar_inner)>=9,
+ "Solar hazards have fallen back to blue Calidus difficulty")
+for _,route in ipairs({solar_access,solar_inner}) do
+ check(m.is_navigation_highlight(route,"major"),
+   "Short solar route was excluded from the curated major overlay")
+ local strokes=m.strokes_for_connection(route,"danger","major")
+ check(#strokes>0 and strokes[1].tint.r>strokes[1].tint.b,
+   "Solar corridor has no warm high-risk route colour")
+end
 local ribbons=m.strokes_for_connection(safe,"danger","all")
 local first=ribbons[1]
 check(first.filename==ribbon_module.sheet
@@ -123,7 +145,8 @@ local arc={from="c",to="d",shape="arc",
 check(#m.strokes_for_connection(arc,"danger","all")>0,
  "Default Factorio arc geometry must be rendered, not silently omitted")
 raw["space-connection"]={safe=safe,medium=medium,huge=huge,belt=belt,
-  aegis_native=near_to_inner,aegis_outer=inner_to_outer,stellar=stellar_entry}
+  aegis_native=near_to_inner,aegis_outer=inner_to_outer,stellar=stellar_entry,
+  solar_access=solar_access,solar_inner=solar_inner}
 local layers=raw["utility-sprites"].default.starmap_star.layers
 check(m.data_final_fixes()>20,
  "Map renderer must emit enough connected colored strokes to cover routes")
