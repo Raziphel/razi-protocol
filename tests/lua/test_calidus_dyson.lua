@@ -86,6 +86,41 @@ check(#routes==1 and routes[1].to=="slp-solar-orbit-outer"
  "Calidus solar access corridor not constructed")
 mod.connect_calidus()
 check(#routes==1,"Duplicate solar route after repeated registration")
+-- Native SLP plasma clots get harder without losing plasma resource chunks,
+-- new huge asteroids, source connection IDs or original route geometry.
+local defs={
+ {type="entity",asteroid="slp-plasma-clot",
+  spawn_points={{distance=.5,probability=.08,speed=.015}}},
+ {type="asteroid-chunk",asteroid="slp-plasma-chunk",
+  spawn_points={{distance=.5,probability=.20,speed=.015}}}
+}
+local outer_approach={from="nauvis",to="slp-solar-orbit-outer",
+ length=18000,shape="arc",asteroid_spawn_definitions=defs}
+local inner_lane={from="slp-solar-orbit-outer",to="slp-solar-orbit-inner",
+ length=12000,shape="arc",asteroid_spawn_definitions=defs}
+raw["space-connection"]["slp-outer-approach"]=outer_approach
+raw["space-connection"]["slp-inner-approach"]=inner_lane
+local ladder=require("lib.difficulty.asteroids")
+check(ladder.route_level(outer_approach,.0)>=7
+ and ladder.route_level(inner_lane,.0)>=9,
+ "Solar routes must not inherit beginner-safe Calidus grades")
+check(mod.harden_solar_routes()==2,
+ "Both real SLP corridors should receive stronger existing hostile spawns")
+check(outer_approach.asteroid_spawn_definitions[1].spawn_points[1].probability>.08
+ and inner_lane.asteroid_spawn_definitions[1].spawn_points[1].probability>
+   outer_approach.asteroid_spawn_definitions[1].spawn_points[1].probability,
+ "The inner orbit should be more hostile than the outer approach")
+check(outer_approach.asteroid_spawn_definitions[2]==defs[2]
+ and inner_lane.asteroid_spawn_definitions[2]==defs[2]
+ and defs[1].spawn_points[1].probability==.08,
+ "Source plasma chunks or shared native asteroid tables were modified")
+check(inner_lane.shape=="arc" and inner_lane.from=="slp-solar-orbit-outer"
+ and #inner_lane.asteroid_spawn_definitions==2,
+ "Solar tuning must preserve source route geometry and species")
+local reinforced=inner_lane.asteroid_spawn_definitions[1].spawn_points[1].probability
+check(mod.harden_solar_routes()==0 and
+ inner_lane.asteroid_spawn_definitions[1].spawn_points[1].probability==reinforced,
+ "Repeated solar pass must not compound hazard probabilities")
 local connected,c=setup()
 connected["space-location"]["sye-calidus"]={icon="home-hub"}
 connected["space-connection"]["source-nauvis-solar-orbit"]={
