@@ -26,39 +26,80 @@ function bellicos.data()
 	-- opposite bearing from the other deep-space branches. The entry gate and
 	-- pulsar share a radial line, while the Bellicos gate sits on the pulsar's
 	-- inward face so the inter-stargate route never crosses the star image.
-	PlanetsLib:update({
-		{
-			type = "space-location",
-			name = "pulsar",
-			orbit = {
-				parent = {type = "space-location", name = "solar-system-edge"},
-				distance = 240,
-				orientation = 0.5
-			}
-		},
-		{
-			type = "space-location",
-			name = entry_gate,
-			distance = nil,
-			orientation = nil,
-			orbit = {
-				parent = {type = "space-location", name = "solar-system-edge"},
-				distance = 30,
-				orientation = 0.5
-			},
-			redrawn_connections_exclude = true
-		},
-		{
-			type = "space-location",
-			name = bellicos_gate,
-			orbit = {
-				parent = {type = "space-location", name = "pulsar"},
-				distance = 58,
-				orientation = 0.0
-			},
-			redrawn_connections_exclude = true
-		}
-	})
+  -- Aegis & Bellicos 0.4.4 removed the PlanetsLib-only "pulsar" and
+  -- replaced it with a real "bellicos-pulsar" location. Never send the
+  -- deleted name to PlanetsLib:update: that aborts the entire mod pack.
+  local locations = data.raw["space-location"] or {}
+  local native_pulsar = locations["bellicos-pulsar"]
+    or (data.raw.planet or {})["bellicos-pulsar"]
+  local legacy_pulsar = not native_pulsar and locations.pulsar
+  local updates = {}
+  if legacy_pulsar then
+    updates[#updates + 1] = {
+      type = "space-location",
+      name = "pulsar",
+      orbit = {
+        parent = {type = "space-location", name = "solar-system-edge"},
+        distance = 240,
+        orientation = 0.5
+      }
+    }
+  end
+
+  if locations[entry_gate] and locations["solar-system-edge"] then
+    updates[#updates + 1] = {
+      type = "space-location",
+      name = entry_gate,
+      distance = nil,
+      orientation = nil,
+      orbit = {
+        parent = {type = "space-location", name = "solar-system-edge"},
+        distance = 30,
+        orientation = 0.5
+      },
+      redrawn_connections_exclude = true
+    }
+  end
+
+  -- The original far-side gate orbited the old sprite-only pulsar.
+  -- New releases position their locations using the native star instead.
+  if legacy_pulsar and locations[bellicos_gate] then
+    updates[#updates + 1] = {
+      type = "space-location",
+      name = bellicos_gate,
+      orbit = {
+        parent = {type = "space-location", name = "pulsar"},
+        distance = 58,
+        orientation = 0.0
+      },
+      redrawn_connections_exclude = true
+    }
+  end
+  if #updates > 0 then PlanetsLib:update(updates) end
+
+  if native_pulsar then
+    -- Aegis 0.4.4+ moves all native pulsar satellites and graphics in its
+    -- data-updates phase. Relocate the real star BEFORE that source pass,
+    -- rather than reparenting any of its dependent locations in PlanetsLib.
+    local edge = locations["solar-system-edge"]
+    local origin = edge and edge.origin
+    local ox = origin and (origin.x or origin[1]) or 0
+    local oy = origin and (origin.y or origin[2]) or 0
+    if edge and type(edge.distance) == "number"
+      and type(edge.orientation) == "number"
+      and type(ox) == "number" and type(oy) == "number" then
+      local angle = 2 * math.pi * edge.orientation
+      native_pulsar.origin = {
+        x = ox + edge.distance * math.sin(angle),
+        y = oy - edge.distance * math.cos(angle)
+      }
+      native_pulsar.distance = 240
+      native_pulsar.orientation = 0.5
+    elseif type(log) == "function" then
+      -- Preserve source coordinates if the edge hasn't resolved yet.
+      log("[Razi Protocol/Bellicos] Native solar-system edge unavailable; keeping Aegis' source star position")
+    end
+  end
 
 	remove_stock_entry_routes()
 	deleteRoute(deep_space_entry_route)
