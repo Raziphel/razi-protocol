@@ -63,7 +63,7 @@ local function run(options)
       end
     end
   })
-  rawset(_G, "mods", {["bellicos-and-aegis"]="0.4.1"})
+  rawset(_G, "mods", {["bellicos-and-aegis"]=options.native_pulsar and "0.4.5" or "0.4.3"})
   rawset(_G, "deleteRoute", function(name) routes[name] = nil end)
   rawset(_G, "deleteRoutesBetween", function(a, b)
     for name, route in pairs(routes) do
@@ -87,6 +87,25 @@ local function run(options)
   package.loaded["prototypes.world.systems.bellicos"] = nil
   local module = require("prototypes.world.systems.bellicos")
   module.data()
+  if options.native_pulsar then
+    -- The upstream 0.4.4+ data-updates stage positions the whole Aegis
+    -- system from the star's native position. Its anchor must already be
+    -- correct when the source mod reads it, not only in final-fixes.
+    local star=places["bellicos-pulsar"]
+    check(star and star.orbit and star.orbit.parent.name=="sye-calidus"
+      and star.distance==190 and star.orientation==.5,
+      "Aegis 0.4.5 must see the relocated native pulsar during data stage")
+    local near=places["near-bellicos-orbit"]
+    if near then
+      local angle=2*math.pi*star.orientation
+      local sx=star.origin.x+star.distance*math.sin(angle)
+      local sy=star.origin.y-star.distance*math.cos(angle)
+      check(near.orbit and near.orbit.parent.name=="bellicos-pulsar"
+        and math.abs(near.origin.x-sx)<.001
+        and math.abs(near.origin.y-sy)<.001,
+        "Aegis 0.4.5 near orbit must follow its native star before sprite baking")
+    end
+  end
   module.data_final_fixes()
   -- In the real data-final-fixes pipeline, fortify_routes runs after source
   -- route registration. Test retirement independently in its route fixture.
