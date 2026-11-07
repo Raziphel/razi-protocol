@@ -92,6 +92,13 @@ function M.data_final_fixes()
    -- internal SLP APIs. The native launch/repeater tasks stay source-owned.
    M.safe_link("razi-singularity-test-fire","slp-dyson-sphere-grounded")
  end
+ -- Drive the shared difficulty ladder from the actual source technology
+ -- unlocks, not only the known location names used by older SLP releases.
+ local ladder=require("lib.difficulty.asteroids")
+ local outer_id=M.destination("planet-discovery-sunorbit")
+ local inner_id=M.destination("slp-solar-system-sun2")
+ if outer_id then ladder.register_solar_station(outer_id,7) end
+ if inner_id then ladder.register_solar_station(inner_id,9) end
  local visual_setting=settings and settings.startup
    and settings.startup["razi-dyson-calidus-layout"]
  if visual_setting and visual_setting.value==false then return end
@@ -131,5 +138,76 @@ function M.connect_calidus()
  local icons=require("prototypes.world.routes.route_icons")
  icons.assign(route,"starter")
  data:extend({route})
+end
+-- The source owns its plasma asteroids and resource harvesting. Razi only
+-- increases the frequency of already-present hostile entities on genuine
+-- solar corridors. Never replace a source spawn table, introduce a new
+-- species, alter plasma chunks, or add huge asteroids this early in the run.
+-- Run after route authority and asteroid distribution, before intel/colour.
+local hardened=setmetatable({},{__mode="k"})
+local function reinforce(def,factor)
+ if type(def)~="table" or def.type~="entity" then return nil end
+ local result={}
+ for key,value in pairs(def) do result[key]=value end
+ local changed=false
+ local function boost(value)
+   if type(value)=="number" and value>0 and value<1 then
+     return math.min(1,value*factor)
+   end
+   return value
+ end
+ if type(def.probability)=="number" then
+   local p=boost(def.probability)
+   changed=changed or p~=def.probability
+   result.probability=p
+ end
+ if type(def.spawn_points)=="table" then
+   local points={}
+   for i,point in ipairs(def.spawn_points) do
+     if type(point)=="table" then
+       local next_point={}
+       for key,value in pairs(point) do next_point[key]=value end
+       next_point.probability=boost(point.probability)
+       if next_point.probability~=point.probability then changed=true end
+       points[i]=next_point
+     else points[i]=point end
+   end
+   result.spawn_points=points
+ end
+ return changed and result or nil
+end
+function M.harden_solar_routes()
+ if not (mods and mods["slp-dyson-sphere-reworked-fork"]) then return 0 end
+ local ladder=require("lib.difficulty.asteroids")
+ local outer=M.destination("planet-discovery-sunorbit")
+ local inner=M.destination("slp-solar-system-sun2")
+ if outer then ladder.register_solar_station(outer,7) end
+ if inner then ladder.register_solar_station(inner,9) end
+ if not outer and not inner then return 0 end
+ local count=0
+ for _,route in pairs(data.raw["space-connection"] or {}) do
+   local risk=ladder.solar_route_tier(route)
+   local definitions=route.asteroid_spawn_definitions
+   if risk and not hardened[route] and type(definitions)=="table" then
+     local factor=risk>=9 and 1.75 or 1.4
+     local altered={}
+     for key,value in pairs(definitions) do altered[key]=value end
+     local changed=false
+     for i,def in ipairs(definitions) do
+       local increased=reinforce(def,factor)
+       if increased then altered[i]=increased;changed=true end
+     end
+     if changed then
+       route.asteroid_spawn_definitions=altered
+       count=count+1
+     end
+     hardened[route]=true
+   end
+ end
+ if type(log)=="function" then
+   log("[Razi Protocol/Dyson] Reinforced "..count..
+     " real solar route hostile asteroid curves, keeping source plasma and resources")
+ end
+ return count
 end
 return M
