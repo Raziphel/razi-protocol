@@ -183,7 +183,9 @@ function M.harden_solar_routes()
  local inner=M.destination("slp-solar-system-sun2")
  if outer then ladder.register_solar_station(outer,7) end
  if inner then ladder.register_solar_station(inner,9) end
- if not outer and not inner then return 0 end
+ -- Known SLP IDs are also registered in the shared ladder. If a source
+ -- release hides its discovery effects late, retain those known solar
+ -- corridors rather than silently leaving their hostile encounters weak.
  local count=0
  for _,route in pairs(data.raw["space-connection"] or {}) do
    local risk=ladder.solar_route_tier(route)
