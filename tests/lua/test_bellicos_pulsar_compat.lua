@@ -1,3 +1,4 @@
+---@diagnostic disable: inject-field, assign-type-mismatch
 -- Regression for Aegis & Bellicos 0.4.4 removing the PlanetsLib pulsar.
 -- Run from the repository root with: lua tests/lua/test_bellicos_pulsar_compat.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -36,7 +37,7 @@ local function run(source, has_edge_position)
   local routes, touched = {}, {}
   _G.mods = {["bellicos-and-aegis"]="0.4.4"}
   _G.data = {raw = {["space-location"]=places,["space-connection"]=routes,planet={}}}
-  function data:extend(entries)
+  function data.extend(_, entries)
     for _, v in ipairs(entries) do routes[v.name] = v end
   end
   _G.deleteRoute = function(name) routes[name] = nil end
@@ -63,7 +64,7 @@ local function run(source, has_edge_position)
   return places, touched
 end
 
-local legacy, old_updates = run("legacy", true)
+local legacy = run("legacy", true)
 check(legacy.pulsar.orbit.parent.name=="solar-system-edge",
   "Legacy pulsar must retain PlanetsLib orbit")
 check(legacy[far].orbit.parent.name=="pulsar",
