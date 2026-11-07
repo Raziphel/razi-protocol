@@ -31,6 +31,12 @@ local function run(options)
   elseif options.pulsar == "planet" then
     planets.pulsar = {name="pulsar",orbit={sprite={filename="__aegis_graphics__/pulsar-atlas.png"}}}
   end
+  if options.native_pulsar then
+    -- Aegis & Bellicos 0.4.4+ owns a real native star, not the former
+    -- PlanetsLib-only sprite prototype.
+    places["bellicos-pulsar"]={name="bellicos-pulsar",
+      origin={x=0,y=0},distance=35,orientation=.75}
+  end
   if options.no_entry_gate then places[gate_a] = nil end
   if options.near then
     if options.dual_warden then
@@ -309,4 +315,26 @@ check(math.abs(original_art.shift[1]-(16+source_x*32))<.01
 check(dual.reconcile_final_positions()>=5
   and math.abs(original_art.shift[1]-(16+source_x*32))<.01,
   "Repeated final reconciliation must not move artwork or Warden again")
+-- Aegis 0.4.4+ replaces the old PlanetsLib sprite with a native star.
+-- It must receive the anchor and keep all nearby expedition destinations
+-- relative to that star in both early and final data stages.
+local native,new_locations=run({native_pulsar=true,near=true})
+check(new_locations["bellicos-pulsar"].orbit.parent.name=="sye-calidus",
+  "New native Bellicos star did not join the Razi frontier")
+check(new_locations["bellicos-pulsar"].orbit.distance==190,
+  "New native Bellicos star was not positioned at the planned distance")
+check(new_locations["near-bellicos-orbit"].orbit.parent.name=="bellicos-pulsar",
+  "Near orbit was left attached to the deleted legacy pulsar")
+local sx,sy=pos2(new_locations["bellicos-pulsar"])
+local mx,my=pos2(new_locations["near-bellicos-orbit"])
+check(math.sqrt((sx-mx)^2+(sy-my)^2)<3.01,
+  "Native Aegis near orbit drifted away from its star")
+native.data_updates()
+native.reconcile_final_positions()
+check(new_locations["near-bellicos-orbit"].orbit.parent.name=="bellicos-pulsar",
+  "Native Aegis source data-updates displaced the near orbit")
+local _,mixed=run({pulsar="space-location",native_pulsar=true,near=true})
+check(mixed["near-bellicos-orbit"].orbit.parent.name=="bellicos-pulsar",
+  "A transient legacy pulsar overrode the real native star")
+
 print("Bellicos late-stage Warden, duplicate-prototype and sprite tests passed")
