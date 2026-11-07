@@ -168,6 +168,11 @@ require("lib.difficulty.asteroids").prepare_routes(data.raw["space-connection"])
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
 require("prototypes.world.asteroids.more_asteroids_integration").data_final_fixes()
 
+-- The original Dyson solar connections retain SLP's plasma resource spawns.
+-- Raise only existing hostile asteroid encounters after the last asteroid
+-- additions, so their danger grading and coloured ribbons match gameplay.
+require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").harden_solar_routes()
+
 require("prototypes.world.routes.route_icons").data_final_fixes()
 
 -- Route tooltips and the star map backdrop read the final routes and orbits.
