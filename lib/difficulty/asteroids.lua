@@ -53,6 +53,30 @@ local exceptional={
   ["skewer_shattered_planet"]=10,
   ["skewer_lost_beyond"]=10
 }
+-- Dyson Sphere's solar destinations are late, hostile expeditions, not
+-- Level 1 Calidus freight lanes. The source currently uses sun-orbit and
+-- close-sun-orbit; alternative forks can rename the locations while keeping
+-- the same discovery technology effects. The Dyson integration registers
+-- those discovered IDs during data-final-fixes.
+local solar_stations={
+  ["sun-orbit"]=7,["close-sun-orbit"]=9,
+  ["slp-solar-system-sun"]=7,["slp-solar-system-sun2"]=9,
+  ["slp-solar-orbit-outer"]=7,["slp-solar-orbit-inner"]=9
+}
+for name,level in pairs(solar_stations) do exceptional[name]=level end
+function M.register_solar_station(name,level)
+  if type(name)~="string" or (level~=7 and level~=9) then return false end
+  solar_stations[name]=math.max(level,solar_stations[name] or 0)
+  exceptional[name]=math.max(level,exceptional[name] or 0)
+  return true
+end
+function M.solar_route_tier(route)
+  if type(route)~="table" then return nil end
+  local from=solar_stations[route.from] or 0
+  local to=solar_stations[route.to] or 0
+  local highest=math.max(from,to)
+  return highest>0 and highest or nil
+end
 M.explicit_levels=exceptional
 local inferred={}
 -- This data-stage pass handles optional source worlds whose IDs weren't
@@ -205,6 +229,11 @@ function M.route_level(route,progress,setting)
         or route.from=="razi-umbra-belt-outer") and 1.15 or .95)
   end
   local stage=a+(b-a)*t+mid*4*t*(1-t)
+  -- Solar plasma and gravitational hazards remain dangerous even near the
+  -- Calidus-facing end. A safe Level 1 endpoint must never make this route
+  -- appear blue or spawn starter-quality enemies at departure.
+  local solar=M.solar_route_tier(route)
+  if solar then stage=math.max(stage,solar) end
   -- Short home-system links remain approachable by default.
   if a==1 and b==1 then stage=1 end
   if setting=="challenging" and stage>1 then stage=stage+.75 end
