@@ -57,7 +57,8 @@ local function candidate(owner,route,mode,scope)
   -- Painting a full-width coloured line through two adjacent icons made
   -- little moons and the Shattered Approach look like giant corridors.
   -- Genuine hazardous belt crossings are ALWAYS painted.
-  if span<10 and not belt then return nil end
+  local solar=owner.is_solar_route and owner.is_solar_route(route)
+  if span<10 and not belt and not solar then return nil end
   if scope=="major" and not owner.is_major(route,a,b) then return nil end
   local sample,length=owner.route_path(route,a,b)
   if not sample or length<2.5 then return nil end
@@ -65,7 +66,8 @@ local function candidate(owner,route,mode,scope)
   -- Preserve the shorter trim on actual belt crossings so the dangerous
   -- passage remains visible right up to both surveyed rim markers.
   local trim=belt and math.min(1.1,length*.10)
-    or math.min(math.max(1.8,length*.055),3.5,length*.20)
+    or (solar and math.min(1.6,length*.075)
+      or math.min(math.max(1.8,length*.055),3.5,length*.20))
   local covered=length-2*trim
   if covered<=0 then return nil end
   local cost=compact()
@@ -154,6 +156,7 @@ function M.data_final_fixes(owner)
       row.difficulty_mode=difficulty_mode
       row.grade=owner.route_color_level(route)
       row.belt=hz.is_belt_crossing(route) and true or false
+      row.solar=owner.is_solar_route and owner.is_solar_route(route) or false
       routes[#routes+1]=row
       total=total+row.pieces
     end
@@ -163,6 +166,7 @@ function M.data_final_fixes(owner)
   -- dangerous star corridor, which left the screenshot mostly grey.
   table.sort(routes,function(a,b)
     if a.belt~=b.belt then return a.belt end
+    if a.solar~=b.solar then return a.solar end
     if a.grade~=b.grade then return a.grade>b.grade end
     return a.name<b.name
   end)
@@ -173,6 +177,14 @@ function M.data_final_fixes(owner)
     else
       local n=math.min(layer_budget-count,
         math.max(1,floor(row.pieces/density)))
+      -- Solar lanes must never go grey when the global atlas is crowded.
+      -- Reserve enough real path segments to stay under the normal sprite
+      -- stretch threshold, rather than painting a disconnected fake chord.
+      if row.solar then
+        local max_span=is_compact and 18.5 or 13.5
+        n=math.min(layer_budget-count,
+          math.max(n,ceil(row.covered/(max_span*.96))))
+      end
       -- Do not stretch narrow line artwork into thick, ugly map stripes.
       if row.covered/n<=(is_compact and 18.5 or 13.5) then
         local segments=render(row,n)
