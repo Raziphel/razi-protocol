@@ -120,6 +120,11 @@ local function aegis_spine(route)
   return is_near or is_warden
 end
 M.is_aegis_spine=aegis_spine
+-- Solar-Dyson connections are genuine hazardous routes even though their
+-- endpoints are compact local orbits rather than named galaxy gateways.
+function M.is_solar_route(route)
+  return quality.solar_route_tier(route)~=nil
+end
 function M.is_navigation_highlight(route,scope)
   if type(route)~="table" or type(route.from)~="string"
     or type(route.to)~="string" or route.hidden
@@ -132,6 +137,7 @@ function M.is_navigation_highlight(route,scope)
     return false
   end
   if aegis_rim(route) or aegis_spine(route)
+    or M.is_solar_route(route)
     or hazards.is_belt_crossing(route) then return true end
   if scope=="all" then return true end
   return major_waypoint(route.from) and major_waypoint(route.to)
@@ -174,6 +180,7 @@ end
 
 local function is_major(route,a,b)
   return aegis_rim(route) or aegis_spine(route)
+    or M.is_solar_route(route)
     or hazards.is_belt_crossing(route) or magnitude(a,b)>=54
     or (route.shape=="line" and magnitude(a,b)>=38)
 end
