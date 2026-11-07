@@ -165,4 +165,32 @@ check(m.route_color_level(huge)~=nil
     palette.route_color(m.route_color_level(huge)),
   "Map danger colors remain 1-10 even if quality enemies are disabled")
 settings.startup["razi-quality-asteroids"].value=true
+-- Atlas-budget regression: hundreds of unrelated eligible routes can
+-- otherwise reduce a short solar corridor to one over-stretched segment,
+-- causing the renderer to silently skip its colour. The solar route stays
+-- visible even under deliberate saturation.
+settings.startup["razi-route-overlay-mode"].value="danger"
+for i=#layers,1,-1 do table.remove(layers,i) end
+layers[1]={filename="__base__/graphics/native-sun.png"}
+raw["space-connection"]={solar_access=solar_access,solar_inner=solar_inner}
+for i=1,800 do
+ raw["space-connection"]["atlas-pressure-"..i]={
+   from="a",to="b",shape="line",length=60000,
+   asteroid_spawn_definitions={}}
+end
+check(m.data_final_fixes()>0,
+ "Even with a crowded atlas, real solar travel must keep colour")
+local dangerous_solar=false
+for _,sprite in ipairs(layers) do
+ local shift=sprite.shift
+ if sprite.filename==ribbon_module.sheet and shift and sprite.tint
+   and sprite.tint.r>.8 and sprite.tint.g<.7 and sprite.tint.b<.5
+   and math.sqrt(shift[1]^2+shift[2]^2)<11*32 then
+   dangerous_solar=true
+   break
+ end
+end
+check(dangerous_solar,
+ "Solar inner corridor went grey when unrelated routes consumed the atlas budget")
+
 print("Route sprite doubling and severe hazard regression passed")
