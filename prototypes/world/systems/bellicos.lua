@@ -41,7 +41,11 @@ local function plan_expedition()
   local virtual_pulsar={x=sx,y=sy}
   local nx,ny=offset(sx,sy,3,.25)
   local virtual_near={x=nx,y=ny}
-  local pulsar=endpoint_type("pulsar") and "pulsar" or nil
+  -- Aegis & Bellicos 0.4.4+ replaced the PlanetsLib sprite-only "pulsar"
+  -- with its own native star location. Prefer that real anchor, while still
+  -- supporting the legacy prototype in older Aegis releases.
+  local pulsar=endpoint_type("bellicos-pulsar") and "bellicos-pulsar"
+    or (endpoint_type("pulsar") and "pulsar" or nil)
   local near=near_orbit()
   local entries={}
   local function append(name,parent,parent_position,r,turn,gate)
