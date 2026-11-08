@@ -1,4 +1,4 @@
--- Where the themed enemy families live (compat/enemy_homes.lua and the six enemy modules) on a mocked data.raw, on each
+-- Where the themed enemy families live (compat/enemy_homes.lua and the five routed enemy modules) on a mocked data.raw, on each
 -- step of the razi-enemy-habitats setting and at each difficulty level.
 -- Run from the mod root:
 --   lua5.2 tests/lua/test_enemy_homes.lua
@@ -30,22 +30,21 @@ rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
 local module_names = {
 	"compatibility.common.enemy_autoplace", "compatibility.common.enemy_homes", "compatibility.common.enemy_planet_pollution", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Arachnids_enemy.arachnids_enemy",
-	"compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies"
+	"compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters", "compatibility.Cold_biters.cold_biters"
 }
 
 local all_mods = {
 	["ArmouredBiters-2_1-update"] = "2.0.4", Arachnids_enemy = "1.2.1", Explosive_biters = "2.4.0",
-	Toxic_biters = "2.1.0", Cold_biters = "2.3.0", Electric_flying_enemies = "0.2.1"
+	Toxic_biters = "2.1.0", Cold_biters = "2.3.0"
 }
 
 local vanilla = {"biter-spawner", "spitter-spawner", "small-worm-turret", "medium-worm-turret", "big-worm-turret", "behemoth-worm-turret"}
 local toxic_worm = "small-toxic-worm-turret"
 local nest = {
 	armoured = "armoured-biter-spawner", arachnids = "arachnid-spawner-unitspawner", explosive = "explosive-biter-spawner",
-	toxic = "toxic-biter-spawner", cold = "cb-cold-spawner", electric = "flying-electric-unit-spawner"
+	toxic = "toxic-biter-spawner", cold = "cb-cold-spawner"
 }
 local cold_worm = "small-cold-worm-turret"
-local walker = "walker-electric-unit-spawner"
 
 local function spawner(name, control)
 	return {type = "unit-spawner", name = name, autoplace = {control = control, probability_expression = "x"}}
@@ -82,8 +81,6 @@ local function setup(active_mods, startup)
 	spawners[nest.toxic] = spawner(nest.toxic, "enemy-base")
 	spawners[nest.explosive] = spawner(nest.explosive, "hot_enemy_base")
 	spawners[nest.cold] = spawner(nest.cold, "frost_enemy_base")
-	spawners[nest.electric] = spawner(nest.electric, "electric_enemies")
-	spawners[walker] = spawner(walker, "electric_enemies")
 	local turrets = {
 		[toxic_worm] = {type = "turret", name = toxic_worm, autoplace = {control = "enemy-base", probability_expression = "x"}},
 		[cold_worm] = {type = "turret", name = cold_worm, autoplace = {control = "frost_enemy_base", probability_expression = "x"}}
@@ -107,7 +104,15 @@ local function setup(active_mods, startup)
 			-- tiles shared with Nauvis and a control of its own: the case a tile restriction does not cover
 			athos = planet({["enemy-base"] = {}}),
 			hyarion = planet(), arig = planet(), moshine = planet(), cubium = planet(), aquilo = planet(), frozeta = planet(),
-			fulgora = planet({electric_enemies = {}}),
+			-- Sentinels model Replicators' native surface state, without relying on its private prototype names.
+			fulgora = (function()
+				local native = planet({native_replicator_nests = {}})
+				native.pollutant_type = "native-replicator-interference"
+				native.map_gen_settings.autoplace_settings = {entity = {settings = {
+					["native-replicator-entity"] = {frequency = 1}
+				}}}
+				return native
+			end)(),
 			ribbonia = planet(),
 			lemures = planet({frost_enemy_base = {}}),
 			-- homes of the wider steps
@@ -122,7 +127,7 @@ local function setup(active_mods, startup)
 end
 
 local function run_all()
-	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters"}) do
+	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters21Compat.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters"}) do
 		require("prototypes." .. name)
 	end
 	require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
@@ -171,19 +176,19 @@ local steps = {
 	none = {},
 	normal = {
 		armoured = {"hyarion"}, arachnids = {"arig"}, explosive = {"moshine"}, toxic = {"cubium"},
-		cold = {"frozeta"}, electric = {"ribbonia"}
+		cold = {"frozeta"}
 	},
 	wide = {
 		armoured = {"hyarion", "panglia"}, arachnids = {"arig", "athos"}, explosive = {"moshine", "cubium"},
-		toxic = {"cubium"}, cold = {"frozeta", "paracelsin"}, electric = {"ribbonia"}
+		toxic = {"cubium"}, cold = {"frozeta", "paracelsin"}
 	},
 	widest = {
 		armoured = {"hyarion", "panglia", "crucible"}, arachnids = {"arig", "athos", "crucible"},
 		explosive = {"moshine", "cubium"}, toxic = {"cubium"},
-		cold = {"frozeta", "paracelsin"}, electric = {"ribbonia"}
+		cold = {"frozeta", "paracelsin"}
 	}
 }
-local family_names = {"armoured", "arachnids", "explosive", "toxic", "cold", "electric"}
+local family_names = {"armoured", "arachnids", "explosive", "toxic", "cold"}
 local shared = {"armoured", "arachnids", "toxic"}
 
 -- Everything the step has to give, checked on a fresh fixture. `label` names the case in the messages.
@@ -221,9 +226,9 @@ local function check_step(label, startup, step_name)
 		end
 	end
 
-	-- Pollution only where there is a home of this step; Fulgora's is the enemy mod's own, Lemures belongs to Dea Dia.
+	-- Routed homes gain pollution; Fulgora's native Replicators interference stays untouched.
 	for planet_name in pairs(data.raw.planet) do
-		local expected = any_home[planet_name] and "pollution" or nil
+		local expected = planet_name == "fulgora" and "native-replicator-interference" or (any_home[planet_name] and "pollution" or nil)
 		check(data.raw.planet[planet_name].pollutant_type == expected,
 			label .. ": pollution of " .. planet_name .. " is " .. tostring(data.raw.planet[planet_name].pollutant_type))
 	end
@@ -251,7 +256,6 @@ local function check_step(label, startup, step_name)
 	end
 	if homes.toxic then
 		check(placed("cubium", toxic_worm), label .. ": Cubium has the toxic worms")
-		check(placed("ribbonia", walker) and placed("ribbonia", nest.electric), label .. ": Ribbonia has both electric nests")
 	end
 	-- A home of one shared-control family is not a home of the others.
 	for _, family in ipairs(shared) do
@@ -269,14 +273,13 @@ local function check_step(label, startup, step_name)
 	check(data.raw.planet.lemures.pollutant_type == nil, label .. ": Lemures keeps its pollution state")
 	check(nest_tiles("cold")["snow-flat"] and nest_tiles("cold")["ice-rough"], label .. ": Cold nests keep the snow and ice tiles")
 
-	-- The native homes: left to the mods with a step, switched off without one.
+	-- Replicators owns its native Fulgora islands and interference at every difficulty.
+	check(map_gen("fulgora").autoplace_controls.native_replicator_nests ~= nil, label .. ": Fulgora keeps native control")
+	check(entity_setting("fulgora", "native-replicator-entity").frequency == 1, label .. ": Fulgora native generation remains")
+	check(untouched("ribbonia"), label .. ": Ribbonia is not given Fulgora's old nest placement")
 	if step_name == "none" then
-		check(zeroed("fulgora", nest.electric) and zeroed("fulgora", walker), label .. ": Fulgora's electric nests are switched off")
 		check(zeroed("aquilo", nest.cold) and zeroed("aquilo", cold_worm), label .. ": Aquilo's cold nests are switched off")
-		check(map_gen("fulgora").autoplace_controls.electric_enemies ~= nil, label .. ": Fulgora keeps its control")
 	else
-		check(entity_setting("fulgora", nest.electric) == nil and map_gen("fulgora").autoplace_settings == nil,
-			label .. ": Fulgora's electric nests stay the enemy mod's")
 		check(map_gen("aquilo").autoplace_settings == nil, label .. ": Aquilo is left alone")
 	end
 	return homes

@@ -1,23 +1,24 @@
 local enemy_autoplace = require("prototypes.compatibility.common.enemy_autoplace")
 local difficulty = require("lib.difficulty.presets")
 
--- Where each themed enemy family lives. One list for the six enemy modules, so that a planet is added to a family (or
+-- Where each themed enemy family lives. One list for the five routed enemy modules, so that a planet is added to a family (or
 -- taken from it) in one place. The list is the authors' design (each mod was made for one or two places) plus the
 -- planets whose theme fits the family. Nauvis keeps the vanilla enemies; planets with enemies of their own (Gleba,
 -- Tellus, Lemures with Dea Dia, ...) are not touched.
 --
 -- The homes grow with the `razi-enemy-habitats` setting. Each home has the first step it belongs to, and the steps
 -- add up:
---   none    no home (Easy): the enemy mods' own placement on Fulgora and Aquilo is switched off too
+--   none    no routed homes (Easy): Cold Biters' own placement on Aquilo is switched off too
 --   normal  Hyarion (Armoured), Arig (Arachnids), Moshine (Explosive), Cubium (Toxic), Frozeta (Cold),
---           Fulgora and Ribbonia (Electric)
+--           Fulgora Replicators manages its own Fulgora islands, outside these homes
 --   wide    + Panglia (Armoured), Athos (Arachnids), Cubium (Explosive), Paracelsin (Cold)
 --   widest  + Crucible (Armoured and Arachnids)
 -- `auto` (the default) follows the difficulty level; the level sets the step itself, so `auto` is only seen on Normal
 -- and Custom and means `normal`.
 --
 -- `native` homes are placed by the enemy mod itself, so Razi Protocol only counts them as homes. `native_planets`
--- are planets where the mod places itself although they are not a home; they are only switched off without homes.
+-- are planets where a routed mod also places native nests to disable on None.
+-- Fulgora Replicators owns scripted islands and raids, not Razi-routed nest autoplace.
 -- `control` is the autoplace control the family's nests use; Armoured, Toxic and Arachnids share the vanilla
 -- "enemy-base" one, so every planet with that control (Nauvis, Terrapalus and each home of another family) is a place
 -- where their nests could turn up; `exclude_from_other_planets` switches them off there.
@@ -180,10 +181,6 @@ local families = {
 		-- Vesta (about 2% land) and Obsidiax (0.9% land) are not homes: Cold nests found 0 to 31 places there.
 		homes = {{planet = "frozeta", step = steps.normal}, {planet = "paracelsin", step = steps.wide}}
 	},
-	electric = {
-		control = "electric_enemies",
-		homes = {{planet = "fulgora", step = steps.normal, native = true}, {planet = "ribbonia", step = steps.normal}}
-	}
 }
 
 local enemy_homes = {}
@@ -262,8 +259,8 @@ function enemy_homes.tiles(family_name)
 	return result
 end
 
--- Without homes the enemy mods that place themselves on a planet (Electric on Fulgora, Cold on Aquilo) are switched
--- off there too; with any step the planet is left to the mod.
+-- On None, routed mods with native nests (Cold on Aquilo) are switched off too.
+-- Fulgora Replicators does not use these autoplace homes.
 function enemy_homes.switch_off_native(family_name, entity_names)
 	local family = families[family_name]
 	if not family or current_step() ~= steps.none then

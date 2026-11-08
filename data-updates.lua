@@ -2,7 +2,6 @@
 require("prototypes.compatibility.Arachnids_enemy.arachnids_enemy")
 require("prototypes.compatibility.ArmouredBiters21Compat.armoured_biters")
 require("prototypes.compatibility.Cold_biters.cold_biters")
-require("prototypes.compatibility.Electric_flying_enemies.electric_flying_enemies")
 require("prototypes.compatibility.Explosive_biters.explosive_biters")
 require("prototypes.compatibility.Toxic_biters.toxic_biters")
 -- Run source shims before the optional mods' data-final-fixes scripts.

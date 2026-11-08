@@ -44,3 +44,7 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
 ## If you forgot `/razi-prepare-3`
 
 The save still loads. System tech cards in labs that no longer accept them are lost, and platforms that were flying a removed route return to Nauvis.
+
+## Fulgora enemy replacement (3.x)
+
+Fulgora Replicators replaces Electric Flying Enemies. Remove `Electric_flying_enemies` from your enabled mods and install `Fulgora_Replicators` 2.1.2 or newer. Back up your save first. Old drones and nests are not transformed into the new enemies. Replicator islands only appear in Fulgora chunks generated after enabling the new mod. Replicators' map-generation and raid settings are independent of Razi's enemy-home difficulty setting.

@@ -117,10 +117,14 @@ How many planets carry the themed families is the `razi-enemy-habitats` startup 
 
 | Step | Difficulty | Planets |
 | --- | --- | --- |
-| None | Easy | No planet. The Electric nests that their mod places on Fulgora and the Cold nests it places on Aquilo are switched off too |
-| Normal | Normal, Custom | Hyarion: Armoured. Arig: Arachnids. Moshine: Explosive. Cubium: Toxic. Frozeta: Cold. Fulgora (their own planet) and Ribbonia: Electric |
+| None | Easy | No Razi-routed enemy worlds. Cold Biters' own nests on Aquilo are switched off too |
+| Normal | Normal, Custom | Hyarion: Armoured. Arig: Arachnids. Moshine: Explosive. Cubium: Toxic. Frozeta: Cold |
 | Wide | Hard | Adds Panglia: Armoured. Athos: Arachnids. Cubium: Explosive. Paracelsin: Cold |
 | Widest | Nightmare | Adds Crucible: Armoured and Arachnids |
+
+**Fulgora Replicators** replaces Electric Flying Enemies in 3.x. It owns its Fulgora-only islands, interference pollution, drop-ship raids and holmium scrap. Razi does **not** place its spawners on Ribbonia: that would bypass the scripted island and raid systems. Replicators' own map-generation and raid settings are independent of the Razi difficulty, enemy-routing toggle and habitat steps, including Easy. When updating a save, only newly generated Fulgora terrain can contain new Replicator islands.
+
+The habitat tiers now cover **5, 8 and 9 Razi-routed worlds**, in addition to the native Replicators on Fulgora.
 
 A step gives its homes to the planets that have no surface yet when it is chosen; nests that already stand stay, and on the surfaces that exist the new chunks stay free of the Armoured, Toxic and Arachnid nests of planets where they are not at home. The specialist nests (Armoured, Toxic, Arachnids) share the vanilla enemy control, so they are switched off by name on Nauvis, Terrapalus and every other planet that has that control and is not their home, on every step. A family's nests stand on the land tiles of its homes. Where Razi Protocol assigns a themed enemy faction, it also suppresses vanilla biter and worm autoplace so the custom threat actually defines the planet, and the planet carries pollution so that the nests take part in attacks. If you want original enemy behavior instead, the `razi-enable-enemy-routing` startup setting can disable the Razi routing layer.
 

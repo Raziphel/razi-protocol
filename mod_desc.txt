@@ -90,7 +90,9 @@ Optional Void Processing is supported as a Deep Space branch rather than forced 
 
 Supported optional enemy mods can be reassigned to planets that fit their identity, with vanilla biter/worm autoplace suppressed where needed so the custom faction actually defines the planet.
 
-The `razi-enemy-habitats` startup setting, which the difficulty level sets, chooses how many planets carry them: none on Easy, seven on Normal, ten on Hard and eleven on Nightmare. The `razi-enable-enemy-routing` startup setting can disable this behavior if you want the source mods' original enemy placement instead.
+The `razi-enemy-habitats` startup setting, which the difficulty level sets, chooses how many planets carry them: none on Easy, five on Normal, eight on Hard and nine on Nightmare. The `razi-enable-enemy-routing` startup setting can disable this behavior if you want the source mods' original enemy placement instead.
+
+Fulgora Replicators replaces Electric Flying Enemies. It keeps its Fulgora-only islands, raids and scrap recycling; Razi does not place its spawners on Ribbonia. Replicators' own map and raid settings are independent of Razi's difficulty and habitat settings. Existing saves see its islands only in newly generated Fulgora terrain.
 
 ## Crafting and UI Cleanup
 
