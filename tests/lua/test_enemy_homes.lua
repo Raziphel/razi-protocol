@@ -35,7 +35,7 @@ local module_names = {
 
 local all_mods = {
 	["ArmouredBiters-2_1-update"] = "2.0.4", Arachnids_enemy = "1.2.1", Explosive_biters = "2.4.0",
-	Toxic_biters = "2.1.0", Cold_biters = "2.3.0"
+	Toxic_biters = "2.1.0", Cold_biters = "2.3.0", Fulgora_Replicators = "2.1.2"
 }
 
 local vanilla = {"biter-spawner", "spitter-spawner", "small-worm-turret", "medium-worm-turret", "big-worm-turret", "behemoth-worm-turret"}
@@ -362,11 +362,16 @@ run_all()
 require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 check(absorbs("panglia-midland-turquoise-bark") == nil, "no home, no change to the tiles")
 
--- Without the enemy mods nothing is placed or switched off.
-setup({})
+-- With only the required Replicators installed, no Razi-routed enemy nests are placed.
+setup({Fulgora_Replicators = "2.1.2"})
 run_all()
 for planet_name in pairs(data.raw.planet) do
-	check(untouched(planet_name), "no enemy mods, " .. planet_name .. " untouched")
+	if planet_name == "fulgora" then
+		check(entity_setting(planet_name, "native-replicator-entity").frequency == 1,
+			"no optional enemy mods: Fulgora's native Replicators stay untouched")
+	else
+		check(untouched(planet_name), "no routed enemy mods, " .. planet_name .. " untouched")
+	end
 end
 
 -- Only the installed families are switched off: with Toxic alone the Armoured nest is not named.
@@ -374,12 +379,18 @@ setup({Toxic_biters = "2.1.0"})
 run_all()
 check(zeroed("nauvis", nest.toxic) and entity_setting("nauvis", nest.armoured) == nil, "only the installed family is switched off")
 
--- Enemy routing off: nothing is touched.
+-- Enemy routing off: native Replicators still own Fulgora, and all other planets remain untouched.
 setup(all_mods)
 settings.startup["razi-enable-enemy-routing"] = {value = false} -- luacheck: ignore 122
 run_all()
 for planet_name in pairs(data.raw.planet) do
-	check(untouched(planet_name), "routing off, " .. planet_name .. " untouched")
+	if planet_name == "fulgora" then
+		check(entity_setting(planet_name, "native-replicator-entity").frequency == 1
+			and data.raw.planet[planet_name].pollutant_type == "native-replicator-interference",
+			"routing off: native Replicators generation and interference stay intact")
+	else
+		check(untouched(planet_name), "routing off, " .. planet_name .. " untouched")
+	end
 end
 
 -- A family without a placeable nest (a mod with its nest setting off) is not claimed, so nothing is switched off.
