@@ -5,15 +5,6 @@ if not enemy_autoplace.enabled() or not mods["Electric_flying_enemies"] then
 	return
 end
 
-local electric_enemy_name_patterns = {
-	"fulgora",
-	"fulgoran",
-	"electric",
-	"replicator",
-	"walker",
-	"droid"
-}
-
 local electric_enemy_tiles = {
 	"fulgoran-dust",
 	"fulgoran-rock",
@@ -46,30 +37,15 @@ local electric_enemy_tiles = {
 	"sand-3"
 }
 
-local explicit_electric_spawners = {
+-- Only the spawners of Electric flying enemies themselves, by name: spawners of other mods are not ours to move
+-- (Fulgora Replicators' crawler and carrier have an autoplace on Fulgora tied to that mod's own script).
+local electric_spawner_names = {
 	"flying-electric-unit-spawner",
-	"walker-electric-unit-spawner",
-	"fulgoran-enemy-spawner",
-	"fulgoran-replicator",
-	"fulgoran-unit-replicator",
-	"electric-flying-enemy-spawner",
-	"electric-flying-enemies-spawner",
-	"electric-enemy-spawner",
-	"unit-replicator"
+	"walker-electric-unit-spawner"
 }
 
 local function entity_exists(entity_name)
 	return data.raw["unit-spawner"] and data.raw["unit-spawner"][entity_name]
-end
-
-local function name_matches_electric_enemy(name)
-	for _, pattern in pairs(electric_enemy_name_patterns) do
-		if name:find(pattern, 1, true) then
-			return true
-		end
-	end
-
-	return false
 end
 
 local function add_unique(values, value)
@@ -93,15 +69,9 @@ end
 local function collect_electric_spawners()
 	local spawners = {}
 
-	for _, entity_name in pairs(explicit_electric_spawners) do
+	for _, entity_name in ipairs(electric_spawner_names) do
 		local spawner = entity_exists(entity_name)
 		if enemy_autoplace.has_valid_autoplace(spawner) then
-			spawners[entity_name] = spawner
-		end
-	end
-
-	for entity_name, spawner in pairs(data.raw["unit-spawner"] or {}) do
-		if name_matches_electric_enemy(entity_name) and enemy_autoplace.has_valid_autoplace(spawner) then
 			spawners[entity_name] = spawner
 		end
 	end
@@ -134,9 +104,9 @@ for _, planet_name in pairs(enemy_homes.planets("electric")) do
 end
 
 -- Without homes (Easy) the Electric mod's own nests on Fulgora are switched off as well.
-local electric_spawner_names = {}
+local placed_names = {}
 for entity_name in pairs(electric_spawners) do
-	electric_spawner_names[#electric_spawner_names + 1] = entity_name
+	placed_names[#placed_names + 1] = entity_name
 end
-table.sort(electric_spawner_names)
-enemy_homes.switch_off_native("electric", electric_spawner_names)
+table.sort(placed_names)
+enemy_homes.switch_off_native("electric", placed_names)

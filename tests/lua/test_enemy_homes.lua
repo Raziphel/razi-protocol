@@ -385,6 +385,40 @@ data.raw["unit-spawner"][nest.armoured] = nil
 run_all()
 check(entity_setting("nauvis", nest.armoured) == nil, "no Armoured nest, nothing to switch off")
 
+-- Electric takes the two spawners of Electric flying enemies by name. A spawner of another mod (Fulgora Replicators'
+-- crawler: its autoplace on Fulgora belongs to that mod's script) is neither placed on Ribbonia nor switched off on
+-- Fulgora, whatever its name. The game refuses an entity in a planet's settings that does not exist, so the check
+-- below does too.
+local replicator = "replicator-crawler-spawner"
+local replicator_tiles = {"fulgoran-dust"}
+local function setup_with_replicator(startup)
+	setup(all_mods, startup)
+	local foreign = spawner(replicator, nil)
+	foreign.autoplace.tile_restriction = {replicator_tiles[1]}
+	data.raw["unit-spawner"][replicator] = foreign
+	local restriction = foreign.autoplace.tile_restriction
+	run_all()
+	for planet_name in pairs(data.raw.planet) do
+		local settings = map_gen(planet_name).autoplace_settings --[[@as table?]]
+		for entity_name in pairs(settings and settings.entity and settings.entity.settings or {}) do
+			check(data.raw["unit-spawner"][entity_name] or data.raw.turret[entity_name],
+				planet_name .. " lists the unknown entity " .. entity_name)
+		end
+	end
+	return restriction
+end
+
+local foreign_restriction = setup_with_replicator({["razi-difficulty-preset"] = {value = "custom"}, ["razi-enemy-habitats"] = {value = "normal"}})
+check(placed("ribbonia", nest.electric) and placed("ribbonia", walker), "Ribbonia has the two electric nests")
+check(entity_setting("ribbonia", replicator) == nil, "a foreign spawner is not placed on Ribbonia")
+check(entity_setting("fulgora", replicator) == nil, "a foreign spawner is not touched on Fulgora")
+check(#foreign_restriction == 1 and foreign_restriction[1] == replicator_tiles[1], "a foreign spawner keeps its tile restriction")
+
+setup_with_replicator({["razi-difficulty-preset"] = {value = "custom"}, ["razi-enemy-habitats"] = {value = "none"}})
+check(zeroed("fulgora", nest.electric) and zeroed("fulgora", walker), "no homes, the two electric nests are off on Fulgora")
+check(entity_setting("fulgora", replicator) == nil, "no homes, a foreign spawner stays on Fulgora")
+check(entity_setting("ribbonia", replicator) == nil, "no homes, a foreign spawner is not on Ribbonia")
+
 rawset(_G, "mods", nil)
 rawset(_G, "log", nil)
 rawset(_G, "settings", nil)
