@@ -9,7 +9,7 @@ local retired_gate = "calidus-bellicos-stargate-bellicos"
 -- must remain stable even though their upstream names say "calidus".
 local root_parent = "sye-calidus"
 
--- Preserve the source pulsar artwork below Solaris and Nyxaris.
+-- Keep the Bellicos system below Solaris and Nyxaris.
 -- Both first-frontier gates converge here; deeper Bellicos remains tier three.
 -- Guard missing or retyped source prototypes.
 -- Set real Factorio origin/distance/orientation in addition to orbit
@@ -38,16 +38,16 @@ local function near_orbit()
   end
 end
 
--- The pulsar is a PlanetsLib sprite-only parent. It exists while star art is
--- baked, then disappears from data.raw before Razi's last native positioning.
--- Construct a FIXED virtual coordinate for it even after that deletion.
+-- Aegis & Bellicos has a sprite-only `bellicos-pulsar` that PlanetsLib deletes
+-- before Razi's last native positioning. The centre of the system is a FIXED
+-- virtual coordinate, built from these offsets.
 local function offset(x,y,r,turn)
   local angle=2*math.pi*turn
   return x+r*math.sin(angle),y-r*math.cos(angle)
 end
 
 -- Factorio runs Lua 5.2. math.atan(y, x) silently ignores x there;
--- only math.atan2(y, x) correctly handles the missing-pulsar fallback.
+-- only math.atan2(y, x) gives the right quadrant for the bearing to the virtual pulsar.
 -- In offline Lua >= 5.3 fixtures math.atan supports two arguments instead.
 local atan2=math.atan2 or math.atan
 local function parent_polar(x,y,parent)

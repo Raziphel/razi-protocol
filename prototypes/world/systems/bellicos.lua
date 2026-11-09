@@ -41,7 +41,6 @@ local function plan_expedition()
   local virtual_pulsar={x=sx,y=sy}
   local nx,ny=offset(sx,sy,3,.25)
   local virtual_near={x=nx,y=ny}
-  local pulsar=endpoint_type("pulsar") and "pulsar" or nil
   local near=near_orbit()
   local entries={}
   local function append(name,parent,parent_position,r,turn,gate)
@@ -52,17 +51,13 @@ local function plan_expedition()
       radius=r,turn=turn,x=x,y=y,gate=gate
     }
   end
-  if pulsar then append(pulsar,root_parent,edge,pulsar_radius,pulsar_turn) end
   if near then
-    if pulsar then
-      append(near,pulsar,virtual_pulsar,3,.25)
-    else
-      -- The sprite-only pulsar is gone; preserve the EXACT world position
-      -- by converting the virtual pulsar offset into the Edge's native
-      -- polar coordinates, using quadrant-aware atan2 (Lua 5.2).
-      local r,t=parent_polar(nx,ny,edge)
-      append(near,root_parent,edge,r,t)
-    end
+    -- The sprite-only bellicos-pulsar is removed by PlanetsLib. Put the
+    -- orbit at its EXACT place beside the virtual pulsar by converting the
+    -- offset into the Edge's polar coordinates, using quadrant-aware atan2
+    -- (Lua 5.2).
+    local r,t=parent_polar(nx,ny,edge)
+    append(near,root_parent,edge,r,t)
   end
   append(entry_gate,root_parent,edge,entry_radius,entry_turn,true)
   if near then
@@ -109,8 +104,6 @@ local function position_expedition(pre_render)
         local parent=endpoint_type(target.parent)
         if parent then
           orbit.parent={type=parent,name=target.parent}
-        elseif target.parent=="pulsar" then
-          orbit.parent={type="space-location",name=root_parent}
         end
         orbit.distance=target.radius
         orbit.orientation=target.turn
@@ -146,10 +139,6 @@ local function reconcile_baked_art()
   local near=near_orbit()
   local by_name={}
   for _,target in ipairs(plan) do by_name[target.name]=target end
-  -- Sprite-only pulsar no longer exists, but its artwork still has a tag.
-  local ex,ey=require("prototypes.world.starmap.galaxy_layout")
-    .anchor_position(root_parent)
-  if ex and ey then by_name.pulsar={parent_position={x=ex,y=ey}} end
   local ui=(data.raw["utility-sprites"] or {}).default
   local layers=ui and ui.starmap_star and ui.starmap_star.layers
   if type(layers)~="table" then return 0 end
@@ -161,10 +150,9 @@ local function reconcile_baked_art()
     local delta=layer and layer.planetslib_orbit_shift
     if target and type(delta)=="table"
       and type(delta[1])=="number" and type(delta[2])=="number" then
-      -- When PlanetsLib deletes the sprite-only pulsar, Near Bellicos
-      -- gets a native parent fallback to the Calidus slip stream. Its orbit
-      -- artwork is already baked around the pulsar. Keep the virtual pulsar
-      -- position even after PlanetsLib removes the sprite-only prototype.
+      -- Near Bellicos has a native parent at the Calidus slip stream. Its
+      -- orbit artwork is already baked around the pulsar. Keep the virtual
+      -- pulsar position.
       local origin=target.parent_position
       if target.name==near and virtual_pulsar then
         origin=virtual_pulsar
@@ -241,23 +229,49 @@ function bellicos.data()
   remove_stock_entry_routes()
 end
 
-local function soften_pulsar_art()
+-- Aegis & Bellicos draws its pulsar as one starmap_star layer at the place of
+-- its sprite-only `bellicos-pulsar` (data-updates.lua:33-57 of 0.4.5), which
+-- is nowhere near where this mod lays the system out.
+local pulsar_picture="__bellicos-and-aegis-assets__/graphics/starmap/starmap-pulsar.png"
+
+local function pulsar_layers()
   local util=data.raw["utility-sprites"] and data.raw["utility-sprites"].default
   local layers=util and util.starmap_star and util.starmap_star.layers
-  if type(layers)~="table" then return end
-  local touched=0
+  local found={}
+  if type(layers)~="table" then return found end
   for _,item in ipairs(layers) do
     local layer=item --[[@as table]]
-    local filename=type(layer.filename)=="string" and layer.filename:lower() or ""
-    local tagged=layer.planetslib_orbit_name=="pulsar"
-    local source_file=filename:find("__bellicos-and-aegis",1,true)
-      and filename:find("pulsar",1,true)
-    if tagged or source_file then
-      local tint=layer.tint or {r=1,g=1,b=1,a=1}
-      layer.tint={r=tint.r or 1,g=tint.g or 1,b=tint.b or 1,
-        a=math.min(tint.a or 1,.50)}
-      touched=touched+1
+    if layer.filename==pulsar_picture then found[#found+1]=layer end
+  end
+  return found
+end
+
+-- The picture belongs at the point the system is laid out around: the virtual
+-- pulsar, which is also the parent of Near Bellicos Orbit and of everything
+-- the plan places beyond it.
+local function move_pulsar_art()
+  local layers=pulsar_layers()
+  local x,y=bellicos.pulsar_position()
+  if #layers==0 or not x or not y then
+    if type(log)=="function" then
+      log("[Razi Protocol/starmap] Aegis pulsar picture not found, left as it is")
     end
+    return
+  end
+  for _,layer in ipairs(layers) do layer.shift={32*x,32*y} end
+  if type(log)=="function" then
+    log(("[Razi Protocol/starmap] Moved the Aegis pulsar picture to the centre of the Bellicos system (%.1f, %.1f)")
+      :format(x,y))
+  end
+end
+
+local function soften_pulsar_art()
+  local touched=0
+  for _,layer in ipairs(pulsar_layers()) do
+    local tint=layer.tint or {r=1,g=1,b=1,a=1}
+    layer.tint={r=tint.r or 1,g=tint.g or 1,b=tint.b or 1,
+      a=math.min(tint.a or 1,.50)}
+    touched=touched+1
   end
   if touched>0 and type(log)=="function" then
     log("[Razi Protocol/starmap] Dimmed "..touched.." pulsar atlas layers")
@@ -268,6 +282,7 @@ function bellicos.data_final_fixes()
   if not (mods and mods["bellicos-and-aegis"]) then return end
   remove_stock_entry_routes()
   bellicos.reconcile_final_positions()
+  move_pulsar_art()
   local glare=settings and settings.startup
     and settings.startup["razi-starmap-soften-bellicos"]
   if not glare or glare.value~=false then soften_pulsar_art() end

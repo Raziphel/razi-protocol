@@ -16,7 +16,7 @@ local destinations = {
   beetlejuice = {"cubium", "linox-planet_linox", "secretas", "frozeta", "ferrum", "beetlejuice", "sye-beetlejuice", "planet-ferrum"},
   umbra = {"tenebris", "crucible", "vesta", "abacayba", "carna", "arcanyx", "obsidiax", "umbra", "sye-umbra", "razi-umbra-belt-inner", "razi-umbra-belt-outer", "crucible-orbit"},
   -- The shared frontier below Solaris and Nyxaris; the far-side stargate is retired.
-  aegis = {"pulsar", "calidus-bellicos-stargate-calidus"},
+  aegis = {"calidus-bellicos-stargate-calidus"},
   deep_space = {"nexus", "shattered-planet", "skewer_shattered_planet", "skewer_lost_beyond", "solar-system-edge", "black-hole-approach", "black-hole", "oort-cloud", "sol", "razi-deep-space-edge"}
 }
 
