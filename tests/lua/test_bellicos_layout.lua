@@ -26,11 +26,6 @@ local function run(options)
     [retired_gate] = {name=retired_gate}
   }
   local planets = {}
-  if options.pulsar == "space-location" then
-    places.pulsar = {name="pulsar",orbit={sprite={filename="__aegis_graphics__/pulsar-atlas.png"}}}
-  elseif options.pulsar == "planet" then
-    planets.pulsar = {name="pulsar",orbit={sprite={filename="__aegis_graphics__/pulsar-atlas.png"}}}
-  end
   if options.no_entry_gate then places[gate_a] = nil end
   if options.near then
     if options.dual_warden then
@@ -57,7 +52,7 @@ local function run(options)
       end
     end
   })
-  rawset(_G, "mods", {["bellicos-and-aegis"]="0.4.1"})
+  rawset(_G, "mods", {["bellicos-and-aegis"]="0.4.5"})
   rawset(_G, "deleteRoute", function(name) routes[name] = nil end)
   rawset(_G, "deleteRoutesBetween", function(a, b)
     for name, route in pairs(routes) do
@@ -87,23 +82,9 @@ local function run(options)
   return module, places, planets, routes, updates
 end
 
-local _, present, _, connected = run({pulsar="space-location"})
-check(present.pulsar.orbit.sprite
-  and present.pulsar.orbit.sprite.filename=="__aegis_graphics__/pulsar-atlas.png",
-  "Bellicos relocation erased the source pulsar image")
-local pulsar_image=present.pulsar.orbit.sprite
-local good_pulsar=present.pulsar
--- Verify the dedicated data-updates recovery does not clear artwork if
--- another mod's data-updates temporarily touched the pulsar placement.
-local check_module=require("prototypes.world.systems.bellicos")
-check_module.data_updates()
-check(good_pulsar.orbit.sprite==pulsar_image,
-  "Bellicos pre-render reparenting removed its preserved source sprite")
+local _, present, _, connected = run()
 check(present[retired_gate] and not present[retired_gate].orbit,
   "The retired gate must not receive a new orbit placement")
-check(present.pulsar.orbit.parent.name == "sye-calidus"
-  and present.pulsar.orbit.distance==190,
-  "Pulsar did not join shared southern frontier")
 check(present[gate_a].orbit.parent.name == "sye-calidus"
   and present[gate_a].orbit.distance==151
   and present[gate_a].orbit.orientation==0.468,
@@ -111,9 +92,9 @@ check(present[gate_a].orbit.parent.name == "sye-calidus"
 check(not connected[old_route], "Legacy Vespera-only route was not retired")
 
 local _, missing, _, fallback = run()
-check(not fallback[old_route], "Legacy route resurfaced on pulsar fallback")
+check(not fallback[old_route], "Legacy route resurfaced")
 
--- Exercise the REAL data-final-fixes path, including the near/pulsar drift
+-- Exercise the REAL data-final-fixes path, including the near-orbit/virtual-pulsar drift
 -- diagnostic. An 'and native_point(near)' expression discarded the Y return,
 -- making this fixture crash with 'arithmetic on local ny (a nil value)'.
 local ok, near_mod_or_error, near_locations=pcall(run,{near=true})
@@ -174,27 +155,13 @@ check(math.abs(near_locations["aegis-inner-edge"].orbit.distance-29)<.001
   "Aegis sector local radii drifted")
 
 
-local _, alt_locations, alt_planets = run({pulsar="planet"})
-check(alt_planets.pulsar.orbit.parent.name=="sye-calidus",
-  "Retyped native pulsar was not found in data.raw.planet")
-check(alt_locations["near-bellicos-orbit"]==nil,
-  "Optional near-orbit unexpectedly created during pulsar-only test")
-
 local _, absent, _, no_route = run({no_entry_gate=true})
 check(not absent[gate_a] and not no_route[old_route],
   "Razi created a route with a missing native entry gateway")
 
--- Simulate the exact crash: an upstream data-final-fixes removes the pulsar
--- that was present in data.lua, before Razi's final-stage positioning runs.
-local disappearing, disappearing_locations = run({pulsar="space-location"})
-disappearing_locations.pulsar = nil
-disappearing.data_final_fixes()
-check(disappearing_locations[gate_a].orbit.parent.name=="sye-calidus",
-  "Final-stage removed pulsar displaced the surviving entry gate")
-
 -- Late ENTRY-gate removal must not resurrect a legacy approach route.
 local no_longer_present, late_locations, _, late_routes =
-  run({pulsar="space-location"})
+  run()
 late_locations[gate_a] = nil
 no_longer_present.data_final_fixes()
 check(not late_routes[old_route],
@@ -202,7 +169,7 @@ check(not late_routes[old_route],
 
 -- Factorio's Lua 5.2 math.atan(y,x) ignores the x argument. Simulate the
 -- old one-argument-only behavior in any standalone Lua test version so the
--- missing-pulsar fallback cannot accidentally rely on two-arg math.atan.
+-- bearing to the virtual pulsar cannot accidentally rely on two-arg math.atan.
 local lua_atan,lua_atan2=math.atan,math.atan2
 math.atan=function(value) return lua_atan(value) end
 math.atan2=lua_atan2 or function(y,x) return lua_atan(y,x) end
@@ -221,7 +188,7 @@ local function absolute(name)
 end
 local near_px,near_py=absolute("near-bellicos-orbit")
 check(math.sqrt((near_px-p_x)^2+(near_py-p_y)^2)<3.01,
-  "Missing pulsar sent Near Bellicos Orbit sideways from southern frontier")
+  "Near Bellicos Orbit sideways from southern frontier")
 check(near_py>edge_y+188 and math.abs(near_px-edge_x)<5,
   "Near Bellicos Orbit must be south of two starter stars")
 for _,name in ipairs({"aegis-inner-edge","point-warden",
@@ -234,7 +201,7 @@ local w_x,w_y=absolute("point-warden")
 check(math.sqrt((w_x-near_px)^2+(w_y-near_py)^2)>40
   and math.sqrt((w_x-near_px)^2+(w_y-near_py)^2)<50,
   "Point Warden must remain in its intended Aegis lane")
--- Redo the final pass after the pulsar disappears; it must stay put.
+-- Redo the final pass; it must stay put.
 no_pulsar.reconcile_final_positions()
 local again_x,again_y=absolute("near-bellicos-orbit")
 check(math.abs(again_x-near_px)<.01 and math.abs(again_y-near_py)<.01,
@@ -268,10 +235,9 @@ check(math.abs(repeat_x-ax)<.001 and math.abs(repeat_y-ay)<.001,
 -- Reproduce the player's screenshot: Warden was relocated to Beetlejuice
 -- even though the pulsar/asteroid field had already moved to Deep Space.
 -- The final pass must correct BOTH prototype types and leave sprite art
--- anchored at the vanished sprite-only pulsar, without late PlanetsLib API.
+-- anchored at the virtual pulsar, without late PlanetsLib API.
 local dual,dual_places,dual_planets=run({
-  near=true,pulsar="space-location",dual_warden=true})
-dual_places.pulsar=nil -- sprite-only parent removed by PlanetsLib
+  near=true,dual_warden=true})
 local near=dual_places["near-bellicos-orbit"]
 for _,body in ipairs({dual_places["point-warden"],dual_planets["point-warden"]}) do
   body.origin={x=83,y=-160} -- old Beetlejuice/Secretas chart vicinity
@@ -285,7 +251,7 @@ local original_art={filename="__bellicos-graphics__/aegis-debris.png",
   planetslib_orbit_shift={16,-8},shift={0,0}}
 data.raw["utility-sprites"]={default={starmap_star={
   layers={original_art}}}}
--- Any accidental late PlanetsLib:update is forbidden after pulsar deletion.
+-- Any accidental late PlanetsLib:update is forbidden.
 PlanetsLib.update=function()
   error("Late PlanetsLib:update would displace Bellicos child locations")
 end
@@ -305,7 +271,7 @@ local source_x=edge_x+190*math.sin(2*math.pi*.5)
 local source_y=edge_y-190*math.cos(2*math.pi*.5)
 check(math.abs(original_art.shift[1]-(16+source_x*32))<.01
   and math.abs(original_art.shift[2]-(-8+source_y*32))<.01,
-  "Aegis belt art abandoned the native pulsar when the parent was deleted")
+  "Aegis belt art abandoned the virtual pulsar")
 check(dual.reconcile_final_positions()>=5
   and math.abs(original_art.shift[1]-(16+source_x*32))<.01,
   "Repeated final reconciliation must not move artwork or Warden again")

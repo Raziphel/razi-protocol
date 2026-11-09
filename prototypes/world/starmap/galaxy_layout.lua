@@ -201,12 +201,9 @@ local function remove_baked_source_trails()
   for index=#layers,1,-1 do
     local layer=layers[index]
     local name=layer and layer.planetslib_orbit_name
-    -- Aegis art is source-authored: its pulsar and debris sprites need
-    -- not include "pulsar" in the filename (0.4.x external graphics pack).
     -- Never strip these baked PlanetsLib layers. Native orbit circles are
     -- hidden separately via draw_orbit=false, without deleting source art.
-    local bellicos_art=name=="pulsar"
-      or name=="near-bellicos-orbit" or name=="bellicos-near-orbit"
+    local bellicos_art=name=="near-bellicos-orbit" or name=="bellicos-near-orbit"
       or name=="near_bellicos_orbit" or name=="bellicos-orbit"
       or name=="aegis-inner-edge"
       or name=="aegis-outer-edge" or name=="aegis-warden"
@@ -379,7 +376,7 @@ function M.data_final_fixes()
     "solar-system-edge","shattered-planet","nexus",
     "skewer_shattered_planet","skewer_lost_beyond",
     "black-hole-approach","black-hole","oort-cloud","sol",
-    "pulsar","near-bellicos-orbit","bellicos-orbit",
+    "near-bellicos-orbit","bellicos-orbit",
     "calidus-bellicos-stargate-calidus",
     "aegis-inner-edge","aegis-outer-edge","sye-calidus",
     "sye-solaris","sye-nyxaris",

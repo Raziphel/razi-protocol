@@ -45,7 +45,7 @@ local exceptional={
   -- third system gate, before any railgun is guaranteed. Legacy Calidus gate
   -- IDs never imply safety.
   ["calidus-bellicos-stargate-calidus"]=6,
-  ["pulsar"]=8,["aegis-inner-edge"]=8,
+  ["aegis-inner-edge"]=8,
   ["aegis-outer-edge"]=7,["aegis-warden"]=8,
   ["near-bellicos-orbit"]=8,["bellicos-near-orbit"]=8,
   ["near_bellicos_orbit"]=8,["bellicos-orbit"]=8,
@@ -175,8 +175,7 @@ function M.location_level(name)
   -- mislabeled as deep-space routes simply because of their old names.
   local n=name:lower()
   if n:find("warden",1,true) then return 8 end
-  if n:find("bellicos",1,true) or n:find("aegis",1,true)
-    or n:find("pulsar",1,true) then return 8 end
+  if n:find("bellicos",1,true) or n:find("aegis",1,true) then return 8 end
   if n:find("skewer_",1,true)
     or n:find("black-hole",1,true) then return 10 end
   return base[members.system(name)] or 4

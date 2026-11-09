@@ -139,7 +139,7 @@ local deep_space_no_rings={
   ["solar-system-edge"]=true,["shattered-planet"]=true,nexus=true,
   ["skewer_shattered_planet"]=true,["skewer_lost_beyond"]=true,
   ["black-hole-approach"]=true,["black-hole"]=true,
-  ["oort-cloud"]=true,sol=true,pulsar=true,
+  ["oort-cloud"]=true,sol=true,
   ["near-bellicos-orbit"]=true,["bellicos-orbit"]=true,
   ["calidus-bellicos-stargate-calidus"]=true,
   ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true
