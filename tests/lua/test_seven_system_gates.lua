@@ -146,12 +146,12 @@ check(#techs["tungsten-after"].prerequisites == 1, "An ancestor pack research is
 check(not has_cycle(techs), "Pack links stay acyclic")
 
 -- (g) A pack whose research needs the card it is part of is dropped from the card recipe.
-local function recipe(name, ingredients)
+local function recipe(name, ingredients, enabled)
 	local list = {}
 	for _, ingredient in ipairs(ingredients) do
 		list[#list + 1] = {type = "item", name = ingredient, amount = 1}
 	end
-	return {type = "recipe", name = name, ingredients = list}
+	return {type = "recipe", name = name, ingredients = list, enabled = enabled}
 end
 build({
 	technology("space-science-pack"),
@@ -172,5 +172,80 @@ for _, message in ipairs(logged) do
 	removal_logged = removal_logged or string.find(message, "solaris-tech-card no longer needs loop-pack", 1, true) ~= nil
 end
 check(removal_logged, "The removal is logged")
+
+-- (h) A recipe that is enabled from the start waits for no research: a technology that unlocks it again
+-- (Foliax and copper cable) is not a way from a pack to the card. Ribbonia prices technologies in plain items,
+-- which puts such items among the packs the cycle search walks through.
+build({
+	technology("space-science-pack"),
+	technology("planet-discovery-castra", {}, {"solaris-tech-card"}, {"calidus-tech-card"}),
+	technology("reunlock-cable", {"planet-discovery-castra"}, {"cable"}),
+	technology("cable-user", {}, nil, {"cable"}),
+	technology("chem-research", {}, {"chem-pack"}, {"space-science-pack"}),
+	technology("late-research", {"chem-research"}, nil, {"chem-pack", "safe-pack"})
+}, {
+	["calidus-tech-card"] = recipe("calidus-tech-card", {"chem-pack", "safe-pack", "space-science-pack"}),
+	["chem-pack"] = recipe("chem-pack", {"cable"}, false),
+	["cable"] = recipe("cable", {}, true)
+})
+local calidus = data.raw.recipe["calidus-tech-card"].ingredients
+check(#calidus == 3, "An unlock of a recipe that is enabled from the start does not drop a pack from the card")
+for _, message in ipairs(logged) do
+	check(not string.find(message, "calidus-tech-card no longer needs", 1, true), "No pack is dropped: " .. message)
+end
+
+-- (h2) A recipe that several technologies unlock is available after the first of them: a late alternative
+-- (Foliax and steel plate) does not make the packs made from it wait for the card.
+build({
+	technology("space-science-pack"),
+	technology("planet-discovery-castra", {}, {"solaris-tech-card"}, {"calidus-tech-card"}),
+	technology("steel-processing", {}, {"steel"}),
+	technology("late-steel", {"planet-discovery-castra"}, {"steel"}),
+	technology("steel-user", {}, nil, {"steel"}),
+	technology("chem-research", {}, {"chem-pack"}, {"space-science-pack"}),
+	technology("late-research", {"chem-research"}, nil, {"chem-pack", "safe-pack"})
+}, {
+	["calidus-tech-card"] = recipe("calidus-tech-card", {"chem-pack", "safe-pack", "space-science-pack"}),
+	["chem-pack"] = recipe("chem-pack", {"steel"}, false),
+	["steel"] = recipe("steel", {}, false)
+})
+check(#data.raw.recipe["calidus-tech-card"].ingredients == 3, "A late second unlock does not drop a pack from the card")
+
+-- (h3) When every technology that unlocks the recipe waits for the card, the pack does wait for it.
+build({
+	technology("space-science-pack"),
+	technology("planet-discovery-castra", {}, {"solaris-tech-card"}, {"calidus-tech-card"}),
+	technology("late-steel", {"planet-discovery-castra"}, {"steel"}),
+	technology("later-steel", {"planet-discovery-castra"}, {"steel"}),
+	technology("steel-user", {}, nil, {"steel"}),
+	technology("chem-research", {}, {"chem-pack"}, {"space-science-pack"}),
+	technology("late-research", {"chem-research"}, nil, {"chem-pack", "safe-pack"})
+}, {
+	["calidus-tech-card"] = recipe("calidus-tech-card", {"chem-pack", "safe-pack", "space-science-pack"}),
+	["chem-pack"] = recipe("chem-pack", {"steel"}, false),
+	["steel"] = recipe("steel", {}, false)
+})
+check(#data.raw.recipe["calidus-tech-card"].ingredients == 2, "A pack whose every unlock waits for the card is dropped")
+
+-- (i) A cycle that would take all but one ingredient from a card is not broken: the card keeps its recipe and the
+-- log says so, instead of the card turning into its one-pack fallback.
+build({
+	technology("space-science-pack"),
+	technology("planet-discovery-castra", {}, {"solaris-tech-card"}, {"calidus-tech-card"}),
+	technology("loop-research", {"planet-discovery-castra"}, {"loop-pack"}, {"space-science-pack"}),
+	technology("loop-two-research", {"planet-discovery-castra"}, {"loop-two"}, {"space-science-pack"}),
+	technology("late-research", {"loop-research", "loop-two-research"}, nil, {"loop-pack", "loop-two"})
+}, {
+	["calidus-tech-card"] = recipe("calidus-tech-card", {"loop-pack", "loop-two"}),
+	["loop-pack"] = recipe("loop-pack", {}, false),
+	["loop-two"] = recipe("loop-two", {}, false)
+})
+check(#data.raw.recipe["calidus-tech-card"].ingredients == 2, "A card is not stripped below two ingredients")
+local reported_error = false
+for _, message in ipairs(logged) do
+	reported_error = reported_error or (string.find(message, "ERROR: calidus-tech-card needs loop-pack", 1, true) ~= nil
+		and string.find(message, "loop-research", 1, true) ~= nil)
+end
+check(reported_error, "The cycle that is left is logged as an error with its chain")
 
 print("test_seven_system_gates: ok")

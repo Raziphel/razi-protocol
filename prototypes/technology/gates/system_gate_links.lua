@@ -31,9 +31,15 @@ local function add_link(technologies, target, parent, reason)
 	end
 end
 
+-- A card keeps at least this many ingredients: with fewer, the cycle breaker would turn the card into its
+-- one-pack fallback (lab_cards.lua), and a cycle that cannot be broken without that is reported instead.
+local min_card_ingredients = 2
+
 -- A system card is made of the packs of the planets below its tier. When one of those packs can only be
 -- researched after a technology that is itself priced in the card, nothing can start: the card needs the
--- pack, the pack needs the research, the research needs the card. Drop such a pack from the card recipe.
+-- pack, the pack needs the research, the research needs the card. Drop such a pack from the card recipe,
+-- with a log line that names the chain. If that would leave the card with fewer than min_card_ingredients,
+-- the card is left whole and the cycle is logged as an error.
 local function break_card_cycles(technologies, unlock_index)
 	local packs = {}
 	for _, technology in pairs(technologies) do
@@ -47,59 +53,113 @@ local function break_card_cycles(technologies, unlock_index)
 		return recipe and recipe.ingredients or {}
 	end
 
-	-- Techs lead to their prerequisites, to the packs in their price and, through the pack, to the
-	-- techs that unlock it and to the packs in its recipe.
-	local function successors(node)
-		local result = {}
-		if node.tech then
-			local technology = technologies[node.tech]
-			for _, parent in ipairs(technology.prerequisites or {}) do
-				if technologies[parent] then result[#result + 1] = {tech = parent} end
-			end
-			for _, ingredient in ipairs(technology.unit and technology.unit.ingredients or {}) do
-				result[#result + 1] = {pack = ingredient[1] or ingredient.name}
-			end
-		else
-			for _, unlocker in ipairs(unlock_index[node.pack] or {}) do
-				result[#result + 1] = {tech = unlocker}
-			end
-			for _, ingredient in ipairs(recipe_ingredients(node.pack)) do
-				local name = ingredient.name or ingredient[1]
-				if packs[name] then result[#result + 1] = {pack = name} end
-			end
-		end
-		return result
-	end
+	local tech_names, pack_names = {}, {}
+	for name in pairs(technologies) do tech_names[#tech_names + 1] = name end
+	for name in pairs(packs) do pack_names[#pack_names + 1] = name end
+	table.sort(tech_names)
+	table.sort(pack_names)
 
-	local function reaches_pack(start, wanted)
-		local seen, stack = {}, {{pack = start}}
-		while #stack > 0 do
-			local node = table.remove(stack)
-			local key = node.tech and ("t:" .. node.tech) or ("p:" .. node.pack)
-			if node.pack == wanted then return true end
-			if not seen[key] then
-				seen[key] = true
-				for _, next_node in ipairs(successors(node)) do
-					stack[#stack + 1] = next_node
+	-- Everything that cannot be had before the card: the technologies and packs that need it, with the
+	-- first reason found for each. A technology waits for all of its prerequisites and for every pack in
+	-- its price. A pack waits for the packs in its recipe and, when its recipe is not enabled from the
+	-- start, for the research that unlocks it: the first of several unlocking technologies is enough, so
+	-- the pack waits only if each of them waits (Foliax unlocks steel plate, but so does steel processing).
+	local function needing(card)
+		local tech_why, pack_why = {}, {[card] = true}
+		local grew = true
+		while grew do
+			grew = false
+			for _, name in ipairs(tech_names) do
+				if not tech_why[name] then
+					local technology = technologies[name]
+					local cause
+					for _, parent in ipairs(technology.prerequisites or {}) do
+						if tech_why[parent] then cause = {tech = parent} break end
+					end
+					for _, ingredient in ipairs(not cause and technology.unit and technology.unit.ingredients or {}) do
+						local pack = ingredient[1] or ingredient.name
+						if pack_why[pack] then cause = {pack = pack} break end
+					end
+					if cause then
+						tech_why[name] = cause
+						grew = true
+					end
+				end
+			end
+			for _, pack in ipairs(pack_names) do
+				if not pack_why[pack] then
+					local cause
+					local recipe = data.raw.recipe and data.raw.recipe[pack]
+					local unlockers = unlock_index[pack]
+					if unlockers and #unlockers > 0 and (not recipe or recipe.enabled == false) then
+						local all = true
+						for _, unlocker in ipairs(unlockers) do
+							if not tech_why[unlocker] then all = false break end
+						end
+						if all then cause = {tech = unlockers[1]} end
+					end
+					for _, ingredient in ipairs(not cause and recipe_ingredients(pack) or {}) do
+						local name = ingredient.name or ingredient[1]
+						if packs[name] and pack_why[name] then cause = {pack = name} break end
+					end
+					if cause then
+						pack_why[pack] = cause
+						grew = true
+					end
 				end
 			end
 		end
-		return false
+		return tech_why, pack_why
 	end
 
+	-- "start -> ... -> card": what the pack waits for, step by step.
+	local function chain_of(pack, tech_why, pack_why)
+		local steps, node = {pack}, pack_why[pack]
+		while node ~= true do
+			local name = node.tech or node.pack
+			steps[#steps + 1] = name
+			node = node.tech and tech_why[name] or pack_why[name]
+		end
+		return table.concat(steps, " -> ")
+	end
+
+	local reported = {}
 	local changed = true
 	while changed do
 		changed = false
 		for _, card in ipairs(system_cards) do
 			local recipe = data.raw.recipe and data.raw.recipe[card]
 			local ingredients = recipe and recipe.ingredients or {}
+			local tech_why, pack_why
+			local looping = {}
 			for index = #ingredients, 1, -1 do
 				local pack = (ingredients[index] or {}).name
-				if packs[pack] and pack ~= card and reaches_pack(pack, card) then
-					table.remove(ingredients, index)
-					log("[Razi Protocol/system-gates] " .. card .. " no longer needs " .. pack
-						.. ": its research needs " .. card)
-					changed = true
+				if packs[pack] and pack ~= card then
+					if not pack_why then tech_why, pack_why = needing(card) end
+					if pack_why[pack] then
+						looping[#looping + 1] = {index = index, pack = pack, chain = chain_of(pack, tech_why, pack_why)}
+					end
+				end
+			end
+			if #looping > 0 then
+				if #ingredients - #looping < min_card_ingredients then
+					for _, entry in ipairs(looping) do
+						local key = card .. "/" .. entry.pack
+						if not reported[key] then
+							reported[key] = true
+							log("[Razi Protocol/system-gates] ERROR: " .. card .. " needs " .. entry.pack
+								.. " but its research needs " .. card .. " (" .. entry.chain
+								.. "); kept, because dropping it would leave " .. card .. " with "
+								.. (#ingredients - #looping) .. " of " .. #ingredients .. " ingredients")
+						end
+					end
+				else
+					for _, entry in ipairs(looping) do
+						table.remove(ingredients, entry.index)
+						log("[Razi Protocol/system-gates] " .. card .. " no longer needs " .. entry.pack
+							.. ": its research needs " .. card .. " (" .. entry.chain .. ")")
+						changed = true
+					end
 				end
 			end
 		end
