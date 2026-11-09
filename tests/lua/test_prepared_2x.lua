@@ -33,7 +33,7 @@ end
 ---@return any
 local function world()
 	local messages, spilled, created = {}, {}, {}
-	local force = {name = "player", valid = true, platforms = {},
+	local force = {name = "player", valid = true, platforms = {}, technologies = {},
 		print = function(message) messages[#messages + 1] = message end}
 	local admin_messages = {}
 	---@type any
@@ -90,8 +90,12 @@ local function add_platform(w, index, name, location)
 	return platform
 end
 
-local function prepared(labs, platforms)
-	return {version = 1, tick = 5, labs = labs or {}, platforms = platforms or {}}
+local function prepared(labs, platforms, infinite)
+	local data = {version = 1, tick = 5, labs = labs or {}, platforms = platforms or {}}
+	if infinite then
+		data.infinite = {version = 1, technologies = infinite}
+	end
+	return data
 end
 
 local function update(from)
@@ -230,6 +234,71 @@ do
 	M.on_configuration_changed(update("2.1.6"))
 	check(#w.admin_messages == 1 and w.admin_messages[1][1] == "razi-prepared-2x.not-prepared", "notice to admins")
 	check(#w.messages == 0 and #w.created == 0, "nothing else happens")
+end
+
+-- Infinite technologies: a level above the fifth goes to the continuation with its progress, the rest is left alone.
+do
+	local function technology(name, level, max_level)
+		return {name = name, level = level, saved_progress = 0, prototype = {max_level = max_level or 4294967295}}
+	end
+	local w = world()
+	local techs = w.force.technologies
+	-- cut to level 5 by the game, researched; the continuation is where the level goes
+	techs["agriculture-productivity"] = technology("agriculture-productivity", 5, 5)
+	techs["razi-cards-agriculture-productivity-6"] = technology("razi-cards-agriculture-productivity-6", 6)
+	-- starts at 4: the top is 8, the continuation is named 9
+	techs["electric-weapons-damage-4"] = technology("electric-weapons-damage-4", 8, 8)
+	techs["razi-cards-electric-weapons-damage-9"] = technology("razi-cards-electric-weapons-damage-9", 9)
+	techs["axe-mining-speed"] = technology("axe-mining-speed", 3, 5)
+	techs["razi-cards-axe-mining-speed-6"] = technology("razi-cards-axe-mining-speed-6", 6)
+	-- exactly at the top (level 5 of 1): nothing above it
+	techs["battery-productivity"] = technology("battery-productivity", 5, 5)
+	techs["razi-cards-battery-productivity-6"] = technology("razi-cards-battery-productivity-6", 6)
+	-- the setting was off in 3.0: still infinite, keeps its level, no message of failure
+	techs["oil-processing-productivity"] = technology("oil-processing-productivity", 5)
+	-- a continuation that does not exist
+	techs["mining-productivity"] = technology("mining-productivity", 5, 5)
+	storage.razi_prepare_3 = prepared({}, {}, {
+		{force = "player", name = "agriculture-productivity", level = 12, researched = false, progress = 0.25},
+		{force = "player", name = "electric-weapons-damage-4", level = 10, researched = false, progress = 0},
+		{force = "player", name = "axe-mining-speed", level = 3, researched = false, progress = 0.9},
+		{force = "player", name = "battery-productivity", level = 5, researched = false, progress = 0.5},
+		{force = "player", name = "oil-processing-productivity", level = 9, researched = false, progress = 0},
+		{force = "player", name = "mining-productivity", level = 7, researched = false, progress = 0},
+		{force = "gone", name = "agriculture-productivity", level = 12, researched = false, progress = 0}
+	})
+	M.on_configuration_changed(update("2.1.6"))
+	check(techs["razi-cards-agriculture-productivity-6"].level == 12, "level goes to the continuation")
+	check(techs["razi-cards-agriculture-productivity-6"].saved_progress == 0.25, "progress goes to the continuation")
+	check(techs["razi-cards-electric-weapons-damage-9"].level == 10, "a research that starts at 4 counts from its own first level")
+	check(techs["razi-cards-axe-mining-speed-6"].level == 6 and techs["razi-cards-axe-mining-speed-6"].saved_progress == 0,
+		"a level inside the first five leaves the continuation alone")
+	check(techs["razi-cards-battery-productivity-6"].level == 6 and techs["razi-cards-battery-productivity-6"].saved_progress == 0,
+		"the top of the first five leaves the continuation alone")
+	check(techs["oil-processing-productivity"].level == 5, "the original is not touched")
+	check(storage.razi_prepare_3 == nil, "record taken")
+	local told
+	for _, message in ipairs(w.messages) do
+		if message[1] == "razi-prepared-2x.infinite" then
+			told = message
+		end
+	end
+	check(told and told[2] == 2 and told[3] == 1, "the force is told: 2 continued, 1 without continuation")
+end
+
+-- A save prepared before the levels were recorded: the rest is restored, the lack is logged.
+do
+	local w = world()
+	w.force.technologies["razi-cards-x-6"] = {name = "razi-cards-x-6", level = 6, saved_progress = 0, prototype = {max_level = 4294967295}}
+	storage.razi_prepare_3 = prepared()
+	M.on_configuration_changed(update("2.1.6"))
+	check(w.force.technologies["razi-cards-x-6"].level == 6, "nothing to restore")
+	check(storage.razi_prepare_3 == nil, "record taken")
+	local found = false
+	for _, line in ipairs(logged) do
+		found = found or line:find("no levels of infinite technologies", 1, true) ~= nil
+	end
+	check(found, "the lack is logged")
 end
 
 print("test_prepared_2x: ok")

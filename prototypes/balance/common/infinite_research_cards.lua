@@ -14,32 +14,24 @@
 -- the repairs of other mods and the cards of the packs (razi-auto-tech-cards): a repair of a research that was copied
 -- before it would not reach the copy. With the setting razi-infinite-research-cards off nothing changes.
 local Graph = require("__razi_lib__/lib/technology_graph")
+local Names = require("lib.infinite_research_names")
 local Labs = require("prototypes.industry.cards.system_card_laboratories")
 
 local infinite_research_cards = {}
 
 infinite_research_cards.setting = "razi-infinite-research-cards"
 -- Levels a research keeps on the packs, counted from its first.
-infinite_research_cards.span = 5
+infinite_research_cards.span = Names.span
 
 -- The icon of the card sits at the lower right of the icon of the research (pixels of a 256 icon).
 local label_size = 96
 local label_shift = 70
 
 -- "foo-3" is the research "foo" from level 3 on, a name without a number starts at level 1.
-function infinite_research_cards.split(name)
-	local base, level = name:match("^(.-)%-(%d+)$")
-	if base and base ~= "" then
-		return base, tonumber(level)
-	end
-	return name, 1
-end
+infinite_research_cards.split = Names.split
 
 -- The name of the research that goes on after the five levels of `name`, which the save keeps from then on.
-function infinite_research_cards.continuation(name)
-	local base, level = infinite_research_cards.split(name)
-	return "razi-cards-" .. base .. "-" .. level + infinite_research_cards.span
-end
+infinite_research_cards.continuation = Names.continuation
 
 local function ingredient_name(entry)
 	return entry.name or entry[1]

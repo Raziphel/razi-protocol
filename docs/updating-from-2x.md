@@ -5,7 +5,7 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
 ## Before you update
 
 1. Update Razi Protocol to the newest 2.x version and load your save.
-2. Type `/razi-prepare-3` in the chat and save the game. You must be an admin; in single player you always are. Do this right before updating: the command takes the system tech cards out of your labs, and the update puts them back.
+2. Type `/razi-prepare-3` in the chat and save the game. You must be an admin; in single player you always are. Do this right before updating: the command takes the system tech cards out of your labs, and the update puts them back. It also writes down the level of every infinite technology (see below).
 3. Turn off Asteroid Belt, Better Asteroid Belt and Space Route Overlay if you use them: 3.0 doesn't work with them.
 4. Get your space platforms ready. Asteroids on dangerous routes can now be epic or legendary and hit much harder. Strengthen the defenses, or turn off Quality asteroids in the mod settings.
 5. Take Rigor modules out of machines that make recipes from other mods: they no longer work there.
@@ -21,6 +21,7 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
 - **Routes.** Razi has its own route network now. Many old routes are gone, and most trips are a bit longer.
 - **Labs.** Each lab accepts only some of the system tech cards. Cards a lab no longer accepts are put into a chest next to it.
 - **New planets on the main path.** Igrys, Foliax, Obsidiax, Carna, Velora, Khemia, Arcanyx, Nulla, Athos and Balack are now part of the game. Before you can go to the next star system, you research the planets of the current one and one or two partnership technologies (recipes that combine goods from several planets).
+- **Infinite technologies.** Infinite technologies that cost packs of a star system (such as Asteroid productivity or Agriculture productivity) keep their first five levels on packs. From the sixth level they go on as a new technology, `razi-cards-…`, that costs one system card per unit instead of the packs (see the setting "Infinite research on system cards"). The game cuts the level of the old technology to the fifth when it loads the save, so the levels above the fifth are kept only by `/razi-prepare-3`: the update sets the new technology to your old level and progress, and the old technology stays researched. **Without the command the levels above the fifth are lost**, and you continue from the sixth.
 - **End game.** The transceiver takes more research than before.
 - **Researched technologies** stay researched when 3.0 gives them a prerequisite you have not researched, for example the discovery of a new planet. The technology tree shows the missing prerequisite; you research it only if you want a technology that follows it.
 - **Research in progress** keeps its percentage.
@@ -44,4 +45,4 @@ Your 2.x save keeps working in 3.0. You don't need a new map, and nothing you ha
 
 ## If you forgot `/razi-prepare-3`
 
-The save still loads. System tech cards in labs that no longer accept them are lost, and platforms that were flying a removed route return to Nauvis.
+The save still loads. System tech cards in labs that no longer accept them are lost, platforms that were flying a removed route return to Nauvis, and infinite technologies that go on in system cards are back at their fifth level.

@@ -1,9 +1,14 @@
 -- Takes back what /razi-prepare-3 saved in a 2.x save: the system tech cards
--- that were in laboratories and the positions of space platforms.
+-- that were in laboratories, the positions of space platforms and the levels of infinite technologies.
 -- Runs once, on the update from 2.x to 3.x, and only if the command was used.
 local M = {}
 
+local Names = require("lib.infinite_research_names")
+
 local VERSION = 1
+local INFINITE_VERSION = 1
+-- The game's max_level of a technology with no end (uint32).
+local INFINITE_LEVEL = 4294967295
 local CHEST = "steel-chest"
 
 local function is_update_from_2x(event)
@@ -154,6 +159,48 @@ local function restore_platform(record, reports)
 	report.moved = report.moved + 1
 end
 
+-- 3.0 cuts an infinite technology that goes on in a card technology (balance/common/infinite_research_cards.lua) to its
+-- first five levels, and the game cuts a saved level to the new top before any script runs; the level saved by
+-- /razi-prepare-3 goes to the continuation, the cut technology stays researched.
+local function restore_infinite(record, reports)
+	local report = reports[record.force]
+	if not report then
+		report = {levels = 0, unsolved = 0}
+		reports[record.force] = report
+	end
+	local force = game.forces[record.force]
+	local _, first = Names.split(record.name)
+	if not force or type(record.level) ~= "number" or record.level <= first + Names.span - 1 then
+		return
+	end
+
+	local continuation = force.technologies[Names.continuation(record.name)]
+	if not continuation then
+		-- With razi-infinite-research-cards off the technology is still infinite and keeps the level itself.
+		local original = force.technologies[record.name]
+		if original and original.prototype.max_level >= INFINITE_LEVEL then
+			return
+		end
+		report.unsolved = report.unsolved + 1
+		log("razi-prepared-2x: no " .. Names.continuation(record.name) .. " for " .. record.name .. " at level " .. record.level)
+		return
+	end
+	local ok, problem = pcall(function()
+		if continuation.level < record.level then
+			continuation.level = record.level
+		end
+		if type(record.progress) == "number" and record.progress > 0 then
+			continuation.saved_progress = math.min(record.progress, 0.9999)
+		end
+	end)
+	if ok then
+		report.levels = report.levels + 1
+	else
+		report.unsolved = report.unsolved + 1
+		log("razi-prepared-2x: " .. continuation.name .. " did not take level " .. record.level .. ": " .. tostring(problem))
+	end
+end
+
 function M.on_configuration_changed(event)
 	if not is_update_from_2x(event) then
 		return
@@ -177,7 +224,25 @@ function M.on_configuration_changed(event)
 	for _, record in ipairs(data.platforms or {}) do
 		restore_platform(record, reports)
 	end
+	local infinite_reports = {}
+	local infinite = data.infinite
+	if type(infinite) == "table" and infinite.version == INFINITE_VERSION then
+		for _, record in ipairs(infinite.technologies or {}) do
+			restore_infinite(record, infinite_reports)
+		end
+	else
+		log("razi-prepared-2x: no levels of infinite technologies in the save, levels above the fifth are gone")
+	end
 	storage.razi_prepare_3 = nil
+
+	for name, report in pairs(infinite_reports) do
+		local force = game.forces[name]
+		if force and (report.levels > 0 or report.unsolved > 0) then
+			force.print({"razi-prepared-2x.infinite", report.levels, report.unsolved})
+		end
+		log(string.format("razi-prepared-2x: force %s: %d infinite technologies continued, %d not found",
+			name, report.levels, report.unsolved))
+	end
 
 	for name, report in pairs(reports) do
 		local force = game.forces[name]
