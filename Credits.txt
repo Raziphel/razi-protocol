@@ -53,6 +53,7 @@ These mods inspired or provide the enemy and hazard variety that Razi Protocol r
 - ArmouredBiters
 - Cold_biters
 - Electric_flying_enemies
+- Fulgora_Replicators (Klaudia)
 - Explosive_biters
 - Toxic_biters
 - celestial-weather
