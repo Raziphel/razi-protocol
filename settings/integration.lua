@@ -30,6 +30,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-infinite-research-cards",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-d2[infinite-research-cards]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-stage-aquilo-breakthroughs",
 		setting_type = "startup",
 		default_value = true,
