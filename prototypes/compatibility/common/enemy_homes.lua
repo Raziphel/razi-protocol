@@ -10,14 +10,20 @@ local difficulty = require("lib.difficulty.presets")
 -- add up:
 --   none    no home (Easy): the enemy mods' own placement on Fulgora and Aquilo is switched off too
 --   normal  Hyarion (Armoured), Arig (Arachnids), Moshine (Explosive), Cubium (Toxic), Frozeta (Cold),
---           Fulgora and Ribbonia (Electric)
---   wide    + Panglia (Armoured), Athos (Arachnids), Cubium (Explosive), Paracelsin (Cold)
+--           Fulgora (Electric, without Fulgora Replicators) and Ribbonia (Electric)
+--   wide    + Panglia (Armoured), Athos (Arachnids), Cubium (Explosive), Paracelsin (Cold),
+--           Corrundum (Electric, with Fulgora Replicators)
 --   widest  + Crucible (Armoured and Arachnids)
 -- `auto` (the default) follows the difficulty level; the level sets the step itself, so `auto` is only seen on Normal
 -- and Custom and means `normal`.
 --
--- `native` homes are placed by the enemy mod itself, so Razi Protocol only counts them as homes. `native_planets`
--- are planets where the mod places itself although they are not a home; they are only switched off without homes.
+-- A home with `without_mod` is a home only while that mod is not installed, one with `with_mod` only while it is
+-- (Electric flying enemies leave Fulgora for Corrundum when Fulgora Replicators holds Fulgora's storage islands).
+--
+-- `native` homes are placed by the enemy mod itself, so Razi Protocol only counts them as homes; when a native home is
+-- not a home (the step is none, or its `without_mod` mod is installed) the mod's nests there are switched off.
+-- `native_planets` are planets where the mod places itself although they are not a home; they are only switched off
+-- without homes.
 -- `control` is the autoplace control the family's nests use; Armoured, Toxic and Arachnids share the vanilla
 -- "enemy-base" one, so every planet with that control (Nauvis, Terrapalus and each home of another family) is a place
 -- where their nests could turn up; `exclude_from_other_planets` switches them off there.
@@ -142,6 +148,12 @@ local planet_tiles = {
 		"sand-2",
 		"sand-3"
 	},
+	-- Corrundum's land: the volcanic soil. Its petroleum tile is oil and holds no nest.
+	corrundum = {
+		"volcanic-ash-soil",
+		"volcanic-soil-dark",
+		"volcanic-soil-light"
+	},
 	crucible = {
 		"planet-crucible-dirt-1",
 		"planet-crucible-dirt-2",
@@ -182,7 +194,12 @@ local families = {
 	},
 	electric = {
 		control = "electric_enemies",
-		homes = {{planet = "fulgora", step = steps.normal, native = true}, {planet = "ribbonia", step = steps.normal}}
+		-- Fulgora Replicators holds Fulgora's storage islands, so the Electric nests move from Fulgora to Corrundum.
+		homes = {
+			{planet = "fulgora", step = steps.normal, native = true, without_mod = "Fulgora_Replicators"},
+			{planet = "ribbonia", step = steps.normal},
+			{planet = "corrundum", step = steps.wide, with_mod = "Fulgora_Replicators"}
+		}
 	}
 }
 
@@ -205,11 +222,13 @@ local function current_step()
 	return steps[enemy_homes.habitat()]
 end
 
--- The homes of the family at a step, in the order of the list.
+-- The homes of the family at a step, in the order of the list. A home bound to a mod is counted only as the mod says.
 local function homes_at(family, step)
 	local result = {}
 	for _, home in ipairs(family and family.homes or {}) do
-		if home.step <= step then
+		local allowed = (home.without_mod == nil or not mods[home.without_mod])
+			and (home.with_mod == nil or mods[home.with_mod])
+		if allowed and home.step <= step then
 			result[#result + 1] = home
 		end
 	end
@@ -262,22 +281,29 @@ function enemy_homes.tiles(family_name)
 	return result
 end
 
--- Without homes the enemy mods that place themselves on a planet (Electric on Fulgora, Cold on Aquilo) are switched
--- off there too; with any step the planet is left to the mod.
+-- The enemy mods that place themselves on a planet are switched off there when the planet is not a home: a native
+-- home that is none at this step or that Fulgora Replicators took (Electric on Fulgora), and, only without homes, the
+-- planets the mod uses although they are no home (Cold on Aquilo). A native planet that is a home is left to the mod.
 function enemy_homes.switch_off_native(family_name, entity_names)
 	local family = families[family_name]
-	if not family or current_step() ~= steps.none then
+	if not family then
 		return
 	end
 
 	local planets = {}
+	local homes = {}
+	for _, home in ipairs(homes_at(family, current_step())) do
+		homes[home.planet] = true
+	end
 	for _, home in ipairs(family.homes) do
-		if home.native then
+		if home.native and not homes[home.planet] then
 			planets[#planets + 1] = home.planet
 		end
 	end
-	for _, planet_name in ipairs(family.native_planets or {}) do
-		planets[#planets + 1] = planet_name
+	if current_step() == steps.none then
+		for _, planet_name in ipairs(family.native_planets or {}) do
+			planets[#planets + 1] = planet_name
+		end
 	end
 
 	for _, planet_name in ipairs(planets) do

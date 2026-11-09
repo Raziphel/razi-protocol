@@ -64,6 +64,11 @@ local function extend_tile_restriction(spawner)
 	for _, tile_name in pairs(enemy_autoplace.existing_tiles(electric_enemy_tiles)) do
 		add_unique(spawner.autoplace.tile_restriction, tile_name)
 	end
+
+	-- The land of the homes that are not the mod's own (Corrundum with Fulgora Replicators).
+	for _, tile_name in ipairs(enemy_homes.tiles("electric")) do
+		add_unique(spawner.autoplace.tile_restriction, tile_name)
+	end
 end
 
 local function collect_electric_spawners()
@@ -103,7 +108,8 @@ for _, planet_name in pairs(enemy_homes.planets("electric")) do
 	add_electric_enemies_to_planet(planet_name, electric_spawners)
 end
 
--- Without homes (Easy) the Electric mod's own nests on Fulgora are switched off as well.
+-- The Electric mod's own nests on Fulgora are switched off when Fulgora is no home: without homes (Easy), and with
+-- Fulgora Replicators on every step.
 local placed_names = {}
 for entity_name in pairs(electric_spawners) do
 	placed_names[#placed_names + 1] = entity_name

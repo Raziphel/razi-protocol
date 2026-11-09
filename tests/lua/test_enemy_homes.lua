@@ -30,7 +30,8 @@ rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 
 local module_names = {
 	"compatibility.common.enemy_autoplace", "compatibility.common.enemy_homes", "compatibility.common.enemy_planet_pollution", "compatibility.ArmouredBiters.armoured_biters", "compatibility.Arachnids_enemy.arachnids_enemy",
-	"compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies"
+	"compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies",
+	"compatibility.Fulgora_Replicators.fulgora_replicators"
 }
 
 local all_mods = {
@@ -92,7 +93,8 @@ local function setup(active_mods, startup)
 	local tiles = {}
 	for _, name in ipairs({"hyarion-soil-dark", "arig-sand", "moshine-rock", "cubium-folds", "snow-flat", "ice-rough", "fulgoran-dust",
 		"dirt-1", "sand-1", "panglia-volcanic-soil-dark", "panglia-midland-turquoise-bark", "planet-crucible-dirt-1", "dust-flat-vesta",
-		"ice-rough-vesta", "volcanic-soil-dark", "obsidiax-tile", "panglia-volcanic-cracks", "volcanic-cracks"}) do
+		"ice-rough-vesta", "volcanic-soil-dark", "obsidiax-tile", "panglia-volcanic-cracks", "volcanic-cracks",
+		"volcanic-soil-light", "volcanic-ash-soil", "petroleum-tile"}) do
 		tiles[name] = {type = "tile", name = name}
 	end
 	tiles["volcanic-soil-dark"].absorptions_per_second = {pollution = 0.00003}
@@ -119,10 +121,21 @@ local function setup(active_mods, startup)
 			quiet = planet({["enemy-base"] = {frequency = 0, size = 0, richness = 0}}),
 		},
 	}})
+
+	-- Fulgora Replicators: its control on Fulgora (set in its data stage) and its two spawners, which place themselves
+	if active_mods.Fulgora_Replicators then
+		local fulgora_settings = data.raw.planet.fulgora.map_gen_settings --[[@as table]]
+		fulgora_settings.autoplace_controls.replicator_nests = {}
+		for _, name in ipairs({"replicator-crawler-spawner", "replicator-carrier-spawner"}) do
+			data.raw["unit-spawner"][name] = spawner(name, "replicator_nests")
+			data.raw["unit-spawner"][name].autoplace.tile_restriction = {"fulgoran-dust"}
+		end
+	end
 end
 
 local function run_all()
-	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters"}) do
+	for _, name in ipairs({"compatibility.Arachnids_enemy.arachnids_enemy", "compatibility.ArmouredBiters.armoured_biters", "compatibility.Cold_biters.cold_biters", "compatibility.Electric_flying_enemies.electric_flying_enemies", "compatibility.Explosive_biters.explosive_biters", "compatibility.Toxic_biters.toxic_biters",
+		"compatibility.Fulgora_Replicators.fulgora_replicators"}) do
 		require("prototypes." .. name)
 	end
 	require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
@@ -418,6 +431,127 @@ setup_with_replicator({["razi-difficulty-preset"] = {value = "custom"}, ["razi-e
 check(zeroed("fulgora", nest.electric) and zeroed("fulgora", walker), "no homes, the two electric nests are off on Fulgora")
 check(entity_setting("fulgora", replicator) == nil, "no homes, a foreign spawner stays on Fulgora")
 check(entity_setting("ribbonia", replicator) == nil, "no homes, a foreign spawner is not on Ribbonia")
+
+-- Fulgora Replicators is optional. Electric keeps Ribbonia on every installed step; Fulgora is its home only without
+-- Replicators, and Corrundum is its home on the wide steps only with Replicators. With Replicators the Electric nests
+-- of Fulgora are off on every step, and the spawners of Replicators are never placed, moved or switched off.
+local with_replicators = {}
+for key, value in pairs(all_mods) do
+	with_replicators[key] = value
+end
+with_replicators.Fulgora_Replicators = "2.1.2"
+
+local replicator_names = {"replicator-crawler-spawner", "replicator-carrier-spawner"}
+local volcanic_tiles = {"volcanic-ash-soil", "volcanic-soil-dark", "volcanic-soil-light"}
+
+local function custom(step_name)
+	return {["razi-difficulty-preset"] = {value = "custom"}, ["razi-enemy-habitats"] = {value = step_name}}
+end
+
+local electric_homes = {
+	[false] = {none = {}, normal = {"ribbonia"}, wide = {"ribbonia"}, widest = {"ribbonia"}},
+	[true] = {none = {}, normal = {"ribbonia"}, wide = {"ribbonia", "corrundum"}, widest = {"ribbonia", "corrundum"}}
+}
+
+local function check_electric(label, active_mods, startup, step_name)
+	local replicators = active_mods.Fulgora_Replicators ~= nil
+	setup(active_mods, startup)
+	local restrictions = {}
+	for _, name in ipairs(replicator_names) do
+		restrictions[name] = replicators and data.raw["unit-spawner"][name].autoplace.tile_restriction
+	end
+	run_all()
+
+	local homes = {}
+	for _, planet_name in ipairs(electric_homes[replicators][step_name]) do
+		homes[planet_name] = true
+	end
+	for planet_name in pairs(data.raw.planet) do
+		check((placed(planet_name, nest.electric) and placed(planet_name, walker)) == (homes[planet_name] == true),
+			label .. ": electric nests on " .. planet_name .. ": expected " .. tostring(homes[planet_name] == true))
+		for _, name in ipairs(replicator_names) do
+			check(entity_setting(planet_name, name) == nil, label .. ": " .. name .. " is not touched on " .. planet_name)
+		end
+	end
+
+	-- Fulgora: switched off with Replicators on every step, without them only with no homes
+	if replicators or step_name == "none" then
+		check(zeroed("fulgora", nest.electric) and zeroed("fulgora", walker), label .. ": the electric nests are off on Fulgora")
+	else
+		check(entity_setting("fulgora", nest.electric) == nil and entity_setting("fulgora", walker) == nil,
+			label .. ": the electric nests stay the enemy mod's on Fulgora")
+	end
+	check(map_gen("fulgora").autoplace_controls.electric_enemies ~= nil, label .. ": Fulgora keeps its control")
+
+	-- Corrundum is set up like any other home, and left alone where it is none
+	if homes.corrundum then
+		check(map_gen("corrundum").autoplace_controls.electric_enemies ~= nil, label .. ": Corrundum has the electric control")
+		check(data.raw.planet.corrundum.pollutant_type == "pollution", label .. ": Corrundum carries pollution")
+		check(zeroed("corrundum", "biter-spawner"), label .. ": the vanilla biters are off on Corrundum")
+	else
+		check(next(map_gen("corrundum").autoplace_controls) == nil and untouched("corrundum") and data.raw.planet.corrundum.pollutant_type == nil,
+			label .. ": Corrundum is left alone")
+	end
+
+	-- The nest stands on the land of Corrundum's volcanic soil, not on its oil, and the tiles of its other homes stay
+	local restriction = restricted_to(data.raw["unit-spawner"][nest.electric])
+	for _, tile_name in ipairs(volcanic_tiles) do
+		check((restriction[tile_name] == true) == (homes.corrundum == true),
+			label .. ": the electric nest on " .. tile_name .. ": expected " .. tostring(homes.corrundum == true))
+	end
+	check(not restriction["petroleum-tile"], label .. ": no electric nests on Corrundum's oil")
+	check(restriction["fulgoran-dust"] and restriction["dirt-1"], label .. ": the electric nest keeps its tiles")
+
+	for _, name in ipairs(replicator_names) do
+		local current = replicators and data.raw["unit-spawner"][name].autoplace.tile_restriction
+		check(current == restrictions[name] and (not current or (#current == 1 and current[1] == "fulgoran-dust")),
+			label .. ": " .. name .. " keeps its tile restriction")
+	end
+
+	-- replicator_nests: off on Fulgora with no homes, left to the player's map settings otherwise
+	local control = map_gen("fulgora").autoplace_controls.replicator_nests
+	if replicators and step_name == "none" then
+		check(type(control) == "table" and control.frequency == 0 and control.size == 0, label .. ": replicator_nests is off on Fulgora")
+	elseif replicators then
+		check(type(control) == "table" and next(control) == nil, label .. ": replicator_nests stays as the mod made it")
+	else
+		check(control == nil, label .. ": no replicator_nests control without Replicators")
+	end
+end
+
+for _, step_name in ipairs({"none", "normal", "wide", "widest"}) do
+	check_electric("no replicators, " .. step_name, all_mods, custom(step_name), step_name)
+	check_electric("replicators, " .. step_name, with_replicators, custom(step_name), step_name)
+end
+check_electric("replicators, hard", with_replicators, {["razi-difficulty-preset"] = {value = "hard"}, ["razi-enemy-habitats"] = {value = "auto"}}, "wide")
+check_electric("replicators, easy", with_replicators, {["razi-difficulty-preset"] = {value = "easy"}, ["razi-enemy-habitats"] = {value = "auto"}}, "none")
+check_electric("replicators, easy with wide homes", with_replicators, {["razi-difficulty-preset"] = {value = "easy"}, ["razi-enemy-habitats"] = {value = "wide"}}, "wide")
+check_electric("replicators, no settings", with_replicators, {}, "normal")
+
+-- Cold's Aquilo is not Electric's business: with Replicators it is still switched off only without homes
+setup(with_replicators, custom("normal"))
+run_all()
+check(map_gen("aquilo").autoplace_settings == nil, "replicators, Aquilo is left alone on the normal step")
+setup(with_replicators, custom("none"))
+run_all()
+check(zeroed("aquilo", nest.cold), "replicators, no homes, Aquilo's cold nests are off")
+
+-- Enemy routing off: Replicators' control stays too
+setup(with_replicators, {["razi-enable-enemy-routing"] = {value = false}, ["razi-difficulty-preset"] = {value = "custom"}, ["razi-enemy-habitats"] = {value = "none"}})
+run_all()
+check(next(map_gen("fulgora").autoplace_controls.replicator_nests) == nil, "routing off, replicator_nests untouched")
+check(untouched("fulgora") and untouched("corrundum"), "routing off, Fulgora and Corrundum untouched")
+
+-- Replicators without the Electric mod: only its control is touched
+local replicators_only = {Fulgora_Replicators = "2.1.2"}
+setup(replicators_only, custom("none"))
+run_all()
+check(map_gen("fulgora").autoplace_controls.replicator_nests.size == 0, "no homes, replicator_nests is off without Electric too")
+check(untouched("fulgora") and untouched("corrundum"), "Replicators alone, no entity entries")
+setup(replicators_only, custom("wide"))
+run_all()
+check(next(map_gen("fulgora").autoplace_controls.replicator_nests) == nil, "Replicators alone, wide, replicator_nests untouched")
+check(untouched("corrundum"), "Replicators alone, Corrundum is no electric home")
 
 rawset(_G, "mods", nil)
 rawset(_G, "log", nil)
