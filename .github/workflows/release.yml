@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Check the mod
-        uses: GreenTech-Solutions/factorio-mod-tools@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
+        uses: GreenTech-Solutions/factorio-mod-tools@0111ec0ade0e303274bc7352f345f3f3d1f6ae90 # v1.0.0 + Lua mirrors (#1)
       # Lua 5.2 comes from the toolchain of the check above.
       - name: Checkout RaziLib
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -52,7 +52,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Release
-        uses: GreenTech-Solutions/factorio-mod-tools/release@ada84cd6aa8d7219c6d9ee47f5b701ce9b3f2247 # v1.0.0
+        uses: GreenTech-Solutions/factorio-mod-tools/release@0111ec0ade0e303274bc7352f345f3f3d1f6ae90 # v1.0.0 + Lua mirrors (#1)
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           factorio-token: ${{ secrets.FACTORIO_TOKEN }}
