@@ -13,7 +13,7 @@ function M.data_final_fixes()
     localised_description={"technology-description.razi-convergence-witness-network"},
     icon=source.icon or "__base__/graphics/technology/radar.png",
     icons=source.icons and table.deepcopy(source.icons) or nil,
-    icon_size=source.icon_size or 256,
+    icon_size=source.icon and (source.icon_size or 64) or 256,
     prerequisites={"razi-convergence-synchronization"},
     unit=table.deepcopy(sync.unit),effects={},essential=true,
     order="zz[razi-convergence]-witness"
