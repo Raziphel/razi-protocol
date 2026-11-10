@@ -132,7 +132,8 @@ local function icons_with_label(technology, card)
 	if technology.icons then
 		icons = table.deepcopy(technology.icons)
 	else
-		icons = {{icon = technology.icon, icon_size = technology.icon_size or 256}}
+		-- icon_size defaults to 64 for a technology as well: Igrys gives its copper plate research the 64 icon of the item
+		icons = {{icon = technology.icon, icon_size = technology.icon_size or 64}}
 	end
 	for _, layer in ipairs(source.icons or {{icon = source.icon, icon_size = source.icon_size}}) do
 		local size = layer.icon_size or source.icon_size or 64
