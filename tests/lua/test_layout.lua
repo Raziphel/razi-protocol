@@ -24,7 +24,7 @@ local FOLDERS = {
 		ui = true, world = true,
 	},
 	scripts = {
-		asteroids = true, commands = true, compatibility = true, convergence = true, dyson = true, enemies = true,
+		asteroids = true, cargo = true, commands = true, compatibility = true, convergence = true, dyson = true, enemies = true,
 		events = true, journal = true, migration = true, projects = true, story = true,
 	},
 }

@@ -7,7 +7,8 @@ local story=require("lib.story")
 local platform_projects=require("scripts.projects.platform_projects")
 local great_projects=require("scripts.projects.great_projects")
 local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")
-local ids={"platform","voyage","skybridge","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}
+local fleet=require("scripts.cargo.fleet")
+local ids={"platform","voyage","skybridge","cargo","beltbreaker","dyson","array","transceiver","nexus-trials","ark","convergence"}
 -- The Archive Array project only recovers story records, so it exists only
 -- together with the story.
 local plain_ids={}
@@ -38,6 +39,11 @@ function M.visible(force,id)
     return platform_projects.snapshot(force).voyage
       and script and script.active_mods
       and script.active_mods["orbital-cannon"]~=nil or false
+  end
+  if id=="cargo" then
+    local tech=force and force.technologies
+      and force.technologies[fleet.technology]
+    return tech and tech.researched==true or false
   end
   if id=="beltbreaker" then
     local tech=force and force.technologies
@@ -103,6 +109,9 @@ M.project_ids=project_ids
 local function status_for(force,id,ships)
   if id=="skybridge" then return great_projects.skybridge(force)
   elseif id=="beltbreaker" then return great_projects.beltbreaker(force)
+  elseif id=="cargo" then
+    local facts=fleet.snapshot(force)
+    return facts.platforms-facts.unscheduled,facts.platforms,facts
   elseif id=="array" then return great_projects.array(force)
   elseif id=="nexus-trials" then
     local state=nexus_trials.snapshot(force)

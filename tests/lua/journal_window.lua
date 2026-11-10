@@ -182,7 +182,7 @@ function M.setup()
     p.view="archive"
     journal.draw(player);absorb()
     for _,id in ipairs({"platform","voyage","skybridge","beltbreaker","dyson",
-      "array","transceiver","nexus-trials","ark","convergence"}) do
+      "array","transceiver","nexus-trials","ark","convergence","cargo"}) do
       p.view="projects";p.project=id
       journal.draw(player);absorb()
     end

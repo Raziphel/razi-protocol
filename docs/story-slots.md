@@ -1140,13 +1140,14 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## project-context
 
-`locale/en/story-projects.cfg`, section `[razi-story-project]`: Projects, line under the project overview. 9 slots.
+`locale/en/story-projects.cfg`, section `[razi-story-project]`: Projects, line under the project overview. 10 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
 | story-projects.cfg `[razi-story-project]` | `platform` | Projects, line under the project overview; project `platform` | Projects tab, project `platform` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `voyage` | Projects, line under the project overview; project `voyage` | Projects tab, project `voyage` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `skybridge` | Projects, line under the project overview; project `skybridge` | Projects tab, project `skybridge` is open | 300 |
+| story-projects.cfg `[razi-story-project]` | `cargo` | Projects, line under the project overview; project `cargo` | Projects tab, project `cargo` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `beltbreaker` | Projects, line under the project overview; project `beltbreaker` | Projects tab, project `beltbreaker` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `dyson` | Projects, line under the project overview; project `dyson` | Projects tab, project `dyson` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `transceiver` | Projects, line under the project overview; project `transceiver` | Projects tab, project `transceiver` is open | 300 |
