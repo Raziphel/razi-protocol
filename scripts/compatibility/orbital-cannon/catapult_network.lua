@@ -21,9 +21,11 @@ local details={
   ["gleba:moshine"]={"nyxaris","bio-compute"},
   ["maraxsis:rubia"]={"vespera","subsea-supply"}
 }
-local function researched(force,world)
+function M.researched(force,world)
+  local technology_name=discovery[world]
+  if not technology_name then return false end
   local technology=force and force.technologies
-    and force.technologies[discovery[world]]
+    and force.technologies[technology_name]
   return technology and technology.researched==true or false
 end
 local function setting(name,group,default)
@@ -61,8 +63,8 @@ function M.snapshot(force,options)
       seen[key]=true
       if planet_protos[a] and planet_protos[b] then
         result.total=result.total+1
-        local from=researched(force,a)
-        local to=researched(force,b)
+        local from=M.researched(force,a)
+        local to=M.researched(force,b)
         if hide and not (from and to) then
           result.concealed=result.concealed+1
         else

@@ -7,6 +7,8 @@ local window = require("__razi-protocol__.scripts.journal.window")
 require("__razi-protocol__.scripts.journal.project_state")
 local projects = require("__razi-protocol__.scripts.journal.project_api")
 local great_projects = require("__razi-protocol__.scripts.projects.great_projects")
+local cargo_orders = require("__razi-protocol__.scripts.cargo.orders")
+local catapult_network = require("__razi-protocol__.scripts.compatibility.orbital-cannon.catapult_network")
 
 return function(runner)
 	-- A mock accepts any caption, style or sprite; the game refuses a wrong one.
@@ -45,6 +47,63 @@ return function(runner)
 		runner.assert(done <= total and facts.platforms == total, "cargo reports " .. done .. " of " .. total)
 		window.close(player)
 		technology.researched = was_researched
+	end)
+
+	runner.test("the Cargo Freight tab draws an empty and a saved list", function()
+		local player = game.players[1]
+		local technology = player.force.technologies["interplanetary-trade-logistics"]
+		local was_researched = technology and technology.researched
+		if technology then technology.researched = true end
+		local state = journal.preferences(player.index)
+		local old_view, old_project, old_tab = state.view, state.project, state.cargo_tab
+		local old_snapshot, old_researched = catapult_network.snapshot, catapult_network.researched
+		local snapshot = {
+			installed = true, enabled = true,
+			entries = {{ id = "test-corridor", source = "vulcanus", target = "castra", state = "researched" }}
+		}
+		catapult_network.snapshot = function()
+			return snapshot
+		end
+		catapult_network.researched = function()
+			return true
+		end
+		local function named(root, name)
+			if root.name == name then
+				return true
+			end
+			for _, child in pairs(root.children or {}) do
+				if named(child, name) then
+					return true
+				end
+			end
+			return false
+		end
+		local function draw()
+			state.view = "projects"
+			state.project = "cargo"
+			state.cargo_tab = "freight"
+			window.open(player)
+			return player.gui.screen[journal.FRAME]
+		end
+		cargo_orders.cleanup(player.index)
+		local frame = draw()
+		runner.assert(frame and named(frame, "razi_cargo_route_picker"), "Freight route picker is missing")
+		runner.assert(frame and named(frame, "razi_cargo_item"), "Freight item picker is missing")
+		runner.assert(frame and not named(frame, "razi_cargo_order_1"), "Empty Freight list drew an order")
+		window.close(player)
+		local ok = cargo_orders.select(player, snapshot, "vulcanus>castra")
+		ok = ok and cargo_orders.item_changed(player, "iron-plate")
+		ok = ok and cargo_orders.count_changed(player, 10)
+		ok = ok and cargo_orders.add(player, snapshot)
+		runner.assert(ok, "Could not add the substituted test corridor order")
+		frame = draw()
+		runner.assert(frame and named(frame, "razi_cargo_order_1"), "Saved Freight row is missing")
+		window.close(player)
+		cargo_orders.cleanup(player.index)
+		catapult_network.snapshot = old_snapshot
+		catapult_network.researched = old_researched
+		state.view, state.project, state.cargo_tab = old_view, old_project, old_tab
+		if technology then technology.researched = was_researched end
 	end)
 
 	-- The storyline is off in the shipped mod, so the Archive relay prototype does not exist, as in writer mode.

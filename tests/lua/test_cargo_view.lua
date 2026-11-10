@@ -10,11 +10,24 @@ end
 
 local snapshots = 0
 local network
+local desk_renders=0
+local desk_snapshot
 package.loaded["scripts.compatibility.orbital-cannon.catapult_network"] = {
 	snapshot = function()
 		snapshots = snapshots + 1
 		return network
 	end,
+}
+package.loaded["scripts.cargo.orders"] = {
+	route_id = function(entry,source)
+		return source .. ">" .. (source==entry.source and entry.target or entry.source)
+	end
+}
+package.loaded["scripts.cargo.desk_view"] = {
+	render = function(_,_,_,snapshot)
+		desk_renders=desk_renders+1
+		desk_snapshot=snapshot
+	end
 }
 local inspected
 package.loaded["scripts.cargo.infrastructure"] = {
@@ -35,9 +48,10 @@ local function node(shown)
 	end
 	return element
 end
-local function render(facts)
+local function render(facts,tab)
 	local shown = {}
-	view.render(node(shown), { force = { platforms = {}, technologies = {} } }, 400, facts)
+	view.render(node(shown), { force = { platforms = {}, technologies = {} } }, 400,
+		facts,{cargo_tab=tab or "overview"})
 	return shown
 end
 local function has(shown, key, argument)
@@ -83,5 +97,12 @@ for _, caption in ipairs(shown) do
 	check(type(caption) ~= "table" or caption[1] ~= "journal-ui.cargo-corridor" or caption[2][1] ~= "space-location-name.gleba",
 		"the closed corridor names its world")
 end
+
+snapshots=0
+shown=render(facts,"freight")
+check(snapshots==1 and desk_renders==1 and desk_snapshot==network,
+	"the Freight tab shares one catapult snapshot")
+check(has(shown,"cargo-tab-overview") and has(shown,"cargo-tab-freight"),
+	"both project tabs are shown")
 
 print("test_cargo_view: ok")

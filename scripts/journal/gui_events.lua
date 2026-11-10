@@ -23,6 +23,7 @@ local draw=window.draw
 local open=window.open
 local close=window.close
 local update_reader=require("scripts.journal.reader_update")
+local cargo_gui=require("scripts.cargo.gui")
 
 -- Clicks that only exist inside the story Archive tab.
 local ARCHIVE_ACTIONS={
@@ -33,13 +34,16 @@ local ARCHIVE_ACTIONS={
 function M.gui_click(event)
   local element=event and event.element
   if not (element and element.valid) then return end
-  local tags=element.tags
-  if not tags then return end
+  local tags=element.tags or {}
   local action=tags.razi_journal_action
   local native=tags.razi_ops_action
-  if not action and not native then return end
+  if not action and not native and not cargo_gui.owns(element) then return end
   local player=game.get_player(event.player_index)
   if not (player and player.valid) then return end
+  if cargo_gui.owns(element) then
+    if cargo_gui.click(player,element) then draw(player) end
+    return
+  end
   if native then
     local p=pref(player.index)
     if not (player.gui.screen[FRAME] and p.view=="projects") then return end
@@ -360,6 +364,11 @@ end
 function M.text_changed(event)
   local element=event and event.element
   if not (element and element.valid) then return end
+  if cargo_gui.owns(element) then
+    local player=game.get_player(event.player_index)
+    if player and player.valid then cargo_gui.text_changed(player,element) end
+    return
+  end
   if element.name~="razi_journal_search" then return end
   local player=game.get_player(event.player_index)
   if not (player and player.valid) then return end
@@ -382,6 +391,13 @@ end
 function M.selection_changed(event)
   local element=event and event.element
   if not (element and element.valid) then return end
+  if cargo_gui.owns(element) then
+    local player=game.get_player(event.player_index)
+    if player and player.valid and cargo_gui.selection_changed(player,element) then
+      draw(player)
+    end
+    return
+  end
   if element.name~="razi_journal_chapter_picker" then return end
   local chapter=defs.chapters[element.selected_index]
   local player=game.get_player(event.player_index)
@@ -401,6 +417,14 @@ function M.selection_changed(event)
     end
   end
   if preserve then update_reader(player) else draw(player) end
+end
+function M.elem_changed(event)
+  local element=event and event.element
+  if not (element and element.valid) or not cargo_gui.owns(element) then return end
+  local player=game.get_player(event.player_index)
+  if player and player.valid and cargo_gui.elem_changed(player,element) then
+    draw(player)
+  end
 end
 function M.gui_closed(event)
   if event.element and event.element.valid and event.element.name==FRAME then
