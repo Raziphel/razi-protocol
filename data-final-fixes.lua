@@ -29,6 +29,7 @@ require("prototypes.ui.logistics_cleanup").data_final_fixes()
 require("prototypes.fixes.common.furnace_result_slots").data_final_fixes()
 require("prototypes.fixes.moon-eneas.eneas_gantry").data_final_fixes()
 require("prototypes.fixes.common.variant_surface_conditions").data_final_fixes()
+require("prototypes.compatibility.Igrys.igrys_accumulators").data_final_fixes()
 
 -- Old interstellar shortcuts go before the route reconciler runs.
 require("prototypes.world.routes.legacy_routes").data_final_fixes()
