@@ -28,6 +28,18 @@ end
 -- Return a localized caption and optional quest ID for a safe Journal link.
 local function next_action(force,id,status)
   local done,total,detail=status[1],status[2],status[3]
+  if id=="cargo" then
+    local research=detail and detail.research
+    if research and not research.researched then
+      return L("project-next-research",research.localised_name),
+        quest_by_technology[research.name]
+    end
+    if total==0 then return L("project-next-cargo-platform") end
+    if done<total then
+      return L("project-next-cargo-unscheduled",tostring(total-done))
+    end
+    return L("project-next-cargo-done")
+  end
   if total==0 then return L("project-next-unavailable") end
   if id=="platform" then
     if done==1 then return L("project-next-platform-done") end

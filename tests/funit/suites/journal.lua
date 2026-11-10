@@ -25,6 +25,28 @@ return function(runner)
 		end)
 	end
 
+	-- The Cargo Network project draws with the platform fleet and the corridors of the installed mods. The research
+	-- that opens it is done for the test; the real window and style names are what is checked.
+	runner.test("the Cargo Network project draws its overview", function()
+		local player = game.players[1]
+		local technology = player.force.technologies["interplanetary-trade-logistics"]
+		runner.assert(technology, "no interplanetary-trade-logistics technology")
+		local was_researched = technology.researched
+		technology.researched = true
+		local state = journal.preferences(player.index)
+		state.view = "projects"
+		state.project = "cargo"
+		window.open(player)
+		local frame = player.gui.screen[journal.FRAME]
+		local drawn = frame and frame.valid and #frame.children > 0
+		runner.assert(drawn, "no Journal window")
+		runner.assert(state.project == "cargo", "the Journal moved off the cargo project to " .. tostring(state.project))
+		local done, total, facts = projects.status_for(player.force, "cargo")
+		runner.assert(done <= total and facts.platforms == total, "cargo reports " .. done .. " of " .. total)
+		window.close(player)
+		technology.researched = was_researched
+	end)
+
 	-- The storyline is off in the shipped mod, so the Archive relay prototype does not exist, as in writer mode.
 	-- Asking the game for an entity that does not exist is an error (03.11), so the project must not ask.
 	runner.test("the Archive Array project reports zero without the relay prototype", function()

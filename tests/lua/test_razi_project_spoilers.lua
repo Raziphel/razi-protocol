@@ -19,12 +19,12 @@ check(p.visible(f,"platform"),"First project must always be visible")
 check(not p.visible(f,"voyage"),"First voyage requires a built platform")
 check(p.visible(f,"dyson") and p.visible(f,"transceiver"),"Unblocked projects visible")
 check(not p.visible(f,"convergence"),"Finale still spoiler gated")
-check(not p.valid("cargo") and not p.valid("recovery"),"Ledgers are not Projects")
+check(p.valid("cargo") and not p.valid("recovery"),"Cargo is a Project, recovery is not")
 f.platforms[1]={valid=true,hub={valid=true},force=f,name="One",
   scheduled_for_deletion=0,completed_trips=0}
 check(p.visible(f,"voyage"),"Completed first platform reveals First Voyage")
 waiting.researched=true
 check(p.visible(f,"convergence"),"Research should reveal the finale")
 settings.global["razi-hide-spoilers"].value=false
-check(not p.visible(f,"cargo") and not p.visible(f,"recovery"),"Old project IDs retired")
+check(not p.visible(f,"recovery"),"Old project IDs retired")
 print("Project spoiler gates passed")
