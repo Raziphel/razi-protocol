@@ -1,4 +1,211 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.0.0
+Date: 2026-11-10
+  :
+    - Merge pull request [#62](https://github.com/Raziphel/razi-protocol/issues/62) from Raziphel/dev
+  Features:
+    - Aquilo's foundation, fusion and legendary quality research move later in the campaign
+    - [asteroids] add the eight-family geography of Razi More Asteroids
+    - Balack joins Vespera beyond Aquilo and keeps the armoured biters on Razi's planets
+    - barreling recipes grouped in the crafting menu, optional grouping of spoilable products
+    - [compat] make Fulgora Replicators optional, move Electric enemies to Corrundum with it
+    - continue infinite research from the levels saved by /razi-prepare-3
+    - [convergence] add the Convergence finale and suppress the Krastorio 2 victory
+    - [deps] recommend the enemy, science, Aquilo and trade mods
+    - [difficulty] add difficulty levels over the existing asteroid and progression settings
+    - [difficulty] add pollution, raid, colony, spoilage, ore, research and evolution levers
+    - [difficulty] add razi-resource-loops: open on Easy, closed on Normal, strict on Hard and Nightmare
+    - [difficulty] add rocket launch cost, factory speed and wall strength levers
+    - [difficulty] scale rocket silos, machines and walls by level
+    - [difficulty] scale the map and the global map settings by level
+    - [difficulty] set numeric options of other mods by level
+    - distribute planetary industry research (off by default)
+    - eight system tech cards: Vespera and Umbra cards and a nested card tree
+    - [enemies] drop Vesta and Obsidiax from the homes, keep Nauvis free on old surfaces
+    - [enemies] grow the enemy homes with the difficulty level
+    - [enemies] place each enemy family on its own homes and switch the shared-control nests off elsewhere
+    - Igrys and Foliax join Solaris and Nyxaris, K2SO research data in the system cards
+    - [industry] add the Deep mode of planetary interdependence
+    - [industry] add the interplanetary exchanges and network components
+    - [journal] add journal, project and Convergence prototypes
+    - [journal] add quest data, story switch and spoiler fog
+    - [journal] add the Dyson research and layout settings
+    - [journal] add the expedition journal window
+    - [journal] add the journal text
+    - [journal] connect the journal, projects and Convergence to the runtime
+    - [journal] search quests by their translated names
+    - [journal] show game names and plain text while the story is off
+    - lab cards and platform positions prepared in 2.x come back after the update
+    - labs by tier and bulk multiplex recipes for system cards
+    - list the optional worlds the required path must not need
+    - [locale] translate Projects, Dyson and Convergence into Russian
+    - [locale] translate the journal interface into Russian
+    - [locale] translate the settings, commands and plain texts into Russian
+    - machine-only recipes leave the character crafting menu
+    - [migration] rename the space routes 3.0 renamed
+    - [migration] research the new gates and belt surveys a 2.x save has already passed
+    - new star map layout: six systems around Calidus and Deep Space to the north
+    - Nulla and Athos join Vespera, with Crushing Industry on Krastorio 2's terms
+    - Obsidiax and Carna join the Umbra system
+    - optional quality asteroids and asteroid performance options, off by default
+    - optional worlds join their systems, Bellicos on the new map, expedition briefings in planet descriptions
+    - planet branches within each system require each other's science, essential tech filter shows every discovery
+    - [progression] gate the star systems on interplanetary partnerships
+    - [progression] let the required path need Ferrum's robotics pack
+    - [progression] open the Aegis survey from both first-frontier discoveries
+    - [progression] research installed worlds before the gateways of the next system
+    - [projects] add Dyson, great projects, catapult network and Deep Space expedition
+    - quality asteroids on by default
+    - Razi's own seven-system route network with asteroid profiles and danger levels
+    - runtime on RAZI Library events and a staged /razi-cheat for testers
+    - Russian locale for the debug commands and pack-consistent names
+    - [salvage] require Razi Rocket Reusability and add the rocket salvage tiers
+    - [science] add science tech cards as a difficulty lever
+    - [settings] group settings into coloured sections
+    - seven-system research gates: discoveries follow the system order and cost the previous tier's cards
+    - star map visuals: system backgrounds, belt artwork, route highlights and route intel
+    - [starmap] add Cinematic star clusters, coronas and sector dust
+    - [starmap] move Aegis and Bellicos below Solaris and Nyxaris
+    - [story] add a writer mode with story slots
+    - [story] hide expedition briefings and route notes behind a story switch
+    - Velora, Alchemy Khemia and Arcanyx join Nyxaris, Vibrant and Umbra
+    - Vespera and Umbra star systems, their discoveries and the transceiver gate to Deep Space
+    - Vibrant and Umbra asteroid belts with surveys, edge harvesting and belt settings
+  Balancing:
+    - bio processing circuits take at most +50 % productivity, quartz gives 0.48 matter, and planting a decoration costs twice what mining it drops
+    - calcite from particle manipulation costs 24 quartz, and matter no longer makes quartz
+    - Corrundum recrystallization is removed, the sulfate solution comes from chalcopyrite only, and force reduction takes no productivity
+    - Corrundum sulfuric acid dilution and concentration take no productivity
+    - Crucible space electrolysis gives 250 hydrogen without productivity, and hot hydrogen from ammonia is hidden
+    - crushing without productivity takes no bonus from a crusher
+    - cubic latent recovery takes no quality
+    - filling and emptying a container no longer gains from productivity or quality
+    - Hyarion particle manipulation pairs take no quality, carbon nanotubes take productivity
+    - infinite research goes on for system cards after its fifth level
+    - items and fluids that a recipe only gives back no longer gain from productivity
+    - Krastorio 2 crushing recipes take no productivity
+    - matter no longer makes bones
+    - nutrient spoiling, rapid distillation, gel and slime weed processing take at most a little productivity, and uranium 238 sells for 20 matter
+    - planting a greenhouse decoration costs twice its drop from Normal on, not only on Hard
+    - plasma carbon fiber gives its hot fluoroketone back outside productivity
+    - recycling glass, gold plates and burner inserters returns a quarter of the cheapest recipe at most
+    - recycling the volcanic universe precursor and the sentient processor no longer returns panglite
+    - solid fuel liquefaction gives 90 heavy oil and takes no productivity
+    - the electrochemical plant no longer makes organic recipes, so the biochamber stays needed
+    - the hot fluoroketone of dry ice stays out of productivity
+    - Vesta water synthesis gives 6 water, not 30
+    - wood, coal, carbon and stone no longer go round through matter
+  Optimizations:
+    - [compat] check only the recipes a research unlocks for Voidcraft variants
+  Compatibility:
+    - accumulators of other mods cannot be built on Igrys either
+    - Requires the original Nexus 1.3.6 instead of the fork Nexus-Updated, and nexus-bosses 2.5.1, which needs it too
+  Bugfixes:
+    - anchor the Rocket Turrets Upgraded technologies by their real identifiers
+    - [asteroids] soften the Aegis depths for the fleet that reaches them
+    - [cards] unlock the Deep Space card multiplex with the singularity theory
+    - [compat] a mini locomotive or wagon that is picked up keeps its color and its equipment grid
+    - [compat] Apia no longer makes a freshness recipe for nutrients, so lymph does not keep them fresh for ever
+    - [compat] Armoured Biters 2.1.0 replaces the fork ArmouredBiters21Compat
+    - [compat] artillery shell range research of Krastorio 2 Spaced Out no longer adds the vanilla +0.3 next to the +0.4 of Krastorio 2
+    - [compat] bioflux stacks to 100 again, so the ice box of Corrundum does not stop the game with 101 to 200 of it inside
+    - [compat] bioluminescent copies of Tenebris Prime take the crafting categories of their machines, and copies of machines that cannot work on Tenebris or that nothing makes can no longer be made
+    - [compat] construction mode roboports of Krastorio 2 keep a logistic radius of 1 so repair robots can take repair packs
+    - [compat] crushers of Krastorio 2 no longer destroy their input through a void crushing recipe of an item that has a real crushing recipe
+    - [compat] Factoriopedia shows the enemy units of other mods as themselves, not as the vanilla unit they were copied from
+    - [compat] give the radiation damage back to the vehicle of a Krastorio 2 player
+    - [compat] keep the Iridescent Industry deep mines and entropic creation on Arcanyx
+    - [compat] keep the voidworks fusion and inverse voidcrafting on Arcanyx
+    - [compat] load with Lithium Battery 7.5.1, which keeps its science pack copies
+    - [compat] load with Lithium Battery and keep its promethium belts craftable
+    - [compat] loaders of Krastorio 2 respect the insertion limit, so crushers no longer spill stone when the mod set changes
+    - [compat] move the removed fuel_category to fuel_categories so Khemia loads on Factorio 2.1.20+
+    - [compat] Nexus machines, the cloning vat and the fluid recycler take their usual modules with Voidcraft's module categories
+    - [compat] only Electric flying enemies' own spawners move to its homes
+    - [compat] piercing shotgun shells of Krastorio 2 Spaced Out fire piercing pellets
+    - [compat] quantum processors and fusion reactors and generators are no longer made on Arig, and the Aquilo atomic bomb leaves no ammonia crater there
+    - [compat] recycling an engine unit or a mythril plate returns the parts of the main recipe, not those of the foundry casting
+    - [compat] remove the lamp that Cerys leaves behind a radiative tower
+    - [compat] rigor-module recycler copies obey the Ribbonia ban and minimal rails can no longer be placed on Cerys
+    - [compat] roboport modes of Krastorio 2 show the name and description of their roboport instead of an unknown key
+    - [compat] scale the Muluna satellite radar when it is a radar prototype
+    - [compat] the Aegis pulsar is drawn at the centre of the Bellicos system
+    - [compat] the basic hard drive of Muluna takes 5 seconds to craft instead of half a second
+    - [compat] the colored refined concrete of Planetaris Dyes can be mined into its item
+    - [compat] the connectors of the Dyson sphere give power as generators do, not with the priority of accumulators
+    - [compat] the corpses of the Arachnids bugs, the bug hole and the bosses have names instead of "Unknown key"
+    - [compat] the cubic galvanization science recipe of Cubium no longer returns 1000 notes with every craft
+    - [compat] the electronic components of Pelagos are unlocked with the coconuts, not before the planet is found
+    - [compat] the freshness restoration recipe of an item that the game names by its entity, like the spawners of Pelagos, has a name instead of "Unknown key"
+    - [compat] the hidden poles under the electric rails of minimalist-rails cannot be destroyed and leave no corpse
+    - [compat] the Khemia glyph smelting recipes open with the glyphs, not at the start of the game
+    - [compat] the Krastorio 2 tank and the Muluna buggy brake as their authors wrote, not as the vanilla car
+    - [compat] the lane splitter of a hidden splitter is hidden with its unlocks, so no recipe asks for an item no one can make
+    - [compat] the logistic and construction modes of the Muluna burner roboport are mined into a burner roboport, not a roboport
+    - [compat] the names of the Renai Transportation throwers are read from the locale, so their translations show
+    - [compat] the planes of Aircraft Space Age take the fuel of Krastorio 2 too
+    - [compat] the pressure dome and the regulator of Maraxsis and the bioluminescent roboports of Tenebris keep the pressure Cerys relaxed for every roboport
+    - [compat] the pristine heavy oil filter of Eneas is unlocked by pristine-servofish and gives coal in the right range
+    - [compat] the recycling of the open chest of Renai Transportation no longer sits in the crafting menu from the start of the game
+    - [compat] the scrap recycling recipes of Cerys, Cubium, Frozeta, Nulla and Balack that Eneas switched on stay behind their technologies
+    - [compat] the spidertron bosses of Big-Monsters take no passengers and cannot be mined
+    - [compat] the technology rail-support-foundations shows the line about Arig in its description
+    - [compat] the throwers that Panglia, Tenebris and Rabbasca copy have a range, so building one no longer stops the game
+    - [compat] the unused Aquilo data card of Eneas is hidden and has a name instead of "Unknown key"
+    - [compat] the upgrade planner takes the advanced loader to the hyper loader and the hyper belts of Arig to superior ones
+    - [compat] unlock the orbital catapult with its own technology
+    - [convergence] drop the array core and subassemblies that the finale never uses
+    - [convergence] move the audit command text to the locale
+    - copies of the Carna spire no longer crash the game every ten seconds
+    - Deep Space route notes and their text, closer Shattered Planet hop on the star map
+    - [deps] require Arcanyx 1.1.6 and drop the Voidcraft gap patch
+    - [deps] require Muluna 2.9.9 and Tenebris Prime 1.3.20, which fix crashes and broken bioluminescent copies
+    - [deps] require the latest 2.1 releases of all dependencies
+    - [difficulty] keep the game's own gathering group count above the raid cap
+    - [difficulty] leave Balack's bio fabricators to Balack's own speed setting
+    - [difficulty] scale rich-soil and apia_soil as ore, not as oil
+    - [difficulty] scale the variants that mods put in place of a player's machine
+    - [difficulty] shorten the difficulty description
+    - drop duplicate caption directions for Obsidiax and Arcanyx
+    - electrochemical research data stays on Corrundum when XY is installed
+    - [enemies] Frozeta is the only Cold Biters home, Aquilo had no land for their nests
+    - Ferrum's science and magnets stay out of the research that Ferrum needs
+    - [gates] the card cycle breaker no longer strips a card to its fallback
+    - [journal] add the AAI signal research lookup that the quest data requires
+    - [journal] add the optional-quest production note
+    - [journal] define the catapult corridor strings in journal-ui
+    - [journal] describe the Dyson research setting correctly
+    - [journal] draw journal status marks with sprites instead of font glyphs
+    - [journal] hide the Relay Fragments chapter while the story is off
+    - [journal] keep the Convergence prerequisites of the original module
+    - [journal] look planets up among the space locations
+    - [journal] point quests at technologies the installed packs define
+    - [journal] recognise a game player object in writer mode
+    - [journal] remove quests whose technology is not in the mod
+    - [journal] show the Archive Relay records only with the story on
+    - [journal] silence luacheck findings in the journal modules
+    - [journal] silence type-check warnings in the journal modules
+    - [journal] the Archive tab opens in writer mode with the storyline off
+    - [journal] the quest filter row keeps the bottom of its letters
+    - [journal] type the translation request for the API check
+    - [locale] a machine keeps a hidden recipe but does not work
+    - [locale] align Russian names with the game
+    - [locale] plain names for exchange recipes, technologies and system card recipes
+    - [locale] replace flavor in item, recipe and technology descriptions with facts
+    - Nulla's radio interference keeps the other pollutants of an entity
+    - pin rigor-module compatibility mode to stay under the recipe limit
+    - [recipe] stack inserter and toolbelt equipment are made of low density structure and plastic, not Gleba's carbon fiber and jelly
+    - [recipe] use independent_probability for recipe products
+    - [science] spend the Vespera and Umbra cards on late technologies
+    - [settings] keep voidcraft on Arcanyx
+    - Skewer Shattered Planet and Lost Beyond get an expedition briefing
+    - Skewer Shattered recipes that nothing unlocked under Vesta are unlocked again
+    - [starmap] color the Aegis inner routes and merge aliased corridors
+    - [starmap] colour the two Aegis rim crossings
+    - [starmap] move Paracelsin's label off the Vibrant outer rim
+    - [technology] keep robots and logistics out of planetary distribution
+    - [technology] stack inserter, toolbelt equipment and belt capacity 1 and 2 no longer wait for Gleba's science and carbon fiber research
+---------------------------------------------------------------------------------------------------
 Version: 2.2.2
 Date: 2026-11-10
   Bugfixes:
