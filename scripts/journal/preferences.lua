@@ -8,13 +8,16 @@ local function pref(index)
   local value=storage.razi_expedition_journal[index]
   if not value then
     value={selected=nil,pinned=nil,tracker=false,
-      chapter=nil,chapter_cover=false,filter="all",view="quests",project="platform",record=nil,query=""}
+      chapter=nil,chapter_cover=false,filter="all",view="quests",project="platform",record=nil,query="",
+      cargo_tab="overview"}
     storage.razi_expedition_journal[index]=value
   end
   value.filter=value.filter or "all"
   value.view=({quests=true,projects=true,archive=story.visible(index),
     systems=true})[value.view] and value.view or "quests"
   value.project=projects.valid(value.project) and value.project or "platform"
+  value.cargo_tab=({overview=true,freight=true})[value.cargo_tab]
+    and value.cargo_tab or "overview"
   value.query=value.query or ""
   value.story_unread=value.story_unread or {}
   value.story_alerts=value.story_alerts~=false

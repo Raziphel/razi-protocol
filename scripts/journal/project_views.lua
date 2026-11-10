@@ -176,7 +176,7 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
   elseif p.project=="skybridge" then
     great_project_reader(content,player,width-68,"skybridge",current)
   elseif p.project=="cargo" then
-    cargo_view.render(content,player,width-68,current[3])
+    cargo_view.render(content,player,width-68,current[3],p)
   elseif p.project=="beltbreaker" then
     great_project_reader(content,player,width-68,"beltbreaker",current)
   elseif p.project=="array" then
