@@ -272,3 +272,7 @@ require("prototypes.balance.resource_loops").data_final_fixes()
 
 -- The biochamber stays needed: after the repairs, which see the categories every mod left on the plant.
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
+
+-- Infinite research continues on system cards after its fifth level. The last pass: it copies research, and the repairs
+-- above change research by name; the packs of the research are cards of their own by now when razi-auto-tech-cards is on.
+require("prototypes.balance.common.infinite_research_cards").data_final_fixes()
