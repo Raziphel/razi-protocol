@@ -271,6 +271,11 @@ require("prototypes.fixes.init").data_final_fixes()
 -- Recipe loops, as the level of razi-resource-loops decides: after the repairs, which they see in their final state.
 require("prototypes.balance.resource_loops").data_final_fixes()
 
+-- Muluna's barrels open with the technology of their fluid, not all at once with its trigger technology. After the loops,
+-- which hide the technologies they empty (the barrels must not move to a hidden one), and after the Muluna pass that
+-- gathered the barrels, which a dependency always runs first.
+require("prototypes.balance.planet-muluna.barrel_gates").data_final_fixes()
+
 -- The biochamber stays needed: after the repairs, which see the categories every mod left on the plant.
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
 

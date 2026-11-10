@@ -55,5 +55,12 @@ data:extend({
 		setting_type = "startup",
 		default_value = true,
 		order = "ba[integration]-e2[regional-catapult-links]"
+	},
+	{
+		type = "bool-setting",
+		name = "razi-muluna-barrel-gates",
+		setting_type = "startup",
+		default_value = true,
+		order = "ba[integration]-f[muluna-barrel-gates]"
 	}
 })
