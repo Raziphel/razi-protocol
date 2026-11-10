@@ -1,5 +1,5 @@
 ---@diagnostic disable: missing-fields
--- Productivity caps on four recipes and the matter of uranium 238 (prototypes/balance/common/productivity_caps.lua), on a mocked data.raw.
+-- Productivity caps on five recipes and the matter of uranium 238 (prototypes/balance/common/productivity_caps.lua), on a mocked data.raw.
 -- Run from the mod root with the library bootstrap:
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_balance_productivity_caps.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -15,6 +15,7 @@ local function fixture(cap)
 		["linox-recipe_rapid-distillation"] = { maximum_productivity = cap },
 		["gel-polymerization"] = { maximum_productivity = cap },
 		["slime-weed-processing"] = { maximum_productivity = cap },
+		["advanced-circuit-from-silicon"] = { maximum_productivity = cap },
 		["kr-uranium-238-to-matter"] = { results = {
 			{ type = "fluid", name = "kr-matter", amount = 47.1, ignored_by_productivity = 47.1, ignored_by_stats = 47.1 } } },
 	}
@@ -27,13 +28,15 @@ check(recipes["nutrients-spoiling"].maximum_productivity == 0 and recipes["gel-p
 	"Spoiling and gel take no productivity")
 check(recipes["linox-recipe_rapid-distillation"].maximum_productivity == 0.5, "Rapid distillation takes at most +50 %")
 check(recipes["slime-weed-processing"].maximum_productivity == 2, "Slime weed takes at most +200 %")
+check(recipes["advanced-circuit-from-silicon"].maximum_productivity == 1, "Advanced circuits from silicon take at most +100 %")
 local matter = recipes["kr-uranium-238-to-matter"].results[1]
 check(matter.amount == 20 and matter.ignored_by_productivity == 20 and matter.ignored_by_stats == 20,
 	"Uranium 238 sells for 20 matter, the marks follow")
 check(support.logged("nutrients-spoiling takes at most +0 % productivity") == 1
 	and support.logged("linox-recipe_rapid-distillation takes at most +50 % productivity") == 1
 	and support.logged("slime-weed-processing takes at most +200 % productivity") == 1
-	and support.logged("kr-uranium-238-to-matter gives 20 matter, not 47.1") == 1 and #support.logs == 5
+	and support.logged("advanced-circuit-from-silicon takes at most +100 % productivity") == 1
+	and support.logged("kr-uranium-238-to-matter gives 20 matter, not 47.1") == 1 and #support.logs == 6
 	and support.logs[1]:find("^razi%-protocol: "), "One line for each change")
 
 -- A cap the author set stays, whatever it is.

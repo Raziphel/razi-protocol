@@ -11,6 +11,9 @@ local caps = {
 	-- dea-dia-system: slime weed -> fiber + gel -> fiber, both with the slimeweed research (+81 % breaks even)
 	{ "gel-polymerization", nil, 0 },
 	{ "slime-weed-processing", nil, 2 },
+	-- PlanetAthos: 1 electronic circuit + 1 silicon -> 1 advanced circuit, recycled back to 0.5 electronic circuit
+	-- (and half of the rest); +100 % breaks even
+	{ "advanced-circuit-from-silicon", nil, 1 },
 }
 
 function productivity_caps.data_final_fixes()
