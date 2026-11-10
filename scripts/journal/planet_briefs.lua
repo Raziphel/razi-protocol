@@ -97,7 +97,6 @@ local charter_paths={
   gleba={"moshine","apia"},
   moshine={"panglia","gleba"},
   apia={"panglia","vibrant-gate"},
-  panglia={"panglia-biooptic-trade","panglia-optical-return"},
   fulgora={"cerys","paracelsin"},
   cerys={"paracelsin"},
   ribbonia={"asteroid-belt"},
