@@ -2,8 +2,8 @@
 -- Lithium Battery in the pack (compat/lithium_battery.lua) on a mocked data.raw: the productivity effects of the recipe copies it
 -- deletes (7.5.0 and older) are taken out of Planet Crucible's technologies, and equal ingredients of the research data recipes and
 -- of the copies it keeps (7.5.1), which share one list with them, are added up.
--- Run from the mod root:
---   lua5.2 tests/lua/test_lithium_battery.lua
+-- Run from the mod root with the library bootstrap:
+--   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_lithium_battery.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local function check(ok, message)
@@ -41,8 +41,8 @@ local function setup(mod_list)
 	rawset(_G, "mods", mod_list)
 	rawset(_G, "data", {raw = data_raw})
 	logged = {}
-	package.loaded["prototypes.compat.lithium_battery"] = nil
-	return data_raw, require("prototypes.compat.lithium_battery")
+	package.loaded["prototypes.fixes.LithiumBattery.lithium_battery"] = nil
+	return data_raw, require("prototypes.fixes.LithiumBattery.lithium_battery")
 end
 
 local function recipes_of(technology)
@@ -186,7 +186,7 @@ check(not has_category(machines["kr-advanced-assembling-machine"]), "belt catego
 -- a pack without technologies or recipes does not fail
 rawset(_G, "mods", {LithiumBattery = true})
 rawset(_G, "data", {raw = {}})
-package.loaded["prototypes.compat.lithium_battery"] = nil
-require("prototypes.compat.lithium_battery").data_final_fixes()
+package.loaded["prototypes.fixes.LithiumBattery.lithium_battery"] = nil
+require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 
 print("lithium battery: ok")

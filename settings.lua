@@ -1,16 +1,12 @@
-data:extend({
-	{
-		type = "bool-setting",
-		name = "razi-enable-enemy-routing",
-		setting_type = "startup",
-		default_value = true,
-		order = "a[compat]-a[enemy-routing]"
-	},
-	{
-		type = "bool-setting",
-		name = "razi-hide-redundant-assembler-tiers",
-		setting_type = "startup",
-		default_value = true,
-		order = "a[compat]-b[redundant-assemblers]"
-	}
-})
+require("settings.difficulty")
+require("settings.habitats")
+require("settings.quality_of_life")
+require("settings.integration")
+require("settings.asteroids")
+require("settings.starmap")
+require("settings.stellar")
+require("settings.performance")
+require("settings.spoilers")
+require("settings.welcome")
+require("settings.combat")
+require("settings.resources")

@@ -17,12 +17,19 @@ fields=(
   -F "title=Razi Protocol [Now on 2.1]"
   -F "summary=A giant Space Age modpack bridge that connects many planet, science, enemy, and endgame mods into one coherent progression route across multiple star systems.
 
-See the mod page or README for the full overview and credits."
+Please view the mod page for the full overview and explanations."
   -F "description=<$here/description.md"
   -F "category=mod-packs"
+  -F "tags=enemies"
+  -F "tags=combat"
+  -F "tags=environment"
+  -F "tags=circuit-network"
+  -F "tags=logistics"
+  -F "tags=logistic-network"
+  -F "tags=manufacturing"
   -F "tags=planets"
   -F "license=default_gnugplv3"
-  -F "homepage=https://github.com/Raziphel/razi-protocol"
+  -F "homepage=https://razisrealm.com/discord"
   -F "source_url=https://github.com/Raziphel/razi-protocol"
 )
 
