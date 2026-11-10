@@ -43,7 +43,6 @@ return {
   {id="corp-glass-bond",unlock="alliance-panglia-bond",series="field"},
   {id="corp-panglia-model",unlock="panglia-sentient",series="field"},
   {id="corp-network",unlock="precision-matrix"},
-  {id="corp-first-relay",unlock="first-frontier-relay",series="field"},
   {id="corp-dyson",unlock="dyson-build"},
   {id="corp-solar-orbit-watch",unlock="solar-orbit",series="field"},
   {id="corp-audit",unlock="stable-singularity"},

@@ -75,11 +75,11 @@ local steps=guidance.followups("solaris-gate",{vulcanus="active",castra="locked"
 check(#steps==1 and steps[1].quest.id=="vulcanus",
   "Suggested follow-ups must be direct Codex dependencies")
 local handoffs=guidance.followups("moshine",{
-  apia="locked",panglia="unavailable",["first-frontier-relay"]="active"},3)
-check(#handoffs==2 and handoffs[1].quest.id=="first-frontier-relay"
-  and handoffs[1].cross,"Freight handoff should visibly join two chapters")
+  apia="locked",panglia="unavailable",["precision-matrix"]="active"},3)
+check(#handoffs==2 and handoffs[1].quest.id=="precision-matrix"
+  and handoffs[1].cross,"Cross-chapter follow-up should join two chapters")
 check(#guidance.followups("moshine",{
-  ["first-frontier-relay"]="unavailable"},3)==0,
+  ["precision-matrix"]="unavailable"},3)==0,
   "Missing optional research must never make a fake objective")
 check(#guidance.followups("missing-quest",{},3)==0,
   "Unknown milestones must have no invented successors")

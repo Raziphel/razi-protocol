@@ -42,7 +42,7 @@ M.chapters={
     {id="sphere",missions={"dyson-build","dyson-repeaters","dyson-mk2","dyson-mk3"}},
   },
   ["network"]={
-    {id="trade",missions={"interplanetary-trade","signal-network","first-frontier-relay","panglia-biooptic-trade","panglia-optical-return","aegis"}},
+    {id="trade",missions={"interplanetary-trade","signal-network","aegis"}},
     {id="precision",missions={"precision-matrix"}},
     {id="lattice",missions={"extreme-lattice"}},
   },
