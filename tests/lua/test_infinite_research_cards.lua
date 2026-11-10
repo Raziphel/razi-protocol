@@ -263,6 +263,17 @@ module.data_final_fixes()
 local plain_continuation = plain.technology["razi-cards-plain-effect-6"] or error("plain-effect continues at level 6")
 check(plain_continuation.icon == nil and #plain_continuation.icons == 2
 	and plain_continuation.icons[1].icon == "__base__/plain.png", "icon and icon_size become icons")
+check(plain_continuation.icons[1].icon_size == 256, "the icon_size of the research goes with its icon")
+
+-- An icon without icon_size is 64 (the default of IconData, for a technology as well): Igrys gives its copper plate
+-- research the icon of the item and no size, and a layer of 256 over that image fails the game at start.
+local sizeless = build({research("sizeless-effect", {"automation-science-pack"},
+	{icons = false, icon = "__base__/graphics/icons/copper-plate.png"})})
+sizeless.technology["sizeless-effect"].icons = nil
+module.data_final_fixes()
+local sizeless_continuation = sizeless.technology["razi-cards-sizeless-effect-6"]
+	or error("sizeless-effect continues at level 6")
+check(sizeless_continuation.icons[1].icon_size == 64, "an icon without icon_size stays at 64 in the continuation")
 
 -- A card whose recipe is open from the start needs no research for it; one that nothing opens is no card.
 local open_card = build({research("open-effect", {"automation-science-pack"})})
