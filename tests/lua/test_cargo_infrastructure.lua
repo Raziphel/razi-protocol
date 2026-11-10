@@ -11,26 +11,29 @@ end
 local infrastructure = require("scripts.cargo.infrastructure")
 
 -- The game refuses an unknown field of a prototype; so does this mock.
-local function prototype(kind)
+local known = { type = true, hidden = true, items_to_place_this = true }
+local function prototype(kind, fields)
 	return setmetatable({}, {
 		__index = function(_, key)
-			check(key == "type", "Unknown property of LuaEntityPrototype: " .. tostring(key))
-			return kind
+			check(known[key], "Unknown property of LuaEntityPrototype: " .. tostring(key))
+			if key == "type" then
+				return kind
+			end
+			return (fields or {})[key]
 		end,
 	})
 end
 prototypes = {
 	entity = {
-		["orbital-cannon-launcher"] = prototype("assembling-machine"),
-		["orbital-catapult-pad"] = prototype("container"),
+		["orbital-cannon"] = prototype("proxy-container", { items_to_place_this = { { name = "orbital-cannon", count = 1 } } }),
+		["orbital-cannon-sender"] = prototype("proxy-container", { hidden = true, items_to_place_this = { { name = "orbital-cannon-sender", count = 1 } } }),
 		["orbital-cannon-decoration"] = prototype("simple-entity"),
-		["steel-chest"] = prototype("container"),
+		["steel-chest"] = prototype("container", { items_to_place_this = { { name = "steel-chest", count = 1 } } }),
 	},
 }
 
 local names = infrastructure.launcher_names()
-check(#names == 2 and names[1] == "orbital-cannon-launcher" and names[2] == "orbital-catapult-pad",
-	"launcher names: " .. table.concat(names, ","))
+check(#names == 1 and names[1] == "orbital-cannon", "launcher names: " .. table.concat(names, ","))
 
 local counted = {}
 local function surface(count)
@@ -66,7 +69,7 @@ check(found.nauvis.launchers == 3 and found.nauvis.platforms == 2,
 	"nauvis: " .. found.nauvis.launchers .. " launchers, " .. found.nauvis.platforms .. " platforms")
 check(found.vulcanus.launchers == 0 and found.vulcanus.platforms == 0, "vulcanus is empty")
 check(found.gleba == nil, "a world without a surface is not in the answer")
-check(#counted == 2 and counted[1].force == force and #counted[1].name == 2, "one count per surface, of the launcher names")
+check(#counted == 2 and counted[1].force == force and #counted[1].name == 1, "one count per surface, of the launcher names")
 
 -- At most eight worlds are looked at.
 counted = {}

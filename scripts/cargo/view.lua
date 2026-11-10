@@ -83,8 +83,8 @@ local function corridors_block(parent,player,width)
 end
 -- facts: the fleet snapshot of this drawing, when the caller has one.
 function M.render(parent,player,width,facts)
+  line(parent,L("project-cargo-guide"),width)
   fleet_block(parent,facts or fleet.snapshot(player.force),width)
   corridors_block(parent,player,width)
-  line(parent,L("cargo-footer"),width,HUES.quiet)
 end
 return M

@@ -3,21 +3,17 @@
 -- machines: power and cargo are not checked. Counted when the project is drawn, nothing is
 -- stored and no entity is kept.
 local M={}
--- Machine types an Orbital Catapult launcher can have.
-local launcher_types={
-  ["assembling-machine"]=true,["furnace"]=true,["rocket-silo"]=true,
-  ["electric-energy-interface"]=true,["container"]=true,
-  ["logistic-container"]=true,["accumulator"]=true,["reactor"]=true
-}
 -- Corridors have at most eight worlds; the count is bounded by it.
 local max_worlds=8
--- Launcher names come from the installed game, not from a copy of the mod's list.
+-- Launcher names come from the installed game, not from a copy of the mod's list. A launcher
+-- is a placeable, non-hidden entity; hidden helper entities are not the player's machines.
 function M.launcher_names()
   local names={}
   for name,prototype in pairs(prototypes.entity) do
-    if launcher_types[prototype.type]
-      and (name:find("^orbital%-cannon") or name:find("^orbital%-catapult")) then
-      names[#names+1]=name
+    if (name:find("^orbital%-cannon") or name:find("^orbital%-catapult"))
+      and prototype.hidden~=true then
+      local items=prototype.items_to_place_this
+      if items and #items>0 then names[#names+1]=name end
     end
   end
   table.sort(names)

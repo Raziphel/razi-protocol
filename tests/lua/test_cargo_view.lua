@@ -1,5 +1,5 @@
 ---@diagnostic disable: need-check-nil
--- The Cargo Network overview page: the fleet line, one block per corridor and the closing line. A corridor with a
+-- The Cargo Network overview page: the fleet line, the guide line, one block per corridor. A corridor with a
 -- world that is not researched does not name it.
 package.path = "./?.lua;./?/init.lua;" .. package.path
 local function check(ok, message)
@@ -54,7 +54,7 @@ local facts = { platforms = 3, unscheduled = 1, in_transit = 2 }
 network = { installed = false, enabled = false, entries = {} }
 local shown = render(facts)
 check(has(shown, "cargo-fleet-counts", "3") and has(shown, "cargo-unscheduled-note"), "the fleet line and the note")
-check(has(shown, "cargo-corridors-absent") and has(shown, "cargo-footer"), "no mod: one line and the footer")
+check(has(shown, "cargo-corridors-absent") and has(shown, "project-cargo-guide"), "no mod: one line and the guide")
 
 network = { installed = true, enabled = false, entries = {} }
 check(has(render(facts), "cargo-corridors-off"), "corridors off")
