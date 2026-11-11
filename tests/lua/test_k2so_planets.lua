@@ -1,6 +1,7 @@
 ---@diagnostic disable: missing-fields
 package.path = "./?.lua;./?/init.lua;" .. package.path
 local function check(value, msg) if not value then error(msg, 2) end end
+rawset(_G, "log", function(_) end)
 local function setup(k2)
   local raw={
     item={["oxygen"]={hidden=true},["kr-oxygen"]={},
@@ -128,6 +129,17 @@ for _, spec in ipairs({
     check(ingredient.name~=spec[2],spec[2].." leaked into "..spec[1])
   end
 end
+
+-- A card that already takes the pack made from the data gets no raw data on top of it.
+local packed,packed_mod=setup(true)
+packed.recipe["metallurgic-science-pack"]={ingredients={
+  {type="item",name="kr-blank-tech-card",amount=5},{type="item",name="kr-metallurgic-research-data",amount=5}}}
+table.insert(packed.recipe["solaris-tech-card"].ingredients,{type="item",name="metallurgic-science-pack",amount=1})
+packed_mod.data_final_fixes()
+for _, ingredient in ipairs(packed.recipe["solaris-tech-card"].ingredients) do
+  check(ingredient.name~="kr-metallurgic-research-data","Raw data added next to the pack made from it")
+end
+check(#packed.recipe["nyxaris-tech-card"].ingredients==2,"A card without the pack lost its research data")
 
 -- The owner planet must exist, otherwise the card stays as it was.
 local lost,lost_mod=setup(true)

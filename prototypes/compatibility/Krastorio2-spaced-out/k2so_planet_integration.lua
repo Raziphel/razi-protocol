@@ -110,6 +110,19 @@ local function recipe_makes_item(recipe, name)
   return false
 end
 
+-- A card that already takes a pack made from this research data (the metallurgic science pack is made from
+-- metallurgic research data) needs no raw data on top: the same family twice, one raw and one finished (dest, 11.11).
+local function card_has_pack_of(card_recipe, research_data)
+  for _, ingredient in ipairs(card_recipe.ingredients) do
+    local pack = entry_name(ingredient)
+    local pack_recipe = pack and pack ~= research_data and material("recipe", pack)
+    for _, input in ipairs(pack_recipe and pack_recipe.ingredients or {}) do
+      if entry_name(input) == research_data then return true end
+    end
+  end
+  return false
+end
+
 local function add_existing_research_data()
   for _, bridge in ipairs(data_bridges) do
     local card, research_data, owner = bridge[1], bridge[2], bridge[3]
@@ -120,7 +133,10 @@ local function add_existing_research_data()
     if planet and card_recipe and card_recipe.ingredients
       and material("tool", card) and material("item", research_data)
       and data_recipe and recipe_makes_item(data_recipe, research_data) then
-      local found = false
+      local found = card_has_pack_of(card_recipe, research_data)
+      if found then
+        log("razi-protocol: " .. card .. " already takes a pack made from " .. research_data .. ", no raw data added")
+      end
       for _, ingredient in ipairs(card_recipe.ingredients) do
         if entry_name(ingredient) == research_data then
           found = true
