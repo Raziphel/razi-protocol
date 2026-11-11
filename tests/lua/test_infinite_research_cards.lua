@@ -196,8 +196,10 @@ check(#mixed.prerequisites == 2 and contains(mixed.prerequisites, "mixed-product
 	"it needs the research it continues and the one that unlocks the Vibrant card")
 check(#mixed.icons == 2 and mixed.icons[2].icon:find("vibrant-tech-card", 1, true) and mixed.icons[2].floating,
 	"the card is on the icon, over the icon of the research")
-check(mixed.icons[2].scale * mixed.icons[2].icon_size == 96 and mixed.icons[2].shift[1] > 0 and mixed.icons[2].shift[2] > 0,
-	"the card is 96 pixels, at the lower right")
+check(mixed.icons[2].scale * mixed.icons[2].icon_size == 40
+	and mixed.icons[2].shift[1] == 42 and mixed.icons[2].shift[2] == 42
+	and mixed.icons[2].draw_background == false,
+	"the card is a contained 40px badge on the 128px technology canvas")
 check(techs["mixed-productivity"].icons[2] == nil, "the icon of the research itself is not changed")
 check(mixed.localised_name[1] == "?" and mixed.localised_name[2][1] == "technology-name.mixed-productivity"
 	and mixed.localised_name[3][1] == "technology-name.mixed-productivity",
@@ -264,9 +266,9 @@ local plain_continuation = plain.technology["razi-cards-plain-effect-6"] or erro
 check(plain_continuation.icon == nil and #plain_continuation.icons == 2
 	and plain_continuation.icons[1].icon == "__base__/plain.png", "icon and icon_size become icons")
 check(plain_continuation.icons[1].icon_size == 256, "the icon_size of the research goes with its icon")
-check(plain_continuation.icons[2].scale * plain_continuation.icons[2].icon_size == 96
-	and plain_continuation.icons[2].shift[1] == 70 and plain_continuation.icons[2].shift[2] == 70,
-	"a 256px technology retains its original 96px corner badge")
+check(plain_continuation.icons[2].scale * plain_continuation.icons[2].icon_size == 40
+	and plain_continuation.icons[2].shift[1] == 42 and plain_continuation.icons[2].shift[2] == 42,
+	"256px technology artwork still gets a 40px badge")
 
 -- An icon without icon_size is 64 (the default of IconData, for a technology as well): Igrys gives its copper plate
 -- research the icon of the item and no size, and a layer of 256 over that image fails the game at start.
@@ -277,9 +279,9 @@ module.data_final_fixes()
 local sizeless_continuation = sizeless.technology["razi-cards-sizeless-effect-6"]
 	or error("sizeless-effect continues at level 6")
 check(sizeless_continuation.icons[1].icon_size == 64, "an icon without icon_size stays at 64 in the continuation")
-check(sizeless_continuation.icons[2].scale * sizeless_continuation.icons[2].icon_size == 24
-	and sizeless_continuation.icons[2].shift[1] == 17.5 and sizeless_continuation.icons[2].shift[2] == 17.5,
-	"a default 64px technology gets a proportionate badge instead of a giant overlay")
+check(sizeless_continuation.icons[2].scale * sizeless_continuation.icons[2].icon_size == 40
+	and sizeless_continuation.icons[2].shift[1] == 42 and sizeless_continuation.icons[2].shift[2] == 42,
+	"64px technology art must use the same 128px canvas and compact badge")
 
 -- An explicit intermediate icon resolution must be scaled proportionately too.
 local intermediate = build({research("intermediate-effect", {"automation-science-pack"},
@@ -288,9 +290,9 @@ intermediate.technology["intermediate-effect"].icons = nil
 module.data_final_fixes()
 local intermediate_continuation = intermediate.technology["razi-cards-intermediate-effect-6"]
 	or error("intermediate-effect continues at level 6")
-check(intermediate_continuation.icons[2].scale * intermediate_continuation.icons[2].icon_size == 48
-	and intermediate_continuation.icons[2].shift[1] == 35 and intermediate_continuation.icons[2].shift[2] == 35,
-	"a 128px technology gets a 48px badge")
+check(intermediate_continuation.icons[2].scale * intermediate_continuation.icons[2].icon_size == 40
+	and intermediate_continuation.icons[2].shift[1] == 42 and intermediate_continuation.icons[2].shift[2] == 42,
+	"128px technology artwork must not change the displayed card badge size")
 
 -- Layered technology icons also inherit their canvas size from the first layer.
 local layered = build({research("layered-effect", {"automation-science-pack"},
@@ -300,9 +302,39 @@ module.data_final_fixes()
 local layered_continuation = layered.technology["razi-cards-layered-effect-6"]
 	or error("layered-effect continues at level 6")
 check(#layered_continuation.icons == 3 and layered_continuation.icons[2].shift[1] == 4
-	and layered_continuation.icons[3].scale * layered_continuation.icons[3].icon_size == 24
-	and layered_continuation.icons[3].shift[1] == 17.5,
-	"a layered 64px technology retains its original layers and bounds the added badge")
+	and layered_continuation.icons[3].scale * layered_continuation.icons[3].icon_size == 40
+	and layered_continuation.icons[3].shift[1] == 42,
+	"a layered 64px technology retains its original layers and a contained badge")
+
+-- Composite card artwork can have its own layers and explicit offsets.
+-- Rescale the full source-image bounds as one 40px badge, preserving tint,
+-- relative offsets and the unmodified original science item icon.
+local composite = build({research("composite-effect", {"automation-science-pack"})})
+local calidus = composite.tool["calidus-tech-card"]
+calidus.icon = nil
+calidus.icons = {
+	{icon = "__razi-protocol__/graphics/icons/tech-cards/card-base.png", icon_size = 256},
+	{icon = "__razi-protocol__/graphics/icons/tech-cards/card-detail.png",
+		icon_size = 64, scale = .25, shift = {x = 8, y = 8},
+		tint = {r = .5, g = .9, b = 1}}
+}
+module.data_final_fixes()
+local composition = composite.technology["razi-cards-composite-effect-6"]
+	or error("composite-effect continues at level 6")
+check(#composition.icons == 3
+	and math.abs(composition.icons[2].scale * 256 - 40) < .00001
+	and math.abs(composition.icons[3].scale * 64 - 20) < .00001,
+	"all layers of a source tech card must be scaled together")
+check(composition.icons[2].shift[1] == 42 and composition.icons[2].shift[2] == 42
+	and composition.icons[3].shift[1] == 52 and composition.icons[3].shift[2] == 52
+	and composition.icons[3].tint.r == .5,
+	"composite badge must preserve source layer shifts and tints")
+check(composition.icons[2].floating and composition.icons[3].floating
+	and composition.icons[3].draw_background == false,
+	"badge layers must not expand the technology icon or draw shadows")
+check(calidus.icons[1].scale == nil and calidus.icons[2].scale == .25
+	and calidus.icons[2].shift.x == 8,
+	"composing a badge must not rewrite the original card artwork")
 
 -- A card whose recipe is open from the start needs no research for it; one that nothing opens is no card.
 local open_card = build({research("open-effect", {"automation-science-pack"})})
