@@ -53,8 +53,9 @@ local function has_asteroid(route, name)
   return false
 end
 
-local function test_scenario(with_belt)
+local function test_scenario(with_belt, missing_inner)
   local spaces = {["sye-vibrant"] = {}}
+  if missing_inner then spaces["asteroid-belt-outer-edge"] = {} end
   local planets = {fulgora = {}, ribbonia = {}}
   local custom = {
     type = "asteroid-chunk", asteroid = "custom-inner-belt-ore",
@@ -154,10 +155,12 @@ local function test_scenario(with_belt)
     "Second route-authority pass must not modify the reconciled topology")
   local again = 0
   for _ in pairs(routes) do again = again + 1 end
-  check(count == again and connections(routes)[pair(entry, "fulgora")],
-    "Running route passes again must not recreate Ribbonia entry routes")
+  check(count == again
+    and connections(routes)[pair(entry, "fulgora")] == first,
+    "Repeat route passes must retain the same Fulgora entry without recreating it")
 end
 
 test_scenario(true)
 test_scenario(false)
-print("Vibrant first arrival: belt crossing, Fulgora unlock and Ribbonia access passed")
+test_scenario(false, true)
+print("Vibrant first arrival: full, missing and partial belts, Fulgora access and Ribbonia research passed")
