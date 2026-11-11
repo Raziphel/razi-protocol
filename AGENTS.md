@@ -15,6 +15,6 @@ Use the [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0
 - Under standard semantic-version tooling, `fix` implies patch, `feat` implies minor, and `BREAKING CHANGE` or `!` implies major. **The message alone does not publish or bump a version**. Only the repository's explicitly configured, validated release workflow may tag, bump, or publish artifacts.
 - Respect the current build, testing, release and deployment processes. Do not rewrite historical commits or add new GitHub Actions merely to adopt the convention.
 
-For Factorio mods, coordinate versioned releases with `info.json`, `changelog.txt`, dependencies and Factorio compatibility; do not automatically publish mods from an unverified commit message.
+Never edit the version in `info.json` or write entries into `changelog.txt`: CI writes both from the commit messages when it releases (see contributing.md).
 
 Follow the repository's existing contributing guide, tests, and deployment policy when applicable.

@@ -3,8 +3,8 @@
 ## Branches
 
 - `main` holds the released versions. CI publishes every merge that has a releasable commit to the mod portal.
-- `dev` holds work for the next major version. It goes into `main` in one pull request when it is ready.
-- New work goes on a branch, `feat/<name>` or `fix/<name>`, one feature or fix per branch, and into a pull request. Fixes for the released version go to `main`; after each release `main` is merged into `dev`.
+- `dev` collects the work for the next release. It goes into `main` in one pull request when the release is ready.
+- New work goes on a branch from `dev`, `feat/<name>` or `fix/<name>`, one feature or fix per branch, and into a pull request into `dev`.
 - `main` and `dev` take no direct pushes and no force pushes. CI's release commits are the only exception.
 
 ## Commits and versions
@@ -12,7 +12,8 @@
 See [Releases in the README](README.md#releases):
 
 - commit subjects are conventional commits (`feat:`, `fix:`, `balance:`, `compat:`…), and the subject becomes the changelog line;
-- never edit the version in `info.json` or `changelog.txt`: CI writes both when it releases.
+- never edit the version in `info.json` or `changelog.txt`, and never write entries into `changelog.txt`: CI writes both when it releases;
+- text that players see (locale, changelog lines) is `fix:` or `feat:`, not `docs:`: `docs:` makes no release and no changelog line.
 
 ## Before a pull request
 
@@ -79,3 +80,13 @@ Story text is written in `locale/en/story-*.cfg` and tried in the game in writer
 - Moving a planet without updating its routes.
 - UI rebuilt every tick.
 - Code that is not wired in.
+
+## Mistakes to avoid
+
+- **A version number in names or text.** CI picks the version from the commits when a pull request lands in `main`, and nobody knows it before. No version in a branch name, a commit subject, a pull request, a changelog line or the locale: not `3.0.2`, not "release notes for 3.0.2".
+- **Many commits for one change.** One change is one commit with its test inside. No commits with only a test, no commit that fixes the commit before it, no two commits with the same message. Squash before pushing.
+- **Starting without a look at what is open.** Check the open pull requests and branches first: a bug may be fixed already.
+- **Overriding a player's choice.** A setting that another mod gives the player stays the player's. Do not pin it.
+- **A fix wider than the report.** Fix the reported case. Do not change every location in the pack, or difficulty that nobody asked to change, in passing.
+- **Pushing with red tests.** Run `tests/run.sh` before every push.
+- **A number that does not match its name.** `HOUR_TICKS` is 216000, not 3600. Check every time and amount against its unit.
