@@ -184,7 +184,8 @@ check(count(home,"uranium")==1 and largest(home,"uranium")=="chunk",
 check(count(home,"halide")==0 and count(home,"crystalline")==0,
   "The home system carries only what the first platform can crush: "..names(home))
 check(largest(home,"rock")=="chunk","Home routes stay at level 1: chunks only")
--- Sizes follow the ladder: small from stage 2, medium 3, big 6, huge 9.
+-- Defensive access caps: small from 2, medium from 3, Big from 7,
+-- Huge only in Deep Space (10), even on Hard and Nightmare.
 local crossing=routes.crossing.asteroid_spawn_definitions
 check(largest(crossing,"rock")=="small" and largest(crossing,"crystalline")=="small",
   "A level 1-2 crossing adds small hostiles only: "..names(crossing))
@@ -192,16 +193,17 @@ local moon=routes.moon.asteroid_spawn_definitions
 check(largest(moon,"scrap")=="medium" and largest(moon,"electrostatic")=="medium",
   "Fulgora-Cerys (level 4-5) stops at medium: "..names(moon))
 local belt=routes.belt.asteroid_spawn_definitions
-check(largest(belt,"rock")=="big" and count(belt,"huge")==0,
-  "The Vibrant belt crossing reaches big, never huge: "..names(belt))
+check(largest(belt,"rock")=="medium" and count(belt,"big")==0
+  and count(belt,"huge")==0,
+  "The Vibrant belt must stop at medium until later defenses exist: "..names(belt))
 check(count(belt,"electrostatic")>0 and count(belt,"halide")>0,
   "The Vibrant belt carries the Fulgora and Aquilo families")
 local belt_halide=entry(belt,"halide-asteroid-chunk").spawn_points
 check(belt_halide[1].probability>0 and belt_halide[5].probability>0,
   "Light halide flies at both ends of the Vibrant belt")
--- Flat routes pin the thresholds: stage 4-5 and 5 stop at medium, stage 8
--- reaches big without huge, stage 9 is the first with huge; and they pin the
--- system mixes: electrostatic and chemical in Vibrant, halide in Vespera.
+-- Flat routes pin the defense thresholds: levels 4-6 stop at Medium,
+-- levels 7-9 permit Big, and level 10 alone permits Huge. System mixes
+-- still follow their native geography and recipe unlocks.
 local vib=routes.vib.asteroid_spawn_definitions
 check(largest(vib,"scrap")=="medium" and count(vib,"big")==0,
   "A flat level 4-5 route stops at medium: "..names(vib))
@@ -216,8 +218,8 @@ local eight=routes.eight.asteroid_spawn_definitions
 check(largest(eight,"rock")=="big" and count(eight,"huge")==0,
   "A flat level-8 route reaches big, never huge: "..names(eight))
 local nine=routes.nine.asteroid_spawn_definitions
-check(largest(nine,"rock")=="huge",
-  "A flat level-9 route is the first with huge: "..names(nine))
+check(largest(nine,"rock")=="big" and count(nine,"huge")==0,
+  "Huge asteroids are forbidden below Deep Space tier 10: "..names(nine))
 local stage=ladder.route_level(routes.belt,.5,"balanced")
 local midpoint=entry(belt,"rock-asteroid-chunk").spawn_points[3]
 check(midpoint.distance==.5 and math.abs(midpoint.probability
@@ -322,8 +324,8 @@ integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
   {["razi-asteroid-difficulty-scale"]={value="challenging"}})
 integration.data_final_fixes()
 crossing,moon=routes.crossing.asteroid_spawn_definitions,routes.moon.asteroid_spawn_definitions
-check(largest(crossing,"rock")=="medium",
-  "Challenging lifts the crossing to medium hostiles: "..names(crossing))
+check(largest(crossing,"rock")=="small",
+  "Challenging must not accelerate a level-2 crossing's size unlock: "..names(crossing))
 check(largest(moon,"scrap")=="medium","Challenging keeps Fulgora-Cerys below big")
 -- Hard selects the Challenging scale by itself.
 integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
@@ -331,14 +333,14 @@ integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
    ["razi-asteroid-difficulty-scale"]={value="balanced"}})
 integration.data_final_fixes()
 crossing=routes.crossing.asteroid_spawn_definitions
-check(largest(crossing,"rock")=="medium",
-  "Hard must apply the Challenging scale: "..names(crossing))
+check(largest(crossing,"rock")=="small",
+  "Hard cannot unlock stronger asteroid sizes on early crossings: "..names(crossing))
 integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
   {["razi-asteroid-difficulty-scale"]={value="relentless"}})
 integration.data_final_fixes()
 moon,home=routes.moon.asteroid_spawn_definitions,routes.home.asteroid_spawn_definitions
-check(largest(moon,"scrap")=="big",
-  "Relentless lifts Fulgora-Cerys to big hostiles: "..names(moon))
+check(largest(moon,"scrap")=="medium",
+  "Nightmare density must not introduce Big asteroids before tier 7: "..names(moon))
 check(largest(home,"rock")=="chunk","Home links stay chunk-only on every scale")
 -- Partially installed families: only existing prototypes are referenced,
 -- stale entries of families that lost their prototypes are dropped, and a
