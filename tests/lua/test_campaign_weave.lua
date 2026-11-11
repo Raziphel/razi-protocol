@@ -107,6 +107,10 @@ local function has_pack(name,need)
   end
   return false
 end
+-- Ribbonia deliberately follows Fulgora's electromagnetic research.
+-- This is why Vibrant's inner-belt physical arrival must enter at Fulgora.
+check(has_parent("planet-discovery-ribbonia","planet-discovery-fulgora"),
+  "Ribbonia must remain a later Fulgora branch")
 check(has_parent("planet-discovery-castra","metallurgic-science-pack"),
   "Castra lacks Vulcanus metallurgy research")
 check(has_pack("planet-discovery-castra","metallurgic-science-pack"),
