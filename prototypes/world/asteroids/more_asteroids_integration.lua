@@ -6,6 +6,7 @@ local catalog = require("lib.galactic_catalog")
 local ladder = require("lib.difficulty.asteroids")
 local difficulty = require("lib.difficulty.presets")
 local profiles = require("prototypes.world.asteroids.asteroid_profiles")
+local size_guard = require("prototypes.world.asteroids.asteroid_size_guard")
 
 local materials = {"uranium", "rock", "scrap", "organic", "chemical", "crystalline",
                    "halide", "electrostatic"}
@@ -145,7 +146,10 @@ local function curve(route, start_mix, end_mix, material, size, mode, belt)
   local result, max_probability = {}, 0.0
   local base = ({chunk=.0031, small=.00082, medium=.00054,
                  big=.00029, huge=.00013})[size]
-  local minimum = ({chunk=1, small=2, medium=3, big=6, huge=9})[size]
+  -- The native and modded families share one defense-access gate.
+  -- Preset pressure can increase density, never unlock Big/Huge early.
+  local minimum = size_guard.minimum_level[size]
+    or ({chunk=1, small=2})[size]
   local crowding = profiles.asteroid_factor()
   local harvest = profiles.ore_factor()
   local belt_factor = belt and (size=="chunk" and 1.7*harvest
@@ -155,7 +159,7 @@ local function curve(route, start_mix, end_mix, material, size, mode, belt)
     local weight = (start_mix[material] or 0)*(1-t)
       + (end_mix[material] or 0)*t
     local probability = 0.0
-    if stage >= minimum and weight > 0 then
+    if ladder.route_level(route, t, "balanced") >= minimum and weight > 0 then
       local stage_factor = size=="chunk" and (0.78 + stage*.035)
         or (0.72 + stage*.05)
       local middle = t==.50 and 1.23 or
