@@ -3,6 +3,7 @@ local M=require("scripts.journal.project_api")
 local style=require("scripts.journal.project_style")
 require("scripts.journal.project_next")
 local readers=require("scripts.journal.project_readers")
+local cargo_view=require("scripts.cargo.view")
 local dyson=require("scripts.dyson.dyson")
 local convergence=require("scripts.convergence.convergence")
 local icons=require("scripts.journal.icons")
@@ -16,7 +17,10 @@ local great_project_reader=readers.great
 local nexus_trials_reader=readers.nexus_trials
 local transceiver=readers.transceiver
 local function project_progress(id,done,total)
-  if total==0 then return L("project-unavailable") end
+  if total==0 then
+    return L(id=="cargo" and "project-progress-cargo-none"
+      or "project-unavailable")
+  end
   return L("project-progress-"..id,tostring(done),tostring(total))
 end
 
@@ -171,6 +175,8 @@ local function project_reader(parent,player,p,size,width,compact,statuses,displa
     platform_reader(content,player,width-68,p.project,current)
   elseif p.project=="skybridge" then
     great_project_reader(content,player,width-68,"skybridge",current)
+  elseif p.project=="cargo" then
+    cargo_view.render(content,player,width-68,current[3],p)
   elseif p.project=="beltbreaker" then
     great_project_reader(content,player,width-68,"beltbreaker",current)
   elseif p.project=="array" then

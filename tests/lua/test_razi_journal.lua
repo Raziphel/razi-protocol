@@ -5,7 +5,7 @@ local function check(ok,message) if not ok then error(message,2) end end
 local defs=require("scripts.journal.data")
 local M=require("scripts.journal.journal")
 check(#defs.chapters==19,"Nineteen expedition chapters expected")
-check(#defs.quests==230,"Protocol Codex must include 230 source-backed expedition milestones")
+check(#defs.quests==227,"Protocol Codex must include 227 source-backed expedition milestones")
 local seen={}
 for _,chapter in ipairs(defs.chapters) do
   seen[chapter.id]=true

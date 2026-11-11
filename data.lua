@@ -27,3 +27,10 @@ require("prototypes.compatibility.orbital-cannon.orbital_catapult").data()
 -- data-updates.lua runs before ours, and its recursive GetAllDescendants cannot walk a cyclic prerequisite graph.
 -- Break the cycles Athos owns (or the two known bootstrap loops) now, after our technologies are registered.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair("before-athos-data-updates")
+
+-- nexus-bosses loads before Nexus, which lists it as an optional dependency, and so before us. Its prototypes must see our
+-- final enemies and the final technologies of Nexus: the last step of our data-final-fixes makes them, and this mod-data
+-- tells its own data-final-fixes not to.
+if mods["nexus-bosses"] then
+  data:extend({{type = "mod-data", name = "nexus-bosses-late", data = {mod = "razi-protocol"}}})
+end

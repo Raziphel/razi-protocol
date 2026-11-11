@@ -61,10 +61,12 @@ local route_specifications = {
   -- and a late-game crosslink. They avoid diagonals through Calidus.
   {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
-  -- The exterior Slip Stream reaches the Outer Rim; Ribbonia connects to
+  -- The exterior Slip Stream reaches the Outer Rim; Fulgora connects to
   -- the Inner Rim. Khemia sits INSIDE the band, not across its outer gap.
+  -- Fulgora, not Ribbonia: Ribbonia's research needs electromagnetic science,
+  -- which is made on Fulgora, so a Ribbonia gate locked Fulgora out for good.
   {"sye-vibrant", "asteroid-belt-outer-edge", 36000, "chemistry"},
-  {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
+  {"fulgora", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
   -- Solaris closes into one clean orbital loop. The gateway is outside the
   -- northwest rim, and three interstellar departures fan away from the sun.
@@ -132,10 +134,10 @@ local route_specifications = {
 }
 
 -- Without the Vibrant and Umbra belt locations the belt crossings above are skipped, which would
--- cut off Ribbonia, Fulgora, Cerys, Paracelsin, Shchierbin, Tenebris and Crucible. Link them to
+-- cut off Fulgora, Ribbonia, Cerys, Paracelsin, Shchierbin, Tenebris and Crucible. Link them to
 -- their hubs directly in that case.
 if not (data.raw["space-location"] and data.raw["space-location"]["asteroid-belt-outer-edge"]) then
-  route_specifications[#route_specifications + 1] = {"sye-vibrant", "ribbonia", 20000, "chemistry_deep"}
+  route_specifications[#route_specifications + 1] = {"sye-vibrant", "fulgora", 20000, "chemistry_deep"}
   route_specifications[#route_specifications + 1] = {"sye-vibrant", "paracelsin", 40000, "chemistry_deep"}
 end
 if not (data.raw["space-location"] and data.raw["space-location"]["razi-umbra-belt-outer"]) then

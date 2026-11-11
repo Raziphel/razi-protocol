@@ -17,12 +17,17 @@ prototypes=setmetatable({}, {__index=function(_,key)
 end})
 game={planets={muria={},rubia={},aquilo={}}}
 local network=require("scripts.compatibility.orbital-cannon.catapult_network")
+check(not network.researched(force,"muria")
+  and not network.researched(force,"unknown"),
+ "unknown or incomplete world research is closed")
 local report=network.snapshot(force)
 check(report.installed and report.enabled and report.total==3,
  "Three configured Vespera corridors expected")
 check(report.visible==0 and report.concealed==3 and #report.entries==0,
  "Early-game Journal must not reveal future destination names")
 force.technologies["planet-discovery-muria"].researched=true
+check(network.researched(force,"muria"),
+ "world research uses the catapult network discovery mapping")
 report=network.snapshot(force)
 check(report.visible==0 and report.concealed==3,
  "One world researched must not reveal undiscovered catapult destinations")

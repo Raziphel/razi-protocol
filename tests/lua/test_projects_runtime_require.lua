@@ -8,7 +8,7 @@ storage={}
 local force={index=7,platforms={},technologies={}}
 local ok,err=pcall(function()
   assert(projects.valid("platform") and projects.valid("voyage"))
-  assert(not projects.valid("cargo") and not projects.valid("recovery"))
+  assert(projects.valid("cargo") and not projects.valid("recovery"))
   assert(projects.visible(force,"platform"))
   local ship={valid=true,hub={valid=true},force=force,name="Anvil",
     scheduled_for_deletion=0,completed_trips=0}

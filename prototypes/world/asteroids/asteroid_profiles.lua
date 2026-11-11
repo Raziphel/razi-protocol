@@ -219,10 +219,14 @@ local belt_crossing_rates={
   umbra={metallic=0.014,carbonic=0.034,oxide=0.024}
 }
 local families={"metallic","carbonic","oxide"}
+-- Whether a parked platform may harvest the edges of the belts (razi-belt-edge-harvesting).
+function M.belt_harvesting()
+  return preference("razi-belt-edge-harvesting",true)~=false
+end
 -- Edge harvesting uses the location spawn format rather than route points.
 -- A paused space platform can collect ore without turret-heavy combat.
 function M.belt_edge_resources(intensity,system)
-  if preference("razi-belt-edge-harvesting",true)==false then return {} end
+  if not M.belt_harvesting() then return {} end
   local result={}
   local resources=data and data.raw and data.raw["asteroid-chunk"] or {}
   local emphasis=M.belt_resources[system] or {}

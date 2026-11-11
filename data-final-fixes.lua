@@ -164,6 +164,10 @@ require("prototypes.world.systems.bellicos").dedupe_internal_routes()
 -- mod-provided outer expeditions with unknown location IDs.
 require("lib.difficulty.asteroids").prepare_routes(data.raw["space-connection"])
 
+-- The slipstreams and Eneas have no asteroids: a parked platform gets the basic chunks there. Before More Asteroids,
+-- whose orbit pass adds its families next to them.
+require("prototypes.world.asteroids.parked_chunks").data_final_fixes()
+
 -- Razi More Asteroids owns the eight material families and K2SO recipes.
 -- Reprofile the final surviving RP3 connections, including both Razi belts,
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
@@ -229,6 +233,10 @@ require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 -- could copy these recipes, before the menu pass.
 require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()
 
+-- The metallurgic science pack research also unlocks the oxide asteroid crushing, so calcite comes from orbit at home
+-- once the player has been to Vulcanus. After the gates, which may move unlocks, before the menu pass.
+require("prototypes.balance.space-age.space_calcite").data_final_fixes()
+
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
 -- remnant-beacon. The copies take the already normalized native recipe, so running after the passes above is safe; before the menu pass.
@@ -271,9 +279,18 @@ require("prototypes.fixes.init").data_final_fixes()
 -- Recipe loops, as the level of razi-resource-loops decides: after the repairs, which they see in their final state.
 require("prototypes.balance.resource_loops").data_final_fixes()
 
+-- Muluna's barrels open with the technology of their fluid, not all at once with its trigger technology. After the loops,
+-- which hide the technologies they empty (the barrels must not move to a hidden one), and after the Muluna pass that
+-- gathered the barrels, which a dependency always runs first.
+require("prototypes.balance.planet-muluna.barrel_gates").data_final_fixes()
+
 -- The biochamber stays needed: after the repairs, which see the categories every mod left on the plant.
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
 
 -- Infinite research continues on system cards after its fifth level. The last pass: it copies research, and the repairs
 -- above change research by name; the packs of the research are cards of their own by now when razi-auto-tech-cards is on.
 require("prototypes.balance.common.infinite_research_cards").data_final_fixes()
+
+-- The prototypes of nexus-bosses (copies of enemies, the nests of Nexus, the routes of the warp drive behind the trials), as the
+-- very last step: they see our final enemies and the final technologies of Nexus (data.lua says why we make them).
+if mods["nexus-bosses"] then require("__nexus-bosses__/prototypes/init") end

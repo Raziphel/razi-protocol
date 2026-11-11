@@ -23,9 +23,13 @@ infinite_research_cards.setting = "razi-infinite-research-cards"
 -- Levels a research keeps on the packs, counted from its first.
 infinite_research_cards.span = Names.span
 
--- The icon of the card sits at the lower right of the icon of the research (pixels of a 256 icon).
-local label_size = 96
-local label_shift = 70
+-- The icon of the card sits at the lower right of the icon of the research: 96/256 of its width, its centre 70/256
+-- of the width right and down from the centre. Scale and shift of an icon layer are in GUI units, in which a
+-- technology icon is expected_icon_size / 2 = 128 wide whatever the size of its file (a first layer without a scale
+-- fills it); the sizes in pixels of a 256 icon made the card twice as large and pushed it over the edge.
+local label_part = 96 / 256
+local shift_part = 70 / 256
+local technology_icon_units = 128
 
 -- "foo-3" is the research "foo" from level 3 on, a name without a number starts at level 1.
 infinite_research_cards.split = Names.split
@@ -135,6 +139,10 @@ local function icons_with_label(technology, card)
 		-- icon_size defaults to 64 for a technology as well: Igrys gives its copper plate research the 64 icon of the item
 		icons = {{icon = technology.icon, icon_size = technology.icon_size or 64}}
 	end
+	local first = icons[1]
+	local width = first.scale and (first.icon_size or 64) * first.scale or technology_icon_units
+	local label_size = width * label_part
+	local label_shift = width * shift_part
 	for _, layer in ipairs(source.icons or {{icon = source.icon, icon_size = source.icon_size}}) do
 		local size = layer.icon_size or source.icon_size or 64
 		local scale = label_size / size * (layer.scale or 1)

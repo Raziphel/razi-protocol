@@ -13,7 +13,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## quest-title
 
-`locale/en/story-quests.cfg`, section `[razi-story-quest-title]`: quest name in the list and the dossier heading. 230 slots.
+`locale/en/story-quests.cfg`, section `[razi-story-quest-title]`: quest name in the list and the dossier heading. 227 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -59,8 +59,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `panglia-simulation` | quest name in the list and the dossier heading; chapter `nyxaris` | quest opens with research `panglia_simulation_chamber`, after quests `panglia-dna`, `panglia-timewarp` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `panglia-matrix` | quest name in the list and the dossier heading; chapter `nyxaris` | quest opens with research `panglia_simulation_matrix`, after quests `panglia-simulation` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `panglia-sentient` | quest name in the list and the dossier heading; chapter `nyxaris` | quest opens with research `panglia_sentient_processor`, after quests `panglia-matrix` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `panglia-biooptic-trade` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-panglia-biooptic-glass`, after quests `panglia-glass`, `interplanetary-trade` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `panglia-optical-return` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-moshine-panglia-optical-cables`, after quests `panglia-biooptic-trade` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `vibrant-gate` | quest name in the list and the dossier heading; chapter `vibrant` | quest opens with research `vibrant-discovery`, after quests `corrundum`, `apia` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `fulgora` | quest name in the list and the dossier heading; chapter `vibrant` | quest opens with research `planet-discovery-fulgora`, after quests `vibrant-gate` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `cerys` | quest name in the list and the dossier heading; chapter `vibrant` | quest opens with research `moon-discovery-cerys`, after quests `fulgora` | 60 |
@@ -96,7 +94,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `dyson-mk3` | quest name in the list and the dossier heading; chapter `stellar` | quest opens with research `ds-energy-loader-mk3`, after quests `dyson-mk2` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `interplanetary-trade` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `interplanetary-trade-logistics`, after quests `space-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `signal-network` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `aai-signal-transmission`, after quests `interplanetary-trade` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `first-frontier-relay` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-first-frontier-relay-components`, after quests `vulcanus`, `gleba`, `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `precision-matrix` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-network-precision-matrix`, after quests `fulgora`, `moshine` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `extreme-lattice` | quest name in the list and the dossier heading; chapter `network` | quest opens with research `razi-network-extreme-lattice`, after quests `precision-matrix`, `rubia`, `tenebris` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `outer-mastery` | quest name in the list and the dossier heading; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox` | 60 |
@@ -250,7 +247,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## quest-story
 
-`locale/en/story-quests.cfg`, section `[razi-story-quest]`: quest dossier, story block. 230 slots.
+`locale/en/story-quests.cfg`, section `[razi-story-quest]`: quest dossier, story block. 227 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -296,8 +293,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `panglia-simulation` | quest dossier, story block; chapter `nyxaris` | quest opens with research `panglia_simulation_chamber`, after quests `panglia-dna`, `panglia-timewarp` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `panglia-matrix` | quest dossier, story block; chapter `nyxaris` | quest opens with research `panglia_simulation_matrix`, after quests `panglia-simulation` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `panglia-sentient` | quest dossier, story block; chapter `nyxaris` | quest opens with research `panglia_sentient_processor`, after quests `panglia-matrix` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `panglia-biooptic-trade` | quest dossier, story block; chapter `network` | quest opens with research `razi-panglia-biooptic-glass`, after quests `panglia-glass`, `interplanetary-trade` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `panglia-optical-return` | quest dossier, story block; chapter `network` | quest opens with research `razi-moshine-panglia-optical-cables`, after quests `panglia-biooptic-trade` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `vibrant-gate` | quest dossier, story block; chapter `vibrant` | quest opens with research `vibrant-discovery`, after quests `corrundum`, `apia` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `fulgora` | quest dossier, story block; chapter `vibrant` | quest opens with research `planet-discovery-fulgora`, after quests `vibrant-gate` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `cerys` | quest dossier, story block; chapter `vibrant` | quest opens with research `moon-discovery-cerys`, after quests `fulgora` | 900 |
@@ -333,7 +328,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `dyson-mk3` | quest dossier, story block; chapter `stellar` | quest opens with research `ds-energy-loader-mk3`, after quests `dyson-mk2` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `interplanetary-trade` | quest dossier, story block; chapter `network` | quest opens with research `interplanetary-trade-logistics`, after quests `space-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `signal-network` | quest dossier, story block; chapter `network` | quest opens with research `aai-signal-transmission`, after quests `interplanetary-trade` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `first-frontier-relay` | quest dossier, story block; chapter `network` | quest opens with research `razi-first-frontier-relay-components`, after quests `vulcanus`, `gleba`, `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `precision-matrix` | quest dossier, story block; chapter `network` | quest opens with research `razi-network-precision-matrix`, after quests `fulgora`, `moshine` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `extreme-lattice` | quest dossier, story block; chapter `network` | quest opens with research `razi-network-extreme-lattice`, after quests `precision-matrix`, `rubia`, `tenebris` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `outer-mastery` | quest dossier, story block; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox` | 900 |
@@ -487,7 +481,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## quest-tip
 
-`locale/en/story-quests.cfg`, section `[razi-story-quest-tip]`: quest dossier, field note. 230 slots.
+`locale/en/story-quests.cfg`, section `[razi-story-quest-tip]`: quest dossier, field note. 227 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -533,8 +527,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `panglia-simulation` | quest dossier, field note; chapter `nyxaris` | quest opens with research `panglia_simulation_chamber`, after quests `panglia-dna`, `panglia-timewarp` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `panglia-matrix` | quest dossier, field note; chapter `nyxaris` | quest opens with research `panglia_simulation_matrix`, after quests `panglia-simulation` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `panglia-sentient` | quest dossier, field note; chapter `nyxaris` | quest opens with research `panglia_sentient_processor`, after quests `panglia-matrix` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `panglia-biooptic-trade` | quest dossier, field note; chapter `network` | quest opens with research `razi-panglia-biooptic-glass`, after quests `panglia-glass`, `interplanetary-trade` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `panglia-optical-return` | quest dossier, field note; chapter `network` | quest opens with research `razi-moshine-panglia-optical-cables`, after quests `panglia-biooptic-trade` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `vibrant-gate` | quest dossier, field note; chapter `vibrant` | quest opens with research `vibrant-discovery`, after quests `corrundum`, `apia` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `fulgora` | quest dossier, field note; chapter `vibrant` | quest opens with research `planet-discovery-fulgora`, after quests `vibrant-gate` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `cerys` | quest dossier, field note; chapter `vibrant` | quest opens with research `moon-discovery-cerys`, after quests `fulgora` | 400 |
@@ -570,7 +562,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `dyson-mk3` | quest dossier, field note; chapter `stellar` | quest opens with research `ds-energy-loader-mk3`, after quests `dyson-mk2` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `interplanetary-trade` | quest dossier, field note; chapter `network` | quest opens with research `interplanetary-trade-logistics`, after quests `space-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `signal-network` | quest dossier, field note; chapter `network` | quest opens with research `aai-signal-transmission`, after quests `interplanetary-trade` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `first-frontier-relay` | quest dossier, field note; chapter `network` | quest opens with research `razi-first-frontier-relay-components`, after quests `vulcanus`, `gleba`, `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `precision-matrix` | quest dossier, field note; chapter `network` | quest opens with research `razi-network-precision-matrix`, after quests `fulgora`, `moshine` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `extreme-lattice` | quest dossier, field note; chapter `network` | quest opens with research `razi-network-extreme-lattice`, after quests `precision-matrix`, `rubia`, `tenebris` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `outer-mastery` | quest dossier, field note; chapter `finale` | quest opens with research `razi-outer-frontier-mastery`, after quests `frozeta`, `vesta`, `linox` | 400 |
@@ -900,7 +891,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## record-title
 
-`locale/en/story-records.cfg`, section `[razi-story-record-title]`: Archive list and record heading. 73 slots.
+`locale/en/story-records.cfg`, section `[razi-story-record-title]`: Archive list and record heading. 72 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -959,7 +950,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-records.cfg `[razi-story-record-title]` | `corp-glass-bond` | Archive list and record heading; field record | quest `alliance-panglia-bond` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-panglia-model` | Archive list and record heading; field record | quest `panglia-sentient` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-network` | Archive list and record heading; corporate record | quest `precision-matrix` is complete | 60 |
-| story-records.cfg `[razi-story-record-title]` | `corp-first-relay` | Archive list and record heading; field record | quest `first-frontier-relay` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-dyson` | Archive list and record heading; corporate record | quest `dyson-build` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-solar-orbit-watch` | Archive list and record heading; field record | quest `solar-orbit` is complete | 60 |
 | story-records.cfg `[razi-story-record-title]` | `corp-audit` | Archive list and record heading; corporate record | quest `stable-singularity` is complete | 60 |
@@ -980,7 +970,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## record-origin
 
-`locale/en/story-records.cfg`, section `[razi-story-record-origin]`: Archive record, line under the heading. 73 slots.
+`locale/en/story-records.cfg`, section `[razi-story-record-origin]`: Archive record, line under the heading. 72 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -1039,7 +1029,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-records.cfg `[razi-story-record-origin]` | `corp-glass-bond` | Archive record, line under the heading; field record | quest `alliance-panglia-bond` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-panglia-model` | Archive record, line under the heading; field record | quest `panglia-sentient` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-network` | Archive record, line under the heading; corporate record | quest `precision-matrix` is complete | 80 |
-| story-records.cfg `[razi-story-record-origin]` | `corp-first-relay` | Archive record, line under the heading; field record | quest `first-frontier-relay` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-dyson` | Archive record, line under the heading; corporate record | quest `dyson-build` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-solar-orbit-watch` | Archive record, line under the heading; field record | quest `solar-orbit` is complete | 80 |
 | story-records.cfg `[razi-story-record-origin]` | `corp-audit` | Archive record, line under the heading; corporate record | quest `stable-singularity` is complete | 80 |
@@ -1060,7 +1049,7 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## record-body
 
-`locale/en/story-records.cfg`, section `[razi-story-record]`: Archive record, text. 73 slots.
+`locale/en/story-records.cfg`, section `[razi-story-record]`: Archive record, text. 72 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
@@ -1119,7 +1108,6 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-records.cfg `[razi-story-record]` | `corp-glass-bond` | Archive record, text; field record | quest `alliance-panglia-bond` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-panglia-model` | Archive record, text; field record | quest `panglia-sentient` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-network` | Archive record, text; corporate record | quest `precision-matrix` is complete | 2500 |
-| story-records.cfg `[razi-story-record]` | `corp-first-relay` | Archive record, text; field record | quest `first-frontier-relay` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-dyson` | Archive record, text; corporate record | quest `dyson-build` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-solar-orbit-watch` | Archive record, text; field record | quest `solar-orbit` is complete | 2500 |
 | story-records.cfg `[razi-story-record]` | `corp-audit` | Archive record, text; corporate record | quest `stable-singularity` is complete | 2500 |
@@ -1140,13 +1128,14 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 
 ## project-context
 
-`locale/en/story-projects.cfg`, section `[razi-story-project]`: Projects, line under the project overview. 9 slots.
+`locale/en/story-projects.cfg`, section `[razi-story-project]`: Projects, line under the project overview. 10 slots.
 
 | File and section | Key | Where seen | When it appears | Length |
 | --- | --- | --- | --- | --- |
 | story-projects.cfg `[razi-story-project]` | `platform` | Projects, line under the project overview; project `platform` | Projects tab, project `platform` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `voyage` | Projects, line under the project overview; project `voyage` | Projects tab, project `voyage` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `skybridge` | Projects, line under the project overview; project `skybridge` | Projects tab, project `skybridge` is open | 300 |
+| story-projects.cfg `[razi-story-project]` | `cargo` | Projects, line under the project overview; project `cargo` | Projects tab, project `cargo` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `beltbreaker` | Projects, line under the project overview; project `beltbreaker` | Projects tab, project `beltbreaker` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `dyson` | Projects, line under the project overview; project `dyson` | Projects tab, project `dyson` is open | 300 |
 | story-projects.cfg `[razi-story-project]` | `transceiver` | Projects, line under the project overview; project `transceiver` | Projects tab, project `transceiver` is open | 300 |

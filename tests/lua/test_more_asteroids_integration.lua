@@ -287,10 +287,12 @@ check(raw.planet["sun-orbit"].asteroid_spawn_definitions==nil
   and raw["space-location"]["slp-dyson-dummy"].asteroid_spawn_definitions==nil
   and raw["space-location"]["slp-solar-system-sun"].asteroid_spawn_definitions==nil,
   "Solar orbits never get orbit chunks")
-check(raw["space-location"]["sye-calidus"].asteroid_spawn_definitions==nil
-  and raw["space-location"]["razi-deep-space-edge"].asteroid_spawn_definitions==nil
+check(raw["space-location"]["sye-calidus"].asteroid_spawn_definitions~=nil
+  and #raw["space-location"]["sye-calidus"].asteroid_spawn_definitions>0,
+  "The slipstreams of the systems get orbit chunks: a parked platform collects there")
+check(raw["space-location"]["razi-deep-space-edge"].asteroid_spawn_definitions==nil
   and raw.planet["third-party-world"].asteroid_spawn_definitions==nil,
-  "System hubs, the deep space edge and unknown worlds are skipped")
+  "The deep space edge and unknown worlds are skipped")
 -- Idempotent: a second pass keeps every list identical in content.
 local before=names(deep)..";"..names(home)..";"..names(belt)..";"..names(nauvis)
 check(integration.data_final_fixes()==#approved,"A second pass sees the same routes")
@@ -401,5 +403,16 @@ for _,world in ipairs(worlds) do
       end
     end
   end
+end
+-- Without belt edge harvesting the edges of the belts stay empty; other orbits still get their chunks.
+do
+  local off_chunks,off_enemies=prototypes()
+  local off={["asteroid-chunk"]=off_chunks,asteroid=off_enemies,planet={},
+    ["space-location"]={["asteroid-belt-inner-edge"]={},nexus={}},["space-connection"]={}}
+  reload(off,{["razi-more-asteroids"]="1.1.1"},
+    {["razi-belt-edge-harvesting"]={value=false}}).data_final_fixes()
+  check(off["space-location"]["asteroid-belt-inner-edge"].asteroid_spawn_definitions==nil,
+    "Belt edges get no orbit chunks while harvesting is off")
+  check(#off["space-location"].nexus.asteroid_spawn_definitions>0,"Other orbits still get their chunks")
 end
 print("Razi More Asteroids integration passed")

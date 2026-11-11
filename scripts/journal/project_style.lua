@@ -15,6 +15,7 @@ local PROJECT_ART={
   platform="item/space-platform-starter-pack",
   voyage="entity/thruster",
   skybridge="item/processing-unit",
+  cargo="item/cargo-bay",
   beltbreaker="technology/rocket-turret",
   array="item/razi-archive-relay",
   ark="item/space-platform-foundation",

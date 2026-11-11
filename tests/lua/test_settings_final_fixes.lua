@@ -27,6 +27,7 @@ local raw = {
     ["crushing-industry-glass"] = { default_value = true },
     ["crushing-industry-optical-fiber"] = { default_value = true },
     ["crushing-industry-concrete-mix"] = { default_value = true },
+    ["crushing-industry-space-crusher-quality"] = { default_value = true },
     ["crushing-industry-ore"] = { default_value = true },
     ["rigor-module-compatibility-mode"] = { default_value = false },
     ["rigor-module-compatibility-mode-include-vanilla"] = { default_value = true },
@@ -41,7 +42,8 @@ local raw = {
 }
 run(raw)
 for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis", "bm-armored-biters-override",
-  "nulla-vanila-science", "crushing-industry-k2", "crushing-industry-glass", "crushing-industry-optical-fiber", "crushing-industry-concrete-mix" }) do
+  "nulla-vanila-science", "crushing-industry-k2", "crushing-industry-glass", "crushing-industry-optical-fiber", "crushing-industry-concrete-mix",
+  "crushing-industry-space-crusher-quality" }) do
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == false and setting.default_value == false and setting.hidden == true, name .. " not pinned to false")

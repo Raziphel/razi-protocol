@@ -1,6 +1,6 @@
 -- Inject one lightweight quality carrier per hostile asteroid species.
 -- Runs after ALL route authors, Razi balancing and final route visuals.
--- Resource chunks are never altered. The carriers are immediately replaced
+-- The chunk definitions of the routes are not altered, but a quality asteroid drops chunks of its quality. The carriers are immediately replaced
 -- by real quality asteroids at runtime (scripts/events/asteroids.lua), avoiding fake drop duplication.
 local M={}
 local engine=require("lib.difficulty.asteroids")
