@@ -211,6 +211,11 @@ require("prototypes.world.asteroids.quality_asteroids").data_final_fixes()
 -- spawn scripts are left alone.
 require("prototypes.world.asteroids.asteroid_performance").data_final_fixes()
 
+-- Stationary asteroid supply is separate from route spawn curves. Guarantee
+-- a minimum of collectible native chunks at every final planet and space
+-- location, including slipstreams, without replacing source hazard profiles.
+require("prototypes.world.asteroids.orbit_chunk_floor").data_final_fixes()
+
 -- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
 -- copy or add a prototype, as the last edit of created_effect.
 require("prototypes.fixes.carna.carna_spire_copies").data_final_fixes()
