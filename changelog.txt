@@ -1,4 +1,30 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.0
+Date: 2026-11-11
+  Features:
+    - [balance] Muluna barrels open with the technology of their fluid, not all at once
+    - [journal] add the Cargo Network project with the fleet and catapult corridor overview
+    - [journal] add the freight desk to the Cargo Network project
+  Balancing:
+    - advanced circuits from silicon take at most +100 % productivity
+    - calcite from oxide asteroids after Vulcanus
+    - the crusher no longer gets Crushing Industry's base quality, its chunks and crushed products came out with quality on every platform
+  Bugfixes:
+    - a platform parked at a slipstream collects asteroid chunks; the slipstreams and Eneas had no asteroids, and More Asteroids skipped them; belt edges get no More Asteroids chunks while edge harvesting is off
+    - a technology never needs a hidden one; without Dea Dia, Frozeta hides the bulk heat inserter technology that the neodymium bulk heat inserter of heat-inserter needed, so it could never be researched
+    - drop the optional dependencies that have no Factorio 2.1 release
+    - game start failed on the system card copy of Igrys copper plate productivity
+    - [journal] count only placeable Orbital Catapult machines in the Cargo Network overview
+    - [journal] remove the quests of the dropped exchanges
+    - makes the prototypes of nexus-bosses at the end of its data-final-fixes; nexus-bosses 2.5.2 loads before Nexus, which lists it as an optional dependency since 1.3.8, so the game no longer reports circular dependencies
+    - recommend spiderbots-21, the Factorio 2.1 fork of Spiderbots
+    - recommend the Factorio 2.1 forks of Even Distribution and the Krastorio 2 air purifier helper
+    - recommend the Factorio 2.1 forks of Noxys Swimming and Tenebris plants retexture
+    - the card on the icons of infinite research continued on system cards is half the size and stays inside the icon
+    - the inner edge of the Vibrant asteroid belt leads to Fulgora instead of Ribbonia, Fulgora could only be reached through Ribbonia, whose research needs Fulgora's science
+    - the lab copies of science packs are called "Lab-ready <pack>", with K2 packs the name read "tech card card"
+    - the quality asteroids setting says that their chunks come out with the same quality
+---------------------------------------------------------------------------------------------------
 Version: 3.0.1
 Date: 2026-11-10
   Bugfixes:
