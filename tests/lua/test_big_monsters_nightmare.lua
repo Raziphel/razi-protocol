@@ -40,13 +40,14 @@ local initial = storage.razi_big_monsters
 check(initial.next_event == game.tick + 5 * 7 * 3600
     and initial.next_silo == game.tick + 5 * 4 * 3600,
   "Nightmare must start a five-day schedule, not spawn immediately")
-callbacks.tick({tick = initial.next_silo})
+local first_silo_due = initial.next_silo
+callbacks.tick({tick = first_silo_due})
 check(#calls == 0, "Do not start an attack before the scheduled check")
-callbacks.tick({tick = initial.next_silo + 3600})
+callbacks.tick({tick = first_silo_due + 3600})
 check(#calls == 1 and calls[1] == "create_silo_event",
   "Enabled silo attacks must follow the native Big-Monsters interval")
-check(storage.razi_big_monsters.next_silo >= initial.next_silo + 3600 + 15 * 3600
-    and storage.razi_big_monsters.next_silo <= initial.next_silo + 3600 + 25 * 3600,
+check(storage.razi_big_monsters.next_silo >= first_silo_due + 3600 + 15 * 3600
+    and storage.razi_big_monsters.next_silo <= first_silo_due + 3600 + 25 * 3600,
   "Silo follow-up must use Big-Monsters' native random interval")
 local event_tick = initial.next_event + 3600
 callbacks.tick({tick = event_tick})
