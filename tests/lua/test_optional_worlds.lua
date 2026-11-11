@@ -69,8 +69,8 @@ end
 check(dependencies["planet-ferrum"]:match("^[%?%+]"), "planet-ferrum is no longer an optional dependency")
 check(not seen["planet-ferrum"], "Ferrum and its pack are on the path and stay out of the list")
 check(dependencies["Nexus"] == "Nexus >= 1.3.6", "Nexus must be a required dependency")
--- `nexus-bosses` is required without a load order (`~`).
-check(dependencies["nexus-bosses"] == "~ nexus-bosses >= 2.5.1",
+-- `nexus-bosses` is required without a load order (`~`), 2.5.2 or newer: it loads before Nexus and we make its prototypes.
+check(dependencies["nexus-bosses"] == "~ nexus-bosses >= 2.5.2",
 	"`nexus-bosses` is required without a load order (`~`)")
 -- Secretas is required and on the path to the final technology
 check(not seen["secretas"], "Secretas is a required dependency and stays out of the list")

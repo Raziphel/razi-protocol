@@ -282,3 +282,7 @@ require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plan
 -- Infinite research continues on system cards after its fifth level. The last pass: it copies research, and the repairs
 -- above change research by name; the packs of the research are cards of their own by now when razi-auto-tech-cards is on.
 require("prototypes.balance.common.infinite_research_cards").data_final_fixes()
+
+-- The prototypes of nexus-bosses (copies of enemies, the nests of Nexus, the routes of the warp drive behind the trials), as the
+-- very last step: they see our final enemies and the final technologies of Nexus (data.lua says why we make them).
+if mods["nexus-bosses"] then require("__nexus-bosses__/prototypes/init") end
