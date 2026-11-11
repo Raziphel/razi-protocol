@@ -42,6 +42,11 @@ local pinned_bool_settings = {
 	-- kr-crush-concrete, nuclear-reactor, rocket-silo, centrifuge, cargo-landing-pad, rail ramps, the Planetaris
 	-- concretes and others), moves them to fluid crafting and takes them out of hand crafting.
 	["crushing-industry-concrete-mix"] = false,
+	-- Default true: the vanilla crusher gets a base effect of +12.5 % quality and +25 % productivity and four
+	-- quality-module-2 in its recipe (crushing-industry base-data-updates.lua:17-20). Asteroid chunks and their
+	-- crushed products then come out with quality on every platform, and quality items block ordinary belts,
+	-- filters and recipes. The productivity and the faster crusher of the same mod stay.
+	["crushing-industry-space-crusher-quality"] = false,
 	-- Default false: Rigor Module copies every recipe with a chance among its products into hidden
 	-- <recipe>__rigor_module_mod__<N> variants, one per rigor step (25 776 copies of 395 recipes in the full pack), and
 	-- the game stops at 65 535 recipes ("Reached id limit for recipe"). In compatibility mode only the vanilla recipes
