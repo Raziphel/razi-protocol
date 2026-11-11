@@ -23,10 +23,12 @@ infinite_research_cards.setting = "razi-infinite-research-cards"
 -- Levels a research keeps on the packs, counted from its first.
 infinite_research_cards.span = Names.span
 
--- The badge fills the same fraction of the technology icon at any native
--- resolution. Modded technologies can use 64px item art instead of 256px art.
-local label_size_fraction = 96 / 256
-local label_shift_fraction = 70 / 256
+-- Technology icons render on a 128px logical canvas, independent of the
+-- artwork's 64/128/256px source resolution. The card occupies a 40px square
+-- at the bottom right, wholly inside that canvas (42 + 40/2 < 64).
+local badge_size = 40
+local badge_offset = 42
+local item_icon_canvas = 32 -- IconData defaults: expected item icon size / 2
 
 -- "foo-3" is the research "foo" from level 3 on, a name without a number starts at level 1.
 infinite_research_cards.split = Names.split
@@ -127,28 +129,43 @@ local function lab_takes(names)
 	return false
 end
 
+local function vector_xy(vector)
+	if not vector then return 0, 0 end
+	return vector.x or vector[1] or 0, vector.y or vector[2] or 0
+end
+
 local function icons_with_label(technology, card)
 	local source = science(card)
-	local icons
-	if technology.icons then
-		icons = table.deepcopy(technology.icons)
-	else
-		-- icon_size defaults to 64 for a technology as well: Igrys gives its copper plate research the 64 icon of the item
-		icons = {{icon = technology.icon, icon_size = technology.icon_size or 64}}
-	end
-	local base_size = technology.icon_size or (icons[1] and icons[1].icon_size) or 64
-	local label_size = base_size * label_size_fraction
-	local label_shift = base_size * label_shift_fraction
-	for _, layer in ipairs(source.icons or {{icon = source.icon, icon_size = source.icon_size}}) do
+	local icons = technology.icons and table.deepcopy(technology.icons)
+		or {{icon = technology.icon, icon_size = technology.icon_size or 64}}
+	local layers = source.icons or {{icon = source.icon, icon_size = source.icon_size or 64}}
+
+	-- Normalize the composite item's *drawn* bounds, not its PNG dimensions:
+	-- Item IconData defaults to 32px while technology IconData defaults to
+	-- 128px. Using technology.icon_size (usually 256) made badges enormous.
+	local left, right, top, bottom = math.huge, -math.huge, math.huge, -math.huge
+	for _, layer in ipairs(layers) do
 		local size = layer.icon_size or source.icon_size or 64
-		local scale = label_size / size * (layer.scale or 1)
-		local shift = layer.shift or {0, 0}
+		local half = size * (layer.scale or item_icon_canvas / size) / 2
+		local x, y = vector_xy(layer.shift)
+		left, right = math.min(left, x - half), math.max(right, x + half)
+		top, bottom = math.min(top, y - half), math.max(bottom, y + half)
+	end
+	local factor = badge_size / math.max(right - left, bottom - top)
+	local center_x, center_y = (left + right) / 2, (top + bottom) / 2
+	for _, layer in ipairs(layers) do
+		local size = layer.icon_size or source.icon_size or 64
+		local x, y = vector_xy(layer.shift)
 		icons[#icons + 1] = {
 			icon = layer.icon,
 			icon_size = size,
-			scale = scale,
-			shift = {label_shift + shift[1] * scale, label_shift + shift[2] * scale},
+			scale = (layer.scale or item_icon_canvas / size) * factor,
+			shift = {
+				badge_offset + (x - center_x) * factor,
+				badge_offset + (y - center_y) * factor
+			},
 			tint = layer.tint,
+			draw_background = false,
 			floating = true
 		}
 	end
