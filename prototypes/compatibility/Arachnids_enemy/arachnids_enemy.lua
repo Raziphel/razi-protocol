@@ -17,7 +17,6 @@ local function add_arachnids_to_planet(planet_name)
 		return
 	end
 
-	planet.pollutant_type = planet.pollutant_type or "pollution"
 	enemy_autoplace.disable_vanilla_enemies_on_planet(planet_name)
 	map_gen_settings.autoplace_controls = map_gen_settings.autoplace_controls or {}
 	map_gen_settings.autoplace_controls["enemy-base"] = {
