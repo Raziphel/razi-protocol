@@ -180,12 +180,16 @@ function M.location_level(name)
     or n:find("black-hole",1,true) then return 10 end
   return base[members.system(name)] or 4
 end
+-- The edges of the two asteroid belts and their systems.
+local belt_edges={["asteroid-belt-inner-edge"]="vibrant",
+  ["asteroid-belt-outer-edge"]="vibrant",
+  ["razi-umbra-belt-inner"]="umbra",
+  ["razi-umbra-belt-outer"]="umbra"}
+function M.is_belt_edge(name)
+  return belt_edges[name]~=nil
+end
 function M.is_belt(a,b)
-  local names={["asteroid-belt-inner-edge"]="vibrant",
-    ["asteroid-belt-outer-edge"]="vibrant",
-    ["razi-umbra-belt-inner"]="umbra",
-    ["razi-umbra-belt-outer"]="umbra"}
-  return names[a]~=nil and names[a]==names[b]
+  return belt_edges[a]~=nil and belt_edges[a]==belt_edges[b]
 end
 function M.route_level(route,progress,setting)
   if type(route)~="table" then return 1 end

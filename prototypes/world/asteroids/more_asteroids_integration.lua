@@ -211,7 +211,8 @@ local function apply_route(route, mode, solar)
   return added
 end
 
--- New non-vanilla destinations need something collectible while parked.
+-- New non-vanilla destinations need something collectible while parked, the slipstreams too (parked_chunks.lua gives
+-- them the basic chunks). The edges of the belts get nothing when razi-belt-edge-harvesting is off.
 -- Leave all source-owned planet/orbit hostile lists and existing chunks intact.
 local function apply_orbits(solar)
   local added=0
@@ -219,8 +220,8 @@ local function apply_orbits(solar)
   for _, kind in ipairs({"planet", "space-location"}) do
     for name, loc in pairs(data.raw[kind] or {}) do
       local mix=mix_for(name)
-      if mix and not is_solar(name, solar) and not name:find("^sye%-")
-        and name~="razi-deep-space-edge" then
+      if mix and not is_solar(name, solar) and name~="razi-deep-space-edge"
+        and not (ladder.is_belt_edge(name) and not profiles.belt_harvesting()) then
         local original=loc.asteroid_spawn_definitions or {}
         local present={}
         for _, def in ipairs(original) do
