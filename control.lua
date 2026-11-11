@@ -16,6 +16,7 @@ require("scripts.events.players").register(events)
 require("scripts.events.journal").register(events)
 require("scripts.events.convergence").register(events)
 require("scripts.events.platforms").register(events)
+require("scripts.events.big_monsters").register(events)
 require("scripts.events.forces").register(events)
 
 require("scripts.events.commands").register()
