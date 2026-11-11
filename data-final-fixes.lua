@@ -164,6 +164,10 @@ require("prototypes.world.systems.bellicos").dedupe_internal_routes()
 -- mod-provided outer expeditions with unknown location IDs.
 require("lib.difficulty.asteroids").prepare_routes(data.raw["space-connection"])
 
+-- The slipstreams and Eneas have no asteroids: a parked platform gets the basic chunks there. Before More Asteroids,
+-- whose orbit pass adds its families next to them.
+require("prototypes.world.asteroids.parked_chunks").data_final_fixes()
+
 -- Razi More Asteroids owns the eight material families and K2SO recipes.
 -- Reprofile the final surviving RP3 connections, including both Razi belts,
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
