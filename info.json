@@ -102,6 +102,7 @@
     "? BetterAquilo >= 7.6.3",
     "+ LithiumBattery >= 7.6.3",
     "? Quality-Asteroids-Expanded >= 1.2.5",
+    "? spiderbots-21 >= 0.3.3",
     "! castra",
     "! AsteroidBelt",
     "! kry-asteroid-belt",
