@@ -163,8 +163,8 @@ for _,rule in ipairs(rules) do
   check(recipe and technology, "Curated planet exchange missing: "..rule.name)
   check(recipe.enabled==false and not recipe.auto_recycle,
     "Alternative cannot replace or auto-recycle the original")
-  check(recipe.allow_productivity==false and recipe.maximum_productivity==0,
-    "Bonus manufacturing must never stack free productivity")
+  check(recipe.allow_productivity==true and recipe.maximum_productivity==2,
+    "Bonus manufacturing lost the productivity of the normal recipe or its +200% cap")
   check(#technology.unit.ingredients==2,
     "Source planets' combined research is missing")
   check(amount_of(recipe,"results",rule.output)

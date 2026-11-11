@@ -211,8 +211,12 @@ for i=1,600 do
     effects={{type="unlock-recipe",recipe="some-other-product-"..i}}
   }
 end
+-- A normal recipe with a lower cap than the exchange cap keeps its own.
+full.recipe["kr-casting-rare-metals"].maximum_productivity=0.5
 local original=clone(full.recipe)
 module.data_final_fixes()
+check(full.recipe["razi-bio-rare-metal-casting"].maximum_productivity==0.5,
+  "An exchange went above the productivity cap of its normal recipe")
 check(machine_scans==1 and lab_scans==1,
   "Manufacturing compatibility rebuilt its machine or lab catalog per recipe")
 local names={
@@ -228,8 +232,9 @@ for _, name in ipairs(names) do
   check(recipe and tech,"Missing integrated production exchange: "..name)
   check(recipe.enabled==false and recipe.auto_recycle==false,
     "Production exchange auto-unlocked or has recursive recycling")
-  check(recipe.allow_productivity==false and recipe.maximum_productivity==0,
-    "Cross-planet recipe can multiply bonus with productivity")
+  check(recipe.allow_productivity==true
+    and recipe.maximum_productivity==(name=="razi-bio-rare-metal-casting" and 0.5 or 2),
+    "Cross-planet recipe lost the productivity of the normal recipe or its +200% cap")
   check(#recipe.icons>=1 and tech.icon,"Recipe or technology icon missing")
   check(tech.effects[1].recipe==name,"Exchange not unlocked by its research")
   for _,pack in ipairs(tech.unit.ingredients) do
