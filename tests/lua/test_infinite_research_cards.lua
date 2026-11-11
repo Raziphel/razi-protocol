@@ -196,8 +196,8 @@ check(#mixed.prerequisites == 2 and contains(mixed.prerequisites, "mixed-product
 	"it needs the research it continues and the one that unlocks the Vibrant card")
 check(#mixed.icons == 2 and mixed.icons[2].icon:find("vibrant-tech-card", 1, true) and mixed.icons[2].floating,
 	"the card is on the icon, over the icon of the research")
-check(mixed.icons[2].scale * mixed.icons[2].icon_size == 96 and mixed.icons[2].shift[1] > 0 and mixed.icons[2].shift[2] > 0,
-	"the card is 96 pixels, at the lower right")
+check(mixed.icons[2].scale * mixed.icons[2].icon_size == 48 and mixed.icons[2].shift[1] == 35 and mixed.icons[2].shift[2] == 35,
+	"the card is 48 of the 128 GUI units of a technology icon, inside its lower right corner")
 check(techs["mixed-productivity"].icons[2] == nil, "the icon of the research itself is not changed")
 check(mixed.localised_name[1] == "?" and mixed.localised_name[2][1] == "technology-name.mixed-productivity"
 	and mixed.localised_name[3][1] == "technology-name.mixed-productivity",
@@ -274,6 +274,16 @@ module.data_final_fixes()
 local sizeless_continuation = sizeless.technology["razi-cards-sizeless-effect-6"]
 	or error("sizeless-effect continues at level 6")
 check(sizeless_continuation.icons[1].icon_size == 64, "an icon without icon_size stays at 64 in the continuation")
+check(sizeless_continuation.icons[2].scale * sizeless_continuation.icons[2].icon_size == 48,
+	"the card has the same share of a 64 icon as of a 256 one: the first layer fills 128 units either way")
+
+-- A first layer with its own scale is that many units wide, and the card follows it.
+local scaled = build({research("scaled-effect", {"automation-science-pack"},
+	{icons = {{icon = "__base__/graphics/technology/scaled-effect.png", icon_size = 256, scale = 0.25}}})})
+module.data_final_fixes()
+local scaled_card = (scaled.technology["razi-cards-scaled-effect-6"] or error("scaled-effect continues at level 6")).icons[2]
+check(scaled_card.scale * scaled_card.icon_size == 24 and scaled_card.shift[1] == 17.5,
+	"the card is 96/256 of a first layer 64 units wide, 70/256 of it off the centre")
 
 -- A card whose recipe is open from the start needs no research for it; one that nothing opens is no card.
 local open_card = build({research("open-effect", {"automation-science-pack"})})
