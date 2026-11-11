@@ -264,6 +264,9 @@ local plain_continuation = plain.technology["razi-cards-plain-effect-6"] or erro
 check(plain_continuation.icon == nil and #plain_continuation.icons == 2
 	and plain_continuation.icons[1].icon == "__base__/plain.png", "icon and icon_size become icons")
 check(plain_continuation.icons[1].icon_size == 256, "the icon_size of the research goes with its icon")
+check(plain_continuation.icons[2].scale * plain_continuation.icons[2].icon_size == 96
+	and plain_continuation.icons[2].shift[1] == 70 and plain_continuation.icons[2].shift[2] == 70,
+	"a 256px technology retains its original 96px corner badge")
 
 -- An icon without icon_size is 64 (the default of IconData, for a technology as well): Igrys gives its copper plate
 -- research the icon of the item and no size, and a layer of 256 over that image fails the game at start.
@@ -274,6 +277,32 @@ module.data_final_fixes()
 local sizeless_continuation = sizeless.technology["razi-cards-sizeless-effect-6"]
 	or error("sizeless-effect continues at level 6")
 check(sizeless_continuation.icons[1].icon_size == 64, "an icon without icon_size stays at 64 in the continuation")
+check(sizeless_continuation.icons[2].scale * sizeless_continuation.icons[2].icon_size == 24
+	and sizeless_continuation.icons[2].shift[1] == 17.5 and sizeless_continuation.icons[2].shift[2] == 17.5,
+	"a default 64px technology gets a proportionate badge instead of a giant overlay")
+
+-- An explicit intermediate icon resolution must be scaled proportionately too.
+local intermediate = build({research("intermediate-effect", {"automation-science-pack"},
+	{icons = false, icon = "__base__/graphics/technology/test.png", icon_size = 128})})
+intermediate.technology["intermediate-effect"].icons = nil
+module.data_final_fixes()
+local intermediate_continuation = intermediate.technology["razi-cards-intermediate-effect-6"]
+	or error("intermediate-effect continues at level 6")
+check(intermediate_continuation.icons[2].scale * intermediate_continuation.icons[2].icon_size == 48
+	and intermediate_continuation.icons[2].shift[1] == 35 and intermediate_continuation.icons[2].shift[2] == 35,
+	"a 128px technology gets a 48px badge")
+
+-- Layered technology icons also inherit their canvas size from the first layer.
+local layered = build({research("layered-effect", {"automation-science-pack"},
+	{icons = {{icon = "__base__/graphics/icons/iron-plate.png", icon_size = 64},
+		{icon = "__base__/graphics/icons/copper-plate.png", icon_size = 64, scale = 0.25, shift = {4, -3}}}})})
+module.data_final_fixes()
+local layered_continuation = layered.technology["razi-cards-layered-effect-6"]
+	or error("layered-effect continues at level 6")
+check(#layered_continuation.icons == 3 and layered_continuation.icons[2].shift[1] == 4
+	and layered_continuation.icons[3].scale * layered_continuation.icons[3].icon_size == 24
+	and layered_continuation.icons[3].shift[1] == 17.5,
+	"a layered 64px technology retains its original layers and bounds the added badge")
 
 -- A card whose recipe is open from the start needs no research for it; one that nothing opens is no card.
 local open_card = build({research("open-effect", {"automation-science-pack"})})
