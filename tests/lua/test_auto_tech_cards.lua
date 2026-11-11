@@ -166,13 +166,21 @@ check(agri.pictures==nil and automation.pictures==nil,
   "Cards must not reuse source belt pictures")
 check(agri.icon==nil and agri.icon_size==nil,
   "Card must use icon layers only")
-check(#agri.icons==3,"Source icon layers plus one mark are required")
-check(#automation.icons==2 and automation.icons[1].icon=="automation-science-pack.png",
-  "Single source icon must be wrapped as a layer")
-local mark=agri.icons[#agri.icons]
-check(mark.icon=="__base__/graphics/icons/lab.png" and mark.icon_size==64
-  and mark.scale==0.25 and mark.shift[1]==8 and mark.shift[2]==8,
-  "Lab icon must be the final mark layer")
+check(#agri.icons==2 and agri.icons[1].icon=="agri-base.png"
+  and agri.icons[2].icon=="agri-tint.png"
+  and agri.icons[2].tint.r==1,
+  "Layered source artwork must be preserved with no added lab badge")
+check(#automation.icons==1 and automation.icons[1].icon=="automation-science-pack.png"
+  and automation.icons[1].icon_size==64,
+  "Single source icon must be wrapped without an unwanted lab badge")
+check(agri.icons~=data.raw.item["agricultural-science-pack"].icons,
+  "Generated card must own its icon layers, not mutate the original science")
+for _,card in ipairs({agri,automation}) do
+  for _,layer in ipairs(card.icons) do
+    check(layer.icon~="__base__/graphics/icons/lab.png",
+      "Generated tech cards must not contain a lab overlay")
+  end
+end
 check(agri.localised_name[1]=="razi-auto-card.name"
   and agri.localised_name[2]==data.raw.item["agricultural-science-pack"].localised_name,
   "Card name must use the source localized name")
@@ -216,9 +224,17 @@ check(agri_recipe.allow_productivity==false
   and agri_recipe.allow_decomposition==false,
   "Conversion recipe must block productivity and recycling")
 check(agri_recipe.icon==nil and agri_recipe.icon_size==nil
-  and #agri_recipe.icons==3
-  and agri_recipe.icons[3].icon=="__base__/graphics/icons/lab.png",
-  "Recipe must use the marked card icon")
+  and #agri_recipe.icons==2
+  and agri_recipe.icons[1].icon==agri.icons[1].icon
+  and agri_recipe.icons[2].icon==agri.icons[2].icon
+  and agri_recipe.icons~=agri.icons,
+  "Conversion recipe must use independent, unbadged card artwork")
+for _,recipe in ipairs({automation_recipe,agri_recipe,aerospace_recipe,orbital_recipe}) do
+  for _,layer in ipairs(recipe.icons) do
+    check(layer.icon~="__base__/graphics/icons/lab.png",
+      "Auto-generated conversion recipe must not contain a lab overlay")
+  end
+end
 check(agri_recipe.localised_name[1]=="razi-auto-card.name"
   and agri_recipe.localised_description[1]=="razi-auto-card.description",
   "Conversion recipe must use the card localization keys")
