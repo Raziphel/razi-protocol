@@ -170,7 +170,8 @@ check(raw.ammo["piercing-shotgun-shell"].ammo_type.action[1].action_delivery.pro
 -- construction_roboport
 raw = fresh()
 raw.roboport = {
-  ["roboport-construction-mode"] = {logistics_radius = 0, construction_radius = 55},
+  ["roboport-construction-mode"] = {logistics_radius = 0, logistics_connection_distance = 38, construction_radius = 55},
+  ["pylon-construction-mode"] = {logistics_radius = 0, logistics_connection_distance = 0, construction_radius = 20},
   ["big-roboport-construction-mode"] = {construction_radius = 100},
   ["spare-roboport-construction-mode"] = {logistics_radius = 4, construction_radius = 55},
   ["idle-roboport-construction-mode"] = {logistics_radius = 0, construction_radius = 0},
@@ -178,11 +179,16 @@ raw.roboport = {
 }
 fixes.data_final_fixes()
 check(raw.roboport["roboport-construction-mode"].logistics_radius == 1, "A construction roboport kept the zero radius")
+check(raw.roboport["roboport-construction-mode"].logistics_connection_distance == 38, "A longer connection distance was changed")
+check(raw.roboport["pylon-construction-mode"].logistics_connection_distance == 1,
+  "The connection distance stayed below the new radius")
 check(raw.roboport["big-roboport-construction-mode"].logistics_radius == 1, "A missing radius counts as zero")
+check(raw.roboport["big-roboport-construction-mode"].logistics_connection_distance == nil,
+  "A missing connection distance was set")
 check(raw.roboport["spare-roboport-construction-mode"].logistics_radius == 4, "A changed radius was overwritten")
 check(raw.roboport["idle-roboport-construction-mode"].logistics_radius == 0, "A roboport that does not build was changed")
 check(raw.roboport["roboport-logistic-mode"].logistics_radius == 0, "A logistic mode was changed")
-check(logged("has logistics_radius = 1") == 2, "Expected two changed construction roboports")
+check(logged("has logistics_radius = 1") == 3, "Expected three changed construction roboports")
 
 -- artillery_range
 local function artillery(effects)
