@@ -61,10 +61,12 @@ local route_specifications = {
   -- and a late-game crosslink. They avoid diagonals through Calidus.
   {"sye-solaris", "sye-nyxaris", 82000, "frontier_crosslink"},
   {"sye-beetlejuice", "sye-umbra", 150000, "outer_ring_crosslink"},
-  -- The exterior Slip Stream reaches the Outer Rim; Ribbonia connects to
-  -- the Inner Rim. Khemia sits INSIDE the band, not across its outer gap.
+  -- The exterior Slip Stream reaches the Outer Rim. The first arrival on
+  -- the Inner Rim must be Fulgora, not Ribbonia: researching Ribbonia needs
+  -- Fulgora's electromagnetic science. Ribbonia follows via a local route.
+  -- Khemia stays inside the band, not across the outer gap.
   {"sye-vibrant", "asteroid-belt-outer-edge", 36000, "chemistry"},
-  {"ribbonia", "asteroid-belt-inner-edge", 24000, "chemistry_deep"},
+  {"fulgora", "asteroid-belt-inner-edge", 24000, "electrical"},
   {"asteroid-belt-outer-edge", "sye-beetlejuice", 85000, "outer_crossing"},
   -- Solaris closes into one clean orbital loop. The gateway is outside the
   -- northwest rim, and three interstellar departures fan away from the sun.
@@ -96,7 +98,8 @@ local route_specifications = {
 	-- Optional oceanic freight return once both local destinations are known.
 	{"panglia", "pelagos", 20000, "biological_deep"},
 	{"sye-nyxaris", "dea-dia-system-edge", 20000, "biological_deep"},
-	-- Inner-world industry stays linked without an outer belt bypass.
+	-- Fulgora is the first inner-belt planet; Ribbonia follows as its
+	-- later research branch without an outer-belt shortcut.
 	{"fulgora", "ribbonia", 19500, "electrical"},
 	{"ribbonia", "alchemy-planet", 18000, "chemistry"},
 	-- Frozen Paracelsin lies beyond the native AsteroidBelt crossing.
@@ -131,11 +134,11 @@ local route_specifications = {
 	{"vesta", "solar-system-edge", 185000, "deep_edge"}
 }
 
--- Without the Vibrant and Umbra belt locations the belt crossings above are skipped, which would
--- cut off Ribbonia, Fulgora, Cerys, Paracelsin, Shchierbin, Tenebris and Crucible. Link them to
--- their hubs directly in that case.
+-- Without the Vibrant and Umbra belts, connect the first reachable inner
+-- world (Fulgora) and the exterior branches to their hubs. Ribbonia stays
+-- downstream of Fulgora even when the belt is absent.
 if not (data.raw["space-location"] and data.raw["space-location"]["asteroid-belt-outer-edge"]) then
-  route_specifications[#route_specifications + 1] = {"sye-vibrant", "ribbonia", 20000, "chemistry_deep"}
+  route_specifications[#route_specifications + 1] = {"sye-vibrant", "fulgora", 20000, "electrical"}
   route_specifications[#route_specifications + 1] = {"sye-vibrant", "paracelsin", 40000, "chemistry_deep"}
 end
 if not (data.raw["space-location"] and data.raw["space-location"]["razi-umbra-belt-outer"]) then
