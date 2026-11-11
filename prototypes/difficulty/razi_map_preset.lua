@@ -4,10 +4,10 @@
 -- the controls of every planet and the global map settings. Curated is a
 -- fifth profile (a ready-made, slightly richer start) that is only offered in
 -- the New Game list and never applied by itself.
--- The active level is the auto-selected default marker.
--- A default=true preset must not contain basic/advanced settings, so its
--- real values are placed in the game/planet prototype defaults at data stage.
--- Other profiles carry fully editable MapGenPreset fields.
+-- Factorio forbids basic/advanced settings on default=true map presets.
+-- Normal/Custom can use a default marker; Easy/Hard/Nightmare must remain
+-- fully configurable, explicitly selected presets instead of empty markers.
+-- The startup difficulty still controls map-settings and planet defaults.
 local M={}
 local difficulty=require("lib.difficulty.presets")
 local tuning=require("prototypes.difficulty.tuning")
@@ -367,11 +367,10 @@ function M.set_world_defaults(mode)
  -- don't enable disabled resource slots or modify a planet's noise rules.
  M.scale_planets(mode)
 end
--- Opting in to "Select Razi's map preset by default" gives Razi control of
--- the initial selector even if another mod advertises a default (their
--- presets remain available). Factorio allows exactly one active default, so
--- the flag of every other preset is removed, and a default=true entry
--- cannot also contain map-generation settings.
+-- Only the baseline Normal and Custom map configurations can be genuine
+-- default markers. Factorio rejects map-generation fields on default=true,
+-- so non-baseline presets must never be claimed as defaults: doing so
+-- silently discards their resource, enemy and starting-area controls.
 function M.claim_default(group,mode)
  local key="razi-protocol-"..mode
  for id,preset in pairs(group) do
@@ -398,19 +397,25 @@ function M.data_final_fixes()
  local auto=settings and settings.startup
    and settings.startup["razi-default-new-game-map"]
  local autoselect=not auto or auto.value~=false
- -- Always provide the editable Razi profiles. The selected level becomes a
- -- lightweight default marker only when auto-selection is on.
+ -- Every non-baseline preset must retain its actual settings. Claiming a
+ -- Hard/Nightmare preset as the default discards its resource and enemy
+ -- sliders: Factorio's prototype schema forbids combining the two.
  for _,mode in ipairs(M.modes) do
    group["razi-protocol-"..mode]=M.explicit_preset(mode)
  end
  if autoselect then
-   M.claim_default(group,selected)
-   -- Custom still honors saved Razi gameplay controls via the Normal
-   -- world-generation baseline. This does not override source mod settings.
+   -- A baseline map can use an empty default marker. The non-baseline modes
+   -- cannot: leave the game's existing default and let players explicitly
+   -- select Easy/Hard/Nightmare in New Game.
+   if selected=="normal" or selected=="custom" then
+     M.claim_default(group,selected)
+   end
+   -- Startup difficulty still sets global and planet defaults; selecting
+   -- the named profile applies Nauvis's editable map-generation controls.
    M.set_world_defaults(selected=="custom" and "normal" or selected)
  end
- -- When disabled, leave every other mod's default flag untouched. Razi's
- -- selectable profiles remain available but are never forced as defaults.
+ -- When disabled, leave all other map defaults and global/planet settings
+ -- untouched. The full Razi presets remain selectable.
  return true
 end
 return M
