@@ -132,11 +132,25 @@ for _,spec in ipairs(specs) do
  check(mod.data_final_fixes(),mode.." map presets failed")
  local group=data.raw["map-gen-presets"].default
  local selected=group["razi-protocol-"..mode]
- check(selected and selected.default==true and selected.basic_settings==nil
-    and selected.advanced_settings==nil,
-   "Selected mode must be the legal default=true marker: "..mode)
- check(not group.default.default and group["death-world"],
-   "Native presets must remain selectable")
+ check(selected and selected.default~=true and selected.basic_settings
+    and selected.advanced_settings,
+   "Selected mode must retain fully editable map-generation values: "..mode)
+ check(group.default.default==true and group["death-world"],
+   "Non-baseline modes cannot replace the game's default with empty markers")
+ local controls=selected.basic_settings.autoplace_controls
+ check(near(selected.basic_settings.starting_area,mod.profiles[mode].starting_area),
+   mode.." named map preset lost its starting area")
+ check(near(controls["iron-ore"].frequency,frequency)
+   and near(controls["iron-ore"].size,size)
+   and near(controls["iron-ore"].richness,richness)
+   and near(controls["crude-oil"].richness,oil),
+   mode.." map preset lacks the real ore and oil slider changes")
+ check(near(controls["enemy-base"].frequency,enemies)
+   and near(controls["enemy-base"].size,enemy_size),
+   mode.." map preset lacks enemy frequency and size")
+ check(selected.advanced_settings.difficulty_settings.technology_price_multiplier==research
+   and selected.advanced_settings.enemy_evolution.time_factor==time,
+   mode.." map preset lacks research and evolution changes")
  check(not group["razi-protocol"] and not group["razi-protocol-custom"],
    "Old Recommended/Custom presets must be retired")
  for _,other in ipairs(mod.modes) do
@@ -267,17 +281,19 @@ check(data.raw.planet.ferrum.map_gen_settings
 check(data.raw["map-settings"]["map-settings"].enemy_evolution.time_factor
  ==.000004,"Disabled Razi map generator must leave the map settings alone")
 
--- The option on takes the default from another mod; its preset stays listed.
+-- A non-baseline level cannot take the default without destroying its values.
+-- Keep another mod's default while offering the real Nightmare preset.
 local other=make("nightmare",true)
 local group=data.raw["map-gen-presets"].default
 group.default.default=nil
 group["other-mod-default"]={default=true,order="a",
  basic_settings={starting_area=3}}
 other.data_final_fixes()
-check(group["other-mod-default"].default==nil
+check(group["other-mod-default"].default==true
  and group["other-mod-default"].basic_settings.starting_area==3
- and group["razi-protocol-nightmare"].default==true,
- "Razi must take the default and keep the other preset")
+ and group["razi-protocol-nightmare"].default~=true
+ and group["razi-protocol-nightmare"].basic_settings.starting_area==.90,
+ "Nightmare must keep its real map options and leave other defaults intact")
 
 -- Custom: the Normal map with the lever values saved by hand.
 local custom=make("custom",true,{
