@@ -14,7 +14,7 @@ local notes = {
   {"sye-nyxaris","calidus-bellicos-stargate-calidus","aegis-nyxaris"},
   {"sye-beetlejuice","sye-umbra","outer-bridge"},
   {"sye-vibrant","asteroid-belt-outer-edge","vibrant-outer"},
-  {"ribbonia","asteroid-belt-inner-edge","vibrant-inner"},
+  {"fulgora","asteroid-belt-inner-edge","vibrant-inner"},
   {"asteroid-belt-inner-edge","asteroid-belt-outer-edge","vibrant-crossing"},
   {"asteroid-belt-outer-edge","sye-beetlejuice","beetlejuice-outbound"},
   {"asteroid-belt-outer-edge","paracelsin","paracelsin-reach"},

@@ -18,7 +18,7 @@ local ROUTES = {
 	{"sye-vibrant", "asteroid-belt-outer-edge"}, {"asteroid-belt-outer-edge", "sye-beetlejuice"},
 	{"asteroid-belt-outer-edge", "paracelsin"}, {"paracelsin", "shchierbin"},
 	{"asteroid-belt-inner-edge", "asteroid-belt-outer-edge"},
-	{"ribbonia", "asteroid-belt-inner-edge"}, {"fulgora", "ribbonia"}, {"cerys", "fulgora"},
+	{"fulgora", "asteroid-belt-inner-edge"}, {"fulgora", "ribbonia"}, {"cerys", "fulgora"},
 	{"sye-vespera", "sye-umbra"}, {"sye-beetlejuice", "sye-umbra"},
 	-- An island: two places joined to each other and to nothing else.
 	{"island-west", "island-east"},
