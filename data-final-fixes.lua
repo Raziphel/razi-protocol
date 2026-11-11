@@ -172,6 +172,9 @@ require("prototypes.world.asteroids.parked_chunks").data_final_fixes()
 -- Reprofile the final surviving RP3 connections, including both Razi belts,
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
 require("prototypes.world.asteroids.more_asteroids_integration").data_final_fixes()
+-- Huge asteroids only where railguns are within reach (route level 9), whoever added them. After every route
+-- spawn table, before the route tooltips and the quality carriers read them.
+require("prototypes.world.asteroids.huge_asteroid_gate").data_final_fixes()
 
 require("prototypes.world.routes.route_icons").data_final_fixes()
 
