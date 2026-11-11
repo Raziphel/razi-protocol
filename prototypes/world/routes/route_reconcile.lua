@@ -146,9 +146,12 @@ if not (data.raw["space-location"] and data.raw["space-location"]["razi-umbra-be
   route_specifications[#route_specifications + 1] = {"crucible-orbit", "vesta", 15000, "outer_void"}
 end
 
--- Only Umbra keeps a retired inner-to-outer shortcut and its physical crossing.
+-- Retired corridors contribute their modded asteroid resources to the
+-- replacement routes instead of silently losing them. Ribbonia used to be
+-- the only inner-belt arrival, but is researched after Fulgora.
 local retired_belts = {
-  {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
+  {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"},
+  {"ribbonia", "asteroid-belt-inner-edge", "fulgora", "asteroid-belt-inner-edge"}
 }
 
 local calidus_locations = {"nauvis", "muluna", "sye-calidus"}
@@ -307,9 +310,9 @@ function route_reconcile.data_final_fixes()
     end
   end
 
-	-- Remove only the two direct journeys now replaced by real belt hops.
-	-- This must happen before new routes are created or the old connection
-	-- would bypass the whole encounter.
+	-- Remove retired corridors before the new routes are authored. This
+	-- preserves custom asteroid species without retaining a deadlocked
+	-- Ribbonia-first entry or the old Umbra belt bypass.
 	for _, old in ipairs(retired_belts) do
 		if has_endpoint(old[3]) and has_endpoint(old[4]) then
 			local obsolete = key_for(old[1], old[2])
