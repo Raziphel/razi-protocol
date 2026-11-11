@@ -2,7 +2,8 @@
 Version: 3.0.2
 Date: 2026-11-11
   Bugfixes:
-    - Fixed oversized science-card badges on technologies with smaller or layered icons.
+    - Resized infinite-research tech-card badges to fit Factorio's technology icon canvas on 64px, 128px and 256px source artwork, including layered icons.
+    - Removed science-lab icon overlays from automatically generated tech cards and their crafting recipes.
     - Fixed Hard and Nightmare New Game presets losing their ore, enemy, starting-area and research settings; their full presets remain selectable instead of becoming empty defaults.
     - Removed K2SO research-data ingredients from system tech-card recipes while preserving their existing tech-card requirements.
     - Fixed Vibrant's first inner-belt route so Fulgora can be reached before Ribbonia; preserved the belt crossing and custom asteroid resources.
