@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.0.2
+Date: 2026-11-11
+  Bugfixes:
+    - Fixed oversized science-card badges on technologies with smaller or layered icons.
+    - Fixed Hard and Nightmare New Game presets losing their ore, enemy, starting-area and research settings; their full presets remain selectable instead of becoming empty defaults.
+    - Removed K2SO research-data ingredients from system tech-card recipes while preserving their existing tech-card requirements.
+    - Fixed Vibrant's first inner-belt route so Fulgora can be reached before Ribbonia; preserved the belt crossing and custom asteroid resources.
+    - Added basic Space Age asteroid chunks to stationary planets and space locations so parked platforms can collect resources.
+    - Extended stationary asteroid resources to Vibrant and other system hubs using the progression-gated Razi More Asteroids material mixes.
+  Balancing:
+    - Restricted Big and Huge hostile asteroids on early travel routes and orbits, including modded species. Medium asteroids begin at danger tier 3, Big at tier 7 and Huge at tier 10.
+    - Disabled Big-Monsters scheduled invasions outside Nightmare. Nightmare runs an event schedule at a five-game-day base interval.
+  Compatibility:
+    - Pinned Big-Monsters' native event interval to zero and added Nightmare-specific scheduling through its integration interface.
+---------------------------------------------------------------------------------------------------
 Version: 3.0.1
 Date: 2026-11-10
   Bugfixes:
