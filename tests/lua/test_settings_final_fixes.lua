@@ -9,7 +9,7 @@ end
 
 -- Without the mods nothing is created and nothing fails.
 run({})
-run({ ["bool-setting"] = {}, ["string-setting"] = {} })
+run({ ["bool-setting"] = {}, ["string-setting"] = {}, ["int-setting"] = {} })
 
 -- With the mods the settings are pinned and hidden.
 ---@type table
@@ -38,6 +38,13 @@ local raw = {
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
   },
+  ["int-setting"] = {
+    -- Matches the Big-Monsters 2.2.1 Map setting (runtime-global).
+    ["bm-event-days"] = { default_value = 6, minimum_value = 0,
+      maximum_value = 20, setting_type = "runtime-global" },
+    ["other-mod-interval"] = { default_value = 6, minimum_value = 0,
+      maximum_value = 20, setting_type = "runtime-global" },
+  },
 }
 run(raw)
 for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis", "bm-armored-biters-override",
@@ -50,6 +57,28 @@ end
 local overlap = raw["string-setting"]["s6x-ii-krastorio-overlap-tech"]
 check(overlap.default_value == "kr" and #overlap.allowed_values == 1 and overlap.allowed_values[1] == "kr" and overlap.hidden == true,
   "Krastorio overlap setting not pinned to kr")
+
+-- Big-Monsters reads bm-event-days from runtime-global settings. Changing only
+-- the default would not constrain a save that already stored the original 6.
+-- For integer settings, allowed_values={0} is the engine-supported pin;
+-- forced_value is only for bool settings.
+local event_days = raw["int-setting"]["bm-event-days"]
+check(event_days.default_value == 0 and event_days.hidden == true,
+  "Big-Monsters event interval must default to zero and stay hidden")
+check(#event_days.allowed_values == 1 and event_days.allowed_values[1] == 0,
+  "Big-Monsters must not allow persisted nonzero event intervals")
+check(event_days.setting_type == "runtime-global"
+    and event_days.minimum_value == 0 and event_days.maximum_value == 20
+    and event_days.forced_value == nil,
+  "Big-Monsters pin must preserve its runtime type and valid bounds")
+local other_interval = raw["int-setting"]["other-mod-interval"]
+check(other_interval.default_value == 6 and other_interval.allowed_values == nil
+  and other_interval.hidden == nil,
+  "Unrelated integer runtime settings must not be changed")
+run(raw)
+check(event_days.default_value == 0 and #event_days.allowed_values == 1
+  and event_days.allowed_values[1] == 0,
+  "Applying the settings pass twice must not release Big-Monsters events")
 
 -- Rigor Module runs in compatibility mode with the vanilla recipes included, to stay under the recipe limit.
 for _, name in ipairs({ "rigor-module-compatibility-mode", "rigor-module-compatibility-mode-include-vanilla" }) do
@@ -87,5 +116,17 @@ local partial = { ["bool-setting"] = { ["s6x-arcanyx-mythril-nuclear"] = { defau
 run(partial)
 check(partial["bool-setting"]["s6x-arcanyx-mythril-nuclear"].forced_value == false, "Partial run must still pin the present setting")
 check(partial["string-setting"] == nil, "Missing setting type must not be created")
+check(partial["int-setting"] == nil, "Missing integer setting type must not be created")
+
+-- Big-Monsters alone must work, without the other pinned compatibility mods.
+local big_only = { ["int-setting"] = {
+  ["bm-event-days"] = { default_value = 6, setting_type = "runtime-global" }
+} }
+run(big_only)
+check(big_only["int-setting"]["bm-event-days"].default_value == 0
+  and big_only["int-setting"]["bm-event-days"].allowed_values[1] == 0,
+  "Big-Monsters alone must have scheduled attacks disabled")
+check(big_only["bool-setting"] == nil and big_only["string-setting"] == nil,
+  "Pinning Big-Monsters must not create unrelated setting types")
 rawset(_G, "data", nil)
 print("ok")
