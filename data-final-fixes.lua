@@ -169,6 +169,11 @@ require("lib.difficulty.asteroids").prepare_routes(data.raw["space-connection"])
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
 require("prototypes.world.asteroids.more_asteroids_integration").data_final_fixes()
 
+-- Final hard size gate includes source-owned Lithium, Radioactive, Dense-Metal
+-- and other modded hostile asteroids. Do this before the route preview and
+-- quality-carrier passes so their rosters cannot advertise impossible threats.
+require("prototypes.world.asteroids.asteroid_size_guard").data_final_fixes()
+
 require("prototypes.world.routes.route_icons").data_final_fixes()
 
 -- Route tooltips and the star map backdrop read the final routes and orbits.
