@@ -254,7 +254,8 @@ for index,def in ipairs(deep) do
       "Chunk entries are asteroid-chunk, hostiles are entity")
   end
 end
--- Orbits: missing chunks only; solar orbits and Razi hubs are untouched.
+-- Orbits: missing chunks only; Razi hubs now collect their system resources.
+-- Source-owned solar orbits and uncatalogued foreign worlds stay untouched.
 local nauvis=raw.planet.nauvis.asteroid_spawn_definitions
 check(nauvis~=nauvis_original and #nauvis_original==2,
   "The source orbit list is copied, never mutated")
@@ -287,18 +288,35 @@ check(raw.planet["sun-orbit"].asteroid_spawn_definitions==nil
   and raw["space-location"]["slp-dyson-dummy"].asteroid_spawn_definitions==nil
   and raw["space-location"]["slp-solar-system-sun"].asteroid_spawn_definitions==nil,
   "Solar orbits never get orbit chunks")
-check(raw["space-location"]["sye-calidus"].asteroid_spawn_definitions==nil
-  and raw["space-location"]["razi-deep-space-edge"].asteroid_spawn_definitions==nil
-  and raw.planet["third-party-world"].asteroid_spawn_definitions==nil,
-  "System hubs, the deep space edge and unknown worlds are skipped")
+local hubs=raw["space-location"]
+check(names(hubs["sye-calidus"].asteroid_spawn_definitions)
+  =="uranium-asteroid-chunk,rock-asteroid-chunk",
+  "The starting slipstream supplies only tier-zero materials")
+check(names(hubs["sye-solaris"].asteroid_spawn_definitions)
+  =="uranium-asteroid-chunk,rock-asteroid-chunk,crystalline-asteroid-chunk",
+  "Solaris supports parked platforms with industrial resources")
+check(names(hubs["sye-vibrant"].asteroid_spawn_definitions)
+  =="scrap-asteroid-chunk,chemical-asteroid-chunk,crystalline-asteroid-chunk,electrostatic-asteroid-chunk",
+  "Vibrant has its own Fulgora/Paracelsin resources without late halide")
+check(count(hubs["sye-umbra"].asteroid_spawn_definitions,"halide")==1
+  and count(hubs["sye-umbra"].asteroid_spawn_definitions,"scrap")==0,
+  "Umbra hub follows its later-game mineral mix")
+check(#hubs["razi-deep-space-edge"].asteroid_spawn_definitions==#families,
+  "Deep Space edge gives stationary platforms a little of all eight families")
+check(raw.planet["third-party-world"].asteroid_spawn_definitions==nil,
+  "An uncatalogued world must not receive invented mineral geography")
 -- Idempotent: a second pass keeps every list identical in content.
 local before=names(deep)..";"..names(home)..";"..names(belt)..";"..names(nauvis)
+  ..";"..names(hubs["sye-calidus"].asteroid_spawn_definitions)
+  ..";"..names(hubs["razi-deep-space-edge"].asteroid_spawn_definitions)
 check(integration.data_final_fixes()==#approved,"A second pass sees the same routes")
 deep,home,belt=routes.deep.asteroid_spawn_definitions,
   routes.home.asteroid_spawn_definitions,routes.belt.asteroid_spawn_definitions
 nauvis=raw.planet.nauvis.asteroid_spawn_definitions
-check(names(deep)..";"..names(home)..";"..names(belt)..";"..names(nauvis)==before,
-  "A second pass must not duplicate or reorder entries")
+check(names(deep)..";"..names(home)..";"..names(belt)..";"..names(nauvis)
+  ..";"..names(hubs["sye-calidus"].asteroid_spawn_definitions)
+  ..";"..names(hubs["razi-deep-space-edge"].asteroid_spawn_definitions)==before,
+  "A second pass must not duplicate or reorder route and stationary-hub chunks")
 -- The difficulty scale comes from settings.startup; missing means balanced.
 integration=reload(raw,{["razi-more-asteroids"]="1.1.1"},
   {["razi-asteroid-difficulty-scale"]={value="challenging"}})
@@ -391,15 +409,56 @@ for _,route in ipairs(tier_routes) do
   end
 end
 for _,world in ipairs(worlds) do
-  local list=(raw.planet[world] or {}).asteroid_spawn_definitions
-  if raw.planet[world] then
-    check(list and #list>0,world.." orbit must be populated")
-    for _,family in ipairs(families) do
-      if gated[real_catalog.system(world)][family] then
-        check(count(list,family)==0,
-          world.." orbit parks "..family.." below its gate: "..names(list))
-      end
+  local orbit=raw.planet[world] or raw["space-location"][world]
+  check(orbit and orbit.asteroid_spawn_definitions
+    and #orbit.asteroid_spawn_definitions>0,
+    world.." orbit or system hub must be populated")
+  local list=orbit.asteroid_spawn_definitions
+  for _,family in ipairs(families) do
+    if gated[real_catalog.system(world)][family] then
+      check(count(list,family)==0,
+        world.." parks "..family.." below its gate: "..names(list))
     end
   end
 end
+-- The belt-harvesting toggle must stay authoritative, even when resource
+-- chunks would otherwise be valid in both the hub and its nearby belt.
+chunks,enemies=prototypes()
+local protected_metal={
+  type="asteroid-chunk",asteroid="uranium-asteroid-chunk",
+  probability=.012,speed=.04
+}
+local custom_resource={
+  type="asteroid-chunk",asteroid="source-custom-chunk",
+  probability=.024,speed=.05
+}
+local shared_hub={protected_metal,custom_resource}
+local disabled_belt={}
+raw={["asteroid-chunk"]=chunks,asteroid=enemies,planet={},
+  ["space-location"]={
+    ["sye-calidus"]={asteroid_spawn_definitions=shared_hub},
+    ["asteroid-belt-inner-edge"]={asteroid_spawn_definitions=disabled_belt},
+    ["foreign-mystery"]={}
+  },["space-connection"]={}}
+integration=reload(raw,{["razi-more-asteroids"]="1.2.2"},
+  {["razi-belt-edge-harvesting"]={value=false}})
+check(integration.data_final_fixes()==0,"Stationary integration must not create routes")
+local parked=raw["space-location"]["sye-calidus"].asteroid_spawn_definitions
+check(parked~=shared_hub and #shared_hub==2
+  and parked[1]==protected_metal and parked[2]==custom_resource
+  and protected_metal.probability==.012,
+  "Preserve native/modded hub entries and detach shared spawn tables")
+check(count(parked,"uranium")==1 and count(parked,"rock")==1
+  and #parked==3,
+  "Append only missing appropriate material chunks on Calidus")
+check(raw["space-location"]["asteroid-belt-inner-edge"].asteroid_spawn_definitions
+  ==disabled_belt and #disabled_belt==0,
+  "Explicitly disabled belt harvesting must not be re-enabled by More Asteroids")
+check(raw["space-location"]["foreign-mystery"].asteroid_spawn_definitions==nil,
+  "Uncatalogued foreign locations must not receive invented modded chunks")
+local parked_before=parked
+check(integration.data_final_fixes()==0
+  and raw["space-location"]["sye-calidus"].asteroid_spawn_definitions==parked_before,
+  "Reapplying the orbit pass cannot duplicate or rewrite the same chunks")
+
 print("Razi More Asteroids integration passed")
