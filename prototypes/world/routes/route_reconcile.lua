@@ -134,10 +134,13 @@ local route_specifications = {
 	{"vesta", "solar-system-edge", 185000, "deep_edge"}
 }
 
--- Without the Vibrant and Umbra belts, connect the first reachable inner
--- world (Fulgora) and the exterior branches to their hubs. Ribbonia stays
--- downstream of Fulgora even when the belt is absent.
-if not (data.raw["space-location"] and data.raw["space-location"]["asteroid-belt-outer-edge"]) then
+-- Without the complete Vibrant belt, connect the first reachable inner
+-- world (Fulgora) to the hub. Ribbonia stays downstream of Fulgora even if
+-- either rim is missing. A broken one-rim installation cannot strand Fulgora.
+local vibrant_belts = data.raw["space-location"] or {}
+local has_vibrant_belt = vibrant_belts["asteroid-belt-outer-edge"]
+  and vibrant_belts["asteroid-belt-inner-edge"]
+if not has_vibrant_belt then
   route_specifications[#route_specifications + 1] = {"sye-vibrant", "fulgora", 20000, "electrical"}
   route_specifications[#route_specifications + 1] = {"sye-vibrant", "paracelsin", 40000, "chemistry_deep"}
 end
@@ -218,6 +221,10 @@ local function bypasses_vibrant_belt(a,b)
   if key_for(a,b)==key_for("asteroid-belt-inner-edge","asteroid-belt-outer-edge") then
     return false
   end
+  -- Only the genuine no-belt fallback may cross the inner/outer border.
+  -- It is a permanent route until the belt exists, not a per-pass shortcut.
+  if not has_vibrant_belt
+    and key_for(a,b)==key_for("sye-vibrant","fulgora") then return false end
   return (vibrant_inner[a] and vibrant_outer[b])
       or (vibrant_inner[b] and vibrant_outer[a])
 end
