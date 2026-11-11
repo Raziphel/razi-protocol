@@ -1,19 +1,7 @@
--- K2SO research data and material compatibility.
--- This runs after the planet mods and system cards have been set up.
+-- K2SO material compatibility after planet mods and system cards are loaded.
+-- Research-data items belong to their source mod's own recipes and must not
+-- become additional ingredients in Razi's system tech-card recipes.
 local integration = {}
-
--- Every K2SO research-data family joins the existing Razi progression at
--- the frontier where its native planet can actually be reached. Later cards
--- carry the earlier systems' data forward, never the reverse.
-local data_bridges = {
-  {"solaris-tech-card", "kr-metallurgic-research-data", "vulcanus"},
-  {"nyxaris-tech-card", "kr-agricultural-research-data", "gleba"},
-  {"vibrant-tech-card", "kr-electromagnetic-research-data", "fulgora"},
-  {"vespera-tech-card", "kr-cryogenic-research-data", "aquilo"},
-  {"beetlejuice-tech-card", "kr-matter-research-data", "aquilo"},
-  {"umbra-tech-card", "kr-matter-research-data", "aquilo"},
-  {"deep-space-tech-card", "kr-promethium-research-data", "shattered-planet"}
-}
 
 -- Exact material identities standardized by K2SO. Do not rewrite other
 -- materials or guess aliases for independently designed planet resources.
@@ -102,40 +90,6 @@ local function reconcile_mining()
   end
 end
 
-local function recipe_makes_item(recipe, name)
-  if recipe.result == name then return true end
-  for _, entry in ipairs(recipe.results or {}) do
-    if entry_name(entry) == name then return true end
-  end
-  return false
-end
-
-local function add_existing_research_data()
-  for _, bridge in ipairs(data_bridges) do
-    local card, research_data, owner = bridge[1], bridge[2], bridge[3]
-    local planet = material("planet", owner)
-      or material("space-location", owner)
-    local card_recipe = material("recipe", card)
-    local data_recipe = material("recipe", research_data)
-    if planet and card_recipe and card_recipe.ingredients
-      and material("tool", card) and material("item", research_data)
-      and data_recipe and recipe_makes_item(data_recipe, research_data) then
-      local found = false
-      for _, ingredient in ipairs(card_recipe.ingredients) do
-        if entry_name(ingredient) == research_data then
-          found = true
-          break
-        end
-      end
-      if not found then
-        card_recipe.ingredients[#card_recipe.ingredients + 1] = {
-          type = "item", name = research_data, amount = 1
-        }
-      end
-    end
-  end
-end
-
 function integration.data_final_fixes()
   if not (mods and mods["Krastorio2-spaced-out"]) then return end
   -- Source mods sometimes reintroduce obsolete prototypes in their final
@@ -143,11 +97,6 @@ function integration.data_final_fixes()
   -- and the K2SO counterpart is actually available and visible.
   reconcile_recipes()
   reconcile_mining()
-  -- Cross-world research-data deliveries are optional interdependence,
-  -- unlike the K2SO alias reconciliation needed by every mode.
-  if require("prototypes.industry.exchanges.interdependence_mode").enabled() then
-    add_existing_research_data()
-  end
 end
 
 return integration
