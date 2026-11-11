@@ -84,18 +84,20 @@ check(raw.fish["fish-ore"].minable.results[1].name=="kr-sand",
   "Mineable fish entity still produces hidden sand")
 check(raw.tile["gas-lake"].fluid=="kr-oxygen",
   "Planet tile fluid was not standardized")
+-- K2SO research data is never an ingredient in Razi's system cards.
+-- The actual science packs and predecessor system cards remain as designed.
 for _, spec in ipairs({
-  {"solaris-tech-card","kr-metallurgic-research-data"},
-  {"nyxaris-tech-card","kr-agricultural-research-data"},
-  {"vespera-tech-card","kr-cryogenic-research-data"}
+  {"solaris-tech-card","calidus-tech-card"},
+  {"nyxaris-tech-card","calidus-tech-card"},
+  {"vespera-tech-card","solaris-tech-card"}
 }) do
   local card=raw.recipe[spec[1]]
-  check(#card.ingredients==2 and card.ingredients[#card.ingredients].name==spec[2],
-    "K2SO data was not integrated into "..spec[1])
+  check(#card.ingredients==1 and card.ingredients[1].name==spec[2],
+    "K2SO modified the system card recipe "..spec[1])
 end
 mod.data_final_fixes()
-check(#raw.recipe["solaris-tech-card"].ingredients==2,
-  "Repeat integration duplicated the K2SO data")
+check(#raw.recipe["solaris-tech-card"].ingredients==1,
+  "Repeat integration modified Solaris's ingredients")
 check(raw.recipe["vibrant-tech-card"]==nil,
   "Missing optional recipe was invented")
 
@@ -114,31 +116,62 @@ enabled.data_final_fixes()
 check(common.recipe["planet-oxygen"].ingredients[1].name=="oxygen",
   "Visible source fluid was overwritten by hidden K2SO fluid")
 
--- Each family of research data goes into the card of its own system only.
-local own,own_mod=setup(true)
-own_mod.data_final_fixes()
-for _, spec in ipairs({
-  {"solaris-tech-card","kr-agricultural-research-data"},
-  {"solaris-tech-card","kr-cryogenic-research-data"},
-  {"nyxaris-tech-card","kr-metallurgic-research-data"},
-  {"nyxaris-tech-card","kr-cryogenic-research-data"},
-  {"vespera-tech-card","kr-metallurgic-research-data"}
-}) do
-  for _, ingredient in ipairs(own.recipe[spec[1]].ingredients) do
-    check(ingredient.name~=spec[2],spec[2].." leaked into "..spec[1])
+-- All eight Razi system cards stay unchanged even when all K2SO research-data
+-- items, native production recipes and owner planets are available.
+local cards={
+  "calidus-tech-card","solaris-tech-card","nyxaris-tech-card",
+  "vibrant-tech-card","vespera-tech-card","beetlejuice-tech-card",
+  "umbra-tech-card","deep-space-tech-card"
+}
+local data_items={
+  "kr-metallurgic-research-data","kr-agricultural-research-data",
+  "kr-electromagnetic-research-data","kr-cryogenic-research-data",
+  "kr-matter-research-data","kr-promethium-research-data"
+}
+for _,level in ipairs({"normal","easy","hard","nightmare","custom"}) do
+  local world,compat=setup(true)
+  rawset(_G,"settings",{startup={
+    ["razi-difficulty-preset"]={value=level},
+    ["razi-planetary-interdependence"]={value="deep"}
+  }})
+  for _,name in ipairs(data_items) do
+    world.item[name]={}
+    world.recipe[name]={results={{type="item",name=name,amount=1}}}
+  end
+  for index,name in ipairs(cards) do
+    world.tool[name]={}
+    world.recipe[name]={ingredients={
+      {type="item",name="automation-science-pack",amount=2},
+      {type="item",name=index==1 and "space-science-pack"
+        or cards[index-1],amount=1}
+    }}
+  end
+  compat.data_final_fixes()
+  compat.data_final_fixes()
+  for index,name in ipairs(cards) do
+    local ingredients=world.recipe[name].ingredients
+    check(#ingredients==2 and ingredients[1].name=="automation-science-pack"
+      and ingredients[1].amount==2
+      and ingredients[2].name==(index==1 and "space-science-pack"
+        or cards[index-1]) and ingredients[2].amount==1,
+      level.." K2SO integration changed normal system card ingredients: "..name)
+    for _,input in ipairs(ingredients) do
+      check(not input.name:find("research-data",1,true),
+        level.." adds research data to "..name)
+    end
   end
 end
+rawset(_G,"settings",nil)
 
--- The owner planet must exist, otherwise the card stays as it was.
+-- Missing owner worlds must not make an otherwise valid recipe fail.
 local lost,lost_mod=setup(true)
 lost.planet.vulcanus=nil
 lost_mod.data_final_fixes()
-check(#lost.recipe["solaris-tech-card"].ingredients==1,
-  "Research data was added for a planet that is not in the game")
-check(#lost.recipe["nyxaris-tech-card"].ingredients==2,
-  "A missing planet blocked the data of another system")
+check(#lost.recipe["solaris-tech-card"].ingredients==1
+  and #lost.recipe["nyxaris-tech-card"].ingredients==1,
+  "Removing a planet must not introduce research-data ingredients")
 
--- The Off mode keeps the research untouched but still unifies the materials.
+-- Off mode also preserves cards while still unifying hidden K2SO materials.
 local off,off_mod=setup(true)
 rawset(_G,"settings",{startup={}})
 settings.startup["razi-planetary-interdependence"]={value="off"} -- luacheck: ignore 122
@@ -161,4 +194,4 @@ local late=assert(source:find(
   'require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers").data_final_fixes()',
   integration+1,true))
 check(late>integration,"The last research trigger repair must follow material normalization")
-print("K2SO science-data backbone, planet materials and upstream ownership passed")
+print("K2SO material compatibility and system-card research-data exclusion passed")
