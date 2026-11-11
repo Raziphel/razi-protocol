@@ -211,16 +211,27 @@ local function apply_route(route, mode, solar)
   return added
 end
 
--- New non-vanilla destinations need something collectible while parked.
--- Leave all source-owned planet/orbit hostile lists and existing chunks intact.
+-- New destinations, including system slipstreams and the Deep Space edge,
+-- need local materials when a platform is parked. Follow each system's existing
+-- progression-gated mix; never replace source-owned spawn definitions.
+local belt_orbits = {
+  ["asteroid-belt-inner-edge"]=true, ["asteroid-belt-outer-edge"]=true,
+  ["razi-umbra-belt-inner"]=true, ["razi-umbra-belt-outer"]=true
+}
+local function orbit_harvesting_disabled(name)
+  if not belt_orbits[name] then return false end
+  local startup=settings and settings.startup
+  local option=startup and startup["razi-belt-edge-harvesting"]
+  return option and option.value==false
+end
 local function apply_orbits(solar)
   local added=0
   local chunks=data.raw["asteroid-chunk"] or {}
   for _, kind in ipairs({"planet", "space-location"}) do
     for name, loc in pairs(data.raw[kind] or {}) do
       local mix=mix_for(name)
-      if mix and not is_solar(name, solar) and not name:find("^sye%-")
-        and name~="razi-deep-space-edge" then
+      if mix and not is_solar(name, solar)
+        and not orbit_harvesting_disabled(name) then
         local original=loc.asteroid_spawn_definitions or {}
         local present={}
         for _, def in ipairs(original) do
