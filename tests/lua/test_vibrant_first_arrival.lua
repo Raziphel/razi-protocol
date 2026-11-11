@@ -37,13 +37,13 @@ local function pair(a, b)
 end
 
 local function connections(routes)
-  local pairs = {}
+  local index = {}
   for _, route in pairs(routes) do
     local id = pair(route.from, route.to)
-    check(not pairs[id], "Duplicate space connection: " .. id)
-    pairs[id] = route
+    check(not index[id], "Duplicate space connection: " .. id)
+    index[id] = route
   end
-  return pairs
+  return index
 end
 
 local function has_asteroid(route, name)
@@ -122,7 +122,8 @@ local function test_scenario(with_belt)
   local function reachable(unlocked)
     local visited = {["sye-vibrant"] = true}
     local queue = {"sye-vibrant"}
-    for i = 1, #queue do
+    local i = 1
+    while i <= #queue do
       local current = queue[i]
       for _, route in pairs(routes) do
         local other = route.from == current and route.to
@@ -132,6 +133,7 @@ local function test_scenario(with_belt)
           queue[#queue + 1] = other
         end
       end
+      i = i + 1
     end
     return visited
   end
