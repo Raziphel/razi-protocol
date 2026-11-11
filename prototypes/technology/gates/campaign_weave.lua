@@ -156,8 +156,9 @@ local lab_inputs
 local function has_compatible_lab(ingredients, pack)
   if not lab_inputs then
     lab_inputs={}
-    for _,lab in pairs(data.raw.lab or {}) do
-      if lab.inputs then
+    -- Nexus omega labs accept every science pack and unlock with the game's final research, so they do not prove research is timely.
+    for name,lab in pairs(data.raw.lab or {}) do
+      if lab.inputs and name~="omega-lab" and not name:match("%-omega%-lab$") then
         local accepted={}
         for _,item in ipairs(lab.inputs) do accepted[item]=true end
         lab_inputs[#lab_inputs+1]=accepted
