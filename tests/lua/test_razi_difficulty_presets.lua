@@ -74,20 +74,21 @@ end
 -- Table of levers by level.
 local expected={
   easy={scale="balanced",population="sparse",belts="relaxed",ore="rich",
-    interdependence="balanced",distributed=false,auto_cards=false},
+    interdependence="balanced",distributed=false,auto_cards=false,quality=false},
   normal={scale="balanced",population="standard",belts="standard",
-    ore="standard",interdependence="balanced",distributed=false,auto_cards=false},
+    ore="standard",interdependence="balanced",distributed=false,auto_cards=false,quality=false},
   hard={scale="challenging",population="dense",belts="severe",
-    ore="scarce",interdependence="deep",distributed=true,auto_cards=true},
+    ore="scarce",interdependence="deep",distributed=true,auto_cards=true,quality=true},
   nightmare={scale="relentless",population="dense",belts="severe",
-    ore="scarce",interdependence="deep",distributed=true,auto_cards=true},
+    ore="scarce",interdependence="deep",distributed=true,auto_cards=true,quality=true},
 }
 local names={scale="razi-asteroid-difficulty-scale",
   population="razi-asteroid-population",belts="razi-belt-threats",
   ore="razi-belt-resource-richness",
   interdependence="razi-planetary-interdependence",
   distributed="razi-distributed-technology",
-  auto_cards="razi-auto-tech-cards"}
+  auto_cards="razi-auto-tech-cards",
+  quality="razi-quality-asteroids"}
 for level,row in pairs(expected) do
   startup(level)
   check(P.active()==level,level.." must be active with default controls")
