@@ -23,9 +23,10 @@ infinite_research_cards.setting = "razi-infinite-research-cards"
 -- Levels a research keeps on the packs, counted from its first.
 infinite_research_cards.span = Names.span
 
--- The icon of the card sits at the lower right of the icon of the research (pixels of a 256 icon).
-local label_size = 96
-local label_shift = 70
+-- The badge fills the same fraction of the technology icon at any native
+-- resolution. Modded technologies can use 64px item art instead of 256px art.
+local label_size_fraction = 96 / 256
+local label_shift_fraction = 70 / 256
 
 -- "foo-3" is the research "foo" from level 3 on, a name without a number starts at level 1.
 infinite_research_cards.split = Names.split
@@ -135,6 +136,9 @@ local function icons_with_label(technology, card)
 		-- icon_size defaults to 64 for a technology as well: Igrys gives its copper plate research the 64 icon of the item
 		icons = {{icon = technology.icon, icon_size = technology.icon_size or 64}}
 	end
+	local base_size = technology.icon_size or (icons[1] and icons[1].icon_size) or 64
+	local label_size = base_size * label_size_fraction
+	local label_shift = base_size * label_shift_fraction
 	for _, layer in ipairs(source.icons or {{icon = source.icon, icon_size = source.icon_size}}) do
 		local size = layer.icon_size or source.icon_size or 64
 		local scale = label_size / size * (layer.scale or 1)
