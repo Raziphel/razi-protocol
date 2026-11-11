@@ -233,6 +233,10 @@ require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 -- could copy these recipes, before the menu pass.
 require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()
 
+-- The metallurgic science pack research also unlocks the oxide asteroid crushing, so calcite comes from orbit at home
+-- once the player has been to Vulcanus. After the gates, which may move unlocks, before the menu pass.
+require("prototypes.balance.space-age.space_calcite").data_final_fixes()
+
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of
 -- remnant-beacon. The copies take the already normalized native recipe, so running after the passes above is safe; before the menu pass.
