@@ -3,7 +3,9 @@ local pinned_foreign_settings = {}
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
 -- removes what Razi Protocol relies on, and of Rigor Module (which Planet Crucible requires) whose default would push
--- the recipe count past the engine limit. Each is pinned and hidden; a missing mod or setting is skipped.
+-- the recipe count past the engine limit. Big-Monsters is also pinned to disable periodic
+-- invasions even if a saved game's runtime-global setting was previously nonzero.
+-- Each is pinned and hidden; a missing mod or setting is skipped.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -63,6 +65,13 @@ local pinned_string_settings = {
 	["s6x-ii-krastorio-overlap-tech"] = "kr",
 }
 
+-- Big-Monsters 2.2.1's bm-event-days is an int-setting, not a startup
+-- option. A default alone would leave existing saves with six-day attacks:
+-- allowed_values restricts the actual saved runtime value to zero.
+local pinned_int_settings = {
+	["bm-event-days"] = 0,
+}
+
 function pinned_foreign_settings.settings_final_fixes()
 	local adjust_maraxsis = data.raw["bool-setting"] and data.raw["bool-setting"]["adjust-maraxsis"]
 
@@ -83,6 +92,15 @@ function pinned_foreign_settings.settings_final_fixes()
 
 	for name, value in pairs(pinned_string_settings) do
 		local setting = data.raw["string-setting"] and data.raw["string-setting"][name]
+		if setting then
+			setting.default_value = value
+			setting.allowed_values = { value }
+			setting.hidden = true
+		end
+	end
+
+	for name, value in pairs(pinned_int_settings) do
+		local setting = data.raw["int-setting"] and data.raw["int-setting"][name]
 		if setting then
 			setting.default_value = value
 			setting.allowed_values = { value }
