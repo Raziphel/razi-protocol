@@ -185,6 +185,9 @@ require("prototypes.world.starmap.galaxy_layout").confirm_critical_positions()
 -- Colored route lines follow the final positions; they never change travel data.
 require("prototypes.world.routes.route_highlights").data_final_fixes()
 
+-- Every route end pulls, so a platform without thrust drifts to the nearer end instead of stopping.
+require("prototypes.world.routes.route_drift").data_final_fixes()
+
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.
 require("prototypes.fixes.corrundum-krastorio-compatibility-plus.corrundum_k2so_lab_inputs").data_final_fixes()
