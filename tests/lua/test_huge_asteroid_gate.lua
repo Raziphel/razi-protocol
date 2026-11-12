@@ -1,6 +1,6 @@
 ---@diagnostic disable: missing-fields, need-check-nil, param-type-mismatch, undefined-field
--- Huge asteroids on a space route only from route level 9 (prototypes/world/asteroids/huge_asteroid_gate.lua),
--- on a mocked data.raw.
+-- Huge asteroids on a space route only from route level 9, big and huge Razi More Asteroids asteroids on orbits only
+-- from levels 6 and 9 (prototypes/world/asteroids/huge_asteroid_gate.lua), on a mocked data.raw.
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local function check(ok, message)
@@ -15,6 +15,26 @@ local function points(...)
 	local result = {}
 	for _, distance in ipairs({...}) do
 		result[#result + 1] = {distance = distance, probability = 0.001, speed = 0.018, angle_when_stopped = 0.6}
+	end
+	return result
+end
+
+-- An orbit as Razi More Asteroids leaves it, with the vanilla medium and a big asteroid of another mod
+local function orbit()
+	local result = {}
+	for _, size in ipairs({"medium", "big", "huge"}) do
+		result[#result + 1] = {asteroid = size .. "-rock-asteroid", probability = 0.0001}
+	end
+	result[#result + 1] = {type = "asteroid-chunk", asteroid = "rock-asteroid-chunk", probability = 0.001}
+	result[#result + 1] = {asteroid = "big-carbonic-asteroid", probability = 0.0001}
+	result[#result + 1] = {asteroid = "medium-metallic-asteroid", probability = 0.0001}
+	return result
+end
+
+local function on_orbit(kind, name)
+	local result = {}
+	for _, definition in ipairs(data.raw[kind][name].asteroid_spawn_definitions) do
+		result[definition.asteroid] = true
 	end
 	return result
 end
@@ -45,6 +65,15 @@ local function setup(level)
 			["edge-shattered"] = {from = "solar-system-edge", to = "shattered-planet", length = 30000,
 				asteroid_spawn_definitions = shared},
 		},
+		planet = {
+			vulcanus = {asteroid_spawn_definitions = orbit()}, -- level 2
+			fulgora = {asteroid_spawn_definitions = orbit()}, -- level 4
+			aquilo = {asteroid_spawn_definitions = orbit()}, -- level 7
+			ferrum = {asteroid_spawn_definitions = orbit()}, -- level 8
+		},
+		["space-location"] = {
+			["shattered-planet"] = {asteroid_spawn_definitions = orbit()}, -- level 10
+		},
 	}})
 	package.loaded["prototypes.world.asteroids.huge_asteroid_gate"] = nil
 	package.loaded["lib.difficulty.presets"] = nil
@@ -72,8 +101,9 @@ local function find(route, asteroid)
 	end
 end
 
--- Normal: no huge asteroid before level 9, big ones stay
-check(setup() == 2, "two routes should change")
+-- Normal: no huge asteroid before level 9, big ones stay on routes
+-- 2 routes; orbits: vulcanus, fulgora 2 each, aquilo and ferrum 1 each
+check(setup() == 8, "two routes and six orbit definitions should change")
 check(find("aquilo-balack", "huge-carbonic-asteroid") == nil, "huge asteroids stayed on a level 7 route")
 check(#find("aquilo-balack", "big-carbonic-asteroid").spawn_points == 3, "big asteroids were touched")
 check(find("aquilo-balack", "carbonic-asteroid-chunk") ~= nil, "chunks were touched")
@@ -87,9 +117,24 @@ check(#find("edge-shattered", "huge-carbonic-asteroid").spawn_points == 3, "a le
 check(#shared[1].spawn_points == 3 and #shared == 3 and shared[1].spawn_points[1].probability == 0.001,
 	"the shared spawn table was edited in place")
 
+-- Orbits
+local early = on_orbit("planet", "vulcanus")
+check(not early["big-rock-asteroid"] and not early["huge-rock-asteroid"], "big or huge asteroids stayed on a level 2 orbit")
+check(early["medium-rock-asteroid"] and early["rock-asteroid-chunk"] and early["medium-metallic-asteroid"],
+	"medium asteroids or chunks were removed from an orbit")
+check(early["big-carbonic-asteroid"], "a big asteroid of another mod was removed from an orbit")
+check(not on_orbit("planet", "fulgora")["big-rock-asteroid"], "big asteroids stayed on a level 4 orbit")
+local aquilo = on_orbit("planet", "aquilo")
+check(aquilo["big-rock-asteroid"] and not aquilo["huge-rock-asteroid"], "level 7 orbit: big should stay, huge go")
+local ferrum = on_orbit("planet", "ferrum")
+check(ferrum["big-rock-asteroid"] and not ferrum["huge-rock-asteroid"], "level 8 orbit: big should stay, huge go")
+check(on_orbit("space-location", "shattered-planet")["huge-rock-asteroid"], "a level 10 orbit lost huge asteroids")
+
 -- Nightmare raises the route level (relentless), as for Razi More Asteroids
 -- aquilo-balack: 8.77 at the ends, 9.25 in the middle
-check(setup("nightmare") == 1, "Nightmare should change only the level 7 route")
+-- orbits: vulcanus 3.5 and fulgora 5.5 lose big and huge, aquilo 8.5 and ferrum 9.5: aquilo loses huge
+check(setup("nightmare") == 6, "Nightmare should change the level 7 route and five orbit definitions")
+check(on_orbit("planet", "ferrum")["huge-rock-asteroid"], "Nightmare should keep huge asteroids on a level 8 orbit")
 local middle = find("aquilo-balack", "huge-carbonic-asteroid")
 check(middle and #middle.spawn_points == 3 and #live(middle) == 1 and live(middle)[1] == 0.5,
 	"Nightmare should keep huge asteroids in the middle of a level 7 route")
