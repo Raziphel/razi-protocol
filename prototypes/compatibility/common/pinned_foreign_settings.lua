@@ -2,8 +2,8 @@ local pinned_foreign_settings = {}
 
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
--- removes what Razi Protocol relies on, and of Rigor Module (which Planet Crucible requires) whose default would push
--- the recipe count past the engine limit. Each is pinned and hidden; a missing mod or setting is skipped.
+-- removes what Razi Protocol relies on, of Rigor Module (which Planet Crucible requires) whose default would push
+-- the recipe count past the engine limit, and of Renai Transportation, whose parts Ribbonia needs. Each is pinned and hidden; a missing mod or setting is skipped.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -60,6 +60,12 @@ local pinned_bool_settings = {
 	-- they make fuel, asteroid chunks, foundation and ores of every planet from nothing, and void-fuel returns 12 MJ for
 	-- 2.5 MJ of electricity. With true the machines and all voidcrafting recipes need magic = 100, which only Arcanyx has.
 	["s6x-arcanyx-voidcraft"] = true,
+	-- Default true: Ribbonia (renai-updates.lua) rewrites the recipes and technologies of the Renai Transportation
+	-- throwers, bounce plates, primer plates and train ramps without checking that they exist. With any of these three
+	-- off the game does not start ("attempt to index field 'PrimerBouncePlate' (a nil value)").
+	["RTThrowersSetting"] = true,
+	["RTBounceSetting"] = true,
+	["RTTrainRampSetting"] = true,
 }
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes
