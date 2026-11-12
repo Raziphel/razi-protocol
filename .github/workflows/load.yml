@@ -4,6 +4,8 @@ name: Load
 # on Normal and on Nightmare, so a prototype error or a bad number in the data stops a pull request before it reaches
 # a player. Then the in-game tests of tests/funit run in the same game (the FUnit mod is one more mod of the cache).
 # It runs apart from `check` (release.yml) because the mods are about 7 GB to download.
+# The daily schedule checks dev against the current Factorio builds and mod dependencies. GitHub reads scheduled
+# workflows from the default branch (main), so it starts after the next release includes this file.
 #
 # The mods come from the mod portal with the secret FACTORIO_PLAYER_TOKEN (a player token, not the API key of the
 # release) and the account it belongs to, Raziphel unless the variable FACTORIO_USERNAME says otherwise. A pull request from a fork gets no
@@ -11,10 +13,12 @@ name: Load
 # headless ones from factorio.com; when both are the same version, one job is enough.
 #
 # The mod cache is about 7 GB and a repository holds 10 GB, and a pull request can only use caches of its own branch
-# and of its base branch. So only a run on main or dev (a push or workflow_dispatch) saves the cache; a pull request
+# and of its base branch. A run on main or dev (push, workflow_dispatch, or schedule) saves the cache; a pull request
 # restores it and downloads whatever has a newer version. Run it by hand after the mods have changed a lot:
 # gh workflow run load.yml --ref dev
 on:
+  schedule:
+    - cron: "0 2 * * *"
   pull_request:
     paths:
       - .github/workflows/load.yml
@@ -72,6 +76,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
       - name: Resolve stable and experimental
         id: versions
         run: python3 -I tests/load/mods.py versions >> "$GITHUB_OUTPUT"
@@ -102,6 +108,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
       - name: Resolve the mods
         id: mods
         run: |
@@ -109,7 +117,7 @@ jobs:
           echo "key=$(python3 -I tests/load/mods.py key --lock .load/mods.lock)" >> "$GITHUB_OUTPUT"
       # The key is built from the resolved versions: with no new version nothing is downloaded. After a change the
       # newest older cache is restored, only the new versions are downloaded, and the result is saved under the new key.
-      # Only main and dev save it (see the top), and in its own step, so a load that fails still keeps the mods.
+      # Only main and dev save it (see the top), including scheduled runs, and in its own step, so a load that fails still keeps the mods.
       - name: Restore the mod cache
         id: cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -120,7 +128,7 @@ jobs:
       - name: Download the mods that are not cached
         run: python3 -I tests/load/mods.py fetch --lock .load/mods.lock --dir .load/mods-cache
       - name: Save the mod cache
-        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name != 'pull_request' && steps.cache.outputs.cache-hit != 'true'
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && steps.cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .load/mods-cache
@@ -136,3 +144,94 @@ jobs:
             .load/run-*/*.txt
             .load/run-*/factorio-current.log
           retention-days: 7
+
+  report:
+    name: report nightly load
+    needs: [versions, load]
+    if: github.event_name == 'schedule' && always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      LOAD_RESULT: ${{ needs.versions.result == 'failure' && 'failure' || needs.load.result }}
+      MATRIX_JSON: ${{ needs.versions.outputs.matrix }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Report the scheduled load result
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          gh label create nightly-load --color d73a4a --description "Nightly load failures" || true
+          issue_number="$(gh issue list --label nightly-load --state open --limit 1 --json number --jq ".[0].number // empty")"
+
+          if [[ "$LOAD_RESULT" == failure ]]; then
+            versions="$(python3 -I - <<'PY'
+          import json
+          import os
+
+          try:
+              matrix = json.loads(os.environ.get("MATRIX_JSON", ""))
+          except (TypeError, ValueError):
+              matrix = {}
+          print(", ".join(
+              f"Factorio {item.get('version', '?')} ({item.get('channels', '?')})"
+              for item in matrix.get("include", [])
+              if isinstance(item, dict)
+          ))
+          PY
+          )"
+            if [[ -z "$versions" ]]; then
+              versions="unavailable (the versions job did not produce a matrix)"
+            fi
+
+            artifact_dir="$RUNNER_TEMP/nightly-load-artifacts"
+            mkdir -p "$artifact_dir"
+            gh run download "$GITHUB_RUN_ID" --dir "$artifact_dir" >/dev/null 2>&1 || true
+            first_error="$(python3 -I - "$artifact_dir" <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          root = Path(sys.argv[1])
+          error = re.compile(r"Failed to load| Error |^error:|FAILED\b|__FUNIT__.*(?:FAILURE|ERROR)__", re.IGNORECASE)
+          for path in sorted(root.rglob("*")):
+              if not path.is_file():
+                  continue
+              try:
+                  lines = path.read_text(errors="replace").splitlines()
+              except OSError:
+                  continue
+              for line in lines:
+                  if error.search(line):
+                      print(f"{path.relative_to(root)}: {line.strip()[:500]}")
+                      raise SystemExit
+          PY
+          )"
+
+            body_file="$(mktemp)"
+            {
+              printf 'Nightly load failed: %s\n\n' "$RUN_URL"
+              printf 'Factorio version(s): %s\n' "$versions"
+              if [[ -n "$first_error" ]]; then
+                printf '\nFirst error from the uploaded load artifact:\n%s\n' "$first_error"
+              else
+                printf '\nFirst error: unavailable in the uploaded load artifacts.\n'
+              fi
+            } > "$body_file"
+
+            if [[ -n "$issue_number" ]]; then
+              gh issue comment "$issue_number" --body-file "$body_file"
+            else
+              gh issue create --title "Nightly load failed" --label nightly-load --body-file "$body_file"
+            fi
+          elif [[ "$LOAD_RESULT" == success && -n "$issue_number" ]]; then
+            gh issue comment "$issue_number" --body "passes again: $RUN_URL"
+            gh issue close "$issue_number"
+          else
+            echo "The load result was $LOAD_RESULT; no nightly-load issue change is needed."
+          fi
