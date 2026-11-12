@@ -37,8 +37,8 @@ Date: 2026-11-10
 ---------------------------------------------------------------------------------------------------
 Version: 3.0.0
 Date: 2026-11-10
-  :
-    - Merge pull request [#62](https://github.com/Raziphel/razi-protocol/issues/62) from Raziphel/dev
+  Major Features:
+    - 3.0 changes the star map, progression and difficulty. See docs/updating-from-2x.md.
   Features:
     - Aquilo's foundation, fusion and legendary quality research move later in the campaign
     - [asteroids] add the eight-family geography of Razi More Asteroids

@@ -35,6 +35,10 @@ local raw = {
     ["s6x-arcanyx-voidcraft"] = { default_value = false },
     ["s6x-no-voidcraft-in-space"] = { default_value = false },
     ["s6x-voidcraft-science"] = { default_value = false },
+    ["RTThrowersSetting"] = { default_value = true },
+    ["RTBounceSetting"] = { default_value = false },
+    ["RTTrainRampSetting"] = { default_value = true },
+    ["RTZiplineSetting"] = { default_value = true },
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
@@ -59,6 +63,16 @@ for _, name in ipairs({ "rigor-module-compatibility-mode", "rigor-module-compati
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == true and setting.default_value == true and setting.hidden == true, name .. " not pinned to true")
 end
+
+-- Ribbonia needs the throwers, bounce plates and train ramps of Renai Transportation; its other parts stay optional.
+for _, name in ipairs({ "RTThrowersSetting", "RTBounceSetting", "RTTrainRampSetting" }) do
+  ---@type table
+  local setting = raw["bool-setting"][name]
+  check(setting.forced_value == true and setting.default_value == true and setting.hidden == true, name .. " not pinned to true")
+end
+---@type table
+local zipline = raw["bool-setting"]["RTZiplineSetting"]
+check(zipline.forced_value == nil and zipline.hidden == nil, "RTZiplineSetting must stay untouched")
 
 -- Voidcraft runs only on Arcanyx; its other settings stay visible and at their defaults.
 ---@type table

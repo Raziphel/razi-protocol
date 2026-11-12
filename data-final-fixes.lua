@@ -172,6 +172,10 @@ require("prototypes.world.asteroids.parked_chunks").data_final_fixes()
 -- Reprofile the final surviving RP3 connections, including both Razi belts,
 -- before route tooltips and quality-asteroid carrier conversion inspect them.
 require("prototypes.world.asteroids.more_asteroids_integration").data_final_fixes()
+-- Huge asteroids only where railguns are within reach (route level 9), whoever added them; on orbits also the big
+-- ones of Razi More Asteroids below level 6. After every route and orbit spawn table, before the route tooltips and
+-- the quality carriers read them.
+require("prototypes.world.asteroids.huge_asteroid_gate").data_final_fixes()
 
 require("prototypes.world.routes.route_icons").data_final_fixes()
 
@@ -184,6 +188,9 @@ require("prototypes.world.starmap.galaxy_layout").confirm_critical_positions()
 
 -- Colored route lines follow the final positions; they never change travel data.
 require("prototypes.world.routes.route_highlights").data_final_fixes()
+
+-- Every route end pulls, so a platform without thrust drifts to the nearer end instead of stopping.
+require("prototypes.world.routes.route_drift").data_final_fixes()
 
 -- Corrundum Compatibility+ removes an obsolete XY research item after some
 -- endgame labs have already registered it as an input.

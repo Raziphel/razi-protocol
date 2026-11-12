@@ -27,8 +27,10 @@ local setting=file("settings/integration.lua")
 check(setting:find('allowed_values = {"off", "balanced", "deep"}',1,true),
   "The interdependence setting must offer Off, Balanced and Deep")
 local industry=file("prototypes/industry/exchanges/planet_production_exchanges.lua")
-check(industry:find("alternative.allow_productivity = false",1,true),
-  "Bonus production must not stack productivity")
+check(industry:find("alternative.auto_recycle = false",1,true)
+  and not industry:find("alternative.allow_productivity",1,true)
+  and industry:find("local EXCHANGE_PRODUCTIVITY_CAP = 2",1,true),
+  "Exchanges take the productivity of the normal recipe and never recycle")
 check(file("prototypes/technology/gates/campaign_weave.lua"):find(
   "not interdependence.enabled()",1,true),"Research mode off not respected")
 check(file("prototypes/technology/gates/regional_research_bridges.lua"):find(

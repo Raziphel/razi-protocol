@@ -164,9 +164,14 @@ ok(raw["space-connection"].frontier.asteroid_spawn_definitions==definitions
   "Disabled setting must leave spawn tables untouched")
 ok(raw.asteroid["razi-quality-asteroid-big-metallic-asteroid"]==nil,
   "Disabled setting must not create carrier prototypes")
--- A missing setting falls back to the default, which is on.
+-- A missing setting falls back to the default, which is off since quality asteroids follow the difficulty level.
 settings.startup["razi-quality-asteroids"]=nil -- luacheck: ignore 122
-ok(conversion.data_final_fixes()==1,"Missing setting must default to on; only Deep Space hostile spawn is rewritten")
+ok(conversion.data_final_fixes()==0,"Missing setting must default to off")
+ok(raw["space-connection"].frontier.asteroid_spawn_definitions==definitions,
+  "Missing setting must leave spawn tables untouched")
+-- Ticked by hand on Normal: on.
+settings.startup["razi-quality-asteroids"]={value=true}
+ok(conversion.data_final_fixes()==1,"Ticked setting must convert; only Deep Space hostile spawn is rewritten")
 local adjusted=raw["space-connection"].frontier.asteroid_spawn_definitions
 ok(adjusted[1].asteroid=="razi-quality-asteroid-big-metallic-asteroid",
   "Native hostile must use trigger carrier")

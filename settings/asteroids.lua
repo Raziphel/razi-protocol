@@ -49,7 +49,7 @@ data:extend({
 		type = "bool-setting",
 		name = "razi-quality-asteroids",
 		setting_type = "startup",
-		default_value = true,
+		default_value = false,
 		order = "ad[asteroids]-01[quality-asteroids]"
 	}
 })

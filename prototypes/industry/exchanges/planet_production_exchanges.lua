@@ -21,6 +21,9 @@ local safe_template = support.safe_template
 
 local recipe_produces=Recipe.produces
 
+-- The highest productivity of an exchange (see register_exchange).
+local EXCHANGE_PRODUCTIVITY_CAP = 2
+
 local function source_supports_category(base, category)
   if not base then return false end
   local categories = base.categories or {base.category or "crafting"}
@@ -217,10 +220,15 @@ local function register_exchange(rule)
       rule.time_multiplier or 1.15)
   alternative.auto_recycle = false
   alternative.allow_decomposition = false
-  -- Rewards cross-planet shipping without stacking free bonus throughput
-  -- with productivity modifiers or automatic alternate-recipe recycling.
-  alternative.allow_productivity = false
-  alternative.maximum_productivity = 0
+  -- Productivity follows the normal recipe (copied with it): the bonus is
+  -- measured against that recipe, and the machines of these categories add
+  -- 50% base productivity to it. Without it the exchange made less than the
+  -- normal recipe in the same machine. The cap of +200% keeps the bonus from
+  -- outgrowing what recycling the normal product returns (Moshine silicon
+  -- cells and Aquilo control units loop at +300%). Recycling stays off.
+  alternative.maximum_productivity = math.min(
+    base.maximum_productivity or EXCHANGE_PRODUCTIVITY_CAP,
+    EXCHANGE_PRODUCTIVITY_CAP)
 
   for _, ingredient in ipairs(alternative.ingredients) do
     ingredient.amount = ingredient.amount * rule.batch

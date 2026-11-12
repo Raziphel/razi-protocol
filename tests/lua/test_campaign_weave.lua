@@ -58,9 +58,14 @@ for _, entry in ipairs({
   t[entry[1]]=mk({entry[2]})
   raw.tool[entry[1]]={}
   raw.recipe[entry[1]]={results={{type="item",name=entry[1],amount=1}}}
-  local inputs=raw.lab.standard.inputs
-  inputs[#inputs+1]=entry[1]
+  if entry[1]~="thermodynamic-science-pack" then
+    local inputs=raw.lab.standard.inputs
+    inputs[#inputs+1]=entry[1]
+  end
 end
+local omega_inputs={"calidus-tech-card","thermodynamic-science-pack"}
+raw.lab["omega-lab"]={inputs=omega_inputs}
+raw.lab["harene-infused-omega-lab"]={inputs=omega_inputs}
 t["planetaris-pathological-science-pack"].prerequisites={"planet-discovery-fulgora"}
 -- A recipe can exist but remain locked behind the discovery that is trying
 -- to consume its science. The science technology milestone is still safe,
@@ -107,6 +112,9 @@ local function has_pack(name,need)
   end
   return false
 end
+check(not has_pack("panglia_tech_timewarp_data","thermodynamic-science-pack")
+  and not has_parent("panglia_tech_timewarp_data","thermodynamic-science-pack"),
+  "Panglia timewarp must not use science accepted only by Nexus omega labs")
 check(has_parent("planet-discovery-castra","metallurgic-science-pack"),
   "Castra lacks Vulcanus metallurgy research")
 check(has_pack("planet-discovery-castra","metallurgic-science-pack"),
@@ -176,4 +184,19 @@ f:close()
 local a=assert(src:find('require("prototypes.technology.gates.seven_system_gates").data_final_fixes()',1,true))
 local b=assert(src:find('require("prototypes.technology.gates.campaign_weave").data_final_fixes()',1,true))
 check(b>a,"Weave not wired after final system research gates")
+local ordinary_inputs=raw.lab.standard.inputs
+ordinary_inputs[#ordinary_inputs+1]="thermodynamic-science-pack"
+package.loaded["prototypes.technology.gates.campaign_weave"]=nil
+M=require("prototypes.technology.gates.campaign_weave")
+M.data_final_fixes()
+check(has_pack("panglia_tech_timewarp_data","thermodynamic-science-pack")
+  and has_parent("panglia_tech_timewarp_data","thermodynamic-science-pack"),
+  "Panglia timewarp must use science accepted by an ordinary lab")
+local timewarp_counts={#t["panglia_tech_timewarp_data"].prerequisites,
+  #t["panglia_tech_timewarp_data"].unit.ingredients}
+M.data_final_fixes()
+check(lab_scans==2,"Reloaded campaign weave did not rebuild its lab inputs")
+check(#t["panglia_tech_timewarp_data"].prerequisites==timewarp_counts[1]
+  and #t["panglia_tech_timewarp_data"].unit.ingredients==timewarp_counts[2],
+  "Ordinary-lab research was duplicated on a repeated pass")
 print("Cross-planet research, optional guards, lab safety and cycles passed")

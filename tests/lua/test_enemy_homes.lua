@@ -121,6 +121,7 @@ local function setup(active_mods, startup)
 			quiet = planet({["enemy-base"] = {frequency = 0, size = 0, richness = 0}}),
 		},
 	}})
+	data.raw.planet.nauvis.pollutant_type = "pollution"
 
 	-- Fulgora Replicators: its control on Fulgora (set in its data stage) and its two spawners, which place themselves
 	if active_mods.Fulgora_Replicators then
@@ -234,9 +235,9 @@ local function check_step(label, startup, step_name)
 		end
 	end
 
-	-- Pollution only where there is a home of this step; Fulgora's is the enemy mod's own, Lemures belongs to Dea Dia.
+	-- A home gets no pollution: only Nauvis keeps its own.
 	for planet_name in pairs(data.raw.planet) do
-		local expected = any_home[planet_name] and "pollution" or nil
+		local expected = planet_name == "nauvis" and "pollution" or nil
 		check(data.raw.planet[planet_name].pollutant_type == expected,
 			label .. ": pollution of " .. planet_name .. " is " .. tostring(data.raw.planet[planet_name].pollutant_type))
 	end
@@ -486,7 +487,7 @@ local function check_electric(label, active_mods, startup, step_name)
 	-- Corrundum is set up like any other home, and left alone where it is none
 	if homes.corrundum then
 		check(map_gen("corrundum").autoplace_controls.electric_enemies ~= nil, label .. ": Corrundum has the electric control")
-		check(data.raw.planet.corrundum.pollutant_type == "pollution", label .. ": Corrundum carries pollution")
+		check(data.raw.planet.corrundum.pollutant_type == nil, label .. ": Corrundum gets no pollution")
 		check(zeroed("corrundum", "biter-spawner"), label .. ": the vanilla biters are off on Corrundum")
 	else
 		check(next(map_gen("corrundum").autoplace_controls) == nil and untouched("corrundum") and data.raw.planet.corrundum.pollutant_type == nil,
