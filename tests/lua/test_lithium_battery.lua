@@ -1,7 +1,8 @@
 ---@diagnostic disable: missing-fields, assign-type-mismatch, need-check-nil
 -- Lithium Battery in the pack (compat/lithium_battery.lua) on a mocked data.raw: the productivity effects of the recipe copies it
 -- deletes (7.5.0 and older) are taken out of Planet Crucible's technologies, and equal ingredients of the research data recipes and
--- of the copies it keeps (7.5.1), which share one list with them, are added up.
+-- of the copies it keeps (7.5.1), which share one list with them, are added up; the Vesta items it puts into Vesta's recipes leave
+-- them and their recycling when Vesta does not make the items.
 -- Run from the mod root with the library bootstrap:
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_lithium_battery.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
@@ -182,6 +183,61 @@ check(not has_category(machines["hidden-kr-advanced-assembling-machine"]), "a hi
 check(#machines["kr-advanced-assembling-machine"].crafting_categories == 3, "category added twice")
 machines = belt_pack(false)
 check(not has_category(machines["kr-advanced-assembling-machine"]), "belt category added while the assembling machine 4 is usable")
+
+-- Vesta without its legacy recipes: the items Lithium Battery adds to its recipes are not there
+rawset(_G, "defines", {prototypes = {item = {item = 0, tool = 0}}})
+local function vesta_pack(mod_list, with_legacy_items)
+	data_raw, module = setup(mod_list)
+	data_raw.item = {["quantum-processor"] = {}, ["hea-engine"] = {}, ["accumulator"] = {}}
+	data_raw.fluid = {ske_dt_fuel = {}}
+	if with_legacy_items then
+		data_raw.item.ske_empty_dt_canister = {}
+		data_raw.tool = {["vesta-heater"] = {}}
+	end
+	data_raw.recipe.ske_fusion_framework = {type = "recipe", name = "ske_fusion_framework", ingredients = {
+		{type = "item", name = "quantum-processor", amount = 5},
+		{type = "item", name = "hea-engine", amount = 1},
+		{type = "item", name = "ske_empty_dt_canister", amount = 2},
+		{type = "item", name = "accumulator", amount = 1},
+		{type = "fluid", name = "ske_dt_fuel", amount = 200},
+	}}
+	data_raw.recipe.ske_fusion_thruster = {type = "recipe", name = "ske_fusion_thruster", ingredients = {
+		{type = "item", name = "vesta-heater", amount = 1},
+		{type = "item", name = "hea-engine", amount = 5},
+	}}
+	data_raw.recipe["ske_fusion_framework-recycling"] = {type = "recipe", name = "ske_fusion_framework-recycling", results = {
+		{type = "item", name = "quantum-processor", amount = 1},
+		{type = "item", name = "ske_empty_dt_canister", amount = 0.5},
+	}}
+	module.data_final_fixes()
+	return data_raw.recipe
+end
+
+local function vesta_lines()
+	local count = 0
+	for _, line in ipairs(logged) do
+		count = count + (line:find("legacy recipes", 1, true) and 1 or 0)
+	end
+	return count
+end
+
+local recipes = vesta_pack({LithiumBattery = true, skewer_planet_vesta = true}, false)
+check(ingredient_list(recipes.ske_fusion_framework)
+	== "item:quantum-processor=5,item:hea-engine=1,item:accumulator=1,fluid:ske_dt_fuel=200",
+	"framework: " .. ingredient_list(recipes.ske_fusion_framework))
+check(ingredient_list(recipes.ske_fusion_thruster) == "item:hea-engine=5", "thruster: " .. ingredient_list(recipes.ske_fusion_thruster))
+check(#recipes["ske_fusion_framework-recycling"].results == 1 and recipes["ske_fusion_framework-recycling"].results[1].name
+	== "quantum-processor", "recycling still returns the canister")
+check(vesta_lines() == 3, "one log line per removed ingredient and result: " .. vesta_lines())
+recipes = vesta_pack({LithiumBattery = true, skewer_planet_vesta = true}, true)
+check(#recipes.ske_fusion_framework.ingredients == 5 and #recipes.ske_fusion_thruster.ingredients == 2
+	and #recipes["ske_fusion_framework-recycling"].results == 2,
+	"ingredients removed while Vesta makes the items")
+check(vesta_lines() == 0, "logged while Vesta makes the items")
+recipes = vesta_pack({LithiumBattery = true}, false)
+check(#recipes.ske_fusion_framework.ingredients == 5, "changed without Vesta")
+recipes = vesta_pack({skewer_planet_vesta = true}, false)
+check(#recipes.ske_fusion_framework.ingredients == 5, "changed without Lithium Battery")
 
 -- a pack without technologies or recipes does not fail
 rawset(_G, "mods", {LithiumBattery = true})
