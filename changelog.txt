@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.3
+Date: 2026-11-12
+  Bugfixes:
+    - Even Distribution (updated) by johnmart19 is incompatible: the Even Distribution fork by Jhorr, which razi recommends, refuses to load next to it
+---------------------------------------------------------------------------------------------------
 Version: 3.1.2
 Date: 2026-11-12
   Balancing:
