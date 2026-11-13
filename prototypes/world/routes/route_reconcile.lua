@@ -7,7 +7,7 @@ local layout = require("prototypes.world.starmap.galaxy_layout")
 
 local membership = {
 	-- Main game and Calidus.
-	nauvis = "calidus", muluna = "calidus", ["alchemy-planet"] = "vibrant",
+	nauvis = "calidus", lignumis = "calidus", muluna = "calidus", ["alchemy-planet"] = "vibrant",
 	["sye-calidus"] = "calidus",
 	vulcanus = "solaris",
 	gleba = "nyxaris", rabbasca = "nyxaris", velora = "nyxaris", foliax = "nyxaris",

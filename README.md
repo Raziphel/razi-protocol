@@ -37,7 +37,7 @@ Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bu
 
 ### Calidus
 
-Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and optional Eneas support. This is where the pack establishes the first milestone card: Calidus Tech Card.
+Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, optional Eneas support, and the optional Lignumis start. This is where the pack establishes the first milestone card: Calidus Tech Card.
 
 ### Aegis and Bellicos
 
@@ -85,6 +85,7 @@ Several planets are not just "supported"; they are deliberately placed into the 
 - Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign from Solaris and Nyxaris. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
 
 - Eneas stays an optional early Calidus moon branch when installed.
+- Lignumis is an optional start. With the Lignumis mod enabled, a new game starts on that wooden moon of Nauvis and reaches Nauvis with its wooden rocket; without it the game starts on Nauvis as before. Added to a running game, Lignumis keeps the players where they are: the moon opens with its discovery research (10 automation science), and green circuits take its circuit boards unless its startup setting "Enable telescopic circuit recipes" is off. Lignumis CF stays incompatible: it adds the wood and steam packs to every later research.
 - Every installed world is researched before the gateways of the next system, unless Planetary interdependence is Off: worlds of Solaris and Nyxaris (Igrys, Foliax, Velora, Rabbasca, Pelagos, Terra Palus) before Vibrant and Vespera, worlds of Vibrant and Vespera (Cerys, Khemia, Shchierbin, Athos, Nulla) before Beetlejuice and Umbra, worlds of Beetlejuice and Umbra (Ferrum, Carna, Arcanyx, Obsidiax) and Bellicos before Outer Frontier Mastery. Balack, Skewer Shattered, Rabbasca Underground, Eneas and Nexus stay off the required path.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
 - Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
@@ -195,7 +196,7 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include Dea Dia, Pelagos, Nexus, Solar Halo, Nuclear Steps, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include Dea Dia, Pelagos, Nexus, Lignumis, Solar Halo, Nuclear Steps, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
 Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground, Secretas Orbit Patch, Rate Calculator and What Items Do I Have?
 
