@@ -142,6 +142,8 @@ require("prototypes.world.systems.abacayba_integration").gate()
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.world.routes.route_authority").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").connect_calidus()
+-- Solar Halo is reached from the inner Dyson orbit and makes no science packs from compute.
+require("prototypes.compatibility.Solar-Halo.solar_halo").data_final_fixes()
 -- Native Aegis links and asteroid fields settle after the two curated entries.
 require("prototypes.world.systems.bellicos").fortify_routes()
 
