@@ -73,16 +73,17 @@ end
 
 -- Table of levers by level.
 local expected={
-  easy={scale="balanced",population="sparse",belts="relaxed",ore="rich",
+  easy={scale="balanced",armor="standard",population="sparse",belts="relaxed",ore="rich",
     interdependence="balanced",distributed=false,auto_cards=false,quality=false},
-  normal={scale="balanced",population="standard",belts="standard",
+  normal={scale="balanced",armor="standard",population="standard",belts="standard",
     ore="standard",interdependence="balanced",distributed=false,auto_cards=false,quality=false},
-  hard={scale="challenging",population="dense",belts="severe",
+  hard={scale="challenging",armor="hardened",population="dense",belts="severe",
     ore="scarce",interdependence="deep",distributed=true,auto_cards=true,quality=true},
-  nightmare={scale="relentless",population="dense",belts="severe",
+  nightmare={scale="relentless",armor="armored",population="dense",belts="severe",
     ore="scarce",interdependence="deep",distributed=true,auto_cards=true,quality=true},
 }
 local names={scale="razi-asteroid-difficulty-scale",
+  armor="razi-asteroid-resistances",
   population="razi-asteroid-population",belts="razi-belt-threats",
   ore="razi-belt-resource-richness",
   interdependence="razi-planetary-interdependence",

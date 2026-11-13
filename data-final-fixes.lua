@@ -142,6 +142,8 @@ require("prototypes.world.systems.abacayba_integration").gate()
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.world.routes.route_authority").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").connect_calidus()
+-- Solar Halo is reached from the inner Dyson orbit and makes no science packs from compute.
+require("prototypes.compatibility.Solar-Halo.solar_halo").data_final_fixes()
 -- Native Aegis links and asteroid fields settle after the two curated entries.
 require("prototypes.world.systems.bellicos").fortify_routes()
 
@@ -213,6 +215,10 @@ require("prototypes.technology.gates.distributed_industry").data_final_fixes()
 -- put Razi's gate and belt-rim markers on top.
 require("prototypes.world.starmap.starmap_trail_cleanup").data_final_fixes()
 require("prototypes.world.starmap.location_icons").data_final_fixes()
+
+-- Asteroid armor of the difficulty level (off on Easy and Normal). Before the quality carriers, which copy the
+-- resistances of their originals.
+require("prototypes.world.asteroids.asteroid_resistances").data_final_fixes()
 
 -- Optional, off by default: hostile asteroids on the routes can spawn with quality. Runs after every
 -- route and spawn-table edit so the carriers replace the final hostile entries. Resource chunks are untouched.
