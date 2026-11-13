@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.3
+Date: 2026-11-12
+  Bugfixes:
+    - Even Distribution (updated) by johnmart19 is incompatible: the Even Distribution fork by Jhorr, which razi recommends, refuses to load next to it
+---------------------------------------------------------------------------------------------------
+Version: 3.1.2
+Date: 2026-11-12
+  Balancing:
+    - cross-planet exchange recipes take productivity up to +200%; without it the electromagnetic plant made more with the normal recipe than with the exchange
+    - huge asteroids on space routes only from route level 9, where railguns are within reach; Khemia - Ribbonia, Aquilo - Balack and Beetlejuice - Umbra had them from about level 6 ([#240](https://github.com/Raziphel/razi-protocol/issues/240))
+    - quality asteroids follow the difficulty level, off on Easy and Normal, on for Hard and Nightmare; their chunks with quality clogged belts and collector filters
+  Bugfixes:
+    - a system card no longer takes raw K2 research data next to the science pack made from it; Solaris, Nyxaris, Vibrant, Vespera and Deep Space cards took the same family twice
+    - enemy homes no longer turn on pollution on planets that have none; their nests attack only in response, and the planets load no chunks for a pollution cloud
+    - no big or huge asteroids of Razi More Asteroids on early orbits: Vulcanus, Gleba and Fulgora lose both, Aquilo the huge ones (big from level 6, huge from level 9, as on routes)
+    - platforms without thrust drift to the nearer end of every route; star systems, belt edges and some other locations had no gravity pull, so a platform out of fuel next to them stopped for good
+    - recommend the Even Distribution fork by Jhorr, which keeps quality and freshness on Ctrl+drag and takes over the settings of the original
+    - the description of the Easy, Hard and Nightmare map presets says why their sliders stay at 100 % when the mod setting picks the same difficulty
+    - the game starts with Lithium Battery and Vesta without its legacy recipes
+    - the game starts with Ribbonia when the Renai Transportation bounce plates, throwers or train ramps were turned off; these settings are pinned on
+    - the original Even Distribution is incompatible: its Factorio 2.1 release crashes when a game starts (fuel_category was removed in 2.1.20)
+    - [weave] ignore Nexus omega labs for campaign science ([#247](https://github.com/Raziphel/razi-protocol/issues/247))
+---------------------------------------------------------------------------------------------------
 Version: 3.1.1
 Date: 2026-11-11
   Bugfixes:
