@@ -4,6 +4,7 @@ local defs=require("scripts.journal.data")
 local chapter_timing=require("scripts.journal.chapter_timing")
 local journal_acts=require("scripts.journal.acts")
 local marks=require("scripts.journal.marks")
+local icons=require("scripts.journal.icons")
 local themes=require("scripts.journal.themes")
 local search_names=require("scripts.journal.search_names")
 local widgets=require("scripts.journal.widgets")
@@ -116,11 +117,8 @@ local function update_reader(player,preserve_reader)
               or state=="active" and themes.get(ch.id).soft or COLOR.muted
           end
           if marker then
-            marker.caption=state=="complete" and marks.done
-              or state=="active" and marks.active or marks.pending
-            marker.style.font_color=chosen and themes.get(ch.id).primary
-              or state=="complete" and COLOR.green
-              or state=="active" and COLOR.amber or COLOR.quiet
+            marker.sprite=icons.mark_sprite(state=="complete" and marks.done
+              or state=="active" and marks.active or marks.pending)
           end
         end
       end
@@ -153,7 +151,7 @@ local function update_reader(player,preserve_reader)
       end
       local expanded=shown>0 and (p.chapter==ch.id or p.query~="")
       if entries then entries.visible=expanded end
-      if toggle then toggle.caption=expanded and marks.expanded or marks.collapsed end
+      if toggle then toggle.sprite=icons.mark_sprite(expanded and marks.expanded or marks.collapsed) end
       if count then
         count.caption=L("chapter-progress-short",
           ---@diagnostic disable-next-line: need-check-nil
