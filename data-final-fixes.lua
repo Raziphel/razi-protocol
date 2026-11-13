@@ -214,6 +214,10 @@ require("prototypes.technology.gates.distributed_industry").data_final_fixes()
 require("prototypes.world.starmap.starmap_trail_cleanup").data_final_fixes()
 require("prototypes.world.starmap.location_icons").data_final_fixes()
 
+-- Asteroid armor of the difficulty level (off on Easy and Normal). Before the quality carriers, which copy the
+-- resistances of their originals.
+require("prototypes.world.asteroids.asteroid_resistances").data_final_fixes()
+
 -- Optional, off by default: hostile asteroids on the routes can spawn with quality. Runs after every
 -- route and spawn-table edit so the carriers replace the final hostile entries. Resource chunks are untouched.
 require("prototypes.world.asteroids.quality_asteroids").data_final_fixes()
