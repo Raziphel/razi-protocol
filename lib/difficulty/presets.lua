@@ -17,6 +17,7 @@ local M={}
 -- defaults (checked by tests/lua/test_razi_difficulty_presets.lua).
 M.baseline={
  ["razi-asteroid-difficulty-scale"]="balanced",
+ ["razi-asteroid-resistances"]="standard",
  ["razi-asteroid-population"]="standard",
  ["razi-belt-threats"]="standard",
  ["razi-belt-resource-richness"]="standard",
@@ -46,6 +47,7 @@ M.baseline={
 -- Declaration order; the one list every loop walks, so results are stable.
 M.managed={
  "razi-asteroid-difficulty-scale",
+ "razi-asteroid-resistances",
  "razi-asteroid-population",
  "razi-belt-threats",
  "razi-belt-resource-richness",
@@ -80,6 +82,7 @@ end
 M.presets={
  easy={
   ["razi-asteroid-difficulty-scale"]="balanced",
+  ["razi-asteroid-resistances"]="standard",
   ["razi-asteroid-population"]="sparse",
   ["razi-belt-threats"]="relaxed",
   ["razi-belt-resource-richness"]="rich",
@@ -105,6 +108,7 @@ M.presets={
  normal=copy(M.baseline),
  hard={
   ["razi-asteroid-difficulty-scale"]="challenging",
+  ["razi-asteroid-resistances"]="hardened",
   ["razi-asteroid-population"]="dense",
   ["razi-belt-threats"]="severe",
   ["razi-belt-resource-richness"]="scarce",
@@ -129,6 +133,7 @@ M.presets={
  },
  nightmare={
   ["razi-asteroid-difficulty-scale"]="relentless",
+  ["razi-asteroid-resistances"]="armored",
   ["razi-asteroid-population"]="dense",
   ["razi-belt-threats"]="severe",
   ["razi-belt-resource-richness"]="scarce",

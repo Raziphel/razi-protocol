@@ -196,9 +196,9 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include Dea Dia, Pelagos, Nexus, Lignumis, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Optional supported branches include Dea Dia, Pelagos, Nexus, Lignumis, Solar Halo, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
-Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground and Secretas Orbit Patch.
+Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground, Secretas Orbit Patch, Rate Calculator and What Items Do I Have?
 
 ## Modpack Guidance
 
@@ -208,6 +208,7 @@ For the best results:
 - Updating a save made with 2.x: [docs/updating-from-2x.md](docs/updating-from-2x.md).
 - Install RAZI Library 1.3.1 or newer and Razi More Asteroids 1.1.0 or newer; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
 - Install Razi Rocket Reusability 1.1.5 or newer; it is a required mod now, and the original Rocket Reusability is incompatible with it.
+- Heavy Gun Turret and Heavy Gun Turret - Krastorio 2 compatibility are required: the heavy gun turret follows the range and physical projectile damage bonus Krastorio 2 gives the gun turret, so it is no longer weaker than the turret it is made from.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
 - Expect Razi Protocol to disagree with mods that try to define their own parallel late game.

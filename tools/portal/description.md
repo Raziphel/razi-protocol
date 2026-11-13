@@ -14,9 +14,9 @@ I started this because I wanted to play with a lot of planet mods at once, and i
 ## Please read before you start
 
 * **It is long.** More than 35 worlds on top of Space Age. Nobody has finished a 3.0 game yet, so there is no real playtime figure; plan for hundreds of hours.
-* **It is big.** With the required and recommended mods you load 183 mods, about 6.5 GB of downloads. On a graphics card with 6–8 GB of memory, lower the texture atlas size and turn off high-quality animations in Settings → Graphics, or the game can crash.
+* **It is big.** With the required and recommended mods you load 187 mods, about 6.5 GB of downloads. On a graphics card with 6–8 GB of memory, lower the texture atlas size and turn off high-quality animations in Settings → Graphics, or the game can crash.
 * **It changes the game early.** Technologies unlock in a different order from regular Space Age, and later research costs system cards.
-* **Some mods do not work with it:** other route and asteroid belt overhauls (Asteroid Belt, Space Route Overlay, Redrawn Space Connections), the Krastorio 2 extended endgame mods, Lignumis CF, Factorio+ and the others marked incompatible in the Dependencies tab.
+* **Some mods do not work with it:** other route and asteroid belt overhauls (Asteroid Belt, Redrawn Space Connections), the Krastorio 2 extended endgame mods, Lignumis CF, Factorio+ and the others marked incompatible in the Dependencies tab.
 * **2.x saves can be updated.** Make a backup. Before updating, load the save in the latest 2.x, type `/razi-prepare-3` in the chat and save. Then read [the update guide](https://github.com/Raziphel/razi-protocol/blob/main/docs/updating-from-2x.md): some recipes stop accepting modules, and some researched technologies get new prerequisites.
 
 ## Razi Protocol is for you if
@@ -47,7 +47,7 @@ If you want a short mod list or a game you can finish in a few weekends, this is
 
 Worlds marked * need an optional or recommended mod.
 
-* **Calidus:** Nauvis, Lignumis*, Muluna, Eneas*
+* **Calidus:** Nauvis, Lignumis*, Muluna, Eneas*, Solar Halo*
 * **Solaris:** Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum, Igrys
 * **Nyxaris:** Gleba, Moshine, Apia and Carnova, Panglia, Foliax, Velora, Rabbasca*, Terra Palus*, Pelagos*, Dea Dia*
 * **Vibrant:** Fulgora, Cerys*, Ribbonia, Paracelsin, Khemia, Shchierbin*
