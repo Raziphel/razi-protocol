@@ -18,42 +18,63 @@ local function subgroup(name, group, order)
   return true
 end
 
-local function has(entries, kind, test)
-  for _, entry in ipairs(entries or {}) do
-    local entry_kind = entry.type or "item"
-    local name = entry.name or entry[1]
-    if entry_kind == kind and type(name) == "string" and test(name) then
-      return true
+local function barrel_recipe(_, recipe)
+  if not recipe then return false end
+  local inputs, outputs = recipe.ingredients or {}, recipe.results or {}
+
+  -- Factorio 2.x names filled-barrel recipes after their product and hides
+  -- them from player crafting. Their subgroup and ingredients identify them.
+  if recipe.subgroup == "fill-barrel"
+    or recipe.subgroup == "empty-barrel" then
+    return true
+  end
+
+  local function item(entry, expected)
+    return (entry.type or "item") == "item"
+      and (entry.name or entry[1]) == expected
+      and (entry.amount == nil or entry.amount == 1)
+  end
+  local function fluid(entry)
+    return entry.type == "fluid"
+  end
+
+  if #inputs == 2 and #outputs == 1 then
+    local fluid_input, barrel_input = false, false
+    for _, entry in ipairs(inputs) do
+      if fluid(entry) then
+        fluid_input = true
+      elseif item(entry, "barrel") then
+        barrel_input = true
+      else
+        return false
+      end
     end
+    local product = outputs[1]
+    return fluid_input and barrel_input
+      and (product.type or "item") == "item"
+      and (product.amount == nil or product.amount == 1)
+  end
+
+  if #inputs == 1 and #outputs == 2 then
+    local ingredient = inputs[1]
+    if (ingredient.type or "item") ~= "item"
+      or (ingredient.name or ingredient[1]) == "barrel"
+      or (ingredient.amount ~= nil and ingredient.amount ~= 1) then
+      return false
+    end
+    local fluid_output, barrel_output = false, false
+    for _, entry in ipairs(outputs) do
+      if fluid(entry) then
+        fluid_output = true
+      elseif item(entry, "barrel") then
+        barrel_output = true
+      else
+        return false
+      end
+    end
+    return fluid_output and barrel_output
   end
   return false
-end
-
-local function is_filled_barrel(name)
-  return name ~= "empty-barrel" and name:match("%-barrel$") ~= nil
-end
-
-local function barrel_recipe(name, recipe)
-  if not recipe then return false end
-  local filling = name:match("^fill%-.+%-barrel$") ~= nil
-  local emptying = name:match("^empty%-.+%-barrel$") ~= nil
-  if not filling and not emptying then return false end
-  local inputs, outputs = recipe.ingredients or {}, recipe.results or {}
-  if filling then
-    return has(inputs,"fluid",function() return true end)
-      and has(inputs,"item",function(n) return n=="empty-barrel" end)
-      and has(outputs,"item",is_filled_barrel)
-  end
-  return has(inputs,"item",is_filled_barrel)
-    and has(outputs,"fluid",function() return true end)
-    and has(outputs,"item",function(n) return n=="empty-barrel" end)
-end
-
-local function source_fluid_group(recipe)
-  local source = recipe.subgroup
-  if not source then return true end
-  local prototype = data.raw["item-subgroup"] and data.raw["item-subgroup"][source]
-  return prototype and prototype.group == "fluids" or false
 end
 
 local function perishable_result(recipe)
@@ -121,13 +142,12 @@ function M.data_final_fixes()
   -- including recipes subsequently omitted from the hand-crafting panel.
   if barrels or perishables then
     for name, recipe in pairs(data.raw.recipe or {}) do
-      if not recipe.hidden and not recipe.hide_from_player_crafting then
-        if barrels and source_fluid_group(recipe)
-          and barrel_recipe(name,recipe) then
-          recipe.subgroup="razi-fluid-barreling"
-        elseif perishables and perishable_result(recipe) then
-          recipe.subgroup="razi-perishable-products"
-        end
+      if barrels and barrel_recipe(name,recipe) then
+        recipe.subgroup="razi-fluid-barreling"
+      elseif perishables and not recipe.hidden
+        and not recipe.hide_from_player_crafting
+        and perishable_result(recipe) then
+        recipe.subgroup="razi-perishable-products"
       end
     end
   end

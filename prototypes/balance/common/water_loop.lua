@@ -19,9 +19,10 @@ local recipes = {
 function water_loop.data_final_fixes()
 	for _, name in ipairs(recipes) do
 		local recipe = data.raw.recipe[name]
-		if recipe then
+		if recipe and (recipe.allow_productivity ~= false or recipe.maximum_productivity ~= 0) then
 			recipe.allow_productivity = false
 			recipe.maximum_productivity = 0
+			log("razi-protocol: " .. name .. " takes no productivity")
 		end
 	end
 end

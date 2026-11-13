@@ -25,6 +25,7 @@ local entries = {
 	{ level = "strict", run = require("prototypes.balance.planetaris-hyarion.particle_manipulation").data_final_fixes },
 	{ level = "strict", run = require("prototypes.balance.corrundum.recrystallization").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.skewer_planet_vesta.h2o_water").data_final_fixes },
+	{ level = "closed", run = require("prototypes.balance.common.water_loop").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.planet-crucible.hydrogen").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.nulls-k2so-tweaks.matter_to_bones").data_final_fixes },
 	{ level = "closed", run = require("prototypes.balance.common.wood_coal_stone").data_final_fixes },

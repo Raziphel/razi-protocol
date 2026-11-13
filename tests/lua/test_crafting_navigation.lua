@@ -11,8 +11,9 @@ local function fixture(mode, spoilables, barrels)
   local raw = {
     ["item-group"] = {fluids={},["intermediate-products"]={}},
     ["item-subgroup"] = {
-      ["fluid-recipes"]={group="fluids"},
-      ["intermediate-product"]={group="intermediate-products"}
+      ["intermediate-product"]={group="intermediate-products"},
+      ["fill-barrel"]={group="intermediate-products"},
+      ["empty-barrel"]={group="intermediate-products"}
     },
     character = {character={crafting_categories={"crafting","special-hand"}}},
     ["god-controller"] = {god={crafting_categories={"sandbox-craft"}}},
@@ -29,17 +30,19 @@ local function fixture(mode, spoilables, barrels)
       ["fluid-mixed"]={categories={"crafting","chemistry"},ingredients={{type="fluid",name="water",amount=10}}},
       ["already-hidden"]={category="chemistry",hide_from_player_crafting=true},
       ["fully-hidden"]={category="chemistry",hidden=true},
-      ["fill-water-barrel"]={
-        category="crafting-with-fluid",subgroup="fluid-recipes",
+      ["water-barrel"]={
+        category="crafting-with-fluid",subgroup="fill-barrel",
+        hidden=true,hide_from_player_crafting=true,
         ingredients={{type="fluid",name="water",amount=50},
-          {type="item",name="empty-barrel",amount=1}},
+          {type="item",name="barrel",amount=1}},
         results={{type="item",name="water-barrel",amount=1}}
       },
       ["empty-water-barrel"]={
-        category="crafting-with-fluid",subgroup="fluid-recipes",
+        category="crafting-with-fluid",subgroup="empty-barrel",
+        hidden=true,hide_from_player_crafting=true,
         ingredients={{type="item",name="water-barrel",amount=1}},
         results={{type="fluid",name="water",amount=50},
-          {type="item",name="empty-barrel",amount=1}}
+          {type="item",name="barrel",amount=1}}
       },
       ["fresh-gel"]={
         category="crafting",subgroup="intermediate-product",
@@ -63,6 +66,17 @@ local function fixture(mode, spoilables, barrels)
   return raw.recipe,raw
 end
 
+check(navigation.barrel_recipe("mod-fluid-container", {
+  ingredients={{type="fluid",name="water",amount=50},
+    {type="item",name="barrel",amount=1}},
+  results={{type="item",name="water-container",amount=1}}
+}), "Barrel filling should also be recognized by its ingredients")
+check(navigation.barrel_recipe("mod-empty-container", {
+  ingredients={{type="item",name="water-container",amount=1}},
+  results={{type="fluid",name="water",amount=50},
+    {type="item",name="barrel",amount=1}}
+}), "Barrel emptying should also be recognized by its ingredients")
+
 local recipes = fixture("all",true,true)
 navigation.data_final_fixes()
 for _, name in ipairs({"hand-gear","default-category","hybrid-machine",
@@ -71,7 +85,7 @@ for _, name in ipairs({"hand-gear","default-category","hybrid-machine",
     "Player-craftable recipe hidden: "..name)
 end
 for _, name in ipairs({"machine-metallurgy","razi-machine-metallurgy",
-    "fluid-chemical","fluid-mixed","fill-water-barrel",
+    "fluid-chemical","fluid-mixed","water-barrel",
     "empty-water-barrel"}) do
   check(recipes[name].hide_from_player_crafting == true,
     "Machine-only recipe not hidden: "..name)
@@ -81,9 +95,14 @@ check(recipes["hand-gear"].enabled == false,
 check(recipes["already-hidden"].hide_from_player_crafting == true
   and recipes["fully-hidden"].hidden == true,
   "Existing source visibility was overridden")
-check(recipes["fill-water-barrel"].subgroup == "razi-fluid-barreling"
+check(recipes["water-barrel"].subgroup == "razi-fluid-barreling"
   and recipes["empty-water-barrel"].subgroup == "razi-fluid-barreling",
   "Barrel grouping did not survive hand-crafting cleanup")
+check(recipes["water-barrel"].hidden
+  and recipes["water-barrel"].hide_from_player_crafting
+  and recipes["empty-water-barrel"].hidden
+  and recipes["empty-water-barrel"].hide_from_player_crafting,
+  "Source barrel visibility flags were changed")
 check(recipes["fresh-gel"].subgroup == "razi-perishable-products",
   "Spoilable grouping did not survive hand-crafting cleanup")
 
@@ -95,7 +114,7 @@ check(recipes["razi-machine-metallurgy"].hide_from_player_crafting == true,
   "Razi-only mode failed to hide a Razi recipe")
 check(recipes["fresh-gel"].subgroup == "intermediate-product",
   "Disabled spoilable option still moved source recipes")
-check(recipes["fill-water-barrel"].subgroup == "razi-fluid-barreling",
+check(recipes["water-barrel"].subgroup == "razi-fluid-barreling",
   "Barrel option should work independently of cleanup scope")
 
 recipes = fixture("off",false,false)
@@ -103,7 +122,7 @@ navigation.data_final_fixes()
 check(not recipes["machine-metallurgy"].hide_from_player_crafting
   and not recipes["razi-machine-metallurgy"].hide_from_player_crafting,
   "Off mode did not preserve source crafting menu")
-check(recipes["fill-water-barrel"].subgroup == "fluid-recipes",
+check(recipes["water-barrel"].subgroup == "fill-barrel",
   "Disabled barrel option still moved source recipes")
 check(recipes["fresh-gel"].subgroup == "intermediate-product",
   "Disabled spoilable option still moved source recipes")
