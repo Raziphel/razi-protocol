@@ -91,10 +91,10 @@ function asteroid_resistances.data_final_fixes()
 				touched = harden(entry(asteroid.resistances, "physical"), 0, level.medium_physical) or touched
 			elseif size == "big" then
 				touched = harden(entry(asteroid.resistances, "explosion"), 0, level.big_explosion) or touched
+				-- Asteroid mods may add kr-explosion before K2SO's copy; the game uses the last entry.
 				for _, resistance in ipairs(asteroid.resistances) do
 					if resistance.type == "kr-explosion" then
 						touched = harden(resistance, level.percent, level.big_explosion) or touched
-						break
 					end
 				end
 			end

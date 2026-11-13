@@ -45,6 +45,10 @@ local function setup(level, manual)
 	local k2_resistances = resistances("big")
 	k2_resistances[#k2_resistances + 1] = {type = "kr-explosion", percent = 10}
 	asteroid["big-k2-metallic-asteroid"] = {name = "big-k2-metallic-asteroid", resistances = k2_resistances}
+	local two_kr_resistances = resistances("big")
+	two_kr_resistances[#two_kr_resistances + 1] = {type = "kr-explosion", percent = 100}
+	two_kr_resistances[#two_kr_resistances + 1] = {type = "kr-explosion", percent = 10}
+	asteroid["big-twokr-metallic-asteroid"] = {name = "big-twokr-metallic-asteroid", resistances = two_kr_resistances}
 	-- an asteroid of another mod without resistances, and a name without a size
 	asteroid["medium-rock-asteroid"] = {name = "medium-rock-asteroid"}
 	asteroid["odd-thing"] = {name = "odd-thing", resistances = {{type = "physical", percent = 5}}}
@@ -88,6 +92,13 @@ check(d == 2000 and p == 10, "hard: big physical must stay")
 check(get("big-metallic-asteroid", "kr-explosion") == nil, "hard: big without kr-explosion must not get one")
 d, p = get("big-k2-metallic-asteroid", "kr-explosion")
 check(d == 20 and p == 20, "hard: K2 big explosion " .. d .. " " .. p)
+local two_kr = data.raw.asteroid["big-twokr-metallic-asteroid"].resistances
+local first_kr = two_kr[#two_kr - 1]
+local second_kr = two_kr[#two_kr]
+check(first_kr.type == "kr-explosion" and first_kr.decrease == nil and first_kr.percent == 100,
+	"hard: first kr-explosion immunity must stay")
+check(second_kr.type == "kr-explosion" and second_kr.decrease == 20 and second_kr.percent == 20,
+	"hard: second kr-explosion " .. tostring(second_kr.decrease) .. " " .. tostring(second_kr.percent))
 d, p = get("huge-metallic-asteroid", "physical")
 check(d == 3000 and p == 20, "hard: huge physical " .. d .. " " .. p)
 d, p = get("huge-rubia-metallic-asteroid", "rubia-kinetic")
@@ -100,16 +111,23 @@ check(p == 100, "hard: immunity must stay")
 d, p = get("medium-rock-asteroid", "physical")
 check(d == 1 and p == 10, "hard: an asteroid without resistances gets them")
 check(get("odd-thing", "physical") == 0 and select(2, get("odd-thing", "physical")) == 5, "hard: a name without a size")
-check(hard_changed == 7, "hard: every sized asteroid changes")
+check(hard_changed == 8, "hard: every sized asteroid changes")
 
 -- Nightmare: +20 % for other sizes, +15 % for huge, +2 and +40
-check(setup("nightmare") == 7, "nightmare: every sized asteroid changes")
+check(setup("nightmare") == 8, "nightmare: every sized asteroid changes")
 d, p = get("medium-metallic-asteroid", "physical")
 check(d == 2 and p == 30, "nightmare: medium physical " .. d .. " " .. p)
 d, p = get("big-metallic-asteroid", "explosion")
 check(d == 40 and p == 30, "nightmare: big explosion " .. d .. " " .. p)
 d, p = get("big-k2-metallic-asteroid", "kr-explosion")
 check(d == 40 and p == 30, "nightmare: K2 big explosion " .. d .. " " .. p)
+two_kr = data.raw.asteroid["big-twokr-metallic-asteroid"].resistances
+first_kr = two_kr[#two_kr - 1]
+second_kr = two_kr[#two_kr]
+check(first_kr.type == "kr-explosion" and first_kr.decrease == nil and first_kr.percent == 100,
+	"nightmare: first kr-explosion immunity must stay")
+check(second_kr.type == "kr-explosion" and second_kr.decrease == 40 and second_kr.percent == 30,
+	"nightmare: second kr-explosion " .. tostring(second_kr.decrease) .. " " .. tostring(second_kr.percent))
 d, p = get("huge-metallic-asteroid", "physical")
 check(d == 3000 and p == 25, "nightmare: vanilla huge physical " .. d .. " " .. p)
 d, p = get("huge-rubia-metallic-asteroid", "rubia-kinetic")
@@ -119,12 +137,12 @@ d, p = get("huge-rubia-metallic-asteroid", "physical")
 check(d == 0 and p == 100, "nightmare: Rubia huge physical must stay " .. d .. " " .. p)
 
 -- A value set by hand wins over the level; Custom uses it as well
-check(setup("hard", "armored") == 7, "manual armored on hard")
+check(setup("hard", "armored") == 8, "manual armored on hard")
 d, p = get("big-metallic-asteroid", "explosion")
 check(d == 40 and p == 30, "manual armored on hard: big explosion " .. d .. " " .. p)
 -- A saved "standard" is the default and cannot be told from an untouched setting: the level applies
-check(setup("nightmare", "standard") == 7, "nightmare with the default saved")
-check(setup("custom", "hardened") == 7, "custom hardened")
+check(setup("nightmare", "standard") == 8, "nightmare with the default saved")
+check(setup("custom", "hardened") == 8, "custom hardened")
 
 -- The percent stops at 95
 rawset(_G, "settings", {startup = {["razi-difficulty-preset"] = {value = "nightmare"},
