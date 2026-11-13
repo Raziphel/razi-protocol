@@ -40,12 +40,15 @@ return function(runner)
 	runner.test("every step of the way to the end technologies can be researched", function()
 		local path = needed(ends)
 		local count, broken = 0, {}
+		-- Lignumis disables this technology and enables and researches it by script on the player's first arrival at
+		-- another surface (lignumis/scripts/init.lua:88-92).
+		local lignumis_red_science = script.active_mods["lignumis"] and "automation-science-pack"
 		for _, name in ipairs(sorted(path)) do
 			local technology = prototypes.technology[name]
 			count = count + 1
 			if not technology then
 				broken[#broken + 1] = name .. " does not exist"
-			elseif not technology.enabled then
+			elseif not technology.enabled and name ~= lignumis_red_science then
 				broken[#broken + 1] = name .. " is disabled"
 			elseif technology.hidden then
 				broken[#broken + 1] = name .. " is hidden"
