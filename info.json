@@ -17,6 +17,8 @@
     "Krastorio2-spaced-out >= 2.0.19",
     "slp-dyson-sphere-reworked-fork >= 1.0.5",
     "k2-dyson-sphere-rebalance >= 0.1.2",
+    "heavy_gun_turret >= 0.2.1",
+    "heavy-gun-turret-k2-compat >= 0.1.0",
     "+ planet-express >= 2.1.11",
     "+ upgraded-rocket-turrets >= 2.1.2",
     "Krastorio2Assets >= 2.1.0",
