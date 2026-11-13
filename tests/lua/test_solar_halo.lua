@@ -55,6 +55,29 @@ local function world(dyson)
 	return require("prototypes.compatibility.Solar-Halo.solar_halo")
 end
 
+local function check_discovery_prerequisites(initial, expected, message)
+	local solar_halo = world(true)
+	local prerequisites = {}
+	for i, prerequisite in ipairs(initial) do
+		prerequisites[i] = prerequisite
+	end
+	data.raw.technology["halo-discovery-solar"].prerequisites = prerequisites
+	solar_halo.data_final_fixes()
+
+	local actual = data.raw.technology["halo-discovery-solar"].prerequisites
+	check(#actual == #expected, message .. ": prerequisite count")
+	for i, prerequisite in ipairs(expected) do
+		check(actual[i] == prerequisite, message .. ": prerequisite " .. i)
+	end
+end
+
+-- the gate replaces space science in place, or follows other prerequisites
+check_discovery_prerequisites({"space-science-pack"}, {"slp-solar-system-sun2"}, "replace space science")
+check_discovery_prerequisites({"space-science-pack", "x"}, {"slp-solar-system-sun2", "x"}, "replace among prerequisites")
+check_discovery_prerequisites({"space-science-pack", "slp-solar-system-sun2"}, {"slp-solar-system-sun2"}, "drop space science when the gate is there")
+check_discovery_prerequisites({"x"}, {"x", "slp-solar-system-sun2"}, "append the gate")
+check_discovery_prerequisites({"slp-solar-system-sun2"}, {"slp-solar-system-sun2"}, "do not duplicate the gate")
+
 -- with the Dyson sphere
 local solar_halo = world(true)
 solar_halo.data_final_fixes()

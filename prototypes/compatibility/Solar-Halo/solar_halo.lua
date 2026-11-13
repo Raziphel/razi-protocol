@@ -76,11 +76,37 @@ end
 
 local function gate_discovery(gate)
 	local discovery = technology(solar_halo.DISCOVERY)
-	local prerequisites = discovery and discovery.prerequisites
-	if prerequisites and #prerequisites == 1 and prerequisites[1] == "space-science-pack" then
-		discovery.prerequisites = {gate}
-		log("razi-protocol: Solar Halo: " .. solar_halo.DISCOVERY .. " follows " .. gate)
+	if not discovery then
+		return
 	end
+	local prerequisites = discovery.prerequisites or {}
+	for i, prerequisite in ipairs(prerequisites) do
+		if prerequisite == "space-science-pack" then
+			local gate_is_present = false
+			for _, current in ipairs(prerequisites) do
+				if current == gate then
+					gate_is_present = true
+					break
+				end
+			end
+			if gate_is_present then
+				table.remove(prerequisites, i)
+			else
+				prerequisites[i] = gate
+			end
+			discovery.prerequisites = prerequisites
+			log("razi-protocol: Solar Halo: " .. solar_halo.DISCOVERY .. " follows " .. gate .. " instead of space-science-pack")
+			return
+		end
+	end
+	for _, prerequisite in ipairs(prerequisites) do
+		if prerequisite == gate then
+			return
+		end
+	end
+	prerequisites[#prerequisites + 1] = gate
+	discovery.prerequisites = prerequisites
+	log("razi-protocol: Solar Halo: " .. solar_halo.DISCOVERY .. " also follows " .. gate)
 end
 
 local function is_simulation(name)
