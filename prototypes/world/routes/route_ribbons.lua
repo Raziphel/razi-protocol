@@ -136,7 +136,14 @@ function M.data_final_fixes(owner)
   for i=#atlas.layers,1,-1 do
     if obsolete(atlas.layers[i]) then table.remove(atlas.layers,i) end
   end
-  if mode=="off" or (mods and mods["space-route-overlay"]) then return 0 end
+  if mode=="off" then return 0 end
+  -- Space Route Overlay draws the routes instead of the ribbons; in danger mode its dots take the levels 1-10.
+  if mods and mods["space-route-overlay"] then
+    if mode=="danger" then
+      require("prototypes.compatibility.space-route-overlay.danger_definitions").data_final_fixes(owner)
+    end
+    return 0
+  end
   -- Respect subsequent final-fixes calls. Never draw duplicate ribbons.
   for _,sprite in ipairs(atlas.layers) do
     if sprite.filename==SHEET then return 0 end
