@@ -144,13 +144,11 @@ local function render_chapters(parent,player,p,context,size,view,plan)
       head.style.horizontal_spacing=5
       icons.sprite(head,themes.icon(chapter.id),"chapter_button",
         {"journal-chapter."..chapter.id})
-      local toggle=head.add{type="button",name="razi_journal_chapter_toggle",style="tool_button",
-        caption=open and marks.expanded or marks.collapsed,
+      local toggle=head.add{type="sprite-button",name="razi_journal_chapter_toggle",style="tool_button",
+        sprite=icons.mark_sprite(open and marks.expanded or marks.collapsed),
         tags={razi_journal_action="chapter",id=chapter.id},
         tooltip={"journal-chapter."..chapter.id}}
-      toggle.style.width=20
-      toggle.style.height=22
-      toggle.style.font_color=open and theme.primary or COLOR.quiet
+      toggle.style.size=22
       local heading=head.add{type="label",name="razi_journal_chapter_title",
         style="clickable_label",
         caption={"",string.format("%02d",index)," / ",{"journal-chapter."..chapter.id}},
@@ -219,17 +217,12 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           select_rule.visible=chosen
           icons.sprite(item,quest_art(player.force,quest,context),
             "quest_row")
-          local control=item.add{type="button",name="razi_journal_item_control",style="tool_button",
-            caption=state=="complete" and marks.done
-              or state=="active" and marks.active or marks.pending,
+          local control=item.add{type="sprite-button",name="razi_journal_item_control",style="tool_button",
+            sprite=icons.mark_sprite(state=="complete" and marks.done
+              or state=="active" and marks.active or marks.pending),
             tags={razi_journal_action="select",id=quest.id},
             tooltip=milestone_tooltip}
-          control.style.width=21
-          control.style.height=21
-          local color=state=="complete" and {r=.48,g=.85,b=.67}
-            or state=="active" and {r=.98,g=.79,b=.46}
-            or {r=.58,g=.61,b=.68}
-          control.style.font_color=color
+          control.style.size=21
           local choice=item.add{type="label",name="razi_journal_item_choice",style="clickable_label",
             caption=defs.quest_title(quest,player),
             tags={razi_journal_action="select",id=quest.id},
@@ -239,7 +232,6 @@ local function render_chapters(parent,player,p,context,size,view,plan)
           choice.style.font_color=chosen and COLOR.ink
             or state=="active" and theme.soft or COLOR.muted
           if chosen then
-            control.style.font_color=theme.primary
             choice.style.font="default-bold"
             selected_element=choice
           end

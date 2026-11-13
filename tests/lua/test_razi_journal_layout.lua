@@ -343,7 +343,7 @@ local selector
 for _,element in ipairs(live_elements()) do
   if element.name=="razi_journal_chapter_picker" then picker=element end
   if element.tags and element.tags.razi_journal_action=="select"
-    and element.type=="button" then selector=element end
+    and (element.type=="button" or element.type=="sprite-button") then selector=element end
 end
 check(picker and picker.items and #picker.items==#defs.chapters and picker.selected_index,
   "The chapter jump dropdown is absent")
@@ -470,4 +470,20 @@ check(not nav.visible and reader.visible
   "Selecting a milestone should immediately reopen the full-width dossier")
 check(reader.children[1] and reader.children[1].style.width==narrow.width-43,
   "After an in-place selection, the full-width dossier must stay responsive")
+-- A rich-text sprite in a button caption keeps the font's line height, and a button under tool_button's 28 px clips
+-- it (fac-bug-reports 13.11.2026). The status marks of quest rows and chapter heads are sprite-buttons.
+local mark_buttons=0
+for _,element in ipairs(live_elements()) do
+  if element.type=="button" and type(element.caption)=="string" and element.caption:find("[img=",1,true) then
+    check((element.style.width or 28)>=28 and (element.style.height or 28)>=28,
+      "A status mark in the caption of a button under 28 px is clipped: "..tostring(element.name))
+  end
+  if element.name=="razi_journal_item_control" or element.name=="razi_journal_chapter_toggle" then
+    check(element.type=="sprite-button" and type(element.sprite)=="string"
+      and not element.sprite:find("[",1,true),
+      "A small status mark must be the sprite of a sprite-button: "..element.name)
+    mark_buttons=mark_buttons+1
+  end
+end
+check(mark_buttons>0,"No quest row or chapter head status button was drawn: the check tests nothing")
 print("Journal GUI: adaptive single-column mission reader, selected row in view and source-linked actions passed")
