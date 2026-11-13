@@ -6,6 +6,9 @@ name: Load
 # It runs apart from `check` (release.yml) because the mods are about 7 GB to download.
 # The daily schedule checks dev against the current Factorio builds and mod dependencies. GitHub reads scheduled
 # workflows from the default branch (main), so it starts after the next release includes this file.
+# The nightly and manually dispatched runs also load the optional worlds and compatibilities from
+# tests/load/optional-mods.txt on Normal. The optional job restores the mod cache but does not save another copy: the
+# cache is about 7 GB in a repository with a 10 GB limit.
 #
 # The mods come from the mod portal with the secret FACTORIO_PLAYER_TOKEN (a player token, not the API key of the
 # release) and the account it belongs to, Raziphel unless the variable FACTORIO_USERNAME says otherwise. A pull request from a fork gets no
@@ -145,9 +148,52 @@ jobs:
             .load/run-*/factorio-current.log
           retention-days: 7
 
+  load-optional:
+    name: load with optional mods, Factorio ${{ matrix.version }}
+    needs: versions
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.versions.outputs.matrix) }}
+    env:
+      FACTORIO_USERNAME: ${{ vars.FACTORIO_USERNAME || 'Raziphel' }}
+      FACTORIO_TOKEN: ${{ secrets.FACTORIO_PLAYER_TOKEN }}
+      GAME_VERSION: ${{ matrix.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'dev' || '' }}
+      - name: Resolve the mods
+        id: mods
+        run: |
+          python3 -I tests/load/mods.py resolve --info info.json --game "$GAME_VERSION" --out .load-optional/mods.lock --optional-mods tests/load/optional-mods.txt --extra-mod funit
+          echo "key=$(python3 -I tests/load/mods.py key --lock .load-optional/mods.lock)" >> "$GITHUB_OUTPUT"
+      - name: Restore the mod cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .load-optional/mods-cache
+          key: mods-${{ steps.mods.outputs.key }}
+          restore-keys: mods-
+      - name: Download the mods that are not cached
+        run: python3 -I tests/load/mods.py fetch --lock .load-optional/mods.lock --dir .load-optional/mods-cache
+      - name: Load the game
+        run: tests/load/run.sh --game "$GAME_VERSION" --resolved --work .load-optional --difficulty normal
+      - name: Keep the logs of a failure
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: load-optional-logs-${{ matrix.version }}
+          path: |
+            .load-optional/run-*/*.txt
+            .load-optional/run-*/factorio-current.log
+          retention-days: 7
+
   report:
     name: report nightly load
-    needs: [versions, load]
+    needs: [versions, load, load-optional]
     if: github.event_name == 'schedule' && always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -157,7 +203,10 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      LOAD_RESULT: ${{ needs.versions.result == 'failure' && 'failure' || needs.load.result }}
+      VERSIONS_RESULT: ${{ needs.versions.result }}
+      LOAD_JOB_RESULT: ${{ needs.load.result }}
+      LOAD_OPTIONAL_JOB_RESULT: ${{ needs['load-optional'].result }}
+      LOAD_RESULT: ${{ needs.versions.result == 'failure' && 'failure' || needs.load.result == 'failure' && 'failure' || needs['load-optional'].result == 'failure' && 'failure' || needs.load.result }}
       MATRIX_JSON: ${{ needs.versions.outputs.matrix }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
@@ -165,6 +214,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
+          failed_jobs=()
+          [[ "$VERSIONS_RESULT" == failure ]] && failed_jobs+=(versions)
+          [[ "$LOAD_JOB_RESULT" == failure ]] && failed_jobs+=(load)
+          [[ "$LOAD_OPTIONAL_JOB_RESULT" == failure ]] && failed_jobs+=(load-optional)
+          failed_job_list="${failed_jobs[*]:-unknown}"
 
           gh label create nightly-load --color d73a4a --description "Nightly load failures" || true
           issue_number="$(gh issue list --label nightly-load --state open --limit 1 --json number --jq ".[0].number // empty")"
@@ -216,6 +271,7 @@ jobs:
             body_file="$(mktemp)"
             {
               printf 'Nightly load failed: %s\n\n' "$RUN_URL"
+              printf 'Failed job(s): %s\n' "$failed_job_list"
               printf 'Factorio version(s): %s\n' "$versions"
               if [[ -n "$first_error" ]]; then
                 printf '\nFirst error from the uploaded load artifact:\n%s\n' "$first_error"
