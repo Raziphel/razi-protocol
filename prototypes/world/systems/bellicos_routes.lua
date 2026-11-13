@@ -222,10 +222,9 @@ function passes.fortify_routes()
   local near=near_orbit()
   local points={
     [entry_gate]=true,[retired_gate]=true,
-    ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true,
-    ["near-bellicos-orbit"]=true,["bellicos-near-orbit"]=true,
-    ["near_bellicos_orbit"]=true
+    ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true
   }
+  if near then points[near]=true end
   for _,name in ipairs(wardens) do points[name]=true end
   local function key(a,b)
     if a>b then a,b=b,a end

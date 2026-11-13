@@ -21,6 +21,13 @@ local function contains(value, fragment)
 	return type(value) == "string" and value:find(fragment, 1, true) ~= nil
 end
 
+local function crosses_systems(connection)
+	local membership = require("prototypes.world.routes.route_reconcile").membership or {}
+	local from_system = membership[connection.from]
+	local to_system = membership[connection.to]
+	return from_system and to_system and from_system ~= to_system
+end
+
 local function classify(connection, profile)
 	if contains(profile, "belt_")
 		or contains(connection.from, "-belt-")
@@ -41,7 +48,7 @@ local function classify(connection, profile)
 		return "deep_space"
 	end
 
-	if connection.shape == "line"
+	if crosses_systems(connection)
 		or contains(profile, "crossing")
 		or contains(profile, "crosslink") then
 		return "interstellar"

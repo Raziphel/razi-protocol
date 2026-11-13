@@ -4,6 +4,12 @@
 -- lua tests/lua/test_asteroid_performance.lua
 package.path="./?.lua;./?/init.lua;"..package.path
 local function expect(cond,reason) if not cond then error(reason,2) end end
+package.loaded["lib.difficulty.presets"] = {
+  effective=function(name,fallback)
+    if name=="razi-asteroid-difficulty-scale" then return "challenging" end
+    return fallback
+  end
+}
 local source=require("prototypes.world.asteroids.asteroid_performance")
 local function copy(value)
   if type(value)~="table" then return value end
@@ -43,10 +49,17 @@ local all_visual={type="direct",action_delivery={type="instant",
   target_effects={type="create-particle",particle_name="dust"}}}
 local cleared=source.prune(all_visual,true,false)
 expect(cleared==nil,"Cosmetic-only effect wrappers must be removed cleanly")
+local empty_nested={type="nested-result",action={type="direct",
+  action_delivery={type="instant",
+    target_effects={type="create-particle",particle_name="dust"}}}}
+local nested_clean=source.prune(empty_nested,true,false)
+expect(nested_clean==nil,
+  "A nested-result without an action after cosmetic pruning must be removed")
 local group={
   ["big-metallic-asteroid"]={dying_trigger_effect=copy(visual)},
   ["medium-metallic-asteroid"]={dying_trigger_effect={
     {type="create-explosion",entity_name="rock-burst"}}},
+  ["small-metallic-asteroid"]={},
   ["small-promethium-asteroid"]={dying_trigger_effect={
     {type="create-asteroid-chunk",asteroid_name="promethium-asteroid-chunk"}}},
   ["small-auric-asteroid"]={dying_trigger_effect={
@@ -60,7 +73,7 @@ local chunks={
   ["auric-asteroid-chunk"]={}
 }
 local projectile={
-  ["rocket"]={action=copy(wrapped)}
+  ["rocket"]={action=copy(wrapped),final_action=copy(wrapped)}
 }
 local burst={created_effect={type="direct",action_delivery={type="instant",
   target_effects={
@@ -80,6 +93,11 @@ local routes={
         spawn_points={{distance=.2,probability=.20}}},
       {type="asteroid-chunk",asteroid="metallic-asteroid-chunk",
         spawn_points={{distance=.2,probability=.4}}}
+    }},
+  challenging={from="sye-beetlejuice",to="cubium",length=10000,
+    asteroid_spawn_definitions={
+      {type="entity",asteroid="small-metallic-asteroid",
+        spawn_points={{distance=.5,probability=.2}}}
     }}
 }
 local all={
@@ -119,6 +137,8 @@ perf=reload()
 expect(perf.data_final_fixes()>0,"Weapon particle option should strip visuals")
 expect(projectile.rocket.action.action_delivery.target_effects[1].type
   =="damage","Weapon damage effects must remain")
+expect(projectile.rocket.final_action.action_delivery.target_effects[1].type
+  =="damage","Projectile final_action particles must be pruned")
 settings.startup["razi-performance-weapon-particles"].value=false
 settings.startup["razi-performance-reduced-fragments"]={value=true}
 perf=reload()
@@ -145,6 +165,9 @@ expect(routes.endgame.asteroid_spawn_definitions[2]
 expect(routes.home.asteroid_spawn_definitions[1]
   .spawn_points[1].probability==.11,
   "Low-level home routes must remain unchanged")
+expect(math.abs(routes.challenging.asteroid_spawn_definitions[1]
+    .spawn_points[1].probability-.144)<1e-12,
+  "Challenging must raise a level-7 route across the level-8 density threshold")
 -- Explosion smoke mode must retain gameplay damage and ground effects.
 local damage={type="damage",damage={amount=100,type="explosion"}}
 local special={smoke_count=12,animations={},explosion_effect={

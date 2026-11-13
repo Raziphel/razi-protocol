@@ -7,9 +7,20 @@ end
 
 local external_icon = "__external__/graphics/owned.png"
 local external_layers = {{icon = "__external__/graphics/layer.png", icon_size = 32}}
+package.loaded["prototypes.world.routes.route_reconcile"] = {
+	membership = {
+		nauvis = "calidus", muluna = "calidus",
+		["sye-solaris"] = "solaris", ["sye-nyxaris"] = "nyxaris",
+		arig = "solaris", hyarion = "solaris",
+		["sye-vibrant"] = "vibrant", ribbonia = "vibrant",
+		secretas = "beetlejuice", ["solar-system-edge"] = "deep-space"
+	}
+}
 rawset(_G, "data", {raw = {['space-connection'] = {
-	planetary = {from = "nauvis", to = "vulcanus", length = 15000},
+	planetary = {from = "nauvis", to = "muluna", length = 15000},
 	interstellar = {from = "sye-solaris", to = "sye-nyxaris", shape = "line"},
+	local_line = {from = "arig", to = "hyarion", length = 15000, shape = "line"},
+	cross_system_arc = {from = "arig", to = "ribbonia", shape = "arc"},
 	asteroid = {from = "razi-umbra-belt-inner", to = "razi-umbra-belt-outer"},
 	deep = {from = "secretas", to = "solar-system-edge", length = 155000},
 	external = {icon = external_icon, icon_size = 128},
@@ -26,6 +37,10 @@ for name, route in pairs(routes) do
 end
 check(routes.planetary.icon == route_icons.icons.planetary, "Wrong planetary icon")
 check(routes.interstellar.icon == route_icons.icons.interstellar, "Wrong interstellar icon")
+check(routes.local_line.icon == route_icons.icons.planetary,
+	"An intra-system line must not receive the interstellar icon")
+check(routes.cross_system_arc.icon == route_icons.icons.interstellar,
+	"A cross-system route must receive the interstellar icon regardless of shape")
 check(routes.asteroid.icon == route_icons.icons.asteroid, "Wrong asteroid crossing icon")
 check(routes.deep.icon == route_icons.icons.deep_space, "Wrong deep-space icon")
 check(routes.planetary.icon_size == 64, "Route icon_size does not match the PNG")

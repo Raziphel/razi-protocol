@@ -1,6 +1,7 @@
 -- Route danger levels for the map legend and hover text.
 -- Uses the asteroid spawn definitions without changing them.
 local M = {}
+local membership=require("prototypes.world.routes.route_reconcile").membership or {}
 -- This module inspects physical asteroid sizes and resource chunks only.
 -- All Level 1-10 danger calculations and colors belong exclusively to
 -- lib.difficulty.asteroids. No second severity scale lives here.
@@ -30,7 +31,10 @@ function M.kind(route)
     or a:find("deep-space",1,true) or b:find("deep-space",1,true) then
     return "deep-space"
   end
-  if route.shape=="line" then return "interstellar" end
+  local from_system,to_system=membership[a],membership[b]
+  if from_system and to_system and from_system~=to_system then
+    return "interstellar"
+  end
   return "local"
 end
 

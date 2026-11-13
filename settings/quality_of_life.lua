@@ -51,7 +51,7 @@ data:extend({
 		name = "razi-route-overlay-mode",
 		setting_type = "startup",
 		default_value = "danger",
-		allowed_values = {"off", "danger", "chapter"},
+		allowed_values = {"off", "danger"},
 		order = "ca[quality-of-life]-c[route-overlay-mode]"
 	},
 	{

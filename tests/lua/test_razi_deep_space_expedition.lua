@@ -33,6 +33,12 @@ for i,pair in ipairs(connections) do
  prototypes.space_connection[i]={from=pair[1],to=pair[2]}
 end
 local m=require("scripts.convergence.deep_space_expedition")
+for _,alias in ipairs({"near-bellicos-orbit","bellicos-near-orbit",
+  "near_bellicos_orbit"}) do
+ for _,candidate in ipairs(m.candidates) do
+  check(candidate~=alias,"Invented Bellicos orbit alias remains a candidate")
+ end
+end
 local f1={index=1}
 local craft={valid=true,hub={valid=true},force=f1,
  name="Witness Ark",completed_trips=4,

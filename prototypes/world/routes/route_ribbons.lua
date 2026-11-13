@@ -41,7 +41,7 @@ M.obsolete=obsolete
 
 -- All four real Aegis spine connections receive a ribbon. The previous
 -- native_aegis_corridor exclusion accidentally skipped the surviving
--- Near Bellicos Orbit -> Inner Edge and Inner Edge -> Point Warden links.
+-- bellicos-orbit -> aegis-inner-edge and Inner Edge -> Point Warden links.
 -- bellicos.fortify_routes() makes those native connections shape="line";
 -- owner.route_path() now traces that exact geometry. Never add a second
 -- travel edge or a separate decorative Aegis route here.

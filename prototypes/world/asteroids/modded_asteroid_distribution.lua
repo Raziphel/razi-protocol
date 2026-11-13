@@ -9,6 +9,7 @@
 -- Source-owned spawn curves always win, and modded entries are untouched.
 local M={}
 local levels=require("lib.difficulty.asteroids")
+local profiles=require("prototypes.world.asteroids.asteroid_profiles")
 local vanilla={metallic=true,carbonic=true,oxide=true,promethium=true}
 local done=setmetatable({},{__mode="k"})
 local installed={}
@@ -223,10 +224,12 @@ function M.data_final_fixes()
   end
   if imersite then
     changed=changed+add_orbit_chunk("fulgora",imersite,.0010)
-    changed=changed+add_orbit_chunk("asteroid-belt-inner-edge",
-      imersite,.0025)
-    changed=changed+add_orbit_chunk("asteroid-belt-outer-edge",
-      imersite,.004)
+    if profiles.belt_harvesting() then
+      changed=changed+add_orbit_chunk("asteroid-belt-inner-edge",
+        imersite,.0025)
+      changed=changed+add_orbit_chunk("asteroid-belt-outer-edge",
+        imersite,.004)
+    end
   end
   -- Source Secretas/Frozeta already author their own orbit distributions,
   -- so Razi does not inject more stationary auric rocks there.
