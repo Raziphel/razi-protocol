@@ -1,4 +1,5 @@
 local recrystallization = {}
+local hide_recipes = require("prototypes.balance.common.hide_recipes")
 
 -- Corrundum dissolves iron and copper into sulfate solution (recrystallization: 5 plates, 16 gears, cables or sticks and
 -- 200 sulfuric acid -> 200 solution) and reduces the solution to ore (force reduction: 300 solution -> 7 iron or 3
@@ -14,49 +15,9 @@ local names = {
 }
 
 function recrystallization.data_final_fixes()
-	local removed = {}
-	for _, name in ipairs(names) do
-		local recipe = data.raw.recipe[name]
-		if recipe then
-			if recipe.hidden ~= true or recipe.enabled ~= false then
-				log("razi-protocol: " .. name .. " removed")
-			end
-			recipe.hidden = true
-			recipe.enabled = false
-			removed[name] = true
-		end
-	end
-
-	local emptied = {}
-	for technology_name, technology in pairs(data.raw.technology) do
-		local effects = technology.effects or {}
-		local had = #effects
-		for index = #effects, 1, -1 do
-			local effect = effects[index]
-			if effect and effect.type == "unlock-recipe" and removed[effect.recipe] then
-				table.remove(effects, index)
-			end
-		end
-		if had > 0 and #effects == 0 then
-			emptied[technology_name] = true
-		end
-	end
-
-	for _, technology in pairs(data.raw.technology) do
-		for _, prerequisite in pairs(technology.prerequisites or {}) do
-			emptied[prerequisite] = nil
-		end
-	end
-
-	local hidden = {}
-	for technology_name in pairs(emptied) do
-		hidden[#hidden + 1] = technology_name
-	end
-	table.sort(hidden)
-	for _, technology_name in ipairs(hidden) do
-		data.raw.technology[technology_name].hidden = true
-		log("razi-protocol: technology " .. technology_name .. " hidden: nothing left to unlock")
-	end
+	hide_recipes.hide(names, function(name)
+		return "razi-protocol: " .. name .. " removed"
+	end)
 
 	for _, name in ipairs({ "force-reduction-iron", "force-reduction-copper" }) do
 		local recipe = data.raw.recipe[name]

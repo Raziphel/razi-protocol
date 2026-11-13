@@ -5,6 +5,15 @@
 --   LUA_INIT=@tests/lua/razi_lib_bootstrap.lua RAZI_LIB_PATH=<RaziLib> lua5.2 tests/lua/test_nauvis_comfort_recipes.lua
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
+rawset(_G, "defines", _G.defines or { prototypes = { item = {
+	item = 1,
+	tool = 2,
+	module = 3,
+	capsule = 4,
+	ammo = 5,
+	["item-with-entity-data"] = 6,
+} } })
+
 local function check(ok, message)
 	if not ok then
 		error(message, 2)

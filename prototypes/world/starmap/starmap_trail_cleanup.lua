@@ -1,11 +1,8 @@
--- Final visual-only cleanup for the stray two-row red dotted ribbons near
--- Carna and Velora. The previous fixes removed native orbit.sprite and
--- Razi route overlays, but these trails can also be painted by the installed
+-- Remove stale Carna/Velora PlanetsLib orbit decorations and sprites from
 -- Orbital Catapult's independent starmap compositor. Do not remove real
 -- space connections, catapult travel definitions, prototypes or surfaces.
 local M={}
 
-local RAZI_STROKES="__razi-protocol__/graphics/route-highlights/directional-strokes.png"
 local unwanted_orbits={carna=true,velora=true}
 local function asset_path(layer)
   if type(layer)~="table" then return nil end
@@ -35,41 +32,9 @@ local function is_old_orbit_art(layer)
   return unwanted_orbits[layer.planetslib_orbit_name]==true
 end
 
--- Some old route artworks were left as free-floating tinted sprites rather
--- than tagged PlanetsLib layers. Remove only vividly red Razi source strokes
--- in the immediate vicinity of those two worlds, not whole-system belts.
-local function is_dangling_razi_stroke(layer,centers)
-  if asset_path(layer)~=RAZI_STROKES then return false end
-  local tint=layer.tint or {}
-  if type(tint.r)~="number" or type(tint.g)~="number"
-    or tint.r<.7 or tint.r<tint.g*1.45 then return false end
-  local shift=layer.shift or {}
-  local x,y=shift.x or shift[1],shift.y or shift[2]
-  if type(x)~="number" or type(y)~="number" then return false end
-  for _,center in ipairs(centers) do
-    local dx,dy=x/32-center.x,y/32-center.y
-    if dx*dx+dy*dy<=16*16 then return true end
-  end
-  return false
-end
-
-local function position(name)
-  local planet=(data.raw.planet or {})[name]
-    or (data.raw["space-location"] or {})[name]
-  if not planet then return nil end
-  local origin=planet.origin or {}
-  local x,y=origin.x or origin[1] or 0,origin.y or origin[2] or 0
-  if type(planet.distance)=="number"
-    and type(planet.orientation)=="number" then
-    return {x=x+planet.distance*math.sin(2*math.pi*planet.orientation),
-      y=y-planet.distance*math.cos(2*math.pi*planet.orientation)}
-  end
-end
-
-function M.remove_layers(layers,centers)
-  if type(layers)~="table" then return 0,{catapult=0,orbit=0,strokes=0} end
-  centers=centers or {}
-  local count,detail=0,{catapult=0,orbit=0,strokes=0}
+function M.remove_layers(layers)
+	if type(layers)~="table" then return 0,{catapult=0,orbit=0} end
+	local count,detail=0,{catapult=0,orbit=0}
   for i=#layers,1,-1 do
     local layer=layers[i]
     local reason
@@ -78,8 +43,6 @@ function M.remove_layers(layers,centers)
         reason="catapult"
       elseif is_old_orbit_art(layer) then
         reason="orbit"
-      elseif is_dangling_razi_stroke(layer,centers) then
-        reason="strokes"
       end
     end
     if reason then
@@ -94,16 +57,11 @@ end
 function M.data_final_fixes()
   local ui=(data.raw["utility-sprites"] or {}).default
   local layers=ui and ui.starmap_star and ui.starmap_star.layers
-  local centers={}
-  for _,name in ipairs({"carna","velora"}) do
-    local p=position(name)
-    if p then centers[#centers+1]=p end
-  end
-  local removed,detail=M.remove_layers(layers,centers)
+	local removed,detail=M.remove_layers(layers)
   if type(log)=="function" then
     log(string.format(
-      "[Razi Protocol/starmap] Final red-trail cleanup: removed %d sprite layers (catapult=%d, old orbit=%d, local red strokes=%d); transit data unchanged",
-      removed,detail.catapult,detail.orbit,detail.strokes))
+      "[Razi Protocol/starmap] Final catapult and old-orbit cleanup: removed %d sprite layers (catapult=%d, old orbit=%d); transit data unchanged",
+      removed,detail.catapult,detail.orbit))
   end
   return removed
 end

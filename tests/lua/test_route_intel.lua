@@ -33,10 +33,10 @@ local routes={
 check(hz.inspect(routes.huge).chunks==1,"Chunk scan lost")
 check(hz.inspect(routes.huge).mix=="single","One threat size should remain single")
 check(hz.inspect(routes.unknown).mix=="unclassified","Unknown size must be flagged")
-check(hz.haul_class(routes.calm)=="shuttle","Local freight class lost")
+check(hz.haul_class(routes.calm)==nil,"Short route must not get a haul class")
 check(hz.haul_class(routes.medium)=="long-haul","Long haul classification lost")
 check(hz.haul_class({length=200000})=="expedition","Expedition class lost")
-check(hz.haul_class({})=="unlisted","Unspecified distance must stay unknown")
+check(hz.haul_class({})==nil,"Unspecified distance must stay unclassified")
 local mixed={asteroid_spawn_definitions={def("small-metallic-asteroid",0.1),
   def("big-oxide-asteroid",0.0001)}}
 check(hz.inspect(mixed).mix=="mixed","Asteroid size mixtures should be shown")

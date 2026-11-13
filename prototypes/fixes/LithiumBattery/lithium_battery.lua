@@ -1,6 +1,6 @@
 local lithium_battery = {}
 
--- Belts without a machine. Razi hides the assembling machine 4 of Lithium Battery (compat/redundant_progression.lua, setting
+-- Belts without a machine. Razi hides the assembling machine 4 of Lithium Battery (prototypes/compatibility/common/redundant_progression.lua, setting
 --    razi-hide-redundant-assembler-tiers), but the four promethium belt recipes of Lithium Battery (promethium-transport-belt,
 --    -underground-belt, -splitter, -loader) are in the category hea-am4-only, which only that machine and its Tenebris and Rabbasca
 --    copies have (prototypes/belt/recipe.lua, prototypes/hea-assembling-machine.lua). No machine the player has can make them.

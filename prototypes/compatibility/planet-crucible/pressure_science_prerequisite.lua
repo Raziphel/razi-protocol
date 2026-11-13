@@ -2,6 +2,7 @@
 local helpers = require("prototypes.fixes.common.sanity_helpers")
 local add_technology_prerequisite_if_present = helpers.add_technology_prerequisite_if_present
 local technology_has_ingredient = helpers.technology_has_ingredient
+local technology_exists = require("prototypes.fixes.common.progression_helpers").technology_exists
 
 local pressure_science_prerequisite = {}
 

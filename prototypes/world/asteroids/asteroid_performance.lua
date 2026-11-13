@@ -230,11 +230,6 @@ local function space_explosion_smoke()
   end
   return affected
 end
-M.space_explosion_smoke=space_explosion_smoke
-M.trim_fragments=trim_fragments
-M.visual_asteroids=visual_asteroids
-M.weapon_particles=weapon_particles
-M.reduce_outer_hostiles=reduce_outer_hostiles
 local already=false
 function M.data_final_fixes()
   if already then return 0 end

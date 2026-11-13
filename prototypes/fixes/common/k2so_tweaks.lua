@@ -1,6 +1,6 @@
 local compat = {}
 
-local xy_k2so_placeholder_connections = { -- Cuz fuckin hell xy loves to complain.
+local xy_k2so_placeholder_connections = {
 	{
 		name = "nauvis-moshine",
 		from = "nauvis",
@@ -16,7 +16,7 @@ local xy_k2so_placeholder_connections = { -- Cuz fuckin hell xy loves to complai
 }
 
 local function xy_k2so_enhancements_active()
-	return mods["xy-k2so-enhancements-nulls-fork"] or mods["xy-k2so-enhancements"]
+	return mods["xy-k2so-enhancements-nulls-fork"]
 end
 
 local function patch_xy_k2so_globals()
@@ -71,12 +71,7 @@ local function remove_xy_k2so_placeholder_connections()
 	data.raw["space-connection"]["moshine-maraxsis"] = nil
 end
 
-local function item_exists(name)
-	return
-		(data.raw.item and data.raw.item[name]) or
-		(data.raw.ammo and data.raw.ammo[name]) or
-		(data.raw.tool and data.raw.tool[name])
-end
+local item_exists = require("prototypes.fixes.common.sanity_helpers").item_exists
 
 local function fluid_exists(name)
 	return data.raw.fluid and data.raw.fluid[name]
@@ -187,16 +182,6 @@ local function replace_fluid_globally(from, to)
 	end
 end
 
-local function fix_corrosive_magazine_without_k2_rifles()
-	if item_exists("kr-rifle-magazine") or not item_exists("firearm-magazine") then
-		return
-	end
-
-	-- nulls-k2so-tweaks upgrades Pelagos' corrosive ammo to use K2 rifle
-	-- magazines. K2SO only creates those when realistic weapons are enabled.
-	replace_recipe_ingredient("corrosive-firearm-magazine", "kr-rifle-magazine", "firearm-magazine")
-end
-
 local function resync_paracelsin_common_gases()
 	if not mods["Paracelsin"] or not mods["paracelsin-krastorio-compatibility-plus"] or not mods["nulls-k2so-tweaks"] then
 		return
@@ -247,7 +232,6 @@ function compat.data_updates()
 end
 
 function compat.data_final_fixes()
-	fix_corrosive_magazine_without_k2_rifles()
 	replace_missing_magazine_ingredients_globally("kr-rifle-magazine", "firearm-magazine")
 	resync_paracelsin_common_gases()
 end

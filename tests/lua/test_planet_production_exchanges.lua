@@ -493,14 +493,17 @@ check(legacy.recipe[legacy_rule.name]
 -- Fifth-pass integer rounding: preserve the 4% per-machine advantage.
 local paced,paced_engine=setup()
 paced["assembling-machine"].standard={crafting_categories={"crafting"}}
+portfolio.profiles["razi-fixture-paced-economy"]={kind="accelerated"}
 local paced_rule=clone(rule)
 paced_rule.name="razi-fixture-paced-economy"
 paced_rule.time_multiplier=1.15
 paced_rule.min_throughput_ratio=1.04
 paced_engine.register_k2so_balanced({paced_rule})
 check(paced.recipe[paced_rule.name] and
-  product(paced.recipe[paced_rule.name],"kr-electronic-components")==20,
-  "Sixteen original components should earn four premium components")
+	product(paced.recipe[paced_rule.name],"kr-electronic-components")==19,
+	"Throughput validation must use the accelerated profile's effective time")
+check(math.abs(paced.recipe[paced_rule.name].energy_required-8.48)<0.0001,
+	"The accepted throughput check and generated recipe must share one multiplier")
 check(paced_rule.bonus==1,"Bonus normalization mutated the input rule")
 local constrained,constrained_engine=setup()
 constrained["assembling-machine"].standard={crafting_categories={"crafting"}}
