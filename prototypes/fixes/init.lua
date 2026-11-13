@@ -43,6 +43,9 @@ local repairs = {
 	require("prototypes.fixes.corrundum.bioflux_stack"),
 	require("prototypes.fixes.shchierbin.vanadium_acid_steam"),
 	require("prototypes.fixes.alchemy-khemia.glyph_smelting_unlock"),
+	require("prototypes.fixes.Arcanyx.crushed_creation_unlock"),
+	require("prototypes.fixes.plasma_crafter.crushed_ore_melting"),
+	require("prototypes.fixes.Voidcraft.crushed_prismite_sand"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
 }
