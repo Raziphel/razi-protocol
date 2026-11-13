@@ -29,8 +29,6 @@ local function remove_stock_entry_routes()
 	deleteRoutesBetween("sye-calidus", entry_gate)
 	deleteRoutesBetween("sye-vespera", entry_gate)
 end
-bellicos.find_wardens=find_wardens
-
 local function plan_expedition()
   if not endpoint_type(root_parent) then return nil end
   local layout=require("prototypes.world.starmap.galaxy_layout")
@@ -75,7 +73,6 @@ local function plan_expedition()
   end
   return entries,virtual_pulsar
 end
-bellicos.plan_expedition=plan_expedition
 -- The decorative background and native starmap MUST share this one anchor.
 -- Read the plan, never duplicate a stale static coordinate in another module.
 function bellicos.pulsar_position()

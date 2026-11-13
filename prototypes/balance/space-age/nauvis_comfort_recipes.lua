@@ -34,9 +34,7 @@ local function entry_amount(entry)
 	return entry.amount or entry[2]
 end
 
-local function item_exists(name)
-	return data.raw.item and data.raw.item[name] ~= nil
-end
+local item_exists = require("prototypes.fixes.common.sanity_helpers").item_exists
 
 local function find(list, name)
 	for index, entry in ipairs(list or {}) do

@@ -1,4 +1,5 @@
 local redundant_progression = {}
+local hide_recipes = require("prototypes.balance.common.hide_recipes")
 
 local function raw(type_name, name)
 	return data.raw[type_name] and data.raw[type_name][name]
@@ -28,18 +29,6 @@ local function hide_item_family(name)
 	}) do
 		set_hidden_flags(raw(type_name, name))
 	end
-end
-
-local function hide_recipe(name)
-	local recipe = raw("recipe", name)
-	if not recipe then
-		return
-	end
-
-	recipe.enabled = false
-	recipe.hide_from_player_crafting = true
-	recipe.hide_from_stats = true
-	set_hidden_flags(recipe)
 end
 
 local function hide_entity(name)
@@ -122,46 +111,20 @@ local function clear_hidden_next_upgrade_targets()
 	end
 end
 
-local function technology_has_dependents(technology_name)
-	for _, technology in pairs(data.raw.technology or {}) do
-		for _, prerequisite in ipairs(technology.prerequisites or {}) do
-			if prerequisite == technology_name then
-				return true
-			end
-		end
-	end
-
-	return false
-end
-
-local function strip_recipe_unlock(recipe_name)
-	for _, technology in pairs(data.raw.technology or {}) do
-		local effects = technology.effects
-		local removed_unlock = false
-		if effects then
-			for index = #effects, 1, -1 do
-				local effect = effects[index]
-				if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
-					table.remove(effects, index)
-					removed_unlock = true
-				end
-			end
-		end
-
-		-- Never hide an unrelated, already-empty technology. This cleanup
-		-- only owns technologies whose last unlock we actually removed.
-		if removed_unlock and #effects == 0 and not technology_has_dependents(technology.name) then
-			set_hidden_flags(technology)
-		end
-	end
-end
-
 local function hide_redundant_machine(name)
 	hide_item_family(name)
-	hide_recipe(name)
+	local emptied = hide_recipes.hide({name})
+	local recipe = raw("recipe", name)
+	if recipe then
+		recipe.hide_from_player_crafting = true
+		recipe.hide_from_stats = true
+		set_hidden_flags(recipe)
+	end
+	for technology_name in pairs(emptied) do
+		set_hidden_flags(raw("technology", technology_name))
+	end
 	hide_entity(name)
 	clear_next_upgrade_references(name)
-	strip_recipe_unlock(name)
 end
 
 function redundant_progression.data_final_fixes()

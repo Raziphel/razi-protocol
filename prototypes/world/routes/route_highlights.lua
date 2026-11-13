@@ -23,10 +23,6 @@ end
 function M.color_for_route(route)
   return quality.route_color(M.route_color_level(route))
 end
-function M.color_for_guide(_,route)
-  return M.color_for_route(route)
-end
-
 local function finite(x)
   return type(x)=="number" and x==x and abs(x)<100000
 end

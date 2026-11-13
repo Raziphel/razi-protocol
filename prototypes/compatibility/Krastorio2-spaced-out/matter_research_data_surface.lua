@@ -10,7 +10,7 @@ function matter_research_data_surface.data_final_fixes()
 		return
 	end
 
-	-- K2SO 1.6 moved this onto Aquilo pressure only. Razi moves Aquilo into
+	-- K2SO 2.0.x moved this onto Aquilo pressure only. Razi moves Aquilo into
 	-- the expanded system ladder, so the data recipe needs to follow the broader K2SO
 	-- matter route instead of hard-locking one planet.
 	matter_data.surface_conditions = nil

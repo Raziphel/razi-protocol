@@ -78,9 +78,12 @@ for _,name in ipairs({"rocket-silo","robotics","space-platform",
   #raw.technology[name].unit.ingredients==3,
   "Bootstrap technology was changed: "..name)
 end
-check(#M.core==2 and M.core[1].tech=="nuclear-power"
-  and M.core[2].tech=="nuclear-fuel-reprocessing",
-  "Only nuclear technologies may be spread over the planets")
+check(#M.core==1 and M.core[1].tech=="nuclear-power",
+	"Only nuclear power is explicitly spread over the planets")
+check(#raw.technology["nuclear-fuel-reprocessing"].prerequisites==1
+	and raw.technology["nuclear-fuel-reprocessing"].prerequisites[1]=="nuclear-power"
+	and #raw.technology["nuclear-fuel-reprocessing"].unit.ingredients==3,
+	"The optional Cerys nuclear-science rule must not change fuel reprocessing")
 for _,name in ipairs({"construction-robotics","logistic-robotics",
  "personal-roboport-equipment","logistic-system"}) do
  local tech=raw.technology[name]

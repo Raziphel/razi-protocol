@@ -10,11 +10,8 @@ local science_tiers = {
 		"metallurgic-science-pack",
 		"electromagnetic-science-pack",
 		"agricultural-science-pack",
-		"lithium-science-pack",
-		"tungsten-science-pack"
 	},
 	inner_system = {
-		"lunar-science-pack",
 		"interstellar-science-pack",
 		"advanced-space-science-pack",
 		"cerysian-science-pack"
@@ -33,14 +30,12 @@ local science_tiers = {
 		"dea-dia-science-pack",
 		"insulation-science-pack",
 		"thermodynamic-science-pack",
-		"nuclear-science-pack",
 		"apicultural-science-pack",
 		"pelagos-science-pack",
 	},
 	vibrant = {
 		"ribbonia-alien-science-pack",
 		"galvanization-science-pack",
-		"paracelsin-galvanization-science-pack"
 	},
 	vespera = {
 		"acidworking-science-pack",
@@ -157,12 +152,6 @@ local function set_science_after(technology_name, tier_name)
 	set_technology_unit_ingredients_if_exists(technology_name, build_science_after(tier_name))
 end
 
-local function set_many_science_through(technology_names, tier_name)
-	for _, technology_name in ipairs(technology_names) do
-		set_science_through(technology_name, tier_name)
-	end
-end
-
 local function set_many_science_after(technology_names, tier_name)
 	for _, technology_name in ipairs(technology_names) do
 		set_science_after(technology_name, tier_name)
@@ -230,14 +219,7 @@ set_science_after("beetlejuice-discovery", "vibrant")
 -- Base/inner-system planet discoveries.
 set_science_through("planet-discovery-muluna", "base")
 set_science_through("moon-discovery-cerys", "base")
-set_many_science_through({
-	"moon-discovery-eneas",
-	"planet-discovery-eneas"
-}, "base")
-add_first_existing_prerequisite("moon-discovery-eneas", {
-	"planet-discovery-muluna",
-	"moon-discovery-cerys"
-})
+set_science_through("planet-discovery-eneas", "base")
 add_first_existing_prerequisite("planet-discovery-eneas", {
 	"planet-discovery-muluna",
 	"moon-discovery-cerys"
@@ -327,10 +309,8 @@ end
 set_prerequisites_if_exists("planet-discovery-ribbonia", {"vibrant-discovery"})
 set_prerequisites_if_exists("planet-discovery-paracelsin", {"planet-discovery-ribbonia"})
 set_prerequisites_if_exists("planet-discovery-aquilo", {"vibrant-discovery"})
-set_prerequisites_if_exists("muriatic-science-pack", {"planet-discovery-muria"})
 set_prerequisites_if_exists("vanadium-science-pack", {"planet-discovery-shchierbin"})
 set_many_science_after({
-	"muriatic-science-pack",
 	"vanadium-science-pack"
 }, "vibrant")
 set_prerequisites_if_exists("planet-discovery-rubia", {"planet-discovery-aquilo"})

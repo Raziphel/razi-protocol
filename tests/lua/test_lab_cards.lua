@@ -112,8 +112,8 @@ local beetlejuice = amounts(raw.recipe["beetlejuice-tech-card"])
 check(beetlejuice["golden-science-pack"] == 2 and beetlejuice["vibrant-tech-card"] == 1,
 	"Beetlejuice mixes one card per predecessor and two packs")
 local solaris = amounts(raw.recipe["solaris-tech-card"])
-check(solaris["calidus-tech-card"] == 1 and solaris["tungsten-science-pack"] == 1,
-	"Inner frontier packs stay single")
+check(solaris["calidus-tech-card"] == 1 and not solaris["tungsten-science-pack"],
+	"Invalid Tungsten science must not enter the Solaris card")
 -- Pathological and refraction science need Fulgora, so they belong to the Vibrant card, not Solaris.
 check(solaris["planetaris-polishing-science-pack"] == 1, "Solaris keeps the other Planetaris packs")
 check(not solaris["planetaris-pathological-science-pack"] and not solaris["planetaris-refraction-science-pack"],

@@ -41,9 +41,7 @@ end
 -- Freight scale is derived from the real connection length; not an ETA.
 function M.haul_class(route)
   local length=route and route.length
-  if type(length)~="number" or length<=0 then return "unlisted" end
-  if length<=20000 then return "shuttle" end
-  if length<=75000 then return "regional" end
+  if type(length)~="number" or length<=75000 then return nil end
   if length<=150000 then return "long-haul" end
   return "expedition"
 end

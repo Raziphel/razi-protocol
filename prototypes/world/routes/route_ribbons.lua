@@ -5,7 +5,6 @@
 local M={}
 local hz=require("prototypes.world.routes.route_hazards")
 local SHEET="__razi-protocol__/graphics/route-highlights/route-ribbons.png"
-local OLD="__razi-protocol__/graphics/route-highlights/"
 local ANGLES,CELL,COLS=128,64,16
 local function selected(name,default)
   local item=settings and settings.startup and settings.startup[name]
@@ -28,16 +27,7 @@ local difficulty=require("lib.difficulty.presets")
 local function angle(dy,dx)
   return (math.atan2 and math.atan2(dy,dx) or math.atan(dy,dx))%math.pi
 end
-local function obsolete(sprite)
-  local f=sprite and sprite.filename
-  return type(f)=="string" and f:sub(1,#OLD)==OLD and
-    (f:find("continuous-strokes.png",1,true)
-      or f:find("directional-strokes.png",1,true)
-      or f:find("quality-risk-marker.png",1,true)
-      or f:match("/guide%-%d+%.png$"))~=nil
-end
 M.sheet=SHEET
-M.obsolete=obsolete
 
 -- All four real Aegis spine connections receive a ribbon. The previous
 -- native_aegis_corridor exclusion accidentally skipped the surviving
@@ -133,9 +123,6 @@ function M.data_final_fixes(owner)
   local ui=(data.raw["utility-sprites"] or {}).default
   local atlas=ui and ui.starmap_star
   if not (atlas and type(atlas.layers)=="table") then return 0 end
-  for i=#atlas.layers,1,-1 do
-    if obsolete(atlas.layers[i]) then table.remove(atlas.layers,i) end
-  end
   if mode=="off" then return 0 end
   -- Space Route Overlay draws the routes instead of the ribbons; in danger mode its dots take the levels 1-10.
   if mods and mods["space-route-overlay"] then

@@ -1,6 +1,7 @@
 -- Crucible and Vesta moved outward in the campaign.
 -- Strip their late science packs from research needed to reach them.
 local guard = {}
+local item_exists = require("prototypes.fixes.common.sanity_helpers").item_exists
 
 local families = {
   {
@@ -34,7 +35,7 @@ end
 
 local function usable_fallback()
   for _, science in ipairs({"calidus-tech-card", "space-science-pack"}) do
-    if data.raw.tool and data.raw.tool[science] then
+    if item_exists(science) then
       for _, lab in pairs(data.raw.lab or {}) do
         for _, input in ipairs(lab.inputs or {}) do
           if input == science then return science end

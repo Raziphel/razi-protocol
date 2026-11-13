@@ -29,12 +29,6 @@ M.core={
     parents={"planet-discovery-vulcanus","planet-discovery-gleba",
       "metallurgic-science-pack","agricultural-science-pack"},
     packs={"metallurgic-science-pack","agricultural-science-pack"}},
-  -- Cerys has its own optional nuclear science in the curated pack.
-  -- Fuel reprocessing is a late efficiency reward, never needed to
-  -- operate reactors or make the first nuclear fuel cells.
-  {tech="nuclear-fuel-reprocessing",stage="cerys",
-    parents={"moon-discovery-cerys","nuclear-science-pack"},
-    packs={"nuclear-science-pack"}}
 }
 -- No AAI Signal Transmission rule: its partner technologies are not in this mod, and with Linox AAI sits behind a level 3 world.
 M.optional={

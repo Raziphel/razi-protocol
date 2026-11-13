@@ -145,9 +145,12 @@
     "+ rabbasca-underground >= 0.12.0",
     "? planet-rabbasca >= 0.24.2",
     "? nuclear-steps >= 0.3.4",
+    "(?) Abacayba_Moon_of_Nauvis",
+    "(?) Better_Starmap_Background",
     "(?) dea-dia-system",
+    "(?) Flare Stack",
     "(?) pelagos",
-    "(?) Flare Stack"
+    "(?) space-route-overlay"
   ],
   "quality_required": true,
   "rail_bridges_required": true,

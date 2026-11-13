@@ -36,8 +36,8 @@ function science_tab.data_updates()
 		return
 	end
 
-	-- Science Tab directly indexes these subgroups for supported mods. In this
-	-- pack, some of those mods can rename or remove them before final fixes.
+	-- Keep these source recipe subgroups in the intermediate-products group
+	-- with a stable order, whether they were created by a dependency or not.
 	ensure_item_subgroup("maraxsis-deepsea-research", "intermediate-products", "z[maraxsis-deepsea-research]")
 	ensure_item_subgroup("maraxsis-fill-research-vessel", "intermediate-products", "z[maraxsis-fill-research-vessel]")
 	ensure_item_subgroup("maraxsis-empty-research-vessel", "intermediate-products", "z[maraxsis-empty-research-vessel]")

@@ -133,18 +133,6 @@ local route_specifications = {
 	{"vesta", "solar-system-edge", 185000, "deep_edge"}
 }
 
--- Without the Vibrant and Umbra belt locations the belt crossings above are skipped, which would
--- cut off Fulgora, Ribbonia, Cerys, Paracelsin, Shchierbin, Tenebris and Crucible. Link them to
--- their hubs directly in that case.
-if not (data.raw["space-location"] and data.raw["space-location"]["asteroid-belt-outer-edge"]) then
-  route_specifications[#route_specifications + 1] = {"sye-vibrant", "fulgora", 20000, "chemistry_deep"}
-  route_specifications[#route_specifications + 1] = {"sye-vibrant", "paracelsin", 40000, "chemistry_deep"}
-end
-if not (data.raw["space-location"] and data.raw["space-location"]["razi-umbra-belt-outer"]) then
-  route_specifications[#route_specifications + 1] = {"sye-umbra", "vesta", 20000, "outer_void"}
-  route_specifications[#route_specifications + 1] = {"crucible-orbit", "vesta", 15000, "outer_void"}
-end
-
 -- Only Umbra keeps a retired inner-to-outer shortcut and its physical crossing.
 local retired_belts = {
   {"crucible-orbit", "vesta", "razi-umbra-belt-inner", "razi-umbra-belt-outer"}
@@ -306,7 +294,7 @@ function route_reconcile.data_final_fixes()
     end
   end
 
-	-- Remove only the two direct journeys now replaced by real belt hops.
+	-- Remove only the direct route now replaced by a real belt hop.
 	-- This must happen before new routes are created or the old connection
 	-- would bypass the whole encounter.
 	for _, old in ipairs(retired_belts) do

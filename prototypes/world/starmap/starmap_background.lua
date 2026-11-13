@@ -244,11 +244,6 @@ function M.make_layers(mode,halos,atmosphere,details,cartography)
           belt.tint,(cinematic and (belt.cinematic_alpha or .145)
             or (belt.subtle_alpha or .105))*
             strength("razi-map-belt-intensity",{faint=.5,standard=1,strong=1.4}))
-        if cinematic and belt.debris then
-          insert_asset(layers,belt.debris,belt.scale*1.04,x,y,
-            belt.tint,belt.debris_alpha*
-              strength("razi-map-belt-intensity",{faint=.5,standard=1,strong=1.4}))
-        end
       end
     end
   end
