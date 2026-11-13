@@ -46,6 +46,9 @@ local repairs = {
 	require("prototypes.fixes.alchemy-khemia.glyph_smelting_unlock"),
 	require("prototypes.fixes.planetaris-tellus.magnesium_productivity"),
 	require("prototypes.fixes.flare_stack.flaring_emissions"),
+	require("prototypes.fixes.Arcanyx.crushed_creation_unlock"),
+	require("prototypes.fixes.plasma_crafter.crushed_ore_melting"),
+	require("prototypes.fixes.Voidcraft.crushed_prismite_sand"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
 }
