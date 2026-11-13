@@ -48,7 +48,8 @@ for _, world in ipairs(roster.worlds) do
 end
 for location, mod in pairs({["rabbasca-underground"] = "rabbasca-underground",
 	skewer_shattered_planet = "skewer_shattered_planet", skewer_lost_beyond = "skewer_shattered_planet",
-	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus"}) do
+	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus",
+	["asteroid-0"] = "nuclear-steps", ["asteroid-1"] = "nuclear-steps", ["mesnard-black-hole"] = "nuclear-steps"}) do
 	check(excluded[location] == mod, location .. " must stay off the path")
 end
 -- Rabbasca is woven: only its packs stay out
@@ -60,8 +61,9 @@ for _, mod in ipairs({"planet-rabbasca"}) do
 	end
 end
 
--- the optional dependencies that add a world (Rabbasca, Rabbasca Underground, Skewer, Eneas) are all in the list
-for _, mod in ipairs({"planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet", "moon-eneas"}) do
+-- the optional dependencies that add a world (Rabbasca, Rabbasca Underground, Skewer, Eneas, Nuclear Steps) are all in
+-- the list
+for _, mod in ipairs({"planet-rabbasca", "rabbasca-underground", "skewer_shattered_planet", "moon-eneas", "nuclear-steps"}) do
 	check(seen[mod], mod .. " is missing from the list")
 	check(dependencies[mod]:match("^[%?%+]"), mod .. " is no longer an optional dependency")
 end

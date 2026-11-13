@@ -49,7 +49,7 @@ Worlds marked * need an optional or recommended mod.
 
 * **Calidus:** Nauvis, Muluna, Eneas*, Solar Halo*
 * **Solaris:** Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum, Igrys
-* **Nyxaris:** Gleba, Moshine, Apia and Carnova, Panglia, Foliax, Velora, Rabbasca*, Terra Palus*, Pelagos*, Dea Dia*
+* **Nyxaris:** Gleba, Moshine, Apia and Carnova, Panglia, Foliax, Velora, Rabbasca*, Terra Palus*, Pelagos*, Dea Dia*, Nuclear Steps*
 * **Vibrant:** Fulgora, Cerys*, Ribbonia, Paracelsin, Khemia, Shchierbin*
 * **Vespera:** Muria, Athos, Aquilo, Nulla, Rubia, Maraxsis, Balack
 * **Beetlejuice:** Cubium, Linox, Secretas, Frozeta, Ferrum*
