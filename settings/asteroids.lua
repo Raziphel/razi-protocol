@@ -9,6 +9,14 @@ data:extend({
 	},
 	{
 		type = "string-setting",
+		name = "razi-asteroid-resistances",
+		setting_type = "startup",
+		default_value = "standard",
+		allowed_values = {"standard", "hardened", "armored"},
+		order = "ad[asteroids]-02b[asteroid-resistances]"
+	},
+	{
+		type = "string-setting",
 		name = "razi-asteroid-population",
 		setting_type = "startup",
 		default_value = "standard",
