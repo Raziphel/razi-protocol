@@ -14,7 +14,6 @@ function sand_progression.data_final_fixes()
 		return
 	end
 
-	add_prerequisite(sand_processing, "crusher")
 	add_prerequisite(sand_processing, "kr-crusher")
 	remove_recipe_unlock("sand-processing", "sand")
 	remove_recipe_unlock("sand-processing", "kr-sand")

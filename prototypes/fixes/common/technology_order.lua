@@ -6,7 +6,6 @@ local technology_order = {}
 
 function technology_order.data_final_fixes()
 	for technology_name, order in pairs({
-		["crusher"] = "a-a[crusher]",
 		["sand-processing"] = "a-b[sand-processing]",
 		["glass-processing"] = "a-c[glass-processing]",
 		["electricity"] = "a-d[electricity]",

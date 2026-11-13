@@ -95,17 +95,17 @@ require("prototypes.compatibility.common.outer_science_arrival_guard").data_fina
 -- Interplanetary exchanges: the shared components first, then the exchange
 -- recipes that consume them (K2SO recipe names are settled by now).
 require("prototypes.industry.components.network_components").data_final_fixes()
+require("prototypes.compatibility.aai-signal-transmission.aai_signal_partnerships").data_final_fixes()
 require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()
 require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()
 
--- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
+-- Handoffs between neighbouring systems, then placement of two mod technologies.
 require("prototypes.technology.gates.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.gates.galactic_mod_research").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
-require("prototypes.ui.tech_tree_visibility").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").data_final_fixes()
 
 -- Castra's exchange, then the exchanges that return component cargo; they run
@@ -206,6 +206,7 @@ require("prototypes.industry.cards.system_card_laboratories").data_final_fixes()
 
 require("prototypes.technology.endgame.convergence").data_final_fixes()
 require("prototypes.technology.endgame.convergence_witness").data_final_fixes()
+require("prototypes.ui.tech_tree_visibility").data_final_fixes()
 
 -- Optional, off by default: a few robot and nuclear technologies (and Planet Express' trade research) are tied to the
 -- science of the first planets. Runs after every research and lab pass, so the lab check sees the final labs.
