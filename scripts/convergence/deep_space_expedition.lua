@@ -11,8 +11,7 @@ local candidates={
   -- Optional expedition arms. They become mandatory IF actually installed
   -- and linked to the same traversable Deep Space route graph.
   "skewer_shattered_planet","skewer_lost_beyond",
-  "calidus-bellicos-stargate-calidus","near-bellicos-orbit",
-  "bellicos-near-orbit","near_bellicos_orbit",
+  "calidus-bellicos-stargate-calidus",
   "aegis-inner-edge","point-warden","aegis-outer-edge",
   "calidus-bellicos-stargate-bellicos"
 }

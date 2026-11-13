@@ -3,6 +3,13 @@
 -- Razi route tooltip and hazard inspection fixtures.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(x,msg) if not x then error(msg,2) end end
+package.loaded["prototypes.world.routes.route_reconcile"] = {
+  membership = {
+    vulcanus="solaris",arig="solaris",hyarion="solaris",
+    ["sye-solaris"]="solaris",["sye-nyxaris"]="nyxaris",
+    ["sye-vibrant"]="vibrant"
+  }
+}
 local hz=require("prototypes.world.routes.route_hazards")
 local intel=require("prototypes.world.routes.route_intel")
 local function def(name, probability)
@@ -20,7 +27,8 @@ local routes={
     asteroid_spawn_definitions={def("modded-asteroid",0.03)}},
   external={from="foo",to="bar",length=9000,
     localised_description={"other.description"},
-    custom_tooltip_fields={{name={"other.label"},value={"other.value"},order=12}}}
+    custom_tooltip_fields={{name={"other.label"},value={"other.value"},order=12}}},
+  local_line={from="arig",to="hyarion",length=18000,shape="line"}
 }
 check(hz.inspect(routes.huge).chunks==1,"Chunk scan lost")
 check(hz.inspect(routes.huge).mix=="single","One threat size should remain single")
@@ -35,6 +43,8 @@ check(hz.inspect(mixed).mix=="mixed","Asteroid size mixtures should be shown")
 check(hz.inspect(routes.unknown).unknown,"Modded unknowns must be reported")
 check(hz.kind(routes.huge)=="belt-crossing","Belt class lost")
 check(hz.kind(routes.medium)=="interstellar","Interstellar class lost")
+check(hz.kind(routes.local_line)=="local",
+  "An intra-system route stays local even when it is drawn as a line")
 check(intel.annotate(routes.external),"External route should be annotated")
 local regional={from="vulcanus",to="arig",length=19500,shape="arc"}
 check(intel.annotate(regional),"Known regional route should be annotated")
@@ -75,10 +85,15 @@ check(quality_field and quality_field.value[2]
 local sector=row(regional,"sector")
 check(sector and sector.value[1]=="razi-route-intel.inside-system",
   "Regional tooltip uses the wrong system identity")
+intel.annotate(routes.local_line)
+check(row(routes.local_line,"sector").value[1]=="razi-route-intel.inside-system",
+  "An intra-system line must keep the inside-system tooltip")
 check(not row(regional,"alert") and not row(regional,"preparation")
   and not row(regional,"quality-warning"),
   "Harmless local freight must not receive old combat alerts")
-local cross={from="sye-solaris",to="sye-vibrant",shape="line"}
+local cross={from="sye-solaris",to="sye-vibrant",shape="arc"}
+check(hz.kind(cross)=="interstellar",
+  "A cross-system route stays interstellar when it is not drawn as a line")
 intel.annotate(cross)
 check(row(cross,"sector").value[1]=="razi-route-intel.across-systems",
   "Interstellar sector label missing")

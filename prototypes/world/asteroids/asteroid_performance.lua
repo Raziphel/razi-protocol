@@ -70,6 +70,9 @@ local function prune(node,cosmetic,fragments)
     if changed and kind=="direct" and rebuilt.action_delivery==nil then
       return nil,removed,halved
     end
+    if kind=="nested-result" and rebuilt.action==nil then
+      return nil,removed,halved
+    end
   end
   return changed and rebuilt or node,removed,halved
 end
@@ -122,7 +125,7 @@ local function weapon_particles()
   for _,group in ipairs({"projectile","artillery-projectile","beam"}) do
     for _,prototype in pairs(data.raw[group] or {}) do
       for _,field in ipairs({"action","created_effect",
-        "hit_effects","dying_trigger_effect"}) do
+        "final_action","dying_trigger_effect"}) do
         changed=changed+select(1,
           modify_field(prototype,field,true,false))
       end
@@ -159,6 +162,8 @@ end
 local function reduce_outer_hostiles()
   local changed=0
   local ladder=require("lib.difficulty.asteroids")
+  local difficulty=require("lib.difficulty.presets")
+  local mode=difficulty.effective("razi-asteroid-difficulty-scale","balanced")
   local asteroid=data.raw.asteroid or {}
   local function apply(target)
     local source=target.asteroid_spawn_definitions
@@ -191,7 +196,7 @@ local function reduce_outer_hostiles()
   end
   for _,route in pairs(data.raw["space-connection"] or {}) do
     if not route.hidden then
-      local _,peak=ladder.route_range(route)
+      local _,peak=ladder.route_range(route,mode)
       if peak>=8 then apply(route) end
     end
   end

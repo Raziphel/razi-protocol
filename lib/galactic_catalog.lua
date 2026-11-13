@@ -8,26 +8,26 @@ local groups={
   solaris={"sye-solaris","vulcanus","castra","arig","hyarion","tellus","corrundum",
            "igrys","igrys-orbit"},
   nyxaris={"sye-nyxaris","gleba","rabbasca","moshine","panglia","apia","carnova",
-           "apia-carnova-orbit","pelagos","foliax","terrapalus","dea-dia",
+           "apia-carnova-orbit","pelagos","foliax","terrapalus","planet-dea-dia",
           "star-dea-dia",
           "dea-dia-system-edge",
            "razi-dea-dia-slip-stream","lemures","prosephina","velora"},
   aegis={"calidus-bellicos-stargate-calidus",
          "aegis-inner-edge","aegis-outer-edge","aegis-warden",
-         "bellicos-orbit",
-         "near-bellicos-orbit","bellicos-near-orbit","near_bellicos_orbit"},
+         "bellicos-orbit"},
   vibrant={"sye-vibrant","fulgora","cerys","ribbonia",
            "paracelsin","shchierbin","alchemy-planet",
            "asteroid-belt-inner-edge","asteroid-belt-outer-edge"},
   vespera={"sye-vespera","muria","athos","aquilo","nulla","rubia","maraxsis",
            "bm-balack"},
   beetlejuice={"sye-beetlejuice","cubium","linox-planet_linox","secretas",
-               "frozeta","ferrum","planet-ferrum"},
+               "frozeta","ferrum"},
   umbra={"sye-umbra","tenebris","crucible","crucible-orbit","vesta",
          "razi-umbra-belt-inner","razi-umbra-belt-outer",
          "carna","arcanyx","obsidiax","abacayba"},
   ["deep-space"]={"solar-system-edge","razi-deep-space-edge","shattered-planet",
-                  "nexus","black-hole","oort-cloud"}
+                  "nexus","black-hole","black-hole-approach","oort-cloud",
+                  "sol","skewer_shattered_planet","skewer_lost_beyond"}
 }
 for group,names in pairs(groups) do
   for _,name in ipairs(names) do members[name]=group end
