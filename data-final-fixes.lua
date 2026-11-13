@@ -1,6 +1,5 @@
 require("util")
 
-require("prototypes.fixes.common.removed_fuel_category").data_final_fixes()
 require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
@@ -229,17 +228,12 @@ require("prototypes.world.asteroids.quality_asteroids").data_final_fixes()
 -- spawn scripts are left alone.
 require("prototypes.world.asteroids.asteroid_performance").data_final_fixes()
 
--- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
--- copy or add a prototype, as the last edit of created_effect.
-require("prototypes.fixes.carna.carna_spire_copies").data_final_fixes()
-
 -- The deep mines and the entropic creation of Iridescent Industry and Arcanyx make ore out of nothing on any surface; Arcanyx's
 -- keep-Voidcraft-on-Arcanyx condition does not reach them. After every pass that could add a recipe, before the menu pass.
 require("prototypes.fixes.Arcanyx.arcanyx_from_nothing").data_final_fixes()
 
--- Lithium Battery (7.5.0 and older) deletes two recipe copies that Planet Crucible's productivity technologies still list, and
--- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
--- After every pass that could add a recipe effect or ingredient, before the menu pass.
+-- Lithium Battery hides assembling machine 4 but its belt recipes still need a machine, and adds legacy Vesta ingredients
+-- that may not exist. After every pass that could add a recipe effect or ingredient, before the menu pass.
 require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 
 -- The stack inserter and the toolbelt equipment, which technology/nauvis_comforts.lua researches on Nauvis, are made of low density
