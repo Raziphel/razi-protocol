@@ -83,6 +83,8 @@ check(module.signal(player)=="status-local",
   "Operations status should only reflect real researched technologies")
 check(module.priority(player)=="priority-local",
   "The welcome directive must follow actual researched milestones")
+check(select("#",module.priority(player))==1,
+  "The welcome directive must return one localized priority key")
 settings.global["razi-hide-spoilers"].value=false
 check(module.spoiler_status()=="spoilers-off",
   "Current spoiler setting OFF must be reflected in the welcome")

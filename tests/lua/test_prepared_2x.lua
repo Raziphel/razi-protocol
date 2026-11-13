@@ -1,5 +1,6 @@
 -- Cards and platforms saved in 2.x come back after the update to 3.0.
 -- Run from the mod root: lua5.2 tests/lua/test_prepared_2x.lua
+---@diagnostic disable: missing-fields
 package.path = "./?.lua;./?/init.lua;" .. package.path
 
 local function check(ok, message)
@@ -15,6 +16,10 @@ rawset(_G, "log", function(message) logged[#logged + 1] = message end)
 local function make_inventory(capacity, accept)
 	local inventory = {items = {}, capacity = capacity}
 	function inventory.insert(stack)
+		check(prototypes.item[stack.name] ~= nil, "insert must reject an unknown item")
+		if stack.quality then
+			check(prototypes.quality[stack.quality] ~= nil, "insert must reject an unknown quality")
+		end
 		if accept and not accept[stack.name] then
 			return 0
 		end
@@ -40,6 +45,8 @@ local function world()
 	local surface
 	surface = {name = "nauvis", labs = {},
 		find_entity = function(name, position)
+			check(prototypes.entity[name] ~= nil, "find_entity must reject an unknown entity")
+			surface.find_calls = (surface.find_calls or 0) + 1
 			return surface.labs[name .. ":" .. position.x .. ":" .. position.y]
 		end,
 		-- Positional like the real call: name, center, radius, precision.
@@ -57,13 +64,28 @@ local function world()
 			created[#created + 1] = chest
 			return chest
 		end,
-		spill_item_stack = function(args) spilled[#spilled + 1] = args end}
+		spill_item_stack = function(args)
+			check(prototypes.item[args.stack.name] ~= nil, "spill must reject an unknown item")
+			if args.stack.quality then
+				check(prototypes.quality[args.stack.quality] ~= nil, "spill must reject an unknown quality")
+			end
+			spilled[#spilled + 1] = args
+		end}
 	local admin = {admin = true, print = function(message) admin_messages[#admin_messages + 1] = message end}
 	local guest = {admin = false, print = function() error("guests get no message") end}
 	rawset(_G, "game", {tick = 1, forces = {player = force}, surfaces = {nauvis = surface},
 		players = {admin, guest}})
 	local connections = {}
-	rawset(_G, "prototypes", {space_location = {nauvis = {}, vulcanus = {}, fulgora = {}}, space_connection = connections})
+	rawset(_G, "prototypes", {
+		space_location = {nauvis = {}, vulcanus = {}, fulgora = {}},
+		space_connection = connections,
+		entity = { ["steel-chest"] = {}, lab = {} },
+		item = {
+			["calidus-tech-card"] = {}, ["solaris-tech-card"] = {},
+			["vibrant-tech-card"] = {}, ["umbra-tech-card"] = {}
+		},
+		quality = {normal = {}, rare = {}, epic = {}}
+	})
 	rawset(_G, "storage", {})
 	return {connections = connections, force = force, surface = surface, messages = messages, spilled = spilled, created = created,
 		admin_messages = admin_messages}
@@ -71,6 +93,7 @@ end
 
 ---@param w any
 local function add_lab(w, name, x, y, accepts, capacity)
+	prototypes.entity[name] = {}
 	local inventory = make_inventory(capacity or 100, accepts)
 	local lab = {valid = true, name = name, force = w.force, position = {x = x, y = y},
 		prototype = {lab_inputs = (function()
@@ -81,13 +104,6 @@ local function add_lab(w, name, x, y, accepts, capacity)
 		get_inventory = function() return inventory end}
 	w.surface.labs[name .. ":" .. x .. ":" .. y] = lab
 	return lab, inventory
-end
-
-local function add_platform(w, index, name, location)
-	-- The module reads a prototype and writes a name, like the real property.
-	local platform = {valid = true, index = index, name = name, space_location = location and {name = location}}
-	w.force.platforms[index] = platform
-	return platform
 end
 
 local function prepared(labs, platforms, infinite)
@@ -102,12 +118,49 @@ local function update(from)
 	return {mod_changes = {["razi-protocol"] = {old_version = from, new_version = "3.0.0"}}}
 end
 
+local M = require("scripts.migration.prepared_2x")
+
+-- A lab removed with its source mod and stacks whose item or quality vanished
+-- from the updated mod set are reported as unsolved without calling the API.
+do
+	local w = world()
+	storage.razi_prepare_3 = prepared({{
+		surface = "nauvis", position = {x = 3, y = 4}, name = "removed-mod-lab", force = "player",
+		items = {{name = "calidus-tech-card", quality = "normal", count = 3}}
+	}})
+	M.on_configuration_changed(update("2.1.6"))
+	check(w.surface.find_calls == nil, "unknown laboratory prototype must be skipped before find_entity")
+	check(#w.created == 0 and #w.spilled == 0, "unknown laboratory record must not create or spill items")
+	check(w.messages[1][6] == 3, "unknown laboratory stacks are counted as unsolved")
+end
+
+do
+	local w = world()
+	local _, inventory = add_lab(w, "lab", 3, 4, { ["calidus-tech-card"] = true })
+	storage.razi_prepare_3 = prepared({{
+		surface = "nauvis", position = {x = 3, y = 4}, name = "lab", force = "player",
+		items = {
+			{name = "removed-mod-card", quality = "normal", count = 2},
+			{name = "calidus-tech-card", quality = "removed-mod-quality", count = 3}
+		}
+	}})
+	M.on_configuration_changed(update("2.1.6"))
+	check(next(inventory.items) == nil, "stacks with unknown item or quality must not enter the lab")
+	check(#w.created == 0 and #w.spilled == 0, "unknown item or quality must not be stashed or spilled")
+	check(w.messages[1][6] == 5, "unknown item and quality counts are unsolved")
+end
+
+local function add_platform(w, index, name, location)
+	-- The module reads a prototype and writes a name, like the real property.
+	local platform = {valid = true, index = index, name = name, space_location = location and {name = location}}
+	w.force.platforms[index] = platform
+	return platform
+end
+
 local function where(platform)
 	local location = platform.space_location
 	return type(location) == "table" and location.name or location
 end
-
-local M = require("scripts.migration.prepared_2x")
 
 -- Accepted cards go into the lab, the rest into a steel chest next to it; quality is kept.
 do

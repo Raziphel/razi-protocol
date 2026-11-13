@@ -69,15 +69,6 @@ local function installed(force,world,names)
   return surface and #names>0 and surface.count_entities_filtered
     and surface.count_entities_filtered{name=names,force=force}>0 or false
 end
-local function powered_relay(force,world) -- luacheck: ignore 211
-  local surface=planet_surface(world)
-  if not (surface and surface.find_entities_filtered) then return false end
-  for _,entity in pairs(surface.find_entities_filtered{
-    name="razi-archive-relay",force=force}) do
-    if entity.valid and entity.energy and entity.energy>0 then return true end
-  end
-  return false
-end
 function M.array(force)
   local systems={}
   local sites={}
@@ -210,8 +201,7 @@ local function qualified_ark(platform)
     and surface.count_entities_filtered{type="ammo-turret",force=force}>=4
     and surface.count_entities_filtered{type="assembling-machine",force=force}>=2
 end
-local deep={"solar-system-edge","razi-deep-space-edge",
-  "nexus","shattered-planet"}
+local deep={"solar-system-edge","nexus","shattered-planet"}
 local function is_deep(name)
   for _,id in ipairs(deep) do if id==name then return true end end
   return false
@@ -336,9 +326,14 @@ function M.forces_merged(event)
     target.ark_name=source.ark_name
   end
   target.skybridge=target.skybridge or {}
-  if source.skybridge and source.skybridge.delivered
-    and not target.skybridge.delivered then
-    target.skybridge=source.skybridge
+  local source_bridge=source.skybridge
+  local target_bridge=target.skybridge
+  local target_complete=target_bridge.complete
+  if source_bridge and source_bridge.complete and not target_complete then
+    target.skybridge=source_bridge
+  elseif source_bridge and source_bridge.from and not target_bridge.from
+    and not target_complete then
+    target.skybridge=source_bridge
   end
   target.pending={} -- Old platform indices change on force merges.
   all[target_index]=target

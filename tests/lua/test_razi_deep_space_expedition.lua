@@ -10,7 +10,6 @@ local endpoints={
  "solar-system-edge","nexus","shattered-planet",
  "black-hole-approach","black-hole","oort-cloud","sol",
  "skewer_shattered_planet","skewer_lost_beyond",
- "razi-deep-space-edge"
 }
 prototypes={space_location={},space_connection={}}
 for _,id in ipairs(endpoints) do
@@ -26,15 +25,14 @@ local connections={
  {"nexus","oort-cloud"},{"oort-cloud","sol"},
  {"shattered-planet","skewer_shattered_planet"},
  {"skewer_shattered_planet","skewer_lost_beyond"},
- {"solar-system-edge","razi-deep-space-edge"},
  {"solar-system-edge","aegis-inner-edge"}
 }
 for i,pair in ipairs(connections) do
  prototypes.space_connection[i]={from=pair[1],to=pair[2]}
 end
 local m=require("scripts.convergence.deep_space_expedition")
-for _,alias in ipairs({"near-bellicos-orbit","bellicos-near-orbit",
-  "near_bellicos_orbit"}) do
+for _,alias in ipairs({"razi-deep-space-edge","near-bellicos-orbit",
+	"bellicos-near-orbit","near_bellicos_orbit"}) do
  for _,candidate in ipairs(m.candidates) do
   check(candidate~=alias,"Invented Bellicos orbit alias remains a candidate")
  end
@@ -48,7 +46,7 @@ local pilot={name="Pioneer",valid=true,force=f1,controller_type=1,
 game.connected_players={pilot}
 local done,total,stops,chart=m.status(f1) -- luacheck: ignore 311
 check(chart and total==#endpoints and done==0,
- "All ten real connected stops, including optional branches, must be required")
+	"All nine real connected stops, including optional branches, must be required")
 check(not m.observe({valid=true,force=f1,character=nil}),
  "Uncrewed travel must not record")
 pilot.controller_type=9

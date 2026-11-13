@@ -5,7 +5,7 @@
 -- Only installed, connected, navigable named Deep Space destinations count.
 local M={}
 local candidates={
-  "solar-system-edge","razi-deep-space-edge",
+  "solar-system-edge",
   "nexus","shattered-planet",
   "black-hole-approach","black-hole","oort-cloud","sol",
   -- Optional expedition arms. They become mandatory IF actually installed
