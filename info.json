@@ -144,7 +144,10 @@
     "+ skewer_shattered_planet >= 1.0.42",
     "+ rabbasca-underground >= 0.12.0",
     "? planet-rabbasca >= 0.24.2",
-    "? nuclear-steps >= 0.3.4"
+    "? nuclear-steps >= 0.3.4",
+    "(?) dea-dia-system",
+    "(?) pelagos",
+    "(?) Flare Stack"
   ],
   "quality_required": true,
   "rail_bridges_required": true,

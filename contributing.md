@@ -36,6 +36,8 @@ See [Releases in the README](README.md#releases):
 
 `<mod>` is the name from the `info.json` of that mod. `control.lua`, `settings.lua` and the `data*.lua` files hold only the order of calls.
 
+Spaces in a mod name become `_` in the folder name (`prototypes/fixes/flare_stack/` for Flare Stack).
+
 A fix says what is broken and where, with `file:line` of the other mod. If the author did it on purpose, it is a balance decision of this mod: it goes to `balance/`, and its comment says so. A name that replaces a translated one keeps the original as a fallback, so other languages do not fall back to English.
 
 Past about 500 lines a file is split by meaning. Moves and splits go in their own commits, without changes to the logic, and a data dump before and after has to be identical.
