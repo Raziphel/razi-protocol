@@ -124,6 +124,7 @@
     "! factorioplus",
     "! even-distribution",
     "! even-distribution-updated",
+    "! slp-dyson-sphere-legacy",
     "Igrys >= 1.5.41",
     "foliax >= 2.0.48",
     "obsidiax >= 1.0.30",
