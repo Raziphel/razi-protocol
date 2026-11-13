@@ -1,0 +1,12 @@
+# Optional mods loaded together by the nightly `load-optional` job: the worlds and compatibilities that razi only
+# touches when they are installed.
+moon-eneas
+assets-eneas
+lignumis
+Solar-Halo
+nuclear-steps
+Cerys-Moon-of-Fulgora
+planet-rabbasca
+space-route-overlay
+advanced_target_priorities
+Flare Stack
