@@ -44,6 +44,7 @@ local repairs = {
 	require("prototypes.fixes.shchierbin.vanadium_acid_steam"),
 	require("prototypes.fixes.alchemy-khemia.glyph_smelting_unlock"),
 	require("prototypes.fixes.planetaris-tellus.magnesium_productivity"),
+	require("prototypes.fixes.flare_stack.flaring_emissions"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
 }
