@@ -37,12 +37,15 @@ local function setup(options)
   options = options or {}
   local items={}
   for _, name in ipairs({
-    "kr-rare-metals", "bioflux", "kr-electronic-components",
+    "kr-rare-metals", "kr-electronic-components",
     "kr-silicon", "kr-glass", "plastic-bar", "holmium-plate",
     "carbon-fiber", "silicon-cell", "stone"
   }) do
     items[name]={icon="__base__/graphics/icons/iron-plate.png",icon_size=64}
   end
+  local capsules={bioflux={
+    icon="__space-age__/graphics/icons/bioflux.png",icon_size=64
+  }}
   for _, name in ipairs({"automation-science-pack", "logistic-science-pack",
     "chemical-science-pack", "production-science-pack",
     "utility-science-pack"}) do items[name]={} end
@@ -91,6 +94,7 @@ local function setup(options)
   end
   local raw={
     item=items,fluid=fluids,recipe=recipes,technology=techs,
+    capsule=capsules,
     -- the magazine is an "ammo" prototype, not an "item"
     ammo={["piercing-rounds-magazine"]={
       icon="__base__/graphics/icons/iron-plate.png",icon_size=64}},
@@ -110,7 +114,7 @@ local function setup(options)
       ["electromagnetic-plant"]={crafting_categories={"electromagnetics"}}
     }
   }
-  if options.hidden_bioflux then items.bioflux.hidden=true end
+  if options.hidden_bioflux then capsules.bioflux.hidden=true end
   if options.missing_magnetic_field then
     raw.planet.fulgora.surface_properties["magnetic-field"]=20
   end
@@ -192,6 +196,13 @@ local function product(recipe, name)
   end
 end
 
+local function has_icon(recipe, path)
+  for _, icon in ipairs(recipe.icons or {}) do
+    if icon.icon == path then return true end
+  end
+  return false
+end
+
 local full, module=setup()
 -- Even with a large machine/lab catalogue, exchange checks should only
 -- enumerate both catalogues once across all candidate recipes.
@@ -236,6 +247,10 @@ for _, name in ipairs(names) do
     and recipe.maximum_productivity==(name=="razi-bio-rare-metal-casting" and 0.5 or 2),
     "Cross-planet recipe lost the productivity of the normal recipe or its +200% cap")
   check(#recipe.icons>=1 and tech.icon,"Recipe or technology icon missing")
+  if name=="razi-bio-rare-metal-casting" then
+    check(has_icon(recipe,"__space-age__/graphics/icons/bioflux.png"),
+      "Bioflux capsule bonus icon is missing from the casting recipe")
+  end
   check(tech.effects[1].recipe==name,"Exchange not unlocked by its research")
   for _,pack in ipairs(tech.unit.ingredients) do
     check(not pack[1]:find("tech%-card"),
