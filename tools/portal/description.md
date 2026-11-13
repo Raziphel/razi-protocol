@@ -47,7 +47,7 @@ If you want a short mod list or a game you can finish in a few weekends, this is
 
 Worlds marked * need an optional or recommended mod.
 
-* **Calidus:** Nauvis, Muluna, Eneas*
+* **Calidus:** Nauvis, Muluna, Eneas*, Solar Halo*
 * **Solaris:** Vulcanus, Castra Prime, Arig, Hyarion, Tellus, Corrundum, Igrys
 * **Nyxaris:** Gleba, Moshine, Apia and Carnova, Panglia, Foliax, Velora, Rabbasca*, Terra Palus*, Pelagos*, Dea Dia*
 * **Vibrant:** Fulgora, Cerys*, Ribbonia, Paracelsin, Khemia, Shchierbin*
