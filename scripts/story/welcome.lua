@@ -53,7 +53,7 @@ end
 -- Immediate assignment follows existing force research. None of the
 -- priority lines name an undiscovered world or expose finale answers.
 function M.priority(player)
-  return M.signal(player):gsub("^status%-","priority-")
+  return (M.signal(player):gsub("^status%-","priority-"))
 end
 local function unread_count(index)
   local state=storage.razi_expedition_journal -- luacheck: ignore 431

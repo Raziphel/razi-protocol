@@ -47,13 +47,6 @@ function lifecycle.register(events)
 			platform_projects.snapshot(force)
 		end
 		deep_expedition.observe_connected()
-		-- Existing saves may have researched older Convergence stages before
-		-- their new manufacturing unlocks were introduced.
-		if event and event.mod_changes and event.mod_changes["razi-protocol"] then
-			for _, force in pairs(game.forces) do
-				convergence.repair_recipe_unlocks(force)
-			end
-		end
 		nexus_technology_visibility.repair(event)
 		razi_prepared_2x.on_configuration_changed(event)
 		-- Names may have changed with the mods; the journal asks again when drawn.

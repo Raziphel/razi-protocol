@@ -8,6 +8,7 @@ local entities = {}
 local transceiver_gate_technology = "razi-intergalactic-transceiver-signal"
 local active_transceiver_name = "kr-activated-intergalactic-transceiver"
 local archive_relay_name = "razi-archive-relay"
+local relay_refresh_pending = "razi_archive_relay_refresh_pending"
 local transceiver_build_events = {
 	defines.events.on_built_entity,
 	defines.events.on_robot_built_entity,
@@ -68,7 +69,7 @@ end
 local function on_archive_relay_removed(event)
 	local entity = event.entity
 	if entity and entity.valid and entity.name == archive_relay_name then
-		razi_journal.refresh_open()
+		storage[relay_refresh_pending] = true
 	end
 end
 

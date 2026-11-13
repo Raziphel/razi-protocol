@@ -24,6 +24,10 @@ function journal.register(events)
 		razi_journal.refresh_research_visible()
 	end)
 	events:on_nth_tick(30, function()
+		if storage.razi_archive_relay_refresh_pending then
+			razi_journal.refresh_open()
+			storage.razi_archive_relay_refresh_pending = nil
+		end
 		razi_journal.flush_research_refreshes()
 		story_dispatch.flush()
 		welcome.flush()

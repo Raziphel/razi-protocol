@@ -62,10 +62,7 @@ check(key(messages[#messages]) == "razi-cheat.admin-only", "Non-admin should get
 M.command({parameter = ""})
 check(key(logged[#logged]) == "razi-cheat.player-only", "The server console should get a log line")
 
-local notified = {}
-M.set_research_listener(function(changed)
-	notified[changed.name] = (notified[changed.name] or 0) + 1
-end)
+check(rawget(M, "set_research_listener") == nil, "The unused research listener API must be removed")
 
 player.admin = true
 command("bogus")
@@ -111,7 +108,6 @@ check(key(messages[#messages]) == "razi-cheat.complete", "Completion should be r
 check(not technologies.hidden.researched and not technologies.disabled.researched,
 	"Research must not grant hidden or source-disabled technologies")
 -- The re-required module has no listener: control.lua sets it again on load.
-check(notified.player == 5, "The listener should hear start, cancel, restart and every step")
 
 resumed.command({player_index = 1, parameter = "start"})
 check(key(messages[#messages]) == "razi-cheat.nothing-left" and not state.razi_cheat_jobs,

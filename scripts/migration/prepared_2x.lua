@@ -83,6 +83,14 @@ local function restore_lab(record, reports, chests)
 		return
 	end
 
+	if not prototypes.entity[record.name] then
+		for _, stack in ipairs(record.items) do
+			report.unsolved = report.unsolved + stack.count
+		end
+		log("razi-prepared-2x: no entity " .. tostring(record.name) .. " for a saved laboratory")
+		return
+	end
+
 	local lab = surface.find_entity(record.name, record.position)
 	if lab and not (lab.valid and lab.force == force) then
 		lab = nil
@@ -91,17 +99,25 @@ local function restore_lab(record, reports, chests)
 	local inventory = lab and lab.get_inventory(defines.inventory.lab_input)
 
 	for _, stack in ipairs(record.items) do
-		local left = stack.count
-		if inventory and accepted[stack.name] then
-			left = left - inventory.insert({name = stack.name, count = left, quality = stack.quality})
-			report.labs = report.labs + (stack.count - left)
-		end
-		if left > 0 then
-			local rest = {name = stack.name, count = left, quality = stack.quality}
-			if stash(surface, force, record.position, rest, chests) == "chest" then
-				report.chests = report.chests + left
-			else
-				report.lost = report.lost + left
+		local item_exists = prototypes.item[stack.name] ~= nil
+		local quality_exists = not stack.quality or prototypes.quality[stack.quality] ~= nil
+		if not item_exists or not quality_exists then
+			report.unsolved = report.unsolved + stack.count
+			log("razi-prepared-2x: unknown item or quality " .. tostring(stack.name) .. "/" .. tostring(stack.quality)
+				.. " in saved laboratory")
+		else
+			local left = stack.count
+			if inventory and accepted[stack.name] then
+				left = left - inventory.insert({name = stack.name, count = left, quality = stack.quality})
+				report.labs = report.labs + (stack.count - left)
+			end
+			if left > 0 then
+				local rest = {name = stack.name, count = left, quality = stack.quality}
+				if stash(surface, force, record.position, rest, chests) == "chest" then
+					report.chests = report.chests + left
+				else
+					report.lost = report.lost + left
+				end
 			end
 		end
 	end
