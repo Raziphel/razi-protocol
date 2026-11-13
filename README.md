@@ -197,7 +197,7 @@ Core content in the intended experience includes:
 
 Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
-Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground and Secretas Orbit Patch.
+Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground, Secretas Orbit Patch, Rate Calculator and What Items Do I Have?
 
 ## Modpack Guidance
 
