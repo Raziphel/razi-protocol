@@ -54,3 +54,10 @@ for _,quest in ipairs(data.quests) do
 end
 
 print("PASS test_journal_quest_targets")
+
+-- Under Krastorio 2 the radar needs green science (kr-sentinel, 200 red + green): its milestone comes after it.
+local radar=assert(data.by_id["nauvis-radar"],"nauvis-radar is missing")
+check(radar.phase=="growth","nauvis-radar must be a growth milestone, not "..tostring(radar.phase))
+local after_green=false
+for _,id in ipairs(radar.requires) do after_green=after_green or id=="green-science" end
+check(after_green,"nauvis-radar must require green-science")

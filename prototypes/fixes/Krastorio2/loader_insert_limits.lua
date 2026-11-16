@@ -8,7 +8,15 @@ local loader_insert_limits = {}
 -- of every furnace down to one stack: the other 800 stone of each crusher fall on the ground at each mod update.
 -- Assembling machines keep their input. With the insertion limit the input holds a few crafts, never more than a stack,
 -- so the load has nothing to cut. A loader still feeds a machine as fast as it crafts.
+--
+-- Set razi-loader-insert-limits to false to leave the loader prototypes unchanged.
 function loader_insert_limits.data_final_fixes()
+	local startup = settings and settings.startup
+	local setting = startup and startup["razi-loader-insert-limits"]
+	if type(setting) == "table" and setting.value == false then
+		return
+	end
+
 	for _, prototype_type in ipairs({"loader", "loader-1x1"}) do
 		for name, loader in pairs(data.raw[prototype_type] or {}) do
 			if loader.respect_insert_limits ~= true then

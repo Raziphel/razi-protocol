@@ -36,6 +36,8 @@ See [Releases in the README](README.md#releases):
 
 `<mod>` is the name from the `info.json` of that mod. `control.lua`, `settings.lua` and the `data*.lua` files hold only the order of calls.
 
+Spaces in a mod name become `_` in the folder name (`prototypes/fixes/flare_stack/` for Flare Stack).
+
 A fix says what is broken and where, with `file:line` of the other mod. If the author did it on purpose, it is a balance decision of this mod: it goes to `balance/`, and its comment says so. A name that replaces a translated one keeps the original as a fallback, so other languages do not fall back to English.
 
 Past about 500 lines a file is split by meaning. Moves and splits go in their own commits, without changes to the logic, and a data dump before and after has to be identical.
@@ -45,7 +47,7 @@ Past about 500 lines a file is split by meaning. Moves and splits go in their ow
 - The title is a conventional commit.
 - The description is a short list of what changes.
 - CI (`check`: Lua 5.2 syntax, luacheck, emmylua_check against the Factorio API, `changelog.txt` format, Lua tests) must be green before merging.
-- `Load` (`.github/workflows/load.yml`) loads the mod with its dependencies in a headless game on Normal and Nightmare when a pull request changes code, data, settings or locale; a pull request from a fork gets no mod download and skips it. It then runs the tests of `tests/funit/`. `tests/load/run.sh` runs the same checks locally.
+- `Load` (`.github/workflows/load.yml`) loads the mod with its dependencies in a headless game on Normal and Nightmare when a pull request changes code, data, settings or locale; a pull request from a fork gets no mod download and skips it. It then runs the tests of `tests/funit/`. `tests/load/run.sh` runs the same checks locally. A nightly run also loads the optional mods of `tests/load/optional-mods.txt` on Normal; add a mod there when razi gets code for it.
 
 ## Story text
 

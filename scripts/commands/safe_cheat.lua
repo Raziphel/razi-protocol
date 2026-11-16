@@ -3,11 +3,6 @@
 -- changes one research at a time and can be cancelled without a reset.
 local M = {}
 
--- Optional listener for features that redraw on research changes.
--- Writing technology.researched does not have to raise an event, so a
--- feature that needs to know registers itself here instead.
-local research_listener
-
 local WARNING_COOLDOWN = 600
 local WARNING_TINT = {r = 1, g = 0.77, b = 0.47}
 
@@ -18,12 +13,6 @@ local function say(index, key, ...)
 		player.print(message)
 	else
 		log(message)
-	end
-end
-
-local function notify(force)
-	if research_listener then
-		research_listener(force)
 	end
 end
 
@@ -74,10 +63,6 @@ local function make_plan(force)
 	return ordered
 end
 
-function M.set_research_listener(listener)
-	research_listener = listener
-end
-
 function M.command(event)
 	local player = event.player_index and game.get_player(event.player_index)
 	if not (player and player.valid) then
@@ -114,7 +99,6 @@ function M.command(event)
 	if action == "cancel" then
 		if job then
 			jobs[force.name] = nil
-			notify(force)
 			say(player.index, "cancelled", job.position - 1, #job.names)
 			if not next(jobs) then
 				storage.razi_cheat_jobs = nil
@@ -145,7 +129,6 @@ function M.command(event)
 		last_reported = 0,
 		player_index = player.index
 	}
-	notify(force)
 	say(player.index, "started", #plan)
 end
 
@@ -177,7 +160,6 @@ function M.tick()
 					end
 				end
 				job.position = job.position + 1
-				notify(force)
 				local mark = math.floor((job.position - 1) * 10 / #job.names)
 				if mark > job.last_reported and mark < 10 then
 					job.last_reported = mark

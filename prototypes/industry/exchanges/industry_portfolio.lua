@@ -84,7 +84,6 @@ local science_floors={
   ["agricultural-science-pack"]=500,
   ["electromagnetic-science-pack"]=950,
   ["cryogenic-science-pack"]=950,
-  ["nuclear-science-pack"]=950,
   ["kr-electromagnetic-research-data"]=950,
   ["kr-cryogenic-research-data"]=950,
   ["planet-crucible-science-pack"]=1450,

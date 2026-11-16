@@ -20,8 +20,9 @@ M.quests={
  {id="nauvis-power",chapter="calidus",tech="steam-power",phase="machines",requires={}},
  {id="nauvis-logistics",chapter="calidus",tech="logistics",phase="machines",requires={"first-signal"}},
  {id="nauvis-electronics",chapter="calidus",tech="electronics",phase="machines",requires={"nauvis-power"}},
- {id="nauvis-radar",chapter="calidus",tech="radar",phase="machines",requires={"nauvis-power"}},
  {id="green-science",chapter="calidus",tech="logistic-science-pack",phase="growth",requires={"first-signal","nauvis-logistics"}},
+ -- Krastorio 2 puts radar behind kr-sentinel and green science (200 red + green), so it is a growth milestone.
+ {id="nauvis-radar",chapter="calidus",tech="radar",phase="growth",requires={"green-science"}},
  {id="steel",chapter="calidus",tech="steel-processing",phase="growth",requires={"green-science"}},
  {id="nauvis-fast-inserters",chapter="calidus",tech="fast-inserter",phase="growth",requires={"nauvis-logistics","green-science"}},
  {id="nauvis-automation-2",chapter="calidus",tech="automation-2",phase="growth",requires={"green-science"}},

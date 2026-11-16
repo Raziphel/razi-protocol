@@ -40,6 +40,11 @@ M.worlds = {
 		reason = "its discovery is a chain of eight build and craft triggers"},
 	{mod = "Nexus", locations = {"nexus"}, packs = {},
 		reason = "its discovery waits for the transceiver signal"},
+	{mod = "Solar-Halo", locations = {"halo-solar-orbit", "halo-solar-station"}, packs = {"halo-science-pack"},
+		reason = "a side branch at the Dyson sphere: supercomputers and charged electrolyte"},
+	{mod = "nuclear-steps", locations = {"asteroid-0", "asteroid-1", "mesnard-black-hole"},
+		packs = {"mesnard-radio-science-pack", "deep-space-exploration-science-pack", "impossible-science-pack"},
+		reason = "a side trip from Gleba; the mod is unfinished and locks its later discoveries"},
 }
 
 return M

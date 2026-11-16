@@ -5,8 +5,7 @@ local recipe = helpers.recipe
 local bootstrap_machines = {}
 
 function bootstrap_machines.data_final_fixes()
-	-- Nexus-Updated is the 2.1 fork of Nexus with the same prototype names.
-	if not (mods["Nexus"] or mods["Nexus-Updated"]) then
+	if not mods["Nexus"] then
 		return
 	end
 

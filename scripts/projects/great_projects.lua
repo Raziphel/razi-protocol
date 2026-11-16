@@ -9,6 +9,18 @@ local valid_crossings={
   umbra={"razi-umbra-belt-inner","razi-umbra-belt-outer"}
 }
 M.ark_weight=1000000
+---@class RaziGreatProjectsRecord
+---@field belts table<string, boolean>
+---@field pending table<integer, table>
+---@field skybridge table
+---@field archive_recovered integer?
+---@field ark boolean?
+---@field ark_name string?
+
+---@return table<integer, RaziGreatProjectsRecord>?
+local function records()
+  return storage and storage.razi_great_projects
+end
 local function store(force)
   if not (storage and force and force.index) then return nil end
   storage.razi_great_projects=storage.razi_great_projects or {}
@@ -69,15 +81,6 @@ local function installed(force,world,names)
   return surface and #names>0 and surface.count_entities_filtered
     and surface.count_entities_filtered{name=names,force=force}>0 or false
 end
-local function powered_relay(force,world) -- luacheck: ignore 211
-  local surface=planet_surface(world)
-  if not (surface and surface.find_entities_filtered) then return false end
-  for _,entity in pairs(surface.find_entities_filtered{
-    name="razi-archive-relay",force=force}) do
-    if entity.valid and entity.energy and entity.energy>0 then return true end
-  end
-  return false
-end
 function M.array(force)
   local systems={}
   local sites={}
@@ -116,7 +119,7 @@ function M.array(force)
   return #sites,3,sites
 end
 function M.recovered(force)
-  local all=storage and storage.razi_great_projects
+  local all=records()
   local record=all and force and all[force.index]
   return record and record.archive_recovered or 0
 end
@@ -210,8 +213,7 @@ local function qualified_ark(platform)
     and surface.count_entities_filtered{type="ammo-turret",force=force}>=4
     and surface.count_entities_filtered{type="assembling-machine",force=force}>=2
 end
-local deep={"solar-system-edge","razi-deep-space-edge",
-  "nexus","shattered-planet"}
+local deep={"solar-system-edge","nexus","shattered-planet"}
 local function is_deep(name)
   for _,id in ipairs(deep) do if id==name then return true end end
   return false
@@ -289,7 +291,7 @@ end
 -- builds. Only forces with an actual recorded outgoing crossing are checked
 -- every 300 ticks; no idle-platform, entity or surface scans occur.
 function M.flush_pending(forces)
-  local all=storage and storage.razi_great_projects
+  local all=records()
   if not all then return false end
   local changed=false
   for force_index,state in pairs(all) do
@@ -317,7 +319,7 @@ function M.flush_pending(forces)
 end
 
 function M.forces_merged(event)
-  local all=storage and storage.razi_great_projects
+  local all=records()
   if not (all and event) then return end
   local source=all[event.source_index]
   if not source then return end
@@ -336,9 +338,14 @@ function M.forces_merged(event)
     target.ark_name=source.ark_name
   end
   target.skybridge=target.skybridge or {}
-  if source.skybridge and source.skybridge.delivered
-    and not target.skybridge.delivered then
-    target.skybridge=source.skybridge
+  local source_bridge=source.skybridge
+  local target_bridge=target.skybridge
+  local target_complete=target_bridge.complete
+  if source_bridge and source_bridge.complete and not target_complete then
+    target.skybridge=source_bridge
+  elseif source_bridge and source_bridge.from and not target_bridge.from
+    and not target_complete then
+    target.skybridge=source_bridge
   end
   target.pending={} -- Old platform indices change on force merges.
   all[target_index]=target

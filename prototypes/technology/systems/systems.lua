@@ -6,10 +6,6 @@ local function build_solaris_science_ingredients()
 			"planetaris-bioengineering-science-pack",
 			"planetaris-pathological-science-pack"
 		},
-		first_available_science_packs = {
-			"lithium-science-pack",
-			"tungsten-science-pack"
-		},
 		fallback_science_packs = {
 			"space-science-pack",
 			"metallurgic-science-pack",
@@ -26,10 +22,6 @@ local function build_nyxaris_science_ingredients()
 			"planetaris-polishing-science-pack",
 			"planetaris-bioengineering-science-pack",
 			"planetaris-pathological-science-pack"
-		},
-		first_available_science_packs = {
-			"lithium-science-pack",
-			"tungsten-science-pack"
 		},
 		extra_science_packs = {
 			"insulation-science-pack",

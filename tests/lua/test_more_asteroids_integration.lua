@@ -141,7 +141,7 @@ raw={
   ["space-location"]={["sye-calidus"]={},["sye-solaris"]={},["sye-vibrant"]={},
     ["sye-vespera"]={},["sye-umbra"]={},["crucible-orbit"]={},
     ["solar-system-edge"]={},nexus={},["slp-dyson-dummy"]={},
-    ["slp-solar-system-sun"]={},["razi-deep-space-edge"]={},
+    ["slp-solar-system-sun"]={},
     ["asteroid-belt-inner-edge"]={},["asteroid-belt-outer-edge"]={},
     ["razi-umbra-belt-inner"]={},["razi-umbra-belt-outer"]={}},
   technology={["planet-discovery-sunorbit"]={effects={
@@ -290,7 +290,7 @@ check(raw.planet["sun-orbit"].asteroid_spawn_definitions==nil
 check(raw["space-location"]["sye-calidus"].asteroid_spawn_definitions~=nil
   and #raw["space-location"]["sye-calidus"].asteroid_spawn_definitions>0,
   "The slipstreams of the systems get orbit chunks: a parked platform collects there")
-check(raw["space-location"]["razi-deep-space-edge"].asteroid_spawn_definitions==nil
+check(raw["space-location"]["solar-system-edge"].asteroid_spawn_definitions==nil
   and raw.planet["third-party-world"].asteroid_spawn_definitions==nil,
   "The deep space edge and unknown worlds are skipped")
 -- Idempotent: a second pass keeps every list identical in content.

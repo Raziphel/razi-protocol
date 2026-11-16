@@ -23,13 +23,13 @@ local assets={
     tint={r=1,g=.22,b=.3},shift={5*32,40*32}},
   {filename="__base__/graphics/normal-orbit.png"}
 }
-local n,d=M.remove_layers(assets,{{x=5,y=3}})
-check(n==6 and d.catapult==3 and d.orbit==2 and d.strokes==1,
-  "Every catapult/Carna/Velora visual ribbon must be removed")
-check(#assets==5,"Too many layers removed")
+local n,d=M.remove_layers(assets)
+check(n==5 and d.catapult==3 and d.orbit==2,
+  "Catapult and tagged Carna/Velora orbit art must be removed")
+check(#assets==6,"Unexpected layers were removed")
 check(not M.is_catapult_sprite("__razi-protocol__/graphics/starmap/razi/glow-umbra.png"),
   "Other mods must not be affected")
-check(M.remove_layers(assets,{{x=5,y=3}})==0,"Cleanup must be idempotent")
+check(M.remove_layers(assets)==0,"Cleanup must be idempotent")
 local connections={["carna-crucible"]={from="carna",to="crucible-orbit"}}
 local links={["gleba-velora"]={source="gleba",target="velora"}}
 data={raw={planet={carna={origin={x=0,y=0},distance=10,orientation=.25},

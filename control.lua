@@ -1,5 +1,6 @@
 local Events = require("__razi_lib__/runtime/events")
 local voidcraft_variants = require("scripts.compatibility.Voidcraft.variants")
+local target_priorities = require("scripts.compatibility.advanced_target_priorities.asteroids")
 local entities = require("scripts.events.entities")
 local damage = require("scripts.events.damage")
 
@@ -22,6 +23,8 @@ require("scripts.events.commands").register()
 
 -- Voidcraft 2.11.1 hands the unlock of its recipe variants to this interface instead of walking every recipe on each research.
 voidcraft_variants.register()
+-- Advanced Target Priorities offers every asteroid of the game, not only the four of Space Age.
+target_priorities.register()
 
 events:install()
 

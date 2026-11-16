@@ -44,7 +44,7 @@ end
 -- Mirrors Nexus's published four-slot permission algorithm. Actual built
 -- counts come from Factorio's O(1) force entity counter, never a world scan.
 function M.cores(force)
-  if not (loaded("Nexus-Updated") or loaded("Nexus")) then
+  if not loaded("Nexus") then
     return {installed=false}
   end
   local tech=force.technologies["zero-point-energy-engine-core"]
@@ -252,11 +252,11 @@ function M.sync_companion_widgets(player,show_native)
   if loaded("planet-express") then
     set_visible("planet-express-monitor-dock")
   end
-  if loaded("Nexus-Updated") or loaded("Nexus") then
+  if loaded("Nexus") then
     -- The source GUI currently contains only the ZPE core cap.
     set_visible("nexus_limit_frame")
   end
-  if loaded("Nexus-Threat-Updated") or loaded("Nexus-Threat") then
+  if loaded("Nexus-Threat") then
     set_visible("nexus_toggle_button")
     set_visible("nexus_frame")
   end

@@ -41,6 +41,16 @@ package.loaded["prototypes.world.asteroids.asteroid_profiles"] = setmetatable({}
 package.loaded["prototypes.world.routes.route_icons"] = setmetatable({}, { __index = function() return function() end end })
 package.loaded["prototypes.world.starmap.galaxy_layout"] = setmetatable({}, { __index = function() return function() end end })
 
+local function has_route(specifications, a, b)
+	for _, route in ipairs(specifications) do
+		if (route[1] == a and route[2] == b)
+			or (route[1] == b and route[2] == a) then
+			return true
+		end
+	end
+	return false
+end
+
 for _, with_belt in ipairs({ true, false }) do
   local locations = {}
   if with_belt then
@@ -51,9 +61,18 @@ for _, with_belt in ipairs({ true, false }) do
   rawset(_G, "mods", {})
   package.loaded["prototypes.world.routes.route_reconcile"] = nil
   local reconcile = require("prototypes.world.routes.route_reconcile")
-  local label = with_belt and "with the belt" or "without the belt"
-  check(reachable(reconcile.specifications, "sye-vibrant", "fulgora", "ribbonia"),
-    "Fulgora is reachable only through Ribbonia " .. label)
-  check(reachable(reconcile.specifications, "sye-vibrant", "ribbonia", nil), "Ribbonia is unreachable " .. label)
+	if with_belt then
+		check(reachable(reconcile.specifications, "sye-vibrant", "fulgora", "ribbonia"),
+			"Fulgora is reachable only through Ribbonia")
+		check(reachable(reconcile.specifications, "sye-vibrant", "ribbonia", nil),
+			"Ribbonia is unreachable")
+	end
+	for _, edge in ipairs({
+		{"sye-vibrant", "fulgora"}, {"sye-vibrant", "paracelsin"},
+		{"sye-umbra", "vesta"}, {"crucible-orbit", "vesta"}
+	}) do
+		check(not has_route(reconcile.specifications, edge[1], edge[2]),
+			"Missing-belt fallback route must not be generated")
+	end
 end
 print("ok")

@@ -1,5 +1,14 @@
 ---@diagnostic disable: missing-fields
 package.path = "./?.lua;./?/init.lua;" .. package.path
+
+rawset(_G, "defines", _G.defines or { prototypes = { item = {
+	item = 1,
+	tool = 2,
+	module = 3,
+	capsule = 4,
+	ammo = 5,
+	["item-with-entity-data"] = 6,
+} } })
 local function check(value, message)
   if not value then error(message, 2) end
 end

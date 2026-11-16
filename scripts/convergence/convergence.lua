@@ -9,6 +9,7 @@ local galactic_catalog=require("lib.galactic_catalog")
 local deep_expedition=require("scripts.convergence.deep_space_expedition")
 local nexus_trials=require("scripts.compatibility.nexus-bosses.trials")
 local story=require("lib.story")
+local WITNESS_STATUS_CACHE_TICKS=600
 -- Adds M.render.
 require("scripts.convergence.panel")
 M.stages=defs.shipments
@@ -57,7 +58,6 @@ local destinations={
  ["solar-system-edge"]=true,
  ["shattered-planet"]=true,
  ["nexus"]=true,
- ["razi-deep-space-edge"]=true,
  ["black-hole-approach"]=true
 }
 -- Witness anchors are RAZI's physical, decentralized veto. Each of the
@@ -65,7 +65,20 @@ local destinations={
 M.witness_systems={
  "calidus","solaris","nyxaris","vibrant","vespera","beetlejuice","umbra"
 }
-function M.witness_status(force)
+function M.witness_status(force,refresh)
+ local tick=game and game.tick or 0
+ local index=force and force.index
+ local cache
+ if storage and index then
+  storage.razi_convergence_witness=
+   storage.razi_convergence_witness or {}
+  cache=storage.razi_convergence_witness
+  local cached=cache[index]
+  if not refresh and cached and tick>=cached.tick
+   and tick-cached.tick<WITNESS_STATUS_CACHE_TICKS then
+   return cached.active,cached.total,cached.locations
+  end
+ end
  local locations={}
  local found={}
  local total=#M.witness_systems
@@ -74,6 +87,9 @@ function M.witness_status(force)
  if known==0 then
   for _,system in ipairs(M.witness_systems) do
    locations[#locations+1]={system=system}
+  end
+  if cache then
+   cache[index]={tick=tick,active=0,total=total,locations=locations}
   end
   return 0,total,locations
  end
@@ -96,6 +112,9 @@ function M.witness_status(force)
  for _,system in ipairs(M.witness_systems) do
   if found[system] then active=active+1 end
   locations[#locations+1]={system=system,planet=found[system]}
+ end
+ if cache then
+  cache[index]={tick=tick,active=active,total=total,locations=locations}
  end
  return active,total,locations
 end
@@ -174,7 +193,7 @@ local function stage_ready(force,index)
   if nexus.count<nexus.total then
    return false,"convergence-need-nexus-trials"
   end
-  if select(1,M.witness_status(force))<7 then
+  if select(1,M.witness_status(force,true))<7 then
    return false,"convergence-need-witnesses"
   end
   local visited,required,_,chart_ready=M.expedition_status(force)
@@ -356,14 +375,6 @@ function M.deliver(player,id)
  end
  return "convergence-delivered",removed_total
 end
--- Only restore newly introduced recipe unlocks on an existing save.
--- Never reset the whole science tree or change another mod's research.
-function M.repair_recipe_unlocks(force) -- luacheck: ignore 212
- -- Source mods exclusively own their recipe unlocks. Never unlock native
- -- products from Razi research or mutate already-researched saves.
- return
-end
-
 -- Only visit actively transmitting forces, once per second.
 function M.advance(tick)
  local waiting=storage and storage.razi_convergence_pending

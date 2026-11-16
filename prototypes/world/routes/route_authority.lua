@@ -23,6 +23,9 @@ local side_routes={
   {"arcanyx","tenebris",25000,"outer_void"},
   {"bm-balack","aquilo",30000,"cryogenic_deep"},
   {"velora","gleba",14000,"biological"},
+  -- Nuclear Steps: the asteroid field orbits Gleba (compatibility/nuclear-steps/asteroid_field.lua); the source's
+  -- gleba-to-asteroid-0 keeps its length and asteroids, the bodies behind the field keep their own routes.
+  {"asteroid-0","gleba",15000,"biological"},
   -- Preserve remaining source-owned side-world connections.
   -- Athos now belongs to Vespera. Its single dry-world spur leaves Muria,
   -- with no Vulcanus/Nauvis shortcut or duplicate connection.

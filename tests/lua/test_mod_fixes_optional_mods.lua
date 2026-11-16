@@ -389,4 +389,46 @@ raw = fresh()
 roboport_pressure.data_final_fixes()
 check(next(raw) == nil and #logs == 0, "Something changed without roboports")
 
+-- moon-eneas construction_drone
+local construction_drone = require("prototypes.fixes.moon-eneas.construction_drone")
+local function drone_data()
+	local drone_raw = fresh()
+	_G.mods["moon-eneas"] = "1.0.10"
+	drone_raw.technology = {["friend-tech"] = {effects = {}}}
+	_G.data.extend = function(_, prototypes)
+		for _, prototype in ipairs(prototypes) do
+			drone_raw[prototype.type] = drone_raw[prototype.type] or {}
+			drone_raw[prototype.type][prototype.name] = prototype
+		end
+	end
+	return drone_raw
+end
+drone_data()
+construction_drone.data_final_fixes()
+local drone = proto("item", "Construction_Drone")
+check(drone and drone.hidden and drone.hidden_in_factoriopedia and drone.stack_size == 1
+	and drone.localised_name[1] == "item-name.razi-eneas-construction-drone",
+	"Without Construction_Drones_Forked the hidden Construction_Drone item is missing")
+check(logged("razi-protocol: Construction_Drone is added") == 1 and #logs == 1, "Expected one line for the item")
+construction_drone.data_final_fixes()
+check(#logs == 1, "The repeated run logged again")
+raw = drone_data()
+raw.item = {Construction_Drone = {type = "item", name = "Construction_Drone", stack_size = 50}}
+local drone_before = deepcopy(raw.item)
+construction_drone.data_final_fixes()
+check(same(raw.item, drone_before) and #logs == 0, "The item of Construction_Drones_Forked was changed")
+raw = drone_data()
+_G.defines.prototypes.item["item-with-entity-data"] = 1
+raw["item-with-entity-data"] = {Construction_Drone = {type = "item-with-entity-data", name = "Construction_Drone"}}
+construction_drone.data_final_fixes()
+check(raw.item == nil and #logs == 0, "A second Construction_Drone was made beside one of another item type")
+raw = drone_data()
+raw.technology = nil
+construction_drone.data_final_fixes()
+check(raw.item == nil and #logs == 0, "The item was made without friend-tech")
+raw = drone_data()
+_G.mods["moon-eneas"] = nil
+construction_drone.data_final_fixes()
+check(raw.item == nil and #logs == 0, "The item was made without Eneas")
+
 print("mod fixes (optional mods): ok")

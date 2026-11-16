@@ -64,11 +64,11 @@ function technology_visibility.repair(event)
 	-- A normal Razi update or another mod's configuration change must not
 	-- override technology gates deliberately disabled by another mod.
 	local changes = event and event.mod_changes
-	if not (changes and (changes["Nexus"] or changes["Nexus-Updated"])) then
+	if not (changes and changes["Nexus"]) then
 		return
 	end
 
-	if not (script.active_mods["Nexus"] or script.active_mods["Nexus-Updated"]) then
+	if not script.active_mods["Nexus"] then
 		return
 	end
 

@@ -17,7 +17,8 @@ local members={
   ["asteroid-belt-inner-edge"]="mid-outer-belt",
   ["asteroid-belt-outer-edge"]="mid-outer-belt",
   ["crucible-orbit"]="umbra",crucible="umbra",
-  ["sye-umbra"]="umbra",tenebris="umbra"
+  ["sye-umbra"]="umbra",tenebris="umbra",
+  gleba="nyxaris"
 }
 local approved={}
 for _,two in ipairs({
@@ -60,7 +61,7 @@ local planets={}
 for _,name in ipairs({"nauvis","muluna","vulcanus","castra",
   "fulgora","aquilo","ferrum","tenebris","carna","arcanyx","vesta","obsidiax","athos",
   "muria","paracelsin","shchierbin","abacayba","crucible","eneas",
-  "child-moon","remote-nexus"}) do
+  "child-moon","remote-nexus","gleba","asteroid-0","asteroid-1"}) do
   planets[name]={name=name}
 end
 planets["child-moon"].orbit={parent={type="planet",name="nauvis"}}
@@ -113,7 +114,12 @@ local roads={
   ["athos-source-vulcanus"]=route("athos-source-vulcanus",
     "athos","vulcanus",13000,{{asteroid="athos-source-diamond",probability=.19}}),
   ["nexus-solaris"]=route("nexus-solaris","sye-solaris","remote-nexus",25000),
-  ["external-internal"]=internal
+  ["external-internal"]=internal,
+  -- Nuclear Steps: one native entry from Gleba, a route inside its system, a stray shortcut
+  ["gleba-to-asteroid-0"]=route("gleba-to-asteroid-0","gleba","asteroid-0",15000,
+    {{asteroid="oxide-asteroid-chunk",probability=.04}}),
+  ["asteroid-0-to-asteroid-1"]=route("asteroid-0-to-asteroid-1","asteroid-0","asteroid-1",5000),
+  ["nauvis-to-asteroid-0"]=route("nauvis-to-asteroid-0","nauvis","asteroid-0",3000)
 }
 rawset(_G,"data",{raw={
   planet=planets,["space-location"]=spaces,
@@ -205,6 +211,19 @@ for _,entry in ipairs(roads["razi-curated-ferrum-sye-beetlejuice"].asteroid_spaw
 end
 check(ferrumResource and ferrumDebris,
   "Ferrum migration lost a native modded asteroid resource")
+-- Nuclear Steps: the source entry from Gleba stays as it is, the system inside stays, no other way in
+local entry=roads["gleba-to-asteroid-0"]
+check(entry and entry.length==15000 and #entry.asteroid_spawn_definitions==1
+  and entry.asteroid_spawn_definitions[1].asteroid=="oxide-asteroid-chunk",
+  "Nuclear Steps lost its source entry from Gleba")
+check(roads["asteroid-0-to-asteroid-1"]~=nil,"Nuclear Steps lost a route inside its system")
+check(roads["nauvis-to-asteroid-0"]==nil,"Nuclear Steps kept a second way in")
+check(roads["razi-curated-asteroid-0-gleba"]==nil,"Nuclear Steps got a second route from Gleba")
+-- without the source entry Gleba still leads there
+roads["gleba-to-asteroid-0"]=nil
+manager.data_final_fixes()
+local lane=roads["razi-curated-asteroid-0-gleba"]
+check(lane and lane.length==15000,"Nuclear Steps lost its way in from Gleba")
 local count=0
 for _ in pairs(roads) do count=count+1 end
 check(manager.data_final_fixes()==0,

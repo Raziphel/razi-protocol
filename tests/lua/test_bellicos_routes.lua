@@ -8,7 +8,7 @@ local entry="calidus-bellicos-stargate-calidus"
 local deep="calidus-bellicos-stargate-bellicos"
 local outer="aegis-outer-edge"
 local inner="aegis-inner-edge"
-local near="near-bellicos-orbit"
+local near="bellicos-orbit"
 local warden="point-warden"
 local places={}
 for _,id in ipairs({entry,deep,outer,inner,near,warden}) do
@@ -23,7 +23,8 @@ end
 local routes={
   ["native-outer-inner"]=route("native-outer-inner",outer,inner,5000,
     "author-original-rock"),
-  ["native-near-inner"]=route("native-near-inner",near,inner,1000),
+  ["aegis-bellicos-connection"]=route("aegis-bellicos-connection",
+    inner,near,2000000,"medium-oxide-asteroid"),
   ["native-inner-warden"]=route("native-inner-warden",inner,warden,3000),
   ["native-warden-deep"]=route("native-warden-deep",warden,deep,4000),
   ["native-direct-entry-deep"]=route("native-direct-entry-deep",
@@ -35,7 +36,7 @@ rawset(_G,"data",{raw={["space-location"]=places,planet={},
   ["space-connection"]=routes,
   ["utility-sprites"]={default={starmap_star={layers={
     {planetslib_orbit_name=deep, filename="old-gate-orbit.png"},
-    {planetslib_orbit_name="near-bellicos-orbit", filename="aegis-belt.png"}
+    {planetslib_orbit_name="bellicos-orbit", filename="aegis-belt.png"}
   }}}},
   technology={
     ["source-deep-technology"]={effects={
@@ -49,7 +50,7 @@ rawset(_G,"data",{raw={["space-location"]=places,planet={},
       routes[value.name]=value
     end
   end})
-rawset(_G,"mods",{["bellicos-and-aegis"]="0.4.1"})
+rawset(_G,"mods",{["bellicos-and-aegis"]="0.4.7"})
 local profile={
   create=function() return {} end,
   apply=function(r,p) r.test_profile=p end,
@@ -92,6 +93,16 @@ end
 check(has(entry,outer) and has(outer,inner)
   and has(inner,warden) and has(near,inner),
   "Main Aegis expedition or orbit spur disconnected")
+local native_bellicos=routes["aegis-bellicos-connection"]
+check(native_bellicos and native_bellicos.shape=="line"
+  and native_bellicos.test_profile=="aegis_depths"
+  and native_bellicos.test_field==1.6,
+  "The native Bellicos route must receive its Aegis depth profile")
+check(native_bellicos.asteroid_spawn_definitions[1].asteroid
+    =="medium-oxide-asteroid",
+  "The native route must retain the source-owned oxide asteroid")
+check(routes["razi-aegis-bellicos-orbit-aegis-inner-edge"]==nil,
+  "The duplicate Razi route must not replace the native Bellicos connection")
 check(not places[deep], "Dead-end Bellicos gateway location still exists")
 check(not has(entry,deep) and not has(outer,deep)
   and not has(inner,deep) and not has(warden,deep),
@@ -127,10 +138,10 @@ local reverse=route("zz-late-mirrored-near-inner",inner,near,15000,
 routes[reverse.name]=reverse
 check(bellicos.dedupe_internal_routes()==1,
   "Mirrored Aegis route should be removed at final reconciliation")
-check(routes[reverse.name]==nil and routes["native-near-inner"],
+check(routes[reverse.name]==nil and routes["aegis-bellicos-connection"],
   "The duplicate survived or the original saved route ID was removed")
 local preserved=false
-for _,def in ipairs(routes["native-near-inner"].asteroid_spawn_definitions or {}) do
+for _,def in ipairs(routes["aegis-bellicos-connection"].asteroid_spawn_definitions or {}) do
   if def.asteroid=="late-unique-asteroid-chunk" then preserved=true end
 end
 check(preserved, "Late duplicate's source-only asteroid resources disappeared")

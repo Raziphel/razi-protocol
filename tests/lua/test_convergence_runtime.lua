@@ -73,6 +73,10 @@ local function stock_supplies(inventory,rule)
  end
 end
 local force,player,inventory=fixture(1)
+player.character.surface.platform.space_location.name="razi-deep-space-edge"
+check(m.location(player)==nil,
+ "A location key without a real prototype cannot accept Convergence cargo")
+player.character.surface.platform.space_location.name="solar-system-edge"
 -- An absent or incompatible receiver prototype must not create
 -- an unfinishable endgame in a reduced modpack.
 local source_registry=prototypes
@@ -180,8 +184,11 @@ for _,world in ipairs(worlds) do
    return {}
   end}
 end
+local original_tick=game.tick
+game.tick=642 -- Expire the empty-world snapshot from the earlier gate check.
 check(select(1,m.witness_status(force))==7,
  "Seven independent real planet systems must supply live anchors")
+game.tick=original_tick
 message,used=m.deliver(player,"ignition")
 check(message=="convergence-need-deep-expedition" and used==0,
  "The final Mandate cannot be submitted without in-person travel to every reachable deep-space stop")

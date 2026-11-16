@@ -3,7 +3,8 @@
 # for each difficulty. A prototype error, a Lua error at start or a bad number in the data (see check-mod/) fails it.
 # Then the tests of tests/funit run in the same game with the FUnit mod; a failed test, a missing report or a suite that
 # ran no test fails it too.
-# Optional dependencies ("?") stay off. Needs bash, python3 and curl; downloading the game needs Linux x64.
+# Optional dependencies ("?") stay off unless --optional-mods names them. Needs bash, python3 and curl; downloading the
+# game needs Linux x64.
 #
 #   FACTORIO_USERNAME=<account> FACTORIO_TOKEN=<player token> tests/load/run.sh
 #   tests/load/run.sh --factorio-bin /path/to/factorio --pool ../razi-latest-mods     # no account, mods from a folder
@@ -12,6 +13,7 @@
 #   --factorio-bin PATH   use this game instead of downloading the headless build
 #   --difficulty LIST     values of razi-difficulty-preset to load, default "normal nightmare"
 #   --pool DIR            take the mods from the zips in DIR (newest of each), repeatable; no portal, no account
+#   --optional-mods FILE  include optional mods from this list and their dependencies
 #   --ticks N             ticks to run after the new map, default 60
 #   --work DIR            working folder, default .load in the repository
 #   --resolved            <work>/mods.lock was made by the caller (mods.py resolve): do not resolve again
@@ -35,12 +37,14 @@ tree=0
 resolved=0
 funit=1
 pools=()
+optional_mods=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --game) game="$2"; shift 2 ;;
     --factorio-bin) bin="$2"; shift 2 ;;
     --difficulty) levels="$2"; shift 2 ;;
     --pool) pools+=(--pool "$2"); shift 2 ;;
+    --optional-mods) optional_mods=(--optional-mods "$2"); shift 2 ;;
     --ticks) ticks="$2"; shift 2 ;;
     --work) work="$2"; shift 2 ;;
     --resolved) resolved=1; shift ;;
@@ -85,7 +89,7 @@ echo "Factorio $game"
 
 # --- the mods ---------------------------------------------------------------------------------------------------
 if [ "$resolved" -eq 0 ]; then
-  py mods.py resolve --info "$root/info.json" --game "$game" --out "$work/mods.lock" --extra-mod funit ${pools[@]+"${pools[@]}"} || exit 1
+  py mods.py resolve --info "$root/info.json" --game "$game" --out "$work/mods.lock" --extra-mod funit ${pools[@]+"${pools[@]}"} ${optional_mods[@]+"${optional_mods[@]}"} || exit 1
 fi
 if [ ${#pools[@]} -eq 0 ]; then
   py mods.py fetch --lock "$work/mods.lock" --dir "$work/mods-cache" || exit 1

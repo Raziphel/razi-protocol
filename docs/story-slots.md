@@ -21,8 +21,8 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-power` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `steam-power` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-logistics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `logistics`, after quests `first-signal` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-electronics` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `electronics`, after quests `nauvis-power` | 60 |
-| story-quests.cfg `[razi-story-quest-title]` | `nauvis-radar` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `radar`, after quests `nauvis-power` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `green-science` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `logistic-science-pack`, after quests `first-signal`, `nauvis-logistics` | 60 |
+| story-quests.cfg `[razi-story-quest-title]` | `nauvis-radar` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `radar`, after quests `green-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `steel` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `steel-processing`, after quests `green-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-fast-inserters` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `fast-inserter`, after quests `nauvis-logistics`, `green-science` | 60 |
 | story-quests.cfg `[razi-story-quest-title]` | `nauvis-automation-2` | quest name in the list and the dossier heading; chapter `calidus` | quest opens with research `automation-2`, after quests `green-science` | 60 |
@@ -255,8 +255,8 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest]` | `nauvis-power` | quest dossier, story block; chapter `calidus` | quest opens with research `steam-power` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-logistics` | quest dossier, story block; chapter `calidus` | quest opens with research `logistics`, after quests `first-signal` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-electronics` | quest dossier, story block; chapter `calidus` | quest opens with research `electronics`, after quests `nauvis-power` | 900 |
-| story-quests.cfg `[razi-story-quest]` | `nauvis-radar` | quest dossier, story block; chapter `calidus` | quest opens with research `radar`, after quests `nauvis-power` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `green-science` | quest dossier, story block; chapter `calidus` | quest opens with research `logistic-science-pack`, after quests `first-signal`, `nauvis-logistics` | 900 |
+| story-quests.cfg `[razi-story-quest]` | `nauvis-radar` | quest dossier, story block; chapter `calidus` | quest opens with research `radar`, after quests `green-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `steel` | quest dossier, story block; chapter `calidus` | quest opens with research `steel-processing`, after quests `green-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-fast-inserters` | quest dossier, story block; chapter `calidus` | quest opens with research `fast-inserter`, after quests `nauvis-logistics`, `green-science` | 900 |
 | story-quests.cfg `[razi-story-quest]` | `nauvis-automation-2` | quest dossier, story block; chapter `calidus` | quest opens with research `automation-2`, after quests `green-science` | 900 |
@@ -489,8 +489,8 @@ set when the game loads or for the whole game, so writer mode cannot show them.
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-power` | quest dossier, field note; chapter `calidus` | quest opens with research `steam-power` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-logistics` | quest dossier, field note; chapter `calidus` | quest opens with research `logistics`, after quests `first-signal` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-electronics` | quest dossier, field note; chapter `calidus` | quest opens with research `electronics`, after quests `nauvis-power` | 400 |
-| story-quests.cfg `[razi-story-quest-tip]` | `nauvis-radar` | quest dossier, field note; chapter `calidus` | quest opens with research `radar`, after quests `nauvis-power` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `green-science` | quest dossier, field note; chapter `calidus` | quest opens with research `logistic-science-pack`, after quests `first-signal`, `nauvis-logistics` | 400 |
+| story-quests.cfg `[razi-story-quest-tip]` | `nauvis-radar` | quest dossier, field note; chapter `calidus` | quest opens with research `radar`, after quests `green-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `steel` | quest dossier, field note; chapter `calidus` | quest opens with research `steel-processing`, after quests `green-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-fast-inserters` | quest dossier, field note; chapter `calidus` | quest opens with research `fast-inserter`, after quests `nauvis-logistics`, `green-science` | 400 |
 | story-quests.cfg `[razi-story-quest-tip]` | `nauvis-automation-2` | quest dossier, field note; chapter `calidus` | quest opens with research `automation-2`, after quests `green-science` | 400 |

@@ -133,9 +133,10 @@ local total=#layers
 check(m.data_final_fixes()==0 and #layers==total,
  "Do not duplicate warning sprites on another data pass")
 settings.startup["razi-route-overlay-mode"].value="off"
-layers[1]={filename="__razi-protocol__/graphics/route-highlights/continuous-strokes.png"}
-check(m.data_final_fixes()==0 and #layers==total-1,
- "Old stretched route sprites must be removed even in Off mode")
+local retired={filename="__razi-protocol__/graphics/route-highlights/continuous-strokes.png"}
+layers[1]=retired
+check(m.data_final_fixes()==0 and #layers==total and layers[1]==retired,
+ "Route rendering must not clean up an obsolete layer it no longer creates")
 settings.startup["razi-quality-asteroids"].value=false
 check(m.route_color_level(huge)~=nil
   and m.color_for_route(huge,"danger")==

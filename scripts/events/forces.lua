@@ -19,6 +19,7 @@ function forces.register(events)
 	events:on_event(defines.events.on_research_reversed, function(event)
 		spoiler_fog.sync_force(event.research.force)
 		spoiler_fog.defer(event.research.force)
+		razi_journal.defer_research_refresh(event.research.force)
 	end)
 	events:on_event(defines.events.on_technology_effects_reset, function()
 		-- Rubia may reset its own placeholder technologies in this event,

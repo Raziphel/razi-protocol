@@ -5,14 +5,13 @@
 -- Only installed, connected, navigable named Deep Space destinations count.
 local M={}
 local candidates={
-  "solar-system-edge","razi-deep-space-edge",
+  "solar-system-edge",
   "nexus","shattered-planet",
   "black-hole-approach","black-hole","oort-cloud","sol",
   -- Optional expedition arms. They become mandatory IF actually installed
   -- and linked to the same traversable Deep Space route graph.
   "skewer_shattered_planet","skewer_lost_beyond",
-  "calidus-bellicos-stargate-calidus","near-bellicos-orbit",
-  "bellicos-near-orbit","near_bellicos_orbit",
+  "calidus-bellicos-stargate-calidus",
   "aegis-inner-edge","point-warden","aegis-outer-edge",
   "calidus-bellicos-stargate-bellicos"
 }

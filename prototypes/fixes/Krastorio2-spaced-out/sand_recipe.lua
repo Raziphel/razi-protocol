@@ -37,7 +37,6 @@ function kr_sand.data_final_fixes()
 	-- leaving a hidden fluid variant behind on a difficulty-specific branch.
 	overwrite_recipe_variants(sand_recipe, {
 		categories = {"kr-crushing"},
-		enabled = true,
 		hidden = false,
 		hidden_in_factoriopedia = false,
 		hide_from_player_crafting = false,

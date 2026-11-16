@@ -102,10 +102,11 @@ local function register_exchange(rule)
     if type(share)~="number" or share<0.16 or share>0.25 then return end
     bonus=math.max(1,math.floor(native_amount*rule.batch*share+0.000001))
   end
+  local time_ratio=portfolio.time_multiplier(profile,native_amount,
+    rule.batch,bonus or 0,rule.time_multiplier or 1.15)
   if rule.min_throughput_ratio then
     -- Integer output rounding otherwise makes a nominal 20% recipe yield
     -- less than the time premium, particularly on 2-item native batches.
-    local time_ratio=rule.time_multiplier or 1.15
     local base_output=native_amount*rule.batch
     local needed=math.ceil(base_output*
       (time_ratio*rule.min_throughput_ratio-1)-0.000001)
@@ -120,8 +121,9 @@ local function register_exchange(rule)
   end
   if rule.max_bonus_fraction~=nil and bonus>native_amount*rule.batch
     *rule.max_bonus_fraction+0.000001 then return end
+  time_ratio=portfolio.time_multiplier(profile,native_amount,
+    rule.batch,bonus,rule.time_multiplier or 1.15)
   if rule.min_throughput_ratio then
-    local time_ratio=rule.time_multiplier or 1.15
     if (native_amount*rule.batch+bonus)/(native_amount*rule.batch*
       time_ratio)+0.000001<rule.min_throughput_ratio then return end
   end
@@ -216,8 +218,7 @@ local function register_exchange(rule)
   -- Imported materials already pay the logistics price, so use a smaller
   -- default machine-time premium for legacy alternatives.
   alternative.energy_required = (base.energy_required or 0.5) * rule.batch
-    * portfolio.time_multiplier(profile,native_amount,rule.batch,bonus,
-      rule.time_multiplier or 1.15)
+    * time_ratio
   alternative.auto_recycle = false
   alternative.allow_decomposition = false
   -- Productivity follows the normal recipe (copied with it): the bonus is

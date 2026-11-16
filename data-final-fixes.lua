@@ -1,6 +1,5 @@
 require("util")
 
-require("prototypes.fixes.common.removed_fuel_category").data_final_fixes()
 require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
@@ -24,7 +23,6 @@ require("prototypes.fixes.common.research_data_surfaces").data_final_fixes()
 require("prototypes.compatibility.common.enemy_homes").data_final_fixes()
 require("prototypes.compatibility.common.enemy_planet_pollution").data_final_fixes()
 require("prototypes.compatibility.common.redundant_progression").data_final_fixes()
-require("prototypes.balance.common.water_loop").data_final_fixes()
 require("prototypes.ui.logistics_cleanup").data_final_fixes()
 require("prototypes.fixes.common.furnace_result_slots").data_final_fixes()
 require("prototypes.fixes.moon-eneas.eneas_gantry").data_final_fixes()
@@ -95,17 +93,17 @@ require("prototypes.compatibility.common.outer_science_arrival_guard").data_fina
 -- Interplanetary exchanges: the shared components first, then the exchange
 -- recipes that consume them (K2SO recipe names are settled by now).
 require("prototypes.industry.components.network_components").data_final_fixes()
+require("prototypes.compatibility.aai-signal-transmission.aai_signal_partnerships").data_final_fixes()
 require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()
 require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()
 
--- Handoffs between neighbouring systems, then placement of two mod technologies, then the tech tree filter.
+-- Handoffs between neighbouring systems, then placement of two mod technologies.
 require("prototypes.technology.gates.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.gates.galactic_mod_research").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
-require("prototypes.ui.tech_tree_visibility").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").data_final_fixes()
 
 -- Castra's exchange, then the exchanges that return component cargo; they run
@@ -142,6 +140,8 @@ require("prototypes.world.systems.abacayba_integration").gate()
 -- have documented exceptions and are never indiscriminately wiped.
 require("prototypes.world.routes.route_authority").data_final_fixes()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").connect_calidus()
+-- Solar Halo is reached from the inner Dyson orbit and makes no science packs from compute.
+require("prototypes.compatibility.Solar-Halo.solar_halo").data_final_fixes()
 -- Native Aegis links and asteroid fields settle after the two curated entries.
 require("prototypes.world.systems.bellicos").fortify_routes()
 
@@ -204,6 +204,7 @@ require("prototypes.industry.cards.system_card_laboratories").data_final_fixes()
 
 require("prototypes.technology.endgame.convergence").data_final_fixes()
 require("prototypes.technology.endgame.convergence_witness").data_final_fixes()
+require("prototypes.ui.tech_tree_visibility").data_final_fixes()
 
 -- Optional, off by default: a few robot and nuclear technologies (and Planet Express' trade research) are tied to the
 -- science of the first planets. Runs after every research and lab pass, so the lab check sees the final labs.
@@ -214,6 +215,10 @@ require("prototypes.technology.gates.distributed_industry").data_final_fixes()
 require("prototypes.world.starmap.starmap_trail_cleanup").data_final_fixes()
 require("prototypes.world.starmap.location_icons").data_final_fixes()
 
+-- Asteroid armor of the difficulty level (off on Easy and Normal). Before the quality carriers, which copy the
+-- resistances of their originals.
+require("prototypes.world.asteroids.asteroid_resistances").data_final_fixes()
+
 -- Optional, off by default: hostile asteroids on the routes can spawn with quality. Runs after every
 -- route and spawn-table edit so the carriers replace the final hostile entries. Resource chunks are untouched.
 require("prototypes.world.asteroids.quality_asteroids").data_final_fixes()
@@ -222,23 +227,26 @@ require("prototypes.world.asteroids.quality_asteroids").data_final_fixes()
 -- spawn scripts are left alone.
 require("prototypes.world.asteroids.asteroid_performance").data_final_fixes()
 
--- Carna's spire marker is taken off the copies other mods make of it (Tenebris Prime, Rabbasca). After every pass that could
--- copy or add a prototype, as the last edit of created_effect.
-require("prototypes.fixes.carna.carna_spire_copies").data_final_fixes()
-
 -- The deep mines and the entropic creation of Iridescent Industry and Arcanyx make ore out of nothing on any surface; Arcanyx's
 -- keep-Voidcraft-on-Arcanyx condition does not reach them. After every pass that could add a recipe, before the menu pass.
 require("prototypes.fixes.Arcanyx.arcanyx_from_nothing").data_final_fixes()
 
--- Lithium Battery (7.5.0 and older) deletes two recipe copies that Planet Crucible's productivity technologies still list, and
--- doubles a biter egg of the promethium research data with Maraxsis, in the research data and in the copy that 7.5.1 keeps.
--- After every pass that could add a recipe effect or ingredient, before the menu pass.
+-- Lithium Battery hides assembling machine 4 but its belt recipes still need a machine, and adds legacy Vesta ingredients
+-- that may not exist. After every pass that could add a recipe effect or ingredient, before the menu pass.
 require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 
 -- The stack inserter and the toolbelt equipment, which technology/nauvis_comforts.lua researches on Nauvis, are made of low density
 -- structure and plastic instead of Gleba's carbon fiber and jelly; their recycling and crushing return the same. After every pass that
 -- could copy these recipes, before the menu pass.
 require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()
+
+-- Crushing Industry rewrites ore recipes in data-updates; restore their ore inputs after recipe-copying passes,
+-- while leaving its separate crushing and enrichment routes available, before the crafting-menu pass.
+require("prototypes.balance.crushing-industry.ore_recipes").data_final_fixes()
+
+-- Hyarion and Foliax make promethium research data instead of cards, so every card takes a blank tech card like the Krastorio 2 chain.
+-- After recipe-copying passes (Igrys), before the menu pass.
+require("prototypes.balance.common.promethium_research_data").data_final_fixes()
 
 -- The metallurgic science pack research also unlocks the oxide asteroid crushing, so calcite comes from orbit at home
 -- once the player has been to Vulcanus. After the gates, which may move unlocks, before the menu pass.
@@ -277,9 +285,6 @@ require("prototypes.difficulty.biological_machines_difficulty").data_final_fixes
 -- so no planet escapes the scaling and no later pass sees half-scaled controls.
 require("prototypes.difficulty.razi_map_preset").data_final_fixes()
 
--- Convert eligible science packs after all research and recipes have settled.
-require("prototypes.industry.cards.auto_tech_cards").data_final_fixes()
-
 -- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
 require("prototypes.fixes.init").data_final_fixes()
 
@@ -295,7 +300,7 @@ require("prototypes.balance.planet-muluna.barrel_gates").data_final_fixes()
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
 
 -- Infinite research continues on system cards after its fifth level. The last pass: it copies research, and the repairs
--- above change research by name; the packs of the research are cards of their own by now when razi-auto-tech-cards is on.
+-- above change research by name.
 require("prototypes.balance.common.infinite_research_cards").data_final_fixes()
 
 -- The prototypes of nexus-bosses (copies of enemies, the nests of Nexus, the routes of the warp drive behind the trials), as the

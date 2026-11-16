@@ -1,6 +1,10 @@
 -- Standalone Lua 5.2 suite for source-aware asteroid distribution.
 package.path="./?.lua;./?/init.lua;"..package.path
 local function check(ok,msg) if not ok then error(msg,2) end end
+local edge_harvesting=false
+package.loaded["prototypes.world.asteroids.asteroid_profiles"]={
+  belt_harvesting=function() return edge_harvesting end
+}
 local chunks={
   ["imersite-asteroid-chunk"]={},
   ["auric-asteroid-chunk"]={},
@@ -70,7 +74,7 @@ local function def(route,name)
 end
 local original_shared=shared
 local changed=distribution.data_final_fixes()
-check(changed>=13,"Expected source-aware custom encounters were not added")
+check(changed>=11,"Expected source-aware custom encounters were not added")
 check(not def(routes.starter,"imersite-asteroid-chunk"),
   "Home-system starter route must remain free from imersite harvesting")
 check(not def(routes.starter,"auric-asteroid-chunk"),
@@ -127,6 +131,19 @@ check(def(secretas,"auric-asteroid-chunk")==original_custom,
   "Do not double the original Secretas stationary Auric field")
 check(not def(routes.moon,"foliax-charged-promethium-asteroid-chunk"),
   "Foliax's craft-only fuel chunk cannot spawn from empty space")
+check(not def(map["space-location"]["asteroid-belt-inner-edge"],
+    "imersite-asteroid-chunk")
+  and not def(map["space-location"]["asteroid-belt-outer-edge"],
+    "imersite-asteroid-chunk"),
+  "Disabled belt-edge harvesting must not add stationary Imersite")
+edge_harvesting=true
+check(distribution.data_final_fixes()==2,
+  "Enabled belt-edge harvesting should add Imersite to both edges")
+check(def(map["space-location"]["asteroid-belt-inner-edge"],
+    "imersite-asteroid-chunk")
+  and def(map["space-location"]["asteroid-belt-outer-edge"],
+    "imersite-asteroid-chunk"),
+  "Enabled belt-edge harvesting must keep both Imersite fields")
 local fields=distribution.classify_unknowns()
 check(fields.auric and fields.imersite,
   "Custom asteroid discovery must identify existing prototype families")

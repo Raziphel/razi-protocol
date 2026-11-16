@@ -14,18 +14,8 @@ local unlock_order = {}
 function unlock_order.data_final_fixes()
 	gate_recipe_to_technology(
 		{"kr-sand", "sand"},
-		{"crusher", "sand-processing"},
-		{"sand-processing"}
-	)
-	gate_recipe_to_technology(
-		{"open-chest-recycling", "2x-open-chest-recycling"},
-		{"recycler", "fluid-recycler"},
-		{"recycling", "fluid-recycler"}
-	)
-	gate_recipe_to_technology(
-		{"sand-compaction"},
-		{"fluid-recycler", "pneumatic-press"},
-		{"sand-processing"}
+		{"kr-stone-processing", "kr-crusher", "sand-processing"},
+		{"sand-processing", "crusher"}
 	)
 	gate_recipe_to_technology(
 		{"void-data-disk", "void-data-disk-black-hole"},
@@ -92,14 +82,14 @@ function unlock_order.data_final_fixes()
 		add_prerequisite(solaris, "agricultural-science-pack")
 	end
 
-	for _, technology_name in ipairs({"access-to-suns-orbit", "access-to-sun-orbit"}) do
+	for _, technology_name in ipairs({"access-to-sun-orbit"}) do
 		local orbit_access = technology(technology_name)
 		if orbit_access then
 			add_prerequisite(orbit_access, "metallurgic-science-pack")
 		end
 	end
 
-	for _, technology_name in ipairs({"aircraft-energy-shields", "lex-aircraft-energy-shields"}) do
+	for _, technology_name in ipairs({"aircraft-energy-shield", "lex-aircraft-energy-shields"}) do
 		local aircraft_shields = technology(technology_name)
 		if aircraft_shields then
 			add_prerequisite(aircraft_shields, "electromagnetic-science-pack")

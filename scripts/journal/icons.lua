@@ -61,4 +61,11 @@ function M.button(parent,path,role,tags,tooltip,name)
   return element
 end
 
+-- A status mark (scripts/journal/marks.lua) on a button smaller than tool_button's 28 px goes in as the button's
+-- sprite, which fits inside the padding. As rich text in the caption it keeps the font's line height and the
+-- button clips it (fac-bug-reports, 13.11.2026).
+function M.mark_sprite(mark)
+  return (mark:match("^%[img=(.+)%]$"))
+end
+
 return M

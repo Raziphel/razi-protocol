@@ -305,7 +305,8 @@ check(not has(cyclic.technology["razi-network-bond-paracelsin-coils"],
 rawset(_G,"settings",nil)
 
 -- Wiring in data-final-fixes: the components exist before the exchanges that
--- consume them, and the return-cargo exchanges run after the research passes.
+-- consume them, AAI partnerships follow those components, and the visibility
+-- pass waits until the Convergence technologies exist.
 local handle=assert(io.open("data-final-fixes.lua","r"))
 local source=handle:read("*a")
 handle:close()
@@ -316,8 +317,16 @@ local parts=position('require("prototypes.industry.components.network_components
 check(parts<position('require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()')
   and parts<position('require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixes()'),
   "Components must be created before their exchange recipes")
-local visibility=position('require("prototypes.ui.tech_tree_visibility").data_final_fixes()')
-check(position('require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixes()')>visibility
-  and position('require("prototypes.industry.components.network_components").register_premium()')>visibility,
+local partnerships=position('require("prototypes.compatibility.aai-signal-transmission.aai_signal_partnerships").data_final_fixes()')
+check(parts<partnerships
+  and partnerships<position('require("prototypes.industry.exchanges.planet_production_exchanges").data_final_fixes()'),
+  "AAI partnerships must run after the component technologies are created")
+local research_passes=position('require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()')
+check(research_passes<position('require("prototypes.industry.exchanges.first_frontier_industry").data_final_fixes()')
+  and research_passes<position('require("prototypes.industry.components.network_components").register_premium()'),
   "Return-cargo exchanges must run after the research passes")
+local visibility=position('require("prototypes.ui.tech_tree_visibility").data_final_fixes()')
+check(position('require("prototypes.technology.endgame.convergence").data_final_fixes()')<visibility
+  and position('require("prototypes.technology.endgame.convergence_witness").data_final_fixes()')<visibility,
+  "Tech tree visibility must run after the Convergence technologies are created")
 print("Shared factory parts, guarded return cargo and premium sinks passed")

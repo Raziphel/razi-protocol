@@ -13,6 +13,11 @@ rawset(_G,"data",{extend=function(_,items)
   for _,item in ipairs(items) do declared[item.name]=item end
 end})
 dofile("settings.lua")
+local removed_card_setting = "razi-" .. "auto-" .. "tech-cards"
+check(declared[removed_card_setting] == nil, "Automatic science cards must not be declared")
+for _, name in ipairs(P.managed) do
+	check(name ~= removed_card_setting, "Automatic science cards must not be managed")
+end
 local LEVELS={"easy","normal","hard","nightmare"}
 
 -- Every lever has a setting, its baseline is the setting's default, and every
@@ -73,21 +78,21 @@ end
 
 -- Table of levers by level.
 local expected={
-  easy={scale="balanced",population="sparse",belts="relaxed",ore="rich",
-    interdependence="balanced",distributed=false,auto_cards=false,quality=false},
-  normal={scale="balanced",population="standard",belts="standard",
-    ore="standard",interdependence="balanced",distributed=false,auto_cards=false,quality=false},
-  hard={scale="challenging",population="dense",belts="severe",
-    ore="scarce",interdependence="deep",distributed=true,auto_cards=true,quality=true},
-  nightmare={scale="relentless",population="dense",belts="severe",
-    ore="scarce",interdependence="deep",distributed=true,auto_cards=true,quality=true},
+  easy={scale="balanced",armor="standard",population="sparse",belts="relaxed",ore="rich",
+    interdependence="balanced",distributed=false,quality=false},
+  normal={scale="balanced",armor="standard",population="standard",belts="standard",
+    ore="standard",interdependence="balanced",distributed=false,quality=false},
+  hard={scale="challenging",armor="hardened",population="dense",belts="severe",
+    ore="scarce",interdependence="deep",distributed=true,quality=true},
+  nightmare={scale="relentless",armor="armored",population="dense",belts="severe",
+    ore="scarce",interdependence="deep",distributed=true,quality=true},
 }
 local names={scale="razi-asteroid-difficulty-scale",
+  armor="razi-asteroid-resistances",
   population="razi-asteroid-population",belts="razi-belt-threats",
   ore="razi-belt-resource-richness",
   interdependence="razi-planetary-interdependence",
   distributed="razi-distributed-technology",
-  auto_cards="razi-auto-tech-cards",
   quality="razi-quality-asteroids"}
 for level,row in pairs(expected) do
   startup(level)
@@ -191,25 +196,6 @@ check(P.effective("razi-distributed-technology")==false,"Custom keeps the saved 
 startup("custom",{["razi-distributed-technology"]=true})
 check(P.effective("razi-distributed-technology")==true,"Custom keeps a ticked value")
 
--- Automatic science cards: four levels, left alone or ticked by hand.
-for _,level in ipairs(LEVELS) do
-  local enabled=(level=="hard" or level=="nightmare")
-  startup(level)
-  check(P.effective("razi-auto-tech-cards",false)==enabled,
-    level..": default automatic science cards")
-  startup(level,{["razi-auto-tech-cards"]=true})
-  check(P.effective("razi-auto-tech-cards",false)==true,
-    level..": manually enabled science cards must stay on")
-end
-startup("hard")
-check(P.effective("razi-auto-tech-cards")==true,"Hard enables science cards")
-startup("custom")
-check(P.effective("razi-auto-tech-cards")==false,
-  "Custom keeps automatic science cards off")
-startup("custom",{["razi-auto-tech-cards"]=true})
-check(P.effective("razi-auto-tech-cards")==true,
-  "Custom keeps manually enabled science cards")
-
 -- Ticking it on Normal makes the session Custom but still honours the tick.
 startup("normal",{["razi-distributed-technology"]=true})
 check(P.active()=="custom","A manual change reports Custom")
@@ -253,9 +239,7 @@ local function text(path)
 end
 for _,lang in ipairs({"en","ru"}) do
   local cfg=text("locale/"..lang.."/settings.cfg")
-  local names_cfg=text("locale/"..lang.."/names.cfg")
   local keys={"razi-difficulty-preset","razi-asteroid-difficulty-scale",
-    "razi-auto-tech-cards",
     "razi-default-new-game-map"}
   for _,v in ipairs(declared["razi-resource-loops"].allowed_values) do
     keys[#keys+1]="razi-resource-loops-"..v
@@ -284,12 +268,6 @@ for _,lang in ipairs({"en","ru"}) do
     lang.." misses the level description")
   check(description:find("\nrazi-resource-loops=",1,true),
     lang.." misses the description of the recipe loops")
-  check(description:find("\nrazi-auto-tech-cards=",1,true),
-    lang.." misses the automatic science cards description")
-  local card_section=names_cfg:match("\n%[razi%-auto%-card%]\n(.*)")
-  check(card_section and card_section:find("name=",1,true)
-    and card_section:find("\ndescription=",1,true),
-    lang.." misses automatic card names and descriptions")
   for name in pairs(map_levers) do
     check(description:find("\n"..name.."=",1,true),
       lang.." misses the description of "..name)

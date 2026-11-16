@@ -9,6 +9,6 @@ local runner = require("__funit__.test_runner")
 runner.register("razi-protocol")
 runner.report("razi")
 
-for _, suite in ipairs({"start", "journal", "technology", "recipes"}) do
+for _, suite in ipairs({"start", "journal", "technology", "recipes", "asteroids"}) do
 	require("__zzz-razi-funit__.suites." .. suite)(runner)
 end

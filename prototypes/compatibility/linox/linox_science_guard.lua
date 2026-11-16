@@ -1,6 +1,7 @@
 -- Linox is a late Beetlejuice destination.
 -- Its hard-mode science cannot be required to discover Linox itself.
 local compat = {}
+local item_exists = require("prototypes.fixes.common.sanity_helpers").item_exists
 
 local late_science = "linox-item_linox-science-pack"
 local protected_destinations = {
@@ -26,8 +27,7 @@ end
 -- was a technology's entire science requirement.
 local function first_early_science()
   for _, pack in ipairs({"calidus-tech-card", "space-science-pack"}) do
-    if (data.raw.tool and data.raw.tool[pack])
-      or (data.raw.item and data.raw.item[pack]) then
+    if item_exists(pack) then
       for _, lab in pairs(data.raw.lab or {}) do
         for _, input in ipairs(lab.inputs or {}) do
           if input==pack then return pack end

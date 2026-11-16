@@ -7,6 +7,15 @@ local function raw(kind, name)
   return data.raw[kind] and data.raw[kind][name]
 end
 
+local item_families = {"item", "tool", "module", "ammo", "capsule"}
+
+local function visible_item(name)
+  for _, family in ipairs(item_families) do
+    local item = raw(family, name)
+    if item and not item.hidden then return item end
+  end
+end
+
 local function deepcopy(value)
   return table.deepcopy(value)
 end
@@ -23,11 +32,7 @@ local function valid_ingredient(entry)
     local fluid = raw("fluid", name)
     return fluid and not fluid.hidden
   end
-  for _, family in ipairs({"item", "tool", "module", "ammo", "capsule"}) do
-    local item = raw(family, name)
-    if item and not item.hidden then return true end
-  end
-  return false
+  return visible_item(name) ~= nil
 end
 
 local function technologies()
@@ -286,7 +291,7 @@ local function recipe_icon(base, product, bonus)
       return nil
     end
   end
-  local marker = raw("item", bonus)
+  local marker = visible_item(bonus)
   -- Community items and Razi's own shared components may use layered
   -- `icons` without a plain `icon`. Show the shipping input on the
   -- premium recipe regardless of which valid icon representation it uses.

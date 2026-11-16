@@ -8,6 +8,13 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
+		name = "razi-loader-insert-limits",
+		setting_type = "startup",
+		default_value = true,
+		order = "ca[quality-of-life]-a2[loader-insert-limits]"
+	},
+	{
+		type = "bool-setting",
 		name = "razi-curated-space-routes",
 		setting_type = "startup",
 		default_value = true,
@@ -51,7 +58,7 @@ data:extend({
 		name = "razi-route-overlay-mode",
 		setting_type = "startup",
 		default_value = "danger",
-		allowed_values = {"off", "danger", "chapter"},
+		allowed_values = {"off", "danger"},
 		order = "ca[quality-of-life]-c[route-overlay-mode]"
 	},
 	{

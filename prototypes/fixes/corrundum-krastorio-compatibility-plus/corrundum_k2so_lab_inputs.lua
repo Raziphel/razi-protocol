@@ -3,10 +3,7 @@ local corrundum_k2so_lab_inputs = {}
 local obsolete_input = "xy-electrochemical-research-data"
 local replacement_input = "electrochemical-science-pack"
 
-local function item_exists(name)
-	return (data.raw.item and data.raw.item[name])
-		or (data.raw.tool and data.raw.tool[name])
-end
+local item_exists = require("prototypes.fixes.common.sanity_helpers").item_exists
 
 function corrundum_k2so_lab_inputs.data_final_fixes()
 	if not (mods["corrundum-krastorio-compatibility-plus"]

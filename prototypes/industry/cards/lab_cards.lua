@@ -35,7 +35,7 @@ local system_card_definitions = {
 		unlock_technology_candidates = {"planet-discovery-castra"},
 		ingredients = {
 			"calidus-tech-card", "metallurgic-science-pack",
-			"tungsten-science-pack", "battlefield-science-pack",
+			"battlefield-science-pack",
 			"planetaris-compression-science-pack",
 			"planetaris-polishing-science-pack",
 			"planetaris-bioengineering-science-pack"
@@ -146,7 +146,6 @@ local system_card_definitions = {
 local modded_science_ids = {
 	"space-logistic-science-pack",
 	"pulsar-science-pack",
-	"lunar-science-pack",
 	"interstellar-science-pack",
 	"advanced-space-science-pack",
 	"cerysian-science-pack",
@@ -166,7 +165,6 @@ local modded_science_ids = {
 	"biorecycling-science-pack",
 	"rubia-biofusion-science-pack",
 	"galvanization-science-pack",
-	"paracelsin-galvanization-science-pack",
 	"hydraulic-science-pack",
 	"bioluminescent-science-pack",
 	"gas-manipulation-science-pack",

@@ -21,6 +21,8 @@ require("prototypes.fixes.tenebris-prime.bioluminescent_references").data_update
 require("prototypes.world.systems.calidus_sun").data_updates()
 require("prototypes.world.systems.abacayba_integration").data_updates()
 require("prototypes.world.starmap.galaxy_layout").data_updates()
+-- Nuclear Steps orbits Gleba, which galaxy_layout has just placed.
+require("prototypes.compatibility.nuclear-steps.asteroid_field").data_updates()
 -- Source starfields must be positioned before PlanetsLib's irreversible
 -- sprite-only star cleanup; the Aegis orbit artwork is kept.
 require("prototypes.world.systems.bellicos").data_updates()

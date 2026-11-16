@@ -4,7 +4,7 @@
 local M = {}
 
 M.systems = {
-	calidus = {"muluna"},
+	calidus = {"lignumis", "muluna"},
 	solaris = {"vulcanus", "castra", "arig", "hyarion", "tellus", "corrundum", "igrys"},
 	nyxaris = {"gleba", "moshine", "apia-carnova-orbit", "panglia", "foliax", "rabbasca", "velora",
 		"terrapalus", "pelagos", "planet-dea-dia"},

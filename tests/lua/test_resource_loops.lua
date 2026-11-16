@@ -50,4 +50,40 @@ for _, row in ipairs({ { "normal", "closed" }, { "hard", "closed" } }) do
 	loops.data_final_fixes()
 end
 
+local water_recipes = {
+	["water-electrolysis-shchierbin"] = { allow_productivity = true, maximum_productivity = 0.5 },
+	ske_h2o = { allow_productivity = true, maximum_productivity = 0.5 },
+	ske_water_electrolysis = { allow_productivity = true, maximum_productivity = 0.5 },
+}
+support.level("custom", "open")
+local raw = support.install(water_recipes)
+local water_before = support.copy(raw.recipe)
+loops.data_final_fixes()
+check(support.same(raw.recipe, water_before), "Open: water recipes keep their productivity")
+check(#support.logs == 0, "Open: water recipes log no changes")
+
+support.level("custom", "closed")
+raw = support.install(support.copy(water_recipes))
+loops.data_final_fixes()
+for _, name in ipairs({ "water-electrolysis-shchierbin", "ske_h2o", "ske_water_electrolysis" }) do
+	local recipe = raw.recipe[name]
+	check(recipe.allow_productivity == false and recipe.maximum_productivity == 0,
+		"Closed: " .. name .. " takes no productivity")
+	check(support.logged(name .. " takes no productivity") == 1,
+		"Closed: " .. name .. " logs its change once")
+end
+
+local already_closed = support.copy(water_recipes)
+for _, recipe in pairs(already_closed) do
+	recipe.allow_productivity = false
+	recipe.maximum_productivity = 0
+end
+raw = support.install(already_closed)
+loops.data_final_fixes()
+check(support.same(raw.recipe, already_closed), "Closed: water recipes already take no productivity")
+for _, name in ipairs({ "water-electrolysis-shchierbin", "ske_h2o", "ske_water_electrolysis" }) do
+	check(support.logged(name .. " takes no productivity") == 0,
+		"Closed: " .. name .. " does not log without a change")
+end
+
 print("test_resource_loops: ok")

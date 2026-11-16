@@ -37,7 +37,7 @@ Razi Protocol treats the galaxy like a sequence of chapters instead of a flat bu
 
 ### Calidus
 
-Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, and optional Eneas support. This is where the pack establishes the first milestone card: Calidus Tech Card.
+Calidus is the early foundation chapter. It covers the base Space Age setup and the first inner-system layer, including Muluna, optional Cerys, optional Eneas support, and the optional Lignumis start. This is where the pack establishes the first milestone card: Calidus Tech Card.
 
 ### Aegis and Bellicos
 
@@ -85,6 +85,7 @@ Several planets are not just "supported"; they are deliberately placed into the 
 - Bellicos and Aegis retain their complete internal stargate, Warden, asteroid, and pulsar route, but enter the wider campaign from Solaris and Nyxaris. Their original direct Nauvis and Fulgora links are removed to avoid bypassing Razi Protocol's chapter structure.
 
 - Eneas stays an optional early Calidus moon branch when installed.
+- Lignumis is an optional start. With the Lignumis mod enabled, a new game starts on that wooden moon of Nauvis and reaches Nauvis with its wooden rocket; without it the game starts on Nauvis as before. Added to a running game, Lignumis keeps the players where they are: the moon opens with its discovery research (10 automation science), and green circuits take its circuit boards unless its startup setting "Enable telescopic circuit recipes" is off. Lignumis CF stays incompatible: it adds the wood and steam packs to every later research.
 - Every installed world is researched before the gateways of the next system, unless Planetary interdependence is Off: worlds of Solaris and Nyxaris (Igrys, Foliax, Velora, Rabbasca, Pelagos, Terra Palus) before Vibrant and Vespera, worlds of Vibrant and Vespera (Cerys, Khemia, Shchierbin, Athos, Nulla) before Beetlejuice and Umbra, worlds of Beetlejuice and Umbra (Ferrum, Carna, Arcanyx, Obsidiax) and Bellicos before Outer Frontier Mastery. Balack, Skewer Shattered, Rabbasca Underground, Eneas and Nexus stay off the required path.
 - Muria is integrated into the Vibrant chapter ahead of Aquilo.
 - Shchierbin now branches from Paracelsin instead of hanging directly off the Vibrant slipstream.
@@ -141,7 +142,7 @@ It also includes a few narrow balance passes for overlapping unlocks where two p
 
 ## Orbital Salvage
 
-[Razi Rocket Reusability](https://mods.factorio.com/mod/razi-rocket-reusability) (1.1.5 or newer) is a required mod: after a rocket launch a used rocket can drift in next to a space platform, its chunks are crushed back into rocket parts, and the Remnant Beacon draws the wrecks in. Razi Protocol leaves that mod's recipes, research and settings as they are and adds up to three optional bulk-crushing technologies on top: Precision Rocket Reclamation (Remnant Beacon and Fulgora), Cryogenic Rocket Reclamation (Aquilo) and Network Rocket Reclamation (the Precision Control Matrix and Planet Express' interplanetary trade logistics). Network Rocket Reclamation appears only when the Precision Control Matrix research exists (the Planetary interdependence startup setting is not Off) and Planet Express is installed. Each technology processes several chunks per craft, copies the native salvage outputs of the installed pack with a small handling bonus and allows no productivity. Native Rocket Chunk Processing stays available, and none of this gates a planet.
+[Razi Rocket Reusability](https://mods.factorio.com/mod/razi-rocket-reusability) (at the version that `info.json` asks for) is a required mod: after a rocket launch a used rocket can drift in next to a space platform, its chunks are crushed back into rocket parts, and the Remnant Beacon draws the wrecks in. Razi Protocol leaves that mod's recipes, research and settings as they are and adds up to three optional bulk-crushing technologies on top: Precision Rocket Reclamation (Remnant Beacon and Fulgora), Cryogenic Rocket Reclamation (Aquilo) and Network Rocket Reclamation (the Precision Control Matrix and Planet Express' interplanetary trade logistics). Network Rocket Reclamation appears only when the Precision Control Matrix research exists (the Planetary interdependence startup setting is not Off) and Planet Express is installed. Each technology processes several chunks per craft, copies the native salvage outputs of the installed pack with a small handling bonus and allows no productivity. Native Rocket Chunk Processing stays available, and none of this gates a planet.
 
 ## Compatibility Focus
 
@@ -195,9 +196,9 @@ Core content in the intended experience includes:
 - Ribbonia
 - Paracelsin
 
-Optional supported branches include Dea Dia, Pelagos, Nexus, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+Dea Dia and Pelagos are supported when those mods are installed. Other optional supported branches include Nexus, Lignumis, Solar Halo, Nuclear Steps, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
-Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground and Secretas Orbit Patch.
+Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground, Secretas Orbit Patch, Rate Calculator and What Items Do I Have?
 
 ## Modpack Guidance
 
@@ -205,8 +206,9 @@ For the best results:
 
 - Use the dependency list in `info.json` as the source of truth.
 - Updating a save made with 2.x: [docs/updating-from-2x.md](docs/updating-from-2x.md).
-- Install RAZI Library 1.3.1 or newer and Razi More Asteroids 1.1.0 or newer; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
-- Install Razi Rocket Reusability 1.1.5 or newer; it is a required mod now, and the original Rocket Reusability is incompatible with it.
+- Install RAZI Library and Razi More Asteroids at the versions that `info.json` asks for; both are required. The library is the shared foundation used directly by Razi Protocol's data-stage compatibility code, and the asteroid mod supplies the eight asteroid families that Razi Protocol lays out across its systems.
+- Install Razi Rocket Reusability at the version that `info.json` asks for; it is a required mod now, and the original Rocket Reusability is incompatible with it.
+- Heavy Gun Turret and Heavy Gun Turret - Krastorio 2 compatibility are required: the heavy gun turret follows the range and physical projectile damage bonus Krastorio 2 gives the gun turret, so it is no longer weaker than the turret it is made from.
 - Treat unsupported route overhauls as incompatible unless explicitly patched.
 - Be cautious with collision-layer-heavy add-ons.
 - Expect Razi Protocol to disagree with mods that try to define their own parallel late game.

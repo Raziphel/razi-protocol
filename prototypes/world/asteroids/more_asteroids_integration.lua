@@ -220,7 +220,7 @@ local function apply_orbits(solar)
   for _, kind in ipairs({"planet", "space-location"}) do
     for name, loc in pairs(data.raw[kind] or {}) do
       local mix=mix_for(name)
-      if mix and not is_solar(name, solar) and name~="razi-deep-space-edge"
+      if mix and not is_solar(name, solar) and name~="solar-system-edge"
         and not (ladder.is_belt_edge(name) and not profiles.belt_harvesting()) then
         local original=loc.asteroid_spawn_definitions or {}
         local present={}

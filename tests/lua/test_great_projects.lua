@@ -69,6 +69,18 @@ start.space_location={name="solar-system-edge"}
 start.completed_trips=8
 check(m.observe(start),"A qualifying deep space arrival should count")
 check(select(1,m.ark(force))==1,"Ark should complete after actual expedition")
+local false_edge_force={index=3,platforms={}}
+local false_edge={valid=true,hub={valid=true},index=303,force=false_edge_force,
+  name="False Edge Ark",scheduled_for_deletion=0,weight=1250000,surface=surface,
+  completed_trips=1,last_visited_space_location={name="nexus"},
+  space_connection={from="nexus",to="razi-deep-space-edge"}}
+false_edge_force.platforms[1]=false_edge
+m.observe(false_edge)
+false_edge.space_connection=nil
+false_edge.space_location={name="razi-deep-space-edge"}
+false_edge.completed_trips=2
+check(not m.observe(false_edge) and select(1,m.ark(false_edge_force))==0,
+  "A fabricated deep-space location must not complete the Ark project")
 local source={planet={name="nauvis"}}
 local destination={planet={name="fulgora"}}
 local qty=20

@@ -3,15 +3,19 @@ local hide_recipes = {}
 -- Takes working recipes out of the game for the balance files: a recipe is disabled and hidden, its unlock effects go,
 -- and a technology left with nothing to unlock is hidden unless another technology requires it. Recipes that do not
 -- exist are skipped.
-function hide_recipes.hide(names)
+function hide_recipes.hide(names, recipe_log_message)
 	local removed = {}
 	for _, name in ipairs(names) do
 		local recipe = data.raw.recipe[name]
 		if recipe then
+			local changed = recipe.hidden ~= true or recipe.enabled ~= false
 			recipe.enabled = false
 			recipe.hidden = true
 			removed[name] = true
-			log("razi-protocol: recipe " .. name .. " hidden")
+			if changed then
+				log(recipe_log_message and recipe_log_message(name)
+					or "razi-protocol: recipe " .. name .. " hidden")
+			end
 		end
 	end
 
@@ -40,6 +44,8 @@ function hide_recipes.hide(names)
 		data.raw.technology[technology_name].hidden = true
 		log("razi-protocol: technology " .. technology_name .. " hidden: nothing left to unlock")
 	end
+
+	return emptied
 end
 
 return hide_recipes

@@ -7,10 +7,6 @@ set_technology_unit_ingredients_if_exists("planet-discovery-moshine", build_inte
 		"space-science-pack",
 		"electromagnetic-science-pack",
 		"planetaris-polishing-science-pack",
-		"lithium-science-pack",
 		"aerospace-science-pack"
 	},
-	extra_science_packs = {
-		"tungsten-science-pack"
-	}
 }))

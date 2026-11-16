@@ -54,6 +54,23 @@ check(raw["loader-1x1"]["hidden-loader"].respect_insert_limits == true, "loader-
 check(logged("respects the insertion limit") == 3, "Expected one line for each of the three changed loaders, got " .. logged("respects the insertion limit"))
 check(logs[1]:find("^razi%-protocol: "), "The line does not start with the mod name")
 
+-- loader_insert_limits off
+raw = fresh()
+raw.loader = {
+  ["kr-loader"] = {type = "loader"},
+  ["kr-fast-loader"] = {type = "loader", respect_insert_limits = false},
+  ["kr-done"] = {type = "loader", respect_insert_limits = true},
+}
+raw["loader-1x1"] = {["hidden-loader"] = {type = "loader-1x1"}}
+rawset(_G, "settings", {startup = {["razi-loader-insert-limits"] = {value = false}}})
+fixes.data_final_fixes()
+check(raw.loader["kr-loader"].respect_insert_limits == nil, "A loader was changed with insertion limits off")
+check(raw.loader["kr-fast-loader"].respect_insert_limits == false, "A loader flag was changed with insertion limits off")
+check(raw.loader["kr-done"].respect_insert_limits == true, "A loader flag was changed with insertion limits off")
+check(raw["loader-1x1"]["hidden-loader"].respect_insert_limits == nil, "A loader-1x1 was changed with insertion limits off")
+check(#logs == 0, "A loader logged with insertion limits off")
+rawset(_G, "settings", nil)
+
 -- roboport_mode_names
 raw = fresh()
 local function roboport(name, localised_name, localised_description)

@@ -17,21 +17,12 @@ local function first_existing_recipe(names)
 end
 
 local function item_exists(name)
-	return
-		(data.raw.item and data.raw.item[name]) or
-		(data.raw.tool and data.raw.tool[name]) or
-		(data.raw.module and data.raw.module[name]) or
-		(data.raw["item-with-entity-data"] and data.raw["item-with-entity-data"][name]) or
-		(data.raw["rail-planner"] and data.raw["rail-planner"][name]) or
-		(data.raw["ammo"] and data.raw["ammo"][name]) or
-		(data.raw["capsule"] and data.raw["capsule"][name]) or
-		(data.raw["gun"] and data.raw["gun"][name]) or
-		(data.raw["repair-tool"] and data.raw["repair-tool"][name]) or
-		(data.raw["armor"] and data.raw["armor"][name]) or
-		(data.raw["selection-tool"] and data.raw["selection-tool"][name]) or
-		(data.raw["copy-paste-tool"] and data.raw["copy-paste-tool"][name]) or
-		(data.raw["deconstruction-item"] and data.raw["deconstruction-item"][name]) or
-		(data.raw["spidertron-remote"] and data.raw["spidertron-remote"][name])
+	for type_name in pairs(defines.prototypes.item) do
+		local prototype = data.raw[type_name] and data.raw[type_name][name]
+		if prototype then
+			return prototype
+		end
+	end
 end
 
 local function first_existing_item(names)
