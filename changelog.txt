@@ -1,4 +1,48 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.0
+Date: 2026-11-16
+  Features:
+    - Advanced Target Priorities lists every asteroid of the game
+    - asteroid armor on Hard and Nightmare: every size is tougher against the weapon meant for it
+    - Lignumis can be the start: with the mod enabled a new game begins on that wooden moon of Nauvis, without it on Nauvis as before; the moon belongs to Calidus
+    - Nuclear Steps joins Nyxaris as a side trip from Gleba
+    - Rate Calculator and What Items Do I Have? are recommended, EvoFilter is optional
+    - [settings] setting to let loaders fill machines past the insertion limit
+    - Solar Halo joins Calidus next to the Dyson sphere
+    - Space Route Overlay draws the routes in the colours of their levels
+    - the heavy gun turret follows Krastorio 2's gun turret bonuses
+  Bugfixes:
+    - asteroid armor on Hard and Nightmare reaches huge asteroids hit by Rubia's railgun damage and big ones hit by K2 rockets, and applies to saves already started
+    - [balance] concrete, ore melting, thruster oxidizer, tungsten plate and holmium solution take ore again, crushing stays optional
+    - [balance] Hyarion and Foliax promethium recipes make research data, so every card takes a blank tech card
+    - [balance] Krastorio 2 glass recycling returns half a sand also with AAI Industry
+    - [cards] the Lab-ready science cards are gone, cards in saves turn back into their packs
+    - [compat] drop fixes the upstream mods already ship, Carna spire copies work as spires again
+    - [compat] Krastorio 2 with AAI Industry unlocks wood from sand again and the lab only once
+    - [compat] the Paracelsin planet keeps its calcium crystals and cryovolcanic vents when Nexus loads after Paracelsin
+    - Dea Dia, Pelagos and Flare Stack always load before razi, which patches them; checks for the Nexus forks are gone
+    - Dyson Sphere (legacy) is marked incompatible: it defines the same prototypes as the Dyson Sphere fork that razi requires
+    - Eneas supply deliveries no longer stop the game with an unknown Construction_Drone item
+    - Eneas's friend-tech research has a name and a description instead of an unknown key
+    - Even Distribution (updated) by johnmart19 is incompatible: the Even Distribution fork by Jhorr, which razi recommends, refuses to load next to it
+    - Flare Stack flares crude oil, heavy oil, ethanol and other fluids with the pollution of their fluid
+    - [journal] status marks on quest rows and chapter heads fit their buttons
+    - K2 rockets meet the asteroid armor on Hard and Nightmare also when an asteroid mod declares its own kr-explosion resistance
+    - [migration] a 2.x save gets the route to every planet it has unlocked
+    - [progression] K2 sand opens with stone processing, Convergence order in the tech tree, AAI partnerships wired
+    - [progression] technologies of hidden tier-4 assemblers are hidden instead of staying empty
+    - requires Bellicos and Aegis 0.4.7, which unlocks its Hyarion alternate recipes together with the originals
+    - [routes] Bellicos native route, deep-space catalog, belt-edge and difficulty checks for asteroids
+    - [runtime] 2.x restore skips unknown prototypes, Skybridge contracts survive force merges, cached Convergence radar check
+    - [settings] Crushing Industry coal crushing is off by default
+    - Solar Halo's discovery follows the Dyson orbit whatever its other prerequisites
+    - Tellus magnesium sheets take productivity like the other plates
+    - the game loads with Crushing Industry's crushed ore off
+    - the journal redraws when research is reversed
+    - the radar milestone of the journal comes after green science, which Krastorio 2 requires for the radar
+    - [types] great projects record fields are declared, the EmmyLua check on dev passes again
+    - [ui] fluid barreling group finds 2.x barrel recipes, railgun turrets keep their own groups, resource-loop setting covers the water loop
+---------------------------------------------------------------------------------------------------
 Version: 3.1.3
 Date: 2026-11-12
   Bugfixes:
