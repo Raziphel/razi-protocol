@@ -29,6 +29,7 @@ local raw = {
     ["crushing-industry-concrete-mix"] = { default_value = true },
     ["crushing-industry-space-crusher-quality"] = { default_value = true },
     ["crushing-industry-ore"] = { default_value = true },
+    ["crushing-industry-coal"] = { default_value = true },
     ["rigor-module-compatibility-mode"] = { default_value = false },
     ["rigor-module-compatibility-mode-include-vanilla"] = { default_value = true },
     ["rigor-module-disable-rigor-effect"] = { default_value = false },
@@ -91,6 +92,10 @@ for _, name in ipairs({ "nulla-science-promethium", "crushing-industry-ore" }) d
   local setting = raw["bool-setting"][name]
   check(setting.default_value == true and setting.forced_value == nil and setting.hidden == nil, name .. " must stay untouched")
 end
+---@type table
+local crushing_coal = raw["bool-setting"]["crushing-industry-coal"]
+check(crushing_coal.default_value == false and crushing_coal.forced_value == nil and crushing_coal.hidden == nil,
+  "crushing-industry-coal must default to off and stay visible to the player")
 
 -- The other settings of Rigor Module stay as they are.
 ---@type table
