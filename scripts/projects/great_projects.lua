@@ -9,6 +9,18 @@ local valid_crossings={
   umbra={"razi-umbra-belt-inner","razi-umbra-belt-outer"}
 }
 M.ark_weight=1000000
+---@class RaziGreatProjectsRecord
+---@field belts table<string, boolean>
+---@field pending table<integer, table>
+---@field skybridge table
+---@field archive_recovered integer?
+---@field ark boolean?
+---@field ark_name string?
+
+---@return table<integer, RaziGreatProjectsRecord>?
+local function records()
+  return storage and storage.razi_great_projects
+end
 local function store(force)
   if not (storage and force and force.index) then return nil end
   storage.razi_great_projects=storage.razi_great_projects or {}
@@ -107,7 +119,7 @@ function M.array(force)
   return #sites,3,sites
 end
 function M.recovered(force)
-  local all=storage and storage.razi_great_projects
+  local all=records()
   local record=all and force and all[force.index]
   return record and record.archive_recovered or 0
 end
@@ -279,7 +291,7 @@ end
 -- builds. Only forces with an actual recorded outgoing crossing are checked
 -- every 300 ticks; no idle-platform, entity or surface scans occur.
 function M.flush_pending(forces)
-  local all=storage and storage.razi_great_projects
+  local all=records()
   if not all then return false end
   local changed=false
   for force_index,state in pairs(all) do
@@ -307,7 +319,7 @@ function M.flush_pending(forces)
 end
 
 function M.forces_merged(event)
-  local all=storage and storage.razi_great_projects
+  local all=records()
   if not (all and event) then return end
   local source=all[event.source_index]
   if not source then return end
