@@ -4,6 +4,7 @@ local pinned_foreign_settings = {}
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
 -- removes what Razi Protocol relies on, of Rigor Module (which Planet Crucible requires) whose default would push
 -- the recipe count past the engine limit, and of Renai Transportation, whose parts Ribbonia needs. Each is pinned and hidden; a missing mod or setting is skipped.
+-- Crushing Industry's coal-crushing default is kept separately in default_only_bool_settings, where only its default changes.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -76,6 +77,12 @@ local pinned_string_settings = {
 	["s6x-ii-krastorio-overlap-tech"] = "kr",
 }
 
+-- Crushing Industry's coal setting replaces coal in recipes at crushing-industry_0.6.9/base-data-updates.lua:83-94.
+-- Keep it visible and change only its default so a saved player choice still wins.
+local default_only_bool_settings = {
+	["crushing-industry-coal"] = false,
+}
+
 function pinned_foreign_settings.settings_final_fixes()
 	local adjust_maraxsis = data.raw["bool-setting"] and data.raw["bool-setting"]["adjust-maraxsis"]
 
@@ -100,6 +107,13 @@ function pinned_foreign_settings.settings_final_fixes()
 			setting.default_value = value
 			setting.allowed_values = { value }
 			setting.hidden = true
+		end
+	end
+
+	for name, value in pairs(default_only_bool_settings) do
+		local setting = data.raw["bool-setting"] and data.raw["bool-setting"][name]
+		if setting then
+			setting.default_value = value
 		end
 	end
 end

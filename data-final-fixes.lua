@@ -240,6 +240,10 @@ require("prototypes.fixes.LithiumBattery.lithium_battery").data_final_fixes()
 -- could copy these recipes, before the menu pass.
 require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes()
 
+-- Crushing Industry rewrites ore recipes in data-updates; restore their ore inputs after recipe-copying passes,
+-- while leaving its separate crushing and enrichment routes available, before the crafting-menu pass.
+require("prototypes.balance.crushing-industry.ore_recipes").data_final_fixes()
+
 -- The metallurgic science pack research also unlocks the oxide asteroid crushing, so calcite comes from orbit at home
 -- once the player has been to Vulcanus. After the gates, which may move unlocks, before the menu pass.
 require("prototypes.balance.space-age.space_calcite").data_final_fixes()
@@ -277,9 +281,6 @@ require("prototypes.difficulty.biological_machines_difficulty").data_final_fixes
 -- so no planet escapes the scaling and no later pass sees half-scaled controls.
 require("prototypes.difficulty.razi_map_preset").data_final_fixes()
 
--- Convert eligible science packs after all research and recipes have settled.
-require("prototypes.industry.cards.auto_tech_cards").data_final_fixes()
-
 -- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
 require("prototypes.fixes.init").data_final_fixes()
 
@@ -295,7 +296,7 @@ require("prototypes.balance.planet-muluna.barrel_gates").data_final_fixes()
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
 
 -- Infinite research continues on system cards after its fifth level. The last pass: it copies research, and the repairs
--- above change research by name; the packs of the research are cards of their own by now when razi-auto-tech-cards is on.
+-- above change research by name.
 require("prototypes.balance.common.infinite_research_cards").data_final_fixes()
 
 -- The prototypes of nexus-bosses (copies of enemies, the nests of Nexus, the routes of the warp drive behind the trials), as the

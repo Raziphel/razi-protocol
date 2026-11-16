@@ -23,13 +23,6 @@ data:extend({
 	},
 	{
 		type = "bool-setting",
-		name = "razi-auto-tech-cards",
-		setting_type = "startup",
-		default_value = false,
-		order = "ba[integration]-d[auto-tech-cards]"
-	},
-	{
-		type = "bool-setting",
 		name = "razi-infinite-research-cards",
 		setting_type = "startup",
 		default_value = true,
