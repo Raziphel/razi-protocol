@@ -4,6 +4,8 @@ local recycling_returns = {}
 -- recipe that is really used. Each is brought to a quarter of the cheapest recipe:
 -- - glass-recycling: from Moshine's glass (4 sand -> 1), 50 % of the K2 recipe (16 sand -> 8 glass); 1 glass returns
 --   half a sand;
+-- - kr-glass-recycling: with AAI Industry, from its glass (4 sand -> 1 K2 glass,
+--   aai-industry/prototypes/phase-1/recipe/recipe.lua:28-40), 50 % of the K2 recipe; 1 glass returns half a sand;
 -- - gold-plate-recycling: from secretas' gold-plate-alt (4 ore -> 1 plate), 100 % of the main chain (1 ore a plate):
 --   a quarter of an ore.
 local function results_of(name)
@@ -35,6 +37,9 @@ end
 function recycling_returns.data_final_fixes()
 	if total_of("glass-recycling", "kr-sand") == 1 then
 		set_fraction("glass-recycling", "kr-sand", 0.5)
+	end
+	if total_of("kr-glass-recycling", "kr-sand") == 1 then
+		set_fraction("kr-glass-recycling", "kr-sand", 0.5)
 	end
 	if total_of("gold-plate-recycling", "gold-ore") == 1 then
 		set_fraction("gold-plate-recycling", "gold-ore", 0.25)

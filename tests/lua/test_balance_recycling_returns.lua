@@ -12,6 +12,7 @@ local fix = require("prototypes.balance.Krastorio2.recycling_returns")
 local function fixture()
 	return {
 		["glass-recycling"] = { results = { { type = "item", name = "kr-sand", amount = 1 } } },
+		["kr-glass-recycling"] = { results = { { type = "item", name = "kr-sand", amount = 1, extra_count_fraction = 0 } } },
 		["gold-plate-recycling"] = { results = { { type = "item", name = "gold-ore", amount = 1, extra_count_fraction = 0 } } },
 		["kr-crush-burner-inserter"] = { results = {
 			{ type = "item", name = "kr-inserter-parts", amount = 1 }, { type = "item", name = "iron-plate", amount = 1 } } },
@@ -23,18 +24,30 @@ fix.data_final_fixes()
 local recipes = raw.recipe
 check(recipes["glass-recycling"].results[1].amount == 0 and recipes["glass-recycling"].results[1].extra_count_fraction == 0.5,
 	"Glass returns half a sand")
+check(recipes["kr-glass-recycling"].results[1].amount == 0 and recipes["kr-glass-recycling"].results[1].extra_count_fraction == 0.5,
+	"K2 glass returns half a sand")
 check(recipes["gold-plate-recycling"].results[1].amount == 0 and recipes["gold-plate-recycling"].results[1].extra_count_fraction == 0.25,
 	"A gold plate returns a quarter of an ore")
 check(recipes["kr-crush-burner-inserter"].results[1].amount == 0 and recipes["kr-crush-burner-inserter"].results[1].extra_count_fraction == 0.5
 	and recipes["kr-crush-burner-inserter"].results[2].amount == 1, "The burner inserter crusher returns half a part and keeps the plate")
-check(support.logged("glass-recycling returns 0.5 kr-sand") == 1 and support.logged("gold-plate-recycling returns 0.25 gold-ore") == 1
-	and support.logged("kr-crush-burner-inserter returns half a part") == 1 and #support.logs == 3, "A line for each change")
+check(support.logged("razi-protocol: glass-recycling returns 0.5 kr-sand") == 1
+	and support.logged("razi-protocol: kr-glass-recycling returns 0.5 kr-sand") == 1
+	and support.logged("gold-plate-recycling returns 0.25 gold-ore") == 1
+	and support.logged("kr-crush-burner-inserter returns half a part") == 1 and #support.logs == 4, "A line for each change")
 check(support.logs[1]:find("^razi%-protocol: "), "Lines start with the mod name")
 
 -- A second run finds the new numbers and changes nothing.
 support.logs = {}
 fix.data_final_fixes()
 check(#support.logs == 0, "A second run changes nothing")
+
+-- A recycler with a different return is not changed.
+raw = support.install({
+	["kr-glass-recycling"] = { results = { { type = "item", name = "kr-sand", amount = 2 } } },
+})
+local different_before = support.copy(raw)
+fix.data_final_fixes()
+check(support.same(raw, different_before) and #support.logs == 0, "A different K2 glass return stays and nothing is logged")
 
 -- Numbers the authors changed are left alone: glass at a quarter already, gold at half, a part with a fraction.
 raw = support.install({
