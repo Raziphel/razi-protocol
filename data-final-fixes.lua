@@ -244,6 +244,10 @@ require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes(
 -- while leaving its separate crushing and enrichment routes available, before the crafting-menu pass.
 require("prototypes.balance.crushing-industry.ore_recipes").data_final_fixes()
 
+-- Hyarion and Foliax make promethium research data instead of cards, so every card takes a blank tech card like the Krastorio 2 chain.
+-- After recipe-copying passes (Igrys), before the menu pass.
+require("prototypes.balance.common.promethium_research_data").data_final_fixes()
+
 -- The metallurgic science pack research also unlocks the oxide asteroid crushing, so calcite comes from orbit at home
 -- once the player has been to Vulcanus. After the gates, which may move unlocks, before the menu pass.
 require("prototypes.balance.space-age.space_calcite").data_final_fixes()
