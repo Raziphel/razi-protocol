@@ -298,16 +298,6 @@ module.data_final_fixes()
 check(locked.technology["razi-cards-locked-effect-6"] == nil and locked.technology["locked-effect"].max_level == "infinite",
 	"a card that nothing unlocks leaves the research as it is")
 
--- With razi-auto-tech-cards the research costs the card of each pack: that card stands for the pack, the card of a pack
--- outside the system cards stays, and the laboratory has to take it.
-local auto = build({research("auto-effect", {"razi-automation-science-pack-tech-card", "razi-metallurgic-science-pack-tech-card",
-	{"razi-orphan-science-pack-tech-card", 3}})}, {"razi-orphan-science-pack-tech-card"})
-module.data_final_fixes()
-local auto_continuation = auto.technology["razi-cards-auto-effect-6"] or error("auto-effect continues at level 6")
-check(#auto_continuation.unit.ingredients == 2 and auto_continuation.unit.ingredients[1][1] == "solaris-tech-card"
-	and amount(auto_continuation.unit.ingredients, "razi-orphan-science-pack-tech-card") == 3,
-	"the cards of the packs of a system are one system card, the card of another pack stays")
-
 -- An own name is kept.
 local named = build({research("named-effect", {"automation-science-pack"}, {localised_name = {"mod-text.named"}})})
 module.data_final_fixes()

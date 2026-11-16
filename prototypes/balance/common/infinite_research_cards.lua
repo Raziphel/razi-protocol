@@ -11,7 +11,7 @@
 --
 -- The packs of a card come from the recipes as they are after all other passes, not from a list: a pack that a card
 -- takes in is covered too. A research that costs a system card already is left alone. The pass is the last one, after
--- the repairs of other mods and the cards of the packs (razi-auto-tech-cards): a repair of a research that was copied
+-- the repairs of other mods: a repair of a research that was copied
 -- before it would not reach the copy. With the setting razi-infinite-research-cards off nothing changes.
 local Graph = require("__razi_lib__/lib/technology_graph")
 local Names = require("lib.infinite_research_names")
@@ -212,8 +212,7 @@ function infinite_research_cards.data_final_fixes()
 			local wanted, kept, has_card = {}, {}, false
 			for _, entry in ipairs(unit.ingredients or {}) do
 				local pack = ingredient_name(entry)
-				-- with razi-auto-tech-cards the research costs the card of a pack, which stands for the pack
-				local source = pack:match("^razi%-(.+)%-tech%-card$") or pack
+				local source = pack
 				if packs[pack] then
 					has_card = true
 				elseif in_cards[source] then

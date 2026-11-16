@@ -134,7 +134,7 @@ Normal is recommended and leaves the map settings unchanged. The Difficulty sett
 | Planets with themed enemies | none | 7 | 10 (11 with Fulgora Replicators) | 11 (12) |
 | Recipe loops | Open | Closed | Strict | Strict |
 
-Hard and Nightmare also turn each science pack into a card before it reaches a lab, and put nuclear power behind Vulcanus and Gleba science.
+Hard and Nightmare also put nuclear power behind Vulcanus and Gleba science.
 
 Other settings cover the star map look, route lines and tooltips, crafting menu cleanup, and fewer particles for slower computers.
 
