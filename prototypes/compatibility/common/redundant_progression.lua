@@ -111,14 +111,34 @@ local function clear_hidden_next_upgrade_targets()
 	end
 end
 
+-- Hide a technology that only unlocked this machine even if another technology requires it.
+-- `hide_recipes` keeps required technologies visible, leaving players who paid science for
+-- `automation-4` or `planetaris-automation-4` with an empty technology.
 local function hide_redundant_machine(name)
 	hide_item_family(name)
+	local unlockers = {}
+	for technology_name, technology in pairs(data.raw.technology or {}) do
+		for _, effect in pairs(technology.effects or {}) do
+			if effect and effect.type == "unlock-recipe" and effect.recipe == name then
+				unlockers[technology_name] = true
+				break
+			end
+		end
+	end
 	local emptied = hide_recipes.hide({name})
 	local recipe = raw("recipe", name)
 	if recipe then
 		recipe.hide_from_player_crafting = true
 		recipe.hide_from_stats = true
 		set_hidden_flags(recipe)
+	end
+	for technology_name in pairs(unlockers) do
+		local technology = raw("technology", technology_name)
+		local effects = technology and technology.effects
+		if technology and (effects == nil or #effects == 0) and technology.hidden ~= true then
+			set_hidden_flags(technology)
+			log("razi-protocol: technology " .. technology_name .. " hidden: it only unlocked the hidden machine " .. name)
+		end
 	end
 	for technology_name in pairs(emptied) do
 		set_hidden_flags(raw("technology", technology_name))
