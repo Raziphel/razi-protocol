@@ -50,6 +50,9 @@ local TECHNOLOGIES = {
 	["beetlejuice-discovery"] = unlock("sye-beetlejuice"),
 	["vespera-discovery"] = unlock("sye-vespera"),
 	["umbra-discovery"] = unlock("sye-umbra"),
+	["nyxaris-discovery"] = unlock("sye-calidus", "sye-nyxaris"),
+	["solaris-discovery"] = unlock("sye-calidus", "sye-solaris"),
+	["vibrant-discovery"] = unlock("sye-vibrant"),
 	["razi-outer-frontier-mastery"] = {effects = {}},
 	["razi-singularity-theory"] = {effects = {}},
 	["automation"] = {effects = {{type = "unlock-recipe", recipe = "assembling-machine-1"}}}
@@ -57,7 +60,7 @@ local TECHNOLOGIES = {
 
 ---@param researched string[]|nil
 ---@return any
-local function force_of(name, researched, known)
+local function force_of(name, researched, known, unlocked)
 	local technologies = {}
 	for tech in pairs(known or TECHNOLOGIES) do
 		technologies[tech] = {name = tech, researched = false}
@@ -65,7 +68,20 @@ local function force_of(name, researched, known)
 	for _, tech in ipairs(researched or {}) do
 		technologies[tech].researched = true
 	end
-	return {name = name, technologies = technologies}
+	local unlocked_locations = {nauvis = true}
+	for _, location in ipairs(unlocked or {}) do
+		unlocked_locations[location] = true
+	end
+	return {
+		name = name,
+		technologies = technologies,
+		is_space_location_unlocked = function(location)
+			if type(location) ~= "string" then
+				error("space location name must be a string")
+			end
+			return unlocked_locations[location] == true
+		end
+	}
 end
 
 ---@param forces any[]
@@ -91,6 +107,31 @@ end
 
 local function researched(force, name)
 	return force.technologies[name] and force.technologies[name].researched
+end
+
+local function check_grant_set(expected, message)
+	check(#logged == 1, message .. ": expected one log line")
+	local actual, count = {}, 0
+	local grants = logged[1]:match(": (.*)$")
+	for name in (grants .. ","):gmatch("(.-),") do
+		name = name:match("^%s*(.-)%s*$")
+		actual[name] = true
+		count = count + 1
+	end
+	check(count == #expected, message .. ": wrong number of granted technologies")
+	for _, name in ipairs(expected) do
+		check(actual[name], message .. ": missing " .. name)
+	end
+	for name in pairs(actual) do
+		local found = false
+		for _, expected_name in ipairs(expected) do
+			if name == expected_name then
+				found = true
+				break
+			end
+		end
+		check(found, message .. ": unexpected " .. name)
+	end
 end
 
 local M = require("scripts.migration.migration_3")
@@ -226,6 +267,68 @@ do
 	world({lost}, nil, {})
 	M.run()
 	check(not researched(lost, "space-discovery-asteroid-belt"), "no home planet, no survey")
+end
+
+-- An explicitly unlocked destination gets only the route technologies; researched discoveries
+-- are not destinations on their own, and a hidden opening technology cannot make a route passable.
+do
+	local technologies = {}
+	for name, technology in pairs(TECHNOLOGIES) do
+		technologies[name] = technology
+	end
+	technologies["nyxaris-discovery"] = {
+		hidden = true,
+		effects = TECHNOLOGIES["nyxaris-discovery"].effects
+	}
+	local player = force_of("player", {"automation", "planet-discovery-crucible"}, nil, {"crucible"})
+	world({player}, technologies)
+	M.run()
+	check_grant_set({
+		"solaris-discovery",
+		"vibrant-discovery",
+		"space-discovery-asteroid-belt",
+		"beetlejuice-discovery",
+		"umbra-discovery",
+		"razi-umbra-belt-survey",
+		"planet-discovery-tenebris"
+	}, "the route avoids the location opened only by hidden nyxaris-discovery")
+	check(not researched(player, "nyxaris-discovery") and not researched(player, "vespera-discovery"),
+		"hidden nyxaris and off-route vespera are not granted")
+
+	world({player}, technologies)
+	M.run()
+	check(#logged == 0, "a second route migration run is silent")
+end
+
+-- When one discovery opens two closed locations on the chosen path, prefer it.
+do
+	local player = force_of("player", {"automation", "vibrant-discovery"}, nil, {"sye-vibrant"})
+	world({player})
+	M.run()
+	check_grant_set({"solaris-discovery"}, "solaris-discovery opens both calidus and solaris")
+	check(not researched(player, "nyxaris-discovery"), "the tied alternative is not granted")
+end
+
+-- An unlocked route whose locations are all open needs no route research.
+do
+	local player = force_of("player", {"automation"}, nil, {
+		"sye-calidus", "sye-solaris", "sye-vibrant", "asteroid-belt-outer-edge", "sye-beetlejuice", "sye-umbra"
+	})
+	world({player})
+	M.run()
+	check(#logged == 0, "no route technologies are granted for an open path")
+	for _, name in ipairs({"solaris-discovery", "vibrant-discovery", "space-discovery-asteroid-belt",
+		"beetlejuice-discovery", "umbra-discovery", "razi-umbra-belt-survey"}) do
+		check(not researched(player, name), name .. " remains unresearched on an open path")
+	end
+end
+
+-- An unlocked destination outside the connected graph has no route technologies to grant.
+do
+	local player = force_of("player", {"automation"}, nil, {"island-west"})
+	world({player})
+	M.run()
+	check(#logged == 0, "an unlocked isolated place grants nothing")
 end
 
 -- migrations/3.0.0.json: well formed, and each new name is a route this mod creates.
