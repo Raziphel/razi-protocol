@@ -57,6 +57,8 @@ rawset(_G, "commands", {add_command = function(name, help, handler)
 	registered_commands[name] = {help = help, handler = handler}
 end})
 rawset(_G, "storage", {})
+-- No freeplay interface: the Eneas shelter restore has nothing to do.
+rawset(_G, "remote", {interfaces = {}})
 rawset(_G, "log", function(_) end)
 
 local function technology(researched, enabled, prototype)
