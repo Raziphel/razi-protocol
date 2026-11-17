@@ -103,6 +103,27 @@ local rigor_effect = raw["bool-setting"]["rigor-module-disable-rigor-effect"]
 check(rigor_effect.default_value == false and rigor_effect.forced_value == nil and rigor_effect.hidden == nil,
   "rigor-module-disable-rigor-effect must stay untouched")
 
+-- Nexus shows its limit frame only with the core in hand by default; the player may still change it.
+-- The Big-Monsters camera settings, which end the game when changed, are hidden.
+local foreign = {
+  ["bool-setting"] = {
+    ["nexus-limit-frame-in-hand-only"] = { default_value = false },
+    ["bm_draggable_camera"] = { default_value = false },
+  },
+  ["int-setting"] = { ["bm_camera_size"] = { default_value = 300 } },
+}
+run(foreign)
+---@type table
+local limit_frame = foreign["bool-setting"]["nexus-limit-frame-in-hand-only"]
+check(limit_frame.default_value == true and limit_frame.forced_value == nil and limit_frame.hidden == nil,
+  "nexus-limit-frame-in-hand-only must default to on and stay visible")
+---@type table
+local drag = foreign["bool-setting"]["bm_draggable_camera"]
+---@type table
+local size = foreign["int-setting"]["bm_camera_size"]
+check(drag.hidden == true and drag.default_value == false and size.hidden == true and size.default_value == 300,
+  "Big-Monsters camera settings must be hidden with their defaults")
+
 -- Only one of the settings present is enough.
 local partial = { ["bool-setting"] = { ["s6x-arcanyx-mythril-nuclear"] = { default_value = true } } }
 run(partial)

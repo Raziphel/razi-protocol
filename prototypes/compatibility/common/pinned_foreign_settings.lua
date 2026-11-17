@@ -79,8 +79,20 @@ local pinned_string_settings = {
 
 -- Crushing Industry's coal setting replaces coal in recipes at crushing-industry_0.6.9/base-data-updates.lua:83-94.
 -- Keep it visible and change only its default so a saved player choice still wins.
+-- Nexus 1.4.0: with nexus-limit-frame-in-hand-only (per player, off by default, Nexus/settings.lua:10-15) the limit
+-- frame shows only while the player holds a zero-point energy engine core; otherwise it stays on screen all game.
 local default_only_bool_settings = {
 	["crushing-industry-coal"] = false,
+	["nexus-limit-frame-in-hand-only"] = true,
+}
+
+-- Big-Monsters 2.2.1: changing either per-player camera setting ends the game with a non-recoverable error. The handler
+-- of on_runtime_mod_setting_changed reads ic_draggable_camera and ic_camera_size, names that do not exist (the settings
+-- are bm_*: control.lua:49-56, settings.lua:365,373), so the settings never worked either. They are hidden: every
+-- player keeps the defaults and the handler never runs.
+local hidden_settings = {
+	{ "bool-setting", "bm_draggable_camera" },
+	{ "int-setting", "bm_camera_size" },
 }
 
 function pinned_foreign_settings.settings_final_fixes()
@@ -114,6 +126,13 @@ function pinned_foreign_settings.settings_final_fixes()
 		local setting = data.raw["bool-setting"] and data.raw["bool-setting"][name]
 		if setting then
 			setting.default_value = value
+		end
+	end
+
+	for _, entry in ipairs(hidden_settings) do
+		local setting = data.raw[entry[1]] and data.raw[entry[1]][entry[2]]
+		if setting then
+			setting.hidden = true
 		end
 	end
 end

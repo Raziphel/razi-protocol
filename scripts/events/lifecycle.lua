@@ -10,6 +10,7 @@ local spoiler_fog = require("scripts.journal.spoiler_fog")
 local convergence = require("scripts.convergence.convergence")
 local victory_guard = require("scripts.convergence.victory_guard")
 local nexus_technology_visibility = require("scripts.compatibility.Nexus.technology_visibility")
+local eneas_starting_shelter = require("scripts.compatibility.moon-eneas.starting_shelter")
 
 local lifecycle = {}
 
@@ -39,6 +40,8 @@ function lifecycle.register(events)
 	-- Surfaces that exist already get the switched-off nests of their planet for their new chunks.
 	events:on_init(enemy_surfaces.apply)
 	events:on_init(start_journal)
+	-- Eneas sets the starting items on init and at every configuration change; the Krastorio 2 shelter is put back after it.
+	events:on_init(eneas_starting_shelter.restore)
 	events:on_configuration_changed(function(event)
 		prepare_journal_state()
 		entities.check_existing_transceivers()
@@ -48,6 +51,7 @@ function lifecycle.register(events)
 		end
 		deep_expedition.observe_connected()
 		nexus_technology_visibility.repair(event)
+		eneas_starting_shelter.restore()
 		razi_prepared_2x.on_configuration_changed(event)
 		-- Names may have changed with the mods; the journal asks again when drawn.
 		search_names.reset()
