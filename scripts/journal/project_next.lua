@@ -65,6 +65,17 @@ local function next_action(force,id,status)
     if detail and detail.missing then
       return L("project-next-skybridge-missing")
     end
+    -- The project shows from Vulcanus on, the catapult research comes much later.
+    local research=force.technologies and force.technologies["razi-orbital-catapult"]
+    if research and not research.researched then
+      local missing=unmet(research)
+      if #missing>0 then
+        return L("project-next-prerequisite",missing[1].localised_name),
+          quest_by_technology[missing[1].name]
+      end
+      return L("project-next-research",research.localised_name),
+        quest_by_technology[research.name]
+    end
     if not detail or not detail.options or #detail.options==0 then
       return L("project-next-skybridge-build")
     end
