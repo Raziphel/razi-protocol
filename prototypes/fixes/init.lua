@@ -49,6 +49,7 @@ local repairs = {
 	require("prototypes.fixes.plasma_crafter.crushed_ore_melting"),
 	require("prototypes.fixes.Voidcraft.crushed_prismite_sand"),
 	require("prototypes.fixes.Krastorio2-spaced-out.aai_industry_unlocks"),
+	require("prototypes.fixes.aai-industry.lignumis_burner_assembler"),
 	require("prototypes.fixes.Nexus.paracelsin_resources"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
