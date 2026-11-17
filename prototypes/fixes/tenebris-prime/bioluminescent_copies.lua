@@ -24,6 +24,11 @@ local bioluminescent_copies = {}
 --    flare-stack, and the hidden kr-electric-mining-drill-mk3, kr-advanced-transport-belt and
 --    planetaris-assembling-machine-4 have no recipe either. Their bioinfusion recipes ask for an item nothing makes,
 --    so they are hidden and lose their unlock the same way.
+--
+-- 4. A copy keeps the fluid boxes and mirroring its base had when it was copied. K2 lets its machines mirror in
+--    data-updates, Muluna the assembling machines 3 and 4 in data-final-fixes, where it also adds their data ports and
+--    the fluid box of the rocket silo: the copies of those machines could not be mirrored, and the bioluminescent
+--    rocket silo could not make the rocket parts that take a fluid. Every copy takes both from its base.
 
 local function property_value(tenebris, property)
 	local own = tenebris.surface_properties and tenebris.surface_properties[property]
@@ -52,6 +57,25 @@ local function same_list(left, right)
 	end
 	for index, value in ipairs(left) do
 		if right[index] ~= value then
+			return false
+		end
+	end
+
+	return true
+end
+
+-- Deep comparison of two prototype values (tables of tables, strings, numbers, booleans).
+local function same_value(left, right)
+	if type(left) ~= "table" or type(right) ~= "table" then
+		return left == right
+	end
+	for key, value in pairs(left) do
+		if not same_value(value, right[key]) then
+			return false
+		end
+	end
+	for key in pairs(right) do
+		if left[key] == nil then
 			return false
 		end
 	end
@@ -106,6 +130,17 @@ function bioluminescent_copies.data_final_fixes()
 					and not same_list(copy.crafting_categories, base.crafting_categories) then
 					copy.crafting_categories = table.deepcopy(base.crafting_categories)
 					log("razi-protocol: " .. type_name .. "/" .. name .. " takes the crafting categories of " .. base_name)
+				end
+
+				if not same_value(copy.fluid_boxes, base.fluid_boxes) then
+					copy.fluid_boxes = table.deepcopy(base.fluid_boxes)
+					log("razi-protocol: " .. type_name .. "/" .. name .. " takes the fluid boxes of " .. base_name)
+				end
+
+				if (copy.use_mirroring == true) ~= (base.use_mirroring == true) then
+					copy.use_mirroring = base.use_mirroring
+					log("razi-protocol: " .. type_name .. "/" .. name .. " mirrors like " .. base_name .. ": "
+						.. tostring(base.use_mirroring == true))
 				end
 
 				-- Only the bioinfusion recipe, which has the name of the copy: a recipe Tenebris wrote by hand for a copy
