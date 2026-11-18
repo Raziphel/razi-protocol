@@ -299,6 +299,13 @@ require("prototypes.balance.planet-muluna.barrel_gates").data_final_fixes()
 -- The biochamber stays needed: after the repairs, which see the categories every mod left on the plant.
 require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plant_organic").data_final_fixes()
 
+-- Krastorio 2 biomass gets a fuel category of its own that every chemical burner but the locomotives takes, so trains no
+-- longer burn the biomass their driver carries. After the repairs and every pass that adds a burner.
+require("prototypes.balance.Krastorio2.biomass_fuel").data_final_fixes()
+
+-- Planetaris Dyes: dyeing 5 stone walls makes 5 colored walls, not 10.
+require("prototypes.balance.planetaris-dyes.colored_walls").data_final_fixes()
+
 -- Infinite research continues on system cards after its fifth level. The last pass: it copies research, and the repairs
 -- above change research by name.
 require("prototypes.balance.common.infinite_research_cards").data_final_fixes()

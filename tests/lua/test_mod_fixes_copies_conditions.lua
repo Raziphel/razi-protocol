@@ -148,6 +148,35 @@ check(logs[1]:find("^razi%-protocol: "), "The line does not start with the mod n
 copies.data_final_fixes()
 check(logged("takes the crafting categories") == 1, "The repeated run touched the copy again")
 
+-- fluid boxes and mirroring
+raw = tenebris_world()
+local port = {production_type = "input", pipe_connections = {{flow_direction = "input", position = {0, -1}}}}
+raw["assembling-machine"] = {
+	["assembling-machine-3"] = {use_mirroring = true, fluid_boxes = {port, {production_type = "output"}}},
+	["bioluminescent-assembling-machine-3"] = {bioluminescent = true, fluid_boxes = {port}},
+	["recycler"] = {},
+	["bioluminescent-recycler"] = {bioluminescent = true, use_mirroring = true},
+	["same"] = {use_mirroring = true, fluid_boxes = {port}},
+	["bioluminescent-same"] = {bioluminescent = true, use_mirroring = true, fluid_boxes = {table.deepcopy(port)}},
+}
+raw["rocket-silo"] = {
+	["rocket-silo"] = {fluid_boxes = {port}},
+	["bioluminescent-rocket-silo"] = {bioluminescent = true},
+}
+copies.data_final_fixes()
+plant = raw["assembling-machine"]
+check(plant["bioluminescent-assembling-machine-3"].use_mirroring == true, "The copy did not take the mirroring of its base")
+check(#plant["bioluminescent-assembling-machine-3"].fluid_boxes == 2, "The copy did not take the fluid boxes of its base")
+check(plant["bioluminescent-assembling-machine-3"].fluid_boxes[1] ~= port, "The copy shares the fluid boxes of its base")
+check(plant["bioluminescent-recycler"].use_mirroring == nil, "A copy of a base that does not mirror still mirrors")
+---@type any
+local silo = raw["rocket-silo"]["bioluminescent-rocket-silo"]
+check(silo.fluid_boxes and #silo.fluid_boxes == 1, "The copy of the rocket silo did not take its fluid box")
+check(logged("takes the fluid boxes") == 2 and logged("mirrors like") == 2,
+	"Expected a line for each copy that was behind, none for the copy that matches its base")
+copies.data_final_fixes()
+check(logged("takes the fluid boxes") == 2 and logged("mirrors like") == 2, "The repeated run touched the copies again")
+
 -- hidden bioinfusion recipes
 raw = tenebris_world()
 raw["assembling-machine"] = {

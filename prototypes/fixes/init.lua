@@ -17,6 +17,7 @@ local repairs = {
 	require("prototypes.fixes.common.recycling_hidden"),
 	require("prototypes.fixes.moon-eneas.pristine_filter"),
 	require("prototypes.fixes.moon-eneas.construction_drone"),
+	require("prototypes.fixes.moon-eneas.lignumis_robotics"),
 	require("prototypes.fixes.Cerys-Moon-of-Fulgora.roboport_pressure"),
 	require("prototypes.fixes.Krastorio2.loader_insert_limits"),
 	require("prototypes.fixes.planetaris-arig.surface_conditions"),
@@ -49,7 +50,9 @@ local repairs = {
 	require("prototypes.fixes.plasma_crafter.crushed_ore_melting"),
 	require("prototypes.fixes.Voidcraft.crushed_prismite_sand"),
 	require("prototypes.fixes.Krastorio2-spaced-out.aai_industry_unlocks"),
+	require("prototypes.fixes.aai-industry.lignumis_burner_assembler"),
 	require("prototypes.fixes.Nexus.paracelsin_resources"),
+	require("prototypes.fixes.panglia_planet.flesh_spoil_tooltip"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
 }

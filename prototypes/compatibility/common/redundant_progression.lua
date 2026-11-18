@@ -157,8 +157,8 @@ function redundant_progression.data_final_fixes()
 		hide_redundant_machine("planetaris-assembling-machine-4")
 	end
 
-	if mods["LithiumBattery"] and raw("assembling-machine", "assembling-machine-4") then
-		hide_redundant_machine("assembling-machine-4")
+	if mods["LithiumBattery"] and raw("assembling-machine", "ao-assembling-machine-4") then
+		hide_redundant_machine("ao-assembling-machine-4")
 	end
 
 	clear_hidden_next_upgrade_targets()

@@ -2,14 +2,15 @@ local lithium_battery = {}
 
 -- Belts without a machine. Razi hides the assembling machine 4 of Lithium Battery (prototypes/compatibility/common/redundant_progression.lua, setting
 --    razi-hide-redundant-assembler-tiers), but the four promethium belt recipes of Lithium Battery (promethium-transport-belt,
---    -underground-belt, -splitter, -loader) are in the category hea-am4-only, which only that machine and its Tenebris and Rabbasca
---    copies have (prototypes/belt/recipe.lua, prototypes/hea-assembling-machine.lua). No machine the player has can make them.
+--    -underground-belt, -splitter, -loader) are in the category ao-hea-am4-only, which only that machine has
+--    (8.0.6 prototypes/hea-belt.lua:1270-1285). No machine the player has can make them.
 --    The category goes to Krastorio 2's advanced assembling machine, the tier that takes the place of the hidden one, and to its copies.
--- Vesta items that are not there. With Vesta and its setting hea-endgame, Lithium Battery (7.6.4 data-final-fixes.lua:241-259)
---    rewrites the ingredients of ske_fusion_framework and ske_fusion_thruster with ske_empty_dt_canister and vesta-heater. Vesta
---    (2.1.30 data.lua:25-33) makes those two items only with its setting ske_vesta_legacy_recipes; without it the game stops with
---    "item with name 'ske_empty_dt_canister' does not exist". Ingredients whose item or fluid does not exist are taken out, and
---    the results of the same name from the recycling recipes, which are made from these lists before Razi loads.
+-- Vesta items that are not there. With Vesta and its setting ao-compat-skewer_planet_vesta, Lithium Battery (8.0.6
+--    prototypes/compat-data.lua:257-276) rewrites the ingredients of ske_fusion_framework and ske_fusion_thruster with
+--    ske_empty_dt_canister and vesta-heater. Vesta (2.1.30 data.lua:25-33) makes those two items only with its setting
+--    ske_vesta_legacy_recipes; without it the game stops with "item with name 'ske_empty_dt_canister' does not exist".
+--    Ingredients whose item or fluid does not exist are taken out, and the results of the same name from the recycling
+--    recipes, which are made from these lists before Razi loads.
 -- Remove this module when Razi leaves the assembling machine 4 of Lithium Battery alone and when Lithium Battery checks
 -- that the Vesta items exist.
 
@@ -22,11 +23,11 @@ local function sorted_keys(map)
 	return keys
 end
 
-local BELT_CATEGORY = "hea-am4-only"
+local BELT_CATEGORY = "ao-hea-am4-only"
 local SUBSTITUTE = "kr-advanced-assembling-machine"
 
 local function keep_belts_craftable()
-	local recipe = data.raw.recipe and data.raw.recipe["assembling-machine-4"]
+	local recipe = data.raw.recipe and data.raw.recipe["ao-assembling-machine-4"]
 	if not (type(recipe) == "table" and recipe.hidden) then
 		return
 	end

@@ -123,17 +123,20 @@ end
 
 local english=locale_keys("locale/en")
 local russian=locale_keys("locale/ru")
--- Russian names of the Renai throwers (locale/ru/renai_transportation.cfg). English has no such keys on purpose: a
--- language without the key falls back to English, and with an English key it would not reach the name Renai built,
--- which carries the translations of the other languages.
-local function is_russian_only(key)
-  return key:find("RTThrower%-",1,false)~=nil
+-- A Russian file without an English one holds Russian for the strings of other mods (locale/ru/renai_transportation.cfg,
+-- locale/ru/surface_properties.cfg). English has no such keys on purpose: they are the other mod's, a language without
+-- the key falls back to the mod's own text, and with an English key in this mod it would not reach the name Renai
+-- built, which carries the translations of the other languages.
+local english_files={}
+for _,path in ipairs(files("locale/en")) do english_files[path:match("([^/]+)$")]=true end
+local function is_russian_only(entry)
+  return not english_files[entry.path:match("([^/]+)$")]
 end
 
 local extra,missing,placeholder_mismatches,markup_mismatches={},{},{},{}
 
-for key in pairs(russian) do
-  if not english[key] and not is_russian_only(key) then extra[#extra+1]=key end
+for key,entry in pairs(russian) do
+  if not english[key] and not is_russian_only(entry) then extra[#extra+1]=key end
 end
 for key,entry in pairs(english) do
   local translation=russian[key]
