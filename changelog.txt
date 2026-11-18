@@ -1,4 +1,21 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.2.1
+Date: 2026-11-18
+  Bugfixes:
+    - [compat] Better Aquilo is marked incompatible, Lithium Battery 8.0 refuses to load next to it
+    - [compat] Eneas with its Lignumis integration no longer stops the game from loading on the missing copper robotics technology
+    - [compat] enemy expansion no longer builds vanilla nests on Castra
+    - [compat] Lithium Battery 8.0 keeps its assembling machine 4 hidden and its promethium belts craftable
+    - [compat] take over the pack's fixes for Panglia, Cerys, Krastorio 2, Planetaris Dyes, Nexus, Big-Monsters and Eneas
+    - [compat] Tenebris bioluminescent copies take the fluid boxes and mirroring of their base
+    - [compat] the Lignumis burner assembling machine no longer needs automation cores from Nauvis with AAI Industry and Krastorio 2
+    - [journal] the Skybridge next step names the orbital catapult research or its missing prerequisite before asking for catapults
+    - [locale] English names of the nitrogen and nitric acid recipes of Krastorio 2
+    - [locale] Russian for Planet Ferrum, which ships English only
+    - [locale] Russian for the mods of the pack that ship it incomplete or wrong
+    - [locale] Russian names for the surface properties of nuclear-steps, PlanetsLib and Rubia
+    - [progression] imersite asteroid crushing waits for the discovery of Fulgora
+---------------------------------------------------------------------------------------------------
 Version: 3.2.0
 Date: 2026-11-16
   Features:
