@@ -44,11 +44,11 @@ local function belt_pack(hidden)
 			crafting_categories = {"crafting", "hea-fabrication"}}
 	end
 	data_raw, module = setup({LithiumBattery = true})
-	data_raw.recipe["assembling-machine-4"] = {type = "recipe", name = "assembling-machine-4", hidden = hidden}
-	data_raw["recipe-category"] = {["hea-am4-only"] = {type = "recipe-category", name = "hea-am4-only"}}
+	data_raw.recipe["ao-assembling-machine-4"] = {type = "recipe", name = "ao-assembling-machine-4", hidden = hidden}
+	data_raw["recipe-category"] = {["ao-hea-am4-only"] = {type = "recipe-category", name = "ao-hea-am4-only"}}
 	data_raw["assembling-machine"] = {
-		["assembling-machine-4"] = {type = "assembling-machine", name = "assembling-machine-4", hidden = hidden,
-			crafting_categories = {"crafting", "hea-am4-only"}},
+		["ao-assembling-machine-4"] = {type = "assembling-machine", name = "ao-assembling-machine-4", hidden = hidden,
+			crafting_categories = {"crafting", "ao-hea-am4-only"}},
 		["kr-advanced-assembling-machine"] = machine("kr-advanced-assembling-machine"),
 		["bioluminescent-kr-advanced-assembling-machine"] = machine("bioluminescent-kr-advanced-assembling-machine"),
 		["assembling-machine-3"] = machine("assembling-machine-3"),
@@ -60,7 +60,7 @@ end
 
 local function has_category(machine)
 	for _, category in ipairs(machine.crafting_categories) do
-		if category == "hea-am4-only" then
+		if category == "ao-hea-am4-only" then
 			return true
 		end
 	end
@@ -80,7 +80,7 @@ check(not has_category(machines["kr-advanced-assembling-machine"]), "belt catego
 rawset(_G, "defines", {prototypes = {item = {item = 0, tool = 0}}})
 local function vesta_pack(mod_list, with_legacy_items)
 	data_raw, module = setup(mod_list)
-	data_raw.item = {["quantum-processor"] = {}, ["hea-engine"] = {}, ["accumulator"] = {}}
+	data_raw.item = {["quantum-processor"] = {}, ["ao-hea-engine"] = {}, ["accumulator"] = {}}
 	data_raw.fluid = {ske_dt_fuel = {}}
 	if with_legacy_items then
 		data_raw.item.ske_empty_dt_canister = {}
@@ -88,14 +88,14 @@ local function vesta_pack(mod_list, with_legacy_items)
 	end
 	data_raw.recipe.ske_fusion_framework = {type = "recipe", name = "ske_fusion_framework", ingredients = {
 		{type = "item", name = "quantum-processor", amount = 5},
-		{type = "item", name = "hea-engine", amount = 1},
+		{type = "item", name = "ao-hea-engine", amount = 1},
 		{type = "item", name = "ske_empty_dt_canister", amount = 2},
 		{type = "item", name = "accumulator", amount = 1},
 		{type = "fluid", name = "ske_dt_fuel", amount = 200},
 	}}
 	data_raw.recipe.ske_fusion_thruster = {type = "recipe", name = "ske_fusion_thruster", ingredients = {
 		{type = "item", name = "vesta-heater", amount = 1},
-		{type = "item", name = "hea-engine", amount = 5},
+		{type = "item", name = "ao-hea-engine", amount = 5},
 	}}
 	data_raw.recipe["ske_fusion_framework-recycling"] = {type = "recipe", name = "ske_fusion_framework-recycling", results = {
 		{type = "item", name = "quantum-processor", amount = 1},
@@ -115,9 +115,9 @@ end
 
 local recipes = vesta_pack({LithiumBattery = true, skewer_planet_vesta = true}, false)
 check(ingredient_list(recipes.ske_fusion_framework)
-	== "item:quantum-processor=5,item:hea-engine=1,item:accumulator=1,fluid:ske_dt_fuel=200",
+	== "item:quantum-processor=5,item:ao-hea-engine=1,item:accumulator=1,fluid:ske_dt_fuel=200",
 	"framework: " .. ingredient_list(recipes.ske_fusion_framework))
-check(ingredient_list(recipes.ske_fusion_thruster) == "item:hea-engine=5", "thruster: " .. ingredient_list(recipes.ske_fusion_thruster))
+check(ingredient_list(recipes.ske_fusion_thruster) == "item:ao-hea-engine=5", "thruster: " .. ingredient_list(recipes.ske_fusion_thruster))
 check(#recipes["ske_fusion_framework-recycling"].results == 1 and recipes["ske_fusion_framework-recycling"].results[1].name
 	== "quantum-processor", "recycling still returns the canister")
 check(vesta_lines() == 3, "one log line per removed ingredient and result: " .. vesta_lines())
