@@ -25,15 +25,15 @@ local function fixture()
 	local raw = {
 		["assembling-machine"] = {
 			["planetaris-assembling-machine-4"] = {type = "assembling-machine"},
-			["assembling-machine-4"] = {type = "assembling-machine"},
+			["ao-assembling-machine-4"] = {type = "assembling-machine"},
 		},
 		item = {
 			["planetaris-assembling-machine-4"] = {place_result = "planetaris-assembling-machine-4"},
-			["assembling-machine-4"] = {place_result = "assembling-machine-4"},
+			["ao-assembling-machine-4"] = {place_result = "ao-assembling-machine-4"},
 		},
 		recipe = {
 			["planetaris-assembling-machine-4"] = {enabled = true},
-			["assembling-machine-4"] = {enabled = true},
+			["ao-assembling-machine-4"] = {enabled = true},
 			["promethium-transport-belt"] = {},
 			["other-recipe"] = {},
 		},
@@ -42,7 +42,7 @@ local function fixture()
 				{type = "unlock-recipe", recipe = "planetaris-assembling-machine-4"},
 			}},
 			["automation-4"] = {
-				effects = {{type = "unlock-recipe", recipe = "assembling-machine-4"}},
+				effects = {{type = "unlock-recipe", recipe = "ao-assembling-machine-4"}},
 				prerequisites = {"planetaris-automation-4"},
 			},
 			["promethium-transport-belt"] = {
@@ -50,7 +50,7 @@ local function fixture()
 				prerequisites = {"automation-4"},
 			},
 			["mixed-tech"] = {effects = {
-				{type = "unlock-recipe", recipe = "assembling-machine-4"},
+				{type = "unlock-recipe", recipe = "ao-assembling-machine-4"},
 				{type = "unlock-recipe", recipe = "other-recipe"},
 			}},
 			["mixed-child"] = {effects = {}, prerequisites = {"mixed-tech"}},
@@ -74,7 +74,7 @@ for _, name in ipairs({"automation-4", "planetaris-automation-4"}) do
 		"Expected one hidden-technology log for " .. name)
 end
 
-for _, name in ipairs({"planetaris-assembling-machine-4", "assembling-machine-4"}) do
+for _, name in ipairs({"planetaris-assembling-machine-4", "ao-assembling-machine-4"}) do
 	local item = raw.item[name]
 	local recipe = raw.recipe[name]
 	check(item.hidden == true and item.hidden_in_factoriopedia == true, "Item " .. name .. " stayed visible")
