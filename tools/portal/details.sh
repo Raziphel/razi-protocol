@@ -14,7 +14,7 @@ info() { python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))[sys.ar
 mod=$(info name)
 fields=(
   -F "mod=$mod"
-  -F "title=Razi Protocol [Now on 2.1]"
+  -F "title=Razi Protocol 3.0"
   -F "summary=A giant Space Age modpack bridge that connects many planet, science, enemy, and endgame mods into one coherent progression route across multiple star systems.
 
 Please view the mod page for the full overview and explanations."
