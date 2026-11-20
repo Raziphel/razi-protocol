@@ -31,6 +31,7 @@ local repairs = {
 	require("prototypes.fixes.minimalist-rails.hidden_poles"),
 	require("prototypes.fixes.k2so-cubium-compatibility-fork.galvanization_notes"),
 	require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.upgrade_chain"),
+	require("prototypes.fixes.xy-k2so-enhancements-nulls-fork.electrochemical_plant_prerequisite"),
 	require("prototypes.fixes.slp-dyson-sphere-reworked-fork.connector_priority"),
 	require("prototypes.fixes.lane-balancers.hidden_splitters"),
 	require("prototypes.fixes.Aircraft-space-age.vehicle_fuel"),
