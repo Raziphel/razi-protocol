@@ -20,7 +20,9 @@ local system_card_definitions = {
 			"automation-science-pack", "logistic-science-pack",
 			"military-science-pack", "chemical-science-pack",
 			"production-science-pack", "utility-science-pack",
-			"space-science-pack"
+			"space-science-pack",
+			-- Both Lignumis packs are researched before space science.
+			"wood-science-pack", "steam-science-pack"
 			-- The frontier systems now own metallurgy, biology and electronics.
 			-- No later-planet science may be needed to construct this first card.
 		},
