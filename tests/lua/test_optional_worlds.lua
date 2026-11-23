@@ -49,7 +49,8 @@ end
 for location, mod in pairs({["rabbasca-underground"] = "rabbasca-underground",
 	skewer_shattered_planet = "skewer_shattered_planet", skewer_lost_beyond = "skewer_shattered_planet",
 	["bm-balack"] = "biological-machines-planet-balack", eneas = "moon-eneas", nexus = "Nexus",
-	["asteroid-0"] = "nuclear-steps", ["asteroid-1"] = "nuclear-steps", ["mesnard-black-hole"] = "nuclear-steps"}) do
+	["asteroid-0"] = "nuclear-steps", ["gargante-black-hole"] = "nuclear-steps",
+	["nuclear-steps-white-hole"] = "nuclear-steps"}) do
 	check(excluded[location] == mod, location .. " must stay off the path")
 end
 -- Rabbasca is woven: only its packs stay out
