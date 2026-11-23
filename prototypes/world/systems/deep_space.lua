@@ -49,12 +49,13 @@ local function add_connection_if_locations_exist(connection)
 	end
 end
 
+-- 300,000 km: the longest of the regular routes, a third of the way to the shattered planet; the dash to Sol after Nexus stays 2,000,000 km.
 add_connection_if_locations_exist({
 	type = "space-connection",
 	name = "solar-system-edge-nexus",
 	from = "solar-system-edge",
 	to = "nexus",
-	length = 2000000,
+	length = 300000,
 	asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
 })
 
