@@ -1,7 +1,7 @@
 -- Nuclear Steps (Neomorphos, optional) as a side trip from Gleba.
--- Nuclear Steps 0.3.4 places its bodies by their distance from the star (prototypes/space-locations/space-locations.lua:
--- 15-16, 47-48, 62-63, 110-111, 123-124). In this galaxy that is north of Calidus, between Calidus and Beetlejuice, and
--- its only entry, gleba-to-asteroid-0 (:133-164), crossed Calidus and was repriced to 104 000 km
+-- Nuclear Steps 0.4.1 places its bodies by their distance from the star (prototypes/space-locations/space-locations.lua:
+-- 19-20, 72-73, 101-102). In this galaxy that is north of Calidus, between Calidus and Beetlejuice, and
+-- its only entry, gleba-to-asteroid-0 (:113-144), crossed Calidus and was repriced to 104 000 km
 -- (prototypes/world/routes/route_distance_balance.lua). Here the asteroid field orbits Gleba, in the free space
 -- between Nyxaris and Solaris, and the bodies behind it keep the author's layout at three quarters of its size, so the
 -- black hole (magnitude 10) keeps clear of the field. The bodies are found by the routes from the asteroid field, not
