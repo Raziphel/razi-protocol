@@ -120,7 +120,7 @@ ok(difficulty.route_level({from="nauvis",to="muluna",length=8000},.5)==1,
 local umbra={from="razi-umbra-belt-inner",to="razi-umbra-belt-outer",length=5000}
 ok(difficulty.route_level(umbra,.5,"balanced")>9,
   "Umbra inner belt must exceed level 9 at its midpoint")
-local deep={from="solar-system-edge",to="nexus",length=2000000}
+local deep={from="solar-system-edge",to="nexus",length=300000}
 ok(difficulty.route_level(deep,.5,"balanced")==10,
   "Deep Space route must reach level 10")
 ok(difficulty.route_level(route,.5,"relentless")>center,
