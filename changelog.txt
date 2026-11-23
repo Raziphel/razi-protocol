@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.3.0
+Date: 2026-11-23
+  Features:
+    - [locale] Russian for the mods comes with the optional razi-protocol-ru, Celestial Weather Next ships its own
+  Bugfixes:
+    - [cards] the Calidus card takes the wood and steam science packs of Lignumis when it is installed
+    - [compat] galvanization research data of Paracelsin is made in the electrochemical plant again, not in the research server
+    - [compat] razi-protocol loads next to Space Route Overlay again; both mods ordered themselves after each other and the game refused to start
+    - [compat] Reduce Tile Effects is an optional dependency, so a game with all optional mods stays under the tile effect limit of Factorio 2.1.24
+    - [compat] the electrochemical plant of Paracelsin is researched after the advanced chemical plant that its recipe needs
+    - [journal] the warp key goes into the reliquary of the Nexus vault
+    - [portal] the portal title is Razi Protocol 3.0 again, the details workflow had reset it
+---------------------------------------------------------------------------------------------------
 Version: 3.2.1
 Date: 2026-11-18
   Bugfixes:
