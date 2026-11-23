@@ -29,6 +29,10 @@ local function build(options)
 	for _, name in ipairs(options.packs) do
 		raw.tool[name] = {type = "tool", name = name}
 	end
+	-- Lignumis defines its science packs as items, not tools.
+	for _, name in ipairs(options.items or {}) do
+		raw.item[name] = {type = "item", name = name}
+	end
 	for _, name in ipairs(options.technologies) do
 		raw.technology[name] = {type = "technology", name = name, effects = {}}
 	end
@@ -82,7 +86,8 @@ local technologies = {
 }
 
 -- All packs present: eight cards with recipes, unlocks and the nested tree.
-local raw = build({packs = full_packs, technologies = technologies, science_group = true})
+local raw = build({packs = full_packs, items = {"wood-science-pack", "steam-science-pack"},
+	technologies = technologies, science_group = true})
 for _, name in ipairs(card_names) do
 	check(raw.tool[name], name .. " item is missing")
 	check(raw.recipe[name], name .. " recipe is missing")
@@ -92,6 +97,10 @@ end
 check(raw["item-subgroup"]["system-tech-card"].group == "science", "Science group is used when present")
 
 check(raw.recipe["calidus-tech-card"].energy_required == 10, "Calidus craft time")
+local calidus = amounts(raw.recipe["calidus-tech-card"])
+check(calidus["space-science-pack"] == 1, "Calidus takes space science")
+check(calidus["wood-science-pack"] == 1 and calidus["steam-science-pack"] == 1,
+	"Calidus takes both Lignumis packs")
 check(raw.recipe["vespera-tech-card"].energy_required == 16, "Vespera craft time")
 check(raw.recipe["umbra-tech-card"].energy_required == 22, "Umbra craft time")
 check(raw.recipe["deep-space-tech-card"].energy_required == 28, "Deep Space craft time")
@@ -156,6 +165,7 @@ end
 -- Without the packs the fallback ingredients take over.
 raw = build({packs = {"space-science-pack"}, technologies = technologies})
 check(raw.recipe["calidus-tech-card"], "Calidus is built from the vanilla pack")
+check(not amounts(raw.recipe["calidus-tech-card"])["wood-science-pack"], "Without Lignumis the card needs no wood science")
 local solaris_fallback = amounts(raw.recipe["solaris-tech-card"])
 check(solaris_fallback["calidus-tech-card"] == 1, "Solaris falls back to the Calidus card")
 local vespera_fallback = amounts(raw.recipe["vespera-tech-card"])

@@ -9,7 +9,7 @@ end
 package.loaded["scripts.compatibility.orbital-cannon.catapult_network"]={
 	snapshot=function() return {installed=false,enabled=false,entries={}} end
 }
-package.loaded["lib.galactic_catalog"]={system=function() return nil end}
+package.loaded["lib.galactic_catalog"]={system=function(_name) return nil end}
 storage={razi_great_projects={
 	[1]={belts={},pending={},skybridge={from="nauvis",to="fulgora",delivered=false}},
 	[3]={belts={},pending={},skybridge={from="vulcanus",to="gleba",delivered=false}},

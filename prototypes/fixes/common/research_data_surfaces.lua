@@ -7,7 +7,9 @@ local research_data_surfaces = {}
 -- anywhere once the machine is built:
 -- - galvanization-research-data (paracelsin-krastorio-compatibility-plus) is
 --   made in the Krastorio research server on any planet. It gets the pressure
---   of Paracelsin back, as the original galvanization science pack had.
+--   of Paracelsin back, as the original galvanization science pack had, and
+--   the electrochemical plant of Paracelsin, where that pack is made: every
+--   other research data is made in a machine of its own planet.
 -- - biorecycling-research-data (rubia-krastorio-compatibility-plus) is made in
 --   the biorecycling plant, which has no surface conditions of its own. It
 --   takes the conditions of the other Rubia research data,
@@ -35,8 +37,24 @@ local function lock_biorecycling_research_data()
 	end
 end
 
+-- The copied recipe keeps the tech card category of the xy fork.
+local function galvanization_machine()
+	local recipe = data.raw.recipe["galvanization-research-data"]
+	local categories = data.raw["recipe-category"]
+	if not (recipe and categories and categories["electrochemistry"]) then
+		return
+	end
+
+	local current = recipe.categories
+	if current and #current == 1 and current[1] == "kr-tech-cards" then
+		recipe.categories = {"electrochemistry"}
+		log("razi-protocol: galvanization-research-data is made in the electrochemical plant, as the galvanization science pack of Paracelsin")
+	end
+end
+
 function research_data_surfaces.data_final_fixes()
 	lock_galvanization_research_data()
+	galvanization_machine()
 	lock_biorecycling_research_data()
 end
 
