@@ -2,9 +2,10 @@ local pinned_foreign_settings = {}
 
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
--- removes what Razi Protocol relies on, of Rigor Module (which Planet Crucible requires) whose default would push
--- the recipe count past the engine limit, and of Renai Transportation, whose parts Ribbonia needs. Each is pinned and hidden; a missing mod or setting is skipped.
--- Crushing Industry's coal-crushing default is kept separately in default_only_bool_settings, where only its default changes.
+-- removes what Razi Protocol relies on, of 248k Redux whose default changes the Krastorio 2 end-game recipes, of Rigor
+-- Module (which Planet Crucible requires) whose default would push the recipe count past the engine limit, and of Renai
+-- Transportation, whose parts Ribbonia needs. Each is pinned and hidden; a missing mod or setting is skipped.
+-- Settings where only the default changes and the player keeps the choice are in default_only_bool_settings.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
 	-- planet-discovery-arcanyx and umbra-discovery. Nuclear power, Cerys, K2 fusion and spidertron would move to the
@@ -69,6 +70,10 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
+	-- Default true: 248k Redux (scripts/krastorio2/data-final-fixes.lua:390-410) adds its gravitation items
+	-- gr_stack_down and gr_stack_up to kr-antimatter-reactor, and those and gr_white to kr-intergalactic-transceiver,
+	-- the razi end-game recipe. With false both recipes stay as razi sets them.
+	["override_krastorio_endgame"] = false,
 }
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes
@@ -84,6 +89,10 @@ local pinned_string_settings = {
 local default_only_bool_settings = {
 	["crushing-industry-coal"] = false,
 	["nexus-limit-frame-in-hand-only"] = true,
+	-- Default false: 248k Redux shares KI channels across surfaces; one KI core feeds modules to beacons on every planet
+	-- and platform (248k-Redux/scripts/electronic/el_ki_script.lua:414-422). With true, a beacon takes modules only from a
+	-- core on its own surface. The setting stays visible, so the map admin can switch it.
+	["el_ki_same_surface"] = true,
 }
 
 -- Big-Monsters 2.2.1: changing either per-player camera setting ends the game with a non-recoverable error. The handler

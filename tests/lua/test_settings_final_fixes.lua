@@ -11,7 +11,7 @@ end
 run({})
 run({ ["bool-setting"] = {}, ["string-setting"] = {} })
 
--- With the mods the settings are pinned and hidden.
+-- With the mods the settings are adjusted according to compatibility rules.
 ---@type table
 local raw = {
   ["bool-setting"] = {
@@ -40,6 +40,8 @@ local raw = {
     ["RTBounceSetting"] = { default_value = false },
     ["RTTrainRampSetting"] = { default_value = true },
     ["RTZiplineSetting"] = { default_value = true },
+    ["override_krastorio_endgame"] = { default_value = true },
+    ["el_ki_same_surface"] = { default_value = false },
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
@@ -48,11 +50,15 @@ local raw = {
 run(raw)
 for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis", "bm-armored-biters-override",
   "nulla-vanila-science", "crushing-industry-k2", "crushing-industry-glass", "crushing-industry-optical-fiber", "crushing-industry-concrete-mix",
-  "crushing-industry-space-crusher-quality" }) do
+  "crushing-industry-space-crusher-quality", "override_krastorio_endgame" }) do
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == false and setting.default_value == false and setting.hidden == true, name .. " not pinned to false")
 end
+---@type table
+local ki_same_surface = raw["bool-setting"]["el_ki_same_surface"]
+check(ki_same_surface.default_value == true and ki_same_surface.forced_value == nil and ki_same_surface.hidden ~= true,
+  "el_ki_same_surface must default to true and stay visible to the player")
 ---@type table
 local overlap = raw["string-setting"]["s6x-ii-krastorio-overlap-tech"]
 check(overlap.default_value == "kr" and #overlap.allowed_values == 1 and overlap.allowed_values[1] == "kr" and overlap.hidden == true,
