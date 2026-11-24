@@ -2,9 +2,9 @@ local pinned_foreign_settings = {}
 
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
--- removes what Razi Protocol relies on, of 248k Redux whose default changes the Krastorio 2 end-game recipes, of Rigor
--- Module (which Planet Crucible requires) whose default would push the recipe count past the engine limit, and of Renai
--- Transportation, whose parts Ribbonia needs. Each is pinned and hidden; a missing mod or setting is skipped.
+-- removes what Razi Protocol relies on, of Rigor Module (which Planet Crucible requires) whose default would push the
+-- recipe count past the engine limit, and of Renai Transportation, whose parts Ribbonia needs. Each is pinned and
+-- hidden; a missing mod or setting is skipped.
 -- Settings where only the default changes and the player keeps the choice are in default_only_bool_settings.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
@@ -70,10 +70,6 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
-	-- Default true: 248k Redux (scripts/krastorio2/data-final-fixes.lua:390-410) adds its gravitation items
-	-- gr_stack_down and gr_stack_up to kr-antimatter-reactor, and those and gr_white to kr-intergalactic-transceiver,
-	-- the razi end-game recipe. With false both recipes stay as razi sets them.
-	["override_krastorio_endgame"] = false,
 }
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes

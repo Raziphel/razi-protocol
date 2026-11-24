@@ -50,7 +50,7 @@ local raw = {
 run(raw)
 for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis", "bm-armored-biters-override",
   "nulla-vanila-science", "crushing-industry-k2", "crushing-industry-glass", "crushing-industry-optical-fiber", "crushing-industry-concrete-mix",
-  "crushing-industry-space-crusher-quality", "override_krastorio_endgame" }) do
+  "crushing-industry-space-crusher-quality" }) do
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == false and setting.default_value == false and setting.hidden == true, name .. " not pinned to false")
@@ -59,6 +59,10 @@ end
 local ki_same_surface = raw["bool-setting"]["el_ki_same_surface"]
 check(ki_same_surface.default_value == true and ki_same_surface.forced_value == nil and ki_same_surface.hidden ~= true,
   "el_ki_same_surface must default to true and stay visible to the player")
+---@type table
+local override_krastorio_endgame = raw["bool-setting"]["override_krastorio_endgame"]
+check(override_krastorio_endgame.default_value == true and override_krastorio_endgame.forced_value == nil and override_krastorio_endgame.hidden ~= true,
+  "override_krastorio_endgame must keep the 248k Redux default and stay visible to the player")
 ---@type table
 local overlap = raw["string-setting"]["s6x-ii-krastorio-overlap-tech"]
 check(overlap.default_value == "kr" and #overlap.allowed_values == 1 and overlap.allowed_values[1] == "kr" and overlap.hidden == true,
