@@ -74,6 +74,6 @@ check(recipes_of(technology) == table.concat(ENEAS_UNLOCKS, ",") and #logs == 0,
 
 -- Without Eneas the setting does not exist.
 technology = run({lignumis = "2.13.2"}, nil)
-check(#logs == 0, "nothing changes without Eneas")
+check(recipes_of(technology) == table.concat(ENEAS_UNLOCKS, ",") and #logs == 0, "nothing changes without Eneas")
 
 print("test_mod_fixes_eneas_lignumis_iron_processing ok")
