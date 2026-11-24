@@ -27,6 +27,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Reworks endgame flow around the solar-system edge and intergalactic transceiver, with an expanded black-hole route when optional Nexus is installed.
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
+- Places optional 248k Redux in the chapters: its fission, fusion and gravitation stages need the Solaris, Vibrant and Deep Space cards, its purifier works only on Nauvis, its roboports stay off space platforms and its white hole no longer duplicates items.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
