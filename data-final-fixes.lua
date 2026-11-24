@@ -100,6 +100,8 @@ require("prototypes.industry.exchanges.modded_planet_exchanges").data_final_fixe
 -- Handoffs between neighbouring systems, then placement of two mod technologies.
 require("prototypes.technology.gates.regional_research_bridges").data_final_fixes()
 require("prototypes.technology.gates.galactic_mod_research").data_final_fixes()
+require("prototypes.compatibility.248k-Redux.chapter_gates").data_final_fixes()
+require("prototypes.compatibility.248k-Redux.lab_inputs").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
