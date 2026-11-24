@@ -289,6 +289,9 @@ require("prototypes.difficulty.razi_map_preset").data_final_fixes()
 
 -- Repairs of mistakes in other mods, as the last step: they see the final prototypes of every pass above.
 require("prototypes.fixes.init").data_final_fixes()
+require("prototypes.compatibility.248k-Redux.purifier_nauvis").data_final_fixes()
+require("prototypes.compatibility.248k-Redux.robo_ports").data_final_fixes()
+require("prototypes.compatibility.248k-Redux.white_hole").data_final_fixes()
 
 -- Recipe loops, as the level of razi-resource-loops decides: after the repairs, which they see in their final state.
 require("prototypes.balance.resource_loops").data_final_fixes()
