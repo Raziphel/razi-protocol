@@ -18,7 +18,6 @@ require("scripts.events.journal").register(events)
 require("scripts.events.convergence").register(events)
 require("scripts.events.platforms").register(events)
 require("scripts.events.forces").register(events)
-require("scripts.events.enemies").register(events)
 
 require("scripts.events.commands").register()
 
