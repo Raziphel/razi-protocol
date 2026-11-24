@@ -15,6 +15,8 @@ require("prototypes.fixes.common.k2so_tweaks").data_updates()
 require("prototypes.fixes.Voidcraft.module_category_defaults").data_updates()
 
 require("prototypes.fixes.tenebris-prime.bioluminescent_references").data_updates()
+-- Eneas replaces the unlocks of iron-processing in its data-final-fixes; note them first.
+require("prototypes.fixes.moon-eneas.lignumis_iron_processing").data_updates()
 
 -- Star images are rendered and sprite_only parents deleted during PlanetsLib
 -- data-final-fixes. Position them BEFORE that irreversible rendering pass.

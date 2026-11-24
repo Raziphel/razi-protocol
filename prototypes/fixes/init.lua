@@ -18,6 +18,7 @@ local repairs = {
 	require("prototypes.fixes.moon-eneas.pristine_filter"),
 	require("prototypes.fixes.moon-eneas.construction_drone"),
 	require("prototypes.fixes.moon-eneas.lignumis_robotics"),
+	require("prototypes.fixes.moon-eneas.lignumis_iron_processing"),
 	require("prototypes.fixes.Cerys-Moon-of-Fulgora.roboport_pressure"),
 	require("prototypes.fixes.Krastorio2.loader_insert_limits"),
 	require("prototypes.fixes.planetaris-arig.surface_conditions"),
