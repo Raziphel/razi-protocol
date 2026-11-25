@@ -147,6 +147,8 @@ jobs:
             .load/run-*/*.txt
             .load/run-*/factorio-current.log
           retention-days: 7
+          # .load is a hidden folder, and upload-artifact skips hidden files by default
+          include-hidden-files: true
 
   load-optional:
     name: load with optional mods, Factorio ${{ matrix.version }}
@@ -190,6 +192,8 @@ jobs:
             .load-optional/run-*/*.txt
             .load-optional/run-*/factorio-current.log
           retention-days: 7
+          # .load-optional is a hidden folder, and upload-artifact skips hidden files by default
+          include-hidden-files: true
 
   report:
     name: report nightly load
