@@ -116,9 +116,6 @@ local pinned_string_settings = {
 	["bzzirconium-recipe-bypass"] = bz_recipe_bypass,
 	["bzcarbon-recipe-bypass"] = bz_recipe_bypass,
 	["bzsilicon-recipe-bypass"] = bz_recipe_bypass,
-	-- Default "yes" adds the bzlead expansion bolts and buildings. Foliax then copies the bolt recipe with foliax-iron-bar,
-	-- an item that does not exist, and the game does not start (bzlead/settings.lua:17-20; foliax/prototypes/mod-compat.lua:368).
-	["bzlead-more-entities"] = "no",
 }
 
 -- The stage power draw is 150 MW times this multiplier (Rocket-Silo-Construction/prototypes/entities.lua:7).
@@ -140,6 +137,10 @@ local default_only_bool_settings = {
 	-- and platform (248k-Redux/scripts/electronic/el_ki_script.lua:414-422). With true, a beacon takes modules only from a
 	-- core on its own surface. The setting stays visible, so the map admin can switch it.
 	["el_ki_same_surface"] = true,
+	-- Default true: Real Smoke 1.0.22 puts smoke on every death near a player, and its skip list has no asteroid
+	-- (real-smoke/control.lua:166-184), so every asteroid shot near a platform leaves black smoke in space. Off by
+	-- default; the player can still turn it on.
+	["real-smoke-events"] = false,
 }
 
 -- Big-Monsters 2.2.1: changing either per-player camera setting ends the game with a non-recoverable error. The handler
