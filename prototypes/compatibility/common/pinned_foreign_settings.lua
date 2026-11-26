@@ -112,9 +112,6 @@ local pinned_string_settings = {
 	["bzzirconium-recipe-bypass"] = bz_recipe_bypass,
 	["bzcarbon-recipe-bypass"] = bz_recipe_bypass,
 	["bzsilicon-recipe-bypass"] = bz_recipe_bypass,
-	-- Default "yes" adds the bzlead expansion bolts and buildings. Foliax then copies the bolt recipe with foliax-iron-bar,
-	-- an item that does not exist, and the game does not start (bzlead/settings.lua:17-20; foliax/prototypes/mod-compat.lua:368).
-	["bzlead-more-entities"] = "no",
 }
 
 -- The stage power draw is 150 MW times this multiplier (Rocket-Silo-Construction/prototypes/entities.lua:7).
