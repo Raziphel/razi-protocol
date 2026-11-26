@@ -52,6 +52,55 @@ end
 
 log("razi-load-check: tile effects " .. tile_effects .. " of " .. tile_effect_limit .. ", recipes " .. recipes .. " of 65535, labs " .. count(data.raw.lab))
 
+if mods["Smart_Inserters"] then
+	local startup = settings and settings.startup or {}
+	local function check_setting(name, expected)
+		local setting = startup[name]
+		if not setting or setting.value ~= expected then
+			problems[#problems + 1] = "Smart_Inserters setting " .. name .. " must be " .. tostring(expected)
+		end
+	end
+
+	check_setting("si-range-adder", "inserter")
+	for _, name in ipairs({
+		"si-disable-inserters-consumption",
+		"si-disable-long-inserters",
+		"si-range-technologies",
+		"si-diagonal-technologies",
+		"si-offset-technologies",
+	}) do
+		check_setting(name, false)
+	end
+	check_setting("si-inserters-chase-belt-items", true)
+
+	for name, expected in pairs({
+		inserter = 0.035,
+		["fast-inserter"] = 0.1,
+		["long-handed-inserter"] = 0.05,
+	}) do
+		local inserter = data.raw.inserter and data.raw.inserter[name]
+		if not inserter then
+			problems[#problems + 1] = "Smart_Inserters is missing inserter " .. name
+		elseif type(inserter.extension_speed) ~= "number" or math.abs(inserter.extension_speed - expected) > 1e-9 then
+			problems[#problems + 1] = "Smart_Inserters changed " .. name .. " extension_speed"
+		end
+	end
+
+	local long_handed = data.raw.inserter and data.raw.inserter["long-handed-inserter"]
+	if not long_handed or long_handed.fast_replaceable_group ~= "long-handed-inserter" then
+		problems[#problems + 1] = "Smart_Inserters changed long-handed-inserter fast_replaceable_group"
+	end
+	if not long_handed or long_handed.next_upgrade ~= "kr-superior-long-inserter" then
+		problems[#problems + 1] = "Smart_Inserters changed long-handed-inserter next_upgrade"
+	end
+	for name, inserter in pairs(data.raw.inserter or {}) do
+		if type(inserter.fast_replaceable_group) == "string"
+			and string.find(inserter.fast_replaceable_group, "razi-long-handed-inserter", 1, true) then
+			problems[#problems + 1] = "Smart_Inserters left the group marker on " .. name
+		end
+	end
+end
+
 if #problems > 0 then
 	error("razi-load-check: " .. table.concat(problems, "; "))
 end

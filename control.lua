@@ -18,6 +18,8 @@ require("scripts.events.journal").register(events)
 require("scripts.events.convergence").register(events)
 require("scripts.events.platforms").register(events)
 require("scripts.events.forces").register(events)
+-- Smart_Inserters with Vehicle Wagon 2: no Smart_Inserters panel on the loading ramp.
+require("scripts.compatibility.Smart_Inserters.vehicle_wagon_ramp").register(events)
 
 require("scripts.events.commands").register()
 
