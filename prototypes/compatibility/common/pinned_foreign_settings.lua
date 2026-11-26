@@ -133,6 +133,10 @@ local default_only_bool_settings = {
 	-- and platform (248k-Redux/scripts/electronic/el_ki_script.lua:414-422). With true, a beacon takes modules only from a
 	-- core on its own surface. The setting stays visible, so the map admin can switch it.
 	["el_ki_same_surface"] = true,
+	-- Default true: Real Smoke 1.0.22 puts smoke on every death near a player, and its skip list has no asteroid
+	-- (real-smoke/control.lua:166-184), so every asteroid shot near a platform leaves black smoke in space. Off by
+	-- default; the player can still turn it on.
+	["real-smoke-events"] = false,
 }
 
 -- Big-Monsters 2.2.1: changing either per-player camera setting ends the game with a non-recoverable error. The handler
