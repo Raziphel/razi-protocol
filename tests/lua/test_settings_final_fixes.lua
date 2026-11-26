@@ -48,6 +48,7 @@ local raw = {
     ["bzzirconium-early"] = { default_value = true },
     ["vehicle-wagon-use-custom-weights"] = { default_value = true },
     ["yir_vanilla_loco_nerf"] = { default_value = true },
+    ["omni-signals"] = { default_value = true },
     ["RTZiplineSetting"] = { default_value = true },
     ["override_krastorio_endgame"] = { default_value = true },
     ["el_ki_same_surface"] = { default_value = false },
@@ -76,7 +77,7 @@ local raw = {
 run(raw)
 for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s6x-prismite-on-nauvis", "s6x-colored-concrete", "adjust-maraxsis", "bm-armored-biters-override",
   "nulla-vanila-science", "crushing-industry-k2", "crushing-industry-glass", "crushing-industry-optical-fiber", "crushing-industry-concrete-mix",
-  "crushing-industry-space-crusher-quality", "yir_vanilla_loco_nerf" }) do
+  "crushing-industry-space-crusher-quality", "yir_vanilla_loco_nerf", "omni-signals" }) do
   ---@type table
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == false and setting.default_value == false and setting.hidden == true, name .. " not pinned to false")

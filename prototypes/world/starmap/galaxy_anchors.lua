@@ -32,6 +32,9 @@ local anchors = {
   {"space-location","black-hole","black-hole-approach",31,0.76},
   {"space-location","oort-cloud","nexus",112,0.17},
   {"space-location","sol","oort-cloud",94,0.13},
+  -- OMNI (omni) is a side branch behind the promethium science pack: north of
+  -- the edge, between Black Hole Approach and Nexus, clear of every route.
+  {"planet","OMNI","solar-system-edge",150,0.95},
   {"space-location","sye-calidus","star",20,0.5},
   -- Clear west-northwest external gateway, just beyond the orbital rim.
   -- Three interstellar departures fan outward, while the northern arc
@@ -125,7 +128,7 @@ end
 local deep_space_names={
   ["shattered-planet"]=true,["skewer_shattered_planet"]=true,
   ["skewer_lost_beyond"]=true,nexus=true,["black-hole-approach"]=true,
-  ["black-hole"]=true,["oort-cloud"]=true,sol=true
+  ["black-hole"]=true,["oort-cloud"]=true,sol=true,OMNI=true
 }
 local deep_space_orbits={}
 for _,item in ipairs(anchors) do
@@ -140,6 +143,7 @@ local deep_space_no_rings={
   ["skewer_shattered_planet"]=true,["skewer_lost_beyond"]=true,
   ["black-hole-approach"]=true,["black-hole"]=true,
   ["oort-cloud"]=true,sol=true,
+  OMNI=true,
   ["near-bellicos-orbit"]=true,["bellicos-orbit"]=true,
   ["calidus-bellicos-stargate-calidus"]=true,
   ["aegis-inner-edge"]=true,["aegis-outer-edge"]=true
