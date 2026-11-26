@@ -3,8 +3,8 @@ local pinned_foreign_settings = {}
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
 -- removes what Razi Protocol relies on, of Rigor Module (which Planet Crucible requires) whose default would push the
--- recipe count past the engine limit, and of Renai Transportation, whose parts Ribbonia needs. Each is pinned and
--- hidden; a missing mod or setting is skipped.
+-- recipe count past the engine limit, of Renai Transportation, whose parts Ribbonia needs, and of Yuoki Industries
+-- Railway, whose default weakens the vanilla locomotive. Each is pinned and hidden; a missing mod or setting is skipped.
 -- Settings where only the default changes and the player keeps the choice are in default_only_bool_settings.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
@@ -70,6 +70,10 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
+	-- Default true: Yuoki Industries Railway cuts the vanilla locomotive to 900 kW and speed 0.9 so that its own
+	-- engines look stronger (yi_railway settings.lua:3-8, data-updates.lua:3-19). Razi Protocol balances the vanilla and
+	-- Krastorio 2 locomotive itself, so the cut is pinned off.
+	["yir_vanilla_loco_nerf"] = false,
 }
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes

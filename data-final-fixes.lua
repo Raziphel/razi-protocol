@@ -294,6 +294,11 @@ require("prototypes.compatibility.248k-Redux.robo_ports").data_final_fixes()
 require("prototypes.compatibility.248k-Redux.white_hole").data_final_fixes()
 require("prototypes.compatibility.248k-Redux.power_caps").data_final_fixes()
 
+-- Yuoki Industries Railway: its trains and their Tenebris copies go only where the vanilla ones go, and its
+-- coke gives no more energy than the coal it is made of. After the repairs, which see every copy.
+require("prototypes.compatibility.yi_railway.surface_conditions").data_final_fixes()
+require("prototypes.balance.yi_railway.coke_fuel").data_final_fixes()
+
 -- Recipe loops, as the level of razi-resource-loops decides: after the repairs, which they see in their final state.
 require("prototypes.balance.resource_loops").data_final_fixes()
 

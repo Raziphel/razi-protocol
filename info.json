@@ -39,6 +39,7 @@
     "? terrapalus-updated >= 0.5.0",
     "? Solar-Halo >= 1.2.3",
     "? 248k-Redux >= 2.1.51",
+    "? yi_railway >= 1.4.0",
     "corrundum >= 1.0.51",
     "corrundum-krastorio-compatibility-plus >= 1.1.2",
     "apia >= 0.5.1",
@@ -152,7 +153,10 @@
     "(?) Better_Starmap_Background",
     "(?) dea-dia-system",
     "(?) Flare Stack",
-    "(?) pelagos"
+    "(?) pelagos",
+    "(?) z_yira_american",
+    "(?) z_yira_UP",
+    "(?) z_yira_yuokirails"
   ],
   "quality_required": true,
   "rail_bridges_required": true,
