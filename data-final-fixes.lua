@@ -314,6 +314,7 @@ require("prototypes.compatibility.248k-Redux.purifier_nauvis").data_final_fixes(
 require("prototypes.compatibility.248k-Redux.robo_ports").data_final_fixes()
 require("prototypes.compatibility.248k-Redux.white_hole").data_final_fixes()
 require("prototypes.compatibility.248k-Redux.power_caps").data_final_fixes()
+require("prototypes.compatibility.VehicleWagon2.winch").data_final_fixes()
 
 -- Recipe loops, as the level of razi-resource-loops decides: after the repairs, which they see in their final state.
 require("prototypes.balance.resource_loops").data_final_fixes()

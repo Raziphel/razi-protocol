@@ -84,6 +84,11 @@ local pinned_bool_settings = {
 	-- RSC makes every stage non-minable immediately after placement when enabled, so the site cannot be dismantled for
 	-- its stage materials (Rocket-Silo-Construction/control.lua:217, 377).
 	["rsc-st-not-removable-site"] = true,
+	-- Default true: Vehicle Wagon 2 only checks its maximum vehicle weight when this is on (script/makeGlobalMaps.lua:21-22).
+	-- The spider weight workaround in prototypes/fixes/VehicleWagon2/no_item_spiders.lua would
+	-- stop excluding vehicles without an item if that check were disabled; loading one of those
+	-- vehicles crashes in VehicleWagon2/script/getVehicleItem.lua:19.
+	["vehicle-wagon-use-custom-weights"] = true,
 }
 
 -- These recipes are left untouched by BZ. bypass() is global in each mod's data-util.lua, so the last loaded mod
