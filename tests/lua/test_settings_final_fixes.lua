@@ -40,6 +40,7 @@ local raw = {
     ["RTBounceSetting"] = { default_value = false },
     ["RTTrainRampSetting"] = { default_value = true },
     ["bzzirconium-early"] = { default_value = true },
+    ["vehicle-wagon-use-custom-weights"] = { default_value = true },
     ["RTZiplineSetting"] = { default_value = true },
     ["override_krastorio_endgame"] = { default_value = true },
     ["el_ki_same_surface"] = { default_value = false },
@@ -121,6 +122,10 @@ for _, name in ipairs({ "RTThrowersSetting", "RTBounceSetting", "RTTrainRampSett
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == true and setting.default_value == true and setting.hidden == true, name .. " not pinned to true")
 end
+---@type table
+local vehicle_wagon_weights = raw["bool-setting"]["vehicle-wagon-use-custom-weights"]
+check(vehicle_wagon_weights.forced_value == true and vehicle_wagon_weights.hidden == true,
+  "vehicle-wagon-use-custom-weights must be pinned to true")
 ---@type table
 local zipline = raw["bool-setting"]["RTZiplineSetting"]
 check(zipline.forced_value == nil and zipline.hidden == nil, "RTZiplineSetting must stay untouched")

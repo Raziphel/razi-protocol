@@ -31,6 +31,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Places optional Mech Armor Expanded in the chapters: its MK2, MK3 and MK4 need the Vibrant, Beetlejuice and Deep Space cards, and their grids, inventory and resistances sit between mech armor and the top armor of the pack.
 - Supports the optional BZ mods (lead, titanium, tin, zirconium, carbon, silicon): pipes, circuits, steel, space platform foundation, sulfuric acid, plastic and scrap recycling keep their vanilla recipes, synthetic diamonds get their own technology, and the clashes with PlanetAthos, Nexus, Arig and Muria are resolved.
 - Supports optional Rocket-Silo Construction: the first rocket silo is built in six stages, then the regular rocket silo recipe unlocks with Space platform. A placed construction site cannot be removed, each stage draws 75 MW, and stage changes can bring biter attacks.
+- Supports optional Vehicle Wagon 2: its winch takes only the player's own vehicles, and bosses, hidden helpers and other vehicles without an item stay off the wagons, so loading them no longer crashes the game.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.
