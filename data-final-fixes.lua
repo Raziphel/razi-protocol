@@ -107,6 +107,12 @@ require("prototypes.compatibility.mech-armor-expanded.chapter_gates").data_final
 require("prototypes.compatibility.mech-armor-expanded.base_armor_links").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
 
+-- Rocket-Silo Construction: fixed stage materials, the silo's surface conditions on every stage, and the regular silo
+-- recipe from Space platform on, so only the first silo is built in stages.
+require("prototypes.compatibility.Rocket-Silo-Construction.stage_ingredients").data_final_fixes()
+require("prototypes.compatibility.Rocket-Silo-Construction.surface_conditions").data_final_fixes()
+require("prototypes.compatibility.Rocket-Silo-Construction.first_silo").data_final_fixes()
+
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
 require("prototypes.compatibility.slp-dyson-sphere-reworked-fork.calidus_dyson").data_final_fixes()

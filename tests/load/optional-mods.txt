@@ -14,3 +14,4 @@ Flare Stack
 248k-Redux
 mech-armor-expanded
 Smart_Inserters
+Rocket-Silo-Construction

@@ -78,6 +78,9 @@ local pinned_bool_settings = {
 	["si-diagonal-technologies"] = false,
 	["si-offset-technologies"] = false,
 	["si-inserters-chase-belt-items"] = true,
+	-- RSC makes every stage non-minable immediately after placement when enabled, so the site cannot be dismantled for
+	-- its stage materials (Rocket-Silo-Construction/control.lua:217, 377).
+	["rsc-st-not-removable-site"] = true,
 }
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes
@@ -87,6 +90,14 @@ local pinned_string_settings = {
 	-- Default "equal" gives every inserter a reach of 3; "inserter" caps each at its own reach
 	-- (Smart_Inserters/scripts/inserter_functions.lua:433-459).
 	["si-range-adder"] = "inserter",
+}
+
+-- The stage power draw is 150 MW times this multiplier (Rocket-Silo-Construction/prototypes/entities.lua:7).
+-- The cost multiplier applies to ingredients of stages 2, 4, 5 and 6
+-- (Rocket-Silo-Construction/prototypes/recipe.lua:93-123, 269-276).
+local pinned_double_settings = {
+	["rsc-st-power-mp"] = 0.5,
+	["rsc-st-cost-mp"] = 1,
 }
 
 -- Crushing Industry's coal setting replaces coal in recipes at crushing-industry_0.6.9/base-data-updates.lua:83-94.
@@ -131,6 +142,15 @@ function pinned_foreign_settings.settings_final_fixes()
 
 	for name, value in pairs(pinned_string_settings) do
 		local setting = data.raw["string-setting"] and data.raw["string-setting"][name]
+		if setting then
+			setting.default_value = value
+			setting.allowed_values = { value }
+			setting.hidden = true
+		end
+	end
+
+	for name, value in pairs(pinned_double_settings) do
+		local setting = data.raw["double-setting"] and data.raw["double-setting"][name]
 		if setting then
 			setting.default_value = value
 			setting.allowed_values = { value }
