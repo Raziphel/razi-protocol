@@ -18,6 +18,9 @@ require("prototypes.fixes.tenebris-prime.bioluminescent_references").data_update
 -- Eneas replaces the unlocks of iron-processing in its data-final-fixes; note them first.
 require("prototypes.fixes.moon-eneas.lignumis_iron_processing").data_updates()
 
+-- BZ Carbon redefines the PlanetsLib oxygen property and its planet values in its data stage.
+require("prototypes.compatibility.bzcarbon.oxygen").data_updates()
+
 -- Star images are rendered and sprite_only parents deleted during PlanetsLib
 -- data-final-fixes. Position them BEFORE that irreversible rendering pass.
 require("prototypes.world.systems.calidus_sun").data_updates()
