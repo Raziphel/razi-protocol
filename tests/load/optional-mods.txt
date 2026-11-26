@@ -13,4 +13,10 @@ advanced_target_priorities
 Flare Stack
 248k-Redux
 mech-armor-expanded
+bzlead
+bztitanium
+bztin
+bzzirconium
+bzcarbon
+bzsilicon
 Rocket-Silo-Construction
