@@ -51,6 +51,7 @@ local raw = {
     ["override_krastorio_endgame"] = { default_value = true },
     ["el_ki_same_surface"] = { default_value = false },
     ["rsc-st-not-removable-site"] = { default_value = false },
+    ["real-smoke-events"] = { default_value = true },
   },
   ["double-setting"] = {
     ["rsc-st-power-mp"] = { default_value = 1, minimum_value = 0.25, maximum_value = 3 },
@@ -179,6 +180,12 @@ end
 local crushing_coal = raw["bool-setting"]["crushing-industry-coal"]
 check(crushing_coal.default_value == false and crushing_coal.forced_value == nil and crushing_coal.hidden == nil,
   "crushing-industry-coal must default to off and stay visible to the player")
+
+-- Real Smoke's death smoke is off by default because of asteroids; the player may turn it on.
+---@type table
+local real_smoke_events = raw["bool-setting"]["real-smoke-events"]
+check(real_smoke_events.default_value == false and real_smoke_events.forced_value == nil and real_smoke_events.hidden == nil,
+  "real-smoke-events must default to off and stay visible to the player")
 
 -- The other settings of Rigor Module stay as they are.
 ---@type table
