@@ -42,6 +42,11 @@ local raw = {
     ["RTZiplineSetting"] = { default_value = true },
     ["override_krastorio_endgame"] = { default_value = true },
     ["el_ki_same_surface"] = { default_value = false },
+    ["rsc-st-not-removable-site"] = { default_value = false },
+  },
+  ["double-setting"] = {
+    ["rsc-st-power-mp"] = { default_value = 1, minimum_value = 0.25, maximum_value = 3 },
+    ["rsc-st-cost-mp"] = { default_value = 1, minimum_value = 0.5, maximum_value = 100 },
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
@@ -67,6 +72,17 @@ check(override_krastorio_endgame.default_value == true and override_krastorio_en
 local overlap = raw["string-setting"]["s6x-ii-krastorio-overlap-tech"]
 check(overlap.default_value == "kr" and #overlap.allowed_values == 1 and overlap.allowed_values[1] == "kr" and overlap.hidden == true,
   "Krastorio overlap setting not pinned to kr")
+
+---@type table
+local non_removable_site = raw["bool-setting"]["rsc-st-not-removable-site"]
+check(non_removable_site.default_value == true and non_removable_site.forced_value == true and non_removable_site.hidden == true,
+  "RSC construction sites must stay non-removable")
+for name, value in pairs({ ["rsc-st-power-mp"] = 0.5, ["rsc-st-cost-mp"] = 1 }) do
+  ---@type table
+  local setting = raw["double-setting"][name]
+  check(setting.default_value == value and #setting.allowed_values == 1 and setting.allowed_values[1] == value
+      and setting.hidden == true and setting.forced_value == nil, name .. " not pinned to its configured value")
+end
 
 -- Rigor Module runs in compatibility mode with the vanilla recipes included, to stay under the recipe limit.
 for _, name in ipairs({ "rigor-module-compatibility-mode", "rigor-module-compatibility-mode-include-vanilla" }) do
@@ -139,5 +155,6 @@ local partial = { ["bool-setting"] = { ["s6x-arcanyx-mythril-nuclear"] = { defau
 run(partial)
 check(partial["bool-setting"]["s6x-arcanyx-mythril-nuclear"].forced_value == false, "Partial run must still pin the present setting")
 check(partial["string-setting"] == nil, "Missing setting type must not be created")
+check(partial["double-setting"] == nil, "Missing double-setting type must not be created")
 rawset(_G, "data", nil)
 print("ok")
