@@ -65,6 +65,36 @@ local function turret_mk(name,node)
   return nil
 end
 
+-- planet-ferrum adds its robotics pack, and the technology of that pack as a
+-- prerequisite, to every technology priced in Vulcanus, Fulgora and Gleba
+-- science (planet-ferrum data-updates.lua:15-19, prototypes/science.lua:11-16).
+-- MK2 costs all three, so with Ferrum, which razi reaches from Beetlejuice,
+-- MK2 and every tier after it would wait for Ferrum instead of the chapter
+-- below. The tiers placed here keep their chapter without Ferrum's pack.
+local ferrum_pack="ferrum-robotics-science-pack"
+local function drop_ferrum_pack(name,node)
+  local removed=false
+  local ingredients=node.unit and node.unit.ingredients or {}
+  for index=#ingredients,1,-1 do
+    local ingredient=ingredients[index]
+    if (ingredient.name or ingredient[1])==ferrum_pack then
+      table.remove(ingredients,index)
+      removed=true
+    end
+  end
+  local prerequisites=node.prerequisites or {}
+  for index=#prerequisites,1,-1 do
+    if prerequisites[index]==ferrum_pack then
+      table.remove(prerequisites,index)
+      removed=true
+    end
+  end
+  if removed then
+    log("razi-protocol: "..name.." no longer needs "..ferrum_pack
+      ..": it belongs to an earlier chapter than Ferrum")
+  end
+end
+
 function M.data_final_fixes()
   -- Source tech uses platform and space science already; anchoring to the
   -- research milestone does not require visiting a second star to trade.
@@ -84,7 +114,9 @@ function M.data_final_fixes()
   for _,name in ipairs(keys) do
     local node=tech(name)
     local tier=turret_mk(name,node)
-    if tier then safe_link(name,stage[tier]) end
+    if tier and safe_link(name,stage[tier]) then
+      drop_ferrum_pack(name,node)
+    end
   end
 end
 
