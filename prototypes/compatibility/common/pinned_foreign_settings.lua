@@ -70,12 +70,32 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
+	-- Default true: zircon is used in the stone furnace and other early recipes. False moves its use until after logistic
+	-- science (bzzirconium/zirconium-recipe-updates.lua:32-34).
+	["bzzirconium-early"] = false,
 }
+
+-- These recipes are left untouched by BZ. bypass() is global in each mod's data-util.lua, so the last loaded mod
+-- provides the function and its recipe list applies to all six (bzlead/data-util.lua:110; bztitanium/data-util.lua:110;
+-- bztin/data-util.lua:110; bzzirconium/data-util.lua:110; bzcarbon/data-util.lua:110; bzsilicon/data-util.lua:110).
+-- For scrap-recycling, BZ sets independent_probability on existing shared_probability
+-- (bzcarbon/data-util.lua:1181; bzlead/lead-recipe-updates.lua:8-12; bztin/tin-recipe-updates.lua:13-15;
+-- bzcarbon/carbon-recipe-updates.lua:53-55).
+local bz_recipe_bypass = "pipe,pipe-to-ground,electronic-circuit,advanced-circuit,processing-unit,steel-plate,space-platform-foundation,sulfuric-acid,plastic-bar,scrap-recycling"
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes
 -- and hides the kr-air-purification technology. "kr" keeps Krastorio 2 and adds no second purifier ("both" would).
 local pinned_string_settings = {
 	["s6x-ii-krastorio-overlap-tech"] = "kr",
+	["bzlead-recipe-bypass"] = bz_recipe_bypass,
+	["bztitanium-recipe-bypass"] = bz_recipe_bypass,
+	["bztin-recipe-bypass"] = bz_recipe_bypass,
+	["bzzirconium-recipe-bypass"] = bz_recipe_bypass,
+	["bzcarbon-recipe-bypass"] = bz_recipe_bypass,
+	["bzsilicon-recipe-bypass"] = bz_recipe_bypass,
+	-- Default "yes" adds the bzlead expansion bolts and buildings. Foliax then copies the bolt recipe with foliax-iron-bar,
+	-- an item that does not exist, and the game does not start (bzlead/settings.lua:17-20; foliax/prototypes/mod-compat.lua:368).
+	["bzlead-more-entities"] = "no",
 }
 
 -- Crushing Industry's coal setting replaces coal in recipes at crushing-industry_0.6.9/base-data-updates.lua:83-94.
