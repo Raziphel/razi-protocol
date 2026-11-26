@@ -13,3 +13,4 @@ advanced_target_priorities
 Flare Stack
 248k-Redux
 mech-armor-expanded
+Smart_Inserters

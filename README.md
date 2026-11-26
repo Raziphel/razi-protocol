@@ -29,6 +29,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Places optional 248k Redux in the chapters: its fission, fusion and gravitation stages need the Solaris, Vibrant and Deep Space cards, its purifier works only on Nauvis, its roboports stay off space platforms and its white hole no longer duplicates items.
 - Places optional Mech Armor Expanded in the chapters: its MK2, MK3 and MK4 need the Vibrant, Beetlejuice and Deep Space cards, and their grids, inventory and resistances sit between mech armor and the top armor of the pack.
+- Supports optional Smart Inserters: pickup and drop points of inserters can be moved from the start, without its technologies; each inserter reaches only as far as its own range, and inserter speeds, upgrades and fast-replace groups stay as without the mod.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.

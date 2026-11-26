@@ -1,5 +1,6 @@
 require("util")
 
+require("prototypes.compatibility.Smart_Inserters.smart_inserters").data_final_fixes()
 require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()

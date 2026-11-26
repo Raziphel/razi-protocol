@@ -70,12 +70,23 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
+	-- Smart_Inserters 2.1.0: range, diagonal and offset technologies stay off so vectors work from the start on
+	-- Lignumis; long inserters and their power use stay enabled. Belt chasing stays on; false disables it for every inserter.
+	["si-disable-inserters-consumption"] = false,
+	["si-disable-long-inserters"] = false,
+	["si-range-technologies"] = false,
+	["si-diagonal-technologies"] = false,
+	["si-offset-technologies"] = false,
+	["si-inserters-chase-belt-items"] = true,
 }
 
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes
 -- and hides the kr-air-purification technology. "kr" keeps Krastorio 2 and adds no second purifier ("both" would).
 local pinned_string_settings = {
 	["s6x-ii-krastorio-overlap-tech"] = "kr",
+	-- Default "equal" gives every inserter a reach of 3; "inserter" caps each at its own reach
+	-- (Smart_Inserters/scripts/inserter_functions.lua:433-459).
+	["si-range-adder"] = "inserter",
 }
 
 -- Crushing Industry's coal setting replaces coal in recipes at crushing-industry_0.6.9/base-data-updates.lua:83-94.
