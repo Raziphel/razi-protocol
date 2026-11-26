@@ -124,7 +124,7 @@ return function(runner)
 
 		local discovery = prototypes.technology["planet-discovery-OMNI"]
 		local prerequisites = {}
-		for _, name in pairs(discovery.prerequisites) do prerequisites[name] = true end
+		for name in pairs(discovery.prerequisites) do prerequisites[name] = true end
 		runner.assert(prerequisites["promethium-science-pack"],
 			"planet-discovery-OMNI does not require promethium-science-pack")
 		runner.assert(prerequisites["razi-singularity-theory"] or prerequisites["promethium-882-research"],
