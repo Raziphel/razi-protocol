@@ -13,6 +13,8 @@ local HYARION_RECIPE = "planetaris-promethium-science-pack"
 local FOLIAX_RECIPE = "foliax-promethium-science-pack"
 local HYARION_COPY = "igrys-planetaris-promethium-science-pack-enhanced"
 local FOLIAX_COPY = "igrys-foliax-promethium-science-pack-enhanced"
+local OMNI_RECIPE = "advanced-promethium-science"
+local OMNI_COPY = "igrys-advanced-promethium-science-enhanced"
 
 local function item(name, amount)
 	return {type = "item", name = name, amount = amount}
@@ -53,15 +55,18 @@ local recipes = {
 		icons = {{icon = "unused-extra-icon.png", icon_size = 32}},
 		localised_description = {"item-description.foliax-promethium-science-pack"},
 	}),
+	[OMNI_RECIPE] = source_recipe(5),
 	[HYARION_COPY] = source_recipe(15, {enabled = true, hidden = false}),
 	[FOLIAX_COPY] = source_recipe(10, {enabled = true, hidden = false}),
+	[OMNI_COPY] = source_recipe(5, {enabled = true, hidden = false}),
 }
 local original_ingredients = {
 	[HYARION_RECIPE] = support.copy(recipes[HYARION_RECIPE].ingredients),
 	[FOLIAX_RECIPE] = support.copy(recipes[FOLIAX_RECIPE].ingredients),
+	[OMNI_RECIPE] = support.copy(recipes[OMNI_RECIPE].ingredients),
 }
 local raw = install(recipes, {
-	promethium = {effects = {unlock(HYARION_COPY), unlock(FOLIAX_COPY), unlock("other-recipe")}},
+	promethium = {effects = {unlock(HYARION_COPY), unlock(FOLIAX_COPY), unlock(OMNI_COPY), unlock("other-recipe")}},
 }, {
 	[DATA_NAME] = {icon = "promethium-research-data.png"},
 })
@@ -72,6 +77,8 @@ check(recipes[HYARION_RECIPE].results[1].name == DATA_NAME and recipes[HYARION_R
 	"Hyarion makes eight research data")
 check(recipes[FOLIAX_RECIPE].results[1].name == DATA_NAME and recipes[FOLIAX_RECIPE].results[1].amount == 10,
 	"Foliax makes ten research data")
+check(recipes[OMNI_RECIPE].results[1].name == DATA_NAME and recipes[OMNI_RECIPE].results[1].amount == 5,
+	"omni makes five research data")
 check(recipes[HYARION_RECIPE].results[1].ignored_by_productivity == 2,
 	"Other result fields stay untouched")
 check(recipes[HYARION_RECIPE].main_product == DATA_NAME, "Hyarion main product follows the research data")
@@ -86,17 +93,20 @@ check(recipes[FOLIAX_RECIPE].icon == "promethium-research-data.png"
 	and recipes[FOLIAX_RECIPE].icon_size == nil and recipes[FOLIAX_RECIPE].icons == nil,
 	"Foliax uses the data item icon and drops the old icon fields")
 check(support.same(recipes[HYARION_RECIPE].ingredients, original_ingredients[HYARION_RECIPE])
-	and support.same(recipes[FOLIAX_RECIPE].ingredients, original_ingredients[FOLIAX_RECIPE]),
-	"Neither recipe's ingredients change")
+	and support.same(recipes[FOLIAX_RECIPE].ingredients, original_ingredients[FOLIAX_RECIPE])
+	and support.same(recipes[OMNI_RECIPE].ingredients, original_ingredients[OMNI_RECIPE]),
+	"The recipes' ingredients stay unchanged")
 check(support.logged(HYARION_RECIPE .. " makes 8 " .. DATA_NAME) == 1
-	and support.logged(FOLIAX_RECIPE .. " makes 10 " .. DATA_NAME) == 1,
+	and support.logged(FOLIAX_RECIPE .. " makes 10 " .. DATA_NAME) == 1
+	and support.logged(OMNI_RECIPE .. " makes 5 " .. DATA_NAME) == 1,
 	"Each changed recipe has one change log")
 check(recipes[HYARION_COPY].hidden == true and recipes[HYARION_COPY].enabled == false
-	and recipes[FOLIAX_COPY].hidden == true and recipes[FOLIAX_COPY].enabled == false,
+	and recipes[FOLIAX_COPY].hidden == true and recipes[FOLIAX_COPY].enabled == false
+	and recipes[OMNI_COPY].hidden == true and recipes[OMNI_COPY].enabled == false,
 	"Igrys copies of changed recipes are hidden and disabled")
 check(#raw.technology.promethium.effects == 1 and raw.technology.promethium.effects[1].recipe == "other-recipe",
 	"Only unlocks for the hidden Igrys copies are removed")
-check(#support.logs == 4, "Two recipe changes and two hidden Igrys copies are logged")
+check(#support.logs == 6, "Three recipe changes and three hidden Igrys copies are logged")
 
 local after_first_call = support.copy(raw)
 local log_count = #support.logs

@@ -23,6 +23,10 @@ require("prototypes.ui.journal")
 require("prototypes.industry.great_projects").data()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data()
 
+-- omni: its research is split in three and its science pack, synthesis and cloning recipes work only on OMNI. In the
+-- data stage, before the mods that copy recipes in their later stages.
+require("prototypes.compatibility.omni.omni").data()
+
 -- Before quality makes the recycling recipes in data-updates.
 require("prototypes.fixes.planetaris-arig.lead_expansion_bolt").data()
 

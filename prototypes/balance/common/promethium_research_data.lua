@@ -1,10 +1,12 @@
--- Hyarion and Foliax recipe amounts are a balance decision: both routes still use promethium chunks,
--- but produce research data so every promethium card takes a blank tech card like the Krastorio 2 chain.
+-- Hyarion, Foliax and omni recipe amounts are a balance decision: each recipe keeps its source ingredients but produces
+-- research data, so every promethium card takes a blank tech card like the Krastorio 2 chain.
 local RECIPES = {
 	-- Planetaris Hyarion (planetaris-hyarion/prototypes/recipe.lua:1231): 20 chunks, 1 quantum processor, 10 biter eggs.
 	{recipe = "planetaris-promethium-science-pack", cards = 15, data = 8},
 	-- Foliax (foliax/prototypes/recipe.lua:3178): 25 chunks, 25 processing units, 25 raw fish.
 	{recipe = "foliax-promethium-science-pack", cards = 10, data = 10},
+	-- omni (omni/prototypes/recipe.lua:377-393): 10 biter eggs, 1 quantum processor, 250 beninium.
+	{recipe = "advanced-promethium-science", cards = 5, data = 5, mod = "omni"},
 }
 
 local DATA_NAME = "kr-promethium-research-data"
@@ -93,7 +95,8 @@ function promethium_research_data.data_final_fixes()
 					end
 				end
 
-				log("razi-protocol: " .. entry.recipe .. " makes " .. entry.data .. " " .. DATA_NAME
+				local log_prefix = entry.mod and ("razi-protocol: " .. entry.mod .. ": ") or "razi-protocol: "
+				log(log_prefix .. entry.recipe .. " makes " .. entry.data .. " " .. DATA_NAME
 					.. " instead of " .. entry.cards .. " promethium-science-pack")
 				changed_copies[#changed_copies + 1] = "igrys-" .. entry.recipe .. "-enhanced"
 			end

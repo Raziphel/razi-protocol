@@ -172,6 +172,9 @@ require("prototypes.world.asteroids.belt_expeditions").data_final_fixes()
 require("prototypes.compatibility.Imersite-Asteroids.imersite_aquilo_routes").data_final_fixes()
 
 -- Calibrate severe source-native 1,000 km shortcuts after the route reconciliation.
+-- omni: the approach to OMNI is as long as the one to Nexus. Before the distance balance, which would raise the
+-- source 10 000 km to its span minimum.
+require("prototypes.compatibility.omni.omni").data_final_fixes()
 require("prototypes.world.routes.route_distance_balance").data_final_fixes()
 -- Only existing source-mod asteroid families are distributed on the final approved routes.
 require("prototypes.world.asteroids.modded_asteroid_distribution").data_final_fixes()
@@ -263,7 +266,7 @@ require("prototypes.balance.space-age.nauvis_comfort_recipes").data_final_fixes(
 -- while leaving its separate crushing and enrichment routes available, before the crafting-menu pass.
 require("prototypes.balance.crushing-industry.ore_recipes").data_final_fixes()
 
--- Hyarion and Foliax make promethium research data instead of cards, so every card takes a blank tech card like the Krastorio 2 chain.
+-- Hyarion, Foliax and omni make promethium research data instead of cards, so every card takes a blank tech card like the Krastorio 2 chain.
 -- After recipe-copying passes (Igrys), before the menu pass.
 require("prototypes.balance.common.promethium_research_data").data_final_fixes()
 

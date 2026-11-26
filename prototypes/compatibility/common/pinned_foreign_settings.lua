@@ -3,8 +3,9 @@ local pinned_foreign_settings = {}
 -- Startup settings of the Arcanyx family (Arcanyx, IridescentIndustry, Voidcraft), Balack, Nulla and Crushing Industry
 -- (which PlanetAthos requires) whose default or opt-in value rewrites vanilla, Krastorio 2 or Space Age progression, or
 -- removes what Razi Protocol relies on, of Rigor Module (which Planet Crucible requires) whose default would push the
--- recipe count past the engine limit, of Renai Transportation, whose parts Ribbonia needs, and of Yuoki Industries
--- Railway, whose default weakens the vanilla locomotive. Each is pinned and hidden; a missing mod or setting is skipped.
+-- recipe count past the engine limit, of Renai Transportation, whose parts Ribbonia needs, of Yuoki Industries Railway,
+-- whose default weakens the vanilla locomotive, and of omni, whose signals are named after its authors. Each is pinned
+-- and hidden; a missing mod or setting is skipped.
 -- Settings where only the default changes and the player keeps the choice are in default_only_bool_settings.
 local pinned_bool_settings = {
 	-- Default true: IridescentIndustry makes nuclear-power require s6x-mythril, which sits behind
@@ -93,6 +94,9 @@ local pinned_bool_settings = {
 	-- engines look stronger (yi_railway settings.lua:3-8, data-updates.lua:3-19). Razi Protocol balances the vanilla and
 	-- Krastorio 2 locomotive itself, so the cut is pinned off.
 	["yir_vanilla_loco_nerf"] = false,
+	-- Default true: omni adds four virtual signals named after its authors and their channel, with joke descriptions
+	-- (omni/settings.lua:11-17, data.lua:1). Pinned off.
+	["omni-signals"] = false,
 }
 
 -- These recipes are left untouched by BZ. bypass() is global in each mod's data-util.lua, so the last loaded mod

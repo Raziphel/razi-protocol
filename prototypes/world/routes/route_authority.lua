@@ -26,6 +26,9 @@ local side_routes={
   -- Nuclear Steps: the asteroid field orbits Gleba (compatibility/nuclear-steps/asteroid_field.lua); the source's
   -- gleba-to-asteroid-0 keeps its length and asteroids, the bodies behind the field keep their own routes.
   {"asteroid-0","gleba",15000,"biological"},
+  -- OMNI: the source's solar-system-edge-OMNI keeps its asteroids; razi sets it
+  -- to 300 000 km (compatibility/omni/omni.lua), like the Nexus approach.
+  {"OMNI","solar-system-edge",300000,"deep_edge"},
   -- Preserve remaining source-owned side-world connections.
   -- Athos now belongs to Vespera. Its single dry-world spur leaves Muria,
   -- with no Vulcanus/Nauvis shortcut or duplicate connection.

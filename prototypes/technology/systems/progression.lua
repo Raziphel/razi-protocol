@@ -401,6 +401,16 @@ if mods["Nexus"] then
 else
 	set_science_after("black-hole-discovery", "umbra")
 end
+-- OMNI (omni) lies behind the promethium science pack at the edge of the solar system. Its discovery and the two research
+-- of its recipes (compatibility/omni/omni.lua) take the seven system cards and the Deep Space card.
+for _, name in ipairs({"planet-discovery-OMNI", "razi-omni-synthesis", "razi-omni-science"}) do
+	if mods["Nexus"] then
+		set_science_after(name, "nexus_early")
+	else
+		set_science_after(name, "umbra")
+	end
+end
+add_first_existing_prerequisite("planet-discovery-OMNI", {"razi-singularity-theory", "promethium-882-research"})
 -- Only the compressed system cards need to be added by this mod.
 -- Adding every science pack found in technologies makes all labs universal.
 add_science_to_labs(system_tech_cards)

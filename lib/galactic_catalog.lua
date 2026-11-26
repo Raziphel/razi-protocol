@@ -27,7 +27,7 @@ local groups={
          "carna","arcanyx","obsidiax","abacayba"},
   ["deep-space"]={"solar-system-edge","razi-deep-space-edge","shattered-planet",
                   "nexus","black-hole","black-hole-approach","oort-cloud",
-                  "sol","skewer_shattered_planet","skewer_lost_beyond"}
+                  "sol","skewer_shattered_planet","skewer_lost_beyond","OMNI"}
 }
 for group,names in pairs(groups) do
   for _,name in ipairs(names) do members[name]=group end

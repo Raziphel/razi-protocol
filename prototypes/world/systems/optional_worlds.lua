@@ -45,6 +45,8 @@ M.worlds = {
 	{mod = "nuclear-steps", locations = {"asteroid-0", "gargante-black-hole", "nuclear-steps-white-hole"},
 		packs = {"nuclear-steps-radio-science-pack", "space-gravimetry-science-pack", "impossible-science-pack"},
 		reason = "a side trip from Gleba; the mod is unfinished and locks its later discoveries"},
+	{mod = "omni", locations = {"OMNI"}, packs = {},
+		reason = "a side branch at the solar system edge; its discovery takes the promethium science pack"},
 }
 
 return M
