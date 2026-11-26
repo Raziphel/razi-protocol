@@ -45,6 +45,7 @@ local raw = {
     ["RTThrowersSetting"] = { default_value = true },
     ["RTBounceSetting"] = { default_value = false },
     ["RTTrainRampSetting"] = { default_value = true },
+    ["bzzirconium-early"] = { default_value = true },
     ["RTZiplineSetting"] = { default_value = true },
     ["override_krastorio_endgame"] = { default_value = true },
     ["el_ki_same_surface"] = { default_value = false },
@@ -60,6 +61,13 @@ local raw = {
       default_value = "equal",
       allowed_values = { "inserter", "incremental", "equal", "rebase", "incremental-with-rebase", "inserter-with-rebase" },
     },
+    ["bzlead-recipe-bypass"] = { default_value = "" },
+    ["bztitanium-recipe-bypass"] = { default_value = "" },
+    ["bztin-recipe-bypass"] = { default_value = "" },
+    ["bzzirconium-recipe-bypass"] = { default_value = "" },
+    ["bzcarbon-recipe-bypass"] = { default_value = "" },
+    ["bzsilicon-recipe-bypass"] = { default_value = "" },
+    ["bzlead-more-entities"] = { default_value = "yes", allowed_values = { "yes", "no" } },
   },
 }
 run(raw)
@@ -70,6 +78,10 @@ for _, name in ipairs({ "s6x-arcanyx-mythril-nuclear", "s6x-location-unlock", "s
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == false and setting.default_value == false and setting.hidden == true, name .. " not pinned to false")
 end
+---@type table
+local bz_early = raw["bool-setting"]["bzzirconium-early"]
+check(bz_early.default_value == false and bz_early.forced_value == false and bz_early.hidden == true,
+  "bzzirconium-early must be pinned to false")
 ---@type table
 local ki_same_surface = raw["bool-setting"]["el_ki_same_surface"]
 check(ki_same_surface.default_value == true and ki_same_surface.forced_value == nil and ki_same_surface.hidden ~= true,
@@ -100,6 +112,18 @@ local range_adder = raw["string-setting"]["si-range-adder"]
 check(range_adder.default_value == "inserter" and #range_adder.allowed_values == 1
   and range_adder.allowed_values[1] == "inserter" and range_adder.hidden == true,
   "si-range-adder not pinned to inserter")
+
+local bz_recipe_bypass = "pipe,pipe-to-ground,electronic-circuit,advanced-circuit,processing-unit,steel-plate,space-platform-foundation,sulfuric-acid,plastic-bar,scrap-recycling"
+for _, name in ipairs({ "bzlead-recipe-bypass", "bztitanium-recipe-bypass", "bztin-recipe-bypass", "bzzirconium-recipe-bypass", "bzcarbon-recipe-bypass", "bzsilicon-recipe-bypass" }) do
+  ---@type table
+  local setting = raw["string-setting"][name]
+  check(setting.default_value == bz_recipe_bypass and #setting.allowed_values == 1 and setting.allowed_values[1] == bz_recipe_bypass and setting.hidden == true,
+    name .. " not pinned to the shared bypass list")
+end
+---@type table
+local bzlead_entities = raw["string-setting"]["bzlead-more-entities"]
+check(bzlead_entities.default_value == "no" and #bzlead_entities.allowed_values == 1 and bzlead_entities.allowed_values[1] == "no" and bzlead_entities.hidden == true,
+  "bzlead-more-entities must be pinned to no")
 
 ---@type table
 local non_removable_site = raw["bool-setting"]["rsc-st-not-removable-site"]

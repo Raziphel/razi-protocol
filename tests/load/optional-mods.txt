@@ -14,4 +14,10 @@ Flare Stack
 248k-Redux
 mech-armor-expanded
 Smart_Inserters
+bzlead
+bztitanium
+bztin
+bzzirconium
+bzcarbon
+bzsilicon
 Rocket-Silo-Construction

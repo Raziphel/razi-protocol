@@ -1,6 +1,12 @@
 require("util")
 
 require("prototypes.compatibility.Smart_Inserters.smart_inserters").data_final_fixes()
+-- BZ Carbon against PlanetAthos and Nexus, before every Razi pass over technologies and before the Athos cycle guard.
+require("prototypes.compatibility.bzcarbon.diamond_processing").data_final_fixes()
+require("prototypes.compatibility.bzcarbon.vulcanus_diamond").data_final_fixes()
+require("prototypes.compatibility.bzcarbon.flake_graphite").data_final_fixes()
+require("prototypes.compatibility.bzcarbon.graphite_prerequisites").data_final_fixes()
+
 require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
