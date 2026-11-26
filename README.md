@@ -199,6 +199,8 @@ Core content in the intended experience includes:
 
 Dea Dia and Pelagos are supported when those mods are installed. Other optional supported branches include Nexus, Lignumis, Solar Halo, Nuclear Steps, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
 
+With Nuclear Steps, rails and trains on a space platform need its heavy foundation on every platform tile, Muluna's and Rabbasca's included, and they stay off Cerys as without it.
+
 Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground, Secretas Orbit Patch, Rate Calculator and What Items Do I Have?
 
 ## Modpack Guidance

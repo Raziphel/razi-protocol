@@ -309,6 +309,10 @@ require("prototypes.balance.xy-k2so-enhancements-nulls-fork.electrochemical_plan
 -- longer burn the biomass their driver carries. After the repairs and every pass that adds a burner.
 require("prototypes.balance.Krastorio2.biomass_fuel").data_final_fixes()
 
+-- Nuclear Steps: rails and trains in space need its heavy foundation on the platform tiles of every mod, and stay off
+-- Cerys. After every pass that adds trains (the YIR rolling stock among them).
+require("prototypes.compatibility.nuclear-steps.space_trains").data_final_fixes()
+
 -- Planetaris Dyes: dyeing 5 stone walls makes 5 colored walls, not 10.
 require("prototypes.balance.planetaris-dyes.colored_walls").data_final_fixes()
 
