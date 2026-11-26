@@ -33,6 +33,7 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Supports the optional BZ mods (lead, titanium, tin, zirconium, carbon, silicon): pipes, circuits, steel, space platform foundation, sulfuric acid, plastic and scrap recycling keep their vanilla recipes, synthetic diamonds get their own technology, and the clashes with PlanetAthos, Nexus, Arig and Muria are resolved.
 - Supports optional Rocket-Silo Construction: the first rocket silo is built in six stages, then the regular rocket silo recipe unlocks with Space platform. A placed construction site cannot be removed, each stage draws 75 MW, and stage changes can bring biter attacks.
 - Supports optional Vehicle Wagon 2: its winch takes only the player's own vehicles, and bosses, hidden helpers and other vehicles without an item stay off the wagons, so loading them no longer crashes the game.
+- Supports optional Yuoki Industries Railway (YIR) in Calidus: its trains go only where the vanilla ones go (off space platforms, or onto heavy foundation with nuclear-steps), its industrial coke gives 20 MJ instead of 35 MJ, its u1 and u3 fuel recipes make the fuel they are named after, and the vanilla locomotive keeps its stats.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
 - Includes narrow compatibility fixes for K2SO enhancement/tweak mods, route assumptions, late prototype edge cases, and overlapping planet content.

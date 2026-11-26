@@ -60,6 +60,7 @@ local repairs = {
 	require("prototypes.fixes.bzzirconium.lava_zircon"),
 	require("prototypes.fixes.PlanetsLib.vehicle_variant_items"),
 	require("prototypes.fixes.VehicleWagon2.no_item_spiders"),
+	require("prototypes.fixes.yi_railway.fuel_fluid_results"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
 }

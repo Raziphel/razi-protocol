@@ -49,6 +49,7 @@
     "? bzcarbon >= 2.0.23",
     "? bzsilicon >= 2.0.19",
     "? VehicleWagon2 >= 4.2.3",
+    "? yi_railway >= 1.4.0",
     "corrundum >= 1.0.51",
     "corrundum-krastorio-compatibility-plus >= 1.1.2",
     "apia >= 0.5.1",
@@ -172,7 +173,10 @@
     "(?) Better_Starmap_Background",
     "(?) dea-dia-system",
     "(?) Flare Stack",
-    "(?) pelagos"
+    "(?) pelagos",
+    "(?) z_yira_american",
+    "(?) z_yira_UP",
+    "(?) z_yira_yuokirails"
   ],
   "quality_required": true,
   "rail_bridges_required": true,
