@@ -55,7 +55,6 @@ local repairs = {
 	require("prototypes.fixes.aai-industry.lignumis_burner_assembler"),
 	require("prototypes.fixes.Nexus.paracelsin_resources"),
 	require("prototypes.fixes.panglia_planet.flesh_spoil_tooltip"),
-	require("prototypes.fixes.castra-prime.furnace_categories"),
 	require("prototypes.fixes.Muria.lead_bolt_unlock"),
 	require("prototypes.fixes.bzzirconium.lava_zircon"),
 	-- Last: the repairs above may hide technologies too.
