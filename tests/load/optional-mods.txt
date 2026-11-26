@@ -8,7 +8,6 @@ nuclear-steps
 Cerys-Moon-of-Fulgora
 planet-rabbasca
 space-route-overlay
-reduce-tile-effects
 advanced_target_priorities
 Flare Stack
 248k-Redux

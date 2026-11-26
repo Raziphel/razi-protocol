@@ -7,7 +7,7 @@
   "description": "A Space Age progression overhaul for huge K2SO planet packs, with custom system tech cards, rebuilt planet discovery, enemy routing, and a longer deep-space endgame across multiple star systems.\n\nSee the README for the full overview, compatibility notes, and credits.",
   "factorio_version": "2.1",
   "dependencies": [
-    "base >= 2.1.0",
+    "base >= 2.1.25",
     "space-age >= 2.1.0",
     "razi_lib >= 1.3.2",
     "razi-more-asteroids >= 1.2.2",
@@ -149,7 +149,6 @@
     "+ rabbasca-underground >= 0.12.0",
     "? planet-rabbasca >= 0.24.2",
     "? nuclear-steps >= 0.4.1",
-    "? reduce-tile-effects >= 1.1.1",
     "(?) Abacayba_Moon_of_Nauvis",
     "(?) Better_Starmap_Background",
     "(?) dea-dia-system",
