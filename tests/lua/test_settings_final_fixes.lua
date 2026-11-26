@@ -123,8 +123,9 @@ for _, name in ipairs({ "bzlead-recipe-bypass", "bztitanium-recipe-bypass", "bzt
 end
 ---@type table
 local bzlead_entities = raw["string-setting"]["bzlead-more-entities"]
-check(bzlead_entities.default_value == "no" and #bzlead_entities.allowed_values == 1 and bzlead_entities.allowed_values[1] == "no" and bzlead_entities.hidden == true,
-  "bzlead-more-entities must be pinned to no")
+-- Foliax 3.0.13 copies the expansion bolt with its own iron, so the player's choice stays.
+check(bzlead_entities.default_value == "yes" and #bzlead_entities.allowed_values == 2 and not bzlead_entities.hidden,
+  "bzlead-more-entities must stay the player's choice")
 
 ---@type table
 local non_removable_site = raw["bool-setting"]["rsc-st-not-removable-site"]
