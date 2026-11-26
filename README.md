@@ -28,6 +28,9 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Replaces Nexus omega-science clutter with a more readable Deep Space card-driven endgame when Nexus is present.
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Places optional 248k Redux in the chapters: its fission, fusion and gravitation stages need the Solaris, Vibrant and Deep Space cards, its purifier works only on Nauvis, its roboports stay off space platforms and its white hole no longer duplicates items.
+- Places optional Mech Armor Expanded in the chapters: its MK2, MK3 and MK4 need the Vibrant, Beetlejuice and Deep Space cards, and their grids, inventory and resistances sit between mech armor and the top armor of the pack.
+- Supports the optional BZ mods (lead, titanium, tin, zirconium, carbon, silicon): pipes, circuits, steel, space platform foundation, sulfuric acid, plastic and scrap recycling keep their vanilla recipes, synthetic diamonds get their own technology, and the clashes with PlanetAthos, Nexus, Arig and Muria are resolved.
+- Supports optional Rocket-Silo Construction: the first rocket silo is built in six stages, then the regular rocket silo recipe unlocks with Space platform. A placed construction site cannot be removed, each stage draws 75 MW, and stage changes can bring biter attacks.
 - Supports optional Yuoki Industries Railway (YIR) in Calidus: its trains go only where the vanilla ones go (off space platforms, or onto heavy foundation with nuclear-steps), its industrial coke gives 20 MJ instead of 35 MJ, its u1 and u3 fuel recipes make the fuel they are named after, and the vanilla locomotive keeps its stats.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.

@@ -56,6 +56,8 @@ local repairs = {
 	require("prototypes.fixes.Nexus.paracelsin_resources"),
 	require("prototypes.fixes.panglia_planet.flesh_spoil_tooltip"),
 	require("prototypes.fixes.castra-prime.furnace_categories"),
+	require("prototypes.fixes.Muria.lead_bolt_unlock"),
+	require("prototypes.fixes.bzzirconium.lava_zircon"),
 	require("prototypes.fixes.yi_railway.fuel_fluid_results"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),

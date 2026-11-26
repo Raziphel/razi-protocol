@@ -70,16 +70,47 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
+	-- Default true: zircon is used in the stone furnace and other early recipes. False moves its use until after logistic
+	-- science (bzzirconium/zirconium-recipe-updates.lua:32-34).
+	["bzzirconium-early"] = false,
+	-- RSC makes every stage non-minable immediately after placement when enabled, so the site cannot be dismantled for
+	-- its stage materials (Rocket-Silo-Construction/control.lua:217, 377).
+	["rsc-st-not-removable-site"] = true,
 	-- Default true: Yuoki Industries Railway cuts the vanilla locomotive to 900 kW and speed 0.9 so that its own
 	-- engines look stronger (yi_railway settings.lua:3-8, data-updates.lua:3-19). Razi Protocol balances the vanilla and
 	-- Krastorio 2 locomotive itself, so the cut is pinned off.
 	["yir_vanilla_loco_nerf"] = false,
 }
 
+-- These recipes are left untouched by BZ. bypass() is global in each mod's data-util.lua, so the last loaded mod
+-- provides the function and its recipe list applies to all six (bzlead/data-util.lua:110; bztitanium/data-util.lua:110;
+-- bztin/data-util.lua:110; bzzirconium/data-util.lua:110; bzcarbon/data-util.lua:110; bzsilicon/data-util.lua:110).
+-- For scrap-recycling, BZ sets independent_probability on existing shared_probability
+-- (bzcarbon/data-util.lua:1181; bzlead/lead-recipe-updates.lua:8-12; bztin/tin-recipe-updates.lua:13-15;
+-- bzcarbon/carbon-recipe-updates.lua:53-55).
+local bz_recipe_bypass = "pipe,pipe-to-ground,electronic-circuit,advanced-circuit,processing-unit,steel-plate,space-platform-foundation,sulfuric-acid,plastic-bar,scrap-recycling"
+
 -- Default "ii": IridescentIndustry deletes the Krastorio 2 air purifier, pollution filter and air cleaning recipes
 -- and hides the kr-air-purification technology. "kr" keeps Krastorio 2 and adds no second purifier ("both" would).
 local pinned_string_settings = {
 	["s6x-ii-krastorio-overlap-tech"] = "kr",
+	["bzlead-recipe-bypass"] = bz_recipe_bypass,
+	["bztitanium-recipe-bypass"] = bz_recipe_bypass,
+	["bztin-recipe-bypass"] = bz_recipe_bypass,
+	["bzzirconium-recipe-bypass"] = bz_recipe_bypass,
+	["bzcarbon-recipe-bypass"] = bz_recipe_bypass,
+	["bzsilicon-recipe-bypass"] = bz_recipe_bypass,
+	-- Default "yes" adds the bzlead expansion bolts and buildings. Foliax then copies the bolt recipe with foliax-iron-bar,
+	-- an item that does not exist, and the game does not start (bzlead/settings.lua:17-20; foliax/prototypes/mod-compat.lua:368).
+	["bzlead-more-entities"] = "no",
+}
+
+-- The stage power draw is 150 MW times this multiplier (Rocket-Silo-Construction/prototypes/entities.lua:7).
+-- The cost multiplier applies to ingredients of stages 2, 4, 5 and 6
+-- (Rocket-Silo-Construction/prototypes/recipe.lua:93-123, 269-276).
+local pinned_double_settings = {
+	["rsc-st-power-mp"] = 0.5,
+	["rsc-st-cost-mp"] = 1,
 }
 
 -- Crushing Industry's coal setting replaces coal in recipes at crushing-industry_0.6.9/base-data-updates.lua:83-94.
@@ -124,6 +155,15 @@ function pinned_foreign_settings.settings_final_fixes()
 
 	for name, value in pairs(pinned_string_settings) do
 		local setting = data.raw["string-setting"] and data.raw["string-setting"][name]
+		if setting then
+			setting.default_value = value
+			setting.allowed_values = { value }
+			setting.hidden = true
+		end
+	end
+
+	for name, value in pairs(pinned_double_settings) do
+		local setting = data.raw["double-setting"] and data.raw["double-setting"][name]
 		if setting then
 			setting.default_value = value
 			setting.allowed_values = { value }

@@ -8,10 +8,17 @@ nuclear-steps
 Cerys-Moon-of-Fulgora
 planet-rabbasca
 space-route-overlay
-reduce-tile-effects
 advanced_target_priorities
 Flare Stack
 248k-Redux
+mech-armor-expanded
+bzlead
+bztitanium
+bztin
+bzzirconium
+bzcarbon
+bzsilicon
+Rocket-Silo-Construction
 yi_railway
 z_yira_yuokirails
 z_yira_UP

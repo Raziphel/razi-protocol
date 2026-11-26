@@ -1,5 +1,11 @@
 require("util")
 
+-- BZ Carbon against PlanetAthos and Nexus, before every Razi pass over technologies and before the Athos cycle guard.
+require("prototypes.compatibility.bzcarbon.diamond_processing").data_final_fixes()
+require("prototypes.compatibility.bzcarbon.vulcanus_diamond").data_final_fixes()
+require("prototypes.compatibility.bzcarbon.flake_graphite").data_final_fixes()
+require("prototypes.compatibility.bzcarbon.graphite_prerequisites").data_final_fixes()
+
 require("prototypes.industry.cards.lab_cards").data_final_fixes()
 require("prototypes.compatibility.Cerys-Moon-of-Fulgora.cerys_cards").data_final_fixes()
 require("prototypes.fixes.Moshine.moshine_datacells").data_final_fixes()
@@ -102,7 +108,15 @@ require("prototypes.technology.gates.regional_research_bridges").data_final_fixe
 require("prototypes.technology.gates.galactic_mod_research").data_final_fixes()
 require("prototypes.compatibility.248k-Redux.chapter_gates").data_final_fixes()
 require("prototypes.compatibility.248k-Redux.lab_inputs").data_final_fixes()
+require("prototypes.compatibility.mech-armor-expanded.chapter_gates").data_final_fixes()
+require("prototypes.compatibility.mech-armor-expanded.base_armor_links").data_final_fixes()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data_final_fixes()
+
+-- Rocket-Silo Construction: fixed stage materials, the silo's surface conditions on every stage, and the regular silo
+-- recipe from Space platform on, so only the first silo is built in stages.
+require("prototypes.compatibility.Rocket-Silo-Construction.stage_ingredients").data_final_fixes()
+require("prototypes.compatibility.Rocket-Silo-Construction.surface_conditions").data_final_fixes()
+require("prototypes.compatibility.Rocket-Silo-Construction.first_silo").data_final_fixes()
 
 -- Recheck after the research weaving above; only Athos-owned cyclic arrows (and the known bootstrap loops) are removed.
 require("prototypes.fixes.PlanetAthos.athos_cycle_guard").repair()
@@ -253,6 +267,10 @@ require("prototypes.balance.common.promethium_research_data").data_final_fixes()
 -- The metallurgic science pack research also unlocks the oxide asteroid crushing, so calcite comes from orbit at home
 -- once the player has been to Vulcanus. After the gates, which may move unlocks, before the menu pass.
 require("prototypes.balance.space-age.space_calcite").data_final_fixes()
+
+-- Mech Armor Expanded: its three tiers get grids, inventory and resistances between mech armor and the armor of the
+-- pack. After every mod that changes armor resistances (Krastorio 2 Spaced Out, cr-extras, maraxsis).
+require("prototypes.balance.mech-armor-expanded.armor_tiers").data_final_fixes()
 
 -- Razi Rocket Reusability: three optional bulk tiers of rocket chunk processing. They copy the final results of
 -- rocket-chunk-processing (the mod loads before Razi, so its Krastorio 2 Spaced Out pass has run) and the research price of

@@ -23,6 +23,9 @@ require("prototypes.ui.journal")
 require("prototypes.industry.great_projects").data()
 require("prototypes.compatibility.orbital-cannon.orbital_catapult").data()
 
+-- Before quality makes the recycling recipes in data-updates.
+require("prototypes.fixes.planetaris-arig.lead_expansion_bolt").data()
+
 -- Factorio runs every data.lua before any data-updates.lua. Razi Protocol requires PlanetAthos, so Athos's
 -- data-updates.lua runs before ours, and its recursive GetAllDescendants cannot walk a cyclic prerequisite graph.
 -- Break the cycles Athos owns (or the two known bootstrap loops) now, after our technologies are registered.

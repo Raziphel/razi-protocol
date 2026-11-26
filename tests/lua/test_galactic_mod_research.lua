@@ -87,4 +87,33 @@ check(#real["upgraded-rocket-9"].prerequisites==0,"Tier outside 1-4")
 mod.data_final_fixes()
 check(#real["upgraded-rocket-3"].prerequisites==2,"Real duplicate gate: "..prereqs("upgraded-rocket-3"))
 
+-- planet-ferrum prices MK2 (Vulcanus, Fulgora and Gleba science) in its robotics
+-- pack and makes the pack's technology a prerequisite; the placed tier sheds both.
+local logs={}
+rawset(_G,"log",function(line) logs[#logs+1]=line end)
+local ferrum_pack="ferrum-robotics-science-pack"
+local packs={{"metallurgic-science-pack",1},{"electromagnetic-science-pack",1},
+ {"agricultural-science-pack",1},{ferrum_pack,1}}
+real["upgraded-rocket-2"].unit={count=1500,time=60,ingredients=packs}
+table.insert(real["upgraded-rocket-2"].prerequisites,ferrum_pack)
+real[ferrum_pack]={prerequisites={}}
+real["ferrum-late-tech"]={prerequisites={ferrum_pack},unit={count=1,time=1,
+ ingredients={{ferrum_pack,1}}}}
+mod.data_final_fixes()
+local function costs(node,pack)
+ for _,ingredient in ipairs(node.unit and node.unit.ingredients or {}) do
+  if (ingredient.name or ingredient[1])==pack then return true end
+ end
+ return false
+end
+check(not costs(real["upgraded-rocket-2"],ferrum_pack),"MK2 still costs Ferrum's pack")
+check(not has_real("upgraded-rocket-2",ferrum_pack),"MK2 still requires Ferrum's pack technology")
+check(costs(real["upgraded-rocket-2"],"electromagnetic-science-pack"),"MK2 keeps its own packs")
+check(#real["upgraded-rocket-2"].unit.ingredients==3,"MK2 keeps three packs")
+check(costs(real["ferrum-late-tech"],ferrum_pack) and has_real("ferrum-late-tech",ferrum_pack),
+ "Other technologies keep Ferrum's pack")
+check(#logs==1,"One change, one log line, got "..#logs)
+mod.data_final_fixes()
+check(#logs==1,"Nothing left to change on a second pass")
+
 print("Two new non-planet mods safely anchored to real planetary research")
