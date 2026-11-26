@@ -21,6 +21,12 @@ local raw = {
     ["s6x-colored-concrete"] = { default_value = true },
     ["adjust-maraxsis"] = { default_value = true },
     ["bm-armored-biters-override"] = { default_value = true },
+    ["si-disable-inserters-consumption"] = { default_value = false },
+    ["si-disable-long-inserters"] = { default_value = false },
+    ["si-range-technologies"] = { default_value = false },
+    ["si-diagonal-technologies"] = { default_value = false },
+    ["si-offset-technologies"] = { default_value = false },
+    ["si-inserters-chase-belt-items"] = { default_value = true },
     ["nulla-vanila-science"] = { default_value = true },
     ["nulla-science-promethium"] = { default_value = true },
     ["crushing-industry-k2"] = { default_value = true },
@@ -40,6 +46,7 @@ local raw = {
     ["RTBounceSetting"] = { default_value = false },
     ["RTTrainRampSetting"] = { default_value = true },
     ["bzzirconium-early"] = { default_value = true },
+    ["vehicle-wagon-use-custom-weights"] = { default_value = true },
     ["yir_vanilla_loco_nerf"] = { default_value = true },
     ["RTZiplineSetting"] = { default_value = true },
     ["override_krastorio_endgame"] = { default_value = true },
@@ -52,6 +59,10 @@ local raw = {
   },
   ["string-setting"] = {
     ["s6x-ii-krastorio-overlap-tech"] = { default_value = "ii", allowed_values = { "ii", "kr", "both" } },
+    ["si-range-adder"] = {
+      default_value = "equal",
+      allowed_values = { "inserter", "incremental", "equal", "rebase", "incremental-with-rebase", "inserter-with-rebase" },
+    },
     ["bzlead-recipe-bypass"] = { default_value = "" },
     ["bztitanium-recipe-bypass"] = { default_value = "" },
     ["bztin-recipe-bypass"] = { default_value = "" },
@@ -85,6 +96,24 @@ check(override_krastorio_endgame.default_value == true and override_krastorio_en
 local overlap = raw["string-setting"]["s6x-ii-krastorio-overlap-tech"]
 check(overlap.default_value == "kr" and #overlap.allowed_values == 1 and overlap.allowed_values[1] == "kr" and overlap.hidden == true,
   "Krastorio overlap setting not pinned to kr")
+
+-- Smart Inserters starts with vectors available, keeps long inserters and power use, and chases belt items.
+for _, name in ipairs({ "si-disable-inserters-consumption", "si-disable-long-inserters", "si-range-technologies",
+  "si-diagonal-technologies", "si-offset-technologies" }) do
+  ---@type table
+  local setting = raw["bool-setting"][name]
+  check(setting.default_value == false and setting.forced_value == false and setting.hidden == true,
+    name .. " not pinned to false")
+end
+---@type table
+local chase_belt_items = raw["bool-setting"]["si-inserters-chase-belt-items"]
+check(chase_belt_items.default_value == true and chase_belt_items.forced_value == true and chase_belt_items.hidden == true,
+  "si-inserters-chase-belt-items not pinned to true")
+---@type table
+local range_adder = raw["string-setting"]["si-range-adder"]
+check(range_adder.default_value == "inserter" and #range_adder.allowed_values == 1
+  and range_adder.allowed_values[1] == "inserter" and range_adder.hidden == true,
+  "si-range-adder not pinned to inserter")
 
 local bz_recipe_bypass = "pipe,pipe-to-ground,electronic-circuit,advanced-circuit,processing-unit,steel-plate,space-platform-foundation,sulfuric-acid,plastic-bar,scrap-recycling"
 for _, name in ipairs({ "bzlead-recipe-bypass", "bztitanium-recipe-bypass", "bztin-recipe-bypass", "bzzirconium-recipe-bypass", "bzcarbon-recipe-bypass", "bzsilicon-recipe-bypass" }) do
@@ -122,6 +151,10 @@ for _, name in ipairs({ "RTThrowersSetting", "RTBounceSetting", "RTTrainRampSett
   local setting = raw["bool-setting"][name]
   check(setting.forced_value == true and setting.default_value == true and setting.hidden == true, name .. " not pinned to true")
 end
+---@type table
+local vehicle_wagon_weights = raw["bool-setting"]["vehicle-wagon-use-custom-weights"]
+check(vehicle_wagon_weights.forced_value == true and vehicle_wagon_weights.hidden == true,
+  "vehicle-wagon-use-custom-weights must be pinned to true")
 ---@type table
 local zipline = raw["bool-setting"]["RTZiplineSetting"]
 check(zipline.forced_value == nil and zipline.hidden == nil, "RTZiplineSetting must stay untouched")

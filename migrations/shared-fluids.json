@@ -1,0 +1,9 @@
+{
+  "fluid": [
+    ["hydrogen-chloride", "kr-hydrogen-chloride"]
+  ],
+  "item": [
+    ["hydrogen-chloride-barrel", "kr-hydrogen-chloride-barrel"],
+    ["hydrogen-chloride-titanium-barrel", "kr-hydrogen-chloride-titanium-barrel"]
+  ]
+}

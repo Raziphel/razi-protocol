@@ -31,3 +31,5 @@ require("prototypes.compatibility.nuclear-steps.asteroid_field").data_updates()
 -- Source starfields must be positioned before PlanetsLib's irreversible
 -- sprite-only star cleanup; the Aegis orbit artwork is kept.
 require("prototypes.world.systems.bellicos").data_updates()
+-- Run before Smart_Inserters' data-final-fixes, which doubles speed and merges the long-handed group.
+require("prototypes.compatibility.Smart_Inserters.smart_inserters").data_updates()

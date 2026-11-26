@@ -29,8 +29,10 @@ Razi Protocol is the layer that turns that chaos into an intentional galaxy rout
 - Routes optional custom enemy mods onto planets that fit their theme, while suppressing default biter noise where appropriate.
 - Places optional 248k Redux in the chapters: its fission, fusion and gravitation stages need the Solaris, Vibrant and Deep Space cards, its purifier works only on Nauvis, its roboports stay off space platforms and its white hole no longer duplicates items.
 - Places optional Mech Armor Expanded in the chapters: its MK2, MK3 and MK4 need the Vibrant, Beetlejuice and Deep Space cards, and their grids, inventory and resistances sit between mech armor and the top armor of the pack.
+- Supports optional Smart Inserters: pickup and drop points of inserters can be moved from the start, without its technologies; each inserter reaches only as far as its own range, and inserter speeds, upgrades and fast-replace groups stay as without the mod.
 - Supports the optional BZ mods (lead, titanium, tin, zirconium, carbon, silicon): pipes, circuits, steel, space platform foundation, sulfuric acid, plastic and scrap recycling keep their vanilla recipes, synthetic diamonds get their own technology, and the clashes with PlanetAthos, Nexus, Arig and Muria are resolved.
 - Supports optional Rocket-Silo Construction: the first rocket silo is built in six stages, then the regular rocket silo recipe unlocks with Space platform. A placed construction site cannot be removed, each stage draws 75 MW, and stage changes can bring biter attacks.
+- Supports optional Vehicle Wagon 2: its winch takes only the player's own vehicles, and bosses, hidden helpers and other vehicles without an item stay off the wagons, so loading them no longer crashes the game.
 - Supports optional Yuoki Industries Railway (YIR) in Calidus: its trains go only where the vanilla ones go (off space platforms, or onto heavy foundation with nuclear-steps), its industrial coke gives 20 MJ instead of 35 MJ, its u1 and u3 fuel recipes make the fuel they are named after, and the vanilla locomotive keeps its stats.
 - Adds Science Tab cleanup so system cards, planet science, and research-data items land in more readable groups.
 - Adds Vehicles & Infrastructure as a dedicated crafting tab to reduce early Logistics bloat.
@@ -202,6 +204,8 @@ Core content in the intended experience includes:
 - Paracelsin
 
 Dea Dia and Pelagos are supported when those mods are installed. Other optional supported branches include Nexus, Lignumis, Solar Halo, Nuclear Steps, Celestial Weather and its additions, Eneas, Cerys, Void Processing, a range of enemy packs, and a variety of quality-of-life and compatibility helpers listed in `info.json`.
+
+With Nuclear Steps, rails and trains on a space platform need its heavy foundation on every platform tile, Muluna's and Rabbasca's included, and they stay off Cerys as without it.
 
 Recommended mods (`+` in `info.json`; the game offers them, nothing breaks without them): Cold Biters, Explosive Biters, Imersite Asteroids, Void Processing (2.1), Science Tab, Lithium Battery, Frozeta: Nuclear Winter, Planet Express, Upgraded Rocket Turrets, Planet Ferrum, Skewer Shattered Planet, Rabbasca Underground, Secretas Orbit Patch, Rate Calculator and What Items Do I Have?
 

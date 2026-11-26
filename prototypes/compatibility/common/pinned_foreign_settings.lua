@@ -70,12 +70,25 @@ local pinned_bool_settings = {
 	["RTThrowersSetting"] = true,
 	["RTBounceSetting"] = true,
 	["RTTrainRampSetting"] = true,
+	-- Smart_Inserters 2.1.0: range, diagonal and offset technologies stay off so vectors work from the start on
+	-- Lignumis; long inserters and their power use stay enabled. Belt chasing stays on; false disables it for every inserter.
+	["si-disable-inserters-consumption"] = false,
+	["si-disable-long-inserters"] = false,
+	["si-range-technologies"] = false,
+	["si-diagonal-technologies"] = false,
+	["si-offset-technologies"] = false,
+	["si-inserters-chase-belt-items"] = true,
 	-- Default true: zircon is used in the stone furnace and other early recipes. False moves its use until after logistic
 	-- science (bzzirconium/zirconium-recipe-updates.lua:32-34).
 	["bzzirconium-early"] = false,
 	-- RSC makes every stage non-minable immediately after placement when enabled, so the site cannot be dismantled for
 	-- its stage materials (Rocket-Silo-Construction/control.lua:217, 377).
 	["rsc-st-not-removable-site"] = true,
+	-- Default true: Vehicle Wagon 2 only checks its maximum vehicle weight when this is on (script/makeGlobalMaps.lua:21-22).
+	-- The spider weight workaround in prototypes/fixes/VehicleWagon2/no_item_spiders.lua would
+	-- stop excluding vehicles without an item if that check were disabled; loading one of those
+	-- vehicles crashes in VehicleWagon2/script/getVehicleItem.lua:19.
+	["vehicle-wagon-use-custom-weights"] = true,
 	-- Default true: Yuoki Industries Railway cuts the vanilla locomotive to 900 kW and speed 0.9 so that its own
 	-- engines look stronger (yi_railway settings.lua:3-8, data-updates.lua:3-19). Razi Protocol balances the vanilla and
 	-- Krastorio 2 locomotive itself, so the cut is pinned off.
@@ -94,6 +107,9 @@ local bz_recipe_bypass = "pipe,pipe-to-ground,electronic-circuit,advanced-circui
 -- and hides the kr-air-purification technology. "kr" keeps Krastorio 2 and adds no second purifier ("both" would).
 local pinned_string_settings = {
 	["s6x-ii-krastorio-overlap-tech"] = "kr",
+	-- Default "equal" gives every inserter a reach of 3; "inserter" caps each at its own reach
+	-- (Smart_Inserters/scripts/inserter_functions.lua:433-459).
+	["si-range-adder"] = "inserter",
 	["bzlead-recipe-bypass"] = bz_recipe_bypass,
 	["bztitanium-recipe-bypass"] = bz_recipe_bypass,
 	["bztin-recipe-bypass"] = bz_recipe_bypass,

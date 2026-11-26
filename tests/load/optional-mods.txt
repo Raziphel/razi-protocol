@@ -12,6 +12,7 @@ advanced_target_priorities
 Flare Stack
 248k-Redux
 mech-armor-expanded
+Smart_Inserters
 bzlead
 bztitanium
 bztin
@@ -19,6 +20,7 @@ bzzirconium
 bzcarbon
 bzsilicon
 Rocket-Silo-Construction
+VehicleWagon2
 yi_railway
 z_yira_yuokirails
 z_yira_UP

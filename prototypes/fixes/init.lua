@@ -25,6 +25,7 @@ local repairs = {
 	require("prototypes.fixes.Krastorio2-spaced-out.void_crushing"),
 	require("prototypes.fixes.Krastorio2-spaced-out.piercing_shotgun"),
 	require("prototypes.fixes.tenebris-prime.bioluminescent_copies"),
+	require("prototypes.fixes.tenebris-prime.vehicle_wagon_copy"),
 	require("prototypes.fixes.Krastorio2.construction_roboport"),
 	require("prototypes.fixes.Krastorio2.artillery_range"),
 	require("prototypes.fixes.apia.nutrients_refresh"),
@@ -58,6 +59,8 @@ local repairs = {
 	require("prototypes.fixes.castra-prime.furnace_categories"),
 	require("prototypes.fixes.Muria.lead_bolt_unlock"),
 	require("prototypes.fixes.bzzirconium.lava_zircon"),
+	require("prototypes.fixes.PlanetsLib.vehicle_variant_items"),
+	require("prototypes.fixes.VehicleWagon2.no_item_spiders"),
 	require("prototypes.fixes.yi_railway.fuel_fluid_results"),
 	-- Last: the repairs above may hide technologies too.
 	require("prototypes.fixes.common.hidden_prerequisites"),
