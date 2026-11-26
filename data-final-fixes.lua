@@ -61,6 +61,8 @@ require("prototypes.world.systems.planet_descriptions").data_final_fixes()
 require("prototypes.compatibility.Krastorio2-spaced-out.k2so_planet_integration").data_final_fixes()
 -- The integration renames recipe products; repoint the research triggers that still name the old ones.
 require("prototypes.fixes.Krastorio2-spaced-out.renamed_research_triggers").data_final_fixes()
+-- One fluid per substance: Muria's hydrogen chloride becomes K2's, retired fluids lose their barrels and flare recipes.
+require("prototypes.compatibility.Krastorio2-spaced-out.shared_fluids").data_final_fixes()
 
 -- Set the campaign gates after the earlier compatibility passes: each system's discovery follows the
 -- previous tier and costs its cards.
